@@ -55,7 +55,6 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 
 	private String language =null;
 	private String region = null;
-	private String httpDebug = null;
 
 	
 	protected String widgetset;
@@ -114,7 +113,6 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		final String deployment= (String) settings.get("tipi.instance.deployment");
 		language = (String) settings.get("tipi.instance.language");
 		region = (String) settings.get("tipi.instance.region");
-		httpDebug = (String) settings.get("http.debug");
 		productionMode = (String) settings.get("tipi.instance.productionmode");
 		widgetset = (String) settings.get("tipi.instance.widgetset");
 
@@ -200,7 +198,7 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 			return;
 		}
 		
-		if("true".equals(httpDebug)) {
+		if(httpLogger.isDebugEnabled()) {
 			dumpRequestHeaders(request);
 		}
 		
