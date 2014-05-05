@@ -2869,12 +2869,14 @@ public class TslCompiler {
 			NodeList rules = list.item(i).getChildNodes();
 			for (int j = 0; j < rules.getLength(); j++) {
 				if (rules.item(j).getNodeName().equals("define")) {
-					String name = ((Element) rules.item(j))
-							.getAttribute("name");
-					String expression = rules.item(j).getFirstChild()
-							.getNodeValue();
+					String name = ((Element) rules.item(j)).getAttribute("name");
+					String expression = rules.item(j).getFirstChild().getNodeValue();
 					expression = expression.replace('\r', ' ');
 					expression = expression.replace('\n', ' ');
+					// Replace any references to another define 
+					// (Starting with #) by a dynamic lookup
+					expression = expression.replaceAll("#([A-Za-z0-9]*)",
+							" ( \" + userDefinedRules.get(\"$1\") + \" ) ");
 					generatedCode.append("userDefinedRules.put(\"" + name
 							+ "\",\"" + expression + "\");\n");
 				}
