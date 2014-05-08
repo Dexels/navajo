@@ -115,9 +115,17 @@ public String selectionPointer = null;
   public boolean useCurrentOutDoc;
   
   /*
-   * If useCurrentMessages is set, the NavajoMap will copy the comma-seperated message names to the request of the called webservice.
+   * If useCurrentMessages is set, the NavajoMap will copy the comma-seperated message names of
+   * the OUTPUT doc to the request of the called webservice.
    */
   public String useCurrentMessages = null;
+  
+  /*
+   * If copyInputMessages is set, the NavajoMap will copy the comma-seperated message names of
+   * the INPUT doc to the request of the called webservice.
+   */
+  public String copyInputMessages = null;
+
   
   public boolean breakOnConditionError = true;
   public boolean breakOnException = true;
@@ -660,6 +668,23 @@ public void store() throws MappableException, UserException {
 		  }
 	  }
 	  
+	  if (this.copyInputMessages != null) {
+			String[] copy = copyInputMessages.split(",");
+			for (String msgName : copy) {
+				Message msg = null;
+				if ((msg = access.getInDoc().getMessage(msgName)) != null) {
+					if (this.outDoc.getMessage(msgName) != null) {
+						this.outDoc.getMessage(msgName).merge(msg);
+					} else {
+						this.outDoc.addMessage(msg);
+					}
+				} else {
+					throw new UserException(-1,
+							"Could not find message specified in copyInputMessages: " + msgName);
+				}
+			}
+	  }
+	  
 	  if ( this.useCurrentOutDoc ) {
 	
 		  // Copy param messages.
@@ -1183,6 +1208,10 @@ public void kill() {
 
   public void setUseCurrentMessages(String m) throws UserException {
 	  this.useCurrentMessages = m;
+  }
+  
+  public void setCopyInputMessages(String m) throws UserException {
+	  this.copyInputMessages = m;
   }
   
   public boolean isExists() {
@@ -1771,6 +1800,9 @@ public boolean getUseCurrentOutDoc() {
 }
 public String getUseCurrentMessages() {
 	return useCurrentMessages;
+}
+public String getCopyInputMessages() {
+	return copyInputMessages;
 }
 public boolean getBreakOnConditionError() {
 	return breakOnConditionError;
