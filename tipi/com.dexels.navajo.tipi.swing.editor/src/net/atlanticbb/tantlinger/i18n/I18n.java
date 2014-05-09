@@ -31,7 +31,7 @@ public class I18n {
     private static final String MNEM_POSTFIX = ".mnemonic";
     
     public static final Properties BUNDLE_PROPS = new Properties();
-    public static final Hashtable<String, I18n> I18NS = new Hashtable<>();
+    public static final Hashtable<String, I18n> I18NS = new Hashtable<String, I18n>();
     
     public static Locale locale = Locale.getDefault();
     

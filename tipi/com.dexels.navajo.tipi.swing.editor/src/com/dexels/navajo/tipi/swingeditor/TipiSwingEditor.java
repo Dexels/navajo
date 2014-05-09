@@ -73,7 +73,7 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 
 				@Override
 				public void run() {
-					editor.setTabsVisible((boolean) object);
+					editor.setTabsVisible((Boolean) object);
 				}
 			});
 		}
