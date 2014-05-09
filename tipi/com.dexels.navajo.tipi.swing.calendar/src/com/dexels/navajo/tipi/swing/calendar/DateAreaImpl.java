@@ -42,6 +42,12 @@ public class DateAreaImpl extends DateAreaBean{
 			.getLogger(DateAreaImpl.class);
 
 	private ActivityAShapeBean myShape = null;
+	Color windowBackground = null;
+	Color gridLines = null;
+	Color dividerLine = null;
+	Color activityTextColor = null;
+	Color textColor = null;
+	Font  labelFont = null;
 	
 	public DateAreaImpl()
 	{
@@ -49,64 +55,38 @@ public class DateAreaImpl extends DateAreaBean{
 		initialize();
 	}
 	
+	private void setColors() {
+		// define base colors and fonts
+		windowBackground = getLafColor("window");
+		gridLines = getLessExtremeColor(windowBackground, windowBackground);
+		dividerLine = getLessExtremeColor(gridLines, windowBackground);
+		activityTextColor = getBrightness(windowBackground) < 128 ? Color.WHITE : Color.BLACK;
+		textColor = getLafColor("Label.foreground");
+		labelFont = getLafFont("Label.font");
+	}
+	
 	private void initialize()
 	{
-		//define base colors and fonts
-		Color windowBackground = getLafColor("window");
-		Color gridLines = getLessExtremeColor(windowBackground, windowBackground);
-		Color dividerLine = getLessExtremeColor(gridLines, windowBackground);
-		Color activityTextColor = getBrightness(windowBackground) < 128 ? Color.WHITE : Color.BLACK; 
-		Color textColor = getLafColor("Label.foreground");
-		Font  labelFont = getLafFont("Label.font");
+		setColors();
 
 		setActivityLayouts(new ActivityLayout[] {
 				new TimeBoundsLayout(new AtFixed(1.0f), new AtStart(0.0f), new AtEnd(0.0f), new AtStart(14.0f), new AtEnd(0.0f), 0, new AtFixed(12.0f), new AtFixed(8.0f), null, new String[] {"TimeBounds"}, new BoundaryRounder(DateRangeI.RANGE_TYPE_DAY, true, true, false, null, null, new Integer(0))),	
 	            new FlexGridLayout(new AtStart(0.0f), new AtStart(1.0f), true, true, new Integer(1), null, new Integer(13), 1, 0, new AbsRect(new AtStart(0.0f), new AtStart(14.0f), new AtEnd(0.0f), new AtEnd(0.0f), null, null, null), new String[] {"FlexGrid"})
 			});
-		setActivityPaintContext("week");
-		setHorizontalGridLineShowFirst(true);
-		setHorizontalGridLineShowLast(true);
-		setVerticalGridLineShowFirst(true);
-		setVerticalGridLineShowLast(true);
-		setLayoutOptimizeBoundary(DateRangeI.RANGE_TYPE_WEEK);
-		setDividerPaint(dividerLine);
-		setLabelDateFormat("d");
-		setLabelPlaceRect(new AbsRect(new AtStart(0.0f), new AtStart(2.0f), new AtEnd(-3.0f), new AtStart(15.0f), null, null, null));
-		setLabelAlignX(new AtFraction(1.0f));
-		setLabelAlignY(new AtStart(0.0f));
-		setLabelFont(labelFont.deriveFont(9F));
-		setLabelForeground(textColor);
-		setBackground(windowBackground);
-		setHorizontalGridLinePaintEven(gridLines);
-		setHorizontalGridLinePaintOdd(gridLines);
-		setVerticalGridLinePaintEven(gridLines);
-		setVerticalGridLinePaintOdd(gridLines);
 		
-		myShape = new ActivityAShapeBean();
-		myShape.setBackgroundPlaceRect(new AbsRect(new AtStart(0.0f), new AtStart(0.0f), new AtEnd(0.0f), new AtEnd(0.0f), null, null, null));
-		myShape.setCornerRadius(16.0);
-		myShape.setOutlinePaint(dividerLine);
-		myShape.setOutlineStrokeWidth(0.0F);
-		myShape.setPaintContext("week");
-		myShape.setResizeHandles(SwingConstants.HORIZONTAL);
-		myShape.setShapeNamePrefix("month_");
-		myShape.setTextFont(labelFont.deriveFont(9F)); 
-		myShape.setTextTemplate("");
-		myShape.setTitleAlignX(new AtStart(5.0f));
-		myShape.setTitleAlignY(new AtStart(0.0f));
-		myShape.setTitleFont(labelFont.deriveFont(9F));
-		myShape.setTitleForeground(activityTextColor);
-		myShape.setTitlePlaceRect(new AbsRect(new AtStart(0.0f), new AtStart(0.0f), new AtEnd(0.0f), new AtEnd(0.0f), null, null, null));
-		myShape.setTitleTemplate("$summary$");
-		myShape.setBackground(gridLines);
-
+		setMigProperties();
+		setActivityShapeProperties();
 		GridDimensionLayoutBean weekLayout = new GridDimensionLayoutBean();
 	    weekLayout.setRowSizeNormal(new SizeSpec(new AtFixed(80.0f), null, null));
-
 		setSecondaryDimensionLayout(weekLayout);
-
 		DateHeaderBean weekDateHeader = new DateHeaderBean();
-	    weekDateHeader.setHeaderRows(new CellDecorationRow[] {
+	    setDateHeaderProperties(weekDateHeader);
+		setNorthDateHeader(weekDateHeader);
+		
+	}
+
+	private void setDateHeaderProperties(DateHeaderBean weekDateHeader) {
+		weekDateHeader.setHeaderRows(new CellDecorationRow[] {
 	            new CellDecorationRow(
 	                DateRangeI.RANGE_TYPE_CUSTOM,
 	                new DateFormatList("MMMM yyyy", null),
@@ -131,9 +111,47 @@ public class DateAreaImpl extends DateAreaBean{
 	                new Integer[] {null},
 	                new AtFraction(0.5f),
 	                new AtFraction(0.5f))});
-		
-		setNorthDateHeader(weekDateHeader);
-		
+	}
+
+	private void setActivityShapeProperties() {
+		myShape = new ActivityAShapeBean();
+		myShape.setBackgroundPlaceRect(new AbsRect(new AtStart(0.0f), new AtStart(0.0f), new AtEnd(0.0f), new AtEnd(0.0f), null, null, null));
+		myShape.setCornerRadius(16.0);
+		myShape.setOutlinePaint(dividerLine);
+		myShape.setOutlineStrokeWidth(0.0F);
+		myShape.setPaintContext("week");
+		myShape.setResizeHandles(SwingConstants.HORIZONTAL);
+		myShape.setShapeNamePrefix("month_");
+		myShape.setTextFont(labelFont.deriveFont(9F)); 
+		myShape.setTextTemplate("");
+		myShape.setTitleAlignX(new AtStart(5.0f));
+		myShape.setTitleAlignY(new AtStart(0.0f));
+		myShape.setTitleFont(labelFont.deriveFont(9F));
+		myShape.setTitleForeground(activityTextColor);
+		myShape.setTitlePlaceRect(new AbsRect(new AtStart(0.0f), new AtStart(0.0f), new AtEnd(0.0f), new AtEnd(0.0f), null, null, null));
+		myShape.setTitleTemplate("$summary$");
+		myShape.setBackground(gridLines);
+	}
+
+	private void setMigProperties() {
+		setActivityPaintContext("week");
+		setHorizontalGridLineShowFirst(true);
+		setHorizontalGridLineShowLast(true);
+		setVerticalGridLineShowFirst(true);
+		setVerticalGridLineShowLast(true);
+		setLayoutOptimizeBoundary(DateRangeI.RANGE_TYPE_WEEK);
+		setDividerPaint(dividerLine);
+		setLabelDateFormat("d");
+		setLabelPlaceRect(new AbsRect(new AtStart(0.0f), new AtStart(2.0f), new AtEnd(-3.0f), new AtStart(15.0f), null, null, null));
+		setLabelAlignX(new AtFraction(1.0f));
+		setLabelAlignY(new AtStart(0.0f));
+		setLabelFont(labelFont.deriveFont(9F));
+		setLabelForeground(textColor);
+		setBackground(windowBackground);
+		setHorizontalGridLinePaintEven(gridLines);
+		setHorizontalGridLinePaintOdd(gridLines);
+		setVerticalGridLinePaintEven(gridLines);
+		setVerticalGridLinePaintOdd(gridLines);
 	}
 	
 	private Font getLafFont(String key)
@@ -142,9 +160,10 @@ public class DateAreaImpl extends DateAreaBean{
 		if (font == null)
 		{  // slightly random default
 			logger.warn("Can't get font with key " + key + " from the laf, using hardcoded default.");
-			font = new Font("SansSerif", 0, 10);
+			font = new Font("SansSerif", 0, 14);
 		}
-		return font;
+		
+		return new Font("SansSerif", 0, 14);
 	}
 	
 	private Color getLafColor(String key)

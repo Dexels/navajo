@@ -48,7 +48,7 @@ public final class TipiCalendar
 		addTestData();
 		
 		myCalendar = new DateAreaImpl();
-
+		
 		return myCalendar;
 	}
 	
