@@ -130,10 +130,9 @@ public class HTMLEditorPane extends JPanel
 	protected JScrollPane genericPanel;
 
     
-	public HTMLEditorPane(String locStr) {
-		System.out.println("Creating new HTMLEditorPane instance with locale: " + locStr);
-		I18n.setLocale(locStr);
-    	initUI();
+    public HTMLEditorPane(String locStr) {
+	I18n.setLocale(locStr);
+        initUI();
     }
 	
     public HTMLEditorPane()
