@@ -267,6 +267,7 @@
 	    <feature version="[3.0.2,4)">navajo.function</feature>
 	    <feature version="[3.0.4,4)">tipi.appstore</feature>
 	    <feature version="[3.0.1,4)">tipi.mail</feature>
+	    <feature version="[3.0.1,4)">tipi.vaadin</feature>
 	    
 	</feature>
 </features>
