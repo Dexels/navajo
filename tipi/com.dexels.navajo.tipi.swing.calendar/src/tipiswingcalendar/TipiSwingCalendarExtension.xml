@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="swingcalendar" requiresMain="swing" project="com.dexels.navajo.tipi.css" version="0.9" title="Tipi Swing Calendar libraries" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		Tipi Swing Calendar libraries
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/swing/calendar/swingcalendarclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="TipiSwingCalendar.jar"/>
+	</jars>
+</extension>

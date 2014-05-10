@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="project" default="justunsign" basedir=".">
+
+
+	<taskdef name="p200ant" classname="de.matthiasmann.p200ant.P200AntTask"/>
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+	<property file="/home/flyaruu/ant_sandbox/sign.properties" />
+	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" onerror="ignore" />
+
+	<property name="local" value="${user.dir}"/>
+
+	<echo message="${user.dir}"/>
+
+	<macrodef name="unsignjar">
+	        
+	    <attribute name="jar"/>
+	            
+	    <sequential>
+	        <!-- Remove any existing signatures from a JAR file. -->
+	        <tempfile prefix="usignjar-" destdir="${java.io.tmpdir}" property="temp.file"/>
+	        <echo message="Removing signatures from JAR: @{jar}"/>
+	        <mkdir dir="${temp.file}"/>
+	                
+	        <unjar src="@{jar}" dest="${temp.file}">
+	            <patternset>
+	                <include name="**"/>
+	                <exclude name="META-INF/*.SF"/>
+	                <exclude name="META-INF/*.DSA"/>
+	                <exclude name="META-INF/*.RSA"/>
+	            </patternset>
+	        </unjar>
+	                
+	        <delete file="@{jar}" failonerror="true"/>
+	                
+	        <!-- Touch it in case the file didn't have a manifest.
+	             Otherwise the JAR task below will fail if the manifest 
+	             file doesn't exist. -->
+	        <mkdir dir="${temp.file}/META-INF"/>
+	        <touch file="${temp.file}/META-INF/MANIFEST.MF"/>
+	                
+	        <jar destfile="@{jar}" 
+	            basedir="${temp.file}" 
+	            includes="**" 
+	            manifest="${temp.file}/META-INF/MANIFEST.MF"/>
+	                
+	        <delete dir="${temp.file}" failonerror="true"/>
+	    </sequential>
+	</macrodef>
+	
+    <macrodef name="unsignfileset">
+        <attribute name="filesetref" />
+        <sequential>
+        	<echo message="@{filesetref}"/>
+       	<for param="file">
+            <fileset  refid="@{filesetref}"/>
+            <sequential>
+				<unsignjar jar="@{file}"/>
+            </sequential>
+        </for>
+        </sequential>
+    </macrodef>
+	
+	
+	<fileset dir="${user.dir}/unsigned" id="unsigned">
+		<include name="**.jar"/>
+	</fileset>
+	
+	
+	
+	<target name="clean">
+		<delete failonerror="false" dir="bak">
+		</delete>
+
+		<delete >
+			<fileset dir="lib" >
+    <include name="*"/>
+</fileset>
+
+		</delete>
+	</target>
+	
+	<target name="setup"  description="description" depends="clean">
+		<mkdir dir="${user.dir}/bak"/>
+		<copy todir="${user.dir}/bak">
+			<fileset dir=".">
+					<include name="lib/**"/>
+				<include name="unsigned/**"/>
+			</fileset>
+		</copy>
+
+
+		<unsignfileset filesetref="unsigned"/> 
+		<copy todir="${user.dir}/lib">
+			<fileset dir="unsigned" >
+				<include name="**.jar"/>
+			</fileset>
+		</copy>
+
+	</target>
+
+	
+	<fileset dir="." id="justthis">
+		<include name="**.jar"/>
+	</fileset>
+	<target name="justunsign">
+		<unsignfileset filesetref="justthis"/> 
+	</target>
+	
+	<target name="repackJars" depends="setup">
+
+		<p200ant repack="true" keepModificationTime="false" singleSegment="false" >
+			<fileset dir="${local}/lib">
+				<include name="*.jar" />
+			</fileset>
+		</p200ant>
+	</target>
+	<target name="sign" depends="repackJars">
+
+		<signjar keystore="${keystore}" verbose="false" storepass="${storepass}" keypass="${keypass}" alias="${alias}">
+			<fileset dir="${local}/lib">
+				<include name="*.jar" />
+			</fileset>
+		</signjar>
+	</target>
+	<target name="packJars" depends="sign">
+		<!-- Don't pack the unsigned jars, for now. -->
+		<p200ant  singleSegment="false">
+			<fileset dir="${local}/lib">
+				<include name="*.jar" />
+			</fileset>
+		</p200ant>
+	</target>
+
+	<target name="default" depends="packJars" description="description">
+
+	</target>
+
+</project>
