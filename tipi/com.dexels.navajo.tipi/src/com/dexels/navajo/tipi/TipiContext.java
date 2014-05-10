@@ -570,10 +570,15 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		setSystemProperty("tipi.client.server", navajoServer);
 		navajoUsername = (String) attemptGenericEvaluate(config
 				.getStringAttribute("username", ""));
+
 		setSystemProperty("tipi.client.username", navajoUsername);
 		navajoPassword = (String) attemptGenericEvaluate(config
 				.getStringAttribute("password", ""));
 		setSystemProperty("tipi.client.password", navajoPassword);
+		boolean forceGzip = (Boolean) attemptGenericEvaluate(config
+				.getStringAttribute("forceGzip", "false"));
+		boolean secure = (Boolean) attemptGenericEvaluate(config
+				.getStringAttribute("https", "false"));
 
 		logger.info("Connecting to server: " + navajoServer);
 		if (!impl.equals("direct")) {
@@ -584,6 +589,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			getClient().setServerUrl(navajoServer);
 			getClient().setUsername(navajoUsername);
 			getClient().setPassword(navajoPassword);
+			getClient().setForceGzip(forceGzip);
+			getClient().setHttps(secure);
+			
 			Integer retryCount = (Integer) attemptGenericEvaluate(config
 					.getStringAttribute("retryCount", "-1"));
 			if(retryCount!=null) {
