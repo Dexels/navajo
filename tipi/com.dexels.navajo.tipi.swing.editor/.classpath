@@ -5,6 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="lib/jtidy-8.0.jar"/>
 	<classpathentry kind="lib" path="lib/novaworx-syntax-0.0.7.jar"/>
-	<classpathentry kind="lib" path="lib/sam.jar"/>
+	<classpathentry kind="lib" path="lib/swingactionmanager-1.0.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
