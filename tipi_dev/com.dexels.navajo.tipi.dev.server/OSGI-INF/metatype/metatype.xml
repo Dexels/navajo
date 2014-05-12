@@ -15,10 +15,13 @@
    <AD name="JNLP Code Base"    id="tipi.store.codebase" required="false"  type="String"/>   
    <AD name="Use authorization"    id="authorize" required="false"  type="Boolean" default="true"/>   
    </OCD>
-  <Designate factoryPid="tipi.dev.gitapplication" pid="tipi.dev.gitapplication">
+  <Designate factoryPid="tipi.dev.gitapplication">
      <Object ocdref="tipi.dev.gitapplication"/>
   </Designate>
-
+  <Designate  pid="tipi.dev.appstore.manager">
+     <Object ocdref="tipi.dev.appstore.manager"/>
+  </Designate>
+  
 	<!-- tipi.dev.appstore.manager	clientid = (String) configuration.get("tipi.store.clientid");
 		clientsecret = (String) configuration.get("tipi.store.clientsecret");
 		organization = (String) configuration.get("tipi.store.organization");

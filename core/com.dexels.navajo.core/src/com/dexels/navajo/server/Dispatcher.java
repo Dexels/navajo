@@ -1003,7 +1003,9 @@ public final boolean isBusy() {
         MDC.put("accessId", access.accessID);
         MDC.put("rpcName", access.getRpcName());
         MDC.put("rpcUser", access.getRpcUser());
-        MDC.put("tenant", access.getInstance());
+        if(access.getInstance()!=null) {
+            MDC.put("tenant", access.getInstance());
+        }
         MDC.put("rootPath", getNavajoConfig().getRootPath());
         MDC.put("instanceName", getNavajoConfig().getInstanceName());
         MDC.put("instanceGroup", getNavajoConfig().getInstanceGroup());

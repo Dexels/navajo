@@ -21,5 +21,5 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Bundle-ClassPath: lib/jtidy-8.0.jar,
  lib/novaworx-syntax-0.0.7.jar,
- lib/sam.jar,
+ lib/swingactionmanager-1.0.jar,
  .

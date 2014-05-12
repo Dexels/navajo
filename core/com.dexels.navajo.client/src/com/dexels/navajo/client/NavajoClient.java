@@ -770,7 +770,16 @@ public void setServers(String[] servers) {
   @Override
 public String getCurrentHost() {
 	if (serverUrls!=null && serverUrls.length>0) {
-		return serverUrls[currentServerIndex];
+		String currentServer = serverUrls[currentServerIndex];
+		if(currentServer.startsWith("http://")) {
+			setHttps(false);
+			return currentServer.substring(7);
+		}
+		if(currentServer.startsWith("https://")) {
+			setHttps(true);
+			return currentServer.substring(8);
+		}
+		return currentServer;
 	}
 	return null;
 }

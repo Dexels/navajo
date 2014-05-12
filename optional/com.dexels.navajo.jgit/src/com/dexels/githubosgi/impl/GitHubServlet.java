@@ -77,6 +77,10 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 		if (!checkGitHubIpRange(req)) {
 			resp.sendError(400);
 		}
+		boolean isJson = "application/json".equals( req.getContentType());
+		if(isJson) {
+			throw new ServletException("JSON detected. Use content type formencoded");
+		}
 		String p = req.getParameter("payload");
 		// ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		// copyResource(baos, p.getInputStream());
