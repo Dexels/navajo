@@ -76,7 +76,7 @@ public class TestRuntime {
 		JsonNode rootNode = mapper.readValue(out, JsonNode.class);
 		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 		System.out.println(writer.writeValueAsString(rootNode));
-		Assert.assertEquals(24, rootNode.get("data").get("verjaardagen").size());
+		Assert.assertEquals(11, rootNode.size());
 
 	}
 

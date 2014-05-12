@@ -2,5 +2,9 @@
     <service name="clubsites/nl/init"/>
     <setvalue service="clubsites/nl/init" element="parameters/aantaldagen" value="7"/>
     <service input="clubsites/nl/init" name="clubsites/nl/verjaardagen"/>
-    <table service="clubsites/nl/verjaardagen" name="verjaardagen" columnWidths="100,200" columnLabels="Verjaardag, Naam" columns="verjaardag,volledigenaam" path="verjaardagen"/>
+    <table service="clubsites/nl/verjaardagen" path="verjaardagen">
+		<column id="verjaardag" label="Verjaardag" type="date"/>
+		<column id="volledigenaam" label="naam" type="string"/>
+    </table>
 </article>
+
