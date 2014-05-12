@@ -96,8 +96,9 @@ public class NewTableDialog extends OptionDialog
             }
             html += "</tr>\n"; //$NON-NLS-1$
         }
-        
-        return html + "</table>   <p></p>"; //$NON-NLS-1$
+        // Add space after table to prevent losing table cells..
+        // Dexels
+        return html + "</table> &#160;"; //$NON-NLS-1$
     }
     
     private class LayoutPanel extends JPanel
