@@ -634,11 +634,17 @@ public class HTMLEditorPane extends JPanel
         }
     }
     
+    // Added by Dexels
 	public String getTidyText() {
 		HTMLUtils utils = new HTMLUtils();
-		String text = utils.cleanHTML(this.getText());
+		// Clean the html - remove spaces and other stuff
+		String text = utils.cleanHTML(wysEditor.getText());
 		text = removeInvalidTags(text);
-		return text.replace("\n", " ");
+		text = text.replace("\n", "");
+		if (!text.endsWith("&#160;")) {
+			text += "&#160;";
+		}
+		return text;
 	}
 
 	public String getText(){
