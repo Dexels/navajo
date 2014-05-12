@@ -16,6 +16,7 @@ import com.dexels.navajo.tipi.headless.HeadlessApplicationFactory;
 import com.dexels.navajo.tipi.headless.HeadlessTipiContext;
 public class AbstractTipiTest  {
 
+
 	private HeadlessTipiContext myContext = null;
 	
 	private final static Logger logger = LoggerFactory

@@ -8,7 +8,6 @@
       <onActionPerformed>
          <showInfo text="'event3'"/>
          <sleep time="1000"/>
-         <exit/>
       </onActionPerformed>
     </d.headlessbutton> 
 </tid>

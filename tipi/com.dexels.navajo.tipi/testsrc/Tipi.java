@@ -15,8 +15,7 @@ import tests.scripting.ScriptingTipi;
 	EventInjectTipi.class,
 	InstantiateDisposeTipi.class,
 	CascadingListeners.class,
-	NonCascadingListeners.class,
-	ScriptingTipi.class
+	NonCascadingListeners.class
 	
 	})
 public class Tipi {

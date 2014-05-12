@@ -79,7 +79,7 @@ public class TipiHeadlessButton extends TipiComponentImpl {
 
 	private void doFireAction() throws TipiBreakException,
 			TipiException {
-		performTipiEvent("onActionPerformed", null, false);
+		performTipiEvent("onActionPerformed", null, true);
 
 	}
 }

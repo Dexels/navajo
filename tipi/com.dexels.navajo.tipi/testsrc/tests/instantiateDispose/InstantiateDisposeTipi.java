@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Test;
 
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
@@ -25,6 +26,7 @@ public class InstantiateDisposeTipi extends AbstractTipiTest {
 		setContext("init", new File("testsrc/tests/instantiateDispose"),elist);
 	}
 
+	@Test
 	public void testTipi()  {
 		String xx = getContext().getInfoBuffer();
 		assertEquals("instantiateOk\n", xx);
