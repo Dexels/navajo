@@ -38,7 +38,7 @@ public class CoreTipi extends AbstractTipiTest {
 		// Thread.sleep(100);
 		// } catch (InterruptedException e) {
 		// }
-		getContext().shutdown();
+//		getContext().shutdown();
 		String xx = getContext().getInfoBuffer();
 		assertEquals("event1\nevent2\n0.99\n", xx);
 		logger.info("Test ok: "+xx);
