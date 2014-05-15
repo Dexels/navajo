@@ -349,6 +349,9 @@ public class TableSorter extends TableMap {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// If we click on a column, then explicitly call stopEditing
+				tableView.stopCellEditing();
+				
 				TableColumnModel columnModel = tableView.getColumnModel();
 				int viewColumn = columnModel.getColumnIndexAtX(e.getX());
 				Rectangle headerRect = tableView.getTableHeader()
