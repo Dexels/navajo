@@ -43,15 +43,17 @@ public final class PropertyCheckBox extends JCheckBox implements
 		if (p == null) {
 			return;
 		}
-		if (myProperty.getValue() != null) {
-			setEnabled(p.isDirIn());
-			setSelected(myProperty.getValue().equals("true"));
-		} else {
+		
+		setEnabled(p.isDirIn());
+		
+		if (myProperty.getValue() == null) {
+			// If myProperty's value is null, features such as sorting will not 
+			// work. Therefore explicitly set to false
+			myProperty.setAnyValue(false);
 			setSelected(false);
-			// setEnabled(false);
+		} else {
+			setSelected(myProperty.getValue().equals("true"));
 		}
-		setSelected(myProperty.getValue() != null
-				&& myProperty.getValue().equals("true"));
 	}
 
 }
