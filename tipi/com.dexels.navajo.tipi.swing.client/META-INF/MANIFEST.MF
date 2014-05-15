@@ -2,16 +2,13 @@ Bundle-Name: Navajo Swing Tipi Client
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.client
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.2.15.qualifier
+Bundle-Version: 1.2.16
 Bundle-Activator: tipiswingclient.Version
-Export-Package: com.dexels.navajo.dnd,
- com.dexels.navajo.swingclient.ui,
- com.dexels.navajo.tipi.swingclient,
- com.dexels.navajo.tipi.swingclient.components,
- com.dexels.navajo.tipi.swingclient.components.calendar,
- com.dexels.navajo.tipi.swingclient.components.remotecombobox,
- com.dexels.navajo.tipi.swingclient.components.sort,
- tipiswingclient
+Export-Package: com.dexels.navajo.dnd,com.dexels.navajo.swingclient.ui
+ ,com.dexels.navajo.tipi.swingclient,com.dexels.navajo.tipi.swingclien
+ t.components,com.dexels.navajo.tipi.swingclient.components.calendar,c
+ om.dexels.navajo.tipi.swingclient.components.remotecombobox,com.dexel
+ s.navajo.tipi.swingclient.components.sort,tipiswingclient
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
