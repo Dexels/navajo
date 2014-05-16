@@ -266,7 +266,10 @@ public class PropertyCellEditor implements TableCellEditor,
 							} catch (NavajoException e1) {
 								e1.printStackTrace();
 							}
-
+							// Since a change in a checkbox can cause immediate
+							// changes in sorting, stopCellEditing mode to allow
+							// proper redrawing of this cell
+							stopCellEditing();
 						}
 					});
 				}
