@@ -75,8 +75,7 @@ public class MoneyField extends AbstractPropertyField implements
 			super.setForeground(value.doubleValue() < 0 ? Color.RED
 					: Color.BLACK);
 		} else {
-			// Has no effect, look and feel overrides this to GRAY (both substance and metal do this!!)
-			super.setForeground(value.doubleValue() < 0 ? Color.PINK.darker()
+			super.setDisabledTextColor(value.doubleValue() < 0 ? Color.RED.darker()
 					: Color.GRAY);
 		}
 
