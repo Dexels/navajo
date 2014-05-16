@@ -823,9 +823,11 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 	}
 
 	private void scrollToSelectedRow() {
-		int sel = getSelectedRow();
-		messageTable.getSelectionModel().setSelectionInterval(sel, sel);
-		messageTable.scrollRectToVisible(new Rectangle(messageTable.getCellRect(sel, 0, true)));
+		if (useScroll) {
+			int sel = getSelectedRow();
+			messageTable.getSelectionModel().setSelectionInterval(sel, sel);
+			messageTable.scrollRectToVisible(new Rectangle(messageTable.getCellRect(sel, 0, true)));
+		}
 	}
 
 	final void messageTable_valueChanged(ListSelectionEvent e) {
