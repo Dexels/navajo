@@ -501,10 +501,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 		cleanupBinaryStreams();
 
-		if (ownConnection && GrusProviderFactory.getInstance()!=null && gc!=null) {
-			GrusProviderFactory.getInstance().release(gc);
-			return;
-		} 
+		
 		
 		if (transactionContext == -1) {
 
@@ -537,6 +534,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					if(multiTenantGrusConnection!=null) {
 						GrusProviderFactory.getInstance().release(multiTenantGrusConnection);
 						multiTenantGrusConnection = null;
+						// multiTenantGrusConnection == gc
+						gc = null;
 					}
 
 				}
@@ -559,6 +558,10 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				}
 				
 			}
+		}
+		
+		if (ownConnection && GrusProviderFactory.getInstance()!=null && gc!=null) {
+			GrusProviderFactory.getInstance().release(gc);
 		}
 
 	}
@@ -881,7 +884,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				Access.writeToConsole(myAccess, "in createConnection() for datasource " + datasource + " and username " + username + "\n");
 			}
 			if (GrusProviderFactory.getInstance()!=null) {
-				// in multitenant
+				// in multitenant or OSGi
 				if(transactionContext!=-1) {
 					gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
 					this.ownConnection = false;
@@ -891,7 +894,6 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 						instance = myAccess.getInstance();
 					}
 					gc = GrusProviderFactory.getInstance().requestConnection(instance, datasource,alternativeUsername);
-					setTransactionContext((int) gc.getId());
 					this.ownConnection = true;
 				}
 				multiTenantGrusConnection = gc;
