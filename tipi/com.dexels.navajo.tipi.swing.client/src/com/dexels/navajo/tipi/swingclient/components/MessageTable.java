@@ -2121,7 +2121,12 @@ public class MessageTable extends JTable implements CellEditorListener,
 							row += 1;
 						}
 						if (row == rowCount) {
-							row = 0;
+							// Do not continue on first row, instead break.
+							// This prevents scrolling to top of table when we tab on the last
+							// row (to trigger a tipi onchange event) and no other
+							// remaining editable cells are left
+							//row = row;
+							break;
 						}
 						// Back to where we started, get out.
 						if (row == table.getSelectedRow()
