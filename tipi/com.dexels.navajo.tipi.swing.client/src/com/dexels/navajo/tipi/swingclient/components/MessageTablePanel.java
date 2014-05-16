@@ -202,7 +202,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 
 	public void firePopupEvent(MouseEvent e) {
 		logger.info("Popupevent fired!!!!");
-
+		stopCellEditing();
 		final int col = messageTable.getColumnModel().getColumnIndexAtX(
 				e.getX());
 		if (messageTable.isCellEditable(0, col)) {
@@ -407,85 +407,48 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 	}
 
 	private final void invertSelection(int column) {
-		List<Message> selected = getSelectedMessages();
-		if (selected != null && selected.size() > 0) {
-			for (int i = 0; i < selected.size(); i++) {
-				Object o = messageTable.getValueAt(i, column);
-				Property q = (Property) o;
-				Message m = selected.get(i);
-				Property p = m.getProperty(q.getName());
-				boolean value = ((Boolean) p.getTypedValue()).booleanValue();
-				p.setValue(!value);
-				try {
-					messageTable.fireChangeEvents(p, !value, value);
-					p.getParentMessage().refreshExpression();
-				} catch (NavajoException e) {
-					logger.error("Error: ",e);
-				} catch (ExpressionChangedException e) {
-				}
-			}
-		} else {
-			final int rowCount = getRowCount();
-			for (int i = 0; i < rowCount; i++) {
-				Object o = messageTable.getValueAt(i, column);
-				Property p = (Property) o;
-				boolean value = ((Boolean) p.getTypedValue()).booleanValue();
-				p.setValue(!value);
-				try {
-					messageTable.fireChangeEvents(p, !value, value);
-					p.getParentMessage().refreshExpression();
-				} catch (NavajoException e) {
-					logger.error("Error: ",e);
-				} catch (ExpressionChangedException e) {
-				}
+		ArrayList<Message> messages = getMessage().getAllMessages();
+		for (int i = 0; i < getRowCount(); i++) {
+			Object o = messageTable.getValueAt(i, column);
+			Property p = messages.get(i).getProperty(((Property) o).getName());
+			boolean oldValue = ((Boolean) p.getTypedValue()).booleanValue();
+			p.setValue(!oldValue);
+			messageTable.fireChangeEvents(p, oldValue, !oldValue);
+
+			try {
+				p.getParentMessage().refreshExpression();
+			} catch (NavajoException e) {
+				logger.error("Error: ", e);
+			} catch (ExpressionChangedException e) {
 			}
 		}
+
 		fireDataChanged();
 		fireHeaderMenuEvent();
 		doSort(getSortedColumn(), getSortingDirection());
 	}
 
 	private final void setSelectAll(int column, boolean value) {
-		ArrayList<Message> selected = getSelectedMessages();
-		if (selected != null && selected.size() > 0) {
-			for (int i = 0; i < selected.size(); i++) {
-				Object o = messageTable.getValueAt(i, column);
-				Property q = (Property) o;
-				Message m = selected.get(i);
-				Property p = m.getProperty(q.getName());
-				if (((Boolean) p.getTypedValue()).booleanValue() != value) {
-					try {
-						Object oldValue = p.getTypedValue();
-						p.setValue(value);
-						messageTable.fireChangeEvents(p, oldValue, value);
-						m.refreshExpression();
-					} catch (NavajoException e) {
-						logger.error("Error: ",e);
-					} catch (ExpressionChangedException e) {
-					}
-				}
-			}
-		} else {
 
-			selected = getMessage().getAllMessages();
-			final int rowCount = getRowCount();
-			for (int i = 0; i < rowCount; i++) {
-				Object o = messageTable.getValueAt(i, column);
-				Message m = selected.get(i);
-				Property p = m.getProperty(((Property) o).getName());
-				if (((Boolean) p.getTypedValue()).booleanValue() != value) {
-					try {
-						Object oldValue = p.getTypedValue();
-						p.setValue(value);
-						messageTable.fireChangeEvents(p, oldValue, value);
-						p.getParentMessage().refreshExpression();
-					} catch (NavajoException e) {
-						logger.error("Error: ",e);
-					} catch (ExpressionChangedException e) {
-					}
+		ArrayList<Message> selected = getMessage().getAllMessages();
+		final int rowCount = getRowCount();
+		for (int i = 0; i < rowCount; i++) {
+			Object o = messageTable.getValueAt(i, column);
+			Message m = selected.get(i);
+			Property p = m.getProperty(((Property) o).getName());
+			if (((Boolean) p.getTypedValue()).booleanValue() != value) {
+				try {
+					Object oldValue = p.getTypedValue();
+					p.setValue(value);
+					messageTable.fireChangeEvents(p, oldValue, value);
+					p.getParentMessage().refreshExpression();
+				} catch (NavajoException e) {
+					logger.error("Error: ", e);
+				} catch (ExpressionChangedException e) {
 				}
 			}
 		}
+
 		fireDataChanged();
 		fireHeaderMenuEvent();
 		doSort(getSortedColumn(), getSortingDirection());
