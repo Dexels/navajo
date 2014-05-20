@@ -16,8 +16,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,7 +80,11 @@ import novaworx.textpane.SyntaxGutterBase;
 import org.bushe.swing.action.ActionList;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.ActionUIFactory;
-import org.w3c.tidy.Tidy;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.select.Elements;
 
 /**
  *
@@ -108,9 +110,9 @@ public class HTMLEditorPane extends JPanel
     //private JMenuBar menuBar;
     protected JToolBar formatToolBar;
 
-    protected JMenu editMenu;
-    protected JMenu formatMenu;
-    protected JMenu insertMenu;
+    //protected JMenu editMenu;
+    //protected JMenu formatMenu;
+    //protected JMenu insertMenu;
 
     protected JPopupMenu wysPopupMenu, srcPopupMenu;
     
@@ -194,142 +196,110 @@ public class HTMLEditorPane extends JPanel
     
     public JMenu getEditMenu()
     {
-        return editMenu;
+        return null;
     }
 
     public JMenu getFormatMenu()
     {
-        return formatMenu;
+        return null;
     }
 
     public JMenu getInsertMenu()
     {
-        return insertMenu;
+        return null;
     }
 
     
-    private void createEditorActions()
-    {        
-        actionList = new ActionList("editor-actions");
-        
-        ActionList paraActions = new ActionList("paraActions");
-        ActionList fontSizeActions = new ActionList("fontSizeActions");
-        ActionList editActions = HTMLEditorActionFactory.createEditActionList();
-        Action objectPropertiesAction = new HTMLElementPropertiesAction();
-        
-        //create editor popupmenus
-        wysPopupMenu = ActionUIFactory.getInstance().createPopupMenu(editActions);
-        wysPopupMenu.addSeparator();
-        wysPopupMenu.add(objectPropertiesAction);
-        srcPopupMenu = ActionUIFactory.getInstance().createPopupMenu(editActions);               
-                
-        // create file menu
-        JMenu fileMenu = new JMenu(i18n.str("file"));        
-        
-        // create edit menu   
-        
-        ActionList lst = new ActionList("edits");             
-        
-        Action act = new ChangeTabAction(0);        
-        lst.add(act);
-        act = new ChangeTabAction(1);        
-        lst.add(act);
-        lst.add(null);//separator        
-        lst.addAll(editActions);
-        lst.add(null);
-        lst.add(new FindReplaceAction(false));
-        actionList.addAll(lst);
-        editMenu = ActionUIFactory.getInstance().createMenu(lst);
-        editMenu.setText(i18n.str("edit"));        
+	private void createEditorActions() {
+		actionList = new ActionList("editor-actions");
 
-        
-        //create format menu
-        formatMenu = new JMenu(i18n.str("format"));      
-        
-        lst = HTMLEditorActionFactory.createFontSizeActionList();//HTMLEditorActionFactory.createInlineActionList();
-        actionList.addAll(lst);        
-        formatMenu.add(createMenu(lst, i18n.str("size")));
-        fontSizeActions.addAll(lst);
-        
-        lst = HTMLEditorActionFactory.createInlineActionList();
-        actionList.addAll(lst);
-        formatMenu.add(createMenu(lst, i18n.str("style")));
-        
-        act = new HTMLFontColorAction();
-        actionList.add(act);
-        formatMenu.add(act);
-        
-        act = new HTMLFontAction();
-        actionList.add(act);
-        formatMenu.add(act);
-        
-        act = new ClearStylesAction();
-        actionList.add(act);
-        formatMenu.add(act);
-        formatMenu.addSeparator();
-        
-        lst = HTMLEditorActionFactory.createBlockElementActionList();
-        actionList.addAll(lst);
-        formatMenu.add(createMenu(lst, i18n.str("paragraph")));
-        paraActions.addAll(lst);
-        
-        lst = HTMLEditorActionFactory.createListElementActionList();
-        actionList.addAll(lst);
-        formatMenu.add(createMenu(lst, i18n.str("list")));
-        formatMenu.addSeparator();
-        //paraActions.addAll(lst);
-        
-        lst = HTMLEditorActionFactory.createAlignActionList();
-        actionList.addAll(lst);        
-        formatMenu.add(createMenu(lst, i18n.str("align")));
-                
-        JMenu tableMenu = new JMenu(i18n.str("table"));
-        lst = HTMLEditorActionFactory.createInsertTableElementActionList();
-        actionList.addAll(lst);
-        tableMenu.add(createMenu(lst, i18n.str("insert")));
-        
-        lst = HTMLEditorActionFactory.createDeleteTableElementActionList();
-        actionList.addAll(lst);
-        tableMenu.add(createMenu(lst, i18n.str("delete")));
-        formatMenu.add(tableMenu);
-        formatMenu.addSeparator();
-                
-        actionList.add(objectPropertiesAction);
-        formatMenu.add(objectPropertiesAction);
-                
-        
-        
-        //create insert menu
-        insertMenu = new JMenu(i18n.str("insert"));
-        act = new HTMLLinkAction();
-        actionList.add(act);
-        insertMenu.add(act);
-        
-        act = new HTMLImageAction();
-        actionList.add(act);
-        insertMenu.add(act);
-        
-        act = new HTMLTableAction();
-        actionList.add(act);
-        insertMenu.add(act);
-        insertMenu.addSeparator();
-        
-        act = new HTMLLineBreakAction();
-        actionList.add(act);
-        insertMenu.add(act);
-        
-        act = new HTMLHorizontalRuleAction();
-        actionList.add(act);
-        insertMenu.add(act);
-        
-        act = new SpecialCharAction();
-        actionList.add(act);
-        insertMenu.add(act);
-        
-       
-        createFormatToolBar(paraActions, fontSizeActions);
-    }
-    
+		ActionList paraActions = new ActionList("paraActions");
+		ActionList fontSizeActions = new ActionList("fontSizeActions");
+		ActionList editActions = HTMLEditorActionFactory.createEditActionList();
+		Action objectPropertiesAction = new HTMLElementPropertiesAction();
+
+		// create editor popupmenus
+		wysPopupMenu = ActionUIFactory.getInstance().createPopupMenu(editActions);
+		wysPopupMenu.addSeparator();
+		wysPopupMenu.add(objectPropertiesAction);
+		srcPopupMenu = ActionUIFactory.getInstance().createPopupMenu(editActions);
+
+		// create edit menu
+
+		ActionList lst = new ActionList("edits");
+
+		Action act = new ChangeTabAction(0);
+		lst.add(act);
+		act = new ChangeTabAction(1);
+		lst.add(act);
+		lst.add(null);// separator
+		lst.addAll(editActions);
+		lst.add(null);
+		lst.add(new FindReplaceAction(false));
+		actionList.addAll(lst);
+
+		// create format menu
+
+		lst = HTMLEditorActionFactory.createFontSizeActionList();// HTMLEditorActionFactory.createInlineActionList();
+		actionList.addAll(lst);
+		fontSizeActions.addAll(lst);
+
+		lst = HTMLEditorActionFactory.createInlineActionList();
+		actionList.addAll(lst);
+
+		act = new HTMLFontColorAction();
+		actionList.add(act);
+
+		act = new HTMLFontAction();
+		actionList.add(act);
+
+		act = new ClearStylesAction();
+		actionList.add(act);
+
+		lst = HTMLEditorActionFactory.createBlockElementActionList();
+		actionList.addAll(lst);
+		paraActions.addAll(lst);
+
+		lst = HTMLEditorActionFactory.createListElementActionList();
+		actionList.addAll(lst);
+		// paraActions.addAll(lst);
+
+		lst = HTMLEditorActionFactory.createAlignActionList();
+		actionList.addAll(lst);
+
+		JMenu tableMenu = new JMenu(i18n.str("table"));
+		lst = HTMLEditorActionFactory.createInsertTableElementActionList();
+		actionList.addAll(lst);
+		tableMenu.add(createMenu(lst, i18n.str("insert")));
+
+		lst = HTMLEditorActionFactory.createDeleteTableElementActionList();
+		actionList.addAll(lst);
+		tableMenu.add(createMenu(lst, i18n.str("delete")));
+
+		actionList.add(objectPropertiesAction);
+
+		// create insert menu
+		act = new HTMLLinkAction();
+		actionList.add(act);
+
+		act = new HTMLImageAction();
+		actionList.add(act);
+
+		act = new HTMLTableAction();
+		actionList.add(act);
+
+		act = new HTMLLineBreakAction();
+		actionList.add(act);
+
+		act = new HTMLHorizontalRuleAction();
+		actionList.add(act);
+
+		act = new SpecialCharAction();
+		actionList.add(act);
+
+		createFormatToolBar(paraActions, fontSizeActions);
+	}
+
     private void createFormatToolBar(ActionList blockActs, ActionList fontSizeActs)
     {
         formatToolBar = new JToolBar();
@@ -551,7 +521,7 @@ public class HTMLEditorPane extends JPanel
        
         ed.setContentType("text/html"); 
         
-        insertHTML(ed, "<p></p>", 0);        
+        insertHTML(ed, "<div></div>", 0);        
                 
         ed.addCaretListener(caretHandler);
         ed.addFocusListener(focusHandler);
@@ -615,14 +585,12 @@ public class HTMLEditorPane extends JPanel
     {
     	String topText = removeInvalidTags(text);  
         
-        if(hasWysiwygEditorOpen())
-        {           
-                      
-            wysEditor.setText("");
-            insertHTML(wysEditor, topText, 0);            
-            CompoundUndoManager.discardAllEdits(wysEditor.getDocument());
-            
-        }
+		if (hasWysiwygEditorOpen()) {
+			wysEditor.setText("");
+			insertHTML(wysEditor, topText, 0);
+			CompoundUndoManager.discardAllEdits(wysEditor.getDocument());
+
+		}
         else 
         {
             {
@@ -634,17 +602,76 @@ public class HTMLEditorPane extends JPanel
         }
     }
     
-    // Added by Dexels
+	// Added by Dexels
 	public String getTidyText() {
-		HTMLUtils utils = new HTMLUtils();
-		// Clean the html - remove spaces and other stuff
-		String text = utils.cleanHTML(wysEditor.getText());
-		text = removeInvalidTags(text);
-		text = text.replace("\n", "");
-		if (!text.endsWith("&#160;")) {
-			text += "&#160;";
+		String sourceTxt = null;
+		if(hasWysiwygEditorOpen()) {
+			sourceTxt = wysEditor.getText();
+		} else {
+			sourceTxt = srcEditor.getText();
 		}
-		return text;
+		
+		
+		org.jsoup.nodes.Document doc = Jsoup.parse(sourceTxt);
+		// Set prettyPrint to false to prevent removal of users spaces inside tags
+		doc.outputSettings().prettyPrint(false);
+		
+		return bodyElementToString(doc.body());
+	}
+	
+	
+	private String bodyElementToString(Element bodyElement) {
+		String result = "";
+		boolean closeDiv = false;
+		for (Element child : bodyElement.children()) {
+			result += getStringFromNode(child, "");
+		}
+		
+		// If the body had no child elements, create a div around any possible
+		// text elements to prevent text not enclosed in a tag
+		if (result == "") {
+			result += "<div>";
+			closeDiv = true;
+		}
+		for (TextNode child : bodyElement.textNodes()) {
+			if (!child.getWholeText().trim().isEmpty()) {
+				result += child.outerHtml();
+			}
+		}
+		if (closeDiv) {
+			result += "</div>";
+		}
+		
+		// Add trailing nbsp to prevent bug in java HTMLEditor where the last element
+		// disappears when empty (such as tablecell) when reading HTML 
+		if (!(result.trim().endsWith("&nbsp;") || result.trim().endsWith("&#160;"))) {
+			result += "&nbsp;";
+		}
+		return result.replace("\n", "");
+	}
+	
+	/* 
+	 * Recursive method that prints a Element to a string. Leaves 
+	 * text inside tags intact
+	 */
+	private String getStringFromNode(Element node, String result) {
+		result += "<" + node.tagName();
+		for (Attribute attr : node.attributes()) {
+			result += " " + attr.toString() ;
+		}
+		result += ">";
+		for (Element child : node.children()) {
+			result += getStringFromNode(child, "");
+		}
+		
+		for (TextNode child : node.textNodes()) {
+			if (!child.getWholeText().trim().isEmpty()) {
+				result += child.outerHtml();
+			}
+		}
+
+		result += "</" + node.tagName() + ">";
+		return result;
 	}
 
 	public String getText(){

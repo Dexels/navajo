@@ -3,8 +3,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="lib/jtidy-8.0.jar"/>
 	<classpathentry kind="lib" path="lib/novaworx-syntax-0.0.7.jar"/>
 	<classpathentry kind="lib" path="lib/swingactionmanager-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jsoup-1.7.3.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

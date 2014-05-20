@@ -5,12 +5,7 @@
 package net.atlanticbb.tantlinger.ui.text;
 
 import java.awt.Color;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,10 +37,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Document;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.tidy.Tidy;
 
 
 /**
@@ -58,23 +52,7 @@ import org.w3c.tidy.Tidy;
 public class HTMLUtils
 {
     
-    private static final Tidy tidy = new Tidy();
-    static
-    {
-        tidy.setQuiet(true);
-        tidy.setShowWarnings(false);
-        tidy.setForceOutput(true);
-        tidy.setFixComments(true);
-        tidy.setFixUri(true);
-        tidy.setDropEmptyParas(true);
-        tidy.setLiteralAttribs(true);
-        tidy.setTrimEmptyElements(true);
-        tidy.setXHTML(true);
-        tidy.setDocType("omit");
-        //tidy.setInputEncoding("UTF-16");
-        //tidy.setOutputEncoding("UTF-16");
-    }
-    
+	
             
     /**
      * Tests if an element is an implied paragraph (p-implied)
@@ -378,74 +356,40 @@ public class HTMLUtils
     }
     
     
-	// Added by Dexels
-	public String cleanHTML(String topText) {
-		tidy.setOutputEncoding("UTF-8");
-		tidy.setInputEncoding("UTF-8");
-		tidy.setXHTML(false);
-
-		tidy.setTidyMark(false);
-		ByteArrayOutputStream bout = new ByteArrayOutputStream();
-		try {
-			ByteArrayInputStream bin = new ByteArrayInputStream(topText.getBytes("UTF-8"));
-
-			tidy.parse(bin, bout);
-
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return bout.toString();
-	}
-	
-    
-    /**
+	/**
      * Inserts an arbitrary chunk of HTML into the JEditorPane at the current
      * caret position.
      * 
      * @param rawHtml
      * @param editor
      */
-    public static void insertArbitraryHTML(String rawHtml, JEditorPane editor)
-    {
-        tidy.setOutputEncoding("UTF-8");
-        tidy.setInputEncoding("UTF-8");
-        
-        try
-        {
-            ByteArrayInputStream bin = new ByteArrayInputStream(rawHtml.getBytes("UTF-8"));       
-            Document doc = tidy.parseDOM(bin, null);
-            NodeList nodelist = doc.getElementsByTagName("body");
-            
-            if(nodelist != null)
-            {
-                Node body = nodelist.item(0);
-                NodeList bodyChildren = body.getChildNodes();
-                
-                //for(int i = bodyChildren.getLength() - 1; i >= 0; i--)
-                int len = bodyChildren.getLength();
-                for(int i = 0; i < len; i++)
-                {                
-                    String ml = xmlToString(bodyChildren.item(i));
-                    if(ml != null)
-                    {
-                        //System.out.println(ml);
-                        HTML.Tag tag = getStartTag(ml);
-                        if(tag == null)
-                        {
-                            tag = HTML.Tag.SPAN;
-                            ml = "<span>" + ml + "</span>";
-                        }
-                        insertHTML(ml, tag, editor);    
-                    }
-                }                               
-            }
-        }
-        catch (UnsupportedEncodingException e)
-        {            
-            e.printStackTrace();
-        }        
-    }
-            
+	public static void insertArbitraryHTML(String rawHtml, JEditorPane editor) {
+
+		// ByteArrayInputStream bin = new
+		// ByteArrayInputStream(rawHtml.getBytes("UTF-8"));
+		org.jsoup.nodes.Document doc = Jsoup.parse(rawHtml);
+		Elements nodelist = doc.getElementsByTag("body");
+
+		if (nodelist != null) {
+			org.jsoup.nodes.Element body = nodelist.first();
+			Elements bodyChildren = body.getAllElements();
+
+			for (org.jsoup.nodes.Element child : bodyChildren) {
+				String ml = child.toString();
+				if (ml != null) {
+					// System.out.println(ml);
+					HTML.Tag tag = getStartTag(ml);
+					if (tag == null) {
+						tag = HTML.Tag.SPAN;
+						ml = "<span>" + ml + "</span>";
+					}
+					insertHTML(ml, tag, editor);
+				}
+			}
+		}
+
+	}
+    
     private static String xmlToString(Node node)
     {
         try
@@ -1046,5 +990,7 @@ public class HTMLUtils
         int len;
         AttributeSet attrs;
     }
+
+
 
 }
