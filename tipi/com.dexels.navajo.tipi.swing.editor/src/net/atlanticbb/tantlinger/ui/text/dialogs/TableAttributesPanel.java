@@ -21,7 +21,7 @@ public class TableAttributesPanel extends HTMLAttributeEditorPanel
      * 
      */
     private static final long serialVersionUID = 1L;
-    private final String ALIGNMENTS[] = {"left", "center", "right"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    private final String ALIGNMENTS[] = {i18n.str("left"), i18n.str("center"), i18n.str("right")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     private final String MEASUREMENTS[] = {i18n.str("percent"), i18n.str("pixels")}; //$NON-NLS-1$ //$NON-NLS-2$
     
     private JCheckBox widthCB = null;

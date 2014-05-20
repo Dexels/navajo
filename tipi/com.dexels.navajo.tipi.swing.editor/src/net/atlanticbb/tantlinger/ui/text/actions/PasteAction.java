@@ -8,21 +8,27 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.StringReader;
 
 import javax.swing.Action;
 import javax.swing.JEditorPane;
 import javax.swing.KeyStroke;
+import javax.swing.text.Document;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 import net.atlanticbb.tantlinger.ui.UIUtils;
 import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
+import net.atlanticbb.tantlinger.ui.text.HTMLUtils;
 
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.ShouldBeEnabledDelegate;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
 
 public class PasteAction extends HTMLTextEditAction
@@ -79,22 +85,44 @@ public class PasteAction extends HTMLTextEditAction
         HTMLEditorKit ekit = (HTMLEditorKit)editor.getEditorKit();
         HTMLDocument document = (HTMLDocument)editor.getDocument();        
         Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
+
         
-        try 
-        {
+        try {
             CompoundUndoManager.beginCompoundEdit(document);
             Transferable content = clip.getContents(this);                           
-            String txt = content.getTransferData(
-                new DataFlavor(String.class, "String")).toString();
+            String htmlcontent= null;
+            String txt = null;
+			try {
+				htmlcontent = content.getTransferData(
+						new DataFlavor("text/html;class=java.lang.String;charset=UTF-8")).toString();
+			} catch (UnsupportedFlavorException ex) {
+				txt = content.getTransferData(new DataFlavor(String.class, "String")).toString();
+			}
         
-            document.replace(editor.getSelectionStart(),
+			if (htmlcontent != null) {
+				Whitelist list =  Whitelist.basic();
+				list.addTags("table", "tr", "td" , "h1", "h2", "h3", "h4", "h5", "h6");
+				list.addAttributes("table", "width", "border", "align", "cellspacing", "bgcolor", "cellpadding");
+				String clean = Jsoup.clean(htmlcontent, list);
+				StringReader reader = new StringReader(HTMLUtils.jEditorPaneizeHTML(clean));
+	            // remove existing selection if applicable
+				if (editor.getSelectionEnd() > editor.getSelectionStart()) {
+					document.replace(editor.getSelectionStart(),
+							editor.getSelectionEnd() - editor.getSelectionStart(), "",
+							ekit.getInputAttributes());
+				}
+				ekit.read(reader, document, editor.getSelectionStart());
+				
+	            
+			} else {
+				document.replace(editor.getSelectionStart(),
                 editor.getSelectionEnd() - editor.getSelectionStart(),
                 txt, ekit.getInputAttributes());
-            
+			}
         } 
         catch(Exception ex) 
         {
-            //ex.printStackTrace();
+            ex.printStackTrace();
         }
         finally
         {

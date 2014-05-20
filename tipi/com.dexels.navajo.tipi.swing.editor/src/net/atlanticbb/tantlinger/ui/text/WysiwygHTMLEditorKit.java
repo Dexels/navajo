@@ -44,7 +44,6 @@ import javax.swing.text.html.ObjectView;
 
 import net.atlanticbb.tantlinger.ui.UIUtils;
 import net.atlanticbb.tantlinger.ui.text.actions.DecoratedTextAction;
-//import net.atlanticbb.tantlinger.ui.text.actions.EnterKeyAction;
 import net.atlanticbb.tantlinger.ui.text.actions.EnterKeyAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLTextEditAction;
 import net.atlanticbb.tantlinger.ui.text.actions.RemoveAction;
@@ -100,10 +99,17 @@ public class WysiwygHTMLEditorKit extends HTMLEditorKit
         InputMap inputMap = ed.getInputMap(JComponent.WHEN_FOCUSED);
         ActionMap actionMap = ed.getActionMap();
         
-        Action delegate = actionMap.get("insert-break");        
+        Action delegate = actionMap.get("insert-break");
         Action action = new EnterKeyAction(delegate);
         actions.put("insert-break", action);
         actionMap.put("insert-break", action);
+        
+        // Shift enter action
+        
+        KeyStroke shiftEnter = KeyStroke.getKeyStroke("shift ENTER");
+        inputMap.put(shiftEnter, "insert-break-shift");
+        actions.put("insert-break-shift",action );
+        actionMap.put("insert-break-shift",action );
         
         delegate = actionMap.get("delete-previous");        
         action = new RemoveAction(RemoveAction.BACKSPACE, delegate);

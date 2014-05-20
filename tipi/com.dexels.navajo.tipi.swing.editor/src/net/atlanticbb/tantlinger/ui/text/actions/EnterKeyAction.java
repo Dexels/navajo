@@ -7,6 +7,7 @@ package net.atlanticbb.tantlinger.ui.text.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.StringWriter;
+import java.lang.annotation.ElementType;
 import java.util.Enumeration;
 
 import javax.swing.Action;
@@ -71,7 +72,8 @@ public class EnterKeyAction extends DecoratedTextAction
         HTML.Tag tag = HTML.getTag(elem.getName());
         HTML.Tag parentTag = HTML.getTag(parentElem.getName());
         int caret = editor.getCaretPosition();
-
+        boolean shiftPressed = ((e.getModifiers() & ActionEvent.SHIFT_MASK) == ActionEvent.SHIFT_MASK);
+        
         CompoundUndoManager.beginCompoundEdit(document);
         try
         {            
@@ -182,11 +184,16 @@ public class EnterKeyAction extends DecoratedTextAction
                     //System.out.println("elem: " + elem.getName());
                     //System.out.println("pelem: " + parentElem.getName());
                                         
-                    if(parentTag.isPreformatted())
-                    {
-                        insertImpliedBR(e);
-                    }
-                    else if(parentTag.equals(HTML.Tag.TD))
+					if (parentTag.isPreformatted()) {
+						insertImpliedBR(e);
+					}
+						
+					if (shiftPressed) {
+						insertBR(e, elem);
+						 editor.setCaretPosition(caret + 1);
+					}
+
+					else if(parentTag.equals(HTML.Tag.TD))
                     {
                         encloseInDIV(parentElem, document);
                         editor.setCaretPosition(caret + 1);
@@ -225,7 +232,12 @@ public class EnterKeyAction extends DecoratedTextAction
                 else 
                 {
                     //System.out.println("not implied insertparaafter1 " + elem.getName());
-                    insertParagraphAfter(elem, editor);
+                	if (shiftPressed) { 
+                		insertBR(e, elem);
+                		
+                	} else {
+                		insertParagraphAfter(elem, editor);
+                	}
                 }
             }
         }
@@ -259,6 +271,12 @@ public class EnterKeyAction extends DecoratedTextAction
                 "<br>", HTML.Tag.IMPLIED, HTML.Tag.BR);
         hta.actionPerformed(e);
     }
+
+	private void insertBR(ActionEvent e, Element element) {
+		HTMLEditorKit.InsertHTMLTextAction hta = new HTMLEditorKit.InsertHTMLTextAction("insertBR",
+				"<br>", HTML.getTag(element.getName()), HTML.Tag.BR);
+		hta.actionPerformed(e);
+	}
     
     private void encloseInDIV(Element elem, HTMLDocument document) 
     throws Exception
@@ -327,7 +345,7 @@ public class EnterKeyAction extends DecoratedTextAction
             chAttribs = new SimpleAttributeSet(document.getCharacterElement(cr - 1).getAttributes());
         else
             chAttribs = new SimpleAttributeSet(document.getCharacterElement(cr).getAttributes());
-
+      
         document.setOuterHTML(elem, html);
         
         cr++;

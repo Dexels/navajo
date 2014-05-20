@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.util.Locale;
 
 import javax.swing.Action;
 import javax.swing.JColorChooser;
@@ -79,8 +80,9 @@ public class HTMLFontColorAction extends HTMLTextEditAction
         Window win = SwingUtilities.getWindowAncestor(c);
         if(win != null)
             c = win;
-        Color color = 
-			JColorChooser.showDialog(c, "Color", Color.black);	 //$NON-NLS-1$
+        //JColorChooser colorChooser = new JColorChooser();
+        //colorChooser.setLocale(Locale.getDefault());
+        Color color = JColorChooser.showDialog(c, i18n.str("color"), Color.black);	 //$NON-NLS-1$
 		return color;
     }
 

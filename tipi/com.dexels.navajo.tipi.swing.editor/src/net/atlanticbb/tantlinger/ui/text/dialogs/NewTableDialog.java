@@ -67,7 +67,7 @@ public class NewTableDialog extends OptionDialog
         mainPanel.add(propsPanel, BorderLayout.CENTER);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         setContentPane(mainPanel);
-        setSize(new Dimension(330, 380));
+        setSize(new Dimension(450, 380));
         setResizable(false);        
     }
     
@@ -96,9 +96,7 @@ public class NewTableDialog extends OptionDialog
             }
             html += "</tr>\n"; //$NON-NLS-1$
         }
-        // Add space after table to prevent losing table cells..
-        // Dexels
-        return html + "</table> &#160;"; //$NON-NLS-1$
+        return html + "</table>"; //$NON-NLS-1$
     }
     
     private class LayoutPanel extends JPanel
@@ -118,7 +116,7 @@ public class NewTableDialog extends OptionDialog
          */
         public LayoutPanel()
         {
-            this(1, 1);
+            this(2, 2);
         }
         
         public LayoutPanel(int r, int c)
