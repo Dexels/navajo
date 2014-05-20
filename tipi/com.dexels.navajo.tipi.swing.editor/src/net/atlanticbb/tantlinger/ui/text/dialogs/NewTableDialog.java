@@ -96,7 +96,8 @@ public class NewTableDialog extends OptionDialog
             }
             html += "</tr>\n"; //$NON-NLS-1$
         }
-        return html + "</table>"; //$NON-NLS-1$
+        // Add trailing empty div - to prevent bug where no more editing is possible after table
+        return html + "</table> <div> </div>"; //$NON-NLS-1$
     }
     
     private class LayoutPanel extends JPanel

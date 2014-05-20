@@ -14,6 +14,9 @@ import javax.swing.text.Element;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
 import net.atlanticbb.tantlinger.ui.text.HTMLUtils;
 
@@ -65,19 +68,31 @@ public class RemoveAction extends DecoratedTextAction
         int caretPos = editor.getCaretPosition();
         int start = elem.getStartOffset();
         int end = elem.getEndOffset();        
-        boolean noSelection = editor.getSelectedText() == null;                
+        boolean noSelection = editor.getSelectedText() == null;
+           
+        //Document parsed =  Jsoup.parseBodyFragment(editor.getText());
         
 		Element tableElement = HTMLUtils.getParent(elem, HTML.Tag.TABLE);
-		if (tableElement != null && noSelection) {
-			// We are in a table, with no selected text. Thus in case of a 
+		
+        
+		if (tableElement != null && noSelection && type == DELETE ) {
+			// We are in a table, with no selected text. Thus in case of a
 			// RemoveAction, remove the whole table.
+			String content = null;
 			try {
-				HTMLUtils.removeElement(tableElement);
-
-			} catch (Exception e1) {
-				e1.printStackTrace();
+				content = document.getText(tableElement.getStartOffset(),
+						(tableElement.getEndOffset() - tableElement.getStartOffset()));
+			} catch (BadLocationException e2) {
+				content = "";
 			}
-			return;
+			if (content.trim().isEmpty()) {
+				try {
+					HTMLUtils.removeElement(tableElement);
+					return;
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
         
         if(type == DELETE && (end - 1) == caretPos && 

@@ -565,7 +565,10 @@ public class HTMLEditorPane extends JPanel
         }
         else 
         {           
-            String topText = removeInvalidTags(wysEditor.getText());            
+            String topText = removeInvalidTags(wysEditor.getText());       
+            if (!(topText.trim().endsWith("&nbsp;") || topText.trim().endsWith("&#160;"))) {
+            	topText += "&nbsp;";
+    		}
             if(isWysTextChanged || srcEditor.getText().equals(""))
             {
                 String t = deIndent(removeInvalidTags(topText));

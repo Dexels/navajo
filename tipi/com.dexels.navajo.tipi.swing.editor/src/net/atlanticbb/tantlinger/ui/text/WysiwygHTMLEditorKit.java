@@ -105,11 +105,22 @@ public class WysiwygHTMLEditorKit extends HTMLEditorKit
         actionMap.put("insert-break", action);
         
         // Shift enter action
-        
         KeyStroke shiftEnter = KeyStroke.getKeyStroke("shift ENTER");
         inputMap.put(shiftEnter, "insert-break-shift");
         actions.put("insert-break-shift",action );
         actionMap.put("insert-break-shift",action );
+        
+        KeyStroke undoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK);
+        inputMap.put(undoKeystroke, "undo");
+        action = CompoundUndoManager.UNDO;
+        actions.put("undo",action );
+        actionMap.put("undo",action );
+
+        KeyStroke redoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_MASK);
+        inputMap.put(redoKeystroke, "redo");
+        action = CompoundUndoManager.REDO;
+        actions.put("redo",action );
+        actionMap.put("redo",action );
         
         delegate = actionMap.get("delete-previous");        
         action = new RemoveAction(RemoveAction.BACKSPACE, delegate);
