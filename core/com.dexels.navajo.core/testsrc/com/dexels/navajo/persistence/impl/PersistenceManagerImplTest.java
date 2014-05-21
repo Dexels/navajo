@@ -60,6 +60,7 @@ public class PersistenceManagerImplTest {
 		injectedDispatcher.setUseAuthorisation(false);
 		si = new SharedMemoryStore();
 		pi = new PersistenceManagerImpl();
+		pi.init();
 		navajoConfig.setMyPersistenceManager(pi);
 		pi.setSharedStore(si);
 	}
