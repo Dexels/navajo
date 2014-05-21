@@ -48,8 +48,6 @@
 			</div>
 		</c:if>
 			
-	<h3>Setup client</h3>
-		<c:import url="/tml/manager/clientform.jsp" />
 
 		<h3>Folders and Scripts</h3>
 		<div class="info"><c:import url="/tml/manager/scripttree.jsp" />
