@@ -34,6 +34,7 @@ Import-Package: javax.servlet;version="3.0.0",
  org.apache.oltu.oauth2.rs.response;version="0.31.0",
  org.junit;version="4.10.0",
  org.restlet.resource,
- org.slf4j;version="1.7.5"
+ org.slf4j;version="1.7.5",
+ org.codehaus.jettison.json
 Service-Component: OSGI-INF/navajo.oauth.authorization.xml,
  OSGI-INF/navajo.oauth.token.xml

@@ -223,7 +223,8 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	private String tenantFromScriptPath(String scriptPath) {
 		int scoreIndex = scriptPath.lastIndexOf("_");
-		if(scoreIndex>=0) {
+		int slashIndex = scriptPath.indexOf("/");
+		if(scoreIndex>=0 && slashIndex < scoreIndex) {
 			return scriptPath.substring(scoreIndex+1, scriptPath.length());
 		} else {
 			return null;
@@ -231,7 +232,8 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 	private String rpcNameFromScriptPath(String scriptPath) {
 		int scoreIndex = scriptPath.lastIndexOf("_");
-		if(scoreIndex>=0) {
+		int slashIndex = scriptPath.indexOf("/");
+		if(scoreIndex>=0 && slashIndex < scoreIndex) {
 			return scriptPath.substring(0,scoreIndex);
 		} else {
 			return scriptPath;

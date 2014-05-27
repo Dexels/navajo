@@ -83,7 +83,6 @@ public class SerializationUtil {
 	
 	public static void removeAllNavajos() {
 		logger.warn("In removeAllNavajos()");
-		Thread.dumpStack();
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		ssi.removeAll(SerializationUtil.SHAREDSTORE_PARENT);
 	}

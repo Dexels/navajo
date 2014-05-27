@@ -27,16 +27,19 @@ public class SimpleSharedStore implements SharedStoreInterface {
 
 	@Override
 	public void removeAll(String parent) {
+		throw new UnsupportedOperationException("Method not implemented in SimpleSharedStore");
 	}
 
 	@Override
 	public void store(String parent, String name, Serializable value,
 			boolean append, boolean requireLock) throws SharedStoreException {
+		throw new UnsupportedOperationException("Method not implemented in SimpleSharedStore");
 	}
 
 	@Override
 	public void storeText(String parent, String name, String value,
 			boolean append, boolean requireLock) throws SharedStoreException {
+		System.err.println("Storing to root: "+this.storeRoot.getAbsolutePath());
 	}
 
 	@Override

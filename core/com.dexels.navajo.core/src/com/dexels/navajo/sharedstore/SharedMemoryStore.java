@@ -242,7 +242,8 @@ public class SharedMemoryStore implements SharedStoreInterface {
 	}
 	@Override
 	public String[] getParentObjects(String parent) {
-		throw new RuntimeException("Not Implemented");
+		logger.warn("parent objects not implemented");
+		return new String[]{};
 	}
 
 	@Override

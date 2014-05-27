@@ -14,7 +14,9 @@ import java.io.Serializable;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +60,16 @@ public class SharedStoreInterfaceTest {
 	SharedStoreLock myssl;
 	int locks = 0;
 
+    @Rule
+    public TemporaryFolder folder= new TemporaryFolder();
+    
+//	@Before
+//	public void setUp() throws Exception {
+//		final File newFolder = folder.newFolder("simpleSharedStore");
+//		ssi = new SimpleSharedStore(newFolder.getAbsolutePath());
+//		SharedStoreFactory.setInstance(ssi);
+//	}	
+	
 	@Before
 	public void setUp() throws Exception {
 		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
@@ -180,7 +192,9 @@ public class SharedStoreInterfaceTest {
 					try {
 						si.store("myparent", "mystoredobject" + index,
 								objects[index], false, false);
-						locks++;
+						synchronized(SharedStoreInterfaceTest.this) {
+							locks++;
+						}
 					} catch (SharedStoreException e) {
 						logger.error("Error: ", e);
 					}
@@ -256,6 +270,7 @@ public class SharedStoreInterfaceTest {
 	@Test
 	public void testStoreText() throws Exception {
 		si.storeText("myparent", "mytextobject", "text", false, false);
+		System.err.println("SI: "+si);
 		BufferedReader r = new BufferedReader(new InputStreamReader(si.getStream("myparent", "mytextobject")));
 		String l = r.readLine();
 		r.close();

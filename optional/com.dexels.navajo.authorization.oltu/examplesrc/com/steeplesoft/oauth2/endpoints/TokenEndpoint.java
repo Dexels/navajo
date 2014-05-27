@@ -55,6 +55,8 @@ public class TokenEndpoint {
     
     public static final String INVALID_CLIENT_DESCRIPTION = "Client authentication failed (e.g., unknown client, no client authentication included, or unsupported authentication method).";
     
+    
+    
     @POST
     @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
