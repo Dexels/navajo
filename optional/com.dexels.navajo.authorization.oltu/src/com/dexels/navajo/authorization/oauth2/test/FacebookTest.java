@@ -60,7 +60,7 @@ public class FacebookTest {
 
             System.out.println(
                 "Access Token: " + oAuthResponse.getAccessToken() + ", Expires in: " + oAuthResponse
-                    .getExpiresIn());
+                    .getExpiresIn() +" - "+oAuthResponse.getRefreshToken());
         } catch (OAuthProblemException e) {
             System.out.println("OAuth error: " + e.getError());
             System.out.println("OAuth error description: " + e.getDescription());
