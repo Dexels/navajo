@@ -166,6 +166,26 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.println("  "+prefix+"Resource(\""+res+"\",resource); ");
 		w.println("}\n");
 	}
+	
+	private String tenantFromScriptPath(String scriptPath) {
+		int scoreIndex = scriptPath.lastIndexOf("_");
+		int slashIndex = scriptPath.indexOf("/");
+		if(scoreIndex>=0 && slashIndex < scoreIndex) {
+			return scriptPath.substring(scoreIndex+1, scriptPath.length());
+		} else {
+			return null;
+		}
+	}
+	private String rpcNameFromScriptPath(String scriptPath) {
+		int scoreIndex = scriptPath.lastIndexOf("_");
+		int slashIndex = scriptPath.indexOf("/");
+		if(scoreIndex>=0 && slashIndex < scoreIndex) {
+			return scriptPath.substring(0,scoreIndex);
+		} else {
+			return scriptPath;
+		}
+	}
+	
 
 	private void generateManifest(String description, String version, String packagePath, String script, Set<String> packages, String compileDate) throws IOException {
 		String symbolicName = "navajo.script."+description;
@@ -217,18 +237,22 @@ public class TslCompilerComponent implements ScriptCompiler {
 		} else {
 			javaPackagePath = packagePath.replaceAll("/", ".");
 		}
-		String symbolicName = null;
+//		String symbolicName = null;
 //		String tenant = null;
 		
-		symbolicName = fullName.replaceAll("/", ".");
+//		boolean hasTenantSpecificFile = navajoIOConfig.hasTenantScriptFile(script, tenant,scriptExtension);
+
+		String tenant = tenantFromScriptPath(fullName);
+		String symbolicName = rpcNameFromScriptPath(fullName).replaceAll("/", ".");
+//		symbolicName = fullName.replaceAll("/", ".");
 		boolean hasTenantSpecificFile = false;
-		String tenant = null;
-		if(symbolicName.indexOf("_")!=-1) {
-			final String[] split = symbolicName.split("_");
-			symbolicName = split[0];
-			tenant = split[1];
-			hasTenantSpecificFile = true;
-		}
+		hasTenantSpecificFile = tenant !=null;		
+//		if(symbolicName.indexOf("_")!=-1) {
+//			final String[] split = symbolicName.split("_");
+//			symbolicName = split[0];
+//			tenant = split[1];
+//			hasTenantSpecificFile = true;
+//		}
 
 		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
 		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
@@ -251,6 +275,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 			addProperty("service.ranking","Integer","1000", xe);
 		} else {
 			addProperty("service.ranking","Integer","0", xe);
+//			addProperty("navajo.tenant","String","*", xe);
 			
 		}
 //		for (Dependency dependency : dependencies) {
