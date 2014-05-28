@@ -169,7 +169,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	
 	private String tenantFromScriptPath(String scriptPath) {
 		int scoreIndex = scriptPath.lastIndexOf("_");
-		int slashIndex = scriptPath.indexOf("/");
+		int slashIndex = scriptPath.lastIndexOf("/");
 		if(scoreIndex>=0 && slashIndex < scoreIndex) {
 			return scriptPath.substring(scoreIndex+1, scriptPath.length());
 		} else {
@@ -178,7 +178,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	}
 	private String rpcNameFromScriptPath(String scriptPath) {
 		int scoreIndex = scriptPath.lastIndexOf("_");
-		int slashIndex = scriptPath.indexOf("/");
+		int slashIndex = scriptPath.lastIndexOf("/");
 		if(scoreIndex>=0 && slashIndex < scoreIndex) {
 			return scriptPath.substring(0,scoreIndex);
 		} else {
