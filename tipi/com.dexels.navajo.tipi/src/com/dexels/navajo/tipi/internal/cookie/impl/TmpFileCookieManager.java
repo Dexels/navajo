@@ -84,19 +84,23 @@ public class TmpFileCookieManager implements CookieManager {
 	 */
 	protected void loadCookieFromStream(InputStream fis) throws IOException {
 		BufferedReader fw = new BufferedReader(new InputStreamReader(fis));
-		String line = fw.readLine();
-		while (line != null) {
-			if (line.equals("")) {
-				line = fw.readLine();
-				continue;
+		try {
+			String line = fw.readLine();
+			while (line != null) {
+				if (line.equals("")) {
+					line = fw.readLine();
+					continue;
+				}
+				if (line.indexOf('|') != -1) {
+					StringTokenizer st = new StringTokenizer(line, "|");
+					String key = st.nextToken();
+					String value = st.nextToken();
+					cookieMap.put(key, value);
+					line = fw.readLine();
+				}
 			}
-			if (line.indexOf('|') != -1) {
-				StringTokenizer st = new StringTokenizer(line, "|");
-				String key = st.nextToken();
-				String value = st.nextToken();
-				cookieMap.put(key, value);
-				line = fw.readLine();
-			}
+		} catch (Throwable e) {
+			logger.warn("Error reading line from cookies. Ignoring line.");
 		}
 	}
 
