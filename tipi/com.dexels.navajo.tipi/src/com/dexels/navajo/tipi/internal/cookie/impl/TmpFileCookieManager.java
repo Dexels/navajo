@@ -84,9 +84,9 @@ public class TmpFileCookieManager implements CookieManager {
 	 */
 	protected void loadCookieFromStream(InputStream fis) throws IOException {
 		BufferedReader fw = new BufferedReader(new InputStreamReader(fis));
-		String line = fw.readLine();
-		while (line != null) {
-			try {
+		try {
+			String line = fw.readLine();
+			while (line != null) {
 				if (line.equals("")) {
 					line = fw.readLine();
 					continue;
@@ -98,9 +98,9 @@ public class TmpFileCookieManager implements CookieManager {
 					cookieMap.put(key, value);
 					line = fw.readLine();
 				}
-			} catch (Throwable e) {
-				logger.warn("Error reading line from cookies. Ignoring line.");
 			}
+		} catch (Throwable e) {
+			logger.warn("Error reading line from cookies. Ignoring line.");
 		}
 	}
 
