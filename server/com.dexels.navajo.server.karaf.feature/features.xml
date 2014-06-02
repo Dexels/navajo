@@ -202,7 +202,7 @@
 
 	<feature resolver="(obr)" name='navajo.enterprise.mongodb' version='3.0.4' start-level='81' >
 		<feature version="[3.0.14,4)">navajo.server.osgi</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo/3.0.8</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo/3.0.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo.navajostore/3.0.0</bundle>
 	</feature>
 	
@@ -272,8 +272,8 @@
 	</feature>
 	
 	<feature resolver="(obr)" name='navajo.enterprise.monitor' version='1.0.0' start-level='81' >
-	    <feature version="[3.0.3,4)">navajo.enterprise.mongodb</feature>
-	    <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/1.0.3</bundle>
+	    <feature version="[3.0.4,4)">navajo.enterprise.mongodb</feature>
+	    <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/1.0.5</bundle>
 	</feature>
 	
 	<feature resolver="(obr)" name='navajo.enterprise.monitor.accessclone' version='1.0.0' start-level='81' >
