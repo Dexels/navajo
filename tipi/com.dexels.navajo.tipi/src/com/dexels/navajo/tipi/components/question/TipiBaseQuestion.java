@@ -178,9 +178,9 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 					tc.setValue("messagePath", current.getFullMessageName());
 					tc.setValue("questionDefinitionName",
 							questionDefinitionName);
-					tc.loadData(n, myContext);
 					tc.setQuestionGroup(questionGroup);
 					tc.setQuestionList(myQuestionList);
+					tc.loadData(n, myContext);
 					// mySubQuestions.add(tc);
 				} catch (TipiException ex) {
 					logger.error("Error: ",ex);
