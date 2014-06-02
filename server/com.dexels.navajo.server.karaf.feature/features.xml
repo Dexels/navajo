@@ -77,7 +77,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>	
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.13' start-level='81' >
+	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.14' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/2.0.2</bundle>
@@ -88,7 +88,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource/2.0.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager/2.0.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.oracle/2.0.4</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.mongodb/2.0.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.mongodb/2.0.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.mysql/2.0.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.h2/1.1.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tunnel/2.0.2</bundle>
@@ -200,8 +200,8 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.0</bundle>
     </feature>
 
-	<feature resolver="(obr)" name='navajo.enterprise.mongodb' version='3.0.3' start-level='81' >
-		<feature version="[3.0.0,4)">navajo.server.osgi</feature>
+	<feature resolver="(obr)" name='navajo.enterprise.mongodb' version='3.0.4' start-level='81' >
+		<feature version="[3.0.14,4)">navajo.server.osgi</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo/3.0.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo.navajostore/3.0.0</bundle>
 	</feature>
