@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
@@ -35,13 +34,13 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	private final static Logger logger = LoggerFactory
 			.getLogger(ServletArticleRuntimeImpl.class);
 	
-	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, File article,String articleName, Map<String, String[]> parameterMap,String instance, Map<String, String> suppliedScopes) throws IOException {
+	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, String clientId, String username, File article,String articleName, Map<String, String[]> parameterMap,String instance, Map<String, String> suppliedScopes) throws IOException {
 		super(articleName,article,suppliedScopes,instance);
 		this.request = req;
 		this.parameterMap = parameterMap;
 		this.response = resp;
-		this.token = URLDecoder.decode(req.getParameter("token"),"UTF-8").replaceAll(" ", "+");
-		this.username = req.getParameter("username");
+		this.token = clientId;
+		this.username = username;
 	}
 
 	
