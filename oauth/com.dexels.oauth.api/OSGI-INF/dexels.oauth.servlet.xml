@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="dexels.oauth.servlet">
+   <implementation class="com.dexels.oauth.internal.OauthServlet"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="alias" type="String" value="/oauth"/>
+   <reference bind="setUserAuthenticator" cardinality="1..1" interface="com.dexels.oauth.api.UserAuthenticator" name="UserAuthenticator" policy="dynamic" unbind="clearUserAuthenticator"/>
+   <reference bind="setClientStore" cardinality="1..1" interface="com.dexels.oauth.api.ClientStore" name="ClientStore" policy="dynamic" unbind="clearClientStore"/>
+   <reference bind="setScopeValidator" cardinality="1..1" interface="com.dexels.oauth.api.ScopeValidator" name="ScopeValidator" policy="dynamic" unbind="clearScopeValidator"/>
+   <reference bind="setTokenStore" cardinality="1..1" interface="com.dexels.oauth.api.TokenStore" name="TokenStore" policy="dynamic" unbind="clearTokenStore"/>
+</scr:component>

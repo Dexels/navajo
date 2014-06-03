@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" configuration-policy="require" name="dexels.oauth.clientstore.inmemory">
+   <implementation class="com.dexels.oauth.api.impl.InMemoryClientStore"/>
+   <service>
+      <provide interface="com.dexels.oauth.api.ClientStore"/>
+   </service>
+</scr:component>
