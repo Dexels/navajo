@@ -58,6 +58,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 
 	@Override
 	public Map<String, String> getScopes(String token) {
+		
 		Map<String, String> result = new HashMap<String, String>();
 		if (token != null) {
 			//
@@ -283,6 +284,8 @@ public abstract class BaseContextImpl implements ArticleContext {
 	public void clearConfig(NavajoIOConfig ioConfig) {
 		this.config = null;
 	}
+
+
 
 	public static void main(String[] args) {
 		

@@ -28,7 +28,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 	private final static Logger logger = LoggerFactory
 			.getLogger(ArticleServlet.class);
 
-	private ArticleContext context;
+	protected ArticleContext context;
 	
 	public ArticleServlet() {
 		
@@ -72,7 +72,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		}
 		File article = context.resolveArticle(determineArticleFromRequest(req));
 		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article,pathInfo,req.getParameterMap(),instance,scopes);
+			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, clientId, req.getParameter("username"),article,pathInfo,req.getParameterMap(),instance,scopes);
 			try {
 				runtime.execute(context);
 				resp.setContentType("application/json; charset=utf-8");
@@ -89,7 +89,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		}
 	}
 	
-	private String determineInstanceFromRequest(final HttpServletRequest req) {
+	protected String determineInstanceFromRequest(final HttpServletRequest req) {
 		String pathinfo = req.getPathInfo();
 		logger.info("Assuming multi teant, trying to determine instance from path info: "+pathinfo);
 		if(pathinfo.startsWith("/")) {
@@ -104,7 +104,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		return instance;
 	}
 	
-	private String determineArticleFromRequest(final HttpServletRequest req) {
+	protected String determineArticleFromRequest(final HttpServletRequest req) {
 		String pathinfo = req.getPathInfo();
 		logger.info("Assuming multi teant, trying to determine instance from path info: "+pathinfo);
 		if(pathinfo.startsWith("/")) {
@@ -121,7 +121,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 	}
 
 
-	private String getToken(HttpServletRequest req) {
+	protected String getToken(HttpServletRequest req) {
 
 		return null;
 	}

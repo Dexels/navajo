@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.server.article.servlet.oauth">
+   <implementation class="com.dexels.navajo.article.impl.OAuthArticleServlet"/>
+   <reference bind="setArticleContext" cardinality="1..1" interface="com.dexels.navajo.article.ArticleContext" name="ArticleContext" policy="dynamic" unbind="clearArticleContext"/>
+   <property name="alias" type="String" value="/data"/>
+   <property name="servlet-name" type="String" value="oauthdata"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <reference bind="setTokenStore" cardinality="1..1" interface="com.dexels.oauth.api.TokenStore" name="TokenStore" policy="dynamic" unbind="clearTokenStore"/>
+</scr:component>

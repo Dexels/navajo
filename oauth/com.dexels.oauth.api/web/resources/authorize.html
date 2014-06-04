@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>OAuth2Sample</title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+		<script src="js/handlebars.js"></script>
+		<script src="js/jquery.js"></script>
+
+		<script type="text/javascript">
+
+		</script>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="row" style="margin-top:50px;">
+                <div class="span8 offset2">
+                    <form action="/oauth/authorizeendpoint" method="post" class="form-horizontal">
+                        <legend>Authorisatie</legend>
+                        <h4 class="clientlabel">Clubsite 'De Schoof'</h4>
+                        <p>vraagt toegang tot:</p>
+                        <ul class="scopelist">
+
+                        </ul>
+                        
+
+                        <div class="form-actions">
+                            <input type="submit" name="action" value="Accept" class="btn btn-large btn-primary" />
+                            <input type="submit" name="action" value="Reject" class="btn btn-large"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+        	<script type="text/javascript">
+        	
+        	function getelement(element) {
+        		return "<li><input type='checkbox' name='scope' value='" + element.name+"' checked>"+element.description+"</li>";
+        	}
+        	
+			$.getJSON("/oauth/requestedscopes", function(data) {
+				$(".clientlabel").html(data.clientdescription);
+				$.each( data.requestedScopes, function( key, value ) {
+					  $(".scopelist").append(getelement(value))
+					});
+			});
+	</script>
+</html>

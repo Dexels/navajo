@@ -223,15 +223,18 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	private String tenantFromScriptPath(String scriptPath) {
 		int scoreIndex = scriptPath.lastIndexOf("_");
-		if(scoreIndex>=0) {
+		int slashIndex = scriptPath.lastIndexOf("/");
+		if(scoreIndex>=0 && slashIndex < scoreIndex) {
 			return scriptPath.substring(scoreIndex+1, scriptPath.length());
 		} else {
 			return null;
 		}
 	}
 	private String rpcNameFromScriptPath(String scriptPath) {
+		System.err.println("ScriptPath: >"+scriptPath);
 		int scoreIndex = scriptPath.lastIndexOf("_");
-		if(scoreIndex>=0) {
+		int slashIndex = scriptPath.lastIndexOf("/");
+		if(scoreIndex>=0 && slashIndex < scoreIndex) {
 			return scriptPath.substring(0,scoreIndex);
 		} else {
 			return scriptPath;
@@ -764,4 +767,10 @@ public class BundleCreatorComponent implements BundleCreator {
 		}
 	}
 
+	public static void main(String[] args) {
+		//aap_noot/mies_wim/InitUpdateClub
+		BundleCreatorComponent bcc = new BundleCreatorComponent();
+		String s = bcc.rpcNameFromScriptPath("aap_noot/mies_wim/InitUpdateClub");
+		System.err.println(">> "+s);
+	}
 }

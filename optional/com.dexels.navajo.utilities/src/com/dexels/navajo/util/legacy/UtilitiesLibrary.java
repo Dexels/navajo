@@ -19,7 +19,7 @@ public class UtilitiesLibrary implements ExtensionDefinition {
 
 	@Override
 	public InputStream getDefinitionAsStream() {
-		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/util/adapter.xml");
+		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/util/legacy/adapter.xml");
 	}
 
 	@Override

@@ -5,12 +5,13 @@ Bundle-SymbolicName: com.dexels.navajo.article
 Bundle-Version: 2.0.9.qualifier
 Bundle-Activator: navajoarticle.Activator
 Bundle-Vendor: DEXELS
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.document;version="2.2.1",
  com.dexels.navajo.document.nanoimpl;version="2.2.1",
  com.dexels.navajo.document.types;version="2.2.1",
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
+ com.dexels.oauth.api,
  javax.servlet;version="3.0.0",
  javax.servlet.http;version="3.0.0",
  org.apache.commons.io;version="2.0.1",
@@ -23,6 +24,7 @@ Import-Package: com.dexels.navajo.document;version="2.2.1",
  org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/navajo.server.article.xml,
  OSGI-INF/navajo.server.article.servlet.xml,
+ OSGI-INF/navajo.server.article.servlet.oauth.xml,
  OSGI-INF/navajo.server.article.list.servlet.xml,
  OSGI-INF/navajo.server.article.filter.xml,
  OSGI-INF/navajo.server.article.session.servlet.xml,
