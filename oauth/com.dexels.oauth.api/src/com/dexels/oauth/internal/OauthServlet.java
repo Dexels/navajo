@@ -351,7 +351,7 @@ public class OauthServlet extends HttpServlet {
 		String client_id = (String) req.getSession().getAttribute("client_id");
 		String client_secret = (String) req.getSession().getAttribute("client_secret");
 		String redirect_uri = (String) req.getSession().getAttribute("redirect_uri");
-		boolean succeeded = userAuthenticator.authenticateUser(username, password);
+		boolean succeeded = userAuthenticator.authenticateUser(username, password,client_id);
 		if(!succeeded) {
 //			req.getSession().invalidate();
 			req.getSession().setAttribute("error", "Username incorrect");

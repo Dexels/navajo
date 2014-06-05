@@ -10,6 +10,7 @@ package com.dexels.navajo.client;
  */
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.KeyStore;
 
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
 import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
@@ -37,6 +38,7 @@ public interface ClientInterface {
   public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval) throws ClientException;
   public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException;
   public void setUsername(String s);
+  public void setKeyStore(KeyStore keystore);
   public void setPassword(String pw);
   public void setServerUrl(String url);
   public void setRetryAttempts(int noOfAttempts);
