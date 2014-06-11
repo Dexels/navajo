@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.NavajoLaszloConverter;
@@ -62,7 +63,9 @@ public class EntityListener extends HttpServlet {
 		Map<String,String []> requestParameters = request.getParameterMap();
 
 		boolean debug = ( requestParameters.get("debug") != null ? true : false );
-
+		String output = ( requestParameters.get("output") != null ?requestParameters.get("output")[0] : "json" );
+		String username = requestParameters.get("username")[0];
+		String password = requestParameters.get("password")[0];
 
 		String entityName = path.substring(1);
 		if ( debug ) {
@@ -73,47 +76,50 @@ public class EntityListener extends HttpServlet {
 		Entity e = myManager.getEntity(entityName);
 
 		Navajo input = null;
+		Message entityMessage = e.getMessage();
+		
+		// If HEAD, simply print the entityMessage
 		if ( method.equals("HEAD") ) {
 			Writer w = new OutputStreamWriter(response.getOutputStream());
 			JSONTML json = JSONTMLFactory.getInstance();
 			try {
-				json.format(e.getMessage().getRootDoc(), w);
+				json.format(entityMessage.getRootDoc(), w);
 			} catch (Exception e1) {
 				throw new ServletException(e1);
 			}
 			w.close();
 			return;
-		} else
-			if ( method.equals("GET")) {
-				input = myManager.deriveNavajoFromParameterMap(e, requestParameters);
-			} else {
-				JSONTML json = JSONTMLFactory.getInstance();
-				json.setEntityTemplate(e.getMessage().getRootDoc());
-				try {
-					input = json.parse(request.getInputStream());
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
+		}
+		
+		// Get the input document 
+		if (method.equals("GET")) {
+			input = myManager.deriveNavajoFromParameterMap(e, requestParameters);
+		} else {
+			JSONTML json = JSONTMLFactory.getInstance();
+			json.setEntityTemplate(entityMessage.getRootDoc());
+			try {
+				input = json.parse(request.getInputStream());
+			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
+		}
+		
 		if ( debug ) {
-			System.err.println("Reveived request:");
+			System.err.println("Received request:");
 			input.write(System.err);
 		}
-		// Fetch output method
-		String output = ( requestParameters.get("output") != null ?requestParameters.get("output")[0] : "json" );
-		// Fetch username/password.
-		String username = requestParameters.get("username")[0];
-		String password = requestParameters.get("password")[0];
+		
+		// Create a header from the input
 		Header header = NavajoFactory.getInstance().createHeader(input, "", username, password, -1);
 		input.addHeader(header);
-
+		
 		try {
 			Operation o = myManager.getOperation(entityName, method);
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, myClient, o);
 			Navajo result = seo.perform(input);
 			// Merge with entity template
-			if ( result.getMessage(e.getMessage().getName() ) != null ) {
-				EntityHelper.mergeWithEntityTemplate(result.getMessage(e.getMessage().getName() ), e.getMessage() );
+			if ( result.getMessage(entityMessage.getName() ) != null ) {
+				EntityHelper.mergeWithEntityTemplate(result.getMessage(entityMessage.getName() ), entityMessage );
 			}
 			if ( output.equals("json")) {
 				Writer w = new OutputStreamWriter(response.getOutputStream());
