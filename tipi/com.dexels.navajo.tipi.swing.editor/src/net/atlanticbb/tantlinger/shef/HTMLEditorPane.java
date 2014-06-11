@@ -608,91 +608,31 @@ public class HTMLEditorPane extends JPanel
 	// Added by Dexels
 	public String getTidyText() {
 		String sourceTxt = null;
-		if(hasWysiwygEditorOpen()) {
+		if (hasWysiwygEditorOpen()) {
 			sourceTxt = wysEditor.getText();
 		} else {
 			sourceTxt = srcEditor.getText();
 		}
-		
-		
+
 		org.jsoup.nodes.Document doc = Jsoup.parse(sourceTxt);
-		// Set prettyPrint to false to prevent removal of users spaces inside tags
+		// Set prettyPrint to false to prevent removal of users spaces inside
+		// tags
 		doc.outputSettings().prettyPrint(false);
-		
-		return bodyElementToString(doc.body());
+		return doc.body().html();
 	}
 	
 	
-	private String bodyElementToString(Element bodyElement) {
-		String result = "";
-		boolean closeDiv = false;
-		for (Element child : bodyElement.children()) {
-			result += getStringFromNode(child, "");
+	public String getText() {
+		String topText;
+		if (hasWysiwygEditorOpen()) {
+			topText = removeInvalidTags(wysEditor.getText());
+		} else {
+			topText = removeInvalidTags(srcEditor.getText());
+			topText = deIndent(removeInvalidTags(topText));
+			topText = Entities.HTML40.unescapeUnknownEntities(topText);
 		}
-		
-		// If the body had no child elements, create a div around any possible
-		// text elements to prevent text not enclosed in a tag
-		if (result == "") {
-			result += "<div>";
-			closeDiv = true;
-		}
-		for (TextNode child : bodyElement.textNodes()) {
-			if (!child.getWholeText().trim().isEmpty()) {
-				result += child.outerHtml();
-			}
-		}
-		if (closeDiv) {
-			result += "</div>";
-		}
-		
-		// Add trailing nbsp to prevent bug in java HTMLEditor where the last element
-		// disappears when empty (such as tablecell) when reading HTML 
-		if (!(result.trim().endsWith("&nbsp;") || result.trim().endsWith("&#160;"))) {
-			result += "&nbsp;";
-		}
-		return result.replace("\n", "");
+		return topText;
 	}
-	
-	/* 
-	 * Recursive method that prints a Element to a string. Leaves 
-	 * text inside tags intact
-	 */
-	private String getStringFromNode(Element node, String result) {
-		result += "<" + node.tagName();
-		for (Attribute attr : node.attributes()) {
-			result += " " + attr.toString() ;
-		}
-		result += ">";
-		for (Element child : node.children()) {
-			result += getStringFromNode(child, "");
-		}
-		
-		for (TextNode child : node.textNodes()) {
-			if (!child.getWholeText().trim().isEmpty()) {
-				result += child.outerHtml();
-			}
-		}
-
-		result += "</" + node.tagName() + ">";
-		return result;
-	}
-
-	public String getText(){
-    	
-    	String topText; 
-    	
-    	if(hasWysiwygEditorOpen())
-        {        
-    		topText = removeInvalidTags(wysEditor.getText());
-        }
-        else 
-        {           
-            topText = removeInvalidTags(srcEditor.getText()); 
-            topText = deIndent(removeInvalidTags(topText));
-            topText = Entities.HTML40.unescapeUnknownEntities(topText); 
-        }
-    	return topText;
-    }
     
     
     /* *******************************************************************
