@@ -432,6 +432,32 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 	        }
 		}
     }
+    
+    /**
+     * Get the file mime-type using Files.probeContentType() (Java 1.7)
+     * 
+     */
+    private final String getJavaMimeType(File f) {
+    	String type = "";
+    	
+    	// To support Java 1.6, we first determine whether we can find the 
+    	// Java 1.7 class Files
+		try {
+		     Class.forName("java.nio.file.Files");
+		} catch (ClassNotFoundException e) {
+			// No Files class available - return
+			return type;
+		}
+		
+		// We now know we have a Files class...
+		try {
+			java.nio.file.Files.probeContentType(f.toPath());
+		} catch (IOException e) {
+			// Something went wrong trying to determine the file type 
+			// but we not interested
+		}
+		return type;
+    }
 
     /**
      * Guess the internal data's mimetype
@@ -449,6 +475,12 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
                 f = dataFile;
             }
             if ( f != null ) {
+            	String mime = this.getJavaMimeType(f);
+            	if (mime != null && mime != "") {
+            		return mime;
+            	}
+            	
+            	// Java mime type not found - attempt regular FormatIdentification
             	if(NavajoFactory.getInstance().isSandboxMode()) {
                 	currentFormatDescription = com.dexels.navajo.document.metadata.FormatIdentification.identify(inMemory);
             	} else {
