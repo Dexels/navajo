@@ -451,7 +451,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 		
 		// We now know we have a Files class...
 		try {
-			java.nio.file.Files.probeContentType(f.toPath());
+			type = java.nio.file.Files.probeContentType(f.toPath());
 		} catch (IOException e) {
 			// Something went wrong trying to determine the file type 
 			// but we not interested
@@ -475,15 +475,14 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
                 f = dataFile;
             }
             if ( f != null ) {
-            	String mime = this.getJavaMimeType(f);
-            	if (mime != null && mime != "") {
-            		return mime;
-            	}
-            	
-            	// Java mime type not found - attempt regular FormatIdentification
             	if(NavajoFactory.getInstance().isSandboxMode()) {
                 	currentFormatDescription = com.dexels.navajo.document.metadata.FormatIdentification.identify(inMemory);
             	} else {
+            		String mime = this.getJavaMimeType(f);
+                	if (mime != null && mime != "") {
+                		return mime;
+                	}
+                	// Java mime type not found - attempt regular FormatIdentification
                 	currentFormatDescription = com.dexels.navajo.document.metadata.FormatIdentification.identify(f);
             	}
             }
