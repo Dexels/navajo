@@ -585,13 +585,28 @@ public class HTMLEditorPane extends JPanel
     }
     
     public void setText(String text) {
-    	  
+    	StringBuilder b = new StringBuilder();
     	org.jsoup.nodes.Document doc = Jsoup.parse(text);
-  
-    	// Legacy - replace div's with p
-    	Elements elements = doc.select("div");
-    	elements.tagName("p");
-    	String topText = removeInvalidTags(doc.html());
+    	Elements ps =  doc.select("p");
+    	String htmlText = "";
+    	
+    	// Conversion of <p> to one large div with <br>'s
+    	if (ps.size() > 0) { 
+    		for (Element p : ps ) {
+        	    b.append(p.text());
+        	    b.append(" <br/> ");
+        	    
+        	}
+    		String innerText = b.toString();
+    		// Trim last <br>
+    		htmlText = "<div>" + innerText.substring(0, innerText.length() - 5 );
+    		htmlText += "</div>";
+    	} else {
+    		htmlText = text;
+    	}
+    	
+    	
+    	String topText = removeInvalidTags(htmlText);
 		
 		if (hasWysiwygEditorOpen()) {
 			wysEditor.setText("");
@@ -620,21 +635,23 @@ public class HTMLEditorPane extends JPanel
 		}
 
 		org.jsoup.nodes.Document doc = Jsoup.parse(sourceTxt);
+		doc.outputSettings().prettyPrint(true);
 		for (Element element : doc.body().select("div")) {
-			if (!element.hasText()) {
+			if (!element.hasText() && element.children().size() == 0) {
 				// Remove empty elements
 				element.remove();
 			}
 		}
 		
-		doc.outputSettings().prettyPrint(true);
 		String html = doc.body().html();
-		if (!(html.trim().endsWith("&nbsp;") || html.trim().endsWith("&#160;"))) {
-			// Add a trailing nbsp to work around JEditor bug where the last 
-			// element (e.g. a table cell) is removed when there is no trailing
-			// content
-			html += "&nbsp;";
-		}
+		
+		// Add a trailing nbsp to work around JEditor bug where the last
+		// element (e.g. a table cell) is removed when there is no trailing
+		// content. Before adding, remove any remaining ones
+		html = html.replace("&nbsp;", "");
+		html = html.replace("&nbsp;", "");
+		html += "&nbsp;";
+		
 		return html.replace("\n", "");
 	}
 	

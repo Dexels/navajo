@@ -76,8 +76,8 @@ public class HTMLEditorActionFactory
     public static ActionList createBlockElementActionList()
     {
         ActionList list = new ActionList("paragraph");
-        //list.add(new HTMLBlockAction(HTMLBlockAction.DIV));
-        list.add(new HTMLBlockAction(HTMLBlockAction.P));
+        list.add(new HTMLBlockAction(HTMLBlockAction.DIV));
+        //list.add(new HTMLBlockAction(HTMLBlockAction.P));
         list.add(null);
         //list.add(new HTMLBlockAction(HTMLBlockAction.BLOCKQUOTE));
         //list.add(new HTMLBlockAction(HTMLBlockAction.PRE));
