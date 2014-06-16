@@ -148,7 +148,8 @@ public class EnterKeyAction extends DecoratedTextAction
                             //reset the table cell contents nested in a <div>
                             //we do this because otherwise the next table cell would
                             //get deleted!! Perhaps this is a bug in swing's html implemenation?
-                            encloseInDIV(listParentElem, document);
+                           // encloseInDIV(listParentElem, document);
+                        	//insertBR(e, elem);
                             editor.setCaretPosition(caret + 1);
                         }
                         else //end the list
@@ -190,13 +191,12 @@ public class EnterKeyAction extends DecoratedTextAction
 						
 					if (shiftPressed) {
 						insertBR(e, elem);
-						 editor.setCaretPosition(caret + 1);
+						editor.setCaretPosition(caret + 1);
 					}
 
 					else if(parentTag.equals(HTML.Tag.TD))
                     {
-                        encloseInDIV(parentElem, document);
-                        editor.setCaretPosition(caret + 1);
+                        delegate.actionPerformed(e);
                     }
                     else if(parentTag.equals(HTML.Tag.BODY) || isInList(elem))
                     {
@@ -234,7 +234,7 @@ public class EnterKeyAction extends DecoratedTextAction
                     //System.out.println("not implied insertparaafter1 " + elem.getName());
                 	if (shiftPressed) { 
                 		insertBR(e, elem);
-                		
+                		editor.setCaretPosition(caret + 1);
                 	} else {
                 		insertParagraphAfter(elem, editor);
                 	}
@@ -273,8 +273,10 @@ public class EnterKeyAction extends DecoratedTextAction
     }
 
 	private void insertBR(ActionEvent e, Element element) {
+		// Due to a formatting bug, add a nbsp after the break to make the
+		// break appear in the editor
 		HTMLEditorKit.InsertHTMLTextAction hta = new HTMLEditorKit.InsertHTMLTextAction("insertBR",
-				"<br>", HTML.getTag(element.getName()), HTML.Tag.BR);
+				"<br>&nbsp;", HTML.getTag(element.getName()), HTML.Tag.BR);
 		hta.actionPerformed(e);
 	}
     
