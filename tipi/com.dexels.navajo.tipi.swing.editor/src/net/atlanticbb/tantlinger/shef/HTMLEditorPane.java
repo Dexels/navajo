@@ -627,6 +627,7 @@ public class HTMLEditorPane extends JPanel
 			}
 		}
 		
+		doc.outputSettings().prettyPrint(true);
 		String html = doc.body().html();
 		if (!(html.trim().endsWith("&nbsp;") || html.trim().endsWith("&#160;"))) {
 			// Add a trailing nbsp to work around JEditor bug where the last 
@@ -634,7 +635,7 @@ public class HTMLEditorPane extends JPanel
 			// content
 			html += "&nbsp;";
 		}
-		return html;
+		return html.replace("\n", "");
 	}
 	
 	
