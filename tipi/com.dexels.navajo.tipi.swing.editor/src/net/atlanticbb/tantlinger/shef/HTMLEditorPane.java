@@ -593,8 +593,8 @@ public class HTMLEditorPane extends JPanel
     	// Conversion of <p> to one large div with <br>'s
     	if (ps.size() > 0) { 
     		for (Element p : ps ) {
-        	    b.append(p.text());
-        	    b.append(" <br/> ");
+        	    b.append(p.html());
+        	    b.append("<br/>");
         	    
         	}
     		String innerText = b.toString();
