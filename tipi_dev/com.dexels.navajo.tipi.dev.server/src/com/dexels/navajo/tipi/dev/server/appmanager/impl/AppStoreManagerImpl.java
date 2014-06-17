@@ -73,7 +73,14 @@ public class AppStoreManagerImpl implements AppStoreManager {
 			}
 		} else {
 			// it's a string
-			authorize = false;
+			if("true".equals(authorizeObject)) {
+				authorize = true;
+			}
+			if("false".equals(authorizeObject)) {
+				authorize = false;
+			}
+			
+			authorize = true;
 		}
 	}
 	
