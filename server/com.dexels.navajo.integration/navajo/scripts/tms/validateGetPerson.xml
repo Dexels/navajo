@@ -1,0 +1,10 @@
+<navascript>
+  <validations>
+        <check code="40003">
+	[/Player/PersonId] == 'XX'
+        </check>
+    </validations>
+<message name="validation">
+<property name="result" value="OK" />
+</message>
+</navascript>

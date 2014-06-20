@@ -1860,7 +1860,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	public void writeSimpleJSON(Writer writer) throws IOException {
 		  writer.write("{");
 		  printElementJSONTypeless(writer);
-		  writer.write("}");
+		  //writer.write("}");
 	  }
 
 	  @Override

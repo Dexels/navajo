@@ -1,0 +1,148 @@
+<tml>
+  <!-- property with name "url" should be one of:
+      <property name="url" value="jdbc:oracle:thin:@gargantua.dexels.nl:1521:anemoon"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot"/>
+      <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:sltest01"/>
+      <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:sltest02"/>
+      <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:slacc01"/>
+      <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:sltrain"/>
+      <property name="url" value="jdbc:oracle:thin:@zeus1.dexels.com:1521:slprod01"/>
+      <property name="url" value="jdbc:oracle:thin:@zeus2.dexels.com:1521:slprod02"/>
+      <property name="url" value="jdbc:oracle:thin:@zeus3.dexels.com:1521:slprod03"/>
+  -->
+  <message name="datasources">
+    <message name="sportlinkkernel">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot"/>
+      <property name="username" value="knvbkern"/>
+      <property name="password" value="knvb"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="15"/>
+    </message>
+    <message name="default">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot"/>
+      <property name="username" value="knvbkern"/>
+      <property name="password" value="knvb"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="15"/>
+    </message>
+    <message name="competition">
+        <property name="driver" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://source.dexels.com:3306/competition" />
+        <property name="username" value="widget" />
+        <property name="password" value="widget" />
+        <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap" />
+        <property name="refresh" type="float" value="0.01" />
+        <property name="min_connections" type="integer" value="1" />
+        <property name="max_connections" type="integer" value="100" />
+        <property name="type" value="mysql"/>
+    </message>     
+    <message name="sportlink">
+        <property name="driver" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://source.dexels.com:3306/sportlink" />
+        <property name="username" value="sportlink" />
+        <property name="password" value="sportlink" />
+        <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap" />
+        <property name="refresh" type="float" value="0.01" />
+        <property name="min_connections" type="integer" value="1" />
+        <property name="max_connections" type="integer" value="100" />
+        <property name="type" value="mysql"/>
+    </message>     
+    <message name="authentication">
+        <property name="driver" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://source.dexels.com:3306/authentication" />
+        <property name="username" value="authentication" />
+        <property name="password" value="authentication" />
+        <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap" />
+        <property name="refresh" type="float" value="0.01" />
+        <property name="min_connections" type="integer" value="1" />
+        <property name="max_connections" type="integer" value="100" />
+        <property name="type" value="mysql"/>
+    </message>     
+    <message name="sportlinkkernel_repl">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot"/>
+      <property name="username" value="knvbkern"/>
+      <property name="password" value="knvb"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="15"/>
+    </message>
+    <message name="vla">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot"/>
+      <property name="username" value="sportdba"/>
+      <property name="password" value="sp0rtl1nk"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="5"/>
+    </message>
+    <message name="yoghurt">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot"/>
+      <property name="username" value="sportdba"/>
+      <property name="password" value="sp0rtl1nk"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="5"/>
+    </message>
+    <message name="migrate">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot"/>
+      <property name="username" value="knvbkern"/>
+      <property name="password" value="knvb"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="5"/>
+    </message>
+    <message name="navajostore">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot"/>
+      <property name="username" value="knvbnavajo"/>
+      <property name="password" value="knvbnavajo"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="5"/>
+    </message>
+    <message name="sportlinkdba">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot"/>
+      <property name="username" value="sportdba"/>
+      <property name="password" value="sp0rtl1nk"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="5"/>
+    </message>
+    <message name="finance">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot"/>
+      <property name="username" value="knvbkern"/>
+      <property name="password" value="knvb"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="15"/>
+    </message>
+    <message name="dashboard">
+        <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:AARDNOOT"/>
+        <property name="username" value="dashboard"/>
+        <property name="password" value="dashboard"/>
+        <property name="logfile" value="sportlinkkernel.oracle10g.sqlmap"/>
+        <property name="refresh" type="float" value="0.1"/>
+        <property name="min_connections" type="integer" value="1"/>
+        <property name="max_connections" type="integer" value="50"/>
+    </message>     
+  </message>
+</tml>

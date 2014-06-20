@@ -1,0 +1,556 @@
+1403080574343-85 - Getting script: mongo/ProcessModifyMongo
+1403080574343-85 - Installing script: ProcessModifyMongo.jar
+1403080574343-85 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403080574343-85 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403080574343-85 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403080574343-85 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403080574343-85 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403080574343-85 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403080574343-85 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403080574343-85 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403080574343-85 - Scanning bundle navajo.script.mongo/ProcessModifyMongo for blueprint application
+1403080574343-85 - No blueprint application found in bundle navajo.script.mongo/ProcessModifyMongo
+1403080574343-85 - On demand installation finished, waiting for service...
+1403080574343-85 - Loading Mongo with meta. Collection: Person msg: Person database: mymongo multiple: false
+1403080574343-85 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403080574343-85 - scope null||/entity/Person @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@28f43e9d}
+1403080574343-85 - scope null||/entity/Person @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@62ca4d3c}
+1403080574343-85 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403080574343-85 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403080574343-85 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403080574343-85 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403080574343-85 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403080574343-85 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403080574343-85 - RESPONSE /entity/Person  200 handled=true
+1403080574343-85 - Enabled read interest SCEP@18bf913e{l(/127.0.0.1:33617)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@48d88a23,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403080574343-85 - ishut SCEP@18bf913e{l(/127.0.0.1:33617)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@48d88a23,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403080574343-85 - filled -1/0
+1403080574343-85 - Disabled read interest while writing response SCEP@18bf913e{l(/127.0.0.1:33617)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@48d88a23,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403080574343-85 - close SCEP@18bf913e{l(/127.0.0.1:33617)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@48d88a23,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403080574343-85 - filled 274/274
+1403080574343-85 - REQUEST /entity/Club on AsyncHttpConnection@216af81e,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403080574343-85 - Matching [/entity/Club]...
+1403080574343-85 - Path [/entity/Club] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@e280c42,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403080574343-85 - scope null||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403080574343-85 - context=||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403080574343-85 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@117dedb4
+1403080574343-85 - session=null
+1403080574343-85 - servlet |/entity|/Club -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403080574343-85 - Handling request for [/entity/Club] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403080574343-85 - chain=null
+1403080574343-85 - No global manager found
+1403080672112-175 - Loading Mongo with meta. Collection: Person msg: Person database: mymongo multiple: false
+1403080672112-175 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403080672112-175 - scope null||/entity/Person @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@28f43e9d}
+1403080672112-175 - scope null||/entity/Person @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@62ca4d3c}
+1403080672112-175 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403080672112-175 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403080672112-175 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403080672112-175 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403080672112-175 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403080672112-175 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403080672112-175 - RESPONSE /entity/Person  200 handled=true
+1403080672112-175 - Enabled read interest SCEP@4cbb509b{l(/127.0.0.1:33665)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1da91778,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403080672112-175 - ishut SCEP@4cbb509b{l(/127.0.0.1:33665)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1da91778,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403080672112-175 - filled -1/0
+1403080672112-175 - Disabled read interest while writing response SCEP@4cbb509b{l(/127.0.0.1:33665)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1da91778,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403080672112-175 - close SCEP@4cbb509b{l(/127.0.0.1:33665)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1da91778,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403080672112-175 - Exception while filling
+java.io.IOException: Connection reset by peer
+	at sun.nio.ch.FileDispatcherImpl.read0(Native Method) ~[na:1.7.0_55]
+	at sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:39) ~[na:1.7.0_55]
+	at sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:223) ~[na:1.7.0_55]
+	at sun.nio.ch.IOUtil.read(IOUtil.java:197) ~[na:1.7.0_55]
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:379) ~[na:1.7.0_55]
+	at org.eclipse.jetty.io.nio.ChannelEndPoint.fill(ChannelEndPoint.java:235) ~[org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.fill(SelectChannelEndPoint.java:365) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.fill(HttpParser.java:1044) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:280) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:667) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at java.lang.Thread.run(Thread.java:744) [na:1.7.0_55]
+1403080672112-175 - filled -1/0
+1403080672112-175 - Disabled read interest while writing response SCEP@ceb1d27{l(/127.0.0.1:33982)<->r(0.0.0.0/0.0.0.0:9099),s=1,open=false,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1!}-{AsyncHttpConnection@1fc6f211,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403080672112-175 - filled 254/254
+1403080672112-175 - REQUEST /entity/Person on AsyncHttpConnection@6ced312d,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403080672112-175 - Matching [/entity/Person]...
+1403080672112-175 - Path [/entity/Person] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@e280c42,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403080672112-175 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403080672112-175 - context=||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403080672112-175 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@117dedb4
+1403080672112-175 - session=null
+1403080672112-175 - servlet |/entity|/Person -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403080672112-175 - Handling request for [/entity/Person] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403080672112-175 - chain=null
+1403080672112-175 - No global manager found
+1403081024201-265 - Loading Mongo with meta. Collection: Person msg: Person database: mymongo multiple: false
+1403081024201-265 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403081024201-265 - scope null||/entity/Person @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@28f43e9d}
+1403081024201-265 - scope null||/entity/Person @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@62ca4d3c}
+1403081024201-265 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403081024201-265 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403081024201-265 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403081024201-265 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403081024201-265 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403081024201-265 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403081024201-265 - RESPONSE /entity/Person  200 handled=true
+1403081024201-265 - Enabled read interest SCEP@6333dafa{l(/127.0.0.1:34021)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@616d85f7,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403081024201-265 - ishut SCEP@6333dafa{l(/127.0.0.1:34021)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@616d85f7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403081024201-265 - filled -1/0
+1403081024201-265 - Disabled read interest while writing response SCEP@6333dafa{l(/127.0.0.1:34021)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@616d85f7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403081024201-265 - close SCEP@6333dafa{l(/127.0.0.1:34021)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@616d85f7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403081024201-265 - filled 263/263
+1403081024201-265 - REQUEST /entity/Club on AsyncHttpConnection@19af3bb9,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403081024201-265 - Matching [/entity/Club]...
+1403081024201-265 - Path [/entity/Club] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@e280c42,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403081024201-265 - scope null||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403081024201-265 - context=||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403081024201-265 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@117dedb4
+1403081024201-265 - session=null
+1403081024201-265 - servlet |/entity|/Club -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403081024201-265 - Handling request for [/entity/Club] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403081024201-265 - chain=null
+1403081024201-265 - No global manager found
+1403081298103-339 - Loading Mongo with meta. Collection: Person msg: Person database: mymongo multiple: false
+1403081298103-339 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403081298103-339 - scope null||/entity/Person @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@28f43e9d}
+1403081298103-339 - scope null||/entity/Person @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@62ca4d3c}
+1403081298103-339 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403081298103-339 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403081298103-339 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403081298103-339 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403081298103-339 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403081298103-339 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403081298103-339 - RESPONSE /entity/Person  200 handled=true
+1403081298103-339 - Enabled read interest SCEP@23ee8b44{l(/127.0.0.1:34090)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@1f92fca,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403081298103-339 - ishut SCEP@23ee8b44{l(/127.0.0.1:34090)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@1f92fca,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403081298103-339 - filled -1/0
+1403081298103-339 - Disabled read interest while writing response SCEP@23ee8b44{l(/127.0.0.1:34090)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@1f92fca,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403081298103-339 - close SCEP@23ee8b44{l(/127.0.0.1:34090)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@1f92fca,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403081298103-339 - filled 257/257
+1403081298103-339 - REQUEST /entity/Person on AsyncHttpConnection@b6a536a,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403081298103-339 - Matching [/entity/Person]...
+1403081298103-339 - Path [/entity/Person] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@e280c42,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403081298103-339 - scope null||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403081298103-339 - context=||/entity/Person @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403081298103-339 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@117dedb4
+1403081298103-339 - session=null
+1403081298103-339 - servlet |/entity|/Person -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403081298103-339 - Handling request for [/entity/Person] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403081298103-339 - chain=null
+1403081298103-339 - No global manager found
+1403086003678-88 - Installing script: ProcessModifyMongo.jar
+1403086003678-88 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403086003678-88 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403086003678-88 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403086003678-88 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403086003678-88 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403086003678-88 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403086003678-88 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403086003678-88 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403086003678-88 - Scanning bundle navajo.script.mongo/ProcessModifyMongo for blueprint application
+1403086003678-88 - No blueprint application found in bundle navajo.script.mongo/ProcessModifyMongo
+1403086003678-88 - On demand installation finished, waiting for service...
+1403086003678-88 - Loading Mongo with meta. Collection: Player msg: Player database: mymongo multiple: false
+1403086003678-88 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403086003678-88 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@78d60bfd}
+1403086003678-88 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@3ed3b8c4}
+1403086003678-88 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403086003678-88 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403086003678-88 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403086003678-88 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403086003678-88 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403086003678-88 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403086003678-88 - RESPONSE /entity/Player  200 handled=true
+1403086003678-88 - Enabled read interest SCEP@467048e{l(/127.0.0.1:34844)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@75c08e4,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403086003678-88 - ishut SCEP@467048e{l(/127.0.0.1:34844)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@75c08e4,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403086003678-88 - filled -1/0
+1403086003678-88 - Disabled read interest while writing response SCEP@467048e{l(/127.0.0.1:34844)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@75c08e4,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403086003678-88 - close SCEP@467048e{l(/127.0.0.1:34844)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@75c08e4,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403086003678-88 - ishut SCEP@555e801{l(/0:0:0:0:0:0:0:1:37311)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@7df94e05,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=4}
+1403086003678-88 - filled -1/0
+1403086003678-88 - Disabled read interest while writing response SCEP@555e801{l(/0:0:0:0:0:0:0:1:37311)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@7df94e05,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=4}
+1403086003678-88 - close SCEP@555e801{l(/0:0:0:0:0:0:0:1:37311)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@7df94e05,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=4}
+1403086003678-88 - ishut SCEP@4421cbc6{l(/0:0:0:0:0:0:0:1:37309)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@6c9571c,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=7}
+1403086003678-88 - filled -1/0
+1403086003678-88 - Disabled read interest while writing response SCEP@4421cbc6{l(/0:0:0:0:0:0:0:1:37309)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@6c9571c,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=7}
+1403086003678-88 - close SCEP@4421cbc6{l(/0:0:0:0:0:0:0:1:37309)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@6c9571c,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=7}
+1403098456970-232 - Installing script: ProcessModifyMongo.jar
+1403098456970-232 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403098456970-232 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403098456970-232 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403098456970-232 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403098456970-232 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403098456970-232 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403098456970-232 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403098456970-232 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403098456970-232 - Scanning bundle navajo.script.mongo/ProcessModifyMongo for blueprint application
+1403098456970-232 - No blueprint application found in bundle navajo.script.mongo/ProcessModifyMongo
+1403098456970-232 - On demand installation finished, waiting for service...
+1403098456970-232 - Loading Mongo with meta. Collection: Player msg: Player database: mymongo multiple: false
+1403098456970-232 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403098456970-232 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@2aa8b034}
+1403098456970-232 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@5c834ea7}
+1403098456970-232 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403098456970-232 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403098456970-232 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403098456970-232 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403098456970-232 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403098456970-232 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403098456970-232 - RESPONSE /entity/Player  200 handled=true
+1403098456970-232 - Enabled read interest SCEP@3f1bb616{l(/127.0.0.1:39499)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@344f7eb8,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403098456970-232 - ishut SCEP@3f1bb616{l(/127.0.0.1:39499)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@344f7eb8,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403098456970-232 - filled -1/0
+1403098456970-232 - Disabled read interest while writing response SCEP@3f1bb616{l(/127.0.0.1:39499)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@344f7eb8,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403098456970-232 - close SCEP@3f1bb616{l(/127.0.0.1:39499)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@344f7eb8,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403098456970-232 - filled 274/274
+1403098456970-232 - REQUEST /entity/Club on AsyncHttpConnection@12400701,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403098456970-232 - Matching [/entity/Club]...
+1403098456970-232 - Path [/entity/Club] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@117dedb4,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403098456970-232 - scope null||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403098456970-232 - context=||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403098456970-232 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@66cc0591
+1403098456970-232 - session=null
+1403098456970-232 - servlet |/entity|/Club -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403098456970-232 - Handling request for [/entity/Club] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403098456970-232 - chain=null
+1403098456970-232 - No global manager found
+1403098488676-306 - Loading Mongo with meta. Collection: Player msg: Player database: mymongo multiple: false
+1403098488676-306 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403098488676-306 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@2aa8b034}
+1403098488676-306 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@5c834ea7}
+1403098488676-306 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403098488676-306 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403098488676-306 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403098488676-306 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403098488676-306 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403098488676-306 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403098488676-306 - RESPONSE /entity/Player  200 handled=true
+1403098488676-306 - Enabled read interest SCEP@f15f1bb{l(/127.0.0.1:39542)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@69b133b9,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403098488676-306 - ishut SCEP@f15f1bb{l(/127.0.0.1:39542)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@69b133b9,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403098488676-306 - filled -1/0
+1403098488676-306 - Disabled read interest while writing response SCEP@f15f1bb{l(/127.0.0.1:39542)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@69b133b9,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403098488676-306 - close SCEP@f15f1bb{l(/127.0.0.1:39542)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@69b133b9,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403098488676-306 - filled 207/207
+1403098488676-306 - REQUEST /entity/Player on AsyncHttpConnection@1f625903,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403098488676-306 - Matching [/entity/Player]...
+1403098488676-306 - Path [/entity/Player] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@117dedb4,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403098488676-306 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403098488676-306 - context=||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403098488676-306 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@66cc0591
+1403098488676-306 - session=null
+1403098488676-306 - servlet |/entity|/Player -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403098488676-306 - Handling request for [/entity/Player] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403098488676-306 - chain=null
+1403098488676-306 - No global manager found
+1403098854724-380 - Loading Mongo with meta. Collection: Player msg: Player database: mymongo multiple: false
+1403098854724-380 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403098854724-380 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@2aa8b034}
+1403098854724-380 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@5c834ea7}
+1403098854724-380 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403098854724-380 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403098854724-380 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403098854724-380 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403098854724-380 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403098854724-380 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403098854724-380 - RESPONSE /entity/Player  200 handled=true
+1403098854724-380 - Enabled read interest SCEP@747407c2{l(/127.0.0.1:39585)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@6da98d48,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403098854724-380 - ishut SCEP@747407c2{l(/127.0.0.1:39585)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@6da98d48,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403098854724-380 - filled -1/0
+1403098854724-380 - Disabled read interest while writing response SCEP@747407c2{l(/127.0.0.1:39585)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@6da98d48,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403098854724-380 - close SCEP@747407c2{l(/127.0.0.1:39585)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@6da98d48,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403098854724-380 - filled 274/274
+1403098854724-380 - REQUEST /entity/Club on AsyncHttpConnection@106f1622,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403098854724-380 - Matching [/entity/Club]...
+1403098854724-380 - Path [/entity/Club] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@117dedb4,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403098854724-380 - scope null||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403098854724-380 - context=||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403098854724-380 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@66cc0591
+1403098854724-380 - session=null
+1403098854724-380 - servlet |/entity|/Club -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403098854724-380 - Handling request for [/entity/Club] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403098854724-380 - chain=null
+1403098854724-380 - No global manager found
+1403098888095-455 - Loading Mongo with meta. Collection: Player msg: Player database: mymongo multiple: false
+1403098888095-455 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403098888095-455 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@2aa8b034}
+1403098888095-455 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@5c834ea7}
+1403098888095-455 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403098888095-455 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403098888095-455 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403098888095-455 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403098888095-455 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403098888095-455 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403098888095-455 - RESPONSE /entity/Player  200 handled=true
+1403098888095-455 - Enabled read interest SCEP@1256f6b6{l(/127.0.0.1:39628)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@b5f3022,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403098888095-455 - ishut SCEP@1256f6b6{l(/127.0.0.1:39628)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@b5f3022,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403098888095-455 - filled -1/0
+1403098888095-455 - Disabled read interest while writing response SCEP@1256f6b6{l(/127.0.0.1:39628)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@b5f3022,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403098888095-455 - close SCEP@1256f6b6{l(/127.0.0.1:39628)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@b5f3022,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403098888095-455 - filled 263/263
+1403098888095-455 - REQUEST /entity/Club on AsyncHttpConnection@23987721,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403098888095-455 - Matching [/entity/Club]...
+1403098888095-455 - Path [/entity/Club] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@117dedb4,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403098888095-455 - scope null||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403098888095-455 - context=||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403098888095-455 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@66cc0591
+1403098888095-455 - session=null
+1403098888095-455 - servlet |/entity|/Club -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403098888095-455 - Handling request for [/entity/Club] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403098888095-455 - chain=null
+1403098888095-455 - No global manager found
+1403103777929-91 - Installing script: ProcessModifyMongo.jar
+1403103777929-91 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403103777929-91 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403103777929-91 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403103777929-91 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403103777929-91 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403103777929-91 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403103777929-91 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403103777929-91 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403103777929-91 - Scanning bundle navajo.script.mongo/ProcessModifyMongo for blueprint application
+1403103777929-91 - No blueprint application found in bundle navajo.script.mongo/ProcessModifyMongo
+1403103777929-91 - On demand installation finished, waiting for service...
+1403103777929-91 - Loading Mongo with meta. Collection: Player msg: Player database: mymongo multiple: false
+1403103777929-91 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403103777929-91 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@10bf96d5}
+1403103777929-91 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@62ca4d3c}
+1403103777929-91 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403103777929-91 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403103777929-91 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403103777929-91 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403103777929-91 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403103777929-91 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403103777929-91 - RESPONSE /entity/Player  200 handled=true
+1403103777929-91 - Enabled read interest SCEP@451d154{l(/127.0.0.1:43173)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@1785e403,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403103777929-91 - ishut SCEP@451d154{l(/127.0.0.1:43173)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@1785e403,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403103777929-91 - filled -1/0
+1403103777929-91 - Disabled read interest while writing response SCEP@451d154{l(/127.0.0.1:43173)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@1785e403,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403103777929-91 - close SCEP@451d154{l(/127.0.0.1:43173)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@1785e403,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403103777929-91 - filled 263/263
+1403103777929-91 - REQUEST /entity/Club on AsyncHttpConnection@34cb0472,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403103777929-91 - Matching [/entity/Club]...
+1403103777929-91 - Path [/entity/Club] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@47833123,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403103777929-91 - scope null||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403103777929-91 - context=||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403103777929-91 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@762c92c1
+1403103777929-91 - session=null
+1403103777929-91 - servlet |/entity|/Club -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403103777929-91 - Handling request for [/entity/Club] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403103777929-91 - chain=null
+1403103777929-91 - No global manager found
+1403262346009-61 - Installing script: ProcessModifyMongo.jar
+1403262346009-61 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403262346009-61 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403262346009-61 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403262346009-61 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403262346009-61 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403262346009-61 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403262346009-61 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403262346009-61 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403262346009-61 - Scanning bundle navajo.script.mongo/ProcessModifyMongo for blueprint application
+1403262346009-61 - No blueprint application found in bundle navajo.script.mongo/ProcessModifyMongo
+1403262346009-61 - On demand installation finished, waiting for service...
+1403262346009-61 - Loading Mongo with meta. Collection: Player msg: Player database: mymongo multiple: false
+1403262346009-61 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403262346009-61 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@57532871}
+1403262346009-61 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@ce9d475}
+1403262346009-61 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403262346009-61 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403262346009-61 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403262346009-61 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403262346009-61 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403262346009-61 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403262346009-61 - RESPONSE /entity/Player  200 handled=true
+1403262346009-61 - Enabled read interest SCEP@7699ead2{l(/127.0.0.1:41873)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@7307bdd2,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403262346009-61 - ishut SCEP@7699ead2{l(/127.0.0.1:41873)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@7307bdd2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403262346009-61 - filled -1/0
+1403262346009-61 - Disabled read interest while writing response SCEP@7699ead2{l(/127.0.0.1:41873)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@7307bdd2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403262346009-61 - close SCEP@7699ead2{l(/127.0.0.1:41873)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@7307bdd2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403262346009-61 - filled 263/263
+1403262346009-61 - REQUEST /entity/Club on AsyncHttpConnection@497b26a7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403262346009-61 - Matching [/entity/Club]...
+1403262346009-61 - Path [/entity/Club] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@251cee30,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403262346009-61 - scope null||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403262346009-61 - context=||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403262346009-61 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@6cf54645
+1403262346009-61 - session=null
+1403262346009-61 - servlet |/entity|/Club -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403262346009-61 - Handling request for [/entity/Club] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403262346009-61 - chain=null
+1403262346009-61 - No global manager found
+1403262373016-136 - Loading Mongo with meta. Collection: Player msg: Player database: mymongo multiple: false
+1403262373016-136 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403262373016-136 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@57532871}
+1403262373016-136 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@ce9d475}
+1403262373016-136 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403262373016-136 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403262373016-136 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403262373016-136 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403262373016-136 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403262373016-136 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403262373016-136 - RESPONSE /entity/Player  200 handled=true
+1403262373016-136 - Enabled read interest SCEP@731943d7{l(/127.0.0.1:41910)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@7fb51349,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403262373016-136 - ishut SCEP@731943d7{l(/127.0.0.1:41910)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@7fb51349,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403262373016-136 - filled -1/0
+1403262373016-136 - Disabled read interest while writing response SCEP@731943d7{l(/127.0.0.1:41910)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@7fb51349,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403262373016-136 - close SCEP@731943d7{l(/127.0.0.1:41910)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@7fb51349,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403262373016-136 - filled 263/263
+1403262373016-136 - REQUEST /entity/Club on AsyncHttpConnection@79e61605,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403262373016-136 - Matching [/entity/Club]...
+1403262373016-136 - Path [/entity/Club] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@251cee30,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403262373016-136 - scope null||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403262373016-136 - context=||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403262373016-136 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@6cf54645
+1403262373016-136 - session=null
+1403262373016-136 - servlet |/entity|/Club -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403262373016-136 - Handling request for [/entity/Club] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403262373016-136 - chain=null
+1403262373016-136 - No global manager found
+1403262653338-71 - Installing script: ProcessModifyMongo.jar
+1403262653338-71 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403262653338-71 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403262653338-71 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403262653338-71 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403262653338-71 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403262653338-71 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403262653338-71 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403262653338-71 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403262653338-71 - Scanning bundle navajo.script.mongo/ProcessModifyMongo for blueprint application
+1403262653338-71 - No blueprint application found in bundle navajo.script.mongo/ProcessModifyMongo
+1403262653338-71 - On demand installation finished, waiting for service...
+1403262653338-71 - Loading Mongo with meta. Collection: Player msg: Player database: mymongo multiple: false
+1403262653338-71 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403262653338-71 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@21766ac3}
+1403262653338-71 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@4f004432}
+1403262653338-71 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403262653338-71 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403262653338-71 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403262653338-71 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403262653338-71 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403262653338-71 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403262653338-71 - RESPONSE /entity/Player  200 handled=true
+1403262653338-71 - Enabled read interest SCEP@88c374{l(/127.0.0.1:42201)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@12d7f4f2,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403262653338-71 - ishut SCEP@88c374{l(/127.0.0.1:42201)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@12d7f4f2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403262653338-71 - filled -1/0
+1403262653338-71 - Disabled read interest while writing response SCEP@88c374{l(/127.0.0.1:42201)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@12d7f4f2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403262653338-71 - close SCEP@88c374{l(/127.0.0.1:42201)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@12d7f4f2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403262653338-71 - filled 257/257
+1403262653338-71 - REQUEST /entity/Player on AsyncHttpConnection@2b7571ff,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=2
+1403262653338-71 - Matching [/entity/Player]...
+1403262653338-71 - Path [/entity/Player] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@45e91ace,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403262653338-71 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403262653338-71 - context=||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403262653338-71 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@14c63afe
+1403262653338-71 - session=null
+1403262653338-71 - servlet |/entity|/Player -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403262653338-71 - Handling request for [/entity/Player] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403262653338-71 - chain=null
+1403262653338-71 - No global manager found
+1403262665142-146 - Loading Mongo with meta. Collection: Player msg: Player database: mymongo multiple: false
+1403262665142-146 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403262665142-146 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@21766ac3}
+1403262665142-146 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@4f004432}
+1403262665142-146 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403262665142-146 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403262665142-146 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403262665142-146 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403262665142-146 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403262665142-146 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403262665142-146 - RESPONSE /entity/Player  200 handled=true
+1403262665142-146 - Enabled read interest SCEP@54741761{l(/127.0.0.1:42239)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@11ab0c98,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403262665142-146 - ishut SCEP@54741761{l(/127.0.0.1:42239)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@11ab0c98,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403262665142-146 - filled -1/0
+1403262665142-146 - Disabled read interest while writing response SCEP@54741761{l(/127.0.0.1:42239)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@11ab0c98,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403262665142-146 - close SCEP@54741761{l(/127.0.0.1:42239)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@11ab0c98,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403262665142-146 - filled 263/263
+1403262665142-146 - REQUEST /entity/Club on AsyncHttpConnection@242e4978,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403262665142-146 - Matching [/entity/Club]...
+1403262665142-146 - Path [/entity/Club] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@45e91ace,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403262665142-146 - scope null||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403262665142-146 - context=||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403262665142-146 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@14c63afe
+1403262665142-146 - session=null
+1403262665142-146 - servlet |/entity|/Club -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403262665142-146 - Handling request for [/entity/Club] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403262665142-146 - chain=null
+1403262665142-146 - No global manager found
+1403262904906-60 - Installing script: ProcessModifyMongo.jar
+1403262904906-60 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403262904906-60 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403262904906-60 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403262904906-60 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403262904906-60 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403262904906-60 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403262904906-60 - Starting BlueprintContainer destruction process for bundle navajo.script.mongo/ProcessModifyMongo
+1403262904906-60 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.mongo/ProcessModifyMongo.
+1403262904906-60 - Scanning bundle navajo.script.mongo/ProcessModifyMongo for blueprint application
+1403262904906-60 - No blueprint application found in bundle navajo.script.mongo/ProcessModifyMongo
+1403262904906-60 - On demand installation finished, waiting for service...
+1403262904906-60 - Loading Mongo with meta. Collection: Player msg: Player database: mymongo multiple: false
+1403262904906-60 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403262904906-60 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@137c20c1}
+1403262904906-60 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@764dc63d}
+1403262904906-60 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403262904906-60 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403262904906-60 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403262904906-60 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403262904906-60 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403262904906-60 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403262904906-60 - RESPONSE /entity/Player  200 handled=true
+1403262904906-60 - Enabled read interest SCEP@4630bae{l(/127.0.0.1:42404)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@293cec2,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403262904906-60 - ishut SCEP@4630bae{l(/127.0.0.1:42404)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@293cec2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403262904906-60 - filled -1/0
+1403262904906-60 - Disabled read interest while writing response SCEP@4630bae{l(/127.0.0.1:42404)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@293cec2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403262904906-60 - close SCEP@4630bae{l(/127.0.0.1:42404)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@293cec2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403262904906-60 - onIdleExpired 200423ms AsyncHttpConnection@2f044b73,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1 SCEP@1f653aff{l(/127.0.0.1:42369)<->r(/127.0.0.1:9099),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@2f044b73,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403262904906-60 - oshut SCEP@1f653aff{l(/127.0.0.1:42369)<->r(/127.0.0.1:9099),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@2f044b73,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403262904906-60 - onIdleExpired 200383ms AsyncHttpConnection@5fb8002,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1 SCEP@5976cac9{l(/127.0.0.1:42394)<->r(/127.0.0.1:9099),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@5fb8002,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403262904906-60 - oshut SCEP@5976cac9{l(/127.0.0.1:42394)<->r(/127.0.0.1:9099),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@5fb8002,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403262904906-60 - onIdleExpired 200265ms AsyncHttpConnection@5fb8002,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1 SCEP@5976cac9{l(/127.0.0.1:42394)<->r(/127.0.0.1:9099),s=0,open=true,ishut=false,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@5fb8002,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403262904906-60 - close SCEP@5976cac9{l(/127.0.0.1:42394)<->r(/127.0.0.1:9099),s=0,open=true,ishut=false,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@5fb8002,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403262904906-60 - filled 0/0
+1403262904906-60 - filled 257/257
+1403262904906-60 - REQUEST /entity/Player on AsyncHttpConnection@3dded8dc,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=2
+1403262904906-60 - Matching [/entity/Player]...
+1403262904906-60 - Path [/entity/Player] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@65e8b7c4,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403262904906-60 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403262904906-60 - context=||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403262904906-60 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@2135dc50
+1403262904906-60 - session=null
+1403262904906-60 - servlet |/entity|/Player -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403262904906-60 - Handling request for [/entity/Player] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403262904906-60 - chain=null
+1403264637883-122 - Loading Mongo with meta. Collection: Player msg: Player database: mymongo multiple: false
+1403264637883-122 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403264637883-122 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@137c20c1}
+1403264637883-122 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@764dc63d}
+1403264637883-122 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403264637883-122 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403264637883-122 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403264637883-122 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403264637883-122 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403264637883-122 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403264637883-122 - RESPONSE /entity/Player  200 handled=true
+1403264637883-122 - Enabled read interest SCEP@3fec4cdc{l(/127.0.0.1:42846)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@32aa204d,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=55},r=1}
+1403264637883-122 - ishut SCEP@3fec4cdc{l(/127.0.0.1:42846)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@32aa204d,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=1}
+1403264637883-122 - filled -1/0
+1403264637883-122 - Disabled read interest while writing response SCEP@3fec4cdc{l(/127.0.0.1:42846)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@32aa204d,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403264637883-122 - close SCEP@3fec4cdc{l(/127.0.0.1:42846)<->r(/127.0.0.1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@32aa204d,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=1}
+1403264637883-122 - filled 257/257
+1403264637883-122 - REQUEST /entity/Player on AsyncHttpConnection@166b5be2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403264637883-122 - Matching [/entity/Player]...
+1403264637883-122 - Path [/entity/Player] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@65e8b7c4,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403264637883-122 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403264637883-122 - context=||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403264637883-122 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@2135dc50
+1403264637883-122 - session=null
+1403264637883-122 - servlet |/entity|/Player -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403264637883-122 - Handling request for [/entity/Player] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403264637883-122 - chain=null
+1403264637883-122 - No global manager found
+1403262904906-60 - No global manager found

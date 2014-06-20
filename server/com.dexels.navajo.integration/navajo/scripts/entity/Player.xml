@@ -1,0 +1,28 @@
+<navascript>
+  <operations>
+        <operation entity="Player" service="mongo/ProcessQueryMongo"  validationService="tms/validateGetPerson"  method="GET">
+            <message name="__Mongo__">
+                <property name="Datasource" type="string" value="mymongo" />
+            </message>
+        </operation>
+        <operation entity="Player" service="mongo/ProcessModifyMongo" method="POST">
+            <message name="__Mongo__">
+                <property name="Datasource" type="string" value="mymongo" />
+            </message>
+        </operation>
+        <operation entity="Player" service="mongo/ProcessDeleteMongo" method="DELETE">
+            <message name="__Mongo__">
+                <property name="Datasource" type="string" value="mymongo" />
+            </message>
+        </operation>
+        <operation entity="Player" service="mongo/ProcessInsertMongo" method="PUT">
+            <message name="__Mongo__">
+                <property name="Datasource" type="string" value="mymongo" />
+            </message>
+        </operation>
+    </operations>
+
+  <message name="Player" extends="navajo://Person">
+    <property name="PersonType" type="string" />
+  </message>
+</navascript>

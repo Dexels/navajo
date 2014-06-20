@@ -1,0 +1,300 @@
+<aaa>
+    <!-- Authorization section. Each authorize entry defines for a specific service what entity to check and what parameters should be used -->
+    <!-- Discipline section -->
+    <authorize service="discipline/ProcessUpdateChargeCodes" xml:space="preserve"> 
+        UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="discipline/ProcessInsertChargeCode" xml:space="preserve"> 
+        UserInRole('ADMINISTRATOR')
+    </authorize>
+    <!-- Competition section -->
+    <authorize service="match/ProcessDeleteMatches" xml:space="preserve"> 
+        [/SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] AND UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="match/ProcessUpdateMatch" xml:space="preserve"> 
+        UserInRole('COMPETITION_DEPT', [/MatchData/OrganizingDistrictId]) OR UserInRole('ORG_PER_BV_COMPETITION_BASE', [/MatchData/OrganizingDistrictId]) OR UserInRole('ORG_PER_BV_COMPETITION_COORDINAT', [/MatchData/OrganizingDistrictId])
+    </authorize>
+    <authorize service="competition/ProcessUpdatePool" xml:space="preserve"> 
+        [/SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="competition/ProcessDeletePool" xml:space="preserve"> 
+        [/SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="competition/ProcessUpdateTeamCompetitionTypeSeason" xml:space="preserve"> 
+         [/SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="competition/ProcessUpdateCompetitionType" xml:space="preserve">
+        (!?[/CompetitionType/SeasonDistrictSpecific/DistrictId] OR
+        [/CompetitionType/SeasonDistrictSpecific/DistrictId] == [/__globals__/RegionOwner]) AND
+        ( UserInRole('OPERATOR') OR UserInRole('ORG_PER_BV_COMPETITION_BASE') OR UserInRole('ORG_PER_BV_COMPETITION_PLANNING') OR UserInRole('ORG_PER_BV_COMPETITION_COORDINAT') OR UserInRole('ADMINISTRATOR') )
+    </authorize>
+    <authorize service="competition/ProcessDeleteCompetitionType" xml:space="preserve">
+        (!?[/CompetitionType/SeasonDistrictSpecific/DistrictId] OR
+        [/CompetitionType/SeasonDistrictSpecific/DistrictId] == [/__globals__/RegionOwner]) AND
+        ( UserInRole('OPERATOR') OR UserInRole('ORG_PER_BV_COMPETITION_BASE') OR UserInRole('ORG_PER_BV_COMPETITION_PLANNING') OR UserInRole('ORG_PER_BV_COMPETITION_COORDINAT') OR UserInRole('ADMINISTRATOR') )
+    </authorize>
+    <authorize service="competition/ProcessInsertCompetitionType" xml:space="preserve">
+        ( UserInRole('OPERATOR') OR UserInRole('ORG_PER_BV_COMPETITION_BASE') OR UserInRole('ORG_PER_BV_COMPETITION_PLANNING') OR UserInRole('ORG_PER_BV_COMPETITION_COORDINAT') OR UserInRole('ADMINISTRATOR') )
+    </authorize>
+    <authorize service="competition/InitGetFacilityPriorities" xml:space="preserve"> 
+        [/SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="match/InitScheduleDraftMatches" xml:space="preserve"> 
+        [/SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="match/ProcessScheduleDraftMatches" xml:space="preserve"> 
+        [/SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="competition/ProcessClearSlotAssignments" xml:space="preserve"> 
+        [/SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="match/ProcessCreateDraftMatches" xml:space="preserve"> 
+        [/SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="match/ProcessFinalizeMatches" xml:space="preserve">  
+         [/SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="competition/ProcessAssignSlots" xml:space="preserve"> 
+        [/SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="competition/ProcessUpdateClassSeason" xml:space="preserve"> 
+        [/ClassSeason/DistrictId] == [/__globals__/RegionOwner]  OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="competition/ProcessDeleteClassSeason" xml:space="preserve">
+        [SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="competition/ProcessDeleteCompetitionClass" xml:space="preserve">
+        [SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] AND
+        ( UserInRole('ADMINISTRATOR') OR UserInRole('OPERATOR') OR UserInRole('ORG_PER_BV_COMPETITION_BASE') OR UserInRole('ORG_PER_BV_COMPETITION_PLANNING') OR UserInRole('ORG_PER_BV_COMPETITION_COORDINAT') )
+    </authorize>
+    <authorize service="competition/ProcessInsertCompetitionClass" xml:space="preserve">
+        ( UserInRole('ADMINISTRATOR') OR UserInRole('OPERATOR') OR UserInRole('ORG_PER_BV_COMPETITION_BASE') OR UserInRole('ORG_PER_BV_COMPETITION_PLANNING') OR UserInRole('ORG_PER_BV_COMPETITION_COORDINAT') )
+    </authorize>
+    <authorize service="competition/ProcessUpdateCompetitionClass" xml:space="preserve">
+        [SelectedGlobals/DistrictId] == [/__globals__/RegionOwner] AND
+        ( UserInRole('ADMINISTRATOR') OR UserInRole('OPERATOR') OR UserInRole('ORG_PER_BV_COMPETITION_BASE') OR UserInRole('ORG_PER_BV_COMPETITION_PLANNING') OR UserInRole('ORG_PER_BV_COMPETITION_COORDINAT') )
+    </authorize>
+    <!-- Facility section -->
+    <authorize service="facility/ProcessUpdateFacility" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_facilityorganizationid(?) from dual', [/FacilityData/FacilityId]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR') OR UserInRole('ORG_PER_BV_FACILITIES')
+    </authorize>
+    <authorize service="facility/ProcessDeleteFacility" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_facilityorganizationid(?) from dual', [/FacilityData/FacilityId]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR') OR UserInRole('ORG_PER_BV_FACILITIES')
+    </authorize>
+    <authorize service="facility/ProcessUpdateLocation" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_facilityorganizationid(?) from dual', [/LocationNonUpdatableData/FacilityId]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="facility/ProcessDeleteLocation" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_facilityorganizationid(?) from dual', [/LocationUpdateContext/FacilityId]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="facility/ProcessUpdateSubFacility" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR FORALL( '/SubFacilities', `!?[Update] OR [Update] == false OR
+                 SingleValueQuery('sportlinkkernel:SELECT get_facilityorganizationid(?) from dual', [FacilityId]) == [/__globals__/RegionOwner]`) OR UserInRole('ADMINISTRATOR')  OR UserInRole('ORG_PER_BV_FACILITIES')
+    </authorize>
+    <authorize service="facility/ProcessDeleteSubFacility" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR FORALL( '/SubFacilities', `!?[Delete] OR [Delete] == false OR
+                 SingleValueQuery('sportlinkkernel:SELECT get_facilityorganizationid(?) from dual', [FacilityId]) == [/__globals__/RegionOwner]`) OR UserInRole('ADMINISTRATOR')  OR UserInRole('ORG_PER_BV_FACILITIES')
+    </authorize>
+    <authorize service="facility/ProcessInsertSubLocation" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_facilityorganizationid(?) from dual', [/NewSubFacility/FacilityId]) == [/__globals__/RegionOwner]
+    </authorize>
+    <authorize service="facility/ProcessUpdateSubLocation" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR FORALL( '/SubFacilities', `!?[Update] OR [Update] == false OR
+                 SingleValueQuery('sportlinkkernel:SELECT get_facilityorganizationid(?) from dual', [FacilityId]) == [/__globals__/RegionOwner]`) OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="facility/ProcessDeleteSubLocation" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR FORALL( '/SubFacilities', `!?[Delete] OR [Delete] == false OR
+                 SingleValueQuery('sportlinkkernel:SELECT get_facilityorganizationid(?) from dual', [FacilityId]) == [/__globals__/RegionOwner]`) OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="club/ProcessDeleteSubFacilityAvailability" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR FORALL( '/Calendar', `SingleValueQuery('sportlinkkernel:SELECT get_facilityorganizationid(?) from dual', [FacilityId]) == [/__globals__/RegionOwner]`) OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="club/ProcessUpdateClubFacility" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/Club/ClubIdentifier]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="club/ProcessDeleteClubFacility" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/Club/ClubIdentifier]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <!-- Club section -->
+    <authorize service="club/PocessInsertOtherSport" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/ClubData/ClubIdentifier]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="club/ProcessDeleteClubActivity" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/Club/ClubIdentifier]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="club/ProcessInsertClubActivity" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/Club/ClubIdentifier]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="club/ProcessUpdateClubActivity" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/Club/ClubIdentifier]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="club/ProcessDeleteOtherSports" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/Club/ClubIdentifier]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="club/ProcessDeleteClub" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/ClubData/ClubIdentifier]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="club/ProcessUpdateClub" xml:space="preserve"> 
+        UserInRole('SPORTLINKCLUB') OR UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/ClubData/ClubIdentifier]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="club/ProcessOverwriteClubAddress" xml:space="preserve"> 
+        UserInRole('SUPERMEMBER_DEPT') OR SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual',  [/OverwriteClubAddress/ClubIdentifier]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <!-- Member section -->
+    <authorize service="member/ProcessDeletePlayer" xml:space="preserve"> 
+        UserInRole('SPORTLINKCLUB') OR
+        UserInRole('SUPERMEMBER_DEPT') OR [/__globals__/RegionOwner] == 'KNVB-DISTRICT-BETAALD' OR
+        SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/MemberData/OrganizationId])
+        == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR') 
+    </authorize>
+    <authorize service="member/ProcessInsertPlayer" xml:space="preserve"> 
+        UserInRole('SPORTLINKCLUB') OR UserInRole('ADMINISTRATOR') OR
+        UserInRole('SUPERMEMBER_DEPT') OR [/__globals__/RegionOwner] == 'KNVB-DISTRICT-BETAALD' OR
+        SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/ClubMember/ClubIdentifier])
+        == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR') 
+    </authorize>
+    <authorize service="member/ProcessInsertClubMembership" xml:space="preserve">
+       UserInRole('SPORTLINKCLUB') OR 
+       UserInRole('SUPERMEMBER_DEPT') OR [/__globals__/RegionOwner] == 'KNVB-DISTRICT-BETAALD' OR
+       SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/ClubMember/ClubIdentifier]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="member/ProcessDeleteClubMemberships" xml:space="preserve">
+       UserInRole('SPORTLINKCLUB') OR UserInRole('SUPERMEMBER_DEPT') OR
+       FORALL( '/ClubMembership/ClubMemberships', `[Delete] == false OR 
+                 SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [ClubIdentifier]) == [/__globals__/RegionOwner]`) OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="member/ProcessDeregisterMembers" xml:space="preserve">
+       UserInRole('SPORTLINKCLUB') OR UserInRole('SUPERMEMBER_DEPT') OR
+       FORALL( '/Members', `[Processed] == true OR 
+                 SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [ClubIdentifier]) == [/__globals__/RegionOwner]`) OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="member/ProcessInsertClubTrainer" xml:space="preserve">
+        UserInRole('SPORTLINKCLUB') OR UserInRole('SUPERMEMBER_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/NewClubTrainer/ClubName:value]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="member/ProcessDeleteClubTrainer" xml:space="preserve">
+        UserInRole('SPORTLINKCLUB') OR UserInRole('SUPERMEMBER_DEPT') OR
+        FORALL( '/ClubTrainers', `[Delete] == false OR 
+                 SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [ClubIdentifier]) == [/__globals__/RegionOwner]`) OR UserInRole('ADMINISTRATOR')
+      </authorize>
+    <authorize service="member/ProcessUpdateClubTrainer" xml:space="preserve">
+        UserInRole('SPORTLINKCLUB') OR UserInRole('SUPERMEMBER_DEPT') OR
+        FORALL( '/ClubTrainers', `[Update] == false OR 
+                 SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [ClubIdentifier]) == [/__globals__/RegionOwner]`) OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="member/ProcessInsertClubAdminFunction" xml:space="preserve">
+        UserInRole('SPORTLINKCLUB') OR UserInRole('SUPERMEMBER_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [/NewClubAdminFunction/ClubName:value]) == [/__globals__/RegionOwner] OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="member/ProcessDeleteClubAdminFunction" xml:space="preserve">
+        UserInRole('SPORTLINKCLUB') OR UserInRole('SUPERMEMBER_DEPT') OR
+        FORALL( '/ClubAdminFunctions', `[Delete] == false OR 
+                 SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [ClubIdentifier]) == [/__globals__/RegionOwner]`) OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="member/ProcessUpdateClubAdminFunction" xml:space="preserve">
+        UserInRole('SPORTLINKCLUB') OR UserInRole('SUPERMEMBER_DEPT') OR
+        FORALL( '/ClubAdminFunctions', `[Update] == false OR 
+                 SingleValueQuery('sportlinkkernel:SELECT get_parentorganizationid(?) from dual', [ClubIdentifier]) == [/__globals__/RegionOwner]`) OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="member/ProcessUpdateKernMember" xml:space="preserve"> 
+        [/MemberData/RegionOwner] == [/__globals__/RegionOwner] OR UserInRole('SPORTLINKCLUB') OR UserInRole('SUPERMEMBER_DEPT')  OR UserInRole('ADMINISTRATOR') OR UserInRole('ORG_PER_BV_MEMBERS')
+    </authorize>
+    <authorize service="relations/ProcessUpdateInternationalDetails" xml:space="preserve"> 
+        UserInRole('INTERNATIONAL_DEPT') OR UserInRole('ADMINISTRATOR') OR UserInRole('MARKET_DEPT_INTERNATIONALS')
+    </authorize>
+    <!-- Activities section -->
+    <authorize service="activities/ProcessDeleteActivity" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == null
+    </authorize>
+    <authorize service="activities/ProcessDeleteActivityDays" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == null
+    </authorize>
+    <authorize service="activities/ProcessDeleteActivityFacility" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == null
+    </authorize>
+    <authorize service="activities/ProcessDeleteActivityParticipant" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == null
+    </authorize>
+    <authorize service="activities/ProcessDeleteFacilityActivities" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == null
+    </authorize>
+    <authorize service="activities/ProcessDeleteOrganizationActivities" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == null
+    </authorize>
+    <authorize service="activities/ProcessUpdateActivity" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == null
+    </authorize>
+    <authorize service="activities/ProcessUpdateActivityDays" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == null
+    </authorize>
+    <authorize service="activities/ProcessUpdateActivityFacility" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == null
+    </authorize>
+    <authorize service="activities/ProcessUpdateActivityParticipant" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == null
+    </authorize>
+    <!-- Note: when no organization is supplied the activity is added to
+      **       the district; in this case the authorization is handled
+      **       at the top level via the role
+      -->
+    <authorize service="activities/ProcessInsertActivity" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR !?[/ActivityInsertData/OrganizationId] OR
+        ( ?[/ActivityInsertData/OrganizationId] AND
+           SingleValueQuery('sportlinkkernel:SELECT get_organizationdistrictid(?) from dual', [/ActivityInsertData/OrganizationId]) == [/__globals__/RegionOwner]
+        )
+    </authorize>
+    <authorize service="activities/ProcessInsertActivityDay" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == null
+    </authorize>
+    <authorize service="activities/ProcessInsertActivityFacility" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/NewActivityInsertFacilityData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/NewActivityInsertFacilityData/ActivityId]) == null
+    </authorize>
+    <authorize service="activities/ProcessInsertActivityParticipant" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        FORALL( '/NewActivityInsertParticipantData',
+              ` SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [ActivityId]) == [/__globals__/RegionOwner] OR
+                SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [ActivityId]) == null
+              `)
+    </authorize>
+    <authorize service="activities/ProcessInsertFacilityActivity" xml:space="preserve"> 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/NewActivityInsertFacilityData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/NewActivityInsertFacilityData/ActivityId]) == null
+    </authorize>
+    <authorize service="activities/ProcessEmailParticipants" xml:space="preserve"
+    > 
+        UserInRole('SUPERACTIVITY_DEPT') OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == [/__globals__/RegionOwner] OR
+        SingleValueQuery('sportlinkkernel:SELECT get_activitydistrictid(?) from dual', [/ActivityUpdateData/ActivityId]) == null
+    </authorize>
+    <authorize service="official/ProcessUpdateOfficial" xml:space="preserve">
+        FORALL( '/Officials', `! [Update] OR UserInRole( 'COMPETITION_DEPT', [OrganizingDistrictId] ) OR UserInRole( 'ORG_PER_BV_OFFICIALS', [OrganizingDistrictId] ) `) OR UserInRole('ADMINISTRATOR')
+    </authorize>
+    <authorize service="official/ProcessUpdateParentDistrictId" xml:space="preserve"> 
+        UserInRole('COMPETITION_DEPT', [/Official/CurrentDistrictId]) OR UserInRole('ORG_PER_BV_OFFICIALS', [/Official/CurrentDistrictId])
+    </authorize>
+</aaa>

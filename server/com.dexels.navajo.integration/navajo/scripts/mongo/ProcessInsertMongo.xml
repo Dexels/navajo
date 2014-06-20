@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+	<map object="com.dexels.navajo.mongo.adapter.InsertMongoAdapter"/>
+</tsl>

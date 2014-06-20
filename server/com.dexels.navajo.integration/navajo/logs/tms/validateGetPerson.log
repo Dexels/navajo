@@ -1,0 +1,1055 @@
+1403262959172-61 - Installing script: validateGetPerson.jar
+1403262959172-61 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403262959172-61 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403262959172-61 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403262959172-61 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403262959172-61 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403262959172-61 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403262959172-61 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403262959172-61 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403262959172-61 - Scanning bundle navajo.script.tms/validateGetPerson for blueprint application
+1403262959172-61 - No blueprint application found in bundle navajo.script.tms/validateGetPerson
+1403262959172-61 - On demand installation finished, waiting for service...
+1403262959172-61 - No global manager found
+1403262973910-62 - No global manager found
+1403263207676-63 - No global manager found
+1403264637603-101 - Install: Fri Jun 20 13:15:59 CEST 2014
+1403264637603-101 - mod: Fri Jun 20 13:43:41 CEST 2014
+1403264637603-101 - comp: 
+1403264637603-101 - Obsolete script found. Needs recompile.
+1403264637603-101 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264637603-101 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264637603-101 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264637603-101 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264637603-101 - Deactivating script: tms.validateGetPerson
+1403264637603-101 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264637603-101 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264637603-101 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264637603-101 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264637603-101 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264637603-101 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264637603-101 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264637603-101 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264637603-101 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264637603-101 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264637603-101 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264637603-101 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264637603-101 - uninstalling bundle with URI: file:/home/chris/dexels/navajo/server/com.dexels.navajo.integration/navajo/classes/tms/validateGetPerson.jar
+1403264637603-101 - Installing script: validateGetPerson.jar
+1403264637603-101 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264637603-101 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264637603-101 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264637603-101 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264637603-101 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264637603-101 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264637603-101 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264637603-101 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264637603-101 - Scanning bundle navajo.script.tms/validateGetPerson for blueprint application
+1403264637603-101 - No blueprint application found in bundle navajo.script.tms/validateGetPerson
+1403264637603-101 - On demand installation finished, waiting for service...
+1403264637603-101 - No global manager found
+1403264637888-123 - No global manager found
+1403264678012-145 - No global manager found
+1403264798553-147 - Install: Fri Jun 20 13:43:57 CEST 2014
+1403264798553-147 - mod: Fri Jun 20 13:46:26 CEST 2014
+1403264798553-147 - comp: 
+1403264798553-147 - Obsolete script found. Needs recompile.
+1403264798553-147 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264798553-147 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264798553-147 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264798553-147 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264798553-147 - Deactivating script: tms.validateGetPerson
+1403264798553-147 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264798553-147 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264798553-147 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264798553-147 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264798553-147 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264798553-147 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264798553-147 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264798553-147 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264798553-147 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264798553-147 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264798553-147 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264798553-147 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264798553-147 - uninstalling bundle with URI: file:/home/chris/dexels/navajo/server/com.dexels.navajo.integration/navajo/classes/tms/validateGetPerson.jar
+1403264798553-147 - Installing script: validateGetPerson.jar
+1403264798553-147 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264798553-147 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264798553-147 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264798553-147 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264798553-147 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264798553-147 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264798553-147 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264798553-147 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264798553-147 - Scanning bundle navajo.script.tms/validateGetPerson for blueprint application
+1403264798553-147 - No blueprint application found in bundle navajo.script.tms/validateGetPerson
+1403264798553-147 - On demand installation finished, waiting for service...
+1403264798553-147 - No global manager found
+1403264915290-165 - Install: Fri Jun 20 13:46:38 CEST 2014
+1403264915290-165 - mod: Fri Jun 20 13:48:04 CEST 2014
+1403264915290-165 - comp: 
+1403264915290-165 - Obsolete script found. Needs recompile.
+1403264915290-165 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264915290-165 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264915290-165 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264915290-165 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264915290-165 - Deactivating script: tms.validateGetPerson
+1403264915290-165 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264915290-165 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264915290-165 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264915290-165 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264915290-165 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264915290-165 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264915290-165 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264915290-165 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264915290-165 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264915290-165 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264915290-165 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264915290-165 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264915290-165 - uninstalling bundle with URI: file:/home/chris/dexels/navajo/server/com.dexels.navajo.integration/navajo/classes/tms/validateGetPerson.jar
+1403264915290-165 - Installing script: validateGetPerson.jar
+1403264915290-165 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264915290-165 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264915290-165 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264915290-165 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264915290-165 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264915290-165 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264915290-165 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403264915290-165 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403264915290-165 - Scanning bundle navajo.script.tms/validateGetPerson for blueprint application
+1403264915290-165 - No blueprint application found in bundle navajo.script.tms/validateGetPerson
+1403264915290-165 - On demand installation finished, waiting for service...
+1403264915290-165 - No global manager found
+1403265111310-166 - 
+javax.servlet.ServletException: General Error : Validation error 
+<tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" queueId="null" processingTime="0" accessId="1403265111310-166" cpuload="-1.0" authorisationTime="1" serverTime="2" threadCount="0" beforeServiceTime="0" queueTime="0" afterServiceTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="tms/validateGetPerson" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="ConditionErrors" type="array">
+      <message index="0" name="ConditionErrors" type="array_element">
+         <property direction="out" name="Id" value="40003" type="string"/>
+         <property direction="out" name="Description" value="null" type="string"/>
+         <property direction="out" name="FailedExpression" value="[/Player/PersonId] == 'XX'" type="string"/>
+         <property direction="out" name="EvaluatedExpression" value="{&quot;AA&quot;} == 'XX'" type="string"/>
+      </message>
+   </message>
+   <methods/>
+   <operations/>
+</tml>
+
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:143) ~[com.dexels.navajo.entity/:na]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:848) ~[org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:684) ~[org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:501) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceServletHandler.doHandle(HttpServiceServletHandler.java:69) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:137) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:557) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:231) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1086) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceContext.doHandle(HttpServiceContext.java:219) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:428) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:193) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1020) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.JettyServerHandlerCollection.handle(JettyServerHandlerCollection.java:77) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.Server.handle(Server.java:366) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:494) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:971) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:1033) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:644) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:667) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at java.lang.Thread.run(Thread.java:744) [na:1.7.0_55]
+Caused by: com.dexels.navajo.entity.EntityException: General Error : Validation error 
+<tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" queueId="null" processingTime="0" accessId="1403265111310-166" cpuload="-1.0" authorisationTime="1" serverTime="2" threadCount="0" beforeServiceTime="0" queueTime="0" afterServiceTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="tms/validateGetPerson" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="ConditionErrors" type="array">
+      <message index="0" name="ConditionErrors" type="array_element">
+         <property direction="out" name="Id" value="40003" type="string"/>
+         <property direction="out" name="Description" value="null" type="string"/>
+         <property direction="out" name="FailedExpression" value="[/Player/PersonId] == 'XX'" type="string"/>
+         <property direction="out" name="EvaluatedExpression" value="{&quot;AA&quot;} == 'XX'" type="string"/>
+      </message>
+   </message>
+   <methods/>
+   <operations/>
+</tml>
+
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.perform(ServiceEntityOperation.java:329) ~[com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:127) ~[com.dexels.navajo.entity/:na]
+	... 27 common frames omitted
+1403265111310-166 - /entity/Player
+com.dexels.navajo.entity.EntityException: General Error : Validation error 
+<tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" queueId="null" processingTime="0" accessId="1403265111310-166" cpuload="-1.0" authorisationTime="1" serverTime="2" threadCount="0" beforeServiceTime="0" queueTime="0" afterServiceTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="tms/validateGetPerson" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="ConditionErrors" type="array">
+      <message index="0" name="ConditionErrors" type="array_element">
+         <property direction="out" name="Id" value="40003" type="string"/>
+         <property direction="out" name="Description" value="null" type="string"/>
+         <property direction="out" name="FailedExpression" value="[/Player/PersonId] == 'XX'" type="string"/>
+         <property direction="out" name="EvaluatedExpression" value="{&quot;AA&quot;} == 'XX'" type="string"/>
+      </message>
+   </message>
+   <methods/>
+   <operations/>
+</tml>
+
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.perform(ServiceEntityOperation.java:329) ~[com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:127) ~[com.dexels.navajo.entity/:na]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:848) ~[org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:684) ~[org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:501) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceServletHandler.doHandle(HttpServiceServletHandler.java:69) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:137) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:557) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:231) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1086) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceContext.doHandle(HttpServiceContext.java:219) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:428) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:193) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1020) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.JettyServerHandlerCollection.handle(JettyServerHandlerCollection.java:77) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.Server.handle(Server.java:366) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:494) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:971) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:1033) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:644) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:667) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at java.lang.Thread.run(Thread.java:744) [na:1.7.0_55]
+1403265111310-166 - [GET /entity/Player?username=ROOT&password=ROOT&PersonId=AA]@1567123621 org.eclipse.jetty.server.Request@5d6868a5
+1403265111310-166 - Response already committed for handling com.dexels.navajo.entity.EntityException: General Error : Validation error 
+<tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" queueId="null" processingTime="0" accessId="1403265111310-166" cpuload="-1.0" authorisationTime="1" serverTime="2" threadCount="0" beforeServiceTime="0" queueTime="0" afterServiceTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="tms/validateGetPerson" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="ConditionErrors" type="array">
+      <message index="0" name="ConditionErrors" type="array_element">
+         <property direction="out" name="Id" value="40003" type="string"/>
+         <property direction="out" name="Description" value="null" type="string"/>
+         <property direction="out" name="FailedExpression" value="[/Player/PersonId] == 'XX'" type="string"/>
+         <property direction="out" name="EvaluatedExpression" value="{&quot;AA&quot;} == 'XX'" type="string"/>
+      </message>
+   </message>
+   <methods/>
+   <operations/>
+</tml>
+
+1403265111310-166 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403265111310-166 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@137c20c1}
+1403265111310-166 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@764dc63d}
+1403265111310-166 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403265111310-166 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403265111310-166 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403265111310-166 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403265111310-166 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403265111310-166 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403265111310-166 - RESPONSE /entity/Player  500 handled=true
+1403265111310-166 - Enabled read interest SCEP@15558441{l(/127.0.0.1:42872)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@215dd258,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=0},r=1}
+1403265111310-166 - filled 0/0
+1403265111310-166 - filled 263/263
+1403265111310-166 - REQUEST /entity/Club on AsyncHttpConnection@5a709424,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403265111310-166 - Matching [/entity/Club]...
+1403265111310-166 - Path [/entity/Club] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@65e8b7c4,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403265111310-166 - scope null||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403265111310-166 - context=||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403265111310-166 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@2135dc50
+1403265111310-166 - session=null
+1403265111310-166 - servlet |/entity|/Club -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403265111310-166 - Handling request for [/entity/Club] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403265111310-166 - chain=null
+1403265111310-166 - No global manager found
+1403265141168-183 - No global manager found
+1403265170856-184 - 
+javax.servlet.ServletException: General Error : <tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" queueId="null" processingTime="1" accessId="1403265170856-184" cpuload="-1.0" authorisationTime="10" serverTime="14" threadCount="0" beforeServiceTime="0" queueTime="0" afterServiceTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="tms/validateGetPerson" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="ConditionErrors" type="array">
+      <message index="0" name="ConditionErrors" type="array_element">
+         <property direction="out" name="Id" value="40003" type="string"/>
+         <property direction="out" name="Description" value="null" type="string"/>
+         <property direction="out" name="FailedExpression" value="[/Player/PersonId] == 'XX'" type="string"/>
+         <property direction="out" name="EvaluatedExpression" value="{&quot;AA&quot;} == 'XX'" type="string"/>
+      </message>
+   </message>
+   <methods/>
+   <operations/>
+</tml>
+
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:143) ~[com.dexels.navajo.entity/:na]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:848) ~[org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:684) ~[org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:501) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceServletHandler.doHandle(HttpServiceServletHandler.java:69) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:137) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:557) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:231) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1086) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceContext.doHandle(HttpServiceContext.java:219) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:428) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:193) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1020) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.JettyServerHandlerCollection.handle(JettyServerHandlerCollection.java:77) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.Server.handle(Server.java:366) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:494) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:971) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:1033) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:644) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:667) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at java.lang.Thread.run(Thread.java:744) [na:1.7.0_55]
+Caused by: com.dexels.navajo.entity.EntityException: General Error : <tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" queueId="null" processingTime="1" accessId="1403265170856-184" cpuload="-1.0" authorisationTime="10" serverTime="14" threadCount="0" beforeServiceTime="0" queueTime="0" afterServiceTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="tms/validateGetPerson" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="ConditionErrors" type="array">
+      <message index="0" name="ConditionErrors" type="array_element">
+         <property direction="out" name="Id" value="40003" type="string"/>
+         <property direction="out" name="Description" value="null" type="string"/>
+         <property direction="out" name="FailedExpression" value="[/Player/PersonId] == 'XX'" type="string"/>
+         <property direction="out" name="EvaluatedExpression" value="{&quot;AA&quot;} == 'XX'" type="string"/>
+      </message>
+   </message>
+   <methods/>
+   <operations/>
+</tml>
+
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.perform(ServiceEntityOperation.java:329) ~[com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:127) ~[com.dexels.navajo.entity/:na]
+	... 27 common frames omitted
+1403265170856-184 - /entity/Player
+com.dexels.navajo.entity.EntityException: General Error : <tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" queueId="null" processingTime="1" accessId="1403265170856-184" cpuload="-1.0" authorisationTime="10" serverTime="14" threadCount="0" beforeServiceTime="0" queueTime="0" afterServiceTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="tms/validateGetPerson" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="ConditionErrors" type="array">
+      <message index="0" name="ConditionErrors" type="array_element">
+         <property direction="out" name="Id" value="40003" type="string"/>
+         <property direction="out" name="Description" value="null" type="string"/>
+         <property direction="out" name="FailedExpression" value="[/Player/PersonId] == 'XX'" type="string"/>
+         <property direction="out" name="EvaluatedExpression" value="{&quot;AA&quot;} == 'XX'" type="string"/>
+      </message>
+   </message>
+   <methods/>
+   <operations/>
+</tml>
+
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.perform(ServiceEntityOperation.java:329) ~[com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:127) ~[com.dexels.navajo.entity/:na]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:848) ~[org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:684) ~[org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:501) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceServletHandler.doHandle(HttpServiceServletHandler.java:69) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:137) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:557) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:231) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1086) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceContext.doHandle(HttpServiceContext.java:219) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:428) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:193) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1020) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.JettyServerHandlerCollection.handle(JettyServerHandlerCollection.java:77) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.Server.handle(Server.java:366) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:494) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:971) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:1033) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:644) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:667) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at java.lang.Thread.run(Thread.java:744) [na:1.7.0_55]
+1403265170856-184 - [GET /entity/Player?username=ROOT&password=ROOT&PersonId=AA]@517468755 org.eclipse.jetty.server.Request@1ed7f253
+1403265170856-184 - Response already committed for handling com.dexels.navajo.entity.EntityException: General Error : <tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" queueId="null" processingTime="1" accessId="1403265170856-184" cpuload="-1.0" authorisationTime="10" serverTime="14" threadCount="0" beforeServiceTime="0" queueTime="0" afterServiceTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="tms/validateGetPerson" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="ConditionErrors" type="array">
+      <message index="0" name="ConditionErrors" type="array_element">
+         <property direction="out" name="Id" value="40003" type="string"/>
+         <property direction="out" name="Description" value="null" type="string"/>
+         <property direction="out" name="FailedExpression" value="[/Player/PersonId] == 'XX'" type="string"/>
+         <property direction="out" name="EvaluatedExpression" value="{&quot;AA&quot;} == 'XX'" type="string"/>
+      </message>
+   </message>
+   <methods/>
+   <operations/>
+</tml>
+
+1403265170856-184 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403265170856-184 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@137c20c1}
+1403265170856-184 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@764dc63d}
+1403265170856-184 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403265170856-184 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403265170856-184 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403265170856-184 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403265170856-184 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403265170856-184 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403265170856-184 - RESPONSE /entity/Player  500 handled=true
+1403265170856-184 - Enabled read interest SCEP@a0a2740{l(/127.0.0.1:42931)<->r(/127.0.0.1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@2096dfe6,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=12,c=0},r=1}
+1403265170856-184 - filled 0/0
+1403265170856-184 - filled 263/263
+1403265170856-184 - REQUEST /entity/Club on AsyncHttpConnection@3c91b77c,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=12,c=0},r=1
+1403265170856-184 - Matching [/entity/Club]...
+1403265170856-184 - Path [/entity/Club] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@65e8b7c4,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403265170856-184 - scope null||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403265170856-184 - context=||/entity/Club @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403265170856-184 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@2135dc50
+1403265170856-184 - session=null
+1403265170856-184 - servlet |/entity|/Club -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403265170856-184 - Handling request for [/entity/Club] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403265170856-184 - chain=null
+1403265170856-184 - No global manager found
+1403265214894-193 - Error: 
+com.dexels.navajo.parser.TMLExpressionException: Invalid expression. Invalid condition: [/Player/PersonId] == 'XX'.
+Cause: Invalid expression. Property does not exist: /Player/PersonId
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:55) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:60) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.mapping.CompiledScript.checkValidationRules(CompiledScript.java:420) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.mapping.CompiledScript.run(CompiledScript.java:352) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.GenericHandler.doService(GenericHandler.java:486) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.ServiceHandler.construct(ServiceHandler.java:68) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.persistence.impl.PersistenceManagerImpl.get(PersistenceManagerImpl.java:160) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.dispatch(Dispatcher.java:473) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.processNavajo(Dispatcher.java:1059) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.handle(Dispatcher.java:781) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.LocalClientDispatcherWrapper.call(LocalClientDispatcherWrapper.java:44) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.commitOperation(ServiceEntityOperation.java:564) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.callEntityValidationService(ServiceEntityOperation.java:491) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.perform(ServiceEntityOperation.java:324) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:127) [com.dexels.navajo.entity/:na]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:848) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:684) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:501) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceServletHandler.doHandle(HttpServiceServletHandler.java:69) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:137) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:557) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:231) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1086) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceContext.doHandle(HttpServiceContext.java:219) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:428) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:193) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1020) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.JettyServerHandlerCollection.handle(JettyServerHandlerCollection.java:77) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.Server.handle(Server.java:366) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:494) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:971) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:1033) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:644) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:667) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at java.lang.Thread.run(Thread.java:744) [na:1.7.0_55]
+Caused by: com.dexels.navajo.parser.TMLExpressionException: Invalid expression. Property does not exist: /Player/PersonId
+	at com.dexels.navajo.parser.ASTTmlNode.interpret(ASTTmlNode.java:309) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.ASTEQNode.interpret(ASTEQNode.java:14) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:46) ~[com.dexels.navajo.core/:na]
+	... 41 common frames omitted
+1403265214894-193 - No global manager found
+1403265649770-195 - Error: 
+com.dexels.navajo.parser.TMLExpressionException: Invalid expression. Invalid condition: [/Player/PersonId] == 'XX'.
+Cause: Invalid expression. Property does not exist: /Player/PersonId
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:55) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:60) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.mapping.CompiledScript.checkValidationRules(CompiledScript.java:420) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.mapping.CompiledScript.run(CompiledScript.java:352) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.GenericHandler.doService(GenericHandler.java:486) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.ServiceHandler.construct(ServiceHandler.java:68) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.persistence.impl.PersistenceManagerImpl.get(PersistenceManagerImpl.java:160) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.dispatch(Dispatcher.java:473) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.processNavajo(Dispatcher.java:1059) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.handle(Dispatcher.java:781) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.LocalClientDispatcherWrapper.call(LocalClientDispatcherWrapper.java:44) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.commitOperation(ServiceEntityOperation.java:564) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.callEntityValidationService(ServiceEntityOperation.java:491) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.perform(ServiceEntityOperation.java:324) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:127) [com.dexels.navajo.entity/:na]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:848) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:684) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:501) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceServletHandler.doHandle(HttpServiceServletHandler.java:69) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:137) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:557) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:231) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1086) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceContext.doHandle(HttpServiceContext.java:219) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:428) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:193) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1020) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.JettyServerHandlerCollection.handle(JettyServerHandlerCollection.java:77) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.Server.handle(Server.java:366) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:494) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:971) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:1033) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:644) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:667) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at java.lang.Thread.run(Thread.java:744) [na:1.7.0_55]
+Caused by: com.dexels.navajo.parser.TMLExpressionException: Invalid expression. Property does not exist: /Player/PersonId
+	at com.dexels.navajo.parser.ASTTmlNode.interpret(ASTTmlNode.java:309) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.ASTEQNode.interpret(ASTEQNode.java:14) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:46) ~[com.dexels.navajo.core/:na]
+	... 41 common frames omitted
+1403265649770-195 - No global manager found
+1403265718651-199 - Error: 
+com.dexels.navajo.parser.TMLExpressionException: Invalid expression. Invalid condition: [/Player/PersonId] == 'XX'.
+Cause: Invalid expression. Property does not exist: /Player/PersonId
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:55) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:60) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.mapping.CompiledScript.checkValidationRules(CompiledScript.java:420) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.mapping.CompiledScript.run(CompiledScript.java:352) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.GenericHandler.doService(GenericHandler.java:486) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.ServiceHandler.construct(ServiceHandler.java:68) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.persistence.impl.PersistenceManagerImpl.get(PersistenceManagerImpl.java:160) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.dispatch(Dispatcher.java:473) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.processNavajo(Dispatcher.java:1059) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.handle(Dispatcher.java:781) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.LocalClientDispatcherWrapper.call(LocalClientDispatcherWrapper.java:44) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.commitOperation(ServiceEntityOperation.java:564) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.callEntityValidationService(ServiceEntityOperation.java:491) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.perform(ServiceEntityOperation.java:324) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:127) [com.dexels.navajo.entity/:na]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:848) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:684) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:501) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceServletHandler.doHandle(HttpServiceServletHandler.java:69) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:137) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:557) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:231) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1086) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceContext.doHandle(HttpServiceContext.java:219) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:428) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:193) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1020) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.JettyServerHandlerCollection.handle(JettyServerHandlerCollection.java:77) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.Server.handle(Server.java:366) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:494) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:971) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:1033) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:644) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:667) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at java.lang.Thread.run(Thread.java:744) [na:1.7.0_55]
+Caused by: com.dexels.navajo.parser.TMLExpressionException: Invalid expression. Property does not exist: /Player/PersonId
+	at com.dexels.navajo.parser.ASTTmlNode.interpret(ASTTmlNode.java:309) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.ASTEQNode.interpret(ASTEQNode.java:14) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:46) ~[com.dexels.navajo.core/:na]
+	... 41 common frames omitted
+1403265718651-199 - No global manager found
+1403265722795-201 - Error: 
+com.dexels.navajo.parser.TMLExpressionException: Invalid expression. Invalid condition: [/Player/PersonId] == 'XX'.
+Cause: Invalid expression. Property does not exist: /Player/PersonId
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:55) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:60) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.mapping.CompiledScript.checkValidationRules(CompiledScript.java:420) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.mapping.CompiledScript.run(CompiledScript.java:352) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.GenericHandler.doService(GenericHandler.java:486) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.ServiceHandler.construct(ServiceHandler.java:68) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.persistence.impl.PersistenceManagerImpl.get(PersistenceManagerImpl.java:160) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.dispatch(Dispatcher.java:473) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.processNavajo(Dispatcher.java:1059) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.handle(Dispatcher.java:781) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.LocalClientDispatcherWrapper.call(LocalClientDispatcherWrapper.java:44) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.commitOperation(ServiceEntityOperation.java:564) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.callEntityValidationService(ServiceEntityOperation.java:491) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.perform(ServiceEntityOperation.java:324) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:127) [com.dexels.navajo.entity/:na]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:848) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:684) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:501) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceServletHandler.doHandle(HttpServiceServletHandler.java:69) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:137) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:557) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:231) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1086) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceContext.doHandle(HttpServiceContext.java:219) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:428) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:193) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1020) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.JettyServerHandlerCollection.handle(JettyServerHandlerCollection.java:77) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.Server.handle(Server.java:366) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:494) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:971) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:1033) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:644) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:667) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at java.lang.Thread.run(Thread.java:744) [na:1.7.0_55]
+Caused by: com.dexels.navajo.parser.TMLExpressionException: Invalid expression. Property does not exist: /Player/PersonId
+	at com.dexels.navajo.parser.ASTTmlNode.interpret(ASTTmlNode.java:309) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.ASTEQNode.interpret(ASTEQNode.java:14) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:46) ~[com.dexels.navajo.core/:na]
+	... 41 common frames omitted
+1403265722795-201 - No global manager found
+1403265737200-203 - Error: 
+com.dexels.navajo.parser.TMLExpressionException: Invalid expression. Invalid condition: [/Player/PersonId] == 'XX'.
+Cause: Invalid expression. Property does not exist: /Player/PersonId
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:55) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:60) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.mapping.CompiledScript.checkValidationRules(CompiledScript.java:420) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.mapping.CompiledScript.run(CompiledScript.java:352) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.GenericHandler.doService(GenericHandler.java:486) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.ServiceHandler.construct(ServiceHandler.java:68) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.persistence.impl.PersistenceManagerImpl.get(PersistenceManagerImpl.java:160) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.dispatch(Dispatcher.java:473) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.processNavajo(Dispatcher.java:1059) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.Dispatcher.handle(Dispatcher.java:781) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.server.LocalClientDispatcherWrapper.call(LocalClientDispatcherWrapper.java:44) [com.dexels.navajo.core/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.commitOperation(ServiceEntityOperation.java:564) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.callEntityValidationService(ServiceEntityOperation.java:491) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.perform(ServiceEntityOperation.java:324) [com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:127) [com.dexels.navajo.entity/:na]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:848) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:684) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:501) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceServletHandler.doHandle(HttpServiceServletHandler.java:69) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:137) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:557) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:231) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1086) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceContext.doHandle(HttpServiceContext.java:219) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:428) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:193) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1020) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.JettyServerHandlerCollection.handle(JettyServerHandlerCollection.java:77) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.Server.handle(Server.java:366) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:494) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:971) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:1033) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:644) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:667) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at java.lang.Thread.run(Thread.java:744) [na:1.7.0_55]
+Caused by: com.dexels.navajo.parser.TMLExpressionException: Invalid expression. Property does not exist: /Player/PersonId
+	at com.dexels.navajo.parser.ASTTmlNode.interpret(ASTTmlNode.java:309) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.ASTEQNode.interpret(ASTEQNode.java:14) ~[com.dexels.navajo.core/:na]
+	at com.dexels.navajo.parser.Condition.evaluate(Condition.java:46) ~[com.dexels.navajo.core/:na]
+	... 41 common frames omitted
+1403265737200-203 - No global manager found
+1403265769498-207 - 
+javax.servlet.ServletException: General Error : <tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" queueId="null" processingTime="0" accessId="1403265769498-207" cpuload="-1.0" authorisationTime="1" serverTime="1" threadCount="0" beforeServiceTime="0" queueTime="0" afterServiceTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="tms/validateGetPerson" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="ConditionErrors" type="array">
+      <message index="0" name="ConditionErrors" type="array_element">
+         <property direction="out" name="Id" value="40003" type="string"/>
+         <property direction="out" name="Description" value="null" type="string"/>
+         <property direction="out" name="FailedExpression" value="[/Player/PersonId] == 'XX'" type="string"/>
+         <property direction="out" name="EvaluatedExpression" value="{&quot;AA&quot;} == 'XX'" type="string"/>
+      </message>
+   </message>
+   <methods/>
+   <operations/>
+</tml>
+
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:143) ~[com.dexels.navajo.entity/:na]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:848) ~[org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:684) ~[org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:501) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceServletHandler.doHandle(HttpServiceServletHandler.java:69) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:137) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:557) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:231) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1086) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceContext.doHandle(HttpServiceContext.java:219) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:428) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:193) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1020) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.JettyServerHandlerCollection.handle(JettyServerHandlerCollection.java:77) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.Server.handle(Server.java:366) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:494) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:971) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:1033) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:644) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:667) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at java.lang.Thread.run(Thread.java:744) [na:1.7.0_55]
+Caused by: com.dexels.navajo.entity.EntityException: General Error : <tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" queueId="null" processingTime="0" accessId="1403265769498-207" cpuload="-1.0" authorisationTime="1" serverTime="1" threadCount="0" beforeServiceTime="0" queueTime="0" afterServiceTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="tms/validateGetPerson" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="ConditionErrors" type="array">
+      <message index="0" name="ConditionErrors" type="array_element">
+         <property direction="out" name="Id" value="40003" type="string"/>
+         <property direction="out" name="Description" value="null" type="string"/>
+         <property direction="out" name="FailedExpression" value="[/Player/PersonId] == 'XX'" type="string"/>
+         <property direction="out" name="EvaluatedExpression" value="{&quot;AA&quot;} == 'XX'" type="string"/>
+      </message>
+   </message>
+   <methods/>
+   <operations/>
+</tml>
+
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.perform(ServiceEntityOperation.java:329) ~[com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:127) ~[com.dexels.navajo.entity/:na]
+	... 27 common frames omitted
+1403265769498-207 - /entity/Player
+com.dexels.navajo.entity.EntityException: General Error : <tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" queueId="null" processingTime="0" accessId="1403265769498-207" cpuload="-1.0" authorisationTime="1" serverTime="1" threadCount="0" beforeServiceTime="0" queueTime="0" afterServiceTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="tms/validateGetPerson" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="ConditionErrors" type="array">
+      <message index="0" name="ConditionErrors" type="array_element">
+         <property direction="out" name="Id" value="40003" type="string"/>
+         <property direction="out" name="Description" value="null" type="string"/>
+         <property direction="out" name="FailedExpression" value="[/Player/PersonId] == 'XX'" type="string"/>
+         <property direction="out" name="EvaluatedExpression" value="{&quot;AA&quot;} == 'XX'" type="string"/>
+      </message>
+   </message>
+   <methods/>
+   <operations/>
+</tml>
+
+	at com.dexels.navajo.entity.impl.ServiceEntityOperation.perform(ServiceEntityOperation.java:329) ~[com.dexels.navajo.entity/:na]
+	at com.dexels.navajo.entity.listener.EntityListener.service(EntityListener.java:127) ~[com.dexels.navajo.entity/:na]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:848) ~[org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:684) ~[org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:501) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceServletHandler.doHandle(HttpServiceServletHandler.java:69) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:137) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:557) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:231) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1086) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.HttpServiceContext.doHandle(HttpServiceContext.java:219) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:428) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:193) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1020) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.ops4j.pax.web.service.jetty.internal.JettyServerHandlerCollection.handle(JettyServerHandlerCollection.java:77) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.Server.handle(Server.java:366) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:494) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:971) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:1033) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:644) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:667) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543) [org.ops4j.pax.web.pax-web-jetty-bundle_3.0.6.jar:na]
+	at java.lang.Thread.run(Thread.java:744) [na:1.7.0_55]
+1403265769498-207 - [GET /entity/Player?username=ROOT&password=ROOT&PersonId=AA]@630575962 org.eclipse.jetty.server.Request@2595d35a
+1403265769498-207 - Response already committed for handling com.dexels.navajo.entity.EntityException: General Error : <tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" queueId="null" processingTime="0" accessId="1403265769498-207" cpuload="-1.0" authorisationTime="1" serverTime="1" threadCount="0" beforeServiceTime="0" queueTime="0" afterServiceTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="tms/validateGetPerson" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="ConditionErrors" type="array">
+      <message index="0" name="ConditionErrors" type="array_element">
+         <property direction="out" name="Id" value="40003" type="string"/>
+         <property direction="out" name="Description" value="null" type="string"/>
+         <property direction="out" name="FailedExpression" value="[/Player/PersonId] == 'XX'" type="string"/>
+         <property direction="out" name="EvaluatedExpression" value="{&quot;AA&quot;} == 'XX'" type="string"/>
+      </message>
+   </message>
+   <methods/>
+   <operations/>
+</tml>
+
+1403265769498-207 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403265769498-207 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@137c20c1}
+1403265769498-207 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@764dc63d}
+1403265769498-207 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403265769498-207 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403265769498-207 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403265769498-207 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403265769498-207 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403265769498-207 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403265769498-207 - RESPONSE /entity/Player  500 handled=true
+1403265769498-207 - Enabled read interest SCEP@4eaf4519{l(/0:0:0:0:0:0:0:1:45687)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@54e194aa,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=10,c=0},r=9}
+1403265769498-207 - filled 0/0
+1403269072280-6 - in removeAll(navajocache)
+1403269072280-6 - ============================================================================
+1403269072280-6 - inMemoryCache = {}
+1403269072280-6 - accessFrequency = {}
+1403269072280-6 - sharedPersistenceStore = com.dexels.navajo.sharedstore.SharedFileStore@58c106c4
+1403269072280-6 - ============================================================================
+1403269072280-6 - Installing script: validateGetPerson.jar
+1403269072280-6 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403269072280-6 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403269072280-6 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403269072280-6 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403269072280-6 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403269072280-6 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403269072280-6 - Starting BlueprintContainer destruction process for bundle navajo.script.tms/validateGetPerson
+1403269072280-6 - Not a blueprint bundle or destruction of BlueprintContainer already finished for navajo.script.tms/validateGetPerson.
+1403269072280-6 - Scanning bundle navajo.script.tms/validateGetPerson for blueprint application
+1403269072280-6 - No blueprint application found in bundle navajo.script.tms/validateGetPerson
+1403269072280-6 - On demand installation finished, waiting for service...
+1403269072280-6 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403269072280-6 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@6f4b39e1}
+1403269072280-6 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@dc45b95}
+1403269072280-6 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403269072280-6 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403269072280-6 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403269072280-6 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403269072280-6 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403269072280-6 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403269072280-6 - RESPONSE /entity/Player  420 handled=true
+1403269072280-6 - Enabled read interest SCEP@3269770a{l(/0:0:0:0:0:0:0:1:48566)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@2a064b61,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=10,c=0},r=1}
+1403269072280-6 - filled 0/0
+1403269142603-7 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403269142603-7 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@6f4b39e1}
+1403269142603-7 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@dc45b95}
+1403269142603-7 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403269142603-7 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403269142603-7 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403269142603-7 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403269142603-7 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403269142603-7 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403269142603-7 - RESPONSE /entity/Player  420 handled=true
+1403269142603-7 - Enabled read interest SCEP@3269770a{l(/0:0:0:0:0:0:0:1:48566)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@2a064b61,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=10,c=0},r=2}
+1403269142603-7 - filled 0/0
+1403269214382-8 - No global manager found
+1403269518428-9 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403269518428-9 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@6f4b39e1}
+1403269518428-9 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@dc45b95}
+1403269518428-9 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403269518428-9 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403269518428-9 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403269518428-9 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403269518428-9 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403269518428-9 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403269518428-9 - RESPONSE /entity/Player  420 handled=true
+1403269518428-9 - Enabled read interest SCEP@3269770a{l(/0:0:0:0:0:0:0:1:48566)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@2a064b61,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=10,c=0},r=3}
+1403269518428-9 - filled 0/0
+1403269142603-7 - ishut SCEP@3269770a{l(/0:0:0:0:0:0:0:1:48566)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@2a064b61,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=3}
+1403269142603-7 - filled -1/0
+1403269142603-7 - Disabled read interest while writing response SCEP@3269770a{l(/0:0:0:0:0:0:0:1:48566)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@2a064b61,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=3}
+1403269142603-7 - close SCEP@3269770a{l(/0:0:0:0:0:0:0:1:48566)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@2a064b61,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=3}
+1403269518428-9 - filled 327/327
+1403269518428-9 - REQUEST /entity/Player on AsyncHttpConnection@48080a96,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=10,c=0},r=1
+1403269518428-9 - Matching [/entity/Player]...
+1403269518428-9 - Path [/entity/Player] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@5223dfc6,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403269518428-9 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403269518428-9 - context=||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403269518428-9 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@48eded98
+1403269518428-9 - session=null
+1403269518428-9 - servlet |/entity|/Player -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403269518428-9 - Handling request for [/entity/Player] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403269518428-9 - chain=null
+1403269518428-9 - No global manager found
+1403269668386-10 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403269668386-10 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@6f4b39e1}
+1403269668386-10 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@dc45b95}
+1403269668386-10 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403269668386-10 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403269668386-10 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403269668386-10 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403269668386-10 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403269668386-10 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403269668386-10 - RESPONSE /entity/Player  420 handled=true
+1403269668386-10 - Enabled read interest SCEP@358b3be0{l(/0:0:0:0:0:0:0:1:48610)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@48080a96,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=10,c=0},r=1}
+1403269668386-10 - filled 0/0
+1403269668386-10 - filled 327/327
+1403269668386-10 - REQUEST /entity/Player on AsyncHttpConnection@48080a96,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=10,c=0},r=2
+1403269668386-10 - Matching [/entity/Player]...
+1403269668386-10 - Path [/entity/Player] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@5223dfc6,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403269668386-10 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403269668386-10 - context=||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403269668386-10 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@48eded98
+1403269668386-10 - session=null
+1403269668386-10 - servlet |/entity|/Player -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403269668386-10 - Handling request for [/entity/Player] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403269668386-10 - chain=null
+1403269668386-10 - No global manager found
+1403269704739-11 - No global manager found
+1403269762611-12 - No global manager found
+1403269935954-13 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403269935954-13 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@6f4b39e1}
+1403269935954-13 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@dc45b95}
+1403269935954-13 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403269935954-13 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403269935954-13 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403269935954-13 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403269935954-13 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403269935954-13 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403269935954-13 - RESPONSE /entity/Player  420 handled=true
+1403269935954-13 - Enabled read interest SCEP@358b3be0{l(/0:0:0:0:0:0:0:1:48610)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@48080a96,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=10,c=0},r=2}
+1403269935954-13 - ishut SCEP@358b3be0{l(/0:0:0:0:0:0:0:1:48610)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@48080a96,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=2}
+1403269935954-13 - filled -1/0
+1403269935954-13 - Disabled read interest while writing response SCEP@358b3be0{l(/0:0:0:0:0:0:0:1:48610)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@48080a96,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=2}
+1403269935954-13 - close SCEP@358b3be0{l(/0:0:0:0:0:0:0:1:48610)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=true,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@48080a96,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=2}
+1403269072280-6 - filled 327/327
+1403269072280-6 - REQUEST /entity/Player on AsyncHttpConnection@370d0b92,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=10,c=0},r=1
+1403269072280-6 - Matching [/entity/Player]...
+1403269072280-6 - Path [/entity/Player] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@5223dfc6,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403269072280-6 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403269072280-6 - context=||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403269072280-6 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@48eded98
+1403269072280-6 - session=null
+1403269072280-6 - servlet |/entity|/Player -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403269072280-6 - Handling request for [/entity/Player] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403269072280-6 - chain=null
+1403269072280-6 - No global manager found
+1403270248399-14 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403270248399-14 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@6f4b39e1}
+1403270248399-14 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@dc45b95}
+1403270248399-14 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403270248399-14 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403270248399-14 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403270248399-14 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403270248399-14 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403270248399-14 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403270248399-14 - RESPONSE /entity/Player  420 handled=true
+1403270248399-14 - Enabled read interest SCEP@35a64542{l(/0:0:0:0:0:0:0:1:48657)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@370d0b92,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=10,c=0},r=1}
+1403270248399-14 - filled 0/0
+1403269935954-13 - filled 327/327
+1403269935954-13 - REQUEST /entity/Player on AsyncHttpConnection@370d0b92,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=10,c=0},r=2
+1403269935954-13 - Matching [/entity/Player]...
+1403269935954-13 - Path [/entity/Player] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@5223dfc6,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403269935954-13 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403269935954-13 - context=||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403269935954-13 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@48eded98
+1403269935954-13 - session=null
+1403269935954-13 - servlet |/entity|/Player -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403269935954-13 - Handling request for [/entity/Player] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403269935954-13 - chain=null
+1403269935954-13 - No global manager found
+1403270335726-15 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403270335726-15 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@6f4b39e1}
+1403270335726-15 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@dc45b95}
+1403270335726-15 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403270335726-15 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403270335726-15 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403270335726-15 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403270335726-15 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403270335726-15 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403270335726-15 - RESPONSE /entity/Player  420 handled=true
+1403270335726-15 - Enabled read interest SCEP@35a64542{l(/0:0:0:0:0:0:0:1:48657)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@370d0b92,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=10,c=0},r=2}
+1403270335726-15 - filled 0/0
+1403270248399-14 - filled 327/327
+1403270248399-14 - REQUEST /entity/Player on AsyncHttpConnection@370d0b92,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=10,c=0},r=3
+1403270248399-14 - Matching [/entity/Player]...
+1403270248399-14 - Path [/entity/Player] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@5223dfc6,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403270248399-14 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403270248399-14 - context=||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403270248399-14 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@48eded98
+1403270248399-14 - session=null
+1403270248399-14 - servlet |/entity|/Player -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403270248399-14 - Handling request for [/entity/Player] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403270248399-14 - chain=null
+1403270248399-14 - No global manager found
+1403270421947-16 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners - 4}}
+1403270421947-16 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.ops4j.pax.web.service.internal.DefaultSharedWebContainerContext@6f4b39e1}
+1403270421947-16 - scope null||/entity/Player @ HttpServiceContext{httpContext=org.apache.felix.webconsole.internal.servlet.OsgiManagerHttpContext@dc45b95}
+1403270421947-16 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.dev.console - 112}}
+1403270421947-16 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.resource.manager - 42}}
+1403270421947-16 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.external - 121}}
+1403270421947-16 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.jsp.osgi - 99}}
+1403270421947-16 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.listeners.continuations - 15}}
+1403270421947-16 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.enterprise.listeners - 115}}
+1403270421947-16 - RESPONSE /entity/Player  420 handled=true
+1403270421947-16 - Enabled read interest SCEP@35a64542{l(/0:0:0:0:0:0:0:1:48657)<->r(/0:0:0:0:0:0:0:1:9099),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@370d0b92,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=10,c=0},r=3}
+1403270421947-16 - filled 0/0
+1403269142603-7 - filled 445/445
+1403269142603-7 - REQUEST /entity/Player on AsyncHttpConnection@778034cb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=2,l=10,c=57},r=2
+1403269142603-7 - Matching [/entity/Player]...
+1403269142603-7 - Path [/entity/Player] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@5223dfc6,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403269142603-7 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403269142603-7 - context=||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403269142603-7 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@48eded98
+1403269142603-7 - session=null
+1403269142603-7 - servlet |/entity|/Player -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403269142603-7 - Handling request for [/entity/Player] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403269142603-7 - chain=null
+1403269142603-7 - No global manager found
+1403270335726-15 - filled 445/445
+1403270335726-15 - REQUEST /entity/Player on AsyncHttpConnection@778034cb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=2,l=10,c=57},r=5
+1403270335726-15 - Matching [/entity/Player]...
+1403270335726-15 - Path [/entity/Player] matched to {pattern=/entity/.*,model=ServletModel{id=org.ops4j.pax.web.service.spi.model.ServletModel-36,name=org.ops4j.pax.web.service.spi.model.ServletModel-36,urlPatterns=[/entity/*],alias=/entity,servlet=com.dexels.navajo.entity.listener.EntityListener@5223dfc6,initParams={},context=ContextModel{id=org.ops4j.pax.web.service.spi.model.ContextModel-35,name=,httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102},contextParams={},virtualHosts={},connectors={}}}}
+1403270335726-15 - scope null||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403270335726-15 - context=||/entity/Player @ HttpServiceContext{httpContext=DefaultHttpContext{com.dexels.navajo.entity - 102}}
+1403270335726-15 - sessionManager=org.ops4j.pax.web.service.jetty.internal.LateInvalidatingHashSessionManager@48eded98
+1403270335726-15 - session=null
+1403270335726-15 - servlet |/entity|/Player -> org.ops4j.pax.web.service.spi.model.ServletModel-36
+1403270335726-15 - Handling request for [/entity/Player] using http context [DefaultHttpContext{com.dexels.navajo.entity - 102}]
+1403270335726-15 - chain=null
+1403270335726-15 - No global manager found
