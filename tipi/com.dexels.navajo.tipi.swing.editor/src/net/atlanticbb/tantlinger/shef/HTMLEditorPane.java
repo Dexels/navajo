@@ -584,10 +584,30 @@ public class HTMLEditorPane extends JPanel
         updateState();        
     }
     
-    public void setText(String text)
-    {
-    	String topText = removeInvalidTags(text);  
-        
+    public void setText(String text) {
+    	StringBuilder b = new StringBuilder();
+    	org.jsoup.nodes.Document doc = Jsoup.parse(text);
+    	Elements ps =  doc.select("p");
+    	String htmlText = "";
+    	
+    	// Conversion of <p> to one large div with <br>'s
+    	if (ps.size() > 0) { 
+    		for (Element p : ps ) {
+        	    b.append(p.html());
+        	    b.append("<br/>");
+        	    
+        	}
+    		String innerText = b.toString();
+    		// Trim last <br>
+    		htmlText = "<div>" + innerText.substring(0, innerText.length() - 5 );
+    		htmlText += "</div>";
+    	} else {
+    		htmlText = text;
+    	}
+    	
+    	
+    	String topText = removeInvalidTags(htmlText);
+		
 		if (hasWysiwygEditorOpen()) {
 			wysEditor.setText("");
 			insertHTML(wysEditor, topText, 0);
@@ -615,10 +635,24 @@ public class HTMLEditorPane extends JPanel
 		}
 
 		org.jsoup.nodes.Document doc = Jsoup.parse(sourceTxt);
-		// Set prettyPrint to false to prevent removal of users spaces inside
-		// tags
-		doc.outputSettings().prettyPrint(false);
-		return doc.body().html();
+		doc.outputSettings().prettyPrint(true);
+		for (Element element : doc.body().select("div")) {
+			if (!element.hasText() && element.children().size() == 0) {
+				// Remove empty elements
+				element.remove();
+			}
+		}
+		
+		String html = doc.body().html();
+		
+		// Add a trailing nbsp to work around JEditor bug where the last
+		// element (e.g. a table cell) is removed when there is no trailing
+		// content. Before adding, remove any remaining ones
+		html = html.replace("&nbsp;", "");
+		html = html.replace("&nbsp;", "");
+		html += "&nbsp;";
+		
+		return html.replace("\n", "");
 	}
 	
 	

@@ -1,7 +1,9 @@
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URL;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -108,5 +110,39 @@ public class TestBinary {
 		Assert.assertEquals(binary5,binary1);
 	}
 
-	
+	@Test
+	public void testMimeDetection1() throws IOException {
+		// File-based test - no sandbox mode
+		NavajoFactory.getInstance().setSandboxMode(false);
+		URL url = this.getClass().getResource("doc1.doc");
+		Binary binary_x = new Binary(new File(url.getFile()));
+		Assert.assertEquals("application/msword", binary_x.guessContentType());
+	}
+
+	@Test
+	public void testMimeDetection2() throws IOException {
+		// File-based test - no sandbox mode
+		NavajoFactory.getInstance().setSandboxMode(false);
+		URL url = this.getClass().getResource("binary1.txt");
+		Binary binary_x = new Binary(new File(url.getFile()));
+		Assert.assertEquals("text/plain", binary_x.guessContentType());
+	}
+
+	@Test
+	public void testMimeDetection3() throws IOException {
+		// File-based test - no sandbox mode
+		NavajoFactory.getInstance().setSandboxMode(false);
+		URL url = this.getClass().getResource("doc2.odt");
+		Binary binary_x = new Binary(new File(url.getFile()));
+		Assert.assertEquals("application/vnd.oasis.opendocument.text", binary_x.guessContentType());
+	}
+
+	@Test
+	public void testMimeDetection4() throws IOException {
+		// File-based test - no sandbox mode
+		NavajoFactory.getInstance().setSandboxMode(false);
+		URL url = this.getClass().getResource("doc3.docx");
+		Binary binary_x = new Binary(new File(url.getFile()));
+		Assert.assertEquals("application/vnd.openxmlformats-officedocument.wordprocessingml.document", binary_x.guessContentType());
+	}
 }

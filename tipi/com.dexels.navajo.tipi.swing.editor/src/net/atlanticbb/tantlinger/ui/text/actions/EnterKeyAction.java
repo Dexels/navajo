@@ -148,7 +148,8 @@ public class EnterKeyAction extends DecoratedTextAction
                             //reset the table cell contents nested in a <div>
                             //we do this because otherwise the next table cell would
                             //get deleted!! Perhaps this is a bug in swing's html implemenation?
-                            encloseInDIV(listParentElem, document);
+                           // encloseInDIV(listParentElem, document);
+                        	insertImpliedBR(e);
                             editor.setCaretPosition(caret + 1);
                         }
                         else //end the list
@@ -186,27 +187,34 @@ public class EnterKeyAction extends DecoratedTextAction
                                         
 					if (parentTag.isPreformatted()) {
 						insertImpliedBR(e);
+						editor.setCaretPosition(caret + 1);
 					}
 						
 					if (shiftPressed) {
-						insertBR(e, elem);
-						 editor.setCaretPosition(caret + 1);
+						insertImpliedBR(e);
+						editor.setCaretPosition(caret + 1);
 					}
 
 					else if(parentTag.equals(HTML.Tag.TD))
                     {
-                        encloseInDIV(parentElem, document);
-                        editor.setCaretPosition(caret + 1);
+						insertImpliedBR(e);
+						editor.setCaretPosition(caret + 1);
                     }
                     else if(parentTag.equals(HTML.Tag.BODY) || isInList(elem))
                     {
                         //System.out.println("insertParagraphAfter elem");
-                        insertParagraphAfter(elem, editor);
+                        //insertParagraphAfter(elem, editor);
+                    	encloseInDIV(parentElem, document);
+                    	insertImpliedBR(e);
+                    	editor.setCaretPosition(caret + 1);
                     }
                     else
                     {
                         //System.out.println("***insertParagraphAfter parentElem");
-                        insertParagraphAfter(parentElem, editor);
+                       // insertParagraphAfter(parentElem, editor);
+                    	//insertBR(e, parentElem);
+                    	insertImpliedBR(e);
+                    	editor.setCaretPosition(caret + 1);
                     }
                 }
             }
@@ -226,18 +234,21 @@ public class EnterKeyAction extends DecoratedTextAction
                     else
                     {                
                         //System.out.println("NOT implied delegate");
-                        delegate.actionPerformed(e);
+                    	insertImpliedBR(e);
+                    	editor.setCaretPosition(caret + 1);
                     }
                 }
                 else 
                 {
                     //System.out.println("not implied insertparaafter1 " + elem.getName());
-                	if (shiftPressed) { 
+                	/* if (shiftPressed) { 
                 		insertBR(e, elem);
-                		
+                		editor.setCaretPosition(caret + 1);
                 	} else {
                 		insertParagraphAfter(elem, editor);
-                	}
+                	}*/
+                	insertImpliedBR(e);
+                	editor.setCaretPosition(caret + 1);
                 }
             }
         }
@@ -268,15 +279,10 @@ public class EnterKeyAction extends DecoratedTextAction
     {
         HTMLEditorKit.InsertHTMLTextAction hta =
             new HTMLEditorKit.InsertHTMLTextAction("insertBR",
-                "<br>", HTML.Tag.IMPLIED, HTML.Tag.BR);
+                "<br>&nbsp;", HTML.Tag.IMPLIED, HTML.Tag.BR);
         hta.actionPerformed(e);
     }
 
-	private void insertBR(ActionEvent e, Element element) {
-		HTMLEditorKit.InsertHTMLTextAction hta = new HTMLEditorKit.InsertHTMLTextAction("insertBR",
-				"<br>", HTML.getTag(element.getName()), HTML.Tag.BR);
-		hta.actionPerformed(e);
-	}
     
     private void encloseInDIV(Element elem, HTMLDocument document) 
     throws Exception
@@ -285,7 +291,7 @@ public class EnterKeyAction extends DecoratedTextAction
         HTML.Tag tag = HTML.getTag(elem.getName());
         String html = HTMLUtils.getElementHTML(elem, false);
         html = HTMLUtils.createTag(tag, 
-            elem.getAttributes(), "<div>" + html + "</div><div></div>");
+            elem.getAttributes(), "<div>" + html + "</div>");
         
         document.setOuterHTML(elem, html);
     }
