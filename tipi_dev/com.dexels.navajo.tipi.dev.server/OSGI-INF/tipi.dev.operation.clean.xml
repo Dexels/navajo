@@ -14,5 +14,6 @@
    </property>
    <property name="alias" type="String" value="/clean"/>
    <property name="name" type="String" value="clean"/>
+   <property name="servlet-name" type="String" value="clean"/>
    <property name="type" type="String" value="webstart"/>
 </scr:component>

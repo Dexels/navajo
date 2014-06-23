@@ -13,5 +13,6 @@
    </property>
    <property name="alias" type="String" value="/pull"/>
    <property name="name" type="String" value="pull"/>
+   <property name="servlet-name" type="String" value="pull"/>
    <property name="repo" type="String" value="git"/>
 </scr:component>

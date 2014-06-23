@@ -8,5 +8,6 @@
    </service>
    <property name="asyncSupported" value="true"/>
    <property name="alias" type="String" value="/navajo"/>
-   <property name="servletName" type="String" value="Multi"/>
+   <property name="servletName" type="String" value="postman-multitenant"/>
+   <property name="servlet-name" type="String" value="postman-multitenant"/>
 </scr:component>

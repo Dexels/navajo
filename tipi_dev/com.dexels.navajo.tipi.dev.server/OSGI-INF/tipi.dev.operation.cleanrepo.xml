@@ -13,5 +13,6 @@
    </property>
    <property name="alias" type="String" value="/cleanrepo"/>
    <property name="name" type="String" value="cleanrepo"/>
+   <property name="servlet-name" type="String" value="cleanrepo"/>
    <property name="type" type="String" value="global"/>
 </scr:component>

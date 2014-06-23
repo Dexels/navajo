@@ -16,6 +16,7 @@
 
    <property name="alias" type="String" value="/cachebuild"/>
    <property name="name" type="String" value="cachebuild"/>
+   <property name="servlet-name" type="String" value="cachebuild"/>
    <property name="type" type="String" value="webstart"/>
    <property name="event.topics" type="String">
 		repository/change

@@ -14,5 +14,6 @@
    </property>
    <property name="alias" type="String" value="/list"/>
    <property name="name" type="String" value="list"/>
+   <property name="servlet-name" type="String" value="list"/>
    <property name="type" type="String" value="global"/>
 </scr:component>

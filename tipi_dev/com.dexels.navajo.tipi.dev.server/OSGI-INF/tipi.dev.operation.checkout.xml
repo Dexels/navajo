@@ -14,5 +14,6 @@
    </property>
    <property name="alias" type="String" value="/checkout"/>
    <property name="name" type="String" value="checkout"/>
+   <property name="servlet-name" type="String" value="checkout"/>
    <property name="repo" type="String" value="git"/>
 </scr:component>

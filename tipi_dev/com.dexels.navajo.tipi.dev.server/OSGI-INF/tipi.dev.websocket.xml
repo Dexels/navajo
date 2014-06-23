@@ -6,4 +6,5 @@
    </service>
 
    <property name="alias" type="String" value="/websocket"/>
+   <property name="servlet-name" type="String" value="websocket"/>
 </scr:component>

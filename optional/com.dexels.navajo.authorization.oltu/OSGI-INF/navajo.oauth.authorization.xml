@@ -5,4 +5,5 @@
       <provide interface="javax.servlet.Servlet"/>
    </service>
    <property name="alias" type="String" value="/auth/client"/>
+   <property name="servlet-name" type="String" value="oauth-client"/>
 </scr:component>

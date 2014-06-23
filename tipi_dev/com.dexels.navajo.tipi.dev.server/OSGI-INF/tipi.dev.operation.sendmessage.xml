@@ -15,5 +15,6 @@
    </property>
    <property name="alias" type="String" value="/sendmessage"/>
    <property name="name" type="String" value="sendmessage"/>
+   <property name="servlet-name" type="String" value="sendmessage"/>
    <property name="type" type="String" value="webstart"/>
 </scr:component>

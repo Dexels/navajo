@@ -7,5 +7,6 @@
    </service>
    <property name="alias" type="String" value="/authorize"/>
    <property name="name" type="String" value="authorize"/>
+   <property name="servlet-name" type="String" value="authorize"/>
    <property name="type" type="String" value="global"/>
 </scr:component>

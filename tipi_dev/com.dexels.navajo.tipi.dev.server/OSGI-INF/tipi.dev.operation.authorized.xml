@@ -6,5 +6,6 @@
       <provide interface="javax.servlet.Servlet"/>
    </service>
    <property name="alias" type="String" value="/authorized"/>
+   <property name="servlet-name" type="String" value="authorized"/>
    
 </scr:component>

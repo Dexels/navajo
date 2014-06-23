@@ -5,6 +5,7 @@
       <provide interface="javax.servlet.Servlet"/>
    </service>
    <property name="alias" type="String" value="/oauth"/>
+   <property name="servlet-name" type="String" value="oauth"/>
    <reference bind="setUserAuthenticator" cardinality="1..1" interface="com.dexels.oauth.api.UserAuthenticator" name="UserAuthenticator" policy="dynamic" unbind="clearUserAuthenticator"/>
    <reference bind="setClientStore" cardinality="1..1" interface="com.dexels.oauth.api.ClientStore" name="ClientStore" policy="dynamic" unbind="clearClientStore"/>
    <reference bind="setScopeValidator" cardinality="1..1" interface="com.dexels.oauth.api.ScopeValidator" name="ScopeValidator" policy="dynamic" unbind="clearScopeValidator"/>

@@ -2,6 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.server.article.session.servlet">
    <implementation class="com.dexels.navajo.article.impl.ArticleSessionServlet"/>
    <property name="alias" type="String" value="/article/session"/>
+   <property name="servlet-name" type="String" value="article-session"/>
    <service>
       <provide interface="javax.servlet.Servlet"/>
    </service>
