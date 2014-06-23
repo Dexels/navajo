@@ -5,6 +5,7 @@ work/
 classes/
 bin/
 core/com.dexels.navajo.core/sharedstore/
+server/com.dexels.navajo.integration/navajo/logs/
 .DS_Store
 *.war
 *.jar

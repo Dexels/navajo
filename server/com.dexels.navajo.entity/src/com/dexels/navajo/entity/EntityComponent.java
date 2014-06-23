@@ -38,9 +38,7 @@ public class EntityComponent extends Entity {
 		in.addHeader(h);
 		Navajo result = dispatcher.handle(in, true);
 		if (result.getMessage((String) parameters.get("entity.name")) == null) {
-			// Unable to find message
-			Thread.dumpStack();
-			return;
+			throw new Exception("unable to find entity in provided script!");
 		}
 
 		Message l = result.getAllMessages().iterator().next();
