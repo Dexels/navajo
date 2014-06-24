@@ -24,7 +24,7 @@
   <message name="Person">
     <property name="PersonId" type="string" key="true,auto"/>
     <property name="LastName" type="string" key="false,required"/>
-    <property name="FirstName" type="string" key="false"/>
-    <property name="DateOfBirth" type="date" key="false"/>
+    <property name="FirstName" type="string" />
+    <property name="DateOfBirth" type="date" />
   </message>
 </navascript>

@@ -15,6 +15,7 @@ public class EntityException extends UserException {
 	public final static int BAD_REQUEST = 400;
 	public final static int ENTITY_NOT_FOUND = 404;
 	public final static int OPERATION_NOT_SUPPORTED = 405;
+	public final static int OUTPUT_NOT_ACCEPTABLE = 406;
 	public final static int CONFLICT = 409;
 	public final static int FAILURE = 420;
 	public final static int NOT_MODIFIED = 304;
@@ -38,6 +39,7 @@ public class EntityException extends UserException {
 		errorCodes.put(MISSING_ID, "Missing entity id");
 		errorCodes.put(BAD_REQUEST, "Invalid entity request");
 		errorCodes.put(FAILURE, "Validation exception");
+		errorCodes.put(OUTPUT_NOT_ACCEPTABLE, "Requested output not available");
 	}
 	
 	public EntityException() {
