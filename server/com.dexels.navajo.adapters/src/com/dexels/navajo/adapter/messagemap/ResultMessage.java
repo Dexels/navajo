@@ -173,7 +173,9 @@ public class ResultMessage implements Mappable {
 		
 		if (  this.parentMsg.getArrayParentMessage() != null && definitionMessage != null ) {
 			processSuppressedProperties(definitionMessage);
-			this.parentMsg.getArrayParentMessage() .setDefinitionMessage(definitionMessage);
+			Message copy = definitionMessage.copy(myNavajo);
+			copy.setName(parentMsg.getName());
+			this.parentMsg.getArrayParentMessage().setDefinitionMessage(copy);
 		}
 		this.myNavajo = access.getOutputDoc();
 		Message copy = msg.copy(myNavajo);
