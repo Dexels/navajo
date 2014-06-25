@@ -372,12 +372,12 @@ public class ServiceEntityOperation implements EntityOperation {
 				Navajo currentEntity = getCurrentEntity(input);
 				
 				// Check Etag.
-				String postedEtag = null;
-				if ((postedEtag = getMetaProperty(input, ETAG)) != null) {
+				String postedEtag;
+				if ((postedEtag = inputEntity.getEtag()) != null) {
 					
 					String currentEtag = getCurrentEntity(input).getMessage(myEntity.getName()).generateEtag();
 					if (!postedEtag.equals(currentEtag)) {
-						throw new EntityException(EntityException.CONFLICT);
+						throw new EntityException(EntityException.ETAG_ERROR);
 					}
 				}
 				

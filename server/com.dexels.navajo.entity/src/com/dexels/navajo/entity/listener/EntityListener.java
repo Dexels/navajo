@@ -117,7 +117,7 @@ public class EntityListener extends HttpServlet {
 			// Create a header from the input
 			Header header = NavajoFactory.getInstance().createHeader(input, "", username, password,-1);
 			input.addHeader(header);
-			input.getMessage(entityName).setEtag(etag);
+			input.getMessage(entityMessage.getName()).setEtag(etag);
 		
 			String output = getOutputFormat(request);
 			Operation o = myManager.getOperation(entityName, method);

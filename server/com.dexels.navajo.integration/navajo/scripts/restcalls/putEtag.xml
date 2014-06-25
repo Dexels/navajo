@@ -9,6 +9,7 @@
 <map.rest useCurrentOutDoc="true" >
    <rest.addparameter name="'username'" value="'ROOT'"/>
    <rest.addparameter name="'password'" value="'ROOT'"/>
+   <rest.addheader name="'ETag'" value="'abc'" />
    <rest.callservice url="'localhost:9099/entity/Player'" method="'PUT'" append="''" appendTo="'/'"/>
 </map.rest>
 </navascript>

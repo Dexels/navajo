@@ -11,14 +11,19 @@ public class EntityException extends UserException {
 
 	// HTTP
 	public final static int OK = 200;
-	public final static int SERVER_ERROR = 500;
+	
+	public final static int NOT_MODIFIED = 304;
+
 	public final static int BAD_REQUEST = 400;
 	public final static int ENTITY_NOT_FOUND = 404;
 	public final static int OPERATION_NOT_SUPPORTED = 405;
 	public final static int OUTPUT_NOT_ACCEPTABLE = 406;
 	public final static int CONFLICT = 409;
+	public final static int ETAG_ERROR = 412;
 	public final static int FAILURE = 420;
-	public final static int NOT_MODIFIED = 304;
+	
+	public final static int SERVER_ERROR = 500;
+
 	// 304: Not yet implemented: could be used for GET operations. Instead of returning entire result
 	// return 304 to indicate the "client" that data has not changed. It can use its current data.
 	
@@ -40,6 +45,7 @@ public class EntityException extends UserException {
 		errorCodes.put(BAD_REQUEST, "Invalid entity request");
 		errorCodes.put(FAILURE, "Validation exception");
 		errorCodes.put(OUTPUT_NOT_ACCEPTABLE, "Requested output not available");
+		errorCodes.put(ETAG_ERROR, "ETag mismatch");
 	}
 	
 	public EntityException() {
