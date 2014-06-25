@@ -1,7 +1,7 @@
 <navascript>
   <validations>
         <check code="40003">
-	[/Player/PersonId] == 'XX'
+	[/Player/PersonId] != 'XX'
         </check>
     </validations>
 <message name="validation">

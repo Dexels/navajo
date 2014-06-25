@@ -10,7 +10,7 @@
                 <property name="Datasource" type="string" value="mymongo" />
             </message>
         </operation>
-        <operation entity="Transfer" service="mongo/ProcessInsertMongo" method="PUT">
+        <operation entity="Transfer" service="mongo/ProcessInsertMongo" method="POST">
             <message name="__Mongo__">
                 <property name="Datasource" type="string" value="mymongo" />
             </message>

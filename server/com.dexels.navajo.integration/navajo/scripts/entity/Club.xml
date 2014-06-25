@@ -5,7 +5,7 @@
                 <property name="Datasource" type="string" value="mymongo" />
             </message>
         </operation>
-        <operation entity="Club" service="mongo/ProcessModifyMongo" method="POST">
+        <operation entity="Club" service="mongo/ProcessInsertMongo" method="POST">
             <message name="__Mongo__">
                 <property name="Datasource" type="string" value="mymongo" />
             </message>
@@ -15,7 +15,7 @@
                 <property name="Datasource" type="string" value="mymongo" />
             </message>
         </operation>
-        <operation entity="Club" service="mongo/ProcessInsertMongo" method="PUT">
+        <operation entity="Club" service="mongo/ProcessModifyMongo" method="PUT">
             <message name="__Mongo__">
                 <property name="Datasource" type="string" value="mymongo" />
             </message>
