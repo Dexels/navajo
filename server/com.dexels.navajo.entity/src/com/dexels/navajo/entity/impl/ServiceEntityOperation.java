@@ -389,8 +389,8 @@ public class ServiceEntityOperation implements EntityOperation {
 						}
 					} catch (EntityException e) {
 						// TODO: Support PUT for create
-						// However currently the Mongo impl. does not support this 
-						// due to missing _id. Thus, we throw exception
+						// Currently the Mongo impl. does not support this due to missing _id. 
+						// Thus, we throw exception
 						throw new EntityException(EntityException.ENTITY_NOT_FOUND,
 								"Could not perform update, entity not found");
 					}
@@ -410,7 +410,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				if ( getCurrentEntity(input) != null ) {
 					// TODO: Support POST for updates
 					// Right now we cannot detect whether the POST will cause a conflict (e.g.
-					// a duplicate key ) or not. Therefore simply give CONFLICT error right away
+					// a duplicate key) or not. Therefore simply give CONFLICT error right away
 					throw new EntityException(EntityException.CONFLICT, "Could not perform insert, duplicate entry");
 				}
 			}
