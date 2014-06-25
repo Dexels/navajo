@@ -38,9 +38,9 @@ public class EntityListener extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = -6681359881499760460L;
-	private final static String DEFAULT_OUTPUT_FORMAT = "json";
-	private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json",
-			"xml", "tml"));
+	private final static String DEFAULT_OUTPUT_FORMAT = "application/json";
+	private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("application/json",
+			"application/xml", "application/tml"));
 	
 	EntityManager myManager;
 	LocalClient myClient;
@@ -92,7 +92,7 @@ public class EntityListener extends HttpServlet {
 
 		Navajo input = null;
 		Message entityMessage = e.getMessage();
-		
+		String etag = null;
 		
 		try {
 			// Get the input document
@@ -103,6 +103,7 @@ public class EntityListener extends HttpServlet {
 				json.setEntityTemplate(entityMessage.getRootDoc());
 				try {
 					input = json.parse(request.getInputStream());
+					etag = request.getHeader("ETag");
 				} catch (Exception e1) {
 					throw new EntityException(EntityException.BAD_REQUEST);
 				}
@@ -116,23 +117,29 @@ public class EntityListener extends HttpServlet {
 			// Create a header from the input
 			Header header = NavajoFactory.getInstance().createHeader(input, "", username, password,-1);
 			input.addHeader(header);
-		
+			input.getMessage(entityName).setEtag(etag);
 		
 			String output = getOutputFormat(request);
 			Operation o = myManager.getOperation(entityName, method);
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, myClient, o);
 			Navajo result = seo.perform(input);
-			// Merge with entity template
-			if ( result.getMessage(entityMessage.getName() ) != null ) {
-				EntityHelper.mergeWithEntityTemplate(result.getMessage(entityMessage.getName() ), entityMessage );
-			}
 			
-			if ( output.equals("json")) {
+			if ( result.getMessage(entityMessage.getName() ) != null ) {
+				// Merge with entity template
+				EntityHelper.mergeWithEntityTemplate(result.getMessage(entityMessage.getName() ), entityMessage );
+				if (method.equals("GET")) {
+					response.setHeader("Etag", result.getMessage(entityMessage.getName()).getEtag());
+				}
+			}
+			response.setHeader("Cache-Control", "private");
+			response.setHeader("Content-Type", output);
+			
+			if ( output.equals("application/json"))  {
 				Writer w = new OutputStreamWriter(response.getOutputStream());
 				JSONTML json = JSONTMLFactory.getInstance();
 				json.format(result, w);
 				w.close();
-			} else if ( output.equals("xml") ) {
+			} else if ( output.equals("application/xml") ) {
 				NavajoLaszloConverter.writeBirtXml(result, response.getWriter());
 			} else {
 				result.write(response.getOutputStream());
@@ -155,9 +162,9 @@ public class EntityListener extends HttpServlet {
 			response.setStatus(e1.getCode());
 			
 			String output = this.getOutputFormat(request);
-			if (output.equals("json")) {
+			if (output.equals("application/json")) {
 				response.getWriter().println(errorToJson(e1));
-			} else if (output.equals("xml")) {
+			} else if (output.equals("application/xml")) {
 				response.getWriter().println(errorToJson(e1));
 			} else {
 				response.getWriter().println(e1.getMessage());
@@ -186,10 +193,8 @@ public class EntityListener extends HttpServlet {
 			}
 		} catch (EntityException ex1) {
 			// Exception while trying to handle existing exception...
-			// Next statement will throw ServletException
 		} catch (IOException e) {
 			// Exception while trying to handle existing exception...
-			// Next statement will throw ServletException
 		}
 
 		//throw new ServletException(e1.getMessage(), e1);
@@ -198,24 +203,25 @@ public class EntityListener extends HttpServlet {
 
 	private String errorToJson(Exception e) throws JsonMappingException, IOException{
 		ObjectMapper om = new ObjectMapper();
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("errors", e.getMessage());
+		Map<String, Object> top = new HashMap<String, Object>();
+		Map<String, Object> errors = new HashMap<String, Object>();
+		
 		if (e instanceof EntityException) {
-			result.put("code", ((EntityException) e).getCode());
+			errors.put("code", ((EntityException) e).getCode());
+			errors.put("error", e.getMessage());
+		} else {
+			errors.put("code", EntityException.SERVER_ERROR);
+			errors.put("error", "Server error (" + e.toString());
 		}
-		return om.writeValueAsString(result);
+		top.put("errors", errors);
+		return om.writeValueAsString(top);
 	}
 
 
 	private String getOutputFormat(HttpServletRequest request) throws EntityException {
-		// TODO: get output from Accept-header
-		String output;
-		
-		if ((output = request.getParameter("output")) == null) {
-			output = DEFAULT_OUTPUT_FORMAT;
-		}
+		String output = request.getHeader("Accept");
 		if (!SUPPORTED_OUTPUT.contains(output)) {
-			throw new EntityException(EntityException.OUTPUT_NOT_ACCEPTABLE);
+			output = DEFAULT_OUTPUT_FORMAT;
 		}
 		return output;
 	}
