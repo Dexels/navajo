@@ -289,18 +289,21 @@ public class ServiceEntityOperation implements EntityOperation {
 	}
 	
 	private void setEtag(Navajo n) {
-	
 		Message m = n.getMessage(myEntity.getName());
-		//m.write(System.err);
 		String etag = m.generateEtag();
 		setMetaProperty(n, ETAG, etag);
-		
 	}
 	
 	@Override
 	public Navajo perform(Navajo input) throws EntityException {
 		
-		String [] validMessages = {"__parms__", "__globals__", ServiceEntityOperation.ENTITY_META_MSG, myOperation.getEntityName(), ( myOperation.getExtraMessage() != null ? myOperation.getExtraMessage().getName() : "")};
+		String[] validMessages = {
+				"__parms__",
+				"__globals__",
+				ServiceEntityOperation.ENTITY_META_MSG,
+				myOperation.getEntityName(),
+				(myOperation.getExtraMessage() != null ? myOperation.getExtraMessage().getName()
+						: "") };
 		
 		if(myOperation.getMethod().equals(Operation.HEAD)) {
 			Navajo out = NavajoFactory.getInstance().createNavajo();
@@ -309,11 +312,16 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 		
 		Message inputEntity = input.getMessage(myEntity.getName());
+		if (inputEntity == null) {
+			throw new EntityException(EntityException.BAD_REQUEST, "No valid entity found.");
+		}
+		
 		myKey = myEntity.getKey(inputEntity.getAllProperties());
 		if(myKey==null) {
 			// Check for _id property. If _id is present it is good as a key.
 			if ( inputEntity.getProperty("_id") == null ) {
-				throw new EntityException(EntityException.MISSING_ID, "Input is invalid: no valid entity key found.");
+				throw new EntityException(EntityException.MISSING_ID,
+						"Input is invalid: no valid entity key found.");
 			} else {
 				myKey = new Key("", myEntity);
 			}
@@ -327,18 +335,13 @@ public class ServiceEntityOperation implements EntityOperation {
 	
 			Message validationErrors;
 			if ((validationErrors = validationResult.getMessage("ConditionErrors")) != null ) {
-				throw new EntityException(EntityException.FAILURE, validationErrors.getMessage(0).getProperty("Id").toString());
+				throw new EntityException(EntityException.FAILURE, validationErrors.getMessage(0)
+						.getProperty("Id").toString());
 			}
 		}
 		
 		if( myOperation.getMethod().equals(Operation.GET) ) {
-			Navajo result = getCurrentEntity(input);
-			if ( result == null ) {
-				throw new EntityException(EntityException.ENTITY_NOT_FOUND, myEntity.getName());
-			}
-			setEtag(result);
-			setMetaProperty(result, STATUS, EntityException.OK+"");
-			return result;
+			return getEntity(input);
 		}
 		
 		if (myOperation.getMethod().equals(Operation.DELETE)) {
@@ -346,9 +349,8 @@ public class ServiceEntityOperation implements EntityOperation {
 			try {
 				checkForMongo(request.getMessage(myEntity.getName()));
 			} catch (Exception e) {
-				StringWriter sw = new StringWriter();
-				request.write(sw);
-				throw new EntityException(EntityException.ENTITY_NOT_FOUND,"Could not peform delete, entity not found:\n" + sw);
+				throw new EntityException(EntityException.ENTITY_NOT_FOUND,
+						"Could not peform delete, entity not found");
 			}
 
 			return callEntityService(request);
@@ -356,24 +358,46 @@ public class ServiceEntityOperation implements EntityOperation {
 	
 		if (myOperation.getMethod().equals(Operation.PUT) || myOperation.getMethod().equals(Operation.POST)) {
 
-			// PUT == insert
+			// PUT == upsert: update or insert
+			// Must be idem-potent!
 			if (myOperation.getMethod().equals(Operation.PUT)) {
 
 				// Required properties check.
 				List<String> missing = checkRequired(inputEntity, myEntity.getMessage(), false);
 				if (missing.size() > 0) {
 					throw new EntityException(EntityException.BAD_REQUEST,
-							"Could not perform insert, missing required properties:\n"
+							"Could not perform insert, missing required properties: "
 									+ listToString(missing));
 				}
+				Navajo currentEntity = getCurrentEntity(input);
+				
+				// Check Etag.
+				String postedEtag = null;
+				if ((postedEtag = getMetaProperty(input, ETAG)) != null) {
+					
+					String currentEtag = getCurrentEntity(input).getMessage(myEntity.getName()).generateEtag();
+					if (!postedEtag.equals(currentEtag)) {
+						throw new EntityException(EntityException.CONFLICT);
+					}
+				}
+				
 				// Duplicate entry check.
-				if (getCurrentEntity(input) != null) {
-					// Do NOT throw error message, since PUT must be idem-potent anyway...
-					throw new EntityException(EntityException.CONFLICT, "Could not perform insert, duplicate entry");
+				if (currentEntity != null) {
+					try {
+						if (checkForMongo(inputEntity)) {
+							addIdToArrayMessageDefinitions(myEntity.getMessage());
+						}
+					} catch (EntityException e) {
+						// TODO: Support PUT for create
+						// However currently the Mongo impl. does not support this 
+						// due to missing _id. Thus, we throw exception
+						throw new EntityException(EntityException.ENTITY_NOT_FOUND,
+								"Could not perform update, entity not found");
+					}
 				}
 			}
 
-			// POST == update
+			// POST == insert
 			if (myOperation.getMethod().equals(Operation.POST)) {
 
 				List<String> missing = checkRequired(inputEntity, myEntity.getMessage(), true);
@@ -382,31 +406,13 @@ public class ServiceEntityOperation implements EntityOperation {
 							"Could not perform update, missing required properties:\n"
 									+ listToString(missing));
 				}
-				// Check for (Mongo) entity, if Mongo make sure that _id is added if
-				// it does not exist.
-				try {
-					if (checkForMongo(inputEntity)) {
-						addIdToArrayMessageDefinitions(myEntity.getMessage());
-					}
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
-					StringWriter sw = new StringWriter();
-					inputEntity.write(sw);
-					throw new EntityException(EntityException.ENTITY_NOT_FOUND,
-							"Could not perform update, entity not found:\n" + sw);
-					// Try INSERT instead....
+				// Duplicate entry check.
+				if ( getCurrentEntity(input) != null ) {
+					// TODO: Support POST for updates
+					// Right now we cannot detect whether the POST will cause a conflict (e.g.
+					// a duplicate key ) or not. Therefore simply give CONFLICT error right away
+					throw new EntityException(EntityException.CONFLICT, "Could not perform insert, duplicate entry");
 				}
-
-				// Check Etag.
-				String postedEtag = null;
-				if ((postedEtag = getMetaProperty(input, ETAG)) != null) {
-					Message currentEntity = getCurrentEntity(input).getMessage(myEntity.getName());
-					String currentEtag = currentEntity.generateEtag();
-					if (!postedEtag.equals(currentEtag)) {
-						throw new EntityException(EntityException.CONFLICT);
-					}
-				}
-
 			}
 
 			// Mask message, i.e. populate selection properties and add missing
@@ -422,10 +428,22 @@ public class ServiceEntityOperation implements EntityOperation {
 								+ listToString(invalidProperties));
 			}
 
-			return callEntityService(input);
-
+			callEntityService(input);
+			// After a POST or PUT, return the full new object resulting from the previous operation
+			// effectively this is a GET
+			return getEntity(input); 
 		}
 		return null;
+	}
+
+	private Navajo getEntity(Navajo input) throws EntityException {
+		Navajo result = getCurrentEntity(input);
+		if ( result == null ) {
+			throw new EntityException(EntityException.ENTITY_NOT_FOUND, myEntity.getName());
+		}
+		setEtag(result);
+		setMetaProperty(result, STATUS, EntityException.OK+"");
+		return result;
 	}
 
 
