@@ -109,7 +109,7 @@ public String selectionPointer = null;
   // appendParms is used to append entire output doc of called webservice to param block.
   public String appendParms;
   public boolean sendThrough;
-  /**
+  /*
    * if useCurrentOutDoc is set, the NavajoMap will use the outDoc from the access object instead of creating a new one.
    */
   public boolean useCurrentOutDoc;
