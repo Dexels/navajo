@@ -3,6 +3,7 @@ package com.dexels.navajo.entity.listener;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.HttpRetryException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,8 +43,11 @@ public class EntityListener extends HttpServlet {
 	private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("application/json",
 			"application/xml", "application/tml"));
 	
-	EntityManager myManager;
-	LocalClient myClient;
+	private EntityManager myManager;
+	private LocalClient myClient;
+	private String urlOutput;
+	private String username;
+	private String password;
 
 	public void setClient(LocalClient client) {
 		this.myClient = client;
@@ -67,14 +71,14 @@ public class EntityListener extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-
+		resetParameters();
+		
 		String method = request.getMethod();
 		String path = request.getPathInfo();
-		Map<String,String []> requestParameters = request.getParameterMap();
 
-		boolean debug = ( requestParameters.get("debug") != null ? true : false );
-		String username = requestParameters.get("username")[0];
-		String password = requestParameters.get("password")[0];
+		boolean debug = (request.getParameter("debug") != null ? true : false);
+		
+		authenticateRequest(request);
 
 		String entityName = path.substring(1);
 		if ( debug ) {
@@ -91,22 +95,30 @@ public class EntityListener extends HttpServlet {
 		}
 
 		Navajo input = null;
+		if (path.lastIndexOf('.') > 0) {
+			urlOutput = path.substring(path.lastIndexOf('.'));
+		}
+		
 		Message entityMessage = e.getMessage();
 		String etag = null;
 		
 		try {
 			// Get the input document
 			if (method.equals("GET") || method.equals("DELETE")) {
-				input = myManager.deriveNavajoFromParameterMap(e, requestParameters);
+				input = myManager.deriveNavajoFromParameterMap(e, request.getParameterMap());
 			} else {
 				JSONTML json = JSONTMLFactory.getInstance();
 				json.setEntityTemplate(entityMessage.getRootDoc());
 				try {
 					input = json.parse(request.getInputStream());
-					etag = request.getHeader("ETag");
 				} catch (Exception e1) {
 					throw new EntityException(EntityException.BAD_REQUEST);
 				}
+			}
+			
+			etag = request.getHeader("If-Match");
+			if (etag == null) {
+				etag = request.getHeader("If-None-Match");
 			}
 
 			if (debug) {
@@ -145,14 +157,27 @@ public class EntityListener extends HttpServlet {
 				result.write(response.getOutputStream());
 			}
 		} catch (EntityException e1) {
-			System.out.println("ent");
+			System.err.println("ent");
 			handleEntityException(e1, request, response);
 		} catch (Exception e2) {
-			System.out.println("gen");
+			System.err.println("gen");
 
 			handleGenericException(e2, request, response);
 		}
 
+	}
+
+	private void resetParameters() {
+		username = null;
+		password = null;
+		urlOutput = null;
+	}
+
+	private void authenticateRequest(HttpServletRequest request) {
+		// TODO: better security, such as API keys
+		// Furthermore check authorization
+		username = request.getParameter("username");
+		password = request.getParameter("password");
 	}
 
 
@@ -207,10 +232,10 @@ public class EntityListener extends HttpServlet {
 		Map<String, Object> errors = new HashMap<String, Object>();
 		
 		if (e instanceof EntityException) {
-			errors.put("code", ((EntityException) e).getCode());
+			errors.put("status", ((EntityException) e).getCode());
 			errors.put("error", e.getMessage());
 		} else {
-			errors.put("code", EntityException.SERVER_ERROR);
+			errors.put("status", EntityException.SERVER_ERROR);
 			errors.put("error", "Server error (" + e.toString());
 		}
 		top.put("errors", errors);

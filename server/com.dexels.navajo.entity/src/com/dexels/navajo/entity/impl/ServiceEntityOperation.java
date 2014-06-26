@@ -296,6 +296,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	
 	@Override
 	public Navajo perform(Navajo input) throws EntityException {
+		String postedEtag;
 		
 		String[] validMessages = {
 				"__parms__",
@@ -341,10 +342,18 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 		
 		if( myOperation.getMethod().equals(Operation.GET) ) {
+			if ((postedEtag = inputEntity.getEtag()) != null) {
+				String currentEtag = getCurrentEntity(input).getMessage(myEntity.getName()).generateEtag();
+				if (postedEtag.equals(currentEtag)) {
+					throw new EntityException(EntityException.NOT_MODIFIED);
+				}
+			}
+			
 			return getEntity(input);
 		}
 		
 		if (myOperation.getMethod().equals(Operation.DELETE)) {
+			validateEtag(input, inputEntity);
 			Navajo request = myKey.generateRequestMessage(input);
 			try {
 				checkForMongo(request.getMessage(myEntity.getName()));
@@ -371,15 +380,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				}
 				Navajo currentEntity = getCurrentEntity(input);
 				
-				// Check Etag.
-				String postedEtag;
-				if ((postedEtag = inputEntity.getEtag()) != null) {
-					
-					String currentEtag = getCurrentEntity(input).getMessage(myEntity.getName()).generateEtag();
-					if (!postedEtag.equals(currentEtag)) {
-						throw new EntityException(EntityException.ETAG_ERROR);
-					}
-				}
+				validateEtag(input, inputEntity);
 				
 				// Duplicate entry check.
 				if (currentEntity != null) {
@@ -434,6 +435,17 @@ public class ServiceEntityOperation implements EntityOperation {
 			return getEntity(input); 
 		}
 		return null;
+	}
+
+	private void validateEtag(Navajo input, Message inputEntity) throws EntityException {
+		String postedEtag;
+		// Check Etag.
+		if ((postedEtag = inputEntity.getEtag()) != null) {
+			String currentEtag = getCurrentEntity(input).getMessage(myEntity.getName()).generateEtag();
+			if (!postedEtag.equals(currentEtag)) {
+				throw new EntityException(EntityException.ETAG_ERROR);
+			}
+		}
 	}
 
 	private Navajo getEntity(Navajo input) throws EntityException {
