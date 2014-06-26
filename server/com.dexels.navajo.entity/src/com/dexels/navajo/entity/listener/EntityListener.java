@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 
+import javax.activation.MimeType;
+import javax.activation.MimeTypeParseException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +41,8 @@ public class EntityListener extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = -6681359881499760460L;
-	private final static String DEFAULT_OUTPUT_FORMAT = "application/json";
-	private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("application/json",
-			"application/xml", "application/tml"));
+	private final static String DEFAULT_OUTPUT_FORMAT = "json";
+	private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json", "xml", "tml"));
 	
 	private EntityManager myManager;
 	private LocalClient myClient;
@@ -75,6 +76,18 @@ public class EntityListener extends HttpServlet {
 		
 		String method = request.getMethod();
 		String path = request.getPathInfo();
+		String query = request.getQueryString();
+		
+		if (query != null && query.lastIndexOf('.') > 0) {
+			urlOutput = query.substring(query.lastIndexOf('.') + 1 );
+			if (!SUPPORTED_OUTPUT.contains(urlOutput)) {
+				// unsupported format
+				urlOutput = null;
+			}
+		}
+		String output = getOutputFormat(request);
+		response.setHeader("Cache-Control", "private");
+		response.setHeader("Content-Type", "application/"+output);
 
 		boolean debug = (request.getParameter("debug") != null ? true : false);
 		
@@ -95,10 +108,6 @@ public class EntityListener extends HttpServlet {
 		}
 
 		Navajo input = null;
-		if (path.lastIndexOf('.') > 0) {
-			urlOutput = path.substring(path.lastIndexOf('.'));
-		}
-		
 		Message entityMessage = e.getMessage();
 		String etag = null;
 		
@@ -130,8 +139,7 @@ public class EntityListener extends HttpServlet {
 			Header header = NavajoFactory.getInstance().createHeader(input, "", username, password,-1);
 			input.addHeader(header);
 			input.getMessage(entityMessage.getName()).setEtag(etag);
-		
-			String output = getOutputFormat(request);
+			
 			Operation o = myManager.getOperation(entityName, method);
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, myClient, o);
 			Navajo result = seo.perform(input);
@@ -143,19 +151,8 @@ public class EntityListener extends HttpServlet {
 					response.setHeader("Etag", result.getMessage(entityMessage.getName()).getEtag());
 				}
 			}
-			response.setHeader("Cache-Control", "private");
-			response.setHeader("Content-Type", output);
 			
-			if ( output.equals("application/json"))  {
-				Writer w = new OutputStreamWriter(response.getOutputStream());
-				JSONTML json = JSONTMLFactory.getInstance();
-				json.format(result, w);
-				w.close();
-			} else if ( output.equals("application/xml") ) {
-				NavajoLaszloConverter.writeBirtXml(result, response.getWriter());
-			} else {
-				result.write(response.getOutputStream());
-			}
+			writeOutput(result, response, output);
 		} catch (EntityException e1) {
 			System.err.println("ent");
 			handleEntityException(e1, request, response);
@@ -165,6 +162,20 @@ public class EntityListener extends HttpServlet {
 			handleGenericException(e2, request, response);
 		}
 
+	}
+
+	private void writeOutput(Navajo result, HttpServletResponse response, String output)
+			throws IOException, Exception {
+		if ( output.equals("json"))  {
+			Writer w = new OutputStreamWriter(response.getOutputStream());
+			JSONTML json = JSONTMLFactory.getInstance();
+			json.format(result, w);
+			w.close();
+		} else if ( output.equals("xml") ) {
+			NavajoLaszloConverter.writeBirtXml(result, response.getWriter());
+		} else {
+			result.write(response.getOutputStream());
+		}
 	}
 
 	private void resetParameters() {
@@ -194,9 +205,6 @@ public class EntityListener extends HttpServlet {
 			} else {
 				response.getWriter().println(e1.getMessage());
 			}
-		} catch (EntityException ex1) {
-			// Exception while trying to handle existing exception...
-			throw new ServletException(ex1.getMessage(), ex1);
 		} catch (IOException ex1) {
 			// Exception while trying to handle existing exception...
 			throw new ServletException(ex1.getMessage(), ex1);
@@ -216,8 +224,6 @@ public class EntityListener extends HttpServlet {
 			} else {
 				response.getWriter().println(e1.getMessage());
 			}
-		} catch (EntityException ex1) {
-			// Exception while trying to handle existing exception...
 		} catch (IOException e) {
 			// Exception while trying to handle existing exception...
 		}
@@ -243,12 +249,40 @@ public class EntityListener extends HttpServlet {
 	}
 
 
-	private String getOutputFormat(HttpServletRequest request) throws EntityException {
-		String output = request.getHeader("Accept");
-		if (!SUPPORTED_OUTPUT.contains(output)) {
-			output = DEFAULT_OUTPUT_FORMAT;
+	private String getOutputFormat(HttpServletRequest request)  {
+		if (urlOutput != null) {
+			// Explicit output in URL gets preference over Accept header
+			return urlOutput;
 		}
-		return output;
+		
+		String mimeResult = null;
+		String header = request.getHeader("Accept");
+		if (header != null) {
+			try {
+				String reqTypes[] = header.split(",");
+				for (String reqType :reqTypes ) {
+					String mime = reqType;
+					if (reqType.indexOf(';') > 0) {
+						mime = reqType.substring(0, reqType.indexOf(';'));
+					}
+					
+					MimeType n = new MimeType(mime);
+					mimeResult = n.getSubType();
+					if (SUPPORTED_OUTPUT.contains(mimeResult)) {
+						// Found a supported type!
+						break;
+					}
+				}
+				
+			} catch (MimeTypeParseException e) {
+				mimeResult = DEFAULT_OUTPUT_FORMAT;
+			}
+		}
+
+		if (!SUPPORTED_OUTPUT.contains(mimeResult)) {
+			mimeResult = DEFAULT_OUTPUT_FORMAT;
+		}
+		return mimeResult;
 	}
 
 }
