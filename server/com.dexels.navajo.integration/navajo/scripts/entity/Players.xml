@@ -1,0 +1,20 @@
+<navascript>
+  <operations>
+        <operation entity="Players" service="mongo/ProcessQueryMongo" method="GET">
+            <message name="__Mongo__">
+                <property name="Datasource" type="string" value="mymongo" />
+            </message>
+        </operation>
+</operations>
+<message name="Players">
+    <property name="FromAge" type="integer" key="true,optional,id=search"/>
+    <property name="ToAge" type="integer" key="true,optional,id=search"/>
+    <property name="LastName" type="integer" key="true,optional,id=search"/>
+    <message name="Players" type="array">
+        <message name="Players" type="definition">
+           <property name="PersonId" type="string" reference="navajo://Person/PersonId"/>
+        </message>
+    </message>
+</message>
+
+</navascript>

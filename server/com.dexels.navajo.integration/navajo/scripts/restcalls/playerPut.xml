@@ -1,0 +1,14 @@
+<navascript>
+
+<message name="Player">
+	<property name="PersonId" value="FF" />
+        <property name="LastName" value="Jansen"/>
+	<property name="DateOfBirth" value="2001-01-21" />
+</message>
+
+<map.rest useCurrentOutDoc="true" >
+   <rest.addparameter name="'username'" value="'ROOT'"/>
+   <rest.addparameter name="'password'" value="'ROOT'"/>
+   <rest.callservice url="'localhost:9099/entity/Player'" method="'PUT'" append="''" appendTo="'/'"/>
+</map.rest>
+</navascript>
