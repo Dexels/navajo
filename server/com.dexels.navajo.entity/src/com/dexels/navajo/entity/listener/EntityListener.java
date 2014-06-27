@@ -30,7 +30,10 @@ import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
 import com.dexels.navajo.entity.util.EntityHelper;
 import com.dexels.navajo.script.api.LocalClient;
-import com.dexels.sportlink.functions.Base64;
+
+import org.dexels.utils.Base64;
+import org.dexels.utils.Base64.DecodingException;
+
 
 public class EntityListener extends HttpServlet {
 
@@ -206,8 +209,11 @@ public class EntityListener extends HttpServlet {
 			StringTokenizer st = new StringTokenizer(authHeader);
 			if (st.hasMoreTokens()) {
 				if (st.nextToken().equalsIgnoreCase("Basic")) {
+
+					String credentials;
 					try {
-						String credentials = new String(Base64.decode(st.nextToken()), "UTF-8");
+						credentials = new String(Base64.decode(st.nextToken()));
+
 						int p = credentials.indexOf(":");
 						if (p != -1) {
 							username = credentials.substring(0, p).trim();
@@ -216,9 +222,10 @@ public class EntityListener extends HttpServlet {
 						} else {
 							System.err.println("Invalid authentication token");
 						}
-					} catch (UnsupportedEncodingException e) {
-						System.err.println("Couldn't retrieve authentication");
+					} catch (DecodingException e) {
+						// Error in decoding
 					}
+
 				}
 			}
 		}
