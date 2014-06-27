@@ -1,0 +1,189 @@
+<tml>
+	<message name="datasources">
+
+    <message name="mongodwf">
+    	<property name="type" value="mongo"/>
+        <property name="host" value="localhost" />
+        <property name="port" type="integer" value="27017"/>
+        <property name="database" value="test_knvb"/>
+    </message>
+    
+    <message name="sharedstore">
+    	<property name="type" value="mongo"/>
+        <property name="host" value="localhost" />
+        <property name="port" type="integer" value="27017"/>
+        <property name="database" value="sharedstore"/>
+    </message>
+    
+	<message name="authorization">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot" condition="[/@DTAP] == 'Development'"/>
+<!--       <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:SLACC01" condition="[/@DTAP] == 'Acceptance'"/> -->
+      <property name="user" value="knvbkern"/>
+      <property name="password" value="knvb"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="15"/>
+	  <property name="type" value="oracle" />
+	</message>
+    <message name="authentication">
+        <property name="driver" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://source.dexels.com:3306/authentication" condition="[/@DTAP] == 'Development'"/>
+<!--         <property name="url" value="jdbc:mysql://penelope1.dexels.com:5123/authentication" condition="[/@DTAP] == 'Acceptance'" /> -->
+        <property name="user" value="authentication" />
+        <property name="password" value="authentication" />
+        <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap" />
+        <property name="refresh" type="float" value="0.01" />
+        <property name="min_connections" type="integer" value="1" />
+        <property name="max_connections" type="integer" value="100" />
+        <property name="type" value="mysql"/>
+    </message>     
+    <message name="sportlinkkernel">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot" condition="[/@DTAP] == 'Development'"/>
+<!--       <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:SLACC01" condition="[/@DTAP] == 'Acceptance'"/> -->
+      <property name="user" value="knvbkern"/>
+      <property name="password" value="knvb"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="15"/>
+	  <property name="type" value="oracle" />
+    </message>
+    <message name="default">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot" condition="[/@DTAP] == 'Development'"/>
+<!--       <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:SLACC01" condition="[/@DTAP] == 'Acceptance'"/> -->
+      <property name="user" value="knvbkern"/>
+      <property name="password" value="knvb"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="15"/>
+	  <property name="type" value="oracle" />
+    </message>
+    <message name="competition">
+        <property name="driver" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://source.dexels.com:3306/competition" condition="[/@DTAP] == 'Development'"/>
+<!--         <property name="url" value="jdbc:mysql://penelope1.dexels.com:5123/competition" condition="[/@DTAP] == 'Acceptance'" /> -->
+        <property name="user" value="widget" />
+        <property name="password" value="widget" />
+        <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap" />
+        <property name="refresh" type="float" value="0.01" />
+        <property name="min_connections" type="integer" value="1" />
+        <property name="max_connections" type="integer" value="100" />
+        <property name="type" value="mysql"/>
+    </message>     
+    <message name="sportlink">
+        <property name="driver" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://source.dexels.com:3306/sportlink" condition="[/@DTAP] == 'Development'"/>
+<!--         <property name="url" value="jdbc:mysql://penelope1.dexels.com:5123/sportlink" condition="[/@DTAP] == 'Acceptance'" /> -->
+        <property name="user" value="sportlink" />
+        <property name="password" value="sportlink" />
+        <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap" />
+        <property name="refresh" type="float" value="0.01" />
+        <property name="min_connections" type="integer" value="1" />
+        <property name="max_connections" type="integer" value="100" />
+        <property name="type" value="mysql"/>
+    </message>     
+    <message name="sportlinkkernel_repl">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot" condition="[/@DTAP] == 'Development'"/>
+<!--       <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:SLACC01" condition="[/@DTAP] == 'Acceptance'"/> -->
+      <property name="user" value="knvbkern"/>
+      <property name="password" value="knvb"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="15"/>
+	  <property name="type" value="oracle" />
+    </message>
+    <message name="vla">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot" condition="[/@DTAP] == 'Development'"/>
+<!--       <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:SLACC01" condition="[/@DTAP] == 'Acceptance'"/> -->
+      <property name="user" value="sportdba"/>
+      <property name="password" value="sp0rtl1nk"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="5"/>
+	  <property name="type" value="oracle" />
+    </message>
+    <message name="yoghurt">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot" condition="[/@DTAP] == 'Development'"/>
+<!--       <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:SLACC01" condition="[/@DTAP] == 'Acceptance'"/> -->
+      <property name="user" value="sportdba"/>
+      <property name="password" value="sp0rtl1nk"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="5"/>
+	  <property name="type" value="oracle" />
+    </message>
+    <message name="migrate">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot" condition="[/@DTAP] == 'Development'"/>
+<!--       <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:SLACC01" condition="[/@DTAP] == 'Acceptance'"/> -->
+      <property name="user" value="knvbkern"/>
+      <property name="password" value="knvb"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="5"/>
+	  <property name="type" value="oracle" />
+    </message>
+    <message name="navajostore">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot" condition="[/@DTAP] == 'Development'"/>
+<!--       <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:SLACC01" condition="[/@DTAP] == 'Acceptance'"/> -->
+      <property name="user" value="knvbnavajo" condition="[/@DTAP] == 'Development'"/>
+      <property name="password" value="knvbnavajo" condition="[/@DTAP] == 'Development'"/>
+<!--       <property name="user" value="KNVBNAVAJO" condition="[/@DTAP] == 'Acceptance'"/> -->
+<!--       <property name="password" value="KNVBNAVAJO" condition="[/@DTAP] == 'Acceptance'"/> -->
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="5"/>
+	  <property name="type" value="oracle" />
+    </message>
+    <message name="sportlinkdba">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot" condition="[/@DTAP] == 'Development'"/>
+<!--       <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:SLACC01" condition="[/@DTAP] == 'Acceptance'"/> -->
+      <property name="user" value="sportdba"/>
+      <property name="password" value="sp0rtl1nk"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="5"/>
+	  <property name="type" value="oracle" />
+    </message>
+    <message name="finance">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot" condition="[/@DTAP] == 'Development'"/>
+<!--       <property name="url" value="jdbc:oracle:thin:@odysseus.dexels.com:1521:SLACC01" condition="[/@DTAP] == 'Acceptance'"/> -->
+      <property name="user" value="knvbkern"/>
+      <property name="password" value="knvb"/>
+      <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="15"/>
+	  <property name="type" value="oracle" />
+    </message>
+    <message name="dashboard">
+      <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot" condition="[/@DTAP] == 'Development'"/>
+<!--       <property name="url" value="jdbc:oracle:thin:@source.dexels.com:1521:aardnoot" condition="[/@DTAP] == 'Acceptance'"/> -->
+      <property name="user" value="dashboard"/>
+      <property name="password" value="dashboard"/>
+      <property name="logfile" value="sportlinkkernel.oracle10g.sqlmap"/>
+      <property name="refresh" type="float" value="0.1"/>
+      <property name="min_connections" type="integer" value="1"/>
+      <property name="max_connections" type="integer" value="50"/>
+	  <property name="type" value="oracle" />
+    </message>     
+	</message>
+</tml>

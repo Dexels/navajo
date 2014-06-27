@@ -285,13 +285,21 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+
+
+	public Operation createOperation(Navajo n, String method, String service, 
+			String entityName, Message extra) {
+		return createOperation(n, method, service, null,entityName,  extra);
+	}
 
 	@Override
-	public Operation createOperation(Navajo n, String method, String service,
+	public Operation createOperation(Navajo n, String method, String service, String validationService,
 			String entityName, Message extra) {
 		BaseOperationImpl oi = new BaseOperationImpl(n);
 		oi.setMethod(method);
 		oi.setService(service);
+		oi.setValidationService(validationService);
 		oi.setEntityName(entityName);
 		oi.setExtraMessage(extra);
 		return oi;

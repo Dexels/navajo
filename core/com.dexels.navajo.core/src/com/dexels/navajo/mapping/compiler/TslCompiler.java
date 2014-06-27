@@ -634,6 +634,7 @@ public class TslCompiler {
 				Element e = (Element) children.item(i);
 				String entity = e.getAttribute("entity");
 				String service = e.getAttribute("service");
+				String validationService = e.getAttribute("validationService");
 				String method = e.getAttribute("method");
 
 				result.append(printIdent(ident) + "if (true) {\n");
@@ -643,9 +644,12 @@ public class TslCompiler {
 						+ "\""
 						+ method
 						+ "\", \""
-						+ service
-						+ "\", \""
-						+ entity + "\", null);\n";
+						+ service;
+				if (validationService != "") {
+					operationString += "\", \"" + validationService;
+				}
+						
+				operationString	+= "\", \""+ entity + "\", null);\n";
 
 				result.append(printIdent(ident + 2) + operationString);
 				// Find extra message definition.

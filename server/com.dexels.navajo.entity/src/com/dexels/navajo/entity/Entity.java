@@ -147,27 +147,27 @@ public class Entity  {
 	}
 	
 	private void processExtendedEntity(Message m, String extendedEntity) throws EntityException {
-		if ( em.getEntity(extendedEntity) != null ) {
-			// Copy properties/messages from superEntity.
-			Entity superEntity = em.getEntity(extendedEntity);
-			myMessage.merge(superEntity.getMessage().copy(myMessage.getRootDoc()));
-			// Check extended properties.
-			processExtendedProperties(myMessage);
-			addSuperEntity(superEntity);
-		} else {
-			throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE, "Could not find super entity: " + extendedEntity + " for entity: " + getName());
+		Entity superEntity = null;
+		if ((superEntity = em.getEntity(extendedEntity) ) == null) {
+			throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE,
+					"Could not find super entity: " + extendedEntity + " for entity: " + getName());
 		}
+		// Copy properties/messages from superEntity.
+		myMessage.merge(superEntity.getMessage().copy(myMessage.getRootDoc()));
+		// Check extended properties.
+		processExtendedProperties(myMessage);
+		addSuperEntity(superEntity);
 	}
 	
 	private void findSuperEntities() throws EntityException {
 
 		if ( myMessage.getExtends() != null ) {	
 			
-			if ( !"".equals(myMessage.getExtends()) && myMessage.getExtends().startsWith(NAVAJO_URI) ) {
+			if ( myMessage.getExtends().startsWith(NAVAJO_URI) ) {
 				String ext = myMessage.getExtends().substring(NAVAJO_URI.length());
 				String [] superEntities = ext.split(",");
-				for ( int i = 0; i < superEntities.length; i++ ) {
-					processExtendedEntity(myMessage, superEntities[i]);
+				for (String superEntity: superEntities) {
+					processExtendedEntity(myMessage, superEntity);
 				}
 			} else if (!"".equals(myMessage.getExtends()) ){
 				throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE, "Extension type not supported: " + myMessage.getExtends());
@@ -185,7 +185,7 @@ public class Entity  {
 		for ( Property p : allProps ) {
 			if ( p.getKey() != null && p.getKey().indexOf("true") != -1 ) {
 				String id = Key.getKeyId(p.getKey());
-								if ( id == null ) {
+				if ( id == null ) {
 					id = ""+(keySequence++);
 				}
 				Key key = null;

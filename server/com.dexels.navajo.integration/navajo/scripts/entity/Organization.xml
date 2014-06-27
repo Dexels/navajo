@@ -1,0 +1,7 @@
+<navascript>
+  <message name="Organization">
+    <property name="OrganizationId" type="string" key="true,auto"/>
+    <property name="Level" type="string" />
+    <property name="Country" type="string" />
+  </message>
+</navascript>

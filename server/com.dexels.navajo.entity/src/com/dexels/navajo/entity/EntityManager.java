@@ -56,7 +56,12 @@ public class EntityManager {
 			Property prop = entity.getMessage().getProperty(propertyName);
 			if ( prop != null ) {
 				Property prop_copy = prop.copy(n);
-				prop_copy.setUnCheckedStringAsValue(parameters.get(key)[0]);
+				String propValue = parameters.get(key)[0];
+				if (propValue.indexOf('.') > 0) {
+					// Dots in property values are not supported since they can be used to indicate output format
+					propValue = propValue.substring(0, propValue.indexOf('.'));
+				}
+				prop_copy.setUnCheckedStringAsValue(propValue);
 				m.addProperty(prop_copy);
 			}
 			

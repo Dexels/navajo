@@ -37,6 +37,10 @@ public class EntityComponent extends Entity {
 		Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
 		in.addHeader(h);
 		Navajo result = dispatcher.handle(in, true);
+		if (result.getMessage((String) parameters.get("entity.name")) == null) {
+			throw new Exception("unable to find entity in provided script!");
+		}
+
 		Message l = result.getAllMessages().iterator().next();
 		setMessage(l);
 		activate();

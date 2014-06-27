@@ -16,6 +16,7 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 
 	protected String method;
 	protected String service;
+	protected String validationService;
 	protected String entityName;
 	protected Message extraMessage;
 	
@@ -58,6 +59,7 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 		 Map<String,String> m = new HashMap<String,String>();
 	      m.put("method", method);
 	      m.put("service", service);
+	      m.put("validationService", validationService);
 	      m.put("entity", entityName);
 	      return m;
 	}
@@ -89,8 +91,20 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 
 	@Override
 	public Operation copy(Navajo n) {
-		 BaseOperationImpl m = (BaseOperationImpl)NavajoFactory.getInstance().createOperation(n, getMethod(), getService(), getEntityName(), getExtraMessage().copy());
+		BaseOperationImpl m = (BaseOperationImpl) NavajoFactory.getInstance().createOperation(n,
+				getMethod(), getService(), getValidationService(), getEntityName(), getExtraMessage().copy());
 	    return m;
+	}
+
+	@Override
+	public void setValidationService(String service) {
+		this.validationService = service;
+		
+	}
+
+	@Override
+	public String getValidationService() {
+		return validationService;
 	}
 
 }

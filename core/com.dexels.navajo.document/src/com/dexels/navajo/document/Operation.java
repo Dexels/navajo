@@ -31,6 +31,10 @@ public interface Operation {
 	
 	public String getMethod();
 	
+	public void setValidationService(String service);
+	
+	public String getValidationService();
+	
 	public void setService(String service);
 	
 	public String getService();

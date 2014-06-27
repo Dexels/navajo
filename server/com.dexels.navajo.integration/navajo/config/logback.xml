@@ -1,0 +1,71 @@
+<configuration>
+
+  <appender name="STDOUT"
+    class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>
+        %d{HH:mm:ss} %logger{20} - %msg%n
+     </Pattern>
+    </layout>
+  </appender>
+
+  <appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <!-- in the absence of the class attribute, it is assumed that the
+         desired discriminator type is
+         ch.qos.logback.classic.sift.MDCBasedDiscriminator -->
+    <discriminator>
+      <key>rpcName</key>
+      <defaultValue>unknown_service</defaultValue>
+    </discriminator>
+    <sift>
+    	<!-- ${rootPath} -->
+      <appender name="NavajoFile-${rootPath}" class="ch.qos.logback.core.FileAppender">
+        <file>${rootPath}/logs/${rpcName}.log</file>
+        <append>true</append>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+          <pattern>%mdc{accessId} - %msg%n</pattern>
+        </layout>
+      </appender>
+    </sift>
+  </appender>
+  
+    <appender name="USER" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <discriminator>
+      <key>rpcUser</key>
+      <defaultValue>unknown_user</defaultValue>
+    </discriminator>
+    <sift>
+    	<!-- ${rootPath} -->
+      <appender name="NavajoFile-${rootPath}" class="ch.qos.logback.core.FileAppender">
+        <file>${rootPath}/logs/${rpcUser}.log</file>
+        <append>true</append>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+          <pattern>%mdc{accessId} %highlight(%-5level) %mdc{rpcName} %cyan(%logger{15})- %msg%n</pattern>
+        </layout>
+      </appender>
+    </sift>
+  </appender>
+  
+  
+  <logger name="org.eclipse.jetty.util.log" level="WARNING" />
+    <appender name="statlogger" class="ch.qos.logback.core.FileAppender">
+      <file>${rootPath}/logs/stats.log</file>
+      <append>true</append>
+      <layout class="ch.qos.logback.classic.PatternLayout">
+        <pattern>- %msg%n</pattern>
+      </layout>
+    </appender>
+
+    <logger name="stats" level="DEBUG" additivity="false">
+        <appender-ref ref="statlogger"/>
+    </logger>
+
+
+  <root level="DEBUG">
+  <!--   <appender-ref ref="STDOUT" /> -->
+    <appender-ref ref="SIFT" />
+    <appender-ref ref="USER" />
+    <appender-ref ref="STDOUT" />
+  </root>
+
+</configuration>

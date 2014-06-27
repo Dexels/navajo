@@ -14,10 +14,12 @@ public class OperationComponent implements Operation {
 	private String service;
 	private String entityName;
 	private Message extraMessage;
+	private String validationService;
 	
 	public void activateComponent(Map<String,Object> parameters) throws Exception {
 		method = (String) parameters.get("operation.method");
 		service = (String) parameters.get("operation.service");
+		validationService = (String) parameters.get("operation.validationService");
 		entityName = (String) parameters.get("operation.entity");
 		// How to fetch Message from this??
 		if ( parameters.get("operation.extramessage") != null ) {
@@ -42,6 +44,17 @@ public class OperationComponent implements Operation {
 	@Override
 	public String getService() {
 		return service;
+	}
+	
+	@Override
+	public void setValidationService(String service) {
+		this.validationService = service;
+		
+	}
+
+	@Override
+	public String getValidationService() {
+		return validationService;
 	}
 
 	@Override
@@ -80,6 +93,7 @@ public class OperationComponent implements Operation {
 		OperationComponent oc = new OperationComponent();
 		oc.setMethod(this.method);
 		oc.setService(this.service);
+		oc.setValidationService(this.validationService);
 		oc.setEntityName(this.entityName);
 		oc.setExtraMessage(this.extraMessage.copy());
 		return oc;

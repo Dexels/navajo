@@ -1,0 +1,8 @@
+<navascript>
+  <message name="Person">
+    <property name="PersonId" type="string" key="true,auto"/>
+    <property name="LastName" type="string" key="false,required"/>
+    <property name="FirstName" type="string" />
+    <property name="DateOfBirth" type="date" />
+  </message>
+</navascript>

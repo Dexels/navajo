@@ -16,7 +16,7 @@ public class TestOperation {
 		Message msg = f.createMessage(n, "__Mongo__");
 		
 		
-		Operation o = f.createOperation(n, "PUT", "vla/ProcessInsertPerson", "Person", null);
+		Operation o = f.createOperation(n, "PUT", "vla/ProcessInsertPerson", null, "Person", null);
 		n.addOperation(o);
 		o.setExtraMessage(msg);
 		Method m = f.createMethod(n, "vla/ProcessUpdatePerson", null);

@@ -1,0 +1,39 @@
+<tml>
+  <message name="Replications" type="array">
+     <!--<message name="Replications">
+         <property name="FromDataSource" type="string" value="sportlinkkernel"/>
+         <property name="ToDataSource" type="string" value="mysql"/>
+         <property name="TableName" type="string" value="SPORT"/>
+     </message>
+     <message name="Replications">
+         <property name="FromDataSource" type="string" value="sportlinkkernel"/>
+         <property name="ToDataSource" type="string" value="mysql"/>
+         <property name="TableName" type="string" value="SYSTEMUSER"/>
+     </message>
+     <message name="Replications">
+         <property name="FromDataSource" type="string" value="sportlinkkernel"/>
+         <property name="ToDataSource" type="string" value="mysql"/>
+         <property name="TableName" type="string" value="ORGANIZATIONPERSON"/>
+     </message>
+     <message name="Replications">
+         <property name="FromDataSource" type="string" value="sportlinkkernel"/>
+         <property name="ToDataSource" type="string" value="mysql"/>
+         <property name="TableName" type="string" value="ORGANIZATION"/>
+     </message>
+     <message name="Replications">
+         <property name="FromDataSource" type="string" value="sportlinkkernel"/>
+         <property name="ToDataSource" type="string" value="mysql"/>
+         <property name="TableName" type="string" value="CBS_GEMEENTE"/>
+     </message>
+     <message name="Replications">
+         <property name="FromDataSource" type="string" value="sportlinkkernel"/>
+         <property name="ToDataSource" type="string" value="mysql"/>
+         <property name="TableName" type="string" value="AGECLASS"/>
+     </message>
+     <message name="Replications">
+         <property name="FromDataSource" type="string" value="sportlinkkernel"/>
+         <property name="ToDataSource" type="string" value="mysql"/>
+         <property name="TableName" type="string" value="POSTCODETABLE"/>
+     </message>-->
+  </message>
+</tml>

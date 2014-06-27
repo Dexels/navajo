@@ -397,6 +397,15 @@
 			<method name="deletemessage">
 				<param name="name" field="deleteMessage" type="string" required="true" />
 			</method>
+			<method name="addparameter">
+                                <param name="name" field="parameterName" type="string" required="true" />
+                                <param name="value" field="parameterValue" type="string" required="true" />
+                        </method>
+                        <method name="addheader">
+                                <param name="name" field="headerKey" type="string" required="true" />
+                                <param name="value" field="headerValue" type="string" required="true" />
+                        </method>
+
 			<method name="callservice">
 				<param name="url" field="url" type="string" required="true" />
 				<param name="method" field="method" type="string" required="true" />
