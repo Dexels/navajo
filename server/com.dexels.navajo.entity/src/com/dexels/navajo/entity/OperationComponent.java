@@ -46,13 +46,12 @@ public class OperationComponent implements Operation {
 		return service;
 	}
 	
-	@Override
+
 	public void setValidationService(String service) {
 		this.validationService = service;
 		
 	}
 
-	@Override
 	public String getValidationService() {
 		return validationService;
 	}
