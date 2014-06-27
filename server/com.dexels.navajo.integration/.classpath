@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="lib/org.apache.httpcomponents.httpclient_4.3.4.jar" sourcepath="/home/chris/.m2/repository/org/apache/httpcomponents/httpclient-osgi/4.3.4/httpclient-osgi-4.3.4-sources.jar"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
