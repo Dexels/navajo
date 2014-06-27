@@ -1,6 +1,5 @@
 package com.dexels.navajo.entity.impl;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,8 +17,6 @@ import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.EntityOperation;
 import com.dexels.navajo.entity.Key;
 import com.dexels.navajo.entity.adapters.EntityMap;
-import com.dexels.navajo.entity.transactions.NavajoTransaction;
-import com.dexels.navajo.entity.transactions.NavajoTransactionManager;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.UserException;

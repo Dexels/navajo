@@ -2,13 +2,12 @@ package com.dexels.navajo.entity.listener;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.net.HttpRetryException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.StringTokenizer;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
@@ -16,9 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -34,6 +30,7 @@ import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
 import com.dexels.navajo.entity.util.EntityHelper;
 import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.sportlink.functions.Base64;
 
 public class EntityListener extends HttpServlet {
 
@@ -73,19 +70,20 @@ public class EntityListener extends HttpServlet {
 			throws ServletException, IOException {
 
 		resetParameters();
-		
+		Navajo result = null;
 		String method = request.getMethod();
 		String path = request.getPathInfo();
 		String query = request.getQueryString();
 		
 		if (query != null && query.lastIndexOf('.') > 0) {
-			urlOutput = query.substring(query.lastIndexOf('.') + 1 );
+			urlOutput = query.substring(query.lastIndexOf('.') +1 );
 			if (!SUPPORTED_OUTPUT.contains(urlOutput)) {
 				// unsupported format
 				urlOutput = null;
 			}
 		}
 		String output = getOutputFormat(request);
+		// Only end-points are allowed to cache - no servers in between
 		response.setHeader("Cache-Control", "private");
 		response.setHeader("Content-Type", "application/"+output);
 
@@ -103,7 +101,7 @@ public class EntityListener extends HttpServlet {
 		
 		if (e == null) {
 			// Requested entity not found
-			handleEntityException(new EntityException(EntityException.ENTITY_NOT_FOUND), request, response);
+			handleException(new EntityException(EntityException.ENTITY_NOT_FOUND), request, response);
 			return;
 		}
 
@@ -142,7 +140,7 @@ public class EntityListener extends HttpServlet {
 			
 			Operation o = myManager.getOperation(entityName, method);
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, myClient, o);
-			Navajo result = seo.perform(input);
+			result = seo.perform(input);
 			
 			if ( result.getMessage(entityMessage.getName() ) != null ) {
 				// Merge with entity template
@@ -151,25 +149,32 @@ public class EntityListener extends HttpServlet {
 					response.setHeader("Etag", result.getMessage(entityMessage.getName()).getEtag());
 				}
 			}
-			
-			writeOutput(result, response, output);
-		} catch (EntityException e1) {
-			System.err.println("ent");
-			handleEntityException(e1, request, response);
-		} catch (Exception e2) {
-			System.err.println("gen");
-
-			handleGenericException(e2, request, response);
+		} catch (Exception ex) {
+			result = handleException(ex, request, response);
 		}
-
+		writeOutput(result, response, output);
 	}
 
 	private void writeOutput(Navajo result, HttpServletResponse response, String output)
-			throws IOException, Exception {
+			throws IOException, ServletException {
+		if (result == null) {
+			throw new ServletException("No output found");
+		}
+		if (result.getMessage("errors") != null) {
+			String status = result.getMessage("errors").getProperty("status").toString();
+			if (status.equals("304")) {
+				// No content
+				return;
+			}
+		}
 		if ( output.equals("json"))  {
 			Writer w = new OutputStreamWriter(response.getOutputStream());
 			JSONTML json = JSONTMLFactory.getInstance();
-			json.format(result, w);
+			try {
+				json.format(result, w);
+			} catch (Exception e) {
+				throw new ServletException("Error producing output");
+			}
 			w.close();
 		} else if ( output.equals("xml") ) {
 			NavajoLaszloConverter.writeBirtXml(result, response.getWriter());
@@ -187,68 +192,69 @@ public class EntityListener extends HttpServlet {
 	private void authenticateRequest(HttpServletRequest request) {
 		// TODO: better security, such as API keys
 		// Furthermore check authorization
-		username = request.getParameter("username");
-		password = request.getParameter("password");
-	}
+		basicAuthentication(request);
+		if (username == null) {
+			// TODO: This is very unsafe
+			username = request.getParameter("username");
+			password = request.getParameter("password");
+		}
+	}	
+	
+	private void basicAuthentication(HttpServletRequest req) {
+		String authHeader = req.getHeader("Authorization");
+		if (authHeader != null) {
+			StringTokenizer st = new StringTokenizer(authHeader);
+			if (st.hasMoreTokens()) {
+				if (st.nextToken().equalsIgnoreCase("Basic")) {
+					try {
+						String credentials = new String(Base64.decode(st.nextToken()), "UTF-8");
+						int p = credentials.indexOf(":");
+						if (p != -1) {
+							username = credentials.substring(0, p).trim();
+							password = credentials.substring(p + 1).trim();
 
-
-	private void handleEntityException(EntityException e1, HttpServletRequest request,
-			HttpServletResponse response) throws ServletException {
-		try {
-			response.setStatus(e1.getCode());
-			
-			String output = this.getOutputFormat(request);
-			if (output.equals("application/json")) {
-				response.getWriter().println(errorToJson(e1));
-			} else if (output.equals("application/xml")) {
-				response.getWriter().println(errorToJson(e1));
-			} else {
-				response.getWriter().println(e1.getMessage());
+						} else {
+							System.err.println("Invalid authentication token");
+						}
+					} catch (UnsupportedEncodingException e) {
+						System.err.println("Couldn't retrieve authentication");
+					}
+				}
 			}
-		} catch (IOException ex1) {
-			// Exception while trying to handle existing exception...
-			throw new ServletException(ex1.getMessage(), ex1);
 		}
 	}
-	
-	private void handleGenericException(Exception e1, HttpServletRequest request,
+
+	// In case of an exception, we create a Navajo document with some messages describing
+	// the error. This allows us to output the exception in the format the user requested
+	// (eg.g JSON).
+	private Navajo handleException(Exception ex, HttpServletRequest request,
 			HttpServletResponse response) throws ServletException {
-		try {
-			response.setStatus(EntityException.SERVER_ERROR);
-			
-			String output = this.getOutputFormat(request);
-			if (output.equals("json")) {
-				response.getWriter().println(errorToJson(e1));
-			} else if (output.equals("xml")) {
-				response.getWriter().println(errorToJson(e1));
-			} else {
-				response.getWriter().println(e1.getMessage());
-			}
-		} catch (IOException e) {
-			// Exception while trying to handle existing exception...
-		}
-
-		//throw new ServletException(e1.getMessage(), e1);
-	}
-	
-
-	private String errorToJson(Exception e) throws JsonMappingException, IOException{
-		ObjectMapper om = new ObjectMapper();
-		Map<String, Object> top = new HashMap<String, Object>();
-		Map<String, Object> errors = new HashMap<String, Object>();
+		Navajo result = null;
 		
-		if (e instanceof EntityException) {
-			errors.put("status", ((EntityException) e).getCode());
-			errors.put("error", e.getMessage());
+		result = NavajoFactory.getInstance().createNavajo();
+		Message m = NavajoFactory.getInstance().createMessage(result, "errors");
+		result.addMessage(m);
+		if (ex instanceof EntityException) {
+			response.setStatus(((EntityException) ex).getCode());
+			int code = ((EntityException) ex).getCode();
+			m.addProperty(NavajoFactory.getInstance().createProperty(result, "status", "string",
+					String.valueOf(code), 1, null, null));
+			m.addProperty(NavajoFactory.getInstance().createProperty(result, "error", "string",
+					ex.getMessage(), 1, null, null));
+
 		} else {
-			errors.put("status", EntityException.SERVER_ERROR);
-			errors.put("error", "Server error (" + e.toString());
+			response.setStatus(EntityException.SERVER_ERROR);
+			m.addProperty(NavajoFactory.getInstance().createProperty(result, "status", "string",
+					String.valueOf(EntityException.SERVER_ERROR), 1, null, null));
+			m.addProperty(NavajoFactory.getInstance().createProperty(result, "error", "string",
+					"Server error (" + ex.toString(), 1, null, null));
 		}
-		top.put("errors", errors);
-		return om.writeValueAsString(top);
+
+		return result;
 	}
+	
 
-
+	
 	private String getOutputFormat(HttpServletRequest request)  {
 		if (urlOutput != null) {
 			// Explicit output in URL gets preference over Accept header
