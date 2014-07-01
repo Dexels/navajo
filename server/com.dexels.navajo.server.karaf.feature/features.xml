@@ -34,15 +34,15 @@
 	</feature>
 
 	
-	<feature resolver="(obr)" name='navajo.server' version='3.0.3' start-level='81' >
+	<feature resolver="(obr)" name='navajo.server' version='3.0.4' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.core</feature>
 		<feature version="[3.0.0,4)">pax-war</feature>
 		<feature version="[3.0.0,4)">pax-http-whiteboard</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/2.0.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.16</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/2.0.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.2.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.queuemanager/1.0.36</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/2.0.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.2.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.queuemanager/1.0.38</bundle>
 		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
 		<bundle dependency='true'>mvn:commons-lang/commons-lang/2.4</bundle>
 		<bundle dependency='true'>mvn:commons-dbcp/commons-dbcp/1.4</bundle>
@@ -77,16 +77,16 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>	
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.14' start-level='81' >
+	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.15' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/2.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.resource/2.0.14</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/3.0.8</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/3.0.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/2.0.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.http/1.0.12</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource/2.0.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager/2.0.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager/2.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.oracle/2.0.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.mongodb/2.0.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.mysql/2.0.4</bundle>
@@ -105,9 +105,9 @@
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.1.0</bundle> -->
 	</feature>
 
-	<feature resolver="(obr)" name='tipi.core' version='3.0.5' start-level='81' >
+	<feature resolver="(obr)" name='tipi.core' version='3.0.6' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/2.0.8</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/2.0.12</bundle>
 	</feature>
 	
 	<feature resolver="(obr)" name='tipi.css' version='3.0.2' start-level='81' >
@@ -152,11 +152,12 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager.openshift/1.0.16</bundle>
 	</feature>
 -->
-	<feature resolver="(obr)" name='navajo.article' version='3.0.4' start-level='81' >
+	<feature resolver="(obr)" name='navajo.article' version='3.0.6' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/2.0.8</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/2.0.10</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.oauth.api/1.0.1</bundle>
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article.jsp/1.0.11</bundle>-->
 	</feature>
 	
@@ -172,9 +173,9 @@
 	</feature>
 	
 
-	<feature resolver="(obr)" name='navajo.dev' version='3.0.4' start-level='81' >
+	<feature resolver="(obr)" name='navajo.dev' version='3.0.5' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.server.osgi</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/3.0.8</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/3.0.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.birt.push/2.0.0</bundle>
 	</feature>			
 
@@ -197,17 +198,17 @@
 		<feature version="[3.0.0,4)">navajo.enterprise.mongodb</feature>
 	</feature>
 	
-	<feature resolver="(obr)" name='navajo.enterprise.core' version='3.0.5' start-level='81' >
+	<feature resolver="(obr)" name='navajo.enterprise.core' version='3.0.6' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.0.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.0.4</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.2</bundle>
     </feature>
 
-	<feature resolver="(obr)" name='navajo.enterprise.mongodb' version='3.0.4' start-level='81' >
+	<feature resolver="(obr)" name='navajo.enterprise.mongodb' version='3.0.5' start-level='81' >
 		<feature version="[3.0.14,4)">navajo.server.osgi</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo/3.0.10</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo.navajostore/3.0.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo.navajostore/3.0.2</bundle>
 	</feature>
 	
 	<feature resolver="(obr)" name='navajo.enterprise.lucene' version='3.0.2' start-level='81' >
@@ -223,18 +224,18 @@
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.0.4</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='sportlink.libraries' version='3.0.9' start-level='82' >
+	<feature resolver="(obr)" name='sportlink.libraries' version='3.0.10' start-level='82' >
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.nevobo.dps/1.0.0</bundle> -->
 		<feature version="[3.0.0,4)">navajo.function</feature> 
 		<feature version="[3.0.0,4)">navajo.adapter</feature> 
 		<feature version="[3.0.0,4)">navajo.article</feature> 
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.aaa/3.0.8</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.0.14</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.0.18</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.functions/3.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.adapters/3.0.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.comp/3.0.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.tensing/1.0.4</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.optimizepool/3.0.10</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.optimizepool/3.0.12</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.nevobo.dps/1.0.3</bundle>
 				<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.crystal/1.0.5</bundle> -->
 	</feature>
@@ -251,22 +252,22 @@
 		<feature version="[3.0.0,4)">navajo.kml</feature>
 	</feature>	
 
-	<feature resolver="(obr)" name='navajo.jgit' version='3.0.8' start-level='81' >
+	<feature resolver="(obr)" name='navajo.jgit' version='3.0.9' start-level='81' >
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.ant/1.9.2_1</bundle>
 		<bundle dependency='true'>mvn:com.jcraft/jsch-bundle/0.1.46</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/1.3_5</bundle>
 		<bundle dependency='true'>mvn:org.eclipse.jgit/org.eclipse.jgit/3.1.0.201310021548-r</bundle>
 		<bundle dependency='true'>mvn:com.dexels.thirdparty/javaewah/0.5.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jgit/3.0.14</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jgit/3.0.16</bundle>
 	</feature>
 	
-	<feature resolver="(obr)" name='tipi.appstore' version='3.0.5' start-level='81' >
+	<feature resolver="(obr)" name='tipi.appstore' version='3.0.6' start-level='81' >
 	    <feature version="[3.0.0,4)">navajo.jgit</feature>
 	    <feature version="[3.0.0,4)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.core/2.0.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.core/2.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.ant/2.0.2</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.server/2.0.20</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.server/2.0.22</bundle>
 	</feature>
 	
 	<feature resolver="(obr)" name='oao' version='1.0.1' start-level='81' >
