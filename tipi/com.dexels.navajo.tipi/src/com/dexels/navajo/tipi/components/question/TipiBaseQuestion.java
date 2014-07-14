@@ -51,6 +51,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 	private Message myMessage = null;
 	private String myId;
 	private String subQuestionPath;
+	private String subQuestionInvalidText = "Subvraag incorrect";
 
 	
 	private final static Logger logger = LoggerFactory
@@ -70,6 +71,10 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		}
 		if (name.equals("subQuestionPath")) {
 			subQuestionPath = (String) object;
+
+		}
+		if (name.equals("subQuestionInvalidText")) {
+			subQuestionInvalidText = (String) object;
 
 		}
 
@@ -237,7 +242,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 			}
 		}
 		if (invalidFound) {
-			setValid(false, "Subvraag incorrect");
+			setValid(false, subQuestionInvalidText);
 		} else {
 			if (!isValid()) {
 				setValid(false);
