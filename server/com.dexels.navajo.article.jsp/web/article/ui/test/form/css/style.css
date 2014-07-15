@@ -1,0 +1,105 @@
+body {
+    font-family: Helvetica,Arial;
+    font-size: 12pt;
+    background-color:#cecece;
+}
+
+input {
+    width:250px;
+    font-size:12pt;
+    border: solid 1px #000000;
+}
+
+li {
+    list-style:none;
+}
+
+input.ng-invalid {
+  border: 1px solid red;
+}
+
+input.ng-valid {
+  border: 1px solid green;
+}
+
+td {
+    padding: 0px;
+    margin: 0px;
+}
+
+table { 
+    border-spacing: 0px;
+    border-collapse: separate;
+}
+
+.marginTop {
+    margin-top: 15px;
+}
+
+.resultwrapper {
+    background-color:#FEFEFE;
+    width:1100px;
+    text-align:center;
+    padding:10px;
+    border-radius:8px;
+    margin:10px;
+    margin-left: 40px;
+}
+
+.title {
+    font-weight: bold;
+    color:#045FB4;
+}
+
+.fieldTitle {
+    font-weight: bold;
+}
+
+.fieldValue {
+    font-style: italic;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.searchtext {
+    font-size:1.2em;
+    font-weight:bold;
+    color:#006;
+    padding-right:5px;
+}
+
+.inputbg {
+    background:#fff;
+    padding:8px;
+    border-radius:4px;
+}
+
+.bold {
+  font-weight:bold;
+}
+
+.textLeft {
+    text-align: left;
+}
+
+.textRight {
+    text-align: right;
+}
+
+.alignRight {
+    float: right;
+}
+
+.alignLeft {
+    float: left;
+}
+
+.w200 {
+    width: 200px;
+}
