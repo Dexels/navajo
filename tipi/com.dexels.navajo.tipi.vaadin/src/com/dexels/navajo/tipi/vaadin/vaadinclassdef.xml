@@ -782,6 +782,7 @@
             <value direction="inout" name="questionGroupPath" type="object"/>
             <value direction="inout" name="columnWidth" type="string"/>
             <value direction="in" name="subQuestionPath" type="string"/>
+         	<value direction="in" name="subQuestionInvalidText" type="string" />
       </values>
         <methods>
             <method name="print"/>

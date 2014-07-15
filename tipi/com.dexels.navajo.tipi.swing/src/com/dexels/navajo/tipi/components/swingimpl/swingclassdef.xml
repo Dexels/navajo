@@ -699,6 +699,7 @@
          <value direction="inout" name="questionDefinitionName" type="string" />
          <value direction="inout" name="questionGroupPath" type="string" />
          <value direction="in" name="subQuestionPath" type="string" />
+         <value direction="in" name="subQuestionInvalidText" type="string" />
       </values>
       <methods>
          <method name="print" />
