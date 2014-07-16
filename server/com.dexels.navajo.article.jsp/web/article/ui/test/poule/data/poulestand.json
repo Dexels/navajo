@@ -1,0 +1,148 @@
+{
+  "" : [ 
+  {
+    "positie" : 1,
+    "teamnaam" : "JOS/W'graafsmeer 6",
+    "gespeeldewedstrijden" : "21",
+    "gewonnen" : "16",
+    "gelijk" : "3",
+    "verloren" : "2",
+    "doelpuntenvoor" : "77",
+    "doelpuntentegen" : "34",
+    "verliespunten" : "0",
+    "punten" : "51",
+    "eigenteam" : "false"
+  }, {
+    "positie" : 2,
+    "teamnaam" : "WV-HEDW 17",
+    "gespeeldewedstrijden" : "21",
+    "gewonnen" : "15",
+    "gelijk" : "2",
+    "verloren" : "4",
+    "doelpuntenvoor" : "92",
+    "doelpuntentegen" : "40",
+    "verliespunten" : "0",
+    "punten" : "47",
+    "eigenteam" : "false"
+  }, {
+    "positie" : 3,
+    "teamnaam" : "VVGA 3",
+    "gespeeldewedstrijden" : "21",
+    "gewonnen" : "13",
+    "gelijk" : "3",
+    "verloren" : "5",
+    "doelpuntenvoor" : "67",
+    "doelpuntentegen" : "36",
+    "verliespunten" : "0",
+    "punten" : "42",
+    "eigenteam" : "false"
+  }, {
+    "positie" : 4,
+    "teamnaam" : "Wartburgia 5",
+    "gespeeldewedstrijden" : "20",
+    "gewonnen" : "11",
+    "gelijk" : "5",
+    "verloren" : "4",
+    "doelpuntenvoor" : "77",
+    "doelpuntentegen" : "40",
+    "verliespunten" : "0",
+    "punten" : "38",
+    "eigenteam" : "false"
+  }, {
+    "positie" : 5,
+    "teamnaam" : "TABA 2",
+    "gespeeldewedstrijden" : "20",
+    "gewonnen" : "12",
+    "gelijk" : "1",
+    "verloren" : "7",
+    "doelpuntenvoor" : "69",
+    "doelpuntentegen" : "44",
+    "verliespunten" : "0",
+    "punten" : "37",
+    "eigenteam" : "false"
+  }, {
+    "positie" : 6,
+    "teamnaam" : "Kadoelen sv 6",
+    "gespeeldewedstrijden" : "21",
+    "gewonnen" : "11",
+    "gelijk" : "1",
+    "verloren" : "9",
+    "doelpuntenvoor" : "65",
+    "doelpuntentegen" : "60",
+    "verliespunten" : "0",
+    "punten" : "34",
+    "eigenteam" : "false"
+  }, {
+    "positie" : 7,
+    "teamnaam" : "Castricum 6",
+    "gespeeldewedstrijden" : "20",
+    "gewonnen" : "7",
+    "gelijk" : "2",
+    "verloren" : "11",
+    "doelpuntenvoor" : "66",
+    "doelpuntentegen" : "61",
+    "verliespunten" : "0",
+    "punten" : "23",
+    "eigenteam" : "false"
+  }, {
+    "positie" : 8,
+    "teamnaam" : "Geinburgia Za. 2",
+    "gespeeldewedstrijden" : "21",
+    "gewonnen" : "7",
+    "gelijk" : "2",
+    "verloren" : "12",
+    "doelpuntenvoor" : "61",
+    "doelpuntentegen" : "82",
+    "verliespunten" : "0",
+    "punten" : "23",
+    "eigenteam" : "false"
+  }, {
+    "positie" : 9,
+    "teamnaam" : "Sloterdijk 3",
+    "gespeeldewedstrijden" : "21",
+    "gewonnen" : "7",
+    "gelijk" : "2",
+    "verloren" : "12",
+    "doelpuntenvoor" : "48",
+    "doelpuntentegen" : "93",
+    "verliespunten" : "0",
+    "punten" : "23",
+    "eigenteam" : "false"
+  }, {
+    "positie" : 10,
+    "teamnaam" : "Fortius 6",
+    "gespeeldewedstrijden" : "21",
+    "gewonnen" : "5",
+    "gelijk" : "4",
+    "verloren" : "12",
+    "doelpuntenvoor" : "46",
+    "doelpuntentegen" : "67",
+    "verliespunten" : "0",
+    "punten" : "19",
+    "eigenteam" : "false"
+  }, {
+    "positie" : 11,
+    "teamnaam" : "Meer de 4",
+    "gespeeldewedstrijden" : "20",
+    "gewonnen" : "6",
+    "gelijk" : "0",
+    "verloren" : "14",
+    "doelpuntenvoor" : "37",
+    "doelpuntentegen" : "74",
+    "verliespunten" : "0",
+    "punten" : "18",
+    "eigenteam" : "false"
+  }, {
+    "positie" : 12,
+    "teamnaam" : "DVVA 11",
+    "gespeeldewedstrijden" : "21",
+    "gewonnen" : "1",
+    "gelijk" : "1",
+    "verloren" : "19",
+    "doelpuntenvoor" : "23",
+    "doelpuntentegen" : "97",
+    "verliespunten" : "0",
+    "punten" : "4",
+    "eigenteam" : "false"
+  } ]
+}

@@ -508,7 +508,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			String resetSession = null;
 			if (myConnectionBroker != null && this.alternativeUsername != null) {
 				if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier()) || SQLMapConstants.ENTERPRISEDB.equals(this.getDbIdentifier())) {
-					resetSession = "SET SEARCH_PATH TO " + myConnectionBroker.getUsername();
+					resetSession = "SET SEARCH_PATH TO " + myConnectionBroker.getUsername() + ",public";
 				} else {
 					resetSession = "ALTER SESSION SET CURRENT_SCHEMA = " + myConnectionBroker.getUsername();
 				}
