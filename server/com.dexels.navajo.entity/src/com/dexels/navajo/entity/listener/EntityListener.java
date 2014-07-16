@@ -100,19 +100,20 @@ public class EntityListener extends HttpServlet {
 			System.err.println("path: " + path);
 			System.err.println("entityName: " + entityName);
 		}
-		Entity e = myManager.getEntity(entityName);
 		
-		if (e == null) {
-			// Requested entity not found
-			handleException(new EntityException(EntityException.ENTITY_NOT_FOUND), request, response);
-			return;
-		}
-
+		
 		Navajo input = null;
-		Message entityMessage = e.getMessage();
 		String etag = null;
 		
 		try {
+			Entity e = myManager.getEntity(entityName);
+			if (e == null) {
+				// Requested entity not found
+				throw new EntityException(EntityException.ENTITY_NOT_FOUND);
+			}
+
+			Message entityMessage = e.getMessage();
+			
 			// Get the input document
 			if (method.equals("GET") || method.equals("DELETE")) {
 				input = myManager.deriveNavajoFromParameterMap(e, request.getParameterMap());
