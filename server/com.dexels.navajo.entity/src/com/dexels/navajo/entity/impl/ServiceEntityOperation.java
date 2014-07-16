@@ -316,10 +316,10 @@ public class ServiceEntityOperation implements EntityOperation {
 		
 		myKey = myEntity.getKey(inputEntity.getAllProperties());
 		if(myKey==null) {
-			// Check for _id property. If _id is present it is good as a key.
-			if ( inputEntity.getProperty("_id") == null ) {
-				throw new EntityException(EntityException.MISSING_ID,
-						"Input is invalid: no valid entity key found.");
+			// Check for _id property. If _id is present it is good as a key.  
+			// It's also possible our entity has no keys defined. In that case accept input
+			if ( inputEntity.getProperty("_id") == null && myEntity.getKeys().size() > 0 ) {
+				throw new EntityException(EntityException.MISSING_ID, "Input is invalid: no valid entity key found.");
 			} else {
 				myKey = new Key("", myEntity);
 			}
@@ -340,10 +340,13 @@ public class ServiceEntityOperation implements EntityOperation {
 		
 		if( myOperation.getMethod().equals(Operation.GET) ) {
 			if ((postedEtag = inputEntity.getEtag()) != null) {
-				String currentEtag = getCurrentEntity(input).getMessage(myEntity.getName()).generateEtag();
-				if (postedEtag.equals(currentEtag)) {
-					throw new EntityException(EntityException.NOT_MODIFIED);
+				Navajo entity = getCurrentEntity(input);
+				if (entity != null && entity.getMessage(myEntity.getName()) != null) {
+					if (postedEtag.equals(entity.getMessage(myEntity.getName()).generateEtag())) {
+						throw new EntityException(EntityException.NOT_MODIFIED);
+					}
 				}
+				
 			}
 			
 			return getEntity(input);
@@ -545,6 +548,9 @@ public class ServiceEntityOperation implements EntityOperation {
 		Navajo result =  commitOperation(input, myOperation, false);
 		if (result.getMessage("error") != null) {
 			throw new EntityException(EntityException.SERVER_ERROR);
+		}
+		if (result.getMessage("AuthenticationError") != null) {
+			throw new EntityException(EntityException.UNAUTHORIZED);
 		}
 		return result;
 		
