@@ -15,6 +15,7 @@ public class EntityException extends UserException {
 	public final static int NOT_MODIFIED = 304;
 
 	public final static int BAD_REQUEST = 400;
+	public final static int UNAUTHORIZED = 401;
 	public final static int ENTITY_NOT_FOUND = 404;
 	public final static int OPERATION_NOT_SUPPORTED = 405;
 	public final static int OUTPUT_NOT_ACCEPTABLE = 406;
@@ -46,6 +47,8 @@ public class EntityException extends UserException {
 		errorCodes.put(FAILURE, "Validation exception");
 		errorCodes.put(OUTPUT_NOT_ACCEPTABLE, "Requested output not available");
 		errorCodes.put(ETAG_ERROR, "ETag mismatch");
+		errorCodes.put(UNAUTHORIZED, "Unauthorized");
+
 	}
 	
 	public EntityException() {
