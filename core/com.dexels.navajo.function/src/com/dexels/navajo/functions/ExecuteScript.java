@@ -55,7 +55,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
       return bbb;
       }
     catch (Exception ex) {
-    	throw new TMLExpressionException(this, "Error while trying to execute script: " + script);
+    	throw new TMLExpressionException(this, "Error while trying to execute script: " + script, ex);
     }
   }
 
