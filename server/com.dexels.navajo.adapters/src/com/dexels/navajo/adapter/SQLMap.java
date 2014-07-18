@@ -250,7 +250,12 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 */
 	@Override
 	public String getDbIdentifier() {
-		
+		if (con != null && con.toString().contains("postgresql" )) {
+			return SQLMapConstants.POSTGRESDB;
+		}
+		if (this.datasource.equals("vla") || this.datasource.equals("yoghurt")  ) {
+			return SQLMapConstants.POSTGRESDB;
+		}
 		if ( this.myConnectionBroker != null ) {
 			return this.myConnectionBroker.getDbIdentifier();
 		} else {
@@ -787,6 +792,28 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 		query = newQuery.replace('"', (this.replaceQueryDoubleQuotes) ? '\''
 				: '\"');
+
+		if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier())) {
+			if (query.contains("rownum")) {
+				// Replace Oracle rownum construction with PostgreSQL compatible
+				// version
+				// Regex: case insensitive, "AND", one or more spaces, "ROWNUM",
+				// one or more spaces
+				// "=", one or more spaces, a number
+				query = query.replaceAll("(?i)AND(\\s)+ROWNUM(\\s)+=(\\s)+(\\d)",
+						"LIMIT $4 OFFSET 1");
+			}
+			if (query.contains("nextval")) {
+				// Replace sequencename.nextval with Postgresql format
+				// nextval('sequencename')
+				query = query.replaceAll("(\\w+)\\.nextval", "nextval(\'$1\')");
+			}
+
+		}
+		
+			
+
+		
 		if (debug) {
 			Access.writeToConsole(myAccess, "SQLMap(): query = " + query + "\n");
 		}
@@ -1289,6 +1316,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				resultSet = (ResultSetMap[]) dummy.toArray(resultSet);
 			}
 		} catch (SQLException sqle) {
+			logger.error("The following query failed: {}", this.getQuery());
 			AuditLog.log("SQLMap", sqle.getMessage(),sqle, Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access"));
 			throw new UserException(-1, sqle.getMessage(), sqle);
 		} finally {
