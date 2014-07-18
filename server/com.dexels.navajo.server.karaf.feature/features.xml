@@ -107,7 +107,7 @@
 
 	<feature resolver="(obr)" name='tipi.core' version='3.0.7' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/2.0.14</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/2.0.16</bundle>
 	</feature>
 	
 	<feature resolver="(obr)" name='tipi.css' version='3.0.2' start-level='81' >
@@ -119,7 +119,7 @@
 	<feature resolver="(obr)" name='tipi.vaadin' version='3.0.11' start-level='81' >
 		<feature version="[3.0.0,4)">tipi.core</feature>
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.14</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.3.16</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.3.18</bundle>
 	</feature>
 	<feature resolver="(obr)" name='tipi.vaadin.touch' version='3.0.0' start-level='81' >
 		<feature version="[3.0.0,4)">tipi.vaadin</feature>
