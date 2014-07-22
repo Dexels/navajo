@@ -27,5 +27,7 @@ public interface GrusConnection {
 
 	public void rollback(boolean b);
 
+	public String getDbIdentifier();
+
 
 }
