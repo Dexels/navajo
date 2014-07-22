@@ -2,7 +2,6 @@ package com.dexels.navajo.entity.listener;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.Set;
@@ -127,6 +126,11 @@ public class EntityListener extends HttpServlet {
 				}
 			}
 			
+			if (input.getMessage(entityMessage.getName()) == null) {
+				throw new EntityException(EntityException.BAD_REQUEST);
+
+			}
+			
 			etag = request.getHeader("If-Match");
 			if (etag == null) {
 				etag = request.getHeader("If-None-Match");
@@ -188,8 +192,10 @@ public class EntityListener extends HttpServlet {
 	}
 
 	private void resetParameters() {
-		username = null;
-		password = null;
+		// To prevent LocalClient from adding username & password if none are given, 
+		// we reset the username and password to a string with one space character
+		username = " ";
+		password = " ";
 		urlOutput = null;
 	}
 
@@ -260,8 +266,6 @@ public class EntityListener extends HttpServlet {
 
 		return result;
 	}
-	
-
 	
 	private String getOutputFormat(HttpServletRequest request)  {
 		if (urlOutput != null) {

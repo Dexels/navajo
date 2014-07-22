@@ -329,7 +329,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		// Perform validation method if defined
 		if ((myOperation.getValidationService()) != null) {
 			Navajo request = myKey.generateRequestMessage(input);
-			Navajo validationResult = callEntityValidationService(request);
+			Navajo validationResult = callEntityValidationService(input, request);
 	
 			Message validationErrors;
 			if ((validationErrors = validationResult.getMessage("ConditionErrors")) != null ) {
@@ -362,7 +362,7 @@ public class ServiceEntityOperation implements EntityOperation {
 						"Could not peform delete, entity not found");
 			}
 
-			return callEntityService(request);
+			return callEntityService(input);
 		}
 	
 		if (myOperation.getMethod().equals(Operation.PUT) || myOperation.getMethod().equals(Operation.POST)) {
@@ -448,16 +448,6 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 	}
 
-	private Navajo getEntity(Navajo input) throws EntityException {
-		Navajo result = getCurrentEntity(input);
-		if ( result == null ) {
-			throw new EntityException(EntityException.ENTITY_NOT_FOUND, myEntity.getName());
-		}
-		setEtag(result);
-		setMetaProperty(result, STATUS, EntityException.OK+"");
-		return result;
-	}
-
 
 	/**
 	 * Checks whether this entity is backed by Mongo. If this is true it checks for existence of _id property.
@@ -493,35 +483,57 @@ public class ServiceEntityOperation implements EntityOperation {
 	}
 
 
+	
+	private Navajo getEntity(Navajo input) throws EntityException {
+		Navajo result = getCurrentEntity(input);
+		if ( result == null ) {
+			throw new EntityException(EntityException.ENTITY_NOT_FOUND, myEntity.getName());
+		}
+		result.getMessage(myEntity.getName()).maskMessage(myEntity.getMessage());
+		setEtag(result);
+		setMetaProperty(result, STATUS, EntityException.OK+"");
+		return result;
+	}
+
+
 	/**
-	 * Get an entity instance based on the input Navajo
+	 * Perform a GET operation on the entity instance based on the input Navajo. Check
+	 * the result for errors (Server errors or authentication).
 	 * 
 	 * @param input
-	 * @return
-	 * @throws EntityException
+	 * @return Returns the result of the GET operation. If no message named entity.getName()
+	 * is found, return null.
+	 * @throws EntityException Throws EntityException when the GET operation results in a 
+	 * error.
 	 */
 	private Navajo getCurrentEntity(Navajo input) throws EntityException {
 		Operation getop = EntityManager.getInstance().getOperation(myEntity.getName(), Operation.GET);
 		ServiceEntityOperation get = this.cloneServiceEntityOperation(getop);
-		Navajo r = myKey.generateRequestMessage(input);
+		Navajo request = myKey.generateRequestMessage(input);
 		if ( getop.getExtraMessage() != null ) {
-			r.addMessage(getop.getExtraMessage().copy(r));
+			request.addMessage(getop.getExtraMessage().copy(request));
 		}
-		appendServiceName(r, getop);
-		Navajo original = get.commitOperation(r, getop, true);
-		if (original.getMessage("error") != null) {
+		prepareServiceRequestHeader(input, request, getop);
+
+
+		Navajo result = get.commitOperation(request, getop, true);
+		if (result.getMessage("error") != null) {
 			throw new EntityException(EntityException.SERVER_ERROR);
 		}
-		if ( original.getMessage(myEntity.getName()) == null ) {
-			return null;
-		} else {
-			return original;
+		if (result.getMessage("AuthenticationError") != null) {
+			throw new EntityException(EntityException.UNAUTHORIZED);
 		}
+
+		if ( result.getMessage(myEntity.getName()) == null ) {
+			return null;
+		}
+		
+		return result;
 	}
 	
-	private Navajo callEntityValidationService(Navajo input) throws EntityException {
-		appendServiceValidationName(input, myOperation);
-		Navajo result =  commitOperation(input, myOperation, false);
+	private Navajo callEntityValidationService(Navajo input, Navajo request) throws EntityException {
+		prepareValidationServiceRequestHeader(input, request, myOperation);
+		Navajo result =  commitOperation( request, myOperation, false);
 		if (result.getMessage("errors") != null) {
 			throw new EntityException(EntityException.SERVER_ERROR);
 		}
@@ -538,14 +550,14 @@ public class ServiceEntityOperation implements EntityOperation {
 	 * @throws EntityException
 	 */
 	private Navajo callEntityService(Navajo input) throws EntityException {
-		appendServiceName(input, myOperation);
-		final Message extraMessage = myOperation.getExtraMessage();
-		if(extraMessage!=null) {
-			input.addMessage(extraMessage);
+		Navajo request = myKey.generateRequestMessage(input);
+		if ( myOperation.getExtraMessage() != null ) {
+			request.addMessage(myOperation.getExtraMessage().copy(request));
 		}
+		prepareServiceRequestHeader(input,request, myOperation);
 
 		// No transaction support yet
-		Navajo result =  commitOperation(input, myOperation, false);
+		Navajo result =  commitOperation(request, myOperation, false);
 		if (result.getMessage("error") != null) {
 			throw new EntityException(EntityException.SERVER_ERROR);
 		}
@@ -619,32 +631,29 @@ public class ServiceEntityOperation implements EntityOperation {
 	}
 	
 
-	protected void appendServiceName(Navajo input, Operation o) {
-		Header h = input.getHeader();
+	protected void prepareServiceRequestHeader(Navajo input, Navajo request, Operation o) {	
+		prepareRequestHeader(input, request, o, o.getService());
+	}
+	
+	protected void prepareValidationServiceRequestHeader(Navajo input, Navajo request, Operation o) {	
+		prepareRequestHeader(input, request, o, o.getValidationService());
+	}
+	
+	protected void prepareRequestHeader(Navajo input, Navajo request, Operation o, String service) {
+		Header h = request.getHeader();
 		if(h==null) {
-			h = NavajoFactory.getInstance().createHeader(input, o.getService(), "", "", -1);
-			input.addHeader(h);
+			h = NavajoFactory.getInstance().createHeader(request, service, "", "", -1);
+			request.addHeader(h);
 		} else {
-			h.setRPCName(o.getService());
+			h.setRPCName(service);
 		}
 		// Append additional entity meta data.
 		h.setHeaderAttribute("entity_name", myEntity.getName());
 		h.setHeaderAttribute("entity_operation", o.getMethod());
 		h.setHeaderAttribute("entity_service", o.getService());
-	}
-	
-	protected void appendServiceValidationName(Navajo input, Operation o) {
-		Header h = input.getHeader();
-		if(h==null) {
-			h = NavajoFactory.getInstance().createHeader(input, o.getValidationService(), "", "", -1);
-			input.addHeader(h);
-		} else {
-			h.setRPCName(o.getValidationService());
-		}
-		// Append additional entity meta data.
-		h.setHeaderAttribute("entity_name", myEntity.getName());
-		h.setHeaderAttribute("entity_operation", o.getMethod());
-		h.setHeaderAttribute("entity_service", o.getValidationService());
+		
+		h.setRPCUser(input.getHeader().getRPCUser());
+		h.setRPCPassword(input.getHeader().getRPCPassword());
 	}
 
 }
