@@ -21,12 +21,8 @@ public class PostgresqlWrapped implements DataSource {
 	private PGConnectionPoolDataSource datasource;
 	private PostgreSQLJDBCDataSourceService data;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(PostgresqlWrapped.class);
+	private final static Logger logger = LoggerFactory.getLogger(PostgresqlWrapped.class);
 	
-	
-	public PostgresqlWrapped() {
-	}
 	
 	public void activate(Map<String,Object> settings) {
 		data = new PostgreSQLJDBCDataSourceService();
@@ -40,16 +36,16 @@ public class PostgresqlWrapped implements DataSource {
 			datasource = new PGConnectionPoolDataSource();
 			wrapped = data.setup(datasource,p);
 		} catch (SQLException e) {
-			logger.error("Error creating oracle ",e);
+			logger.error("Error creating postgresql ",e);
 		} catch (Exception e) {
-			logger.error("Error creating oracle ",e);
+			logger.error("Error creating postgresql ",e);
 		}
-		logger.info("Created oracle datasource with setting: "+settings);
+		logger.info("Created postgresql datasource with setting: "+settings);
 //		logger.info("Activation successful");
 	}
 	
 	public void deactivate() {
-//		logger.info("Oracle driver deactivated");
+//		logger.info("PostgreSQL driver deactivated");
 
 	}
 	
@@ -91,14 +87,6 @@ public class PostgresqlWrapped implements DataSource {
 	@Override
 	public Connection getConnection(String username, String password)
 			throws SQLException {
-//		PreparedStatement stmt = null;
-//		if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier()) || SQLMapConstants.ENTERPRISEDB.equals(this.getDbIdentifier())) {
-//			stmt = con.prepareStatement("SET SEARCH_PATH TO " + this.alternativeUsername);
-//		} else {
-//			stmt = con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.alternativeUsername);
-//		}
-//		stmt.executeUpdate();
-//		stmt.close();
 		return wrapped.getConnection(username, password);
 	}
 

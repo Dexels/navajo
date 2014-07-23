@@ -1,5 +1,6 @@
 package com.postgresql.jdbc.service.impl;
 
+import java.net.URI;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
@@ -8,6 +9,7 @@ import java.util.Properties;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
 import javax.sql.XADataSource;
+
 
 
 
@@ -115,12 +117,16 @@ public class PostgreSQLJDBCDataSourceService implements DataSourceFactory {
         	base.setServerName(props.getProperty(JDBC_SERVER_NAME));
         }
         if (props.containsKey(JDBC_URL)) {       	
-        	// Cannot set URL directly...
-        	base.setServerName("source.dexels.com");
-        	base.setDatabaseName("AARDNOOT");
-        	
-        	//base.setServerName(props.getProperty(JDBC_URL));
-        }
+        	// PGConnectionPoolDataSource has no support for a JDBC url..
+        	//String url = "jdbc:postgres://hostname:432/dbname;collation=abc:PRIMARY";
+        	String cleanURI = props.getProperty(JDBC_URL).substring(5);
+        	URI uri = URI.create(cleanURI);
+        	String dbName = (uri.getPath().split(";")[0]).substring(0);
+
+        	base.setServerName(uri.getHost());
+        	base.setPortNumber(uri.getPort());
+        	base.setDatabaseName(dbName);
+       }
         if (props.containsKey(JDBC_USER)) {
         	base.setUser(props.getProperty(JDBC_USER));
         }
