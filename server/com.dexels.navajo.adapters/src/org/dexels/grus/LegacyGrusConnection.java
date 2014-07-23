@@ -161,10 +161,4 @@ public class LegacyGrusConnection implements GrusConnection {
 		
 	}
 
-	@Override
-	public String getDbIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

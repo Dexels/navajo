@@ -16,7 +16,6 @@ import org.dexels.grus.GrusProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
 import com.dexels.navajo.script.api.UserException;
 
 public class GrusProviderImpl implements GrusProvider {
@@ -24,7 +23,6 @@ public class GrusProviderImpl implements GrusProvider {
 	private final Map<String, Map<String, DataSource>> instances = new HashMap<String, Map<String, DataSource>>();
 	private final Map<String, DataSource> defaultDataSources = new HashMap<String, DataSource>();
 	private final Map<DataSource, Map<String, Object>> settingsMap = new HashMap<DataSource, Map<String, Object>>();
-	private final Map<String, Map<String, Object>> allSettingsMap = new HashMap<String, Map<String, Object>>();
 
 	private final Map<String, Map<String, Object>> defaultSettingsMap = new HashMap<String, Map<String, Object>>();
 
@@ -39,10 +37,8 @@ public class GrusProviderImpl implements GrusProvider {
 		settingsMap.put(source, settings);
 		List<String> instances = getInstances(settings);
 
-		String instance = (String) settings.get("instance");
+		 String instance = (String) settings.get("instance");
 		String name = (String) settings.get("name");
-		allSettingsMap.put(name, settings);
-
 		List<String> aliases = (List<String>) settings.get("aliases");
 		logger.warn(">|>| Name: " + name + " instances: " + instances
 				+ " Inst: " + instance);
@@ -51,7 +47,8 @@ public class GrusProviderImpl implements GrusProvider {
 			defaultDataSources.put(name, source);
 			if (aliases != null) {
 				for (String alias : aliases) {
-					defaultSettingsMap.put("navajo.resource." + alias, settings);
+					defaultSettingsMap
+							.put("navajo.resource." + alias, settings);
 					defaultDataSources.put("navajo.resource." + alias, source);
 				}
 			}
@@ -69,7 +66,7 @@ public class GrusProviderImpl implements GrusProvider {
 			}
 		}
 	}
-	
+
 	private void addDataSource(DataSource source, String name,
 			String currentInstance) {
 		Map<String, DataSource> instanceDataSources = getInstanceDataSources(currentInstance);
@@ -216,27 +213,6 @@ public class GrusProviderImpl implements GrusProvider {
 
 	public void deactivate() {
 		GrusProviderFactory.setInstance(null);
-	}
-
-	@Override
-	public String getDbIdentifier(String name) {
-		Map<String, Object> sourceSettings = allSettingsMap.get("navajo.resource."+name);
-		String url = (String) sourceSettings.get("url");
-		
-		if (url == null) {
-			return null;
-		}
-		
-		if (url.contains("oracle")) {
-			return SQLMapConstants.ORACLEDB;
-		}
-		if (url.contains("mysql")) {
-			return SQLMapConstants.MYSQLDB;
-		}
-		if (url.contains("postgres")) {
-			return SQLMapConstants.POSTGRESDB;
-		}
-		return null;
 	}
 
 }
