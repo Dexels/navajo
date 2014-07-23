@@ -1,15 +1,21 @@
 package com.dexels.navajo.entity;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.server.DispatcherInterface;
 
 /**
  * TODO: NAVAJO CLUSTER ENABLING
@@ -18,17 +24,19 @@ import com.dexels.navajo.document.Property;
  *
  */
 public class EntityManager {
-
 	private Map<String,Entity> entityMap = new ConcurrentHashMap<String,Entity>();
 	private Map<String,Map<String,Operation>> operationsMap = new ConcurrentHashMap<String,Map<String,Operation>>();
 
 	private static EntityManager instance;
+	private BundleCreator bundleCreator;
+	private DispatcherInterface dispatcher;
 	
 	public EntityManager() {
 	}
 
-	public void activate() {
+	public void activate() throws Exception {
 		instance = this;
+		buildAndLoadScripts();
 	}
 	
 	public void deactivate() {
@@ -113,5 +121,57 @@ public class EntityManager {
 	public Set<String> getRegisteredEntities() {
 		return entityMap.keySet();
 	}
+	
+
+
+	
+
+	private void buildAndLoadScripts() throws Exception {
+		if (dispatcher == null || bundleCreator == null) {
+			return;
+		}
+		
+		String scriptPath =  dispatcher.getNavajoConfig().getScriptPath();
+		File entityDir = new File(scriptPath + "/entity");
+		for (File f : entityDir.listFiles()) {
+			if (f.isFile()) {
+				buildAndLoadScript(f.toString());
+			}
+		}
+	}
+	
+	private void buildAndLoadScript(String fileName) throws Exception {
+		List<String> success = new ArrayList<String>();
+		List<String> failures = new ArrayList<String>();
+		List<String> skipped = new ArrayList<String>();
+		
+		String script = fileName.substring(fileName.indexOf("entity"), fileName.indexOf(".xml"));
+		
+		bundleCreator.createBundle(script, new Date(), ".xml", failures, success, skipped, false, false);
+		bundleCreator.installBundles(script, failures, success, skipped, true, ".xml");
+	}
+
+
+	
+	public void setBundleCreator(BundleCreator bundleCreator) throws Exception {
+		this.bundleCreator = bundleCreator;
+		buildAndLoadScripts();
+	}
+
+	public void clearBundleCreator(BundleCreator bundleCreator) {
+		this.bundleCreator = null;
+	}
+	
+	public void setDispatcher(DispatcherInterface dispatcher) throws Exception {
+		this.dispatcher = dispatcher;
+		buildAndLoadScripts();
+	}
+
+	public void clearDispatcher(DispatcherInterface dispatcher) {
+		this.dispatcher = null;
+	}
+
+
+		
 	
 }
