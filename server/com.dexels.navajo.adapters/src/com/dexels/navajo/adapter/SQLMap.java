@@ -250,12 +250,6 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 */
 	@Override
 	public String getDbIdentifier() {
-		if (con != null && con.toString().contains("postgresql" )) {
-			return SQLMapConstants.POSTGRESDB;
-		}
-		if (this.datasource.equals("vla") || this.datasource.equals("yoghurt")  ) {
-			return SQLMapConstants.POSTGRESDB;
-		}
 		if ( this.myConnectionBroker != null ) {
 			return this.myConnectionBroker.getDbIdentifier();
 		} else {
@@ -798,9 +792,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				// Replace Oracle rownum construction with PostgreSQL compatible
 				// version
 				// Regex: case insensitive, "AND", one or more spaces, "ROWNUM",
-				// one or more spaces
-				// "=", one or more spaces, a number
-				query = query.replaceAll("(?i)AND(\\s)+ROWNUM(\\s)+=(\\s)+(\\d)",
+				// one or more spaces, "=", one or more spaces, a number
+				query = query.replaceAll("(?i)AND(\\s)+ROWNUM(\\s)+=(\\s)+(\\d+)",
 						"LIMIT $4 OFFSET 1");
 			}
 			if (query.contains("nextval")) {
@@ -974,7 +967,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					// Now set current_schema...
 					PreparedStatement stmt = null;
 					if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier()) || SQLMapConstants.ENTERPRISEDB.equals(this.getDbIdentifier())) {
-						stmt = con.prepareStatement("SET SEARCH_PATH TO " + this.alternativeUsername);
+						stmt = con.prepareStatement("SET SEARCH_PATH TO " + this.alternativeUsername + ", public");
 					} else {
 						stmt = con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.alternativeUsername);
 					}
