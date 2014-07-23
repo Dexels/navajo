@@ -29,7 +29,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	private ClassLoader classLoader = null;
 	private final static Logger logger = LoggerFactory.getLogger(TslCompilerComponent.class);
 	private TslCompiler compiler;
-	String[] standardPackages = new String[]{"com.dexels.navajo.document","com.dexels.navajo.document.types","com.dexels.navajo.script.api","com.dexels.navajo.server","com.dexels.navajo.mapping","com.dexels.navajo.server.enterprise.tribe","com.dexels.navajo.mapping.compiler.meta","com.dexels.navajo.parser","com.dexels.navajo.loader","org.osgi.framework"};
+	String[] standardPackages = new String[]{"com.dexels.navajo.document","com.dexels.navajo.document.types","com.dexels.navajo.script.api","com.dexels.navajo.server","com.dexels.navajo.mapping","com.dexels.navajo.server.enterprise.tribe","com.dexels.navajo.mapping.compiler.meta","com.dexels.navajo.parser","com.dexels.navajo.loader","org.osgi.framework","com.dexels.navajo.entity;resolution:=optional", "com.dexels.navajo.entity.impl;resolution:=optional"};
 	private ExpressionEvaluator expressionEvaluator;
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String)
@@ -99,6 +99,9 @@ public class TslCompilerComponent implements ScriptCompiler {
 
 		generateManifest(scriptString,"1.0.0",packagePath, script,packages,compileDate);
 		generateDs(packagePath, script,dependencies,dependentResources);
+		if (packagePath.equals("entity")) {
+			generateEntityDs(packagePath, script,dependencies, dependentResources);
+		}
 	}
 	
 	private void generateFactoryClass(String script, String packagePath, Set<String> resources) throws IOException {
@@ -216,14 +219,13 @@ public class TslCompilerComponent implements ScriptCompiler {
 			
 		}
 		w.print("Import-Package: "+sb.toString()+"\r\n");
-		w.print("Service-Component: OSGI-INF/script.xml\r\n");
+		w.print("Service-Component: OSGI-INF/*.xml\r\n");
 		w.print("\r\n");
 		w.flush();
 		w.close();
 	}
 	
 	private void generateDs(String packagePath, String script,List<Dependency> dependencies, Set<String> dependentResources) throws IOException {
-		
 		String fullName;
 		if (packagePath.equals("")) {
 			fullName = script;
@@ -304,6 +306,74 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.flush();
 		w.close();
 	}
+	
+	private void generateEntityDs(String packagePath, String script,List<Dependency> dependencies, Set<String> dependentResources) throws IOException { 
+		String fullName;
+		if (packagePath.equals("")) {
+			fullName = script;
+		} else {
+			fullName = packagePath+"/"+script;
+
+		}
+		
+		String symbolicName = rpcNameFromScriptPath(fullName).replaceAll("/", ".");
+
+		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
+		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
+		xe.setAttribute("immediate", "false");
+		xe.setAttribute("name","navajo."+symbolicName);
+		xe.setAttribute("activate", "activateComponent");
+		xe.setAttribute("deactivate", "deactivateComponent");
+		xe.setAttribute("enabled", "true");
+		
+		XMLElement implementation = new CaseSensitiveXMLElement("implementation");
+		xe.addChild(implementation);
+		implementation.setAttribute("class","com.dexels.navajo.entity.EntityComponent");
+		XMLElement service = new CaseSensitiveXMLElement("service");
+		xe.addChild(service);
+		XMLElement provide = new CaseSensitiveXMLElement("provide");
+		service.addChild(provide);
+		provide.setAttribute("interface", "com.dexels.navajo.entity.Entity");
+
+		addProperty("entity.name","String", script, xe);
+		addProperty("service.name","String", fullName, xe);
+		
+		XMLElement ref = new CaseSensitiveXMLElement("reference");
+		ref.setAttribute("bind", "setDispatcher");
+		ref.setAttribute("unbind", "clearDispatcher");
+		ref.setAttribute("policy", "dynamic");
+		ref.setAttribute("cardinality", "1..1");
+		ref.setAttribute("interface", "com.dexels.navajo.server.DispatcherInterface");
+		ref.setAttribute("name", "Dispatcher");
+		xe.addChild(ref);
+		
+		ref = new CaseSensitiveXMLElement("reference");
+		ref.setAttribute("bind", "setEntityManager");
+		ref.setAttribute("unbind", "clearEntityManager");
+		ref.setAttribute("policy", "dynamic");
+		ref.setAttribute("cardinality", "1..1");
+		ref.setAttribute("interface", "com.dexels.navajo.entity.EntityManager");
+		ref.setAttribute("name", "EntityManager");
+		xe.addChild(ref);
+		
+		for (String resource : dependentResources) {
+			XMLElement dep = new CaseSensitiveXMLElement("reference");
+			dep.setAttribute("bind", "set"+resource);
+			dep.setAttribute("unbind", "clear"+resource);
+			dep.setAttribute("policy", "static");
+			dep.setAttribute("cardinality", "1..1");
+			dep.setAttribute("interface", "javax.sql.DataSource");
+			dep.setAttribute("target", "(navajo.resource.name="+resource+")");
+			xe.addChild(dep);
+		}
+		
+		PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, "entity", ".xml"));
+		w.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		xe.write(w);
+		w.flush();
+		w.close();
+	}
+
 
 	protected void addProperty(final String key, final String type, final String value, final XMLElement xe) {
 		XMLElement property = new CaseSensitiveXMLElement("property");
