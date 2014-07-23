@@ -20,6 +20,7 @@ import java.util.logging.Level;
 
 import org.dexels.grus.DbConnectionBroker;
 import org.dexels.grus.GrusConnection;
+import org.dexels.grus.GrusProvider;
 import org.dexels.grus.GrusProviderFactory;
 import org.dexels.grus.LegacyDbConnectionBroker;
 import org.dexels.grus.LegacyGrusConnection;
@@ -152,7 +153,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	public boolean debug = false;
 	public boolean kill = false;
-	public int timeAlert = -1;
+	public int timeAlert = 1000;
 
 	public String driver;
 	public String url;
@@ -251,11 +252,26 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	@Override
 	public String getDbIdentifier() {
 		
-		if ( this.myConnectionBroker != null ) {
+		
+		
+		if (GrusProviderFactory.getInstance()!=null) {
+			// osgi 
+			
+			// If we have a transactionContext, get the connection and use its information
+			if (transactionContext != -1) {
+
+				GrusConnection gc = null;
+				gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
+				return gc.getDbIdentifier();
+				
+			} 
+			// NO transactionContext, get information based on datasource
+			return 	GrusProviderFactory.getInstance().getDbIdentifier(datasource);
+		} else if ( this.myConnectionBroker != null ) {
 			return this.myConnectionBroker.getDbIdentifier();
-		} else {
-			return null;
 		}
+		
+		return null;
 	}
 	
 	private void createDataSource(Message body, NavajoConfigInterface config) throws Throwable {
@@ -787,6 +803,30 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 		query = newQuery.replace('"', (this.replaceQueryDoubleQuotes) ? '\''
 				: '\"');
+
+		if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier())) {
+			if (query.contains("rownum")) {
+				// Replace Oracle rownum construction with PostgreSQL compatible
+				// version
+				// Regex: case insensitive, "AND", one or more spaces, "ROWNUM",
+				// one or more spaces
+				// "=", one or more spaces, a number
+				query = query.replaceAll("(?i)AND(\\s)+ROWNUM(\\s)+=(\\s)+(\\d)",
+						"LIMIT $4 OFFSET 1");
+			}
+			if (query.contains("nextval")) {
+				// Replace sequencename.nextval with Postgresql format
+				// nextval('sequencename')
+				query = query.replaceAll("(\\w+)\\.nextval", "nextval(\'$1\')");
+			}
+			
+			
+			query = query.replaceAll("SELECT (\\w\\,)+ FROM (SELECT  (\\w\\,)+) ", "SELECT (\\w\\,)+ FROM (SELECT  (\\w\\,)+) as a");
+		}
+		
+			
+
+		
 		if (debug) {
 			Access.writeToConsole(myAccess, "SQLMap(): query = " + query + "\n");
 		}
@@ -947,7 +987,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					// Now set current_schema...
 					PreparedStatement stmt = null;
 					if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier()) || SQLMapConstants.ENTERPRISEDB.equals(this.getDbIdentifier())) {
-						stmt = con.prepareStatement("SET SEARCH_PATH TO " + this.alternativeUsername);
+						stmt = con.prepareStatement("SET SEARCH_PATH TO " + this.alternativeUsername + ", public");
 					} else {
 						stmt = con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.alternativeUsername);
 					}
@@ -1289,6 +1329,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				resultSet = (ResultSetMap[]) dummy.toArray(resultSet);
 			}
 		} catch (SQLException sqle) {
+			logger.error("The following query failed: {}", this.getQuery());
 			AuditLog.log("SQLMap", sqle.getMessage(),sqle, Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access"));
 			throw new UserException(-1, sqle.getMessage(), sqle);
 		} finally {
@@ -1310,6 +1351,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				AuditLogEvent ale = new AuditLogEvent("SQLMAPTIMEALERT", "Query took " + (end - start) + " millis:\n" + (query != null ? query : update), Level.WARNING);
 				ale.setAccessId(myAccess.accessID);
 				NavajoEventRegistry.getInstance().publishEvent(ale);
+				logger.info("SLOW query ({} ms) (datasource {}): {}", (end - start), datasource, this.getQuery());
 			}
 			// Log total if needed....
 			// totaltiming += total;

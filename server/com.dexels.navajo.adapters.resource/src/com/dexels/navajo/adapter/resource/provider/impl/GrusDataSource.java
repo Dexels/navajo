@@ -12,6 +12,8 @@ import org.dexels.grus.GrusProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
+
 public class GrusDataSource implements GrusConnection {
 
 	private final DataSource datasource;
@@ -19,6 +21,7 @@ public class GrusDataSource implements GrusConnection {
 	private DbConnectionBroker dbConnectionBroker;
 	private final int id;
 	private final Connection connection;
+	private String dbIdentifier;
 
 	private final GrusProvider grusProvider;
 	
@@ -123,6 +126,26 @@ public class GrusDataSource implements GrusConnection {
 	public void rollback(boolean b) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public String getDbIdentifier() {
+		String url = (String) settings.get("url");
+		
+		if (url == null) {
+			return null;
+		}
+		
+		if (url.contains("oracle")) {
+			return SQLMapConstants.ORACLEDB;
+		}
+		if (url.contains("mysql")) {
+			return SQLMapConstants.MYSQLDB;
+		}
+		if (url.contains("postgres")) {
+			return SQLMapConstants.POSTGRESDB;
+		}
+		return null;
 	}
 
 }
