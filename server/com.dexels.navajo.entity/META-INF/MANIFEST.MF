@@ -11,6 +11,7 @@ Eclipse-ExtensibleAPI: true
 Import-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.adapter.messagemap,
  com.dexels.navajo.client;version="1.0.0",
+ com.dexels.navajo.compiler,
  com.dexels.navajo.document;version="2.2.1",
  com.dexels.navajo.document.json,
  com.dexels.navajo.mapping,
