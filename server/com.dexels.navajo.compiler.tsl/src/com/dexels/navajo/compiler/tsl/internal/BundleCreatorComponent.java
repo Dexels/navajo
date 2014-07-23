@@ -334,17 +334,21 @@ public class BundleCreatorComponent implements BundleCreator {
 			packagePath = "";
 			script = scriptPath;
 		}
+		
 		String fixOffset = packagePath.equals("") ? "defaultPackage" : "";
-		File outB = new File(navajoIOConfig.getCompiledScriptPath());
-		File out = new File(outB, fixOffset);
+		File compiledScriptPath = new File(navajoIOConfig.getCompiledScriptPath());
+		File outPath = new File(compiledScriptPath, fixOffset);
+		
 
-		File java = new File(outB, scriptPath + ".java");
-		File factoryJavaFile = new File(outB, scriptPath + "Factory.java");
-		File classFile = new File(out, scriptPath + ".class");
-		File factoryClassFile = new File(out, scriptPath + "Factory.class");
-		File manifestFile = new File(outB, scriptPath + ".MF");
-		File dsFile = new File(outB, scriptPath + ".xml");
-		File bundleDir = new File(outB, scriptPath);
+		File java = new File(compiledScriptPath, scriptPath + ".java");
+		File factoryJavaFile = new File(compiledScriptPath, scriptPath + "Factory.java");
+		File classFile = new File(outPath, scriptPath + ".class");
+		File factoryClassFile = new File(outPath, scriptPath + "Factory.class");
+		File manifestFile = new File(compiledScriptPath, scriptPath + ".MF");
+		File dsFile = new File(compiledScriptPath, scriptPath + ".xml");
+		File entityFile = new File(compiledScriptPath, packagePath +  "/entity.xml");
+		
+		File bundleDir = new File(compiledScriptPath, scriptPath);		
 		if (!bundleDir.exists()) {
 			bundleDir.mkdirs();
 		}
@@ -366,21 +370,26 @@ public class BundleCreatorComponent implements BundleCreator {
 			osgiinf.mkdirs();
 		}
 		File osgiinfScript = new File(osgiinf, "script.xml");
+		File entityOsgiiScript = new File(osgiinf, "entity.xml");
 		File metainfManifest = new File(metainf, "MANIFEST.MF");
 
 		File classFileInPlace = new File(bundlePackageDir, script + ".class");
-		File factoryClassFileInPlace = new File(bundlePackageDir, script
-				+ "Factory.class");
-//		File parent = classFile.getParentFile();
-//		if(!parent.exists()) {
-//			parent.mkdirs();
-//		}
+		File factoryClassFileInPlace = new File(bundlePackageDir, script + "Factory.class");
+		// File parent = classFile.getParentFile();
+		// if(!parent.exists()) {
+		// parent.mkdirs();
+		// }
 		FileUtils.copyFile(classFile, classFileInPlace);
 		FileUtils.copyFile(factoryClassFile, factoryClassFileInPlace);
 		FileUtils.copyFile(manifestFile, metainfManifest);
 		FileUtils.copyFile(dsFile, osgiinfScript);
-//		final File jarFile = new File(outB, scriptPath + ".jar");
-		final File jarFile = navajoIOConfig.getApplicableBundleForScript(rpcNameFromScriptPath(scriptPath),tenantFromScriptPath(scriptPath),extension);
+		if (entityFile.exists()) {
+			FileUtils.copyFile(entityFile, entityOsgiiScript);
+		}
+		
+		FileUtils.copyFile(dsFile, osgiinfScript);
+		// final File jarFile = new File(outB, scriptPath + ".jar");
+		File jarFile = navajoIOConfig.getApplicableBundleForScript(rpcNameFromScriptPath(scriptPath),tenantFromScriptPath(scriptPath),extension);
 		
 		
 		addFolderToJar(bundleDir, null, jarFile, bundleDir.getAbsolutePath()+ "/");
@@ -391,6 +400,9 @@ public class BundleCreatorComponent implements BundleCreator {
 			java.delete();
 			factoryJavaFile.delete();
 			factoryClassFile.delete();
+			if (entityFile.exists()) {
+				entityFile.delete();
+			}
 			FileUtils.deleteQuietly(bundleDir);
 		}
 		return jarFile;
