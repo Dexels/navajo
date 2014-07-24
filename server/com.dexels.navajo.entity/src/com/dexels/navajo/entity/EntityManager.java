@@ -94,9 +94,8 @@ public class EntityManager {
 		}
 	}
 
-	public Entity addEntity(Entity e) {
+	public void addEntity(Entity e) {
 		entityMap.put(e.getName(), e);
-		return e;
 	}
 
 	public void removeEntity(Entity e) {

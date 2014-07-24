@@ -65,8 +65,11 @@ public class TestEntity {
 		
 		activity.write(System.err);
 		
-		Entity e1 = manager.addEntity(new Entity(entity, manager));
-		Entity e2 = manager.addEntity(new Entity(activity, manager));
+		Entity e1 = new Entity(entity, manager);
+		Entity e2 = new Entity(activity, manager);
+		manager.addEntity(e1);
+		manager.addEntity(e2);
+		
 		e1.addSuperEntity(e2);
 		e1.activate();
 		e2.activate();
