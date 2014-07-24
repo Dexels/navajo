@@ -1,7 +1,7 @@
 Bundle-Name: OAuth2 
 Bundle-SymbolicName: com.dexels.oauth.api
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.2.qualifier
+Bundle-Version: 1.0.3
 Bundle-Vendor: Dexels
 Import-Package: javax.servlet;version="[2.6.0,4.0.0)",
  javax.servlet.http;version="[3.0.0,4.0.0)",
