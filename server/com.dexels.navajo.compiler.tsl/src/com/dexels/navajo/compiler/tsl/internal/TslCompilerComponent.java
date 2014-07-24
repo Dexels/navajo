@@ -203,6 +203,8 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.print("Bundle-ManifestVersion: 2\r\n");
 		w.print("Bundle-ClassPath: .\r\n");
 		
+		w.print("DynamicImport-Package: * \r\n");
+		
 		StringBuffer sb = new StringBuffer();
 		Iterator<String> it = packages.iterator();
 		boolean first = true;
