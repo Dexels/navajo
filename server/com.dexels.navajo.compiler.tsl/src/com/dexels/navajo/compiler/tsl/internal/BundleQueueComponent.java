@@ -61,6 +61,12 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 					if(!failures.isEmpty()) {
 						logger.info("Script compilation failed: "+script);
 					}
+					
+					// Scripts in "entity/*" folder are installed immediately
+					if (script.startsWith("entity")) {
+						logger.info("Installing entity : "+script);
+						bundleCreator.installBundles(script, failures, success, skipped, true, extension);
+					}
 				} catch (Throwable e) {
 					logger.error("Error: ", e);
 				}
@@ -83,7 +89,6 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 				File location = new File(ri.getRepositoryFolder(),changedScript);
 				if(location.isFile()) {
 					extractScript(changedScript);
-
 				}
 			} catch (IllegalArgumentException e1) {
 				logger.warn("Error: ", e1);
