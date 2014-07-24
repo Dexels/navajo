@@ -14,21 +14,12 @@ import com.dexels.navajo.server.DispatcherInterface;
 
 public class EntityComponent extends Entity {
 
-	DispatcherInterface dispatcher;
-	
 	private String serviceName;
 	
 	public EntityComponent() {
 		super();
 	}
 	
-	public void setDispatcher(DispatcherInterface dispatcher) {
-		this.dispatcher = dispatcher;
-	}
-
-	public void clearDispatcher(DispatcherInterface dispatcher) {
-		this.dispatcher = null;
-	}
 
 	
 	public void activateComponent(Map<String,Object> parameters) throws Exception {
@@ -48,6 +39,9 @@ public class EntityComponent extends Entity {
 		Operation head = new OperationComponent();
 		head.setEntityName(getName());
 		head.setMethod("HEAD");
+		if (em == null) {
+			return;
+		}
 		em.addOperation(head);
 		// Add operations defined in entity.
 		List<Operation> allOps = result.getAllOperations();
