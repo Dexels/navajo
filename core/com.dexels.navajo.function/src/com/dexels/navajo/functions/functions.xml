@@ -1,41 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- This file is in alphabetical order -->
 <functiondef>
-	<function name="StoreBinary" class="com.dexels.navajo.functions.StoreBinary">
-		<description>Store a binary object in Shared Store
-		</description>
-		<input>string, binary</input>
-		<result>string</result>
-	</function> 
-	<function name="GetBinary" class="com.dexels.navajo.functions.GetBinary">
-		<description>Gets a binary object from Shared Store
-		</description>
-		<input>string</input>
-		<result>binary</result>
-	</function>
-	<function name="EncryptString" class="com.dexels.navajo.functions.EncryptString">
-		<description>Encrypts a string</description>
-		<input>string,string</input>
-		<result>string</result>
-	</function>
-	<function name="DecryptString" class="com.dexels.navajo.functions.DecryptString">
-		<description>Decrypts a string</description>
-		<input>string,string</input>
-		<result>string</result>
-	</function>
-	<function name="GetRequest" class="com.dexels.navajo.functions.GetRequest">
-		<description>Returns the current request Navajo as a string
-			representation</description>
-		<input></input>
-		<result>string</result>
-	</function>
-	<function name="GetHeader" class="com.dexels.navajo.functions.GetHeader">
-		<description>Returns a specified attribute value from the request
-			header
-		</description>
-		<input>string</input>
-		<result>string</result>
-	</function>
 	<function name="Abs" class="com.dexels.navajo.functions.Abs">
 		<description>Returns absolute value of a number</description>
 		<input>float|integer</input>
@@ -184,10 +149,20 @@
 		<input />
 		<result />
 	</function>
+	<function name="DecryptString" class="com.dexels.navajo.functions.DecryptString">
+		<description>Decrypts a string</description>
+		<input>string,string</input>
+		<result>string</result>
+	</function>
 	<function name="EmptyBinary" class="com.dexels.navajo.functions.EmptyBinary">
 		<description>Creates an empty binary object</description>
 		<input />
 		<result />
+	</function>
+	<function name="EncryptString" class="com.dexels.navajo.functions.EncryptString">
+		<description>Encrypts a string</description>
+		<input>string,string</input>
+		<result>string</result>
 	</function>
 	<function name="EqualsIgnoreCase" class="com.dexels.navajo.functions.EqualsIgnoreCase">
 		<description />
@@ -267,6 +242,11 @@
 		<input>string</input>
 		<result>string</result>
 	</function>
+	<function name="FindElement" class="com.dexels.navajo.functions.FindElement">
+		<description>Finds an array element that has a property with a matching value. If no message is supplied, currentMessage will be used</description>
+		<input>string,object,message|empty</input>
+		<result>message</result>
+	</function>
 	<function name="ForAll" class="com.dexels.navajo.functions.ForAll">
 		<description>Evaluates a condition (expression evaluating to a
 			boolean) under all the messages of an array message. It will return a
@@ -299,6 +279,12 @@
 		</description>
 		<input>string</input>
 		<result>string</result>
+	</function>
+	<function name="GetBinary" class="com.dexels.navajo.functions.GetBinary">
+		<description>Gets a binary object from Shared Store
+		</description>
+		<input>string</input>
+		<result>binary</result>
 	</function>
 	<function name="GetBinaryPath" class="com.dexels.navajo.functions.GetBinaryPath">
 		<description>Returns the path to a binary</description>
@@ -344,6 +330,13 @@
 			n m&apos;</description>
 		<input />
 		<result />
+	</function>
+	<function name="GetHeader" class="com.dexels.navajo.functions.GetHeader">
+		<description>Returns a specified attribute value from the request
+			header
+		</description>
+		<input>string</input>
+		<result>string</result>
 	</function>
 	<function name="GetLogoImage" class="com.dexels.navajo.functions.GetLogoImage">
 		<description>Get the specified string a a nice mirroed logo image
@@ -402,6 +395,12 @@
 		</description>
 		<input>string</input>
 		<result>binary</result>
+	</function>
+	<function name="GetRequest" class="com.dexels.navajo.functions.GetRequest">
+		<description>Returns the current request Navajo as a string
+			representation</description>
+		<input></input>
+		<result>string</result>
 	</function>
 	<function name="GetSelectedName" class="com.dexels.navajo.functions.GetSelectedName">
 		<description>Gets the name of a selected property</description>
@@ -679,6 +678,12 @@
 		<input>string|binary|list|message</input>
 		<result>integer</result>
 	</function>
+	<function name="StoreBinary" class="com.dexels.navajo.functions.StoreBinary">
+		<description>Store a binary object in Shared Store
+		</description>
+		<input>string, binary</input>
+		<result>string</result>
+	</function> 
 	<function name="StringDistance" class="com.dexels.navajo.functions.StringDistance">
 		<description>Returns an Integer representing how much the two strings
 			differ, 0 is equal

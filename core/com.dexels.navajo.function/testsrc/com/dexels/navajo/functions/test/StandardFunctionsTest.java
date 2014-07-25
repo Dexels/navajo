@@ -27,6 +27,7 @@ import com.dexels.navajo.document.types.Memo;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
+import com.dexels.navajo.functions.FindElement;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.parser.FunctionInterface;
@@ -73,6 +74,44 @@ public class StandardFunctionsTest {
 		return doc;
 	}
 
+	@Test
+	public void testFindElement() throws TMLExpressionException {
+		Navajo doc = NavajoFactory.getInstance().createNavajo();
+		Message array = NavajoFactory.getInstance().createMessage(doc, "Aap");
+		array.setType(Message.MSG_TYPE_ARRAY);
+		doc.addMessage(array);
+
+		Message array1 = NavajoFactory.getInstance().createMessage(doc, "Aap");
+		array.addElement(array1);
+		Property p1 = NavajoFactory.getInstance().createProperty(doc, "Noot",
+				Property.STRING_PROPERTY, "pim", 10, "", "in");
+		array1.addProperty(p1);
+		Message array2 = NavajoFactory.getInstance().createMessage(doc, "Aap");
+		array.addElement(array2);
+		Property p2 = NavajoFactory.getInstance().createProperty(doc, "Noot",
+				Property.STRING_PROPERTY, "pam", 10, "", "in");
+		array2.addProperty(p2);
+		Message array3 = NavajoFactory.getInstance().createMessage(doc, "Aap");
+		array.addElement(array3);
+		Property p3 = NavajoFactory.getInstance().createProperty(doc, "Noot",
+				Property.STRING_PROPERTY, "pet", 10, "", "in");
+		array3.addProperty(p3);
+		
+		
+		FunctionInterface fi = fff.getInstance(cl, "FindElement");
+		doc.write(System.err);
+		fi.reset();
+		fi.insertOperand("Noot");
+		fi.insertOperand("pam");
+		fi.insertOperand(array);
+		Message result = (Message) fi.evaluate();
+		assertEquals(array2, result);
+		fi.reset();
+		fi.setCurrentMessage(array3);
+		fi.insertOperand("Noot");
+		fi.insertOperand("pam");
+		assertEquals(array2, result);
+	}
 	@Test
 	public void testAbs() throws Exception {
 
