@@ -43,7 +43,8 @@ public class EntityComponent extends Entity {
 
 		Message l = result.getAllMessages().iterator().next();
 		setMessage(l);
-		activate();
+		em.addEntity(this);
+		
 		// Add HEAD operation.
 		Operation head = new OperationComponent();
 		head.setEntityName(getName());
