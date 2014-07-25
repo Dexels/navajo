@@ -29,7 +29,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	private ClassLoader classLoader = null;
 	private final static Logger logger = LoggerFactory.getLogger(TslCompilerComponent.class);
 	private TslCompiler compiler;
-	String[] standardPackages = new String[]{"com.dexels.navajo.document","com.dexels.navajo.document.types","com.dexels.navajo.script.api","com.dexels.navajo.server","com.dexels.navajo.mapping","com.dexels.navajo.server.enterprise.tribe","com.dexels.navajo.mapping.compiler.meta","com.dexels.navajo.parser","com.dexels.navajo.loader","org.osgi.framework","com.dexels.navajo.entity;resolution:=optional", "com.dexels.navajo.entity.impl;resolution:=optional"};
+	String[] standardPackages = new String[]{"com.dexels.navajo.document","com.dexels.navajo.document.types","com.dexels.navajo.script.api","com.dexels.navajo.server","com.dexels.navajo.mapping","com.dexels.navajo.server.enterprise.tribe","com.dexels.navajo.mapping.compiler.meta","com.dexels.navajo.parser","com.dexels.navajo.loader","org.osgi.framework","com.dexels.navajo.entity;resolution:=optional", "com.dexels.navajo.entity.impl;resolution:=optional","com.dexels.navajo.server.resource;resolution:=optional"};
 	private ExpressionEvaluator expressionEvaluator;
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String)
@@ -202,7 +202,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.print("Bundle-RequiredExecutionEnvironment: JavaSE-1.6\r\n");
 		w.print("Bundle-ManifestVersion: 2\r\n");
 		w.print("Bundle-ClassPath: .\r\n");
-		
+			
 		StringBuffer sb = new StringBuffer();
 		Iterator<String> it = packages.iterator();
 		boolean first = true;
@@ -320,7 +320,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 
 		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
 		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
-		xe.setAttribute("immediate", "false");
+		xe.setAttribute("immediate", "true");
 		xe.setAttribute("name","navajo."+symbolicName);
 		xe.setAttribute("activate", "activateComponent");
 		xe.setAttribute("deactivate", "deactivateComponent");
@@ -337,14 +337,15 @@ public class TslCompilerComponent implements ScriptCompiler {
 
 		addProperty("entity.name","String", script, xe);
 		addProperty("service.name","String", fullName, xe);
-		
+
+		   
 		XMLElement ref = new CaseSensitiveXMLElement("reference");
-		ref.setAttribute("bind", "setDispatcher");
-		ref.setAttribute("unbind", "clearDispatcher");
+		ref.setAttribute("bind", "setClient");
+		ref.setAttribute("unbind", "clearClient");
 		ref.setAttribute("policy", "dynamic");
 		ref.setAttribute("cardinality", "1..1");
-		ref.setAttribute("interface", "com.dexels.navajo.server.DispatcherInterface");
-		ref.setAttribute("name", "Dispatcher");
+		ref.setAttribute("interface", "com.dexels.navajo.script.api.LocalClient");
+		ref.setAttribute("name", "ClientInterface");
 		xe.addChild(ref);
 		
 		ref = new CaseSensitiveXMLElement("reference");

@@ -20,6 +20,7 @@ public class Entity  {
 	// Keep track of entities that are derived from this entity.
 	private Set<Entity> subEntities = new HashSet<Entity>();
 	private Set<Entity> superEntities = new HashSet<Entity>();
+
 	
 	public Entity(Message msg, EntityManager m) {
 		myMessage = msg;
@@ -35,6 +36,8 @@ public class Entity  {
 	public void clearEntityManager(EntityManager em) {
 		this.em = null;
 	}
+	
+	
 	
 	public Set<Entity> getSubEntities() {
 		return subEntities;
