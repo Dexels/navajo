@@ -26,13 +26,29 @@ public String remarks() {
   @Override
 public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 	 
-	Message in = (Message) getOperand(0);
-	String propertyName = (String) getOperand(1);
-	Object propertyValue = getOperand(2);
-	
+	Message in = null;
+	String propertyName = (String) getOperand(0);
+	Object propertyValue = getOperand(1);
+
+	if(getOperands().size()==2) {
+		in = currentMessage;
+		if(in==null) {
+			throw new TMLExpressionException("Can not FindElement: No supplied message and no currentMessage");
+		}
+	} else {
+		in = (Message) getOperand(2);
+		
+	}
+
+	if(!Message.MSG_TYPE_ARRAY.equals(in.getType())) {
+		in = in.getArrayParentMessage();
+	}
+	if(in==null) {
+		throw new TMLExpressionException("Can not FindElement: Supplied message is not an array message or array element");
+	}
 	String type = in.getType();
 	if(!Message.MSG_TYPE_ARRAY.equals(type)) {
-		throw new TMLExpressionException("FindMessageWithProperty only works with array messages");
+		throw new TMLExpressionException("FindElement resolved message is still no array message (?)");
 	}
 	for (Message element : in.getAllMessages()) {
 		Property p = element.getProperty(propertyName);

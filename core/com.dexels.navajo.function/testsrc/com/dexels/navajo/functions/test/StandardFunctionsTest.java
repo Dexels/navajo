@@ -101,10 +101,15 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "FindElement");
 		doc.write(System.err);
 		fi.reset();
-		fi.insertOperand(array);
 		fi.insertOperand("Noot");
 		fi.insertOperand("pam");
+		fi.insertOperand(array);
 		Message result = (Message) fi.evaluate();
+		assertEquals(array2, result);
+		fi.reset();
+		fi.setCurrentMessage(array3);
+		fi.insertOperand("Noot");
+		fi.insertOperand("pam");
 		assertEquals(array2, result);
 	}
 	@Test
