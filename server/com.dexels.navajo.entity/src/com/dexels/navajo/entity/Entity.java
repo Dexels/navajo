@@ -7,7 +7,6 @@ import java.util.Set;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.server.DispatcherInterface;
 
 public class Entity  {
 
@@ -22,7 +21,6 @@ public class Entity  {
 	private Set<Entity> subEntities = new HashSet<Entity>();
 	private Set<Entity> superEntities = new HashSet<Entity>();
 
-	protected DispatcherInterface dispatcher;
 	
 	public Entity(Message msg, EntityManager m) {
 		myMessage = msg;
@@ -39,14 +37,7 @@ public class Entity  {
 		this.em = null;
 	}
 	
-	public void setDispatcher(DispatcherInterface dispatcher) {
-		this.dispatcher = dispatcher;
-	}
-
-	public void clearDispatcher(DispatcherInterface dispatcher) {
-		this.dispatcher = null;
-	}
-
+	
 	
 	public Set<Entity> getSubEntities() {
 		return subEntities;

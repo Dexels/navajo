@@ -9,15 +9,24 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
-import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.script.api.LocalClient;
 
 
 public class EntityComponent extends Entity {
 
 	private String serviceName;
+	private LocalClient myClient;
 	
 	public EntityComponent() {
 		super();
+	}
+	
+	public void setClient(LocalClient client) {
+		this.myClient = client;
+	}
+
+	public void clearClient(LocalClient client) {
+		this.myClient = null;
 	}
 	
 
@@ -27,7 +36,7 @@ public class EntityComponent extends Entity {
 		Navajo in = NavajoFactory.getInstance().createNavajo();
 		Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
 		in.addHeader(h);
-		Navajo result = dispatcher.handle(in, true);
+		Navajo result = myClient.call(in);
 		if (result.getMessage((String) parameters.get("entity.name")) == null) {
 			throw new Exception("unable to find entity in provided script!");
 		}

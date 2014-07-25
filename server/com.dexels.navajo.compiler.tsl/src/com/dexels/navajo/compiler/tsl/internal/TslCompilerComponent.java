@@ -202,9 +202,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.print("Bundle-RequiredExecutionEnvironment: JavaSE-1.6\r\n");
 		w.print("Bundle-ManifestVersion: 2\r\n");
 		w.print("Bundle-ClassPath: .\r\n");
-		
-		w.print("DynamicImport-Package: * \r\n");
-		
+			
 		StringBuffer sb = new StringBuffer();
 		Iterator<String> it = packages.iterator();
 		boolean first = true;
@@ -339,14 +337,15 @@ public class TslCompilerComponent implements ScriptCompiler {
 
 		addProperty("entity.name","String", script, xe);
 		addProperty("service.name","String", fullName, xe);
-		
+
+		   
 		XMLElement ref = new CaseSensitiveXMLElement("reference");
-		ref.setAttribute("bind", "setDispatcher");
-		ref.setAttribute("unbind", "clearDispatcher");
+		ref.setAttribute("bind", "setClient");
+		ref.setAttribute("unbind", "clearClient");
 		ref.setAttribute("policy", "dynamic");
 		ref.setAttribute("cardinality", "1..1");
-		ref.setAttribute("interface", "com.dexels.navajo.server.DispatcherInterface");
-		ref.setAttribute("name", "Dispatcher");
+		ref.setAttribute("interface", "com.dexels.navajo.script.api.LocalClient");
+		ref.setAttribute("name", "ClientInterface");
 		xe.addChild(ref);
 		
 		ref = new CaseSensitiveXMLElement("reference");
