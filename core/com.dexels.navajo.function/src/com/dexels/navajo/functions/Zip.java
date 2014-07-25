@@ -74,7 +74,7 @@ public class Zip extends FunctionInterface {
 			ZipEntry entry = new ZipEntry(f);
 			zo.putNextEntry(entry);
 			//zo.write( i.getData() );
-			i.write( zo );
+			i.write( zo,false );
 			fos.flush();
 			zo.closeEntry();
 			zo.close();
@@ -87,7 +87,7 @@ public class Zip extends FunctionInterface {
 			return b;
 		} catch (Exception e) {
 			
-			throw new TMLExpressionException(this, e.getMessage());
+			throw new TMLExpressionException(this, e.getMessage(),e);
 		} finally {
 			if ( tempFile != null ) {
 				tempFile.delete();
