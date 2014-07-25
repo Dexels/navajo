@@ -126,9 +126,7 @@ public class EntityManager {
 	
 
 	private void buildAndLoadScripts() throws Exception {
-		if (dispatcher == null || bundleCreator == null) {
-			return;
-		}
+		
 		
 		String scriptPath =  dispatcher.getNavajoConfig().getScriptPath();
 		File entityDir = new File(scriptPath + "/entity");
@@ -147,14 +145,13 @@ public class EntityManager {
 		String script = fileName.substring(fileName.indexOf("entity"), fileName.indexOf(".xml"));
 		
 		bundleCreator.createBundle(script, new Date(), ".xml", failures, success, skipped, false, false);
-		bundleCreator.installBundles(script, failures, success, skipped, true, ".xml");
+		//bundleCreator.installBundles(script, failures, success, skipped, true, ".xml");
 	}
 
 
 	
 	public void setBundleCreator(BundleCreator bundleCreator) throws Exception {
 		this.bundleCreator = bundleCreator;
-		buildAndLoadScripts();
 	}
 
 	public void clearBundleCreator(BundleCreator bundleCreator) {
@@ -163,7 +160,6 @@ public class EntityManager {
 	
 	public void setDispatcher(DispatcherInterface dispatcher) throws Exception {
 		this.dispatcher = dispatcher;
-		buildAndLoadScripts();
 	}
 
 	public void clearDispatcher(DispatcherInterface dispatcher) {

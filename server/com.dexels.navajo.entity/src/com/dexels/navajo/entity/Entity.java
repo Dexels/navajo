@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.script.api.LocalClient;
 
 public class Entity  {
 
@@ -20,6 +21,8 @@ public class Entity  {
 	// Keep track of entities that are derived from this entity.
 	private Set<Entity> subEntities = new HashSet<Entity>();
 	private Set<Entity> superEntities = new HashSet<Entity>();
+
+	protected LocalClient myClient;
 
 	
 	public Entity(Message msg, EntityManager m) {
@@ -35,6 +38,14 @@ public class Entity  {
 	
 	public void clearEntityManager(EntityManager em) {
 		this.em = null;
+	}
+	
+	public void setClient(LocalClient client) {
+		this.myClient = client;
+	}
+
+	public void clearClient(LocalClient client) {
+		this.myClient = null;
 	}
 	
 	

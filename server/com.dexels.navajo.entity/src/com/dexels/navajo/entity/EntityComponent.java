@@ -9,27 +9,15 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
-import com.dexels.navajo.script.api.LocalClient;
 
 
 public class EntityComponent extends Entity {
 
 	private String serviceName;
-	private LocalClient myClient;
 	
 	public EntityComponent() {
 		super();
 	}
-	
-	public void setClient(LocalClient client) {
-		this.myClient = client;
-	}
-
-	public void clearClient(LocalClient client) {
-		this.myClient = null;
-	}
-	
-
 	
 	public void activateComponent(Map<String,Object> parameters) throws Exception {
 		serviceName = (String) parameters.get("service.name");
