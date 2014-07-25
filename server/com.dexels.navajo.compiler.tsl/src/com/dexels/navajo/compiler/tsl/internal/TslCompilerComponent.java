@@ -338,7 +338,6 @@ public class TslCompilerComponent implements ScriptCompiler {
 		addProperty("entity.name","String", script, xe);
 		addProperty("service.name","String", fullName, xe);
 
-		   
 		XMLElement ref = new CaseSensitiveXMLElement("reference");
 		ref.setAttribute("bind", "setClient");
 		ref.setAttribute("unbind", "clearClient");
@@ -355,6 +354,13 @@ public class TslCompilerComponent implements ScriptCompiler {
 		ref.setAttribute("cardinality", "1..1");
 		ref.setAttribute("interface", "com.dexels.navajo.entity.EntityManager");
 		ref.setAttribute("name", "EntityManager");
+		xe.addChild(ref);
+		
+		ref = new CaseSensitiveXMLElement("reference");
+		ref.setAttribute("cardinality", "1..1");
+		ref.setAttribute("interface", "com.dexels.navajo.script.api.CompiledScriptFactory");
+		ref.setAttribute("name", "CompiledScript");
+		ref.setAttribute("target", "(component.name=" + symbolicName + ")");
 		xe.addChild(ref);
 		
 		for (String resource : dependentResources) {
