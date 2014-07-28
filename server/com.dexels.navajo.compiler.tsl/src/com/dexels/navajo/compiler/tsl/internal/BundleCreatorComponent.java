@@ -100,15 +100,28 @@ public class BundleCreatorComponent implements BundleCreator {
 		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 		String formatted = df.format(d);
 		return formatted;
+		
 	}
-/**
- * scriptName includes the _TENANT part
- */
+
+	/**
+	 * scriptName includes the _TENANT part
+	 */
 	@Override
-	public void createBundle(String scriptName, Date compilationDate,
-			String scriptExtension, List<String> failures,
-			List<String> success, List<String> skipped, boolean force,
+	public void createBundle(String scriptName, Date compilationDate, String scriptExtension,
+			List<String> failures, List<String> success, List<String> skipped, boolean force,
 			boolean keepIntermediate) throws Exception {
+		
+		createBundle(scriptName, compilationDate, scriptExtension, failures, success, skipped,
+				force, keepIntermediate, false);
+	}
+
+	/**
+	 * scriptName includes the _TENANT part
+	 */
+	@Override
+	public void createBundle(String scriptName, Date compilationDate, String scriptExtension,
+			List<String> failures, List<String> success, List<String> skipped, boolean force,
+			boolean keepIntermediate, boolean isEntity) throws Exception {
 		// TODO does scriptExtension always include the dot?
 		if(!scriptExtension.startsWith(".")) {
 			throw new IllegalAccessError("SCript extension did not start with a dot!");
@@ -117,7 +130,11 @@ public class BundleCreatorComponent implements BundleCreator {
 		final String tenant = tenantFromScriptPath(scriptName);
 //		final String rpcName = rpcNameFromScriptPath(scriptName);
 		
+		
 		File scriptFolder = new File(navajoIOConfig.getScriptPath());
+		if (isEntity) {
+			scriptFolder = new File(navajoIOConfig.getEntityPath());
+		}
 		File f = new File(scriptFolder, script);
 		
 		
@@ -169,12 +186,24 @@ public class BundleCreatorComponent implements BundleCreator {
 		final boolean isDir = f.isDirectory();
 		return isDir && equalsCanonical;
 	}
+	
+	private void compileAllIn(File baseDir, Date compileDate, List<String> failures,
+			List<String> success, List<String> skipped, boolean force, boolean keepIntermediate,
+			String extension) throws Exception {
+		compileAllIn(baseDir, compileDate, failures, success, skipped, force, keepIntermediate,
+				extension, false);
+	}
 
-	private void compileAllIn(File baseDir, Date compileDate,
-			List<String> failures, List<String> success, List<String> skipped,
-			boolean force, boolean keepIntermediate, String extension) throws Exception {
-		File scriptPath = new File(navajoIOConfig.getScriptPath());
+	private void compileAllIn(File baseDir, Date compileDate, List<String> failures,
+			List<String> success, List<String> skipped, boolean force, boolean keepIntermediate,
+			String extension, boolean isEntity) throws Exception {
 		
+		File scriptPath = new File(navajoIOConfig.getScriptPath());
+		if (isEntity) {
+			scriptPath = new File(navajoIOConfig.getEntityPath());
+
+		}
+
 		Iterator<File> it = FileUtils.iterateFiles(baseDir,
 				new String[] { "xml" }, true);
 		while (it.hasNext()) {
@@ -569,13 +598,21 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	@Override
+	public void verifyScript(String scriptPath, List<String> failed, List<String> success) {
+		verifyScript(scriptPath, failed, success, false);
+	}
+
+	@Override
 	public void verifyScript(String scriptPath, List<String> failed,
-			List<String> success) {
+			List<String> success, boolean isEntity) {
 		File outputFolder = new File(navajoIOConfig.getScriptPath());
+		if (isEntity) {
+			outputFolder = new File(navajoIOConfig.getEntityPath());
+		}
 		File f = new File(outputFolder, scriptPath);
 
 		if (f.isDirectory()) {
-			verifyScripts(f, failed, success);
+			verifyScripts(f, failed, success, isEntity);
 		} else {
 			verifySingleScript(scriptPath, failed, success);
 		}
@@ -762,9 +799,13 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	private void verifyScripts(File baseDir, List<String> failed,
-			List<String> success) {
+			List<String> success, boolean isEntity) {
 		final String extension = "xml";
 		File compiledScriptPath = new File(navajoIOConfig.getScriptPath());
+		if (isEntity) {
+			compiledScriptPath = new File(navajoIOConfig.getEntityPath());
+		}
+		
 		Iterator<File> it = FileUtils.iterateFiles(baseDir,
 				new String[] { extension }, true);
 		while (it.hasNext()) {
