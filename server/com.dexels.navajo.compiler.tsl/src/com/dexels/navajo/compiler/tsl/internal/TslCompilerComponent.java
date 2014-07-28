@@ -321,7 +321,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
 		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
 		xe.setAttribute("immediate", "true");
-		xe.setAttribute("name","navajo."+symbolicName);
+		xe.setAttribute("name","navajo.entities."+symbolicName);
 		xe.setAttribute("activate", "activateComponent");
 		xe.setAttribute("deactivate", "deactivateComponent");
 		xe.setAttribute("enabled", "true");
