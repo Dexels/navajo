@@ -16,7 +16,7 @@ public class NavajoRepositoryLayout implements RepositoryLayout {
 //	result.add("workflows");
 //	result.add("tasks");
 	
-	private final List<String> monitoredFolders = Arrays.asList("config", "scripts", "article","authorization","workflows","tasks", "entities");
+	private final List<String> monitoredFolders = Arrays.asList("config", "scripts", "article","authorization","workflows","tasks");
 	@Override
 	public List<String> getMonitoredFolders() {
 		String suppressAdapters = System.getenv("navajo.suppress.adaptersfolder");

@@ -29,7 +29,7 @@ public class EntityManager {
 	private Map<String, Map<String, Operation>> operationsMap = new ConcurrentHashMap<String, Map<String, Operation>>();
 
 	private static EntityManager instance;
-	private BundleQueue entityQueue;
+	private BundleQueue bundleQueue;
 	private DispatcherInterface dispatcher;
 
 	public EntityManager() {
@@ -136,15 +136,15 @@ public class EntityManager {
 
 	private void buildAndLoadScript(String fileName) throws Exception {
 		String script = fileName.substring(fileName.indexOf("entity"), fileName.indexOf(".xml"));
-		entityQueue.enqueueScript(script, ".xml", true);
+		bundleQueue.enqueueScript(script, ".xml", true);
 	}
 
 	public void setBundleQueue(BundleQueue queue) throws Exception {
-		this.entityQueue = queue;
+		this.bundleQueue = queue;
 	}
 
 	public void clearBundleQueue(BundleQueue queue) {
-		this.entityQueue = null;
+		this.bundleQueue = null;
 	}
 
 	public void setDispatcher(DispatcherInterface dispatcher) throws Exception {
