@@ -75,10 +75,12 @@ public class EntityListener extends HttpServlet {
 		Navajo result = null;
 		String method = request.getMethod();
 		String path = request.getPathInfo();
-		String query = request.getQueryString();
+		String uri = request.getRequestURI();
 		
-		if (query != null && query.lastIndexOf('.') > 0) {
-			urlOutput = query.substring(query.lastIndexOf('.') +1 );
+		if (uri.lastIndexOf('.') > 0) {
+			// The output format can be set by adding a trailing .<format> to the URL.
+			// This overrules accept-encoding
+			urlOutput = uri.substring(uri.lastIndexOf('.') +1 );
 			if (!SUPPORTED_OUTPUT.contains(urlOutput)) {
 				// unsupported format
 				urlOutput = null;
@@ -94,6 +96,10 @@ public class EntityListener extends HttpServlet {
 		authenticateRequest(request);
 
 		String entityName = path.substring(1);
+		if (entityName.indexOf('.') > 0) {
+			// Remove .<format> from entityName
+			entityName = entityName.substring(0, entityName.indexOf('.'));
+		}
 		if ( debug ) {
 			System.err.println("method: " + method);
 			System.err.println("path: " + path);
