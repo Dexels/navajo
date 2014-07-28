@@ -139,11 +139,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	public String getScriptPath() {
 		return null;
 	}
-	
-	@Override
-	public String getEntityPath() {
-		return null;
-	}
 
 	@Override
 	public boolean isAsyncEnabled() {

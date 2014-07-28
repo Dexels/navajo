@@ -46,11 +46,6 @@ public abstract class TestContextImpl extends BaseContextImpl {
 			}
 			
 			@Override
-			public String getEntityPath() {
-				return null;
-			}
-			
-			@Override
 			public Date getScriptModificationDate(String scriptPath, String tenant,String extension) {
 				return null;
 			}

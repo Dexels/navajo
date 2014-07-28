@@ -153,11 +153,6 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	public String getScriptPath() {
 		return navajoIOConfig.getScriptPath();
 	}
-	
-	@Override
-	public String getEntityPath() {
-		return navajoIOConfig.getEntityPath();
-	}
 
 	@Override
 	public String getCompiledScriptPath() {

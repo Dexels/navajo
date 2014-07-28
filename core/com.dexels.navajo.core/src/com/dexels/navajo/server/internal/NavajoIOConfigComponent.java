@@ -66,11 +66,6 @@ public class NavajoIOConfigComponent extends FileNavajoConfig implements NavajoI
 	public String getScriptPath() {
 		return new File(rootPath,"scripts").getAbsolutePath();
 	}
-	
-	@Override
-	public String getEntityPath() {
-		return new File(rootPath,"entities").getAbsolutePath();
-	}
 
 	@Override
 	public String getCompiledScriptPath() {
