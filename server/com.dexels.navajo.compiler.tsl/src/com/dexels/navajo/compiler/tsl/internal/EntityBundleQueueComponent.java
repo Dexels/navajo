@@ -18,17 +18,21 @@ import com.dexels.navajo.compiler.tsl.BundleQueue;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 
-public class BundleQueueComponent implements EventHandler, BundleQueue {
+public class EntityBundleQueueComponent implements EventHandler, BundleQueue {
 	
-	private static final String SCRIPTS_FOLDER = "scripts/";
+	private static final String ENTITIES_FOLDER  = "entities/";
 	private BundleCreator bundleCreator = null;
 	private ExecutorService executor;
 	
 	private final static Logger logger = LoggerFactory
-			.getLogger(BundleQueueComponent.class);
+			.getLogger(EntityBundleQueueComponent.class);
 	
 	public void setBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = bundleCreator;
+	}
+	
+	public void clearBundleCreator(BundleCreator bundleCreator) {
+		this.bundleCreator = null;
 	}
 
 	public void activate() {
@@ -40,11 +44,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 		executor = null;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.dexels.navajo.compiler.tsl.internal.BundleQueue#enqueueScript(java.lang.String)
-	 */
-	@Override
-	public void enqueueScript(final String script, final String extension) {
+	public void enqueueEntity(final String entity, final String extension) {
 		executor.execute(new Runnable(){
 
 			@Override
@@ -52,71 +52,66 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 				List<String> failures = new ArrayList<String>();
 				List<String> success = new ArrayList<String>();
 				List<String> skipped = new ArrayList<String>();
-				logger.info("Eagerly compiling: "+script);
+				logger.info("Eagerly compiling: "+entity);
 				try {
-					bundleCreator.createBundle(script, new Date(), extension, failures, success, skipped, false, false);
+					bundleCreator.createBundle(entity, new Date(), extension, failures, success, skipped, false, false, true);
 					if(!skipped.isEmpty()) {
-						logger.info("Script compilation skipped: "+script);
+						logger.info("Entity compilation skipped: "+entity);
 					}
 					if(!failures.isEmpty()) {
-						logger.info("Script compilation failed: "+script);
+						logger.info("Entity compilation failed: "+entity);
 					}
+					
+					// Entities are installed immediately
+					logger.info("Installing entity : "+entity);
+					bundleCreator.installBundles(entity, failures, success, skipped, true, extension);
+					
 				} catch (Throwable e) {
 					logger.error("Error: ", e);
 				}
 			}});
 	}
-	/**
-	 * 
-	 * @param bundleCreator the bundlecreator to clear
-	 */
-	public void clearBundleCreator(BundleCreator bundleCreator) {
-		this.bundleCreator = null;
-	}
+
 
 	@Override
 	public void handleEvent(Event e) {
 		RepositoryInstance ri =  (RepositoryInstance) e.getProperty("repository");
-		List<String> changedScripts = RepositoryEventParser.filterChanged(e,SCRIPTS_FOLDER);
-		for (String changedScript : changedScripts) {
+		List<String> changedEntities = RepositoryEventParser.filterChanged(e, ENTITIES_FOLDER);
+		for (String changedEntity : changedEntities) {
 			try {
-				File location = new File(ri.getRepositoryFolder(),changedScript);
+				File location = new File(ri.getRepositoryFolder(),changedEntity);
 				if(location.isFile()) {
-					extractScript(changedScript);
+					extractEntity(changedEntity);
 				}
 			} catch (IllegalArgumentException e1) {
 				logger.warn("Error: ", e1);
 			}
 		}
-		
-		
 	}
 
-	private void extractScript(String changedScript) {
-		String stripped = changedScript.substring(SCRIPTS_FOLDER.length());
+	private void extractEntity(String changedEntity) {
+		String stripped = changedEntity.substring(ENTITIES_FOLDER.length());
 		int dotIndex = stripped.lastIndexOf(".");
 		if(dotIndex<0) {
-			throw new IllegalArgumentException("Scripts need an extension, and "+changedScript+" has none. Ignoring.");
+			throw new IllegalArgumentException("Entities need an extension, and "+changedEntity+" has none. Ignoring.");
 		}
-		String scriptName = stripped.substring(0,dotIndex);
+		String entityName = stripped.substring(0,dotIndex);
 		String extension = stripped.substring(dotIndex,stripped.length());
 
-		logger.debug("scriptName: "+scriptName);
+		logger.debug("Entityname: "+entityName);
 		logger.debug("extension: "+extension);
 		if(".rptdesign".equals(extension)) {
-			logger.info("Ignoring report "+scriptName);
+			logger.info("Ignoring report "+entityName);
 			return;
 		}
-		enqueueScript(scriptName,extension);
+		enqueueEntity(entityName,extension);
 	}
-	
-	public static void main(String[] args) {
-		BundleQueueComponent bqc = new BundleQueueComponent();
-		bqc.extractScript("scripts/InitAsync_AAP.xml");
-		bqc.extractScript("scripts/InitSomething.xml");
-		bqc.extractScript("scripts/somepack/InitSomething.xml");
+
+	@Override
+	public void enqueueScript(String script, String extension) {
+		enqueueEntity(script, extension);
+		
 	}
-	
 
 
 }
