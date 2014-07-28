@@ -111,6 +111,10 @@ public class EntityListener extends HttpServlet {
 		String etag = null;
 		
 		try {
+			if (entityName == "") {
+				throw new EntityException(EntityException.BAD_REQUEST);
+			}
+			
 			Entity e = myManager.getEntity(entityName);
 			if (e == null) {
 				// Requested entity not found
