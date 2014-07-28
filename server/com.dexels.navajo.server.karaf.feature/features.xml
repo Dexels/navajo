@@ -25,7 +25,7 @@
 			</feature>
     <feature resolver="(obr)" name='navajo.function' version='3.0.2' start-level='80'  >
 		<feature version="[3.0.0,4)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.2.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.2.6</bundle>
 	</feature>
 	
     <feature resolver="(obr)" name='navajo.log' version='1.0.0' start-level='80'  >
