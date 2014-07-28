@@ -39,6 +39,11 @@ public class LegacyNavajoIOConfig extends FileNavajoConfig implements NavajoIOCo
 	public String getScriptPath() {
 		return DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
 	}
+	
+	@Override
+	public String getEntityPath() {
+		return DispatcherFactory.getInstance().getNavajoConfig().getEntityPath();
+	}
 
 	@Override
 	public String getCompiledScriptPath() {

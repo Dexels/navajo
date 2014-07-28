@@ -42,6 +42,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 	public String compiledScriptPath;
 	public String hibernatePath;
 	public String scriptPath;
+	public String entityPath;
 	
 	private String repositoryClass = "com.dexels.navajo.server.SimpleRepository";
 	private String sharedStoreClass;
@@ -172,6 +173,8 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     				body.getProperty("paths/adapters").getValue());
     		scriptPath = properDir(rootPath +
     				body.getProperty("paths/scripts").getValue());
+    		entityPath = properDir(rootPath +
+    				body.getProperty("paths/entities").getValue());
     		
     		// changed to more defensive behaviour
     		Property resourceProperty = body.getProperty("paths/resource");
@@ -482,6 +485,11 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 	public final String getScriptPath() {
         return scriptPath;
     }
+    
+    @Override
+	public String getEntityPath() {
+		return entityPath;
+	}
 
     @Override
 	public final String getResourcePath() {

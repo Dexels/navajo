@@ -23,6 +23,7 @@ public interface NavajoIOConfig {
     public String getConfigPath();
 	public String getRootPath();
 	public String getScriptPath();
+	public String getEntityPath();
 	public String getCompiledScriptPath();
 	public String getAdapterPath();
 	public String getResourcePath();
