@@ -31,7 +31,8 @@ Import-Package: com.dexels.navajo.adapter,
  org.dexels.utils;version="2.2.1",
  org.junit;version="4.0.0";resolution:=optional,
  org.junit.runners;version="4.0.0";resolution:=optional,
- org.osgi.framework;version="1.6.0"
+ org.osgi.framework;version="1.6.0",
+ org.osgi.service.component;version="1.2.0"
 Service-Component: OSGI-INF/*.xml
 Export-Package: com.dexels.navajo.entity,com.dexels.navajo.entity.adap
  ters,com.dexels.navajo.entity.impl,com.dexels.navajo.entity.transacti
