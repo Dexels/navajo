@@ -61,6 +61,12 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 					if(!failures.isEmpty()) {
 						logger.info("Script compilation failed: "+script);
 					}
+					
+					// Scripts in "entity/*" folder are installed immediately
+					if (script.startsWith("entity")) {
+						logger.info("Installing entity : "+script);
+						bundleCreator.installBundles(script, failures, success, skipped, true, extension);
+					}
 				} catch (Throwable e) {
 					logger.error("Error: ", e);
 				}
@@ -88,8 +94,6 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 				logger.warn("Error: ", e1);
 			}
 		}
-		
-		
 	}
 
 	private void extractScript(String changedScript) {
@@ -109,7 +113,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 		}
 		enqueueScript(scriptName,extension);
 	}
-	
+
 	public static void main(String[] args) {
 		BundleQueueComponent bqc = new BundleQueueComponent();
 		bqc.extractScript("scripts/InitAsync_AAP.xml");

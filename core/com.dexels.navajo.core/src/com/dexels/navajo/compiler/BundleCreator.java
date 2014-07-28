@@ -30,13 +30,8 @@ public interface BundleCreator {
 	
 //	public Collection<Long> installBundles(String scriptPrefix) throws BundleException;
 
-	public void createBundle(String script, Date date, String extension, List<String> failures,
-			List<String> success, List<String> skipped, boolean force, boolean keepIntermediateFiles)
-			throws Exception;
-
-	public void createBundle(String script, Date date, String extension, List<String> failures,
-			List<String> success, List<String> skipped, boolean force,
-			boolean keepIntermediateFiles, boolean isEntity) throws Exception;
+	public void createBundle(String script, Date date, String extension,
+			List<String> failures, List<String> success, List<String> skipped, boolean force,boolean keepIntermediateFiles) throws Exception;
 
 	public Date getBundleInstallationDate(String scriptPath, String tenant, String extension);
 	public Date getScriptModificationDate(String scriptPath, String tenant,String extension) throws FileNotFoundException;
@@ -49,8 +44,6 @@ public interface BundleCreator {
 
 	public void verifyScript(String script, List<String> failed,
 			List<String> success);
-	public void verifyScript(String script, List<String> failed,
-			List<String> success, boolean isEntity);
 
 	/**
 	 * Format the compilation timestamp in a consistent way

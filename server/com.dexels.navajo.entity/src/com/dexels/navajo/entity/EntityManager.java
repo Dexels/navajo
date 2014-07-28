@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.tsl.BundleQueue;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -136,7 +135,7 @@ public class EntityManager {
 
 	private void buildAndLoadScript(String fileName) throws Exception {
 		String script = fileName.substring(fileName.indexOf("entity"), fileName.indexOf(".xml"));
-		bundleQueue.enqueueScript(script, ".xml", true);
+		bundleQueue.enqueueScript(script, ".xml");
 	}
 
 	public void setBundleQueue(BundleQueue queue) throws Exception {
