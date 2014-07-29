@@ -13,7 +13,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.5.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.2.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/2.0.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.0.22</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.0.28</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.0.2</bundle>
