@@ -291,22 +291,38 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 				}
 				if (name.equals("x")) {
 					myBounds.x = ((Integer) object).intValue();
+					if (getDialogContainer() == null)
+					{
+						myBoundsByDefinition.x = myBounds.x; 
+					}
 					resetDialogBounds();
 					return;
 				}
 				if (name.equals("y")) {
 					myBounds.y = ((Integer) object).intValue();
+					if (getDialogContainer() == null)
+					{
+						myBoundsByDefinition.y = myBounds.y; 
+					}
 					resetDialogBounds();
 					return;
 				}
 				if (name.equals("w")) {
 					myBounds.width = ((Integer) object).intValue();
+					if (getDialogContainer() == null)
+					{
+						myBoundsByDefinition.width = myBounds.width; 
+					}
 					resetDialogBounds();
 					return;
 				}
 				if (name.equals("h")) {
 					myBounds.height = ((Integer) object).intValue();
 					// logger.debug("Setting height: "+myBounds.height);
+					if (getDialogContainer() == null)
+					{
+						myBoundsByDefinition.height = myBounds.height; 
+					}
 					resetDialogBounds();
 					return;
 				}
