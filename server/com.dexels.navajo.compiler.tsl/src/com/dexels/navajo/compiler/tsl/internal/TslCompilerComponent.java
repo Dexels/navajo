@@ -19,6 +19,7 @@ import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
+import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;
 import com.dexels.navajo.script.api.CompiledScriptFactory;
 import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
@@ -362,6 +363,18 @@ public class TslCompilerComponent implements ScriptCompiler {
 		ref.setAttribute("name", "CompiledScript");
 		ref.setAttribute("target", "(component.name=" + symbolicName + ")");
 		xe.addChild(ref);
+		
+		for (Dependency d : dependencies) {
+				if(d instanceof ExtendDependency) {
+					XMLElement dep = new CaseSensitiveXMLElement("reference");
+					dep.setAttribute("policy", "static");
+					dep.setAttribute("cardinality", "1..1");
+					dep.setAttribute("interface", "com.dexels.navajo.entity.Entity");
+					dep.setAttribute("target", "(service.name="+d.getId()+")");
+					xe.addChild(dep);
+				}
+				
+		}
 		
 		for (String resource : dependentResources) {
 			XMLElement dep = new CaseSensitiveXMLElement("reference");

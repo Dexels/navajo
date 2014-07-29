@@ -76,6 +76,7 @@ import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.bean.DomainObjectMapper;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;
+import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
@@ -926,9 +927,16 @@ public class TslCompiler {
 					+ "outMsgStack.push(currentOutMsg);\n");
 			result.append(printIdent(ident + 2) + "currentOutMsg = "
 					+ messageList + "[messageCount" + (ident) + "];\n");
-			if (extendsMsg != null) {
+			if (extendsMsg != null && extendsMsg != "") {
 				result.append(printIdent(ident + 2)
 						+ "currentOutMsg.setExtends(\"" + extendsMsg + "\");\n");
+				
+				if (extendsMsg.startsWith("navajo://")) {
+					// Add ExtendDependency dependency
+					String entityName = "entity." + extendsMsg.split("navajo://")[1];
+					deps.add(new ExtendDependency(ExtendDependency.getScriptTimeStamp(entityName),entityName ));
+				}
+				
 			}
 			if (scopeMsg != null) {
 				result.append(printIdent(ident + 2)
@@ -3247,6 +3255,7 @@ public class TslCompiler {
 		}
 
 		ArrayList<String> inheritedScripts = new ArrayList<String>();
+		ArrayList<String> extendEntities = new ArrayList<String>();
 		InputStream is = null;
 
 		try {
@@ -3278,7 +3287,7 @@ public class TslCompiler {
 				is = ais;
 			}
 			sis.close();
-
+			
 			for (int i = 0; i < inheritedScripts.size(); i++) {
 				addDependency(
 						"dependentObjects.add( new InheritDependency( new Long(\""
@@ -3287,6 +3296,7 @@ public class TslCompiler {
 								+ inheritedScripts.get(i) + "\"));\n",
 						"INHERIT" + inheritedScripts.get(i));
 			}
+			
 			compileScript(is, packagePath, script, scriptPath, outputWriter,
 					deps, tenant);
 
