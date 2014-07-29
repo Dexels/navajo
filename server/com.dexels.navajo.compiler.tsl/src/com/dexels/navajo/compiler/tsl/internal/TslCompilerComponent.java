@@ -370,7 +370,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 					dep.setAttribute("policy", "static");
 					dep.setAttribute("cardinality", "1..1");
 					dep.setAttribute("interface", "com.dexels.navajo.entity.Entity");
-					dep.setAttribute("target", "(service.name="+d.getId()+")");
+					dep.setAttribute("target", "(entity.name="+d.getId()+")");
 					xe.addChild(dep);
 				}
 				
