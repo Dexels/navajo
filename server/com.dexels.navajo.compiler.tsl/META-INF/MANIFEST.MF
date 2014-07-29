@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tsl compiler for Navajo
 Bundle-SymbolicName: com.dexels.navajo.compiler.tsl
-Bundle-Version: 3.0.26.qualifier
+Bundle-Version: 3.0.28.qualifier
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.document;version="2.2.0",
@@ -31,12 +31,13 @@ Service-Component: OSGI-INF/navajoTslCompiler.xml, OSGI-INF/javaCompiler.xml, OS
  OSGI-INF/bundleCreator.xml, OSGI-INF/navajo.repository.listener.xml,
  OSGI-INF/navajo.bundlecreator.queue.xml
 Bundle-ClassPath: .
-Export-Package: com.dexels.navajo.compiler.tsl.custom;uses:="javax.too
- ls,org.osgi.framework,javax.lang.model.element",com.dexels.navajo.com
- piler.tsl.internal; uses:="org.osgi.service.event,  com.dexels.navajo
- .server,  com.dexels.osgicompiler,  com.dexels.navajo.compiler,  com.
- dexels.navajo.mapping,  org.osgi.framework,  com.dexels.navajo.docume
- nt,  com.dexels.navajo.document.nanoimpl",com.dexels.osgicompiler,com
- .dexels.osgicompiler.internal;uses:="javax.tools,com.dexels.osgicompi
- ler,org.osgi.framework",navajotsl;uses:="org.osgi.framework"
+Export-Package: com.dexels.navajo.compiler.tsl,com.dexels.navajo.compi
+ ler.tsl.custom;uses:="javax.tools,org.osgi.framework,javax.lang.model
+ .element",com.dexels.navajo.compiler.tsl.internal; uses:="org.osgi.se
+ rvice.event,  com.dexels.navajo.server,  com.dexels.osgicompiler,  co
+ m.dexels.navajo.compiler,  com.dexels.navajo.mapping,  org.osgi.frame
+ work,  com.dexels.navajo.document,  com.dexels.navajo.document.nanoim
+ pl",com.dexels.osgicompiler,com.dexels.osgicompiler.internal;uses:="j
+ avax.tools,com.dexels.osgicompiler,org.osgi.framework",navajotsl;uses
+ :="org.osgi.framework"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

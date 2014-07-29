@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.dexels.navajo.compiler.BundleCreator;
+import com.dexels.navajo.compiler.tsl.BundleQueue;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -21,16 +21,16 @@ import com.dexels.navajo.server.DispatcherInterface;
  * TODO: NAVAJO CLUSTER ENABLING
  * 
  * @author arjenschoneveld
- *
+ * 
  */
 public class EntityManager {
-	private Map<String,Entity> entityMap = new ConcurrentHashMap<String,Entity>();
-	private Map<String,Map<String,Operation>> operationsMap = new ConcurrentHashMap<String,Map<String,Operation>>();
+	private Map<String, Entity> entityMap = new ConcurrentHashMap<String, Entity>();
+	private Map<String, Map<String, Operation>> operationsMap = new ConcurrentHashMap<String, Map<String, Operation>>();
 
 	private static EntityManager instance;
-	private BundleCreator bundleCreator;
+	private BundleQueue bundleQueue;
 	private DispatcherInterface dispatcher;
-	
+
 	public EntityManager() {
 	}
 
@@ -38,49 +38,50 @@ public class EntityManager {
 		instance = this;
 		buildAndLoadScripts();
 	}
-	
+
 	public void deactivate() {
 		entityMap.clear();
 		operationsMap.clear();
 		instance = null;
 	}
-	
+
 	public static EntityManager getInstance() {
 		return instance;
 	}
-	
-	public Navajo deriveNavajoFromParameterMap(Entity entity, Map<String, String []> parameters) {
-		
+
+	public Navajo deriveNavajoFromParameterMap(Entity entity, Map<String, String[]> parameters) {
+
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message m = NavajoFactory.getInstance().createMessage(n, entity.getName());
 		n.addMessage(m);
-		
-		for ( String key : parameters.keySet() ) {
-			
+
+		for (String key : parameters.keySet()) {
+
 			String propertyName = key;
-			if ( !propertyName.startsWith("/" + entity.getName() + "/" ) ) {
+			if (!propertyName.startsWith("/" + entity.getName() + "/")) {
 				propertyName = "/" + entity.getName() + "/" + propertyName;
 			}
 			Property prop = entity.getMessage().getProperty(propertyName);
-			if ( prop != null ) {
+			if (prop != null) {
 				Property prop_copy = prop.copy(n);
 				String propValue = parameters.get(key)[0];
 				if (propValue.indexOf('.') > 0) {
-					// Dots in property values are not supported since they can be used to indicate output format
+					// Dots in property values are not supported since they can
+					// be used to indicate output format
 					propValue = propValue.substring(0, propValue.indexOf('.'));
 				}
 				prop_copy.setUnCheckedStringAsValue(propValue);
 				m.addProperty(prop_copy);
 			}
-			
+
 		}
-		
+
 		return n;
 	}
-	
+
 	public void addOperation(Operation o) {
-		Map<String,Operation> operationEntry = null;
-		if ( ( operationEntry = operationsMap.get(o.getEntityName())) == null ) {
+		Map<String, Operation> operationEntry = null;
+		if ((operationEntry = operationsMap.get(o.getEntityName())) == null) {
 			operationEntry = new HashMap<String, Operation>();
 			operationsMap.put(o.getEntityName(), operationEntry);
 		}
@@ -88,8 +89,8 @@ public class EntityManager {
 	}
 
 	public void removeOperation(Operation o) {
-		Map<String,Operation> operationEntry = null;
-		if ( ( operationEntry = operationsMap.get(o.getEntityName())) != null ) {
+		Map<String, Operation> operationEntry = null;
+		if ((operationEntry = operationsMap.get(o.getEntityName())) != null) {
 			operationEntry.remove(o.getMethod());
 		}
 	}
@@ -103,32 +104,27 @@ public class EntityManager {
 	}
 
 	public Operation getOperation(String entity, String method) throws EntityException {
-		if ( operationsMap.get(entity) != null && operationsMap.get(entity).get(method) != null ) {
+		if (operationsMap.get(entity) != null && operationsMap.get(entity).get(method) != null) {
 			return operationsMap.get(entity).get(method);
 		}
-		if ( getEntity(entity) == null ) {
+		if (getEntity(entity) == null) {
 			throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Unknown entity: " + entity);
 		}
-		throw new EntityException(EntityException.OPERATION_NOT_SUPPORTED, "Operation " + method + " not supported for entity: " + entity);
+		throw new EntityException(EntityException.OPERATION_NOT_SUPPORTED, "Operation " + method
+				+ " not supported for entity: " + entity);
 	}
 
 	public Entity getEntity(String name) {
 		Entity e = entityMap.get(name);
 		return e;
 	}
-	
+
 	public Set<String> getRegisteredEntities() {
 		return entityMap.keySet();
 	}
-	
-
-
-	
 
 	private void buildAndLoadScripts() throws Exception {
-		
-		
-		String scriptPath =  dispatcher.getNavajoConfig().getScriptPath();
+		String scriptPath = dispatcher.getNavajoConfig().getScriptPath();
 		File entityDir = new File(scriptPath + "/entity");
 		for (File f : entityDir.listFiles()) {
 			if (f.isFile()) {
@@ -136,28 +132,20 @@ public class EntityManager {
 			}
 		}
 	}
-	
+
 	private void buildAndLoadScript(String fileName) throws Exception {
-		List<String> success = new ArrayList<String>();
-		List<String> failures = new ArrayList<String>();
-		List<String> skipped = new ArrayList<String>();
-		
 		String script = fileName.substring(fileName.indexOf("entity"), fileName.indexOf(".xml"));
-		
-		bundleCreator.createBundle(script, new Date(), ".xml", failures, success, skipped, false, false);
-		//bundleCreator.installBundles(script, failures, success, skipped, true, ".xml");
+		bundleQueue.enqueueScript(script, ".xml");
 	}
 
-
-	
-	public void setBundleCreator(BundleCreator bundleCreator) throws Exception {
-		this.bundleCreator = bundleCreator;
+	public void setBundleQueue(BundleQueue queue) throws Exception {
+		this.bundleQueue = queue;
 	}
 
-	public void clearBundleCreator(BundleCreator bundleCreator) {
-		this.bundleCreator = null;
+	public void clearBundleQueue(BundleQueue queue) {
+		this.bundleQueue = null;
 	}
-	
+
 	public void setDispatcher(DispatcherInterface dispatcher) throws Exception {
 		this.dispatcher = dispatcher;
 	}
@@ -166,7 +154,4 @@ public class EntityManager {
 		this.dispatcher = null;
 	}
 
-
-		
-	
 }
