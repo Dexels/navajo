@@ -43,10 +43,16 @@ public class SimpleRepository implements Repository, GlobalManager {
 
 	private static final Logger logger = LoggerFactory.getLogger(SimpleRepository.class);
 	
+	private boolean setAccessPassword = false;
+	
 	public SimpleRepository() {
 	}
 	
-	public void activate() {
+	public void activate(Map<String,Object> settings) {
+		if (settings.get("setAccessPassword") != null) {
+			setAccessPassword = ( settings.get("setAccessPassword").equals("true"));
+
+		}
 	}
 
 	@Override
@@ -80,7 +86,11 @@ public class SimpleRepository implements Repository, GlobalManager {
 		} catch (NavajoException e) {
 			logger.error("Error: ", e);
 		}
-		return new Access( 1, 1, username, service, "", "", "", certificate);
+		Access a = new Access( 1, 1, username, service, "", "", "", certificate);
+		if (setAccessPassword) {
+			a.rpcPwd = password;
+		}
+		return a;
 	}
 
 	/**
