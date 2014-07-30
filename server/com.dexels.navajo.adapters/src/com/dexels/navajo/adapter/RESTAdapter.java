@@ -1,9 +1,12 @@
 package com.dexels.navajo.adapter;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.dexels.utils.Base64;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -98,7 +101,8 @@ public class RESTAdapter extends NavajoMap {
 	}
 
 	@Override
-	public void setDoSend(String m, Navajo od) throws UserException, ConditionErrorException, SystemException {
+	public void setDoSend(String m, Navajo od) throws UserException, ConditionErrorException,
+			SystemException {
 		// Prepare JSON content.
 		JSONTML json = JSONTMLFactory.getInstance();
 		Binary bContent = new Binary();
@@ -108,6 +112,24 @@ public class RESTAdapter extends NavajoMap {
 			throw new UserException(e.getMessage(), e);
 		}
 		HTTPMap http = new HTTPMap();
+		
+		setupHttpMap(http, bContent);
+		http.setDoSend(true);
+		Binary result = http.getResult();
+		responseCode = http.getResponseCode();
+		responseMessage = http.getResponseMessage();
+		try {
+			if (result != null) {
+				inDoc = json.parse(result.getDataAsStream(), topMessage);
+			} else {
+				inDoc = NavajoFactory.getInstance().createNavajo();
+			}
+		} catch (Exception e) {
+			throw new UserException(e.getMessage(), e);
+		}
+	}
+
+	private void setupHttpMap(HTTPMap http, Binary content) throws UserException {
 		try {
 			http.load(access);
 		} catch (MappableException e) {
@@ -122,33 +144,29 @@ public class RESTAdapter extends NavajoMap {
 			}
 			fullUrl += parameters.get(i);
 		}
-		
+
 		for (String key : headers.keySet()) {
 			http.setHeaderKey(key);
 			http.setHeaderValue(headers.get(key));
 		}
-		
+
 		http.setUrl(fullUrl);
 		http.setMethod(method);
-		if (method != "DELETE") {
-		http.setContent(bContent);
-		http.setContentType("application/json");
-		http.setContentLength(bContent.getLength());
+		if (method == "POST" || method == "PUT") {
+			http.setContent(content);
+			http.setContentType("application/json");
+			http.setContentLength(content.getLength());
 		}
 		http.trustAll();
-		http.setDoSend(true);
-		
-		Binary result = http.getResult();
-		responseCode = http.getResponseCode();
-		responseMessage = http.getResponseMessage();
-		try {
-			if ( result != null ) {
-				inDoc = json.parse(result.getDataAsStream(), topMessage);
-			} else {
-				inDoc = NavajoFactory.getInstance().createNavajo();
-			}
-		} catch (Exception e) {
-			throw new UserException(e.getMessage(), e);
+		if (username != null && password != null) {
+			// Use HTTP Basic auth - should only be used over HTTPS!
+			String authString = username + ":" + password;
+			String encoded = Base64.encode(authString.getBytes(Charset.forName("UTF-8")));
+			//!Important! - Get rid of any newline characters erroneously added by the Base64Encoder
+			encoded = encoded.replaceAll("\n", "");
+			http.setHeaderKey("Authorization");
+			http.setHeaderValue("Basic " + encoded);
+			
 		}
 	}
 

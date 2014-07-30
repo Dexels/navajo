@@ -381,6 +381,8 @@
 			<value name="selectionPointer" type="string" required="false" direction="in" />
 			<value name="message" map="messagemap" required="false" direction="out" />
 			<value name="messages" map="messagemap []" required="false" direction="out" />
+			<value name="username" type="string" required="false" direction="in" />
+                        <value name="password" type="string" required="false" direction="in" />
 		</values>
 		<methods>
 			<!-- Creates a new property -->
@@ -414,6 +416,8 @@
 				<param name="value" field="doSend" type="string" required="automatic" value="'CALLREST'" />
 				<param name="appendTo" field="appendTo" type="string" required="false" />
 				<param name="append" field="append" type="string" required="false" />
+				<param name="username" field="username" type="string" required="false" />
+                                <param name="password" field="password" type="string" required="false" />
 			</method>
 		</methods>
 	</map>
