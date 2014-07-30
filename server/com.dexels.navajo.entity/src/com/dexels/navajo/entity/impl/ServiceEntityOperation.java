@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -34,6 +37,8 @@ public class ServiceEntityOperation implements EntityOperation {
 	private static final String ENTITY_META_MSG = "__Entity__";
 	private static final String ETAG = "ETag";
 	private static final String STATUS = "Status";
+	private final static Logger logger = LoggerFactory.getLogger(ServiceEntityOperation.class);
+
 	
 	public ServiceEntityOperation(EntityManager m, DispatcherInterface c, Operation o) throws EntityException {
 		this.manager = m;
@@ -41,6 +46,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		this.myOperation = o;
 		this.myEntity = manager.getEntity(myOperation.getEntityName());
 		if ( myEntity == null ) {
+			logger.error("ServiceEntityOperation could not find requested entity!");
 			throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not find entity: " + myOperation.getEntityName());
 		}
 	}
@@ -51,6 +57,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		this.myOperation = o;
 		this.myEntity = manager.getEntity(myOperation.getEntityName());
 		if ( myEntity == null ) {
+			logger.error("ServiceEntityOperation could not find requested entity!");
 			throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not find entity: " + myOperation.getEntityName());
 		}
 	}
@@ -61,6 +68,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		this.myOperation = o;
 		this.myEntity = manager.getEntity(myOperation.getEntityName());
 		if ( myEntity == null ) {
+			logger.error("ServiceEntityOperation could not find requested entity!");
 			throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not find entity: " + myOperation.getEntityName());
 		}
 	}

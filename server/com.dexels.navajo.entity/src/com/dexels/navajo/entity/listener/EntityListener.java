@@ -32,6 +32,8 @@ import com.dexels.navajo.script.api.LocalClient;
 
 import org.dexels.utils.Base64;
 import org.dexels.utils.Base64.DecodingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class EntityListener extends HttpServlet {
@@ -42,7 +44,8 @@ public class EntityListener extends HttpServlet {
 	private static final long serialVersionUID = -6681359881499760460L;
 	private final static String DEFAULT_OUTPUT_FORMAT = "json";
 	private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json", "xml", "tml"));
-	
+	private final static Logger logger = LoggerFactory.getLogger(EntityListener.class);
+
 	private EntityManager myManager;
 	private LocalClient myClient;
 	private String urlOutput;
@@ -75,12 +78,18 @@ public class EntityListener extends HttpServlet {
 		Navajo result = null;
 		String method = request.getMethod();
 		String path = request.getPathInfo();
-		String uri = request.getRequestURI();
 		
-		if (uri.lastIndexOf('.') > 0) {
+		// Check for a .<format> in the URL - can be in RequestURI or QueryString
+		String dotString = null; 
+		if (request.getRequestURI().contains(".")) {
+			dotString = request.getRequestURI();
+		} else if (request.getQueryString().contains(".")) {
+			dotString = request.getQueryString();
+		}
+		if (dotString != null) {
 			// The output format can be set by adding a trailing .<format> to the URL.
 			// This overrules accept-encoding
-			urlOutput = uri.substring(uri.lastIndexOf('.') +1 );
+			urlOutput = dotString.substring(dotString.lastIndexOf('.') +1 );
 			if (!SUPPORTED_OUTPUT.contains(urlOutput)) {
 				// unsupported format
 				urlOutput = null;
@@ -90,9 +99,7 @@ public class EntityListener extends HttpServlet {
 		// Only end-points are allowed to cache - no servers in between
 		response.setHeader("Cache-Control", "private");
 		response.setHeader("Content-Type", "application/"+output);
-
-		boolean debug = (request.getParameter("debug") != null ? true : false);
-		
+	
 		authenticateRequest(request);
 
 		String entityName = path.substring(1);
@@ -100,24 +107,22 @@ public class EntityListener extends HttpServlet {
 			// Remove .<format> from entityName
 			entityName = entityName.substring(0, entityName.indexOf('.'));
 		}
-		if ( debug ) {
-			System.err.println("method: " + method);
-			System.err.println("path: " + path);
-			System.err.println("entityName: " + entityName);
-		}
-		
-		
+
 		Navajo input = null;
 		String etag = null;
 		
+		logger.info("Incoming entity request: entity={},user={},method={},output={}", entityName, username, method, output);
+		
 		try {
 			if (entityName == "") {
+				logger.error("No entity name found in request. Request URI: {}", request.getRequestURI());
 				throw new EntityException(EntityException.BAD_REQUEST);
 			}
 			
 			Entity e = myManager.getEntity(entityName);
 			if (e == null) {
 				// Requested entity not found
+				logger.error("Requested entity not registred with entityManager!");
 				throw new EntityException(EntityException.ENTITY_NOT_FOUND);
 			}
 
@@ -137,6 +142,7 @@ public class EntityListener extends HttpServlet {
 			}
 			
 			if (input.getMessage(entityMessage.getName()) == null) {
+				logger.error("Entity name not found in input - format incorrect or bad request"); 
 				throw new EntityException(EntityException.BAD_REQUEST);
 
 			}
@@ -146,31 +152,32 @@ public class EntityListener extends HttpServlet {
 				etag = request.getHeader("If-None-Match");
 			}
 
-			if (debug) {
-				System.err.println("Received request:");
-				input.write(System.err);
-			}
-
 			// Create a header from the input
 			Header header = NavajoFactory.getInstance().createHeader(input, "", username, password,-1);
 			input.addHeader(header);
 			input.getMessage(entityMessage.getName()).setEtag(etag);
 			
 			Operation o = myManager.getOperation(entityName, method);
+			logger.debug("Found matching entity operation"); 
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, myClient, o);
 			result = seo.perform(input);
-			
+			logger.debug("Performed entity operation"); 
+
 			if ( result.getMessage(entityMessage.getName() ) != null ) {
 				// Merge with entity template
 				EntityHelper.mergeWithEntityTemplate(result.getMessage(entityMessage.getName() ), entityMessage );
+				logger.debug("Merging output of Operation and Entity"); 
 				if (method.equals("GET")) {
 					response.setHeader("Etag", result.getMessage(entityMessage.getName()).getEtag());
+					logger.debug("Added Etag header"); 
+
 				}
 			}
 		} catch (Exception ex) {
 			result = handleException(ex, request, response);
 		}
 		writeOutput(result, response, output);
+		resetParameters();
 	}
 
 	private void writeOutput(Navajo result, HttpServletResponse response, String output)
@@ -178,10 +185,13 @@ public class EntityListener extends HttpServlet {
 		if (result == null) {
 			throw new ServletException("No output found");
 		}
+		logger.info("Writing entity output");
+
 		if (result.getMessage("errors") != null) {
 			String status = result.getMessage("errors").getProperty("status").toString();
 			if (status.equals("304")) {
 				// No content
+				logger.info("Returning HTTP code 304 - not modified");
 				return;
 			}
 		}
@@ -191,6 +201,7 @@ public class EntityListener extends HttpServlet {
 			try {
 				json.format(result, w);
 			} catch (Exception e) {
+				logger.error("Error in writing entity output in JSON!");
 				throw new ServletException("Error producing output");
 			}
 			w.close();
@@ -215,6 +226,7 @@ public class EntityListener extends HttpServlet {
 		basicAuthentication(request);
 		if (username == null) {
 			// TODO: This is very unsafe
+			logger.warn("No basic auth - attemping username/password parameter");
 			username = request.getParameter("username");
 			password = request.getParameter("password");
 		}
@@ -226,7 +238,6 @@ public class EntityListener extends HttpServlet {
 			StringTokenizer st = new StringTokenizer(authHeader);
 			if (st.hasMoreTokens()) {
 				if (st.nextToken().equalsIgnoreCase("Basic")) {
-
 					String credentials;
 					try {
 						credentials = new String(Base64.decode(st.nextToken()));
@@ -237,10 +248,11 @@ public class EntityListener extends HttpServlet {
 							password = credentials.substring(p + 1).trim();
 
 						} else {
-							System.err.println("Invalid authentication token");
+							logger.error("Invalid authentication token: {}", credentials);
+
 						}
 					} catch (DecodingException e) {
-						// Error in decoding
+						logger.error("DecodingException in attemping to decode http basic authentication header");
 					}
 
 				}
@@ -254,7 +266,8 @@ public class EntityListener extends HttpServlet {
 	private Navajo handleException(Exception ex, HttpServletRequest request,
 			HttpServletResponse response) throws ServletException {
 		Navajo result = null;
-		
+		logger.warn("Exception in handling entity request: {}. Going to try to handle it nicely.", ex);
+
 		result = NavajoFactory.getInstance().createNavajo();
 		Message m = NavajoFactory.getInstance().createMessage(result, "errors");
 		result.addMessage(m);
@@ -303,14 +316,15 @@ public class EntityListener extends HttpServlet {
 				}
 				
 			} catch (MimeTypeParseException e) {
+				logger.warn("MimeTypeParseException in getting mime-types from Accept header - using default output");
 				mimeResult = DEFAULT_OUTPUT_FORMAT;
 			}
 		}
 
 		if (!SUPPORTED_OUTPUT.contains(mimeResult)) {
+			logger.info("No supported output format requested - using default output");
 			mimeResult = DEFAULT_OUTPUT_FORMAT;
 		}
 		return mimeResult;
 	}
-
 }
