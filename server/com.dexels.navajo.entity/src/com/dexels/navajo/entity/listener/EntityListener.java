@@ -21,6 +21,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.document.Operation;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.entity.Entity;
@@ -83,7 +84,7 @@ public class EntityListener extends HttpServlet {
 		String dotString = null; 
 		if (request.getRequestURI().contains(".")) {
 			dotString = request.getRequestURI();
-		} else if (request.getQueryString().contains(".")) {
+		} else if (request.getQueryString() != null && request.getQueryString().contains(".")) {
 			dotString = request.getQueryString();
 		}
 		if (dotString != null) {
@@ -137,10 +138,11 @@ public class EntityListener extends HttpServlet {
 				try {
 					input = json.parse(request.getInputStream());
 				} catch (Exception e1) {
+					logger.error("Error in parsing input JSON");
 					throw new EntityException(EntityException.BAD_REQUEST);
 				}
 			}
-			
+
 			if (input.getMessage(entityMessage.getName()) == null) {
 				logger.error("Entity name not found in input - format incorrect or bad request"); 
 				throw new EntityException(EntityException.BAD_REQUEST);
