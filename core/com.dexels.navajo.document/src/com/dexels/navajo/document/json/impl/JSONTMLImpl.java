@@ -260,7 +260,7 @@ public class JSONTMLImpl implements JSONTML {
 			} else {
 				String value = jp.getText();
 				if ( parent == null ) {
-					System.err.println("Could not find message, creating dummy");
+					System.err.println("JSONTMLImpl: Could not find message, creating dummy");
 					parent = NavajoFactory.getInstance().createMessage(n, (topLevelMessageName != null ? topLevelMessageName : "Request" ) );
 					n.addMessage(parent);
 				}
