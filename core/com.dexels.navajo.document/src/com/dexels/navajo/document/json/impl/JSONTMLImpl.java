@@ -198,11 +198,15 @@ public class JSONTMLImpl implements JSONTML {
 	}
 
 	private void parseProperty(String name, String value, Message p, JsonParser jp) throws Exception {
+		if (name == null) {
+			// Give property the name of the message
+			name = p.getName();
+		}
 		Property prop = NavajoFactory.getInstance().createProperty(p.getRootDoc(), name, Property.STRING_PROPERTY, value, 0, "", "out");
 		p.addProperty(prop);
 		if ( entityTemplate != null ) {
 			Property ep = entityTemplate.getProperty(prop.getFullPropertyName());
-			if ( ep != null ) {
+ 			if ( ep != null ) {
 				if ( ep.getType().equals(Property.SELECTION_PROPERTY)) {
 					Selection s = NavajoFactory.getInstance().createSelection(p.getRootDoc(), value, value, true);
 					prop.setType(ep.getType());
@@ -220,7 +224,14 @@ public class JSONTMLImpl implements JSONTML {
 	private void parseArrayMessageElement(Message arrayMessage, JsonParser jp) throws Exception {
 		Message m = NavajoFactory.getInstance().createMessage(arrayMessage.getRootDoc(), arrayMessage.getName());
 		arrayMessage.addElement(m);
-		parse(arrayMessage.getRootDoc(), m, jp);
+		if (jp.getCurrentToken() == JsonToken.END_OBJECT) {
+			// Array with sub message structure
+			parse(arrayMessage.getRootDoc(), m, jp);
+		} else {
+			String name = jp.getCurrentName();
+			String value = jp.getText();
+			parseProperty(name, value, m, jp);
+		}
 	}
 
 	private void parseArrayMessage(String name, Navajo n, Message parent, JsonParser jp) throws Exception {
@@ -232,6 +243,7 @@ public class JSONTMLImpl implements JSONTML {
 			n.addMessage(m);
 		}
 		while ( jp.nextToken() != JsonToken.END_ARRAY ) {
+			
 			parseArrayMessageElement(m, jp);
 		}
 	}
@@ -247,12 +259,13 @@ public class JSONTMLImpl implements JSONTML {
 	}
 
 	private void parse(Navajo n, Message parent, JsonParser jp) throws Exception {
-
-		while ( jp.nextToken() != JsonToken.END_OBJECT ) {
+		
+		while ( jp.nextToken() != JsonToken.END_OBJECT) {
 			String name = jp.getCurrentName();
 			if ( name != null && jp.getCurrentToken() == JsonToken.FIELD_NAME ) {
 				jp.nextToken();
 			}
+			
 			if ( jp.getCurrentToken() == JsonToken.START_OBJECT ) {
 				parseMessage(name, n, parent, jp);
 			} else if ( jp.getCurrentToken() == JsonToken.START_ARRAY ) {
@@ -260,7 +273,7 @@ public class JSONTMLImpl implements JSONTML {
 			} else {
 				String value = jp.getText();
 				if ( parent == null ) {
-					System.err.println("Could not find message, creating dummy");
+					System.err.println("JSONTMLImpl: Could not find message, creating dummy");
 					parent = NavajoFactory.getInstance().createMessage(n, (topLevelMessageName != null ? topLevelMessageName : "Request" ) );
 					n.addMessage(parent);
 				}

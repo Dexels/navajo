@@ -386,8 +386,8 @@ public class ServiceEntityOperation implements EntityOperation {
 							"Could not perform insert, missing required properties: "
 									+ listToString(missing));
 				}
-				Navajo currentEntity = getCurrentEntity(input);
 				
+				Navajo currentEntity = getCurrentEntity(input);
 				validateEtag(input, inputEntity);
 				
 				// Duplicate entry check.
@@ -437,10 +437,15 @@ public class ServiceEntityOperation implements EntityOperation {
 								+ listToString(invalidProperties));
 			}
 
-			callEntityService(input);
+			Navajo result = callEntityService(input);
 			// After a POST or PUT, return the full new object resulting from the previous operation
-			// effectively this is a GET
-			return getEntity(input); 
+			// effectively this is a GET. However, if this fails (e.g. no GET operation is defined
+			// for this entity), we return the original result
+			try { 
+				return getEntity(input); 
+			} catch (EntityException e) {
+				return result;
+			} 
 		}
 		return null;
 	}
@@ -515,7 +520,18 @@ public class ServiceEntityOperation implements EntityOperation {
 	 * error.
 	 */
 	private Navajo getCurrentEntity(Navajo input) throws EntityException {
-		Operation getop = EntityManager.getInstance().getOperation(myEntity.getName(), Operation.GET);
+		Operation getop  = null;
+		try{ 
+			getop = manager.getOperation(myEntity.getName(), Operation.GET);
+		} catch (EntityException e) {
+			if (e.getCode() == EntityException.OPERATION_NOT_SUPPORTED) {
+				// No GET operation defined - no biggie
+				return null;
+			}
+			// Other exceptions are passed on
+			throw e;
+		}
+		
 		ServiceEntityOperation get = this.cloneServiceEntityOperation(getop);
 		Navajo request = myKey.generateRequestMessage(input);
 		if ( getop.getExtraMessage() != null ) {

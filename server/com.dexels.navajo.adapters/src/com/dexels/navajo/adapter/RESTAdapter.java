@@ -151,7 +151,10 @@ public class RESTAdapter extends NavajoMap {
 		}
 
 		http.setUrl(fullUrl);
+		http.setHeaderKey("Accept");
+		http.setHeaderValue("application/json");
 		http.setMethod(method);
+		
 		if (method == "POST" || method == "PUT") {
 			http.setContent(content);
 			http.setContentType("application/json");
@@ -161,9 +164,8 @@ public class RESTAdapter extends NavajoMap {
 		if (username != null && password != null) {
 			// Use HTTP Basic auth - should only be used over HTTPS!
 			String authString = username + ":" + password;
-			String encoded = Base64.encode(authString.getBytes(Charset.forName("UTF-8")));
-			//!Important! - Get rid of any newline characters erroneously added by the Base64Encoder
-			encoded = encoded.replaceAll("\n", "");
+			byte[] bytes = authString.getBytes(Charset.forName("UTF-8"));
+			String encoded = Base64.encode(bytes, 0, bytes.length, 0, "");
 			http.setHeaderKey("Authorization");
 			http.setHeaderValue("Basic " + encoded);
 			
