@@ -9,7 +9,7 @@ public class UIResolver implements ResourceMapping {
 	
 	
 	public void activate() {
-		resourceMapping.setAlias("/ui");
+		resourceMapping.setAlias("/auth");
 		resourceMapping.setPath("resources");
 
 	}
