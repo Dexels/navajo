@@ -933,7 +933,7 @@ public class TslCompiler {
 				
 				if (extendsMsg.startsWith("navajo://")) {
 					// Add ExtendDependency dependency
-					String entityName = "entity." + extendsMsg.split("navajo://")[1];
+					String entityName = extendsMsg.split("navajo://")[1];
 					deps.add(new ExtendDependency(ExtendDependency.getScriptTimeStamp(entityName),entityName ));
 				}
 				
