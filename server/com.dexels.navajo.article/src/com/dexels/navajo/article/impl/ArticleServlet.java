@@ -3,6 +3,7 @@ package com.dexels.navajo.article.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.Servlet;
@@ -63,7 +64,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		if(clientId==null) {
 			throw new ServletException("Please supply a token (a client id, actually)");
 		}
-		Map<String,String> scopes = context.getScopes(getToken(req));
+//		Map<String,String> scopes = context.getScopes(getToken(req));
 		String pathInfo = req.getPathInfo();
 		String instance = determineInstanceFromRequest(req);
 		logger.info("Instance determined: "+instance);
@@ -72,7 +73,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		}
 		File article = context.resolveArticle(determineArticleFromRequest(req));
 		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, clientId, req.getParameter("username"),article,pathInfo,req.getParameterMap(),instance,scopes);
+			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, clientId, req.getParameter("username"),article,pathInfo,req.getParameterMap(),instance,new HashMap<String,String>());
 			try {
 				runtime.execute(context);
 				resp.setContentType("application/json; charset=utf-8");
@@ -120,11 +121,6 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		return article;
 	}
 
-
-	protected String getToken(HttpServletRequest req) {
-
-		return null;
-	}
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
