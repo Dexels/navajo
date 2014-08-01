@@ -339,41 +339,42 @@ public class TslCompilerComponent implements ScriptCompiler {
 		addProperty("entity.name","String", script, xe);
 		addProperty("service.name","String", fullName, xe);
 
-		XMLElement ref = new CaseSensitiveXMLElement("reference");
-		ref.setAttribute("bind", "setClient");
-		ref.setAttribute("unbind", "clearClient");
-		ref.setAttribute("policy", "dynamic");
-		ref.setAttribute("cardinality", "1..1");
-		ref.setAttribute("interface", "com.dexels.navajo.script.api.LocalClient");
-		ref.setAttribute("name", "ClientInterface");
-		xe.addChild(ref);
+		XMLElement refClient = new CaseSensitiveXMLElement("reference");
+		refClient.setAttribute("bind", "setClient");
+		refClient.setAttribute("unbind", "clearClient");
+		refClient.setAttribute("policy", "dynamic");
+		refClient.setAttribute("cardinality", "1..1");
+		refClient.setAttribute("interface", "com.dexels.navajo.script.api.LocalClient");
+		refClient.setAttribute("name", "ClientInterface");
+		xe.addChild(refClient);
 		
-		ref = new CaseSensitiveXMLElement("reference");
-		ref.setAttribute("bind", "setEntityManager");
-		ref.setAttribute("unbind", "clearEntityManager");
-		ref.setAttribute("policy", "dynamic");
-		ref.setAttribute("cardinality", "1..1");
-		ref.setAttribute("interface", "com.dexels.navajo.entity.EntityManager");
-		ref.setAttribute("name", "EntityManager");
-		xe.addChild(ref);
+		XMLElement refMan = new CaseSensitiveXMLElement("reference");
+		refMan.setAttribute("bind", "setEntityManager");
+		refMan.setAttribute("unbind", "clearEntityManager");
+		refMan.setAttribute("policy", "dynamic");
+		refMan.setAttribute("cardinality", "1..1");
+		refMan.setAttribute("interface", "com.dexels.navajo.entity.EntityManager");
+		refMan.setAttribute("name", "EntityManager");
+		xe.addChild(refMan);
 		
-		ref = new CaseSensitiveXMLElement("reference");
-		ref.setAttribute("cardinality", "1..1");
-		ref.setAttribute("interface", "com.dexels.navajo.script.api.CompiledScriptFactory");
-		ref.setAttribute("name", "CompiledScript");
-		ref.setAttribute("target", "(component.name=" + symbolicName + ")");
-		xe.addChild(ref);
+		XMLElement refScript = new CaseSensitiveXMLElement("reference");
+		refScript.setAttribute("cardinality", "1..1");
+		refScript.setAttribute("interface", "com.dexels.navajo.script.api.CompiledScriptFactory");
+		refScript.setAttribute("name", "CompiledScript");
+		refScript.setAttribute("target", "(component.name=" + symbolicName + ")");
+		xe.addChild(refScript);
 		
-		for (Dependency d : dependencies) {
-				if(d instanceof ExtendDependency) {
-					XMLElement dep = new CaseSensitiveXMLElement("reference");
-					dep.setAttribute("policy", "static");
-					dep.setAttribute("cardinality", "1..1");
-					dep.setAttribute("interface", "com.dexels.navajo.entity.Entity");
-					dep.setAttribute("target", "(entity.name="+d.getId()+")");
-					xe.addChild(dep);
-				}
-				
+		for (int i = 0; i < dependencies.size(); i++) {
+			Dependency d = dependencies.get(i);
+			if (d instanceof ExtendDependency) {
+				XMLElement depref = new CaseSensitiveXMLElement("reference");
+				depref.setAttribute("name", "SuperEntity" + i);
+				depref.setAttribute("policy", "static");
+				depref.setAttribute("cardinality", "1..1");
+				depref.setAttribute("interface", "com.dexels.navajo.entity.Entity");
+				depref.setAttribute("target", "(entity.name=" + d.getId() + ")");
+				xe.addChild(depref);
+			}
 		}
 		
 		for (String resource : dependentResources) {
