@@ -37,7 +37,8 @@ public class TslCompilerComponent implements ScriptCompiler {
 	 * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String)
 	 */
 	@Override
-	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies, String tenant, boolean hasTenantSpecificFile) throws Exception {
+	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies,
+			String tenant1, boolean hasTenantSpecificFile) throws Exception {
 		String packagePath = null;
 		String script = null;
 		if(scriptPath.indexOf('/')>=0) {
@@ -70,7 +71,9 @@ public class TslCompilerComponent implements ScriptCompiler {
 			scriptString = packagePath + "/"+script.replaceAll("_", "|");
 		}
 		String scriptSource = script;
-		compiler.compileToJava(scriptSource, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc, navajoIOConfig,dependencies,tenant,hasTenantSpecificFile);
+		compiler.compileToJava(scriptSource, navajoIOConfig.getScriptPath(),
+				navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc,
+				navajoIOConfig, dependencies, tenant, hasTenantSpecificFile);
 		Set<String> dependentResources = new HashSet<String>();
 		
 		for (Dependency d : dependencies) {
