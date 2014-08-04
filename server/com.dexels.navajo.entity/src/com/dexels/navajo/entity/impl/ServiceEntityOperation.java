@@ -318,11 +318,18 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 		
 		Message inputEntity = input.getMessage(myEntity.getName());
+		
+		
 		if (inputEntity == null) {
 			throw new EntityException(EntityException.BAD_REQUEST, "No valid entity found.");
 		}
 		
-		myKey = myEntity.getKey(inputEntity.getAllProperties());
+		List<Property> props= inputEntity.getAllProperties();
+		for (Message m : inputEntity.getAllMessages()) {
+			props.addAll(m.getAllProperties());
+		}
+		
+		myKey = myEntity.getKey(props);
 		if(myKey==null) {
 			// Check for _id property. If _id is present it is good as a key.  
 			// It's also possible our entity has no keys defined. In that case accept input
