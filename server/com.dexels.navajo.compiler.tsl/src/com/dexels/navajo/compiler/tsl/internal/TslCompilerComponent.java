@@ -357,6 +357,8 @@ public class TslCompilerComponent implements ScriptCompiler {
 		refMan.setAttribute("name", "EntityManager");
 		xe.addChild(refMan);
 		
+		
+		// Entity requires its CompiledScript to be activated to get its message and operations
 		XMLElement refScript = new CaseSensitiveXMLElement("reference");
 		refScript.setAttribute("cardinality", "1..1");
 		refScript.setAttribute("interface", "com.dexels.navajo.script.api.CompiledScriptFactory");
@@ -364,6 +366,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		refScript.setAttribute("target", "(component.name=" + symbolicName + ")");
 		xe.addChild(refScript);
 		
+		// Any super entities must be activated before activating myself
 		for (int i = 0; i < dependencies.size(); i++) {
 			Dependency d = dependencies.get(i);
 			if (d instanceof ExtendDependency) {
@@ -371,6 +374,8 @@ public class TslCompilerComponent implements ScriptCompiler {
 				depref.setAttribute("name", "SuperEntity" + i);
 				depref.setAttribute("policy", "static");
 				depref.setAttribute("cardinality", "1..1");
+				depref.setAttribute("bind", "addSuperEntity");
+				depref.setAttribute("unbind", "clearSuperEntity");
 				depref.setAttribute("interface", "com.dexels.navajo.entity.Entity");
 				depref.setAttribute("target", "(entity.name=" + d.getId() + ")");
 				xe.addChild(depref);
