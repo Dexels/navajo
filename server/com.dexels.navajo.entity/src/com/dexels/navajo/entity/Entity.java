@@ -30,6 +30,9 @@ public class Entity  {
 
 	protected LocalClient myClient;
 
+	public Entity() {
+		
+	}
 	
 	public Entity(Message msg, EntityManager m) {
 		myMessage = msg;

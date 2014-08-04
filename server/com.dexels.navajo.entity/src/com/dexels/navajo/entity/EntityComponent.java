@@ -14,6 +14,9 @@ import com.dexels.navajo.document.Operation;
 
 
 public class EntityComponent extends Entity {
+	public EntityComponent() {
+		
+	}
 
 	public EntityComponent(Message msg, EntityManager m) {
 		super(msg, m);
