@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Arrays;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.activation.MimeType;
@@ -15,13 +15,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.dexels.utils.Base64;
+import org.dexels.utils.Base64.DecodingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.document.Operation;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.entity.Entity;
@@ -30,11 +34,6 @@ import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
 import com.dexels.navajo.entity.util.EntityHelper;
 import com.dexels.navajo.script.api.LocalClient;
-
-import org.dexels.utils.Base64;
-import org.dexels.utils.Base64.DecodingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class EntityListener extends HttpServlet {

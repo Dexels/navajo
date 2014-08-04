@@ -6,11 +6,11 @@ import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
+import com.dexels.navajo.entity.util.EntityHelper;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
-import com.dexels.navajo.entity.util.EntityHelper;
 import com.dexels.navajo.server.ConditionErrorException;
 
 
