@@ -25,11 +25,14 @@ import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.server.NavajoIOConfig;
+import com.dexels.oauth.api.TokenStore;
+import com.dexels.oauth.api.Token;
 
 public abstract class BaseContextImpl implements ArticleContext {
 
 	private final Map<String, ArticleCommand> commands = new HashMap<String, ArticleCommand>();
 	private NavajoIOConfig config;
+	private TokenStore tokenStore;
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseContextImpl.class);
@@ -50,6 +53,14 @@ public abstract class BaseContextImpl implements ArticleContext {
 	public void removeCommand(ArticleCommand command) {
 		commands.remove(command.getName());
 	}
+	
+	public void setTokenStore(TokenStore tokenStore) {
+		this.tokenStore = tokenStore;
+	}
+
+	public void clearTokenStore(TokenStore tokenStore) {
+		this.tokenStore = null;
+	}
 
 	@Override
 	public ArticleCommand getCommand(String name) {
@@ -58,12 +69,15 @@ public abstract class BaseContextImpl implements ArticleContext {
 
 	@Override
 	public Map<String, String> getScopes(String token) {
-		
 		Map<String, String> result = new HashMap<String, String>();
+		Token t = tokenStore.getTokenByString(token);
+		
 		if (token != null) {
-			//
+			result.putAll(t.getUserAttributes());
+			result.put("clientId", t.clientId());
+			result.put("username", t.clientId());
+			
 		} else {
-			result.put("userdata", "bertus");
 		}
 		return result;
 	}

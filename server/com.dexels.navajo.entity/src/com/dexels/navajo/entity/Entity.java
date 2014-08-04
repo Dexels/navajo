@@ -30,13 +30,51 @@ public class Entity  {
 
 	protected LocalClient myClient;
 
+	public Entity() {
+		
+	}
 	
 	public Entity(Message msg, EntityManager m) {
 		myMessage = msg;
 		em = m;
 	}
-	public Entity() {
+	
+
+	/**
+	 * When entity de-activates make sure that sub entities are deactivated.
+	 * 
+	 * @throws Exception
+	 */
+	protected synchronized void deactivate() throws EntityException {
+		for ( Entity sub : subEntities ) {
+			sub.deactivate();
+		}
+		if (!activated) {
+			return;
+		}
+		logger.info("Deactivating entity: {}", this.getName());
+		activated = false;
+		// Clear all superentities since extends may have changed.
+		superEntities.clear();
 	}
+	
+	public synchronized void activate() throws EntityException {
+		logger.info("Activating entity");
+
+		if ( activated ) {
+			logger.info("Re-activate of entity {} - nothing to do", this.getName());
+			return;
+		}
+		// Set activate flag immediately to prevent looping
+		activated = true;
+		findSuperEntities();
+		findKeys();
+		for ( Entity sub : subEntities ) {
+			sub.activate();
+		}
+		logger.info("Entity {} activated", this.getName());
+	}
+	
 	
 	public void setEntityManager(EntityManager em) {
 		this.em = em;
@@ -92,6 +130,7 @@ public class Entity  {
 	}
 	
 	public void addSuperEntity(Entity sup) throws EntityException {
+		logger.info("adding super entity: {}", sup.getName());
 		if ( !containsSuperEntity(sup) ) {
 			superEntities.add(sup);
 			sup.addSubEntity(this);
@@ -107,40 +146,7 @@ public class Entity  {
 		return false;
 	}
 	
-	/**
-	 * When entity de-activates make sure that sub entities are deactivated.
-	 * 
-	 * @throws Exception
-	 */
-	protected synchronized void deactivate() throws EntityException {
-		for ( Entity sub : subEntities ) {
-			sub.deactivate();
-		}
-		if (!activated) {
-			return;
-		}
-		logger.info("Deactivating entity: {}", this.getName());
-		activated = false;
-		// Clear all superentities since extends may have changed.
-		superEntities.clear();
-	}
 	
-	public synchronized void activate() throws EntityException {
-		logger.info("Activating entity");
-
-		if ( activated ) {
-			logger.info("Re-activate of entity {} - nothing to do", this.getName());
-			return;
-		}
-		// Set activate flag immediately to prevent looping
-		activated = true;
-		findSuperEntities();
-		findKeys();
-		for ( Entity sub : subEntities ) {
-			sub.activate();
-		}
-		logger.info("Entity {} activated", this.getName());
-	}
 
 	private Property getExtendedProperty(String ext) throws EntityException {
 		if ( ext.startsWith(NAVAJO_URI) ) {

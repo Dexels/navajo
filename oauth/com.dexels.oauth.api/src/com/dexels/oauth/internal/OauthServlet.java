@@ -2,6 +2,7 @@ package com.dexels.oauth.internal;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -21,10 +22,6 @@ import com.dexels.oauth.api.ScopeValidator;
 import com.dexels.oauth.api.Token;
 import com.dexels.oauth.api.TokenStore;
 import com.dexels.oauth.api.UserAuthenticator;
-import com.dexels.oauth.api.impl.EqualUserAuthenticator;
-import com.dexels.oauth.api.impl.InMemoryClientStore;
-import com.dexels.oauth.api.impl.InMemoryTokenStore;
-import com.dexels.oauth.api.impl.SimpleScopeValidator;
 
 public class OauthServlet extends HttpServlet {
 
@@ -150,6 +147,7 @@ public class OauthServlet extends HttpServlet {
 
 //	http://localhost:8080/oauth?redirect_uri=http://www.aap.nl&client_id=123&scope=aapje,olifantje&state=456
 
+	@SuppressWarnings("unchecked")
 	private void initialAuth(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 //		req.getSession().invalidate();
 		String client_id = req.getParameter("client_id");
@@ -171,9 +169,10 @@ public class OauthServlet extends HttpServlet {
 			throw new ServletException("Only token auth supported for now!");
 		}
 		String username = (String) req.getAttribute("username");
+		Map<String,String> userAttributes = (Map<String, String>) req.getAttribute("userAttributes");
 		if(username==null) {
 			// better to check for token presence & validity
-			resp.sendRedirect("/ui/login.html");
+			resp.sendRedirect("/auth/login.html");
 			return;
 		}
 		String[] authorizedScopes = getRequestedScopes(req);
@@ -181,7 +180,7 @@ public class OauthServlet extends HttpServlet {
 		boolean scopesPresent = verifyScopes(authorizedScopes,requestedScopes);
 		if(scopesPresent) {
 			if(clientStore.verifyRedirectURL(client_id,redirect_uri)) {
-				Token token =  tokenStore.generateToken(client_id,scope,username,redirect_uri);
+				Token token =  tokenStore.generateToken(client_id,scope,username,userAttributes,redirect_uri);
 				String populatedURI = insertTokenToURI(redirect_uri,token.toString());
 				resp.sendRedirect(populatedURI);
 				return;
@@ -193,7 +192,7 @@ public class OauthServlet extends HttpServlet {
 				// todo: redirect
 			}
 		} else {
-			resp.sendRedirect("/ui/authorize.html");
+			resp.sendRedirect("/auth/authorize.html");
 		}
 	}
 
@@ -204,6 +203,7 @@ public class OauthServlet extends HttpServlet {
 
 //	/authorizeendpoint
 	
+	@SuppressWarnings("unchecked")
 	private void authorizeendpoint(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
 		String[] authorizedScopes = req.getParameterValues("scope");
@@ -213,6 +213,7 @@ public class OauthServlet extends HttpServlet {
 		String client_id = (String) req.getSession().getAttribute("client_id");
 
 		String redirect_uri = (String) req.getSession().getAttribute("redirect_uri");
+		Map<String,String> userAttributes = (Map<String, String>) req.getSession().getAttribute("userAttributes");
 
 		String action = req.getParameter("action");
 		
@@ -227,7 +228,7 @@ public class OauthServlet extends HttpServlet {
 			if(clientStore.verifyRedirectURL(client_id,redirect_uri)) {
 				String username = (String) req.getSession().getAttribute("username");
 
-				Token token =  tokenStore.generateToken(client_id,scopes,username,redirect_uri);
+				Token token =  tokenStore.generateToken(client_id,scopes,username,userAttributes,redirect_uri);
 				String populatedURI = insertTokenToURI(redirect_uri,"token="+token.toString());
 				System.err.println("Redirecting to: "+populatedURI);
 
@@ -239,11 +240,11 @@ public class OauthServlet extends HttpServlet {
 				req.getSession().setAttribute("errorheader","Authenticatie probleem");
 				req.getSession().setAttribute("error","Redirect URL ongeldig");
 				// todo: redirect
-				resp.sendRedirect("/ui/error.html");
+				resp.sendRedirect("/auth/error.html");
 
 			}
 		} else {
-			resp.sendRedirect("/ui/authorize.html");
+			resp.sendRedirect("/auth/authorize.html");
 			return;
 		}
 		// boolean scopesPresent = verifyScopes(requestedScopes,providedScopes);
@@ -351,12 +352,12 @@ public class OauthServlet extends HttpServlet {
 		String client_id = (String) req.getSession().getAttribute("client_id");
 		String client_secret = (String) req.getSession().getAttribute("client_secret");
 		String redirect_uri = (String) req.getSession().getAttribute("redirect_uri");
-		boolean succeeded = userAuthenticator.authenticateUser(username, password,client_id);
-		if(!succeeded) {
+		Map<String,String> userAttributes = userAuthenticator.authenticateUser(username, password,client_id);
+		if(userAttributes == null) {
 //			req.getSession().invalidate();
 			req.getSession().setAttribute("error", "Username incorrect");
 			req.getSession().setAttribute("errorheader", "Authentication problem");
-			resp.sendRedirect("/ui/login.html");
+			resp.sendRedirect("/auth/login.html");
 			return;
 		} else {
 			req.getSession().setAttribute("error", null);
@@ -364,13 +365,14 @@ public class OauthServlet extends HttpServlet {
 		}
 		
 		req.getSession().setAttribute("username", username);
+		req.getSession().setAttribute("userAttributes", userAttributes);
 
 		String[] scopes = getRequestedScopes(req);
 		String[] authorizedScopes = (String[])req.getSession().getAttribute("authorizedScopes");
 		boolean scopesPresent = verifyScopes(authorizedScopes,scopes);
 		if(scopesPresent) {
 			if(clientStore.verifyRedirectURL(client_id,redirect_uri)) {
-				Token token =  tokenStore.generateToken(client_id,scopes,username,redirect_uri);
+				Token token =  tokenStore.generateToken(client_id,scopes,username,userAttributes,redirect_uri);
 				String populatedURI = insertTokenToURI(redirect_uri,token.toString());
 				resp.sendRedirect(populatedURI);
 				return;
@@ -382,7 +384,7 @@ public class OauthServlet extends HttpServlet {
 				// todo: redirect
 			}
 		} else {
-			resp.sendRedirect("/ui/authorize.html");
+			resp.sendRedirect("/auth/authorize.html");
 			return;
 		}
 	}

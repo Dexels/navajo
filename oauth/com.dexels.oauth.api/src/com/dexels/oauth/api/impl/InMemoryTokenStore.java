@@ -12,8 +12,8 @@ public class InMemoryTokenStore implements TokenStore {
 	
 	@Override
 	public Token generateToken(String client_id, String[] scopes,
-			String username, String redirect_uri) {
-		SimpleToken t = new SimpleToken(client_id,scopes,username,redirect_uri);
+			String username, Map<String,String> userAttributes, String redirect_uri) {
+		SimpleToken t = new SimpleToken(client_id,scopes,username,userAttributes, redirect_uri);
 		tokenMap.put(t.toString(), t);
 		return t;
 	}

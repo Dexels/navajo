@@ -38,13 +38,14 @@ public class OAuthArticleServlet extends ArticleServlet {
 			throw new ServletException("Please supply a token");
 		}
 		Token t = tokenStore.getTokenByString(token);
+		//TODO null check
 		String clientId = t.clientId();
-		
+
 		String username = t.getUsername();
 		Map<String,String> scopes =  getScopes(t); // context.getScopes(getToken(req));
 		String pathInfo = req.getPathInfo();
 		String instance = determineInstanceFromRequest(req);
-		logger.info("Instance determined: "+instance);
+		logger.info("Instance determined: "+instance); 
 		if(pathInfo==null) {
 			throw new ServletException("No article found, please specify after article");
 		}
@@ -71,6 +72,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 		Map<String,String> result = new HashMap<String, String>();
 		result.put("username", t.getUsername());
 		result.put("clientId", t.clientId());
+		result.putAll(t.getUserAttributes());
 		Set<String> scopes = t.scopes();
 		for (String s : scopes) {
 			result.put(s, "true");

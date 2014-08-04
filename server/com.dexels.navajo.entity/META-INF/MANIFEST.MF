@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Entity model implementation
 Bundle-SymbolicName: com.dexels.navajo.entity
-Bundle-Version: 1.1.21.qualifier
+Bundle-Version: 1.1.27.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Navajo-Extension: com/dexels/navajo/entity/adapters/adapters.xml
@@ -32,7 +32,6 @@ Import-Package: com.dexels.navajo.adapter,
  org.junit;version="4.0.0";resolution:=optional,
  org.junit.runners;version="4.0.0";resolution:=optional,
  org.osgi.framework;version="1.6.0",
- org.osgi.service.component;version="1.2.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/*.xml
 Export-Package: com.dexels.navajo.entity,com.dexels.navajo.entity.adap

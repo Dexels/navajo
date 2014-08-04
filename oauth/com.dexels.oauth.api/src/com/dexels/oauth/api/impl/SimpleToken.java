@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.dexels.oauth.api.Token;
@@ -11,20 +12,22 @@ import com.dexels.oauth.api.Token;
 public class SimpleToken implements Token {
 
 	//(in sec:)
-	private static final int TIMEOUT = 30;
+	private static final int TIMEOUT = 1000;
 	private final String client_id;
 	private final Set<String> scopes = new HashSet<String>();
 	private final String username;
 	private final String token;
-
+	private final Map<String,String> userAttributes;
 	private final long expires = System.currentTimeMillis() + 1000 * TIMEOUT;
-	public SimpleToken(String client_id, String[] scopes, String username,
+
+	public SimpleToken(String client_id, String[] scopes, String username, Map<String,String> userAttributes,
 			String redirect_uri) {
 		this.client_id = client_id;
 		for (String s : scopes) {
 			this.scopes.add(s);
 		}
 //		this.scopes = scopes;
+		this.userAttributes = userAttributes;
 		this.username = username;
 		this.token = generateRandom();
 	}
@@ -47,6 +50,11 @@ public class SimpleToken implements Token {
 	@Override
 	public String getUsername() {
 		return username;
+	}
+	
+	@Override
+	public Map<String,String> getUserAttributes() {
+		return userAttributes;
 	}
 	
 	private String generateRandom() {

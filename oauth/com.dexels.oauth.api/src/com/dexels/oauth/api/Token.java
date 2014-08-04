@@ -1,5 +1,6 @@
 package com.dexels.oauth.api;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface Token {
@@ -9,4 +10,5 @@ public interface Token {
 	public String toString();
 	public String getUsername();
 	public int getExpirySeconds();
+	public Map<String, String> getUserAttributes();
 }
