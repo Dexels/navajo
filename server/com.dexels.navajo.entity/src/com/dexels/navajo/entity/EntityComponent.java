@@ -4,8 +4,6 @@ import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
 
-import org.osgi.service.component.ComponentException;
-
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -25,40 +23,37 @@ public class EntityComponent extends Entity {
 	private String serviceName;
 	
 
-	public void activateComponent(Map<String, Object> parameters) throws ComponentException {
+	public void activateComponent(Map<String, Object> parameters) throws Exception {
 		serviceName = (String) parameters.get("service.name");
 		Navajo in = NavajoFactory.getInstance().createNavajo();
 		Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
 		in.addHeader(h);
-		try {
-			Navajo result = myClient.call(in);
-			if (result.getMessage((String) parameters.get("entity.name")) == null) {
-				throw new Exception("unable to find entity in provided script!");
-			}
 
-			Message l = result.getAllMessages().iterator().next();
-			setMessage(l);
+		Navajo result = myClient.call(in);
+		if (result.getMessage((String) parameters.get("entity.name")) == null) {
+			throw new Exception("unable to find entity in provided script!");
+		}
 
-			em.addEntity(this);
+		Message l = result.getAllMessages().iterator().next();
+		setMessage(l);
 
-			// Add HEAD operation.
-			Operation head = new OperationComponent();
-			head.setEntityName(getName());
-			head.setMethod("HEAD");
-			if (em == null) {
-				return;
+		em.addEntity(this);
+
+		// Add HEAD operation.
+		Operation head = new OperationComponent();
+		head.setEntityName(getName());
+		head.setMethod("HEAD");
+		if (em == null) {
+			return;
+		}
+		em.addOperation(head);
+		// Add operations defined in entity.
+		List<Operation> allOps = result.getAllOperations();
+		for (Operation o : allOps) {
+			if (o.getEntityName() == null || o.getEntityName().equals("")) {
+				o.setEntityName(getName());
 			}
-			em.addOperation(head);
-			// Add operations defined in entity.
-			List<Operation> allOps = result.getAllOperations();
-			for (Operation o : allOps) {
-				if (o.getEntityName() == null || o.getEntityName().equals("")) {
-					o.setEntityName(getName());
-				}
-				em.addOperation(o);
-			}
-		} catch (Exception e) {
-			throw new ComponentException(e);
+			em.addOperation(o);
 		}
 	}
 
