@@ -222,9 +222,7 @@ public class TestEntity {
 		
 		System.err.println("=================================================================================");
 		Entity a = manager.getEntity("Activity");
-		a.activate();
 		Entity m = manager.getEntity("MyEntity");
-		m.activate();
 		Assert.assertEquals(1, m.getSuperEntities().size());
 		
 		//  Create new Activity Message
