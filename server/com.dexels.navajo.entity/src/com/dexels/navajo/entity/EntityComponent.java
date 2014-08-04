@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.osgi.service.component.ComponentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -16,13 +18,15 @@ import com.dexels.navajo.document.Operation;
 public class EntityComponent extends Entity {
 
 	private String serviceName;
-	
+	private final static Logger logger = LoggerFactory.getLogger(EntityComponent.class);
+
 	public EntityComponent() {
 		super();
 	}
 
 	public void activateComponent(Map<String, Object> parameters) throws ComponentException {
 		serviceName = (String) parameters.get("service.name");
+		logger.info("activating EntityComponent {}", parameters.get("entity.name"));
 		Navajo in = NavajoFactory.getInstance().createNavajo();
 		Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
 		in.addHeader(h);
@@ -31,6 +35,7 @@ public class EntityComponent extends Entity {
 			if (result.getMessage((String) parameters.get("entity.name")) == null) {
 				throw new Exception("unable to find entity in provided script!");
 			}
+			logger.debug("Got navajo result of {}", serviceName);
 
 			Message l = result.getAllMessages().iterator().next();
 			setMessage(l);
@@ -56,6 +61,8 @@ public class EntityComponent extends Entity {
 		} catch (Exception e) {
 			throw new ComponentException(e);
 		}
+		logger.info("EntityComponent activated {}", parameters.get("entity.name"));
+
 	}
 
 	public void deactivateComponent() throws Exception {

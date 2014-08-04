@@ -55,10 +55,11 @@ public interface BundleCreator {
 	/**
 	 * Tries to resolve a compiledscript. Returns null if not found.
 	 * @param rpcName
+	 * @param tenantQualified TODO
 	 * @return Null if not found
 	 * @throws ClassNotFoundException if something weird happened
 	 */
-	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant,String extension) throws ClassNotFoundException;
+	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant,String extension, boolean tenantQualified) throws ClassNotFoundException;
 
 	/**
 	 * Same as getCompiledScript, only will try to install (and compile if needed) bundle if it isn't there.

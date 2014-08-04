@@ -3,7 +3,11 @@ package com.dexels.navajo.entity;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
@@ -17,6 +21,8 @@ public class Entity  {
 	private Set<Key> myKeys = new HashSet<Key>();
 	protected EntityManager em = null;
 	private boolean activated = false;
+	private final static Logger logger = LoggerFactory.getLogger(Entity.class);
+
 
 	// Keep track of entities that are derived from this entity.
 	private Set<Entity> subEntities = new HashSet<Entity>();
@@ -110,14 +116,20 @@ public class Entity  {
 		for ( Entity sub : subEntities ) {
 			sub.deactivate();
 		}
+		if (!activated) {
+			return;
+		}
+		logger.info("Deactivating entity: {}", this.getName());
 		activated = false;
 		// Clear all superentities since extends may have changed.
 		superEntities.clear();
 	}
 	
 	public synchronized void activate() throws EntityException {
-		
+		logger.info("Activating entity");
+
 		if ( activated ) {
+			logger.info("Re-activate of entity {} - nothing to do", this.getName());
 			return;
 		}
 		// Set activate flag immediately to prevent looping
@@ -127,6 +139,7 @@ public class Entity  {
 		for ( Entity sub : subEntities ) {
 			sub.activate();
 		}
+		logger.info("Entity {} activated", this.getName());
 	}
 
 	private Property getExtendedProperty(String ext) throws EntityException {
@@ -162,10 +175,14 @@ public class Entity  {
 	
 	private void processExtendedEntity(Message m, String extendedEntity) throws EntityException {
 		Entity superEntity = null;
+		logger.info("Processing super entity {}", extendedEntity);
+
 		if ((superEntity = em.getEntity(extendedEntity) ) == null) {
+			logger.error("Super entity {} not known with EntityManager", extendedEntity);
 			throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE,
 					"Could not find super entity: " + extendedEntity + " for entity: " + getName());
 		}
+		
 		// Copy properties/messages from superEntity.
 		myMessage.merge(superEntity.getMessage().copy(myMessage.getRootDoc()));
 		// Check extended properties.
@@ -184,10 +201,20 @@ public class Entity  {
 					processExtendedEntity(myMessage, superEntity);
 				}
 			} else if (!"".equals(myMessage.getExtends()) ){
+				logger.error("Invalid extend message: {}", myMessage.getExtends());
 				throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE, "Extension type not supported: " + myMessage.getExtends());
 			}
 		}
 	}
+	
+	public void addSuperEntity(Entity e, Map<String,Object> settings) {
+		logger.info("adding super entity: {}", e.getName());
+	}
+	
+	public void clearSuperEntity(Entity e, Map<String,Object> settings) {
+		logger.info("removing super entity: {}", e.getName());
+	}
+	
 
 	private void findKeys() {
 		
@@ -220,7 +247,8 @@ public class Entity  {
 
 	public String getName() {
 		if(myMessage==null) {
-			return "bullshit";
+			logger.warn("Requested entity name but I have no message!");
+			return "!invalid!";
 		}
 		return myMessage.getName();
 	}

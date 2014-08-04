@@ -2664,10 +2664,11 @@ public class TslCompiler {
 	 * @param scriptPath
 	 * @param n
 	 * @param parent
+	 * @param deps TODO
 	 * @throws Exception
 	 */
 	private final void includeNode(String scriptPath, Node n, Document parent,
-			String tenant) throws Exception {
+			String tenant, List<Dependency> deps) throws Exception {
 
 		included++;
 
@@ -2707,6 +2708,9 @@ public class TslCompiler {
 				"dependentObjects.add( new IncludeDependency( new Long(\""
 						+ IncludeDependency.getScriptTimeStamp(fileName)
 						+ "\"), \"" + script + "\"));\n", "INCLUDE" + script);
+		deps.add(new IncludeDependency(IncludeDependency.getScriptTimeStamp(fileName), script , fileName));
+
+		
 
 		if (includeDoc.getElementsByTagName("tsl").item(0) == null) { // Maybe
 																		// it is
@@ -2761,7 +2765,7 @@ public class TslCompiler {
 
 		if (n.getNodeName().equals("include")) {
 			includeNode(scriptPath, n, n.getParentNode().getOwnerDocument(),
-					tenant);
+					tenant, deps);
 		} else if (n.getNodeName().equals("map")) {
 			result.append(printIdent(ident)
 					+ "{ // Starting new mappable object context. \n");
@@ -3135,7 +3139,7 @@ public class TslCompiler {
 			for (int i = 0; i < includeArray.length; i++) {
 				// System.err.println("ABOUT TO RESOLVE INCLUDE: " +
 				// includeArray[i]);
-				includeNode(scriptPath, includeArray[i], tslDoc, tenant);
+				includeNode(scriptPath, includeArray[i], tslDoc, tenant, deps);
 			}
 
 			// Generate dump request Navajo

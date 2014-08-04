@@ -114,7 +114,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			throw new IllegalAccessError("SCript extension did not start with a dot!");
 		}
 		String script = scriptName.replaceAll("\\.", "/");
-		final String tenant = tenantFromScriptPath(scriptName);
+		final String scriptTenant = tenantFromScriptPath(scriptName);
 //		final String rpcName = rpcNameFromScriptPath(scriptName);
 		
 		File scriptFolder = new File(navajoIOConfig.getScriptPath());
@@ -128,8 +128,8 @@ public class BundleCreatorComponent implements BundleCreator {
 			compileAllIn(f, compilationDate, failures, success, skipped, force,
 					keepIntermediate,scriptExtension);
 		} else {
-			File scriptFile = navajoIOConfig.getApplicableScriptFile(script, tenant,scriptExtension);
-			boolean hasTenantSpecificFile = navajoIOConfig.hasTenantScriptFile(script, tenant,scriptExtension);
+			File scriptFile = navajoIOConfig.getApplicableScriptFile(script, scriptTenant,scriptExtension);
+			boolean hasTenantSpecificFile = navajoIOConfig.hasTenantScriptFile(script, scriptTenant,scriptExtension);
 //			File scriptFile = new File(scriptFolder, script + "."
 //					+ scriptExtension);
 			if (!scriptFile.exists()) {
@@ -138,18 +138,17 @@ public class BundleCreatorComponent implements BundleCreator {
 				return;
 			}
 			Date compiled = getCompiledModificationDate(scriptName,scriptExtension);
-			Date modified = getScriptModificationDate(script,tenant,scriptExtension);
+			Date modified = getScriptModificationDate(script,scriptTenant,scriptExtension);
 			if (!force && compiled != null && compiled.after(modified)) {
 				// logger.debug("Skipping up-to-date script: "+scriptFile.getAbsolutePath());
 				skipped.add(script);
 			} else {
 				try {
 					List<Dependency> dependencies = new ArrayList<Dependency>();
-					scriptCompiler.compileTsl(script, formatCompilationDate,
-					dependencies, tenant,hasTenantSpecificFile);
+					scriptCompiler.compileTsl(script, formatCompilationDate, dependencies, scriptTenant,hasTenantSpecificFile);
 					javaCompiler.compileJava(script);
 					javaCompiler.compileJava(script + "Factory");
-					createBundleJar(script, tenant,keepIntermediate,hasTenantSpecificFile,scriptExtension);
+					createBundleJar(script, scriptTenant,keepIntermediate,hasTenantSpecificFile,scriptExtension);
 					success.add(script);
 				} catch (SkipCompilationException e) {
 					logger.debug("Script fragment: {} ignored.",script);
@@ -598,7 +597,7 @@ public class BundleCreatorComponent implements BundleCreator {
 				throw new IllegalArgumentException("rpcName should not have a tenant suffix: "+rpcName+" scriptName: "+scriptName);
 			}
 		}
-		CompiledScriptInterface sc = getCompiledScript(rpcName,tenant,extension);
+		CompiledScriptInterface sc = getCompiledScript(rpcName, tenant, extension, tenantQualified);
 
 		boolean forceReinstall = false;
 		if (sc != null) {
@@ -633,7 +632,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 		logger.debug("On demand installation finished, waiting for service...");
 //		CompiledScript cs = waitForService(rpcName,tenant);
-		return getCompiledScript(rpcName, tenant,extension);
+		return getCompiledScript(rpcName, tenant,extension, tenantQualified);
 
 //	/	return cs;
 		//
@@ -648,18 +647,17 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant,String extension)
+	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant, String extension, boolean tenantQualified)
 			throws ClassNotFoundException {
 		String scriptName = rpcName.replaceAll("/", ".");
 		String filter = null;
-//		boolean tenantQualified;
-		
-		if(navajoIOConfig.hasTenantScriptFile(rpcName, tenant,extension)) {
-//			tenantQualified = true;
+
+		if(tenantQualified) {
 			filter = "(&(navajo.scriptName=" + scriptName + ")(navajo.tenant="+tenant+"))";
 		} else {
-//			tenantQualified = false;
-			filter = "(&(navajo.scriptName=" + scriptName + ")(!(navajo.tenant=*)))";
+			// Not tentantQualified, but script might include tenant-specific files. Therefore
+			// prefer tenant-specific file (using service ranking)
+			filter = "(| ( & (navajo.scriptName=" + scriptName + ") (navajo.tenant="+tenant+")) (navajo.scriptName=" + scriptName + ")  )";
 		}
 			
 		
