@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.DirectOutputThrowable;
+import com.dexels.oauth.api.ClientRegistration;
+import com.dexels.oauth.api.ClientStore;
 import com.dexels.oauth.api.Token;
 import com.dexels.oauth.api.TokenStore;
 
@@ -26,6 +28,8 @@ public class OAuthArticleServlet extends ArticleServlet {
 	private static final long serialVersionUID = 1199676363102046960L;
 
 	private TokenStore tokenStore;
+
+	private ClientStore clientStore;
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(OAuthArticleServlet.class);
@@ -40,7 +44,8 @@ public class OAuthArticleServlet extends ArticleServlet {
 		Token t = tokenStore.getTokenByString(token);
 		//TODO null check
 		String clientId = t.clientId();
-
+		
+		ClientRegistration cr = clientStore.getClient(clientId);
 		String username = t.getUsername();
 		Map<String,String> scopes =  getScopes(t); // context.getScopes(getToken(req));
 		String pathInfo = req.getPathInfo();
@@ -49,10 +54,13 @@ public class OAuthArticleServlet extends ArticleServlet {
 		if(pathInfo==null) {
 			throw new ServletException("No article found, please specify after article");
 		}
+		logger.info("Scopes resolved: "+scopes);
 		File article = context.resolveArticle(determineArticleFromRequest(req));
 		if(article.exists()) {
 			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, clientId,username, article,pathInfo,req.getParameterMap(),instance,scopes);
 			try {
+				runtime.setUsername(cr.getUsername());
+				runtime.setPassword(cr.getAccessToken());
 				runtime.execute(context);
 				resp.setContentType("application/json; charset=utf-8");
 			} catch (ArticleException e) {
@@ -86,6 +94,15 @@ public class OAuthArticleServlet extends ArticleServlet {
 
 	public void clearTokenStore(TokenStore tokenStore) {
 		this.tokenStore = null;
+	}
+
+
+	public void setClientStore(ClientStore clientStore) {
+		this.clientStore = clientStore;
+	}
+
+	public void clearClientStore(ClientStore clientStore) {
+		this.clientStore = null;
 	}
 
 	

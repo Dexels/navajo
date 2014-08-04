@@ -33,45 +33,7 @@ public class OauthServlet extends HttpServlet {
 	private ScopeValidator scopeValidator;
 	
 	public void activate() {
-//		this.userAuthenticator = new EqualUserAuthenticator();
-//		this.tokenStore = new InMemoryTokenStore();
-//		this.scopeValidator = new SimpleScopeValidator();
-//		this.clientStore = new InMemoryClientStore();
-		final String clientId = "5CO5fUgfoGOQMus628uG/MKRkcdu6aIZS6EUSwLaUbkdLVxzaMGYTQg5UJQDhF5dnizrZNEy5KYHMcVb2kzWjLW8V3CprGk5qZA0CYvyw1Q=";
-		this.clientStore.registerClient(clientId, new ClientRegistration() {
-			
-			@Override
-			public String getRedirectUriPrefix() {
-				return "http://localhost:8080/data/KNVB/wedstrijd-accommodatie";
-			}
-			
-			@Override
-			public String getClientId() {
-				return clientId;
-			}
-			
-			@Override
-			public String getClientDescription() {
-				return "Club: BBCY45I";
-			}
-		});
-		this.clientStore.registerClient("123", new ClientRegistration() {
-			
-			@Override
-			public String getRedirectUriPrefix() {
-				return "http://localhost";
-			}
-			
-			@Override
-			public String getClientId() {
-				return "123";
-			}
 
-			@Override
-			public String getClientDescription() {
-				return "De Apenheul";
-			}
-		});
 		
 	}
 	
