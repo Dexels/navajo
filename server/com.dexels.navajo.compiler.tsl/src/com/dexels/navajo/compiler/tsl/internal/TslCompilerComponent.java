@@ -20,6 +20,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;
+import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.script.api.CompiledScriptFactory;
 import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
@@ -96,10 +97,10 @@ public class TslCompilerComponent implements ScriptCompiler {
 				}
 			}
 		}
-		generateFactoryClass(script, packagePath,dependentResources);
+		generateFactoryClass(script, packagePath, dependentResources);
 
-		generateManifest(scriptString,"1.0.0",packagePath, script,packages,compileDate);
-		generateDs(packagePath, script,dependencies,dependentResources);
+		generateManifest(scriptString, "1.0.0", packagePath, script, packages, compileDate);
+		generateDs(packagePath, script, dependencies, dependentResources);
 		if (packagePath.equals("entity")) {
 			generateEntityDs(packagePath, script,dependencies, dependentResources);
 		}
@@ -240,22 +241,15 @@ public class TslCompilerComponent implements ScriptCompiler {
 		} else {
 			javaPackagePath = packagePath.replaceAll("/", ".");
 		}
-//		String symbolicName = null;
-//		String tenant = null;
-		
-//		boolean hasTenantSpecificFile = navajoIOConfig.hasTenantScriptFile(script, tenant,scriptExtension);
 
 		String tenant = tenantFromScriptPath(fullName);
+		if (tenant == null) {
+			tenant = getTentantSpecificDependency(dependencies);
+		}
 		String symbolicName = rpcNameFromScriptPath(fullName).replaceAll("/", ".");
 //		symbolicName = fullName.replaceAll("/", ".");
-		boolean hasTenantSpecificFile = false;
-		hasTenantSpecificFile = tenant !=null;		
-//		if(symbolicName.indexOf("_")!=-1) {
-//			final String[] split = symbolicName.split("_");
-//			symbolicName = split[0];
-//			tenant = split[1];
-//			hasTenantSpecificFile = true;
-//		}
+		boolean hasTenantSpecificFile = tenant !=null;		
+
 
 		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
 		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
@@ -308,6 +302,18 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.close();
 	}
 	
+	private String getTentantSpecificDependency(List<Dependency> dependencies) {
+		for (Dependency d : dependencies) {
+			if (d instanceof IncludeDependency) {
+				IncludeDependency incDep = (IncludeDependency) d;
+				if (incDep.isTentantSpecificInclude()) {
+					return incDep.getTentant();
+				}
+			}
+		}
+		return null;
+	}
+
 	private void generateEntityDs(String packagePath, String script,List<Dependency> dependencies, Set<String> dependentResources) throws IOException { 
 		String fullName;
 		if (packagePath.equals("")) {
@@ -357,8 +363,6 @@ public class TslCompilerComponent implements ScriptCompiler {
 		refMan.setAttribute("name", "EntityManager");
 		xe.addChild(refMan);
 		
-		
-		// Entity requires its CompiledScript to be activated to get its message and operations
 		XMLElement refScript = new CaseSensitiveXMLElement("reference");
 		refScript.setAttribute("cardinality", "1..1");
 		refScript.setAttribute("interface", "com.dexels.navajo.script.api.CompiledScriptFactory");
@@ -366,7 +370,6 @@ public class TslCompilerComponent implements ScriptCompiler {
 		refScript.setAttribute("target", "(component.name=" + symbolicName + ")");
 		xe.addChild(refScript);
 		
-		// Any super entities must be activated before activating myself
 		for (int i = 0; i < dependencies.size(); i++) {
 			Dependency d = dependencies.get(i);
 			if (d instanceof ExtendDependency) {
@@ -374,8 +377,6 @@ public class TslCompilerComponent implements ScriptCompiler {
 				depref.setAttribute("name", "SuperEntity" + i);
 				depref.setAttribute("policy", "static");
 				depref.setAttribute("cardinality", "1..1");
-				depref.setAttribute("bind", "addSuperEntity");
-				depref.setAttribute("unbind", "clearSuperEntity");
 				depref.setAttribute("interface", "com.dexels.navajo.entity.Entity");
 				depref.setAttribute("target", "(entity.name=" + d.getId() + ")");
 				xe.addChild(depref);
