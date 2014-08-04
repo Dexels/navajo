@@ -15,11 +15,12 @@ import com.dexels.navajo.document.Operation;
 
 public class EntityComponent extends Entity {
 
+	public EntityComponent(Message msg, EntityManager m) {
+		super(msg, m);
+	}
+
 	private String serviceName;
 	
-	public EntityComponent() {
-		super();
-	}
 
 	public void activateComponent(Map<String, Object> parameters) throws ComponentException {
 		serviceName = (String) parameters.get("service.name");
@@ -75,3 +76,4 @@ public class EntityComponent extends Entity {
 		
 	}
 }
+
