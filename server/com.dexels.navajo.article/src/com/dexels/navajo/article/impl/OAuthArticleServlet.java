@@ -38,6 +38,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 			throw new ServletException("Please supply a token");
 		}
 		Token t = tokenStore.getTokenByString(token);
+		//TODO null check
 		String clientId = t.clientId();
 
 		String username = t.getUsername();

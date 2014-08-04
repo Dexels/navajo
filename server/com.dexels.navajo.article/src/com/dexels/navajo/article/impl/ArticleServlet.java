@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -67,7 +66,6 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 //		Map<String,String> scopes = context.getScopes(getToken(req));
 		String pathInfo = req.getPathInfo();
 		String instance = determineInstanceFromRequest(req);
-		logger.info("Instance determined: "+instance);
 		if(pathInfo==null) {
 			throw new ServletException("No article found, please specify after article");
 		}
