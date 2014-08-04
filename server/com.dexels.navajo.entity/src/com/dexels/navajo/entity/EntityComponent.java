@@ -63,6 +63,7 @@ public class EntityComponent extends Entity {
 	}
 
 	public void deactivateComponent() throws Exception {
+		em.removeEntity(this);
 		deactivate();
 	}
 	
