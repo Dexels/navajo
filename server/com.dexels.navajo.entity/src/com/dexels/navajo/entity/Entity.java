@@ -226,7 +226,12 @@ public class Entity  {
 		
 		myKeys.clear();
 		HashMap<String,Key> foundKeys = new HashMap<String,Key>();
+		
 		List<Property> allProps = myMessage.getAllProperties();
+		for (Message m : myMessage.getAllMessages()) {
+			List<Property> newProps = m.getAllProperties();
+			allProps.addAll(newProps);
+		}
 		int keySequence = 0;
 		
 		for ( Property p : allProps ) {
