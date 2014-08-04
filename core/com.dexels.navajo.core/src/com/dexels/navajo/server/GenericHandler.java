@@ -589,12 +589,12 @@ public class GenericHandler extends ServiceHandler {
 			return null;
 		}
 		
-		final String tenant = "KNVB";
-//		if (access.getInstance()==null) {
-//			tenant = tenantConfig.getInstanceGroup();
-//		} else {
-//			tenant = access.getInstance();
-//		}
+		final String tenant;
+		if (access.getInstance()==null) {
+			tenant = tenantConfig.getInstanceGroup();
+		} else {
+			tenant = access.getInstance();
+		}
 		
 		boolean hasTenantScriptFile = tenantConfig.hasTenantScriptFile(rpcName,tenant,extension);
 		String scriptName = hasTenantScriptFile ? rpcName + "_" + tenant : rpcName;
