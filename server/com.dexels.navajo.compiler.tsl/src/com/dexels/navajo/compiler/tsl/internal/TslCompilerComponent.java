@@ -38,7 +38,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	 */
 	@Override
 	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies,
-			String tenant1, boolean hasTenantSpecificFile) throws Exception {
+			String tenant, boolean hasTenantSpecificFile) throws Exception {
 		String packagePath = null;
 		String script = null;
 		if(scriptPath.indexOf('/')>=0) {
