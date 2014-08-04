@@ -207,7 +207,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 	}
 
 	protected void createWindowListener(final JInternalFrame d) {
-		// d.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		d.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		d.addInternalFrameListener(new InternalFrameAdapter() {
 
 			@Override
@@ -499,7 +499,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 		if (rootObject == null) {
 			logger.debug("Null root. Bad, bad, bad.");
 			myDialog = ((SwingTipiContext) myContext).createDialog(this, title);
-			// myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+			myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		} else {
 			if (rootObject instanceof RootPaneContainer) {
 				r = (RootPaneContainer) rootObject;
@@ -508,7 +508,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 					// myDialog = new TipiSwingDialog((JFrame) r,this);
 					myDialog = ((SwingTipiContext) myContext).createDialog(
 							this, title);
-					// myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+					myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 					// myDialog.setUndecorated(true);
 					myRootPaneContainer = myDialog;
 				} else {
@@ -521,7 +521,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 
 						// TODO All use the dialog factory in the
 						// SwingTipiContext
-						// myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+						myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 						myOffset = jap.getLocationOnScreen();
 						myDialog.setLocation(jap.getLocationOnScreen());
 					} else if (rootObject instanceof JInternalFrame) {
@@ -529,7 +529,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 								(JFrame) ((JInternalFrame) rootObject)
 										.getTopLevelAncestor(),
 								this);
-						// myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+						myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 						myRootPaneContainer = myDialog;
 					}
 				}
@@ -538,7 +538,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 						+ rootObject.getClass());
 				myDialog = ((SwingTipiContext) myContext).createDialog(this,
 						title);
-				// myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+				myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			}
 		}
 		// logger.debug("Dialog class: "+myDialog);
