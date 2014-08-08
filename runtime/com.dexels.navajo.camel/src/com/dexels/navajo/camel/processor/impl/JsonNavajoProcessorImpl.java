@@ -1,12 +1,9 @@
 package com.dexels.navajo.camel.processor.impl;
 
 import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.camel.converter.stream.CachedOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
