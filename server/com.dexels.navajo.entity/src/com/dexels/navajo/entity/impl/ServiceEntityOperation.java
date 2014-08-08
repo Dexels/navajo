@@ -461,8 +461,15 @@ public class ServiceEntityOperation implements EntityOperation {
 		String postedEtag;
 		// Check Etag.
 		if ((postedEtag = inputEntity.getEtag()) != null) {
-			String currentEtag = getCurrentEntity(input).getMessage(myEntity.getName()).generateEtag();
-			if (!postedEtag.equals(currentEtag)) {
+			Navajo current = getCurrentEntity(input);
+			if (current == null) {
+				return;
+			}
+			Message entityMessage = current.getMessage(myEntity.getName());
+			if (entityMessage == null) {
+				return;
+			}
+			if (!(postedEtag.equals(entityMessage.generateEtag()))) {
 				throw new EntityException(EntityException.ETAG_ERROR);
 			}
 		}
