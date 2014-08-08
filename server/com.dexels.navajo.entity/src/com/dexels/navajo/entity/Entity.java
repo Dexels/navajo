@@ -31,7 +31,7 @@ public class Entity  {
 	private Set<Entity> subEntities = new HashSet<Entity>();
 	private Set<Entity> superEntities = new HashSet<Entity>();
 
-	private Map<String, Entity> superEntitiesMap = new HashMap<String, Entity>();
+	protected Map<String, Entity> superEntitiesMap = new HashMap<String, Entity>();
 	
 	protected BundleContext bundleContext;
 
@@ -84,6 +84,7 @@ public class Entity  {
 	
 	public void setEntityManager(EntityManager em) {
 		this.entityManager = em;
+		
 	}
 	
 	public void clearEntityManager(EntityManager em) {
@@ -201,7 +202,7 @@ public class Entity  {
 
 	private void processExtendedEntity(Message m, String extendedEntity) throws EntityException {
 		logger.info("Processing super entity {}", extendedEntity);
-		Entity superEntity = superEntitiesMap.get(extendedEntity);
+		Entity superEntity = getSuperEntity(extendedEntity);
 
 		if (superEntity == null) {
 			throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE,
@@ -213,6 +214,11 @@ public class Entity  {
 		// Check extended properties.
 		processExtendedProperties(myMessage);
 		registerSuperEntity(superEntity);
+	}
+
+	// Non-osgi
+	protected Entity getSuperEntity(String extendedEntity) {
+		return entityManager.getEntity(extendedEntity);
 	}
 
 	private void findSuperEntities() throws EntityException {

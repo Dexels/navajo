@@ -18,10 +18,13 @@ public class EntityComponent extends Entity {
 		super(msg, m);
 	}
 
-	public void activateComponent(BundleContext bundleContext, Map<String, Object> parameters)
+	public void activateComponent(Map<String, Object> properties)
 			throws Exception {
-		entityName = (String) parameters.get("entity.name");
-		this.bundleContext = bundleContext;
+		entityName = (String) properties.get("entity.name");
+
+		Navajo entityNavajo = entityManager.getEntityNavajo((String) properties.get("service.name"));
+		activateMessage(entityNavajo);
+		entityManager.registerEntity(this);
 	}
 
 	public void deactivateComponent() throws Exception {
@@ -35,5 +38,11 @@ public class EntityComponent extends Entity {
 
 		m.write(System.err);
 
+	}
+	
+	// OSGi impl - super entities should be added by OSGi to superEntitiesMap
+	@Override
+	protected Entity getSuperEntity(String extendedEntity) {
+		return superEntitiesMap.get(extendedEntity);
 	}
 }
