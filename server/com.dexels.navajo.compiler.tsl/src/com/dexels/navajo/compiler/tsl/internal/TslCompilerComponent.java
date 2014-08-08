@@ -373,6 +373,8 @@ public class TslCompilerComponent implements ScriptCompiler {
 				depref.setAttribute("cardinality", "1..1");
 				depref.setAttribute("interface", "com.dexels.navajo.entity.Entity");
 				depref.setAttribute("target", "(entity.name=" + d.getId() + ")");
+				depref.setAttribute("bind", "addSuperEntity");
+				depref.setAttribute("unbind", "removeSuperEntity");
 				xe.addChild(depref);
 			}
 		}

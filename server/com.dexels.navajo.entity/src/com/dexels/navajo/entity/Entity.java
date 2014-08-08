@@ -148,7 +148,7 @@ public class Entity  {
 		subEntities.add(sub);
 	}
 	
-	public void addSuperEntity(Entity sup) throws EntityException {
+	public void registerSuperEntity(Entity sup) throws EntityException {
 		logger.info("adding super entity: {}", sup.getName());
 		if ( !containsSuperEntity(sup) ) {
 			superEntities.add(sup);
@@ -212,7 +212,7 @@ public class Entity  {
 		myMessage.merge(superEntity.getMessage().copy(myMessage.getRootDoc()));
 		// Check extended properties.
 		processExtendedProperties(myMessage);
-		addSuperEntity(superEntity);
+		registerSuperEntity(superEntity);
 	}
 
 	private void findSuperEntities() throws EntityException {
@@ -237,7 +237,7 @@ public class Entity  {
 		superEntitiesMap.put(e.getName(), e);
 	}
 	
-	public void clearSuperEntity(Entity e, Map<String,Object> settings) {
+	public void removeSuperEntity(Entity e, Map<String,Object> settings) {
 		logger.info("removing super entity: {}", e.getName());
 		superEntitiesMap.remove(e.getName());
 
