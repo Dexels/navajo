@@ -113,10 +113,9 @@ public class Entity  {
 		// Add operations defined in entity.
 		List<Operation> allOps = n.getAllOperations();
 		for (Operation o : allOps) {
-			if (o.getEntityName() == null || o.getEntityName().equals("")) {
-				o.setEntityName(getName());
-				entityManager.addOperation(o);
-			}
+			o.setEntityName(getName());
+			entityManager.addOperation(o);
+
 		}
 	}
 

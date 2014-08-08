@@ -98,16 +98,17 @@ public class EntityManager {
 		}
 	}
 	
-	
+	// Non-osgi
 	public void registerEntity(Entity e) {
 		entityMap.put(e.getName(), e);
 	}
 
+	
 	public void addEntity(Entity e, Map<String, Object> properties) throws Exception {
-		this.registerEntity(e);
 		logger.info("Adding entity: {}", e);
 		Navajo entityNavajo = this.getEntityNavajo((String) properties.get("service.name"));
 		e.activateMessage(entityNavajo);
+		registerEntity( e) ;
 	}
 
 	public void removeEntity(Entity e) {
