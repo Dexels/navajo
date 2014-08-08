@@ -26,8 +26,8 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	
 	private final HttpServletRequest request;
 	private final HttpServletResponse response;
-	private final String token;
-	private final String username;
+	private String token;
+	private String username;
 	private final StringWriter writer = new StringWriter();
 	private final Map<String, String[]> parameterMap; 
 	
@@ -94,6 +94,15 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	@Override
 	public String getUsername() {
 		return username;
+	}
+	@Override
+	public void setPassword(String password) {
+		this.token = password;
+	}
+	
+	@Override
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	// TODO: Stream this.

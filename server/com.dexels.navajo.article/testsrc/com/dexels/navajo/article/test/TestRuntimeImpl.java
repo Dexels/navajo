@@ -66,4 +66,16 @@ public class TestRuntimeImpl extends BaseRuntimeImpl {
 		return Collections.emptyMap();
 	}
 
+	@Override
+	public void setPassword(String password) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setUsername(String username) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
