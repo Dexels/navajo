@@ -25,7 +25,7 @@ public class CamelConsumerImpl extends DefaultConsumer implements Consumer, Nava
 			.getLogger(CamelConsumerImpl.class);
     public CamelConsumerImpl(CamelEndpoint endpoint, Processor processor) {
     	super(endpoint, processor);
-        
+
     	this.endpoint = endpoint;
     	logger.info("Created standard consumer");
     }
@@ -70,7 +70,7 @@ public class CamelConsumerImpl extends DefaultConsumer implements Consumer, Nava
 
 			@Override
 			public void onComplete(Exchange ex) {
-//				logger.error("Firing on complete: ");
+				logger.error("Firing on complete: ");
 //				try {
 //					tr.setResponseNavajo((Navajo) ex.getOut().getBody());
 //					tr.endTransaction();

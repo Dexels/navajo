@@ -1,12 +1,14 @@
 package com.dexels.navajo.listeners.camel;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.RestoreAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,13 +38,26 @@ public class CamelContinuationServlet extends HttpServlet {
 				consumer.process(tr);
 			} catch (Exception e) {
 				logger.error("Problem offering logger to Camel: ",e);
+				resp.setStatus(500);
+				PrintStream printStream = new PrintStream(resp.getOutputStream());
+				printStream.print("ERROR");
+				printStream.close();
 				tr.abort("whoops");
 			}
 
 		} else {
 			logger.warn("Problem: not active");
+			resp.setStatus(500);
+			PrintStream printStream = new PrintStream(resp.getOutputStream());
+			printStream.print("ERROR");
+			printStream.close();
 			tr.abort("whoops");
 		}
+		resp.setStatus(200);
+		PrintStream printStream = new PrintStream(resp.getOutputStream());
+		printStream.print("OK");
+		printStream.close();
+		
 	}
 	
 	public void activate(Map<String,Object> params) {
@@ -57,7 +72,7 @@ public class CamelContinuationServlet extends HttpServlet {
 		this.consumer = consumer;
 	}
 
-	public void clearNavajoCamelComponent(NavajoCamelConsumer consumer) {
+	public void clearConsumer(NavajoCamelConsumer consumer) {
 		this.consumer = null;
 	}
 	
