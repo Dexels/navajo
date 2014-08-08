@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,6 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.script.api.LocalClient;
 
 public class Entity  {
 
@@ -31,7 +31,9 @@ public class Entity  {
 	private Set<Entity> subEntities = new HashSet<Entity>();
 	private Set<Entity> superEntities = new HashSet<Entity>();
 
-	protected LocalClient myClient;
+	private Map<String, Entity> superEntitiesMap = new HashMap<String, Entity>();
+	
+	protected BundleContext bundleContext;
 
 	public Entity() {
 		
@@ -87,16 +89,7 @@ public class Entity  {
 	public void clearEntityManager(EntityManager em) {
 		this.entityManager = null;
 	}
-	
-	public void setClient(LocalClient client) {
-		this.myClient = client;
-	}
-
-	public void clearClient(LocalClient client) {
-		this.myClient = null;
-	}
-	
-	
+		
 	/* OSGi activation */
 	public void activateMessage(Navajo n) throws Exception {
 		if (n.getMessage(entityName) == null) {
@@ -205,23 +198,23 @@ public class Entity  {
 		
 	}
 	
-	private void processExtendedEntity(Message m, String extendedEntity) throws EntityException {
-		Entity superEntity = null;
-		logger.info("Processing super entity {}", extendedEntity);
 
-		if ((superEntity = entityManager.getEntity(extendedEntity) ) == null) {
-			logger.error("Super entity {} not known with EntityManager", extendedEntity);
+	private void processExtendedEntity(Message m, String extendedEntity) throws EntityException {
+		logger.info("Processing super entity {}", extendedEntity);
+		Entity superEntity = superEntitiesMap.get(extendedEntity);
+
+		if (superEntity == null) {
 			throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE,
 					"Could not find super entity: " + extendedEntity + " for entity: " + getName());
 		}
-		
+	
 		// Copy properties/messages from superEntity.
 		myMessage.merge(superEntity.getMessage().copy(myMessage.getRootDoc()));
 		// Check extended properties.
 		processExtendedProperties(myMessage);
 		addSuperEntity(superEntity);
 	}
-	
+
 	private void findSuperEntities() throws EntityException {
 
 		if ( myMessage.getExtends() != null ) {	
@@ -241,10 +234,13 @@ public class Entity  {
 	
 	public void addSuperEntity(Entity e, Map<String,Object> settings) {
 		logger.info("adding super entity: {}", e.getName());
+		superEntitiesMap.put(e.getName(), e);
 	}
 	
 	public void clearSuperEntity(Entity e, Map<String,Object> settings) {
 		logger.info("removing super entity: {}", e.getName());
+		superEntitiesMap.remove(e.getName());
+
 	}
 	
 

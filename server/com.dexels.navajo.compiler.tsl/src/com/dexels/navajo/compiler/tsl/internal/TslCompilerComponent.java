@@ -347,15 +347,6 @@ public class TslCompilerComponent implements ScriptCompiler {
 
 		addProperty("entity.name","String", script, xe);
 		addProperty("service.name","String", fullName, xe);
-
-		XMLElement refClient = new CaseSensitiveXMLElement("reference");
-		refClient.setAttribute("bind", "setClient");
-		refClient.setAttribute("unbind", "clearClient");
-		refClient.setAttribute("policy", "dynamic");
-		refClient.setAttribute("cardinality", "1..1");
-		refClient.setAttribute("interface", "com.dexels.navajo.script.api.LocalClient");
-		refClient.setAttribute("name", "ClientInterface");
-		xe.addChild(refClient);
 		
 		XMLElement refMan = new CaseSensitiveXMLElement("reference");
 		refMan.setAttribute("bind", "setEntityManager");
