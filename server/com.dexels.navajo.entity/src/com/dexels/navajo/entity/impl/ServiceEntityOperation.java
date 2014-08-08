@@ -517,8 +517,8 @@ public class ServiceEntityOperation implements EntityOperation {
 			throw new EntityException(EntityException.ENTITY_NOT_FOUND, myEntity.getName());
 		}
 		result.getMessage(myEntity.getName()).maskMessage(myEntity.getMessage());
-		setEtag(result);
-		setMetaProperty(result, STATUS, EntityException.OK+"");
+		//setEtag(result);
+		//setMetaProperty(result, STATUS, EntityException.OK+"");
 		return result;
 	}
 

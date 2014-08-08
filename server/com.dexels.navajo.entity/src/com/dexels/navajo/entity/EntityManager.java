@@ -6,23 +6,29 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.compiler.tsl.BundleQueue;
+import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.server.DispatcherInterface;
 
 /**
  * TODO: NAVAJO CLUSTER ENABLING
  * 
- * @author arjenschoneveld
+ * @author arjenschoneveld / cbrouwer
  * 
  */
 public class EntityManager {
 	private Map<String, Entity> entityMap = new ConcurrentHashMap<String, Entity>();
 	private Map<String, Map<String, Operation>> operationsMap = new ConcurrentHashMap<String, Map<String, Operation>>();
+	private final static Logger logger = LoggerFactory.getLogger(EntityManager.class);
 
 	private static EntityManager instance;
 	private BundleQueue bundleQueue;
@@ -91,9 +97,17 @@ public class EntityManager {
 			operationEntry.remove(o.getMethod());
 		}
 	}
-
-	public void addEntity(Entity e) {
+	
+	
+	public void registerEntity(Entity e) {
 		entityMap.put(e.getName(), e);
+	}
+
+	public void addEntity(Entity e, Map<String, Object> properties) throws Exception {
+		this.registerEntity(e);
+		logger.info("Adding entity: {}", e);
+		Navajo entityNavajo = this.getEntityNavajo((String) properties.get("service.name"));
+		e.activateMessage(entityNavajo);
 	}
 
 	public void removeEntity(Entity e) {
@@ -122,6 +136,7 @@ public class EntityManager {
 
 	private void buildAndLoadScripts() throws Exception {
 		String scriptPath = dispatcher.getNavajoConfig().getScriptPath();
+		logger.info("Compiling and installing scripts in: {}", scriptPath + "/entity");
 		File entityDir = new File(scriptPath + "/entity");
 		for (File f : entityDir.listFiles()) {
 			if (f.isFile()) {
@@ -149,6 +164,22 @@ public class EntityManager {
 
 	public void clearDispatcher(DispatcherInterface dispatcher) {
 		this.dispatcher = null;
+	}
+	
+	
+	public Navajo getEntityNavajo(String serviceName) throws InterruptedException, FatalException {
+		Navajo in = NavajoFactory.getInstance().createNavajo();
+		Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
+		in.addHeader(h);
+		try {
+			return dispatcher.handle(in);
+		} catch (FatalException e) {
+			logger.warn("Error in getting EntityNavajo - perhaps OSGi activation problem? Trying one last time in 5 seconds...");
+			// OSGi activation - dispatcher might not be fully configured yet.
+			// Sleep a bit to allow for activation, then retry one last time
+			Thread.sleep(5000);
+		}
+		return dispatcher.handle(in);
 	}
 
 }

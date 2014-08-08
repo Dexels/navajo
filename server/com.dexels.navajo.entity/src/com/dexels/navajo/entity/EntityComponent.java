@@ -20,52 +20,17 @@ public class EntityComponent extends Entity {
 		super(msg, m);
 	}
 
-	private String serviceName;
 	
-
 	public void activateComponent(Map<String, Object> parameters) throws Exception {
-		serviceName = (String) parameters.get("service.name");
-		Navajo in = NavajoFactory.getInstance().createNavajo();
-		Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
-		in.addHeader(h);
-
-		Navajo result = myClient.call(in);
-		if (result.getMessage((String) parameters.get("entity.name")) == null) {
-			throw new Exception("unable to find entity in provided script!");
-		}
-
-		Message l = result.getAllMessages().iterator().next();
-		setMessage(l);
-
-		em.addEntity(this);
-
-		// Add HEAD operation.
-		Operation head = new OperationComponent();
-		head.setEntityName(getName());
-		head.setMethod("HEAD");
-		if (em == null) {
-			return;
-		}
-		em.addOperation(head);
-		// Add operations defined in entity.
-		List<Operation> allOps = result.getAllOperations();
-		for (Operation o : allOps) {
-			if (o.getEntityName() == null || o.getEntityName().equals("")) {
-				o.setEntityName(getName());
-			}
-			em.addOperation(o);
-		}
+		entityName = (String) parameters.get("entity.name");
 	}
-
+	
+	
 	public void deactivateComponent() throws Exception {
-		em.removeEntity(this);
 		deactivate();
 	}
 	
-	public void addDependency(Entity e) throws Exception {
-		addSuperEntity(e);
-	}
-	
+
 	public static void main(String [] args) {
 		
 		String aap = "<tml><message name=\"noot\"></message></tml>";

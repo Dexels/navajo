@@ -65,8 +65,8 @@ public class TestOperation {
 
 		activity.write(System.err);
 
-		manager.addEntity(new Entity(entity, manager));
-		manager.addEntity(new Entity(activity, manager));
+		manager.registerEntity(new Entity(entity, manager));
+		manager.registerEntity(new Entity(activity, manager));
 
 	}
 

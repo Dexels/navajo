@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.script.api.LocalClient;
 
@@ -19,9 +21,10 @@ public class Entity  {
 
 	private Message myMessage;
 	private Set<Key> myKeys = new HashSet<Key>();
-	protected EntityManager em = null;
+	protected EntityManager entityManager = null;
 	private boolean activated = false;
 	private final static Logger logger = LoggerFactory.getLogger(Entity.class);
+	protected String entityName = null;
 
 
 	// Keep track of entities that are derived from this entity.
@@ -34,9 +37,10 @@ public class Entity  {
 		
 	}
 	
+	// Non-OSGi activation
 	public Entity(Message msg, EntityManager m) {
 		myMessage = msg;
-		em = m;
+		entityManager = m;
 	}
 	
 
@@ -77,11 +81,11 @@ public class Entity  {
 	
 	
 	public void setEntityManager(EntityManager em) {
-		this.em = em;
+		this.entityManager = em;
 	}
 	
 	public void clearEntityManager(EntityManager em) {
-		this.em = null;
+		this.entityManager = null;
 	}
 	
 	public void setClient(LocalClient client) {
@@ -93,7 +97,30 @@ public class Entity  {
 	}
 	
 	
-	
+	/* OSGi activation */
+	public void activateMessage(Navajo n) throws Exception {
+		if (n.getMessage(entityName) == null) {
+			throw new Exception("unable to find entity in provided script!");
+		}
+
+		Message l = n.getAllMessages().iterator().next();
+		setMessage(l);
+		
+		Operation head = new OperationComponent();
+		head.setEntityName(getName());
+		head.setMethod("HEAD");
+
+		// Add operations defined in entity.
+		List<Operation> allOps = n.getAllOperations();
+		for (Operation o : allOps) {
+			if (o.getEntityName() == null || o.getEntityName().equals("")) {
+				o.setEntityName(getName());
+				entityManager.addOperation(o);
+			}
+		}
+	}
+
+
 	public Set<Entity> getSubEntities() {
 		return subEntities;
 	}
@@ -153,7 +180,7 @@ public class Entity  {
 			String s = ext.substring(NAVAJO_URI.length());
 			String entityName = s.split("/")[0];
 			String propertyName = s.split("/")[1];
-			Message msg = em.getEntity(entityName).getMessage();
+			Message msg = entityManager.getEntity(entityName).getMessage();
 			return msg.getProperty(propertyName);
 		} else {
 			throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE);
@@ -183,7 +210,7 @@ public class Entity  {
 		Entity superEntity = null;
 		logger.info("Processing super entity {}", extendedEntity);
 
-		if ((superEntity = em.getEntity(extendedEntity) ) == null) {
+		if ((superEntity = entityManager.getEntity(extendedEntity) ) == null) {
 			logger.error("Super entity {} not known with EntityManager", extendedEntity);
 			throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE,
 					"Could not find super entity: " + extendedEntity + " for entity: " + getName());
