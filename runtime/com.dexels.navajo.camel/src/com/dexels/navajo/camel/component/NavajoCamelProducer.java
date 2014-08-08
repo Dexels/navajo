@@ -43,7 +43,20 @@ public class NavajoCamelProducer extends DefaultProducer {
     	Message in = exchange.getIn();
     	Object rawbody = in.getBody();
     	if(rawbody instanceof Navajo) {
-    		Navajo input = (Navajo)rawbody;
+    		Navajo input = (Navajo) rawbody;
+    		setupHeader(input);
+    		
+    		Navajo result = localClient.call(input);
+    		result.write(System.err);
+    		exchange.getOut().setBody(result);;
+    	} else if (in.getHeader("origDocument") != null) {
+    		Navajo input = (Navajo) in.getHeader("origDocument");
+    		//Message hd = NavajoFactory.getInstance().createMessage(n, "Headers");
+    		if (exchange.getProperty("CamelExceptionCaught") != null ) {
+    			Object exception = exchange.getProperty("CamelExceptionCaught");
+    			System.out.println("ex");
+    		}
+    		
     		setupHeader(input);
     		
     		Navajo result = localClient.call(input);

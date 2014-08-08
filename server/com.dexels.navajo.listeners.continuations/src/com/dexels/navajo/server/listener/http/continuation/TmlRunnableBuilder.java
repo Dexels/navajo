@@ -20,8 +20,7 @@ public class TmlRunnableBuilder {
 	public static TmlRunnable prepareRunnable(
 			final HttpServletRequest req, HttpServletResponse resp, LocalClient localClient, String instance)
 			throws UnsupportedEncodingException, IOException {
-		TmlContinuationRunner tmlRunner = (TmlContinuationRunner) req
-				.getAttribute("tmlRunner");
+		TmlContinuationRunner tmlRunner = (TmlContinuationRunner) req.getAttribute("tmlRunner");
 		if (tmlRunner != null) {
 			return null;
 		}
