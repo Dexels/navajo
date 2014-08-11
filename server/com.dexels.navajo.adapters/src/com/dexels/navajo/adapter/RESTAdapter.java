@@ -106,6 +106,15 @@ public class RESTAdapter extends NavajoMap {
 		// Prepare JSON content.
 		JSONTML json = JSONTMLFactory.getInstance();
 		Binary bContent = new Binary();
+		
+		// Remove globals and parms message
+		if (od.getMessage("__globals__") != null) {
+			od.removeMessage("__globals__");
+		}
+		if (od.getMessage("__parms__") != null) {
+			od.removeMessage("__parms__");
+		}
+		
 		try {
 			json.format(od, bContent.getOutputStream(), removeTopMessage);
 		} catch (Exception e) {
