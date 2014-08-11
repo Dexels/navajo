@@ -67,10 +67,10 @@ public class TestEntity {
 		
 		Entity e1 = new Entity(entity, manager);
 		Entity e2 = new Entity(activity, manager);
-		manager.addEntity(e1);
-		manager.addEntity(e2);
+		manager.registerEntity(e1);
+		manager.registerEntity(e2);
 		
-		e1.addSuperEntity(e2);
+		e1.registerSuperEntity(e2);
 		e1.activate();
 		e2.activate();
 		

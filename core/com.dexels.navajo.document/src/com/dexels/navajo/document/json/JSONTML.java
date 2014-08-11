@@ -4,12 +4,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.text.DateFormat;
 
 import com.dexels.navajo.document.Navajo;
 
 public interface JSONTML {
 
 	public void setEntityTemplate(Navajo m);
+	
+	public void setDateFormat(DateFormat format);
 	
 	public abstract Navajo parse(InputStream is) throws Exception;
 

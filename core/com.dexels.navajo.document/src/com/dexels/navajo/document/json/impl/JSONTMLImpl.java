@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.text.DateFormat;
 import java.util.List;
 
 import org.codehaus.jackson.JsonFactory;
@@ -293,6 +294,15 @@ public class JSONTMLImpl implements JSONTML {
 	@Override
 	public void setEntityTemplate(Navajo m) {
 		this.entityTemplate = m;
+	}
+
+	@Override
+	public void setDateFormat(DateFormat format) {
+		if (om == null) {
+			return;
+		}
+		om.setDateFormat(format);
+		
 	}
 
 

@@ -82,6 +82,7 @@ public class NavajoCamelComponent extends DefaultComponent implements Component 
 		return endPoints.get(id);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void registerConsumer(CamelConsumerImpl e, String id) {
 		consumers.put(id, e);
 		Dictionary<String,Object> so = new Hashtable<String,Object>();

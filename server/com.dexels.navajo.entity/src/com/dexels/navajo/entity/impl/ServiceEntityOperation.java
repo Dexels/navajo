@@ -1,6 +1,7 @@
 package com.dexels.navajo.entity.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -189,6 +190,12 @@ public class ServiceEntityOperation implements EntityOperation {
 				} else if ( !inputP.getType().equals(entityP.getType()) ) {
 					invalidProperties.add(inputP.getFullPropertyName() + ":" + inputP.getType() + "<-" + entityP.getType());
 					//throw new EntityException("Invalid type encountered in " + method + " operation for entityservice {" + message.getName() +  "}: [" + inputP.getFullPropertyName() + "]: " + inputP.getType() + ", expected: " + entityP.getType());
+				} else if (entityP.getType().equals(Property.DATE_PROPERTY) && inputP.getValue() != null){
+					// BasePropertyImpl does not throw exception on invalid date format. Thus we perform an extra check here on that
+					if (!(inputP.getTypedValue() instanceof Date)) {
+						invalidProperties.add(inputP.getFullPropertyName() + ":" + inputP.getType() + "<-" + entityP.getType());
+
+					}
 				}
 			}
 		}
@@ -440,8 +447,7 @@ public class ServiceEntityOperation implements EntityOperation {
 					invalidProperties);
 			if (invalidProperties.size() > 0) {
 				throw new EntityException(EntityException.BAD_REQUEST,
-						"Could not perform operation, invalid property types:\n"
-								+ listToString(invalidProperties));
+						"Could not perform operation, invalid property types: "+ listToString(invalidProperties));
 			}
 
 			Navajo result = callEntityService(input);
@@ -461,8 +467,15 @@ public class ServiceEntityOperation implements EntityOperation {
 		String postedEtag;
 		// Check Etag.
 		if ((postedEtag = inputEntity.getEtag()) != null) {
-			String currentEtag = getCurrentEntity(input).getMessage(myEntity.getName()).generateEtag();
-			if (!postedEtag.equals(currentEtag)) {
+			Navajo current = getCurrentEntity(input);
+			if (current == null) {
+				return;
+			}
+			Message entityMessage = current.getMessage(myEntity.getName());
+			if (entityMessage == null) {
+				return;
+			}
+			if (!(postedEtag.equals(entityMessage.generateEtag()))) {
 				throw new EntityException(EntityException.ETAG_ERROR);
 			}
 		}
@@ -510,8 +523,8 @@ public class ServiceEntityOperation implements EntityOperation {
 			throw new EntityException(EntityException.ENTITY_NOT_FOUND, myEntity.getName());
 		}
 		result.getMessage(myEntity.getName()).maskMessage(myEntity.getMessage());
-		setEtag(result);
-		setMetaProperty(result, STATUS, EntityException.OK+"");
+		//setEtag(result);
+		//setMetaProperty(result, STATUS, EntityException.OK+"");
 		return result;
 	}
 
@@ -581,14 +594,13 @@ public class ServiceEntityOperation implements EntityOperation {
 	 * @throws EntityException
 	 */
 	private Navajo callEntityService(Navajo input) throws EntityException {
-		Navajo request = myKey.generateRequestMessage(input);
 		if ( myOperation.getExtraMessage() != null ) {
-			request.addMessage(myOperation.getExtraMessage().copy(request));
+			input.addMessage(myOperation.getExtraMessage().copy(input));
 		}
-		prepareServiceRequestHeader(input,request, myOperation);
+		prepareServiceRequestHeader(input,input, myOperation);
 
 		// No transaction support yet
-		Navajo result =  commitOperation(request, myOperation, false);
+		Navajo result =  commitOperation(input, myOperation, false);
 		if (result.getMessage("error") != null) {
 			throw new EntityException(EntityException.SERVER_ERROR);
 		}

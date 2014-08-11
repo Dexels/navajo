@@ -3,6 +3,8 @@ package com.dexels.navajo.entity.listener;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -135,13 +137,13 @@ public class EntityListener extends HttpServlet {
 				JSONTML json = JSONTMLFactory.getInstance();
 				json.setEntityTemplate(entityMessage.getRootDoc());
 				try {
-					input = json.parse(request.getInputStream());
+					input = json.parse(request.getInputStream(), entityMessage.getName());
 				} catch (Exception e1) {
 					logger.error("Error in parsing input JSON");
 					throw new EntityException(EntityException.BAD_REQUEST);
 				}
 			}
-
+			
 			if (input.getMessage(entityMessage.getName()) == null) {
 				logger.error("Entity name not found in input - format incorrect or bad request"); 
 				throw new EntityException(EntityException.BAD_REQUEST);
@@ -189,7 +191,7 @@ public class EntityListener extends HttpServlet {
 		logger.info("Writing entity output");
 
 		if (result.getMessage("errors") != null) {
-			String status = result.getMessage("errors").getProperty("status").toString();
+			String status = result.getMessage("errors").getProperty("Status").toString();
 			if (status.equals("304")) {
 				// No content
 				logger.info("Returning HTTP code 304 - not modified");
@@ -199,8 +201,9 @@ public class EntityListener extends HttpServlet {
 		if ( output.equals("json"))  {
 			Writer w = new OutputStreamWriter(response.getOutputStream());
 			JSONTML json = JSONTMLFactory.getInstance();
+			json.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 			try {
-				json.format(result, w);
+				json.format(result, w, true);
 			} catch (Exception e) {
 				logger.error("Error in writing entity output in JSON!");
 				throw new ServletException("Error producing output");
@@ -272,19 +275,20 @@ public class EntityListener extends HttpServlet {
 		result = NavajoFactory.getInstance().createNavajo();
 		Message m = NavajoFactory.getInstance().createMessage(result, "errors");
 		result.addMessage(m);
+		m.addProperty(NavajoFactory.getInstance().createProperty(result, "Error", "boolean", "true", 1, null, null));
 		if (ex instanceof EntityException) {
 			response.setStatus(((EntityException) ex).getCode());
 			int code = ((EntityException) ex).getCode();
-			m.addProperty(NavajoFactory.getInstance().createProperty(result, "status", "string",
+			m.addProperty(NavajoFactory.getInstance().createProperty(result, "Status", "string",
 					String.valueOf(code), 1, null, null));
-			m.addProperty(NavajoFactory.getInstance().createProperty(result, "error", "string",
+			m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string",
 					ex.getMessage(), 1, null, null));
 
 		} else {
 			response.setStatus(EntityException.SERVER_ERROR);
-			m.addProperty(NavajoFactory.getInstance().createProperty(result, "status", "string",
+			m.addProperty(NavajoFactory.getInstance().createProperty(result, "Status", "string",
 					String.valueOf(EntityException.SERVER_ERROR), 1, null, null));
-			m.addProperty(NavajoFactory.getInstance().createProperty(result, "error", "string",
+			m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string",
 					"Server error (" + ex.toString(), 1, null, null));
 		}
 

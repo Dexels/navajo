@@ -6,6 +6,4 @@
    </service>
    <reference bind="setBundleQueue" cardinality="1..1" interface="com.dexels.navajo.compiler.tsl.BundleQueue" name="BundleQueue" policy="dynamic" unbind="clearBundleQueue"/>
    <reference bind="setDispatcher" unbind="clearDispatcher" cardinality="1..1" interface="com.dexels.navajo.server.DispatcherInterface" name="Dispatcher" policy="dynamic"/>
- <!--  <reference bind="addEntity" unbind="removeEntity" cardinality="0..n" interface="com.dexels.navajo.entity.Entity" name="Entity" policy="dynamic"/> -->
-   
 </scr:component>
