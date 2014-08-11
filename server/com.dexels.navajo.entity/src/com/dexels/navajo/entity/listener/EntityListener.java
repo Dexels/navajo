@@ -137,19 +137,13 @@ public class EntityListener extends HttpServlet {
 				JSONTML json = JSONTMLFactory.getInstance();
 				json.setEntityTemplate(entityMessage.getRootDoc());
 				try {
-					input = json.parse(request.getInputStream());
+					input = json.parse(request.getInputStream(), entityMessage.getName());
 				} catch (Exception e1) {
 					logger.error("Error in parsing input JSON");
 					throw new EntityException(EntityException.BAD_REQUEST);
 				}
 			}
 			
-			if (input.getMessage("Request") != null) {
-				// No top level defined in incoming message. Replace "Request" message name with  
-				// our entity name
-				input.getMessage("Request").setName(entityMessage.getName());
-			}
-
 			if (input.getMessage(entityMessage.getName()) == null) {
 				logger.error("Entity name not found in input - format incorrect or bad request"); 
 				throw new EntityException(EntityException.BAD_REQUEST);
