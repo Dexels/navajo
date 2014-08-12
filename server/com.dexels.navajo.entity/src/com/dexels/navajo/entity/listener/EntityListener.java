@@ -6,6 +6,7 @@ import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -113,7 +114,8 @@ public class EntityListener extends HttpServlet {
 		Navajo input = null;
 		String etag = null;
 		
-		logger.info("Incoming entity request: entity={},user={},method={},output={}", entityName, username, method, output);
+		logger.info("Incoming entity request from {}: entity={}, user={}, method={}, output={}",
+				request.getRemoteAddr(), entityName, username, method, output);
 		
 		try {
 			if (entityName == "") {
@@ -143,7 +145,7 @@ public class EntityListener extends HttpServlet {
 					throw new EntityException(EntityException.BAD_REQUEST);
 				}
 			}
-			
+
 			if (input.getMessage(entityMessage.getName()) == null) {
 				logger.error("Entity name not found in input - format incorrect or bad request"); 
 				throw new EntityException(EntityException.BAD_REQUEST);
