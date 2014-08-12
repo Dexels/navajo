@@ -31,5 +31,7 @@ public class JsonNavajoProcessorImpl implements Processor {
 	
 		Navajo doc = json.parse(new StringReader((String) body));
 		ex.getOut().setBody(doc);
+		 // copy headers from IN to OUT to propagate them
+		ex.getOut().setHeaders(ex.getIn().getHeaders());
 	}
 }
