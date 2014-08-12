@@ -31,14 +31,13 @@ public class NavajoRestProcessorImpl implements Processor {
 			throw new Exception();
 		}
 		Navajo document = (Navajo) body;
-		String targeturl = document.getHeader().getHeaderAttribute("targeturl");
-		String targetmethod = document.getHeader().getHeaderAttribute("targetmethod");
 		JSONTML json = JSONTMLFactory.getInstance();
 		Writer w = new StringWriter()		;
 		json.format(document, w, false);
 		ex.getOut().setBody(w.toString());
-		ex.getOut().setHeader("targeturl", targeturl);
-		ex.getOut().setHeader("CamelHttpMethod", targetmethod);
-		ex.getOut().setHeader("origDocument", document);
+		ex.getOut().setHeaders(ex.getIn().getHeaders());
+		ex.getOut().setHeader("Accept", "application/json");
+		ex.setProperty("origBody", body);
+
 	}
 }
