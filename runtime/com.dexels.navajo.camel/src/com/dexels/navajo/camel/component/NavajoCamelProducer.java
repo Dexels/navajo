@@ -46,22 +46,38 @@ public class NavajoCamelProducer extends DefaultProducer {
     		Navajo input = (Navajo) rawbody;
     		setupHeader(input);
     		
-    		Navajo result = localClient.call(input);
-    		result.write(System.err);
-    		exchange.getOut().setBody(result);;
-    	} else if (in.getHeader("origDocument") != null) {
-    		Navajo input = (Navajo) in.getHeader("origDocument");
-    		//Message hd = NavajoFactory.getInstance().createMessage(n, "Headers");
-    		if (exchange.getProperty("CamelExceptionCaught") != null ) {
-    			Object exception = exchange.getProperty("CamelExceptionCaught");
-    			System.out.println("ex");
+    		// Check for errors - if so add Error message
+    		Object exCaught = exchange.getProperty("CamelExceptionCaught");
+    		if (exCaught != null) {
+    			// Somewhere in the camel route, an exception took place. We add a message to the Navajo input
+    			// with information about the caught exception
+    			Exception e1 = (Exception) exCaught;
+				com.dexels.navajo.document.Message errorMessage = NavajoFactory.getInstance()
+						.createMessage(input, "Errors");
+				input.addMessage(errorMessage);
+				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(input, "Error",
+						"boolean", "true", 1, null, null));
+				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(input,
+						"Exception", "String", e1.getClass().getName(), 1, null, null));
+				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(input,
+						"Message", "String", e1.getMessage(), 1, null, null));
+
+    			System.err.println(exCaught);
     		}
     		
-    		setupHeader(input);
+    		// Check for errors - if so add Error message
+    		Object origBody = exchange.getProperty("origBody");
+    		if (origBody != null) {
+    			Navajo origNavajo = (Navajo) origBody;
+
+    			for (com.dexels.navajo.document.Message m : origNavajo.getAllMessages()) {
+    				input.addMessage(m);
+    			}
+    		}
     		
     		Navajo result = localClient.call(input);
-    		result.write(System.err);
-    		exchange.getOut().setBody(result);;
+    		//result.write(System.err);
+    		exchange.getOut().setBody(result);
     	} else {
     		logger.warn("Unexpected body in navajo producer: "+rawbody);
     	}
