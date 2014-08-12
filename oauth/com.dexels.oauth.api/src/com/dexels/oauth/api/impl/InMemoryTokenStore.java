@@ -22,7 +22,4 @@ public class InMemoryTokenStore implements TokenStore {
 	public Token getTokenByString(String token) {
 		return tokenMap.get(token);
 	}
-
-	
-
 }
