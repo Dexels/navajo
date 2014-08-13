@@ -44,6 +44,7 @@ Service-Component: OSGI-INF/navajoCamelComponentResolver.xml,OSGI-INF/navajoCame
 Export-Package: com.dexels.navajo.camel.adapter,
  com.dexels.navajo.camel.component,
  com.dexels.navajo.camel.consumer,
+ com.dexels.navajo.camel.dataformat,
  com.dexels.navajo.camel.http,
  com.dexels.navajo.camel.processor.impl
 Bundle-Activator: navajocamel.Version
