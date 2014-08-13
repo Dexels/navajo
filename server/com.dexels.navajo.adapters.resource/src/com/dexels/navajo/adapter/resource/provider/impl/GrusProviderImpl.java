@@ -119,11 +119,10 @@ public class GrusProviderImpl implements GrusProvider {
 			if (dataSource != null) {
 				return dataSource;
 			} else {
-				logger.warn("No datasource found for instance: "+instance+" name: "+name);
+				logger.info("No instance-specific datasource found for instance: "+instance+" name: "+name+" continuing to look for generic.");
 			}
 		}
-		DataSource dataSource = defaultDataSources.get("navajo.resource."
-				+ name);
+		DataSource dataSource = defaultDataSources.get(name);
 		if (dataSource != null) {
 			return dataSource;
 		}
@@ -133,7 +132,7 @@ public class GrusProviderImpl implements GrusProvider {
 		// logger.warn("No datasource found for instance: "+instance+" and name: "+name);
 		// }
 		logger.warn("No datasource found for instance: " + instance
-				+ " and name: " + name);
+				+ " and name: " + name+ " datasource keys: "+defaultDataSources.keySet());
 		return null;
 	}
 

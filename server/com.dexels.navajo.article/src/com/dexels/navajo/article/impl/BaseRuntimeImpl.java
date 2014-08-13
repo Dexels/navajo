@@ -75,10 +75,17 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	}
 	
 	protected void verifyScopes() throws ArticleException {
+		Set<String> missing = null;
 		for (String scope : getRequiredScopes()) {
 			if(!suppliedScopes.containsKey(scope)) {
-				throw new ArticleException("Required scope: "+scope+" missing");
+				if(missing==null) {
+					missing = new HashSet<String>();
+				}
+				missing.add(scope);
 			}
+		}
+		if(missing!=null && !missing.isEmpty()) {
+			throw new ArticleException("Required scopes: "+missing+" missing");
 		}
 	}
 	

@@ -3,6 +3,7 @@ package com.dexels.navajo.article.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -38,21 +39,68 @@ public class OAuthArticleServlet extends ArticleServlet {
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String token = req.getParameter("token");
+		Token t = null;
+		ClientRegistration cr = null;
 		if(token==null) {
-			throw new ServletException("Please supply a token");
+			// fallback:
+			final String clientId = req.getParameter("clientId");
+			final String username = req.getParameter("username");
+			if(clientId== null || username == null ) {
+				resp.sendError(400, "Missing token");
+			}
+			t = new Token() {
+				
+				@Override
+				public Set<String> scopes() {
+					return Collections.emptySet();
+				}
+				
+				@Override
+				public boolean isExpired() {
+					return false;
+				}
+				
+				@Override
+				public String getUsername() {
+					return username;
+				}
+				
+				@Override
+				public Map<String, String> getUserAttributes() {
+					return Collections.emptyMap();
+				}
+				
+				@Override
+				public int getExpirySeconds() {
+					return 999;
+				}
+				
+				@Override
+				public String clientId() {
+					return clientId;
+				}
+			};
+			cr = clientStore.getClientByToken(clientId);
+
+		} else {
+			t = tokenStore.getTokenByString(token);
+			cr = clientStore.getClient(t.clientId());
+			
 		}
-		Token t = tokenStore.getTokenByString(token);
 		//TODO null check
-		String clientId = t.clientId();
+		if(t==null) {
+			resp.sendError(400, "Unauthorized or expired token");
+			return;
+		}
 		
-		ClientRegistration cr = clientStore.getClient(clientId);
+		String clientId = t.clientId();
 		String username = t.getUsername();
 		Map<String,String> scopes =  getScopes(t); // context.getScopes(getToken(req));
 		String pathInfo = req.getPathInfo();
 		String instance = determineInstanceFromRequest(req);
 		logger.info("Instance determined: "+instance); 
 		if(pathInfo==null) {
-			throw new ServletException("No article found, please specify after article");
+			throw new ServletException("No article found, please specify");
 		}
 		logger.info("Scopes resolved: "+scopes);
 		File article = context.resolveArticle(determineArticleFromRequest(req));
