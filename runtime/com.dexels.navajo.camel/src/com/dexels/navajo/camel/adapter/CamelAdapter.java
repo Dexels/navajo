@@ -51,6 +51,12 @@ public class CamelAdapter implements Mappable  {
 	@Override
 	public void store() throws MappableException, UserException {
 		CamelContext context = getCamelContext(contextName);
+		try {
+			context.start();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		ProducerTemplate producer = context.createProducerTemplate();
 		
 		Navajo navajoDoc = myAccess.getInDoc();
@@ -64,8 +70,11 @@ public class CamelAdapter implements Mappable  {
 		Header header = NavajoFactory.getInstance().createHeader(navajoDoc, "", myAccess.rpcUser,
 				myAccess.rpcPwd, -1);
 		
-		navajoDoc.addHeader(header);
+		for (String key : properties.keySet()) {
+			header.setHeaderAttribute(key, (String) properties.get(key));
+		}
 		
+		navajoDoc.addHeader(header);
 		producer.sendBodyAndHeaders(endPointUri, navajoDoc, properties);
 		logger.info("Body sent to camelContext: {}", endPointUri);
 		ungetServices();
