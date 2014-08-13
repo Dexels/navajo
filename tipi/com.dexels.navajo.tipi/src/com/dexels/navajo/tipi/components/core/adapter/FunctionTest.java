@@ -8,6 +8,7 @@ public class FunctionTest {
 	public static void main(String[] arr)  {
 	}
 
+	@SuppressWarnings("unchecked")
 	private FunctionInterface instantiateFunction(String name)
 			throws TMLExpressionException {
 		Class<FunctionInterface> cc;

@@ -8,15 +8,11 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.NumberList;
-import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.Recur;
@@ -25,8 +21,24 @@ import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.WeekDayList;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.Categories;
+import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStamp;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.ExDate;
+import net.fortuna.ical4j.model.property.Location;
+import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.RDate;
+import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.Summary;
+import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.UidGenerator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.miginfocom.calendar.activity.Activity;
 import com.miginfocom.calendar.activity.ActivityDepository;
@@ -35,8 +47,6 @@ import com.miginfocom.calendar.activity.recurrence.CompositeRecurrence;
 import com.miginfocom.calendar.activity.recurrence.Recurrence;
 import com.miginfocom.calendar.activity.recurrence.RecurrenceRule;
 import com.miginfocom.util.dates.ImmutableDateRange;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class CalendarConverter {
 	private final static Logger logger = LoggerFactory
@@ -60,6 +70,7 @@ public class CalendarConverter {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public OutputStream exportActivities()
 	{
 		net.fortuna.ical4j.model.Calendar outputCal = new net.fortuna.ical4j.model.Calendar();
@@ -145,6 +156,7 @@ public class CalendarConverter {
 	 * @param exRule    Output
 	 * @param including Only used if the Recurrence r is of the type RecurrenceRule
 	 */
+	@SuppressWarnings("unchecked")
 	private void parseRecurrence(Recurrence r, DateList rDate, DateList exDate, Collection<Recur> rRule, Collection<Recur> exRule, Boolean including)
 	{
 		if (r instanceof CompositeRecurrence)

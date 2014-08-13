@@ -164,6 +164,7 @@ public abstract class BaseClassManager implements IClassManager {
 		return ttp;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public TipiTypeParser parseParser(XMLElement xe, ExtensionDefinition te) {
 		String name = xe.getStringAttribute("name");

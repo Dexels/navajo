@@ -54,7 +54,7 @@ public class TipiNewCallService extends TipiAction {
 		String destination = (String) getEvaluatedParameterValue("destination", event);
 		String connector = (String) getEvaluatedParameterValue("connector", event);
 		Object cached = getEvaluatedParameterValue("cached", event);
-		Boolean local = (Boolean) getEvaluatedParameterValue("local", event);
+//		Boolean local = (Boolean) getEvaluatedParameterValue("local", event);
 		Boolean breakOnError = (Boolean) getEvaluatedParameterValue("breakOnError", event);
 		if(breakOnError==null) {
 			breakOnError = false;
@@ -172,7 +172,7 @@ public class TipiNewCallService extends TipiAction {
 		// things up.
 		myContext.fireNavajoSent(input, service);
 		try {
-			Navajo result = myContext.getClient().doSimpleSend(nn, service);
+			myContext.getClient().doSimpleSend(nn, service);
 			processResult(breakOnError, destination, service, nn);
 	} catch (ClientException e) {
 			e.printStackTrace();

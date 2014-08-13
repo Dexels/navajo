@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <title>My HTML File</title>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular-cookies.js"></script>
+
+</head>
+<body  ng-controller="MyController">
+  <h3>Cookies</h3>
+  <pre>{{usingCookies|json}}</pre>
+  <h3>Cookie Store</h3>
+  <pre>{{usingCookieStore|json}}</pre>
+      <script>
+    angular.module('myApp', ['ngCookies']);
+    app.controller('MyController',['$scope','$cookies','$cookieStore', 
+                       function($scope,$cookies,$cookieStore) {
+      var someSessionObj = { 'innerObj' : 'somesessioncookievalue'};
+
+    $cookies.dotobject = someSessionObj;
+    $scope.usingCookies = { 'cookies.dotobject' : $cookies.dotobject, "cookieStore.get" : $cookieStore.get('dotobject') };
+
+    $cookieStore.put('obj', someSessionObj);
+    $scope.usingCookieStore = { "cookieStore.get" : $cookieStore.get('obj'), 'cookies.dotobject' : $cookies.obj, };
+    }
+  </script>
+<p>1 + 2 = {{ 1 + 2 }}</p>
+  <p>Nothing here {{'yet' + '!'}}</p>
+
+</body>
+</html>

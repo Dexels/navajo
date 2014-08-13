@@ -6,7 +6,6 @@ import tests.cascadinglisteners.NonCascadingListeners;
 import tests.core.CoreTipi;
 import tests.eventinject.EventInjectTipi;
 import tests.instantiateDispose.InstantiateDisposeTipi;
-import tests.scripting.ScriptingTipi;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({

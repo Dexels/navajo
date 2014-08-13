@@ -1,13 +1,10 @@
 package com.dexels.navajo.tipi.swing.calendar;
 
-import java.awt.*;
+import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
@@ -21,8 +18,11 @@ import com.miginfocom.calendar.activity.DefaultActivity;
 import com.miginfocom.calendar.activity.recurrence.ByXXXRuleData;
 import com.miginfocom.calendar.activity.recurrence.RecurrenceRule;
 import com.miginfocom.util.ActivityHelper;
-import com.miginfocom.util.dates.*;
-import com.miginfocom.util.gfx.geometry.numbers.*;
+import com.miginfocom.util.dates.DateRange;
+import com.miginfocom.util.dates.DateRangeI;
+import com.miginfocom.util.dates.ImmutableDateRange;
+import com.miginfocom.util.dates.TimeSpanListEvent;
+import com.miginfocom.util.gfx.geometry.numbers.AtFraction;
 
 /**
  * <p>Title: </p>
@@ -38,9 +38,6 @@ public final class TipiCalendar
 
 	private static final long serialVersionUID = -4916285139918344788L;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(TipiCalendar.class);
-	
 	private DateAreaBean myCalendar;
 
 	@Override
@@ -52,6 +49,7 @@ public final class TipiCalendar
 		return myCalendar;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public void addTestData()
 	{
 		final String[] TITLES = {"Going to the Gym", "Meeting with the Board", "Taking Mick to Ice Hockey",
