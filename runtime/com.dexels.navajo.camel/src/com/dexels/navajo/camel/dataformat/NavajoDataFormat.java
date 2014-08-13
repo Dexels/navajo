@@ -1,11 +1,8 @@
 package com.dexels.navajo.camel.dataformat;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.nio.charset.Charset;
-import java.util.Scanner;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.spi.DataFormat;
