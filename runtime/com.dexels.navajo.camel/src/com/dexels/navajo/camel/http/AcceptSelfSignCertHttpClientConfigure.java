@@ -10,7 +10,7 @@ public class AcceptSelfSignCertHttpClientConfigure implements HttpClientConfigur
 	@Override
 	public void configureHttpClient(HttpClient client) {
 		// register the customer SSLFactory
-		ProtocolSocketFactory easy = new EasySslProtocolSocketFactory();
+		ProtocolSocketFactory easy = new EasySSLProtocolSocketFactory();
 		Protocol protocol = new Protocol("https", easy, 443);
 		Protocol.registerProtocol("https", protocol);
 
