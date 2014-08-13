@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="sportlink.oao-1.0.1">
+
+	<feature name='oao' version='1.0.1' start-level='81' >
+	    <feature version="[3.0.2,4)">navajo.function</feature>
+	    <feature version="[3.0.4,4)">tipi.appstore</feature>
+	    <feature version="[3.0.1,4)">tipi.mail</feature>
+	    <feature version="[3.0.1,4)">tipi.vaadin</feature>
+	</feature> 
+</features>

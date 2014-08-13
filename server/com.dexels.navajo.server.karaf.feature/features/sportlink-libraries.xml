@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="sportlink.libraries-3.0.11">
+
+	<feature name='sportlink.libraries' version='3.0.11'>
+		<feature version="[3.0.0,4)">navajo.function</feature>
+		<feature version="[3.0.0,4)">navajo.adapter</feature>
+		<feature version="[3.0.0,4)">navajo.article</feature>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.aaa/3.0.10</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.0.18</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.functions/3.0.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.adapters/3.0.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.comp/3.0.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.tensing/1.0.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.optimizepool/3.0.12</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.nevobo.dps/1.0.3</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.oauth/1.0.3</bundle>
+	</feature>
+
+</features>

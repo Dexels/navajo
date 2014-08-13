@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.adapter-3.0.7">
+
+    <feature  name='navajo.adapter' version='3.0.7'>
+		<feature version="[3.0.0,4)">navajo.server</feature>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.0.20</bundle>
+	</feature>
+	
+</features>

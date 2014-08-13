@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="sportlink-3.0.3">
+
+	<feature name='sportlink' version='3.0.3' start-level='81'>
+		<feature version="[3.0.0,4)">sportlink.libraries</feature>
+		<feature version="[3.0.0,4)">navajo.enterprise</feature> 
+		<feature version="[3.0.0,4)">navajo.adapter</feature> 
+		<feature version="[3.0.0,4)">navajo.function</feature> 
+		<feature version="[3.0.0,4)">navajo.article</feature> 
+		<feature version="[3.0.0,4)">navajo.rhino</feature>
+		<feature version="[3.0.0,4)">navajo.multitenant</feature>
+		<feature version="[3.0.0,4)">tipi.appstore</feature>
+	</feature>	 
+</features>

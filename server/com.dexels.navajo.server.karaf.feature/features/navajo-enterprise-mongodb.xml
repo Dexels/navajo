@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.enterprise.mongodb-3.0.5">
+	<feature name='navajo.enterprise.mongodb' version='3.0.5' start-level='81' >
+		<feature version="[3.0.14,4)">navajo.server.osgi</feature>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo/3.0.10</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo.navajostore/3.0.2</bundle>
+	</feature>
+</features>
