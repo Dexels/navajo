@@ -34,6 +34,7 @@ public abstract class TipiAbstractOSGiExtension extends AbstractCoreExtension im
 	
 	
 	
+	@SuppressWarnings("unchecked")
 	protected void registerTipiExtension(BundleContext context)
 			throws Exception {
 		this.context = context;
@@ -79,6 +80,7 @@ public abstract class TipiAbstractOSGiExtension extends AbstractCoreExtension im
 
 	}	
 	
+	@SuppressWarnings("unchecked")
 	public ITipiExtensionRegistry getTipiExtensionRegistry() {
 		if(context==null) {
 			return nonOSGiRegistry;

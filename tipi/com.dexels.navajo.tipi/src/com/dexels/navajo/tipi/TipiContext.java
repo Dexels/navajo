@@ -47,6 +47,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
@@ -261,6 +262,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void initializeContext(TipiApplicationInstance myApplication,List<TipiExtension> preload, TipiContext parent) {
 
 		myParentContext = parent;
@@ -751,6 +753,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		getClassManager().addFunctionDefinition(name, fd);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void parseStorage(XMLElement child) {
 		String type = child.getStringAttribute("type");
 		if ("asp".equals(type)) {
@@ -1844,7 +1847,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			}
 			// synchronized (sync) {
 			tc.setCurrentEvent(event);
-			o = Expression.evaluate(expr, n, null, currentMessage, null, tc);
+			o = Expression.evaluate(expr, n, null, currentMessage, (Selection)null, tc);
 			if (o == null) {
 				logger.debug("Expression evaluated to null operand!");
 				return null;

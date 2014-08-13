@@ -151,7 +151,7 @@ public class TipiElement extends ElementAdapter implements NodeList {
 				logger.error("Error: ",e);
 			}
 		}
-		NodeList n = new NodeList(){
+		new NodeList(){
 
 			@Override
 			public int getLength() {

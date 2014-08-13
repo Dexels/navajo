@@ -28,7 +28,6 @@ import com.dexels.navajo.tipi.locale.LocaleListener;
 public abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
 
 	private TipiContext currentContext;
-	private TipiConnector defaultConnector;
 	private String language;
 	private String region;
 //	private File installationFolder = null;
@@ -190,7 +189,6 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 
 	@Override
 	public void setDefaultConnector(TipiConnector tipiConnector) {
-		this.defaultConnector = tipiConnector;
 	}
 	
 	@Override

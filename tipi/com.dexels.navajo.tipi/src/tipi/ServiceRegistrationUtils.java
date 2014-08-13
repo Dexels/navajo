@@ -129,6 +129,7 @@ public class ServiceRegistrationUtils {
 	
 
 
+	@SuppressWarnings("unchecked")
 	public static void parseParser(BundleContext bundleContext, Dictionary<String, Object> props, XMLElement xe, final TipiExtension extension) {
 //		String name = xe.getStringAttribute("name");
 		final String parserClass = xe.getStringAttribute("parser");
