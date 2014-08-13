@@ -3,6 +3,7 @@ package com.dexels.navajo.camel.component;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.component.http.HttpOperationFailedException;
 import org.apache.camel.impl.DefaultProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 
 /**
@@ -43,8 +45,8 @@ public class NavajoCamelProducer extends DefaultProducer {
     	Message in = exchange.getIn();
     	Object rawbody = in.getBody();
     	if(rawbody instanceof Navajo) {
-    		Navajo input = (Navajo) rawbody;
-    		setupHeader(input);
+    		Navajo navajoDoc = (Navajo) rawbody;
+    		setupHeader(navajoDoc);
     		
     		// Check for errors - if so add Error message
     		Object exCaught = exchange.getProperty("CamelExceptionCaught");
@@ -53,14 +55,20 @@ public class NavajoCamelProducer extends DefaultProducer {
     			// with information about the caught exception
     			Exception e1 = (Exception) exCaught;
 				com.dexels.navajo.document.Message errorMessage = NavajoFactory.getInstance()
-						.createMessage(input, "Errors");
-				input.addMessage(errorMessage);
-				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(input, "Error",
+						.createMessage(navajoDoc, "Errors");
+				navajoDoc.addMessage(errorMessage);
+				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(navajoDoc, "Error",
 						"boolean", "true", 1, null, null));
-				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(input,
+				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(navajoDoc,
 						"Exception", "String", e1.getClass().getName(), 1, null, null));
-				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(input,
+				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(navajoDoc,
 						"Message", "String", e1.getMessage(), 1, null, null));
+				
+				if (exCaught instanceof HttpOperationFailedException) {
+					errorMessage.addProperty(NavajoFactory.getInstance().createProperty(navajoDoc,
+							"HttpBody", "String", ((HttpOperationFailedException) exCaught).getResponseBody(), 1, null, null));
+				}
+				
 
     			System.err.println(exCaught);
     		}
@@ -69,13 +77,18 @@ public class NavajoCamelProducer extends DefaultProducer {
     		Object origBody = exchange.getProperty("origBody");
     		if (origBody != null) {
     			Navajo origNavajo = (Navajo) origBody;
-
+    			com.dexels.navajo.document.Message inputMessage = NavajoFactory.getInstance().createMessage(navajoDoc, "_Input");
+    			navajoDoc.addMessage(inputMessage);
     			for (com.dexels.navajo.document.Message m : origNavajo.getAllMessages()) {
-    				input.addMessage(m);
+    				inputMessage.addMessage(m);
     			}
     		}
     		
-    		Navajo result = localClient.call(input);
+    		Navajo result = localClient.call(navajoDoc);
+    		if (result.getMessage("error") != null) {
+    			// An exception occured in handling Navajo!
+    			logger.error("Error in handling Camel navajo: {}", rawbody);
+    		}
     		//result.write(System.err);
     		exchange.getOut().setBody(result);
     	} else {
