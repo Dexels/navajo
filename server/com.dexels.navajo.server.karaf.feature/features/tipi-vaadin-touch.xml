@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="tipi.vaadin.touch-3.0.0">
+	<feature name='tipi.vaadin.touch' version='3.0.0' start-level='81' >
+		<feature version="[3.0.0,4)">tipi.vaadin</feature>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin.touch/1.0.0</bundle>
+	</feature>
+</features>

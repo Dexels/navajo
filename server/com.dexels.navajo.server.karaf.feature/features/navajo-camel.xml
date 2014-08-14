@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.camel-3.0.11">
+	<feature name='navajo.camel' version='3.0.11' start-level='81' >
+		<feature version="[3.0.0,4)">navajo.server</feature>
+		<feature version="[2.10.2,3)">camel</feature>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/2.0.23</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.camel/2.0.0</bundle>
+		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.javax.mail/1.4.1_5</bundle>
+		<bundle dependency='true'>mvn:org.apache.james.protocols/protocols-api/1.6.3</bundle>
+		<bundle dependency='true'>mvn:org.apache.james.protocols/protocols-netty/1.6.3</bundle>
+		<bundle dependency='true'>mvn:org.apache.james.protocols/protocols-smtp/1.6.3</bundle>
+		<bundle dependency='true'>mvn:io.netty/netty/3.9.0.Final</bundle>
+	</feature>
+</features>

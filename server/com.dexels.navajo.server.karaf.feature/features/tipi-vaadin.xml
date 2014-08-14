@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="tipi.vaadin-3.0.11">
+
+	<feature name='tipi.vaadin' version='3.0.11' start-level='81' >
+		<feature version="[3.0.0,4)">tipi.core</feature>
+		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.14</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.3.18</bundle>
+	</feature>
+</features>

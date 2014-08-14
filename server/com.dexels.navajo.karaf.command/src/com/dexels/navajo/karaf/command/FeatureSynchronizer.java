@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.karaf.features.Feature;
 import org.apache.karaf.features.FeaturesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +25,14 @@ public class FeatureSynchronizer implements Runnable {
 	private Thread updateThread = null;
 	private String cacheDir = null;
 	
-	public void setFeatureService(FeaturesService featureService) {
+	public void setFeaturesService(FeaturesService featureService) {
 		this.featureService = featureService;
 	}
 	
-	public void clearFeatureService(FeaturesService featureService) {
+	public void clearFeaturesService(FeaturesService featureService) {
 		this.featureService = null;
 	}
+	
 	
 	public void activate(Map<String,Object> settings) throws IOException {
 		this.settings = settings;
@@ -38,22 +40,30 @@ public class FeatureSynchronizer implements Runnable {
 		this.cacheDir  = (String) settings.get("cacheDir");
 		loadOwnedFeatures();
 		this.running = true;
+		updateThread.start();
+		logger.info("Sync started!");
 	}
 
 	private void loadOwnedFeatures() throws FileNotFoundException, IOException {
 		File cacheFolder = new File(cacheDir);
+		if(!cacheFolder.exists()) {
+			cacheFolder.mkdirs();
+		}
 		File ownershipFile = new File(cacheFolder,"ownedfeatures.properties");
-		FileReader fr = new FileReader(ownershipFile);
-		propertyFile.load(fr);
-		fr.close();
+		if(ownershipFile.exists()) {
+			try(FileReader fr = new FileReader(ownershipFile)) {
+				propertyFile.load(fr);
+			}
+			
+		}
 	}
 	
 	private void saveOwnedFeatures() throws FileNotFoundException, IOException {
 		File cacheFolder = new File(cacheDir);
 		File ownershipFile = new File(cacheFolder,"ownedfeatures.properties");
-		FileWriter fw = new FileWriter(ownershipFile);
-		propertyFile.store(fw, "Owned by the feature synchronizer");
-		fw.close();
+		try (FileWriter fw = new FileWriter(ownershipFile)) {
+			propertyFile.store(fw, "Owned by the feature synchronizer");
+		}
 	}
 
 	public void deactivate() {
@@ -62,25 +72,66 @@ public class FeatureSynchronizer implements Runnable {
 	}
 	
 	public synchronized void updateFeatures() throws IOException {
-		for (Map.Entry<String, Object> e : settings.entrySet()) {
-			String feature = e.getKey();
-			if(!feature.startsWith("feature.")) {
-				continue;
-			}
-			String version = (String) e.getValue();
-			String current = (String) propertyFile.get(feature);
-			if(current!=null) {
-				propertyFile.remove(feature);
-			}
-			try {
-				featureService.installFeature(feature, version);
-				
-			} catch (Exception e1) {
-				logger.error("Error installing Karaf feature: "+feature+" version: "+version, e1);
+		logger.info("Scanning for feature updates");
+		String installed = (String) settings.get("installed");
+		String uninstalled = (String) settings.get("uninstalled");
+		if(installed!=null) {
+			String[] ins = installed.split(",");
+			for (String in : ins) {
+				ensureInstalled(in);
 			}
 		}
-		saveOwnedFeatures();
+		if(uninstalled!=null) {
+			String[] uns = uninstalled.split(",");
+			for (String in : uns) {
+				ensureUninstalled(in);
+			}
+		}
 	}
+
+	private void ensureInstalled(String feature) {
+		logger.info("Ensuring installation of: "+feature);
+		try {
+			Feature f = featureService.getFeature(feature);
+			if(f==null) {
+				logger.debug("seems unavailable. Can't be helped now.");
+			} else {
+				
+//				logger.info("Getting install>"+f.getInstall()+"< id: >"+f.getId()+"<");
+				if(featureService.isInstalled(f)) {
+					logger.info("Installed!");
+				} else {
+					logger.info("Not installed, installing..");
+					featureService.installFeature(feature);
+				}
+				
+			}
+			saveOwnedFeatures();
+		} catch (Exception e2) {
+			logger.error("Error: ", e2);
+		}
+	}
+	
+	private void ensureUninstalled(String feature) {
+		try {
+			Feature f = featureService.getFeature(feature);
+			if(f==null) {
+				logger.debug("seems unavailable. No problem");
+			} else {
+				
+				if(featureService.isInstalled(f)) {
+					logger.info("Installed!");
+					featureService.uninstallFeature(feature);
+				} else {
+					logger.info("Not installed: ok");
+				}
+				
+			}
+		} catch (Exception e2) {
+			logger.error("Error: ", e2);
+		}
+	}
+
 
 	@Override
 	public void run() {
