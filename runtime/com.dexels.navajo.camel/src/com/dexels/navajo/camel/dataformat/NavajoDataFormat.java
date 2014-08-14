@@ -20,6 +20,10 @@ public class NavajoDataFormat implements DataFormat {
 	public Object unmarshal(Exchange exchange, InputStream stream) throws Exception {
 
 		Navajo n =  NavajoFactory.getInstance().createNavajo(stream);
+		// Copy any existing headers
+		exchange.getOut().setHeaders(exchange.getIn().getHeaders());
+		
+		// Get navajo header and add its attributes as headers
 		com.dexels.navajo.document.Header header = n.getHeader();
 		if (header != null) {
 			for (String key : header.getHeaderAttributes().keySet()) {
