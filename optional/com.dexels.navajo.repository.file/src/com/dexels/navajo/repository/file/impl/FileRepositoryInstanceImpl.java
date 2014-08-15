@@ -35,6 +35,8 @@ public class FileRepositoryInstanceImpl extends BaseFileRepositoryInstanceImpl i
 			}
 			watchDir = null;
 		}
+		super.deregisterFileInstallLocations();
+
 	}
 	
 

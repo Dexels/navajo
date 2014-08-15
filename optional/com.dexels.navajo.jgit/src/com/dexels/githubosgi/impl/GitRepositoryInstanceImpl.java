@@ -157,7 +157,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 
 	
 	public void deactivate() {
-
+		super.deregisterFileInstallLocations();
 	}
 	
 	

@@ -332,11 +332,22 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.configAdmin = configAdmin;
 	}
+	
 
 	/**
 	 * @param configAdmin the configAdmin to remove 
 	 */
 	public void clearConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.configAdmin = null;
+	}
+
+	protected void deregisterFileInstallLocations() {
+		for (Map.Entry<String, Configuration> element : resourcePids.entrySet()) {
+			try {
+				element.getValue().delete();
+			} catch (IOException e) {
+				logger.warn("Problem removing fileinstalled location: ", element.getKey(),e);
+			}
+		}
 	}
 }
