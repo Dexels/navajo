@@ -70,15 +70,15 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 
 	protected void initializeContext(String installationPath,String contextPath) throws IOException {
 		this.installationPath = installationPath;
-		try {
-			if(!suppressAdapters) {
-				addFolderMonitorListener(contextPath,installationPath,"adapters");
-			}
-			addFolderMonitorListener(contextPath,installationPath,"camel");
-			addFolderMonitorListener(contextPath,installationPath,"features");
-		} catch (InvalidSyntaxException e) {
-			logger.error("Error creating folder monitor: ",e);
-		}
+//		try {
+//			if(!suppressAdapters) {
+//				addFolderMonitorListener(contextPath,installationPath,"adapters");
+//			}
+//			addFolderMonitorListener(contextPath,installationPath,"camel");
+//			addFolderMonitorListener(contextPath,installationPath,"features");
+//		} catch (InvalidSyntaxException e) {
+//			logger.error("Error creating folder monitor: ",e);
+//		}
 		emitLogbackConfiguration(installationPath);
 	}
 	
@@ -102,6 +102,14 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 		return installationPath;
 	}
 
+	/**
+	 * This is no longer necessary, as the RepositoryInstance will do this for you. As both check for duplicates
+	 * @param contextPath
+	 * @param installPath
+	 * @param subFolder
+	 * @throws IOException
+	 * @throws InvalidSyntaxException
+	 */
 	private void addFolderMonitorListener(String contextPath, String installPath, String subFolder) throws IOException, InvalidSyntaxException {
 		File cp = new File(installPath);
 		File monitoredFolder = new File(cp,subFolder);
