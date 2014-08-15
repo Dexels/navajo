@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-3.0.18">
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-3.0.19">
 	<!-- scr, http, webconsole -->
-	<feature  name='navajo.core' version='3.0.18'>
+	<feature  name='navajo.core' version='3.0.19'>
 		<details>Navajo Core Components</details>
 
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.88

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.multitenant-3.0.0">
-	<feature name='navajo.multitenant' version='3.0.0' start-level='81' >
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.instance.factory/2.0.12</bundle>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.multitenant-3.0.1">
+	<feature name='navajo.multitenant' version='3.0.1' start-level='81' >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.instance.factory/2.0.14</bundle>
 	</feature>
 </features>
