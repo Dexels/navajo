@@ -152,19 +152,19 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 					+ " because it does not exist");
 			return;
 		}
-		final String factoryPid = "org.apache.felix.fileinstall";
-		final String filter = "(&(service.factoryPid=" + factoryPid + ")(name="
-				+ configName + "))";
 		try {
-			Configuration cc = createOrReuse(factoryPid, filter);
+			Configuration cc = getUniqueResourceConfig(folder.getAbsolutePath());
 			Dictionary<String, Object> d = new Hashtable<String, Object>();
 			d.put("felix.fileinstall.dir", folder.getAbsolutePath());
 			d.put("felix.fileinstall.filter", fileFilter);
 			d.put("configName", configName);
-			cc.update(d);
+			updateIfChanged(cc, d);
 			ownedConfigurations.add(cc);
 		} catch (IOException e) {
 			logger.error("Error: ", e);
+		} catch (InvalidSyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -609,6 +609,26 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		return cc;
 	}
 
+	private Configuration getUniqueResourceConfig(String path)
+			throws IOException, InvalidSyntaxException {
+		final String factoryPid = "org.apache.felix.fileinstall";
+		Configuration[] cc = configAdmin
+				.listConfigurations("(&(service.factoryPid=" + factoryPid
+						+ ")(felix.fileinstall.dir=" + path + "))");
+		if (cc != null) {
+
+			if (cc.length != 1) {
+				logger.info("Odd length: " + cc.length);
+			}
+			return cc[0];
+		} else {
+			logger.info("Not found: " + path+" creating a new factory config for: "+factoryPid);
+			Configuration c = configAdmin.createFactoryConfiguration(
+					factoryPid, null);
+			return c;
+		}
+	}
+	
 	private void updateIfChanged(Configuration c,
 			Dictionary<String, Object> settings) throws IOException {
 		Dictionary<String, Object> old = c.getProperties();
