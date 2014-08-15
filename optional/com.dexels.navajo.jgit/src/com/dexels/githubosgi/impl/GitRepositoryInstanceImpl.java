@@ -211,6 +211,8 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			logger.error("Error: ", t);
 			
 		}
+		
+		registerFileInstallLocations();
 
 	}
 
