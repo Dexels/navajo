@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 
@@ -26,10 +27,17 @@ public class JsonNavajoProcessorImpl implements Processor {
 		logger.warn("Start proccing NavajoInput");
 		org.apache.camel.Message in = ex.getIn();
 		Object body = in.getBody(String.class);
+		Navajo doc = null;
 		
-		JSONTML json = JSONTMLFactory.getInstance();
-	
-		Navajo doc = json.parse(new StringReader((String) body));
+		if (body == null || body.equals("")) {
+			// Nothing to parse...
+			doc = NavajoFactory.getInstance().createNavajo();
+
+		} else {
+			JSONTML json = JSONTMLFactory.getInstance();
+			doc = json.parse(new StringReader((String) body));
+		}
+		
 		ex.getOut().setBody(doc);
 		 // copy headers from IN to OUT to propagate them
 		ex.getOut().setHeaders(ex.getIn().getHeaders());
