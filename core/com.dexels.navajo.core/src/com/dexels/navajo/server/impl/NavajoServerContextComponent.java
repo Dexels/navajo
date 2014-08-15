@@ -75,6 +75,7 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 				addFolderMonitorListener(contextPath,installationPath,"adapters");
 			}
 			addFolderMonitorListener(contextPath,installationPath,"camel");
+			addFolderMonitorListener(contextPath,installationPath,"features");
 		} catch (InvalidSyntaxException e) {
 			logger.error("Error creating folder monitor: ",e);
 		}
