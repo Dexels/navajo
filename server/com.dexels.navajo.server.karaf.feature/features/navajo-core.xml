@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-3.0.17">
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-3.0.18">
 	<!-- scr, http, webconsole -->
-	<feature  name='navajo.core' version='3.0.17'>
+	<feature  name='navajo.core' version='3.0.18'>
 		<details>Navajo Core Components</details>
 
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.88
@@ -14,7 +14,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/2.0.0
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.0.36</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.0.38</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1
 		</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
