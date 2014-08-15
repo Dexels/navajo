@@ -7,5 +7,6 @@
    <reference bind="setEventAdmin" cardinality="0..1" interface="org.osgi.service.event.EventAdmin" name="EventAdmin" policy="dynamic" unbind="clearEventAdmin"/>
    <reference bind="addOperation" cardinality="0..n" interface="com.dexels.navajo.repository.api.AppStoreOperation" name="AppStoreOperation" policy="dynamic" unbind="removeOperation"  target="(|(repo=file)(!(repo=*)))"/>
    <reference bind="setRepositoryLayout" cardinality="1..1" interface="com.dexels.navajo.repository.api.diff.RepositoryLayout" name="RepositoryLayout" policy="dynamic" target="(name=navajo)" unbind="clearRepositoryLayout"/>
+   <reference bind="setConfigAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="dynamic" unbind="clearConfigAdmin"/>
    <property name="repo" type="String" value="file"/>
 </scr:component>

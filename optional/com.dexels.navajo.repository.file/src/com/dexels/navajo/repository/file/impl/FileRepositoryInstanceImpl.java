@@ -23,6 +23,7 @@ public class FileRepositoryInstanceImpl extends BaseFileRepositoryInstanceImpl i
 		settings.putAll(configuration);
 		applicationFolder = findConfiguration(path,fileInstallPath);
 		super.setupMonitoredFolders();
+		super.registerFileInstallLocations();
 	}
 
 	public void deactivate() {

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.repository.api.RepositoryManager;
+import com.dexels.navajo.repository.api.diff.RepositoryLayout;
 
 public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 	
@@ -24,6 +25,10 @@ public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 	private final Map<String,Map<String,Object>> operationSettings = new HashMap<String, Map<String,Object>>();
 	protected String type;
 
+	private final Map<String,RepositoryLayout> repositoryLayout = new HashMap<String, RepositoryLayout>();
+
+
+	
 	private final static Logger logger = LoggerFactory
 			.getLogger(RepositoryInstanceImpl.class);
 	
@@ -113,4 +118,35 @@ public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 		return getRepositoryName()+": "+repositoryType()+"=>"+applicationType();
 	}
 
+
+
+	public void addRepositoryLayout(RepositoryLayout r, Map<String,Object> settings) {
+		repositoryLayout.put((String) settings.get("name"),r);
+	}
+	
+	public void removeRepositoryLayout(RepositoryLayout r, Map<String,Object> settings) {
+		repositoryLayout.remove(settings.get("name"));
+	}
+
+	@Override
+	public List<String> getMonitoredFolders() {
+		RepositoryLayout r = repositoryLayout.get(type);
+		if(r==null) {
+			logger.warn("Unknown repository layout: "+type+", change monitoring might not work!");
+			return null;
+		}
+		return r.getMonitoredFolders();
+	}
+	
+
+	@Override
+	public List<String> getConfigurationFolders() {
+		RepositoryLayout r = repositoryLayout.get(type);
+		if(r==null) {
+			logger.warn("Unknown repository layout: "+type+", change monitoring might not work!");
+			return null;
+		}
+		return r.getConfigurationFolders();
+	}
+	
 }
