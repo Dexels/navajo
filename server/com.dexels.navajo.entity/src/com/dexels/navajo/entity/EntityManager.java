@@ -131,6 +131,9 @@ public class EntityManager {
 		String scriptPath = dispatcher.getNavajoConfig().getScriptPath();
 		logger.info("Compiling and installing scripts in: {}", scriptPath + "/entity");
 		File entityDir = new File(scriptPath + "/entity");
+		if (!entityDir.exists()) {
+			return;
+		}
 		for (File f : entityDir.listFiles()) {
 			if (f.isFile()) {
 				buildAndLoadScript(f.toString());
