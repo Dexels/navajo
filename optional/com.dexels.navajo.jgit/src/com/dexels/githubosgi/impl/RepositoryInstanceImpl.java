@@ -219,7 +219,19 @@ public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 				logger.warn("Problem removing fileinstalled location: ", element.getKey(),e);
 			}
 		}
-		// TODO Auto-generated method stub
 		
 	}
+	
+	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
+		this.configAdmin = configAdmin;
+	}
+	
+
+	/**
+	 * @param configAdmin the configAdmin to remove 
+	 */
+	public void clearConfigAdmin(ConfigurationAdmin configAdmin) {
+		this.configAdmin = null;
+	}
+
 }
