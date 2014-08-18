@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="sportlink.libraries-3.0.11">
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="sportlink.libraries-3.0.12">
 
-	<feature name='sportlink.libraries' version='3.0.11'>
+	<feature name='sportlink.libraries' version='3.0.12'>
 		<feature version="[3.0.0,4)">navajo.function</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<feature version="[3.0.0,4)">navajo.article</feature>

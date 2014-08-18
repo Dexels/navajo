@@ -8,12 +8,17 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
@@ -29,7 +34,9 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 	protected File applicationFolder;
 	
 	private EventAdmin eventAdmin = null;
-
+	private ConfigurationAdmin configAdmin;
+	private final Map<String,Configuration> resourcePids = new HashMap<String, Configuration>();
+	
 	protected final Map<String,Object> settings = new HashMap<String, Object>();
 	private final Map<String,AppStoreOperation> operations = new HashMap<String, AppStoreOperation>();
 	private RepositoryLayout repositoryLayout = null;
@@ -108,6 +115,15 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 
 	
 
+
+	@Override
+	public List<String> getConfigurationFolders() {
+		if(repositoryLayout==null) {
+			logger.warn("Unknown repository layout: "+type+", change monitoring might not work!");
+			return null;
+		}
+		return repositoryLayout.getConfigurationFolders();
+	}
 	
 	@Override
 	public List<String> getMonitoredFolders() {
@@ -218,7 +234,6 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 			String operationName = entry.getKey();
 			Map<String,Object> settings = operationSettings.get(operationName);
 			String operationType = (String) settings.get("type");
-			// TODO match repository type
 			if(this.type==null) {
 				//
 			}
@@ -247,7 +262,6 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 
 	@Override
 	public int refreshApplication() throws IOException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -260,6 +274,80 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 		return envDeployment;
 	}
 
+	protected void registerFileInstallLocations() throws IOException {
+		List<String> locations = getConfigurationFolders();
+		for (String location : locations) {
+			File current = new File(getRepositoryFolder(),location);
+			addFolderMonitorListener(current);
+		}
+		
+	}
 
+	private void addFolderMonitorListener(File monitoredFolder) throws IOException {
+		if(!monitoredFolder.exists()) {
+			logger.warn("FileInstaller should monitor folder: {} but it does not exist. Will not try again.", monitoredFolder.getAbsolutePath());
+			return;
+		}
+		//fileInstallConfiguration = myConfigurationAdmin.createFactoryConfiguration("org.apache.felix.fileinstall",null);
+//		monitoredFolder.getCanonicalFile().getAbsolutePath()
+		final String absolutePath = monitoredFolder.getCanonicalFile().getAbsolutePath();
+		Configuration newConfig = getUniqueResourceConfig( absolutePath);
+		Dictionary<String,Object> d = newConfig.getProperties();
+		if(d==null) {
+			d = new Hashtable<String,Object>();
+		}
+		d.put("felix.fileinstall.dir",absolutePath );
+		d.put("injectedBy","repository-instance" );
+		String pid = newConfig.getPid();
+		resourcePids.put(pid, newConfig);
+		newConfig.update(d);	
+	}
+	
+	private Configuration getUniqueResourceConfig(String path)
+			throws IOException {
+		final String factoryPid = "org.apache.felix.fileinstall";
+		Configuration[] cc;
+		String filter = "(&(service.factoryPid=" + factoryPid
+				+ ")(felix.fileinstall.dir=" + path + "))";
+		try {
+			cc = configAdmin.listConfigurations(filter);
+		} catch (InvalidSyntaxException e) {
+			logger.error("Error discovering previous fileinstalls filter: "+filter, e);
+			return null;
+		}
+		if (cc != null) {
 
+			if (cc.length != 1) {
+				logger.info("Odd length: " + cc.length);
+			}
+			return cc[0];
+		} else {
+			logger.info("Not found: " + path+" creating a new factory config for: "+factoryPid);
+			Configuration c = configAdmin.createFactoryConfiguration(
+					factoryPid, null);
+			return c;
+		}
+	}
+	
+	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
+		this.configAdmin = configAdmin;
+	}
+	
+
+	/**
+	 * @param configAdmin the configAdmin to remove 
+	 */
+	public void clearConfigAdmin(ConfigurationAdmin configAdmin) {
+		this.configAdmin = null;
+	}
+
+	protected void deregisterFileInstallLocations() {
+		for (Map.Entry<String, Configuration> element : resourcePids.entrySet()) {
+			try {
+				element.getValue().delete();
+			} catch (IOException e) {
+				logger.warn("Problem removing fileinstalled location: ", element.getKey(),e);
+			}
+		}
+	}
 }

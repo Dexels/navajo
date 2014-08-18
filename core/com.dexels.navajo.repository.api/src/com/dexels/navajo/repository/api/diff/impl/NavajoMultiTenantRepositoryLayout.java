@@ -15,10 +15,16 @@ public class NavajoMultiTenantRepositoryLayout implements RepositoryLayout {
 //	result.add("workflows");
 //	result.add("tasks");
 	
-	private final List<String> monitoredFolders = Arrays.asList("config", "scripts", "article","authorization","adapters","workflows","tasks");
+	private final List<String> monitoredFolders = Arrays.asList("config", "scripts", "article","authorization","adapters","features","workflows","tasks");
+	private final List<String> configurationFolders = Arrays.asList("config","adapters","features");
+
 	@Override
 	public List<String> getMonitoredFolders() {
 		return monitoredFolders;
+	}
+	@Override
+	public List<String> getConfigurationFolders() {
+		return configurationFolders;
 	}
 
 }
