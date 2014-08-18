@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.githubosgi.GitRepositoryInstance;
 import com.dexels.navajo.repository.api.diff.EntryChangeType;
 import com.dexels.navajo.repository.api.diff.RepositoryChange;
-import com.dexels.navajo.repository.api.diff.RepositoryLayout;
+import com.dexels.navajo.repository.core.impl.RepositoryInstanceImpl;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 
@@ -170,7 +170,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		branch = (String) settings.get("branch");
 		name = (String) settings.get("name");
 		this.type = (String) settings.get("type");
-
+		deployment = (String) settings.get("repository.deployment");
 		repositoryName = name + "-"+branch;
 		applicationFolder = new File(gitRepoFolder,repositoryName);
 		super.setSettings(settings);
@@ -442,7 +442,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	
 
 	@Override
-	public int refreshApplication() throws IOException {
+	public void refreshApplication() throws IOException {
 //		RevCommit last = lastCommit;
 		String oldVersion = getLastCommitVersion();
 		logger.debug(">>> last commit version: " + oldVersion);
@@ -458,11 +458,11 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			List<DiffEntry> diffEntries = diff(oldVersion);
 			if(newVersion.equals(oldVersion)) {
 				logger.info("Identical versions. Nothing pulled");
-				return 0;
+				return;
 			}
 			if(diffEntries.isEmpty()) {
 				logger.info("Empty changeset (but there was a commit). Maybe empty commit?");
-				return 0;
+				return;
 			}
 
 			for (DiffEntry diffEntry : diffEntries) {
@@ -495,10 +495,9 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 				properties.put("url", url);
 			}
 			sendChangeEvent(RepositoryChange.TOPIC, properties);
-			return 1;
 		} catch (GitAPIException e) {
 			logger.error("Error: ", e);
-			return -1;
+			throw new IOException("Trouble updating git repository.", e);
 		}
 
 	}

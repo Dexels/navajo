@@ -20,7 +20,7 @@ public class FileRepositoryInstanceImpl extends BaseFileRepositoryInstanceImpl i
 		repositoryName = (String) configuration.get("repository.name");
 		deployment = (String) configuration.get("repository.deployment");
 		final String fileInstallPath= (String) configuration.get("felix.fileinstall.filename");
-		settings.putAll(configuration);
+		getSettings().putAll(configuration);
 		applicationFolder = findConfiguration(path,fileInstallPath);
 		super.setupMonitoredFolders();
 		super.registerFileInstallLocations();
@@ -39,6 +39,12 @@ public class FileRepositoryInstanceImpl extends BaseFileRepositoryInstanceImpl i
 
 	}
 	
+
+	@Override
+	public String repositoryType() {
+		return "file";
+	}
+
 
 
 
