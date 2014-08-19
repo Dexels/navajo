@@ -142,7 +142,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 
 		File adapters = new File(rootPath, "adapters");
 
-		addWatchedFolder(adapters, ".*\\.jar", "adapters");
+		addWatchedFolder(adapters, "", "adapters");
 	}
 
 	private void addWatchedFolder(File folder, String fileFilter,
