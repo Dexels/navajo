@@ -17,8 +17,8 @@ Export-Package: com.dexels.navajo.client;version="1.0.0";uses:="com.dexels.navaj
  com.dexels.navajo.client.systeminfo,
  navajoclient;uses:="com.dexels.navajo.version,org.osgi.framework,org.osgi.service.cm"
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.navajo.document;version="2.2.0",
- com.dexels.navajo.document.types;version="2.2.0",
+Import-Package: com.dexels.navajo.document;version="[2.2.0,2.3.0)",
+ com.dexels.navajo.document.types;version="[2.2.0,2.3.0)",
  com.dexels.navajo.version,
  com.jcraft.jzlib;version="1.1.1",
  javax.net,
