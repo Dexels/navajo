@@ -37,8 +37,7 @@ public class GrusManager implements Runnable {
 			try {
 				db.destroy();
 			} catch (Throwable t) {
-				System.err.println("Problem shutting down broker: ");
-				t.printStackTrace();
+				logger.error("Problem shutting down broker:  ", t);
 			}
 		}
 	}

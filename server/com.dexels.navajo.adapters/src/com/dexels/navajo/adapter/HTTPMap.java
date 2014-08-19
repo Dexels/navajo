@@ -210,7 +210,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 			sc.init(null, new TrustManager[] { trm }, null);
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 	}
 	

@@ -54,9 +54,7 @@ public class Parameters extends java.util.Hashtable<String,Parameter> implements
             	// TODO don't like passing null here, but have no idea what this whole thing does
                 eval = Condition.evaluate(condition, doc,null);
         } catch (TMLExpressionException ce) {
-            // ce.printStackTrace();
             eval = false;
-            // throw new SystemException(SystemException.PARSE_ERROR, "Invalid condition expression: " + value + "\n"+ce.getMessage());
         }
 
         // If condition succeeds evaluate parameter expression.

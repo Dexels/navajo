@@ -126,7 +126,7 @@ public final class LegacyDbConnectionBroker implements DbConnectionBroker
 		try {
 			availableConnections.acquire();
 		} catch (InterruptedException e1) {
-			e1.printStackTrace();
+			logger.debug("Thread interrupted",e1);
 		}
 
 		synchronized (this ) {

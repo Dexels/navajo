@@ -51,7 +51,6 @@ public class Version extends AbstractCoreExtension {
 			registerAll(library);
 		} catch (Throwable e) {
 			logger.error("Trouble starting NavajoEventEmitters bundle",e);
-			e.printStackTrace();
 		}
 	}
 	

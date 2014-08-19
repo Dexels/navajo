@@ -79,7 +79,6 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 						try {
 							JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 						} catch (Throwable t) {
-							//t.printStackTrace(System.err);
 						} 
 					}
 				}

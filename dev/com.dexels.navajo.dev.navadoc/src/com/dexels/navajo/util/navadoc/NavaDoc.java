@@ -22,6 +22,9 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.util.navadoc.config.ConfigurationException;
 import com.dexels.navajo.util.navadoc.config.DocumentSet;
 import com.dexels.navajo.util.navadoc.config.NavaDocConfigurator;
@@ -32,6 +35,8 @@ public class NavaDoc {
       "$Id$";
 
   private NavaDocConfigurator config = new NavaDocConfigurator();
+  
+  private final static Logger logger = LoggerFactory.getLogger(NavaDoc.class);
 
   private ServicesList list = null;
   private NavaDocTransformer transformer = null;
@@ -167,7 +172,6 @@ public class NavaDoc {
 
     }
     catch (Exception e) {
-      e.printStackTrace( System.err );
       throw new ConfigurationException(e.getMessage(), this.config.getConfigUri());
 
     }
@@ -194,7 +198,7 @@ public class NavaDoc {
   		}
   		
   	}catch(Exception e){
-  		e.printStackTrace();
+  		logger.error("Error: ", e);
   	}
 		
 		return previous;
@@ -250,7 +254,7 @@ public class NavaDoc {
       				previous.addSubFolderRow(key, "", currentindex.baseUri + key + "/index.html");
       			}
       		}catch(Exception e){
-      			e.printStackTrace();
+      			logger.error("Error: ", e);
       		}
       	}
       }

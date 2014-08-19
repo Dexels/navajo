@@ -121,6 +121,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	private void loadConfig(InputStream in, String externalRootPath, String servletContextPath)  throws SystemException{
     	
    	if(servletContextPath!=null) {

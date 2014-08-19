@@ -179,7 +179,6 @@ public class RepositoryInstanceWrapper implements RepositoryInstance {
 
 	@Override
 	public Map<String, Object> getSettings() {
-		// TODO Auto-generated method stub
 		return instance.getSettings();
 	}
 
@@ -205,8 +204,8 @@ public class RepositoryInstanceWrapper implements RepositoryInstance {
 
 
 	@Override
-	public int refreshApplication() throws IOException {
-		return 0;
+	public void refreshApplication() throws IOException {
+		instance.refreshApplication();
 	}
 
 

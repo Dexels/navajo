@@ -2,11 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: File implementation of repository
 Bundle-SymbolicName: com.dexels.navajo.repository.file
-Bundle-Version: 3.0.13.qualifier
+Bundle-Version: 3.0.15.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.repository.api;version="1.0.0",
  com.dexels.navajo.repository.api.diff;version="1.0.0",
+ com.dexels.navajo.repository.core.impl,
  org.osgi.framework;version="[1.5.0,2.0.0)",
  org.osgi.service.cm;version="[1.4.0,1.6.0)",
  org.osgi.service.event;version="[1.1.0,2.0.0)",

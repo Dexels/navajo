@@ -66,8 +66,8 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 			resp.sendError(400, "No repo");
 			return;
 		}
-		int eventCount = r.refreshApplication();
-		resp.getWriter().write(""+eventCount+"events sent");
+		r.refreshApplication();
+		resp.getWriter().write("Repository refreshed.");
 	}
 
 	@Override
@@ -166,8 +166,8 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 		final GitRepositoryInstance application = findApplication(url, branch);
 		try {
 			if (application != null) {
-				int eventCount = application.refreshApplication();
-				logger.info("pull complete: "+eventCount+" events sent!");
+				application.refreshApplication();
+				logger.info("pull complete.");
 			} else {
 				logger.warn("No repository found from url: " + url
 						+ " with branch: " + branch);

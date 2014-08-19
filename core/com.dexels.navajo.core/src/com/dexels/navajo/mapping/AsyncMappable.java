@@ -234,15 +234,11 @@ public String getVERSION() {
    * Use this method to let a thread sleep for a while...
    */
   public void goToSleep() {
-      //System.out.println("GOING TO SLEEP....(resume = " + resume + ")");
       try {
         while (!resume && !kill) {
           Thread.sleep(3000);
-          //System.err.print("Zzzzz....");
         }
       } catch (java.lang.InterruptedException ie) {
-        //System.err.println("Uhhhh??....GO SLEEP AGAIN....");
-        //ie.printStackTrace(System.err);
         goToSleep();
       }
   }

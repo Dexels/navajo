@@ -199,7 +199,6 @@ public class NavajoClassLoader extends MultiClassLoader {
     		  return myScriptClass;
     	  }
     	  catch (Exception e) {
-    		  //e.printStackTrace();
     		  // Try normal classloader...
     		  try {
     			  Class<?> c = getClass(className);

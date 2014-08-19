@@ -9,10 +9,7 @@ import java.util.Set;
 import navajocamel.Version;
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.CamelContextAware;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +17,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.mapping.DependentResource;
-import com.dexels.navajo.mapping.GenericDependentResource;
-import com.dexels.navajo.mapping.HasDependentResources;
-import com.dexels.navajo.mapping.compiler.meta.AdapterResourceDependency;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
@@ -54,8 +47,7 @@ public class CamelAdapter implements Mappable  {
 		try {
 			context.start();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		ProducerTemplate producer = context.createProducerTemplate();
 		

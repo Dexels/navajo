@@ -36,6 +36,8 @@ import org.apache.james.protocols.smtp.core.AbstractAuthRequiredToRelayRcptHook;
 import org.apache.james.protocols.smtp.hook.HookResult;
 import org.apache.james.protocols.smtp.hook.HookReturnCode;
 import org.apache.james.protocols.smtp.hook.MessageHook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Consumer which starts an SMTPServer and forward mails to the processer once they are received
@@ -47,10 +49,12 @@ public class SMTPConsumer extends DefaultConsumer {
 //    private SMTPURIConfiguration config;
     private NettyServer server;
 
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(SMTPConsumer.class);
+	
     public SMTPConsumer(Endpoint endpoint, Processor processor, SMTPURIConfiguration config) {
         super(endpoint, processor);
-//        this.config = config;
-
         
     }
 
@@ -79,20 +83,8 @@ public class SMTPConsumer extends DefaultConsumer {
 				// TODO remove hardcoded interface, it should be in the url
 				server =  createServer(new SMTPProtocol(chain, config, new ProtocolLogger(SMTPConsumer.class)), new InetSocketAddress("0.0.0.0", 8025)); // new NettyServer(new SMTPProtocol(chain, new SMTPConfigurationImpl(), new ProtocolLogger(SMTPConsumer.class)));
 				server.bind();
-
-			
-			
-			
-			
-//			chain = new SMTPProtocolHandlerChain();
-//			chain.add(new AllowToRelayHandler());
-//			chain.add(new ProcessorMessageHook());
-//			chain.wireExtensibleHandlers();
-//			server = new NettyServer(new SMTPProtocol(chain, new SMTPConfigurationImpl(), new ProtocolLogger(SMTPConsumer.class)));
-//			server.setListenAddresses(new InetSocketAddress(config.getBindIP(), config.getBindPort()));
-//			server.bind();
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
     }
 
@@ -111,22 +103,6 @@ public class SMTPConsumer extends DefaultConsumer {
         server.unbind();
     }
 
- 
-
-//    private final class AllowToRelayHandler extends AbstractAuthRequiredToRelayRcptHook {
-//
-//        @Override
-//        protected boolean isLocalDomain(String domain) {
-//            List<String> domains = config.getLocalDomains();
-//            if (domains == null) {
-//                // no restriction was set.. accept it!
-//                return true;
-//            } else {
-//                return domains.contains(domain.trim());
-//            }
-//        }
-//    }
-//
     /**
      * Send the {@link Exchange} to the {@link Processor} after receiving a message via SMTP
      *

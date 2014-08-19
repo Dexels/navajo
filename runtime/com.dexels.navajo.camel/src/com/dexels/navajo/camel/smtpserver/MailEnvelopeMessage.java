@@ -38,6 +38,8 @@ import javax.mail.internet.MimeMultipart;
 import org.apache.camel.impl.DefaultMessage;
 import org.apache.james.protocols.smtp.MailAddress;
 import org.apache.james.protocols.smtp.MailEnvelope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Message implementation which can holds all data for a {@link MailEnvelope}.
@@ -64,6 +66,10 @@ public class MailEnvelopeMessage extends DefaultMessage{
      */
     public final static String SMTP_MESSAGE_SIZE = "SMTP_MESSAGE_SIZE";
 
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(MailEnvelopeMessage.class);
+	
     public MailEnvelopeMessage(MailEnvelope env) throws MessagingException, IOException {
         populate(env);
     }
@@ -84,13 +90,12 @@ public class MailEnvelopeMessage extends DefaultMessage{
 		Enumeration en =  msg.getAllHeaders();
 		while (en.hasMoreElements()) {
 			Header object = (Header) en.nextElement();
-			System.err.println(">>>>>> "+object.getName()+" val: "+object.getValue());
 			setHeader(object.getName(), object.getValue());
 		}
         try {
             setBody(new ByteArrayInputStream(data));
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Error: ", e);
         }
         setHeader(SMTP_SENDER_ADRRESS, env.getSender().toString());
         

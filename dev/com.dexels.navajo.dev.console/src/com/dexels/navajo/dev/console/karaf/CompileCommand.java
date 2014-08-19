@@ -9,6 +9,8 @@ import org.apache.felix.service.command.Descriptor;
 import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
 
@@ -16,8 +18,8 @@ public class CompileCommand extends OsgiCommandSupport  {
 	
 //	import org.osgi.service.command.CommandProcessor;
 	
-//	private final static Logger logger = LoggerFactory
-//			.getLogger(CompileCommand.class);
+	private final static Logger logger = LoggerFactory
+			.getLogger(CompileCommand.class);
 	private BundleCreator bundleCreator = null;
 
 	public void setBundleCreator(BundleCreator bundleCreator) {
@@ -64,7 +66,7 @@ public class CompileCommand extends OsgiCommandSupport  {
 				System.err.println("Failed: "+failed);
 			}
 		} catch (Throwable e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 		return null;
 	}

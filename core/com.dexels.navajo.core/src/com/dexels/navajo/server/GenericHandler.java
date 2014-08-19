@@ -116,7 +116,7 @@ public class GenericHandler extends ServiceHandler {
 
     private final static CompiledScript getCompiledScript(Access a, String className,File scriptFile,String scriptName) throws Exception {
     	NavajoClassSupplier loader = getScriptLoader(a.betaUser, className);
-    	Class cs = loader.getCompiledNavaScript(className);
+    	Class<?> cs = loader.getCompiledNavaScript(className);
     	if ( cs != null ) {
     		com.dexels.navajo.mapping.CompiledScript cso = (com.dexels.navajo.mapping.CompiledScript) cs.newInstance();
     		if(cso instanceof GenericScriptEngine) {
@@ -139,7 +139,7 @@ public class GenericHandler extends ServiceHandler {
     		if ( loader == null ) { // Script does not yet exist.
     			return false;
     		}
-    		Class cs = loader.getCompiledNavaScript(className);
+    		Class<?> cs = loader.getCompiledNavaScript(className);
         	if ( cs != null ) {
         		cso = (CompiledScript) cs.newInstance();
         		cso.setClassLoader(loader);

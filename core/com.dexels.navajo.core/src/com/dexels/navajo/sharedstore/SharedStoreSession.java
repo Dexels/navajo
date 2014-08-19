@@ -162,7 +162,6 @@ public class SharedStoreSession {
 				return "No matching files";
 			}
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
 			throw new Exception("Could not get file: " + source + " (" + e.getMessage() + ")");
 		}
 	}

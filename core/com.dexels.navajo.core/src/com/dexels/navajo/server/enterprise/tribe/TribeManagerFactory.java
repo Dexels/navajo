@@ -5,7 +5,6 @@ import java.util.logging.Level;
 
 import navajocore.Version;
 
-import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +45,7 @@ public class TribeManagerFactory {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private static TribeManagerInterface getTribeManagerService() {
 		
 			try {
@@ -83,7 +83,6 @@ public class TribeManagerFactory {
 				Method m = c.getMethod("getInstance",(Class[]) null);
 				m.invoke(dummy, (Object[])null);
 			} catch (Throwable e) {
-				//e.printStackTrace(System.err);
 				AuditLog.log("INIT", "WARNING: Tribe Status Collector not available", Level.WARNING);
 			}	
 		}

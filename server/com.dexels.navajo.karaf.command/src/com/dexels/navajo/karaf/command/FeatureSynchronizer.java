@@ -94,14 +94,14 @@ public class FeatureSynchronizer implements Runnable {
 		try {
 			Feature f = featureService.getFeature(feature);
 			if(f==null) {
-				logger.debug("seems unavailable. Can't be helped now.");
+				logger.warn("Should install: {}, but it seems unavailable. Can't be helped now, will keep trying.",feature);
 			} else {
 				
 //				logger.info("Getting install>"+f.getInstall()+"< id: >"+f.getId()+"<");
 				if(featureService.isInstalled(f)) {
-					logger.info("Installed!");
+					logger.info("Feature: {} is installed. Good.",feature);
 				} else {
-					logger.info("Not installed, installing..");
+					logger.info("Feature {} is not installed, installing.",feature);
 					featureService.installFeature(feature);
 				}
 				
@@ -116,14 +116,14 @@ public class FeatureSynchronizer implements Runnable {
 		try {
 			Feature f = featureService.getFeature(feature);
 			if(f==null) {
-				logger.debug("seems unavailable. No problem");
+				logger.debug("Want to uninstall feature {}, but seems unavailable. Assuming all is well.");
 			} else {
 				
 				if(featureService.isInstalled(f)) {
-					logger.info("Installed!");
+					logger.info("Feature {} is installed, uninstalling. ",feature);
 					featureService.uninstallFeature(feature);
 				} else {
-					logger.info("Not installed: ok");
+					logger.info("Feature: {} is not installed: ok",feature);
 				}
 				
 			}

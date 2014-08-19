@@ -137,19 +137,14 @@ public class DocumentWebService extends HttpServlet {
         final String base = this
                 .getInitParameter( NavaDocConstants.WEB_BASE_INITPARAM );
         
-        System.err.println(">>>>>>>>>>>>>>>>> FOUND BASE: " + base);
         if ( ( base != null ) && ( base.length() > 0 ) ) {
             System.setProperty( NavaDocConstants.BASE_SYS_PROPERTY, base );
         }
-        
-        System.err.println("BASE = " + base + ", configUri = " + configUri);
-
         final NavaDocConfigurator conf = new NavaDocConfigurator(
                 this.configUri );
         try {
             conf.configure();
         } catch ( ConfigurationException ex ) {
-        	ex.printStackTrace(System.err);
             throw new ServletException( ex.toString() );
         }
 

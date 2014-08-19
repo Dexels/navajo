@@ -44,7 +44,7 @@ public class RepositoryManagerImpl implements RepositoryManager {
 		if(!configurationFolder.exists()) {
 			configurationFolder.mkdirs();
 		}
-		logger.info("Repository manager activated");
+		logger.info("Repository manager activated. Using repositoryfolder: "+repositoryFolder.getAbsolutePath());
 
 	}
 
@@ -57,12 +57,18 @@ public class RepositoryManagerImpl implements RepositoryManager {
 		File storeFolder = null;
 		if(path==null) {
 			logger.info("No storage.path found, now trying to retrieve from felix.fileinstall.filename");
-			storeFolder = findByFileInstaller(fileInstallPath);
+			storeFolder = findByFileInstaller(fileInstallPath,"storage");
 		} else {
-			storeFolder = new File(path);
+			
+			File suppliedPath = new File(path);
+			if(suppliedPath.isAbsolute()) {
+				storeFolder = suppliedPath;
+			} else {
+				storeFolder =findByFileInstaller(fileInstallPath,path);
+			}
 		}
-		if(storeFolder==null || !storeFolder.exists()) {
-			storeFolder = findByFileInstaller(fileInstallPath);
+		if(storeFolder==null ) {
+			storeFolder = findByFileInstaller(fileInstallPath,"storage");
 		}
 		if(storeFolder==null || !storeFolder.exists()) {
 			throw new IOException("No storage.path set in configuration!");
@@ -71,7 +77,7 @@ public class RepositoryManagerImpl implements RepositoryManager {
 	}
 
 	// f-in' beautiful
-	private File findByFileInstaller(final String fileNamePath) {
+	private File findByFileInstaller(final String fileNamePath, String storagePath) {
 		try {
 			URL url = new URL(fileNamePath);
 			File f;
@@ -85,7 +91,7 @@ public class RepositoryManagerImpl implements RepositoryManager {
 				if(etc!=null) {
 					File root = etc.getParentFile();
 					if(root!=null) {
-						File storage = new File(root,"storage");
+						File storage = new File(root,storagePath);
 						if(!storage.exists()) {
 							storage.mkdirs();
 						}

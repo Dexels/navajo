@@ -1285,7 +1285,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					}
 
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 					/*************************************************
 					 * this is a bit of a kludge, for batch mode, we'll poke
 					 * ahead to see if we really do have a result set,

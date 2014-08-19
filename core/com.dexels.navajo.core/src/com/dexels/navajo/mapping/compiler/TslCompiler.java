@@ -1691,7 +1691,7 @@ public class TslCompiler {
 							}
 
 						} catch (Exception e) {
-							// e.printStackTrace();
+							logger.info("Error adding dependency, wasn't logged before so reduced level to info. ", e);
 						}
 					} else {
 						addDependency(

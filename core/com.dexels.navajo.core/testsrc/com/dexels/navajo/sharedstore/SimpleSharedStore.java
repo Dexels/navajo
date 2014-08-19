@@ -9,9 +9,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SimpleSharedStore implements SharedStoreInterface {
 
 	File storeRoot;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SimpleSharedStore.class);
 	
 	public SimpleSharedStore(String name) {
 		storeRoot = new File(name);
@@ -85,7 +91,7 @@ public class SimpleSharedStore implements SharedStoreInterface {
 		try {
 			return new FileInputStream(new File(storeRoot, parent + "/" + name));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			return null;
 		}
 	}
@@ -101,7 +107,7 @@ public class SimpleSharedStore implements SharedStoreInterface {
 			System.err.println("In getOutputStream(), filename: " + f.getAbsolutePath());
 			return new FileOutputStream(new File(f, name));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			return null;
 		}
 	}

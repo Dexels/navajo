@@ -575,7 +575,7 @@ public void store() throws MappableException, UserException {
 					  waitForResult();
 				  }
 			  } catch (IOException e) {
-				  e.printStackTrace();
+				  logger.error("Error: ", e);
 			  }
 		  }
 

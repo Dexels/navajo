@@ -12,7 +12,6 @@ public class Tools {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		// nijenrodeweg
 //		52.327340
 //		 4.857465

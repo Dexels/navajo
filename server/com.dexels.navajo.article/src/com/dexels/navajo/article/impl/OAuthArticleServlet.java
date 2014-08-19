@@ -48,6 +48,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 			if(clientId== null || username == null ) {
 				resp.sendError(400, "Missing token");
 			}
+			// TODO I think we should verify this one? Of is this enough?
 			t = new Token() {
 				
 				@Override
@@ -84,10 +85,11 @@ public class OAuthArticleServlet extends ArticleServlet {
 
 		} else {
 			t = tokenStore.getTokenByString(token);
-			cr = clientStore.getClient(t.clientId());
+			if(t!=null) {
+				cr = clientStore.getClient(t.clientId());
+			}
 			
 		}
-		//TODO null check
 		if(t==null) {
 			resp.sendError(400, "Unauthorized or expired token");
 			return;

@@ -67,15 +67,4 @@ public class AdapterFieldDependency extends Dependency {
 		return adapterClass;
 	}
 
-//	public static void main(String [] args) {
-//		  Class<? extends AdapterFieldDependency> depClass = AdapterFieldDependency.class;
-//		  try {
-//			Constructor c = depClass.getConstructor(new Class[]{long.class, String.class, String.class, String.class});
-//			AdapterFieldDependency afd = (AdapterFieldDependency) c.newInstance(new Object[]{-1, "Apenoot", "pipo", "de clown"});
-//			System.err.println(afd.getJavaClass() + ", " + afd.getTimestamp() + ", " + afd.getType());
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} 
-//	}
 }

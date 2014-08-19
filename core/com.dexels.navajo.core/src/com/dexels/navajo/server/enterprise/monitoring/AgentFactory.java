@@ -32,7 +32,6 @@ public class AgentFactory {
 						Method m = c.getMethod("getInstance", (Class []) null);
 						instance = (AgentInterface) m.invoke(dummy, (Object []) null);
 					} catch (Throwable e) {
-						//e.printStackTrace(System.err);
 						instance = new DummyAgent();
 					}	
 				}

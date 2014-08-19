@@ -880,7 +880,6 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 				  o.myObject.getClass().getName());
 	  }
 	  catch (InvocationTargetException ite) {
-//		  ite.printStackTrace();
 		  Throwable t = ite.getTargetException();
 		  if (t instanceof UserException) {
 			  throw (UserException) t;

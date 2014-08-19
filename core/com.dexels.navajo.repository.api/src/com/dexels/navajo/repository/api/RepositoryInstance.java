@@ -20,7 +20,7 @@ public interface RepositoryInstance extends Comparable<RepositoryInstance> {
 
 	public List<String> getOperations();
 
-	public int refreshApplication() throws IOException;
+	public void refreshApplication() throws IOException;
 	
 	public String repositoryType();
 	
