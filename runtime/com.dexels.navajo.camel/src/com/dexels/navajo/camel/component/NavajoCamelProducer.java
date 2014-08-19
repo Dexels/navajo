@@ -54,19 +54,22 @@ public class NavajoCamelProducer extends DefaultProducer {
     			// with information about the caught exception
     			Exception e1 = (Exception) exCaught;
 				com.dexels.navajo.document.Message errorMessage = NavajoFactory.getInstance()
-						.createMessage(navajoDoc, "Errors");
+						.createMessage(navajoDoc, "errors");
 				navajoDoc.addMessage(errorMessage);
-				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(navajoDoc, "Error",
+				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(navajoDoc, "camelMessageFile",
+						"String", (String) in.getHeader("CamelFileAbsolutePath"), 1, null, null));
+				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(navajoDoc, "error",
 						"boolean", "true", 1, null, null));
 				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(navajoDoc,
-						"Exception", "String", e1.getClass().getName(), 1, null, null));
+						"exception", "String", e1.getClass().getName(), 1, null, null));
 				errorMessage.addProperty(NavajoFactory.getInstance().createProperty(navajoDoc,
-						"Message", "String", e1.getMessage(), 1, null, null));
+						"message", "String", e1.getMessage(), 1, null, null));
 				
 				if (exCaught instanceof HttpOperationFailedException) {
 					errorMessage.addProperty(NavajoFactory.getInstance().createProperty(navajoDoc,
-							"HttpBody", "String", ((HttpOperationFailedException) exCaught).getResponseBody(), 1, null, null));
+							"httpBody", "String", ((HttpOperationFailedException) exCaught).getResponseBody(), 1, null, null));
 				}
+				
 				
 
     			System.err.println(exCaught);
@@ -87,6 +90,7 @@ public class NavajoCamelProducer extends DefaultProducer {
     		if (result.getMessage("error") != null) {
     			// An exception occured in handling Navajo!
     			logger.error("Error in handling Camel navajo: {}", rawbody);
+    			throw new Exception("Error in calling Camel navajo - " + result.getMessage("error").getProperty("message"));
     		}
     		//result.write(System.err);
     		exchange.getOut().setBody(result);

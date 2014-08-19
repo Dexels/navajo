@@ -17,6 +17,8 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.script.api.FatalException;
+import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 
 /**
@@ -32,7 +34,7 @@ public class EntityManager {
 
 	private static EntityManager instance;
 	private BundleQueue bundleQueue;
-	private DispatcherInterface dispatcher;
+	private LocalClient myClient;
 
 	public EntityManager() {
 	}
@@ -128,7 +130,7 @@ public class EntityManager {
 	}
 
 	private void buildAndLoadScripts() throws Exception {
-		String scriptPath = dispatcher.getNavajoConfig().getScriptPath();
+		String scriptPath = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
 		logger.info("Compiling and installing scripts in: {}", scriptPath + "/entity");
 		File entityDir = new File(scriptPath + "/entity");
 		if (!entityDir.exists()) {
@@ -154,28 +156,27 @@ public class EntityManager {
 		this.bundleQueue = null;
 	}
 
-	public void setDispatcher(DispatcherInterface dispatcher) throws Exception {
-		this.dispatcher = dispatcher;
+	public void setClient(LocalClient client) {
+		this.myClient = client;
 	}
 
-	public void clearDispatcher(DispatcherInterface dispatcher) {
-		this.dispatcher = null;
+	public void clearClient(LocalClient client) {
+		this.myClient = null;
 	}
-	
 	
 	public Navajo getEntityNavajo(String serviceName) throws InterruptedException, FatalException {
 		Navajo in = NavajoFactory.getInstance().createNavajo();
 		Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
 		in.addHeader(h);
 		try {
-			return dispatcher.handle(in);
+			return myClient.call(in);
 		} catch (FatalException e) {
 			logger.warn("Error in getting EntityNavajo - perhaps OSGi activation problem? Trying one last time in 5 seconds...");
 			// OSGi activation - dispatcher might not be fully configured yet.
 			// Sleep a bit to allow for activation, then retry one last time
 			Thread.sleep(5000);
 		}
-		return dispatcher.handle(in);
+		return myClient.call(in);
 	}
 
 }
