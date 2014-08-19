@@ -12,7 +12,6 @@ public class StatisticsRunnerComponent implements StatisticsRunnerInterface {
 	 * @param cc  
 	 */
 	public void activate() {
-		System.out.println("hier");
 	}
 
 	public void deactivate() {
