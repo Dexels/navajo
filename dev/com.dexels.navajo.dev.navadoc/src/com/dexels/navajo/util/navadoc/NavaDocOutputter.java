@@ -17,6 +17,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -32,6 +34,9 @@ public class NavaDocOutputter {
 
   private NavaDocBaseDOM dom = null;
 
+  
+private final static Logger logger = LoggerFactory
+		.getLogger(NavaDocOutputter.class);
 
   // paths
   private File targetPath = null;
@@ -97,7 +102,7 @@ public class NavaDocOutputter {
 	    	out.close();
     	    
     } catch ( Exception ex ) {
-      ex.printStackTrace(System.err);
+    	logger.error("Error: ", ex);
     }
   }
 

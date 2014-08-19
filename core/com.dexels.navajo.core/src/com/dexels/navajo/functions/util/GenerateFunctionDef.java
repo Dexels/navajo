@@ -97,7 +97,6 @@ public class GenerateFunctionDef {
 				input.setContent(sb.toString());
 			}
 		} catch (Exception e)  {
-			//e.printStackTrace(System.err);
 		}
 		
 		XMLElement result = new CaseSensitiveXMLElement("result");
@@ -117,7 +116,6 @@ public class GenerateFunctionDef {
 				result.setContent(sb.toString());
 			}
 		} catch (Exception e)  {
-			//e.printStackTrace(System.err);
 		}
 		
 		

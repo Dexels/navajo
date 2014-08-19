@@ -145,7 +145,6 @@ public class MailMap implements MailMapInterface, Mappable,
 		try {
 			sendMail();
 		} catch (Exception e) {
-			// e.printStackTrace(System.err);
 			if (myAccess != null) {
 				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
 						myAccess.accessID);

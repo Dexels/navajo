@@ -180,7 +180,6 @@ public Message match(String matchString, Navajo inMessage,
         try {
 			current.refreshExpression();
 		} catch (ExpressionChangedException e) {
-//			e.printStackTrace();
 		}
     } catch (NavajoException e) {
         System.err.println("Expression failed: "+current.getValue());

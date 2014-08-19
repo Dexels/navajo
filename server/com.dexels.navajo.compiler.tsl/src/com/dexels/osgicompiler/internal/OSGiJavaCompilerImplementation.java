@@ -73,12 +73,6 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		Dictionary<String, String> nsc = new Hashtable<String, String>();
 		nsc.put("type", "navajoScriptClassLoader");
 		this.customClassLoaderRegistration = this.context.registerService(ClassLoader.class, customClassLoader, nsc);
-		// test the example, it shouldn't really be here, actually
-//		try {
-//			test();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 	}
 
 	@SuppressWarnings("unchecked")

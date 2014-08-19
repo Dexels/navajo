@@ -121,8 +121,7 @@ public class JSONTMLImpl implements JSONTML {
 			format(jg, n);
 			jg.close();
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception("Could not parse JSON inputstream: " + e.getMessage());
+			throw new Exception("Could not parse JSON inputstream" ,e);
 		} 
 	}
 
@@ -193,8 +192,7 @@ public class JSONTMLImpl implements JSONTML {
 		} catch (IOException ioe) {
 			throw ioe;
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
-			throw new Exception("Could not format Navajo as JSON stream: " + e.getMessage());
+			throw new Exception("Could not format Navajo as JSON stream" ,e);
 		}
 	}
 

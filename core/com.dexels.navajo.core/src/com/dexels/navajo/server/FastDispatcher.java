@@ -23,7 +23,6 @@ public class FastDispatcher {
 	 * @param in
 	 * @param responseOutputStream
 	 */
-	@SuppressWarnings("unchecked")
 	public void handle(Navajo in, OutputStream responseOutputStream, Runnable onFinish) {
 		
 		// System.err.println(">>>> IN FASTDISPATCHER.HANDLE()..." + responseOutputStream);
@@ -34,8 +33,8 @@ public class FastDispatcher {
 		a.rpcUser = in.getHeader().getRPCUser();
 		
 		try {
-			Class c = Class.forName("com.dexels.navajo.workflow.TestServiceWorkflow");
-			Constructor con = c.getConstructor(new Class[]{Access.class, OutputStream.class, Runnable.class});
+			Class<?> c = Class.forName("com.dexels.navajo.workflow.TestServiceWorkflow");
+			Constructor<?> con = c.getConstructor(new Class[]{Access.class, OutputStream.class, Runnable.class});
 			Object o = con.newInstance(new Object[]{a, responseOutputStream, onFinish});
 			Method m = c.getMethod("start", (Class[])null);
 			m.invoke(o, (Object[])null);

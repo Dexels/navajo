@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 import org.dexels.grus.DbConnectionBroker;
 import org.dexels.grus.GrusConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DbConnectionBrokerWrapper implements DbConnectionBroker {
 
@@ -13,6 +15,9 @@ public class DbConnectionBrokerWrapper implements DbConnectionBroker {
 	private final int maxConnections;
 	private boolean supportsAutoCommit = true;
 	private String dbIdentifier = "";
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DbConnectionBrokerWrapper.class);
 	
 	public DbConnectionBrokerWrapper(GrusDataSource gds, String username, int maxConnections) {
 		myGrusDataSource = gds;
@@ -47,7 +52,6 @@ public class DbConnectionBrokerWrapper implements DbConnectionBroker {
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -60,7 +64,7 @@ public class DbConnectionBrokerWrapper implements DbConnectionBroker {
 		try {
 			myGrusDataSource.getConnection().close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warn("Error closing connection: ", e);
 		}
 	}
 
@@ -95,7 +99,7 @@ public class DbConnectionBrokerWrapper implements DbConnectionBroker {
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warn("Error closing connection ", e);
 		}
 	}
 

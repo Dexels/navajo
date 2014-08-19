@@ -88,7 +88,7 @@ public class LdapRepository extends SimpleRepository {
                 // of this initial directory context.
 //                ctx.createSubcontext( "dc=dexels,dc=com" );
                 DirContext a = (DirContext) ctx.lookup( "dc=dexels,dc=com" ); 
-                NamingEnumeration e= a.list("ou=users");
+                NamingEnumeration<?> e= a.list("ou=users");
                 while(e.hasMore()) {
                 	Object o = e.next();
                 	System.err.println("o: "+o);

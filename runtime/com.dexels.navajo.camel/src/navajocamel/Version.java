@@ -52,39 +52,8 @@ public class Version extends AbstractCoreExtension {
 		try {
 			CamelAdapterLibrary library = new CamelAdapterLibrary();
 			registerAll(library);
-//			FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
-//			fi.init();
-//			
-//			fi.clearFunctionNames();
-//
-//
-//			fi.injectExtension(library);
-//			
-//			for(String adapterName: fi.getAdapterNames(library)) {
-////			FunctionDefinition fd = fi.getAdapterDefinition(adapterName,extensionDef);
-//				fi.getAdapterConfig(library).get(adapterName);
-////			FunctionDefinition fd = fi.getDef(extensionDef, adapterName);
-//				
-//				String adapterClass = fi.getAdapterClass(adapterName,library);
-//				Class<?> c = null;
-//				
-//				try {
-//					c = Class.forName(adapterClass);
-//					 Dictionary<String, Object> props = new Hashtable<String, Object>();
-//					 props.put("adapterName", adapterName);
-//					 props.put("adapterClass", c.getName());
-//
-//					if(adapterClass!=null) {
-//						context.registerService(Class.class.getName(), c, props);
-//					}
-//				} catch (Exception e) {
-//					logger.error("Error loading class for adapterClass: "+adapterClass,e);
-//				}
-//				
-//			}
 		} catch (Throwable e) {
-			logger.error("Trouble starting NavajoAdapters bundle",e);
-			e.printStackTrace();
+			logger.error("Trouble starting camel bundle",e);
 		}
 	}
 	

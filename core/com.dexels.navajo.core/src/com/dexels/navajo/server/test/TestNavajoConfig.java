@@ -2,13 +2,15 @@ package com.dexels.navajo.server.test;
 
 import java.io.File;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
-import com.dexels.navajo.persistence.PersistenceManagerFactory;
 import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.server.FileNavajoConfig;
 import com.dexels.navajo.server.NavajoConfigInterface;
@@ -30,6 +32,10 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	private NavajoClassSupplier myClassloader;
 	
 	private SharedFileStore sharedFileStore;
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TestNavajoConfig.class);
 	
 	public TestNavajoConfig() throws Exception {
 		this(null);
@@ -254,8 +260,7 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 		try {
 			return new SharedFileStore();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			return null;
 		}
 	}

@@ -246,7 +246,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			eTag = output;
 			return output;
 		} catch (NoSuchAlgorithmException ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 		return null;
 

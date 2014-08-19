@@ -339,11 +339,11 @@ public class NavajoClient implements ClientInterface, Serializable {
 					context.init(null, tmf.getTrustManagers(), null);
 					httpsCon.setSSLSocketFactory(context.getSocketFactory());
 				} catch (NoSuchAlgorithmException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				} catch (KeyStoreException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				} catch (KeyManagementException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 			}
 		}

@@ -74,7 +74,6 @@ public class MapMetaData {
 							                                        myClassLoader);
 				} catch (Exception e) {
 					logger.warn("Unable to lookup providers in lecagy service. Normal in OSGi.");
-//					e.printStackTrace();
 					return;
 				}
 				while(iter.hasNext()) {
@@ -214,7 +213,6 @@ public class MapMetaData {
 			return ( x.getName().equals("navascript"));
 		} catch (Exception e) {
 			AuditLog.log("", "Something went wrong while in determination of metascript status of script: " + fullScriptPath + "(" + e.getMessage() + ")", Level.WARNING);
-			//e.printStackTrace(System.err);
 			return false;
 		}
 		

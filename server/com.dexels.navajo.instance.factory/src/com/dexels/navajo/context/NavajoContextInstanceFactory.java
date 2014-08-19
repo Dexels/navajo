@@ -162,9 +162,6 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			ownedConfigurations.add(cc);
 		} catch (IOException e) {
 			logger.error("Error: ", e);
-		} catch (InvalidSyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 	}
@@ -610,11 +607,17 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 
 	private Configuration getUniqueResourceConfig(String path)
-			throws IOException, InvalidSyntaxException {
+			throws IOException {
 		final String factoryPid = "org.apache.felix.fileinstall";
-		Configuration[] cc = configAdmin
-				.listConfigurations("(&(service.factoryPid=" + factoryPid
-						+ ")(felix.fileinstall.dir=" + path + "))");
+		String filter = "(&(service.factoryPid=" + factoryPid
+				+ ")(felix.fileinstall.dir=" + path + "))";
+		Configuration[] cc;
+		try {
+			cc = configAdmin
+					.listConfigurations(filter);
+		} catch (InvalidSyntaxException e) {
+			throw new IOException("Problem parsing filter: "+filter,e);
+		}
 		if (cc != null) {
 
 			if (cc.length != 1) {

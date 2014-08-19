@@ -5,9 +5,15 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CVSChecker{
 	
 	private HashMap<String, String> scriptStatus = new HashMap<String, String>();
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CVSChecker.class);
 	
 	public CVSChecker(String path){
 		try{
@@ -32,7 +38,7 @@ public class CVSChecker{
 			}
 			q.destroy();
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}				
 	}
 	

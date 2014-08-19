@@ -98,7 +98,7 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider
 				try {
 					fileInputStream.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 			}
 		}

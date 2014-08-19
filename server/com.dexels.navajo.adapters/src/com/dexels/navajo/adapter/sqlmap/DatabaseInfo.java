@@ -188,7 +188,7 @@ public class DatabaseInfo implements Mappable {
       rs.close();
     }
     catch (Exception ex) {
-      //ex.printStackTrace(System.err);
+    	logger.error("Error: ", ex);
     }
     return l;
   }

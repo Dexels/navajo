@@ -353,7 +353,6 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 			SharedStoreLock ssl = readLock(parent, name, owner);
 			return ssl;
 		} catch (Exception e) {
-			//e.printStackTrace(System.err);
 			return null;
 		}
 	}
@@ -791,7 +790,6 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 				return l;
 			}
 		} catch (SharedStoreException e) {
-			e.printStackTrace(System.err);
 			logger.error(e.getMessage(), e);
 			return -1;
 		} finally {

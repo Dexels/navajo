@@ -23,9 +23,14 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ArticleClient {
 	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ArticleClient.class);
 	private URL base;
 	private ObjectNode meta;
 	private ObjectMapper mapper = new ObjectMapper();
@@ -141,11 +146,11 @@ public class ArticleClient {
 							JsonNode articleResult = getJSONFromURL(article,params);
 							checkResult(article,articleResult);
 						} catch (JsonGenerationException e) {
-							e.printStackTrace();
+							logger.error("Error: ", e);
 						} catch (JsonMappingException e) {
-							e.printStackTrace();
+							logger.error("Error: ", e);
 						} catch (IOException e) {
-							e.printStackTrace();
+							logger.error("Error: ", e);
 						}
 					}
 					
