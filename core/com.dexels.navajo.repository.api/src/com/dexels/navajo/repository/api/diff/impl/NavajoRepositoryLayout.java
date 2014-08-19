@@ -17,12 +17,14 @@ public class NavajoRepositoryLayout implements RepositoryLayout {
 //	result.add("tasks");
 	
 	private final List<String> monitoredFolders = Arrays.asList("config", "scripts", "article","authorization","workflows","tasks","features");
-	private final List<String> configurationFolders = Arrays.asList("config","adapters","features");
+	private final List<String> configurationFolders = Arrays.asList("config","features");
 
 	@Override
 	public List<String> getMonitoredFolders() {
-		String suppressAdapters = System.getenv("navajo.suppress.adaptersfolder");
-		if("true".equals(suppressAdapters)) {
+		String suppressAdapters = System.getProperty("navajo.suppress.adaptersfolder");
+		if (suppressAdapters == null) {
+			suppressAdapters = System.getenv("navajo.suppress.adaptersfolder");
+		}		if("true".equals(suppressAdapters)) {
 			return monitoredFolders;		
 		}
 		List<String> result = new ArrayList<String>(monitoredFolders);
@@ -33,7 +35,11 @@ public class NavajoRepositoryLayout implements RepositoryLayout {
 	
 	@Override
 	public List<String> getConfigurationFolders() {
-		String suppressAdapters = System.getenv("navajo.suppress.adaptersfolder");
+		String suppressAdapters = System.getProperty("navajo.suppress.adaptersfolder");
+		if (suppressAdapters == null) {
+			suppressAdapters = System.getenv("navajo.suppress.adaptersfolder");
+		}
+		
 		if("true".equals(suppressAdapters)) {
 			return configurationFolders;		
 		}
