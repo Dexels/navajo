@@ -2,23 +2,20 @@ Bundle-Name: Navajo Document reference implementation
 Bundle-SymbolicName: com.dexels.navajo.document
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.2.91.qualifier
+Bundle-Version: 2.2.92
 Bundle-Activator: navajodocument.Version
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: com.dexels.navajo.document;version="2.2.1",
- com.dexels.navajo.document.base;version="2.2.1",
- com.dexels.navajo.document.comparator;version="2.2.1",
- com.dexels.navajo.document.comparatormanager;version="2.2.1",
- com.dexels.navajo.document.filter;version="2.2.1",
- com.dexels.navajo.document.jaxpimpl.xml;version="2.2.1",
- com.dexels.navajo.document.json;version="2.2.1",
- com.dexels.navajo.document.metadata;version="2.2.1",
- com.dexels.navajo.document.nanoimpl;version="2.2.1",
- com.dexels.navajo.document.notifier;version="2.2.1",
- com.dexels.navajo.document.types;version="2.2.1",
- com.dexels.navajo.persistence;version="2.2.1",
- org.dexels.utils;version="2.2.1"
+Export-Package: com.dexels.navajo.document;version="2.2.1",com.dexels.
+ navajo.document.base;version="2.2.1",com.dexels.navajo.document.compa
+ rator;version="2.2.1",com.dexels.navajo.document.comparatormanager;ve
+ rsion="2.2.1",com.dexels.navajo.document.filter;version="2.2.1",com.d
+ exels.navajo.document.jaxpimpl.xml;version="2.2.1",com.dexels.navajo.
+ document.json;version="2.2.1",com.dexels.navajo.document.metadata;ver
+ sion="2.2.1",com.dexels.navajo.document.nanoimpl;version="2.2.1",com.
+ dexels.navajo.document.notifier;version="2.2.1",com.dexels.navajo.doc
+ ument.types;version="2.2.1",com.dexels.navajo.persistence;version="2.
+ 2.1",org.dexels.utils;version="2.2.1"
 Import-Package: com.dexels.navajo.version,
  javax.xml,
  javax.xml.parsers,
