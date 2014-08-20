@@ -19,7 +19,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.DispatcherInterface;
 
 /**
  * TODO: NAVAJO CLUSTER ENABLING
