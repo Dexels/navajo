@@ -33,7 +33,7 @@ public class NavajoRestProcessorImpl implements Processor {
 		Navajo document = (Navajo) body;
 		JSONTML json = JSONTMLFactory.getInstance();
 		Writer w = new StringWriter()		;
-		json.format(document, w, false);
+		json.format(document, w, true);
 		ex.getOut().setBody(w.toString());
 		ex.getOut().setHeaders(ex.getIn().getHeaders());
 		ex.getOut().setHeader("Accept", "application/json");
