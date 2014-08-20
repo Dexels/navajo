@@ -29,5 +29,12 @@ public interface JSONTML {
 	public abstract void format(Navajo n, Writer w) throws Exception;
 	
 	public abstract void format(Navajo n, Writer w, boolean skipTopLevelMessage) throws Exception;
+	
+	
+	/** 
+	 * Format navajo definition style: the message type is used as its value
+	 */
+	public abstract void formatDefinition(Navajo n, Writer w, boolean skipTopLevelMessage) throws Exception;
+
 
 }

@@ -33,6 +33,7 @@ public class JSONTMLImpl implements JSONTML {
 	private ObjectMapper om = null;
 	private String topLevelMessageName = null;
 	private boolean skipTopLevelMessage = false;
+	private boolean typeIsValue = false;
 	private Navajo entityTemplate = null;
 
 	private final static String TOP_LEVEL_MSG = "__TOP__";
@@ -130,6 +131,15 @@ public class JSONTMLImpl implements JSONTML {
 		this.skipTopLevelMessage = skipTopLevelMessage;
 		format(n, w);
 	}
+	
+	@Override
+	public void formatDefinition(Navajo n, Writer w, boolean skipTopLevelMessage) throws Exception {
+		this.skipTopLevelMessage = skipTopLevelMessage;
+		this.typeIsValue = true;
+		format(n, w);
+
+	}
+	
 
 	private void format(JsonGenerator jg, Property p) throws Exception {
 
@@ -141,7 +151,13 @@ public class JSONTMLImpl implements JSONTML {
 				om.writeValue(jg, "null");
 			}
 		} else {
-			om.writeValue(jg, p.getTypedValue());
+			if (this.typeIsValue) {
+				om.writeValue(jg, p.getType());
+
+			} else {
+				om.writeValue(jg, p.getTypedValue());
+
+			}
 		}
 
 	}
@@ -178,15 +194,22 @@ public class JSONTMLImpl implements JSONTML {
 	}
 
 	private void format(JsonGenerator jg, Navajo n) throws Exception {
-
+		String origName = TOP_LEVEL_MSG;
 		try {
 			jg.writeStartObject();
 			List<Message> messages = n.getAllMessages();
 			for ( Message m: messages) {
-				if ( skipTopLevelMessage ) {
-					m.setName(TOP_LEVEL_MSG);
+				try {
+					if (skipTopLevelMessage) {
+						origName = m.getName();
+						m.setName(TOP_LEVEL_MSG);
+					}
+					format(jg, m, false);
+				} finally {
+					if (skipTopLevelMessage) {
+						m.setName(origName);
+					}
 				}
-				format(jg, m, false);
 			}
 			jg.writeEndObject();
 		} catch (IOException ioe) {
@@ -300,8 +323,7 @@ public class JSONTMLImpl implements JSONTML {
 			return;
 		}
 		om.setDateFormat(format);
-		
 	}
-
+	
 
 }
