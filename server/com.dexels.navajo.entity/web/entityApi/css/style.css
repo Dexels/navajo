@@ -1,0 +1,154 @@
+.bodycenter {
+	margin-left: auto;
+	margin-right: auto;
+	width: 1024px;
+	font-family: "Droid Sans",sans-serif;
+
+}
+
+a  {
+	text-decoration: none;
+}
+
+ul.operations {
+	list-style: none outside none;
+
+}
+
+.operation {
+    float: none;
+    clear: both;
+    overflow: hidden;
+    display: block;
+    margin: 5px 0px 10px;
+    padding: 0px;
+}
+
+.operation.GET {
+	background-color: #E7F0F7;
+}
+
+.operation.POST {
+	background-color: #e7f6ec;
+}
+
+.operation.PUT {
+	background-color: #F9F2E9;
+}
+=
+.operation.DELETE {
+	background-color: #f5e8e8;
+}
+
+
+.operationHeader.GET {
+	border: 1px solid #C3D9EC;
+}
+
+
+.operationHeader.POST {
+	border: 1px solid #C3E8D1;
+}
+
+
+.operationHeader.PUT {
+	border: 1px solid #F0E0CA;
+}
+
+
+.operationHeader.DELETE {
+	border: 1px solid  #e8c6c7;
+}
+
+li.operationHeader .header {
+	display: inline-block;
+	text-decoration: none;
+}
+
+
+
+
+li.operation .method {
+	width: 50px;
+	padding: 7px 1px 4px;
+	display: inline-block;
+	text-transform: uppercase;
+	color: #FFF;
+	font-size: 0.7em;
+	text-align: center;
+}
+
+
+li.operation .url {
+	display: inline-block;
+	padding-left: 10px;
+	color: black;
+	font-family: "Droid Sans",sans-serif;
+	font-size: 1em;
+	text-decoration: none;
+}
+
+
+
+
+li.operation .descrption {
+	display: inline-block;
+	padding-left: 10px;
+	float: right;
+	font-family: "Droid Sans",sans-serif;
+	font-size: 0.8em;
+	text-decoration: none;
+}
+
+li.operation .descrption.GET {
+	color: #0F6AB4;
+}
+
+li.operation .descrption.POST {
+	color: #10A54A;
+}
+
+li.operation .descrption.PUT {
+	color: #C5862B;
+}
+
+li.operation .descrption.DELETE {
+	color: #a41e22;
+}
+
+
+li.operation .httpGET {
+	background-color: #0F6AB4;
+	
+}
+
+li.operation .httpPOST {
+	background-color: #10A54A;
+	
+}
+
+
+li.operation .httpPUT {
+	background-color: #C5862B;
+	
+}
+
+
+li.operation .httpDELETE {
+	background-color: #a41e22;
+	
+	
+}
+
+
+
+li.operation pre {
+	background-color: white;
+	width: 75%;
+	padding: 10px;
+	margin-left: 15px;
+}
+
+
+
+

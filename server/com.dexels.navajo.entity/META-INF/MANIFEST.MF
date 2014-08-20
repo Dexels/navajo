@@ -26,12 +26,17 @@ Import-Package: com.dexels.navajo.adapter,
  javax.transaction;version="1.1.0",
  navajo;version="1.1.0",
  navajoextension,
+ org.apache.commons.lang;version="2.4.0",
  org.codehaus.jackson;version="1.9.11",
  org.codehaus.jackson.map;version="1.6.0",
  org.dexels.utils;version="2.2.1",
  org.junit;version="4.0.0";resolution:=optional,
  org.junit.runners;version="4.0.0";resolution:=optional,
+ org.ops4j.pax.web.extender.whiteboard;version="3.0.6",
+ org.ops4j.pax.web.extender.whiteboard.runtime;version="3.0.6",
+ org.ops4j.pax.web.service;version="3.0.6",
  org.osgi.framework;version="1.6.0",
+ org.osgi.service.http;version="1.2.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/*.xml
 Export-Package: com.dexels.navajo.entity,com.dexels.navajo.entity.adap

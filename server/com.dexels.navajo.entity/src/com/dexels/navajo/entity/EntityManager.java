@@ -103,6 +103,9 @@ public class EntityManager {
 
 	public void registerEntity(Entity e) {
 		entityMap.put(e.getName(), e);
+		if (operationsMap.get(e.getName()) == null) {
+			operationsMap.put(e.getName(), new HashMap<String, Operation>());
+		}
 	}
 
 	public void removeEntity(Entity e) {
@@ -178,5 +181,15 @@ public class EntityManager {
 		}
 		return myClient.call(in);
 	}
+
+	public Map<String, Map<String, Operation>> getOperationsMap() {
+		return operationsMap;
+	}
+	
+	public  Map<String, Operation> getOperations(String entityName) {
+		return operationsMap.get(entityName);
+	}
+	
+	
 
 }
