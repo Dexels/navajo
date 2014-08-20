@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.article-3.0.9">
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.article-3.0.10">
 
-	<feature name='navajo.article' version='3.0.9' start-level='81' >
+	<feature name='navajo.article' version='3.0.10' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/2.0.14</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/2.0.16</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.oauth.api/1.0.9</bundle>
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article.jsp/1.0.11</bundle>-->
 	</feature>
