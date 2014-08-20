@@ -122,7 +122,8 @@ public class GrusProviderImpl implements GrusProvider {
 				logger.info("No instance-specific datasource found for instance: "+instance+" name: "+name+" continuing to look for generic.");
 			}
 		}
-		DataSource dataSource = defaultDataSources.get(name);
+		DataSource dataSource = defaultDataSources.get("navajo.resource."
+				+ name);
 		if (dataSource != null) {
 			return dataSource;
 		}
