@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.DiffCommand;
 import org.eclipse.jgit.api.Git;
@@ -18,6 +19,7 @@ import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
@@ -193,10 +195,17 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			if(applicationFolder.exists()) {
 				Repository repository = getRepository(applicationFolder);
 				git = new Git(repository);
-				Iterable<RevCommit> log = git.log().call();
-				lastCommit = log.iterator().next();
-				repository.close();
-				refreshApplication();
+				try {
+					Iterable<RevCommit> log = git.log().call();
+					lastCommit = log.iterator().next();
+					repository.close();
+					refreshApplication();
+				} catch (NoHeadException e) {
+					// there was no head. That unually means a clone failure in a previous run. Delete and retry.
+					// Maybe also use for other failures.
+					FileUtils.deleteDirectory(applicationFolder);
+					callClone();
+				}
 			} else {
 				callClone();
 			}
