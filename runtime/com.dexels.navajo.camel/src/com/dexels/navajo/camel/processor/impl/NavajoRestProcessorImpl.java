@@ -36,7 +36,11 @@ public class NavajoRestProcessorImpl implements Processor {
 		json.format(document, w, true);
 		ex.getOut().setBody(w.toString());
 		ex.getOut().setHeaders(ex.getIn().getHeaders());
-		ex.getOut().setHeader("Accept", "application/json");
+		if (ex.getIn().getHeader("Accept") == null) {
+			// Would like json back
+			ex.getOut().setHeader("Accept", "application/json"); 
+		}
+		ex.getOut().setHeader("Content-Type", "application/json"); // We have json as content
 		ex.setProperty("origBody", body);
 
 	}
