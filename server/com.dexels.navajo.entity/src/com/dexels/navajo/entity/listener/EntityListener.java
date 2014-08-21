@@ -199,6 +199,7 @@ public class EntityListener extends HttpServlet {
 			}
 		}
 		if ( output.equals("json"))  {
+			response.setHeader("content-type", "application/json");
 			Writer w = new OutputStreamWriter(response.getOutputStream());
 			JSONTML json = JSONTMLFactory.getInstance();
 			json.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
@@ -210,8 +211,10 @@ public class EntityListener extends HttpServlet {
 			}
 			w.close();
 		} else if ( output.equals("xml") ) {
+			response.setHeader("content-type", "text/xml");
 			NavajoLaszloConverter.writeBirtXml(result, response.getWriter());
 		} else {
+			response.setHeader("content-type", "text/xml");
 			result.write(response.getOutputStream());
 		}
 	}
