@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.jgit-3.0.13" >
 
-	<feature name='navajo.jgit' version='3.0.13' start-level='81' >
+	<feature name='navajo.jgit' version='3.0.13' start-level='81' install="auto">
 		<feature>scr</feature> 
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.ant/1.9.2_1</bundle>
