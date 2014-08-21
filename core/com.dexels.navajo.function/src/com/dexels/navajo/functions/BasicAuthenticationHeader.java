@@ -39,7 +39,7 @@ public class BasicAuthenticationHeader extends FunctionInterface {
 		 
 		 
 		Object o1 = this.getOperand(0);
-		Object o2 = this.getOperand(0);
+		Object o2 = this.getOperand(1);
 		
 		if (!(o1 instanceof String) || !(o2 instanceof String)) {
             throw new TMLExpressionException("BasicAuthenticationHeader(String, String) expected");
