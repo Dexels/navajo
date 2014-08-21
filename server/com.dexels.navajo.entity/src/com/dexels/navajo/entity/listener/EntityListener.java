@@ -231,11 +231,14 @@ public class EntityListener extends HttpServlet {
 		// TODO: better security, such as API keys
 		// Furthermore check authorization
 		basicAuthentication(request);
-		if (username == null) {
+		if (username == null || username.trim().equals("")) {
 			// TODO: This is very unsafe
 			logger.warn("No basic auth - attemping username/password parameter");
-			username = request.getParameter("username");
-			password = request.getParameter("password");
+			if (request.getParameterMap().containsKey("username")) {
+				logger.info("Taking username/password from URI parameters");
+				username = request.getParameter("username");
+				password = request.getParameter("password");
+			}
 		}
 	}	
 	
