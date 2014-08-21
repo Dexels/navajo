@@ -43,9 +43,9 @@ public class DecryptString extends FunctionInterface {
 		String s = "5CO5fUgfoGOQMus628uG/Ip5jzSrLGVKAdP4rElwJm7/BijV4ph76b1K/f68yb1yaIymuih4ane9H/qdmkVUnU0Q+Ar5gZSuRCtwCKPcs6E=";
 		DecryptString e = new DecryptString();
 		e.reset();
-		e.insertOperand("aap123aap123");
+		e.insertOperand("aap123");
 		e.insertOperand(s);
-		decrypt("aap123aap123", s);
+		decrypt("aap123", s);
 		String result = (String) e.evaluate();
 		System.err.println("result: " + result);
 	}
