@@ -250,7 +250,7 @@
 	</function>
 	<function name="FindElement" class="com.dexels.navajo.functions.FindElement">
 		<description>Finds an array element that has a property with a matching value. If no message is supplied, currentMessage will be used</description>
-		<input>string,object,message|empty</input>
+		<input>string,any,message|empty</input>
 		<result>message</result>
 	</function>
 	<function name="ForAll" class="com.dexels.navajo.functions.ForAll">
