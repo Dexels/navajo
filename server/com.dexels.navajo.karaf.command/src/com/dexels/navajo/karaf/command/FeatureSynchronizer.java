@@ -72,13 +72,13 @@ public class FeatureSynchronizer implements Runnable {
 	}
 	
 	public synchronized void updateFeatures() throws IOException {
-		logger.info("Scanning for feature updates");
+		logger.debug("Scanning for feature updates");
 		String installed = (String) settings.get("installed");
 		String uninstalled = (String) settings.get("uninstalled");
 		if(installed!=null) {
 			String[] ins = installed.split(",");
 			for (String in : ins) {
-				ensureInstalled(in);
+				ensureInstalled(in.trim());
 			}
 		}
 		if(uninstalled!=null) {
@@ -90,7 +90,7 @@ public class FeatureSynchronizer implements Runnable {
 	}
 
 	private void ensureInstalled(String feature) {
-		logger.info("Ensuring installation of: "+feature);
+		logger.debug("Ensuring installation of: "+feature);
 		try {
 			Feature f = featureService.getFeature(feature);
 			if(f==null) {
@@ -99,7 +99,7 @@ public class FeatureSynchronizer implements Runnable {
 				
 //				logger.info("Getting install>"+f.getInstall()+"< id: >"+f.getId()+"<");
 				if(featureService.isInstalled(f)) {
-					logger.info("Feature: {} is installed. Good.",feature);
+					logger.debug("Feature: {} is installed. Good.",feature);
 				} else {
 					logger.info("Feature {} is not installed, installing.",feature);
 					featureService.installFeature(feature);
@@ -123,7 +123,7 @@ public class FeatureSynchronizer implements Runnable {
 					logger.info("Feature {} is installed, uninstalling. ",feature);
 					featureService.uninstallFeature(feature);
 				} else {
-					logger.info("Feature: {} is not installed: ok",feature);
+					logger.debug("Feature: {} is not installed: ok",feature);
 				}
 				
 			}
