@@ -1384,9 +1384,6 @@ public class MessageTable extends JTable implements CellEditorListener,
 				selectedMsgs.add(selected);
 			}
 		}
-		if (selectedMsgs.size() < 1) {
-			return null;
-		}
 		return selectedMsgs;
 	}
 
@@ -2048,7 +2045,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		// logger.info("COLUMS IN COPY: " + cols);
 		try {
 			List<Message> selectedMsgs = getSelectedMessages();
-			if (selectedMsgs != null) {
+			if (selectedMsgs.size() < 1) {
 				Message m1 = selectedMsgs.get(0);
 				Navajo n = NavajoFactory.getInstance().createNavajo();
 				Message m = NavajoFactory.getInstance().createMessage(n,

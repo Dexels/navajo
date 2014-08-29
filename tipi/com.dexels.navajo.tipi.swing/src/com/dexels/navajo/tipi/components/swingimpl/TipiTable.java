@@ -775,22 +775,29 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 
 			if (name.equals("selectedMessages")) {
 				List<Message> all = mm.getSelectedMessages();
-				if (all != null && all.size() > 0) {
+				if (all != null) {
 					Navajo n = NavajoFactory.getInstance().createNavajo();
 					n.addHeader(NavajoFactory.getInstance().createHeader(n,
 							"Anonymous", "unknown", "unknown", -1));
-					Message array = NavajoFactory.getInstance().createMessage(
-							n, all.get(0).getName(), Message.MSG_TYPE_ARRAY);
-					for (int i = 0; i < all.size(); i++) {
-						Message cur = all.get(i);
-						array.addMessage(cur);
+					Message resultMsg;
+					if (all.size() > 0) {
+						resultMsg = NavajoFactory.getInstance().createMessage(
+								n, all.get(0).getName(), Message.MSG_TYPE_ARRAY);
+						for (int i = 0; i < all.size(); i++) {
+							Message cur = all.get(i);
+							resultMsg.addMessage(cur);
+						}
+					} else {
+						resultMsg = NavajoFactory.getInstance().createMessage(n, "selectedMessages", "message");
 					}
+					
+					
 					try {
-						n.addMessage(array);
+						n.addMessage(resultMsg);
 					} catch (NavajoException e) {
 						logger.error("Error detected",e);
 					}
-					return array;
+					return resultMsg;
 				} else {
 					logger.debug("AAp.. all is null of 0");
 				}
@@ -938,7 +945,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 					logger.debug("Value: " + value.value);
 					logger.debug("PropertyName: " + propertyName.value);
 					ArrayList<Message> al = mm.getSelectedMessages();
-					if (al == null) {
+					if (al == null || al.size() < 1) {
 						// Nothing is selected
 						return;
 					}
