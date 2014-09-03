@@ -3,9 +3,13 @@ package com.dexels.navajo.adapter.dirmap;
 import java.io.File;
 import java.io.IOException;
 
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.document.types.Binary;
 
-public class FileEntryMap {
+public class FileEntryMap implements Mappable {
 	
 	private File file = null;
 	private Binary contents = null;
@@ -66,5 +70,20 @@ public class FileEntryMap {
 
 	public String getName() {
 		return file.getName();
+	}
+
+	@Override
+	public void load(Access access) throws MappableException, UserException {
+		
+	}
+
+	@Override
+	public void store() throws MappableException, UserException {
+		
+	}
+
+	@Override
+	public void kill() {
+		
 	}
 }
