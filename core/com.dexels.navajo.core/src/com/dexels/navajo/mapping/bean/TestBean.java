@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TestBean {
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
+
+public class TestBean implements Mappable {
 
 	public String lastname;
 	public String firstname;
@@ -100,6 +105,21 @@ public class TestBean {
 
 	public void setVip(boolean isVip) {
 		this.isVip = isVip;
+	}
+
+	@Override
+	public void load(Access access) throws MappableException, UserException {
+		
+	}
+
+	@Override
+	public void store() throws MappableException, UserException {
+		
+	}
+
+	@Override
+	public void kill() {
+		
 	}
 	
 }

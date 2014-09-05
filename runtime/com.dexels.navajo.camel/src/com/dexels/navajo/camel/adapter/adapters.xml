@@ -6,6 +6,9 @@
         <values>
             <value name="endpointName" type="string" required="true" direction="in" />
             <value name="contextName" type="string" required="false" direction="in" />
+            <value name="async" type="boolean" required="false" direction="in" />
+            <value name="rpcName" type="string" required="false" direction="in" />
+            
         </values>
         <methods>
             <method name="addHeader">

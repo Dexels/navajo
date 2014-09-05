@@ -14,9 +14,12 @@ import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.User;
 
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;
 
-public class TwitterAdapter {
+public class TwitterAdapter implements Mappable{
 	private Twitter twit;
 	private String username = null; //, status;
 	private String currentUser;
@@ -427,6 +430,21 @@ public class TwitterAdapter {
 //	  oos.writeObject(oauthClient);
 //	  oos.close();
 	  
+	}
+
+	@Override
+	public void load(Access access) throws MappableException, UserException {
+		
+	}
+
+	@Override
+	public void store() throws MappableException, UserException {
+		
+	}
+
+	@Override
+	public void kill() {
+		
 	}
 
 }

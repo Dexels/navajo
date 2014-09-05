@@ -22,6 +22,10 @@ import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
 import com.dexels.navajo.persistence.Constructor;
 import com.dexels.navajo.persistence.Persistable;
 import com.dexels.navajo.persistence.PersistenceManager;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.CacheController;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
@@ -68,7 +72,7 @@ class Frequency implements Serializable {
 	
 }
 
-public final class PersistenceManagerImpl implements PersistenceManager, NavajoListener {
+public final class PersistenceManagerImpl implements PersistenceManager, NavajoListener, Mappable {
 
 	
 	private final static Logger logger = LoggerFactory
@@ -430,6 +434,21 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 			}
 			
 		}
+	}
+
+	@Override
+	public void load(Access access) throws MappableException, UserException {
+		
+	}
+
+	@Override
+	public void store() throws MappableException, UserException {
+		
+	}
+
+	@Override
+	public void kill() {
+		
 	}
 	
 }
