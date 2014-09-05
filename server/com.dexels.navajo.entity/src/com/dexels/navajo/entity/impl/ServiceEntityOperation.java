@@ -350,8 +350,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		
 		// Perform validation method if defined
 		if ((myOperation.getValidationService()) != null) {
-			Navajo request = myKey.generateRequestMessage(input);
-			Navajo validationResult = callEntityValidationService(input, request);
+			Navajo validationResult = callEntityValidationService(input);
 	
 			Message validationErrors;
 			if ((validationErrors = validationResult.getMessage("ConditionErrors")) != null ) {
@@ -575,9 +574,16 @@ public class ServiceEntityOperation implements EntityOperation {
 		return result;
 	}
 	
-	private Navajo callEntityValidationService(Navajo input, Navajo request) throws EntityException {
-		prepareValidationServiceRequestHeader(input, request, myOperation);
-		Navajo result =  commitOperation( request, myOperation, false);
+	private Navajo callEntityValidationService(Navajo input) throws EntityException {
+		
+		if ( myOperation.getExtraMessage() != null ) {
+			input.addMessage(myOperation.getExtraMessage().copy(input));
+		}
+		prepareValidationServiceRequestHeader(input,input, myOperation);
+
+		// No transaction support yet
+		Navajo result =  commitOperation(input, myOperation, false);
+		
 		if (result.getMessage("errors") != null) {
 			throw new EntityException(EntityException.SERVER_ERROR);
 		}
