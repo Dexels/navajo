@@ -92,7 +92,6 @@ public class NavajoCamelProducer extends DefaultProducer {
     			logger.error("Error in handling Camel navajo: {}", rawbody);
     			throw new Exception("Error in calling Camel navajo - " + result.getMessage("error").getProperty("message"));
     		}
-    		//result.write(System.err);
     		exchange.getOut().setBody(result);
     	} else {
     		logger.warn("Unexpected body in navajo producer: "+rawbody);

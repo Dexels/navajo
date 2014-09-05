@@ -1,5 +1,6 @@
 package com.dexels.navajo.camel.adapter;
 
+import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,6 +31,9 @@ public class CamelAdapter implements Mappable  {
 	private String propertyName = null;
 	private final Map<String, Object> properties = new HashMap<String, Object>();
 	private Set<ServiceReference<CamelContext>> references = new HashSet<ServiceReference<CamelContext>>();
+	private String rpcName = "";
+	private boolean async = true;
+	 protected Navajo inDoc;
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(CamelAdapter.class);
@@ -51,6 +55,29 @@ public class CamelAdapter implements Mappable  {
 		}
 		ProducerTemplate producer = context.createProducerTemplate();
 		
+		Navajo navajoDoc = generateNavajo();
+		
+		if (async) {
+			 producer.sendBodyAndHeaders(endPointUri, navajoDoc, properties);
+		     logger.info("Body sent to camelContext: {}", endPointUri);
+		} else {
+		     String response = producer.requestBodyAndHeaders(endPointUri, navajoDoc, properties, String.class);
+		     logger.info("Body sent to camelContext: {}", endPointUri);
+			 try {
+				StringReader r = new StringReader(response);
+				inDoc = NavajoFactory.getInstance().createNavajo(r);
+			 } catch (Exception e) {
+					logger.error("Error in processing Camel reply - maybe not in navajo format?");
+					throw e;
+				}
+
+				myAccess.setOutputDoc(inDoc);
+			
+		}
+		ungetServices();
+	}
+
+	private Navajo generateNavajo() {
 		Navajo navajoDoc = myAccess.getInDoc();
 		if (navajoDoc.getMessage("__globals__") != null) {
 			navajoDoc.removeMessage("__globals__");
@@ -59,17 +86,14 @@ public class CamelAdapter implements Mappable  {
 			navajoDoc.removeMessage("__parms__");
 		}
 		
-		Header header = NavajoFactory.getInstance().createHeader(navajoDoc, "", myAccess.rpcUser,
-				myAccess.rpcPwd, -1);
+		Header header = NavajoFactory.getInstance().createHeader(navajoDoc, rpcName, myAccess.rpcUser,myAccess.rpcPwd, -1);
 		
 		for (String key : properties.keySet()) {
 			header.setHeaderAttribute(key, (String) properties.get(key));
 		}
 		
 		navajoDoc.addHeader(header);
-		producer.sendBodyAndHeaders(endPointUri, navajoDoc, properties);
-		logger.info("Body sent to camelContext: {}", endPointUri);
-		ungetServices();
+		return navajoDoc;
 	}
 
 	@Override
@@ -109,6 +133,22 @@ public class CamelAdapter implements Mappable  {
 	public void setPropertyValue(Object value) {
 		properties.put(propertyName, value);
 	}
+	
+	public String rpcName() {
+		return rpcName;
+	}
+	
+	public void setRpcName(String rpcName) {
+		this.rpcName = rpcName;
+	}
+	
+	public boolean async() {
+		return this.async;
+	}
+	
+	public void setAsync(boolean async) {
+		this.async = async;
+	}
 
 	public CamelContext getCamelContext(String name) throws UserException {
 		
@@ -118,9 +158,7 @@ public class CamelAdapter implements Mappable  {
 			name = "default";
 		}
 		filter = "(camel.context.name=" + name + ")";
-		
-		
-		
+
 		try {
 			Collection<ServiceReference<CamelContext>> sr = Version.getDefaultBundleContext()
 					.getServiceReferences(CamelContext.class, filter);
