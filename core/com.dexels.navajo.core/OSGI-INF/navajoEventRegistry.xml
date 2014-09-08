@@ -3,6 +3,7 @@
    <implementation class="com.dexels.navajo.events.NavajoEventRegistry"/>
    <service>
       <provide interface="com.dexels.navajo.events.NavajoEventRegistry"/>
+      <provide interface="com.dexels.navajo.events.NavajoEventRegistryMXBean"/>
    </service>
    <property name="jmx.objectname" type="String" value="navajo.service:type=navajo.event.registry"/>
 </scr:component>
