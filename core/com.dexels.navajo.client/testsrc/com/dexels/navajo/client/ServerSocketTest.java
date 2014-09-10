@@ -62,7 +62,7 @@ public class ServerSocketTest {
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(
 				new InputStreamReader(
-				clientSocket.getInputStream()));
+				clientSocket.getInputStream(),"UTF-8"));
         String inputLine;
 //        KnockKnockProtocol kkp = new KnockKnockProtocol();
 

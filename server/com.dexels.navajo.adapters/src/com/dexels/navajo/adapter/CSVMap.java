@@ -94,7 +94,7 @@ public class CSVMap implements Mappable {
 		try {
 			Reader f = null;
 			if (fileContent != null) {
-				f = new InputStreamReader(fileContent.getDataAsStream());
+				f = new InputStreamReader(fileContent.getDataAsStream(),"UTF-8");
 			} else {
 				f = new FileReader(fileName);
 			}

@@ -249,7 +249,7 @@ public class FormatIdentification implements Serializable
 				return;
 			} else {
                         }
-			FormatDescriptionReader in = new FormatDescriptionReader(new InputStreamReader(input));
+			FormatDescriptionReader in = new FormatDescriptionReader(new InputStreamReader(input,"UTF-8"));
 			FormatDescription desc;
 			while ((desc = in.read()) != null)
 			{

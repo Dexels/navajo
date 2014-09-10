@@ -28,8 +28,8 @@ public class TestAsyncClient {
 		// "ROOT");
 		// ac.setServer("http://penelope1.dexels.com:90/sportlink/test/knvb/Postman");
 		ac.setServer("https://source.dexels.com/test/PostmanLegacy");
-		ac.setUsername("ROOT");
-		ac.setPassword("R20T");
+		ac.setUsername("test");
+		ac.setPassword("");
 //		myClient.setClientCertificate("SunX509","JKS", getClass().getClassLoader().getResourceAsStream("client.jks"), "password".toCharArray());
 		ac.setClientCertificate("SunX509", "JKS", getClass().getClassLoader().getResourceAsStream("client.jks"), "password".toCharArray());
 		final NavajoResponseHandler showOutput = new NavajoResponseHandler() {

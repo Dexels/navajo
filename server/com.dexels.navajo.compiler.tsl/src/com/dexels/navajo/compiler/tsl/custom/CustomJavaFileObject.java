@@ -95,13 +95,13 @@ public class CustomJavaFileObject implements JavaFileObject {
 
 	@Override
 	public Reader openReader(boolean ignoreEncodingErrors) throws IOException {
-		return new InputStreamReader(openInputStream());
+		return new InputStreamReader(openInputStream(),"UTF-8");
 	}
 
 	@Override
 	public CharSequence getCharContent(boolean ignoreEncodingErrors)
 			throws IOException {
-		final Reader lc = new InputStreamReader(getContents());
+		final Reader lc = new InputStreamReader(getContents(),"UTF-8");
 		StringWriter sw = new StringWriter();
 		IOUtils.copy(lc, sw);
 		return sw.toString();
