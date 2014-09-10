@@ -203,7 +203,7 @@ public class ExtensionManager {
 			InputStream is = ClientActions.getUrlStream(extensionURL);
 			XMLElement result = new CaseSensitiveXMLElement();
 //			InputStream is = extensionURL.openStream();
-			Reader r = new InputStreamReader(is);
+			Reader r = new InputStreamReader(is,"UTF-8");
 			result.parseFromReader(r);
 			is.close();
 			r.close();

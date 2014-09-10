@@ -28,7 +28,7 @@ public class Postcode2Gemeente {
 	public static void init() {
 		String line;
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(Postcode2Gemeente.class.getResourceAsStream("postcode.csv")));
+			BufferedReader br = new BufferedReader(new InputStreamReader(Postcode2Gemeente.class.getResourceAsStream("postcode.csv"),"UTF-8"));
 				line = br.readLine();
 				while(line!=null) {
 					processLine(line);

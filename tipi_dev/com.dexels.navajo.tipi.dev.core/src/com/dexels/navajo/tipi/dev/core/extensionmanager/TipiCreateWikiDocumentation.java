@@ -39,7 +39,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	
 	protected void parseParserMap(URL parserLink) throws IOException {
 		InputStream openStream = parserLink.openStream();
-		InputStreamReader isr = new InputStreamReader(openStream);
+		InputStreamReader isr = new InputStreamReader(openStream,"UTF-8");
 		XMLElement pp = new CaseSensitiveXMLElement();
 		pp.parseFromReader(isr);
 		openStream.close();

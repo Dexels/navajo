@@ -92,12 +92,13 @@ public class OsEnvironment {
 					.println("Could not determine the OS. Perhaps a security issue?");
 			return null;
 		}
-		java.io.BufferedReader br = new java.io.BufferedReader(
-				new java.io.InputStreamReader(p.getInputStream()));
+		java.io.BufferedReader br = null;
 		String line;
 		try {
 			int idx;
 			String key, value;
+			br = new java.io.BufferedReader(
+					new java.io.InputStreamReader(p.getInputStream(),"UTF-8"));
 			while ((line = br.readLine()) != null) {
 				idx = line.indexOf('=');
 				// if there is no equals sign on the line skip to the net line

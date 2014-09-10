@@ -67,7 +67,7 @@ public class SvgRenderer {
 
 	private XMLElement renderStream(InputStream fis) throws IOException {
 		XMLElement xe = new CaseSensitiveXMLElement();
-		xe.parseFromReader(new InputStreamReader(fis));
+		xe.parseFromReader(new InputStreamReader(fis,"UTF-8"));
 		fis.close();
 
 		Map<String,XMLElement> styleMap = new HashMap<String, XMLElement>();

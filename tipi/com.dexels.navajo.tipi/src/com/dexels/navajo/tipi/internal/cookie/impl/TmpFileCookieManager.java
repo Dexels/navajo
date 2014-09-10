@@ -83,7 +83,7 @@ public class TmpFileCookieManager implements CookieManager {
 	 * @throws IOException
 	 */
 	protected void loadCookieFromStream(InputStream fis) throws IOException {
-		BufferedReader fw = new BufferedReader(new InputStreamReader(fis));
+		BufferedReader fw = new BufferedReader(new InputStreamReader(fis,"UTF-8"));
 		try {
 			String line = fw.readLine();
 			while (line != null) {

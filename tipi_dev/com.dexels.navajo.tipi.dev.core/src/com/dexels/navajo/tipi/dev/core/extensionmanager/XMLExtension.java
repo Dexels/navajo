@@ -38,7 +38,7 @@ public class XMLExtension  {
 	protected void loadXML(File xmlName)  {
 		try {
 			InputStream is = new FileInputStream(xmlName);
-			Reader r = new InputStreamReader(is);
+			Reader r = new InputStreamReader(is,"UTF-8");
 			XMLElement xx = new CaseSensitiveXMLElement();
 			xx.parseFromReader(r);
 			r.close();

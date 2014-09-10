@@ -74,7 +74,7 @@ public abstract class AbstractKMLMap {
 
 		XMLElement xe = new CaseSensitiveXMLElement();
 
-		xe.parseFromReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(mapPath)));
+		xe.parseFromReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(mapPath),"UTF-8"));
 		if (m != null) {
 			List<Message> msgElements = m.getAllMessages();
 			for (Message message : msgElements) {

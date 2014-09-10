@@ -83,7 +83,7 @@ public class ExtensionActions {
 	}
 
 	protected static void parseParserMap(URL parserLink, Map<String,String> parserMap) throws IOException {
-		InputStreamReader isr = new InputStreamReader(parserLink.openStream());
+		InputStreamReader isr = new InputStreamReader(parserLink.openStream(),"UTF-8");
 		XMLElement pp = new CaseSensitiveXMLElement();
 		pp.parseFromReader(isr);
 		isr.close();
@@ -287,7 +287,7 @@ public class ExtensionActions {
 
 	private static XMLElement parseXmlFile(URL inputURL) throws FileNotFoundException, IOException {
 		InputStream openStream = inputURL.openStream();
-		Reader fr = new InputStreamReader(openStream);
+		Reader fr = new InputStreamReader(openStream,"UTF-8");
 		XMLElement xe = new CaseSensitiveXMLElement();
 		xe.parseFromReader(fr);
 		openStream.close();

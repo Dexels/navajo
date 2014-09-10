@@ -25,7 +25,7 @@ public class Shape {
 	
 	private void createShape(){
 		try{
-			BufferedReader br = new BufferedReader(new InputStreamReader(data.getDataAsStream()));
+			BufferedReader br = new BufferedReader(new InputStreamReader(data.getDataAsStream(),"UTF-8"));
 			String line = "";
 			
 			Polygon currentPolygon = null;
