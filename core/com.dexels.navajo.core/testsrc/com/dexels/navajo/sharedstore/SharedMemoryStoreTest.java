@@ -261,7 +261,7 @@ public class SharedMemoryStoreTest {
 		InputStream is = si.getStream("myparent", "myname");
 		Assert.assertNotNull(is);
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
 		String l = br.readLine();
 		Assert.assertEquals("Apenoot", l);
 		Assert.assertNotSame("Apenootje", l);

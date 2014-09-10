@@ -123,7 +123,7 @@ public class BaseRequestImpl implements AsyncRequest {
 		if (acceptEncoding != null
 				&& acceptEncoding.equals(AsyncRequest.COMPRESS_JZLIB)) {
 			r = new BufferedReader(new java.io.InputStreamReader(
-					new InflaterInputStream(is)));
+					new InflaterInputStream(is), "UTF-8"));
 		} else if (acceptEncoding != null
 				&& acceptEncoding.equals(AsyncRequest.COMPRESS_GZIP)) {
 			r = new BufferedReader(new java.io.InputStreamReader(

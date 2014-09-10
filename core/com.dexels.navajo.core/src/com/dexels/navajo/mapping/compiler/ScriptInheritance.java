@@ -291,7 +291,7 @@ public class ScriptInheritance {
 				XMLElement result = null;
 				if ( script != null ) {
 					// Recursively do inheritance for inherited scripts...
-					BufferedReader br = new BufferedReader(new InputStreamReader(inherit(new FileInputStream(scriptPath + script + ".xml"), scriptPath, inheritedScripts)));
+					BufferedReader br = new BufferedReader(new InputStreamReader(inherit(new FileInputStream(scriptPath + script + ".xml"), scriptPath, inheritedScripts),"UTF-8"));
 					XMLElement superScript = new CaseSensitiveXMLElement();
 					superScript.parseFromReader(br);
 					br.close();
@@ -387,7 +387,7 @@ public class ScriptInheritance {
 				new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/vla/accounting/journaltransactions/ProcessSearchTransactionItemsAccounting.xml"),
 				"/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/", new ArrayList<String>());
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
 		String line = null;
 		while ( ( line = br.readLine() ) != null ) {
 			System.err.println(line);

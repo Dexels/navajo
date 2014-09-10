@@ -80,7 +80,7 @@ public class MapMetaData {
 					ExtensionDefinition ed = (ExtensionDefinition) iter.next();
 					//System.err.println("FOUND POSSIBLE ADAPTER EXTENSION: " + ed);
 					
-					BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream()));
+					BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream(),"UTF-8"));
 
 					XMLElement config = new CaseSensitiveXMLElement();
 					config.parseFromReader(br);
@@ -162,7 +162,7 @@ public class MapMetaData {
 	 * @throws Exception
 	 */
 	public String parse(String scriptName, InputStream is) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
 		StringWriter sw = new StringWriter();
 		parse(br, scriptName,sw);
 		return sw.toString();
@@ -206,7 +206,7 @@ public class MapMetaData {
 	
 	public static boolean isMetaScript(String fullScriptPath) {
 		try {
-			InputStreamReader isr =  new InputStreamReader( new FileInputStream(fullScriptPath) );
+			InputStreamReader isr =  new InputStreamReader( new FileInputStream(fullScriptPath) ,"UTF-8");
 			XMLElement x = new CaseSensitiveXMLElement();
 			x.parseFromReader(isr);
 			isr.close();

@@ -271,7 +271,7 @@ public class SharedStoreInterfaceTest {
 	public void testStoreText() throws Exception {
 		si.storeText("myparent", "mytextobject", "text", false, false);
 		System.err.println("SI: "+si);
-		BufferedReader r = new BufferedReader(new InputStreamReader(si.getStream("myparent", "mytextobject")));
+		BufferedReader r = new BufferedReader(new InputStreamReader(si.getStream("myparent", "mytextobject"),"UTF-8"));
 		String l = r.readLine();
 		r.close();
 		Assert.assertEquals("text", l);
@@ -583,7 +583,7 @@ public class SharedStoreInterfaceTest {
 		si.storeText("myparent", "mytext", "some text", false, false);
 		java.io.BufferedReader is = new BufferedReader(
 				new java.io.InputStreamReader(
-						si.getStream("myparent", "mytext")));
+						si.getStream("myparent", "mytext"),"UTF-8"));
 		Assert.assertEquals("some text", is.readLine());
 		// Unknown object.
 		boolean exception = false;
@@ -618,7 +618,7 @@ public class SharedStoreInterfaceTest {
 		os2.close();
 		java.io.BufferedReader is = new BufferedReader(
 				new java.io.InputStreamReader(
-						si.getStream("myparent", "mytext")));
+						si.getStream("myparent", "mytext"),"UTF-8"));
 		Assert.assertNotNull(is);
 		Assert.assertEquals(s, is.readLine());
 	}
