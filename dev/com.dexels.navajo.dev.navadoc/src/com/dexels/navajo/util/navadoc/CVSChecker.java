@@ -19,7 +19,7 @@ public class CVSChecker{
 		try{
 			
 			Process q = Runtime.getRuntime().exec("cvs -Q status", new String[]{}, new File(path));
-			BufferedReader read = new BufferedReader(new InputStreamReader(q.getInputStream()));
+			BufferedReader read = new BufferedReader(new InputStreamReader(q.getInputStream(),"UTF-8"));
 			String line = "";
 			while((line = read.readLine()) != null){
 				if(line.indexOf("File:") > -1){

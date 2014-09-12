@@ -141,7 +141,7 @@ public class TslMetaDataHandler implements MetaDataListener {
     public void loadScriptData(InputStream in) {
         Reader fr = null;
         try {
-            fr = new InputStreamReader(in);
+            fr = new InputStreamReader(in,"UTF-8");
             XMLElement e = new CaseSensitiveXMLElement();
             e.parseFromReader(fr);
             parseMetaData(e);

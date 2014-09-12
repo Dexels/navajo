@@ -464,7 +464,7 @@ public static void main(String[] args) throws IOException {
 //	URL adapterFile = TipiCreateTipiBeans.class.getResource("Adapter.template");
 	URL actionsFile = TipiCreateTipiBeans.class.getResource("Actions.template");
 	URL template = TipiCreateTipiBeans.class.getResource("functions.xml");
-	InputStreamReader isr = new InputStreamReader(template.openStream());
+	InputStreamReader isr = new InputStreamReader(template.openStream(),"UTF-8");
 	XMLElement xe = new CaseSensitiveXMLElement();
 	xe.parseFromReader(isr);
 

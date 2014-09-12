@@ -382,7 +382,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			if (streamingMode) {
 				if (sendEncoding != null && sendEncoding.equals(COMPRESS_JZLIB)) {
 					r = new BufferedReader(new java.io.InputStreamReader(
-							new InflaterInputStream(request.getInputStream())));
+							new InflaterInputStream(request.getInputStream()),"UTF-8"));
 				} else if (sendEncoding != null
 						&& sendEncoding.equals(COMPRESS_GZIP)) {
 					r = new BufferedReader(new java.io.InputStreamReader(
@@ -409,7 +409,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 							&& sendEncoding.equals(COMPRESS_JZLIB)) {
 						r = new BufferedReader(new java.io.InputStreamReader(
 								new InflaterInputStream(
-										new ByteArrayInputStream(bytes))));
+										new ByteArrayInputStream(bytes)), "UTF-8"));
 					} else if (sendEncoding != null
 							&& sendEncoding.equals(COMPRESS_GZIP)) {
 						r = new BufferedReader(new java.io.InputStreamReader(
@@ -418,7 +418,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 								"UTF-8"));
 					} else {
 						r = new BufferedReader(new java.io.InputStreamReader(
-								new ByteArrayInputStream(bytes)));
+								new ByteArrayInputStream(bytes), "UTF-8"));
 					}
 					in = NavajoFactory.getInstance().createNavajo(r);
 					if (in == null) {

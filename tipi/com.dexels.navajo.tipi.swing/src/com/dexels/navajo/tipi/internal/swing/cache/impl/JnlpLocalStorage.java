@@ -65,7 +65,7 @@ public class JnlpLocalStorage implements LocalStorage {
 			// never mind
 			return;
 		}
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
 		String line = null;
 		line = br.readLine();
 		do {

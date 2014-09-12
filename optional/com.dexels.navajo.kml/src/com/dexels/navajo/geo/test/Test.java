@@ -46,7 +46,7 @@ public class Test {
 		String line;
 		try {
 			InputStream inStream = new FileInputStream("exampledata/leden.csv");
-			BufferedReader br = new BufferedReader(new InputStreamReader(inStream));
+			BufferedReader br = new BufferedReader(new InputStreamReader(inStream,"UTF-8"));
 				line = br.readLine();
 				while(line!=null) {
 					processLine(line,m);

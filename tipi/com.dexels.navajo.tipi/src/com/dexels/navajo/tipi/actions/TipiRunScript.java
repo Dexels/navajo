@@ -54,7 +54,7 @@ public class TipiRunScript extends TipiAction {
 
 		if (scriptPath != null) {
 			try {
-				script = new InputStreamReader(scriptPath.openStream());
+				script = new InputStreamReader(scriptPath.openStream(),"UTF-8");
 			} catch (IOException e) {
 				logger.error("Error: ",e);
 			}

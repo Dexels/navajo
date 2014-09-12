@@ -31,7 +31,7 @@ public class Encrypt {
 		
 		Binary b2 = s.decryptBinary(enc);
 		
-		BufferedReader is = new BufferedReader(new InputStreamReader(b2.getDataAsStream()));
+		BufferedReader is = new BufferedReader(new InputStreamReader(b2.getDataAsStream(),"UTF-8"));
 		String l = is.readLine();
 		is.close();
 		

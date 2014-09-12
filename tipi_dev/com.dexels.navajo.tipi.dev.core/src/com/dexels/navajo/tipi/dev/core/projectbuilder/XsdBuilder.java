@@ -99,7 +99,7 @@ public class XsdBuilder {
 				logger.info("No tipi extension here");
 				return;
 			}
-			br = new BufferedReader(new InputStreamReader(jf.getInputStream(e)));
+			br = new BufferedReader(new InputStreamReader(jf.getInputStream(e),"UTF-8"));
 			String extension = br.readLine();
 			System.err.println("extension: "+extension);
 			String ex = extension.replaceAll("\\.", "/");
@@ -148,7 +148,7 @@ public class XsdBuilder {
 	private XMLElement readXML(JarFile jf, ZipEntry ee) {
 		Reader r = null;
 		try {
-			r = new InputStreamReader(jf.getInputStream(ee));
+			r = new InputStreamReader(jf.getInputStream(ee),"UTF-8");
 			XMLElement xx = new CaseSensitiveXMLElement();
 			xx.parseFromReader(r);
 			return xx;
@@ -888,7 +888,7 @@ public class XsdBuilder {
 			tml.setAttribute("ref", "tml");
 			XMLElement tmlX = new CaseSensitiveXMLElement();
 			InputStream in = XsdBuilder.class.getResourceAsStream("xtml.xsd");
-			tmlX.parseFromReader(new InputStreamReader(in));
+			tmlX.parseFromReader(new InputStreamReader(in,"UTF-8"));
 			in.close();
 
 			List<XMLElement> ll = tmlX.getChildren();

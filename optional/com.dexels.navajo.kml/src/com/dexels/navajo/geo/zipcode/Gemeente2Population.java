@@ -29,7 +29,7 @@ public class Gemeente2Population {
 	public static void init() {
 		String line;
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(Gemeente2Population.class.getResourceAsStream("postcode.csv")));
+			BufferedReader br = new BufferedReader(new InputStreamReader(Gemeente2Population.class.getResourceAsStream("postcode.csv"),"UTF-8"));
 				line = br.readLine();
 				while(line!=null) {
 					processLine(line);

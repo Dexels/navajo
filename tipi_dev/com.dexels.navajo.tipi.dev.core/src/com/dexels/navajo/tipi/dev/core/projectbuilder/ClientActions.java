@@ -280,7 +280,7 @@ public class ClientActions {
 		try {
 			XMLElement result = new CaseSensitiveXMLElement();
 			InputStream is = extensionURL.openStream();
-			Reader r = new InputStreamReader(is);
+			Reader r = new InputStreamReader(is,"UTF-8");
 			result.parseFromReader(r);
 			r.close();
 			is.close();
