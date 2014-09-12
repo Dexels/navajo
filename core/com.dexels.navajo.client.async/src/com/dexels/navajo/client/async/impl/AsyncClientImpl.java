@@ -360,9 +360,6 @@ public class AsyncClientImpl implements ManualAsyncClient {
 //		final AsyncClient ac = new AsyncClient("http://10.0.0.100:8080/JsSportlink/Comet", "ROOT", "ROOT");
 //		final AsyncClient ac = new AsyncClient("http://localhost:9080/JsSportlink/Comet", "ROOT", "ROOT");
 //		ac.setServer("http://penelope1.dexels.com:90/sportlink/test/knvb/Postman");
-		ac.setServer("https://source.dexels.com/test/Postman");
-		ac.setUsername("ROOT");
-		ac.setPassword("R20T");
 //		ac.setClientCertificate(algorithm, type, is, password)
 		final NavajoResponseHandler showOutput = new NavajoResponseHandler() {
 			@Override
