@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import javax.sql.DataSource;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceRegistration;
@@ -36,6 +38,7 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 	
 	private final Map<String,DB> contextMap = new HashMap<String, DB>();
 	private final Map<String,ServiceRegistration<DB>> registryMap = new HashMap<String,ServiceRegistration<DB>>();
+
 
 
 	
@@ -81,7 +84,8 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 //		logger.info("Configuration received, pid: "+pid);
 		try {
 			Object source = instantiate(settings);
-			ServiceRegistration reg =  bundleContext.registerService(DB.class.getName(),source, settings);
+			ServiceRegistration<DB> reg =  bundleContext.registerService(DB.class, (DB)source, settings);
+
 			registryMap.put(pid, reg);
 			contextMap.put(pid, (DB) source);
 		} catch (Exception e) {
