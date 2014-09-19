@@ -74,7 +74,7 @@ public class GetSelectedName extends FunctionInterface {
 		
 		if (!(o instanceof List)) {
 			throw new TMLExpressionException(this,
-					"Invalid function call in GetSelectedName: Not a selection property");
+					"Invalid function call in GetSelectedName: Not a selection property, but (" + o.getClass() + ")");
 
 		}
 		List<Selection> l = (List<Selection>) o;
