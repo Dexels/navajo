@@ -67,7 +67,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 				}
 				
 				@Override
-				public Map<String, String> getUserAttributes() {
+				public Map<String, Object> getUserAttributes() {
 					return Collections.emptyMap();
 				}
 				
@@ -97,7 +97,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 		
 		String clientId = t.clientId();
 		String username = t.getUsername();
-		Map<String,String> scopes =  getScopes(t); // context.getScopes(getToken(req));
+		Map<String,Object> scopes =  getScopes(t); // context.getScopes(getToken(req));
 		String pathInfo = req.getPathInfo();
 		String instance = determineInstanceFromRequest(req);
 		logger.info("Instance determined: "+instance); 
@@ -126,8 +126,8 @@ public class OAuthArticleServlet extends ArticleServlet {
 		}
 	}
 	
-	private Map<String,String> getScopes(Token t) {
-		Map<String,String> result = new HashMap<String, String>();
+	private Map<String,Object> getScopes(Token t) {
+		Map<String,Object> result = new HashMap<String, Object>();
 		result.put("username", t.getUsername());
 		result.put("clientId", t.clientId());
 		result.putAll(t.getUserAttributes());

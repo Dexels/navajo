@@ -23,5 +23,5 @@ public interface ArticleContext {
 	
 	public void writeArticleMeta(String name,ObjectNode rootNode, ObjectMapper mapper) throws ArticleException, IOException;
 
-	public Map<String,String> getScopes(String token);
+	public Map<String,Object> getScopes(String token);
 }

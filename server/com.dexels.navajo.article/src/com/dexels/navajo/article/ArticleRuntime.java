@@ -47,9 +47,12 @@ public interface ArticleRuntime {
 
 	public Set<String> getRequiredScopes();
 
-	public String resolveScope(String name) throws ArticleException;
+	public Object resolveScope(String name) throws ArticleException;
 
 	public String getInstance();
 
 	public ObjectNode getRootNode();
+
+	public Map<String, Object> getSuppliedScopes();
+	
 }

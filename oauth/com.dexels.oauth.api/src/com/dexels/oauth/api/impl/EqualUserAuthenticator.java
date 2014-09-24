@@ -8,8 +8,8 @@ import com.dexels.oauth.api.UserAuthenticator;
 public class EqualUserAuthenticator implements UserAuthenticator {
 
 	@Override
-	public Map<String,String> authenticateUser(String username, String password, String clientId) {
-		Map<String,String> result = new HashMap<String,String>();
+	public Map<String,Object> authenticateUser(String username, String password, String clientId) {
+		Map<String,Object> result = new HashMap<String,Object>();
 		result.put("username", username);
 		result.put("clientId", clientId);
 		return username.equals(password)?result:null;

@@ -71,7 +71,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		}
 		File article = context.resolveArticle(determineArticleFromRequest(req));
 		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, clientId, req.getParameter("username"),article,pathInfo,req.getParameterMap(),instance,new HashMap<String,String>());
+			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, clientId, req.getParameter("username"),article,pathInfo,req.getParameterMap(),instance,new HashMap<String,Object>());
 			try {
 				runtime.execute(context);
 				resp.setContentType("application/json; charset=utf-8");

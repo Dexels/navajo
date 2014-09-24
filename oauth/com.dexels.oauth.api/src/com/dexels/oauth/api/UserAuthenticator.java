@@ -10,5 +10,5 @@ public interface UserAuthenticator {
 	 * @param clientId
 	 * @return Map of user attributes, or null if auth failed
 	 */
-	public Map<String,String> authenticateUser(String username, String password, String clientId);
+	public Map<String,Object> authenticateUser(String username, String password, String clientId);
 }

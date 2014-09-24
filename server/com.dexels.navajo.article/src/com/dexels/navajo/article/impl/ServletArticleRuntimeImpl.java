@@ -34,7 +34,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	private final static Logger logger = LoggerFactory
 			.getLogger(ServletArticleRuntimeImpl.class);
 	
-	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, String clientId, String username, File article,String articleName, Map<String, String[]> parameterMap,String instance, Map<String, String> suppliedScopes) throws IOException {
+	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, String clientId, String username, File article,String articleName, Map<String, String[]> parameterMap,String instance, Map<String, Object> suppliedScopes) throws IOException {
 		super(articleName,article,suppliedScopes,instance);
 		this.request = req;
 		this.parameterMap = parameterMap;
