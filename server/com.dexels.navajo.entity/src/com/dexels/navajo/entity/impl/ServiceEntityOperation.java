@@ -556,7 +556,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		if ( getop.getExtraMessage() != null ) {
 			request.addMessage(getop.getExtraMessage().copy(request));
 		}
-		prepareServiceRequestHeader(input, request, getop);
+		prepareServiceRequestHeader(input.copy(), request, getop);
 
 
 		Navajo result = get.commitOperation(request, getop, true);
@@ -575,14 +575,14 @@ public class ServiceEntityOperation implements EntityOperation {
 	}
 	
 	private Navajo callEntityValidationService(Navajo input) throws EntityException {
-		
+		Navajo request = input.copy();
 		if ( myOperation.getExtraMessage() != null ) {
-			input.addMessage(myOperation.getExtraMessage().copy(input));
+			input.addMessage(myOperation.getExtraMessage().copy(request));
 		}
-		prepareValidationServiceRequestHeader(input,input, myOperation);
+		prepareValidationServiceRequestHeader(request,request, myOperation);
 
 		// No transaction support yet
-		Navajo result =  commitOperation(input, myOperation, false);
+		Navajo result =  commitOperation(request, myOperation, false);
 		
 		if (result.getMessage("errors") != null) {
 			throw new EntityException(EntityException.SERVER_ERROR);
@@ -608,11 +608,15 @@ public class ServiceEntityOperation implements EntityOperation {
 		// No transaction support yet
 		Navajo result =  commitOperation(input, myOperation, false);
 		if (result.getMessage("error") != null) {
-			throw new EntityException(EntityException.SERVER_ERROR);
+			throw new EntityException(EntityException.SERVER_ERROR, result.getMessage("error").getProperty("message").getValue());
 		}
 		if (result.getMessage("AuthenticationError") != null) {
 			throw new EntityException(EntityException.UNAUTHORIZED);
 		}
+		if (result.getMessage("AuthorizationError") != null) {
+			throw new EntityException(EntityException.UNAUTHORIZED);
+		}
+		
 		return result;
 		
 		// Check for transaction.
