@@ -115,7 +115,7 @@ public class ZipMap implements Mappable {
 		zm.setContent(b);
 
 		Binary r = zm.getZipped();
-		System.err.println(r.getData().length);
+		logger.info(""+r.getData().length);
 		FileOutputStream fo = new FileOutputStream(new File("~/aap.zip"));
 		fo.write(r.getData());
 		fo.close();

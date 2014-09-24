@@ -420,11 +420,11 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		DiffCommand diff = git.diff().setShowNameAndStatusOnly(true).setOldTree(getTreeIterator(repository, oldHash));
 		diff.setNewTree(getTreeIterator(repository, "HEAD"));
 		List<DiffEntry> entries = diff.call();
-		System.err.println(">>> entries: "+entries);
+		logger.debug(">>> entries: "+entries);
 		for (DiffEntry diffEntry : entries) {
 
 			String newPath = diffEntry.getNewPath();
-			System.err.println(">> "+newPath);
+			logger.debug(">> "+newPath);
 		}
 		return entries;
 		
