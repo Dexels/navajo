@@ -127,7 +127,7 @@
 			</method>
 			<method name="update">
 				<param name="method" field="method" type="string" required="automatic"
-					value="'POST'" />
+					value="'PUT'" />
 				<param name="call" field="call" type="boolean" required="automatic"
 					value="true" />
 				<param name="breakOnException" field="breakOnException" type="boolean"
@@ -152,7 +152,7 @@
 			</method>
 			<method name="insert">
 				<param name="method" field="method" type="string" required="automatic"
-					value="'PUT'" />
+					value="'POST'" />
 				<param name="call" field="call" type="boolean" required="automatic"
 					value="true" />
 				<param name="breakOnException" field="breakOnException" type="boolean"
