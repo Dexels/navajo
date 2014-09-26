@@ -2,6 +2,7 @@ package com.dexels.navajo.entity;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -166,7 +167,20 @@ public class Entity  {
 		return false;
 	}
 	
-	
+	/**
+	 * Get the root parent of this entity. 
+	 * If there is no root parent return entity itself.
+	 * 
+	 * @return
+	 */
+	public Entity getRootEntity() {
+		Iterator<Entity> parents = getSuperEntities().iterator();
+		Entity parent = this;
+		while ( parents.hasNext()) {
+			parent = parents.next();
+		}
+		return parent;
+	}
 
 	private Property getExtendedProperty(String ext) throws EntityException {
 		if ( ext.startsWith(NAVAJO_URI) ) {
