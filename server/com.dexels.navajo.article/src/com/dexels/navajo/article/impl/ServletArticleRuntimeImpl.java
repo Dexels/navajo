@@ -29,13 +29,13 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	private String token;
 	private String username;
 	private final StringWriter writer = new StringWriter();
-	private final Map<String, String[]> parameterMap; 
+	private final Map<String, String[]> parameterMap;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(ServletArticleRuntimeImpl.class);
 	
-	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, String clientId, String username, File article,String articleName, Map<String, String[]> parameterMap,String instance, Map<String, Object> suppliedScopes) throws IOException {
-		super(articleName,article,suppliedScopes,instance);
+	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, String clientId, String username, File article,String articleName, Map<String, String[]> parameterMap,String instance, Map<String, Object> suppliedScopes, Map<String,Object> userAttributes) throws IOException {
+		super(articleName,article,suppliedScopes,instance,userAttributes);
 		this.request = req;
 		this.parameterMap = parameterMap;
 		this.response = resp;

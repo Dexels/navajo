@@ -21,6 +21,7 @@ import com.dexels.oauth.api.ClientRegistration;
 import com.dexels.oauth.api.ClientStore;
 import com.dexels.oauth.api.ScopeValidator;
 import com.dexels.oauth.api.Token;
+import com.dexels.oauth.api.TokenException;
 import com.dexels.oauth.api.TokenStore;
 import com.dexels.oauth.api.UserAuthenticator;
 
@@ -78,33 +79,37 @@ public class OauthServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String pathInfo = req.getPathInfo();
 		System.err.println("Pathinfo: "+pathInfo);
-		if(pathInfo==null) {
-			initialAuth(req,resp);
-			return;
-		}
-		if("/access_token".equals(pathInfo)) {
-			accessToken(req,resp);
-			return;
-		}
-		if("/loginstatus".equals(pathInfo)) {
-			loginstatus(req, resp);
-			return;
-		}
-		if("/requestedscopes".equals(pathInfo)) {
-			requestedscopes(req, resp);
-			return;
-		}
-		if("/authorizeendpoint".equals(pathInfo)) {
-			authorizeendpoint(req, resp);
-			return;
-		}
-		if("/loginendpoint".equals(pathInfo)) {
-			login(req, resp);
-			return;
-		}
-		if("/scopes".equals(pathInfo)) {
-			scopes(req, resp);
-			return;
+		try {
+			if(pathInfo==null) {
+				initialAuth(req,resp);
+				return;
+			}
+			if("/access_token".equals(pathInfo)) {
+				accessToken(req,resp);
+				return;
+			}
+			if("/loginstatus".equals(pathInfo)) {
+				loginstatus(req, resp);
+				return;
+			}
+			if("/requestedscopes".equals(pathInfo)) {
+				requestedscopes(req, resp);
+				return;
+			}
+			if("/authorizeendpoint".equals(pathInfo)) {
+				authorizeendpoint(req, resp);
+				return;
+			}
+			if("/loginendpoint".equals(pathInfo)) {
+				login(req, resp);
+				return;
+			}
+			if("/scopes".equals(pathInfo)) {
+				scopes(req, resp);
+				return;
+			}
+		} catch (TokenException e) {
+			throw new ServletException("Token problem",e);
 		}
 		
 		
@@ -113,7 +118,7 @@ public class OauthServlet extends HttpServlet {
 //	http://localhost:8080/oauth?redirect_uri=http://www.aap.nl&client_id=123&scope=aapje,olifantje&state=456
 
 	@SuppressWarnings("unchecked")
-	private void initialAuth(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+	private void initialAuth(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException, TokenException {
 //		req.getSession().invalidate();
 		String client_id = req.getParameter("client_id");
 		String[] scope = req.getParameter("scope").split(",");
@@ -171,7 +176,7 @@ public class OauthServlet extends HttpServlet {
 //	/authorizeendpoint
 	
 	@SuppressWarnings("unchecked")
-	private void authorizeendpoint(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	private void authorizeendpoint(HttpServletRequest req, HttpServletResponse resp) throws IOException, TokenException {
 
 		String[] authorizedScopes = req.getParameterValues("scope");
 		String[] scopes = (String[])req.getSession().getAttribute("scope");
@@ -281,7 +286,7 @@ public class OauthServlet extends HttpServlet {
 	}
 
 	private void scopes(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
+			throws IOException, TokenException {
 		String token = req.getParameter("token");
 		Token t= this.tokenStore.getTokenByString(token);
 		if(t==null) {
@@ -309,7 +314,7 @@ public class OauthServlet extends HttpServlet {
 	}
 	
 	private void login(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
+			throws IOException, TokenException {
 		String username = req.getParameter("username");
 		String password = req.getParameter("password");
 		System.err.println("User: "+username);

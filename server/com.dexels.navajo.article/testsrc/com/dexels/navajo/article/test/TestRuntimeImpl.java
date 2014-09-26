@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class TestRuntimeImpl extends BaseRuntimeImpl {
 	}
 	
 	public TestRuntimeImpl(String articleName, File articleFile, String instance) throws IOException {
-		super(articleName,articleFile,null,instance);
+		super(articleName,articleFile,null,instance,new HashMap<String,Object>());
 	}
 
 	@Override

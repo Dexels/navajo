@@ -46,19 +46,23 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 
 	private final String instance;
 
+	private final Map<String, Object> userAttributes;
+
 	protected BaseRuntimeImpl(String articleName, XMLElement article, Map<String, Object> suppliedScopes, String instance) {
 		rootNode = mapper.createObjectNode();
 		this.article = article;
 		this.articleName = articleName;
 		this.suppliedScopes = suppliedScopes;
 		this.instance = instance;
+		this.userAttributes = new HashMap<String, Object>();
 	}
 
-	protected BaseRuntimeImpl(String articleName, File articleFile, Map<String, Object> suppliedScopes, String instance)
+	protected BaseRuntimeImpl(String articleName, File articleFile, Map<String, Object> suppliedScopes, String instance, Map<String,Object> userAttributes)
 			throws IOException {
 		article = new CaseSensitiveXMLElement();
 		rootNode = mapper.createObjectNode();
 		this.suppliedScopes = suppliedScopes;
+		this.userAttributes = userAttributes;
 		this.articleName = articleName;
 		this.instance = instance;
 		Reader r = null;
@@ -249,6 +253,11 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	@Override
 	public ObjectNode getMetadataRootNode() {
 		return rootNode;
+	}
+	
+	@Override
+	public Map<String,Object> getUserAttributes() {
+		return userAttributes;
 	}
 
 }

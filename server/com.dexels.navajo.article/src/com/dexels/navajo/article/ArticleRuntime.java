@@ -54,5 +54,7 @@ public interface ArticleRuntime {
 	public ObjectNode getRootNode();
 
 	public Map<String, Object> getSuppliedScopes();
+
+	public Map<String, Object> getUserAttributes();
 	
 }

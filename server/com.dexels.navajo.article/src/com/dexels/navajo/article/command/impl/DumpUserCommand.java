@@ -44,12 +44,19 @@ public class DumpUserCommand implements ArticleCommand {
 	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException, DirectOutputThrowable {
 		String token = runtime.getPassword();
 		System.err.println("Token: "+token);
-//		String value = parameters.get("value");
-		Map<String,Object> user = runtime.getSuppliedScopes();
+		Map<String,Object> scopes = runtime.getSuppliedScopes();
 		ObjectNode on = runtime.getRootNode();
-		for (Entry<String,Object> e : user.entrySet()) {
-			on.put(e.getKey(), ""+e.getValue());
+		ObjectNode scopesObject = on.putObject("scopes");
+		for (Entry<String,Object> e : runtime.getSuppliedScopes().entrySet()) {
+			scopesObject.put(e.getKey(), ""+e.getValue());
 		}
+
+		on.put("scopes", scopesObject);
+		ObjectNode userObject = on.putObject("user");
+		for (Entry<String,Object> e : runtime.getUserAttributes().entrySet()) {
+			userObject.put(e.getKey(), ""+e.getValue());
+		}
+		on.put("user", userObject);
 		return on;
 	}
 	

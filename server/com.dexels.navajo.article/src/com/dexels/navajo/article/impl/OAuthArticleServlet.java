@@ -22,6 +22,7 @@ import com.dexels.navajo.article.DirectOutputThrowable;
 import com.dexels.oauth.api.ClientRegistration;
 import com.dexels.oauth.api.ClientStore;
 import com.dexels.oauth.api.Token;
+import com.dexels.oauth.api.TokenException;
 import com.dexels.oauth.api.TokenStore;
 
 public class OAuthArticleServlet extends ArticleServlet {
@@ -84,7 +85,11 @@ public class OAuthArticleServlet extends ArticleServlet {
 			cr = clientStore.getClientByToken(clientId);
 
 		} else {
-			t = tokenStore.getTokenByString(token);
+			try {
+				t = tokenStore.getTokenByString(token);
+			} catch (TokenException e) {
+				throw new ServletException("Token problem",e);
+			}
 			if(t!=null) {
 				cr = clientStore.getClient(t.clientId());
 			}
@@ -107,7 +112,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 		logger.info("Scopes resolved: "+scopes);
 		File article = context.resolveArticle(determineArticleFromRequest(req));
 		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, clientId,username, article,pathInfo,req.getParameterMap(),instance,scopes);
+			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, clientId,username, article,pathInfo,req.getParameterMap(),instance,scopes,t.getUserAttributes());
 			try {
 				runtime.setUsername(cr.getUsername());
 				runtime.setPassword(cr.getAccessToken());
