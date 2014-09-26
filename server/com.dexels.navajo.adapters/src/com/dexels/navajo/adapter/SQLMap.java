@@ -1020,7 +1020,6 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	private final void setStatementParameters(PreparedStatement statement) throws java.sql.SQLException {
 		if (parameters != null) {
-			// System.err.println("parameters = " + parameters);
 			for (int i = 0; i < parameters.size(); i++) {
 				Object param = parameters.get(i);
 				SQLMapHelper.setParameter(statement, 
@@ -1360,8 +1359,6 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			AuditLog.log("SQLMap", e.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access"));
 			throw new UserException(-1, e.getMessage());
 		}
-		// System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OPEN RESULT SETS: "
-		// + openResultSets);
 	}
 
 	/**

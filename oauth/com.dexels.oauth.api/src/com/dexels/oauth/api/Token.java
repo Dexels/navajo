@@ -10,5 +10,6 @@ public interface Token {
 	public String toString();
 	public String getUsername();
 	public int getExpirySeconds();
-	public Map<String, String> getUserAttributes();
+	public Map<String, Object> getUserAttributes();
 }
+// created, scopes, ttl, username,attributes

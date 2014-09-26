@@ -68,14 +68,14 @@ public abstract class BaseContextImpl implements ArticleContext {
 	}
 
 	@Override
-	public Map<String, String> getScopes(String token) {
-		Map<String, String> result = new HashMap<String, String>();
+	public Map<String, Object> getScopes(String token) {
+		Map<String, Object> result = new HashMap<String, Object>();
 		Token t = tokenStore.getTokenByString(token);
 		
 		if (token != null) {
 			result.putAll(t.getUserAttributes());
 			result.put("clientId", t.clientId());
-			result.put("username", t.clientId());
+			result.put("username", t.getUsername());
 			
 		} else {
 		}

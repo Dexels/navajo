@@ -1,5 +1,6 @@
 package com.dexels.oauth.api.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,8 +13,8 @@ public class InMemoryTokenStore implements TokenStore {
 	
 	@Override
 	public Token generateToken(String client_id, String[] scopes,
-			String username, Map<String,String> userAttributes, String redirect_uri) {
-		SimpleToken t = new SimpleToken(client_id,scopes,username,userAttributes, redirect_uri);
+			String username, Map<String,Object> userAttributes, String redirect_uri, Date expireDate) {
+		SimpleToken t = new SimpleToken(client_id,scopes,username,userAttributes, redirect_uri,expireDate);
 		tokenMap.put(t.toString(), t);
 		return t;
 	}

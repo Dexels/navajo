@@ -1,6 +1,7 @@
 package com.dexels.oauth.internal;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +25,8 @@ import com.dexels.oauth.api.TokenStore;
 import com.dexels.oauth.api.UserAuthenticator;
 
 public class OauthServlet extends HttpServlet {
+
+	private static final int EXPIRATION_MILLIS = 1000000;
 
 	private static final long serialVersionUID = -1948354354961917987L;
 
@@ -131,7 +134,7 @@ public class OauthServlet extends HttpServlet {
 			throw new ServletException("Only token auth supported for now!");
 		}
 		String username = (String) req.getAttribute("username");
-		Map<String,String> userAttributes = (Map<String, String>) req.getAttribute("userAttributes");
+		Map<String,Object> userAttributes = (Map<String, Object>) req.getAttribute("userAttributes");
 		if(username==null) {
 			// better to check for token presence & validity
 			resp.sendRedirect("/auth/login.html");
@@ -142,7 +145,9 @@ public class OauthServlet extends HttpServlet {
 		boolean scopesPresent = verifyScopes(authorizedScopes,requestedScopes);
 		if(scopesPresent) {
 			if(clientStore.verifyRedirectURL(client_id,redirect_uri)) {
-				Token token =  tokenStore.generateToken(client_id,scope,username,userAttributes,redirect_uri);
+				Date expire = getExpirationDate();
+
+				Token token =  tokenStore.generateToken(client_id,scope,username,userAttributes,redirect_uri,expire);
 				String populatedURI = insertTokenToURI(redirect_uri,token.toString());
 				resp.sendRedirect(populatedURI);
 				return;
@@ -175,7 +180,7 @@ public class OauthServlet extends HttpServlet {
 		String client_id = (String) req.getSession().getAttribute("client_id");
 
 		String redirect_uri = (String) req.getSession().getAttribute("redirect_uri");
-		Map<String,String> userAttributes = (Map<String, String>) req.getSession().getAttribute("userAttributes");
+		Map<String,Object> userAttributes = (Map<String, Object>) req.getSession().getAttribute("userAttributes");
 
 		String action = req.getParameter("action");
 		
@@ -189,8 +194,8 @@ public class OauthServlet extends HttpServlet {
 		if(scopesPresent) {
 			if(clientStore.verifyRedirectURL(client_id,redirect_uri)) {
 				String username = (String) req.getSession().getAttribute("username");
-
-				Token token =  tokenStore.generateToken(client_id,scopes,username,userAttributes,redirect_uri);
+				Date expire = getExpirationDate();
+				Token token =  tokenStore.generateToken(client_id,scopes,username,userAttributes,redirect_uri,expire);
 				String populatedURI = insertTokenToURI(redirect_uri,"token="+token.toString());
 				System.err.println("Redirecting to: "+populatedURI);
 
@@ -314,7 +319,7 @@ public class OauthServlet extends HttpServlet {
 		String client_id = (String) req.getSession().getAttribute("client_id");
 		String client_secret = (String) req.getSession().getAttribute("client_secret");
 		String redirect_uri = (String) req.getSession().getAttribute("redirect_uri");
-		Map<String,String> userAttributes = userAuthenticator.authenticateUser(username, password,client_id);
+		Map<String,Object> userAttributes = userAuthenticator.authenticateUser(username, password,client_id);
 		if(userAttributes == null) {
 //			req.getSession().invalidate();
 			req.getSession().setAttribute("error", "Username incorrect");
@@ -334,7 +339,8 @@ public class OauthServlet extends HttpServlet {
 		boolean scopesPresent = verifyScopes(authorizedScopes,scopes);
 		if(scopesPresent) {
 			if(clientStore.verifyRedirectURL(client_id,redirect_uri)) {
-				Token token =  tokenStore.generateToken(client_id,scopes,username,userAttributes,redirect_uri);
+				Date expire = getExpirationDate();
+				Token token =  tokenStore.generateToken(client_id,scopes,username,userAttributes,redirect_uri,expire);
 				String populatedURI = insertTokenToURI(redirect_uri,token.toString());
 				resp.sendRedirect(populatedURI);
 				return;
@@ -349,6 +355,12 @@ public class OauthServlet extends HttpServlet {
 			resp.sendRedirect("/auth/authorize.html");
 			return;
 		}
+	}
+
+
+	private Date getExpirationDate() {
+		Date expire = new Date(System.currentTimeMillis() + EXPIRATION_MILLIS);
+		return expire;
 	}
 
 	private boolean verifyScopes(String[] authorizedScopes, String[] requestedScopes) {

@@ -66,11 +66,11 @@ public class SetValueCommand implements ArticleCommand {
 			}
 			p.setValue(resolved);
 		} else if(value.startsWith("$")) {
-			String resolved = runtime.resolveScope(value);
+			Object resolved = runtime.resolveScope(value);
 			if(resolved==null) {
 				throw new ArticleException("Article problem in "+runtime.getArticleName()+". setvalue refers to scope: "+value+" which is not supplied");
 			}
-			p.setValue(resolved);
+			p.setAnyValue(resolved);
 		} else {
 			p.setValue(value);
 		}

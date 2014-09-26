@@ -3,6 +3,7 @@ package com.dexels.oauth.api.impl;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -12,16 +13,15 @@ import com.dexels.oauth.api.Token;
 public class SimpleToken implements Token {
 
 	//(in sec:)
-	private static final int TIMEOUT = 1000;
 	private final String client_id;
 	private final Set<String> scopes = new HashSet<String>();
 	private final String username;
 	private final String token;
-	private final Map<String,String> userAttributes;
-	private final long expires = System.currentTimeMillis() + 1000 * TIMEOUT;
+	private final Map<String,Object> userAttributes;
+	private final Date expire;
 
-	public SimpleToken(String client_id, String[] scopes, String username, Map<String,String> userAttributes,
-			String redirect_uri) {
+	public SimpleToken(String client_id, String[] scopes, String username, Map<String,Object> userAttributes,
+			String redirect_uri,Date expireDate) {
 		this.client_id = client_id;
 		for (String s : scopes) {
 			this.scopes.add(s);
@@ -30,6 +30,7 @@ public class SimpleToken implements Token {
 		this.userAttributes = userAttributes;
 		this.username = username;
 		this.token = generateRandom();
+		this.expire = expireDate;
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class SimpleToken implements Token {
 
 	@Override
 	public boolean isExpired() {
-		return System.currentTimeMillis() > expires;
+		return System.currentTimeMillis() > expire.getTime();
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class SimpleToken implements Token {
 	}
 	
 	@Override
-	public Map<String,String> getUserAttributes() {
+	public Map<String,Object> getUserAttributes() {
 		return userAttributes;
 	}
 	
@@ -69,7 +70,7 @@ public class SimpleToken implements Token {
 
 	@Override
 	public int getExpirySeconds() {
-		return (int) ((expires - System.currentTimeMillis()) / 1000);
+		return (int) ((expire.getTime() - System.currentTimeMillis()) / 1000);
 	}
 
 

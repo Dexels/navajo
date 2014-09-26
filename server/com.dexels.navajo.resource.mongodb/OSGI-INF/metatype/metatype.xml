@@ -1,9 +1,0 @@
-<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
-  <OCD description="Navajo MongoDb driver" name="Navajo MongoDb driver" id="navajo.resource.mongodb">
-    <AD name="url"    id="url"   required="true"  type="String" default="mongodb://user:pass@localhost:27017/database"/>   
-    <AD name="name"  id="name" required="true" type="String" />
-  </OCD>
-  <Designate factoryPid="navajo.resource.mongodb" pid="navajo.resource.mongodb">
-     <Object ocdref="navajo.resource.mongodb"/>
-  </Designate>
-</metatype:MetaData>

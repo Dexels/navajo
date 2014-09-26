@@ -37,7 +37,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 
 	private final Stack<Navajo> navajoStack = new Stack<Navajo>();
 	private final Map<String, Navajo> navajoStore = new HashMap<String, Navajo>();
-	private final Map<String, String> suppliedScopes; 
+	private final Map<String, Object> suppliedScopes; 
 	protected final XMLElement article;
 	private final String articleName;
 
@@ -46,7 +46,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 
 	private final String instance;
 
-	protected BaseRuntimeImpl(String articleName, XMLElement article, Map<String, String> suppliedScopes, String instance) {
+	protected BaseRuntimeImpl(String articleName, XMLElement article, Map<String, Object> suppliedScopes, String instance) {
 		rootNode = mapper.createObjectNode();
 		this.article = article;
 		this.articleName = articleName;
@@ -54,7 +54,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 		this.instance = instance;
 	}
 
-	protected BaseRuntimeImpl(String articleName, File articleFile, Map<String, String> suppliedScopes, String instance)
+	protected BaseRuntimeImpl(String articleName, File articleFile, Map<String, Object> suppliedScopes, String instance)
 			throws IOException {
 		article = new CaseSensitiveXMLElement();
 		rootNode = mapper.createObjectNode();
@@ -103,7 +103,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	}
 	
 	@Override
-	public String resolveScope(String name) throws ArticleException {
+	public Object resolveScope(String name) throws ArticleException {
 		if(!name.startsWith("$")) {
 			throw new ArticleException("scope references should start with $");
 		}
@@ -111,6 +111,11 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 		return suppliedScopes.get(stripped);
 	}
 
+	@Override
+	public Map<String,Object> getSuppliedScopes() {
+		return suppliedScopes;
+	}
+	
 	public ObjectNode getGroupNode(ObjectNode parent, String name) throws ArticleException {
 		JsonNode existing = parent.get(name);
 		if(existing!=null) {

@@ -607,14 +607,16 @@ public class ServiceEntityOperation implements EntityOperation {
 
 		// No transaction support yet
 		Navajo result =  commitOperation(input, myOperation, false);
-		if (result.getMessage("error") != null) {
-			throw new EntityException(EntityException.SERVER_ERROR, result.getMessage("error").getProperty("message").getValue());
-		}
-		if (result.getMessage("AuthenticationError") != null) {
-			throw new EntityException(EntityException.UNAUTHORIZED);
-		}
-		if (result.getMessage("AuthorizationError") != null) {
-			throw new EntityException(EntityException.UNAUTHORIZED);
+		if ( result != null ) {
+			if (result.getMessage("error") != null) {
+				throw new EntityException(EntityException.SERVER_ERROR, result.getMessage("error").getProperty("message").getValue());
+			}
+			if (result.getMessage("AuthenticationError") != null) {
+				throw new EntityException(EntityException.UNAUTHORIZED);
+			}
+			if (result.getMessage("AuthorizationError") != null) {
+				throw new EntityException(EntityException.UNAUTHORIZED);
+			}
 		}
 		
 		return result;
@@ -701,6 +703,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			h.setRPCName(service);
 		}
 		// Append additional entity meta data.
+		h.setHeaderAttribute("root_entity_name", myEntity.getRootEntity().getName());
 		h.setHeaderAttribute("entity_name", myEntity.getName());
 		h.setHeaderAttribute("entity_operation", o.getMethod());
 		h.setHeaderAttribute("entity_service", o.getService());
