@@ -1,7 +1,9 @@
 package com.dexels.navajo.entity.adapters;
 
 import com.dexels.navajo.adapter.NavajoMap;
+import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.EntityManager;
@@ -43,7 +45,12 @@ public class EntityMap extends NavajoMap {
 			Operation o = myManager.getOperation(entity, method);
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, this, o);
 			myEntity = seo.getMyEntity();
-			Navajo result = seo.perform(prepareOutDoc());
+			Navajo request = prepareOutDoc();
+			if ( request.getHeader() == null ) {
+				Header h = NavajoFactory.getInstance().createHeader(request, myEntity.getName(), access.rpcUser, access.rpcName, -1);
+				request.addHeader(h);
+			}
+			Navajo result = seo.perform(request);
 			if ( result != null ) {
 				this.serviceCalled = true;
 				this.serviceFinished = true;
