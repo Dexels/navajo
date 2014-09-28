@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -71,7 +72,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		}
 		File article = context.resolveArticle(determineArticleFromRequest(req));
 		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, clientId, req.getParameter("username"),article,pathInfo,req.getParameterMap(),instance,new HashMap<String,Object>(), new HashMap<String,Object>() );
+			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, clientId, req.getParameter("username"),article,pathInfo,req.getParameterMap(),instance,null );
 			try {
 				runtime.execute(context);
 				resp.setContentType("application/json; charset=utf-8");

@@ -23,7 +23,7 @@ public class InMemoryClientStore implements ClientStore {
 	@Override
 	public void registerClient(String clientId, ClientRegistration registration) {
 		clientRegistration.put(clientId, registration);
-		String token = registration.getAccessToken();
+		String token = registration.getPassword();
 		clientRegistrationByToken.put(token, registration);
 		
 //		http://localhost:8080/oauth?redirect_uri=http://localhost:8080/ui/resource.html&response_type=token&client_id=123&scope=aapje,olifantje&state=456
@@ -47,15 +47,6 @@ public class InMemoryClientStore implements ClientStore {
 		return clientRegistration.get(clientId);
 	}
 
-	@Override
-	public ClientRegistration getClientByToken(String token) {
-		ClientRegistration cr = clientRegistrationByToken.get(token);
-		if(cr==null) {
-			return null;
-		}
-		return verifyClientRegistration(cr);
-	}
-	
 
 	private ClientRegistration verifyClientRegistration(ClientRegistration cr) {
 		Long registered = this.regTTL.get(cr);
@@ -67,7 +58,7 @@ public class InMemoryClientStore implements ClientStore {
 		if(expired) {
 			regTTL.remove(cr);
 			clientRegistration.remove(cr.getClientId());
-			clientRegistrationByToken.remove(cr.getAccessToken());
+			clientRegistrationByToken.remove(cr.getPassword());
 			return null;
 		}
 		return cr;

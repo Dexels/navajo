@@ -1,7 +1,9 @@
 package com.dexels.navajo.article.command.impl;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -44,19 +46,26 @@ public class DumpUserCommand implements ArticleCommand {
 	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException, DirectOutputThrowable {
 		String token = runtime.getPassword();
 		System.err.println("Token: "+token);
-		Map<String,Object> scopes = runtime.getSuppliedScopes();
 		ObjectNode on = runtime.getRootNode();
-		ObjectNode scopesObject = on.putObject("scopes");
-		for (Entry<String,Object> e : runtime.getSuppliedScopes().entrySet()) {
-			scopesObject.put(e.getKey(), ""+e.getValue());
+		ArrayNode requiredScopesObject = on.putArray("requiredScopes");
+		for (String e : runtime.getRequiredScopes()) {
+			requiredScopesObject.add(e);
+		}
+		ArrayNode scopesObject = on.putArray("suppliedScopes");
+		for (String e : runtime.getSuppliedScopes()) {
+			scopesObject.add(e);
 		}
 
-		on.put("scopes", scopesObject);
+//		on.put("scopes", scopesObject);
 		ObjectNode userObject = on.putObject("user");
 		for (Entry<String,Object> e : runtime.getUserAttributes().entrySet()) {
 			userObject.put(e.getKey(), ""+e.getValue());
 		}
 		on.put("user", userObject);
+		Date expiryDate = runtime.getToken().getExpiryDate();
+		if(expiryDate!=null) {
+			on.put("expireDate", expiryDate.toString());
+		}
 		return on;
 	}
 	

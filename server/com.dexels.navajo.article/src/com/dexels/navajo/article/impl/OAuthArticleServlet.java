@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +22,7 @@ import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.DirectOutputThrowable;
 import com.dexels.oauth.api.ClientRegistration;
 import com.dexels.oauth.api.ClientStore;
+import com.dexels.oauth.api.ClientStoreException;
 import com.dexels.oauth.api.Token;
 import com.dexels.oauth.api.TokenException;
 import com.dexels.oauth.api.TokenStore;
@@ -44,9 +46,9 @@ public class OAuthArticleServlet extends ArticleServlet {
 		ClientRegistration cr = null;
 		if(token==null) {
 			// fallback:
-			final String clientId = req.getParameter("clientId");
+			final String password = req.getParameter("clientId");
 			final String username = req.getParameter("username");
-			if(clientId== null || username == null ) {
+			if(password== null || username == null ) {
 				resp.sendError(400, "Missing token");
 			}
 			// TODO I think we should verify this one? Of is this enough?
@@ -79,11 +81,47 @@ public class OAuthArticleServlet extends ArticleServlet {
 				
 				@Override
 				public String clientId() {
-					return clientId;
+					return password;
+				}
+
+				@Override
+				public Date getExpiryDate() {
+					return new Date();
 				}
 			};
-			cr = clientStore.getClientByToken(clientId);
-
+//			cr = clientStore.getClientByToken(password);
+			cr = new ClientRegistration() {
+				
+				@Override
+				public String getUsername() {
+					return username;
+				}
+				
+				@Override
+				public String getRedirectUriPrefix() {
+					return "";
+				}
+				
+				@Override
+				public String getClientId() {
+					return "fake_id";
+				}
+				
+				@Override
+				public String getClientDescription() {
+					return "";
+				}
+				
+				@Override
+				public Map<String, Object> getUserAttributes() {
+					return new HashMap<String, Object>();
+				}
+				
+				@Override
+				public String getPassword() {
+					return password;
+				}
+			};
 		} else {
 			try {
 				t = tokenStore.getTokenByString(token);
@@ -91,7 +129,11 @@ public class OAuthArticleServlet extends ArticleServlet {
 				throw new ServletException("Token problem",e);
 			}
 			if(t!=null) {
-				cr = clientStore.getClient(t.clientId());
+				try {
+					cr = clientStore.getClient(t.clientId());
+				} catch (ClientStoreException e) {
+					throw new ServletException("Client Store problem",e);
+				}
 			}
 			
 		}
@@ -102,20 +144,18 @@ public class OAuthArticleServlet extends ArticleServlet {
 		
 		String clientId = t.clientId();
 		String username = t.getUsername();
-		Map<String,Object> scopes =  getScopes(t); // context.getScopes(getToken(req));
 		String pathInfo = req.getPathInfo();
 		String instance = determineInstanceFromRequest(req);
 		logger.info("Instance determined: "+instance); 
 		if(pathInfo==null) {
 			throw new ServletException("No article found, please specify");
 		}
-		logger.info("Scopes resolved: "+scopes);
 		File article = context.resolveArticle(determineArticleFromRequest(req));
 		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, clientId,username, article,pathInfo,req.getParameterMap(),instance,scopes,t.getUserAttributes());
+			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, clientId,username, article,pathInfo,req.getParameterMap(),instance,t);
 			try {
 				runtime.setUsername(cr.getUsername());
-				runtime.setPassword(cr.getAccessToken());
+				runtime.setPassword(cr.getPassword());
 				runtime.execute(context);
 				resp.setContentType("application/json; charset=utf-8");
 			} catch (ArticleException e) {
@@ -129,18 +169,6 @@ public class OAuthArticleServlet extends ArticleServlet {
 		} else {
 			throw new FileNotFoundException("Unknown article: "+article.getAbsolutePath());
 		}
-	}
-	
-	private Map<String,Object> getScopes(Token t) {
-		Map<String,Object> result = new HashMap<String, Object>();
-		result.put("username", t.getUsername());
-		result.put("clientId", t.clientId());
-		result.putAll(t.getUserAttributes());
-		Set<String> scopes = t.scopes();
-		for (String s : scopes) {
-			result.put(s, "true");
-		}
-		return result;
 	}
 	
 	public void setTokenStore(TokenStore tokenStore) {

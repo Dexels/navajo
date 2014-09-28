@@ -73,6 +73,10 @@ public class SimpleToken implements Token {
 		return (int) ((expire.getTime() - System.currentTimeMillis()) / 1000);
 	}
 
+	@Override
+	public Date getExpiryDate() {
+		return expire;
+	}
 
 	
 }

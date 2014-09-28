@@ -29,6 +29,7 @@ import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.oauth.api.Token;
 
 public abstract class BaseRuntimeImpl implements ArticleRuntime {
 
@@ -37,7 +38,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 
 	private final Stack<Navajo> navajoStack = new Stack<Navajo>();
 	private final Map<String, Navajo> navajoStore = new HashMap<String, Navajo>();
-	private final Map<String, Object> suppliedScopes; 
+	private final Set<String> suppliedScopes; 
 	protected final XMLElement article;
 	private final String articleName;
 
@@ -47,22 +48,31 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	private final String instance;
 
 	private final Map<String, Object> userAttributes;
+	private final Token token;
 
-	protected BaseRuntimeImpl(String articleName, XMLElement article, Map<String, Object> suppliedScopes, String instance) {
+	protected BaseRuntimeImpl(String articleName, XMLElement article, Set<String> suppliedScopes, String instance) {
 		rootNode = mapper.createObjectNode();
 		this.article = article;
 		this.articleName = articleName;
 		this.suppliedScopes = suppliedScopes;
 		this.instance = instance;
 		this.userAttributes = new HashMap<String, Object>();
+		this.token = null;
 	}
 
-	protected BaseRuntimeImpl(String articleName, File articleFile, Map<String, Object> suppliedScopes, String instance, Map<String,Object> userAttributes)
+	protected BaseRuntimeImpl(String articleName, File articleFile,String instance, Token token)
 			throws IOException {
 		article = new CaseSensitiveXMLElement();
 		rootNode = mapper.createObjectNode();
-		this.suppliedScopes = suppliedScopes;
-		this.userAttributes = userAttributes;
+		this.token = token;
+		if(token!=null) {
+			this.suppliedScopes = this.token.scopes();
+			this.userAttributes = this.token.getUserAttributes();
+		} else {
+			this.suppliedScopes = new HashSet<String>();
+			this.userAttributes = new HashMap<String, Object>();
+
+		}
 		this.articleName = articleName;
 		this.instance = instance;
 		Reader r = null;
@@ -81,7 +91,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	protected void verifyScopes() throws ArticleException {
 		Set<String> missing = null;
 		for (String scope : getRequiredScopes()) {
-			if(!suppliedScopes.containsKey(scope)) {
+			if(!suppliedScopes.contains(scope)) {
 				if(missing==null) {
 					missing = new HashSet<String>();
 				}
@@ -112,11 +122,11 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 			throw new ArticleException("scope references should start with $");
 		}
 		String stripped = name.substring(1);
-		return suppliedScopes.get(stripped);
+		return userAttributes.get(stripped);
 	}
 
 	@Override
-	public Map<String,Object> getSuppliedScopes() {
+	public Set<String> getSuppliedScopes() {
 		return suppliedScopes;
 	}
 	
@@ -258,6 +268,11 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	@Override
 	public Map<String,Object> getUserAttributes() {
 		return userAttributes;
+	}
+	
+	@Override
+	public Token getToken() {
+		return token;
 	}
 
 }

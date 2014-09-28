@@ -19,6 +19,7 @@ import org.codehaus.jackson.node.ObjectNode;
 
 import com.dexels.oauth.api.ClientRegistration;
 import com.dexels.oauth.api.ClientStore;
+import com.dexels.oauth.api.ClientStoreException;
 import com.dexels.oauth.api.ScopeValidator;
 import com.dexels.oauth.api.Token;
 import com.dexels.oauth.api.TokenException;
@@ -110,6 +111,8 @@ public class OauthServlet extends HttpServlet {
 			}
 		} catch (TokenException e) {
 			throw new ServletException("Token problem",e);
+		} catch (ClientStoreException e) {
+			throw new ServletException("Client store problem",e);
 		}
 		
 		
@@ -118,7 +121,7 @@ public class OauthServlet extends HttpServlet {
 //	http://localhost:8080/oauth?redirect_uri=http://www.aap.nl&client_id=123&scope=aapje,olifantje&state=456
 
 	@SuppressWarnings("unchecked")
-	private void initialAuth(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException, TokenException {
+	private void initialAuth(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException, TokenException, ClientStoreException {
 //		req.getSession().invalidate();
 		String client_id = req.getParameter("client_id");
 		String[] scope = req.getParameter("scope").split(",");
@@ -176,7 +179,7 @@ public class OauthServlet extends HttpServlet {
 //	/authorizeendpoint
 	
 	@SuppressWarnings("unchecked")
-	private void authorizeendpoint(HttpServletRequest req, HttpServletResponse resp) throws IOException, TokenException {
+	private void authorizeendpoint(HttpServletRequest req, HttpServletResponse resp) throws IOException, TokenException, ClientStoreException {
 
 		String[] authorizedScopes = req.getParameterValues("scope");
 		String[] scopes = (String[])req.getSession().getAttribute("scope");
@@ -237,7 +240,7 @@ public class OauthServlet extends HttpServlet {
 
 	
 
-	private void loginstatus(HttpServletRequest req, HttpServletResponse resp) throws JsonGenerationException, JsonMappingException, IOException {
+	private void loginstatus(HttpServletRequest req, HttpServletResponse resp) throws JsonGenerationException, JsonMappingException, IOException, ClientStoreException {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode rootNode = mapper.createObjectNode(); 
 		String error = (String) req.getSession().getAttribute("error");
@@ -259,7 +262,7 @@ public class OauthServlet extends HttpServlet {
 	}
 	
 	private void requestedscopes(HttpServletRequest req,
-			HttpServletResponse resp) throws JsonGenerationException, JsonMappingException, IOException {
+			HttpServletResponse resp) throws JsonGenerationException, JsonMappingException, IOException, ClientStoreException {
 		String[] scopes = getRequestedScopes(req);
 		String clientId = (String) req.getSession().getAttribute("client_id");
 		ClientRegistration cr = this.clientStore.getClient(clientId);
@@ -314,7 +317,7 @@ public class OauthServlet extends HttpServlet {
 	}
 	
 	private void login(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException, TokenException {
+			throws IOException, TokenException, ClientStoreException {
 		String username = req.getParameter("username");
 		String password = req.getParameter("password");
 		System.err.println("User: "+username);
