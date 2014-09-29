@@ -167,7 +167,11 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		File gitRepoFolder = repositoryManager.getRepositoryFolder();
 		setSettings(settings);
 		gitUrl = (String) settings.get("url");
-		httpUrl = (String) settings.get("httpUrl");
+		httpUrl = extractHttpUriFromGitUri(gitUrl);
+		if (settings.containsKey("httpUrl")) {
+			// overwrite
+			httpUrl = (String) settings.get("httpUrl");
+		}
 		String key = (String) settings.get("key");
 		branch = (String) settings.get("branch");
 		name = (String) settings.get("name");
@@ -226,6 +230,19 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	}
 
 	
+	private String extractHttpUriFromGitUri(String githubUri) {
+		// githubUri = git@github.com:user/project-name.git
+		// httpUri = https://github.com/user/project-name
+		if (githubUri.indexOf(":") < 1) {
+			logger.warn("Unexepcted format of Git URI - cannot extract Http uri!");
+			return "";
+		}
+		String userProject = githubUri.split(":")[1];
+		String user = userProject.substring(0, userProject.indexOf('/'));
+		String project = userProject.substring(userProject.indexOf("/") + 1, userProject.length() -4);
+		return "https://github.com/" + user + "/" + project;
+	}
+
 	@Override
 	public void callClean() throws GitAPIException, IOException {
 		File gitSubfolder = new File(applicationFolder, ".git");
