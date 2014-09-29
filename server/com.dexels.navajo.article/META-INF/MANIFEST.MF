@@ -32,4 +32,5 @@ Service-Component: OSGI-INF/navajo.server.article.xml,
  OSGI-INF/navajo.article.command.literal.xml,
  OSGI-INF/navajo.article.command.table.xml,
  OSGI-INF/navajo.article.command.setvalue.xml,
+ OSGI-INF/navajo.article.command.value.xml,
  OSGI-INF/navajo.article.command.dumpuser.xml

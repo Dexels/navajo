@@ -207,7 +207,8 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 			// TODO bit shaky now
 			if(elements.size()==0) {
 				writeNode(rootNode);
-			} else if(elements.size()==1 || !(elements.iterator().next() instanceof ArrayNode)) {
+			} else if(elements.size()==1 ) {
+				// HUH?
 				writeNode(elements.iterator().next());
 			} else {
 				ArrayNode an = getObjectMapper().createArrayNode();
