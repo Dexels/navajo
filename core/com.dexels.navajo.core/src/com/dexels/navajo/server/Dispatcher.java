@@ -1210,6 +1210,11 @@ public String getServerId() {
 public String getApplicationId() {
 	  return getNavajoConfig().getInstanceName();
   }
+  @Override
+public String getApplicationGroup() {
+	  return getNavajoConfig().getInstanceGroup();
+  }
+  
   
   @Override
 public File getTempDir() {
