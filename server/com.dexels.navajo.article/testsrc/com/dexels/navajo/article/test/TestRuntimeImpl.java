@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;

@@ -3,7 +3,6 @@ package com.dexels.navajo.article.command.impl;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;

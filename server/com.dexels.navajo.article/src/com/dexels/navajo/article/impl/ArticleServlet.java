@@ -3,8 +3,6 @@ package com.dexels.navajo.article.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
