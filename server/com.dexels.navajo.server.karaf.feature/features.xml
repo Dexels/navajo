@@ -278,7 +278,7 @@
 	
 	<feature resolver="(obr)" name='navajo.enterprise.monitor' version='1.1.0' start-level='81' >
 	    <feature version="[3.0.4,4)">navajo.enterprise.mongodb</feature>
-	    <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/1.2.0</bundle>
+	    <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/1.2.6</bundle>
 	    <bundle dependency='true'>mvn:com.dexels.thirdparty/org.apache.commons.math3/3.3</bundle>
 	</feature>
 	
