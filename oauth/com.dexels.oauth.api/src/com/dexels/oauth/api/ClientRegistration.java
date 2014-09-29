@@ -6,7 +6,7 @@ public interface ClientRegistration {
 	public String getClientId();
 	public String getRedirectUriPrefix();
 	public String getClientDescription();
-	public String getAccessToken();
-	public Map<String,String> getAttributes();
+	public Map<String, Object> getUserAttributes();
 	public String getUsername();
+	public String getPassword();
 }

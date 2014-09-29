@@ -357,10 +357,6 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	public static void main(String[] args) throws Exception {
 
 		final ManualAsyncClient ac = new AsyncClientImpl();
-//		final AsyncClient ac = new AsyncClient("http://10.0.0.100:8080/JsSportlink/Comet", "ROOT", "ROOT");
-//		final AsyncClient ac = new AsyncClient("http://localhost:9080/JsSportlink/Comet", "ROOT", "ROOT");
-//		ac.setServer("http://penelope1.dexels.com:90/sportlink/test/knvb/Postman");
-//		ac.setClientCertificate(algorithm, type, is, password)
 		final NavajoResponseHandler showOutput = new NavajoResponseHandler() {
 			@Override
 			public void onResponse(Navajo n) {
@@ -380,7 +376,6 @@ public class AsyncClientImpl implements ManualAsyncClient {
 
 			@Override
 			public Throwable getCaughtException() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		};
