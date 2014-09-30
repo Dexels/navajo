@@ -9,6 +9,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 
 import com.dexels.navajo.article.command.ArticleCommand;
+import com.dexels.oauth.api.TokenException;
 
 public interface ArticleContext {
 
@@ -23,5 +24,5 @@ public interface ArticleContext {
 	
 	public void writeArticleMeta(String name,ObjectNode rootNode, ObjectMapper mapper) throws ArticleException, IOException;
 
-	public Map<String,Object> getScopes(String token);
+	public Map<String,Object> getScopes(String token) throws TokenException;
 }

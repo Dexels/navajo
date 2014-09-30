@@ -86,6 +86,8 @@ public interface DispatcherInterface extends ResourceManager {
 	
 
 	public String getApplicationId();
+	public String getApplicationGroup();
+
 	public String getServerId();
 	public String getThreadName(Access a);
 	
@@ -102,6 +104,7 @@ public interface DispatcherInterface extends ResourceManager {
 	
 	  
 	  public Navajo handleCallbackPointers(Navajo inMessage);
+
 
 	//
 	/**

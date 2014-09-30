@@ -20,26 +20,27 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.oauth.api.Token;
 
 public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements ArticleRuntime {
 
 	
 	private final HttpServletRequest request;
 	private final HttpServletResponse response;
-	private String token;
+	private String password;
 	private String username;
 	private final StringWriter writer = new StringWriter();
-	private final Map<String, String[]> parameterMap; 
+	private final Map<String, String[]> parameterMap;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(ServletArticleRuntimeImpl.class);
 	
-	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, String clientId, String username, File article,String articleName, Map<String, String[]> parameterMap,String instance, Map<String, Object> suppliedScopes) throws IOException {
-		super(articleName,article,suppliedScopes,instance);
+	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, String password, String username, File article,String articleName, Map<String, String[]> parameterMap,String instance,Token t) throws IOException {
+		super(articleName,article,instance,t);
 		this.request = req;
 		this.parameterMap = parameterMap;
 		this.response = resp;
-		this.token = clientId;
+		this.password = password;
 		this.username = username;
 	}
 
@@ -88,7 +89,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	
 	@Override
 	public String getPassword() {
-		return token;
+		return password;
 	}
 	
 	@Override
@@ -97,7 +98,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	}
 	@Override
 	public void setPassword(String password) {
-		this.token = password;
+		this.password = password;
 	}
 	
 	@Override

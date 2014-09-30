@@ -10,6 +10,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.oauth.api.Token;
 
 public interface ArticleRuntime {
 	public String resolveArgument(String name) throws ArticleException;
@@ -53,6 +54,10 @@ public interface ArticleRuntime {
 
 	public ObjectNode getRootNode();
 
-	public Map<String, Object> getSuppliedScopes();
+	public Set<String> getSuppliedScopes();
+
+	public Map<String, Object> getUserAttributes();
+
+	public Token getToken();
 	
 }

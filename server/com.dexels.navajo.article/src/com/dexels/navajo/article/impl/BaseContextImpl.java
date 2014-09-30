@@ -25,6 +25,7 @@ import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.server.NavajoIOConfig;
+import com.dexels.oauth.api.TokenException;
 import com.dexels.oauth.api.TokenStore;
 import com.dexels.oauth.api.Token;
 
@@ -68,7 +69,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 	}
 
 	@Override
-	public Map<String, Object> getScopes(String token) {
+	public Map<String, Object> getScopes(String token) throws TokenException {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Token t = tokenStore.getTokenByString(token);
 		

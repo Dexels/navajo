@@ -25,7 +25,7 @@ public class TestRuntimeImpl extends BaseRuntimeImpl {
 	}
 	
 	public TestRuntimeImpl(String articleName, File articleFile, String instance) throws IOException {
-		super(articleName,articleFile,null,instance);
+		super(articleName,articleFile,instance,null);
 	}
 
 	@Override
