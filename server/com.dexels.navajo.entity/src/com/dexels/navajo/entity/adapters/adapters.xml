@@ -75,7 +75,7 @@
 				<param name="direction" field="propertyDirective" type="string"
 					required="true" />
 			</method>
-			<method name="describe">
+			<method name="head">
 				<param name="method" field="method" type="string" required="automatic"
 					value="'HEAD'" />
 				<param name="call" field="call" type="boolean" required="automatic"
@@ -125,7 +125,7 @@
 					required="false" />
 				<param name="append" field="append" type="string" required="false" />
 			</method>
-			<method name="update">
+			<method name="put">
 				<param name="method" field="method" type="string" required="automatic"
 					value="'PUT'" />
 				<param name="call" field="call" type="boolean" required="automatic"
@@ -150,7 +150,7 @@
 					required="false" />
 				<param name="append" field="append" type="string" required="false" />
 			</method>
-			<method name="insert">
+			<method name="post">
 				<param name="method" field="method" type="string" required="automatic"
 					value="'POST'" />
 				<param name="call" field="call" type="boolean" required="automatic"
