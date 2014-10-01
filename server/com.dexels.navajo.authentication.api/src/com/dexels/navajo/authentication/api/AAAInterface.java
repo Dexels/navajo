@@ -99,7 +99,11 @@ public interface AAAInterface {
     public boolean isAuthorizedAccess(String region, String username, String actionObject, Navajo inputData, Map<String,String> extraParams, Access access) throws AAAException;
 
     
-	  public Access authorizeUser(String username, String password, String service, Navajo inMessage, Object certificate) throws SystemException, AuthorizationException;
+    public Access authorizeUser(String username, String password, String service, Navajo inMessage,
+			Object certificate) throws SystemException, AuthorizationException;
+
+	public Access authorizeUser(String username, String password, String service, Navajo inMessage,
+			Object certificate, String accessID) throws SystemException, AuthorizationException;
 
     /**
      * Authenticate a user, using username and password.
@@ -178,5 +182,8 @@ public interface AAAInterface {
      * @return
      */
     public int getPriority();
+
+
+
 
 }

@@ -56,6 +56,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoExceptionEvent;
+import com.dexels.navajo.events.types.NavajoRequestEvent;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.events.types.ServerReadyEvent;
 import com.dexels.navajo.mapping.AsyncStore;
@@ -868,6 +869,12 @@ public final boolean isBusy() {
       rpcPassword = header.getRPCPassword();
       
   	 boolean preventFinalize = false;
+  	 
+  	 // Log request event ASAP - create a dummy Access object for it
+  	 // Later use this accessID for the real access object
+  	 Access requestEventAccess = new Access(1, 1, rpcUser, rpcName, "", "", "", null);
+     NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(requestEventAccess));
+
 
       
       try {
@@ -895,7 +902,7 @@ public final boolean isBusy() {
         	  throw new FatalException("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
           }
           access = authenticateUser(inMessage, instance, userCertificate,
-				rpcName, rpcUser, rpcPassword);
+				rpcName, rpcUser, rpcPassword, requestEventAccess.accessID);
         }
         catch (AuthorizationException ex) {
           logger.error("AuthorizationException: ", ex);
@@ -914,8 +921,9 @@ public final boolean isBusy() {
       else {  
     	// Use SimpleRepository authorisation is skipped.
     	access = RepositoryFactoryImpl.getRepository("com.dexels.navajo.server.SimpleRepository", navajoConfig)
-    				.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null);
+    				.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null, requestEventAccess.accessID);
       }
+      
       
       //System.err.println("Created Access: " +  access.accessID + ", " + access.rpcName + "(" + access.rpcUser + ")");
       
@@ -1124,7 +1132,7 @@ public final boolean isBusy() {
 
 private Access authenticateUser(Navajo inMessage, String instance,
 		Object userCertificate, String rpcName, String rpcUser,
-		String rpcPassword) throws SystemException, AuthorizationException {
+		String rpcPassword, String accessID) throws SystemException, AuthorizationException {
 	Access access = null;
 	if(instance!=null ) {
 //		  logger.info("using multitenant: "+instance, new Exception());
@@ -1137,7 +1145,7 @@ private Access authenticateUser(Navajo inMessage, String instance,
 		  logger.warn("No access returned from multitenant, instance specific authorization. Instance: "+instance);
 	  }
 	  if(access==null) {
-			access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+			access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate, accessID);
 	  }
 	  access.setInstance(instance);
 	  return access;

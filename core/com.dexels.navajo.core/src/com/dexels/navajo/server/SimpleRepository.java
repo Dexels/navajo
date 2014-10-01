@@ -78,15 +78,21 @@ public class SimpleRepository implements Repository, GlobalManager {
 	}
 	
 	@Override
+	public Access authorizeUser(String username, String password, String service, Navajo inMessage,
+			Object certificate) throws SystemException, AuthorizationException {
+		return authorizeUser(username, password, service, inMessage, certificate, null);
+	}
+	
+	@Override
 	public Access authorizeUser(String username, String password,
-			String service, Navajo inMessage, Object certificate)
+			String service, Navajo inMessage, Object certificate, String accessID)
 			throws SystemException, AuthorizationException {
 		try {
 			initGlobals(service, username, inMessage, null);
 		} catch (NavajoException e) {
 			logger.error("Error: ", e);
 		}
-		Access a = new Access( 1, 1, username, service, "", "", "", certificate);
+		Access a = new Access(accessID, 1, 1, username, service, "", "", "", certificate);
 		if (setAccessPassword) {
 			a.rpcPwd = password;
 		}

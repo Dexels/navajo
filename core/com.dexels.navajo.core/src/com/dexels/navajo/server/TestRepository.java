@@ -15,7 +15,7 @@ public class TestRepository extends SimpleRepository {
 
 	@Override
 	public Access authorizeUser(String username, String password,
-			String service, Navajo inMessage, Object certificate)
+			String service, Navajo inMessage, Object certificate, String accessID)
 			throws SystemException, AuthorizationException {
 		
 		if ( "myself".equals(username) && "mysecret".equals(password) ) {
@@ -24,7 +24,7 @@ public class TestRepository extends SimpleRepository {
 				throw new AuthorizationException(false, true, username, "Not allowed to use this service");
 			}
 			
-			return new Access(1, 1, username, service, "Navajo Client", "1.1.1.1", "myhost", null);
+			return new Access(accessID, 1, 1, username, service, "Navajo Client", "1.1.1.1", "myhost", null);
 			
 		} else {
 			throw new AuthorizationException(true, false, username, "Unknown user");
