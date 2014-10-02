@@ -1,6 +1,7 @@
 package com.dexels.navajo.entity;
 
 import java.io.File;
+import java.nio.file.FileSystem;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -133,8 +134,8 @@ public class EntityManager {
 
 	private void buildAndLoadScripts() throws Exception {
 		String scriptPath = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
-		logger.info("Compiling and installing scripts in: {}", scriptPath + "/entity");
-		File entityDir = new File(scriptPath + "/entity");
+		logger.info("Compiling and installing scripts in: {}", scriptPath + File.separator +   "entity");
+		File entityDir = new File(scriptPath + File.separator + "entity");
 		if (!entityDir.exists()) {
 			return;
 		}

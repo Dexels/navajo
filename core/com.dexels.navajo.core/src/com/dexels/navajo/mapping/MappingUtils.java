@@ -849,6 +849,8 @@ public static final boolean isObjectMappable(String className) throws UserExcept
       return packagePath;
 
     packagePath = packagePath.replaceAll("/", ".");
+    packagePath = packagePath.replace("\\", ".");
+
     packagePath = (packagePath.charAt(packagePath.length()-1) == '.' ? packagePath.substring(0, packagePath.length()-1) : packagePath);
     return packagePath;
   }

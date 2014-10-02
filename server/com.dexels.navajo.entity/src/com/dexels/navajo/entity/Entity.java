@@ -243,6 +243,7 @@ public class Entity  {
 				String ext = myMessage.getExtends().substring(NAVAJO_URI.length());
 				String [] superEntities = ext.split(",");
 				for (String superEntity: superEntities) {
+					superEntity = superEntity.replace("/", ".");
 					processExtendedEntity(myMessage, superEntity);
 				}
 			} else if (!"".equals(myMessage.getExtends()) ){

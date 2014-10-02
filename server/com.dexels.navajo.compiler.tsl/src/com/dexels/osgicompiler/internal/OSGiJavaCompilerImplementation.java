@@ -160,7 +160,7 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
     private  JavaFileObject getJavaSourceFileObject(String className, InputStream contents) throws IOException
     {
         JavaFileObject so = null;
-            so = new CustomJavaFileObject(className+ Kind.SOURCE.extension, URI.create("file:///" + className.replace('.', '/')
+            so = new CustomJavaFileObject(className+ Kind.SOURCE.extension, URI.create("file:///" + className.replace('.', '/').replace('\\', '/')
                     + Kind.SOURCE.extension), contents, Kind.SOURCE);
         return so;
     }

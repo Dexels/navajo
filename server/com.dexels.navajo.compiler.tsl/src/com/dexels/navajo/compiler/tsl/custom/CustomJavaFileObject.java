@@ -2,6 +2,7 @@ package com.dexels.navajo.compiler.tsl.custom;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -49,10 +50,10 @@ public class CustomJavaFileObject implements JavaFileObject {
 		this.binaryName = javaObjectName;
 		this.kind = kind;
 		String stripName = javaObjectName;
-		if (stripName.endsWith("/")) {
+		if (stripName.endsWith(File.separator)) {
 			stripName = stripName.substring(0, stripName.length() - 1);
 		}
-		name = javaObjectName.substring(javaObjectName.lastIndexOf('/') + 1);
+		name = javaObjectName.substring(javaObjectName.lastIndexOf(File.separator) + 1);
 	}
 	private void setContents(byte[] byteArray) {
 		this.localContents = byteArray;

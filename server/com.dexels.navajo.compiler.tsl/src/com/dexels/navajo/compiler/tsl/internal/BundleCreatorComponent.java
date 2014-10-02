@@ -326,9 +326,9 @@ public class BundleCreatorComponent implements BundleCreator {
 			boolean keepIntermediateFiles, boolean useTenantSpecificFile, String extension) throws IOException {
 		String packagePath = null;
 		String script = null;
-		if (scriptPath.indexOf('/') >= 0) {
-			packagePath = scriptPath.substring(0, scriptPath.lastIndexOf('/'));
-			script = scriptPath.substring(scriptPath.lastIndexOf('/') + 1);
+		if (scriptPath.indexOf(File.separator) >= 0) {
+			packagePath = scriptPath.substring(0, scriptPath.lastIndexOf(File.separator));
+			script = scriptPath.substring(scriptPath.lastIndexOf(File.separator) + 1);
 		} else {
 			packagePath = "";
 			script = scriptPath;
@@ -345,7 +345,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		File factoryClassFile = new File(outPath, scriptPath + "Factory.class");
 		File manifestFile = new File(compiledScriptPath, scriptPath + ".MF");
 		File dsFile = new File(compiledScriptPath, scriptPath + ".xml");
-		File entityFile = new File(compiledScriptPath, packagePath +  "/entity.xml");
+		File entityFile = new File(compiledScriptPath, packagePath +  File.separator +"entity.xml");
 		
 		File bundleDir = new File(compiledScriptPath, scriptPath);		
 		if (!bundleDir.exists()) {
@@ -649,7 +649,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	@Override
 	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant, String extension, boolean tenantQualified)
 			throws ClassNotFoundException {
-		String scriptName = rpcName.replaceAll("/", ".");
+		String scriptName = rpcName.replace(File.separator, ".");
 		String filter = null;
 
 		if(tenantQualified) {

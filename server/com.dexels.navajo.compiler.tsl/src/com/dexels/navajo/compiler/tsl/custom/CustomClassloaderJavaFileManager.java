@@ -1,5 +1,6 @@
 package com.dexels.navajo.compiler.tsl.custom;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -82,7 +83,7 @@ public class CustomClassloaderJavaFileManager extends
 	@Override
 	public JavaFileObject getJavaFileForInput(Location location,
 			String className, JavaFileObject.Kind kind) throws IOException {
-		String binaryName = className.replaceAll("\\.", "/");
+		String binaryName = className.replace("\\", "/");
 		if (kind.equals(Kind.CLASS)) {
 			binaryName = binaryName + ".class";
 		} else {
@@ -93,8 +94,8 @@ public class CustomClassloaderJavaFileManager extends
 			return cjfo;
 		}
     	String packageName = null;
-    	if(className.indexOf("/")>0) {
-    		packageName = className.substring(0,className.lastIndexOf("/"));
+    	if(className.indexOf(File.separator)>0) {
+    		packageName = className.substring(0,className.lastIndexOf(File.separator));
     	} else {
     		packageName = "";
     	}
