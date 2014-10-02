@@ -3,13 +3,13 @@ package com.dexels.navajo.entity;
 import java.io.StringReader;
 import java.util.Map;
 
-import org.osgi.framework.BundleContext;
-
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 
 public class EntityComponent extends Entity {
+	
+
 	public EntityComponent() {
 
 	}
@@ -20,7 +20,9 @@ public class EntityComponent extends Entity {
 
 	public void activateComponent(Map<String, Object> properties)
 			throws Exception {
+		
 		entityName = (String) properties.get("entity.name");
+		messageName = (String) properties.get("entity.message");
 
 		Navajo entityNavajo = entityManager.getEntityNavajo((String) properties.get("service.name"));
 		activateMessage(entityNavajo);

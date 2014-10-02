@@ -26,7 +26,7 @@ public class Entity  {
 	private boolean activated = false;
 	private final static Logger logger = LoggerFactory.getLogger(Entity.class);
 	protected String entityName = null;
-
+	protected String messageName = null;
 
 	// Keep track of entities that are derived from this entity.
 	private Set<Entity> subEntities = new HashSet<Entity>();
@@ -94,7 +94,7 @@ public class Entity  {
 		
 	/* OSGi activation */
 	public void activateMessage(Navajo n) throws Exception {
-		if (n.getMessage(entityName) == null) {
+		if (n.getMessage(messageName) == null) {
 			throw new Exception("unable to find entity in provided script!");
 		}
 
@@ -299,12 +299,13 @@ public class Entity  {
 	}
 
 	public String getName() {
-		if(myMessage==null) {
-			logger.warn("Requested entity name but I have no message!");
-			return "!invalid!";
-		}
-		return myMessage.getName();
+		return entityName;
 	}
+
+	public String getMessageName() {
+		return messageName;
+	}
+
 
 	public Key getKey(Set<Property > p) {
 		for ( Key k: myKeys ) {

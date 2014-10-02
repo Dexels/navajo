@@ -35,10 +35,8 @@ public class ServiceEntityOperation implements EntityOperation {
 	private Operation myOperation;
 	private final Entity myEntity;
 	private Key myKey;
-	private static final String ENTITY_META_MSG = "__Entity__";
-	private static final String ETAG = "ETag";
-	private static final String STATUS = "Status";
 	private final static Logger logger = LoggerFactory.getLogger(ServiceEntityOperation.class);
+	String[] validMessages = null;
 
 	
 	public ServiceEntityOperation(EntityManager m, DispatcherInterface c, Operation o) throws EntityException {
@@ -221,19 +219,27 @@ public class ServiceEntityOperation implements EntityOperation {
 		return false;
 	}
 	
+
 	/**
-	 * Clean a Navajo input: only valid messages are kept.
+	 * Clean a Navajo document: only valid messages are kept, missing properties 
+	 * and messages are added, and filter properties on the right direction
 	 * 
 	 * @param validMessages
 	 * @return
 	 */
-	private void cleanInput(Navajo input, String [] validMessages) {
-		List<Message> all = input.getAllMessages();
+	private void clean(Navajo n, String [] validMessages, String direction) {
+		List<Message> all = n.getAllMessages();
 		for ( Message m : all ) {
 			if (!isInArray(validMessages, m.getName() ) ) {
-				input.removeMessage(m);
+				n.removeMessage(m);
 			}
 		}
+		
+		// Add missing properties/messages from template message
+		n.getMessage(myEntity.getMessageName()).merge(myEntity.getMessage(), true);
+				
+		// Mask output with entity message and filter on direction = out
+		n.getMessage(myEntity.getMessageName()).maskMessage(myEntity.getMessage(), direction);
 	}
 	
 	/**
@@ -274,47 +280,15 @@ public class ServiceEntityOperation implements EntityOperation {
 		return sb.toString();
 	}
 	
-	private String getMetaProperty(Navajo n, String name) {
-		Message em = null;
-		if ( ( em = n.getMessage(ServiceEntityOperation.ENTITY_META_MSG) ) != null ) {
-			Property p = em.getProperty(name);
-			if ( p != null ) {
-				return p.getValue();
-			}
-		}
-		return null;
-	}
-	
-	private void setMetaProperty(Navajo n, String name, String value) {
-		Message em = null;
-		if ( ( em = n.getMessage(ServiceEntityOperation.ENTITY_META_MSG) ) == null ) {
-			em = NavajoFactory.getInstance().createMessage(n, ServiceEntityOperation.ENTITY_META_MSG);
-			n.addMessage(em);
-		}
-		Property et = em.getProperty(name);
-		if ( et == null ) {
-			et = NavajoFactory.getInstance().createProperty(n, name, Property.STRING_PROPERTY, value, 0, "", Property.DIR_OUT, null);
-			em.addProperty(et);
-		} else {
-			et.setValue(value);
-		}
-	}
-	
-	private void setEtag(Navajo n) {
-		Message m = n.getMessage(myEntity.getName());
-		String etag = m.generateEtag();
-		setMetaProperty(n, ETAG, etag);
-	}
-	
+
 	@Override
 	public Navajo perform(Navajo input) throws EntityException {
 		String postedEtag;
 		
-		String[] validMessages = {
+		validMessages = new String[] {
 				"__parms__",
 				"__globals__",
-				ServiceEntityOperation.ENTITY_META_MSG,
-				myOperation.getEntityName(),
+				myEntity.getMessageName(),
 				(myOperation.getExtraMessage() != null ? myOperation.getExtraMessage().getName()
 						: "") };
 		
@@ -324,7 +298,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			return out;
 		}
 		
-		Message inputEntity = input.getMessage(myEntity.getName());
+		Message inputEntity = input.getMessage(myEntity.getMessageName());
 		
 		
 		if (inputEntity == null) {
@@ -346,7 +320,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				myKey = new Key("", myEntity);
 			}
 		}
-		cleanInput(input, validMessages);
+		clean(input, validMessages, "in");
 		
 		// Perform validation method if defined
 		if ((myOperation.getValidationService()) != null) {
@@ -362,22 +336,23 @@ public class ServiceEntityOperation implements EntityOperation {
 		if( myOperation.getMethod().equals(Operation.GET) ) {
 			if ((postedEtag = inputEntity.getEtag()) != null) {
 				Navajo entity = getCurrentEntity(input);
-				if (entity != null && entity.getMessage(myEntity.getName()) != null) {
-					if (postedEtag.equals(entity.getMessage(myEntity.getName()).generateEtag())) {
+				if (entity != null && entity.getMessage(myEntity.getMessageName()) != null) {
+					if (postedEtag.equals(entity.getMessage(myEntity.getMessageName()).generateEtag())) {
 						throw new EntityException(EntityException.NOT_MODIFIED);
 					}
 				}
 				
 			}
 			
-			return getEntity(input);
+			return callEntityService(input);
+
 		}
 		
 		if (myOperation.getMethod().equals(Operation.DELETE)) {
 			validateEtag(input, inputEntity);
 			Navajo request = myKey.generateRequestMessage(input);
 			try {
-				checkForMongo(request.getMessage(myEntity.getName()));
+				checkForMongo(request.getMessage(myEntity.getMessageName()));
 			} catch (Exception e) {
 				throw new EntityException(EntityException.ENTITY_NOT_FOUND,
 						"Could not peform delete, entity not found");
@@ -436,10 +411,7 @@ public class ServiceEntityOperation implements EntityOperation {
 					throw new EntityException(EntityException.CONFLICT, "Could not perform insert, duplicate entry");
 				}
 			}
-
-			// Mask message, i.e. populate selection properties and add missing
-			// properties.
-			inputEntity.maskMessage(myEntity.getMessage());
+			
 			// Check property types.
 			List<String> invalidProperties = new ArrayList<String>();
 			checkTypes(inputEntity, myEntity.getMessage(), myOperation.getMethod(),
@@ -450,6 +422,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			}
 
 			Navajo result = callEntityService(input);
+			
 			// After a POST or PUT, return the full new object resulting from the previous operation
 			// effectively this is a GET. However, if this fails (e.g. no GET operation is defined
 			// for this entity), we return the original result
@@ -470,7 +443,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			if (current == null) {
 				return;
 			}
-			Message entityMessage = current.getMessage(myEntity.getName());
+			Message entityMessage = current.getMessage(myEntity.getMessageName());
 			if (entityMessage == null) {
 				return;
 			}
@@ -521,9 +494,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		if ( result == null ) {
 			throw new EntityException(EntityException.ENTITY_NOT_FOUND, myEntity.getName());
 		}
-		result.getMessage(myEntity.getName()).maskMessage(myEntity.getMessage());
-		//setEtag(result);
-		//setMetaProperty(result, STATUS, EntityException.OK+"");
+
 		return result;
 	}
 
@@ -567,7 +538,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			throw new EntityException(EntityException.UNAUTHORIZED);
 		}
 
-		if ( result.getMessage(myEntity.getName()) == null ) {
+		if ( result.getMessage(myEntity.getMessageName()) == null ) {
 			return null;
 		}
 		
@@ -618,7 +589,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				throw new EntityException(EntityException.UNAUTHORIZED);
 			}
 		}
-		
+		clean(result, validMessages, "out");	
 		return result;
 		
 		// Check for transaction.

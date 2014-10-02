@@ -33,7 +33,6 @@ import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
-import com.dexels.navajo.entity.util.EntityHelper;
 import com.dexels.navajo.script.api.LocalClient;
 
 
@@ -150,6 +149,10 @@ public class EntityListener extends HttpServlet {
 
 			}
 			
+			// Merge input.
+			input.getMessage(entityMessage.getName()).merge(entityMessage, true);
+			//EntityHelper.mergeWithEntityTemplate( ), entityMessage , "in");
+			
 			etag = request.getHeader("If-Match");
 			if (etag == null) {
 				etag = request.getHeader("If-None-Match");
@@ -166,16 +169,6 @@ public class EntityListener extends HttpServlet {
 			result = seo.perform(input);
 			logger.debug("Performed entity operation"); 
 
-			if ( result.getMessage(entityMessage.getName() ) != null ) {
-				// Merge with entity template
-				EntityHelper.mergeWithEntityTemplate(result.getMessage(entityMessage.getName() ), entityMessage );
-				logger.debug("Merging output of Operation and Entity"); 
-				if (method.equals("GET")) {
-					response.setHeader("Etag", result.getMessage(entityMessage.getName()).getEtag());
-					logger.debug("Added Etag header"); 
-
-				}
-			}
 		} catch (Exception ex) {
 			result = handleException(ex, request, response);
 		}

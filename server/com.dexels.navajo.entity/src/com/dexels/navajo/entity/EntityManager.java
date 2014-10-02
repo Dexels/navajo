@@ -56,14 +56,14 @@ public class EntityManager {
 	public Navajo deriveNavajoFromParameterMap(Entity entity, Map<String, String[]> parameters) {
 
 		Navajo n = NavajoFactory.getInstance().createNavajo();
-		Message m = NavajoFactory.getInstance().createMessage(n, entity.getName());
+		Message m = NavajoFactory.getInstance().createMessage(n, entity.getMessageName());
 		n.addMessage(m);
 
 		for (String key : parameters.keySet()) {
 
 			String propertyName = key;
-			if (!propertyName.startsWith("/" + entity.getName() + "/")) {
-				propertyName = "/" + entity.getName() + "/" + propertyName;
+			if (!propertyName.startsWith("/" + entity.getMessageName() + "/")) {
+				propertyName = "/" + entity.getMessageName() + "/" + propertyName;
 			}
 			Property prop = entity.getMessage().getProperty(propertyName);
 			if (prop != null) {
@@ -138,16 +138,26 @@ public class EntityManager {
 		if (!entityDir.exists()) {
 			return;
 		}
-		for (File f : entityDir.listFiles()) {
-			if (f.isFile()) {
-				buildAndLoadScript(f.toString());
-			}
-		}
+		
+		buildAndLoadScript(entityDir);
+
 	}
 
-	private void buildAndLoadScript(String fileName) throws Exception {
-		String script = fileName.substring(fileName.indexOf("entity"), fileName.indexOf(".xml"));
-		bundleQueue.enqueueScript(script, ".xml");
+	// Can be called on file or directory. If on directory, call recursively on each file
+	private void buildAndLoadScript(File file) throws Exception {
+		if (file.isFile()) {
+			String filename = file.toString();
+			if (!filename.endsWith(".xml")) {
+				return;
+			}
+			String script = filename.substring(filename.indexOf("entity"), filename.indexOf(".xml"));
+			bundleQueue.enqueueScript(script, ".xml");
+		} else if (file.isDirectory()) {
+			for (File f : file.listFiles()) {
+				buildAndLoadScript(f);
+			}
+		}
+
 	}
 
 	public void setBundleQueue(BundleQueue queue) throws Exception {

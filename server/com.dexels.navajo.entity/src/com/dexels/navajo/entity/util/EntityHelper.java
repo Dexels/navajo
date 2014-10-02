@@ -8,7 +8,13 @@ import com.dexels.navajo.document.Property;
 
 public class EntityHelper {
 
-	public static void mergeWithEntityTemplate(Message msg, Message templateMessage) {
+	/** Similar to BaseMessageImpl->mask, but adds missing properties/messages 
+	 * 
+	 * @param msg
+	 * @param templateMessage
+	 * @param direction If defined, messages are only added when the direction matches
+	 */
+	public static void mergeWithEntityTemplate(Message msg, Message templateMessage, String direction) {
 		if ( templateMessage == null || ( templateMessage.isArrayMessage() && templateMessage.getDefinitionMessage() == null) ) {
 			return;
 		}
@@ -21,6 +27,10 @@ public class EntityHelper {
 			Property e_p = allProperties.next();
 			// Find property in input message.
 			Property p = msg.getProperty(e_p.getName());
+			if (! (e_p.getDirection() == "") || (e_p.getDirection() == direction)) {
+				// not interested
+				break;
+			}
 			/**
 			 * #TODO: Support for multiple selection properties...
 			 */
@@ -35,7 +45,7 @@ public class EntityHelper {
 				p.setSelected(selectedValue);
 				msg.addProperty(p);
 			} else {
-				if ( p == null ) {
+				if ( p == null) {
 					p = e_p.copy(msg.getRootDoc());
 					msg.addProperty(p);
 				} else {
@@ -55,7 +65,7 @@ public class EntityHelper {
 				Message m = msg.getMessage(e_m.getName());
 				if ( m != null ) {
 					for ( int i = 0; i < m.getArraySize(); i++ ) {
-						mergeWithEntityTemplate(m.getMessage(i), e_m);
+						mergeWithEntityTemplate(m.getMessage(i), e_m, direction);
 					}
 				} else {
 					m = NavajoFactory.getInstance().createMessage(msg.getRootDoc(), e_m.getName());
@@ -68,7 +78,7 @@ public class EntityHelper {
 			} else {
 				Message m = msg.getMessage(e_m.getName());
 				if ( m != null ) {
-					mergeWithEntityTemplate(m, e_m);
+					mergeWithEntityTemplate(m, e_m, direction);
 				} else {
 					m = NavajoFactory.getInstance().createMessage(msg.getRootDoc(), e_m.getName());
 					msg.addMessage(m);

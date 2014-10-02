@@ -53,7 +53,7 @@ public class Key {
 	 */
 	public Navajo generateRequestMessage(Navajo input) {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
-		Message m = NavajoFactory.getInstance().createMessage(n, myEntity.getName());
+		Message m = NavajoFactory.getInstance().createMessage(n, myEntity.getMessageName());
 		n.addMessage(m);
 		// Copy properties.
 		for ( Property p : myKey ) {

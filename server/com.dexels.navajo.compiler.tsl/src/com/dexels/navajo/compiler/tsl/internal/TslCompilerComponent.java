@@ -104,7 +104,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 
 		generateManifest(scriptString, "1.0.0", packagePath, script, packages, compileDate);
 		generateDs(packagePath, script, dependencies, dependentResources);
-		if (packagePath.equals("entity")) {
+		if (packagePath.startsWith("entity")) {
 			generateEntityDs(packagePath, script,dependencies, dependentResources);
 		}
 	}
@@ -323,8 +323,8 @@ public class TslCompilerComponent implements ScriptCompiler {
 			fullName = script;
 		} else {
 			fullName = packagePath+"/"+script;
-
 		}
+		String relativeScript = fullName.substring(fullName.indexOf('/') +1 , fullName.length());
 		
 		String symbolicName = rpcNameFromScriptPath(fullName).replaceAll("/", ".");
 
@@ -345,8 +345,9 @@ public class TslCompilerComponent implements ScriptCompiler {
 		service.addChild(provide);
 		provide.setAttribute("interface", "com.dexels.navajo.entity.Entity");
 
-		addProperty("entity.name","String", script, xe);
+		addProperty("entity.name","String", relativeScript, xe);
 		addProperty("service.name","String", fullName, xe);
+		addProperty("entity.message","String", script, xe);
 		
 		XMLElement refMan = new CaseSensitiveXMLElement("reference");
 		refMan.setAttribute("bind", "setEntityManager");
