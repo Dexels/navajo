@@ -1815,13 +1815,19 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	
 	@Override
 	public void maskMessage(Message mask) {
+		maskMessage(mask, "");
+	}
+	
+	@Override
+	public void maskMessage(Message mask, String direction) {
 
 		// Mask all properties.
 		Iterator<Property> allProperties = new ArrayList<Property>(this.getAllProperties()).iterator();
 		
 		while ( allProperties.hasNext() ) {
 			Property p = allProperties.next();
-			if ( this.getIndex() >= 0) { // It's an array message element. Check mask's definition message if it exists..
+			boolean matchDirection = (direction == "") || (p.getDirection() == "") || (p.getDirection() == direction);
+			 if ( this.getIndex() >= 0) { // It's an array message element. Check mask's definition message if it exists..
 				if ( !mask.isArrayMessage() || ((BaseMessageImpl) mask).getPropertyDefinition(p.getName()) == null ) {
 					removeProperty(p);
 				}
@@ -1829,6 +1835,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 				if ( mask.getProperty(p.getName()) == null ) {
 					removeProperty(p);
 				}
+			}
+			if (!matchDirection) {
+				removeProperty(p);
 			}
 		}
 		
@@ -1841,10 +1850,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			} else {
 				if ( m.isArrayMessage() ) {
 					for (int i = 0; i < m.getElements().size(); i++ ) {
-						m.getElements().get(i).maskMessage(mask.getMessage(m.getName()));
+						m.getElements().get(i).maskMessage(mask.getMessage(m.getName()), direction);
 					}
 				} else {
-					m.maskMessage(mask.getMessage(m.getName()));
+					m.maskMessage(mask.getMessage(m.getName()), direction);
 				}
 			}
 		}

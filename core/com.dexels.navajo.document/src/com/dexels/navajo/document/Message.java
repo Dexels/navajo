@@ -290,6 +290,16 @@ public interface Message
   public void maskMessage(Message mask);
   
   /**
+   * Mask message instance with a message 'mask'
+   * (For array messages, the mask message should use definition messages)
+   * 
+   * @param template, the message 'mask'
+   * @param direction, Remove messages with a wrong direction
+   */
+   void maskMessage(Message mask, String direction);
+
+  
+  /**
    * Adds a message to an array message at a specific location in the array
    */
   public void addMessage(Message m, int index) throws NavajoException;
@@ -540,6 +550,7 @@ public interface Message
 	public Map<String, Message> getMessages();
 
 	public List<Message> getElements();
+
 
 
 }
