@@ -98,6 +98,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	public int queueTime;
 	public int authorisationTime;
 	public int clientTime;
+	public int transferTime;
 	public int processingTime;
 	public int beforeServiceTime;
 	public int afterServiceTime;
@@ -369,21 +370,21 @@ public final class Access implements java.io.Serializable, Mappable {
 	public Access(int userID, int serviceID, String rpcUser,
 			String rpcName, String userAgent, String ipAddress,
 			String hostName, Object certificate) {
-		this(0, userID, serviceID, rpcUser, rpcName, userAgent, ipAddress, hostName, certificate);
+		this(null, userID, serviceID, rpcUser, rpcName, userAgent, ipAddress, hostName, certificate);
 	}
 	
-	/**
-	 * Nobody cares about any supplied access ids, so better not to supply them
-	 */
-	
-	@Deprecated
-	public Access(int accessID, int userID, int serviceID, String rpcUser,
+
+	public Access(String accessID, int userID, int serviceID, String rpcUser,
 			String rpcName, String userAgent, String ipAddress,
 			String hostName, Object certificate) {
 
 		this();
-		accessCount++;
-		this.accessID = created.getTime() + "-" + accessCount;
+		
+		this.accessID = accessID;
+		if (accessID == null) {
+			accessCount++;
+			this.accessID = created.getTime() + "-" + accessCount;
+		}
 		this.userID = userID;
 		this.serviceID = serviceID;
 		this.rpcName = rpcName;

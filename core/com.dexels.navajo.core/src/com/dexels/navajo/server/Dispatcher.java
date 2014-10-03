@@ -54,6 +54,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoExceptionEvent;
+import com.dexels.navajo.events.types.NavajoRequestEvent;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.events.types.ServerReadyEvent;
 import com.dexels.navajo.loader.NavajoClassSupplier;
@@ -866,6 +867,11 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
       rpcPassword = header.getRPCPassword();
       
   	 boolean preventFinalize = false;
+  	 
+  	 // Log request event ASAP - create a dummy Access object for it
+     // Later use this accessID for the real access object
+     Access requestEventAccess = new Access(1, 1, rpcUser, rpcName, "", "", "", null);
+     NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(requestEventAccess));
 
       
       try {
@@ -890,7 +896,7 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
         	  logger.error ("Bad initialization or missing repository");
         	  throw new FatalException("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
           }
-          access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+          access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate, requestEventAccess.accessID);
         }
         catch (AuthorizationException ex) {
           outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
@@ -908,7 +914,7 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
       else {  
     	// Use SimpleRepository authorisation is skipped.
     	access = RepositoryFactoryImpl.getRepository("com.dexels.navajo.server.SimpleRepository", navajoConfig)
-    				.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null);
+    				.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null, requestEventAccess.accessID);
       }
       
       //System.err.println("Created Access: " +  access.accessID + ", " + access.rpcName + "(" + access.rpcUser + ")");

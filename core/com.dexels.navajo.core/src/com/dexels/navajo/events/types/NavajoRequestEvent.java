@@ -2,6 +2,7 @@ package com.dexels.navajo.events.types;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.events.NavajoEvent;
+import com.dexels.navajo.server.Access;
 
 /**
  * NavajoRequestEvent is typically emitted when a new Navajo is received.
@@ -20,14 +21,14 @@ public class NavajoRequestEvent implements NavajoEvent {
 	 */
 	private static final long serialVersionUID = 8719913277992819515L;
 	
-	private Navajo navajo;
-
-	public NavajoRequestEvent(Navajo n) {
-		this.navajo = n;
+    private Access myAccess;
+	
+	public NavajoRequestEvent(Access a) {
+		this.myAccess = a;
 	}
 	
-	public Navajo getNavajo() {
-		return navajo;
+ 	public Access getAccess() {
+		return myAccess;
 	}
 
 	@Override

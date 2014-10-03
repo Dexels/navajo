@@ -43,8 +43,28 @@ public interface Repository {
      * @throws SystemException
      * @throws AuthorizationException
      */
-    public Access authorizeUser(String username, String password, String service, Navajo inMessage, Object certificate) throws SystemException, AuthorizationException;
+	public Access authorizeUser(String username, String password,
+			String service, Navajo inMessage, Object certificate)
+			throws SystemException, AuthorizationException;
+	
 
+    /**
+     * Authorize a Navajo user based on username, password and service name. An Access object is returned that can
+     * be used in subsequent calls to the other Repository methods.
+     * 
+     * @param username the Navajo username
+     * @param password the password
+     * @param service the Navajo services
+     * @param inMessage the Navajo inMessage
+     * @param certificate optionally a security token
+     * @param accessId optionally an access id
+     * @return
+     * @throws SystemException
+     * @throws AuthorizationException
+     */
+	public Access authorizeUser(String username, String password,
+			String service, Navajo inMessage, Object certificate, String accessId)
+			throws SystemException, AuthorizationException;
 
     /**
      * Get the dispatcher class from the repository using the Access object.

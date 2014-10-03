@@ -66,15 +66,21 @@ public class SimpleRepository implements Repository, GlobalManager {
 	}
 	
 	@Override
-	public Access authorizeUser(String username, String password,
-			String service, Navajo inMessage, Object certificate)
-			throws SystemException, AuthorizationException {
+	public Access authorizeUser(String username, String passwor, String service, Navajo inMessage, Object certificate,
+			String accessId) throws SystemException, AuthorizationException {
 		try {
 			initGlobals(service, username, inMessage, null);
 		} catch (NavajoException e) {
 			logger.error("Error: ", e);
 		}
-		return new Access( 1, 1, username, service, "", "", "", certificate);
+		return new Access(accessId, 1, 1, username, service, "", "", "", certificate);
+	}
+	
+	@Override
+	public Access authorizeUser(String username, String password, String service, Navajo inMessage, Object certificate)
+			throws SystemException, AuthorizationException {
+		return authorizeUser(username, password, service, inMessage,
+				certificate, null);
 	}
 
 	/**
@@ -166,5 +172,7 @@ public class SimpleRepository implements Repository, GlobalManager {
 		}
 			return "com.dexels.navajo.server.GenericHandler";
 	}
+
+	
 
 }
