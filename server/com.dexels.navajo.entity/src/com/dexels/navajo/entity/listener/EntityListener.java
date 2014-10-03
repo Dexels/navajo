@@ -119,7 +119,7 @@ public class EntityListener extends HttpServlet {
 				logger.error("No entity name found in request. Request URI: {}", request.getRequestURI());
 				throw new EntityException(EntityException.BAD_REQUEST);
 			}
-			
+			entityName = entityName.replace("/", ".");
 			Entity e = myManager.getEntity(entityName);
 			if (e == null) {
 				// Requested entity not found
