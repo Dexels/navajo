@@ -93,6 +93,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	public int queueTime;
 	public int authorisationTime;
 	public int clientTime;
+	public int transferTime;
 	public int processingTime;
 	public int beforeServiceTime;
 	public int afterServiceTime;
