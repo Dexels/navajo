@@ -1826,7 +1826,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		
 		while ( allProperties.hasNext() ) {
 			Property p = allProperties.next();
-			boolean matchDirection = (direction == "") || (p.getDirection() == "") || (p.getDirection() == direction);
+			Property m_p = mask.getProperty(p.getName());
+			boolean matchDirection = (m_p == null) || direction.equals("") || m_p.getDirection().equals("") || (m_p.getDirection().indexOf(direction) != -1);
 			 if ( this.getIndex() >= 0) { // It's an array message element. Check mask's definition message if it exists..
 				if ( !mask.isArrayMessage() || ((BaseMessageImpl) mask).getPropertyDefinition(p.getName()) == null ) {
 					removeProperty(p);
