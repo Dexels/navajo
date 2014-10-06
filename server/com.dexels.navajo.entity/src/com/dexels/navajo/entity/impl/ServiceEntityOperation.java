@@ -236,10 +236,12 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 		
 		// Add missing properties/messages from template message
-		n.getMessage(myEntity.getMessageName()).merge(myEntity.getMessage(), true);
-				
-		// Mask output with entity message and filter on direction = out
-		n.getMessage(myEntity.getMessageName()).maskMessage(myEntity.getMessage(), direction);
+		if ( n.getMessage(myEntity.getMessageName()) != null )  {
+			n.getMessage(myEntity.getMessageName()).merge(myEntity.getMessage(), true);
+
+			// Mask output with entity message and filter on direction = out
+			n.getMessage(myEntity.getMessageName()).maskMessage(myEntity.getMessage(), direction);
+		}
 	}
 	
 	/**
@@ -530,7 +532,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		prepareServiceRequestHeader(input.copy(), request, getop);
 
 
-		Navajo result = get.commitOperation(request, getop, true);
+		Navajo result = get.commitOperation(request, getop);
 		if (result.getMessage("error") != null) {
 			throw new EntityException(EntityException.SERVER_ERROR);
 		}
@@ -553,7 +555,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		prepareValidationServiceRequestHeader(request,request, myOperation);
 
 		// No transaction support yet
-		Navajo result =  commitOperation(request, myOperation, false);
+		Navajo result =  commitOperation(request, myOperation);
 		
 		if (result.getMessage("errors") != null) {
 			throw new EntityException(EntityException.SERVER_ERROR);
@@ -577,7 +579,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		prepareServiceRequestHeader(input,input, myOperation);
 
 		// No transaction support yet
-		Navajo result =  commitOperation(input, myOperation, false);
+		Navajo result =  commitOperation(input, myOperation);
 		if ( result != null ) {
 			if (result.getMessage("error") != null) {
 				throw new EntityException(EntityException.SERVER_ERROR, result.getMessage("error").getProperty("message").getValue());
@@ -627,20 +629,17 @@ public class ServiceEntityOperation implements EntityOperation {
 	 * @return
 	 * @throws EntityException
 	 */
-	private Navajo commitOperation(Navajo input, Operation o, boolean block) throws EntityException {
+	private Navajo commitOperation(Navajo input, Operation o) throws EntityException {
 		try {
 			if ( myEntityMap != null ) {
 				try {
-					myEntityMap.setDoSend(o.getService(), input);
-					if ( block ) {
-						myEntityMap.waitForResult();
-						Navajo n = myEntityMap.getResponseNavajo();
-						return n;
-					}
+					myEntityMap.setDoSend(o.getService(), input.copy());
+					myEntityMap.waitForResult();
+					Navajo n = myEntityMap.getResponseNavajo();
+					return n;
 				} catch (Exception e) {
 					throw new EntityException(EntityException.SERVER_ERROR, e.getMessage(), e);
 				} 
-				return null;
 			}
 			if ( dispatcher != null ) {
 				return dispatcher.handle(input, true);
