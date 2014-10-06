@@ -1,7 +1,6 @@
 package com.dexels.navajo.entity;
 
 import java.io.File;
-import java.nio.file.FileSystem;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
