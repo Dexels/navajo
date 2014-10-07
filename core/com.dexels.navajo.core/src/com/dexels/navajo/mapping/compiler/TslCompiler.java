@@ -3361,13 +3361,13 @@ public class TslCompiler {
 			ClassLoader classLoader, NavajoIOConfig navajoIOConfig,
 			List<Dependency> deps, String tenant,
 			boolean hasTenantSpecificScript) throws Exception {
-		String javaFile = output + File.separator + script + ".java";
+		String javaFile = output + "/" + script + ".java";
 		TslCompiler tslCompiler = new TslCompiler(classLoader, navajoIOConfig);
 		try {
 			String bareScript;
 
-			if (script.indexOf(File.separator) >= 0) {
-				bareScript = script.substring(script.lastIndexOf(File.separator) + 1,
+			if (script.indexOf('/') >= 0) {
+				bareScript = script.substring(script.lastIndexOf('/') + 1,
 						script.length());
 			} else {
 				bareScript = script;

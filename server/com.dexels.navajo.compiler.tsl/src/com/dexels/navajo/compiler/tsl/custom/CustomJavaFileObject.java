@@ -26,11 +26,10 @@ public class CustomJavaFileObject implements JavaFileObject {
 	private Kind kind;
 	private byte[] localContents;
 	private URL lazyURL;
-	
-	
+
 	public CustomJavaFileObject(String javaObjectName, URI uri, InputStream is,
 			Kind kind) throws IOException {
-		this(javaObjectName,uri,kind);
+		this(javaObjectName, uri, kind);
 		if (is != null) {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -40,21 +39,22 @@ public class CustomJavaFileObject implements JavaFileObject {
 	}
 
 	public CustomJavaFileObject(String javaObjectName, URI uri, URL contents,
-			Kind kind)  {
-		this(javaObjectName,uri,kind);
+			Kind kind) {
+		this(javaObjectName, uri, kind);
 		this.lazyURL = contents;
-	}	
-	
+	}
+
 	private CustomJavaFileObject(String javaObjectName, URI uri, Kind kind) {
 		this.uri = uri;
 		this.binaryName = javaObjectName;
 		this.kind = kind;
 		String stripName = javaObjectName;
-		if (stripName.endsWith(File.separator)) {
+		if (stripName.endsWith("/")) {
 			stripName = stripName.substring(0, stripName.length() - 1);
 		}
-		name = javaObjectName.substring(javaObjectName.lastIndexOf(File.separator) + 1);
+		name = javaObjectName.substring(javaObjectName.lastIndexOf('/') + 1);
 	}
+
 	private void setContents(byte[] byteArray) {
 		this.localContents = byteArray;
 	}
@@ -71,21 +71,22 @@ public class CustomJavaFileObject implements JavaFileObject {
 	}
 
 	private InputStream getContents() throws IOException {
-		if(lazyURL!=null) {
+		if (lazyURL != null) {
 			return lazyURL.openStream();
 		}
 		return new ByteArrayInputStream(localContents);
 	}
-	
+
 	@Override
 	public OutputStream openOutputStream() throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream() {
 
 			@Override
 			public void close() throws IOException {
-				setContents( this.toByteArray());
+				setContents(this.toByteArray());
 				super.close();
-			}};
+			}
+		};
 		return baos;
 	}
 
@@ -96,13 +97,13 @@ public class CustomJavaFileObject implements JavaFileObject {
 
 	@Override
 	public Reader openReader(boolean ignoreEncodingErrors) throws IOException {
-		return new InputStreamReader(openInputStream(),"UTF-8");
+		return new InputStreamReader(openInputStream(), "UTF-8");
 	}
 
 	@Override
 	public CharSequence getCharContent(boolean ignoreEncodingErrors)
 			throws IOException {
-		final Reader lc = new InputStreamReader(getContents(),"UTF-8");
+		final Reader lc = new InputStreamReader(getContents(), "UTF-8");
 		StringWriter sw = new StringWriter();
 		IOUtils.copy(lc, sw);
 		return sw.toString();

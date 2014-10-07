@@ -1,6 +1,7 @@
 package com.dexels.osgicompiler.internal;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -160,7 +161,7 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
     private  JavaFileObject getJavaSourceFileObject(String className, InputStream contents) throws IOException
     {
         JavaFileObject so = null;
-            so = new CustomJavaFileObject(className+ Kind.SOURCE.extension, URI.create("file:///" + className.replace('.', '/').replace('\\', '/')
+        so = new CustomJavaFileObject(className+ Kind.SOURCE.extension, URI.create("file:///" + className.replace('.', File.separatorChar)
                     + Kind.SOURCE.extension), contents, Kind.SOURCE);
         return so;
     }

@@ -1,6 +1,5 @@
 package com.dexels.navajo.compiler.tsl.internal;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
@@ -42,9 +41,9 @@ public class TslCompilerComponent implements ScriptCompiler {
 			String tenant, boolean hasTenantSpecificFile) throws Exception {
 		String packagePath = null;
 		String script = null;
-		if(scriptPath.indexOf(File.separator)>=0) {
-			packagePath = scriptPath.substring(0,scriptPath.lastIndexOf(File.separator));
-			script = scriptPath.substring(scriptPath.lastIndexOf(File.separator)+1);
+		if(scriptPath.indexOf('/')>=0) {
+			packagePath = scriptPath.substring(0,scriptPath.lastIndexOf('/'));
+			script = scriptPath.substring(scriptPath.lastIndexOf('/')+1);
 		} else {
 			packagePath ="";
 			script=scriptPath;
@@ -69,7 +68,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		if("".equals(scriptPackage)) {
 			scriptString = scriptPath;
 		} else {
-			scriptString = packagePath + File.separator + script.replaceAll("_", "|");
+			scriptString = packagePath + "/"+script.replaceAll("_", "|");
 		}
 		String scriptSource = script;
 		compiler.compileToJava(scriptSource, navajoIOConfig.getScriptPath(),
@@ -112,7 +111,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	
 	private void generateFactoryClass(String script, String packagePath, Set<String> resources) throws IOException {
 		
-		String javaPackagePath = packagePath.replace(File.separator, ".");
+		String javaPackagePath = packagePath.replaceAll("/", ".");
 //		public CompiledScript getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 //			Class<? extends CompiledScript> c;
 //			logger.info("About to load class: "+serviceName+" I am: "+getClass().getName());
@@ -178,7 +177,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	
 	private String tenantFromScriptPath(String scriptPath) {
 		int scoreIndex = scriptPath.lastIndexOf("_");
-		int slashIndex = scriptPath.lastIndexOf(File.separator);
+		int slashIndex = scriptPath.lastIndexOf("/");
 		if(scoreIndex>=0 && slashIndex < scoreIndex) {
 			return scriptPath.substring(scoreIndex+1, scriptPath.length());
 		} else {
@@ -187,7 +186,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	}
 	private String rpcNameFromScriptPath(String scriptPath) {
 		int scoreIndex = scriptPath.lastIndexOf("_");
-		int slashIndex = scriptPath.lastIndexOf(File.separator);
+		int slashIndex = scriptPath.lastIndexOf("/");
 		if(scoreIndex>=0 && slashIndex < scoreIndex) {
 			return scriptPath.substring(0,scoreIndex);
 		} else {
@@ -236,21 +235,21 @@ public class TslCompilerComponent implements ScriptCompiler {
 		if (packagePath.equals("")) {
 			fullName = script;
 		} else {
-			fullName = packagePath + File.separator + script;
+			fullName = packagePath+"/"+script;
 
 		}
 		String javaPackagePath;
 		if("".equals(packagePath)) {
 			javaPackagePath = "defaultPackage";
 		} else {
-			javaPackagePath = packagePath.replace(File.separator, ".");
+			javaPackagePath = packagePath.replaceAll("/", ".");
 		}
 
 		String tenant = tenantFromScriptPath(fullName);
 		if (tenant == null) {
 			tenant = getTentantSpecificDependency(dependencies);
 		}
-		String symbolicName = rpcNameFromScriptPath(fullName).replace(File.separator, ".");
+		String symbolicName = rpcNameFromScriptPath(fullName).replaceAll("/", ".");
 //		symbolicName = fullName.replaceAll("/", ".");
 		boolean hasTenantSpecificFile = tenant !=null;		
 
@@ -323,11 +322,11 @@ public class TslCompilerComponent implements ScriptCompiler {
 		if (packagePath.equals("")) {
 			fullName = script;
 		} else {
-			fullName = packagePath+File.separator+script;
+			fullName = packagePath+"/"+script;
 		}
-		String relativeScript = fullName.substring(fullName.indexOf(File.separator) +1 , fullName.length());
-		relativeScript = relativeScript.replace(File.separator, ".");
-		String symbolicName = rpcNameFromScriptPath(fullName).replace(File.separator, ".");
+		String relativeScript = fullName.substring(fullName.indexOf('/') +1 , fullName.length());
+		
+		String symbolicName = rpcNameFromScriptPath(fullName).replaceAll("/", ".");
 
 		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
 		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");

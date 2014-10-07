@@ -50,11 +50,11 @@ public class JavaCompilerComponent implements JavaCompiler {
 	@Override
 	public void compileJava(String script) throws Exception {
 		// grab the file from the orig location
-		final File file = new File(navajoIOConfig.getCompiledScriptPath() + File.separator+script+".java");
+		final File file = new File(navajoIOConfig.getCompiledScriptPath()+"/"+script+".java");
 		// but alter the path dir for the compiler:
-		if(script.indexOf(File.separator)==-1) {
+		if(script.indexOf('/')==-1) {
 			logger.warn("Creating compiledScript for default package!");
-			script = "defaultPackage" + File.separator + script;
+			script = "defaultPackage/"+script;
 		}
 		FileInputStream fis = new FileInputStream(file);
 		byte[] bb = javaCompiler.compile(script, fis);
