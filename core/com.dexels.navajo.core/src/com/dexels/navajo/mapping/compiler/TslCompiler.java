@@ -1329,7 +1329,8 @@ public class TslCompiler {
 		String key = n.getAttribute("key");
 		String reference = n.getAttribute("reference");
 		String extendsProp = n.getAttribute("extends");
-
+		String bindProp = n.getAttribute("bind");
+		
 		value = (value == null) || (value.equals("")) ? "" : value;
 		type = (type == null) ? "" : type;
 		subtype = (subtype == null) ? "" : subtype;
@@ -1471,6 +1472,10 @@ public class TslCompiler {
 			if (!"".equals(extendsProp)) {
 				result.append(printIdent(ident) + "p.setExtends(\""
 						+ extendsProp + "\");\n");
+			}
+			if (!"".equals(bindProp)) {
+				result.append(printIdent(ident) + "p.setBind(\""
+						+ bindProp + "\");\n");
 			}
 		} else { // parameter
 			result.append(printIdent(ident)

@@ -132,6 +132,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	protected String direction = Property.DIR_IN;
 	protected String key = null;
 	protected String reference = null;
+	protected String bind = null;
 	protected String myExtends = null;
 	protected int length = -1;
 	private Map<String,String> subtypeMap = null;
@@ -1499,6 +1500,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		if ( getReference() != null ) {
 			cp.setReference(getReference());
 		}
+		if ( getBind() != null) {
+			cp.setBind(getBind());
+		}
 		cp.setRootDoc(n);
 		ArrayList<Selection> mySel = getAllSelections();
 		for (int i = 0; i < mySel.size(); i++) {
@@ -1894,6 +1898,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			m.put(Property.PROPERTY_REFERENCE, reference);
 		}
 		
+		if ( bind != null ) {
+			m.put(Property.PROPERTY_BIND, bind);
+		}
+		
 		if (cardinality != null && Property.SELECTION_PROPERTY.equals(getType())) {
 			m.put(PROPERTY_CARDINALITY, cardinality);
 		}
@@ -1962,6 +1970,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			}
 			if ( getExtends() != null ) {
 				prop.setExtends(getExtends());
+			}
+			if ( getBind() != null) {
+				prop.setBind(getBind());
 			}
 			return prop;
 		}
@@ -2147,6 +2158,18 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		firePropertyChanged(old, reference);
 	}
 
+	@Override
+	public String getBind() {
+		return bind;
+	}
+	
+	@Override
+	public void setBind(String b) {
+		String old = this.bind;
+		this.bind = b;
+		firePropertyChanged(old, b);
+	}
+	
 	@Override
 	public String getReference() {
 		return reference;
