@@ -714,7 +714,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void verifySingleScript(String scriptPath, List<String> failed,
 			List<String> success) {
-		scriptPath = scriptPath.replace('/', '.');
+		scriptPath = scriptPath.replace(File.separatorChar, '.');
 		String filter = "(navajo.scriptName=" + scriptPath + ")";
 		try {
 			ServiceReference[] ssr = bundleContext.getServiceReferences(
