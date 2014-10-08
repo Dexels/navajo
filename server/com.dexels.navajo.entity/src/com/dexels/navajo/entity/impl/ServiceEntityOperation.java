@@ -2,6 +2,8 @@ package com.dexels.navajo.entity.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import com.dexels.navajo.entity.adapters.EntityMap;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.UserException;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 
 public class ServiceEntityOperation implements EntityOperation {
@@ -227,7 +230,8 @@ public class ServiceEntityOperation implements EntityOperation {
 	 * @param validMessages
 	 * @return
 	 */
-	private void clean(Navajo n, String [] validMessages, String direction) {
+	private void clean(Navajo n, String [] validMessages, String direction, boolean resolveLinks) {
+		
 		List<Message> all = n.getAllMessages();
 		for ( Message m : all ) {
 			if (!isInArray(validMessages, m.getName() ) ) {
@@ -241,8 +245,79 @@ public class ServiceEntityOperation implements EntityOperation {
 
 			// Mask output with entity message and filter on direction = out
 			n.getMessage(myEntity.getMessageName()).maskMessage(myEntity.getMessage(), direction);
+			
+			if ( resolveLinks ) {
+
+				myEntity.getMessage().write(System.err);
+				
+				// Add properties that refer to other entities.
+				List<Property> allProps = myEntity.getMessage().getAllProperties();
+				HashMap<String, Navajo> referencedEntities = new HashMap<String, Navajo>();
+				for ( Property p : allProps ) {
+					if ( p.getReference() != null && p.getDirection().indexOf("in") != -1 ) {
+						String entityName = getEntityFromReference(p.getReference());
+						if ( ! referencedEntities.containsKey(entityName) ) {
+							referencedEntities.put(entityName, createInputNavajoForReferencedEntity(entityName, n));
+						}
+					}
+				}
+				// Populate property values that bind to external entities.
+				HashMap<String, Navajo> cachedEntities = new HashMap<String, Navajo >();
+				for ( Property p : allProps  ) {
+					if ( p.getBind() != null ) {
+						String entityName = getEntityFromReference(p.getBind());
+						String propertyName = getPropertyFromReference(p.getBind());
+						Navajo entityObj = null;
+						if ( !cachedEntities.containsKey(entityName)) {
+							try {
+								Operation o = EntityManager.getInstance().getOperation(entityName, "GET");
+								ServiceEntityOperation seo = new ServiceEntityOperation(EntityManager.getInstance(), DispatcherFactory.getInstance(), o);
+								entityObj = seo.perform(referencedEntities.get(entityName));
+							} catch (Exception e) {
+								e.printStackTrace(System.err);
+							}
+						} else {
+							entityObj = cachedEntities.get(entityName);
+						}
+						Object propVal = entityObj.getMessage(entityName).getProperty(propertyName);
+						n.getMessage(myEntity.getName()).getProperty(p.getName()).setAnyValue(propVal);
+					}
+				}
+			}
+			
 		}
 	}
+	
+	private Navajo createInputNavajoForReferencedEntity(String entityName, Navajo input) {
+		
+		Entity entityObj = EntityManager.getInstance().getEntity(entityName);
+		
+		List<Property> props= input.getMessage(myEntity.getMessageName()).getAllProperties();
+		for (Message m : input.getMessage(myEntity.getMessageName()).getAllMessages()) {
+			props.addAll(m.getAllProperties());
+		}
+		
+		Key entityKey = entityObj.getKey(props);
+		Navajo inputC = input.copy();
+		// Correct message name of copy of input.
+		inputC.getMessage(myEntity.getMessageName()).setName(entityName);
+		Navajo n = entityKey.generateRequestMessage(inputC);
+		
+		return n;
+		
+	}
+	
+	private String getEntityFromReference(String ref) {
+		String n = ref.replaceAll("navajo://", "");
+		n = n.substring(0, n.indexOf("/"));
+		return n;
+	}
+	
+	private String getPropertyFromReference(String ref) {
+		String n = ref.substring(ref.lastIndexOf("/") + 1);
+		return n;
+	}
+	
 	
 	/**
 	 * Check for missing _id/__id properties
@@ -299,9 +374,8 @@ public class ServiceEntityOperation implements EntityOperation {
 			out.addMessage(myEntity.getMessage().copy(out));
 			return out;
 		}
-		
+	
 		Message inputEntity = input.getMessage(myEntity.getMessageName());
-		
 		
 		if (inputEntity == null) {
 			throw new EntityException(EntityException.BAD_REQUEST, "No valid entity found.");
@@ -322,7 +396,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				myKey = new Key("", myEntity);
 			}
 		}
-		clean(input, validMessages, "in");
+		clean(input, validMessages, "in", false);
 		
 		// Perform validation method if defined
 		if ((myOperation.getValidationService()) != null) {
@@ -591,7 +665,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				throw new EntityException(EntityException.UNAUTHORIZED);
 			}
 		}
-		clean(result, validMessages, "out");	
+		clean(result, validMessages, "out", true);	
 		return result;
 		
 		// Check for transaction.
