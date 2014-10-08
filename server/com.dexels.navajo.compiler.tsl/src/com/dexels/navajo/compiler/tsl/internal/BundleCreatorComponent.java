@@ -345,7 +345,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		File factoryClassFile = new File(outPath, scriptPath + "Factory.class");
 		File manifestFile = new File(compiledScriptPath, scriptPath + ".MF");
 		File dsFile = new File(compiledScriptPath, scriptPath + ".xml");
-		File entityFile = new File(compiledScriptPath, packagePath + "/entity.xml");
+		File entityFile = new File(compiledScriptPath, packagePath + File.separator + "entity.xml");
 		
 		File bundleDir = new File(compiledScriptPath, scriptPath);		
 		if (!bundleDir.exists()) {

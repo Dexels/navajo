@@ -326,7 +326,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		}
 		String relativeScript = fullName.substring(fullName.indexOf('/') +1 , fullName.length());
 		
-		String symbolicName = rpcNameFromScriptPath(fullName).replaceAll("/", ".");
+		String symbolicName = rpcNameFromScriptPath(fullName);
 
 		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
 		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
@@ -362,13 +362,13 @@ public class TslCompilerComponent implements ScriptCompiler {
 		refScript.setAttribute("cardinality", "1..1");
 		refScript.setAttribute("interface", "com.dexels.navajo.script.api.CompiledScriptFactory");
 		refScript.setAttribute("name", "CompiledScript");
-		refScript.setAttribute("target", "(component.name=" + symbolicName + ")");
+		refScript.setAttribute("target", "(component.name=" + symbolicName.replace("/", ".") + ")");
 		xe.addChild(refScript);
 		
 		for (int i = 0; i < dependencies.size(); i++) {
 			Dependency d = dependencies.get(i);
 			if (d instanceof ExtendDependency) {
-				String entityName =  d.getId().replace("/",".");
+				String entityName =  d.getId();
 				XMLElement depref = new CaseSensitiveXMLElement("reference");
 				depref.setAttribute("name", "SuperEntity" + i);
 				depref.setAttribute("policy", "static");
