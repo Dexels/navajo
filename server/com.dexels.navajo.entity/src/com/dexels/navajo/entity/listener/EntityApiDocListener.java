@@ -79,6 +79,8 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		String path = request.getPathInfo();
 
 		String out = "";
 		out += "<!DOCTYPE html>";
@@ -102,6 +104,7 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 
 		out += "<body class=\"bodycenter\">";	
 		out += "<h1>Entity API Documentation</h1>";
+		
 		Set<String> entityNames = myManager.getRegisteredEntities();
 		for (String entityName : entityNames) {
 			Entity e = myManager.getEntity(entityName);
