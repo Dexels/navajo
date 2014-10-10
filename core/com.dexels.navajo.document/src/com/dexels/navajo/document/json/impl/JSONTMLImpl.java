@@ -167,6 +167,7 @@ public class JSONTMLImpl implements JSONTML {
 		if (!arrayElement && !m.getName().equals(TOP_LEVEL_MSG) ) {
 			jg.writeFieldName(  m.getName() );
 		}
+		
 		if ( !m.isArrayMessage() && !m.getName().equals(TOP_LEVEL_MSG) ) {
 			jg.writeStartObject();
 		}
@@ -200,7 +201,7 @@ public class JSONTMLImpl implements JSONTML {
 			List<Message> messages = n.getAllMessages();
 			for ( Message m: messages) {
 				try {
-					if (skipTopLevelMessage) {
+					if (skipTopLevelMessage && !m.isArrayMessage()) {
 						origName = m.getName();
 						m.setName(TOP_LEVEL_MSG);
 					}

@@ -74,8 +74,11 @@ public class Entity  {
 		}
 		// Set activate flag immediately to prevent looping
 		activated = true;
+		
 		findSuperEntities();
 		findKeys();
+		
+
 		for ( Entity sub : subEntities ) {
 			sub.activate();
 		}
@@ -224,9 +227,9 @@ public class Entity  {
 		}
 	
 		// Copy properties/messages from superEntity.
-		myMessage.merge(superEntity.getMessage().copy(myMessage.getRootDoc()));
+		m.merge(superEntity.getMessage().copy(m.getRootDoc()));
 		// Check extended properties.
-		processExtendedProperties(myMessage);
+		processExtendedProperties(m);
 		registerSuperEntity(superEntity);
 	}
 
@@ -237,17 +240,21 @@ public class Entity  {
 
 	private void findSuperEntities() throws EntityException {
 
-		if ( myMessage.getExtends() != null ) {	
+		Message m = myMessage;
+		if (m.isArrayMessage()) {
+			m = myMessage.getDefinitionMessage();
+		}
+		if ( m.getExtends() != null && ! "".equals(m.getExtends())) {	
 			
-			if ( myMessage.getExtends().startsWith(NAVAJO_URI) ) {
-				String ext = myMessage.getExtends().substring(NAVAJO_URI.length());
+			if ( m.getExtends().startsWith(NAVAJO_URI) ) {
+				String ext = m.getExtends().substring(NAVAJO_URI.length());
 				String [] superEntities = ext.split(",");
 				for (String superEntity: superEntities) {
-					superEntity = superEntity.replace("/", ".");
-					processExtendedEntity(myMessage, superEntity);
+					//superEntity = superEntity.replace("/", ".");
+					processExtendedEntity(m, superEntity);
 				}
-			} else if (!"".equals(myMessage.getExtends()) ){
-				logger.error("Invalid extend message: {}", myMessage.getExtends());
+			} else if (!"".equals(m.getExtends()) ){
+				logger.error("Invalid extend message: {}", m.getExtends());
 				throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE, "Extension type not supported: " + myMessage.getExtends());
 			}
 		}

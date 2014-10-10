@@ -30,7 +30,6 @@ import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 
 public class ServiceEntityOperation implements EntityOperation {
-
 	private EntityManager manager;
 	private DispatcherInterface dispatcher;
 	private LocalClient client;
@@ -238,14 +237,10 @@ public class ServiceEntityOperation implements EntityOperation {
 				n.removeMessage(m);
 			}
 		}
-		
-		// Add missing properties/messages from template message
 		if ( n.getMessage(myEntity.getMessageName()) != null )  {
-			n.getMessage(myEntity.getMessageName()).merge(myEntity.getMessage(), true);
-
-			// Mask output with entity message and filter on direction = out
+			n.getMessage(myEntity.getMessageName()).merge(myEntity.getMessage(), true );
 			n.getMessage(myEntity.getMessageName()).maskMessage(myEntity.getMessage(), direction);
-			
+
 			if ( resolveLinks ) {
 
 				myEntity.getMessage().write(System.err);
