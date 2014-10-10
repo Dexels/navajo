@@ -324,10 +324,10 @@ public class TslCompilerComponent implements ScriptCompiler {
 		} else {
 			fullName = packagePath+"/"+script;
 		}
-		String relativeScript = fullName.substring(fullName.indexOf('/') +1 , fullName.length());
-		
-		String symbolicName = rpcNameFromScriptPath(fullName);
+		String entityName  = fullName.substring(fullName.indexOf("/") +1 ).replaceAll("/", ".");
 
+		String symbolicName = rpcNameFromScriptPath(fullName).replaceAll("/", ".");
+		
 		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
 		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
 		xe.setAttribute("immediate", "true");
@@ -345,7 +345,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		service.addChild(provide);
 		provide.setAttribute("interface", "com.dexels.navajo.entity.Entity");
 
-		addProperty("entity.name","String", relativeScript, xe);
+		addProperty("entity.name","String", entityName, xe);
 		addProperty("service.name","String", fullName, xe);
 		addProperty("entity.message","String", script, xe);
 		
@@ -368,13 +368,13 @@ public class TslCompilerComponent implements ScriptCompiler {
 		for (int i = 0; i < dependencies.size(); i++) {
 			Dependency d = dependencies.get(i);
 			if (d instanceof ExtendDependency) {
-				String entityName =  d.getId();
+				String extendedEntity =  d.getId().replaceAll("/", ".");
 				XMLElement depref = new CaseSensitiveXMLElement("reference");
 				depref.setAttribute("name", "SuperEntity" + i);
 				depref.setAttribute("policy", "static");
 				depref.setAttribute("cardinality", "1..1");
 				depref.setAttribute("interface", "com.dexels.navajo.entity.Entity");
-				depref.setAttribute("target", "(entity.name=" + entityName+ ")");
+				depref.setAttribute("target", "(entity.name=" + extendedEntity+ ")");
 				depref.setAttribute("bind", "addSuperEntity");
 				depref.setAttribute("unbind", "removeSuperEntity");
 				xe.addChild(depref);
