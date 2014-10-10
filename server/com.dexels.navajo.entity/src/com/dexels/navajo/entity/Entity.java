@@ -75,7 +75,7 @@ public class Entity  {
 		// Set activate flag immediately to prevent looping
 		activated = true;
 		
-		findSuperEntities();
+		findSuperEntities(myMessage);
 		findKeys();
 		
 
@@ -185,36 +185,7 @@ public class Entity  {
 		return parent;
 	}
 
-	private Property getExtendedProperty(String ext) throws EntityException {
-		if ( ext.startsWith(NAVAJO_URI) ) {
-			String s = ext.substring(NAVAJO_URI.length());
-			String entityName = s.split("/")[0];
-			String propertyName = s.split("/")[1];
-			Message msg = entityManager.getEntity(entityName).getMessage();
-			return msg.getProperty(propertyName);
-		} else {
-			throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE);
-		}
-	}
-
-	private void processExtendedProperties(Message m) throws EntityException {
-		for ( Property p : m.getAllProperties() ) {
-			if ( p.getExtends() != null ) {
-				Property ep = getExtendedProperty(p.getExtends());
-				m.removeProperty(m.getProperty(ep.getName()));
-				if ( p.getKey() == null && ep.getKey() != null ) {
-					p.setKey(ep.getKey());
-				}
-			}
-		}
-		if ( m.isArrayMessage() && m.getDefinitionMessage() != null ) {
-			processExtendedProperties(m.getDefinitionMessage());
-		}
-		for ( Message c : m.getAllMessages() ) {
-			processExtendedProperties(c);
-		}
-		
-	}
+	
 	
 
 	private void processExtendedEntity(Message m, String extendedEntity) throws EntityException {
@@ -228,8 +199,6 @@ public class Entity  {
 	
 		// Copy properties/messages from superEntity.
 		m.merge(superEntity.getMessage().copy(m.getRootDoc()));
-		// Check extended properties.
-		processExtendedProperties(m);
 		registerSuperEntity(superEntity);
 	}
 
@@ -238,11 +207,10 @@ public class Entity  {
 		return entityManager.getEntity(extendedEntity);
 	}
 
-	private void findSuperEntities() throws EntityException {
+	private void findSuperEntities(Message m) throws EntityException {
 
-		Message m = myMessage;
 		if (m.isArrayMessage()) {
-			m = myMessage.getDefinitionMessage();
+			m = m.getDefinitionMessage();
 		}
 		if ( m.getExtends() != null && ! "".equals(m.getExtends())) {	
 			
@@ -257,6 +225,10 @@ public class Entity  {
 				logger.error("Invalid extend message: {}", m.getExtends());
 				throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE, "Extension type not supported: " + myMessage.getExtends());
 			}
+		}
+		
+		for ( Message subm : m.getAllMessages() ) {
+			findSuperEntities(subm);
 		}
 	}
 	
