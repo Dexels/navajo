@@ -154,7 +154,6 @@ public class JSONTMLImpl implements JSONTML {
 		} else {
 			if (this.typeIsValue) {
 				om.writeValue(jg, p.getType());
-
 			} else {
 				om.writeValue(jg, p.getTypedValue());
 
@@ -183,13 +182,13 @@ public class JSONTMLImpl implements JSONTML {
 		}
 
 		List<Message> messages = new ArrayList<Message>();
-		if (m.isArrayMessage() ) {
-			messages.addAll(m.getElements());
-
-			if (messages.size() == 0) {
+		if (m.isArrayMessage()) {
+			if (typeIsValue) {
+				// Print definition message
 				messages.add(m.getDefinitionMessage());
+			} else {
+				messages.addAll(m.getElements());
 			}
-			
 		} else { 
 			messages = m.getAllMessages();
 		}
