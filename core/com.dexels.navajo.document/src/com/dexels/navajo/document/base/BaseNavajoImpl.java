@@ -688,6 +688,45 @@ public Navajo merge(Navajo with, boolean preferThisNavajo) throws NavajoExceptio
 }
 
 @Override
+public Navajo mask(Navajo with, String direction) throws NavajoException {
+	// Find duplicate messages.
+		ArrayList<Message> superMessages = this.getAllMessages();
+		ArrayList<Message> subMessages = with.getAllMessages();
+
+		for (int i = 0; i < superMessages.size(); i++) {
+			Message superMsg = superMessages.get(i);
+			for (int j = 0; j < subMessages.size(); j++) {
+				Message subMsg = subMessages.get(j);
+				if ( superMsg.getName().equals(subMsg.getName()) ) {
+					// Found duplicate!
+					superMsg.maskMessage(subMsg, direction);
+				}
+			}
+		}
+
+		// Find new messages.
+		for (int i = 0; i < subMessages.size(); i++) {
+			Message subMsg = subMessages.get(i);
+			boolean newMsg = true;
+			for (int j = 0; j < superMessages.size(); j++) {
+				Message superMsg = superMessages.get(j);
+				if ( superMsg.getName().equals(subMsg.getName()) ) {
+					newMsg = false;
+					j = superMessages.size() + 1;
+				}
+			}
+			if ( newMsg ) {
+				this.addMessage(subMsg.copy(this));
+			}
+		}
+
+		return this;
+		
+}
+
+
+
+@Override
 public Map<String,Message> getMessages() {
 	return getRootMessage().getMessages();
 }
@@ -716,6 +755,7 @@ public ArrayList<Operation> getAllOperations() {
 public void addOperation(Operation o) throws NavajoException {
 	myOperations.addOperation(o);
 }
+
 
 
 }

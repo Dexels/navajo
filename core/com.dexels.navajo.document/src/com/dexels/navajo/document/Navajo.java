@@ -211,7 +211,7 @@ public String toString();
    * 
    */
   public Message mergeMessage(Message newMsg) throws
-      NavajoException;
+ NavajoException;
 
   /**
    * Removes the given Message from the current Navajo
@@ -366,6 +366,16 @@ public String persistenceKey();
    * @throws NavajoException
    */
   public Navajo merge(Navajo with) throws NavajoException;
+  
+  /**
+   * Mask Navajo with other Navajo.
+   * 
+   * @param with
+   * @return
+   * @throws NavajoException
+   */
+  public Navajo mask(Navajo with, String direction) throws NavajoException;
+  
   
   /**
    * Merge Navajo with other Navajo. Navajo is merged by merging Messages.
