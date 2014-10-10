@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.jackson.JsonFactory;
@@ -181,10 +182,23 @@ public class JSONTMLImpl implements JSONTML {
 			format(jg, p);
 		}
 
-		List<Message> messages = ( m.isArrayMessage() ? m.getElements() : m.getAllMessages() );
-		for ( Message c: messages) {
+		List<Message> messages = new ArrayList<Message>();
+		if (m.isArrayMessage() ) {
+			messages.addAll(m.getElements());
+
+			if (messages.size() == 0) {
+				messages.add(m.getDefinitionMessage());
+			}
+			
+		} else { 
+			messages = m.getAllMessages();
+		}
+		
+		for ( Message c:  messages) {
 			format(jg, c, m.isArrayMessage());
 		}
+		
+		
 
 		if ( m.isArrayMessage() ) {
 			jg.writeEndArray();
