@@ -2301,8 +2301,19 @@ public class TslCompiler {
 					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
 
 		}
-		result.append(printIdent(ident + 2) + "throw new BreakEvent();\n");
-		result.append(printIdent(ident) + "}\n");
+		// Check for error definition. If error is defined throw UserException else just BreakEvent
+		String error = n.getAttribute("error");
+		if ( error == null || error.equals("") ) {
+			result.append(printIdent(ident + 2) + "throw new BreakEvent();\n");
+			result.append(printIdent(ident) + "}\n");
+		} else {
+			result.append(printIdent(ident + 2) + "op = Expression.evaluate("
+					+ replaceQuotes(error)
+					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
+					
+			result.append(printIdent(ident + 2) + "throw new UserException(-1, op.value + \"\");\n");
+			result.append(printIdent(ident) + "}\n");
+		}
 
 		return result.toString();
 	}
