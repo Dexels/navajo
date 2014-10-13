@@ -20,7 +20,7 @@ import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 
 public class BundleQueueComponent implements EventHandler, BundleQueue {
 	
-	private static final String SCRIPTS_FOLDER = "scripts/";
+	private static final String SCRIPTS_FOLDER = "scripts" + File.separator;
 	private BundleCreator bundleCreator = null;
 	private ExecutorService executor;
 	
@@ -85,6 +85,8 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 		RepositoryInstance ri =  (RepositoryInstance) e.getProperty("repository");
 		List<String> changedScripts = RepositoryEventParser.filterChanged(e,SCRIPTS_FOLDER);
 		for (String changedScript : changedScripts) {
+			// Replace windows backslashes with normal ones
+			changedScript =  changedScript.replace("\\","/");
 			try {
 				File location = new File(ri.getRepositoryFolder(),changedScript);
 				if(location.isFile()) {
