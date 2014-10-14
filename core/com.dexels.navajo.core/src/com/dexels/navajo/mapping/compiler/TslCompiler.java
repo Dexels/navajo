@@ -778,12 +778,14 @@ public class TslCompiler {
 		String orderby = n.getAttribute("orderby");
 		String extendsMsg = n.getAttribute("extends");
 		String scopeMsg = n.getAttribute("scope");
+		String method = n.getAttribute("method");
 		
 		// //System.out.println("COUNT = " + count);
 		type = (type == null) ? "" : type;
 		mode = (mode == null) ? "" : mode;
 		condition = (condition == null) ? "" : condition;
 		count = (count == null || count.equals("")) ? "1" : count;
+		method = (method == null) ? "" : method;
 		int startIndex = (start_index == null || start_index.equals("")) ? -1
 				: Integer.parseInt(start_index);
 
@@ -942,6 +944,9 @@ public class TslCompiler {
 				result.append(printIdent(ident + 2)
 						+ "currentOutMsg.setScope(\"" + scopeMsg + "\");\n");
 			}
+			result.append(printIdent(ident + 2)
+					+ "currentOutMsg.setMethod(\"" + method + "\");\n");
+			
 		} else { // must be parammessage.
 			result.append(printIdent(ident + 2)
 					+ "paramMsgStack.push(currentParamMsg);\n");
@@ -1330,6 +1335,7 @@ public class TslCompiler {
 		String reference = n.getAttribute("reference");
 		String extendsProp = n.getAttribute("extends");
 		String bindProp = n.getAttribute("bind");
+		String methodProp = n.getAttribute("method");
 		
 		value = (value == null) || (value.equals("")) ? "" : value;
 		type = (type == null) ? "" : type;
@@ -1338,7 +1344,8 @@ public class TslCompiler {
 		cardinality = (cardinality == null || cardinality.equals("")) ? "1"
 				: cardinality;
 		condition = (condition == null) ? "" : condition;
-
+		methodProp = (methodProp == null) ? "" : methodProp;
+		
 		boolean conditionClause = false;
 		if (!condition.equals("")) {
 			conditionClause = true;
@@ -1477,6 +1484,8 @@ public class TslCompiler {
 				result.append(printIdent(ident) + "p.setBind(\""
 						+ bindProp + "\");\n");
 			}
+			result.append(printIdent(ident) + "p.setMethod(\""+ methodProp + "\");\n");
+			
 		} else { // parameter
 			result.append(printIdent(ident)
 					+ "MappingUtils.setProperty(true, currentParamMsg, \""

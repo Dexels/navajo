@@ -17,6 +17,7 @@ import org.ops4j.pax.web.extender.whiteboard.runtime.DefaultResourceMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.NavajoLaszloConverter;
@@ -145,16 +146,28 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 					}
 				}
 				
+				boolean containsMethod = checkContainsMethod(n.getMessage(e.getMessageName()));
 				
-				out += "<h3> Input </h3>";
-				out +=  "<pre class=\"prettyprint\">";
-				out +=  writeEntityJson(n, "in");
-				out += "</pre>";
+
 				
-				out += "<h3> Output </h3>";
-				out +=  "<pre class=\"prettyprint\">";
-				out +=  writeEntityJson(n, "out");
-				out += "</pre>";
+				
+				if (containsMethod) {
+					out += "<h3> Input </h3>";
+					out +=  "<pre class=\"prettyprint\">";
+					out +=  writeEntityJson(n, "request");
+					out += "</pre>";
+					
+					out += "<h3> Output </h3>";
+					out +=  "<pre class=\"prettyprint\">";
+					out +=  writeEntityJson(n, "response");
+					out += "</pre>";
+				} else {
+					out += "<h3> Request </h3>";
+					out +=  "<pre class=\"prettyprint\">";
+					out +=  writeEntityJson(n, "");
+					out += "</pre>";
+				}
+				
 				
 				out += "</div>";
 				out += "</li></ul>"; // description div
@@ -173,10 +186,31 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 
 	
 	
-	private String writeEntityJson(Navajo n, String direction) throws ServletException {
+	private boolean checkContainsMethod(Message message) {
+		boolean containsMethod = false; 
+		
+		for (Property p : message.getAllProperties()) {
+			if (!p.getMethod().equals("")) {
+				return true;
+			}
+		}
+		// Check submessages
+		for (Message m : message.getAllMessages()) {
+			if (!m.getMethod().equals("")) {
+				return true;
+			}
+			if (checkContainsMethod(m)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+
+	private String writeEntityJson(Navajo n, String method) throws ServletException {
 		StringWriter writer = new StringWriter();
 		JSONTML json = JSONTMLFactory.getInstance();
-		Navajo masked = n.copy().mask(n, direction);
+		Navajo masked = n.copy().mask(n, method);
 		try {
 			json.formatDefinition(masked, writer, true);
 		} catch (Exception ex) {

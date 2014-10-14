@@ -688,7 +688,7 @@ public Navajo merge(Navajo with, boolean preferThisNavajo) throws NavajoExceptio
 }
 
 @Override
-public Navajo mask(Navajo with, String direction) throws NavajoException {
+public Navajo mask(Navajo with, String method) throws NavajoException {
 	// Find duplicate messages.
 		ArrayList<Message> superMessages = this.getAllMessages();
 		ArrayList<Message> subMessages = with.getAllMessages();
@@ -699,7 +699,7 @@ public Navajo mask(Navajo with, String direction) throws NavajoException {
 				Message subMsg = subMessages.get(j);
 				if ( superMsg.getName().equals(subMsg.getName()) ) {
 					// Found duplicate!
-					superMsg.maskMessage(subMsg, direction);
+					superMsg.maskMessage(subMsg, method);
 				}
 			}
 		}

@@ -374,7 +374,7 @@ public String persistenceKey();
    * @return
    * @throws NavajoException
    */
-  public Navajo mask(Navajo with, String direction) throws NavajoException;
+  public Navajo mask(Navajo with, String method) throws NavajoException;
   
   
   /**

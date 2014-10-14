@@ -190,9 +190,11 @@ public class ServiceEntityOperation implements EntityOperation {
 				} else if ( !inputP.getType().equals(entityP.getType()) ) {
 					invalidProperties.add(inputP.getFullPropertyName() + ":" + inputP.getType() + "<-" + entityP.getType());
 					//throw new EntityException("Invalid type encountered in " + method + " operation for entityservice {" + message.getName() +  "}: [" + inputP.getFullPropertyName() + "]: " + inputP.getType() + ", expected: " + entityP.getType());
-				} else if (entityP.getType().equals(Property.DATE_PROPERTY) && inputP.getValue() != null){
+				} else if (entityP.getType().equals(Property.DATE_PROPERTY)
+						&& inputP.getValue() != null && !"".equals(inputP.getValue())) {
 					// BasePropertyImpl does not throw exception on invalid date format. Thus we perform an extra check here on that
 					if (!(inputP.getTypedValue() instanceof Date)) {
+						Object val =  inputP.getValue();
 						invalidProperties.add(inputP.getFullPropertyName() + ":" + inputP.getType() + "<-" + entityP.getType());
 
 					}
@@ -279,7 +281,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	 * @param validMessages
 	 * @return
 	 */
-	private void clean(Navajo n, String [] validMessages, String direction, boolean resolveLinks) {
+	private void clean(Navajo n, String [] validMessages, String method, boolean resolveLinks) {
 		
 		List<Message> all = n.getAllMessages();
 		for ( Message m : all ) {
@@ -289,7 +291,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 		if ( n.getMessage(myEntity.getMessageName()) != null )  {
 			n.getMessage(myEntity.getMessageName()).merge(myEntity.getMessage(), true );
-			n.getMessage(myEntity.getMessageName()).maskMessage(myEntity.getMessage(), direction);
+			n.getMessage(myEntity.getMessageName()).maskMessage(myEntity.getMessage(), method);
 
 			if ( resolveLinks ) {
 
@@ -434,7 +436,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				myKey = new Key("", myEntity);
 			}
 		}
-		clean(input, validMessages, "in", false);
+		clean(input, validMessages, "request", false);
 		
 		// Perform validation method if defined
 		if ((myOperation.getValidationService()) != null) {
@@ -716,7 +718,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				throw new EntityException(EntityException.UNAUTHORIZED);
 			}
 		}
-		clean(result, validMessages, "out", true);	
+		clean(result, validMessages, "response", true);	
 		return result;
 		
 		// Check for transaction.

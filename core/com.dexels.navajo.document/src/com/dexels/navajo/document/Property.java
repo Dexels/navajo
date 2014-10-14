@@ -37,6 +37,8 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String PROPERTY_REFERENCE = "reference";
   public static final String PROPERTY_EXTENDS = "extends";
   public static final String PROPERTY_BIND = "bind";
+  public static final String PROPERTY_METHOD = "method";
+
 
 
   public static final String STRING_PROPERTY = "string";
@@ -279,6 +281,17 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public void setBind(String s);
   
   public String getBind();
+  
+  
+  /**
+   * Set the method attribute to indicate whether this property is relevant for request, response, or both
+   * 
+   * @param s: "request", "response", ""
+   */
+  public void setMethod(String s);
+  
+  public String getMethod();
+  
   
   /**
    * Sets the reference attribute for a property. Reference can be used to indicate that this property value can be used

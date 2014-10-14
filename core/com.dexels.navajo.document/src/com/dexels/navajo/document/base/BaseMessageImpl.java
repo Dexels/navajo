@@ -59,6 +59,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	
 	private String myScope = "";
 	
+	private String myMethod = "";
+	
 //	private String myCondition = "";
 
 	private int myIndex = -1;
@@ -961,6 +963,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		cp.setEtag(getEtag());
 		cp.setExtends(getExtends());
 		cp.setScope(getScope());
+		cp.setMethod(getMethod());
 		
 		// If definition message is available, copy it as well.
 		if ( isArrayMessage() && getDefinitionMessage() != null ) {
@@ -1407,6 +1410,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		if (myExtends != null && !myExtends.equals("")) {
 			m.put(Message.MSG_EXTENDS, myExtends);
 		}
+		if (myMethod != null && !myMethod.equals("")) {
+			m.put(Message.MSG_METHOD, myMethod);
+		}
 		if (myScope != null && !myScope.equals("")) {
 			m.put(Message.MSG_SCOPE, myScope);
 		}
@@ -1792,6 +1798,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 					if ( !preferThis || o_m == null ) {
 						this.addMessage(newMsg);
 					}
+					if (o_m != null && o_m.getMethod().equals("")) {
+						o_m.setMethod(newMsg.getMethod());
+					}
+					
 				} catch (NavajoException e) {
 				}
 			} else {
@@ -1809,6 +1819,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			if ( !preferThis || o_p == null ) {
 				addProperty(p);
 			}
+			// If we don't have a method set, use the incoming method
+			if (o_p != null && o_p.getMethod().equals("")) {
+				o_p.setMethod(p.getMethod());
+			}
+			
 		}
 
 	}
@@ -1827,7 +1842,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	}
 	
 	@Override
-	public void maskMessage(Message mask, String direction) {
+	public void maskMessage(Message mask, String method) {
 
 		
 		// Mask all properties.
@@ -1836,7 +1851,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		while ( allProperties.hasNext() ) {
 			Property p = allProperties.next();
 			Property m_p = mask.getProperty(p.getName());
-			boolean matchDirection = (m_p == null) || direction.equals("") || m_p.getDirection().equals("") || (m_p.getDirection().indexOf(direction) != -1);
+			
+			// A method that is null or "" is considered to always match
+			boolean matchMethod = m_p == null || m_p.getMethod() == null || m_p.getMethod().equals("") 
+					|| p.getMethod().equals("") || p.getMethod().equals(method);
+			
 			 if ( this.getIndex() >= 0) { // It's an array message element. Check mask's definition message if it exists..
 				if ( !mask.isArrayMessage() || ((BaseMessageImpl) mask).getPropertyDefinition(p.getName()) == null ) {
 					removeProperty(p);
@@ -1846,7 +1865,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 					removeProperty(p);
 				}
 			}
-			if (!matchDirection) {
+			if (!matchMethod) {
 				removeProperty(p);
 			}
 		}
@@ -1854,7 +1873,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		// If we are an array message, mask all submessages with definition message in mask
 		if (isArrayMessage() && mask.isArrayMessage()) {
 			for (Message child: getElements()) {
-				child.maskMessage(mask, direction);
+				child.maskMessage(mask, method);
 			}
 			return;
 		}
@@ -1863,16 +1882,20 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		// Mask all messages.
 		Iterator<Message> allMessages = new ArrayList<Message>(this.getAllMessages()).iterator();
 		while ( allMessages.hasNext() ) {
-			Message m = allMessages.next();		
+			Message m = allMessages.next();
+			
 			if ( mask.getMessage(m.getName()) == null ) {
 				removeMessage(m);
 			} else {
-				if ( m.isArrayMessage() ) {
+				boolean matchMethod = m.getMethod().equals("") || mask.getMessage(m.getName()).getMethod().equals("") || m.getMethod().equals(method);
+				if (!matchMethod) {
+					removeMessage(m);
+				} else if ( m.isArrayMessage() ) {
 					for (int i = 0; i < m.getElements().size(); i++ ) {
-						m.getElements().get(i).maskMessage(mask.getMessage(m.getName()), direction);
+						m.getElements().get(i).maskMessage(mask.getMessage(m.getName()), method);
 					}
 				} else {
-					m.maskMessage(mask.getMessage(m.getName()), direction);
+					m.maskMessage(mask.getMessage(m.getName()), method);
 				}
 			}
 		}
@@ -2060,6 +2083,17 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 				    //Assert.assertNotNull(m3);
 			}
 		  
+	}
+
+	@Override
+	public void setMethod(String s) {
+		myMethod = s;
+		
+	}
+
+	@Override
+	public String getMethod() {
+		return myMethod;
 	}
 
 }

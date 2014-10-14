@@ -249,6 +249,7 @@ public class JSONTMLImpl implements JSONTML {
 					prop.addSelection(s);
 				} else {
 					prop.setType(ep.getType());
+					prop.setMethod(ep.getMethod());
 				}
 			} else {
 				//System.err.println("Could not find property in template: " + prop.getFullPropertyName());

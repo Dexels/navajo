@@ -296,6 +296,7 @@ public final class SaxHandler implements DocHandler {
         String reference = h.get(Property.PROPERTY_REFERENCE);
         String key = h.get(Property.PROPERTY_KEY);
         String bind = h.get(Property.PROPERTY_BIND);
+        String method = h.get(Property.PROPERTY_METHOD);
         
          Integer plength = null;
         Property definitionProperty = null;
@@ -409,6 +410,7 @@ public final class SaxHandler implements DocHandler {
               currentProperty.setKey(key);
               currentProperty.setReference(reference);
               currentProperty.setBind(bind);
+              currentProperty.setMethod(method);
 //              createProperty(currentDocument,myName,cardinality,description,direction);
 
 
