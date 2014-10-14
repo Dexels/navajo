@@ -146,12 +146,7 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 					}
 				}
 				
-				boolean containsMethod = checkContainsMethod(n.getMessage(e.getMessageName()));
-				
-
-				
-				
-				if (containsMethod) {
+				if (checkContainsMethod(n.getMessage(e.getMessageName()))) {
 					out += "<h3> Input </h3>";
 					out +=  "<pre class=\"prettyprint\">";
 					out +=  writeEntityJson(n, "request");
@@ -186,9 +181,7 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 
 	
 	
-	private boolean checkContainsMethod(Message message) {
-		boolean containsMethod = false; 
-		
+	private boolean checkContainsMethod(Message message) {	
 		for (Property p : message.getAllProperties()) {
 			if (!p.getMethod().equals("")) {
 				return true;
