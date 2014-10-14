@@ -81,15 +81,24 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 			throws ServletException, IOException {
 		
 		String path = request.getPathInfo();
+		String basePath = "";
 
+		if (path != null && !path.equals("/")) {
+			for (String subPath : path.split("/")) {
+				basePath += subPath + ".";
+			}
+			basePath = basePath.substring(1);
+		}
+		
+		
 		String out = "";
 		out += "<!DOCTYPE html>";
 		out += "<html>";
 		out += "<head>";
 		out += " <title>Navajo Entity API documentation</title>";
 		out += " <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /> ";
-		out += " <link rel=\"stylesheet\" href=\"entityApi/css/style.css\"> ";
-		out += "<script type=\"text/javascript\" src=\"entityApi/jquery-1.9.1.min.js\" ></script>";
+		out += " <link rel=\"stylesheet\" href=\"/entityApi/css/style.css\"> ";
+		out += "<script type=\"text/javascript\" src=\"/entityApi/jquery-1.9.1.min.js\" ></script>";
 
 		out += "<script type=\"text/javascript\" src=\"https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js\" ></script>";
 		
@@ -105,12 +114,12 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 		out += "<body class=\"bodycenter\">";	
 		out += "<h1>Entity API Documentation</h1>";
 		
-		Set<String> entityNames = myManager.getRegisteredEntities();
+		Set<String> entityNames = myManager.getRegisteredEntities(basePath);
 		for (String entityName : entityNames) {
 			Entity e = myManager.getEntity(entityName);
 			
 			Map<String, Operation> ops = myManager.getOperations(entityName);
-			
+			String entityNameUrl = entityName.replace(".", "/");
 
 			Navajo n = NavajoFactory.getInstance().createNavajo();
 			n.addMessage(e.getMessage());
@@ -121,11 +130,11 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 				out += "<a href=\"#\" > ";
 				out += "<div class=\"operationHeader "+op+"\">";
 				out += "<div class=\"method http"+op+"\">" + op + "</div>" ;
-				out += "<div class=\"url\" > /" +entityName +"</div>";
-				out += "<div class=\"descrption "+ op + "\" > " + operationDescription(op) + " a " + entityName + "</div>";
+				out += "<div class=\"url\" > /" + entityNameUrl+"</div>";
+				out += "<div class=\"descrption "+ op + "\" > " + operationDescription(op) +  entityNameUrl + "</div>";
 				out += "</div>"; //operationHeader
 				out += "</a>";
-				out += "<div  class=\"entityDescription\" style=\"display: none \"> ";
+				out += "<div  class=\"entityDescription\" style=\"display: none \">  ";
 				if ( (op.equals(Operation.GET) || op.equals(Operation.DELETE)) && e.getKeys().size() > 0 ) {
 					out += "<h3> Keys </h3>";
 					for (Key key : e.getKeys()) {
@@ -137,9 +146,14 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 				}
 				
 				
-				out += "<h3> Model </h3>";
+				out += "<h3> Input </h3>";
 				out +=  "<pre class=\"prettyprint\">";
-				out +=  writeEntityJson(n);
+				out +=  writeEntityJson(n, "in");
+				out += "</pre>";
+				
+				out += "<h3> Output </h3>";
+				out +=  "<pre class=\"prettyprint\">";
+				out +=  writeEntityJson(n, "out");
 				out += "</pre>";
 				
 				out += "</div>";
@@ -159,12 +173,12 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 
 	
 	
-	private String writeEntityJson(Navajo n) throws ServletException {
+	private String writeEntityJson(Navajo n, String direction) throws ServletException {
 		StringWriter writer = new StringWriter();
 		JSONTML json = JSONTMLFactory.getInstance();
-
+		Navajo masked = n.copy().mask(n, direction);
 		try {
-			json.formatDefinition(n, writer, true);
+			json.formatDefinition(masked, writer, true);
 		} catch (Exception ex) {
 			logger.error("Error in writing entity output in JSON!");
 			throw new ServletException("Error producing output");

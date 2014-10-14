@@ -1760,7 +1760,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	@Override
 	public void merge(Message incoming, boolean preferThis) {
-		if (this.isArrayMessage() && incoming.getDefinitionMessage() != null) {
+		if (this.isArrayMessage() && incoming.isArrayMessage() && incoming.getDefinitionMessage() != null) {
 			// Perform merge for all my children with the definition message
 			for (Message child : this.getElements()) {
 				child.merge(incoming.getDefinitionMessage(),  preferThis);
@@ -1829,7 +1829,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	@Override
 	public void maskMessage(Message mask, String direction) {
 
-
 		
 		// Mask all properties.
 		Iterator<Property> allProperties = new ArrayList<Property>(this.getAllProperties()).iterator();
@@ -1853,12 +1852,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 		
 		// If we are an array message, mask all submessages with definition message in mask
-		if (isArrayMessage()) {
+		if (isArrayMessage() && mask.isArrayMessage()) {
 			for (Message child: getElements()) {
 				child.maskMessage(mask, direction);
 			}
 			return;
 		}
+
 		
 		// Mask all messages.
 		Iterator<Message> allMessages = new ArrayList<Message>(this.getAllMessages()).iterator();
