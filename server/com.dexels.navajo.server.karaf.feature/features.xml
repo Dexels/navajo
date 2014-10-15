@@ -8,7 +8,7 @@
 			    
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.98</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.14</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/2.0.6</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/2.0.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.repository.api/2.0.13</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.5.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.2.6</bundle>
