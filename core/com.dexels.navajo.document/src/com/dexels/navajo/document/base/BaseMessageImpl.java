@@ -1882,22 +1882,44 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		// Mask all messages.
 		Iterator<Message> allMessages = new ArrayList<Message>(this.getAllMessages()).iterator();
 		while ( allMessages.hasNext() ) {
-			Message m = allMessages.next();
 			
-			if ( mask.getMessage(m.getName()) == null ) {
+			Message m = allMessages.next();
+			boolean matchMethod = m.getMethod().equals("")
+					|| mask.getMessage(m.getName()).getMethod().equals("")
+					|| m.getMethod().equals(method);
+
+			if (!matchMethod) {
 				removeMessage(m);
-			} else {
-				boolean matchMethod = m.getMethod().equals("") || mask.getMessage(m.getName()).getMethod().equals("") || m.getMethod().equals(method);
-				if (!matchMethod) {
-					removeMessage(m);
-				} else if ( m.isArrayMessage() ) {
-					for (int i = 0; i < m.getElements().size(); i++ ) {
-						m.getElements().get(i).maskMessage(mask.getMessage(m.getName()), method);
-					}
-				} else {
-					m.maskMessage(mask.getMessage(m.getName()), method);
-				}
+				break;
 			}
+			
+			if (mask.isArrayMessage() && mask.getDefinitionMessage() != null) {
+				if (mask.getDefinitionMessage().getMessage(m.getName()) == null) {
+					removeMessage(m);
+					break;
+				}
+			} else {
+				if (mask.getMessage(m.getName()) == null) {
+					removeMessage(m);
+					break;
+				}
+			} 
+
+			if (m.isArrayMessage()) {
+				
+				for (int i = 0; i < m.getElements().size(); i++) {
+					if (mask.getDefinitionMessage() != null) {
+						m.getElements().get(i).maskMessage(mask.getDefinitionMessage().getMessage(m.getName()), method);
+
+					} else {
+						m.getElements().get(i).maskMessage(mask.getMessage(m.getName()), method);
+
+					}
+				}
+			} else {
+				m.maskMessage(mask.getMessage(m.getName()), method);
+			}
+
 		}
 	}
 
