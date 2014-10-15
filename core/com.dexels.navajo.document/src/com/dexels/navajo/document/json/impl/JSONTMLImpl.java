@@ -155,7 +155,11 @@ public class JSONTMLImpl implements JSONTML {
 			if (this.typeIsValue) {
 				om.writeValue(jg, p.getType());
 			} else {
-				om.writeValue(jg, p.getTypedValue());
+				Object value = p.getTypedValue();
+				if (p.getType() == Property.BINARY_PROPERTY) {
+					value = p.getValue();
+				} 
+				om.writeValue(jg, value );
 
 			}
 		}
