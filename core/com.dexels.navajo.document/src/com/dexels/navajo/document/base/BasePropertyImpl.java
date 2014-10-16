@@ -133,7 +133,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	protected String key = null;
 	protected String reference = null;
 	protected String bind = null;
-	protected String method = null;
+	protected String method = "";
 	protected String myExtends = null;
 	protected int length = -1;
 	private Map<String,String> subtypeMap = null;
