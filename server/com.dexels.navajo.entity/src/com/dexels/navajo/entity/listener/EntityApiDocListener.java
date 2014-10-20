@@ -242,7 +242,7 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 			for (Property optProp : optionalProps) {
 				result += optProp.getName() +"; ";
 			}
-			result += "</code>; ";
+			result += "</code> ";
 		}
 		return result;
 	}
