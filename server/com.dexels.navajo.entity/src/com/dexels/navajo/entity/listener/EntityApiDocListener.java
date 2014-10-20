@@ -3,6 +3,8 @@ package com.dexels.navajo.entity.listener;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.document.Operation;
@@ -100,22 +103,14 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 		out += " <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /> ";
 		out += " <link rel=\"stylesheet\" href=\"/entityApi/css/style.css\"> ";
 		out += "<script type=\"text/javascript\" src=\"/entityApi/jquery-1.9.1.min.js\" ></script>";
-
-		out += "<script type=\"text/javascript\" src=\"https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js\" ></script>";
-		
-		out += "<script> ";
-		out += "$(document).ready(function() {";
-		out +=		"$(\"a\").click(function(event) { ";
-		out +=  "	    $(this).next().filter(\".entityDescription\").slideToggle(); ";
-		out += "    });" ;
-		out += "});" ;
-		out += "</script> ";
+		out += "<script type=\"text/javascript\" src=\"/entityApi/run_prettify.js\" ></script>";
+		out += "<script type=\"text/javascript\" src=\"/entityApi/entity.js\" ></script>";
 		out +=  "</head>";
 
 		out += "<body class=\"bodycenter\">";	
 		out += "<h1>Entity API Documentation</h1>";
 		
-		Set<String> entityNames = myManager.getRegisteredEntities(basePath);
+		List<String> entityNames = myManager.getRegisteredEntities(basePath);
 		for (String entityName : entityNames) {
 			Entity e = myManager.getEntity(entityName);
 			
@@ -127,45 +122,48 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 			
 			for (String op : ops.keySet()) {
 				out += "<ul class=\"operations\">";
-				out += "<li class=\"operation "+op+"\" >";
+				out += "<li class=\"operation " + op + "\" >";
 				out += "<a href=\"#\" > ";
-				out += "<div class=\"operationHeader "+op+"\">";
-				out += "<div class=\"method http"+op+"\">" + op + "</div>" ;
-				out += "<div class=\"url\" > /" + entityNameUrl+"</div>";
-				out += "<div class=\"descrption "+ op + "\" > " + operationDescription(op) +  entityNameUrl + "</div>";
-				out += "</div>"; //operationHeader
+				out += "<div class=\"operationHeader " + op + "\">";
+				out += "<div class=\"method http" + op + "\">" + op + "</div>";
+				out += "<div class=\"url\" > /" + entityNameUrl + "</div>";
+				out += "<div class=\"descrption " + op + "\" > " + operationDescription(op)
+						+ entityNameUrl + "</div>";
+				out += "</div>"; // operationHeader
 				out += "</a>";
-				out += "<div  class=\"entityDescription\" style=\"display: none \">  ";
-				if ( (op.equals(Operation.GET) || op.equals(Operation.DELETE)) && e.getKeys().size() > 0 ) {
-					out += "<h3> Keys </h3>";
-					for (Key key : e.getKeys()) {
-						Set<Property> properties = key.getKeyProperties();
-						for (Property prop : properties) {
-							out += "<code> " + prop.getName() + "</code>;  ";
-						}
-					}
-				}
-				
-				if (checkContainsMethod(n.getMessage(e.getMessageName()))) {
-					out += "<h3> Input </h3>";
-					out +=  "<pre class=\"prettyprint\">";
-					out +=  writeEntityJson(n, "request");
-					out += "</pre>";
-					
-					out += "<h3> Output </h3>";
-					out +=  "<pre class=\"prettyprint\">";
-					out +=  writeEntityJson(n, "response");
-					out += "</pre>";
+				out += "<div class=\"entityDescription\" style=\"display: none \">  ";
+				if ((op.equals(Operation.GET) || op.equals(Operation.DELETE))
+						&& e.getKeys().size() > 0) {
+					out += printRequestKeysDefinition(e);
 				} else {
-					out += "<h3> Request </h3>";
-					out +=  "<pre class=\"prettyprint\">";
-					out +=  writeEntityJson(n, "");
+					// Writing entire object
+					out += "<h2> Request </h2>";
+					out += "<pre class=\"prettyprint\">";
+					out += writeEntityJson(n, "request");
 					out += "</pre>";
 				}
+
+				out += "<h2> Response </h2>";
+				out += "<small> <a href=\"#\" class=\"outputFormatJSON\">JSON</a></small> ";
+				out += "<small> |  <a href=\"#\" class=\"outputFormatXML\">XML</a> </small>";
 				
 				
-				out += "</div>";
-				out += "</li></ul>"; // description div
+				out += "<div class=\"JSON\">";
+				out += "<pre class=\"prettyprint\">";
+				out += writeEntityJson(n, "response");
+				out += "</pre>";
+				out += "</div>"; //; JSON div
+				
+				out += "<div class=\"XML\" style=\"display: none; \" \">";
+				out += "<pre class=\"prettyprint lang-xml\">";
+				out +=  StringEscapeUtils.escapeHtml(writeEntityXml(n));
+				out += "</pre>";
+				out += "</div>"; //; XML div
+								
+				out += printPropertiesDescription(e);
+
+				out += "</div>";// description div
+				out += "</li></ul>"; 
 			}
 			;
 			
@@ -179,26 +177,73 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 		
 	}
 
-	
-	
-	private boolean checkContainsMethod(Message message) {	
-		for (Property p : message.getAllProperties()) {
-			if (!p.getMethod().equals("")) {
-				return true;
+	private String printPropertiesDescription(Entity e) {
+		String result = "<h2> Description </h2>";
+		boolean hasDescriptions = false;
+		
+		// Check entity message
+		for (Property p : e.getMessage().getAllProperties()) {
+			if (p.getDescription() != null && ! p.getDescription().equals("")) {
+				hasDescriptions = true;
+				result += "<b>" + p.getName() + "</b>: " + p.getDescription();
+				result += "<br>";
 			}
 		}
-		// Check submessages
-		for (Message m : message.getAllMessages()) {
-			if (!m.getMethod().equals("")) {
-				return true;
+		
+		// And other submessages
+		for (Message m : e.getMessage().getAllMessages()) {
+			for (Property p : m.getAllProperties()) {
+				if (p.getDescription() != null && ! p.getDescription().equals("")) {
+					hasDescriptions = true;
+					result += "<b>" + p.getName() + "</b>: " + p.getDescription();
+					result += "<br>";
+				}
 			}
-			if (checkContainsMethod(m)) {
-				return true;
-			}
+			
 		}
-		return false;
+		
+		if (hasDescriptions) {
+			return result;
+		}
+		return "";
 	}
-	
+
+	private String printRequestKeysDefinition(Entity e) throws ServletException {
+		String result = "";
+		
+		result += "<h2> Request </h2>";
+		for (Key key : e.getKeys()) {
+			// Get all properties for this key, put them in a temp Navajo and use the JSONTML to print it
+			Set<Property> properties = key.getKeyProperties();
+			Set<Property> optionalProps = new HashSet<Property>();
+			
+			Navajo nkey = NavajoFactory.getInstance().createNavajo();
+			Message mkey = NavajoFactory.getInstance().createMessage(nkey,"keys");
+			nkey.addMessage(mkey);
+			
+			for (Property prop : properties) {
+				if (! Key.isAutoKey(prop.getKey())) {
+					mkey.addProperty(prop.copy(nkey));
+				}
+				if (Key.isOptionalKey(prop.getKey())) {
+					optionalProps.add(prop);
+				}
+			}
+			
+			// Printing result.
+			result += "<pre class=\"prettyprint\">";
+			result += writeEntityJson(nkey, "request");
+			result += "</pre>";
+			
+			if (optionalProps.size() > 0 ){
+				result += "<code> <b>Optional: </b> ";
+			}
+			for (Property optProp : optionalProps) {
+				result += optProp.getName() +"</code>; ";
+			}
+		}
+		return result;
+	}
 
 	private String writeEntityJson(Navajo n, String method) throws ServletException {
 		StringWriter writer = new StringWriter();
@@ -213,12 +258,21 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 		return StringEscapeUtils.escapeHtml(writer.toString());
 	}
 	
-	private String writeEntityXml(Navajo n) throws ServletException {
+	private String writeEntityXmlBirt(Navajo n) throws ServletException {
 		StringWriter writer = new StringWriter();
 		NavajoLaszloConverter.writeBirtXml(n, writer);
 		String xml = writer.toString();
 		return xml.replace(">",">\n");
 	}
+	
+	private String writeEntityXml(Navajo n) throws ServletException {
+		StringWriter writer = new StringWriter();
+		n.write(writer);
+		return writer.toString();
+	}
+	
+	
+	
 	
 	private String operationDescription(String op) {
 		if (op.equals(Operation.GET)) {

@@ -151,4 +151,15 @@ li.operation pre {
 
 
 
+.outputFormatJSON {
+	font-family: "Droid Sans",sans-serif;
+	font-size: 0.8em;
+	text-decoration: none;
+	color: #606060;
+}
 
+.outputFormatXML {
+	font-size: 0.8em;
+	text-decoration: none;
+	color: #606060;
+}

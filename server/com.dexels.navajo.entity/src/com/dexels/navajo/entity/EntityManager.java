@@ -1,8 +1,10 @@
 package com.dexels.navajo.entity;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -128,15 +130,19 @@ public class EntityManager {
 		return e;
 	}
 
-	public Set<String> getRegisteredEntities(String packagePath) {
-		Set<String> result = new HashSet<String>();
+	public List<String> getRegisteredEntities(String packagePath) {
+		Set<String> unsortedResult = new HashSet<String>();
+		//List<String> result = ;
+		
 		for (String entity : entityMap.keySet()) {
 			// Reconstruct entity from packagePath + entityName
 			String testName = packagePath + entity.substring(entity.lastIndexOf(".") +1);
 			if (testName.equals(entity)) {
-				result.add(entity);
+				unsortedResult.add(entity);
 			}
 		}
+		List<String> result = new ArrayList<String>(unsortedResult);
+		java.util.Collections.sort(result);
 		return result;
 	}
 
