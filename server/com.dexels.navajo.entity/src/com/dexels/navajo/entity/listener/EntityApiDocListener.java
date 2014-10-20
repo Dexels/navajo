@@ -236,11 +236,13 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 			result += "</pre>";
 			
 			if (optionalProps.size() > 0 ){
-				result += "<code> <b>Optional: </b> ";
+				result+= "<b>Optional: </b> ";
 			}
+			result += "<code> ";
 			for (Property optProp : optionalProps) {
-				result += optProp.getName() +"</code>; ";
+				result += optProp.getName() +"; ";
 			}
+			result += "</code>; ";
 		}
 		return result;
 	}
