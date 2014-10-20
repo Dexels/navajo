@@ -870,8 +870,8 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
   	 
   	 // Log request event ASAP - create a dummy Access object for it
      // Later use this accessID for the real access object
-     Access requestEventAccess = new Access(1, 1, rpcUser, rpcName, "", "", "", null);
-     NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(requestEventAccess));
+     access = new Access(1, 1, rpcUser, rpcName, "", "", "", null);
+     NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(access));
 
       
       try {
@@ -896,7 +896,8 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
         	  logger.error ("Bad initialization or missing repository");
         	  throw new FatalException("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
           }
-          access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate, requestEventAccess.accessID);
+          // Replace temp access object with the actual object
+          access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate, access.accessID);
         }
         catch (AuthorizationException ex) {
           outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
@@ -914,7 +915,7 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
       else {  
     	// Use SimpleRepository authorisation is skipped.
     	access = RepositoryFactoryImpl.getRepository("com.dexels.navajo.server.SimpleRepository", navajoConfig)
-    				.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null, requestEventAccess.accessID);
+    				.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null, access.accessID);
       }
       
       //System.err.println("Created Access: " +  access.accessID + ", " + access.rpcName + "(" + access.rpcUser + ")");
