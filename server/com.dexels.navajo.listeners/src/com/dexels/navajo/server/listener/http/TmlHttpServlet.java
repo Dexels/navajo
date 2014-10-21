@@ -586,7 +586,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 				return fallbackHandleTransaction(dis, in, certObject, clientInfo);
 			}
 			LocalClient lc =  (LocalClient)bundleContext.getService(sr);
-			Navajo nn = lc.handleInternal("default",in, certObject, clientInfo);
+			Navajo nn = lc.handleInternal(null, in, certObject, clientInfo);
 			bundleContext.ungetService(sr);
 			lc = null;
 			return nn;
