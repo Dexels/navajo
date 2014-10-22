@@ -98,6 +98,9 @@ public class ServiceCommand implements ArticleCommand {
 	protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n,
 			String instance) throws ArticleException {
 		try {
+			if(localClient==null) {
+				throw new ArticleException("Navajo server not (yet?) initialized");
+			}
 			Navajo result = localClient.call(instance, n);
 
 
