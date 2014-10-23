@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.enterprise.monitor.accessclone-1.0.1">
-	<feature name='navajo.enterprise.monitor.accessclone' version='1.0.1' start-level='81' >
-		<feature version="[1.0.0,2)">navajo.enterprise.monitor</feature>
-	    <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor.clone/1.0.13</bundle>
-	</feature>
-</features>
