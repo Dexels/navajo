@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="feature.sync-1.0.3">
-
-    <feature  name='feature.sync' version='1.0.3' install="auto">
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.karaf.command/1.0.5</bundle>
-	</feature>
-
-</features>

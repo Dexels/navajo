@@ -70,8 +70,11 @@ public class RepositoryManagerImpl implements RepositoryManager {
 		if(storeFolder==null ) {
 			storeFolder = findByFileInstaller(fileInstallPath,"storage");
 		}
-		if(storeFolder==null || !storeFolder.exists()) {
+		if(storeFolder==null) {
 			throw new IOException("No storage.path set in configuration!");
+		}
+		if(!storeFolder.exists()) {
+			storeFolder.mkdirs();
 		}
 		return storeFolder;
 	}

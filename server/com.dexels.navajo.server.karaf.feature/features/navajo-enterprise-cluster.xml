@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.enterprise.cluster-3.0.2">
-	
-	<feature name='navajo.enterprise.cluster' version='3.0.2' start-level='81' >
-		<feature version="[3.0.0,4)">navajo.enterprise.core</feature>
-		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.6.7</bundle>
- 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.0.4</bundle>
-	</feature>
-</features>

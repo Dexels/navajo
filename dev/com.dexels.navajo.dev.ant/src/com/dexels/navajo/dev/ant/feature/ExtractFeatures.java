@@ -73,11 +73,17 @@ public class ExtractFeatures extends Task {
 		if(!destDir.exists()) {
 			destDir.mkdirs();
 		}
-		String outputName = xmlElement.getStringAttribute("name")+"-"+xmlElement.getStringAttribute("version")+".xml";
+		String featureName = xmlElement.getStringAttribute("name")+"-"+xmlElement.getStringAttribute("version");
+//		<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-[[VERSION]]">
+		XMLElement features = new CaseSensitiveXMLElement("features");
+		features.setAttribute("xmlsn", "http://karaf.apache.org/xmlns/features/v1.0.0");
+		features.setAttribute("name", featureName);
+		features.addChild(xmlElement);
+		String outputName = featureName+".xml";
 		File outputFile = new File(destDir,outputName);
 		System.err.println("Writing feature: "+outputFile);
 		FileWriter fw = new FileWriter(outputFile);
-		xmlElement.write(fw);
+		features.write(fw);
 		fw.close();
 	}
 		
