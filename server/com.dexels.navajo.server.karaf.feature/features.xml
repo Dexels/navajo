@@ -244,14 +244,16 @@
 		<feature version="[3.0.0,4)">navajo.kml</feature>
 	</feature>	
 
-	<feature resolver="(obr)" name='navajo.jgit' version='3.0.15' start-level='81' >
+	<feature resolver="(obr)" name='navajo.jgit' version='3.0.17' start-level='81' install="auto">
+		<feature version="[3.0.0,4)">eventadmin</feature>
+		<feature version="[3.0.0,4)">scr</feature>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.ant/1.9.2_1</bundle>
 		<bundle dependency='true'>mvn:com.jcraft/jsch-bundle/0.1.46</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/1.3_5</bundle>
 		<bundle dependency='true'>mvn:org.eclipse.jgit/org.eclipse.jgit/3.1.0.201310021548-r</bundle>
 		<bundle dependency='true'>mvn:com.dexels.thirdparty/javaewah/0.5.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jgit/3.0.31	</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jgit/3.0.31</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.repository.api/2.0.13</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
@@ -292,7 +294,9 @@
 	    <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.entity/1.2.40</bundle>
 	</feature>
 	
-	<feature  name='feature.sync' version='1.0.3' install="auto">
+	<feature  name='feature.sync' version='1.0.4' install="auto">
+		<feature version="[3.0.0,4)">eventadmin</feature>
+		<feature version="[3.0.0,4)">scr</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.karaf.command/1.0.5</bundle>
 	</feature>
 </features>
