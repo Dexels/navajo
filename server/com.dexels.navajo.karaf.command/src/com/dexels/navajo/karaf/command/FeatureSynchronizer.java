@@ -188,14 +188,23 @@ public class FeatureSynchronizer implements Runnable {
 			logger.info("# of added repos: "+added.size());
 		}
 		Set<URI> orphaned = new HashSet<URI>(owned);
-		orphaned.removeAll(owned);
+		orphaned.removeAll(encountered);
 		if(orphaned.size()>0) {
 			logger.info("# of added repos to remove: "+orphaned.size());
 		}
 		for (URI uri : orphaned) {
 			try {
+				logger.info("repo with uri: "+uri+" is owned, and is now orphaned. Will remove.");
 				owned.remove(uri);
-				featureService.removeRepository(uri, true);
+				Repository toremove = present.get(uri);
+				if(toremove!=null) {
+					for (Feature feature : toremove.getFeatures()) {
+						if(featureService.isInstalled(feature)) {
+							featureService.uninstallFeature(feature.getName(),feature.getVersion());
+						}
+					}
+				}
+				featureService.removeRepository(uri, false);
 			} catch (Exception e) {
 				logger.error("Error: ", e);
 			}
