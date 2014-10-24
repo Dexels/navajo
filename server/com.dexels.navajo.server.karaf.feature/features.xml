@@ -6,7 +6,7 @@
 		<feature version="[3.0.0,4)">pax-http</feature>
 		<feature version="[3.0.0,4)">eventadmin</feature>
 			    
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.102</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.106</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/2.0.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.5.4</bundle>
@@ -291,7 +291,7 @@
         <feature version="[3.0.0,4)">navajo.multitenant</feature> 
         <feature version="[3.0.0,4)">navajo.jgit</feature>
         <feature version="[3.0.0,4)">navajo.function</feature> 
-	    <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.entity/1.2.40</bundle>
+	    <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.entity/1.2.44</bundle>
 	</feature>
 	
 	<feature  name='feature.sync' version='1.0.4' install="auto">
