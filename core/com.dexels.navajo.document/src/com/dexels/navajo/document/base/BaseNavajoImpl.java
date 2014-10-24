@@ -698,6 +698,13 @@ public Navajo mask(Navajo with, String method) throws NavajoException {
 			for (int j = 0; j < subMessages.size(); j++) {
 				Message subMsg = subMessages.get(j);
 				if ( superMsg.getName().equals(subMsg.getName()) ) {
+					boolean matchMethod = superMsg.getMethod().equals("")
+							|| subMsg.getMethod().equals("")
+							|| superMsg.getMethod().equals(method);
+					
+					if (!matchMethod) {
+						this.removeMessage(superMsg);
+					}
 					// Found duplicate!
 					superMsg.maskMessage(subMsg, method);
 				}

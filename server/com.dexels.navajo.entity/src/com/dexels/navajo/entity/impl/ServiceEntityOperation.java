@@ -717,6 +717,12 @@ public class ServiceEntityOperation implements EntityOperation {
 			if (result.getMessage("AuthorizationError") != null) {
 				throw new EntityException(EntityException.UNAUTHORIZED);
 			}
+			
+			Message validationErrors;
+			if ((validationErrors = result.getMessage("ConditionErrors")) != null ) {
+				throw new EntityException(EntityException.FAILURE, validationErrors.getMessage(0).getProperty("Id").toString());
+			}
+			
 		}
 		clean(result, validMessages, "response", true);	
 		return result;
