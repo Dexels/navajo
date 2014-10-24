@@ -165,9 +165,10 @@ public class EntityManager {
 			if (!filename.endsWith(".xml")) {
 				return;
 			}
-			String script = filename.substring(filename.indexOf("entity"), filename.indexOf(".xml"));
-			script = script.replace("\\","/");
-			bundleQueue.enqueueScript(script, ".xml");
+			String script = filename.substring(filename.indexOf("scripts" + File.separator + "entity"), filename.indexOf(".xml"));
+			String stripped = script.substring("scripts/".length());
+			stripped = stripped.replace("\\","/");
+			bundleQueue.enqueueScript(stripped, ".xml");
 		} else if (file.isDirectory()) {
 			for (File f : file.listFiles()) {
 				buildAndLoadScript(f);
