@@ -66,48 +66,25 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		this.repositoryInstance = null;
 	}
 
-	public void activate(BundleContext context) {
-		// this.bundleContext = context;
-//		if(context!=null) {
-//			
-//			context.addServiceListener(new ServiceListener() {
-//				
-//				@Override
-//				public void serviceChanged(ServiceEvent se) {
-//					switch (se.getType()) {
-//					case ServiceEvent.MODIFIED:
-//						System.err.println("service MODIFIED: "+se.getServiceReference());
-//						modified++;
-//						break;
-//					case ServiceEvent.REGISTERED:
-//						System.err.println("service REGISTERED: "+se.getServiceReference());
-//						registered++;
-//						break;
-//					case ServiceEvent.UNREGISTERING:
-//						System.err.println("service UNREGISTERING: "+se.getServiceReference());
-//						unregistering++;
-//						break;
-//					default:
-//						break;
-//					}
-//				    System.err.println("STATS: "+modified+" modified. "+registered+" registered. "+unregistering+" unregistering");
-//				}
-//			});
-//		}
-		try {
+	public void activate(BundleContext context) throws FileNotFoundException {
 			String deployment = repositoryInstance.getDeployment();
 			startInstanceFactory(repositoryInstance.getRepositoryFolder(),
 					deployment);
-			
-			
-		} catch (Throwable e) {
-			logger.error("Error: ", e);
-		}
+
 	}
 
-	private void startInstanceFactory(File rootPath, String deployment) {
+	private void startInstanceFactory(File rootPath, String deployment) throws FileNotFoundException {
 		File settings = new File(rootPath, "settings");
 		File config = new File(rootPath, "config");
+		if(!rootPath.exists()) {
+			throw new FileNotFoundException("No rootFolder found: "+rootPath.getAbsolutePath());
+		}
+		if(!config.exists()) {
+			throw new FileNotFoundException("No config folder not found: "+config.getAbsolutePath());
+		}
+		if(!settings.exists()) {
+			throw new FileNotFoundException("No settings folder not found: "+settings.getAbsolutePath());
+		}
 		File globalResourceFile = new File(config, "resources.xml");
 		File[] fd = settings.listFiles();
 		File globalPropertyFile = new File(settings, "application.properties");
