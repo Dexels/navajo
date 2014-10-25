@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +17,7 @@ public class TestNavajoContextInstance {
 	}
 
 	@Test
-	public void test() {
+	public void test() throws FileNotFoundException {
 		context.activate(null);
 		
 	}
