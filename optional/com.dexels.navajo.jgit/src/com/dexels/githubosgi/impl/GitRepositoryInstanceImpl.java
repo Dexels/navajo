@@ -49,7 +49,7 @@ import com.dexels.navajo.repository.core.impl.RepositoryInstanceImpl;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 
-public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements GitRepositoryInstance {
+public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements GitRepositoryInstance, Runnable {
 	
 	private final static Logger logger = LoggerFactory.getLogger(GitRepositoryInstanceImpl.class);
 
@@ -58,30 +58,25 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	private String branch;
 	private String gitUrl;
 
-//	protected ApplicationManager applicationManager;
-
 	private Git git;
-
 	private RevCommit lastCommit;
-
 	private String name;
-
 	private String httpUrl;
-	
 	private EventAdmin eventAdmin = null;
 
+	private Thread updateThread = null;
 
-
+	private static final int DEFAULT_SLEEP = 300000;
+	private int sleepTime = DEFAULT_SLEEP;
+	private boolean running;
+	
 	public GitRepositoryInstanceImpl() {
-		logger.info("Instance created!");
+		logger.debug("Instance created!");
 	}
 
 	public void setEventAdmin(EventAdmin eventAdmin) {
 		this.eventAdmin = eventAdmin;
 	}
-
-
-	
 	/**
 	 * 
 	 * @param eventAdmin
@@ -160,6 +155,10 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	
 	public void deactivate() {
 		super.deregisterFileInstallLocations();
+		this.running = false;
+		if(updateThread!=null) {
+			updateThread.interrupt();
+		}
 	}
 	
 	
@@ -179,6 +178,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		deployment = (String) settings.get("repository.deployment");
 		repositoryName = name + "-"+branch;
 		applicationFolder = new File(gitRepoFolder,repositoryName);
+		logger.info("Activating git repo. Folder: {} Deployment {} Branch: {} GitUrl: {}",applicationFolder.getAbsolutePath(),deployment,branch,gitUrl);
 		super.setSettings(settings);
 		File keyFolder = repositoryManager.getSshFolder();
 		// Not pretty..
@@ -226,10 +226,25 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		}
 		
 		registerFileInstallLocations();
-
+		this.sleepTime = parseSleepTime(settings.get("sleepTime"));
+		initializeThread(settings);
 	}
 
 	
+	private int parseSleepTime(Object value) {
+		if(value==null) {
+			return DEFAULT_SLEEP;
+		}
+		if(value instanceof Integer) {
+			return (Integer)value;
+		}
+		if(value instanceof String) {
+			return Integer.parseInt((String) value);
+					
+		}
+		return DEFAULT_SLEEP;
+	}
+
 	private String extractHttpUriFromGitUri(String githubUri) {
 		// githubUri = git@github.com:user/project-name.git
 		// httpUri = https://github.com/user/project-name
@@ -358,27 +373,16 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 					setBare(false).setCloneAllBranches(true).setDirectory(applicationFolder).
 					setURI(gitUrl).setCredentialsProvider(upc).call();
 			repository = git.getRepository();
-//		if(branch!=null) {
-//			clone.setBranch(branch);
-//		}
-			
 			git.branchCreate() 
 			   .setName(branch)
 			   .setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
 			   .setStartPoint("origin/"+branch)
 			   .setForce(true)
 			   .call();
-//		git.branchCreate().setName(branch).call();
-//		git.checkout().setName("Acceptance").call();
-
 			git.checkout().setName(branch).call();
 			StoredConfig config = git.getRepository().getConfig();
 			config.setString("remote", "origin", "fetch", "+refs/*:refs/*");
 			config.setString("remote", "origin", "fetch", "+refs/heads/*:refs/remotes/origin/*");
-			
-			//		[branch "Production"]
-//				remote = origin
-//				merge = refs/heads/Production
 			config.setString("branch",branch,"merge","refs/heads/"+branch);
 			config.setString("branch",branch,"remote","origin");
 			config.save();
@@ -468,7 +472,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	
 
 	@Override
-	public void refreshApplication() throws IOException {
+	public synchronized void refreshApplication() throws IOException {
 //		RevCommit last = lastCommit;
 		String oldVersion = getLastCommitVersion();
 		logger.debug(">>> last commit version: " + oldVersion);
@@ -574,5 +578,30 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		return envDeployment;
 	}
 
+	public void initializeThread(Map<String,Object> settings) {
+		updateThread = new Thread(this);
+		boolean start = "true".equals((String) settings.get("autoRefresh"));
+		if(start) {
+			this.running = true;
+			updateThread.start();
+			logger.info("Sync started!");
+		}
+	}
+
+	@Override
+	public void run() {
+		while(running) {
+			try {
+				long now = System.currentTimeMillis();
+				callPull();
+				long elapsed = System.currentTimeMillis() - now;
+				logger.debug("Refresh app iteration took: "+elapsed+" millis.");
+				Thread.sleep(sleepTime);
+			} catch (InterruptedException e) {
+			} catch (Throwable e) {
+				logger.error("Error: ", e);
+			}
+		}
+	}
 
 }

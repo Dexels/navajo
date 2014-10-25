@@ -8,6 +8,8 @@
 		<AD name="Https Git URL" id="httpUrl" required="false" type="String" />
 		<AD name="SSH Key file (public as *.pub)" id="key" required="false" type="String" />
 		<AD name="Git Branch" id="branch" required="true" type="String" default="master" />
+		<AD name="Auto refresh" id="autoRefresh" required="false" type="boolean" default="false" />
+		<AD name="Sleep time between refresh" id="sleepTime" required="false" type="Integer" default="300000" />
 	</OCD>
 
 	<Designate factoryPid="dexels.githubosgi.gitrepository">
