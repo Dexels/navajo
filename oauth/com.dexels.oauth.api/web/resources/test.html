@@ -14,9 +14,14 @@
 
     <body>
         <div class="container">
-            <div class="row" style="margin-top:50px;">
-            <a href="http://localhost:8080/oauth?redirect_uri=http://localhost:8080/auth/resource.html&response_type=token&client_id=12345&scope=PERSON,ACTIVITY&state=456" class="btn btn-primary"><i class="icon-white icon-thumbs-up"></i> Log in with Sportlink</a>
-            
+            <div class="row" style="margin-top:10px;margin-left:10px;">
+            	<a href="http://localhost:8080/oauth?redirect_uri=http://localhost:8080/auth/resource.html&response_type=token&client_id=12345&scope=PERSON,ACTIVITY,ICAL&state=456" class="btn btn-primary"><i class="icon-white icon-thumbs-up"></i> Log in with Sportlink (Local eclipse)</a>
+            </div>
+            <div class="row" style="margin-top:10px;margin-left:10px;">
+            	<a href="http://localhost:9090/oauth?redirect_uri=http://localhost:9090/auth/resource.html&response_type=token&client_id=12345&scope=PERSON,ACTIVITY,ICAL&state=456" class="btn btn-primary"><i class="icon-white icon-thumbs-up"></i> Log in with Sportlink (Local eclipse, 9090)</a>
+            </div>
+            <div class="row" style="margin-top:10px;margin-left:10px;">
+            	<a href="http://localhost:8181/oauth?redirect_uri=http://localhost:8181/auth/resource.html&response_type=token&client_id=12345&scope=PERSON,ACTIVITY,ICAL&state=456" class="btn btn-primary"><i class="icon-white icon-thumbs-up"></i> Log in with Sportlink (Local Karaf)</a>
             </div>
         </div>
         
