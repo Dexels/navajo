@@ -32,6 +32,7 @@ Import-Package: com.dexels.navajo.repository.api;version="1.0.0",
 Bundle-ClassPath: .
 Service-Component: OSGI-INF/dexels.githubosgi.gitrepository.xml,
  OSGI-INF/dexels.githubosgi.servlet.xml,
+ OSGI-INF/dexels.githubosgi.manager.xml,
  OSGI-INF/navajo.gitrepository.navajo.xml,
  OSGI-INF/navajo.gitrepository.tipi.xml,
  OSGI-INF/navajo.gitrepository.multitenant.xml
