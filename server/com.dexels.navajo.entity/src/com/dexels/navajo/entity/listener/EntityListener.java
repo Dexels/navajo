@@ -45,6 +45,7 @@ public class EntityListener extends HttpServlet {
 	private final static String DEFAULT_OUTPUT_FORMAT = "json";
 	private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json", "xml", "tml"));
 	private final static Logger logger = LoggerFactory.getLogger(EntityListener.class);
+	private final static Logger entityLogger = LoggerFactory.getLogger("entity");
 
 	private EntityManager myManager;
 	private LocalClient myClient;
@@ -142,11 +143,11 @@ public class EntityListener extends HttpServlet {
 					throw new EntityException(EntityException.BAD_REQUEST);
 				}
 			}
+			entityLogger.info("Entity request: {}", input);
 
 			if (input.getMessage(entityMessage.getName()) == null) {
 				logger.error("Entity name not found in input - format incorrect or bad request"); 
 				throw new EntityException(EntityException.BAD_REQUEST);
-
 			}
 			
 			// Merge input.
