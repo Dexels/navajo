@@ -66,8 +66,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 
 	private Thread updateThread = null;
 
-	private static final int DEFAULT_SLEEP = 300000;
-	private int sleepTime = DEFAULT_SLEEP;
+	private int sleepTime = -1;
 	private boolean running;
 	
 	public GitRepositoryInstanceImpl() {
@@ -174,7 +173,12 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		String key = (String) settings.get("key");
 		branch = (String) settings.get("branch");
 		name = (String) settings.get("name");
-		this.type = (String) settings.get("type");
+		
+		this.type = (String) settings.get("repository.type");
+		if(this.type==null) {
+			logger.warn("type key in GitRepo configuration is deprecated, use repository.type");
+			this.type = (String) settings.get("type");
+		}
 		deployment = (String) settings.get("repository.deployment");
 		repositoryName = name + "-"+branch;
 		applicationFolder = new File(gitRepoFolder,repositoryName);
@@ -182,7 +186,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		super.setSettings(settings);
 		File keyFolder = repositoryManager.getSshFolder();
 		// Not pretty..
-		if(keyFolder!=null && keyFolder.exists()) {
+		if(keyFolder!=null && keyFolder.exists() && key!=null) {
 			privateKey = null;
 			privateKey = new File(keyFolder,key);
 			if(!privateKey.exists() || !privateKey.isFile()) {
@@ -226,14 +230,13 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		}
 		
 		registerFileInstallLocations();
-		this.sleepTime = parseSleepTime(settings.get("sleepTime"));
 		initializeThread(settings);
 	}
 
 	
 	private int parseSleepTime(Object value) {
 		if(value==null) {
-			return DEFAULT_SLEEP;
+			return -1;
 		}
 		if(value instanceof Integer) {
 			return (Integer)value;
@@ -242,7 +245,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			return Integer.parseInt((String) value);
 					
 		}
-		return DEFAULT_SLEEP;
+		return -1;
 	}
 
 	private String extractHttpUriFromGitUri(String githubUri) {
@@ -280,6 +283,8 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	
 	@Override
 	public void callPull() throws GitAPIException, IOException {
+		long now = System.currentTimeMillis();
+
 		File gitSubfolder = new File(applicationFolder, ".git");
 		if (!gitSubfolder.exists()) {
 			logger.info("Folder: " + applicationFolder.getAbsolutePath()
@@ -296,14 +301,14 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			git.checkout().setName(branch).call();
 			// TODO check local changes, see if a hard reset is necessary
 			git.reset().setMode(ResetType.HARD).call();
-			git.pull().setProgressMonitor(new LoggingProgressMonitor()).call().getMergeResult().getMergedCommits();
+			int merged = git.pull().setProgressMonitor(new LoggingProgressMonitor()).call().getMergeResult().getMergedCommits().length;
 			
 			logger.info("Current branch: " + repository.getBranch());
 //			git.clean().call();
 			Iterable<RevCommit> log = git.log().call();
 			lastCommit = log.iterator().next();
-//			lastCommit.getC
-			logger.info("Git pull complete.");
+
+			logger.info("Git pull of branch: {} took: {} millis, resulting in {} merged commits",repository.getBranch(), (System.currentTimeMillis() - now),merged);
 		} finally {
 			if(repository!=null) {
 				repository.close();
@@ -579,13 +584,16 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	}
 
 	public void initializeThread(Map<String,Object> settings) {
-		updateThread = new Thread(this);
-		boolean start = "true".equals((String) settings.get("autoRefresh"));
-		if(start) {
-			this.running = true;
-			updateThread.start();
-			logger.info("Sync started!");
+		this.sleepTime = parseSleepTime(settings.get("sleepTime"));
+
+		if(sleepTime<0) {
+			logger.info("No sleepTime specified, not starting autopull.");
+			return;
 		}
+		updateThread = new Thread(this);
+		this.running = true;
+		updateThread.start();
+		logger.info("Auto pull sync started!");
 	}
 
 	@Override

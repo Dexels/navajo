@@ -16,7 +16,7 @@ public class LoggingProgressMonitor implements ProgressMonitor {
 	@Override
 	public void update(int x) {
 		if(progress % 100 == 0) {
-			logger.info("Progress: " + progress + "/" + total);
+			logger.debug("Progress: " + progress + "/" + total);
 			
 		}
 		progress += x;
@@ -24,7 +24,7 @@ public class LoggingProgressMonitor implements ProgressMonitor {
 
 	@Override
 	public void start(int total) {
-		logger.info("Total: " + total);
+		logger.debug("Total: " + total);
 		this.total = total;
 	}
 
@@ -35,12 +35,12 @@ public class LoggingProgressMonitor implements ProgressMonitor {
 
 	@Override
 	public void endTask() {
-		logger.info("Done!");
+		logger.debug("Done!");
 	}
 
 	@Override
 	public void beginTask(String title, int work) {
-		logger.info("Starting task: " + title + " total work: "
+		logger.debug("Starting task: " + title + " total work: "
 				+ work);
 		total = work;
 		progress = 0;

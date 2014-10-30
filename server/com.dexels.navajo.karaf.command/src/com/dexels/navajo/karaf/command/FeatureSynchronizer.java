@@ -55,6 +55,8 @@ public class FeatureSynchronizer implements Runnable {
 			this.running = true;
 			updateThread.start();
 			logger.info("Sync started!");
+		} else {
+			logger.warn("Start setting not set, not starting synchronize thread.");
 		}
 	}
 

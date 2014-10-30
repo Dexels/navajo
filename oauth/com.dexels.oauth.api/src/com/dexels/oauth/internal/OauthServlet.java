@@ -16,6 +16,8 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.oauth.api.ClientRegistration;
 import com.dexels.oauth.api.ClientStore;
@@ -32,6 +34,10 @@ public class OauthServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -1948354354961917987L;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(OauthServlet.class);
+	
 	private UserAuthenticator userAuthenticator = null;
 	private TokenStore tokenStore = null;
 	private ClientStore clientStore = null;
@@ -79,7 +85,7 @@ public class OauthServlet extends HttpServlet {
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String pathInfo = req.getPathInfo();
-		System.err.println("Pathinfo: "+pathInfo);
+		logger.debug("Pathinfo: "+pathInfo);
 		try {
 			if(pathInfo==null) {
 				initialAuth(req,resp);
