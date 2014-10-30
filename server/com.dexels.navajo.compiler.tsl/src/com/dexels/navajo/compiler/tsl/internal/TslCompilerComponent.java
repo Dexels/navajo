@@ -38,7 +38,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	 */
 	@Override
 	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies,
-			String tenant, boolean hasTenantSpecificFile) throws Exception {
+			String tenant, boolean hasTenantSpecificFile, boolean forceTenant) throws Exception {
 		String packagePath = null;
 		String script = null;
 		if(scriptPath.indexOf('/')>=0) {
@@ -69,11 +69,14 @@ public class TslCompilerComponent implements ScriptCompiler {
 			scriptString = scriptPath;
 		} else {
 			scriptString = packagePath + "/"+script.replaceAll("_", "|");
+			if (forceTenant) {
+				scriptString = packagePath + "/" + (script + "_" + tenant).replaceAll("_", "|");
+			}
 		}
-		String scriptSource = script;
-		compiler.compileToJava(scriptSource, navajoIOConfig.getScriptPath(),
+						
+		compiler.compileToJava(script, navajoIOConfig.getScriptPath(),
 				navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc,
-				navajoIOConfig, dependencies, tenant, hasTenantSpecificFile);
+				navajoIOConfig, dependencies, tenant, hasTenantSpecificFile, forceTenant);
 		Set<String> dependentResources = new HashSet<String>();
 		
 		for (Dependency d : dependencies) {
@@ -99,6 +102,11 @@ public class TslCompilerComponent implements ScriptCompiler {
 					}
 				}
 			}
+		}
+		
+		// Before generating OSGi stuff, check forceTenant
+		if (forceTenant) {
+			script += "_" + tenant;
 		}
 		generateFactoryClass(script, packagePath, dependentResources);
 
@@ -275,19 +283,9 @@ public class TslCompilerComponent implements ScriptCompiler {
 			addProperty("service.ranking","Integer","1000", xe);
 		} else {
 			addProperty("service.ranking","Integer","0", xe);
-//			addProperty("navajo.tenant","String","*", xe);
-			
+			addProperty("navajo.tenant","String","default", xe);			
 		}
-//		for (Dependency dependency : dependencies) {
-//			XMLElement dep = new CaseSensitiveXMLElement("reference");
-//			dep.setAttribute("bind", "setDependency");
-//			dep.setAttribute("deptype", dependency.getType());
-//			dep.setAttribute("depId", dependency.getId());
-//			dep.setAttribute("depStamp", dependency.getCurrentTimeStamp());
-//			xe.addChild(dep);
-//			logger.debug("Dependency: "+dep.toString());
-//		}
-//		  <reference bind="setIOConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoIOConfig" name="NavajoIOConfig" policy="dynamic" unbind="clearIOConfig"/>
+
 		for (String resource : dependentResources) {
 			XMLElement dep = new CaseSensitiveXMLElement("reference");
 			dep.setAttribute("bind", "set"+resource);
@@ -422,6 +420,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	public void setIOConfig(NavajoIOConfig config) {
 		this.navajoIOConfig = config;
 	}
+
 	
 	/**
 	 * @param config the navajoconfig to clear

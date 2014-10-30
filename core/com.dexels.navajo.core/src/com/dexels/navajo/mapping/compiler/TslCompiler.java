@@ -3032,7 +3032,7 @@ public class TslCompiler {
 
 	private final void compileScript(InputStream is, String packagePath,
 			String script, String scriptPath, Writer fo, List<Dependency> deps,
-			String tenant) throws SystemException, SkipCompilationException {
+			String tenant, boolean forceTenant) throws SystemException, SkipCompilationException {
 
 		boolean debugInput = false;
 		boolean debugOutput = false;
@@ -3096,6 +3096,11 @@ public class TslCompiler {
 					actualPackagePath = "defaultPackage";
 				}
 			}
+			
+			String className = script;
+			if (forceTenant) {
+				className += "_" + tenant;
+			}
 
 			String importDef = (actualPackagePath.equals("") ? "" : "package "
 					+ MappingUtils.createPackageName(actualPackagePath)
@@ -3134,7 +3139,7 @@ public class TslCompiler {
 			result.append(" *\n");
 			result.append(" */\n\n");
 
-			String classDef = "public final class " + script
+			String classDef = "public final class " + className
 					+ " extends CompiledScript {\n\n\n";
 
 			result.append(classDef);
@@ -3143,7 +3148,7 @@ public class TslCompiler {
 
 			// Add constructor.
 			String constructorDef = "  public "
-					+ script
+					+ className
 					+ "() {\n "
 					+ "        if ( dependentObjects == null ) {\n"
 					+ "             dependentObjects = new ArrayList<Dependency>();\n"
@@ -3270,7 +3275,7 @@ public class TslCompiler {
 	public void compileScript(String script, String scriptPath,
 			String workingPath, String packagePath, Writer outputWriter,
 			List<Dependency> deps, String tenant,
-			boolean hasTenantSpecificScript) throws SystemException,
+			boolean hasTenantSpecificScript, boolean forceTenant) throws SystemException,
 			SkipCompilationException {
 
 		final String extension = ".xml";
@@ -3327,7 +3332,7 @@ public class TslCompiler {
 			}
 			
 			compileScript(is, packagePath, script, scriptPath, outputWriter,
-					deps, tenant);
+					deps, tenant, forceTenant);
 
 		} catch (SkipCompilationException e) {
 			throw e;
@@ -3356,7 +3361,7 @@ public class TslCompiler {
 			String tenant, boolean hasTenantSpecificScript) throws Exception {
 		return compileToJava(script, input, output, packagePath, packagePath,
 				classLoader, navajoIOConfig, deps, tenant,
-				hasTenantSpecificScript);
+				hasTenantSpecificScript, false);
 	}
 
 	/**
@@ -3373,6 +3378,7 @@ public class TslCompiler {
 	 *            the path of the scriptFile from the scriptRoot
 	 * @param classLoader
 	 * @param navajoIOConfig
+	 * @param forceTenant TODO
 	 * @return
 	 * @throws Exception
 	 */
@@ -3380,8 +3386,13 @@ public class TslCompiler {
 			String packagePath, String scriptPackagePath,
 			ClassLoader classLoader, NavajoIOConfig navajoIOConfig,
 			List<Dependency> deps, String tenant,
-			boolean hasTenantSpecificScript) throws Exception {
-		String javaFile = output + "/" + script + ".java";
+			boolean hasTenantSpecificScript, boolean forceTenant) throws Exception {
+		String tenantScript = script;
+		if (forceTenant) {
+			tenantScript = script + "_" + tenant;
+		}
+		String javaFile = output + "/" + tenantScript + ".java";
+		
 		TslCompiler tslCompiler = new TslCompiler(classLoader, navajoIOConfig);
 		try {
 			String bareScript;
@@ -3399,8 +3410,8 @@ public class TslCompiler {
 
 			tslCompiler.compileScript(bareScript, input, output,
 					scriptPackagePath, navajoIOConfig.getOutputWriter(output,
-							packagePath, script, ".java"), deps, tenant,
-					hasTenantSpecificScript);
+							packagePath, tenantScript, ".java"), deps, tenant,
+					hasTenantSpecificScript, forceTenant);
 
 			return javaFile;
 		} catch (SkipCompilationException ex) {
@@ -3442,7 +3453,7 @@ public class TslCompiler {
 						script, ".java");
 
 				tslCompiler.compileScript(bareScript, input, output,
-						packagePath, w, deps, tenant, hasTenantSpecificScript);
+						packagePath, w, deps, tenant, hasTenantSpecificScript, false);
 
 				// //System.out.println("CREATED JAVA FILE FOR SCRIPT: " +
 				// script);

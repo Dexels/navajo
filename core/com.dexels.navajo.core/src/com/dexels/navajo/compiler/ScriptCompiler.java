@@ -12,6 +12,7 @@ import com.dexels.navajo.script.api.Dependency;
  */
 public interface ScriptCompiler {
 
-	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies, String tenant, boolean hasTenantSpecificFile) throws Exception;
+	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies,
+			String tenant, boolean hasTenantSpecificFile, boolean forceTenant) throws Exception;
 
 }

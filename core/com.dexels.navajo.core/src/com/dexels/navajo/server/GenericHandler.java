@@ -388,7 +388,7 @@ public class GenericHandler extends ServiceHandler {
 									tslCompiler.compileScript(serviceName, 
     										scriptPath,
     										properties.getCompiledScriptPath(),
-    										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps,tenant,tenantConfig.hasTenantScriptFile(serviceName, tenant,".xml"));
+    										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps,tenant,tenantConfig.hasTenantScriptFile(serviceName, tenant,".xml"), false);
     							} catch (SystemException ex) {
     								sourceFile.delete();
     								AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER , ex.getMessage(), Level.SEVERE, a.accessID);

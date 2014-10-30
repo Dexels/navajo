@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.tsl.BundleQueue;
+import com.dexels.navajo.dependency.DependencyAnalyzer;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 
@@ -23,6 +25,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 	private static final String SCRIPTS_FOLDER = "scripts" + File.separator;
 	private BundleCreator bundleCreator = null;
 	private ExecutorService executor;
+	private DependencyAnalyzer depanalyzer;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(BundleQueueComponent.class);
@@ -40,6 +43,14 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 		executor = null;
 	}
 	
+	public void setDependencyAnalyzer(DependencyAnalyzer depa) {
+		depanalyzer = depa;
+	}
+	
+	public void clearDependencyAnalyzer(DependencyAnalyzer depa) {
+		depanalyzer = null;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.compiler.tsl.internal.BundleQueue#enqueueScript(java.lang.String)
 	 */
@@ -55,6 +66,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 				logger.info("Eagerly compiling: "+script);
 				try {
 					bundleCreator.createBundle(script, new Date(), extension, failures, success, skipped, false, false);
+					
 					if(!skipped.isEmpty()) {
 						logger.info("Script compilation skipped: "+script);
 					}
@@ -114,7 +126,17 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 			return;
 		}
 		enqueueScript(scriptName,extension);
+		
+		enqueueDependentScripts(scriptName);
 	}
+	
+    private void enqueueDependentScripts(String script) {
+    	Set<String> dependencies = depanalyzer.getDependentScripts(script);
+    	for (String dependentScript: dependencies) {
+			logger.debug("Compiling {}; the following script should be recompiled too: {}", script, dependentScript);
+    		//enqueueScript(dependentScript, ".xml");  		
+    	}
+    }
 
 	public static void main(String[] args) {
 		BundleQueueComponent bqc = new BundleQueueComponent();

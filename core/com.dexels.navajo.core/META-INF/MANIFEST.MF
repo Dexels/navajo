@@ -7,78 +7,109 @@ Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
 Navajo-Name: Core
 Eclipse-ExtensibleAPI: true
 Bundle-Activator: navajocore.Version
-Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",com.dexe
- ls.navajo.adapter.navajomap.manager;uses:="com.dexels.navajo.server.r
- esource",com.dexels.navajo.compiler;uses:="com.dexels.navajo.mapping"
- ,com.dexels.navajo.compiler.internal;uses:="com.dexels.navajo.server"
- ,com.dexels.navajo.enterprise.scheduler.tribe;uses:="com.dexels.navaj
- o.server.enterprise.tribe,com.dexels.navajo.server,com.dexels.navajo.
- document",com.dexels.navajo.events,com.dexels.navajo.events.types,com
- .dexels.navajo.functions.util;uses:="navajo,com.dexels.navajo.parser,
- com.dexels.navajo.document.nanoimpl",com.dexels.navajo.legacy.compile
- r,com.dexels.navajo.loader;version="1.0.0";uses:="org.dexels.utils",c
- om.dexels.navajo.mapping,com.dexels.navajo.mapping.bean,com.dexels.na
- vajo.mapping.compiler; uses:="com.dexels.navajo.loader,  com.dexels.n
- avajo.server,  org.w3c.dom,  com.dexels.navajo.document.nanoimpl",com
- .dexels.navajo.mapping.compiler.meta,com.dexels.navajo.parser,com.dex
- els.navajo.persistence.impl,com.dexels.navajo.server; uses:="com.dexe
- ls.navajo.server.resource,  com.dexels.navajo.script.api,  com.dexels
- .navajo.sharedstore,  com.dexels.navajo.document.types,  javax.script
- ,  org.slf4j,  com.dexels.navajo.server.enterprise.statistics,  com.d
- exels.navajo.persistence,  com.dexels.navajo.server.enterprise.integr
- ity,  com.dexels.navajo.loader,  com.dexels.navajo.mapping,  org.osgi
- .service.cm,  com.dexels.navajo.server.enterprise.descriptionprovider
- ,  com.dexels.navajo.server.api,  com.dexels.navajo.document",com.dex
- els.navajo.server.api,com.dexels.navajo.server.descriptionprovider;ve
- rsion="1.0.0";uses:="com.dexels.navajo.server,com.dexels.navajo.mappi
- ng,com.dexels.navajo.document",com.dexels.navajo.server.descriptionpr
- ovider.impl,com.dexels.navajo.server.enterprise.integrity;uses:="com.
- dexels.navajo.server,com.dexels.navajo.document",com.dexels.navajo.se
- rver.enterprise.monitoring,com.dexels.navajo.server.enterprise.queue;
- uses:="com.dexels.navajo.server,com.dexels.navajo.document.types,com.
- dexels.navajo.document",com.dexels.navajo.server.enterprise.scheduler
- ;uses:="com.dexels.navajo.server,com.dexels.navajo.server.enterprise.
- workflow,com.dexels.navajo.document",com.dexels.navajo.server.enterpr
- ise.scheduler.tribe,com.dexels.navajo.server.enterprise.statistics;us
- es:="com.dexels.navajo.server,com.dexels.navajo.events,com.dexels.nav
- ajo.mapping",com.dexels.navajo.server.enterprise.tribe;uses:="com.dex
- els.navajo.server,com.dexels.navajo.mapping,com.dexels.navajo.documen
- t",com.dexels.navajo.server.enterprise.workflow;uses:="com.dexels.nav
- ajo.document",com.dexels.navajo.server.enterprise.xmpp,com.dexels.nav
- ajo.server.global,com.dexels.navajo.server.impl; uses:="com.dexels.na
- vajo.sharedstore,  com.dexels.navajo.events,  com.dexels.navajo.persi
- stence,  com.dexels.navajo.server.enterprise.statistics,  com.dexels.
- navajo.server.enterprise.integrity,  com.dexels.navajo.loader,  com.d
- exels.navajo.server.enterprise.tribe,  com.dexels.navajo.server,  com
- .dexels.navajo.mapping,  org.osgi.framework,  com.dexels.navajo.serve
- r.enterprise.descriptionprovider,  org.osgi.service.cm,  com.dexels.n
- avajo.server.api,  com.dexels.navajo.document",com.dexels.navajo.serv
- er.internal; uses:="com.dexels.navajo.client.context,  com.dexels.nav
- ajo.script.api,  com.dexels.navajo.server,  com.dexels.navajo.server.
- api,  com.dexels.navajo.document",com.dexels.navajo.server.jmx;uses:=
- "javax.management.monitor,javax.management.openmbean,javax.management
- ",com.dexels.navajo.server.resource;uses:="com.dexels.navajo.server,c
- om.dexels.navajo.mapping",com.dexels.navajo.server.scriptengine; uses
- :="com.dexels.navajo.serviceplugin,  com.dexels.navajo.server,  javax
- .script,  com.dexels.navajo.document",com.dexels.navajo.server.script
- engine.include;uses:="com.dexels.navajo.server.scriptengine,javax.scr
- ipt",com.dexels.navajo.server.statistics.impl;uses:="com.dexels.navaj
- o.server,com.dexels.navajo.mapping",com.dexels.navajo.server.test; us
- es:="com.dexels.navajo.script.api,  com.dexels.navajo.sharedstore,  c
- om.dexels.navajo.persistence,  com.dexels.navajo.server.enterprise.st
- atistics,  com.dexels.navajo.server.enterprise.integrity,  com.dexels
- .navajo.loader,  com.dexels.navajo.server,  com.dexels.navajo.mapping
- ,  com.dexels.navajo.server.enterprise.descriptionprovider,  com.dexe
- ls.navajo.document",com.dexels.navajo.serviceplugin;uses:="com.dexels
- .navajo.server,com.dexels.navajo.mapping,com.dexels.navajo.document",
- com.dexels.navajo.sharedstore,com.dexels.navajo.sharedstore.map;uses:
- ="com.dexels.navajo.server.enterprise.tribe,com.dexels.navajo.server,
- com.dexels.navajo.mapping",com.dexels.navajo.test;uses:="com.dexels.n
- avajo.document.types",com.dexels.navajo.tipilink,com.dexels.navajo.ut
- il;version="1.0.0"; uses:="com.dexels.navajo.server,  com.dexels.nava
- jo.mapping,  org.w3c.dom,  com.dexels.navajo.document",navajocore;use
- s:="org.osgi.framework,navajoextension",navajoextension;uses:="navajo
- ,com.dexels.navajo.version,org.osgi.framework"
+Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
+ com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.navajo.server.resource",
+ com.dexels.navajo.compiler;uses:="com.dexels.navajo.mapping",
+ com.dexels.navajo.compiler.internal;uses:="com.dexels.navajo.server",
+ com.dexels.navajo.dependency,
+ com.dexels.navajo.enterprise.scheduler.tribe;uses:="com.dexels.navajo.server.enterprise.tribe,com.dexels.navajo.server,com.dexels.navajo.document",
+ com.dexels.navajo.events,
+ com.dexels.navajo.events.types,
+ com.dexels.navajo.functions.util;uses:="navajo,com.dexels.navajo.parser,com.dexels.navajo.document.nanoimpl",
+ com.dexels.navajo.legacy.compiler,
+ com.dexels.navajo.loader;version="1.0.0";uses:="org.dexels.utils",
+ com.dexels.navajo.mapping,
+ com.dexels.navajo.mapping.bean,
+ com.dexels.navajo.mapping.compiler;
+  uses:="com.dexels.navajo.loader,
+   com.dexels.navajo.server,
+   org.w3c.dom,
+   com.dexels.navajo.document.nanoimpl",
+ com.dexels.navajo.mapping.compiler.meta,
+ com.dexels.navajo.parser,
+ com.dexels.navajo.persistence.impl,
+ com.dexels.navajo.server;
+  uses:="com.dexels.navajo.server.resource,
+   com.dexels.navajo.script.api,
+   com.dexels.navajo.sharedstore,
+   com.dexels.navajo.document.types,
+   javax.script,
+   org.slf4j,
+   com.dexels.navajo.server.enterprise.statistics,
+   com.dexels.navajo.persistence,
+   com.dexels.navajo.server.enterprise.integrity,
+   com.dexels.navajo.loader,
+   com.dexels.navajo.mapping,
+   org.osgi.service.cm,
+   com.dexels.navajo.server.enterprise.descriptionprovider,
+   com.dexels.navajo.server.api,
+   com.dexels.navajo.document",
+ com.dexels.navajo.server.api,
+ com.dexels.navajo.server.descriptionprovider;version="1.0.0";uses:="com.dexels.navajo.server,com.dexels.navajo.mapping,com.dexels.navajo.document",
+ com.dexels.navajo.server.descriptionprovider.impl,
+ com.dexels.navajo.server.enterprise.integrity;uses:="com.dexels.navajo.server,com.dexels.navajo.document",
+ com.dexels.navajo.server.enterprise.monitoring,
+ com.dexels.navajo.server.enterprise.queue;uses:="com.dexels.navajo.server,com.dexels.navajo.document.types,com.dexels.navajo.document",
+ com.dexels.navajo.server.enterprise.scheduler;uses:="com.dexels.navajo.server,com.dexels.navajo.server.enterprise.workflow,com.dexels.navajo.document",
+ com.dexels.navajo.server.enterprise.scheduler.tribe,
+ com.dexels.navajo.server.enterprise.statistics;uses:="com.dexels.navajo.server,com.dexels.navajo.events,com.dexels.navajo.mapping",
+ com.dexels.navajo.server.enterprise.tribe;uses:="com.dexels.navajo.server,com.dexels.navajo.mapping,com.dexels.navajo.document",
+ com.dexels.navajo.server.enterprise.workflow;uses:="com.dexels.navajo.document",
+ com.dexels.navajo.server.enterprise.xmpp,
+ com.dexels.navajo.server.global,
+ com.dexels.navajo.server.impl;
+  uses:="com.dexels.navajo.sharedstore,
+   com.dexels.navajo.events,
+   com.dexels.navajo.persistence,
+   com.dexels.navajo.server.enterprise.statistics,
+   com.dexels.navajo.server.enterprise.integrity,
+   com.dexels.navajo.loader,
+   com.dexels.navajo.server.enterprise.tribe,
+   com.dexels.navajo.server,
+   com.dexels.navajo.mapping,
+   org.osgi.framework,
+   com.dexels.navajo.server.enterprise.descriptionprovider,
+   org.osgi.service.cm,
+   com.dexels.navajo.server.api,
+   com.dexels.navajo.document",
+ com.dexels.navajo.server.internal;
+  uses:="com.dexels.navajo.client.context,
+   com.dexels.navajo.script.api,
+   com.dexels.navajo.server,
+   com.dexels.navajo.server.api,
+   com.dexels.navajo.document",
+ com.dexels.navajo.server.jmx;uses:="javax.management.monitor,javax.management.openmbean,javax.management",
+ com.dexels.navajo.server.resource;uses:="com.dexels.navajo.server,com.dexels.navajo.mapping",
+ com.dexels.navajo.server.scriptengine;
+  uses:="com.dexels.navajo.serviceplugin,
+   com.dexels.navajo.server,
+   javax.script,
+   com.dexels.navajo.document",
+ com.dexels.navajo.server.scriptengine.include;uses:="com.dexels.navajo.server.scriptengine,javax.script",
+ com.dexels.navajo.server.statistics.impl;uses:="com.dexels.navajo.server,com.dexels.navajo.mapping",
+ com.dexels.navajo.server.test;
+  uses:="com.dexels.navajo.script.api,
+   com.dexels.navajo.sharedstore,
+   com.dexels.navajo.persistence,
+   com.dexels.navajo.server.enterprise.statistics,
+   com.dexels.navajo.server.enterprise.integrity,
+   com.dexels.navajo.loader,
+   com.dexels.navajo.server,
+   com.dexels.navajo.mapping,
+   com.dexels.navajo.server.enterprise.descriptionprovider,
+   com.dexels.navajo.document",
+ com.dexels.navajo.serviceplugin;uses:="com.dexels.navajo.server,com.dexels.navajo.mapping,com.dexels.navajo.document",
+ com.dexels.navajo.sharedstore,
+ com.dexels.navajo.sharedstore.map;uses:="com.dexels.navajo.server.enterprise.tribe,com.dexels.navajo.server,com.dexels.navajo.mapping",
+ com.dexels.navajo.test;uses:="com.dexels.navajo.document.types",
+ com.dexels.navajo.tipilink,
+ com.dexels.navajo.util;version="1.0.0";
+  uses:="com.dexels.navajo.server,
+   com.dexels.navajo.mapping,
+   org.w3c.dom,
+   com.dexels.navajo.document",
+ navajocore;uses:="org.osgi.framework,navajoextension",
+ navajoextension;uses:="navajo,com.dexels.navajo.version,org.osgi.framework"
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.authentication.api,
  com.dexels.navajo.client,
@@ -107,6 +138,7 @@ Import-Package: com.dexels.navajo.authentication.api,
  javax.xml.transform.stream,
  navajo,
  org.apache.commons.io,
+ org.apache.commons.io.filefilter;version="2.4.0",
  org.junit;version="[4.0.0,5.0.0)";resolution:=optional,
  org.junit.rules;version="[4.0.0,5.0.0)";resolution:=optional,
  org.junit.runner;version="[4.0.0,5.0.0)";resolution:=optional,
@@ -125,4 +157,4 @@ Service-Component: OSGI-INF/simpleRepository.xml, OSGI-INF/repositoryFactory.xml
  OSGI-INF/sharedFileStore.xml,OSGI-INF/dummyTribeManager.xml,OSGI-INF/dummyJabberWorker.xml,OSGI-INF/asyncStoreRunner.xml,
  OSGI-INF/navajo.server.http.osgi.xml,OSGI-INF/dummyIntegrityWorker.xml,OSGI-INF/sharedMemoryStore.xml,
  OSGI-INF/propertyFileDescriptionProvider.xml,OSGI-INF/navajo.repository.context.xml,
- OSGI-INF/navajoGlobalManager.xml,OSGI-INF/navajo.local.client.xml
+ OSGI-INF/navajoGlobalManager.xml,OSGI-INF/navajo.local.client.xml,OSGI-INF/dependencyanalyzer.xml

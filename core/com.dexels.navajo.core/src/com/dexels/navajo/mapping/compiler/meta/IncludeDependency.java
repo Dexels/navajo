@@ -16,6 +16,10 @@ public class IncludeDependency extends Dependency {
 		super(timestamp, id);
 		this.scriptPath = path;
 	}
+	
+	public String getScriptPath() {
+		return scriptPath;
+	}
 
 	@Override
 	public final boolean recompileOnDirty() {
