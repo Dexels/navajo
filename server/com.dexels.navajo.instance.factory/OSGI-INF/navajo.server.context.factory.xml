@@ -2,7 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate"  deactivate="deactivate" immediate="true" name="navajo.server.context.factory">
    <implementation class="com.dexels.navajo.context.NavajoContextInstanceFactory"/>
    <reference bind="setConfigAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="dynamic" unbind="clearConfigAdmin"/>
-   <reference bind="setRepositoryInstance" cardinality="1..1" interface="com.dexels.navajo.repository.api.RepositoryInstance" name="RepositoryInstance" policy="dynamic" unbind="clearRepositoryInstance"/>
+   <reference bind="setRepositoryInstance" cardinality="1..1" interface="com.dexels.navajo.repository.api.RepositoryInstance" name="RepositoryInstance" policy="dynamic" target="(type=multitenant)" unbind="clearRepositoryInstance"/>
    <service>
       <provide interface="com.dexels.navajo.server.api.NavajoServerContext"/>
    </service>
