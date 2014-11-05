@@ -164,6 +164,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	public void activate(Map<String,Object> settings) throws IOException {
 		File gitRepoFolder = repositoryManager.getRepositoryFolder();
 		setSettings(settings);
+		
 		gitUrl = (String) settings.get("url");
 		httpUrl = extractHttpUriFromGitUri(gitUrl);
 		if (settings.containsKey("httpUrl")) {

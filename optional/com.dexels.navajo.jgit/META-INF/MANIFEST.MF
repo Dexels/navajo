@@ -35,6 +35,8 @@ Service-Component: OSGI-INF/dexels.githubosgi.gitrepository.xml,
  OSGI-INF/dexels.githubosgi.manager.xml,
  OSGI-INF/navajo.gitrepository.navajo.xml,
  OSGI-INF/navajo.gitrepository.tipi.xml,
+ OSGI-INF/navajo.gitrepository.generic.xml,
+ OSGI-INF/navajo.gitrepository.webstart.xml,
  OSGI-INF/navajo.gitrepository.multitenant.xml
 Export-Package: com.dexels.githubosgi
 
