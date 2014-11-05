@@ -1,23 +1,12 @@
 package com.dexels.navajo.entity;
 
-import java.io.InputStream;
-import java.io.Reader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.dexels.navajo.document.ExpressionTag;
-import com.dexels.navajo.document.FieldTag;
-import com.dexels.navajo.document.Header;
-import com.dexels.navajo.document.MapTag;
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Operation;
-import com.dexels.navajo.document.ParamTag;
-import com.dexels.navajo.document.Point;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 
