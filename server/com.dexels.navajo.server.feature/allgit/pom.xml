@@ -25,6 +25,7 @@
 		<module>../../com.dexels.navajo.resource.jdbc.oracle</module>
 		<module>../../com.dexels.navajo.resource.jdbc.mysql</module>
 		<module>../../com.dexels.navajo.resource.http</module>
+		<module>../../com.dexels.navajo.resource.mail</module>
 		<module>../../com.dexels.navajo.resource.test</module>
 		<module>../../com.dexels.navajo.server.logback</module>
 		<module>../../com.dexels.navajo.server.deploy</module>
