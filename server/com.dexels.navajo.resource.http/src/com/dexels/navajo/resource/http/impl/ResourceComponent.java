@@ -21,12 +21,12 @@ public class ResourceComponent implements HttpResource {
 	private String url;
 //	private ExecutorService threadPool = null;
 	
-	public void activate(Map<String, String> settings) {
+	public void activate(Map<String, Object> settings) {
 		logger.debug("Activating HTTP connector with: " + settings);
-		for (Entry<String, String> e : settings.entrySet()) {
+		for (Entry<String, Object> e : settings.entrySet()) {
 			logger.debug("key: " + e.getKey() + " value: " + e.getValue());
 		}
-		this.url = settings.get("url");
+		this.url = (String) settings.get("url");
 //		threadPool = Executors.newFixedThreadPool
 		
 	}
