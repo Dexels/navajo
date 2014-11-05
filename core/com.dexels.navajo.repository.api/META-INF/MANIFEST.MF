@@ -16,4 +16,6 @@ Import-Package: org.osgi.framework;version="[1.5.0,1.8.0)",
 Service-Component: OSGI-INF/navajo.repository.manager.xml,
  OSGI-INF/navajo.repository.layout.navajo.xml,
  OSGI-INF/navajo.repository.layout.multitenant.xml,
- OSGI-INF/navajo.repository.layout.tipi.xml
+ OSGI-INF/navajo.repository.layout.tipi.xml,
+ OSGI-INF/navajo.repository.layout.webstart.xml,
+ OSGI-INF/navajo.repository.layout.generic.xml
