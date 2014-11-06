@@ -206,8 +206,9 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		}
 		
 		if(eval==null) {
-			MDC.put("sessionId", request.getSession().);
+			MDC.put("sessionId", request.getSession().getId());
 			super.service(request, response);
+			MDC.remove("sessionId");
 			return;
 		}
 
