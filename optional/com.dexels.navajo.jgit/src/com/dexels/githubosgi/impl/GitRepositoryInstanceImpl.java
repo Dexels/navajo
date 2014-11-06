@@ -283,7 +283,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	}
 	
 	@Override
-	public void callPull() throws GitAPIException, IOException {
+	public synchronized void callPull() throws GitAPIException, IOException {
 		long now = System.currentTimeMillis();
 
 		File gitSubfolder = new File(applicationFolder, ".git");
@@ -576,12 +576,8 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 
 	@Override
 	public String getDeployment() {
-		String settingsDeployment = (String)getSettings().get("deployment");
-		if(settingsDeployment!=null && !"".equals(settingsDeployment)) {
-			return settingsDeployment;
-		}
-		String envDeployment = System.getProperty("DEPLOYMENT");
-		return envDeployment;
+		return deployment;
+		
 	}
 
 	public void initializeThread(Map<String,Object> settings) {

@@ -23,20 +23,20 @@ public class SystemGitRepositoryManager {
 	
 	public void activate() throws IOException {
 		Map<String,String> env = System.getenv();
-		String url = env.get("git.repository.url");
-		String type = env.get("git.repository.type");
-		String storagePath = env.get("git.repository.storage");
-		String deployment = env.get("git.repository.deployment");
+		String url = env.get("GIT_REPOSITORY_URL");
+		String type = env.get("GIT_REPOSITORY_TYPE");
+		String storagePath = env.get("GIT_REPOSITORY_STORAGE");
+		String deployment = env.get("GIT_REPOSITORY_DEPLOYMENT");
 		if(url==null) {
-			logger.warn("No 'git.repository.path' set, so no git repositories will be injected.");
+			logger.warn("No 'GIT_REPOSITORY_URL' set, so no git repositories will be injected.");
 			return;
 		}
 		if(type==null) {
-			logger.warn("No 'git.repository.type' set, so no git repositories will be injected.");
+			logger.warn("No 'GIT_REPOSITORY_TYPE' set, so no git repositories will be injected.");
 			return;
 		}
 		if(storagePath==null) {
-			logger.warn("No 'git.repository.storage' set, so no git repositories will be injected.");
+			logger.warn("No 'GIT_REPOSITORY_STORAGE' set, so no git repositories will be injected.");
 			return;
 		}
 		injectConfig(url,type,deployment,storagePath,env);
@@ -49,14 +49,14 @@ public class SystemGitRepositoryManager {
 		Configuration c = createOrReuse("navajo.gitrepository."+type, "(repository.name=system.managed.repository)");
 		Dictionary<String,Object> properties = new Hashtable<String,Object>();
 		
-		String branch = env.get("git.repository.branch");
+		String branch = env.get("GIT_REPOSITORY_BRANCH");
 
 		properties.put("repository.type", type);
 		properties.put("branch", branch);
 		properties.put("name", "system.managed.repository");
 		properties.put("url", url);
 //		properties.put("autoRefresh", System.getProperty("git.repository.autoRefresh"));
-		String sleepTime = env.get("git.repository.sleepTime");
+		String sleepTime = env.get("GIT_REPOSITORY_SLEEPTIME");
 		if(sleepTime!=null) {
 			properties.put("sleepTime", sleepTime);
 		}
