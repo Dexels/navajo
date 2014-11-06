@@ -22,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
@@ -205,6 +206,7 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		}
 		
 		if(eval==null) {
+			MDC.put("sessionId", request.getSession().);
 			super.service(request, response);
 			return;
 		}
