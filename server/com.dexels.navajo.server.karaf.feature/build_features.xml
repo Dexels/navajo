@@ -7,8 +7,6 @@
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 	<taskdef name="featureextract" classname="com.dexels.navajo.dev.ant.feature.ExtractFeatures" onerror="ignore" classpathref="navajo-ant-tasks.classpath" />
 
-	<property name="artifact" value="com.dexels.navajo.karaf.feature" />
-	<property name="version" value="3.0.153" />
 	<condition property="test">
 		<matches pattern=".*SNAPSHOT" string="${version}" />
 	</condition>
