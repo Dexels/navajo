@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
-    <feature resolver="(obr)" name='navajo.core' version='3.0.23' start-level='80'  >
+    <feature resolver="(obr)" name='navajo.core' version='3.0.24' start-level='80'  >
 	    <details>Navajo Core Components</details>
 		<feature version="[3.0.0,4)">pax-http</feature>
 		<feature version="[3.0.0,4)">eventadmin</feature>
@@ -16,7 +16,6 @@
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.0.6</bundle>
-		<bundle dependency='true'>mvn:org.apache.commons/commons-compress/1.5</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/1.3_5</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
@@ -76,7 +75,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>	
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.20' start-level='81' >
+	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.21' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/2.0.2</bundle>
@@ -95,6 +94,7 @@
 		<bundle dependency='true'>mvn:com.h2database/h2/1.3.175</bundle>
 		<bundle dependency='true'>mvn:com.oracle/com.oracle.jdbc.driver/11.2.33</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jsch/0.1.50_1</bundle>
+		<bundle dependency='true'>mvn:org.apache.commons/commons-compress/1.5</bundle>
 	
 <!--		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.webconsole.branding.karaf/1.0.5</bundle>-->
 
@@ -103,21 +103,21 @@
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.1.0</bundle> -->
 	</feature>
 
-	<feature resolver="(obr)" name='tipi.core' version='3.0.7' start-level='81' >
+	<feature resolver="(obr)" name='tipi.core' version='3.0.8' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/2.0.16</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/2.0.18</bundle>
 	</feature>
 	
-	<feature resolver="(obr)" name='tipi.css' version='3.0.2' start-level='81' >
+	<feature resolver="(obr)" name='tipi.css' version='3.0.3' start-level='81' >
 		<feature version="[3.0.0,4)">tipi.core</feature>
 		<bundle dependency='true'>mvn:org.apache.directory.studio/org.apache.commons.logging/1.1.3</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css/1.0.43</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css.tkui/1.0.25</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css.tkui/1.0.27</bundle>
 	</feature>
-	<feature resolver="(obr)" name='tipi.vaadin' version='3.0.11' start-level='81' >
+	<feature resolver="(obr)" name='tipi.vaadin' version='3.0.12' start-level='81' >
 		<feature version="[3.0.0,4)">tipi.core</feature>
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.14</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.3.18</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.3.20</bundle>
 	</feature>
 	<feature resolver="(obr)" name='tipi.vaadin.touch' version='3.0.0' start-level='81' >
 		<feature version="[3.0.0,4)">tipi.vaadin</feature>
@@ -128,7 +128,12 @@
 		<feature version="[3.0.0,4)">tipi.core</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.mail/1.1.22</bundle>
 	</feature>
-	
+
+	<feature resolver="(obr)" name='tipi.websocket' version='3.0.0' start-level='81' >
+		<feature version="[3.0.0,4)">tipi.core</feature>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.websocket/1.0.11</bundle>
+	</feature>
+		
 	<feature resolver="(obr)" name='navajo.camel' version='3.0.12' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<feature version="[2.10.2,3)">camel</feature>
@@ -245,7 +250,7 @@
 		<feature version="[3.0.0,4)">navajo.kml</feature>
 	</feature>	
 
-	<feature resolver="(obr)" name='navajo.jgit' version='3.0.22' start-level='81' install="auto">
+	<feature resolver="(obr)" name='navajo.jgit' version='3.0.23' start-level='81' install="auto">
 		<feature version="[3.0.0,4)">eventadmin</feature>
 		<feature version="[3.0.0,4)">scr</feature>
 		<feature version="[3.0.0,4)">pax-http</feature>
@@ -255,18 +260,18 @@
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/1.3_5</bundle>
 		<bundle dependency='true'>mvn:org.eclipse.jgit/org.eclipse.jgit/3.1.0.201310021548-r</bundle>
 		<bundle dependency='true'>mvn:com.dexels.thirdparty/javaewah/0.5.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jgit/3.0.37</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jgit/3.0.39</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.repository.api/2.0.19</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
 	</feature>
 	
-	<feature resolver="(obr)" name='tipi.appstore' version='3.0.8' start-level='81' >
+	<feature resolver="(obr)" name='tipi.appstore' version='3.0.11' start-level='81' >
 	    <feature version="[3.0.0,4)">navajo.jgit</feature>
-	    <feature version="[3.0.0,4)">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.core/2.0.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.ant/2.0.4</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.server/2.0.26</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.server/2.0.28</bundle>
+		<bundle dependency='true'>mvn:org.apache.commons/commons-compress/1.5</bundle>
 	</feature>
 	
 	<feature resolver="(obr)" name='oao' version='1.0.1' start-level='81' >
