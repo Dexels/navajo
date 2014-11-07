@@ -1,0 +1,602 @@
+format version: 5
+output mode:
+1 items
+0 -> multiple
+output directories:
+1 items
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src -> /home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/bin
+compile options:
+10 items
+0 -> -javabootclasspath
+1 -> /usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/resources.jar:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/rt.jar:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/jsse.jar:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/jce.jar:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/charsets.jar:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/rhino.jar:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/ext/sunjce_provider.jar:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/ext/sunpkcs11.jar:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/ext/pulse-java.jar:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/ext/dnsns.jar:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/ext/localedata.jar:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/ext/zipfs.jar
+2 -> -javaextdirs
+3 ->  
+4 -> -bootclasspath
+5 -> /home/chris/.eclipse/org.eclipse.platform_4.4.1_1473617060_linux_gtk_x86_64/plugins/org.scala-lang.scala-library_2.11.4.v20141023-110636-d783face36.jar
+6 -> -verbose
+7 -> -explaintypes
+8 -> -encoding
+9 -> UTF-8
+javac options:
+0 items
+compiler version:
+1 items
+0 -> 2.11.4
+compile order:
+1 items
+0 -> Mixed
+name hashing:
+1 items
+0 -> false
+products:
+4 items
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/bin/com/dexels/navajo/function/scala/api/FunctionComponent$$anonfun$StringFunction$1.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/bin/com/dexels/navajo/function/scala/api/FunctionComponent$$anonfun$Switch$1.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/bin/com/dexels/navajo/function/scala/api/FunctionComponent$class.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/bin/com/dexels/navajo/function/scala/api/FunctionComponent.class
+binary dependencies:
+166 items
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/.eclipse/org.eclipse.platform_4.4.1_1473617060_linux_gtk_x86_64/plugins/org.scala-lang.scala-library_2.11.4.v20141023-110636-d783face36.jar
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.api/bin/com/dexels/navajo/script/api/CompiledScriptInterface.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.api/bin/com/dexels/navajo/script/api/Mappable.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.core/classes/com/dexels/navajo/mapping/CompiledScript.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.core/classes/com/dexels/navajo/mapping/CompiledScriptMXBean.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.core/classes/com/dexels/navajo/parser/FunctionInterface.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/Message.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/Navajo.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/Property.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/Selection.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/Binary.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/ClockTime.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/Memo.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/Money.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/Percentage.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/StopwatchTime.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Abs.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Age.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/AppendArray.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ArraySelection.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Base64Encode.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/BasicAuthenticationHeader.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CallService.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckDate.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckEmail.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckFloat.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckInteger.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckRange.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckUniqueness.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckUrl.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Contains.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CreateExpression.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CurrentTimeMillis.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Date.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DateAdd.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DateField.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DateSubstract.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DayOfWeek.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DecimalChar.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DecryptString.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EmptyBinary.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EncryptString.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EqualsIgnoreCase.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EqualsPattern.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Euro.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EvaluateExpression.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EvaluateParameters.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ExecuteScript.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Exists.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ExistsProperty.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ExistsSelectionValue.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/File.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FileExists.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FileSize.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FileString.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FindElement.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ForAll.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FormatDate.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FormatDecimal.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FormatStringList.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FormatZipCode.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetBinary.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetBinaryPath.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetCents.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetContextResource.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetCurrentMessage.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetDescription.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetFileExtension.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetHeader.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetInitials.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetLogoImage.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetMessage.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetMimeType.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetProperty.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertyAttribute.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertyDirection.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertySubType.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertyType.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertyValue.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetReportFile.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetRequest.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetSelectedName.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetSelectedValue.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetUrlMimeType.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetUrlModificationTime.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetUrlSize.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetUrlTime.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetValue.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetVersionInfo.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetWeekDayDate.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IfElse.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/InMonthTurnInterval.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsArrayMessage.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsDate.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsEmpty.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsFutureDate.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsNull.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsNumeric.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsServiceCached.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/KeyValueMap.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/MD5Sum.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Max.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/MergeNavajo.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Min.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/NavajoRequestToString.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/NextMonth.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Now.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/OffsetDate.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ParameterList.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ParseDate.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ParseSelection.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ParseStringList.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Random.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/RandomColor.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/RandomInt.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/RandomString.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Round.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageCentered.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageCropped.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageFree.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageMax.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageMin.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SetAllProperties.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SetMimeType.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Size.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StoreBinary.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StringDistance.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StringField.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StringFunction.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StringPadding.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StripTime.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Sum.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SumExpressions.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SumMessage.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SumProperties.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Switch.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Sysdate.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToBinary.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToBinaryFromPath.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToBinaryFromUrl.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToClockTime.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToDouble.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToInteger.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToLong.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToLower.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToMemo.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToMilliseconds.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToMoney.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToMoneyInternal.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToPercentage.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToSecureImage.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToStopwatchTime.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToString.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToUpper.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Today.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Trim.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Trunc.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/URLEncode.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Unicode.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Wait.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/WeekDay.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/XmlEscape.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/XmlUnescape.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Zip.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ZipArchive.class
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> /usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/rt.jar
+direct source dependencies:
+0 items
+direct external dependencies:
+3 items
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> com.dexels.navajo.scala.Base
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> com.dexels.navajo.scala.BaseAdapters
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> com.dexels.navajo.scala.ScalaCompiledScript
+public inherited source dependencies:
+0 items
+public inherited external dependencies:
+3 items
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> com.dexels.navajo.scala.Base
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> com.dexels.navajo.scala.BaseAdapters
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> com.dexels.navajo.scala.ScalaCompiledScript
+member reference internal dependencies:
+0 items
+member reference external dependencies:
+0 items
+inheritance internal dependencies:
+0 items
+inheritance external dependencies:
+0 items
+class names:
+4 items
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> com.dexels.navajo.function.scala.api.FunctionComponent
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> com.dexels.navajo.function.scala.api.FunctionComponent$$anonfun$StringFunction$1
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> com.dexels.navajo.function.scala.api.FunctionComponent$$anonfun$Switch$1
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> com.dexels.navajo.function.scala.api.FunctionComponent$class
+used names:
+0 items
+product stamps:
+4 items
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/bin/com/dexels/navajo/function/scala/api/FunctionComponent$$anonfun$StringFunction$1.class -> lastModified(1415372962000)
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/bin/com/dexels/navajo/function/scala/api/FunctionComponent$$anonfun$Switch$1.class -> lastModified(1415372962000)
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/bin/com/dexels/navajo/function/scala/api/FunctionComponent$class.class -> lastModified(1415372962000)
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/bin/com/dexels/navajo/function/scala/api/FunctionComponent.class -> lastModified(1415372962000)
+source stamps:
+1 items
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> hash(0613c51b92361116a8e187574eef5ae789d5e4e3)
+binary stamps:
+166 items
+/home/chris/.eclipse/org.eclipse.platform_4.4.1_1473617060_linux_gtk_x86_64/plugins/org.scala-lang.scala-library_2.11.4.v20141023-110636-d783face36.jar -> lastModified(1415357703000)
+/home/chris/git/navajo/core/com.dexels.navajo.api/bin/com/dexels/navajo/script/api/CompiledScriptInterface.class -> lastModified(1415372203000)
+/home/chris/git/navajo/core/com.dexels.navajo.api/bin/com/dexels/navajo/script/api/Mappable.class -> lastModified(1415372203000)
+/home/chris/git/navajo/core/com.dexels.navajo.core/classes/com/dexels/navajo/mapping/CompiledScript.class -> lastModified(1415372206000)
+/home/chris/git/navajo/core/com.dexels.navajo.core/classes/com/dexels/navajo/mapping/CompiledScriptMXBean.class -> lastModified(1415372206000)
+/home/chris/git/navajo/core/com.dexels.navajo.core/classes/com/dexels/navajo/parser/FunctionInterface.class -> lastModified(1415372206000)
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/Message.class -> lastModified(1415372198000)
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/Navajo.class -> lastModified(1415372198000)
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/Property.class -> lastModified(1415372198000)
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/Selection.class -> lastModified(1415372198000)
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/Binary.class -> lastModified(1415372198000)
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/ClockTime.class -> lastModified(1415372198000)
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/Memo.class -> lastModified(1415372198000)
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/Money.class -> lastModified(1415372198000)
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/Percentage.class -> lastModified(1415372198000)
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/StopwatchTime.class -> lastModified(1415372198000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Abs.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Age.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/AppendArray.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ArraySelection.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Base64Encode.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/BasicAuthenticationHeader.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CallService.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckDate.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckEmail.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckFloat.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckInteger.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckRange.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckUniqueness.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckUrl.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Contains.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CreateExpression.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CurrentTimeMillis.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Date.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DateAdd.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DateField.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DateSubstract.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DayOfWeek.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DecimalChar.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DecryptString.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EmptyBinary.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EncryptString.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EqualsIgnoreCase.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EqualsPattern.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Euro.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EvaluateExpression.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EvaluateParameters.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ExecuteScript.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Exists.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ExistsProperty.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ExistsSelectionValue.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/File.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FileExists.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FileSize.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FileString.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FindElement.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ForAll.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FormatDate.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FormatDecimal.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FormatStringList.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FormatZipCode.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetBinary.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetBinaryPath.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetCents.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetContextResource.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetCurrentMessage.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetDescription.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetFileExtension.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetHeader.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetInitials.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetLogoImage.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetMessage.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetMimeType.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetProperty.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertyAttribute.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertyDirection.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertySubType.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertyType.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertyValue.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetReportFile.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetRequest.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetSelectedName.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetSelectedValue.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetUrlMimeType.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetUrlModificationTime.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetUrlSize.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetUrlTime.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetValue.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetVersionInfo.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetWeekDayDate.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IfElse.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/InMonthTurnInterval.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsArrayMessage.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsDate.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsEmpty.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsFutureDate.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsNull.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsNumeric.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsServiceCached.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/KeyValueMap.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/MD5Sum.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Max.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/MergeNavajo.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Min.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/NavajoRequestToString.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/NextMonth.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Now.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/OffsetDate.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ParameterList.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ParseDate.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ParseSelection.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ParseStringList.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Random.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/RandomColor.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/RandomInt.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/RandomString.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Round.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageCentered.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageCropped.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageFree.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageMax.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageMin.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SetAllProperties.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SetMimeType.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Size.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StoreBinary.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StringDistance.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StringField.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StringFunction.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StringPadding.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StripTime.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Sum.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SumExpressions.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SumMessage.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SumProperties.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Switch.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Sysdate.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToBinary.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToBinaryFromPath.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToBinaryFromUrl.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToClockTime.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToDouble.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToInteger.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToLong.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToLower.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToMemo.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToMilliseconds.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToMoney.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToMoneyInternal.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToPercentage.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToSecureImage.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToStopwatchTime.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToString.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToUpper.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Today.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Trim.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Trunc.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/URLEncode.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Unicode.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Wait.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/WeekDay.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/XmlEscape.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/XmlUnescape.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Zip.class -> lastModified(1415372958000)
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ZipArchive.class -> lastModified(1415372958000)
+/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/rt.jar -> lastModified(1413393933000)
+class names:
+166 items
+/home/chris/.eclipse/org.eclipse.platform_4.4.1_1473617060_linux_gtk_x86_64/plugins/org.scala-lang.scala-library_2.11.4.v20141023-110636-d783face36.jar -> scala.package$
+/home/chris/git/navajo/core/com.dexels.navajo.api/bin/com/dexels/navajo/script/api/CompiledScriptInterface.class -> com.dexels.navajo.script.api.CompiledScriptInterface
+/home/chris/git/navajo/core/com.dexels.navajo.api/bin/com/dexels/navajo/script/api/Mappable.class -> com.dexels.navajo.script.api.Mappable
+/home/chris/git/navajo/core/com.dexels.navajo.core/classes/com/dexels/navajo/mapping/CompiledScript.class -> com.dexels.navajo.mapping.CompiledScript
+/home/chris/git/navajo/core/com.dexels.navajo.core/classes/com/dexels/navajo/mapping/CompiledScriptMXBean.class -> com.dexels.navajo.mapping.CompiledScriptMXBean
+/home/chris/git/navajo/core/com.dexels.navajo.core/classes/com/dexels/navajo/parser/FunctionInterface.class -> com.dexels.navajo.parser.FunctionInterface
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/Message.class -> com.dexels.navajo.document.Message
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/Navajo.class -> com.dexels.navajo.document.Navajo
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/Property.class -> com.dexels.navajo.document.Property
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/Selection.class -> com.dexels.navajo.document.Selection
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/Binary.class -> com.dexels.navajo.document.types.Binary
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/ClockTime.class -> com.dexels.navajo.document.types.ClockTime
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/Memo.class -> com.dexels.navajo.document.types.Memo
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/Money.class -> com.dexels.navajo.document.types.Money
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/Percentage.class -> com.dexels.navajo.document.types.Percentage
+/home/chris/git/navajo/core/com.dexels.navajo.document/classes/com/dexels/navajo/document/types/StopwatchTime.class -> com.dexels.navajo.document.types.StopwatchTime
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Abs.class -> com.dexels.navajo.functions.Abs
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Age.class -> com.dexels.navajo.functions.Age
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/AppendArray.class -> com.dexels.navajo.functions.AppendArray
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ArraySelection.class -> com.dexels.navajo.functions.ArraySelection
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Base64Encode.class -> com.dexels.navajo.functions.Base64Encode
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/BasicAuthenticationHeader.class -> com.dexels.navajo.functions.BasicAuthenticationHeader
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CallService.class -> com.dexels.navajo.functions.CallService
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckDate.class -> com.dexels.navajo.functions.CheckDate
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckEmail.class -> com.dexels.navajo.functions.CheckEmail
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckFloat.class -> com.dexels.navajo.functions.CheckFloat
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckInteger.class -> com.dexels.navajo.functions.CheckInteger
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckRange.class -> com.dexels.navajo.functions.CheckRange
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckUniqueness.class -> com.dexels.navajo.functions.CheckUniqueness
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CheckUrl.class -> com.dexels.navajo.functions.CheckUrl
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Contains.class -> com.dexels.navajo.functions.Contains
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CreateExpression.class -> com.dexels.navajo.functions.CreateExpression
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/CurrentTimeMillis.class -> com.dexels.navajo.functions.CurrentTimeMillis
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Date.class -> com.dexels.navajo.functions.Date
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DateAdd.class -> com.dexels.navajo.functions.DateAdd
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DateField.class -> com.dexels.navajo.functions.DateField
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DateSubstract.class -> com.dexels.navajo.functions.DateSubstract
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DayOfWeek.class -> com.dexels.navajo.functions.DayOfWeek
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DecimalChar.class -> com.dexels.navajo.functions.DecimalChar
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/DecryptString.class -> com.dexels.navajo.functions.DecryptString
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EmptyBinary.class -> com.dexels.navajo.functions.EmptyBinary
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EncryptString.class -> com.dexels.navajo.functions.EncryptString
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EqualsIgnoreCase.class -> com.dexels.navajo.functions.EqualsIgnoreCase
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EqualsPattern.class -> com.dexels.navajo.functions.EqualsPattern
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Euro.class -> com.dexels.navajo.functions.Euro
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EvaluateExpression.class -> com.dexels.navajo.functions.EvaluateExpression
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/EvaluateParameters.class -> com.dexels.navajo.functions.EvaluateParameters
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ExecuteScript.class -> com.dexels.navajo.functions.ExecuteScript
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Exists.class -> com.dexels.navajo.functions.Exists
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ExistsProperty.class -> com.dexels.navajo.functions.ExistsProperty
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ExistsSelectionValue.class -> com.dexels.navajo.functions.ExistsSelectionValue
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/File.class -> com.dexels.navajo.functions.File
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FileExists.class -> com.dexels.navajo.functions.FileExists
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FileSize.class -> com.dexels.navajo.functions.FileSize
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FileString.class -> com.dexels.navajo.functions.FileString
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FindElement.class -> com.dexels.navajo.functions.FindElement
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ForAll.class -> com.dexels.navajo.functions.ForAll
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FormatDate.class -> com.dexels.navajo.functions.FormatDate
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FormatDecimal.class -> com.dexels.navajo.functions.FormatDecimal
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FormatStringList.class -> com.dexels.navajo.functions.FormatStringList
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/FormatZipCode.class -> com.dexels.navajo.functions.FormatZipCode
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetBinary.class -> com.dexels.navajo.functions.GetBinary
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetBinaryPath.class -> com.dexels.navajo.functions.GetBinaryPath
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetCents.class -> com.dexels.navajo.functions.GetCents
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetContextResource.class -> com.dexels.navajo.functions.GetContextResource
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetCurrentMessage.class -> com.dexels.navajo.functions.GetCurrentMessage
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetDescription.class -> com.dexels.navajo.functions.GetDescription
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetFileExtension.class -> com.dexels.navajo.functions.GetFileExtension
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetHeader.class -> com.dexels.navajo.functions.GetHeader
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetInitials.class -> com.dexels.navajo.functions.GetInitials
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetLogoImage.class -> com.dexels.navajo.functions.GetLogoImage
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetMessage.class -> com.dexels.navajo.functions.GetMessage
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetMimeType.class -> com.dexels.navajo.functions.GetMimeType
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetProperty.class -> com.dexels.navajo.functions.GetProperty
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertyAttribute.class -> com.dexels.navajo.functions.GetPropertyAttribute
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertyDirection.class -> com.dexels.navajo.functions.GetPropertyDirection
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertySubType.class -> com.dexels.navajo.functions.GetPropertySubType
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertyType.class -> com.dexels.navajo.functions.GetPropertyType
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetPropertyValue.class -> com.dexels.navajo.functions.GetPropertyValue
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetReportFile.class -> com.dexels.navajo.functions.GetReportFile
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetRequest.class -> com.dexels.navajo.functions.GetRequest
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetSelectedName.class -> com.dexels.navajo.functions.GetSelectedName
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetSelectedValue.class -> com.dexels.navajo.functions.GetSelectedValue
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetUrlMimeType.class -> com.dexels.navajo.functions.GetUrlMimeType
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetUrlModificationTime.class -> com.dexels.navajo.functions.GetUrlModificationTime
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetUrlSize.class -> com.dexels.navajo.functions.GetUrlSize
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetUrlTime.class -> com.dexels.navajo.functions.GetUrlTime
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetValue.class -> com.dexels.navajo.functions.GetValue
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetVersionInfo.class -> com.dexels.navajo.functions.GetVersionInfo
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/GetWeekDayDate.class -> com.dexels.navajo.functions.GetWeekDayDate
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IfElse.class -> com.dexels.navajo.functions.IfElse
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/InMonthTurnInterval.class -> com.dexels.navajo.functions.InMonthTurnInterval
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsArrayMessage.class -> com.dexels.navajo.functions.IsArrayMessage
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsDate.class -> com.dexels.navajo.functions.IsDate
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsEmpty.class -> com.dexels.navajo.functions.IsEmpty
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsFutureDate.class -> com.dexels.navajo.functions.IsFutureDate
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsNull.class -> com.dexels.navajo.functions.IsNull
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsNumeric.class -> com.dexels.navajo.functions.IsNumeric
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/IsServiceCached.class -> com.dexels.navajo.functions.IsServiceCached
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/KeyValueMap.class -> com.dexels.navajo.functions.KeyValueMap
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/MD5Sum.class -> com.dexels.navajo.functions.MD5Sum
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Max.class -> com.dexels.navajo.functions.Max
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/MergeNavajo.class -> com.dexels.navajo.functions.MergeNavajo
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Min.class -> com.dexels.navajo.functions.Min
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/NavajoRequestToString.class -> com.dexels.navajo.functions.NavajoRequestToString
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/NextMonth.class -> com.dexels.navajo.functions.NextMonth
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Now.class -> com.dexels.navajo.functions.Now
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/OffsetDate.class -> com.dexels.navajo.functions.OffsetDate
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ParameterList.class -> com.dexels.navajo.functions.ParameterList
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ParseDate.class -> com.dexels.navajo.functions.ParseDate
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ParseSelection.class -> com.dexels.navajo.functions.ParseSelection
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ParseStringList.class -> com.dexels.navajo.functions.ParseStringList
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Random.class -> com.dexels.navajo.functions.Random
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/RandomColor.class -> com.dexels.navajo.functions.RandomColor
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/RandomInt.class -> com.dexels.navajo.functions.RandomInt
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/RandomString.class -> com.dexels.navajo.functions.RandomString
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Round.class -> com.dexels.navajo.functions.Round
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageCentered.class -> com.dexels.navajo.functions.ScaleImageCentered
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageCropped.class -> com.dexels.navajo.functions.ScaleImageCropped
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageFree.class -> com.dexels.navajo.functions.ScaleImageFree
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageMax.class -> com.dexels.navajo.functions.ScaleImageMax
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ScaleImageMin.class -> com.dexels.navajo.functions.ScaleImageMin
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SetAllProperties.class -> com.dexels.navajo.functions.SetAllProperties
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SetMimeType.class -> com.dexels.navajo.functions.SetMimeType
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Size.class -> com.dexels.navajo.functions.Size
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StoreBinary.class -> com.dexels.navajo.functions.StoreBinary
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StringDistance.class -> com.dexels.navajo.functions.StringDistance
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StringField.class -> com.dexels.navajo.functions.StringField
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StringFunction.class -> com.dexels.navajo.functions.StringFunction
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StringPadding.class -> com.dexels.navajo.functions.StringPadding
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/StripTime.class -> com.dexels.navajo.functions.StripTime
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Sum.class -> com.dexels.navajo.functions.Sum
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SumExpressions.class -> com.dexels.navajo.functions.SumExpressions
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SumMessage.class -> com.dexels.navajo.functions.SumMessage
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/SumProperties.class -> com.dexels.navajo.functions.SumProperties
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Switch.class -> com.dexels.navajo.functions.Switch
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Sysdate.class -> com.dexels.navajo.functions.Sysdate
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToBinary.class -> com.dexels.navajo.functions.ToBinary
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToBinaryFromPath.class -> com.dexels.navajo.functions.ToBinaryFromPath
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToBinaryFromUrl.class -> com.dexels.navajo.functions.ToBinaryFromUrl
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToClockTime.class -> com.dexels.navajo.functions.ToClockTime
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToDouble.class -> com.dexels.navajo.functions.ToDouble
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToInteger.class -> com.dexels.navajo.functions.ToInteger
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToLong.class -> com.dexels.navajo.functions.ToLong
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToLower.class -> com.dexels.navajo.functions.ToLower
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToMemo.class -> com.dexels.navajo.functions.ToMemo
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToMilliseconds.class -> com.dexels.navajo.functions.ToMilliseconds
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToMoney.class -> com.dexels.navajo.functions.ToMoney
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToMoneyInternal.class -> com.dexels.navajo.functions.ToMoneyInternal
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToPercentage.class -> com.dexels.navajo.functions.ToPercentage
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToSecureImage.class -> com.dexels.navajo.functions.ToSecureImage
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToStopwatchTime.class -> com.dexels.navajo.functions.ToStopwatchTime
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToString.class -> com.dexels.navajo.functions.ToString
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ToUpper.class -> com.dexels.navajo.functions.ToUpper
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Today.class -> com.dexels.navajo.functions.Today
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Trim.class -> com.dexels.navajo.functions.Trim
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Trunc.class -> com.dexels.navajo.functions.Trunc
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/URLEncode.class -> com.dexels.navajo.functions.URLEncode
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Unicode.class -> com.dexels.navajo.functions.Unicode
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Wait.class -> com.dexels.navajo.functions.Wait
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/WeekDay.class -> com.dexels.navajo.functions.WeekDay
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/XmlEscape.class -> com.dexels.navajo.functions.XmlEscape
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/XmlUnescape.class -> com.dexels.navajo.functions.XmlUnescape
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/Zip.class -> com.dexels.navajo.functions.Zip
+/home/chris/git/navajo/core/com.dexels.navajo.function/classes/com/dexels/navajo/functions/ZipArchive.class -> com.dexels.navajo.functions.ZipArchive
+/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.0.fc20.x86_64/jre/lib/rt.jar -> java.lang.Object
+internal apis:
+1 items
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> 
+rO0ABXNyABB4c2J0aS5hcGkuU291cmNlFlpwRASfbtoCAAZJAAdhcGlIYXNoWgAIaGFzTWFjcm9MABhfaW50ZXJuYWxPbmx5X25hbWVIYXNoZXN0ACRMeHNidGkvYXBpL19pbnRlcm5hbE9ubHlfTmFtZUhhc2hlcztMAANhcGl0ABVMeHNidGkvYXBpL1NvdXJjZUFQSTtMAAtjb21waWxhdGlvbnQAF0x4c2J0aS9hcGkvQ29tcGlsYXRpb247WwAEaGFzaHQAAltCeHDb4DmwAHNyACJ4c2J0aS5hcGkuX2ludGVybmFsT25seV9OYW1lSGFzaGVzVNq+mfrU7EwCAAJbAA9pbXBsaWNpdE1lbWJlcnN0ACNbTHhzYnRpL2FwaS9faW50ZXJuYWxPbmx5X05hbWVIYXNoO1sADnJlZ3VsYXJNZW1iZXJzcQB+AAd4cHVyACNbTHhzYnRpLmFwaS5faW50ZXJuYWxPbmx5X05hbWVIYXNoO0lagLbdlov0AgAAeHAAAAAAdXEAfgAJAAAAAHNyABN4c2J0aS5hcGkuU291cmNlQVBJuV6n+SkjOKQCAAJbAAtkZWZpbml0aW9uc3QAF1tMeHNidGkvYXBpL0RlZmluaXRpb247WwAIcGFja2FnZXN0ABRbTHhzYnRpL2FwaS9QYWNrYWdlO3hwdXIAF1tMeHNidGkuYXBpLkRlZmluaXRpb247iMlc57TjXg4CAAB4cAAAAAFzcgATeHNidGkuYXBpLkNsYXNzTGlrZYM0HKHfsJdsAgAETAAOZGVmaW5pdGlvblR5cGV0ABpMeHNidGkvYXBpL0RlZmluaXRpb25UeXBlO1sAEHNhdmVkQW5ub3RhdGlvbnN0ABNbTGphdmEvbGFuZy9TdHJpbmc7TAAIc2VsZlR5cGV0ABBMeHNidGkvYXBpL0xhenk7TAAJc3RydWN0dXJlcQB+ABV4cgAheHNidGkuYXBpLlBhcmFtZXRlcml6ZWREZWZpbml0aW9u+RFusdVQPOICAAFbAA50eXBlUGFyYW1ldGVyc3QAGltMeHNidGkvYXBpL1R5cGVQYXJhbWV0ZXI7eHIAFHhzYnRpLmFwaS5EZWZpbml0aW9uhyob6HFC40YCAARMAAZhY2Nlc3N0ABJMeHNidGkvYXBpL0FjY2VzcztbAAthbm5vdGF0aW9uc3QAF1tMeHNidGkvYXBpL0Fubm90YXRpb247TAAJbW9kaWZpZXJzdAAVTHhzYnRpL2FwaS9Nb2RpZmllcnM7TAAEbmFtZXQAEkxqYXZhL2xhbmcvU3RyaW5nO3hwc3IAEHhzYnRpLmFwaS5QdWJsaWO6WD2ubC1gQgIAAHhyABB4c2J0aS5hcGkuQWNjZXNz3WKa+B1jMUgCAAB4cHVyABdbTHhzYnRpLmFwaS5Bbm5vdGF0aW9uO+uX6xkQ9o1IAgAAeHAAAAAAc3IAE3hzYnRpLmFwaS5Nb2RpZmllcnPHERMhaZzcJAIAAUIABWZsYWdzeHABdAA2Y29tLmRleGVscy5uYXZham8uZnVuY3Rpb24uc2NhbGEuYXBpLkZ1bmN0aW9uQ29tcG9uZW50dXIAGltMeHNidGkuYXBpLlR5cGVQYXJhbWV0ZXI72W0mDyid8rYCAAB4cAAAAAB+cgAYeHNidGkuYXBpLkRlZmluaXRpb25UeXBlAAAAAAAAAAASAAB4cgAOamF2YS5sYW5nLkVudW0AAAAAAAAAABIAAHhwdAAFVHJhaXR1cgATW0xqYXZhLmxhbmcuU3RyaW5nO63SVufpHXtHAgAAeHAAAAAAc3IAE3hzYnRpLlNhZmVMYXp5JEltcGw7kU8R9EVMyQIAA1oACGJpdG1hcCQwTAACX3R0ABJMamF2YS9sYW5nL09iamVjdDtMAARldmFsdAARTHNjYWxhL0Z1bmN0aW9uMDt4cgAWeHNidGkuYXBpLkFic3RyYWN0TGF6edN3tQFfu+egAgAAeHABc3IAE3hzYnRpLmFwaS5FbXB0eVR5cGW8/Z5GSTuJJAIAAHhyABR4c2J0aS5hcGkuU2ltcGxlVHlwZXJ4YoghI79AAgAAeHIADnhzYnRpLmFwaS5UeXBlP2rZIRZJqsoCAAB4cHBzcQB+AC4Bc3IAE3hzYnRpLmFwaS5TdHJ1Y3R1cmWpqvmAk2/YAAIAA0wACGRlY2xhcmVkcQB+ABVMAAlpbmhlcml0ZWRxAH4AFUwAB3BhcmVudHNxAH4AFXhxAH4ANXNxAH4ALgF1cQB+ABAAAAAAcHNxAH4ALgF1cQB+ABAAAAAAcHNxAH4ALgF1cgARW0x4c2J0aS5hcGkuVHlwZTt0/6Vae/npQQIAAHhwAAAABHNyABR4c2J0aS5hcGkuUHJvamVjdGlvbvPSjVTpRaQtAgACTAACaWRxAH4AHEwABnByZWZpeHQAFkx4c2J0aS9hcGkvU2ltcGxlVHlwZTt4cQB+ADR0AARCYXNlc3IAE3hzYnRpLmFwaS5TaW5nbGV0b278p1/4z1bkRgIAAUwABHBhdGh0ABBMeHNidGkvYXBpL1BhdGg7eHEAfgA0c3IADnhzYnRpLmFwaS5QYXRomz1cCM6lJ4QCAAFbAApjb21wb25lbnRzdAAaW0x4c2J0aS9hcGkvUGF0aENvbXBvbmVudDt4cHVyABpbTHhzYnRpLmFwaS5QYXRoQ29tcG9uZW50O0PaCXQtZxZ0AgAAeHAAAAAFc3IADHhzYnRpLmFwaS5JZJgybIs3U8RAAgABTAACaWRxAH4AHHhyABd4c2J0aS5hcGkuUGF0aENvbXBvbmVudF+aIlsuhp+8AgAAeHB0AANjb21zcQB+AE10AAZkZXhlbHNzcQB+AE10AAZuYXZham9zcQB+AE10AAVzY2FsYXNyAA54c2J0aS5hcGkuVGhpc9sJ7abMWkBcAgAAeHEAfgBOc3EAfgBBdAAMQmFzZUFkYXB0ZXJzcQB+AEdzcQB+AEF0AAZPYmplY3RzcQB+AEVzcQB+AEh1cQB+AEsAAAADc3EAfgBNdAAEamF2YXNxAH4ATXQABGxhbmdxAH4AWHNxAH4AQXQAA0FueXNxAH4ARXNxAH4ASHVxAH4ASwAAAAJzcQB+AE1xAH4AVnEAfgBYcHB1cgAUW0x4c2J0aS5hcGkuUGFja2FnZTtbExk3cKcnoQIAAHhwAAAABnNyABF4c2J0aS5hcGkuUGFja2FnZX5Zj/auzjlYAgABTAAEbmFtZXEAfgAceHB0ACRjb20uZGV4ZWxzLm5hdmFqby5mdW5jdGlvbi5zY2FsYS5hcGlzcQB+AGx0ACBjb20uZGV4ZWxzLm5hdmFqby5mdW5jdGlvbi5zY2FsYXNxAH4AbHQAGmNvbS5kZXhlbHMubmF2YWpvLmZ1bmN0aW9uc3EAfgBsdAARY29tLmRleGVscy5uYXZham9zcQB+AGx0AApjb20uZGV4ZWxzc3EAfgBsdAADY29tc3IAFXhzYnRpLmFwaS5Db21waWxhdGlvbu364MNq6KBCAgACSgAJc3RhcnRUaW1lWwAHb3V0cHV0c3QAGltMeHNidGkvYXBpL091dHB1dFNldHRpbmc7eHAAAAFJis13SnVyABpbTHhzYnRpLmFwaS5PdXRwdXRTZXR0aW5nO39qwvOnh6VCAgAAeHAAAAABc3IAF3hzYnRpLmFwaS5PdXRwdXRTZXR0aW5netmaR3T7HXsCAAJMAA9vdXRwdXREaXJlY3RvcnlxAH4AHEwAD3NvdXJjZURpcmVjdG9yeXEAfgAceHB0AEQvaG9tZS9jaHJpcy9naXQvbmF2YWpvL2NvcmUvY29tLmRleGVscy5uYXZham8uZnVuY3Rpb24uc2NhbGEuYXBpL2JpbnQARC9ob21lL2NocmlzL2dpdC9uYXZham8vY29yZS9jb20uZGV4ZWxzLm5hdmFqby5mdW5jdGlvbi5zY2FsYS5hcGkvc3JjdXIAAltCrPMX+AYIVOACAAB4cAAAABQGE8UbkjYRFqjhh1dO71rnidXk4w==
+external apis:
+3 items
+com.dexels.navajo.scala.Base -> 
+rO0ABXNyABB4c2J0aS5hcGkuU291cmNlFlpwRASfbtoCAAZJAAdhcGlIYXNoWgAIaGFzTWFjcm9MABhfaW50ZXJuYWxPbmx5X25hbWVIYXNoZXN0ACRMeHNidGkvYXBpL19pbnRlcm5hbE9ubHlfTmFtZUhhc2hlcztMAANhcGl0ABVMeHNidGkvYXBpL1NvdXJjZUFQSTtMAAtjb21waWxhdGlvbnQAF0x4c2J0aS9hcGkvQ29tcGlsYXRpb247WwAEaGFzaHQAAltCeHARzZh6AHNyACJ4c2J0aS5hcGkuX2ludGVybmFsT25seV9OYW1lSGFzaGVzVNq+mfrU7EwCAAJbAA9pbXBsaWNpdE1lbWJlcnN0ACNbTHhzYnRpL2FwaS9faW50ZXJuYWxPbmx5X05hbWVIYXNoO1sADnJlZ3VsYXJNZW1iZXJzcQB+AAd4cHVyACNbTHhzYnRpLmFwaS5faW50ZXJuYWxPbmx5X05hbWVIYXNoO0lagLbdlov0AgAAeHAAAAAAdXEAfgAJAAAAAHNyABN4c2J0aS5hcGkuU291cmNlQVBJuV6n+SkjOKQCAAJbAAtkZWZpbml0aW9uc3QAF1tMeHNidGkvYXBpL0RlZmluaXRpb247WwAIcGFja2FnZXN0ABRbTHhzYnRpL2FwaS9QYWNrYWdlO3hwdXIAF1tMeHNidGkuYXBpLkRlZmluaXRpb247iMlc57TjXg4CAAB4cAAAAAFzcgATeHNidGkuYXBpLkNsYXNzTGlrZYM0HKHfsJdsAgAETAAOZGVmaW5pdGlvblR5cGV0ABpMeHNidGkvYXBpL0RlZmluaXRpb25UeXBlO1sAEHNhdmVkQW5ub3RhdGlvbnN0ABNbTGphdmEvbGFuZy9TdHJpbmc7TAAIc2VsZlR5cGV0ABBMeHNidGkvYXBpL0xhenk7TAAJc3RydWN0dXJlcQB+ABV4cgAheHNidGkuYXBpLlBhcmFtZXRlcml6ZWREZWZpbml0aW9u+RFusdVQPOICAAFbAA50eXBlUGFyYW1ldGVyc3QAGltMeHNidGkvYXBpL1R5cGVQYXJhbWV0ZXI7eHIAFHhzYnRpLmFwaS5EZWZpbml0aW9uhyob6HFC40YCAARMAAZhY2Nlc3N0ABJMeHNidGkvYXBpL0FjY2VzcztbAAthbm5vdGF0aW9uc3QAF1tMeHNidGkvYXBpL0Fubm90YXRpb247TAAJbW9kaWZpZXJzdAAVTHhzYnRpL2FwaS9Nb2RpZmllcnM7TAAEbmFtZXQAEkxqYXZhL2xhbmcvU3RyaW5nO3hwc3IAEHhzYnRpLmFwaS5QdWJsaWO6WD2ubC1gQgIAAHhyABB4c2J0aS5hcGkuQWNjZXNz3WKa+B1jMUgCAAB4cHVyABdbTHhzYnRpLmFwaS5Bbm5vdGF0aW9uO+uX6xkQ9o1IAgAAeHAAAAAAc3IAE3hzYnRpLmFwaS5Nb2RpZmllcnPHERMhaZzcJAIAAUIABWZsYWdzeHABdAAcY29tLmRleGVscy5uYXZham8uc2NhbGEuQmFzZXVyABpbTHhzYnRpLmFwaS5UeXBlUGFyYW1ldGVyO9ltJg8onfK2AgAAeHAAAAAAfnIAGHhzYnRpLmFwaS5EZWZpbml0aW9uVHlwZQAAAAAAAAAAEgAAeHIADmphdmEubGFuZy5FbnVtAAAAAAAAAAASAAB4cHQABVRyYWl0dXIAE1tMamF2YS5sYW5nLlN0cmluZzut0lbn6R17RwIAAHhwAAAAAHNyABN4c2J0aS5TYWZlTGF6eSRJbXBsO5FPEfRFTMkCAANaAAhiaXRtYXAkMEwAAl90dAASTGphdmEvbGFuZy9PYmplY3Q7TAAEZXZhbHQAEUxzY2FsYS9GdW5jdGlvbjA7eHIAFnhzYnRpLmFwaS5BYnN0cmFjdExhennTd7UBX7vnoAIAAHhwAXNyABN4c2J0aS5hcGkuRW1wdHlUeXBlvP2eRkk7iSQCAAB4cgAUeHNidGkuYXBpLlNpbXBsZVR5cGVyeGKIISO/QAIAAHhyAA54c2J0aS5hcGkuVHlwZT9q2SEWSarKAgAAeHBwc3EAfgAuAXNyABN4c2J0aS5hcGkuU3RydWN0dXJlqar5gJNv2AACAANMAAhkZWNsYXJlZHEAfgAVTAAJaW5oZXJpdGVkcQB+ABVMAAdwYXJlbnRzcQB+ABV4cQB+ADVzcQB+AC4BdXEAfgAQAAAAAHBzcQB+AC4BdXEAfgAQAAAAAHBzcQB+AC4BdXIAEVtMeHNidGkuYXBpLlR5cGU7dP+lWnv56UECAAB4cAAAAAJzcgAUeHNidGkuYXBpLlByb2plY3Rpb27z0o1U6UWkLQIAAkwAAmlkcQB+ABxMAAZwcmVmaXh0ABZMeHNidGkvYXBpL1NpbXBsZVR5cGU7eHEAfgA0dAAGT2JqZWN0c3IAE3hzYnRpLmFwaS5TaW5nbGV0b278p1/4z1bkRgIAAUwABHBhdGh0ABBMeHNidGkvYXBpL1BhdGg7eHEAfgA0c3IADnhzYnRpLmFwaS5QYXRomz1cCM6lJ4QCAAFbAApjb21wb25lbnRzdAAaW0x4c2J0aS9hcGkvUGF0aENvbXBvbmVudDt4cHVyABpbTHhzYnRpLmFwaS5QYXRoQ29tcG9uZW50O0PaCXQtZxZ0AgAAeHAAAAADc3IADHhzYnRpLmFwaS5JZJgybIs3U8RAAgABTAACaWRxAH4AHHhyABd4c2J0aS5hcGkuUGF0aENvbXBvbmVudF+aIlsuhp+8AgAAeHB0AARqYXZhc3EAfgBNdAAEbGFuZ3NyAA54c2J0aS5hcGkuVGhpc9sJ7abMWkBcAgAAeHEAfgBOc3EAfgBBdAADQW55c3EAfgBFc3EAfgBIdXEAfgBLAAAAAnNxAH4ATXQABXNjYWxhcQB+AFRwcHVyABRbTHhzYnRpLmFwaS5QYWNrYWdlO1sTGTdwpyehAgAAeHAAAAAEc3IAEXhzYnRpLmFwaS5QYWNrYWdlflmP9q7OOVgCAAFMAARuYW1lcQB+ABx4cHQAEWNvbS5kZXhlbHMubmF2YWpvc3EAfgBedAAKY29tLmRleGVsc3NxAH4AXnQAA2NvbXNxAH4AXnQAF2NvbS5kZXhlbHMubmF2YWpvLnNjYWxhc3IAFXhzYnRpLmFwaS5Db21waWxhdGlvbu364MNq6KBCAgACSgAJc3RhcnRUaW1lWwAHb3V0cHV0c3QAGltMeHNidGkvYXBpL091dHB1dFNldHRpbmc7eHAAAAFJisHyhHVyABpbTHhzYnRpLmFwaS5PdXRwdXRTZXR0aW5nO39qwvOnh6VCAgAAeHAAAAACc3IAF3hzYnRpLmFwaS5PdXRwdXRTZXR0aW5netmaR3T7HXsCAAJMAA9vdXRwdXREaXJlY3RvcnlxAH4AHEwAD3NvdXJjZURpcmVjdG9yeXEAfgAceHB0AEIvaG9tZS9jaHJpcy9naXQvbmF2YWpvLnNjYWxhL2xpYnJhcmllcy9jb20uZGV4ZWxzLm5hdmFqby5zY2FsYS9iaW50AEIvaG9tZS9jaHJpcy9naXQvbmF2YWpvLnNjYWxhL2xpYnJhcmllcy9jb20uZGV4ZWxzLm5hdmFqby5zY2FsYS9zcmNzcQB+AGx0AEIvaG9tZS9jaHJpcy9naXQvbmF2YWpvLnNjYWxhL2xpYnJhcmllcy9jb20uZGV4ZWxzLm5hdmFqby5zY2FsYS9iaW50AEYvaG9tZS9jaHJpcy9naXQvbmF2YWpvLnNjYWxhL2xpYnJhcmllcy9jb20uZGV4ZWxzLm5hdmFqby5zY2FsYS90ZXN0c3JjdXIAAltCrPMX+AYIVOACAAB4cAAAABSn6FhtrCYbRCag5ilcas8r5HH6pw==
+com.dexels.navajo.scala.BaseAdapters -> 
+rO0ABXNyABB4c2J0aS5hcGkuU291cmNlFlpwRASfbtoCAAZJAAdhcGlIYXNoWgAIaGFzTWFjcm9MABhfaW50ZXJuYWxPbmx5X25hbWVIYXNoZXN0ACRMeHNidGkvYXBpL19pbnRlcm5hbE9ubHlfTmFtZUhhc2hlcztMAANhcGl0ABVMeHNidGkvYXBpL1NvdXJjZUFQSTtMAAtjb21waWxhdGlvbnQAF0x4c2J0aS9hcGkvQ29tcGlsYXRpb247WwAEaGFzaHQAAltCeHA80cJeAHNyACJ4c2J0aS5hcGkuX2ludGVybmFsT25seV9OYW1lSGFzaGVzVNq+mfrU7EwCAAJbAA9pbXBsaWNpdE1lbWJlcnN0ACNbTHhzYnRpL2FwaS9faW50ZXJuYWxPbmx5X05hbWVIYXNoO1sADnJlZ3VsYXJNZW1iZXJzcQB+AAd4cHVyACNbTHhzYnRpLmFwaS5faW50ZXJuYWxPbmx5X05hbWVIYXNoO0lagLbdlov0AgAAeHAAAAAAdXEAfgAJAAAAAHNyABN4c2J0aS5hcGkuU291cmNlQVBJuV6n+SkjOKQCAAJbAAtkZWZpbml0aW9uc3QAF1tMeHNidGkvYXBpL0RlZmluaXRpb247WwAIcGFja2FnZXN0ABRbTHhzYnRpL2FwaS9QYWNrYWdlO3hwdXIAF1tMeHNidGkuYXBpLkRlZmluaXRpb247iMlc57TjXg4CAAB4cAAAAAFzcgATeHNidGkuYXBpLkNsYXNzTGlrZYM0HKHfsJdsAgAETAAOZGVmaW5pdGlvblR5cGV0ABpMeHNidGkvYXBpL0RlZmluaXRpb25UeXBlO1sAEHNhdmVkQW5ub3RhdGlvbnN0ABNbTGphdmEvbGFuZy9TdHJpbmc7TAAIc2VsZlR5cGV0ABBMeHNidGkvYXBpL0xhenk7TAAJc3RydWN0dXJlcQB+ABV4cgAheHNidGkuYXBpLlBhcmFtZXRlcml6ZWREZWZpbml0aW9u+RFusdVQPOICAAFbAA50eXBlUGFyYW1ldGVyc3QAGltMeHNidGkvYXBpL1R5cGVQYXJhbWV0ZXI7eHIAFHhzYnRpLmFwaS5EZWZpbml0aW9uhyob6HFC40YCAARMAAZhY2Nlc3N0ABJMeHNidGkvYXBpL0FjY2VzcztbAAthbm5vdGF0aW9uc3QAF1tMeHNidGkvYXBpL0Fubm90YXRpb247TAAJbW9kaWZpZXJzdAAVTHhzYnRpL2FwaS9Nb2RpZmllcnM7TAAEbmFtZXQAEkxqYXZhL2xhbmcvU3RyaW5nO3hwc3IAEHhzYnRpLmFwaS5QdWJsaWO6WD2ubC1gQgIAAHhyABB4c2J0aS5hcGkuQWNjZXNz3WKa+B1jMUgCAAB4cHVyABdbTHhzYnRpLmFwaS5Bbm5vdGF0aW9uO+uX6xkQ9o1IAgAAeHAAAAAAc3IAE3hzYnRpLmFwaS5Nb2RpZmllcnPHERMhaZzcJAIAAUIABWZsYWdzeHABdAAkY29tLmRleGVscy5uYXZham8uc2NhbGEuQmFzZUFkYXB0ZXJzdXIAGltMeHNidGkuYXBpLlR5cGVQYXJhbWV0ZXI72W0mDyid8rYCAAB4cAAAAAB+cgAYeHNidGkuYXBpLkRlZmluaXRpb25UeXBlAAAAAAAAAAASAAB4cgAOamF2YS5sYW5nLkVudW0AAAAAAAAAABIAAHhwdAAFVHJhaXR1cgATW0xqYXZhLmxhbmcuU3RyaW5nO63SVufpHXtHAgAAeHAAAAAAc3IAE3hzYnRpLlNhZmVMYXp5JEltcGw7kU8R9EVMyQIAA1oACGJpdG1hcCQwTAACX3R0ABJMamF2YS9sYW5nL09iamVjdDtMAARldmFsdAARTHNjYWxhL0Z1bmN0aW9uMDt4cgAWeHNidGkuYXBpLkFic3RyYWN0TGF6edN3tQFfu+egAgAAeHABc3IAE3hzYnRpLmFwaS5FbXB0eVR5cGW8/Z5GSTuJJAIAAHhyABR4c2J0aS5hcGkuU2ltcGxlVHlwZXJ4YoghI79AAgAAeHIADnhzYnRpLmFwaS5UeXBlP2rZIRZJqsoCAAB4cHBzcQB+AC4Bc3IAE3hzYnRpLmFwaS5TdHJ1Y3R1cmWpqvmAk2/YAAIAA0wACGRlY2xhcmVkcQB+ABVMAAlpbmhlcml0ZWRxAH4AFUwAB3BhcmVudHNxAH4AFXhxAH4ANXNxAH4ALgF1cQB+ABAAAAAAcHNxAH4ALgF1cQB+ABAAAAAAcHNxAH4ALgF1cgARW0x4c2J0aS5hcGkuVHlwZTt0/6Vae/npQQIAAHhwAAAAAnNyABR4c2J0aS5hcGkuUHJvamVjdGlvbvPSjVTpRaQtAgACTAACaWRxAH4AHEwABnByZWZpeHQAFkx4c2J0aS9hcGkvU2ltcGxlVHlwZTt4cQB+ADR0AAZPYmplY3RzcgATeHNidGkuYXBpLlNpbmdsZXRvbvynX/jPVuRGAgABTAAEcGF0aHQAEEx4c2J0aS9hcGkvUGF0aDt4cQB+ADRzcgAOeHNidGkuYXBpLlBhdGibPVwIzqUnhAIAAVsACmNvbXBvbmVudHN0ABpbTHhzYnRpL2FwaS9QYXRoQ29tcG9uZW50O3hwdXIAGltMeHNidGkuYXBpLlBhdGhDb21wb25lbnQ7Q9oJdC1nFnQCAAB4cAAAAANzcgAMeHNidGkuYXBpLklkmDJsizdTxEACAAFMAAJpZHEAfgAceHIAF3hzYnRpLmFwaS5QYXRoQ29tcG9uZW50X5oiWy6Gn7wCAAB4cHQABGphdmFzcQB+AE10AARsYW5nc3IADnhzYnRpLmFwaS5UaGlz2wntpsxaQFwCAAB4cQB+AE5zcQB+AEF0AANBbnlzcQB+AEVzcQB+AEh1cQB+AEsAAAACc3EAfgBNdAAFc2NhbGFxAH4AVHBwdXIAFFtMeHNidGkuYXBpLlBhY2thZ2U7WxMZN3CnJ6ECAAB4cAAAAARzcgAReHNidGkuYXBpLlBhY2thZ2V+WY/2rs45WAIAAUwABG5hbWVxAH4AHHhwdAARY29tLmRleGVscy5uYXZham9zcQB+AF50AApjb20uZGV4ZWxzc3EAfgBedAADY29tc3EAfgBedAAXY29tLmRleGVscy5uYXZham8uc2NhbGFzcgAVeHNidGkuYXBpLkNvbXBpbGF0aW9u7frgw2rooEICAAJKAAlzdGFydFRpbWVbAAdvdXRwdXRzdAAaW0x4c2J0aS9hcGkvT3V0cHV0U2V0dGluZzt4cAAAAUmKwfKEdXIAGltMeHNidGkuYXBpLk91dHB1dFNldHRpbmc7f2rC86eHpUICAAB4cAAAAAJzcgAXeHNidGkuYXBpLk91dHB1dFNldHRpbmd62ZpHdPsdewIAAkwAD291dHB1dERpcmVjdG9yeXEAfgAcTAAPc291cmNlRGlyZWN0b3J5cQB+ABx4cHQAQi9ob21lL2NocmlzL2dpdC9uYXZham8uc2NhbGEvbGlicmFyaWVzL2NvbS5kZXhlbHMubmF2YWpvLnNjYWxhL2JpbnQAQi9ob21lL2NocmlzL2dpdC9uYXZham8uc2NhbGEvbGlicmFyaWVzL2NvbS5kZXhlbHMubmF2YWpvLnNjYWxhL3NyY3NxAH4AbHQAQi9ob21lL2NocmlzL2dpdC9uYXZham8uc2NhbGEvbGlicmFyaWVzL2NvbS5kZXhlbHMubmF2YWpvLnNjYWxhL2JpbnQARi9ob21lL2NocmlzL2dpdC9uYXZham8uc2NhbGEvbGlicmFyaWVzL2NvbS5kZXhlbHMubmF2YWpvLnNjYWxhL3Rlc3RzcmN1cgACW0Ks8xf4BghU4AIAAHhwAAAAFIhihS3SfchoqrPf8fHkvXtBG/el
+com.dexels.navajo.scala.ScalaCompiledScript -> 
+rO0ABXNyABB4c2J0aS5hcGkuU291cmNlFlpwRASfbtoCAAZJAAdhcGlIYXNoWgAIaGFzTWFjcm9MABhfaW50ZXJuYWxPbmx5X25hbWVIYXNoZXN0ACRMeHNidGkvYXBpL19pbnRlcm5hbE9ubHlfTmFtZUhhc2hlcztMAANhcGl0ABVMeHNidGkvYXBpL1NvdXJjZUFQSTtMAAtjb21waWxhdGlvbnQAF0x4c2J0aS9hcGkvQ29tcGlsYXRpb247WwAEaGFzaHQAAltCeHDP3wFHAHNyACJ4c2J0aS5hcGkuX2ludGVybmFsT25seV9OYW1lSGFzaGVzVNq+mfrU7EwCAAJbAA9pbXBsaWNpdE1lbWJlcnN0ACNbTHhzYnRpL2FwaS9faW50ZXJuYWxPbmx5X05hbWVIYXNoO1sADnJlZ3VsYXJNZW1iZXJzcQB+AAd4cHVyACNbTHhzYnRpLmFwaS5faW50ZXJuYWxPbmx5X05hbWVIYXNoO0lagLbdlov0AgAAeHAAAAAAdXEAfgAJAAAAAHNyABN4c2J0aS5hcGkuU291cmNlQVBJuV6n+SkjOKQCAAJbAAtkZWZpbml0aW9uc3QAF1tMeHNidGkvYXBpL0RlZmluaXRpb247WwAIcGFja2FnZXN0ABRbTHhzYnRpL2FwaS9QYWNrYWdlO3hwdXIAF1tMeHNidGkuYXBpLkRlZmluaXRpb247iMlc57TjXg4CAAB4cAAAAAFzcgATeHNidGkuYXBpLkNsYXNzTGlrZYM0HKHfsJdsAgAETAAOZGVmaW5pdGlvblR5cGV0ABpMeHNidGkvYXBpL0RlZmluaXRpb25UeXBlO1sAEHNhdmVkQW5ub3RhdGlvbnN0ABNbTGphdmEvbGFuZy9TdHJpbmc7TAAIc2VsZlR5cGV0ABBMeHNidGkvYXBpL0xhenk7TAAJc3RydWN0dXJlcQB+ABV4cgAheHNidGkuYXBpLlBhcmFtZXRlcml6ZWREZWZpbml0aW9u+RFusdVQPOICAAFbAA50eXBlUGFyYW1ldGVyc3QAGltMeHNidGkvYXBpL1R5cGVQYXJhbWV0ZXI7eHIAFHhzYnRpLmFwaS5EZWZpbml0aW9uhyob6HFC40YCAARMAAZhY2Nlc3N0ABJMeHNidGkvYXBpL0FjY2VzcztbAAthbm5vdGF0aW9uc3QAF1tMeHNidGkvYXBpL0Fubm90YXRpb247TAAJbW9kaWZpZXJzdAAVTHhzYnRpL2FwaS9Nb2RpZmllcnM7TAAEbmFtZXQAEkxqYXZhL2xhbmcvU3RyaW5nO3hwc3IAEHhzYnRpLmFwaS5QdWJsaWO6WD2ubC1gQgIAAHhyABB4c2J0aS5hcGkuQWNjZXNz3WKa+B1jMUgCAAB4cHVyABdbTHhzYnRpLmFwaS5Bbm5vdGF0aW9uO+uX6xkQ9o1IAgAAeHAAAAAAc3IAE3hzYnRpLmFwaS5Nb2RpZmllcnPHERMhaZzcJAIAAUIABWZsYWdzeHABdAArY29tLmRleGVscy5uYXZham8uc2NhbGEuU2NhbGFDb21waWxlZFNjcmlwdHVyABpbTHhzYnRpLmFwaS5UeXBlUGFyYW1ldGVyO9ltJg8onfK2AgAAeHAAAAAAfnIAGHhzYnRpLmFwaS5EZWZpbml0aW9uVHlwZQAAAAAAAAAAEgAAeHIADmphdmEubGFuZy5FbnVtAAAAAAAAAAASAAB4cHQACENsYXNzRGVmdXIAE1tMamF2YS5sYW5nLlN0cmluZzut0lbn6R17RwIAAHhwAAAAAHNyABN4c2J0aS5TYWZlTGF6eSRJbXBsO5FPEfRFTMkCAANaAAhiaXRtYXAkMEwAAl90dAASTGphdmEvbGFuZy9PYmplY3Q7TAAEZXZhbHQAEUxzY2FsYS9GdW5jdGlvbjA7eHIAFnhzYnRpLmFwaS5BYnN0cmFjdExhennTd7UBX7vnoAIAAHhwAXNyABN4c2J0aS5hcGkuRW1wdHlUeXBlvP2eRkk7iSQCAAB4cgAUeHNidGkuYXBpLlNpbXBsZVR5cGVyeGKIISO/QAIAAHhyAA54c2J0aS5hcGkuVHlwZT9q2SEWSarKAgAAeHBwc3EAfgAuAXNyABN4c2J0aS5hcGkuU3RydWN0dXJlqar5gJNv2AACAANMAAhkZWNsYXJlZHEAfgAVTAAJaW5oZXJpdGVkcQB+ABVMAAdwYXJlbnRzcQB+ABV4cQB+ADVzcQB+AC4BdXEAfgAQAAAAAHBzcQB+AC4BdXEAfgAQAAAAAHBzcQB+AC4BdXIAEVtMeHNidGkuYXBpLlR5cGU7dP+lWnv56UECAAB4cAAAAAZzcgAUeHNidGkuYXBpLlByb2plY3Rpb27z0o1U6UWkLQIAAkwAAmlkcQB+ABxMAAZwcmVmaXh0ABZMeHNidGkvYXBpL1NpbXBsZVR5cGU7eHEAfgA0dAAOQ29tcGlsZWRTY3JpcHRzcgATeHNidGkuYXBpLlNpbmdsZXRvbvynX/jPVuRGAgABTAAEcGF0aHQAEEx4c2J0aS9hcGkvUGF0aDt4cQB+ADRzcgAOeHNidGkuYXBpLlBhdGibPVwIzqUnhAIAAVsACmNvbXBvbmVudHN0ABpbTHhzYnRpL2FwaS9QYXRoQ29tcG9uZW50O3hwdXIAGltMeHNidGkuYXBpLlBhdGhDb21wb25lbnQ7Q9oJdC1nFnQCAAB4cAAAAAVzcgAMeHNidGkuYXBpLklkmDJsizdTxEACAAFMAAJpZHEAfgAceHIAF3hzYnRpLmFwaS5QYXRoQ29tcG9uZW50X5oiWy6Gn7wCAAB4cHQAA2NvbXNxAH4ATXQABmRleGVsc3NxAH4ATXQABm5hdmFqb3NxAH4ATXQAB21hcHBpbmdzcgAOeHNidGkuYXBpLlRoaXPbCe2mzFpAXAIAAHhxAH4ATnNxAH4AQXQAF0NvbXBpbGVkU2NyaXB0SW50ZXJmYWNlc3EAfgBFc3EAfgBIdXEAfgBLAAAABnNxAH4ATXQAA2NvbXNxAH4ATXQABmRleGVsc3NxAH4ATXQABm5hdmFqb3NxAH4ATXQABnNjcmlwdHNxAH4ATXQAA2FwaXEAfgBYc3EAfgBBdAAITWFwcGFibGVxAH4AW3NxAH4AQXQAFENvbXBpbGVkU2NyaXB0TVhCZWFucQB+AEdzcQB+AEF0AAZPYmplY3RzcQB+AEVzcQB+AEh1cQB+AEsAAAADc3EAfgBNdAAEamF2YXNxAH4ATXQABGxhbmdxAH4AWHNxAH4AQXQAA0FueXNxAH4ARXNxAH4ASHVxAH4ASwAAAAJzcQB+AE10AAVzY2FsYXEAfgBYcHB1cgAUW0x4c2J0aS5hcGkuUGFja2FnZTtbExk3cKcnoQIAAHhwAAAABHNyABF4c2J0aS5hcGkuUGFja2FnZX5Zj/auzjlYAgABTAAEbmFtZXEAfgAceHB0ABFjb20uZGV4ZWxzLm5hdmFqb3NxAH4AfnQACmNvbS5kZXhlbHNzcQB+AH50AANjb21zcQB+AH50ABdjb20uZGV4ZWxzLm5hdmFqby5zY2FsYXNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABSYrB8oR1cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAnNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5cQB+ABxMAA9zb3VyY2VEaXJlY3RvcnlxAH4AHHhwdABCL2hvbWUvY2hyaXMvZ2l0L25hdmFqby5zY2FsYS9saWJyYXJpZXMvY29tLmRleGVscy5uYXZham8uc2NhbGEvYmludABCL2hvbWUvY2hyaXMvZ2l0L25hdmFqby5zY2FsYS9saWJyYXJpZXMvY29tLmRleGVscy5uYXZham8uc2NhbGEvc3Jjc3EAfgCMdABCL2hvbWUvY2hyaXMvZ2l0L25hdmFqby5zY2FsYS9saWJyYXJpZXMvY29tLmRleGVscy5uYXZham8uc2NhbGEvYmludABGL2hvbWUvY2hyaXMvZ2l0L25hdmFqby5zY2FsYS9saWJyYXJpZXMvY29tLmRleGVscy5uYXZham8uc2NhbGEvdGVzdHNyY3VyAAJbQqzzF/gGCFTgAgAAeHAAAAAUDcrfiITk4synCJjJdM9C3o5oJ+o=
+source infos:
+1 items
+/home/chris/git/navajo/core/com.dexels.navajo.function.scala.api/src/com/dexels/navajo/function/scala/api/api.scala -> 
+AAAAAAAAAAA=
+compilations:
+5 items
+0 -> rO0ABXNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABSYqa3U51cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAXNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAPc291cmNlRGlyZWN0b3J5cQB+AAZ4cHQARC9ob21lL2NocmlzL2dpdC9uYXZham8vY29yZS9jb20uZGV4ZWxzLm5hdmFqby5mdW5jdGlvbi5zY2FsYS5hcGkvYmludABEL2hvbWUvY2hyaXMvZ2l0L25hdmFqby9jb3JlL2NvbS5kZXhlbHMubmF2YWpvLmZ1bmN0aW9uLnNjYWxhLmFwaS9zcmM=
+1 -> rO0ABXNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABSYqt9AR1cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAXNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAPc291cmNlRGlyZWN0b3J5cQB+AAZ4cHQARC9ob21lL2NocmlzL2dpdC9uYXZham8vY29yZS9jb20uZGV4ZWxzLm5hdmFqby5mdW5jdGlvbi5zY2FsYS5hcGkvYmludABEL2hvbWUvY2hyaXMvZ2l0L25hdmFqby9jb3JlL2NvbS5kZXhlbHMubmF2YWpvLmZ1bmN0aW9uLnNjYWxhLmFwaS9zcmM=
+2 -> rO0ABXNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABSYq1CRB1cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAXNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAPc291cmNlRGlyZWN0b3J5cQB+AAZ4cHQARC9ob21lL2NocmlzL2dpdC9uYXZham8vY29yZS9jb20uZGV4ZWxzLm5hdmFqby5mdW5jdGlvbi5zY2FsYS5hcGkvYmludABEL2hvbWUvY2hyaXMvZ2l0L25hdmFqby9jb3JlL2NvbS5kZXhlbHMubmF2YWpvLmZ1bmN0aW9uLnNjYWxhLmFwaS9zcmM=
+3 -> rO0ABXNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABSYrAE/t1cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAXNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAPc291cmNlRGlyZWN0b3J5cQB+AAZ4cHQARC9ob21lL2NocmlzL2dpdC9uYXZham8vY29yZS9jb20uZGV4ZWxzLm5hdmFqby5mdW5jdGlvbi5zY2FsYS5hcGkvYmludABEL2hvbWUvY2hyaXMvZ2l0L25hdmFqby9jb3JlL2NvbS5kZXhlbHMubmF2YWpvLmZ1bmN0aW9uLnNjYWxhLmFwaS9zcmM=
+4 -> rO0ABXNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABSYrNd0p1cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAXNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAPc291cmNlRGlyZWN0b3J5cQB+AAZ4cHQARC9ob21lL2NocmlzL2dpdC9uYXZham8vY29yZS9jb20uZGV4ZWxzLm5hdmFqby5mdW5jdGlvbi5zY2FsYS5hcGkvYmludABEL2hvbWUvY2hyaXMvZ2l0L25hdmFqby9jb3JlL2NvbS5kZXhlbHMubmF2YWpvLmZ1bmN0aW9uLnNjYWxhLmFwaS9zcmM=

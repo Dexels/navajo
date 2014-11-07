@@ -1,0 +1,11 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
+        <modelVersion>4.0.0</modelVersion>
+        <artifactId>com.dexels.navajo.example.adapter.scala.api</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <packaging>eclipse-plugin</packaging>
+        <parent>
+          <groupId>com.dexels.navajo</groupId>
+          <artifactId>com.dexels.navajo.scala.super</artifactId>
+          <version>1.0.0</version>
+        </parent>
+      </project>

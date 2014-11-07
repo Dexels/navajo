@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Vendor: Dexels
+Fragment-Host: com.dexels.navajo.kml;bundle-version="1.2.3.qualifier"
+Bundle-Version: 1.0.0.qualifier
+Bundle-Name: Navajo KML Adapters Scala Api
+Bundle-ManifestVersion: 2
+Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
+ ment
+Provide-Package: com.dexels.navajo.kml.scala.api
+Bundle-SymbolicName: com.dexels.navajo.kml.scala.api
+

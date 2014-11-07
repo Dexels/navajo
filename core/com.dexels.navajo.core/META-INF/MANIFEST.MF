@@ -3,8 +3,8 @@ Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 3.0.49.qualifier
-Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
-Navajo-Name: Core
+disabled: Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
+disabled2: Navajo-Name: Core
 Eclipse-ExtensibleAPI: true
 Bundle-Activator: navajocore.Version
 Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",

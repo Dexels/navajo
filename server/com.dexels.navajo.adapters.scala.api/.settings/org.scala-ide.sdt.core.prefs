@@ -1,0 +1,13 @@
+P=
+Xplugin=
+Xplugin-disable=
+Xplugin-require=
+compileorder=ScalaThenJava
+eclipse.preferences.version=1
+explaintypes=true
+scala.compiler.additionalParams=
+scala.compiler.installation=2.11
+scala.compiler.sourceLevel=2.11
+scala.compiler.useProjectSettings=false
+verbose=true
+withVersionClasspathValidator=false
