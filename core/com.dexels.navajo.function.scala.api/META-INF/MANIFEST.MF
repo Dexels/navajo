@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Dexels
-Fragment-Host: com.dexels.navajo.function;bundle-version="3.2.16"
+Fragment-Host: com.dexels.navajo.function;bundle-version="3.2.16.quali
+ fier"
 Bundle-Version: 1.0.0.qualifier
 Bundle-Name: Navajo Functions Scala Api
 Bundle-ManifestVersion: 2
-Import-Package: com.dexels.navajo.scala,
- com.dexels.navajo.scala.document
+Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
+ ment
 Provide-Package: com.dexels.navajo.function.scala.api
 Bundle-SymbolicName: com.dexels.navajo.function.scala.api
-Export-Package: com.dexels.navajo.function.scala.api
 
