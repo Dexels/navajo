@@ -1,5 +1,5 @@
 <metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
-	<OCD description="Repository Manager" name="Repository Manager" id="dexels.githubosgi.repositorymanager">
+	<OCD description="Repository Manager" name="Repository Manager" id="navajo.repository.manager">
 		<AD name="Storage Folder" id="storage.path" required="true" type="String" />
 	</OCD>
 	<OCD description="Git Repository Instance" name="Git Repository Instance" id="dexels.githubosgi.gitrepository">
@@ -7,6 +7,7 @@
 		<AD name="Repository name" id="name" required="true" type="String" default="myrepo" />
 		<AD name="Https Git URL" id="httpUrl" required="false" type="String" />
 		<AD name="SSH Key file (public as *.pub)" id="key" required="false" type="String" />
+		<AD name="Deployment" id="deployment" required="false" type="String" />
 		<AD name="Git Branch" id="branch" required="true" type="String" default="master" />
 		<AD name="Auto refresh" id="autoRefresh" required="false" type="boolean" default="false" />
 		<AD name="Sleep time between refresh" id="sleepTime" required="false" type="Integer" default="300000" />
@@ -15,7 +16,16 @@
 	<Designate factoryPid="dexels.githubosgi.gitrepository">
 		<Object ocdref="dexels.githubosgi.gitrepository" />
 	</Designate>
-	<Designate pid="dexels.githubosgi.repositorymanager">
-		<Object ocdref="dexels.githubosgi.repositorymanager" />
+	<Designate factoryPid="navajo.gitrepository.multitenant">
+		<Object ocdref="dexels.githubosgi.gitrepository" />
+	</Designate>
+	<Designate factoryPid="navajo.gitrepository.tipi">
+		<Object ocdref="dexels.githubosgi.gitrepository" />
+	</Designate>
+	<Designate factoryPid="navajo.gitrepository.navajo">
+		<Object ocdref="dexels.githubosgi.gitrepository" />
+	</Designate>
+	<Designate pid="navajo.repository.manager">
+		<Object ocdref="navajo.repository.manager" />
 	</Designate>
 </metatype:MetaData>

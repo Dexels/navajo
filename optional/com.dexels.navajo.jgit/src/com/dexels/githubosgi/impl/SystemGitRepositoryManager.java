@@ -21,37 +21,42 @@ public class SystemGitRepositoryManager {
 	private Configuration configuration;
 	
 	
-	public void activate(Map<String,Object> configuration) throws IOException {
-		String url = System.getProperty("git.repository.url");
-		String type = System.getProperty("git.repository.type");
-		String storagePath = System.getProperty("git.repository.storage");
-		String deployment = System.getProperty("git.repository.deployment");
+	public void activate() throws IOException {
+		Map<String,String> env = System.getenv();
+		String url = env.get("GIT_REPOSITORY_URL");
+		String type = env.get("GIT_REPOSITORY_TYPE");
+		String storagePath = env.get("GIT_REPOSITORY_STORAGE");
+		String deployment = env.get("GIT_REPOSITORY_DEPLOYMENT");
 		if(url==null) {
-			throw new IOException("No 'git.repository.path' set, so no git repositories will be injected.");
+			logger.warn("No 'GIT_REPOSITORY_URL' set, so no git repositories will be injected.");
+			return;
 		}
 		if(type==null) {
-			throw new IOException("No 'git.repository.type' set, so no git repositories will be injected.");
+			logger.warn("No 'GIT_REPOSITORY_TYPE' set, so no git repositories will be injected.");
+			return;
 		}
 		if(storagePath==null) {
-			throw new IOException("No 'git.repository.storage' set, so no git repositories will be injected.");
+			logger.warn("No 'GIT_REPOSITORY_STORAGE' set, so no git repositories will be injected.");
+			return;
 		}
-		injectConfig(url,type,deployment,storagePath);
+		injectConfig(url,type,deployment,storagePath,env);
 	}
 	
 
 
-	private void injectConfig(String url, String type, String deployment, String storagePath) throws IOException {
-		Configuration c = createOrReuse("dexels.githubosgi.gitrepository", "(repository.name=system.managed.repository)");
+	private void injectConfig(String url, String type, String deployment, String storagePath, Map<String,String> env) throws IOException {
+//		githubosgi.gitrepository
+		Configuration c = createOrReuse("navajo.gitrepository."+type, "(repository.name=system.managed.repository)");
 		Dictionary<String,Object> properties = new Hashtable<String,Object>();
 		
-		String branch = System.getProperty("git.repository.branch");
+		String branch = env.get("GIT_REPOSITORY_BRANCH");
 
 		properties.put("repository.type", type);
 		properties.put("branch", branch);
 		properties.put("name", "system.managed.repository");
 		properties.put("url", url);
 //		properties.put("autoRefresh", System.getProperty("git.repository.autoRefresh"));
-		String sleepTime = System.getProperty("git.repository.sleepTime");
+		String sleepTime = env.get("GIT_REPOSITORY_SLEEPTIME");
 		if(sleepTime!=null) {
 			properties.put("sleepTime", sleepTime);
 		}
@@ -61,7 +66,7 @@ public class SystemGitRepositoryManager {
 			properties.put("repository.deployment", deployment);
 		}
 		c.update(properties);	
-		Configuration manager = createOrReuse("navajo.repository.manager", "(repository.name=system.managed.manager)");
+		Configuration manager =  configAdmin.getConfiguration("navajo.repository.manager",null);
 		Dictionary<String,Object> managerProperties = new Hashtable<String,Object>();
 		managerProperties.put("storage.path", storagePath);
 		manager.update(managerProperties);

@@ -3,6 +3,7 @@ package com.dexels.navajo.repository.core.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -135,7 +136,7 @@ public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 	public List<String> getConfigurationFolders() {
 		if(repositoryLayout==null) {
 			logger.warn("Unknown repository layout: "+type+", change monitoring might not work!");
-			return null;
+			return Collections.emptyList();
 		}
 		return repositoryLayout.getConfigurationFolders();
 	}
@@ -144,7 +145,7 @@ public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 	public List<String> getMonitoredFolders() {
 		if(repositoryLayout==null) {
 			logger.warn("Unknown repository layout: "+type+", change monitoring might not work!");
-			return null;
+			return Collections.emptyList();
 		}
 		return repositoryLayout.getMonitoredFolders();
 	}

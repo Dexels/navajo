@@ -8,7 +8,7 @@ import com.dexels.navajo.repository.api.diff.RepositoryLayout;
 public class TipiRepositoryLayout implements RepositoryLayout {
 
 	private final List<String> monitoredFolders = Arrays.asList("tipi", "resource", "settings");
-	private final List<String> configurationFolders = Arrays.asList("features");
+	private final List<String> configurationFolders = Arrays.asList("etc");
 
 	@Override
 	public List<String> getMonitoredFolders() {

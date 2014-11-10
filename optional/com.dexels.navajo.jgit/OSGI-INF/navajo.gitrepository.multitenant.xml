@@ -11,7 +11,7 @@
    <service>
       <provide interface="com.dexels.githubosgi.GitRepositoryInstance"/>
       <provide interface="com.dexels.navajo.repository.api.RepositoryInstance"/>
-      </service>
+   </service>
    <property name="repo" type="String" value="git"/>
    <property name="type" type="String" value="multitenant"/>
 </scr:component>

@@ -12,6 +12,8 @@ import org.osgi.service.jdbc.DataSourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
 public class MySqlDataSourceComponent implements DataSource {
 //	private ConnectionPoolDataSource connectionPoolDataSource;
 	private DataSource datasource;
@@ -21,13 +23,11 @@ public class MySqlDataSourceComponent implements DataSource {
 	
 	public void activate(Map<String,Object> props) {
 		try {
-			MySQLJDBCDataSourceService service = new MySQLJDBCDataSourceService();
-			service.start();
 			Properties pr = new Properties();
 			pr.putAll(props);
 			pr.put(DataSourceFactory.JDBC_DATABASE_NAME, props.get("name"));
 			try {
-				datasource = service.createDataSource(pr);
+				datasource = createDataSource(pr);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -36,6 +36,53 @@ public class MySqlDataSourceComponent implements DataSource {
 		}
 	}
 
+    public DataSource createDataSource(Properties props) throws SQLException {
+        MysqlDataSource source = new MysqlDataSource();
+        setup(source, props);
+        return source;
+    }
+    
+    protected void setup(MysqlDataSource source, Properties props) {
+        if (props == null) {
+            return;
+        }
+        for(Object o :props.keySet()) {
+        	logger.debug("Setting up mysql: key {} val: {}",o,props.get(o));
+        }
+        
+        if (props.containsKey(DataSourceFactory.JDBC_DATABASE_NAME)) {
+            source.setDatabaseName(props.getProperty(DataSourceFactory.JDBC_DATABASE_NAME));
+        }
+        if (props.containsKey(DataSourceFactory.JDBC_DATASOURCE_NAME)) {
+            //not supported?
+        }
+        if (props.containsKey(DataSourceFactory.JDBC_DESCRIPTION)) {
+            //not suported?
+        }
+        if (props.containsKey(DataSourceFactory.JDBC_NETWORK_PROTOCOL)) {
+            //not supported?
+        }
+        if (props.containsKey(DataSourceFactory.JDBC_PASSWORD)) {
+            source.setPassword(props.getProperty(DataSourceFactory.JDBC_PASSWORD));
+        }
+        if (props.containsKey(DataSourceFactory.JDBC_PORT_NUMBER)) {
+            source.setPortNumber(Integer.parseInt(props.getProperty(DataSourceFactory.JDBC_PORT_NUMBER)));
+        }
+        if (props.containsKey(DataSourceFactory.JDBC_ROLE_NAME)) {
+            //not supported?
+        }
+        if (props.containsKey(DataSourceFactory.JDBC_SERVER_NAME)) {
+            source.setServerName(props.getProperty(DataSourceFactory.JDBC_SERVER_NAME));
+        }
+        if (props.containsKey(DataSourceFactory.JDBC_URL)) {
+            source.setURL(props.getProperty(DataSourceFactory.JDBC_URL));
+        }
+        if (props.containsKey(DataSourceFactory.JDBC_USER)) {
+            source.setUser(props.getProperty(DataSourceFactory.JDBC_USER));
+        }
+    }
+
+    
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		return datasource.isWrapperFor(iface);
