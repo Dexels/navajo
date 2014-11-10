@@ -1,6 +1,8 @@
 package com.dexels.navajo.server.impl;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,6 +18,9 @@ import com.dexels.navajo.server.global.GlobalManager;
 public class GlobalManagerImpl implements GlobalManager {
 
 	private final Map<String,String> settings = new HashMap<String, String>();
+	private final static List<String> osgiSettings = Arrays.asList(
+			"component.id", "component.name", "service.factoryPid",
+			"service.pid");
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(GlobalManagerImpl.class);
@@ -29,7 +34,9 @@ public class GlobalManagerImpl implements GlobalManager {
 
 	public void activate(Map<String,Object> settings) {
 		for (Entry<String,Object> e : settings.entrySet()) {
-			this.settings.put(e.getKey(), ""+e.getValue());
+			if (!osgiSettings.contains(e.getKey())) {
+				this.settings.put(e.getKey(), ""+e.getValue());
+			}
 		}
 	}
 
