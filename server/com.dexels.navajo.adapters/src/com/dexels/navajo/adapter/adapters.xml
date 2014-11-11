@@ -45,6 +45,10 @@
 		<object>com.dexels.navajo.adapter.TokenizerMap</object>
 	</map>	
 	<map>
+		<tagname>stringsplit</tagname>
+		<object>com.dexels.navajo.adapter.StringSplitMap</object>
+	</map>
+	<map>
 		<tagname>databaseinfo</tagname>
 		<object>com.dexels.navajo.adapter.sqlmap.DatabaseInfo</object>
 	</map>
