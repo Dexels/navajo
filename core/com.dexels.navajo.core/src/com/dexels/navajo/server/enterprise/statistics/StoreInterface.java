@@ -60,6 +60,11 @@ public interface StoreInterface {
   public void storeAuditLogs(final Set<AuditLogEvent> auditLogSet);
 
   public void storeWorkflowEvents(final Set<WorkflowEvent> workflowEventSet);
+
+  /**
+ *    * Clean up and consolidate action - to be called after completing inserting statistics data.
+ *       */
+  public void consolidate();
   
   /**
    * Set the url for the database.
