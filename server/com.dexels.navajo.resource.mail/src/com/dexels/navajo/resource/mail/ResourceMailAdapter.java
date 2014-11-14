@@ -38,7 +38,7 @@ public class ResourceMailAdapter implements MailMapInterface, Mappable {
 	private List<AttachementMap> attachments;
 	private String[] bccArray;
 	private String[] ccArray;
-	private String name;
+	private String resourceName;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(ResourceMailAdapter.class);
@@ -47,7 +47,9 @@ public class ResourceMailAdapter implements MailMapInterface, Mappable {
 	public void load(Access access) throws MappableException, UserException {
 		if (access != null) {
 			doc = access.getInDoc();
-		}		
+		}
+		attachments = new ArrayList<AttachementMap>();
+		contentType = "text/plain";
 	}
 
 	private String parseWithXslStyle(String path) throws TransformerConfigurationException, NavajoException, TransformerException, IOException {
@@ -65,9 +67,9 @@ public class ResourceMailAdapter implements MailMapInterface, Mappable {
 	
 	@Override
 	public void store() throws MappableException, UserException {
-		MailResource resource = MailResourceFactory.getInstance().getMailResource(name);
+		MailResource resource = MailResourceFactory.getInstance().getMailResource(resourceName);
 		if(resource==null) {
-			throw new MappableException("Missing mail resource with name: "+name);
+			throw new MappableException("Missing mail resource with name: "+resourceName);
 		}
 		String body = this.text;
 		if(this.xslFile!=null && !"".equals(xslFile)) {
@@ -86,7 +88,7 @@ public class ResourceMailAdapter implements MailMapInterface, Mappable {
 	}
 
 	public void setResource(String name) {
-		this.name = name;
+		this.resourceName = name;
 	}
 	
 	@Override
@@ -162,11 +164,6 @@ public class ResourceMailAdapter implements MailMapInterface, Mappable {
 
 	@Override
 	public void setMultipleAttachments(AttachementMap[] c) {
-
-		if (attachments == null) {
-			attachments = new ArrayList<AttachementMap>();
-		}
-
 		for (int i = 0; i < c.length; i++) {
 			attachments.add(c[i]);
 		}
@@ -187,9 +184,7 @@ public class ResourceMailAdapter implements MailMapInterface, Mappable {
 
 	@Override
 	public void setAttachment(AttachementMap m) {
-		if (attachments == null) {
-			attachments = new ArrayList<AttachementMap>();
-		}
+		attachments = new ArrayList<AttachementMap>();
 		attachments.add(m);
 	}
 
@@ -199,6 +194,16 @@ public class ResourceMailAdapter implements MailMapInterface, Mappable {
 		logger.warn("setMailServer makes no sense for ResourceMailAdapter");
 		
 	}
+
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
+    }
+	
+	
 
 	
 
