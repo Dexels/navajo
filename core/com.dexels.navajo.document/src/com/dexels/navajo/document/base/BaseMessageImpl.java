@@ -1890,18 +1890,18 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 			if (!matchMethod) {
 				removeMessage(m);
-				break;
+				continue;
 			}
 			
 			if (mask.isArrayMessage() && mask.getDefinitionMessage() != null) {
 				if (mask.getDefinitionMessage().getMessage(m.getName()) == null) {
 					removeMessage(m);
-					break;
+					continue;
 				}
 			} else {
 				if (mask.getMessage(m.getName()) == null) {
 					removeMessage(m);
-					break;
+					continue;
 				}
 			} 
 
