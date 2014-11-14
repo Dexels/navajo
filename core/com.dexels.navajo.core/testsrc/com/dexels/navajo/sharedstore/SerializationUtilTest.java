@@ -29,7 +29,8 @@ public class SerializationUtilTest {
 	
 	@After
 	public void cleanup() {
-		SerializationUtil.removeAllNavajos();
+	    // RemoveAll not supported in SimpleSharedStore
+		//SerializationUtil.removeAllNavajos();
 	}
 	
 	@Test
