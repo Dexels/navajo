@@ -18,57 +18,65 @@ public class TestOperation {
 	static EntityManager manager;
 
 	@BeforeClass
-	public static void setup() {
+    public static void setup() {
 
-		manager = new EntityManager();
+        manager = new EntityManager();
 
-		NavajoFactory f = NavajoFactory.getInstance();
+        NavajoFactory f = NavajoFactory.getInstance();
 
-		Navajo n = f.createNavajo();
-		Message entity = f.createMessage(n, "MyEntity");
-		entity.setExtends("navajo://Activity");
-		n.addMessage(entity);
+        Navajo n = f.createNavajo();
+        Message entity = f.createMessage(n, "MyEntity");
+        entity.setExtends("navajo://Activity");
+        n.addMessage(entity);
 
-		Property keyProp = f.createProperty(n, "MatchId", Property.INTEGER_PROPERTY, "", 0, "", "");
-		keyProp.setKey("true,auto");
-		keyProp.setExtends("navajo://Activity/ActivityId");
-		entity.addProperty(keyProp);
+        Property keyProp = f.createProperty(n, "MatchId", Property.INTEGER_PROPERTY, "", 0, "", "");
+        keyProp.setKey("true,auto");
+        keyProp.setExtends("navajo://Activity/ActivityId");
+        entity.addProperty(keyProp);
 
-		Property keyProp2 = f.createProperty(n, "_id", Property.STRING_PROPERTY, "", 0, "", "");
-		keyProp2.setKey("true,auto");
-		entity.addProperty(keyProp2);
+        Property keyProp2 = f.createProperty(n, "_id", Property.STRING_PROPERTY, "", 0, "", "");
+        keyProp2.setKey("true,auto");
+        entity.addProperty(keyProp2);
 
-		entity.addProperty(f.createProperty(n, "CalendarDate", Property.DATE_PROPERTY, "", 0, "", ""));
-		entity.addProperty(f.createProperty(n, "HomeOrganizationId", Property.STRING_PROPERTY, "", 0, "", ""));
-		entity.addProperty(f.createProperty(n, "AwayOrganizationId", Property.STRING_PROPERTY, "", 0, "", ""));
+        entity.addProperty(f.createProperty(n, "CalendarDate", Property.DATE_PROPERTY, "", 0, "", ""));
+        entity.addProperty(f.createProperty(n, "HomeOrganizationId", Property.STRING_PROPERTY, "", 0, "", ""));
+        entity.addProperty(f.createProperty(n, "AwayOrganizationId", Property.STRING_PROPERTY, "", 0, "", ""));
 
-		Property keyProp1_ALT = f.createProperty(n, "ExternalMatchId", Property.STRING_PROPERTY, "", 0, "", "");
-		keyProp1_ALT.setKey("true,auto,id=ALT");
-		entity.addProperty(keyProp1_ALT);
-		Property keyProp2_ALT = f.createProperty(n, "SeasonId", Property.STRING_PROPERTY, "", 0, "", "");
-		keyProp2_ALT.setKey("true,id=ALT");
-		entity.addProperty(keyProp2_ALT);
-		Property keyProp3_ALT = f.createProperty(n, "OrganizingDistrictId", Property.STRING_PROPERTY, "", 0, "", "");
-		keyProp3_ALT.setKey("true,id=ALT");
-		entity.addProperty(keyProp3_ALT);
+        Property keyProp1_ALT = f.createProperty(n, "ExternalMatchId", Property.STRING_PROPERTY, "", 0, "", "");
+        keyProp1_ALT.setKey("true,auto,id=ALT");
+        entity.addProperty(keyProp1_ALT);
+        Property keyProp2_ALT = f.createProperty(n, "SeasonId", Property.STRING_PROPERTY, "", 0, "", "");
+        keyProp2_ALT.setKey("true,id=ALT");
+        entity.addProperty(keyProp2_ALT);
+        Property keyProp3_ALT = f.createProperty(n, "OrganizingDistrictId", Property.STRING_PROPERTY, "", 0, "", "");
+        keyProp3_ALT.setKey("true,id=ALT");
+        entity.addProperty(keyProp3_ALT);
 
+        entity.write(System.err);
 
-		entity.write(System.err);
+        // Create Activity entity.
 
-		// Create Activity entity.
+        Message activity = f.createMessage(n, "Activity");
+        activity.addProperty(f.createProperty(n, "ActivityType", Property.STRING_PROPERTY, "", 0, "", ""));
+        Property keyPropAct = f.createProperty(n, "ActivityId", Property.INTEGER_PROPERTY, "", 0, "", "");
+        keyPropAct.setKey("true,auto");
+        activity.addProperty(keyPropAct);
 
-		Message activity = f.createMessage(n, "Activity");
-		activity.addProperty(f.createProperty(n, "ActivityType", Property.STRING_PROPERTY, "", 0, "", ""));
-		Property keyPropAct = f.createProperty(n, "ActivityId", Property.INTEGER_PROPERTY, "", 0, "", "");
-		keyPropAct.setKey("true,auto");
-		activity.addProperty(keyPropAct);
+        activity.write(System.err);
 
-		activity.write(System.err);
+        Entity e1 = new Entity(entity, manager);
+        Entity e2 = new Entity(activity, manager);
 
-		manager.registerEntity(new Entity(entity, manager));
-		manager.registerEntity(new Entity(activity, manager));
+        e1.entityName = "MyEntity";
+        e1.messageName = "MyEntity";
 
-	}
+        e2.entityName = "Activity";
+        e2.messageName = "Activity";
+
+        manager.registerEntity(e1);
+        manager.registerEntity(e2);
+
+    }
 
 	@Test
 	public void testAddOperation() throws Exception {
