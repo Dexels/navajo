@@ -1,8 +1,16 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.text.StyledEditorKit;
 
 import com.dexels.navajo.document.Property;
@@ -44,26 +52,20 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
 	@Override
 	public Object createContainer() {
 		myHandler = new PropertyHandler(this, null);
-		// myHandler.addMapping("value", "text");
 		myLabel = new JEditorPane();
 		TipiHelper th = new TipiSwingHelper();
 		myLabel.setAutoscrolls(true);
 		th.initHelper(this);
 		myLabel.setEditorKit(new StyledEditorKit());
-		// myLabel.setFont(new Font("Sans", Font.ITALIC,20));
 		myLabel.setContentType("text/html");
-		// myLabel.setText("some very very very long text  ....");
-
-		// Font font = UIManager.getFont("Label.font");
-		// String bodyRule = "body { font-family: " + font.getFamily() + "; " +
-		// "font-size: " + font.getSize() + "pt; }";
-		// ((HTMLDocument)myLabel.getDocument()).getStyleSheet().addRule(bodyRule);
 
 		myLabel.setEditable(false);
 		myLabel.setEnabled(true);
+	    HyperlinkListener hyperlinkListener = new ActivatedHyperlinkListener( myLabel);
+	    myLabel.addHyperlinkListener(hyperlinkListener);
+
 		addHelper(th);
 		jsp = new JScrollPane(myLabel);
-		// jsp.getViewport().
 		jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		return jsp;
 	}
@@ -77,7 +79,6 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
 	public void setComponentValue(final String name, final Object object) {
 		if (name.equals("text")) {
 			setHtmlText("" + object);
-			// ((TipiSwingLabel) getContainer()).revalidate();
 			return;
 		}
 		if (name.equals("propertyName")) {
@@ -131,4 +132,34 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
 		// ignore dirty
 		
 	}
+
+	class ActivatedHyperlinkListener implements HyperlinkListener {
+
+		  JEditorPane editorPane;
+
+		  public ActivatedHyperlinkListener(JEditorPane editorPane) {
+		    this.editorPane = editorPane;
+		  }
+
+		    public void hyperlinkUpdate(HyperlinkEvent hyperlinkEvent) {
+    		    HyperlinkEvent.EventType type = hyperlinkEvent.getEventType();
+    		    final URL url = hyperlinkEvent.getURL();
+    		    if (type == HyperlinkEvent.EventType.ENTERED) {
+    		    } else if (type == HyperlinkEvent.EventType.ACTIVATED) {
+    		      Runnable runner = new Runnable() {
+    		        public void run() {
+    		            if(Desktop.isDesktopSupported()) {
+    		                try {
+    		                    Desktop.getDesktop().browse(url.toURI());
+    		                }
+    		                catch (IOException | URISyntaxException e1) {
+    		                    e1.printStackTrace();
+    		                }
+    		            }
+    		        }
+    		      };
+    		      SwingUtilities.invokeLater(runner);
+		    }
+		  }
+		}
 }
