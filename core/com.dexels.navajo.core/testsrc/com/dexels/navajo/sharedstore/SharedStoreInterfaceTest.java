@@ -75,7 +75,11 @@ public class SharedStoreInterfaceTest {
 		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
 		DispatcherFactory.getInstance().setUseAuthorisation(false);
 		si = SharedStoreFactory.getInstance();
-		si.removeAll("");
+		
+		// RemoveAll not implemented in SimpleSharedConfig
+        if (!(si instanceof SimpleSharedStore)) {
+            si.removeAll("");
+        }
 		System.err.println("si: " + si);
 	}
 
