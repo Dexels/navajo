@@ -152,8 +152,10 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
     		                try {
     		                    Desktop.getDesktop().browse(url.toURI());
     		                }
-    		                catch (IOException | URISyntaxException e1) {
-    		                    e1.printStackTrace();
+    		                catch (IOException e1) {
+					 e1.printStackTrace();
+				} catch (URISyntaxException e2) {
+    		                	e2.printStackTrace();
     		                }
     		            }
     		        }
