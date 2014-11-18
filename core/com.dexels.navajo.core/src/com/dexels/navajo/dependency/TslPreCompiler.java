@@ -109,7 +109,7 @@ public class TslPreCompiler {
 		 AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(script)+"*.xml");
 		 Collection<File> files = FileUtils.listFiles(scriptPathFile, fileFilter, null);
 		 for (File f : files) {
-			 String includeScriptPath = f.getAbsolutePath().split(scriptPath)[1];
+			 String includeScriptPath = f.getAbsolutePath().substring(scriptPath.length());
 			 String includeScript = includeScriptPath.substring(1, includeScriptPath.indexOf(".xml"));
 			 deps.add(new IncludeDependency(IncludeDependency.getScriptTimeStamp(includeScript), script, includeScript));
 		 }
