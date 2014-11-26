@@ -152,7 +152,12 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 	public void addComponent(TipiComponent c, int index, TipiContext context,
 			Object td);
 
-	public Navajo getNavajo();
+	public void addComponentAsChild(final TipiComponent c);
+
+	public void addExistingComponent(final TipiComponent c, int index,
+			TipiContext context, Object td);
+
+		public Navajo getNavajo();
 
 	public Navajo getNearestNavajo();
 
