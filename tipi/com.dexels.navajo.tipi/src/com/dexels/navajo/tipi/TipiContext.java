@@ -115,6 +115,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public abstract void runAsyncInEventThread(Runnable r);
 
+	private final Map<String, Object> lockMap = new HashMap<String, Object>();
+	
 	/**
 	 * Maps a service to a list of datacomponents. Components register here by
 	 * having a service tag
@@ -1077,8 +1079,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				logger.warn("WARNING, STRANGE LAYOUT TAG: " + instance);
 			}
 		}
-		Object o = instantiateClassObject(type, null);
-		TipiLayout tl = (TipiLayout) initializeClass(o, type, null, instance, cc, Boolean.FALSE);
+		TipiLayout tl = (TipiLayout) instantiateClass(type, null, instance, cc);
 		if (tl == null) {
 			return null;
 		}
@@ -1098,16 +1099,30 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	// TipiException {
 	// return instantiateLayout(instance,null);
 	// }
-
+	/**
+	 * Synchronized instantiation of main level tipi components. Due to the synchronization, the test for an existing component is guaranteed to work.
+	 */
+	
 	public TipiComponent instantiateTipi(TipiInstantiateTipi t,
 			TipiComponent parent, boolean force, String id, Object constraints,
 			TipiEvent event, XMLElement xe) throws TipiException {
-		TipiComponent inst = null;
-		if ("personWindow".equals(id))
-		{
-			logger.info("Just before entering synchronized part for originating instantiateTipi: " + t + " and id " + id);
-		}
+		Object lock = null;
+		String path = parent.getPath() + "/" + id; 
 		synchronized(this)
+		{
+			if (lockMap.containsKey(path))
+			{
+				lock = lockMap.get(path);
+			}
+			else
+			{
+				lock = new Object();
+				lockMap.put(path, lock);
+			}
+		}
+		
+		TipiComponent inst = null;
+		synchronized(lock)
 		{
 			TipiComponent comp = parent.getTipiComponentByPath(id);
 	
@@ -1122,51 +1137,54 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					return comp;
 				}
 			}
-			// First create only the class, don't load any values or subcomponents yet!
-			inst = instantiateComponentObject(xe, event, t, parent, Boolean.FALSE);
+			inst = instantiateComponent(xe, event, t, parent);
 			// set its ID
 			inst.setId(id);
-			inst.setContext(this);
-			if ("personWindow".equals(id))
-			{
-				logger.info("Id set for originating instantiateTipi: " + t + " and id " + id);
-			}
-			// add it to its parent's componentList & Map (nothing more!)
-			parent.addComponentAsChild(inst);
-		}
-		if ("personWindow".equals(id))
-		{
-			logger.info("Leaving synchronized part for originating instantiateTipi: " + t + " and id " + id);
-		}
-			
-		// now we're done with the synchronized part, finish instantiating the class
-		inst = initializeComponent(inst, xe, event, t, parent, Boolean.FALSE);
-		if ("personWindow".equals(id))
-		{
-			logger.info("Instance finished initializing for originating instantiateTipi: " + t + " and id " + id);
-		}
-		// and finish registering it with its parent
-		parent.addExistingComponent(inst, -1, this, constraints);
-		fireTipiStructureChanged(inst);
-		if ("personWindow".equals(id))
-		{
-			logger.info("Done instantiating and initializing for originating instantiateTipi: " + t + " and id " + id);
+			parent.addComponent(inst, this, constraints);
+			fireTipiStructureChanged(inst);
 		}
 		return inst;
 	}
 
-	public TipiComponent instantiateComponent(XMLElement instance,
-			TipiEvent event, TipiInstantiateTipi t, TipiComponent parent)
-			throws TipiException {
-		return instantiateComponent(instance, event, t, parent, Boolean.FALSE);
+	protected TipiComponent instantiateComponentByDefinition(
+			XMLElement definition, XMLElement instance, TipiEvent event,
+			TipiComponent parent) throws TipiException {
+		String clas = definition.getStringAttribute("class");
+		if (clas == null) {
+			clas = definition.getStringAttribute("type");
+		}
+		if (definition.getName().startsWith("d.")) {
+			clas = definition.getName().substring(2,
+					definition.getName().length());
+
+		}
+		String name = instance.getStringAttribute("name");
+		if (name == null) {
+			showInternalError("Error instantiating component: " + clas
+					+ ". No name supplied. instance: " + instance);
+		}
+		if (!clas.equals("")) {
+			TipiComponent tc = (TipiComponent) instantiateClass(clas, name,
+					instance, parent, Boolean.TRUE);
+			XMLElement classDef = getClassManager().getAssembledClassDef(clas);
+
+			/**
+			 * @todo think these two can be removed, because they are invoked in
+			 *       the instantiateClass method
+			 */
+			tc.loadEventsDefinition(this, definition, classDef);
+			tc.loadMethodDefinitions(this, definition, classDef);
+			// -----------------------------
+			tc.loadStartValues(definition, event);
+			tc.commitToUi();
+			return tc;
+		} else {
+			throw new TipiException(
+					"Problems instantiating TipiComponent class: "
+							+ definition.toString());
+		}
 	}
-	public TipiComponent instantiateComponent(XMLElement instance,
-		    TipiEvent event, TipiInstantiateTipi t, TipiComponent parent, Boolean isHomeComponent)
-			throws TipiException {
-		TipiComponent tc = instantiateComponentObject(instance, event, t, parent, isHomeComponent);
-		tc.setContext(this);
-		return initializeComponent(tc, instance, event, t, parent, isHomeComponent);
-	}
+
 	/**
 	 * TODO Support parentExtension: call setParentExtension when creating a
 	 * component, that way we know who its instantiating extension is.
@@ -1179,14 +1197,14 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	 * @throws TipiException
 	 */
 
-	public TipiComponent instantiateComponentObject(XMLElement instance,
+	public TipiComponent instantiateComponent(XMLElement instance,
 			TipiEvent event, TipiInstantiateTipi t, TipiComponent parent)
 			throws TipiException {
-		return instantiateComponentObject(instance, event, t, parent, Boolean.FALSE);
+		return instantiateComponent(instance, event, t, parent, Boolean.FALSE);
 	}
-	private TipiComponent instantiateComponentObject(XMLElement instance,
-		    TipiEvent event, TipiInstantiateTipi t, TipiComponent parent, Boolean isHomeComponent)
-			throws TipiException {
+		public TipiComponent instantiateComponent(XMLElement instance,
+				TipiEvent event, TipiInstantiateTipi t, TipiComponent parent, Boolean isHomeComponent)
+				throws TipiException {
 		String name = (String) instance.getAttribute("name");
 		String tagName = instance.getName();
 		String clas = instance.getStringAttribute("class");
@@ -1204,82 +1222,22 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		TipiComponent tc = null;
 		if (clas.equals("") && name != null && !"".equals(name)) {
 			// No class provided. Must be instantiating from a definition.
-			XMLElement definition = getComponentDefinition(name);
-			if (definition == null) {
+			XMLElement xx = getComponentDefinition(name);
+			if (xx == null) {
 				throw new TipiException(
 						"Definition based instance, but no definition found. Definition: "
 								+ name);
 			}
 			// not passing isHomeComponent since this call automatically decides to set homeComponent
-			clas = definition.getStringAttribute("class");
-			if (clas == null) {
-				clas = definition.getStringAttribute("type");
-			}
-			if (definition.getName().startsWith("d.")) {
-				clas = definition.getName().substring(2,
-						definition.getName().length());
-
-			}
-			if (name == null) {
-				showInternalError("Error instantiating component: " + clas
-						+ ". No name supplied. instance: " + instance);
-			}
-			if (!clas.equals("")) {
-				tc = (TipiComponent) instantiateClassObject(clas, name);
-				return tc;
-			} else {
-				throw new TipiException(
-						"Problems instantiating TipiComponent class: "
-								+ definition.toString());
-			}
+			tc = instantiateComponentByDefinition(xx, instance, event, parent);
 		} else {
 			// Class provided. Not instantiating from a definition, name is
 			// irrelevant.
-			tc = (TipiComponent) instantiateClassObject(clas, null);
+			tc = (TipiComponent) instantiateClass(clas, null, instance, parent, isHomeComponent);
 		}
 		tc.setClassName(clas);
-		return tc;
-	}
+		// tc.setParent(parent);
 
-	private TipiComponent initializeComponent(TipiComponent tc, XMLElement instance,
-		    TipiEvent event, TipiInstantiateTipi t, TipiComponent parent, Boolean isHomeComponent)
-			throws TipiException {
-		if (tc.getClassName() != null && !tc.getClassName().equals(""))
-		{
-			tc = (TipiComponent) initializeClass(tc, tc.getClassName(), null, instance, parent, isHomeComponent);
-		}
-		else
-		{
-			String name = instance.getStringAttribute("name");
-			XMLElement definition = getComponentDefinition(name);
-			if (definition == null) {
-				throw new TipiException(
-						"Definition based instance, but no definition found. Definition: "
-								+ name);
-			}
-			String clas = definition.getStringAttribute("class");
-			if (clas == null) {
-				clas = definition.getStringAttribute("type");
-			}
-			if (definition.getName().startsWith("d.")) {
-				clas = definition.getName().substring(2,
-						definition.getName().length());
-
-			}
-			tc = (TipiComponent) initializeClass(tc, clas, name, instance, parent, Boolean.TRUE);
-			XMLElement classDef = getClassManager().getAssembledClassDef(clas);
-
-			/**
-			 * @todo think these two can be removed, because they are invoked in
-			 *       the instantiateClass method
-			 */
-			tc.loadEventsDefinition(this, definition, classDef);
-			tc.loadMethodDefinitions(this, definition, classDef);
-			// -----------------------------
-			tc.loadStartValues(definition, event);
-			tc.commitToUi();
-		}
-			
 		if (t == null) {
 			tc.loadStartValues(instance, event);
 		} else {
@@ -1303,108 +1261,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		tc.componentInstantiated();
 
 		return tc;
-	}
-
-	/**
-	 * Only instantiate the java object representing this class
-	 * @param className
-	 * @param defname
-	 * @return the instantiated java object
-	 * @throws TipiException
-	 */
-	private Object instantiateClassObject(String className, String defname) throws TipiException {
-
-		XMLElement classDef = getClassManager().getAssembledClassDef(className);
-		Class<?> c = getClassManager().getTipiClass(classDef);
-
-		if (c == null) {
-			throw new TipiException(
-					"Error retrieving class definition. Looking for class: "
-							+ defname + ", classname: " + className);
-		}
-		try {
-			return c.newInstance();
-		} catch (Exception ex) {
-			logger.error("Error: ",ex);
-			throw new TipiException(
-					"Error instantiating class:"
-							+ className
-							+ "/"
-							+ defname
-							+ " class: "
-							+ c.getName()
-							+ ". Class may not have a public default contructor, or be abstract, or an interface");
-		}
-	}
-
-	/**
-	 * Initialize the java object representing the given class - load values, instantiate child components etc.
-	 * @param o         the java object representing the given class
-	 * @param className
-	 * @param defname
-	 * @param instance
-	 * @param parent
-	 * @param isHomeComponent
-	 * @return the fully initialized java object
-	 * @throws TipiException
-	 */
-	private Object initializeClass(Object o, String className, String defname,
-			XMLElement instance, TipiComponent parent, Boolean isHomeComponent) throws TipiException {
-
-		if (TipiComponent.class.isInstance(o)) {
-			XMLElement tipiDefinition = null;
-			XMLElement classDef = getClassManager().getAssembledClassDef(className);
-			// AAAAAAP
-			if (defname != null) {
-				tipiDefinition = getComponentDefinition(defname);
-			}
-			String componentType = classDef.getStringAttribute("type");
-
-			TipiComponent tc = (TipiComponent) o;
-			tc.setParent(parent);
-			tc.setClassName(defname);
-			tc.setHomeComponent(isHomeComponent);
-			if(parent!=null) {
-				tc.setParentContainer(parent.getContainer());
-			}
-			//Might already have been set
-			if (tc.getId() == null)
-			{
-				tc.setId(generateComponentId(parent, tc));
-			}
-			tc.setPropertyComponent(classDef.getBooleanAttribute("propertycomponent", "true", "false", false));
-			tc.initContainer();
-			tc.instantiateComponent(instance, classDef);
-			if (tipiDefinition != null) {
-				tc.load(tipiDefinition, instance, this);
-			} else {
-				tc.load(instance, instance, this);
-			}
-			// Moved from the previous else clause
-			tc.loadEventsDefinition(this, instance, classDef);
-			tc.loadMethodDefinitions(this, instance, classDef);
-
-			if ("connector".equals(componentType)) {
-				boolean isDefaultConnector = instance.getBooleanAttribute(
-						"default", "true", "false", false);
-				if (!(tc instanceof TipiConnector)) {
-					showInternalError("Error: Component: "+ className + " is registered as a component, but it does not implement TipiConnector!");
-				} else {
-					registerConnector((TipiConnector) tc);
-					if (isDefaultConnector) {
-						this.defaultConnector = (TipiConnector) tc;
-					}
-				}
-			}
-
-			return tc;
-		}
-		if (TipiLayout.class.isInstance(o)) {
-			TipiLayout tl = (TipiLayout) o;
-			tl.setContext(this);
-			return tl;
-		}
-		throw new TipiException("INSTANTIATING UNKNOWN SORT OF CLASS THING.");
 	}
 
 	private final void killComponent(TipiComponent comp) {
@@ -1460,6 +1316,87 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 		killComponent(comp);
 		fireTipiStructureChanged(parent);
+	}
+
+	private Object instantiateClass(String className, String defname,
+			XMLElement instance, TipiComponent parent) throws TipiException {
+		return instantiateClass(className, defname, instance, parent, Boolean.FALSE);
+	}
+
+	private Object instantiateClass(String className, String defname,
+			XMLElement instance, TipiComponent parent, Boolean isHomeComponent) throws TipiException {
+
+		XMLElement tipiDefinition = null;
+		XMLElement classDef = getClassManager().getAssembledClassDef(className);
+		Class<?> c = getClassManager().getTipiClass(classDef);
+		// AAAAAAP
+		if (defname != null) {
+			tipiDefinition = getComponentDefinition(defname);
+		}
+
+		String componentType = classDef.getStringAttribute("type");
+		if (c == null) {
+			throw new TipiException(
+					"Error retrieving class definition. Looking for class: "
+							+ defname + ", classname: " + className);
+		}
+		Object o;
+		try {
+			o = c.newInstance();
+		} catch (Exception ex) {
+			logger.error("Error: ",ex);
+			throw new TipiException(
+					"Error instantiating class:"
+							+ className
+							+ "/"
+							+ defname
+							+ " class: "
+							+ c.getName()
+							+ ". Class may not have a public default contructor, or be abstract, or an interface");
+		}
+		if (TipiComponent.class.isInstance(o)) {
+			TipiComponent tc = (TipiComponent) o;
+			tc.setContext(this);
+			tc.setParent(parent);
+			tc.setClassName(defname);
+			tc.setHomeComponent(isHomeComponent);
+			if(parent!=null) {
+				tc.setParentContainer(parent.getContainer());
+			}
+			tc.setId(generateComponentId(parent, tc));
+			tc.setPropertyComponent(classDef.getBooleanAttribute("propertycomponent", "true", "false", false));
+			tc.initContainer();
+			tc.instantiateComponent(instance, classDef);
+			if (tipiDefinition != null) {
+				tc.load(tipiDefinition, instance, this);
+			} else {
+				tc.load(instance, instance, this);
+			}
+			// Moved from the previous else clause
+			tc.loadEventsDefinition(this, instance, classDef);
+			tc.loadMethodDefinitions(this, instance, classDef);
+
+			if ("connector".equals(componentType)) {
+				boolean isDefaultConnector = instance.getBooleanAttribute(
+						"default", "true", "false", false);
+				if (!(tc instanceof TipiConnector)) {
+					showInternalError("Error: Component: "+ className + " is registered as a component, but it does not implement TipiConnector!");
+				} else {
+					registerConnector((TipiConnector) tc);
+					if (isDefaultConnector) {
+						this.defaultConnector = (TipiConnector) tc;
+					}
+				}
+			}
+
+			return tc;
+		}
+		if (TipiLayout.class.isInstance(o)) {
+			TipiLayout tl = (TipiLayout) o;
+			tl.setContext(this);
+			return tl;
+		}
+		throw new TipiException("INSTANTIATING UNKNOWN SORT OF CLASS THING.");
 	}
 
 	public void addTipiInstance(String service, TipiDataComponent instance) {

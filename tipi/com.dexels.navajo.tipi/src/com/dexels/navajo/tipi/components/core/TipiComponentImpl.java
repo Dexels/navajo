@@ -1120,12 +1120,12 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	@Override
 	public void addComponent(final TipiComponent c, int index,
 			TipiContext context, Object td) {
-		addComponentAsChild(c);
-		addExistingComponent(c, index, context, td);
-	}
-
-	public void addComponentAsChild(final TipiComponent c)
-	{
+		if (td == null && getLayout() != null) {
+			td = getLayout().createDefaultConstraint(tipiComponentList.size());
+			if (td != null) {
+				c.setConstraints(td);
+			}
+		}
 		if (c.getId() == null) {
 			logger.warn("Warning: null id.");
 		}
@@ -1139,15 +1139,6 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		addChildComponent(c);
 		c.setParent(this);
 
-	}
-	public void addExistingComponent(final TipiComponent c, int index,
-			TipiContext context, Object td) {
-		if (td == null && getLayout() != null) {
-			td = getLayout().createDefaultConstraint(tipiComponentList.size());
-			if (td != null) {
-				c.setConstraints(td);
-			}
-		}
 		TipiDataComponent cparent = c.getServiceRoot();
 		if (cparent != null) {
 			cparent.registerPropertyChild(c);
