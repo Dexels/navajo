@@ -226,21 +226,10 @@ public class RepositoryInstanceWrapper implements RepositoryInstance {
 	}
 
 
-	@Override
-	public List<String> getMonitoredFolders() {
-		return instance.getMonitoredFolders();
-	}
-
 
 	@Override
 	public String getDeployment() {
 		return instance.getDeployment();
-	}
-
-
-	@Override
-	public List<String> getConfigurationFolders() {
-		return instance.getConfigurationFolders();
 	}
 
 	
