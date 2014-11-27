@@ -449,18 +449,26 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		}
 	}
 
+
+	volatile boolean busyWithOnActionPerformed = false;
+	
 	public void messageTableActionPerformed(ActionEvent ae) {
 		MessageTablePanel mm = (MessageTablePanel) getContainer();
 		Map<String, Object> tempMap = new HashMap<String, Object>();
 		tempMap.put("selectedIndex", new Integer(mm.getSelectedRow()));
 		tempMap.put("selectedMessage", mm.getSelectedMessage());
-		setWaitCursor(true);
-		performTipiEvent("onActionPerformed", tempMap, false, new Runnable() {
-			@Override
-			public void run() {
-				setWaitCursor(false);
-			}
-		});
+		if (!busyWithOnActionPerformed)
+		{
+			setWaitCursor(true);
+			busyWithOnActionPerformed = true;
+			performTipiEvent("onActionPerformed", tempMap, false, new Runnable() {
+				@Override
+				public void run() {
+					setWaitCursor(false);
+					busyWithOnActionPerformed = false;
+				}
+			});
+		}
 
 	}
 

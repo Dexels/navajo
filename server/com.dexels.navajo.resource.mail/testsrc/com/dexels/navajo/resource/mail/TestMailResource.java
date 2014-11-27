@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class TestMailResource {
 		ResourceComponent component = new ResourceComponent();
 		Map<String,Object> settings = new HashMap<String, Object>();
 		settings.put("name", "junit.mail");
-		settings.put("host", "smtp.google.com");
+		settings.put("host", "smtp.gmail.com");
 		settings.put("username", "dexels@gmail.com");
 		settings.put("password", "seriously");
 		settings.put("encrypt", true);
@@ -40,27 +41,38 @@ public class TestMailResource {
 	}
 
 	@Test
-	public void testSimple() throws MappableException, UserException {
+	public void testSimple() throws MappableException {
 		ResourceMailAdapter rma = new ResourceMailAdapter();
-		rma.load(new Access());
-		rma.setRecipients("dexels@gmail.com");
-		rma.setSender("dexels@gmail.com");
-		rma.setSubject("Mail at "+new Date());	
-		rma.store();
+        try {
+            rma.load(new Access());
+            rma.setRecipients("dexels@gmail.com");
+            rma.setSender("dexels@gmail.com");
+            rma.setSubject("Mail at " + new Date());
+            rma.setResourceName("junit.mail");
+            rma.store();
+        } catch (UserException e) {
+            Assert.assertEquals("javax.mail.AuthenticationFailedException", e.getCause().toString());
+        }
+        
 	}
 
 	@Test
-	public void testAttach() throws MappableException, UserException {
-		ResourceMailAdapter rma = new ResourceMailAdapter();
-		rma.load(new Access());
-		rma.setRecipients("dexels@gmail.com");
-		rma.setSender("dexels@gmail.com");
-		rma.setSubject("Attachment at "+new Date());	
-		AttachementMap am = new AttachementMap();
-		am.setAttachContentType("image/jpeg");
-		am.setAttachContentDisposition("inline");
-		am.setAttachFileContent(new Binary(getClass().getResourceAsStream("monkey.jpeg")));
-		rma.setAttachment(am);
-		rma.store();
-	}
+    public void testAttach() throws MappableException, UserException {
+        ResourceMailAdapter rma = new ResourceMailAdapter();
+        try {
+            rma.load(new Access());
+            rma.setRecipients("dexels@gmail.com");
+            rma.setSender("dexels@gmail.com");
+            rma.setSubject("Attachment at " + new Date());
+            AttachementMap am = new AttachementMap();
+            am.setAttachContentType("image/jpeg");
+            am.setAttachContentDisposition("inline");
+            am.setAttachFileContent(new Binary(getClass().getResourceAsStream("monkey.jpeg")));
+            rma.setAttachment(am);
+            rma.setResourceName("junit.mail");
+            rma.store();
+        } catch (UserException e) {
+            Assert.assertEquals("javax.mail.AuthenticationFailedException", e.getCause().toString());
+        }
+    }
 }

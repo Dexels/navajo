@@ -115,6 +115,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public abstract void runAsyncInEventThread(Runnable r);
 
+	private final Map<String, Object> lockMap = new HashMap<String, Object>();
+	
 	/**
 	 * Maps a service to a list of datacomponents. Components register here by
 	 * having a service tag
@@ -1097,6 +1099,52 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	// TipiException {
 	// return instantiateLayout(instance,null);
 	// }
+	/**
+	 * Synchronized instantiation of main level tipi components. Due to the synchronization, the test for an existing component is guaranteed to work.
+	 */
+	
+	public TipiComponent instantiateTipi(TipiInstantiateTipi t,
+			TipiComponent parent, boolean force, String id, Object constraints,
+			TipiEvent event, XMLElement xe) throws TipiException {
+		Object lock = null;
+		String path = parent.getPath() + "/" + id; 
+		synchronized(this)
+		{
+			if (lockMap.containsKey(path))
+			{
+				lock = lockMap.get(path);
+			}
+			else
+			{
+				lock = new Object();
+				lockMap.put(path, lock);
+			}
+		}
+		
+		TipiComponent inst = null;
+		synchronized(lock)
+		{
+			TipiComponent comp = parent.getTipiComponentByPath(id);
+	
+			if (comp != null) {
+				// Component exists:
+				if (force) {
+	
+					disposeTipiComponent(comp);
+				} else {
+					comp.performTipiEvent("onInstantiate", null, false);
+					comp.reUse();
+					return comp;
+				}
+			}
+			inst = instantiateComponent(xe, event, t, parent);
+			// set its ID
+			inst.setId(id);
+			parent.addComponent(inst, this, constraints);
+			fireTipiStructureChanged(inst);
+		}
+		return inst;
+	}
 
 	protected TipiComponent instantiateComponentByDefinition(
 			XMLElement definition, XMLElement instance, TipiEvent event,
