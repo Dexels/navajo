@@ -22,7 +22,6 @@ public class SystemFileRepositoryManager {
 
 	private Configuration configuration;
 	
-	
 	public void activate(Map<String,Object> configuration) throws IOException {
 		String path = System.getProperty("file.repository.path");
 		String type = System.getProperty("file.repository.type");
@@ -42,7 +41,7 @@ public class SystemFileRepositoryManager {
 		if(!resolvedPath.exists()) {
 			throw new FileNotFoundException("Injected path: "+path+" is not found. Not injecting configuration");
 		}
-		Configuration c = createOrReuse("navajo.repository."+type, "(repository.name=system.managed.repository)");
+		Configuration c = createOrReuse("dexels.repository.file", "(repository.name=system.managed.repository)");
 		Dictionary<String,Object> properties = new Hashtable<String,Object>();
 		// I think this one can be removed:
 		properties.put("repository.type", type);
@@ -76,7 +75,6 @@ public class SystemFileRepositoryManager {
 		return configuration;
 	}
 	
-	
 	public void deactivate() {
 		try {
 			configuration.delete();
@@ -86,6 +84,7 @@ public class SystemFileRepositoryManager {
 		
 		
 	}
+	
 	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.configAdmin = configAdmin;
 	}

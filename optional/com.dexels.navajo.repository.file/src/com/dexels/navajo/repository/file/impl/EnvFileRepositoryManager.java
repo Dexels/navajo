@@ -1,4 +1,4 @@
-package com.dexels.githubosgi.impl;
+package com.dexels.navajo.repository.file.impl;
 
 import java.io.IOException;
 import java.util.Dictionary;
@@ -11,56 +11,46 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SystemGitRepositoryManager {
+public class EnvFileRepositoryManager {
 	
 	private ConfigurationAdmin configAdmin;
 	
 	private final static Logger logger = LoggerFactory
-			.getLogger(SystemGitRepositoryManager.class);
+			.getLogger(EnvFileRepositoryManager.class);
 
 	private Configuration configuration;
 	
-	
 	public void activate() throws IOException {
 		Map<String,String> env = System.getenv();
-		String url = env.get("GIT_REPOSITORY_URL");
-		String type = env.get("GIT_REPOSITORY_TYPE");
-		String storagePath = env.get("GIT_REPOSITORY_STORAGE");
-		String deployment = env.get("GIT_REPOSITORY_DEPLOYMENT");
-		if(url==null) {
-			logger.warn("No 'GIT_REPOSITORY_URL' set, so no git repositories will be injected.");
+		String path = env.get("FILE_REPOSITORY_PATH");
+		String type = env.get("FILE_REPOSITORY_TYPE");
+		String deployment = env.get("FILE_REPOSITORY_DEPLOYMENT");
+		if(path==null) {
+			logger.warn("No 'FILE_REPOSITORY_PATH' set, so no file repositories will be injected.");
 			return;
 		}
 		if(type==null) {
-			logger.warn("No 'GIT_REPOSITORY_TYPE' set, so no git repositories will be injected.");
+			logger.warn("No 'FILE_REPOSITORY_TYPE' set, so no file repositories will be injected.");
 			return;
 		}
-		if(storagePath==null) {
-			logger.warn("No 'GIT_REPOSITORY_STORAGE' set, so no git repositories will be injected.");
+		if(deployment==null) {
+			logger.warn("No 'FILE_REPOSITORY_DEPLOYMENT' set, so no file repositories will be injected.");
 			return;
 		}
-		injectConfig(url,type,deployment,storagePath,env);
+		injectConfig(path,type,deployment,env);
 	}
 	
 
 
-	private void injectConfig(String url, String type, String deployment, String storagePath, Map<String,String> env) throws IOException {
+	private void injectConfig(String path, String type, String deployment, Map<String,String> env) throws IOException {
 //		githubosgi.gitrepository
-		Configuration c = createOrReuse("navajo.gitrepository."+type, "(repository.name=system.managed.repository)");
+		Configuration c = createOrReuse("dexels.repository.file", "(repository.name=system.managed.repository)");
 		Dictionary<String,Object> properties = new Hashtable<String,Object>();
 		
-		String branch = env.get("GIT_REPOSITORY_BRANCH");
-
 		properties.put("repository.type", type);
-		properties.put("branch", branch);
 		properties.put("name", "system.managed.repository");
-		properties.put("url", url);
+		properties.put("repository.folder", path);
 //		properties.put("autoRefresh", System.getProperty("git.repository.autoRefresh"));
-		String sleepTime = env.get("GIT_REPOSITORY_SLEEPTIME");
-		if(sleepTime!=null) {
-			properties.put("sleepTime", sleepTime);
-		}
-		
 		properties.put("repo", "git");
 		if(deployment!=null) {
 			properties.put("repository.deployment", deployment);
@@ -68,12 +58,11 @@ public class SystemGitRepositoryManager {
 		c.update(properties);	
 		Configuration manager =  configAdmin.getConfiguration("navajo.repository.manager",null);
 		Dictionary<String,Object> managerProperties = new Hashtable<String,Object>();
-		managerProperties.put("storage.path", storagePath);
 		manager.update(managerProperties);
 
 	}
 
-	protected Configuration createOrReuse(String pid, final String filter)
+	private Configuration createOrReuse(String pid, final String filter)
 			throws IOException {
 		configuration = null;
 		try {

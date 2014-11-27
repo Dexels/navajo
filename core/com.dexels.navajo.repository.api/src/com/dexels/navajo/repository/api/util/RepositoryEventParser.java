@@ -1,14 +1,14 @@
 package com.dexels.navajo.repository.api.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.osgi.service.event.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.repository.api.diff.EntryChangeType;
 import com.dexels.navajo.repository.api.diff.RepositoryChange;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RepositoryEventParser {
 

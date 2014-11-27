@@ -58,8 +58,7 @@ public abstract class BaseFileRepositoryInstanceImpl extends RepositoryInstanceI
 
 	}	
 	
-	protected void setupMonitoredFolders() throws IOException {
-		List<String> monitored = getMonitoredFolders();
+	protected void setupMonitoredFolders(List<String> monitored) throws IOException {
 		if(monitored==null) {
 			logger.info("Can not setup up monitored folders: Layout isn't known (yet?): "+type); 
 			return;
@@ -73,7 +72,7 @@ public abstract class BaseFileRepositoryInstanceImpl extends RepositoryInstanceI
 		}
 		logger.info("Repository instance activated");
 		try {
-			watchDir = new WatchDir(this);
+			watchDir = new WatchDir(this,monitored);
 		} catch (Throwable e) {
 			logger.error("Error registering watchdir: ", e);
 			throw(new IOException(e));

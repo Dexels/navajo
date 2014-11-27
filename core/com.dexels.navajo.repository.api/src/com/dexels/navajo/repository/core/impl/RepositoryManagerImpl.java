@@ -24,7 +24,6 @@ public class RepositoryManagerImpl implements RepositoryManager {
 			.getLogger(RepositoryManagerImpl.class);
 	
 
-	
 	public void activate(Map<String,Object> configuration) throws IOException {
 
 		String path = (String) configuration.get("storage.path");

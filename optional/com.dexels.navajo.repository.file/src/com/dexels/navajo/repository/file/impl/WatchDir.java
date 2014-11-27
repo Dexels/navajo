@@ -109,12 +109,12 @@ public class WatchDir implements Closeable,Runnable {
 		});
 	}
 
-	public WatchDir(BaseFileRepositoryInstanceImpl fileRepository) throws IOException {
+	public WatchDir(BaseFileRepositoryInstanceImpl fileRepository,List<String> monitored) throws IOException {
 		this.watcher = FileSystems.getDefault().newWatchService();
 		this.keys = new HashMap<WatchKey, Path>();
 		this.fileRepository = fileRepository;
 		this.repoRoot = Paths.get(fileRepository.getRepositoryFolder().toURI());
-		for (String folder : fileRepository.getMonitoredFolders()) {
+		for (String folder : monitored) {
 			File folderF = new File(fileRepository.getRepositoryFolder(),folder);
 			System.err.println("Registering folder: "+folderF.getAbsolutePath());
 			if(folderF.exists()) {

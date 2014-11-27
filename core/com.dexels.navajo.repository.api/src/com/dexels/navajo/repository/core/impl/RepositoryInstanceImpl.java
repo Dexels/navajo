@@ -3,7 +3,6 @@ package com.dexels.navajo.repository.core.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.repository.api.RepositoryManager;
-import com.dexels.navajo.repository.api.diff.RepositoryLayout;
 
 public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 	
@@ -33,8 +31,6 @@ public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 	private final Map<String,Map<String,Object>> operationSettings = new HashMap<String, Map<String,Object>>();
 	private ConfigurationAdmin configAdmin;
 	private final Map<String,Configuration> resourcePids = new HashMap<String, Configuration>();
-
-	private RepositoryLayout repositoryLayout = null;
 
 	protected String type;
 
@@ -124,34 +120,8 @@ public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 	}
 
 	
-	public void setRepositoryLayout(RepositoryLayout r) {
-		repositoryLayout = r;
-	}
-	
-	public void clearRepositoryLayout(RepositoryLayout r) {
-		repositoryLayout = null;
-	}
 
-	@Override
-	public List<String> getConfigurationFolders() {
-		if(repositoryLayout==null) {
-			logger.warn("Unknown repository layout: "+type+", change monitoring might not work!");
-			return Collections.emptyList();
-		}
-		return repositoryLayout.getConfigurationFolders();
-	}
-	
-	@Override
-	public List<String> getMonitoredFolders() {
-		if(repositoryLayout==null) {
-			logger.warn("Unknown repository layout: "+type+", change monitoring might not work!");
-			return Collections.emptyList();
-		}
-		return repositoryLayout.getMonitoredFolders();
-	}
-	
-	protected void registerFileInstallLocations() throws IOException {
-		List<String> locations = getConfigurationFolders();
+	protected void registerFileInstallLocations(List<String> locations) throws IOException {
 		for (String location : locations) {
 			File current = new File(getRepositoryFolder(),location);
 			addFolderMonitorListener(current);
@@ -159,7 +129,7 @@ public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 		
 	}
 
-	protected void addFolderMonitorListener(File monitoredFolder) throws IOException {
+	private void addFolderMonitorListener(File monitoredFolder) throws IOException {
 		if(!monitoredFolder.exists()) {
 			logger.warn("FileInstaller should monitor folder: {} but it does not exist. Will not try again.", monitoredFolder.getAbsolutePath());
 			return;
