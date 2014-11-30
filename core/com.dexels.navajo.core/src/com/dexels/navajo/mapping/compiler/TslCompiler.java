@@ -986,6 +986,7 @@ public class TslCompiler {
 			result.append(printIdent(ident + 2)
 					+ "inSelectionRef = MappingUtils.isSelection(currentInMsg, access.getInDoc(), \""
 					+ ref + "\");\n");
+			
 			result.append(printIdent(ident + 2) + "if (!inSelectionRef)\n");
 			result.append(printIdent(ident + 4)
 					+ messageListName
@@ -999,7 +1000,7 @@ public class TslCompiler {
 					+ ref + "\");\n");
 			
 			//String subObjectsName = "subObject" + subObjectCounter;
-			String loopCounterName = "j" + subObjectCounter;
+			String loopCounterName = "j" + subObjectCounter++;
 			
 			variableClipboard.add("int " + loopCounterName + ";\n");
 
@@ -1028,12 +1029,12 @@ public class TslCompiler {
 			result.append(printIdent(ident + 2)
 					+ "currentInMsg = (Message) " + messageListName
 					+ ".get(" + loopCounterName + ");\n");
-			result.append(printIdent(ident) + "else\n");
+			result.append(printIdent(ident) + "else {\n");
 			// currentSelection.
 			result.append(printIdent(ident + 2)
 					+ "currentSelection = (Selection) " + messageListName
 					+ ".get(" + loopCounterName + ");\n");
-
+			
 			// if
 			// CONDITION.EVALUATE()!!!!!!!!!!!! {
 			// If filter is specified, evaluate filter first:
