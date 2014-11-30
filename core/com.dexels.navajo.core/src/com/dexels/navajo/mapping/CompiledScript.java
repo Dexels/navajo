@@ -719,13 +719,11 @@ public Selection getCurrentSelection() {
 		String lockName = user + "-" + service;
 		Lock l = TribeManagerFactory.getInstance().getLock(lockName);
 		acquiredLocks.add(l);
-		System.err.println("Returning lock: " + lockName);
 		
 		return l;
 	}
 	
 	public void releaseLock(Lock l) {
 		l.unlock();
-		System.err.println("Released lock: " + l);
 	}
 }
