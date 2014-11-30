@@ -816,24 +816,24 @@ public class TslCompiler {
 
 		// Check if <message> is mapped to an object attribute:
 		if (nextElt != null && nextElt.getNodeName().equals("map")
-				&& ( ( nextElt.getAttribute("ref") != null && !nextElt.getAttribute("ref").equals("") ) ||
-					   nextElt.getAttribute("message") != null && !nextElt.getAttribute("message").equals("") ) )
-				
-				{
+				&& nextElt.getAttribute("ref") != null && !nextElt.getAttribute("ref").equals("") ) {
 			
 			String refOriginal = null; 
 			isSubMapped = true;
-			if ( nextElt.getAttribute("ref") != null && !nextElt.getAttribute("ref").equals("") ) {
-				refOriginal = nextElt.getAttribute("ref");
-				isMappedMessage = false;
-			} else {
-				refOriginal = nextElt.getAttribute("message");
+			isMappedMessage = false;
+			refOriginal = nextElt.getAttribute("ref");
+			
+			// Check if ref contains [ char, if it does, an array message of a selection property is mapped.
+			if ( refOriginal.startsWith("[") ) {
+				refOriginal = refOriginal.replaceAll("\\[", "");
+				refOriginal = refOriginal.replaceAll("\\]", "");
 				isMappedMessage = true;
 				isArrayAttr = true;
 				type = Message.MSG_TYPE_ARRAY;
+			} else if ( refOriginal.indexOf("$") != -1 ) {
+				// Remove leading $ (if present).
+				refOriginal = refOriginal.replaceAll("\\$", "");
 			}
-			// Remove leading $ (if present).
-			refOriginal = refOriginal.replaceAll("\\$", "");
 
 			// System.err.println("refOriginal = " + refOriginal);
 
