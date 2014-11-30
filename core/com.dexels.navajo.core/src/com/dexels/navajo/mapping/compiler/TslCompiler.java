@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -2870,6 +2871,62 @@ public class TslCompiler {
 			result.append(debugNode(ident, (Element) n));
 		} else if (n.getNodeName().equals("break")) {
 			result.append(breakNode(ident, (Element) n));
+		} else if ( n.getNodeName().equals("synchronized")) {
+			Element elt = (Element) n;
+			
+			String context = elt.getAttribute("context");
+			String timeout = elt.getAttribute("timeout");
+			
+			boolean user = false;
+			boolean service = false;
+			
+			if ( context.indexOf("user") != -1 ) {
+				user = true;
+			}
+			if ( context.indexOf("service") != -1 ) {
+				service = true;
+			}
+			
+			String methodName = "execute_sub" + (methodCounter++);
+			result.append(printIdent(ident) + "if (!kill) { " + methodName
+					+ "(access); }\n");
+
+			StringBuffer methodBuffer = new StringBuffer();
+
+			methodBuffer.append(printIdent(ident) + "private final void "
+					+ methodName + "(Access access) throws Exception {\n\n");
+			ident += 2;
+			methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
+			
+			String lock = "Lock l = getLock(" + ( user ? "access.rpcUser" : null) + "," + ( service ? "access.rpcName" : "null" )+ ");\n" + 
+					      " try { \n";
+			
+			String tryLock = null;
+			if ( "".equals(timeout)) {
+				tryLock = "l.lock(); if ( true ) {\n";
+			} else {
+				tryLock = "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n";
+			}
+			
+			methodBuffer.append(printIdent(ident) + lock);
+			methodBuffer.append(printIdent(ident) + tryLock);
+			
+			NodeList children = n.getChildNodes();
+			for (int i = 0; i < children.getLength(); i++) {
+				if (children.item(i) instanceof Element) {
+					methodBuffer.append(compile(ident + 4, children.item(i), className, objectName, deps, tenant));
+				}
+			}
+			
+			methodBuffer.append(printIdent(ident) + "}\n");
+			ident -= 2;
+			methodBuffer.append(printIdent(ident) + "} finally {\n");
+			methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
+			methodBuffer.append(printIdent(ident) +"}\n");
+			methodBuffer.append(printIdent(ident) +"}\n");
+			methodBuffer.append(printIdent(ident) +"}\n");
+
+			methodClipboard.add(methodBuffer);
 		}
 
 		return result.toString();
@@ -3120,6 +3177,8 @@ public class TslCompiler {
 					+ "import com.dexels.navajo.mapping.compiler.meta.JavaDependency;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.NavajoDependency;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;\n"
+					+ "import java.util.concurrent.locks.Lock;\n"
+					+ "import java.util.concurrent.TimeUnit;\n"
 					+ "import java.util.Stack;\n\n\n";
 			result.append(importDef);
 

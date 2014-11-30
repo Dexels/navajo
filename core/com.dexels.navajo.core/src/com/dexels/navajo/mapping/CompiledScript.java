@@ -28,10 +28,12 @@ package com.dexels.navajo.mapping;
 import java.lang.management.ThreadInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.StringTokenizer;
+import java.util.concurrent.locks.Lock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +60,7 @@ import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionData;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 
 @SuppressWarnings({"unchecked","rawtypes"})
 public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, CompiledScriptInterface  {
@@ -112,6 +115,7 @@ private final HashMap functions = new HashMap();
 
   private CompiledScriptFactory factory;
 
+  private HashSet<Lock> acquiredLocks = new HashSet<Lock>();
   
 @SuppressWarnings("unused")
 private final static Logger logger = LoggerFactory
@@ -376,6 +380,14 @@ public final void run(Access access) throws Exception {
 			  }
 		  }
 	  } finally {
+		  // Release acquired locks.
+		  for ( Lock l : acquiredLocks ) {
+			  try {
+			  l.unlock();
+			  } catch (Throwable t) {
+				  
+			  }
+		  }
 		  access.processingTime = (int) ( System.currentTimeMillis() - start );
 		  try {
 			  //JMXHelper.deregisterMXBean(JMXHelper.SCRIPT_DOMAIN, myThreadName);
@@ -694,5 +706,26 @@ public Selection getCurrentSelection() {
 			return factory.getResource(name);
 		}
 		return null;
+	}
+	
+	/**
+	 * Get a lock for the synchronized block.
+	 * 
+	 */
+	public Lock getLock(String user, String service) throws Exception {
+		if ( user == null && service == null ) {
+			throw new Exception("Either user or service or both should be specified.");
+		}
+		String lockName = user + "-" + service;
+		Lock l = TribeManagerFactory.getInstance().getLock(lockName);
+		acquiredLocks.add(l);
+		System.err.println("Returning lock: " + lockName);
+		
+		return l;
+	}
+	
+	public void releaseLock(Lock l) {
+		l.unlock();
+		System.err.println("Released lock: " + l);
 	}
 }
