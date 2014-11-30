@@ -1029,7 +1029,7 @@ public class TslCompiler {
 			result.append(printIdent(ident + 2)
 					+ "currentInMsg = (Message) " + messageListName
 					+ ".get(" + loopCounterName + ");\n");
-			result.append(printIdent(ident) + "else {\n");
+			result.append(printIdent(ident) + "else \n");
 			// currentSelection.
 			result.append(printIdent(ident + 2)
 					+ "currentSelection = (Selection) " + messageListName
