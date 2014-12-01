@@ -2873,8 +2873,16 @@ public class TslCompiler {
 			result.append(breakNode(ident, (Element) n));
 		} else if ( n.getNodeName().equals("synchronized")) {
 			Element elt = (Element) n;
-			
+			StringBuffer methodBuffer = new StringBuffer();
+
 			String context = elt.getAttribute("context");
+			String key = elt.getAttribute("key");
+			String keyValue = "null";
+			if ( key != null && !key.equals("") ) {
+			  keyValue=	"(\"\" + Expression.evaluate(\"" 
+						+ key
+						+ "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,null,null,getEvaluationParams()).value)";
+			} 
 			String timeout = elt.getAttribute("timeout");
 			
 			boolean user = false;
@@ -2891,15 +2899,15 @@ public class TslCompiler {
 			result.append(printIdent(ident) + "if (!kill) { " + methodName
 					+ "(access); }\n");
 
-			StringBuffer methodBuffer = new StringBuffer();
-
+			
 			methodBuffer.append(printIdent(ident) + "private final void "
 					+ methodName + "(Access access) throws Exception {\n\n");
 			ident += 2;
 			methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
 			
-			String lock = "Lock l = getLock(" + ( user ? "access.rpcUser" : null) + "," + ( service ? "access.rpcName" : "null" )+ ");\n" + 
-					      " try { \n";
+			String lock = "Lock l = getLock(" + ( user ? "access.rpcUser" : null) + "," + ( service ? "access.rpcName" : "null" )+ 
+					"," + keyValue + ");\n" + 
+					" try { \n";
 			
 			String tryLock = null;
 			if ( "".equals(timeout)) {

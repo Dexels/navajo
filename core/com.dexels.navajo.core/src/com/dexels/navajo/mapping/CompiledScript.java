@@ -712,11 +712,12 @@ public Selection getCurrentSelection() {
 	 * Get a lock for the synchronized block.
 	 * 
 	 */
-	public Lock getLock(String user, String service) throws Exception {
-		if ( user == null && service == null ) {
+	public Lock getLock(String user, String service, String key) throws Exception {
+		if ( user == null && service == null && key == null) {
 			throw new Exception("Either user or service or both should be specified.");
 		}
-		String lockName = user + "-" + service;
+		String lockName = user + "-" + service + "-" + key;
+		System.err.println("lockname: " + lockName);
 		Lock l = TribeManagerFactory.getInstance().getLock(lockName);
 		acquiredLocks.add(l);
 		
