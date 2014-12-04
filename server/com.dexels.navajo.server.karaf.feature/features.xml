@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
+
+    <feature version="1.0.2" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
+        <feature version="[3.0.0,4)">eventadmin</feature>
+        <feature version="[3.0.0,4)">scr</feature>
+        <feature version="[3.0.0,4)">pax-http</feature>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf.featuresync/1.0.0</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/2.0.2</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.0.7</bundle>
+        <bundle dependency="true">mvn:com.dexels.thirdparty/javaewah/0.7.9</bundle>
+        <bundle dependency="true">mvn:com.jcraft/jsch-bundle/0.1.50</bundle>
+        <bundle dependency="true">mvn:org.eclipse.jgit/org.eclipse.jgit/3.6.0.201411121045-m1</bundle>
+        <bundle dependency="true">mvn:commons-io/commons-io/2.4</bundle>
+        <bundle dependency="true">mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
+        <bundle dependency="true">mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
+    </feature>
+    
     <feature resolver="(obr)" name='navajo.core.dependencies' version='3.0.0' start-level='80'  >
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/1.3_5</bundle>
@@ -78,11 +94,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>	
 
-<<<<<<< HEAD
 	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.22' start-level='81' >
-=======
-	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.21' start-level='81' >
->>>>>>> master
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/2.0.2</bundle>
