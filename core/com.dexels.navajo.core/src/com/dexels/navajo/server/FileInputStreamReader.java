@@ -43,7 +43,7 @@ public InputStream getResource(String name) {
     	return res.openStream();
     } catch (Exception ioe) {
     	
-    	logger.error("Could not load resource...: " + name + "(" + ioe.getMessage() + ")");
+    	logger.error("Could not load resource...: " + name + "(" + ioe.getMessage() + ")",ioe);
     	return null;
     }
   }
