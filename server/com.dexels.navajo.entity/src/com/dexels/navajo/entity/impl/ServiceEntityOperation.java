@@ -255,7 +255,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				String propertyName = getPropertyFromReference(e_p.getBind());
 				Navajo entityObj = referenced.get(entityName);
 				Property r_p = NavajoFactory.getInstance().createProperty(entityObj, propertyName, "", null, 0, "", "in");
-				System.err.println("Creating property " + r_p.getName() + " with value " + p.getTypedValue());
+				//System.err.println("Creating property " + r_p.getName() + " with value " + p.getTypedValue());
 				r_p.setAnyValue(p.getTypedValue());
 				entityObj.getMessage(entityName).addProperty(r_p);
 				updateableEntities.add(entityName);
@@ -295,7 +295,7 @@ public class ServiceEntityOperation implements EntityOperation {
 
 			if ( resolveLinks ) {
 
-				myEntity.getMessage().write(System.err);
+				//myEntity.getMessage().write(System.err);
 				
 				// Add properties that refer to other entities.
 				List<Property> allProps = myEntity.getMessage().getAllProperties();
@@ -594,7 +594,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			} else {
 				result = currentEntity;
 			}
-			System.err.println("In checkForMongo, current entity:");
+			//System.err.println("In checkForMongo, current entity:");
 			Property id = null;
 			if ( result != null ) {
 				id = result.getProperty(inputEntity.getName() + "/_id");
@@ -724,7 +724,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			}
 			
 		}
-		clean(result, validMessages, "response", true);	
+		clean(result, new String[]{myEntity.getMessageName()}, "response", true);	
 		return result;
 		
 		// Check for transaction.
