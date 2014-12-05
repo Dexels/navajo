@@ -556,7 +556,7 @@ public class TslCompiler {
 				value = child.getNodeValue();
 			} else {
 				throw new Exception(
-						"Error @"
+						"Error line "+ exprElmnt.getAttribute("linenr") +":"+ exprElmnt.getAttribute("startoffset")  +" @"
 								+ (exprElmnt.getParentNode() + "/" + exprElmnt)
 								+ ": <expression> node should either contain a value attribute or a text child node: >"
 								+ value + "<");
