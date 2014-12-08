@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.document.Operation;
@@ -254,7 +253,7 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 		try {
 			json.formatDefinition(masked, writer, true);
 		} catch (Exception ex) {
-			logger.error("Error in writing entity output in JSON!");
+			logger.error("Error in writing entity output in JSON!",ex);
 			throw new ServletException("Error producing output");
 		}
 		return StringEscapeUtils.escapeHtml(writer.toString());
