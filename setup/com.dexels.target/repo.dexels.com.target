@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1216">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1231">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.3.201305221702"/>
@@ -14,14 +14,14 @@
 <repository location="http://repo.dexels.com/eclipse/egit"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.equinox.executable.feature.group" version="3.6.0.v20140117-1004"/>
-<unit id="org.eclipse.equinox.sdk.feature.group" version="3.9.0.v20140221-1852"/>
-<unit id="org.eclipse.equinox.core.feature.feature.group" version="1.1.0.v20140110-1610"/>
-<repository location="http://repo.dexels.com/eclipse/equinox_kepler"/>
+<unit id="org.eclipse.equinox.server.core.feature.group" version="1.3.0.v20140909-1633"/>
+<unit id="org.eclipse.equinox.sdk.feature.group" version="3.10.0.v20140909-1633"/>
+<unit id="org.eclipse.equinox.server.jetty.feature.group" version="1.1.100.v20140416-1649"/>
+<repository location="http://repo.dexels.com/eclipse/equinox_luna"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.8.31.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.8.31"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.0.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.0"/>
 </location>
 </locations>
 <includeBundles>
@@ -80,15 +80,15 @@
 <plugin id="org.apache.camel.camel-mail"/>
 <plugin id="org.apache.camel.camel-stream"/>
 <plugin id="org.apache.commons.beanutils"/>
-<plugin id="org.apache.commons.codec" version="1.9.0"/>
-<plugin id="org.apache.commons.compress" version="1.5.0"/>
+<plugin id="org.apache.commons.codec"/>
+<plugin id="org.apache.commons.compress" version="1.6.0.v201310281400"/>
 <plugin id="org.apache.commons.dbcp"/>
 <plugin id="org.apache.commons.email"/>
 <plugin id="org.apache.commons.fileupload"/>
 <plugin id="org.apache.commons.httpclient"/>
 <plugin id="org.apache.commons.io"/>
 <plugin id="org.apache.commons.lang"/>
-<plugin id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
+<plugin id="org.apache.commons.logging"/>
 <plugin id="org.apache.commons.net"/>
 <plugin id="org.apache.commons.pool"/>
 <plugin id="org.apache.felix.bundlerepository"/>
@@ -183,23 +183,15 @@
 <plugin id="org.apache.tika.parsers"/>
 <plugin id="org.apache.xbean.bundleutils"/>
 <plugin id="org.codehaus.jettison.jettison"/>
-<plugin id="org.eclipse.core.runtime"/>
-<plugin id="org.eclipse.core.variables"/>
-<plugin id="org.eclipse.ecf"/>
-<plugin id="org.eclipse.ecf.filetransfer"/>
-<plugin id="org.eclipse.ecf.identity"/>
-<plugin id="org.eclipse.ecf.provider.filetransfer"/>
-<plugin id="org.eclipse.ecf.provider.filetransfer.ssl"/>
-<plugin id="org.eclipse.ecf.ssl"/>
 <plugin id="org.eclipse.equinox.app"/>
 <plugin id="org.eclipse.equinox.cm"/>
-<plugin id="org.eclipse.equinox.common"/>
+<plugin id="org.eclipse.equinox.common" version="3.6.200.v20130402-1505"/>
 <plugin id="org.eclipse.equinox.concurrent"/>
 <plugin id="org.eclipse.equinox.console.ssh"/>
 <plugin id="org.eclipse.equinox.coordinator"/>
 <plugin id="org.eclipse.equinox.device"/>
 <plugin id="org.eclipse.equinox.ds"/>
-<plugin id="org.eclipse.equinox.event"/>
+<plugin id="org.eclipse.equinox.event" version="1.3.100.v20140115-1647"/>
 <plugin id="org.eclipse.equinox.frameworkadmin"/>
 <plugin id="org.eclipse.equinox.frameworkadmin.equinox"/>
 <plugin id="org.eclipse.equinox.io"/>
@@ -207,17 +199,12 @@
 <plugin id="org.eclipse.equinox.launcher"/>
 <plugin id="org.eclipse.equinox.log"/>
 <plugin id="org.eclipse.equinox.metatype"/>
-<plugin id="org.eclipse.equinox.preferences"/>
 <plugin id="org.eclipse.equinox.registry"/>
 <plugin id="org.eclipse.equinox.security"/>
 <plugin id="org.eclipse.equinox.security.macosx"/>
 <plugin id="org.eclipse.equinox.simpleconfigurator"/>
 <plugin id="org.eclipse.equinox.supplement"/>
-<plugin id="org.eclipse.equinox.transforms.hook"/>
-<plugin id="org.eclipse.equinox.useradmin"/>
 <plugin id="org.eclipse.equinox.util"/>
-<plugin id="org.eclipse.equinox.util.source"/>
-<plugin id="org.eclipse.jdt.core.compiler.batch"/>
 <plugin id="org.eclipse.jetty.ajp"/>
 <plugin id="org.eclipse.jetty.annotations"/>
 <plugin id="org.eclipse.jetty.client"/>
