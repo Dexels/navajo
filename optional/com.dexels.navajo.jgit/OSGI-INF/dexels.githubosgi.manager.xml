@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="ignore" deactivate="deactivate" immediate="true" name="dexels.githubosgi.manager">
-   <implementation class="com.dexels.githubosgi.impl.SystemGitRepositoryManager"/>
-   <reference bind="setConfigAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="dynamic" unbind="clearConfigAdmin"/>
-</scr:component>
