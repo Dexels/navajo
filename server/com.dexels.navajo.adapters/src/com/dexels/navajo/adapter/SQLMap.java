@@ -1606,7 +1606,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				} else {
 				    index++;
 				    Object o = null;
-				    if (parameters.size() <= index) {
+				    if (index <= parameters.size()) {
 				        o = parameters.get(index - 1 ); //0-1 gap
 				    } 
 					
