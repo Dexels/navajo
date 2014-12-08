@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -89,11 +90,11 @@ public class AdminMap implements Mappable {
   @Override
 public void load(Access access) throws MappableException, UserException {
 	NavajoConfigInterface nc = DispatcherFactory.getInstance().getNavajoConfig();
-    scriptPath = nc.getScriptPath();
-    configPath = nc.getConfigPath();
-    adapterPath = nc.getAdapterPath();
-    compiledScriptPath = nc.getCompiledScriptPath();
-    rootPath = nc.getRootPath();
+    scriptPath = ensurePathEndsWithSeparator(nc.getScriptPath());
+    configPath = ensurePathEndsWithSeparator(nc.getConfigPath());
+    adapterPath = ensurePathEndsWithSeparator(nc.getAdapterPath());
+    compiledScriptPath = ensurePathEndsWithSeparator(nc.getCompiledScriptPath());
+    rootPath = ensurePathEndsWithSeparator(nc.getRootPath());
     //supportsHotCompile = nc.isHotCompileEnabled();
     supportsAsync = nc.isAsyncEnabled();
     supportsStore = ( nc.getAsyncStore() != null );
@@ -117,6 +118,18 @@ public void load(Access access) throws MappableException, UserException {
     	jabberService = jw.getJabberService();
     }
     
+  }
+  
+  private String ensurePathEndsWithSeparator(String path)
+  {
+	  if (path.endsWith(File.separator))
+	  {
+		  return path;
+	  }
+	  else
+	  {
+		  return path + File.separator;
+	  }
   }
 
   
