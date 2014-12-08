@@ -129,7 +129,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			boolean keepIntermediate) throws Exception {
 		// TODO does scriptExtension always include the dot?
 		if (!scriptExtension.startsWith(".")) {
-			throw new IllegalAccessError("SCript extension did not start with a dot!");
+			throw new IllegalAccessError("Script extension did not start with a dot!");
 		}
 		String script = scriptName.replaceAll("\\.", "/");
 		final String scriptTenant = tenantFromScriptPath(scriptName);
