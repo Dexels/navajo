@@ -25,6 +25,9 @@ public class Dependency {
 		// TODO support repository (using '!')
 		String rest = p1[1];
 		String[] parts = rest.split("/");
+		if(parts.length<3) {
+			throw new MalformedURLException("Malformed mvn url: "+url);
+		}
 		groupId = parts[0];
 		artifactId = parts[1];
 		version = parts[2];
