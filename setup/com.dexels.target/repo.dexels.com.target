@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1231">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1251">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.3.201305221702"/>
@@ -20,17 +20,18 @@
 <repository location="http://repo.dexels.com/eclipse/equinox_luna"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.0.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.0"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.4.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.4"/>
 </location>
 </locations>
 <includeBundles>
 <plugin id="aQute.xray.plugin"/>
-<plugin id="biz.aQute.bndlib"/>
-<plugin id="ch.qos.logback.access"/>
 <plugin id="ch.qos.logback.classic"/>
 <plugin id="ch.qos.logback.core"/>
 <plugin id="com.dexels.karaf.featuresync"/>
+<plugin id="com.dexels.oauth.api"/>
+<plugin id="com.dexels.oauth.impl"/>
+<plugin id="com.dexels.oauth.web"/>
 <plugin id="com.dexels.osgi.bundlesync"/>
 <plugin id="com.dexels.repository.api"/>
 <plugin id="com.dexels.repository.file"/>
@@ -81,7 +82,7 @@
 <plugin id="org.apache.camel.camel-stream"/>
 <plugin id="org.apache.commons.beanutils"/>
 <plugin id="org.apache.commons.codec"/>
-<plugin id="org.apache.commons.compress" version="1.6.0.v201310281400"/>
+<plugin id="org.apache.commons.compress" version="1.9.0"/>
 <plugin id="org.apache.commons.dbcp"/>
 <plugin id="org.apache.commons.email"/>
 <plugin id="org.apache.commons.fileupload"/>
@@ -152,14 +153,6 @@
 <plugin id="org.apache.oltu.commons.encodedtoken"/>
 <plugin id="org.apache.oltu.commons.json"/>
 <plugin id="org.apache.oltu.jose.jws"/>
-<plugin id="org.apache.oltu.oauth2.authzserver"/>
-<plugin id="org.apache.oltu.oauth2.client"/>
-<plugin id="org.apache.oltu.oauth2.common"/>
-<plugin id="org.apache.oltu.oauth2.dynamicreg.client"/>
-<plugin id="org.apache.oltu.oauth2.dynamicreg.common"/>
-<plugin id="org.apache.oltu.oauth2.dynamicreg.server"/>
-<plugin id="org.apache.oltu.oauth2.resourceserver"/>
-<plugin id="org.apache.oltu.oauth2.resourceserver-filter"/>
 <plugin id="org.apache.pdfbox"/>
 <plugin id="org.apache.pdfbox.fontbox"/>
 <plugin id="org.apache.pdfbox.jempbox"/>
