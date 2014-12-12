@@ -3,14 +3,14 @@
 	name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
 
-    <feature version="1.0.3" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
+    <feature version="1.0.4" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
         <feature version="[3.0.0,4)">eventadmin</feature>
         <feature version="[3.0.0,4)">scr</feature>
         <feature version="[3.0.0,4)">pax-http</feature>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf.featuresync/1.0.0</bundle>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/3.0.1</bundle>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.0.10</bundle>
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.file/1.0.11</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.file/1.0.12</bundle>
         <bundle dependency="true">mvn:com.dexels.thirdparty/javaewah/0.7.9</bundle>
         <bundle dependency="true">mvn:com.jcraft/jsch-bundle/0.1.50</bundle>
         <bundle dependency="true">mvn:org.eclipse.jgit/org.eclipse.jgit/3.6.0.201411121045-m1</bundle>
@@ -20,10 +20,10 @@
     </feature>
 
 
-	<feature version="1.0.2" start-level="80" name="dexels.oauth" resolver="(obr)">
+	<feature version="1.0.3" start-level="80" name="dexels.oauth" resolver="(obr)">
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/1.0.0</bundle>
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.3</bundle>
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.3</bundle>
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.4</bundle>
 	</feature>
 
 
@@ -262,11 +262,11 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.article' version='3.0.14'
+	<feature resolver="(obr)" name='navajo.article' version='3.0.15'
 		start-level='81'>
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<feature version="[1.0.0,2)">dexels.oauth</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/2.0.20
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/2.0.22
 		</bundle>
 	</feature>
 
@@ -329,7 +329,7 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.mongodb'
-		version='3.0.8' start-level='81'>
+		version='3.0.9' start-level='81'>
 		<feature version="[3.0.14,4)">navajo.server.osgi</feature>
 		<feature version="[1.0.0,2)">dexels.oauth</feature>
 		
@@ -337,7 +337,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo.navajostore/3.0.6
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.oauth.mongodb/1.0.1
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.oauth.mongodb/1.0.3
 		</bundle>
 	</feature>
 
