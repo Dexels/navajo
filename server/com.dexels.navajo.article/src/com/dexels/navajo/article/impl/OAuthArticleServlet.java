@@ -3,11 +3,6 @@ package com.dexels.navajo.article.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,11 +25,8 @@ import com.dexels.oauth.api.TokenStore;
 public class OAuthArticleServlet extends ArticleServlet {
 	
 	private static final long serialVersionUID = 1199676363102046960L;
-
 	private TokenStore tokenStore;
-
 	private ClientStore clientStore;
-
 	private final static Logger logger = LoggerFactory
 			.getLogger(OAuthArticleServlet.class);
 	
@@ -60,50 +52,11 @@ public class OAuthArticleServlet extends ArticleServlet {
 				resp.sendError(400, "No token and no valid clientId supplied");
 				return;
 			}
-			
-			
 			final String username = cr.getUsername();
-			
-			
-			
 			if(clientId== null || username == null ) {
 				resp.sendError(400, "Missing token");
 				return;
 			}
-			
-//			cr = clientStore.getClientByToken(password);
-//			cr = new ClientRegistration() {
-//				
-//				@Override
-//				public String getUsername() {
-//					return username;
-//				}
-//				
-//				@Override
-//				public String getRedirectUriPrefix() {
-//					return "";
-//				}
-//				
-//				@Override
-//				public String getClientId() {
-//					return "fake_id";
-//				}
-//				
-//				@Override
-//				public String getClientDescription() {
-//					return "";
-//				}
-//				
-//				@Override
-//				public Map<String, Object> getUserAttributes() {
-//					return new HashMap<String, Object>();
-//				}
-//				
-//				@Override
-//				public String getPassword() {
-//					return clientId;
-//				}
-//			};
 		} else {
 			try {
 				t = tokenStore.getTokenByString(token);
@@ -119,15 +72,13 @@ public class OAuthArticleServlet extends ArticleServlet {
 			}
 			
 		}
-//		if(t==null) {
-//			resp.sendError(400, "Unauthorized or expired token");
-//			return;
-//		}
-		
-		String clientId = cr.getClientId();
 		String username = cr.getUsername();
 		String pathInfo = req.getPathInfo();
-		String instance = determineInstanceFromRequest(req);
+		String instance = cr.getInstance();
+		logger.info("clientInstance: "+instance);
+		if(instance==null) {
+			instance = determineInstanceFromRequest(req);
+		}
 		logger.info("Instance determined: "+instance); 
 		if(pathInfo==null) {
 			throw new ServletException("No article found, please specify");
