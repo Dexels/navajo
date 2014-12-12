@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<<<<<<< HEAD
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1235">
-=======
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1251">
->>>>>>> Update features and target platform
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1261">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.3.201305221702"/>
@@ -24,8 +20,8 @@
 <repository location="http://repo.dexels.com/eclipse/equinox_luna"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.4.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.4"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.6.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.6"/>
 </location>
 </locations>
 <includeBundles>
