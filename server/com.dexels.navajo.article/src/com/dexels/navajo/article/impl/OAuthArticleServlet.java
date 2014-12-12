@@ -167,6 +167,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 			}
 
 		} else {
+			resp.sendError(404, "No such article");
 			throw new FileNotFoundException("Unknown article: "+article.getAbsolutePath());
 		}
 	}
