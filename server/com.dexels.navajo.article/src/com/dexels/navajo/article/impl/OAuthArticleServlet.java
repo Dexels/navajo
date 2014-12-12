@@ -46,82 +46,64 @@ public class OAuthArticleServlet extends ArticleServlet {
 		ClientRegistration cr = null;
 		if(token==null) {
 			// fallback:
-			final String password = req.getParameter("clientId");
-			final String username = req.getParameter("username");
-			if(password== null || username == null ) {
-				resp.sendError(400, "Missing token");
+			final String clientId = req.getParameter("clientId");
+			if(clientId==null) {
+				resp.sendError(400, "No token and no clientId supplied");
+				return;
 			}
-			// TODO I think we should verify this one? Of is this enough?
-			t = new Token() {
-				
-				@Override
-				public Set<String> scopes() {
-					return Collections.emptySet();
-				}
-				
-				@Override
-				public boolean isExpired() {
-					return false;
-				}
-				
-				@Override
-				public String getUsername() {
-					return username;
-				}
-				
-				@Override
-				public Map<String, Object> getUserAttributes() {
-					return Collections.emptyMap();
-				}
-				
-				@Override
-				public int getExpirySeconds() {
-					return 999;
-				}
-				
-				@Override
-				public String clientId() {
-					return password;
-				}
-
-				@Override
-				public Date getExpiryDate() {
-					return new Date();
-				}
-			};
+			try {
+				cr = clientStore.getClient(clientId);
+			} catch (ClientStoreException e) {
+				throw new ServletException("Error acquiring client id:",e);
+			}
+			if(cr==null) {
+				resp.sendError(400, "No token and no valid clientId supplied");
+				return;
+			}
+			
+			
+			final String username = cr.getUsername();
+			
+			
+			
+			if(clientId== null || username == null ) {
+				resp.sendError(400, "Missing token");
+				return;
+			}
+			
 //			cr = clientStore.getClientByToken(password);
-			cr = new ClientRegistration() {
-				
-				@Override
-				public String getUsername() {
-					return username;
-				}
-				
-				@Override
-				public String getRedirectUriPrefix() {
-					return "";
-				}
-				
-				@Override
-				public String getClientId() {
-					return "fake_id";
-				}
-				
-				@Override
-				public String getClientDescription() {
-					return "";
-				}
-				
-				@Override
-				public Map<String, Object> getUserAttributes() {
-					return new HashMap<String, Object>();
-				}
-				
-				@Override
-				public String getPassword() {
-					return password;
-				}
-			};
+//			cr = new ClientRegistration() {
+//				
+//				@Override
+//				public String getUsername() {
+//					return username;
+//				}
+//				
+//				@Override
+//				public String getRedirectUriPrefix() {
+//					return "";
+//				}
+//				
+//				@Override
+//				public String getClientId() {
+//					return "fake_id";
+//				}
+//				
+//				@Override
+//				public String getClientDescription() {
+//					return "";
+//				}
+//				
+//				@Override
+//				public Map<String, Object> getUserAttributes() {
+//					return new HashMap<String, Object>();
+//				}
+//				
+//				@Override
+//				public String getPassword() {
+//					return clientId;
+//				}
+//			};
 		} else {
 			try {
 				t = tokenStore.getTokenByString(token);
@@ -137,13 +119,13 @@ public class OAuthArticleServlet extends ArticleServlet {
 			}
 			
 		}
-		if(t==null) {
-			resp.sendError(400, "Unauthorized or expired token");
-			return;
-		}
+//		if(t==null) {
+//			resp.sendError(400, "Unauthorized or expired token");
+//			return;
+//		}
 		
-		String clientId = t.clientId();
-		String username = t.getUsername();
+		String clientId = cr.getClientId();
+		String username = cr.getUsername();
 		String pathInfo = req.getPathInfo();
 		String instance = determineInstanceFromRequest(req);
 		logger.info("Instance determined: "+instance); 
@@ -152,7 +134,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 		}
 		File article = context.resolveArticle(determineArticleFromRequest(req));
 		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, clientId,username, article,pathInfo,req.getParameterMap(),instance,t);
+			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, cr.getPassword(),username, article,pathInfo,req.getParameterMap(),instance,t);
 			try {
 				runtime.setUsername(cr.getUsername());
 				runtime.setPassword(cr.getPassword());
