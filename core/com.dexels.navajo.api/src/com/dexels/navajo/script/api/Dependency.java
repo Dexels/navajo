@@ -1,5 +1,7 @@
 package com.dexels.navajo.script.api;
 
+import java.io.Serializable;
+
 
 /**
  * Abstract class that is used for modelling Dependent artefacts in a script. 
@@ -17,9 +19,10 @@ package com.dexels.navajo.script.api;
  * @author arjen
  *
  */
-public abstract class Dependency {
+public abstract class Dependency implements Serializable {
 
-	protected long timestamp;
+    private static final long serialVersionUID = -824882271648308385L;
+    protected long timestamp;
 	protected String id;
 	
 	/**
