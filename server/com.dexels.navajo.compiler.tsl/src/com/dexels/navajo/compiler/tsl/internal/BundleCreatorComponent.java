@@ -53,6 +53,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	private ScriptCompiler scriptCompiler;
 	private JavaCompiler javaCompiler;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -153,8 +154,8 @@ public class BundleCreatorComponent implements BundleCreator {
 				return;
 			}
 
-			List<Dependency> dependencies = depanalyzer.getIncludeDependencies(scriptName);
-			if (!hasTenantSpecificFile) {
+			List<Dependency> dependencies = depanalyzer.addDependencies(scriptName);
+			if (!hasTenantSpecificFile && dependencies != null) {
 				// We are not tenant-specific, but check whether we include any tenant-specific files.
 				// If so, compile all versions as if we are tenant-specific (forceTenant)
 				for (Dependency d : dependencies) {
