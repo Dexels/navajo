@@ -2379,7 +2379,7 @@ public class TslCompiler {
 		String className = object;
 		
 		if (className.equals("")) {
-		    throw new Exception("Error in reading Map xml - foudn map with empty object! Line " + n.getAttribute("linenr") +":"+ n.getAttribute("startoffset"));
+		    throw new Exception("Error in reading Map xml - found map with empty object! Line " + n.getAttribute("linenr") +":"+ n.getAttribute("startoffset"));
 		}
 		
 		if (contextClass != null) {
