@@ -1399,16 +1399,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		throw new TipiException("INSTANTIATING UNKNOWN SORT OF CLASS THING.");
 	}
 
-	public void addTipiInstance(String service, TipiDataComponent instance) {
-		if (tipiInstanceMap.containsKey(service)) {
-			List<TipiDataComponent> al = tipiInstanceMap.get(service);
-			al.add(instance);
-		} else {
-			List<TipiDataComponent> al = new ArrayList<TipiDataComponent>();
-			al.add(instance);
-			tipiInstanceMap.put(service, al);
-		}
-	}
+    public void addTipiInstance(String service, TipiDataComponent instance) {
+        if (tipiInstanceMap.containsKey(service)) {
+            List<TipiDataComponent> al = tipiInstanceMap.get(service);
+            al.add(instance);
+        } else {
+            List<TipiDataComponent> al = new ArrayList<TipiDataComponent>();
+            al.add(instance);
+            tipiInstanceMap.put(service, al);
+        }
+    }
 
 	public void removeTipiInstance(TipiComponent instance) {
 		Iterator<List<TipiDataComponent>> c = tipiInstanceMap.values()
@@ -1451,10 +1451,27 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	 * @param service
 	 * @return
 	 */
-	public List<TipiDataComponent> getTipiInstancesByService(String service) {
-		// List<TipiDataComponent> x= tipiInstanceMap.get(service);
-		return tipiInstanceMap.get(service);
-	}
+    public List<TipiDataComponent> getTipiInstancesByService(String service) {
+        // List<TipiDataComponent> x= tipiInstanceMap.get(service);
+        List<TipiDataComponent> res = tipiInstanceMap.get(service);
+
+        // remove nested subcomponents to prevent double events 
+        // (by cascade load)
+        List<TipiDataComponent> toDelete = new ArrayList<TipiDataComponent>();
+
+        if (res != null && res.size() > 1) {
+            for (TipiDataComponent c : res) {
+                for (TipiDataComponent d : res) {
+                    if (c != d && c.getCascadeTipiComponent(d.getId()) != null) {
+                        toDelete.add(d);
+                    }
+                }
+            }
+            res.removeAll(toDelete);
+        }
+
+        return res;
+    }
 
 	public List<String> getListeningServices() {
 		return new ArrayList<String>(tipiInstanceMap.keySet());
@@ -1829,7 +1846,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 		for (int i = 0; i < tipiList.size(); i++) {
 			TipiDataComponent t = tipiList.get(i);
-			debugLog("data    ", "delivering data from method: " + method
+			debugLog("data    ", " delivering data from method: " + method
 					+ " to tipi: " + t.getId());
 			try {
 				t.loadData(reply, method);
@@ -2808,11 +2825,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		try {
 			int i = 0;
 			for (TipiExecutable current : exe) {
+			    
 				executableParent.setExecutionIndex(i);
 				current.performAction(te, executableParent, i);
 				i++;
 			}
-
 		} catch (TipiException ex) {
 			logger.error("Error: ",ex);
 		}

@@ -289,4 +289,6 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 	public boolean containsLocalValue(String expression);
 
 	public int generateChildId();
+
+    public TipiComponent getCascadeTipiComponent(String s);
 }

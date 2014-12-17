@@ -457,22 +457,34 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	 * @param method
 	 * @throws TipiException
 	 */
-	protected void cascadeLoad(Navajo n, String method) throws TipiException {
-		/** @TODO Maybe it is not a good idea that it is recursive. */
-		if ("true".equals(myContext.getSystemProperty("noCascadedLoading"))) {
-			// new style
-		} else {
-			for (int i = 0; i < getChildCount(); i++) {
-				TipiComponent tcomp = getTipiComponent(i);
-				if (TipiDataComponent.class.isInstance(tcomp)) {
-					TipiDataComponent current = (TipiDataComponent) tcomp;
-					current.loadData(n, method);
-				} else {
-					tcomp.loadPropertiesFromNavajo(n);
-				}
-			}
-		}
-	}
+    protected void cascadeLoad(Navajo n, String method) throws TipiException {
+        /** @TODO Maybe it is not a good idea that it is recursive. */
+        if ("true".equals(myContext.getSystemProperty("noCascadedLoading"))) {
+            // new style
+        } else {
+            TipiDataComponent parentServiceRoot = this.getServiceRoot();
+            
+            for (int i = 0; i < getChildCount(); i++) {
+                TipiComponent tcomp = getTipiComponent(i);
+                TipiDataComponent tcompServiceRoot = tcomp.getServiceRoot();
+                
+                // Only cascade if we have the same service root OR if we 
+                // are listening to the same service
+                if (tcomp.getServiceRoot().equals(parentServiceRoot) || 
+                        parentServiceRoot.getServices().equals(tcompServiceRoot.getServices())
+                        ) {
+                    if (TipiDataComponent.class.isInstance(tcomp)) {
+                        TipiDataComponent current = (TipiDataComponent) tcomp;
+                        current.loadData(n, method);
+                    } else {
+                        tcomp.loadPropertiesFromNavajo(n);
+                    }
+                } else {
+                    logger.warn("Stopping cascase load at {} since we seem to be listening to other services", tcomp);
+                }
+            }
+        }
+    }
 
 	protected void doPerformOnLoad(String method, Navajo n, boolean sync)
 			throws TipiException {
