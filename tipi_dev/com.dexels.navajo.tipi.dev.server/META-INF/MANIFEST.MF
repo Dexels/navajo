@@ -44,6 +44,7 @@ Import-Package: com.dexels.githubosgi;version="1.0.0",
 Bundle-ClassPath: .
 Service-Component: OSGI-INF/tipi.dev.downloadservlet.xml,
  OSGI-INF/tipi.dev.appstore.manager.xml,
+ OSGI-INF/tipi.dev.store.env.xml,
  OSGI-INF/tipi.dev.systempropertyhandler.xml,
  OSGI-INF/tipi.dev.filter.xml,
  OSGI-INF/tipi.dev.uiresolver.xml,

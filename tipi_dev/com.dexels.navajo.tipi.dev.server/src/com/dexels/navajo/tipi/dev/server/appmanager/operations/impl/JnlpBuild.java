@@ -129,7 +129,7 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation,EventH
 		}
 //		logger.info("Detected dependencies: "+a.getDependencies());
 		LocalJnlpBuilder jj = new LocalJnlpBuilder();
-		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),repoInstance.getRepositoryFolder(),a.getProfiles(),"",appStoreManager.getCodeBase(),repoInstance.getRepositoryName(), repoInstance.getSettings());
+		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),repoInstance.getRepositoryFolder(),a.getProfiles(),"",appStoreManager.getCodeBase(),repoInstance.getRepositoryName(),repoInstance.getDeployment(), repoInstance.getSettings());
 		for (String profile : a.getProfiles()) {
 			createSignedJnlpJar(repoInstance.getRepositoryFolder(),profile,a);
 		}
