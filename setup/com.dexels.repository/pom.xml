@@ -176,6 +176,10 @@
 							<alias>server</alias>
 							<storepass>${storepass}</storepass>
 							<keypass></keypass>
+							<arguments>
+								<argument>-tsa</argument>
+								<argument>https://timestamp.geotrust.com/tsa</argument>
+							</arguments>
 						</configuration>
 					</plugin>
 
