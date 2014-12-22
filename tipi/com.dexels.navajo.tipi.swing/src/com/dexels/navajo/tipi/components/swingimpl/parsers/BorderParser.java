@@ -102,6 +102,7 @@ public class BorderParser extends TipiTypeParser {
 		return BorderFactory.createEmptyBorder();
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException {

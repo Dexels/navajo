@@ -34,6 +34,7 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 
 		j.setTransferHandler(new TipiTransferHandler(j.getTransferHandler()));
 		j.addMouseMotionListener(new MouseMotionAdapter() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				JComponent c = (JComponent) e.getSource();
@@ -64,6 +65,7 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getDragCategory() {
 		List<String> dragCategory = (List<String>) myTipiComponent
@@ -76,6 +78,7 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 		return myTipiComponent.getValue("dragValue");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean acceptsDropCategory(List<String> category) {
 		List<String> dropCategory = (List<String>) myTipiComponent

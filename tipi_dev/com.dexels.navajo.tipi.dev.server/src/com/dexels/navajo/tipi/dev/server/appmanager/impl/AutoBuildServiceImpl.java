@@ -3,10 +3,8 @@ package com.dexels.navajo.tipi.dev.server.appmanager.impl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreData;
-import com.dexels.navajo.tipi.dev.server.appmanager.operations.impl.JnlpBuild;
 
 public class AutoBuildServiceImpl implements Runnable {
 
@@ -30,7 +27,7 @@ public class AutoBuildServiceImpl implements Runnable {
 	private boolean active = false;
 	
 	public void activate(Map<String,Object> settings) {
-		Map<String, Map<String, ?>> data = appStoreData.getApplicationData();
+//		Map<String, Map<String, ?>> data = appStoreData.getApplicationData();
 		this.active = true;
 		executorService.execute(this);
 	}
@@ -74,7 +71,6 @@ public class AutoBuildServiceImpl implements Runnable {
 				 Map<String, ?> d = data.get("applications");
 				
 				for (Entry<String, ?> e : d.entrySet()) {
-					String applicationId = e.getKey();
 					RepositoryInstanceWrapper ri = (RepositoryInstanceWrapper) e.getValue();
 					System.err.println("VAL: "+ri);
 					System.err.println("Built? "+ri.isBuilt());
