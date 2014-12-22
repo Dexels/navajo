@@ -462,17 +462,15 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
         if ("true".equals(myContext.getSystemProperty("noCascadedLoading"))) {
             // new style
         } else {
-            TipiDataComponent parentServiceRoot = this.getServiceRoot();
+            TipiDataComponent myParentServiceRoot = this.getServiceRoot();
             
             for (int i = 0; i < getChildCount(); i++) {
                 TipiComponent tcomp = getTipiComponent(i);
-                TipiDataComponent tcompServiceRoot = tcomp.getServiceRoot();
-                
-                // Only cascade if we have the same service root OR if we 
-                // are listening to the same service
-                if (tcomp.getServiceRoot().equals(parentServiceRoot) || 
-                        parentServiceRoot.getServices().equals(tcompServiceRoot.getServices())
-                        ) {
+
+                // Only cascade if we have the same service root! This prevents cascading 
+                // along components that are listening to different services. If we are 
+                // listening to the same services, we will be called again for this component
+                if (tcomp.getServiceRoot().equals(myParentServiceRoot)) {
                     if (TipiDataComponent.class.isInstance(tcomp)) {
                         TipiDataComponent current = (TipiDataComponent) tcomp;
                         current.loadData(n, method);
@@ -480,7 +478,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
                         tcomp.loadPropertiesFromNavajo(n);
                     }
                 } else {
-                    logger.warn("Stopping cascase load at {} since we seem to be listening to other services", tcomp);
+                   logger.warn("Stopping cascase load at {} since we seem to be listening to other services", tcomp);
                 }
             }
         }

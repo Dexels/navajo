@@ -1447,30 +1447,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	/**
 	 * Lists all instantiated components that listen to the specified service
+	 * Will return duplicated services that the cascade load will need to filter out!
 	 * 
 	 * @param service
 	 * @return
 	 */
     public List<TipiDataComponent> getTipiInstancesByService(String service) {
-        // List<TipiDataComponent> x= tipiInstanceMap.get(service);
-        List<TipiDataComponent> res = tipiInstanceMap.get(service);
-
-        // remove nested subcomponents to prevent double events 
-        // (by cascade load)
-        List<TipiDataComponent> toDelete = new ArrayList<TipiDataComponent>();
-
-        if (res != null && res.size() > 1) {
-            for (TipiDataComponent c : res) {
-                for (TipiDataComponent d : res) {
-                    if (c != d && c.getCascadeTipiComponent(d.getId()) != null) {
-                        toDelete.add(d);
-                    }
-                }
-            }
-            res.removeAll(toDelete);
-        }
-
-        return res;
+        return tipiInstanceMap.get(service);
     }
 
 	public List<String> getListeningServices() {
