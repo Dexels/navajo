@@ -42,4 +42,4 @@ Export-Package: com.dexels.navajo.compiler.tsl,com.dexels.navajo.compi
  pl",com.dexels.osgicompiler,com.dexels.osgicompiler.internal;uses:="j
  avax.tools,com.dexels.osgicompiler,org.osgi.framework",navajotsl;uses
  :="org.osgi.framework"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

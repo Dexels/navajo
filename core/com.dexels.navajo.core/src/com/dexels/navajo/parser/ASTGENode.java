@@ -10,6 +10,7 @@ import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
 
 
+@SuppressWarnings({"rawtypes"})
 public final class ASTGENode extends SimpleNode {
     public ASTGENode(int id) {
         super(id);

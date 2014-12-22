@@ -12,7 +12,7 @@ import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.bean.DomainObjectMapper;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public final class ASTMappableNode extends SimpleNode {
 
 	
