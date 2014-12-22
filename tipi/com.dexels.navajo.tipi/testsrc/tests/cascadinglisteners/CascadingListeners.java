@@ -33,7 +33,7 @@ public class CascadingListeners extends AbstractTipiTest {
 		// logger.error("Error: ",e);
 		// }
 		String xx = getContext().getInfoBuffer();
-		assertEquals("loaded\n", xx);
+		assertEquals("loaded1\nloaded2\nloaded5\nloaded4\n", xx);
 
 	}
 
