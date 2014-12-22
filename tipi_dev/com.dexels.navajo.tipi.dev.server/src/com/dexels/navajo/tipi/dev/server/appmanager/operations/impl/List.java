@@ -18,21 +18,40 @@ import org.apache.felix.service.command.CommandSession;
 
 import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
+import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreData;
 import com.dexels.navajo.tipi.dev.server.appmanager.impl.RepositoryInstanceWrapper;
 
-public class List extends BaseOperation implements AppStoreOperation {
+public class List extends BaseOperation implements AppStoreOperation,AppStoreData {
 
 	private final Set<AppStoreOperation> operations = new HashSet<AppStoreOperation>();
 	private static final long serialVersionUID = 8640712571228602628L;
 	
 	public void list(CommandSession session ) throws IOException {
-		Map<String,Map<String,?>> wrap = new HashMap<String, Map<String,?>>();
-		wrap.put("applications", getApplications());
-		wrap.put("settings", getSettings());
-		writeValueToJsonArray(session.getConsole(),wrap);
+
+		writeValueToJsonArray(session.getConsole(),getApplicationData());
 	}
 
+	@Override
+	public Map<String,Map<String,?>> getApplicationData() {
+//		Map<String,Map<String,?>> wrap = new LinkedHashMap<String, Map<String,?>>();
+//		wrap.put("applications", getApplications());
+//		wrap.put("settings", getSettings());
+		
+		java.util.List<RepositoryInstanceWrapper> ll = new ArrayList<RepositoryInstanceWrapper>(getApplications().values());
+		Collections.sort(ll);
+		Map<String,Map<String,?>> wrap = new LinkedHashMap<String, Map<String,?>>();
+		final Map<String,RepositoryInstanceWrapper> extwrap = new HashMap<String, RepositoryInstanceWrapper>();
+		
 
+		for (RepositoryInstanceWrapper repository : ll) {
+			extwrap.put(repository.getRepositoryName(), repository);
+		}
+		wrap.put("applications", extwrap);
+		wrap.put("settings", getSettings());
+
+
+		return wrap;
+	}
 
 
 	private Map<String, Object> getSettings() {
@@ -66,23 +85,13 @@ public class List extends BaseOperation implements AppStoreOperation {
 		verifyAuthorization(req,resp);
 		resp.setContentType("application/json");
 		
-		java.util.List<RepositoryInstanceWrapper> ll = new ArrayList<RepositoryInstanceWrapper>(getApplications().values());
-		Collections.sort(ll);
-		Map<String,Map<String,?>> wrap = new LinkedHashMap<String, Map<String,?>>();
-		final Map<String,RepositoryInstanceWrapper> extwrap = new HashMap<String, RepositoryInstanceWrapper>();
+		Map<String,Map<String,?>> wrap = getApplicationData();
 		Map<String,String> user = new HashMap<String, String>();
 		wrap.put("user", user);
 		HttpSession session = req.getSession();
 		user.put("login", (String)session.getAttribute("username"));
 		user.put("image", (String)session.getAttribute("image"));
 		
-
-		for (RepositoryInstanceWrapper repository : ll) {
-			extwrap.put(repository.getRepositoryName(), repository);
-		}
-		wrap.put("applications", extwrap);
-		wrap.put("settings", getSettings());
-
 		writeValueToJsonArray(resp.getOutputStream(),wrap);
 	}
 
