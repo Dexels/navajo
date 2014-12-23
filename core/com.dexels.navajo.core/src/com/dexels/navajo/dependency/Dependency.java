@@ -1,7 +1,5 @@
 package com.dexels.navajo.dependency;
 
-import java.io.File;
-
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 
@@ -57,25 +55,26 @@ public class Dependency {
     public String getScript() {
         String scriptFileRel = null;
         if (scriptFile.indexOf("workflows") > 0) {
-            scriptFileRel = scriptFile.split("workflows" + File.separator)[1];
+            scriptFileRel = scriptFile.split("workflows")[1];
+            return scriptFileRel.substring(1, scriptFileRel.indexOf('.'));
         } else {
-            scriptFileRel = scriptFile.split("scripts" + File.separator)[1];
+            scriptFileRel = scriptFile.split("scripts")[1];
         }
-        return scriptFileRel.substring(0, scriptFileRel.indexOf('.'));
+        return scriptFileRel.substring(1, scriptFileRel.indexOf('.'));
+
     }
 
     @JsonIgnore
     public String getDependee() {
         String scriptFileRel = null;
         if (dependeeFile.indexOf("workflows") > 0) {
-            scriptFileRel = dependeeFile.split("workflows" + File.separator)[1];
+            scriptFileRel = dependeeFile.split("workflows")[1];
+            
         } else {
-            scriptFileRel = dependeeFile.split("scripts" + File.separator)[1];
+            scriptFileRel = dependeeFile.split("scripts")[1];
         }
-
-        if (scriptFileRel.indexOf('.') < 0) {
-            System.out.println("HE");
-        }
+        scriptFileRel = scriptFileRel.substring(1);
+        
         return scriptFileRel.substring(0, scriptFileRel.indexOf('.'));
     }
 
