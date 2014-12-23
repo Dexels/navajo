@@ -104,7 +104,10 @@ public class DependencyAnalyzer {
 
     protected void importPersistedDependencies(String scriptPath) {
         Map<String, List<Dependency>> result = null;
-        File depsFile = new File(scriptPath, NAVAJO_DEPS_FILE);
+        
+        File scriptFolder = new File(scriptPath);
+        File depsFile = new File(scriptFolder.getParentFile(), NAVAJO_DEPS_FILE);
+
         if (!depsFile.exists()) {
             return;
         }
@@ -133,7 +136,7 @@ public class DependencyAnalyzer {
             return;
         }
 
-        File depsFile = new File(scriptFolder, NAVAJO_DEPS_FILE);
+        File depsFile = new File(scriptFolder.getParentFile(), NAVAJO_DEPS_FILE);
         try {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(depsFile, dependencies);
         } catch (IOException e) {
