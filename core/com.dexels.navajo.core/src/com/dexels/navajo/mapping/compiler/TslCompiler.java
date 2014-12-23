@@ -3284,14 +3284,8 @@ public class TslCompiler {
 			SkipCompilationException {
 
 		final String extension = ".xml";
-		String fullScriptPath = null;
-		if (hasTenantSpecificScript) {
-			fullScriptPath = scriptPath + "/" + packagePath + "/" + script
-					+ "_" + tenant + extension;
-		} else {
-			fullScriptPath = scriptPath + "/" + packagePath + "/" + script
-					+ extension;
-		}
+		String fullScriptPath = scriptPath + "/" + packagePath + "/" + script +  extension;
+		
 
 		ArrayList<String> inheritedScripts = new ArrayList<String>();
 		ArrayList<String> extendEntities = new ArrayList<String>();
