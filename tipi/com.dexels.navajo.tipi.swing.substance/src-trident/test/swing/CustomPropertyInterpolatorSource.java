@@ -18,6 +18,7 @@ public class CustomPropertyInterpolatorSource extends JFrame {
 
 	private static class Ellipse2DPropertyInterpolator implements
 			PropertyInterpolator<Ellipse2D> {
+		@SuppressWarnings("rawtypes")
 		@Override
 		public Class getBasePropertyClass() {
 			return Ellipse2D.class;

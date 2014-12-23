@@ -26,13 +26,17 @@ public class TestMailResource {
 		settings.put("name", "junit.mail");
 		settings.put("host", "smtp.gmail.com");
 		settings.put("username", "dexels@gmail.com");
-		settings.put("password", "seriously");
+		settings.put("password", getPassword());
 		settings.put("encrypt", true);
 		component.activate(settings);
 		factory.addMailResource(component, settings);
 		factory.activate();
 
 		
+	}
+	
+	private String getPassword() {
+		return System.getenv().get("test.mail.password");
 	}
 
 	@After

@@ -2,7 +2,7 @@ Bundle-Name: Navajo Core
 Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.0.53.qualifier
+Bundle-Version: 3.0.55.qualifier
 Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
 Navajo-Name: Core
 Eclipse-ExtensibleAPI: true
@@ -139,6 +139,10 @@ Import-Package: com.dexels.navajo.authentication.api,
  navajo,
  org.apache.commons.io,
  org.apache.commons.io.filefilter;version="2.4.0",
+ org.codehaus.jackson.annotate;version="1.9.11",
+ org.codehaus.jackson.map;version="1.9.11",
+ org.codehaus.jackson.map.type;version="1.9.11",
+ org.codehaus.jackson.type;version="1.9.11",
  org.junit;version="[4.0.0,5.0.0)";resolution:=optional,
  org.junit.rules;version="[4.0.0,5.0.0)";resolution:=optional,
  org.junit.runner;version="[4.0.0,5.0.0)";resolution:=optional,

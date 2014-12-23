@@ -4,7 +4,7 @@ package com.dexels.navajo.parser;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public final class ASTAddNode extends SimpleNode {
 
     ASTAddNode(int id) {

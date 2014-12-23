@@ -4,15 +4,13 @@ import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.tipi.components.swingimpl.layout.TipiTextBalloonBorder;
 import com.dexels.navajo.tipi.components.swingimpl.layout.TipiRoundedBorder;
+import com.dexels.navajo.tipi.components.swingimpl.layout.TipiTextBalloonBorder;
 
 /**
  * @author frank

@@ -8,4 +8,3 @@ Bundle-ManifestVersion: 2
 Bundle-Description: Dexels Branding for Webconsole Karaf
 Bundle-DocURL: https://github.com/Dexels/navajo/
 Bundle-SymbolicName: com.dexels.navajo.webconsole.branding.karaf
-

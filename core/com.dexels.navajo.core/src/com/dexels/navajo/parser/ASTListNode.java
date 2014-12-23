@@ -5,6 +5,7 @@ package com.dexels.navajo.parser;
 
 import java.util.ArrayList;
 
+@SuppressWarnings({"rawtypes","unchecked"})
 public final class ASTListNode extends SimpleNode {
 
     int args = 0;

@@ -21,7 +21,7 @@ public class ResourceMailLibrary implements ExtensionDefinition {
 	
 	@Override
 	public InputStream getDefinitionAsStream() {
-		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/adapter/adapters.xml");
+		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/resource/mail/impl/adapter.xml");
 	}
 
 	@Override
@@ -40,12 +40,12 @@ public class ResourceMailLibrary implements ExtensionDefinition {
 
 	@Override
 	public String getDescription() {
-		return "The Standard Navajo Adapter Library";
+		return "Navajo Mail resource Library";
 	}
 
 	@Override
 	public String getId() {
-		return "NavajoAdapters";
+		return "NavajoMail";
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package com.dexels.navajo.script.api;
 
-import java.io.Serializable;
-
 
 /**
  * Abstract class that is used for modelling Dependent artefacts in a script. 
@@ -19,44 +17,43 @@ import java.io.Serializable;
  * @author arjen
  *
  */
-public abstract class Dependency implements Serializable {
+public abstract class Dependency {
 
-    private static final long serialVersionUID = -824882271648308385L;
     protected long timestamp;
-	protected String id;
-	
-	/**
-	 * Create a new dependent object.
-	 * 
-	 * @param timestamp 
-	 * @param id unique id identifying the object
-	 */
-	public Dependency(long timestamp, String id) {
-		this.timestamp = timestamp;
-		this.id = id;
-	}
-	
-	public abstract boolean recompileOnDirty();
-	
-	public abstract long getCurrentTimeStamp();
-	
-	public final boolean needsRecompile() {
-		return ( recompileOnDirty() && getCurrentTimeStamp() > timestamp );
-	}
+    protected String id;
+    
+    /**
+     * Create a new dependent object.
+     * 
+     * @param timestamp 
+     * @param id unique id identifying the object
+     */
+    public Dependency(long timestamp, String id) {
+        this.timestamp = timestamp;
+        this.id = id;
+    }
+    
+    public abstract boolean recompileOnDirty();
+    
+    public abstract long getCurrentTimeStamp();
+    
+    public final boolean needsRecompile() {
+        return ( recompileOnDirty() && getCurrentTimeStamp() > timestamp );
+    }
 
-	public long getTimestamp() {
-		return timestamp;
-	}
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-	public String getId() {
-		return id;
-	}
-	
-	public String getType() {
-		return this.getClass().getSimpleName();
-	}
+    public String getId() {
+        return id;
+    }
+    
+    public String getType() {
+        return this.getClass().getSimpleName();
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 }

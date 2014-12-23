@@ -4,13 +4,13 @@ package com.dexels.navajo.parser;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public final class ASTSubtractNode extends SimpleNode {
     public ASTSubtractNode(int id) {
         super(id);
     }
 
-    @Override
+	@Override
 	public final Object interpret() throws TMLExpressionException {
         // System.out.println("in ASTAddNode()");
         Object a = jjtGetChild(0).interpret();
