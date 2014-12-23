@@ -6,8 +6,7 @@ import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.DispatcherFactory;
 
 public class IncludeDependency extends Dependency {
-    private static final long serialVersionUID = 2514321917524069272L;
-    private String scriptPath = null;
+	private String scriptPath = null;
 	
 	public IncludeDependency(long timestamp, String id) {
 		super(timestamp, id);
