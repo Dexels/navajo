@@ -121,7 +121,7 @@ public class SharedStoreInterfaceTest {
 	@Test
 	public void testStoreWithLock() throws Exception {
 
-		int MAXTHREADS = 1000;
+		int MAXTHREADS = 250;
 		final SerializableObject[] objects = new SerializableObject[MAXTHREADS];
 		for (int i = 0; i < MAXTHREADS; i++) {
 			objects[i] = new SerializableObject();
