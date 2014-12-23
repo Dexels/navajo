@@ -2,7 +2,7 @@ Bundle-Name: Navajo Tipi Build Server
 Bundle-SymbolicName: com.dexels.navajo.tipi.dev.server
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.0.30
+Bundle-Version: 2.0.31.qualifier
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.githubosgi;version="1.0.0",
  com.dexels.navajo.repository.api;version="1.0.0",
