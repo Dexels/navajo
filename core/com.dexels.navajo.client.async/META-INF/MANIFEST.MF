@@ -27,3 +27,4 @@ Import-Package: com.dexels.navajo.client,
 Bundle-Description: A Hello World bundle
 Service-Component: OSGI-INF/navajo.resource.navajo.manager.xml,
  OSGI-INF/resource.navajo.client.async.xml
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

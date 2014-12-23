@@ -870,8 +870,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 						mm.setSelectedRow(count - 1);
 					}
 					if ("selectMessages".equals(name)) {
-						List<Message> list = (List<Message>) compMeth
-								.getEvaluatedParameterValue("messages", event);
+						@SuppressWarnings("unchecked")
+						List<Message> list = (List<Message>) compMeth.getEvaluatedParameterValue("messages", event);
 						ListSelectionModel lsm = mm.getTable()
 								.getSelectionModel();
 						mm.getTable().getSelectionModel()
@@ -1067,6 +1067,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		mm.setColumnDefinitionSavePath(path);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		Map<String, Object> m = (Map<String, Object>) e.getSource();

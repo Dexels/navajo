@@ -62,7 +62,7 @@ public final Operand evaluate(String clause, Navajo inMessage,
 
     }
     try {
-      return Expression.evaluate(clause, inMessage,(MappableTreeNode) mappableTreeNode,parent,currentParam,null,null);
+      return Expression.evaluate(clause, inMessage,(MappableTreeNode) mappableTreeNode,parent,currentParam,null,null,null);
     }
     catch (Throwable ex) {
     	
@@ -505,6 +505,7 @@ public Comparator<Message> getComparator(String compareFunction) {
 	return instance.getComparator(compareFunction);
 }
 
+@SuppressWarnings("unchecked")
 private Comparator<Message> getLegacyComparator(String compareFunction) {
 	ClassLoader cl = getScriptClassLoader();
 	if(cl==null) {

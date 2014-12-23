@@ -418,7 +418,8 @@ public final class Utils extends Exception {
      * @return
      * @throws TMLExpressionException
      */
-    public final static boolean equals(Object a, Object b) throws TMLExpressionException {
+    @SuppressWarnings("rawtypes")
+	public final static boolean equals(Object a, Object b) throws TMLExpressionException {
         if (a instanceof ArrayList) {
             boolean result = true;
             ArrayList list = (ArrayList) a;

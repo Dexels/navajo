@@ -37,7 +37,8 @@ public class PointsMap implements Mappable {
         this.myString = "albert";
     }
 
-    public Vector[] getMyPoints() {
+    @SuppressWarnings("rawtypes")
+	public Vector[] getMyPoints() {
         return this.myPoints;
     }
 
