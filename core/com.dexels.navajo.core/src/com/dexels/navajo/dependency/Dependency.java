@@ -60,8 +60,11 @@ public class Dependency {
         } else {
             scriptFileRel = scriptFile.split("scripts")[1];
         }
-        return scriptFileRel.substring(1, scriptFileRel.indexOf('.'));
-
+        String script = scriptFileRel.substring(1, scriptFileRel.indexOf('.'));
+        
+         // Replace win32 slashes to be consistent with Navajo script slashes        
+        script = script.replace("\\", "/");
+        return script;
     }
 
     @JsonIgnore
@@ -73,9 +76,11 @@ public class Dependency {
         } else {
             scriptFileRel = dependeeFile.split("scripts")[1];
         }
-        scriptFileRel = scriptFileRel.substring(1);
+        String script = scriptFileRel.substring(1, scriptFileRel.indexOf('.'));
         
-        return scriptFileRel.substring(0, scriptFileRel.indexOf('.'));
+        // Replace win32 slashes to be consistent with Navajo script slashes        
+        script = script.replace("\\", "/");
+        return script;
     }
 
     @Override
