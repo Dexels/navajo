@@ -63,6 +63,12 @@ public class SharedStoreInterfaceTest {
     @Rule
     public TemporaryFolder folder= new TemporaryFolder();
     
+    public SharedStoreInterfaceTest()throws Exception  {
+        new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
+        DispatcherFactory.getInstance().setUseAuthorisation(false);
+        si = SharedStoreFactory.getInstance();
+    }
+    
 //	@Before
 //	public void setUp() throws Exception {
 //		final File newFolder = folder.newFolder("simpleSharedStore");
@@ -71,11 +77,8 @@ public class SharedStoreInterfaceTest {
 //	}	
 	
 	@Before
-	public void setUp() throws Exception {
-		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
-		DispatcherFactory.getInstance().setUseAuthorisation(false);
-		si = SharedStoreFactory.getInstance();
-		
+	public void setUp() {
+
 		// RemoveAll not implemented in SimpleSharedConfig
         if (!(si instanceof SimpleSharedStore)) {
             si.removeAll("");
