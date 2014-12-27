@@ -38,18 +38,18 @@
 		<bundle dependency='true'>mvn:org.apache.commons/commons-compress/1.5
 		</bundle>
 	</feature>
-	<feature resolver="(obr)" name='navajo.core' version='3.0.26'
+	<feature resolver="(obr)" name='navajo.core' version='3.0.28'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,4)">pax-http</feature>
 		<feature version="[3.0.0,4)">eventadmin</feature>
 		<feature version="[3.0.0,4)">navajo.core.dependencies</feature>
 
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.106
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.108
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.14
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/2.0.8
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/2.0.10
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.5.4
 		</bundle>
@@ -57,7 +57,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/2.0.6
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.0.52
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.0.54
 		</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1
 		</bundle>
@@ -111,10 +111,10 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.adapter' version='3.0.10'
+	<feature resolver="(obr)" name='navajo.adapter' version='3.0.11'
 		start-level='81'>
 		<feature version="[3.0.0,4)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.0.28
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.0.30
 		</bundle>
 	</feature>
 
@@ -145,7 +145,7 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.23'
+	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.24'
 		start-level='81'>
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
@@ -153,7 +153,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.resource/2.0.18
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/3.0.53
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/3.0.55
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/2.0.6
 		</bundle>
@@ -168,6 +168,8 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.mysql/2.0.8
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.h2/1.1.0
+		</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.mail/1.0.1
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tunnel/2.0.2
 		</bundle>
@@ -189,10 +191,10 @@
 			<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.1.0</bundle> -->
 	</feature>
 
-	<feature resolver="(obr)" name='tipi.core' version='3.0.8'
+	<feature resolver="(obr)" name='tipi.core' version='3.0.9'
 		start-level='81'>
 		<feature version="[3.0.0,4)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/2.0.18
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/2.0.22
 		</bundle>
 	</feature>
 
@@ -422,17 +424,17 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='tipi.appstore' version='3.0.12'
+	<feature resolver="(obr)" name='tipi.appstore' version='3.0.13'
 		start-level='81'>
 		<feature version="[3.0.0,4)">navajo.jgit</feature>
 		<feature version="[3.0.0,4)">pax-http</feature>
 		<feature version="[3.0.0,4)">eventadmin</feature>
 		<feature version="[3.0.0,4)">navajo.core.dependencies</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.core/2.0.4
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.core/2.0.6
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.ant/2.0.4
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.ant/2.0.6
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.server/2.0.28
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.server/2.0.30
 		</bundle>
 	</feature>
 
@@ -472,9 +474,9 @@
 		</bundle>
 	</feature>
 
-	<feature name='logback.redis' version='1.0.6' install="auto">
+	<feature name='logback.redis' version='1.0.7' install="auto">
 		<feature version="[3.0.0,4)">scr</feature>
-		<bundle dependency='true'>mvn:com.dexels.everywear/com.dexels.logback.redis/1.0.3
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.logback.redis/2.0.2
 		</bundle>
 	</feature>
 </features>
