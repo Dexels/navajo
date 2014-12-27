@@ -1,6 +1,5 @@
 Bundle-Name: Navajo Jsp
 Bundle-SymbolicName: com.dexels.navajo.jsp
-Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 2.0.5.qualifier
 Bundle-ClassPath: .

@@ -1,6 +1,5 @@
 Bundle-Name: Navajo Tipi Build Core
 Bundle-SymbolicName: com.dexels.navajo.tipi.dev.core
-Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 2.0.7.qualifier
 Export-Package: com.dexels.navajo.tipi.dev.core.extensionmanager;version="1.0.0",

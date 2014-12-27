@@ -1,6 +1,5 @@
 Bundle-Name: Tipi Ant build tasks
 Bundle-SymbolicName: com.dexels.navajo.tipi.dev.ant
-Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 2.0.7.qualifier
 Bundle-Vendor: Dexels
