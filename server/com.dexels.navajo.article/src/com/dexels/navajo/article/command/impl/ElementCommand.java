@@ -1,15 +1,12 @@
 package com.dexels.navajo.article.command.impl;
 
 import java.io.ByteArrayInputStream;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
-
-import sun.org.mozilla.javascript.internal.ast.ForInLoop;
 
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
@@ -168,7 +165,7 @@ public class ElementCommand implements ArticleCommand {
 		return true;
 	}
 	
-	public void fillObject(ObjectNode node, XMLElement element, String label) {
+	private void fillObject(ObjectNode node, XMLElement element, String label) {
 		node.put("label", element.getAttribute("label", label).toString());
 		if (element.getAttribute("type") != null) {
 			node.put("type", element.getAttribute("type").toString());
@@ -182,7 +179,7 @@ public class ElementCommand implements ArticleCommand {
 		}
 	}
 	
-	public ObjectNode getNodeByFieldName (ArrayNode nodes, String fieldName) {
+	private ObjectNode getNodeByFieldName (ArrayNode nodes, String fieldName) {
 		if (fieldName.length() == 0)
 			return null;
 		
