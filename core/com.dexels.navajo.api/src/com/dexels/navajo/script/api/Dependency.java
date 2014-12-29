@@ -19,41 +19,41 @@ package com.dexels.navajo.script.api;
  */
 public abstract class Dependency {
 
-	protected long timestamp;
-	protected String id;
-	
-	/**
-	 * Create a new dependent object.
-	 * 
-	 * @param timestamp 
-	 * @param id unique id identifying the object
-	 */
-	public Dependency(long timestamp, String id) {
-		this.timestamp = timestamp;
-		this.id = id;
-	}
-	
-	public abstract boolean recompileOnDirty();
-	
-	public abstract long getCurrentTimeStamp();
-	
-	public final boolean needsRecompile() {
-		return ( recompileOnDirty() && getCurrentTimeStamp() > timestamp );
-	}
+    protected long timestamp;
+    protected String id;
+    
+    /**
+     * Create a new dependent object.
+     * 
+     * @param timestamp 
+     * @param id unique id identifying the object
+     */
+    public Dependency(long timestamp, String id) {
+        this.timestamp = timestamp;
+        this.id = id;
+    }
+    
+    public abstract boolean recompileOnDirty();
+    
+    public abstract long getCurrentTimeStamp();
+    
+    public final boolean needsRecompile() {
+        return ( recompileOnDirty() && getCurrentTimeStamp() > timestamp );
+    }
 
-	public long getTimestamp() {
-		return timestamp;
-	}
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-	public String getId() {
-		return id;
-	}
-	
-	public String getType() {
-		return this.getClass().getSimpleName();
-	}
+    public String getId() {
+        return id;
+    }
+    
+    public String getType() {
+        return this.getClass().getSimpleName();
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 }

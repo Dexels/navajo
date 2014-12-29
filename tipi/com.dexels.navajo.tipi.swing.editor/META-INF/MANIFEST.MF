@@ -1,6 +1,5 @@
 Bundle-Name: Navajo Swing Tipi Swing Editor
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.editor
-Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.1.39.qualifier
 Bundle-Vendor: Dexels
@@ -23,3 +22,4 @@ Bundle-ClassPath: lib/jsoup-1.7.3.jar,
  lib/novaworx-syntax-0.0.7.jar,
  lib/swingactionmanager-1.0.jar,
  .
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

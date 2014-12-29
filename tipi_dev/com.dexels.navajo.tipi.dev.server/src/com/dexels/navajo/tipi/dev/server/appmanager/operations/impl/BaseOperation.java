@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
@@ -24,6 +26,9 @@ public abstract class BaseOperation extends HttpServlet  implements AppStoreOper
 	private static final long serialVersionUID = 7744618301328519140L;
 	protected final Map<String,RepositoryInstance> applications = new HashMap<String, RepositoryInstance>();
 	protected AppStoreManager appStoreManager = null;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseOperation.class);
 	
 	private RepositoryManager repositoryManager;
 	private String type;
@@ -87,6 +92,8 @@ public abstract class BaseOperation extends HttpServlet  implements AppStoreOper
 			if(!appStoreManager.useAuthorization()) {
 				return;
 			}
+		} else {
+			logger.warn("Can not verify auth: no appstore manager");
 		}
 		if(!isAuthorized(req)) {
 			resp.sendError(400,"Not authorized for operation");

@@ -36,12 +36,11 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.compiler.ScriptCompiler;
+import com.dexels.navajo.dependency.Dependency;
 import com.dexels.navajo.dependency.DependencyAnalyzer;
 import com.dexels.navajo.mapping.compiler.SkipCompilationException;
-import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.script.api.CompiledScriptFactory;
 import com.dexels.navajo.script.api.CompiledScriptInterface;
-import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class BundleCreatorComponent implements BundleCreator {
@@ -53,6 +52,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	private ScriptCompiler scriptCompiler;
 	private JavaCompiler javaCompiler;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -129,9 +129,13 @@ public class BundleCreatorComponent implements BundleCreator {
 			boolean keepIntermediate) throws Exception {
 		// TODO does scriptExtension always include the dot?
 		if (!scriptExtension.startsWith(".")) {
-			throw new IllegalAccessError("SCript extension did not start with a dot!");
+			throw new IllegalAccessError("Script extension did not start with a dot!");
 		}
 		String script = scriptName.replaceAll("\\.", "/");
+		String rpcName = scriptName;
+		if (rpcName.indexOf("_") > 0) {
+		    rpcName = scriptName.substring(0, rpcName.indexOf("_"));
+		}
 		final String scriptTenant = tenantFromScriptPath(scriptName);
 
 		File scriptFolder = new File(navajoIOConfig.getScriptPath());
@@ -142,10 +146,8 @@ public class BundleCreatorComponent implements BundleCreator {
 			compileAllIn(f, compilationDate, failures, success, skipped, force, keepIntermediate,
 					scriptExtension);
 		} else {
-			File scriptFile = navajoIOConfig.getApplicableScriptFile(script, scriptTenant,
-					scriptExtension);
-			boolean hasTenantSpecificFile = navajoIOConfig.hasTenantScriptFile(script,
-					scriptTenant, scriptExtension);
+			File scriptFile = navajoIOConfig.getApplicableScriptFile(rpcName, scriptTenant, scriptExtension);
+			boolean hasTenantSpecificFile = navajoIOConfig.hasTenantScriptFile(rpcName,scriptTenant, scriptExtension);
 
 			if (!scriptFile.exists()) {
 				logger.error("Script or folder not found: " + script + " full path: "
@@ -153,19 +155,18 @@ public class BundleCreatorComponent implements BundleCreator {
 				return;
 			}
 
-			List<Dependency> dependencies = depanalyzer.getIncludeDependencies(scriptName);
-			if (!hasTenantSpecificFile) {
+			depanalyzer.addDependencies(scriptName);
+			List<Dependency> dependencies = depanalyzer.getDependencies(scriptName, Dependency.INCLUDE_DEPENDENCY);
+			if (!hasTenantSpecificFile && dependencies != null) {
 				// We are not tenant-specific, but check whether we include any tenant-specific files.
 				// If so, compile all versions as if we are tenant-specific (forceTenant)
 				for (Dependency d : dependencies) {
-					if (d instanceof IncludeDependency) {
-						IncludeDependency incDep = (IncludeDependency) d;
-						if (incDep.isTentantSpecificInclude()) {
+						if (d.isTentantSpecificDependee()) {
 							compileAndCreateBundle(script, formatCompilationDate, scriptExtension,
-									incDep.getTentant(), hasTenantSpecificFile, true,
+									d.getTentantDependee(), hasTenantSpecificFile, true,
 									keepIntermediate, success, skipped);
 						}
-					}
+					
 				}
 			}
 
@@ -179,7 +180,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			String scriptExtension, final String scriptTenant, boolean hasTenantSpecificFile,
 			boolean forceTenant, boolean keepIntermediate, List<String> success,
 			List<String> skipped) throws Exception, IOException {
-		List<Dependency> dependencies = new ArrayList<Dependency>();
+		List<com.dexels.navajo.script.api.Dependency> dependencies = new ArrayList<com.dexels.navajo.script.api.Dependency>();
 		String myScript = script;
 		if (forceTenant) {
 			myScript = script + "_" + scriptTenant;

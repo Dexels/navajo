@@ -555,7 +555,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 	public final SharedStoreInterface getSharedStore() {
     	try {
     		if ( sharedStoreClass != null ) {
-    			Class c = Class.forName(sharedStoreClass);
+    			Class<?> c = Class.forName(sharedStoreClass);
     			SharedStoreInterface ssi = (SharedStoreInterface) c.newInstance();
     			return ssi;
     		} else {

@@ -556,7 +556,7 @@ public class TslCompiler {
 				value = child.getNodeValue();
 			} else {
 				throw new Exception(
-						"Error @"
+						"Error line "+ exprElmnt.getAttribute("linenr") +":"+ exprElmnt.getAttribute("startoffset")  +" @"
 								+ (exprElmnt.getParentNode() + "/" + exprElmnt)
 								+ ": <expression> node should either contain a value attribute or a text child node: >"
 								+ value + "<");
@@ -2377,6 +2377,11 @@ public class TslCompiler {
 		}
 
 		String className = object;
+		
+		if (className.equals("")) {
+		    throw new Exception("Error in reading Map xml - found map with empty object! Line " + n.getAttribute("linenr") +":"+ n.getAttribute("startoffset"));
+		}
+		
 		if (contextClass != null) {
 			contextClassStack.push(contextClass);
 		}
@@ -3279,14 +3284,8 @@ public class TslCompiler {
 			SkipCompilationException {
 
 		final String extension = ".xml";
-		String fullScriptPath = null;
-		if (hasTenantSpecificScript) {
-			fullScriptPath = scriptPath + "/" + packagePath + "/" + script
-					+ "_" + tenant + extension;
-		} else {
-			fullScriptPath = scriptPath + "/" + packagePath + "/" + script
-					+ extension;
-		}
+		String fullScriptPath = scriptPath + "/" + packagePath + "/" + script +  extension;
+		
 
 		ArrayList<String> inheritedScripts = new ArrayList<String>();
 		ArrayList<String> extendEntities = new ArrayList<String>();

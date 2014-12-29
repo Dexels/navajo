@@ -35,7 +35,7 @@ public class NonCascadingListeners extends AbstractTipiTest {
 		} catch (InterruptedException e) {
 		}
 		String xx = getContext().getInfoBuffer();
-		assertEquals("", xx);
+		assertEquals("loaded2\nloaded4\n", xx);
 
 	}
 

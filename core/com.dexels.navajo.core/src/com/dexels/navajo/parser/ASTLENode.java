@@ -9,6 +9,8 @@ import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
 
+@SuppressWarnings({"rawtypes"})
+
 public final class ASTLENode extends SimpleNode {
     public ASTLENode(int id) {
         super(id);

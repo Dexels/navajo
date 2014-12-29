@@ -1604,14 +1604,19 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				if (dbQuery.charAt(i) != '?') {
 					queryWithParameters.append(dbQuery.charAt(i));
 				} else {
-					Object o = parameters.get(index++);
+				    index++;
+				    Object o = null;
+				    if (index <= parameters.size()) {
+				        o = parameters.get(index - 1 ); //0-1 gap
+				    } 
+					
 					if (o instanceof String) {
 						queryWithParameters.append("'" + o.toString() + "'");
 					} else {
 						if (o != null) {
 							queryWithParameters.append(o.toString());
 						} else {
-							queryWithParameters.append("null");
+							queryWithParameters.append("?");
 						}
 					}
 				}

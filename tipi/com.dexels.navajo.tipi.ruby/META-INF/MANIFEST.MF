@@ -1,6 +1,5 @@
 Bundle-Name: Navajo Tipi Ruby
 Bundle-SymbolicName: com.dexels.navajo.tipi.ruby
-Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.5.qualifier
 Bundle-Activator: tipiruby.TipiRubyExtension

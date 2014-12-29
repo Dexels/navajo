@@ -89,7 +89,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 	@Override
 	public void buildFromMaven(ResourceBundle settings,
 			List<Dependency> dependencyList, File appFolder,
-			List<String> profiles, String resourceBase, String suppliedCodebase, String applicationName, Map<String,Object> repoSettings) {
+			List<String> profiles, String resourceBase, String suppliedCodebase, String applicationName,String deployment,  Map<String,Object> repoSettings) {
 		logger.debug("Building in folder: "+appFolder);
 		if(profiles==null) {
 			logger.warn("No profiles loaded, not building jnlp");
@@ -101,7 +101,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			try {
 				FileWriter fw1 = new FileWriter(jnlpFile);
 				fw1.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-				XMLElement output = buildElementFromMaven(dependencyList,settings,"deployment",appFolder, resourceBase,fileName+".jnlp", fileName,suppliedCodebase,applicationName,repoSettings);
+				XMLElement output = buildElementFromMaven(dependencyList,settings,deployment,appFolder, resourceBase,fileName+".jnlp", fileName,suppliedCodebase,applicationName,repoSettings);
 				output.write(fw1);
 				fw1.flush();
 				fw1.close();
@@ -164,7 +164,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		try {
 			arguments = parseArguments(baseDir, profile,deployment);
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 			arguments = new HashMap<String, String>();
 		}
 
@@ -179,7 +179,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		arguments.put("tipi.appstore.websocketurl", createWebsocketUrl(suppliedCodebase, applicationName));
 		arguments.put("tipi.appstore.tenant", profile);
 		arguments.put("tipi.appstore.session", "notused");
-		
+		arguments.put("tipi.appstore.deployment", deployment);
 		appendArguments(app, java, arguments);
 		
 //		appendArguments(app, java, params);

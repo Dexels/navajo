@@ -5,7 +5,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.tsl.BundleQueue;
+import com.dexels.navajo.dependency.Dependency;
 import com.dexels.navajo.dependency.DependencyAnalyzer;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
@@ -131,9 +131,9 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 	}
 	
     private void enqueueDependentScripts(String script) {
-    	Set<String> dependencies = depanalyzer.getDependentScripts(script);
-    	for (String dependentScript: dependencies) {
-			logger.debug("Compiling {}; the following script should be recompiled too: {}", script, dependentScript);
+    	List<Dependency> dependencies = depanalyzer.getDependencies(script, Dependency.INCLUDE_DEPENDENCY);
+    	for (Dependency dep: dependencies) {
+			logger.debug("Compiling {}; the following script should be recompiled too: {}", script, dep.getDependee());
     		//enqueueScript(dependentScript, ".xml");  		
     	}
     }
