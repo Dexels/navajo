@@ -438,6 +438,12 @@
 		<input />
 		<result />
 	</function>
+	<function name="GetUTF8Length" class="com.dexels.navajo.functions.GetUTF8Length">
+	        <description>This function return the length of a string when considered as bytes in UTF-8 encoding (for example for writing into Oracle DB)
+	        </description>
+        	<input>string</input>
+	        <result>integer</result>
+	</function>
 	<function name="GetValue" class="com.dexels.navajo.functions.GetValue">
 		<description>Gets a typed value from a property object</description>
 		<input />
