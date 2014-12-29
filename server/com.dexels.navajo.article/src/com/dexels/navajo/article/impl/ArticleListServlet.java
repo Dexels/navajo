@@ -57,7 +57,8 @@ public class ArticleListServlet extends HttpServlet implements Servlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
-			
+			resp.addHeader("Access-Control-Allow-Origin", "*");
+			resp.setContentType("application/json; charset=utf-8");
 			ObjectMapper mapper = new ObjectMapper();
 			ObjectNode rootNode = mapper.createObjectNode(); 
 			String requestedArticle = req.getParameter("article");
@@ -72,7 +73,6 @@ public class ArticleListServlet extends HttpServlet implements Servlet {
 			}
 			mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
 			ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-
 			writer.writeValue(resp.getWriter(), rootNode);
 		} catch (ArticleException e) {
 			logger.error("Error: ", e);

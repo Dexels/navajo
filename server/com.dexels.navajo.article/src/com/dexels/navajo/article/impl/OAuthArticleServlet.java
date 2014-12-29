@@ -42,6 +42,8 @@ public class OAuthArticleServlet extends ArticleServlet {
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String token = req.getParameter("token");
+		resp.addHeader("Access-Control-Allow-Origin", "*");		
+
 		Token t = null;
 		ClientRegistration cr = null;
 		if(token==null) {
