@@ -16,15 +16,17 @@ public class Dependency {
     private int type;
     private String scriptFile;
     private String dependeeFile;
+    private int linenr;
     
     public Dependency() {
         // JSON serialisation likes to have a constructor...
     }
 
-    public Dependency(String scriptFile, String dependeeFile, int type) {
+    public Dependency(String scriptFile, String dependeeFile, int type, int linenr) {
         this.scriptFile = scriptFile;
         this.dependeeFile = dependeeFile;
         this.type = type;
+        this.linenr = linenr;
     }
 
     public int getType() {
@@ -50,6 +52,13 @@ public class Dependency {
     public void setDependeeFile(String dependeeFile) {
         this.dependeeFile = dependeeFile;
     }
+    
+    
+
+    public int getLinenr() {
+        return linenr;
+    }
+
 
     @JsonIgnore
     public String getScript() {
