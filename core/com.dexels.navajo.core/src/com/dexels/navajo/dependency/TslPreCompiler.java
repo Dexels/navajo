@@ -325,7 +325,7 @@ public class TslPreCompiler {
         if (linenr.equals("")) {
             return -1;
         }
-        return Integer.valueOf(linenr);
+        return Integer.valueOf(linenr) +1; // For some reason the +1 is needed here
     }
 
 
