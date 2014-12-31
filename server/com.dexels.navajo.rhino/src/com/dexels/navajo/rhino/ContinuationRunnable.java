@@ -37,8 +37,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 	private RequestQueue requestQueue;
 	private final Map<String,Object> attributes = new HashMap<String,Object>();
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(ContinuationRunnable.class);
+	private final static Logger logger = LoggerFactory.getLogger(ContinuationRunnable.class);
 	
 	public ContinuationRunnable(ScriptEnvironment se,
 			ContinuationPending pending) {

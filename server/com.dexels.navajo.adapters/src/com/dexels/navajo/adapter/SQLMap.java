@@ -872,138 +872,141 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 	}
 
-	protected final void createConnection() throws SQLException, UserException {
+    protected final void createConnection() throws SQLException, UserException {
 
-		if (this.debug) {
-			Access.writeToConsole(myAccess, this.getClass() + ": in createConnection()\n");
-		}
-		if (transactionContext != -1) {
+        if (this.debug) {
+            Access.writeToConsole(myAccess, this.getClass() + ": in createConnection()\n");
+        }
+        if (transactionContext != -1) {
 
-			GrusConnection gc = null;
-			if (GrusProviderFactory.getInstance()!=null) {
-				gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
-			} else {
-				gc = LegacyDbConnectionBroker.getGrusConnection(transactionContext);
-			}
-			if (gc == null) {
-				throw new UserException(-1, "Invalid transaction context set: " + transactionContext);
-			}
-			con = gc.getConnection();
-			if (con == null) {
-				throw new UserException(-1, "Invalid transaction context set: " + transactionContext);
-			}
-			// Set myConnectionBroker.
-			myConnectionBroker = gc.getMyBroker();
-			// Make sure to set connection id.
-			this.connectionId = transactionContext;
-		}
+            GrusConnection gc = null;
+            if (GrusProviderFactory.getInstance() != null) {
+                gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
+            } else {
+                gc = LegacyDbConnectionBroker.getGrusConnection(transactionContext);
+            }
+            if (gc == null) {
+                throw new UserException(-1, "Invalid transaction context set: " + transactionContext);
+            }
+            con = gc.getConnection();
+            if (con == null) {
+                throw new UserException(-1, "Invalid transaction context set: " + transactionContext);
+            }
+            // Set myConnectionBroker.
+            myConnectionBroker = gc.getMyBroker();
+            // Make sure to set connection id.
+            this.connectionId = transactionContext;
+        }
 
-		if (con == null) { // Create connection if it does not yet exist.
+        if (con == null) { // Create connection if it does not yet exist.
 
-			if (this.debug) {
-				Access.writeToConsole(myAccess, "in createConnection() for datasource " + datasource + " and username " + username + "\n");
-			}
-			if (GrusProviderFactory.getInstance()!=null) {
-				// in multitenant or OSGi
-				if(transactionContext!=-1) {
-					gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
-					this.ownConnection = false;
-				} else {
-					String instance = null;
-					if (myAccess!=null) {
-						instance = myAccess.getInstance();
-					}
-					gc = GrusProviderFactory.getInstance().requestConnection(instance, datasource,alternativeUsername);
-					this.ownConnection = true;
-				}
-				multiTenantGrusConnection = gc;
-			} else {
-				myConnectionBroker = null;
-				if (fixedBroker != null) {
-					myConnectionBroker = fixedBroker.get(this.datasource, null, null);
-				}
+            if (this.debug) {
+                Access.writeToConsole(myAccess, "in createConnection() for datasource " + datasource + " and username "
+                        + username + "\n");
+            }
+            if (GrusProviderFactory.getInstance() != null) {
+                // in multitenant or OSGi
+                if (transactionContext != -1) {
+                    gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
+                    this.ownConnection = false;
+                } else {
+                    String instance = null;
+                    if (myAccess != null) {
+                        instance = myAccess.getInstance();
+                    }
 
-				if (myConnectionBroker == null) {
-					throw new UserException(-1,
-							"Could not create connection to datasource "
-									+ this.datasource + ", using username "
-									+ this.username + ", fixedBroker = "
-									+ fixedBroker);
-				}
+                    if (GrusProviderFactory.getInstance().threadContainsConnection(instance, datasource)) {
+                        logger.warn("Opening yet another connection {} for {} in the same thread!", datasource, instance);
+                        // gc = GrusProviderFactory.getInstance().requestExistingConnection(instance, datasource);
+                        // this.ownConnection = false;
+                        // transactionContext = ((Long) gc.getId()).intValue();
+                    }
 
-				gc = myConnectionBroker.getGrusConnection();
-			}
-			if ( gc == null ) {
-				AuditLog.log("SQLMap",
-						"Could (still) not connect to database: " + datasource
-								+ " (" + this.username + ")"
-								+ ", check your connection", Level.SEVERE);
+                    gc = GrusProviderFactory.getInstance().requestConnection(instance, datasource);
+                    this.ownConnection = true;
 
-				throw new UserException(-1, "Could not connect to database: "
-						+ datasource + " (" + this.username + ")"
-						+ ", check your connection");
-			}
-			con = gc.getConnection();
+                }
+                multiTenantGrusConnection = gc;
+            } else {
+                myConnectionBroker = null;
+                if (fixedBroker != null) {
+                    myConnectionBroker = fixedBroker.get(this.datasource, null, null);
+                }
 
-			if (con == null) {
-				AuditLog.log("SQLMap",
-						"Could (still) not connect to database: " + datasource
-								+ " (" + this.username + ")"
-								+ ", check your connection", Level.SEVERE);
+                if (myConnectionBroker == null) {
+                    throw new UserException(-1, "Could not create connection to datasource " + this.datasource
+                            + ", using username " + this.username + ", fixedBroker = " + fixedBroker);
+                }
 
-				throw new UserException(-1, "Could not connect to database: "
-						+ datasource + " (" + this.username + ")"
-						+ ", check your connection");
-				// }
-			} else {
-				if (this.debug) {
-					Access.writeToConsole(myAccess, this.getClass() + ": returned a good connection from the broker manager\n");
-				}
-			}
+                gc = myConnectionBroker.getGrusConnection();
+            }
+            if (gc == null) {
+                AuditLog.log("SQLMap", "Could (still) not connect to database: " + datasource + " (" + this.username
+                        + ")" + ", check your connection", Level.SEVERE);
 
-			// Set current schema if username was specified...
-			if (this.alternativeUsername != null) { // Only works for Oracle...
-				try {
-					// Now set current_schema...
-					PreparedStatement stmt = null;
-					if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier()) || SQLMapConstants.ENTERPRISEDB.equals(this.getDbIdentifier())) {
-						stmt = con.prepareStatement("SET SEARCH_PATH TO " + this.alternativeUsername + ", public");
-					} else {
-						stmt = con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.alternativeUsername);
-					}
-					stmt.executeUpdate();
-					stmt.close();
-				} catch (Exception e) {
-					logger.error("Looking for schema based on username: "+this.alternativeUsername,e);
-				}
-			}
+                throw new UserException(-1, "Could not connect to database: " + datasource + " (" + this.username + ")"
+                        + ", check your connection");
+            }
+            con = gc.getConnection();
 
-			if (con != null && (myConnectionBroker == null || myConnectionBroker.hasAutoCommit() )) {
-				boolean ac = (this.overideAutoCommit) ? autoCommit : supportsAutoCommit(datasource);
-				con.setAutoCommit(ac);
-				if (!con.getAutoCommit()) {
-					con.commit();
-				}
+            if (con == null) {
+                AuditLog.log("SQLMap", "Could (still) not connect to database: " + datasource + " (" + this.username
+                        + ")" + ", check your connection", Level.SEVERE);
 
-				// con.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
-				if (transactionIsolation != -1) {
-					con.setTransactionIsolation(transactionIsolation);
-				}
-				// Set session identification.
-				SessionIdentification.setSessionId(this.getMetaData() != null ? this.getMetaData().getVendor() : "Unknown", con, this.myAccess);
-			}
+                throw new UserException(-1, "Could not connect to database: " + datasource + " (" + this.username + ")"
+                        + ", check your connection");
+                // }
+            } else {
+                if (this.debug) {
+                    Access.writeToConsole(myAccess, this.getClass()
+                            + ": returned a good connection from the broker manager\n");
+                }
+            }
 
-			if (this.con != null) {
-				this.connectionId = (int) gc.getId();
-				if (this.debug) {
-					Access.writeToConsole(myAccess, this.getClass()
-							+ ": put connection no. " + this.connectionId
-							+ " into the connection map\n");
-				}
-			}
-		}
+            // Set current schema if username was specified...
+            if (this.alternativeUsername != null) { // Only works for Oracle...
+                try {
+                    // Now set current_schema...
+                    PreparedStatement stmt = null;
+                    if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier())
+                            || SQLMapConstants.ENTERPRISEDB.equals(this.getDbIdentifier())) {
+                        stmt = con.prepareStatement("SET SEARCH_PATH TO " + this.alternativeUsername + ", public");
+                    } else {
+                        stmt = con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.alternativeUsername);
+                    }
+                    stmt.executeUpdate();
+                    stmt.close();
+                } catch (Exception e) {
+                    logger.error("Looking for schema based on username: " + this.alternativeUsername, e);
+                }
+            }
 
-	}
+            if (con != null && (myConnectionBroker == null || myConnectionBroker.hasAutoCommit())) {
+                boolean ac = (this.overideAutoCommit) ? autoCommit : supportsAutoCommit(datasource);
+                con.setAutoCommit(ac);
+                if (!con.getAutoCommit()) {
+                    con.commit();
+                }
+
+                // con.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
+                if (transactionIsolation != -1) {
+                    con.setTransactionIsolation(transactionIsolation);
+                }
+                // Set session identification.
+                SessionIdentification.setSessionId(this.getMetaData() != null ? this.getMetaData().getVendor()
+                        : "Unknown", con, this.myAccess);
+            }
+
+            if (this.con != null) {
+                this.connectionId = (int) gc.getId();
+                if (this.debug) {
+                    Access.writeToConsole(myAccess, this.getClass() + ": put connection no. " + this.connectionId
+                            + " into the connection map\n");
+                }
+            }
+        }
+
+    }
 
 	public final int getTransactionContext() throws UserException {
 		try {

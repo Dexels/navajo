@@ -22,182 +22,189 @@ import org.osgi.service.jdbc.DataSourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class OracleJDBCDataSourceService implements DataSourceFactory {
 
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(OracleJDBCDataSourceService.class);
-	private ObjectPool pool;
-	
-//	private PoolableConnectionFactory poolableConnectionFactory;
+    private final static Logger logger = LoggerFactory.getLogger(OracleJDBCDataSourceService.class);
+    private ObjectPool pool;
+
+    // private PoolableConnectionFactory poolableConnectionFactory;
     public void start() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        //Load driver if not already done...
+        // Load driver if not already done...
         Class<?> clazz = Class.forName("oracle.jdbc.OracleDriver");
         clazz.newInstance();
     }
 
     @Override
     public DataSource createDataSource(Properties props) throws SQLException {
-//    	OracleConnectionPoolDataSource source = new OracleConnectionPoolDataSource();
-    	OracleConnectionPoolDataSource source = new OracleConnectionPoolDataSource();
+        // OracleConnectionPoolDataSource source = new
+        // OracleConnectionPoolDataSource();
+        OracleConnectionPoolDataSource source = new OracleConnectionPoolDataSource();
         try {
             DataSource result = setup(source, props);
             return result;
-		} catch (Exception e) {
-			throw new SQLException("Trouble createPoolDataSource:",e);
-		}
+        } catch (Exception e) {
+            throw new SQLException("Trouble createPoolDataSource:", e);
+        }
 
-        //        OracleConnectionCacheImpl.
-    
+        // OracleConnectionCacheImpl.
+
     }
 
     @Override
     public ConnectionPoolDataSource createConnectionPoolDataSource(Properties props) throws SQLException {
-    	OracleConnectionPoolDataSource source = new OracleConnectionPoolDataSource();
+        OracleConnectionPoolDataSource source = new OracleConnectionPoolDataSource();
         try {
-			return (ConnectionPoolDataSource) setup(source, props);
-		} catch (Exception e) {
-			throw new SQLException("Trouble createPoolDataSource:",e);
-		}
+            return (ConnectionPoolDataSource) setup(source, props);
+        } catch (Exception e) {
+            throw new SQLException("Trouble createPoolDataSource:", e);
+        }
     }
 
     @Override
     public XADataSource createXADataSource(Properties props) throws SQLException {
-//    	OracleConnectionPoolDataSource base = new OracleConnectionPoolDataSource();
-    	OracleXADataSource source;
-		try {
-			source = setupXSource(props);
-	        return source;
-		} catch (Exception e) {
-			throw new SQLException("Error creating XADatasource: ",e);
-		}
+        // OracleConnectionPoolDataSource base = new
+        // OracleConnectionPoolDataSource();
+        OracleXADataSource source;
+        try {
+            source = setupXSource(props);
+            return source;
+        } catch (Exception e) {
+            throw new SQLException("Error creating XADatasource: ", e);
+        }
     }
 
     @Override
     public Driver createDriver(Properties props) throws SQLException {
-    	OracleDriver driver = new OracleDriver();
-        //Any setup neccessary?
+        OracleDriver driver = new OracleDriver();
+        // Any setup neccessary?
         return driver;
     }
 
     /**
      * Setups the basic properties for {@link DataSource}s
-     * @throws Exception 
+     * 
+     * @throws Exception
      */
     public DataSource setup(OracleConnectionPoolDataSource base, Properties props) throws Exception {
-    	if (props == null) {
+        if (props == null) {
             return null;
         }
+        Integer maxWait = null;
+        
         if (props.containsKey(JDBC_DATABASE_NAME)) {
-        	base.setDatabaseName(props.getProperty(JDBC_DATABASE_NAME));
+            base.setDatabaseName(props.getProperty(JDBC_DATABASE_NAME));
         }
         if (props.containsKey(JDBC_DATASOURCE_NAME)) {
-            //not supported?
+            // not supported?
         }
         if (props.containsKey(JDBC_DESCRIPTION)) {
-            //not suported?
+            // not suported?
         }
         if (props.containsKey(JDBC_NETWORK_PROTOCOL)) {
-            //not supported?
+            // not supported?
         }
         if (props.containsKey(JDBC_PASSWORD)) {
-        	base.setPassword(props.getProperty(JDBC_PASSWORD));
+            base.setPassword(props.getProperty(JDBC_PASSWORD));
         }
         if (props.containsKey(JDBC_PORT_NUMBER)) {
-        	base.setPortNumber(Integer.parseInt(props.getProperty(JDBC_PORT_NUMBER)));
+            base.setPortNumber(Integer.parseInt(props.getProperty(JDBC_PORT_NUMBER)));
         }
         if (props.containsKey(JDBC_ROLE_NAME)) {
-            //not supported?
+            // not supported?
         }
         if (props.containsKey(JDBC_SERVER_NAME)) {
-        	base.setServerName(props.getProperty(JDBC_SERVER_NAME));
+            base.setServerName(props.getProperty(JDBC_SERVER_NAME));
         }
         if (props.containsKey(JDBC_URL)) {
-        	base.setURL(props.getProperty(JDBC_URL));
+            base.setURL(props.getProperty(JDBC_URL));
         }
         if (props.containsKey(JDBC_USER)) {
-        	base.setUser(props.getProperty(JDBC_USER));
+            base.setUser(props.getProperty(JDBC_USER));
         }
-        DataSource source = createPooledConnection(base, (String)props.get(JDBC_URL),(String) props.get(JDBC_USER), (String)props.get(JDBC_PASSWORD),  (Integer)props.get("min_connections"),  (Integer)props.get("max_connections"));
-        
-    	return source;
+        if (props.containsKey("max_wait")) {
+            maxWait = (Integer) props.get("max_wait");
+        }
+        DataSource source = createPooledConnection(base, (String) props.get(JDBC_URL), (String) props.get(JDBC_USER),
+                (String) props.get(JDBC_PASSWORD), (Integer) props.get("min_connections"),
+                (Integer) props.get("max_connections"), maxWait);
+
+        return source;
 
     }
 
     /**
      * Setup the basic and extended properties for {@link XADataSource}s and
      * {@link ConnectionPoolDataSource}s
-     * @throws Exception 
+     * 
+     * @throws Exception
      */
-    private OracleXADataSource setupXSource( Properties props) throws Exception {
+    private OracleXADataSource setupXSource(Properties props) throws Exception {
         if (props == null) {
             return null;
         }
-        return null; 
+        return null;
     }
-    
+
     /**
-    *
-    * @param connectURI - JDBC Connection URI
-    * @param username - JDBC Connection username
-    * @param password - JDBC Connection password
-    * @param minIdle - Minimum number of idel connection in the connection pool
-    * @param maxActive - Connection Pool Maximum Capacity (Size)
-    * @throws Exception
-    */
-   public DataSource createPooledConnection(final DataSource baseSource, String connectURI, 
-	final String username, 
-	final String password,
-	Integer minIdle, Integer maxActive
-	) throws Exception {
-       //
-       // First, we'll need a ObjectPool that serves as the
-       // actual pool of connections.
-       //
-       // We'll use a GenericObjectPool instance, although
-       // any ObjectPool implementation will suffice.
-       //
-	   
-	   final GenericObjectPool connectionPool = new GenericObjectPool(null);
+     *
+     * @param connectURI
+     *            - JDBC Connection URI
+     * @param username
+     *            - JDBC Connection username
+     * @param password
+     *            - JDBC Connection password
+     * @param minIdle
+     *            - Minimum number of idel connection in the connection pool
+     * @param maxActive
+     *            - Connection Pool Maximum Capacity (Size)
+     * @throws Exception
+     */
+    public DataSource createPooledConnection(final DataSource baseSource, String connectURI, final String username,
+            final String password, Integer minIdle, Integer maxActive, Integer maxWait) throws Exception {
+        //
+        // First, we'll need a ObjectPool that serves as the
+        // actual pool of connections.
+        //
+        // We'll use a GenericObjectPool instance, although
+        // any ObjectPool implementation will suffice.
+        //
 
-       
-       if(minIdle!=null) {
-           connectionPool.setMinIdle( minIdle );
-       } else {
-           connectionPool.setMinIdle( 5 );
-    	   
-       }
-       if(maxActive!=null) {
-           connectionPool.setMaxActive( maxActive );
-       } else {
-           connectionPool.setMaxActive( 5 );
-       }
+        final GenericObjectPool connectionPool = new GenericObjectPool(null);
 
-     this.pool = connectionPool; 
+        if (minIdle != null) {
+            connectionPool.setMinIdle(minIdle);
+        } else {
+            connectionPool.setMinIdle(5);
 
-       
-     ConnectionFactory connectionFactory = new ConnectionFactory() {
-		
-		@Override
-		public Connection createConnection() throws SQLException {
+        }
+        if (maxActive != null) {
+            connectionPool.setMaxActive(maxActive);
+        } else {
+            connectionPool.setMaxActive(5);
+        }
+        if (maxWait != null) {
+            connectionPool.setMaxWait(Long.valueOf(maxWait));
+        }
+        this.pool = connectionPool;
+        
+        ConnectionFactory connectionFactory = new ConnectionFactory() {
 
-			return baseSource.getConnection(username,password);
-		}
-	};
-	new PoolableConnectionFactory(
-     	connectionFactory,connectionPool,null,"select 1 from dual",false,false);
+            @Override
+            public Connection createConnection() throws SQLException {
 
-       PoolingDataSource dataSource = 
-       	new PoolingDataSource(connectionPool);
+                return baseSource.getConnection(username, password);
+            }
+        };
+        new PoolableConnectionFactory(connectionFactory, connectionPool, null, "select 1 from dual", false, false);
 
-       return dataSource;
-   }
-   
-   public void printDriverStats() throws Exception {
-       logger.info("NumActive: " + pool.getNumActive());
-       logger.info("NumIdle: " + pool.getNumIdle());
-   }
+        PoolingDataSource dataSource = new PoolingDataSource(connectionPool);
 
+        return dataSource;
+    }
+
+    public void printDriverStats() throws Exception {
+        logger.info("NumActive: " + pool.getNumActive());
+        logger.info("NumIdle: " + pool.getNumIdle());
+    }
 
 }

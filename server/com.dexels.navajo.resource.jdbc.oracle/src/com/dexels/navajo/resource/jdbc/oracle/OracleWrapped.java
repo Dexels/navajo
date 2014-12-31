@@ -3,6 +3,7 @@ package com.dexels.navajo.resource.jdbc.oracle;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -18,6 +19,7 @@ import com.oracle.jdbc.service.impl.OracleJDBCDataSourceService;
 
 public class OracleWrapped implements DataSource {
 
+    
 	private DataSource wrapped = null;
 	private OracleConnectionPoolDataSource datasource;
 	private OracleJDBCDataSourceService data;
@@ -87,7 +89,7 @@ public class OracleWrapped implements DataSource {
 	}
 
 	@Override
-	public Connection getConnection() throws SQLException {
+	public Connection getConnection() throws SQLException {	  
 		return wrapped.getConnection();
 	}
 
