@@ -132,7 +132,7 @@ public final class DbConnectionBroker
 		}
 		userThreadLocal.set(++currentCount);
 		if (currentCount > 1) {
-			logger.warn("Opening yet another connection to {}  in the same thread!", location);
+			logger.warn("Opening yet another connection to {} in the same thread!", location);
 		}	
 		
 		try {
