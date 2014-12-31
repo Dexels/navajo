@@ -133,7 +133,7 @@ public final class DbConnectionBroker
 		userThreadLocal.set(++currentCount);
 		if (currentCount > 1) {
 			logger.warn("Opening yet another connection to {}  in the same thread!", location);
-		}
+		}	
 		
 		try {
 			availableConnections.tryAcquire(60, TimeUnit.SECONDS);
@@ -176,7 +176,8 @@ public final class DbConnectionBroker
 				}
 			}
 		}
-
+		
+		userThreadLocal.set(--currentCount);
 		return null;
 
 	}
@@ -195,6 +196,8 @@ public final class DbConnectionBroker
 		if ( gc == null )
 			return;
 
+		
+		
 		boolean released = false;
 		try {
 			synchronized (this) {
@@ -220,6 +223,11 @@ public final class DbConnectionBroker
 		} finally {
 			if ( released ) {
 				availableConnections.release();
+
+				Integer currentCount = userThreadLocal.get();
+				if ( currentCount != null && currentCount > 0) {
+					userThreadLocal.set(--currentCount);
+				}
 			}
 		}
 	}
@@ -254,6 +262,7 @@ public final class DbConnectionBroker
 		}
 		availableConnectionsStack.clear();
 		inUse.clear();
+		userThreadLocal.set(null);
 	}
 	
 	public final int getUseCount() {
@@ -297,6 +306,7 @@ public final class DbConnectionBroker
 		for ( GrusConnection gc: availableConnectionsStack ) {
 			gc.setAgedForced();
 		}
+		
 	}
 
 	public final static int getInstances() {
