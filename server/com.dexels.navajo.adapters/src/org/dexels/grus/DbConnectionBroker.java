@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 public final class DbConnectionBroker 
 {
 	protected String location, username, password;
+	public static final ThreadLocal<Integer> userThreadLocal = new ThreadLocal<Integer>();
 	
 	private final static Logger logger = LoggerFactory.getLogger(DbConnectionBroker.class);
 	
@@ -123,11 +125,21 @@ public final class DbConnectionBroker
 	
 	public final GrusConnection getGrusConnection() {
 
-		// Try to acquire connection. If not available block
+		// Try to acquire connection. If not available block for 60 seconds - after that throw exception
+		Integer currentCount = userThreadLocal.get();
+		if ( currentCount == null) {
+			 currentCount = 0;
+		}
+		userThreadLocal.set(++currentCount);
+		if (currentCount > 1) {
+			logger.warn("Opening yet another connection to {}  in the same thread!", location);
+		}
+		
 		try {
-			availableConnections.acquire();
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
+			availableConnections.tryAcquire(60, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			logger.error("Interrupted while waiting on connection! {}", e);
+			return null;
 		}
 
 		synchronized (this ) {
@@ -163,8 +175,6 @@ public final class DbConnectionBroker
 					availableConnections.release();
 				}
 			}
-
-			
 		}
 
 		return null;
