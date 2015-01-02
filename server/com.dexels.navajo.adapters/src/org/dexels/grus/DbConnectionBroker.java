@@ -154,6 +154,10 @@ public final class DbConnectionBroker
 						userThreadLocal.set(++currentCount);
 						if (currentCount > 1) {
 							logger.warn("{} connections open to {} (from {})", currentCount, location + " - " + username + ":" + password, MDC.get("rpcName"));
+							if (MDC.get("rpcName") == null) {
+								Thread.dumpStack();
+							}
+							
 						}
 						inUse.add(gc);
 						usedConnectionInstanceIds.add(gc.setInstanceId(instanceCounter++));
@@ -173,6 +177,9 @@ public final class DbConnectionBroker
 					userThreadLocal.set(++currentCount);
 					if (currentCount > 1) {
 						logger.warn("{} connections open to {} (from {})", currentCount, location + " - " + username + ":" + password, MDC.get("rpcName"));
+						if (MDC.get("rpcName") == null) {
+							Thread.dumpStack();
+						}
 					}
 					return gc;
 				} catch (Throwable e) {
