@@ -892,9 +892,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 						+ ", check your connection");
 			}
 			
-			Integer threadConnectionCount = myConnectionBroker.userThreadLocal.get();
+			Integer threadConnectionCount = DbConnectionBroker.userThreadLocal.get();
 			if (threadConnectionCount != null && threadConnectionCount > 1) {
-				logger.warn("{} connections open to datasource {} ({})", threadConnectionCount, this.datasource, myAccess.getRpcName());
+				logger.warn("{} connections open to datasource {} (in {})", threadConnectionCount, this.datasource, myAccess.getRpcName());
 			}
 			
 			con = gc.getConnection();
