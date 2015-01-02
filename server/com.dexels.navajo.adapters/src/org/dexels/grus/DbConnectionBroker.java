@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 public final class DbConnectionBroker 
 {
@@ -126,20 +127,16 @@ public final class DbConnectionBroker
 	public final GrusConnection getGrusConnection() {
 
 		// Try to acquire connection. If not available block for 60 seconds - after that throw exception
-		Integer currentCount = userThreadLocal.get();
-		if ( currentCount == null) {
-			 currentCount = 0;
-		}
-		userThreadLocal.set(++currentCount);
-		if (currentCount > 1) {
-			logger.warn("Opening yet another connection to {} in the same thread!", location);
-		}	
-		
 		try {
 			availableConnections.tryAcquire(60, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			logger.error("Interrupted while waiting on connection! {}", e);
 			return null;
+		}
+		
+		Integer currentCount = userThreadLocal.get();
+		if ( currentCount == null) {
+			 currentCount = 0;
 		}
 
 		synchronized (this ) {
@@ -154,6 +151,10 @@ public final class DbConnectionBroker
 						isClosed = true;
 					}
 					if ( !gc.isAged() && !isClosed ) {
+						userThreadLocal.set(++currentCount);
+						if (currentCount > 1) {
+							logger.warn("{} connections open to {} (from {})", currentCount, location + " - " + username + ":" + password, MDC.get("rpcName"));
+						}
 						inUse.add(gc);
 						usedConnectionInstanceIds.add(gc.setInstanceId(instanceCounter++));
 						return gc;
@@ -169,6 +170,10 @@ public final class DbConnectionBroker
 					GrusConnection gc = new GrusConnection(location, username, password, this, timeoutDays);
 					inUse.add(gc);
 					usedConnectionInstanceIds.add(gc.setInstanceId(instanceCounter++));
+					userThreadLocal.set(++currentCount);
+					if (currentCount > 1) {
+						logger.warn("{} connections open to {} (from {})", currentCount, location + " - " + username + ":" + password, MDC.get("rpcName"));
+					}
 					return gc;
 				} catch (Throwable e) {
 					logger.error("Could not created connection: " + e.getMessage(), e);
@@ -176,8 +181,6 @@ public final class DbConnectionBroker
 				}
 			}
 		}
-		
-		userThreadLocal.set(--currentCount);
 		return null;
 
 	}
