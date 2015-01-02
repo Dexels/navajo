@@ -152,13 +152,6 @@ public final class DbConnectionBroker
 					}
 					if ( !gc.isAged() && !isClosed ) {
 						userThreadLocal.set(++currentCount);
-						if (currentCount > 1) {
-							logger.warn("{} connections open to {} (from {})", currentCount, location + " - " + username + ":" + password, MDC.get("rpcName"));
-							if (MDC.get("rpcName") == null) {
-								Thread.dumpStack();
-							}
-							
-						}
 						inUse.add(gc);
 						usedConnectionInstanceIds.add(gc.setInstanceId(instanceCounter++));
 						return gc;
@@ -175,12 +168,6 @@ public final class DbConnectionBroker
 					inUse.add(gc);
 					usedConnectionInstanceIds.add(gc.setInstanceId(instanceCounter++));
 					userThreadLocal.set(++currentCount);
-					if (currentCount > 1) {
-						logger.warn("{} connections open to {} (from {})", currentCount, location + " - " + username + ":" + password, MDC.get("rpcName"));
-						if (MDC.get("rpcName") == null) {
-							Thread.dumpStack();
-						}
-					}
 					return gc;
 				} catch (Throwable e) {
 					logger.error("Could not created connection: " + e.getMessage(), e);
