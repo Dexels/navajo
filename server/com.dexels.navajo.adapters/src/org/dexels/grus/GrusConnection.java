@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,6 +15,7 @@ public class GrusConnection {
 
 	private final static Logger logger = LoggerFactory.getLogger(DbConnectionBroker.class);
 	private final static int LOGIN_TIMEOUT = 10;
+	private final static Random randomGen = new Random();
 	
 	final Connection myConnection;
 	final DbConnectionBroker myBroker;
@@ -53,11 +55,15 @@ public class GrusConnection {
 		}
 		myBroker = broker;
 		id = connectionCounter.getAndIncrement();
-		this.maxAge = (int) ( maxAge * 86400000L);
+		
+		// setting max age, including a random element (mean of 1 day, stddev of 1 hour) to prevent massive 
+		// connection refreshing at same moment
+		double randomAge = (randomGen.nextGaussian() * 3600 ) + 86400;	
+		this.maxAge = (int) ( maxAge * (randomAge * 1000));
 		created = System.currentTimeMillis();
 		registeredConnections.put(id, this);
 		connectionMapping.put(myConnection, this);
-		logger.info("Created new GrusConnection " + id + "/" + username + "@" + location + ", for Connection: " + myConnection);
+		logger.info("Created new GrusConnection {}/{}@{}, for Connection: {} with maxage {}", id, username, location, myConnection, maxAge );
 	}
 	
 	public Connection getConnection() {
@@ -111,4 +117,5 @@ public class GrusConnection {
 	public DbConnectionBroker getMyBroker() {
 		return  myBroker;
 	}
+	
 }
