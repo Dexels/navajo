@@ -70,6 +70,10 @@ public class DependencyAnalyzer {
         List<Dependency> allDeps = dependencies.get(scriptPath);
         List<Dependency> result = new ArrayList<Dependency>();
         
+        if (allDeps == null) {
+            return result;
+        }
+        
         for (Dependency dep : allDeps) {
             if (dep.getType() == dependencyType) {
                 result.add(dep);
