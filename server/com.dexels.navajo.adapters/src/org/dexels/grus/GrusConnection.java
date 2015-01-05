@@ -58,7 +58,7 @@ public class GrusConnection {
 		
 		// setting max age, including a random element (mean of 1 day, stddev of 1 hour) to prevent massive 
 		// connection refreshing at same moment
-		double randomAge = (randomGen.nextGaussian() * 3600 ) + 86400;	
+		double randomAge = (randomGen.nextGaussian() * 3600 ) + (86400 * maxAge);	
 		this.maxAge = (int) ( maxAge * (randomAge * 1000));
 		created = System.currentTimeMillis();
 		registeredConnections.put(id, this);

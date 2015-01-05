@@ -22,6 +22,7 @@ import org.dexels.grus.DbConnectionBroker;
 import org.dexels.grus.GrusConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.dexels.navajo.adapter.sqlmap.ConnectionBrokerManager;
 import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
@@ -892,9 +893,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 						+ ", check your connection");
 			}
 			
-			Integer threadConnectionCount = DbConnectionBroker.userThreadLocal.get();
-			if (threadConnectionCount != null && threadConnectionCount > 1) {
-				logger.warn("Thread has multiple ({}) connections open to datasource {} (in {})", threadConnectionCount, this.datasource, myAccess.getRpcName());
+			Integer threadConnectionCount = myConnectionBroker.getThreadConnectionCount();
+			if (threadConnectionCount > 1) {
+				logger.warn("Thread has multiple ({}) connections open to datasource {} (in {})", threadConnectionCount, this.datasource, MDC.get("rpcName"));
 			}
 			
 			con = gc.getConnection();

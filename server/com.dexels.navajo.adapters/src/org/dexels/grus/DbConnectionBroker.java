@@ -12,12 +12,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 public final class DbConnectionBroker 
 {
 	protected String location, username, password;
-	public static final ThreadLocal<Integer> userThreadLocal = new ThreadLocal<Integer>();
+	private final ThreadLocal<Integer> userThreadLocal = new ThreadLocal<Integer>();
 	
 	private final static Logger logger = LoggerFactory.getLogger(DbConnectionBroker.class);
 	
@@ -134,10 +133,7 @@ public final class DbConnectionBroker
 			return null;
 		}
 		
-		Integer currentCount = userThreadLocal.get();
-		if ( currentCount == null) {
-			 currentCount = 0;
-		}
+		Integer currentCount = getThreadConnectionCount();
 
 		synchronized (this ) {
 
@@ -221,7 +217,7 @@ public final class DbConnectionBroker
 			if ( released ) {
 				availableConnections.release();
 
-				Integer currentCount = userThreadLocal.get();
+				Integer currentCount = getThreadConnectionCount();
 				if ( currentCount != null && currentCount > 0) {
 					userThreadLocal.set(--currentCount);
 				}
@@ -308,6 +304,14 @@ public final class DbConnectionBroker
 
 	public final static int getInstances() {
 		return GrusManager.getInstance().getInstances();
+	}
+	
+	public Integer getThreadConnectionCount() {
+		Integer res = userThreadLocal.get();
+		if (res == null) {
+			return 0;
+		}
+		return res;
 	}
 
 }

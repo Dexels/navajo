@@ -27,8 +27,7 @@ public class SingleValueQuery extends FunctionInterface {
   public static final String USERDELIMITER = "@";
   private String dbIdentifier = null;
   
-  private final static Logger logger = LoggerFactory
-		.getLogger(SingleValueQuery.class);
+  private final static Logger logger = LoggerFactory.getLogger(SingleValueQuery.class);
 
   public String getDbIdentifier() { return this.dbIdentifier; }
   public void setDbIdentifier(String dbIdentifier) {
