@@ -266,11 +266,11 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.article' version='3.0.18'
+	<feature resolver="(obr)" name='navajo.article' version='3.0.19'
 		start-level='81'>
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<feature version="[1.0.0,2)">dexels.oauth</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/2.0.28
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/2.0.30
 		</bundle>
 	</feature>
 
