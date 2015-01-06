@@ -38,11 +38,13 @@ public class OAuthArticleServlet extends ArticleServlet {
 
 		Token t = null;
 		ClientRegistration cr = null;
+		
+		String errorMessage = "No token or invalid token supplied";
 		if(token==null) {
 			// fallback:
 			final String clientId = req.getParameter("clientId");
 			if(clientId==null) {
-				resp.sendError(400, "No token and no clientId supplied");
+				resp.sendError(400, "Invalid clientId");
 				return;
 			}
 			try {
@@ -51,12 +53,12 @@ public class OAuthArticleServlet extends ArticleServlet {
 				throw new ServletException("Error acquiring client id:",e);
 			}
 			if(cr==null) {
-				resp.sendError(400, "No token and no valid clientId supplied");
+				resp.sendError(400, "Invalid clientId");
 				return;
 			}
 			final String username = cr.getUsername();
 			if(clientId== null || username == null ) {
-				resp.sendError(400, "Missing token");
+				resp.sendError(400, "Invalid clientId");
 				return;
 			}
 		} else {
@@ -68,11 +70,19 @@ public class OAuthArticleServlet extends ArticleServlet {
 			if(t!=null) {
 				try {
 					cr = clientStore.getClient(t.clientId());
+					
+					if (cr == null) {
+						errorMessage = "Invalid clientId";
+					}
 				} catch (ClientStoreException e) {
 					throw new ServletException("Client Store problem",e);
 				}
-			}
-			
+			}	
+		}
+		
+		if(cr==null) {
+			resp.sendError(400, errorMessage);
+			return;
 		}
 		String username = cr.getUsername();
 		String pathInfo = req.getPathInfo();
