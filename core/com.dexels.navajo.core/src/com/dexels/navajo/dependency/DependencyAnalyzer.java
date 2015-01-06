@@ -62,8 +62,8 @@ public class DependencyAnalyzer {
         updateReverseDependencies(myDependencies);
     }
 
-    public List<Dependency> getDependencies(String scriptPath) {
-        return dependencies.get(scriptPath);
+    public List<Dependency> getDependencies(String scriptName) {
+        return dependencies.get(scriptName);
     }
     
     public List<Dependency> getDependencies(String scriptPath, int dependencyType) {
