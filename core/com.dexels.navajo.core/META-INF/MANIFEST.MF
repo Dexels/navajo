@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Core
 Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.1.1.qualifier
+Bundle-Version: 3.1.2
 Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
 Navajo-Name: Core
 Eclipse-ExtensibleAPI: true
@@ -137,6 +137,7 @@ Import-Package: com.dexels.navajo.authentication.api,
  javax.xml.transform,
  javax.xml.transform.dom,
  javax.xml.transform.stream,
+ javax.xml.xpath,
  navajo,
  org.apache.commons.io;version="2.4.0",
  org.apache.commons.io.filefilter;version="2.4.0",
