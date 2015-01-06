@@ -428,17 +428,26 @@
 	</feature>
 
 
-	<feature resolver="(obr)" name='dexels.appstore' version='1.0.0'
+	<feature resolver="(obr)" name='dexels.appstore' version='1.0.7'
 		start-level='81'>
-		<feature version="[3.0.0,4)">navajo.jgit</feature>
 		<feature version="[3.0.0,4)">pax-http</feature>
 		<feature version="[3.0.0,4)">eventadmin</feature>
-		<feature version="[3.0.0,4)">navajo.core.dependencies</feature>
+		<feature version="[1.0.5,2)">dexels.repository</feature>
+		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.ant/1.9.4_1
+		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.core/1.0.0
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.ant/1.0.1
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.server/1.0.0
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.server/1.0.1
+		</bundle>
+		<bundle dependency='true'>mvn:commons-codec/commons-codec/1.10
+		</bundle>
+		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11
+		</bundle>
+		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11
+		</bundle>
+		<bundle dependency='true'>mvn:org.apache.commons/commons-compress/1.9
 		</bundle>
 	</feature>
 	
