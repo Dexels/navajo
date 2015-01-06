@@ -40,7 +40,7 @@ public class LiteralCommand implements ArticleCommand {
 	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException, DirectOutputThrowable {
 		ObjectNode root = runtime.getRootNode();
 		String name = element.getAttribute("name", "name").toString();
-		String value = element.getAttribute("value", "").toString();
+		String value = element.getAttribute("target", "").toString();
 		
 		root.put(name, value);
 		return root;
@@ -51,7 +51,7 @@ public class LiteralCommand implements ArticleCommand {
 		ObjectNode root = mapper.createObjectNode();
 				
 		String name = e.getAttribute("name", "name").toString();
-		String value = e.getAttribute("value", "").toString();
+		String value = e.getAttribute("target", "").toString();
 		
 		root.put(name, value);
 		

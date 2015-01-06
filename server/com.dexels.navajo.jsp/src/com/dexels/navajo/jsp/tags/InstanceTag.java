@@ -1,6 +1,6 @@
 package com.dexels.navajo.jsp.tags;
 
-import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.slf4j.Logger;
@@ -15,8 +15,12 @@ public class InstanceTag extends BaseNavajoTag {
 	@Override
 	public int doStartTag() throws JspException {
 
-		ServletRequest request = getPageContext().getRequest();
+		HttpServletRequest request = (HttpServletRequest) getPageContext().getRequest();
 		String instance = request.getParameter("instance");
+		if(instance==null) {
+			instance = request.getHeader("X-Navajo-Instance");
+		}
+		
 		String sessionId =  getPageContext().getSession().getId();
 		logger.debug("Tag Session Id: "+sessionId+" setting to instance: "+instance);
 		if(instance!=null) {
