@@ -132,10 +132,13 @@ public class BundleCreatorComponent implements BundleCreator {
 			throw new IllegalAccessError("Script extension did not start with a dot!");
 		}
 		String script = scriptName.replaceAll("\\.", "/");
+		String bareScript = scriptName.substring(scriptName.lastIndexOf("/")+1);
 		String rpcName = scriptName;
-		if (rpcName.indexOf("_") > 0) {
-		    rpcName = scriptName.substring(0, rpcName.indexOf("_"));
+		
+		if (bareScript.indexOf("_") > 0) {
+		    rpcName = scriptName.substring(0, rpcName.lastIndexOf("_"));
 		}
+
 		final String scriptTenant = tenantFromScriptPath(scriptName);
 
 		File scriptFolder = new File(navajoIOConfig.getScriptPath());
