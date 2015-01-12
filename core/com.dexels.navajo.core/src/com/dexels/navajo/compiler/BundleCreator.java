@@ -42,8 +42,7 @@ public interface BundleCreator {
 	public void installBundle(String scriptPath,
 			List<String> failures, List<String> success, List<String> skipped, boolean force,String extension);
 
-	public void verifyScript(String script, List<String> failed,
-			List<String> success);
+	public void verifyScript(String script, List<String> failed, List<String> success);
 
 	/**
 	 * Format the compilation timestamp in a consistent way
@@ -68,5 +67,11 @@ public interface BundleCreator {
 	 * @throws Exception
 	 */
 	public CompiledScriptInterface getOnDemandScriptService(String scriptName, String rpcName, String tenant, boolean tenantQualified,boolean force,String extension) throws Exception;
+
+	/**
+	 * Uninstall the bundle belonging to <code>scriptName</code>. If <code>scriptName</code> is tenant-specific, only that 
+	 * bundle will be uninstalled. Otherwise only the generic bundle will be uninstalled; leaving tenant-specific versions intact
+	 */
+	public void uninstallBundle(String scriptName);
 
 }

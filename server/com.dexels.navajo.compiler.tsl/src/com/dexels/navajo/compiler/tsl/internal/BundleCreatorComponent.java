@@ -263,6 +263,41 @@ public class BundleCreatorComponent implements BundleCreator {
 		}
 
 	}
+	
+	@SuppressWarnings("unchecked")
+    @Override
+	public void uninstallBundle(String scriptName) { 
+	    String scriptTenant = tenantFromScriptPath(scriptName);
+	    String rpcName = rpcNameFromScriptPath(scriptName);
+	    
+        String osgiScriptName = rpcName.replaceAll("/", ".");
+        String filter = null;
+        ServiceReference<CompiledScriptFactory>[] sr;
+        
+        if(scriptTenant != null) {
+            filter = "(&(navajo.scriptName=" + osgiScriptName + ")(navajo.tenant="+scriptTenant+"))";
+        } else {
+            filter = "(&(navajo.scriptName=" + osgiScriptName + ") (navajo.tenant=default))";
+        }
+
+        try {
+            sr = (ServiceReference<CompiledScriptFactory>[]) bundleContext.getServiceReferences(
+                    CompiledScriptFactory.class.getName(), filter);
+            if (sr == null) {
+                return;
+            }
+            
+            for (int i =0; i< sr.length; i++) {
+                (sr[i]).getBundle().uninstall();
+            }
+        } catch (InvalidSyntaxException e) {
+            logger.error("Invalid syntax in querying Navajo service: {}", e);
+        } catch (BundleException e) {
+            logger.error("Bundle exception in attempting to stop bundle for non-existing script {}", e);
+        }
+        
+    }
+	
 
 	private String tenantFromScriptPath(String scriptPath) {
 		int scoreIndex = scriptPath.lastIndexOf("_");
@@ -357,7 +392,7 @@ public class BundleCreatorComponent implements BundleCreator {
 							+ " as it is already installed. Lastmod: "
 							+ new Date(previous.getLastModified()) + " status: "
 							+ previous.getState());
-					return null;
+					continue;
 				}
 			}
 
@@ -638,7 +673,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	 * rpcName does not include tenant suffix
 	 */
 	@Override
-	public CompiledScriptInterface getOnDemandScriptService(String scriptName, String rpcName, String tenant, boolean tenantQualified, boolean force, String extension)
+	public CompiledScriptInterface getOnDemandScriptService(String scriptName, String rpcName, String tenant, boolean hasTenantScriptFile, boolean force, String extension)
 			throws Exception {
 		if(rpcName.indexOf("/")!=-1) {
 			String bareScript = rpcName.substring(scriptName.lastIndexOf("/")+1);
@@ -650,16 +685,17 @@ public class BundleCreatorComponent implements BundleCreator {
 				throw new IllegalArgumentException("rpcName should not have a tenant suffix: "+rpcName+" scriptName: "+scriptName);
 			}
 		}
-		CompiledScriptInterface sc = getCompiledScript(rpcName, tenant, extension, tenantQualified);
+		CompiledScriptInterface sc = getCompiledScript(rpcName, tenant, extension, hasTenantScriptFile);
 
 		boolean forceReinstall = false;
 		if (sc != null) {
 			boolean needsRecompile = false;
 			try {
-				needsRecompile = checkForRecompile(rpcName,tenant,tenantQualified,extension);
+                needsRecompile = checkForRecompile(rpcName, tenant, hasTenantScriptFile, extension);
 			} catch (FileNotFoundException e) {
-				logger.warn("Can not find scriptfile, but the service seems available. Continuing: ", e);
-				force = false;
+			    logger.warn("Can not find scriptfile, but the service seems available. Uninstalling service: ", e);
+				uninstallBundle(scriptName);
+				return null;
 			}
 			if (!force && !needsRecompile) {
 				return sc;
@@ -681,18 +717,18 @@ public class BundleCreatorComponent implements BundleCreator {
 		installBundle(scriptName,failures, success, skipped, forceReinstall,extension);
 
 		logger.debug("On demand installation finished, waiting for service...");
-		return getCompiledScript(rpcName, tenant,extension, tenantQualified);
+		return getCompiledScript(rpcName, tenant,extension, hasTenantScriptFile);
 	}
 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant, String extension, boolean tenantQualified)
+	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant, String extension, boolean hasTenantScriptFile)
 			throws ClassNotFoundException {
 		String scriptName = rpcName.replaceAll("/", ".");
 		String filter = null;
 
-		if(tenantQualified) {
+		if(hasTenantScriptFile) {
 			filter = "(&(navajo.scriptName=" + scriptName + ")(navajo.tenant="+tenant+"))";
 		} else {
 			// Not tentantQualified, but script might include tenant-specific files. Therefore

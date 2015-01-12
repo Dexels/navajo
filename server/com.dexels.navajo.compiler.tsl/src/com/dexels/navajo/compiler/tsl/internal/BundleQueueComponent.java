@@ -84,6 +84,22 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 				}
 			}});
 	}
+	
+	public void enqueueDeleteScript(final String script) {
+        executor.execute(new Runnable(){
+
+            @Override
+            public void run() {
+                //String tenant = script.
+                logger.info("Uninstalling: " + script);
+                try {
+                    bundleCreator.uninstallBundle(script);
+                } catch (Throwable e) {
+                    logger.error("Error: ", e);
+                }
+            }});
+    }
+	
 	/**
 	 * 
 	 * @param bundleCreator the bundlecreator to clear
@@ -108,6 +124,23 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 				logger.warn("Error: ", e1);
 			}
 		}
+		
+		// Uninstall deleted files
+        List<String> deletedScripts = RepositoryEventParser.filterDeleted(e, SCRIPTS_FOLDER);
+        for (String deletedScript : deletedScripts) {
+            // Uninstall bundle 
+            String stripped = deletedScript.substring(SCRIPTS_FOLDER.length());
+            int dotIndex = stripped.lastIndexOf(".");
+            if(dotIndex<0) {
+                throw new IllegalArgumentException("Scripts need an extension, and " + deletedScript
+                        + " has none. Ignoring.");
+            }
+            String scriptName = stripped.substring(0,dotIndex);
+            //String extension = stripped.substring(dotIndex,stripped.length());
+            
+            enqueueDeleteScript(scriptName);
+            //enqueueDeleteDependentScripts(scriptName);
+        }
 	}
 
 	private void extractScript(String changedScript) {
