@@ -7,7 +7,7 @@
         <feature version="[3.0.0,4)">eventadmin</feature>
         <feature version="[3.0.0,4)">scr</feature>
         <feature version="[3.0.0,4)">pax-http</feature>
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf.featuresync/1.0.0</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf.featuresync/1.0.1</bundle>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/3.0.1</bundle>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.0.12</bundle>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.file/1.0.14</bundle>
