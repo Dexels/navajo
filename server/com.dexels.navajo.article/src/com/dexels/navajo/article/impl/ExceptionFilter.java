@@ -52,20 +52,34 @@ public void doFilter(ServletRequest rq, ServletResponse rs, FilterChain chain) t
 
 public void activate(Map<String,Object> settings) {
 	this.filterString = (String)settings.get("filterstring");
+	System.out.println("FilterString " + this.filterString);
 	
 }
 
 private boolean filterCondition(HttpServletRequest request) {
 	String userAgent = request.getHeader("user-agent");
-	return userAgent.indexOf(filterString)!=-1;
+	if(userAgent==null) {
+		return false;
+	}
+	userAgent = userAgent.toLowerCase();
+	return userAgent.indexOf("msie")!=-1 || userAgent.indexOf("trident")!=-1;
+	//	return userAgent.indexOf(filterString)!=-1;
 }
 
 private void dealWithException(Throwable t,ErrorCatchHttpResponseWrapper wrapped, HttpServletResponse rs) throws IOException {
 	ObjectMapper objectMapper = new ObjectMapper();
 	ObjectNode object = objectMapper.createObjectNode();
 	object.put("error", true);
-	object.put("errorcode", wrapped.getStatus());
-	object.put("description", wrapped.getErrorMessage());
+	if(t!=null) {
+		while(t.getCause()!=null) {
+			t = t.getCause();
+		}
+		object.put("errorcode", 500);
+		object.put("description", t.getMessage());
+	} else {
+		object.put("errorcode", wrapped.getStatus());
+		object.put("description", wrapped.getErrorMessage());
+	}
 	ObjectWriter writer = objectMapper.writer().withDefaultPrettyPrinter();
 	rs.setContentType("application/json");
 	rs.setStatus(200);
