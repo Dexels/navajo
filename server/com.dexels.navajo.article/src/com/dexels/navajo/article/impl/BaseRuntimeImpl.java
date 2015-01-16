@@ -122,6 +122,9 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 			throw new ArticleException("scope references should start with $");
 		}
 		String stripped = name.substring(1);
+		if (!userAttributes.containsKey(stripped)) {
+			throw new ArticleException("Article problem in " + articleName + ". setvalue refers to scope: " + name + " which is not supplied");
+		}
 		return userAttributes.get(stripped);
 	}
 
