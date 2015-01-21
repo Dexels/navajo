@@ -12,9 +12,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
@@ -52,6 +55,8 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	private ScriptCompiler scriptCompiler;
 	private JavaCompiler javaCompiler;
+	
+	private Map<String, ReentrantLock> lockmap;
 	
 	/*
 	 * (non-Javadoc)
@@ -182,28 +187,53 @@ public class BundleCreatorComponent implements BundleCreator {
 	private void compileAndCreateBundle(String script, final String formatCompilationDate,
 			String scriptExtension, final String scriptTenant, boolean hasTenantSpecificFile,
 			boolean forceTenant, boolean keepIntermediate, List<String> success,
-			List<String> skipped) throws Exception, IOException {
-		List<com.dexels.navajo.script.api.Dependency> dependencies = new ArrayList<com.dexels.navajo.script.api.Dependency>();
-		String myScript = script;
-		if (forceTenant) {
-			myScript = script + "_" + scriptTenant;
-		}
+ List<String> skipped) throws Exception, IOException {
+        List<com.dexels.navajo.script.api.Dependency> dependencies = new ArrayList<com.dexels.navajo.script.api.Dependency>();
+        String myScript = script;
+        if (forceTenant) {
+            myScript = script + "_" + scriptTenant;
+        }
 
-		try {
-			scriptCompiler.compileTsl(script, formatCompilationDate, dependencies, scriptTenant,
-					hasTenantSpecificFile, forceTenant);
-			javaCompiler.compileJava(myScript);
-			javaCompiler.compileJava(myScript + "Factory");
-			createBundleJar(myScript, scriptTenant, keepIntermediate, hasTenantSpecificFile, scriptExtension);
-			success.add(myScript);
-		} catch (SkipCompilationException e) {
-			logger.debug("Script fragment: {} ignored.", script);
-			skipped.add(script);
-		}
+        ReentrantLock lockObject = getLock(script, "compile");
+        try {
+            if (lockObject.tryLock()) {
+                try {
+                    scriptCompiler.compileTsl(script, formatCompilationDate, dependencies, scriptTenant,
+                            hasTenantSpecificFile, forceTenant);
+                    javaCompiler.compileJava(myScript);
+                    javaCompiler.compileJava(myScript + "Factory");
+                    createBundleJar(myScript, scriptTenant, keepIntermediate, hasTenantSpecificFile, scriptExtension);
+                    success.add(myScript);
+                } catch (SkipCompilationException e) {
+                    logger.debug("Script fragment: {} ignored.", script);
+                    skipped.add(script);
+                }
+            } else {
+                // Someone else is already compiling this script. Wait for it
+                // to release the lock, and then we can return immediately 
+                // since they compiled the script for us
+                logger.info("Simultaneous compiling of {} - going to wait it out...", script);
+                lockObject.lock();
+            }
+        } finally {
+            releaseLock(script, "compile", lockObject);
+        }
+        logger.info("Finished compiling and bundling {}", script);
+    }
 
-	}
+	
 
-	private boolean isDirectory(String script, File scriptFolder, File f)
+    private synchronized ReentrantLock getLock(String script, String context) {
+        lockmap.putIfAbsent(script + context, new ReentrantLock());
+        return lockmap.get(script + context);
+    }
+
+    private synchronized void releaseLock(String script, String context,  ReentrantLock lock ) {
+        lock.unlock();
+        lockmap.remove(script + context);
+    }
+    
+    private boolean isDirectory(String script, File scriptFolder, File f)
 			throws IOException {
 		if("".equals(script)) {
 			return true;
@@ -243,12 +273,10 @@ public class BundleCreatorComponent implements BundleCreator {
 	public void installBundles(String scriptPath, List<String> failures,
 			List<String> success, List<String> skipped, boolean force, String extension)
 			throws Exception {
-		// final String extension = "jar";
 		File outputFolder = new File(navajoIOConfig.getCompiledScriptPath());
 		File f = new File(outputFolder, scriptPath);
 		String tenant = tenantFromScriptPath(scriptPath);
 		File jarFile = getScriptBundleJar(scriptPath, tenant, ".xml");
-		// new File(outputFolder,scriptPath+"."+extension);
 
 		if (jarFile!=null && jarFile.exists()) {
 			installBundle(scriptPath, failures, success, skipped, force,extension);
@@ -309,7 +337,6 @@ public class BundleCreatorComponent implements BundleCreator {
 		}
 	}
 	private String rpcNameFromScriptPath(String scriptPath) {
-		System.err.println("ScriptPath: >"+scriptPath);
 		int scoreIndex = scriptPath.lastIndexOf("_");
 		int slashIndex = scriptPath.lastIndexOf("/");
 		if(scoreIndex>=0 && slashIndex < scoreIndex) {
@@ -348,26 +375,40 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	@Override
-	public void installBundle(String scriptPath, List<String> failures,
-			List<String> success, List<String> skipped, boolean force,String extension) {
-		try {
-			Bundle b = doInstall(scriptPath, force,extension);
-			if (b == null) {
-				skipped.add(scriptPath);
-			} else {
-				success.add(b.getSymbolicName());
-			}
-		} catch (BundleException e) {
-			failures.add(e.getLocalizedMessage());
-			reportInstallationError(scriptPath, e);
-		} catch (FileNotFoundException e1) {
-			failures.add(e1.getLocalizedMessage());
-			reportInstallationError(scriptPath, e1);
-		} catch (MalformedURLException e) {
-			failures.add(e.getLocalizedMessage());
-			reportInstallationError(scriptPath, e);
-		}
-	}
+	public void installBundle(String scriptPath, List<String> failures, List<String> success, List<String> skipped,
+            boolean force, String extension) {
+
+        ReentrantLock lockObject = getLock(scriptPath, "install");
+        try {
+            if (lockObject.tryLock()) {
+                // we got the lock!
+                try {
+                    Bundle b = doInstall(scriptPath, force, extension);
+                    if (b == null) {
+                        skipped.add(scriptPath);
+                    } else {
+                        success.add(b.getSymbolicName());
+                    }
+                } catch (BundleException e) {
+                    failures.add(e.getLocalizedMessage());
+                    reportInstallationError(scriptPath, e);
+                } catch (FileNotFoundException e1) {
+                    failures.add(e1.getLocalizedMessage());
+                    reportInstallationError(scriptPath, e1);
+                } catch (MalformedURLException e) {
+                    failures.add(e.getLocalizedMessage());
+                    reportInstallationError(scriptPath, e);
+                }
+            } else {
+                // someone else is installing our bundle - simply wait for them to finish
+                logger.info("Simultaneous installing of {} - going to wait it out...", scriptPath);
+                lockObject.lock();
+            }
+        } finally {
+            releaseLock(scriptPath, "install", lockObject);
+        }
+
+    }
 
 	private Bundle doInstall(String scriptPath, boolean force,String extension)
 			throws BundleException, FileNotFoundException, MalformedURLException {
@@ -385,8 +426,8 @@ public class BundleCreatorComponent implements BundleCreator {
 			Bundle previous = bundleContext.getBundle(uri);
 			if (previous != null) {
 				if (force) {
+                    logger.debug("uninstalling bundle with URI {} with file: {}: ", uri, bundleFile);
 					previous.uninstall();
-					logger.debug("uninstalling bundle with URI: " + uri);
 				} else {
 					logger.debug("Skipping bundle at: " + uri
 							+ " as it is already installed. Lastmod: "
@@ -462,10 +503,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 		File classFileInPlace = new File(bundlePackageDir, script + ".class");
 		File factoryClassFileInPlace = new File(bundlePackageDir, script + "Factory.class");
-		// File parent = classFile.getParentFile();
-		// if(!parent.exists()) {
-		// parent.mkdirs();
-		// }
+
 		FileUtils.copyFile(classFile, classFileInPlace);
 		FileUtils.copyFile(factoryClassFile, factoryClassFileInPlace);
 		FileUtils.copyFile(manifestFile, metainfManifest);
@@ -476,9 +514,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		
 		FileUtils.copyFile(dsFile, osgiinfScript);
 		File jarFile = new File(navajoIOConfig.getCompiledScriptPath(), scriptPath + ".jar");
-		//File jarFile = navajoIOConfig.getApplicableBundleForScript(
-		//	rpcNameFromScriptPath(scriptPath), tenantFromScriptPath(scriptPath), extension);		
-		
+
 		addFolderToJar(bundleDir, null, jarFile, bundleDir.getAbsolutePath()+ "/");
 		if (!keepIntermediateFiles) {
 			classFile.delete();
@@ -540,7 +576,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	public void activate(BundleContext bundleContext) {
 		logger.debug("Activating Bundle creator");
 		this.bundleContext = bundleContext;
-
+		lockmap = new HashMap<String, ReentrantLock>();
 	}
 
 	public void deactivate() {
@@ -765,27 +801,6 @@ public class BundleCreatorComponent implements BundleCreator {
 		return null;
 	}
 
-//	private CompiledScript waitForService(String rpcPath, String tenant) throws Exception {
-//		String rpcName = rpcPath.replaceAll("/", ".");
-//		// script://person/InitSearchPersons
-//		File cscripts = new File(navajoIOConfig.getCompiledScriptPath());
-//		File scriptFile = new File(cscripts,rpcPath+".jar");
-//		System.err.println("Path: "+scriptFile.getAbsolutePath());
-//		URL u = scriptFile.toURI().toURL();
-//		
-//		final String bundleURI = u.toString();
-//		Bundle scriptBundle = bundleContext.getBundle(bundleURI);
-//		if (scriptBundle == null) {
-//			throw new UserException(-1, "Can not resolve bundle for service: "
-//					+ rpcName + " failed to find bundle with URI: " + bundleURI);
-//		}
-//		if (scriptBundle.getState() != Bundle.ACTIVE) {
-//			throw new UserException(-1, "Can not resolve bundle for service: "
-//					+ rpcName + " bundle with URI: " + bundleURI
-//					+ " is not active. State: " + scriptBundle.getState());
-//		}
-//		return getCompiledScript(rpcName, tenant);
-//	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void verifySingleScript(String scriptPath, List<String> failed,
@@ -795,10 +810,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		try {
 			ServiceReference[] ssr = bundleContext.getServiceReferences(
 					CompiledScriptFactory.class.getName(), filter);
-			//
-			// Collection<ServiceReference<CompiledScriptFactory>> sr =
-			// bundleContext.getServiceReferences(CompiledScriptFactory.class,
-			// filter);
+
 			if (ssr==null || ssr.length == 0) {
 				logger.warn("Can not locate service for script: " + scriptPath
 						+ " filter: " + filter);
@@ -811,8 +823,6 @@ public class BundleCreatorComponent implements BundleCreator {
 				return;
 			}
 			logger.info("# of services: " + ssr.length);
-			// final ServiceReference<CompiledScriptFactory> ref =
-			// sr.iterator().next();
 
 			CompiledScriptFactory csf = bundleContext.getService(ssr[0]);
 			if (csf == null) {
@@ -857,6 +867,6 @@ public class BundleCreatorComponent implements BundleCreator {
 		//aap_noot/mies_wim/InitUpdateClub
 		BundleCreatorComponent bcc = new BundleCreatorComponent();
 		String s = bcc.rpcNameFromScriptPath("aap_noot/mies_wim/InitUpdateClub");
-		System.err.println(">> "+s);
+		System.out.println(s);
 	}
 }
