@@ -501,9 +501,9 @@
 		</bundle>
 	</feature>
 
-	<feature name='logback.redis' version='1.0.7' install="auto">
+	<feature name='logback.redis' version='1.0.8' install="auto">
 		<feature version="[3.0.0,4)">scr</feature>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.logback.redis/2.0.2
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.logback.redis/2.1.0
 		</bundle>
 	</feature>
 </features>
