@@ -224,8 +224,12 @@ public class BundleCreatorComponent implements BundleCreator {
 	
 
     private synchronized ReentrantLock getLock(String script, String context) {
-        lockmap.putIfAbsent(script + context, new ReentrantLock());
-        return lockmap.get(script + context);
+        String key = script + context;
+        if (!lockmap.containsKey(key)) {
+            lockmap.put(key, new ReentrantLock());
+        }
+        
+        return lockmap.get(key);
     }
 
     private synchronized void releaseLock(String script, String context,  ReentrantLock lock ) {
