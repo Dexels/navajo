@@ -659,7 +659,6 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 //	}
 
 	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
-		System.err.println("setting configadmin");
 		this.configAdmin = configAdmin;
 	}
 
