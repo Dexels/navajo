@@ -62,7 +62,12 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	final static Logger logger = LoggerFactory.getLogger(Access.class.getName());
 
-	
+	public final static int EXIT_OK = 1;
+	public final static int EXIT_VALIDATION_ERR = 2;
+	public final static int EXIT_BREAk = 3		;
+	public final static int EXIT_USEREXCEPTION = 4	;
+	public final static int EXIT_EXCEPTION = 5	;
+
 	@SuppressWarnings("unused")
 	private static final String VERSION = "$Id$";
 
@@ -97,8 +102,6 @@ public final class Access implements java.io.Serializable, Mappable {
 	public int processingTime;
 	public int beforeServiceTime;
 	public int afterServiceTime;
-	
-	
 	public String requestEncoding;
 	public boolean compressedReceive = false;
 	public boolean compressedSend = false;
@@ -108,27 +111,29 @@ public final class Access implements java.io.Serializable, Mappable {
 	public transient Binary responseNavajo;
 	public boolean debugAll;
 	
-	private String requestUrl;
+	
 
 	// Flag to indicate that during the execution of the webservice, break was called.
 	private boolean breakWasSet = false;
 	
 	private transient Object scriptEnvironment = null;
-	
-
+	private String requestUrl;
+	private int requestNavajoSize; // in bytes
+	private int responseNavajoSize; // in bytes
+	private int exitCode;
 	private transient Throwable myException;
 	private Navajo outputDoc;
 	private Navajo inDoc;
 	// The mergedDoc can be used to merge a previously set Navajo with the outputDoc.
 	// If the mergeDoc is not empty, it will ALWAYS be merged when setOutputDoc is called.
 	private transient Navajo mergedDoc;
-
 	private transient Message currentOutMessage;
 	private transient Object userCertificate;
 	private transient Set<Map<?,?>> piggyBackData = null;
 	private String clientToken = null;
 	private String clientInfo = null;
-	
+	private String instance;
+
 	/**
 	 * Create a private logging console for this access object.
 	 * TODO: Maybe restrict maximum size of console... or use Binary...
@@ -146,7 +151,6 @@ public final class Access implements java.io.Serializable, Mappable {
 	// the original knows how to commit the data and finalize the network connection.
 	protected transient TmlRunnable originalRunnable;
 
-	private String instance;
 
 
 	
@@ -429,6 +433,9 @@ public final class Access implements java.io.Serializable, Mappable {
 		a.consoleContent = this.consoleContent;
 		a.parentAccessId = this.parentAccessId;
 		a.debugAll = this.debugAll;
+		a.exitCode = this.exitCode;
+		a.requestNavajoSize = this.requestNavajoSize;
+		a.responseNavajoSize = this.responseNavajoSize;
 		return a;
 	}
 	/**
@@ -705,7 +712,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	
 
 	/**
-	 * Static method that does not check for existence of Access object.
+	 * Static method thaRt does not check for existence of Access object.
 	 * If Access is null, the output is written to System.err
 	 * 
 	 * @param a
@@ -836,5 +843,43 @@ public final class Access implements java.io.Serializable, Mappable {
 	public String getInstance() {
 		return this.instance;
 	}
+
+
+
+	public int getRequestNavajoSize() {
+		return requestNavajoSize;
+	}
+
+
+
+	public void setRequestNavajoSize(int requestNavajoSize) {
+		this.requestNavajoSize = requestNavajoSize;
+	}
+
+
+
+	public int getResponseNavajoSize() {
+		return responseNavajoSize;
+	}
+
+
+
+	public void setResponseNavajoSize(int responseNavajoSize) {
+		this.responseNavajoSize = responseNavajoSize;
+	}
+
+
+
+	public int getExitCode() {
+		return exitCode;
+	}
+
+
+
+	public void setExitCode(int exitCode) {
+		this.exitCode = exitCode;
+	}
+	
+	
 
 }

@@ -12,7 +12,7 @@ package com.dexels.navajo.mapping;
 
 
 /**
- * This exception is thrown at the occurence of a <break> tag in the Navajo BPCL script.
+ * This exception is thrown at the occurrence of a <break> tag in the Navajo BPCL script.
  */
 
 public class BreakEvent extends Exception {

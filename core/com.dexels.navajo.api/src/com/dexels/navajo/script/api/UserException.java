@@ -31,7 +31,8 @@ public class UserException extends Exception {
     public static final int INVALID_INPUT = 0xFB;
     public static final int USER_EXISTS = 0xFA;
     public static final int INVALID_ACCOUNT_NR = 0xF0;
-
+    public static final int BREAK_EXCEPTION = 0x14;
+    
     public int code;
     public String message = "";
     public Throwable t = null;

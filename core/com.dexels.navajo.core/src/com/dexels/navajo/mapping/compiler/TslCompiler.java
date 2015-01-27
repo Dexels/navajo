@@ -2483,7 +2483,7 @@ public class TslCompiler {
 					+ replaceQuotes(error)
 					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
 					
-			result.append(printIdent(ident + 2) + "throw new UserException(-1, op.value + \"\");\n");
+			result.append(printIdent(ident + 2) + "throw new UserException(UserException.BREAK_EXCEPTION, op.value + \"\");\n");
 			result.append(printIdent(ident) + "}\n");
 		}
 
