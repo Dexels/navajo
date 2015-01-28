@@ -13,6 +13,8 @@ package com.dexels.navajo.parser;
 import java.util.ArrayList;
 import java.util.Date;
 
+@SuppressWarnings("rawtypes")
+
 public class TML {
 
     public TML() {}
@@ -32,7 +34,7 @@ public class TML {
             return "";
     }
 
-    public static String showList(ArrayList aap) {
+	public static String showList(ArrayList aap) {
 
         StringBuffer result = new StringBuffer();
 

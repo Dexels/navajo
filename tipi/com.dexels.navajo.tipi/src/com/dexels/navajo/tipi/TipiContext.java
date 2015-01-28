@@ -115,6 +115,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public abstract void runAsyncInEventThread(Runnable r);
 
+	private final Map<String, Object> lockMap = new HashMap<String, Object>();
+	
 	/**
 	 * Maps a service to a list of datacomponents. Components register here by
 	 * having a service tag
@@ -1097,6 +1099,52 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	// TipiException {
 	// return instantiateLayout(instance,null);
 	// }
+	/**
+	 * Synchronized instantiation of main level tipi components. Due to the synchronization, the test for an existing component is guaranteed to work.
+	 */
+	
+	public TipiComponent instantiateTipi(TipiInstantiateTipi t,
+			TipiComponent parent, boolean force, String id, Object constraints,
+			TipiEvent event, XMLElement xe) throws TipiException {
+		Object lock = null;
+		String path = parent.getPath() + "/" + id; 
+		synchronized(this)
+		{
+			if (lockMap.containsKey(path))
+			{
+				lock = lockMap.get(path);
+			}
+			else
+			{
+				lock = new Object();
+				lockMap.put(path, lock);
+			}
+		}
+		
+		TipiComponent inst = null;
+		synchronized(lock)
+		{
+			TipiComponent comp = parent.getTipiComponentByPath(id);
+	
+			if (comp != null) {
+				// Component exists:
+				if (force) {
+	
+					disposeTipiComponent(comp);
+				} else {
+					comp.performTipiEvent("onInstantiate", null, false);
+					comp.reUse();
+					return comp;
+				}
+			}
+			inst = instantiateComponent(xe, event, t, parent);
+			// set its ID
+			inst.setId(id);
+			parent.addComponent(inst, this, constraints);
+			fireTipiStructureChanged(inst);
+		}
+		return inst;
+	}
 
 	protected TipiComponent instantiateComponentByDefinition(
 			XMLElement definition, XMLElement instance, TipiEvent event,
@@ -1351,16 +1399,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		throw new TipiException("INSTANTIATING UNKNOWN SORT OF CLASS THING.");
 	}
 
-	public void addTipiInstance(String service, TipiDataComponent instance) {
-		if (tipiInstanceMap.containsKey(service)) {
-			List<TipiDataComponent> al = tipiInstanceMap.get(service);
-			al.add(instance);
-		} else {
-			List<TipiDataComponent> al = new ArrayList<TipiDataComponent>();
-			al.add(instance);
-			tipiInstanceMap.put(service, al);
-		}
-	}
+    public void addTipiInstance(String service, TipiDataComponent instance) {
+        if (tipiInstanceMap.containsKey(service)) {
+            List<TipiDataComponent> al = tipiInstanceMap.get(service);
+            al.add(instance);
+        } else {
+            List<TipiDataComponent> al = new ArrayList<TipiDataComponent>();
+            al.add(instance);
+            tipiInstanceMap.put(service, al);
+        }
+    }
 
 	public void removeTipiInstance(TipiComponent instance) {
 		Iterator<List<TipiDataComponent>> c = tipiInstanceMap.values()
@@ -1399,14 +1447,14 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	/**
 	 * Lists all instantiated components that listen to the specified service
+	 * Will return duplicated services that the cascade load will need to filter out!
 	 * 
 	 * @param service
 	 * @return
 	 */
-	public List<TipiDataComponent> getTipiInstancesByService(String service) {
-		// List<TipiDataComponent> x= tipiInstanceMap.get(service);
-		return tipiInstanceMap.get(service);
-	}
+    public List<TipiDataComponent> getTipiInstancesByService(String service) {
+        return tipiInstanceMap.get(service);
+    }
 
 	public List<String> getListeningServices() {
 		return new ArrayList<String>(tipiInstanceMap.keySet());
@@ -1781,7 +1829,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 		for (int i = 0; i < tipiList.size(); i++) {
 			TipiDataComponent t = tipiList.get(i);
-			debugLog("data    ", "delivering data from method: " + method
+			debugLog("data    ", " delivering data from method: " + method
 					+ " to tipi: " + t.getId());
 			try {
 				t.loadData(reply, method);
@@ -2760,11 +2808,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		try {
 			int i = 0;
 			for (TipiExecutable current : exe) {
+			    
 				executableParent.setExecutionIndex(i);
 				current.performAction(te, executableParent, i);
 				i++;
 			}
-
 		} catch (TipiException ex) {
 			logger.error("Error: ",ex);
 		}

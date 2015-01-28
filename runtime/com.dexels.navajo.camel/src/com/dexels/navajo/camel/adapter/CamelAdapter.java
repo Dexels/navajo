@@ -68,7 +68,7 @@ public class CamelAdapter implements Mappable  {
 				inDoc = NavajoFactory.getInstance().createNavajo(r);
 			 } catch (Exception e) {
 					logger.error("Error in processing Camel reply - maybe not in navajo format?");
-					throw e;
+					throw new UserException("Error in processing Camel reply - maybe not in navajo format?", e);
 				}
 
 				myAccess.setOutputDoc(inDoc);

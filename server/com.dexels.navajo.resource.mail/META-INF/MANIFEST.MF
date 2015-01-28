@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mail resource connector
+Bundle-SymbolicName: com.dexels.navajo.resource.mail
+Bundle-Version: 1.0.2.qualifier
+Bundle-Vendor: DEXELS
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Service-Component: OSGI-INF/mailResourceComponent.xml,
+ OSGI-INF/mail.resource.factory.xml
+Export-Package: com.dexels.navajo.resource.mail
+Import-Package: com.dexels.navajo.adapter,
+ com.dexels.navajo.adapter.mailmap,
+ com.dexels.navajo.datasource,
+ com.dexels.navajo.document;version="2.2.1",
+ com.dexels.navajo.document.jaxpimpl.xml;version="2.2.1",
+ com.dexels.navajo.document.types;version="2.2.1",
+ com.dexels.navajo.script.api;version="1.0.0",
+ com.dexels.navajo.server.enterprise.queue,
+ javax.mail;version="1.4.1",
+ javax.mail.internet;version="1.4.1",
+ navajo;version="1.1.0",
+ navajoextension,
+ org.junit;version="4.0.0";resolution:=optional,
+ org.osgi.framework;version="1.7.0",
+ org.slf4j;version="[1.6.1,1.8.0)"

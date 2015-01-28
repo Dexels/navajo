@@ -83,19 +83,6 @@ public class TipiInstantiateTipi extends TipiAction {
 			Map<String, TipiValue> paramMap, Object constraints, TipiEvent event)
 			throws TipiException {
 
-		TipiComponent comp = parent.getTipiComponentByPath(id);
-
-		if (comp != null) {
-			// Component exists:
-			if (force) {
-
-				context.disposeTipiComponent(comp);
-			} else {
-				comp.performTipiEvent("onInstantiate", null, false);
-				comp.reUse();
-				return comp;
-			}
-		}
 		XMLElement xe = new CaseSensitiveXMLElement();
 		xe.setName("component");
 		if (byClass) {
@@ -131,13 +118,9 @@ public class TipiInstantiateTipi extends TipiAction {
 				}
 			}
 		}
-		TipiComponent inst = context.instantiateComponent(xe, event, this,
-				parent);
-		inst.setId(id);
-		parent.addComponent(inst, context, constraints);
 
-		context.fireTipiStructureChanged(inst);
-		return inst;
+		return context.instantiateTipi(this, parent, force, id, constraints, event,
+				xe);
 	}
 
 	private String getEscapedString(Object value) {

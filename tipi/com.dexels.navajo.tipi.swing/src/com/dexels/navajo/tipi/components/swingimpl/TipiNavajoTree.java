@@ -166,6 +166,7 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void dump(TreeNode tn) {
 		// logger.debug("My node: "+tn.toString());
 		// logger.debug("#of children: "+tn.getChildCount());

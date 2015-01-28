@@ -5,7 +5,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.tsl.BundleQueue;
+import com.dexels.navajo.dependency.Dependency;
 import com.dexels.navajo.dependency.DependencyAnalyzer;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
@@ -84,6 +84,22 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 				}
 			}});
 	}
+	
+	public void enqueueDeleteScript(final String script) {
+        executor.execute(new Runnable(){
+
+            @Override
+            public void run() {
+                //String tenant = script.
+                logger.info("Uninstalling: " + script);
+                try {
+                    bundleCreator.uninstallBundle(script);
+                } catch (Throwable e) {
+                    logger.error("Error: ", e);
+                }
+            }});
+    }
+	
 	/**
 	 * 
 	 * @param bundleCreator the bundlecreator to clear
@@ -108,6 +124,23 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 				logger.warn("Error: ", e1);
 			}
 		}
+		
+		// Uninstall deleted files
+        List<String> deletedScripts = RepositoryEventParser.filterDeleted(e, SCRIPTS_FOLDER);
+        for (String deletedScript : deletedScripts) {
+            // Uninstall bundle 
+            String stripped = deletedScript.substring(SCRIPTS_FOLDER.length());
+            int dotIndex = stripped.lastIndexOf(".");
+            if(dotIndex<0) {
+                throw new IllegalArgumentException("Scripts need an extension, and " + deletedScript
+                        + " has none. Ignoring.");
+            }
+            String scriptName = stripped.substring(0,dotIndex);
+            //String extension = stripped.substring(dotIndex,stripped.length());
+            
+            enqueueDeleteScript(scriptName);
+            //enqueueDeleteDependentScripts(scriptName);
+        }
 	}
 
 	private void extractScript(String changedScript) {
@@ -131,9 +164,9 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 	}
 	
     private void enqueueDependentScripts(String script) {
-    	Set<String> dependencies = depanalyzer.getDependentScripts(script);
-    	for (String dependentScript: dependencies) {
-			logger.debug("Compiling {}; the following script should be recompiled too: {}", script, dependentScript);
+    	List<Dependency> dependencies = depanalyzer.getDependencies(script, Dependency.INCLUDE_DEPENDENCY);
+    	for (Dependency dep: dependencies) {
+			logger.debug("Compiling {}; the following script should be recompiled too: {}", script, dep.getDependee());
     		//enqueueScript(dependentScript, ".xml");  		
     	}
     }

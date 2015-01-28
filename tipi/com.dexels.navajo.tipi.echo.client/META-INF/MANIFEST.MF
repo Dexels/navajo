@@ -1,6 +1,5 @@
 Bundle-Name: Tipi Echo Client
 Bundle-SymbolicName: com.dexels.navajo.tipi.echo.client
-Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.28.qualifier
 Bundle-Vendor: Dexels

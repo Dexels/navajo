@@ -1,6 +1,5 @@
 package com.dexels.navajo.compiler.tsl.custom;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;

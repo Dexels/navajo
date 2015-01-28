@@ -1,6 +1,5 @@
 Bundle-Name: Navajo Rhino
 Bundle-SymbolicName: com.dexels.navajo.rhino
-Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 2.0.3.qualifier
 Bundle-Activator: navajorhino.Version

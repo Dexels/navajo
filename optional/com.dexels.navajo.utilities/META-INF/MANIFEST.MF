@@ -1,6 +1,5 @@
 Bundle-Name: Navajo Utilities
 Bundle-SymbolicName: com.dexels.navajo.utilities
-Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 3.0.5.qualifier
 Bundle-Vendor: Dexels

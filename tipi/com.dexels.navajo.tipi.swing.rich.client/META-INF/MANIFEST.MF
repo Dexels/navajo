@@ -1,6 +1,5 @@
 Bundle-Name: Navajo Rich Client
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.rich.client
-Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.19.qualifier
 Export-Package: com.dexels.navajo.rich.components

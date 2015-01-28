@@ -83,6 +83,10 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 	}
 
 	private String determineInstanceFromRequest(final HttpServletRequest req) {
+		String requestInstance = req.getHeader("X-Navajo-Instance");
+		if(requestInstance!=null) {
+			return requestInstance;
+		}
 		String pathinfo = req.getPathInfo();
 		if(pathinfo.startsWith("/")) {
 			pathinfo = pathinfo.substring(1);

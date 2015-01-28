@@ -21,6 +21,7 @@ public class GrusDataSource implements GrusConnection {
 	private final Connection connection;
 
 	private final GrusProvider grusProvider;
+
 	
 	private final static Logger logger = LoggerFactory.getLogger(GrusDataSource.class);
 	
@@ -50,8 +51,7 @@ public class GrusDataSource implements GrusConnection {
 		if(this.datasource==null) {
 			throw new Exception("No datasource in GrusDataSource");
 		}
-		this.dbConnectionBroker = new DbConnectionBrokerWrapper(this, user, maxConns);
-		
+		this.dbConnectionBroker = new DbConnectionBrokerWrapper(this, user, maxConns);   
 		this.connection = this.datasource.getConnection();
 		
 		this.settings = settings;
@@ -124,5 +124,12 @@ public class GrusDataSource implements GrusConnection {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+    public DataSource getDatasource() {
+        return datasource;
+    }
+	
+	
 
 }

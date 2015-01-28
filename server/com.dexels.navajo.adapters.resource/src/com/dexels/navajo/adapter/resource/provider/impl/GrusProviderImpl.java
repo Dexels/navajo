@@ -20,6 +20,8 @@ import com.dexels.navajo.script.api.UserException;
 
 public class GrusProviderImpl implements GrusProvider {
 
+    public static final ThreadLocal<Map<DataSource, Integer>> userThreadLocal = new ThreadLocal<Map<DataSource, Integer>>();
+
 	private final Map<String, Map<String, DataSource>> instances = new HashMap<String, Map<String, DataSource>>();
 	private final Map<String, DataSource> defaultDataSources = new HashMap<String, DataSource>();
 	private final Map<DataSource, Map<String, Object>> settingsMap = new HashMap<DataSource, Map<String, Object>>();
@@ -54,7 +56,7 @@ public class GrusProviderImpl implements GrusProvider {
 			}
 
 		} else {
-			System.err.println("!!! Adding source with name: "+name+" with instances: "+instances);
+			logger.info("!!! Adding source with name: "+name+" with instances: "+instances);
 			for (String currentInstance : instances) {
 				addDataSource(source, name, currentInstance);
 				if (aliases != null) {
@@ -112,8 +114,7 @@ public class GrusProviderImpl implements GrusProvider {
 		return instanceDataSources;
 	}
 
-	private DataSource getInstanceDataSource(String instance, String name,
-			String username) {
+	private DataSource getInstanceDataSource(String instance, String name) {
 		if (instance != null) {
 			DataSource dataSource = getInstanceDataSources(instance).get(name);
 			if (dataSource != null) {
@@ -127,75 +128,83 @@ public class GrusProviderImpl implements GrusProvider {
 		if (dataSource != null) {
 			return dataSource;
 		}
-		// I think this makes no sense
-		// dataSource = getInstanceDataSources("*").get(name);
-		// if(dataSource==null) {
-		// logger.warn("No datasource found for instance: "+instance+" and name: "+name);
-		// }
+
 		logger.warn("No datasource found for instance: " + instance
 				+ " and name: " + name+ " datasource keys: "+defaultDataSources.keySet());
 		return null;
 	}
 
 	public void removeDataSource(DataSource source, Map<String, Object> settings) {
-		
 		removeInstanceDataSource(source);
-		
-//		List<String> instances = getInstances(settings);
-//		List<String> aliases = (List<String>) settings.get("aliases");
-//		String instance = (String) settings.get("instance");
-//		String name = (String) settings.get("name");
-//
-//		if (instance == null) {
-//			defaultSettingsMap.put(name, settings);
-//			defaultDataSources.put(name, source);
-//			if (aliases != null) {
-//				for (String alias : aliases) {
-//					defaultSettingsMap
-//							.put("navajo.resource." + alias, settings);
-//					defaultDataSources.put("navajo.resource." + alias, source);
-//				}
-//			}
-//		}
-//		
-//		settingsMap.remove(source);
-//
-//		Map<String, DataSource> instanceDataSources = getInstanceDataSources(instance);
-//		instanceDataSources.remove(name);
 	}
+	
+	@Override
+	public boolean threadContainsConnection(String instance, String name) {
+	    DataSource dataSourceInstance = getInstanceDataSource(instance, name);
+	    Map<DataSource, Integer> currentMap = userThreadLocal.get();
+	    
+	    if (currentMap == null) {
+	        currentMap = new HashMap<DataSource, Integer>();
+	        userThreadLocal.set(currentMap);
+	    }
+	    
+	    if (currentMap.containsKey(dataSourceInstance)) {
+	        return true;
+	    }
+	    return false;
+	}
+	
+	@Override
+    public GrusConnection requestReuseThreadConnection(String instance, String name) {
+        DataSource dataSourceInstance = getInstanceDataSource(instance, name);
+        Map<DataSource, Integer> currentMap = userThreadLocal.get();
+        
+        if (currentMap == null) {
+            currentMap = new HashMap<DataSource, Integer>();
+        }
+        
+        if (!currentMap.containsKey(dataSourceInstance)) {
+            throw new RuntimeException("Unable to find existing connection!");
+        }
+        return requestConnection(currentMap.get(dataSourceInstance));
+    }
 
 	@Override
-	public GrusConnection requestConnection(String instance, String name,
-			String username) throws UserException {
-		DataSource dataSourceInstance = null;
-		dataSourceInstance = getInstanceDataSource(instance, name, username);
+    public GrusConnection requestConnection(String instance, String name) throws UserException {
+        DataSource dataSourceInstance = null;
+        dataSourceInstance = getInstanceDataSource(instance, name);
 
-		// jdbc:oracle:thin:@odysseus:1521:SLTEST02
+        Map<String, Object> settings = settingsMap.get(dataSourceInstance);
 
-		Map<String, Object> settings = settingsMap.get(dataSourceInstance);
-		// if(instance!=null && settings==null) {
-		// logger.error("Error resolving datasource for instance: "+instance+" and name: "+name+" settings map: "+settingsMap+" defaultS");
-		// throw new
-		// UserException(-1,"Error resolving datasource for instance: "+instance+" and name: "+name);
-		// }
-		if (settings == null && dataSourceInstance == null) {
-			settings = defaultSettingsMap.get(name);
-			dataSourceInstance = defaultDataSources.get(name);
-		}
+        if (settings == null && dataSourceInstance == null) {
+            settings = defaultSettingsMap.get(name);
+            dataSourceInstance = defaultDataSources.get(name);
+        }
 
-		int id = connectionCounter.getAndIncrement();
-		GrusConnection gc;
-		try {
-			gc = new GrusDataSource(id, dataSourceInstance, settings, this);
-		} catch (Exception e) {
-			throw new UserException(-1,
-					"Could not create datasource connection for: " + instance
-							+ " and name: " + name, e);
-		}
-		grusIds.put((long) id, gc);
-		return gc;
-	}
+        int id = connectionCounter.getAndIncrement();
+        GrusConnection gc;
+        try {
+            gc = new GrusDataSource(id, dataSourceInstance, settings, this);
+        } catch (Exception e) {
+            logger.error("Exception in creating datasource connection for: {} name: {}: {}", instance, name, e);
+            throw new UserException(-1, "Could not create datasource connection for: " + instance + " and name: "
+                    + name, e);
+        }
+        grusIds.put((long) id, gc);
 
+        Map<DataSource, Integer> currentMap = userThreadLocal.get();
+
+        if (currentMap == null) {
+            currentMap = new HashMap<DataSource, Integer>();
+        }
+        currentMap.put(dataSourceInstance, id);
+        userThreadLocal.set(currentMap);
+        return gc;
+    }
+
+    
+  
+    
 	@Override
 	public GrusConnection requestConnection(long id) {
 		return grusIds.get(id);
@@ -203,12 +212,26 @@ public class GrusProviderImpl implements GrusProvider {
 
 	@Override
 	public void release(GrusConnection grusDataSource) {
+	    
+        Map<DataSource, Integer> currentMap = userThreadLocal.get();
+        
+        if (currentMap != null) {
+            currentMap.remove(grusDataSource.getDatasource());
+            if (currentMap.size() == 0) {
+                currentMap = null; // clear map to allow GC
+            }
+            userThreadLocal.set(currentMap);
+        }
+        
+
 		grusIds.remove(grusDataSource.getId());
 		grusDataSource.destroy();
+		
+		
 	}
 
 	public void activate() {
-		GrusProviderFactory.setInstance(this);
+		GrusProviderFactory.setInstance(this);		
 	}
 
 	public void deactivate() {

@@ -1,17 +1,12 @@
 package com.dexels.navajo.tipi.dev.server.websocket.impl;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
 import org.eclipse.jetty.websocket.WebSocket;
 import org.osgi.framework.ServiceRegistration;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.dev.server.websocket.TipiCallbackSession;
 
 public class SCSocket implements WebSocket.OnTextMessage, TipiCallbackSession {
@@ -70,14 +65,7 @@ public class SCSocket implements WebSocket.OnTextMessage, TipiCallbackSession {
 
 	@Override
 	public void sendMessage(String data) throws IOException {
-		Navajo out = NavajoFactory.getInstance().createNavajo();
-		Message message = NavajoFactory.getInstance().createMessage(out, "Message");
-		out.addMessage(message);
-		Property body = NavajoFactory.getInstance().createProperty(out, "Body", Property.STRING_PROPERTY, data, 10000, "", Property.DIR_IN);
-		message.addProperty(body);
-		StringWriter sw = new StringWriter();
-		out.write(sw);
-		connection.sendMessage(sw.toString());
+		connection.sendMessage(data);
 	}
 	
 	@Override

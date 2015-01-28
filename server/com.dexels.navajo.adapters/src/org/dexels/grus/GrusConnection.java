@@ -3,6 +3,8 @@ package org.dexels.grus;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 public interface GrusConnection {
 
 	public long getInstanceId();
@@ -26,6 +28,8 @@ public interface GrusConnection {
 	public void autocommit(boolean b);
 
 	public void rollback(boolean b);
+
+    DataSource getDatasource();
 
 
 }

@@ -13,6 +13,7 @@
 		<module>../../com.dexels.navajo.runtime.homecontext</module>
 		<module>../../com.dexels.navajo.runtime.provisioning</module>
 <!--		<module>../../com.dexels.navajo.runtime.dependencies</module>-->
+		<module>../../com.dexels.navajo.camel</module>
 
 		<module>../</module>
 	</modules>

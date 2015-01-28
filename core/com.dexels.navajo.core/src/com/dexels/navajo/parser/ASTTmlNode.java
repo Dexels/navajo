@@ -23,7 +23,7 @@ import com.dexels.navajo.util.Util;
  * @author Arjen Schoneveld
  * @version $Id$
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public final class ASTTmlNode extends SimpleNode {
     String val = "";
     Navajo doc = null;

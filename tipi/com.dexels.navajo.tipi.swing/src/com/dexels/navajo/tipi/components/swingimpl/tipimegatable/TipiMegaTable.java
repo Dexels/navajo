@@ -81,6 +81,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 			public void stateChanged(final ChangeEvent ce) {
 
 				Runnable t = new Runnable() {
+					@SuppressWarnings("unchecked")
 					@Override
 					public void run() {
 						Map<String, Object> m = null;

@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -556,7 +557,7 @@ public class TslCompiler {
 				value = child.getNodeValue();
 			} else {
 				throw new Exception(
-						"Error @"
+						"Error line "+ exprElmnt.getAttribute("linenr") +":"+ exprElmnt.getAttribute("startoffset")  +" @"
 								+ (exprElmnt.getParentNode() + "/" + exprElmnt)
 								+ ": <expression> node should either contain a value attribute or a text child node: >"
 								+ value + "<");
@@ -811,19 +812,33 @@ public class TslCompiler {
 		boolean isSubMapped = false;
 		boolean forceArray = false;
 		boolean isIterator = false;
+		boolean isMappedMessage = false;
 		String mapPath = null;
 
 		// Check if <message> is mapped to an object attribute:
 		if (nextElt != null && nextElt.getNodeName().equals("map")
-				&& nextElt.getAttribute("ref") != null
-				&& !nextElt.getAttribute("ref").equals("")) {
-			String refOriginal = nextElt.getAttribute("ref");
-			// Remove leading $ (if present).
-			refOriginal = refOriginal.replaceAll("\\$", "");
+				&& nextElt.getAttribute("ref") != null && !nextElt.getAttribute("ref").equals("") ) {
+			
+			String refOriginal = null; 
+			isSubMapped = true;
+			isMappedMessage = false;
+			refOriginal = nextElt.getAttribute("ref");
+			
+			// Check if ref contains [ char, if it does, an array message of a selection property is mapped.
+			if ( refOriginal.startsWith("[") ) {
+				refOriginal = refOriginal.replaceAll("\\[", "");
+				refOriginal = refOriginal.replaceAll("\\]", "");
+				isMappedMessage = true;
+				isArrayAttr = true;
+				type = Message.MSG_TYPE_ARRAY;
+			} else if ( refOriginal.indexOf("$") != -1 ) {
+				// Remove leading $ (if present).
+				refOriginal = refOriginal.replaceAll("\\$", "");
+			}
 
 			// System.err.println("refOriginal = " + refOriginal);
 
-			if (refOriginal.indexOf("/") != -1) {
+			if ( !isMappedMessage && refOriginal.indexOf("/") != -1) {
 				ref = refOriginal.substring(refOriginal.lastIndexOf('/') + 1,
 						refOriginal.length());
 				mapPath = refOriginal
@@ -850,40 +865,42 @@ public class TslCompiler {
 			elementOffset = ((elementOffset == null || elementOffset.equals("")) ? ""
 					: elementOffset);
 
-			try {
-				if (mapPath != null) {
-					contextClass = locateContextClass(mapPath, 0);
-					className = contextClass.getName();
-				} else {
-					contextClass = Class.forName(className, false, loader);
+			if ( !isMappedMessage ) {
+				try {
+					if (mapPath != null) {
+						contextClass = locateContextClass(mapPath, 0);
+						className = contextClass.getName();
+					} else {
+						contextClass = Class.forName(className, false, loader);
+					}
+				} catch (Exception e) {
+					throw new Exception("Could not find field: " + className + "/" + mapPath, e);
 				}
-			} catch (Exception e) {
-				throw new Exception("Could not find field: " + className + "/" + mapPath, e);
-			}
 
-			addDependency("dependentObjects.add( new JavaDependency( -1, \""
-					+ className + "\"));\n", "JAVA" + className);
+				addDependency("dependentObjects.add( new JavaDependency( -1, \""
+						+ className + "\"));\n", "JAVA" + className);
 
-			// System.out.println("in MessageNode(), new contextClass = " +
-			// contextClass);
+				// System.out.println("in MessageNode(), new contextClass = " +
+				// contextClass);
 
-			if (DomainObjectMapper.class.isAssignableFrom(contextClass)) {
-				// System.err.println("Got a parent DomainObjectMapper...");
-				isArrayAttr = forceArray;
-				type = Message.MSG_TYPE_ARRAY;
-			} else {
-				isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
-				isIterator = MappingUtils
-						.isIteratorAttribute(contextClass, ref);
-
-				if (isIterator) {
-					isArrayAttr = true;
-				}
-				if (isArrayAttr) {
+				if (DomainObjectMapper.class.isAssignableFrom(contextClass)) {
+					// System.err.println("Got a parent DomainObjectMapper...");
+					isArrayAttr = forceArray;
 					type = Message.MSG_TYPE_ARRAY;
+				} else {
+					isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
+					isIterator = MappingUtils
+							.isIteratorAttribute(contextClass, ref);
+
+					if (isIterator) {
+						isArrayAttr = true;
+					}
+					if (isArrayAttr) {
+						type = Message.MSG_TYPE_ARRAY;
+					}
 				}
 			}
-			isSubMapped = true;
+			
 		}
 		// //System.out.println("isArrayAttr = " + isArrayAttr);
 
@@ -957,7 +974,153 @@ public class TslCompiler {
 		result.append(printIdent(ident + 2)
 				+ "access.setCurrentOutMessage(currentOutMsg);\n");
 
-		if (isSubMapped && isArrayAttr) {
+		if (isSubMapped && isMappedMessage ) {
+			
+			boolean isParam = false;
+			
+			result.append(printIdent(ident + 2)
+					+ "// Map message(s) to message\n");
+			String messageListName = "messages" + ident;
+
+			result.append(printIdent(ident + 2) + "ArrayList "
+					+ messageListName + " = null;\n");
+			result.append(printIdent(ident + 2)
+					+ "inSelectionRef = MappingUtils.isSelection(currentInMsg, access.getInDoc(), \""
+					+ ref + "\");\n");
+			
+			result.append(printIdent(ident + 2) + "if (!inSelectionRef)\n");
+			result.append(printIdent(ident + 4)
+					+ messageListName
+					+ " = MappingUtils.getMessageList(currentInMsg, access.getInDoc(), \""
+					+ ref + "\", \"" + ""
+					+ "\", currentMap, currentParamMsg,access);\n");
+			result.append(printIdent(ident + 2) + "else\n");
+			result.append(printIdent(ident + 4)
+					+ messageListName
+					+ " = MappingUtils.getSelectedItems(currentInMsg, access.getInDoc(), \""
+					+ ref + "\");\n");
+			
+			//String subObjectsName = "subObject" + subObjectCounter;
+			String loopCounterName = "j" + subObjectCounter++;
+			
+			variableClipboard.add("int " + loopCounterName + ";\n");
+
+			result.append(printIdent(ident + 2) + "for (" + loopCounterName
+					+ " = 0; " + loopCounterName + " < " + messageListName
+					+ ".size(); " + loopCounterName
+					+ "++) {\n if (!kill){\n");
+			// currentInMsg, inMsgStack
+			ident += 4;
+			result.append(printIdent(ident)
+					+ "inMsgStack.push(currentInMsg);\n");
+			if (isParam) {
+				result.append(printIdent(ident)
+						+ "paramMsgStack.push(currentParamMsg);\n");
+			}
+			result.append(printIdent(ident)
+					+ "inSelectionRefStack.push(new Boolean(inSelectionRef));\n");
+
+			if (isParam) {
+				result.append(printIdent(ident) + "if (!inSelectionRef)\n");
+				result.append(printIdent(ident + 2)
+						+ "currentParamMsg = (Message) " + messageListName
+						+ ".get(" + loopCounterName + ");\n");
+			}
+			result.append(printIdent(ident) + "if (!inSelectionRef)\n");
+			result.append(printIdent(ident + 2)
+					+ "currentInMsg = (Message) " + messageListName
+					+ ".get(" + loopCounterName + ");\n");
+			result.append(printIdent(ident) + "else \n");
+			// currentSelection.
+			result.append(printIdent(ident + 2)
+					+ "currentSelection = (Selection) " + messageListName
+					+ ".get(" + loopCounterName + ");\n");
+			
+			// if
+			// CONDITION.EVALUATE()!!!!!!!!!!!! {
+			// If filter is specified, evaluate filter first:
+			if (!filter.equals("")) {
+				result.append(printIdent(ident + 4)
+						+ "if (inSelectionRef || Condition.evaluate("
+						+ replaceQuotes(filter)
+						+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) {\n");
+				ident += 2;
+			}
+
+			if (n.getNodeName().equals("message")) {
+				result.append(printIdent(ident + 4)
+						+ "outMsgStack.push(currentOutMsg);\n");
+				result.append(printIdent(ident + 4)
+						+ "currentOutMsg = MappingUtils.getMessageObject(\""
+						+ MappingUtils.getBaseMessageName(messageName)
+						+ "\", currentOutMsg, true, access.getOutputDoc(), false, \"\", "
+						+ "-1"
+						+ ");\n");
+				result.append(printIdent(ident + 4)
+						+ "access.setCurrentOutMessage(currentOutMsg);\n");
+			} else { // parammessage.
+				result.append(printIdent(ident + 4)
+						+ "paramMsgStack.push(currentParamMsg);\n");
+				result.append(printIdent(ident + 4)
+						+ "currentParamMsg = MappingUtils.getMessageObject(\""
+						+ MappingUtils.getBaseMessageName(messageName)
+						+ "\", currentParamMsg, true, access.getInDoc(), false, \"\", "
+						+  "-1" 
+						+ ");\n");
+			}
+			
+			result.append(printIdent(ident) + "try {\n");
+			ident = ident + 2;
+
+			NodeList children = nextElt.getChildNodes();
+			for (int i = 0; i < children.getLength(); i++) {
+				if (children.item(i) instanceof Element) {
+					result.append(compile(ident + 4, children.item(i), className, objectName, deps, tenant));
+				}
+			}
+
+			ident = ident - 2;
+			result.append(printIdent(ident) + "} catch (Exception e"
+					+ ident + ") {\n");
+//			result.append(printIdent(ident + 2)
+//					+ "MappingUtils.callKillOrStoreMethod( "
+//					+ subObjectsName + "[" + loopCounterName + "], e"
+//					+ ident + ");\n");
+//			result.append(printIdent(ident + 2) + "throw e" + ident + ";\n");
+
+			result.append(printIdent(ident) + "}\n");
+
+			if (n.getNodeName().equals("message")) {
+				result.append(printIdent(ident + 2)
+						+ "currentOutMsg = (Message) outMsgStack.pop();\n");
+				result.append(printIdent(ident + 2)
+						+ "access.setCurrentOutMessage(currentOutMsg);\n");
+			} else {
+				result.append(printIdent(ident)
+						+ "currentParamMsg = (Message) paramMsgStack.pop();\n");
+			}
+
+			if (filter != null && !filter.equals("")) {
+				ident -= 2;
+				result.append(printIdent(ident + 4) + "}\n");
+			}
+
+			result.append(printIdent(ident)
+					+ "currentInMsg = (Message) inMsgStack.pop();\n");
+			if (isParam) {
+				result.append(printIdent(ident)
+						+ "currentParamMsg = (Message) paramMsgStack.pop();\n");
+			}
+			result.append(printIdent(ident)
+					+ "inSelectionRef = ((Boolean) inSelectionRefStack.pop()).booleanValue();\n");
+			result.append(printIdent(ident) + "currentSelection = null;\n");
+
+			ident -= 4;
+			result.append(printIdent(ident + 2) + "}\n} // FOR loop for "
+					+ loopCounterName + "\n");
+
+
+		} else if (isSubMapped && isArrayAttr) {
 			type = Message.MSG_TYPE_ARRAY_ELEMENT;
 			String lengthName = "length" + (lengthCounter++);
 
@@ -2320,7 +2483,7 @@ public class TslCompiler {
 					+ replaceQuotes(error)
 					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
 					
-			result.append(printIdent(ident + 2) + "throw new UserException(-1, op.value + \"\");\n");
+			result.append(printIdent(ident + 2) + "throw new UserException(UserException.BREAK_EXCEPTION, op.value + \"\");\n");
 			result.append(printIdent(ident) + "}\n");
 		}
 
@@ -2377,6 +2540,11 @@ public class TslCompiler {
 		}
 
 		String className = object;
+		
+		if (className.equals("")) {
+		    throw new Exception("Error in reading Map xml - found map with empty object! Line " + n.getAttribute("linenr") +":"+ n.getAttribute("startoffset"));
+		}
+		
 		if (contextClass != null) {
 			contextClassStack.push(contextClass);
 		}
@@ -2870,6 +3038,70 @@ public class TslCompiler {
 			result.append(debugNode(ident, (Element) n));
 		} else if (n.getNodeName().equals("break")) {
 			result.append(breakNode(ident, (Element) n));
+		} else if ( n.getNodeName().equals("synchronized")) {
+			Element elt = (Element) n;
+			StringBuffer methodBuffer = new StringBuffer();
+
+			String context = elt.getAttribute("context");
+			String key = elt.getAttribute("key");
+			String keyValue = "null";
+			if ( key != null && !key.equals("") ) {
+			  keyValue=	"(\"\" + Expression.evaluate(\"" 
+						+ key
+						+ "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,null,null,getEvaluationParams()).value)";
+			} 
+			String timeout = elt.getAttribute("timeout");
+			
+			boolean user = false;
+			boolean service = false;
+			
+			if ( context.indexOf("user") != -1 ) {
+				user = true;
+			}
+			if ( context.indexOf("service") != -1 ) {
+				service = true;
+			}
+			
+			String methodName = "execute_sub" + (methodCounter++);
+			result.append(printIdent(ident) + "if (!kill) { " + methodName
+					+ "(access); }\n");
+
+			
+			methodBuffer.append(printIdent(ident) + "private final void "
+					+ methodName + "(Access access) throws Exception {\n\n");
+			ident += 2;
+			methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
+			
+			String lock = "Lock l = getLock(" + ( user ? "access.rpcUser" : null) + "," + ( service ? "access.rpcName" : "null" )+ 
+					"," + keyValue + ");\n" + 
+					" try { \n";
+			
+			String tryLock = null;
+			if ( "".equals(timeout)) {
+				tryLock = "l.lock(); if ( true ) {\n";
+			} else {
+				tryLock = "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n";
+			}
+			
+			methodBuffer.append(printIdent(ident) + lock);
+			methodBuffer.append(printIdent(ident) + tryLock);
+			
+			NodeList children = n.getChildNodes();
+			for (int i = 0; i < children.getLength(); i++) {
+				if (children.item(i) instanceof Element) {
+					methodBuffer.append(compile(ident + 4, children.item(i), className, objectName, deps, tenant));
+				}
+			}
+			
+			methodBuffer.append(printIdent(ident) + "}\n");
+			ident -= 2;
+			methodBuffer.append(printIdent(ident) + "} finally {\n");
+			methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
+			methodBuffer.append(printIdent(ident) +"}\n");
+			methodBuffer.append(printIdent(ident) +"}\n");
+			methodBuffer.append(printIdent(ident) +"}\n");
+
+			methodClipboard.add(methodBuffer);
 		}
 
 		return result.toString();
@@ -3120,6 +3352,8 @@ public class TslCompiler {
 					+ "import com.dexels.navajo.mapping.compiler.meta.JavaDependency;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.NavajoDependency;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;\n"
+					+ "import java.util.concurrent.locks.Lock;\n"
+					+ "import java.util.concurrent.TimeUnit;\n"
 					+ "import java.util.Stack;\n\n\n";
 			result.append(importDef);
 
@@ -3279,14 +3513,8 @@ public class TslCompiler {
 			SkipCompilationException {
 
 		final String extension = ".xml";
-		String fullScriptPath = null;
-		if (hasTenantSpecificScript) {
-			fullScriptPath = scriptPath + "/" + packagePath + "/" + script
-					+ "_" + tenant + extension;
-		} else {
-			fullScriptPath = scriptPath + "/" + packagePath + "/" + script
-					+ extension;
-		}
+		String fullScriptPath = scriptPath + "/" + packagePath + "/" + script +  extension;
+		
 
 		ArrayList<String> inheritedScripts = new ArrayList<String>();
 		ArrayList<String> extendEntities = new ArrayList<String>();

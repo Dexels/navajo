@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -160,5 +162,10 @@ public class LegacyGrusConnection implements GrusConnection {
 		// TODO Auto-generated method stub
 		
 	}
+
+    @Override
+    public DataSource getDatasource() {
+        return null;
+    }
 
 }

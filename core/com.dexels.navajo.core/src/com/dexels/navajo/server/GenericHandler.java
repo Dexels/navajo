@@ -598,7 +598,8 @@ public class GenericHandler extends ServiceHandler {
 		
 		boolean hasTenantScriptFile = tenantConfig.hasTenantScriptFile(rpcName,tenant,extension);
 		String scriptName = hasTenantScriptFile ? rpcName + "_" + tenant : rpcName;
-		CompiledScriptInterface sc = bc.getOnDemandScriptService(scriptName,rpcName,tenant,hasTenantScriptFile,force,extension);
+        CompiledScriptInterface sc = bc.getOnDemandScriptService(scriptName, rpcName, tenant, hasTenantScriptFile,
+                force, extension);
 		// wait for it..
 		bundleContext.ungetService(ref);
 		return sc;

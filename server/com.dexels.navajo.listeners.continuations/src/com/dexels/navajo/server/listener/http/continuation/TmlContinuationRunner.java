@@ -25,7 +25,7 @@ import com.dexels.navajo.server.listener.http.standard.TmlStandardRunner;
 public class TmlContinuationRunner extends TmlStandardRunner {
 
 	private final Continuation continuation;
-
+	private static boolean clearThreadLocal;
 	private final static Logger logger = LoggerFactory
 			.getLogger(TmlContinuationRunner.class);
 
@@ -95,7 +95,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				  try {
 				      int queueSize = getRequestQueue().getQueueSize();
 				      String queueId = getRequestQueue().getId();
-					  ClientInfo clientInfo = getRequest().createClientInfo(scheduledAt, startedAt, queueSize, queueId);
+					  ClientInfo clientInfo = getRequest().createClientInfo(scheduledAt, startedAt, queueSize, queueId); 
 					  setResponseNavajo(getLocalClient().handleInternal(getNavajoInstance(), in, getRequest().getCert(), clientInfo));
 				  } catch (NavajoDoneException e) {
 					  // temp catch, to be able to pre
@@ -148,8 +148,9 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 			if(globalManagerInstance == null) {
 				logger.warn("No global manager found");
 			}
+			clearThreadLocal(true);
 			String instance = getRequest().getInstance();
-			logger.warn("instance: "+instance);
+			logger.info("instance: "+instance);
 			if(instance!=null && globalManagerInstance!=null) {
 
 				GlobalManager gm = globalManagerInstance.getGlobalManager(instance);
@@ -171,4 +172,11 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		}
 	}
 	
+	public static boolean clearThreadLocal() {
+	    return clearThreadLocal;
+	}
+	
+	private static void clearThreadLocal(boolean clear) {
+	    clearThreadLocal = clear;
+    }
 }

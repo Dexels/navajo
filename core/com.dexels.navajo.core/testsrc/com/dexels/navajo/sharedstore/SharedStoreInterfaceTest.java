@@ -63,6 +63,12 @@ public class SharedStoreInterfaceTest {
     @Rule
     public TemporaryFolder folder= new TemporaryFolder();
     
+    public SharedStoreInterfaceTest()throws Exception  {
+        new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
+        DispatcherFactory.getInstance().setUseAuthorisation(false);
+        si = SharedStoreFactory.getInstance();
+    }
+    
 //	@Before
 //	public void setUp() throws Exception {
 //		final File newFolder = folder.newFolder("simpleSharedStore");
@@ -71,11 +77,12 @@ public class SharedStoreInterfaceTest {
 //	}	
 	
 	@Before
-	public void setUp() throws Exception {
-		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
-		DispatcherFactory.getInstance().setUseAuthorisation(false);
-		si = SharedStoreFactory.getInstance();
-		si.removeAll("");
+	public void setUp() {
+
+		// RemoveAll not implemented in SimpleSharedConfig
+        if (!(si instanceof SimpleSharedStore)) {
+            si.removeAll("");
+        }
 		System.err.println("si: " + si);
 	}
 
@@ -117,7 +124,7 @@ public class SharedStoreInterfaceTest {
 	@Test
 	public void testStoreWithLock() throws Exception {
 
-		int MAXTHREADS = 1000;
+		int MAXTHREADS = 250;
 		final SerializableObject[] objects = new SerializableObject[MAXTHREADS];
 		for (int i = 0; i < MAXTHREADS; i++) {
 			objects[i] = new SerializableObject();

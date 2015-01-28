@@ -5,6 +5,7 @@ import java.util.Map;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
+import org.codehaus.jackson.node.ObjectNode;
 
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
@@ -34,21 +35,27 @@ public class LiteralCommand implements ArticleCommand {
 	public String getName() {
 		return name;
 	}
-
-//    <element service="clubsites/nl/adresboek" name="parameters/achternaam" showlabel="true"/>
-
 	
 	@Override
 	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException, DirectOutputThrowable {
-		String value = parameters.get("value");
-		return runtime.getObjectMapper().getNodeFactory().textNode(value);
+		ObjectNode root = runtime.getRootNode();
+		String name = element.getAttribute("name", "name").toString();
+		String value = element.getAttribute("target", "").toString();
+		
+		root.put(name, value);
+		return root;
 	}
-	
-
 
 	@Override
-	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,ObjectMapper mapper) {
-		return false;
+	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs, ObjectMapper mapper) {
+		ObjectNode root = mapper.createObjectNode();
+				
+		String name = e.getAttribute("name", "name").toString();
+		String value = e.getAttribute("target", "").toString();
+		
+		root.put(name, value);
+		
+		outputArgs.add(root);
+		return true;
 	}
-
 }

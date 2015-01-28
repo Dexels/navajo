@@ -276,7 +276,7 @@ public void testOracle() throws Exception, SQLException {
 	}
 	
 	public void testGrus() throws SQLException, UserException {
-		GrusConnection gc = GrusProviderFactory.getInstance().requestConnection("knvb","sportlinkkernel",null);
+		GrusConnection gc = GrusProviderFactory.getInstance().requestConnection("knvb","sportlinkkernel");
 		Connection connection = gc.getConnection();
 		String regionFetch = "SELECT DISTINCT district_cd, district_name FROM sportlink_user_districts WHERE user_id = 3723 ORDER BY district_name";
 		PreparedStatement s2 = connection.prepareStatement(regionFetch);

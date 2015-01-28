@@ -970,6 +970,21 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	public final TipiComponent getTipiComponent(String s) {
 		return tipiComponentMap.get(s);
 	}
+	
+	@Override
+    public final TipiComponent getCascadeTipiComponent(String s) {
+	    TipiComponent res = getTipiComponent(s);
+        if (res != null) {
+            return res;
+        }
+        for (TipiComponent child : tipiComponentList) {
+            res = child.getCascadeTipiComponent(s);
+            if (res != null) {
+                return res;
+            }
+        }
+        return null;
+    }
 
 	@Override
 	public final TipiComponent getTipiComponent(int i) {
@@ -1172,6 +1187,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		// placing it in this thread gives _occasional_ freezes on startup.
 		// As far as I know, it only happens when the performTipiEvent is called
 		// from the main thread
+		
 		try {
 			c.performTipiEvent("onInstantiate", null, true);
 		} catch (TipiException ex) {

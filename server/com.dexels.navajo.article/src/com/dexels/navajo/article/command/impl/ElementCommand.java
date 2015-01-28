@@ -102,8 +102,96 @@ public class ElementCommand implements ArticleCommand {
 
 
 	@Override
-	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,ObjectMapper mapper) {
-		return false;
+	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs, ObjectMapper mapper) {
+		ObjectNode root = mapper.createObjectNode();
+		String name = e.getAttribute("name").toString();
+		
+		//Remove the first slash if present
+		if (name.charAt(0) == '/') {
+			name = name.substring(1);
+		}
+		
+		String objects[] = name.split("/");
+		ObjectNode object = mapper.createObjectNode();
+		if (objects.length > 1) { //Is the name constructed in levels: "voorzitter/naam"
+			
+			ObjectNode previous = object;
+			String fieldName = "default";
+			Boolean isDefined = false;
+			
+			//Loop through the string
+			for(String string : objects) {
+				if (!string.isEmpty()) {
+					
+					//Need the actual fieldName
+					if (objects[0].equals(string)) { //First
+						fieldName = string;
+						
+						//If the fieldName is allready defined we take that node
+						JsonNode node = getNodeByFieldName(outputArgs, fieldName);
+						if (node != null) {
+							previous = (ObjectNode)node;
+							isDefined = true;
+						}
+						
+						continue;
+					}
+					
+					//If it is the last component we set the actual data
+					if (objects[objects.length - 1].equals(string)) { //Last
+						ObjectNode node = mapper.createObjectNode();
+						fillObject(node, e, string);
+						previous.put(string, node);
+					} else {
+						//Create a new object and assign it to previous so we get the levels effect
+						ObjectNode node = mapper.createObjectNode();
+						previous.put(string, node);
+						previous = node;
+					}
+				}
+			}
+			if (!isDefined) {
+				root.put(fieldName, object);
+			} else {
+				//The node was already defined so we do not need to create a wrapper object
+				return false;
+			}	
+		} else { 
+			fillObject(object, e, objects[0]);
+			root.put(name, object);
+		}
+		
+		outputArgs.add(root);
+		return true;
 	}
 	
+	private void fillObject(ObjectNode node, XMLElement element, String label) {
+		node.put("label", element.getAttribute("label", label).toString());
+		if (element.getAttribute("type") != null) {
+			node.put("type", element.getAttribute("type").toString());
+		}
+		if (element.getAttribute("target") != null) {
+			node.put("target", element.getAttribute("target").toString());
+		}
+		
+		if (element.getAttribute("onchange") != null) {
+			node.put("onchange", element.getAttribute("onchange").toString());
+		}
+	}
+	
+	private ObjectNode getNodeByFieldName (ArrayNode nodes, String fieldName) {
+		if (fieldName.length() == 0)
+			return null;
+		
+		for (JsonNode output : nodes) {
+			JsonNode node = output.path(fieldName);
+			if (!node.isMissingNode()) {
+				return (ObjectNode) output.path(fieldName);
+			}
+		}
+		
+		return null;
+	}
 }
+
+

@@ -1,6 +1,5 @@
 Bundle-Name: Navajo Queue Manager
 Bundle-SymbolicName: com.dexels.navajo.queuemanager
-Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.39.qualifier
 Bundle-ClassPath: .

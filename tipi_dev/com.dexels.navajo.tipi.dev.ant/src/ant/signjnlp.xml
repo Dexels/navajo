@@ -11,7 +11,7 @@
 				<include name="JNLP-INF"/>
 			</fileset>
 		</jar>
-		<signjar  keystore="${keystore}" storepass="${storepass}"  alias="${alias}" jar="${profile}_jnlp.jar">
+		<signjar keystore="${keystore}" storepass="${storepass}"  alias="${alias}" jar="${profile}_jnlp.jar" tsaurl="https://timestamp.geotrust.com/tsa">
 		</signjar>
 	</target>
 </project>

@@ -1,8 +1,7 @@
 Bundle-Name: Navajo Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters
-Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.0.29.qualifier
+Bundle-Version: 2.0.33.qualifier
 DynamicImport-Package: *
 Bundle-Activator: navajoadapters.Version
 Navajo-Name: Adapters
