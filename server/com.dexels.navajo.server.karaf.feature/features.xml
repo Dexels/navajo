@@ -3,13 +3,13 @@
 	name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
 
-    <feature version="1.0.10" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
+    <feature version="1.0.11" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
         <feature version="[3.0.0,4)">eventadmin</feature>
         <feature version="[3.0.0,4)">scr</feature>
         <feature version="[3.0.0,4)">pax-http</feature>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf.featuresync/1.0.2</bundle>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/3.0.3</bundle>
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.0.14</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.0.15</bundle>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.file/1.0.15</bundle>
         <bundle dependency="true">mvn:com.dexels.thirdparty/javaewah/0.7.9</bundle>
         <bundle dependency="true">mvn:com.jcraft/jsch-bundle/0.1.50</bundle>
@@ -29,12 +29,14 @@
 
 
 	<feature resolver="(obr)" name='navajo.core.dependencies'
-		version='3.0.0' start-level='80'>
+		version='3.0.1' start-level='80'>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/1.3_5</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.apache.commons/commons-compress/1.5</bundle>
+		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
+		
 	</feature>
 	<feature resolver="(obr)" name='navajo.core' version='3.0.32'
 		start-level='80'>
@@ -114,7 +116,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.28'
+	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.29'
 		start-level='81'>
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
@@ -394,16 +396,16 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.karaf.command/1.0.11</bundle>
 	</feature>
 
-	<feature name='logback.redis' version='1.0.20'>
+	<feature name='logback.redis' version='1.0.27'>
 		<feature version="[3.0.0,4)">scr</feature>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.logback.redis/2.1.9</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.logback.redis/2.1.15</bundle>
 		<bundle dependency='true'>mvn:ch.qos.logback/logback-classic/1.1.2</bundle>
 		<bundle dependency='true'>mvn:ch.qos.logback/logback-core/1.1.2</bundle>
 	</feature>
 	
-	<feature name='dexels.hazelcast' version='1.0.2'>
+	<feature name='dexels.hazelcast' version='1.0.3'>
 		<feature version="[3.0.0,4)">scr</feature>
 		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.6.9</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/1.0.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/1.0.1</bundle>
 	</feature>
 </features>
