@@ -12,9 +12,6 @@
    <feature url="features/com.dexels.navajo.tipi.extensions.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.tipi.extensions.feature" version="1.0.0.qualifier">
       <category name="tipi"/>
    </feature>
-   <feature url="features/com.dexels.navajo.tipi.dev.feature_0.1.0.qualifier.jar" id="com.dexels.navajo.tipi.dev.feature" version="0.1.0.qualifier">
-      <category name="dev"/>
-   </feature>
    <feature url="features/com.dexels.navajo.geo.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.geo.feature" version="1.0.0.qualifier">
       <category name="other"/>
    </feature>
