@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public final class DbConnectionBroker 
 {
 	protected String location, username, password;
-	private final ThreadLocal<Integer> userThreadLocal = new ThreadLocal<Integer>();
+	private final static ThreadLocal<Integer> userThreadLocal = new ThreadLocal<Integer>();
 	
 	private final static Logger logger = LoggerFactory.getLogger(DbConnectionBroker.class);
 	
@@ -86,7 +86,7 @@ public final class DbConnectionBroker
 		availableConnectionsStack = new ArrayDeque<GrusConnection>(maxConnections);
 		usedConnectionInstanceIds = new HashSet<Long>();
 		
-		availableConnections = new Semaphore(maxConnections - 1);
+		availableConnections = new Semaphore(maxConnections - 1, true);
 		
 		if ( timeoutDays > 0 ) {
 			GrusManager.getInstance().addBroker(this);
@@ -124,12 +124,18 @@ public final class DbConnectionBroker
 	}
 	
 	public final GrusConnection getGrusConnection() {
-
+		if (availableConnections.availablePermits() < 25) {
+			if (availableConnections.availablePermits() < 1) {
+				logger.error("No permits left for {}, going to wait... We have {} threads ahead of us", location + "/" + username, availableConnections.getQueueLength());
+			} else {
+				logger.warn("Only {} connection permits left for {}!", availableConnections.availablePermits(), location + "/" + username);
+			}
+		}
 		// Try to acquire connection. If not available block for 60 seconds - after that throw exception
 		try {
 			availableConnections.tryAcquire(60, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-			logger.error("Interrupted while waiting on connection! {}", e);
+		} catch (Exception e) {
+			logger.error("Exception while waiting on connection! {}", e);
 			return null;
 		}
 		
