@@ -12,7 +12,7 @@ public class Activator implements BundleActivator {
 	private static BundleContext context;
 //	private StandardJavaFileManager fileManager;
 //	private CustomClassloaderJavaFileManager customJavaFileManager;
-	private JavaCompiler compiler;
+//	private JavaCompiler compiler;
 //	private DiagnosticListener<JavaFileObject> compilerOutputListener;
 	
 //	private final static Logger logger = LoggerFactory
@@ -27,7 +27,7 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 		
-		compiler = ToolProvider.getSystemJavaCompiler();
+		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		if(compiler==null) {
 			throw new RuntimeException("Error: Toolprovider did not supply a system compiler!");
 		}
