@@ -403,9 +403,9 @@
 		<bundle dependency='true'>mvn:ch.qos.logback/logback-core/1.1.2</bundle>
 	</feature>
 	
-	<feature name='dexels.hazelcast' version='1.0.4'>
+	<feature name='dexels.hazelcast' version='1.0.6'>
 		<feature version="[3.0.0,4)">scr</feature>
 		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.6.9</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/1.0.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/1.0.5</bundle>
 	</feature>
 </features>
