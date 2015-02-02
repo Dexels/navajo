@@ -116,13 +116,13 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.29'
+	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.30'
 		start-level='81'>
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/2.0.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.resource/2.0.20</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/3.0.59</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/3.0.61</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/2.0.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.http/1.0.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource/2.0.0</bundle>
@@ -403,9 +403,9 @@
 		<bundle dependency='true'>mvn:ch.qos.logback/logback-core/1.1.2</bundle>
 	</feature>
 	
-	<feature name='dexels.hazelcast' version='1.0.6'>
+	<feature name='dexels.hazelcast' version='1.0.7'>
 		<feature version="[3.0.0,4)">scr</feature>
 		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.6.9</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/1.0.5</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/1.0.6</bundle>
 	</feature>
 </features>
