@@ -6,9 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiValue;
@@ -95,6 +98,7 @@ public class TipiNewCallService extends TipiAction {
 			}
 		}
 
+		input = enrichInput(input, true);
 
 		setThreadState("waiting");
 		if (connector == null) {
@@ -166,7 +170,7 @@ public class TipiNewCallService extends TipiAction {
 		if (input == null) {
 			input = NavajoFactory.getInstance().createNavajo();
 		}
-		Navajo nn = input.copy();
+		Navajo nn = enrichInput(input.copy(), false);
 		// nn
 		// Don't let NavajoClient touch your original navajo! It will mess
 		// things up.
@@ -179,6 +183,68 @@ public class TipiNewCallService extends TipiAction {
 		}
 
 	
+	}
+	private Navajo enrichInput(Navajo input, boolean newStyle)
+	{
+		// Should this be done? Check a global so it can be set by the tipi code. Slightly hackish ofcourse
+		Object enrichInput = this.getContext().getGlobalValue("enrichInputWithDebug");
+		if (enrichInput != null && enrichInput instanceof Boolean && (Boolean) enrichInput)
+		{
+			
+			Message m = NavajoFactory.getInstance().createMessage(input, "__debug__");
+			
+			// the userName of the sportlink user firing this action
+			Object value = this.getContext().getGlobalValue("UserName");
+			Property p = NavajoFactory.getInstance().createProperty(input, "UserName", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
+			m.addProperty(p);
+			
+			// the Java object id of the input navajo. Note that oldstyle does a clone just before this call
+			value = Integer.toHexString(System.identityHashCode(input));
+			p = NavajoFactory.getInstance().createProperty(input, "NavajoInputJavaId", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
+			m.addProperty(p);
+
+			// which mode this action worked in
+			value = newStyle;
+			p = NavajoFactory.getInstance().createProperty(input, "NewStyle", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
+			m.addProperty(p);
+
+			// the Java object id of this action
+			value = Integer.toHexString(System.identityHashCode(this));
+			p = NavajoFactory.getInstance().createProperty(input, "ActionJavaId", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
+			m.addProperty(p);
+			
+			// the Java object id of the event this action belongs to
+			value = Integer.toHexString(System.identityHashCode(this.getEvent()));
+			p = NavajoFactory.getInstance().createProperty(input, "EventJavaId", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
+			m.addProperty(p);
+			
+			// the id of the event this action belongs to
+			value = this.getEvent().toString();
+			p = NavajoFactory.getInstance().createProperty(input, "EventString", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
+			m.addProperty(p);
+			
+			// the Java object id of the component the event of this action belongs to
+			value = Integer.toHexString(System.identityHashCode(this.getComponent()));
+			p = NavajoFactory.getInstance().createProperty(input, "ComponentJavaId", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
+			m.addProperty(p);
+			
+			// the path of the component the event of this action belongs to
+			value = this.getComponent().getPath();
+			p = NavajoFactory.getInstance().createProperty(input, "ComponentPath", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
+			m.addProperty(p);
+			
+			if (input == null)
+			{
+				input = NavajoFactory.getInstance().createNavajo();
+			}
+			
+			if (input.getMessage("__debug__") != null)
+			{
+				input.removeMessage("__debug__");
+			}
+			input.addMessage(m);
+		}
+		return input;
 	}
 
 	private void processResult(boolean breakOnError, String destination,
