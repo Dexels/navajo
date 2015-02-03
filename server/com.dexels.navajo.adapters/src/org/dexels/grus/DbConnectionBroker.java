@@ -5,6 +5,8 @@ import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
@@ -12,11 +14,14 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
 
 public final class DbConnectionBroker 
 {
 	protected String location, username, password;
 	private final ThreadLocal<Integer> userThreadLocal = new ThreadLocal<Integer>();
+        private final Map<Long, String> connectionUsage = new HashMap<Long, String>();
 	
 	private final static Logger logger = LoggerFactory.getLogger(DbConnectionBroker.class);
 	
@@ -112,6 +117,18 @@ public final class DbConnectionBroker
 		}
 		
 	}
+
+	private void logConnectionUsage(Long grusId) {
+		String value = MDC.get("rpcName") + "/" + MDC.get("accessId") +" - " + Thread.currentThread().getId();
+                if (connectionUsage.containsKey(grusId) ) {
+			logger.warn("Are we reuing a grusConnectionID? Existing value =  {}", connectionUsage.get(grusId));
+		}
+		connectionUsage.put(grusId, value);		
+	}
+
+        private void logFreeConnectionUsage(Long grusId) {
+		connectionUsage.remove(grusId);
+	}
 	
 	@Deprecated
 	public final Connection getConnection() {
@@ -129,6 +146,9 @@ public final class DbConnectionBroker
 				logger.error("No permits left for {}, going to wait... We have {} threads ahead of us", location + "/" + username, availableConnections.getQueueLength());
 			} else {
 				logger.warn("Only {} connection permits left for {}!", availableConnections.availablePermits(), location + "/" + username);
+				for (Long key : connectionUsage.keySet()) {
+					logger.warn("connection {} in use by: {}", key, connectionUsage.get(key));
+				}
 			}
 		}
 		// Try to acquire connection. If not available block for 60 seconds - after that throw exception
@@ -156,6 +176,7 @@ public final class DbConnectionBroker
 						userThreadLocal.set(++currentCount);
 						inUse.add(gc);
 						usedConnectionInstanceIds.add(gc.setInstanceId(instanceCounter++));
+						logConnectionUsage(gc.getInstanceId());
 						return gc;
 					} else {
 						logger.info("Destroying GrusConnection " + gc.getId() + " due to " + ( isClosed ? "closed connection." : "old age."));
@@ -170,6 +191,7 @@ public final class DbConnectionBroker
 					inUse.add(gc);
 					usedConnectionInstanceIds.add(gc.setInstanceId(instanceCounter++));
 					userThreadLocal.set(++currentCount);
+					logConnectionUsage(gc.getInstanceId());
 					return gc;
 				} catch (Throwable e) {
 					logger.error("Could not created connection: " + e.getMessage(), e);
@@ -221,6 +243,7 @@ public final class DbConnectionBroker
 			}
 		} finally {
 			if ( released ) {
+				logFreeConnectionUsage(gc.getInstanceId());
 				availableConnections.release();
 
 				Integer currentCount = getThreadConnectionCount();
