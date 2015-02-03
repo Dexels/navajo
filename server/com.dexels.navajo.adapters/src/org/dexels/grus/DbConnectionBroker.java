@@ -119,8 +119,7 @@ public final class DbConnectionBroker
 	}
 
 	private void logConnectionUsage(Long grusId) {	
-		logger.info("Going to log usage for: {}", grusId);
-		String value = MDC.get("rpcName") + "/" + MDC.get("accessId") +" - " + Thread.currentThread().getId();
+		String value = MDC.get("rpcName") + "@" + MDC.get("accessId") +"; ThreadID:" + Thread.currentThread().getId();
                 if (connectionUsage.containsKey(grusId) ) {
 			logger.warn("Are we reuing a grusConnectionID? Existing value =  {}", connectionUsage.get(grusId));
 		}
@@ -128,7 +127,6 @@ public final class DbConnectionBroker
 	}
 
         private void logFreeConnectionUsage(Long grusId) {
-		logger.info("freeing {}", grusId);
 		connectionUsage.remove(grusId);
 	}
 	
@@ -146,12 +144,12 @@ public final class DbConnectionBroker
 		if (availableConnections.availablePermits() < 25) {
 			if (availableConnections.availablePermits() < 1) {
 				logger.error("No permits left for {}, going to wait... We have {} threads ahead of us", location + "/" + username, availableConnections.getQueueLength());
+                                logger.warn("Going to print connectionUsage info");
+                                for (Long key : connectionUsage.keySet()) {
+                                        logger.warn("connection {} in use by: {}", key, connectionUsage.get(key));
+                                }
 			} else {
 				logger.warn("Only {} connection permits left for {}!", availableConnections.availablePermits(), location + "/" + username);
-				logger.warn("Going to print connectionUsage info: {} size", connectionUsage.size());
-				for (Long key : connectionUsage.keySet()) {
-					logger.warn("connection {} in use by: {}", key, connectionUsage.get(key));
-				}
 			}
 		}
 		// Try to acquire connection. If not available block for 60 seconds - after that throw exception
