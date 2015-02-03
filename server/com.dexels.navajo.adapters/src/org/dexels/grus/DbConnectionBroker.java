@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public final class DbConnectionBroker 
 {
 	protected String location, username, password;
-	private final static ThreadLocal<Integer> userThreadLocal = new ThreadLocal<Integer>();
+	private final ThreadLocal<Integer> userThreadLocal = new ThreadLocal<Integer>();
 	
 	private final static Logger logger = LoggerFactory.getLogger(DbConnectionBroker.class);
 	
