@@ -129,6 +129,15 @@ public final class DbConnectionBroker
         private void logFreeConnectionUsage(Long grusId) {
 		connectionUsage.remove(grusId);
 	}
+  
+	private void writeDebugInfo() {
+		logger.warn("Going to print connectionUsage info");
+		logger.warn("Available connection stack size: {}", availableConnectionsStack.size());
+		logger.warn("usedConnectionInstanceIds size: {}", usedConnectionInstanceIds.size());
+                for (Long key : connectionUsage.keySet()) {
+                    logger.warn("connection {} in use by: {}", key, connectionUsage.get(key));
+                }
+	}
 	
 	@Deprecated
 	public final Connection getConnection() {
@@ -144,10 +153,7 @@ public final class DbConnectionBroker
 		if (availableConnections.availablePermits() < 25) {
 			if (availableConnections.availablePermits() < 1) {
 				logger.error("No permits left for {}, going to wait... We have {} threads ahead of us", location + "/" + username, availableConnections.getQueueLength());
-                                logger.warn("Going to print connectionUsage info");
-                                for (Long key : connectionUsage.keySet()) {
-                                        logger.warn("connection {} in use by: {}", key, connectionUsage.get(key));
-                                }
+				writeDebugInfo();
 			} else {
 				logger.warn("Only {} connection permits left for {}!", availableConnections.availablePermits(), location + "/" + username);
 			}
