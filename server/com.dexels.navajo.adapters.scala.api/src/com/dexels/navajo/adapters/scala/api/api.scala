@@ -107,6 +107,10 @@ trait AdaptersComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     val instance = new TOKENIZER
     setupMap(message, instance, f)
   }
+  def stringsplit(message: NavajoMessage, f: STRINGSPLIT => Unit): Unit = {
+    val instance = new STRINGSPLIT
+    setupMap(message, instance, f)
+  }
   def databaseinfo(message: NavajoMessage, f: DATABASEINFO => Unit): Unit = {
     val instance = new DATABASEINFO
     setupMap(message, instance, f)
@@ -323,6 +327,12 @@ class ASYNCPROXYMAP(instance: com.dexels.navajo.adapter.AsyncProxyMap = new com.
 
 class TOKENIZER(instance: com.dexels.navajo.adapter.TokenizerMap = new com.dexels.navajo.adapter.TokenizerMap) extends Adapter(instance) {
   def instance(f: com.dexels.navajo.adapter.TokenizerMap => Unit) {
+    f(instance)
+  }
+}
+
+class STRINGSPLIT(instance: com.dexels.navajo.adapter.StringSplitMap = new com.dexels.navajo.adapter.StringSplitMap) extends Adapter(instance) {
+  def instance(f: com.dexels.navajo.adapter.StringSplitMap => Unit) {
     f(instance)
   }
 }

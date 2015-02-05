@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
-Bundle-Vendor: Dexels
-Fragment-Host: com.dexels.navajo.adapters.eventemitter;bundle-version=
- "2.0.3.qualifier"
-Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: com.dexels.navajo.adapters.eventemitter.scala.api
+Export-Package: com.dexels.navajo.adapters.eventemitter.scala.api
 Bundle-Name: Navajo EventAdmin handler Scala Api
+Bundle-Version: 1.0.0.qualifier
 Bundle-ManifestVersion: 2
+Bundle-Vendor: Dexels
 Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
  ment
-Provide-Package: com.dexels.navajo.adapters.eventemitter.scala.api
-Bundle-SymbolicName: com.dexels.navajo.adapters.eventemitter.scala.api
+Fragment-Host: com.dexels.navajo.adapters.eventemitter;bundle-version=
+ "2.0.5.qualifier"
 

@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
-Bundle-Vendor: Dexels
-Fragment-Host: com.dexels.navajo.adapters.resource;bundle-version="2.0
- .19.qualifier"
-Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: com.dexels.navajo.adapters.resource.scala.api
+Export-Package: com.dexels.navajo.adapters.resource.scala.api
 Bundle-Name: Navajo Adapters Resource Scala Api
+Bundle-Version: 1.0.0.qualifier
 Bundle-ManifestVersion: 2
+Bundle-Vendor: Dexels
 Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
  ment
-Provide-Package: com.dexels.navajo.adapters.resource.scala.api
-Bundle-SymbolicName: com.dexels.navajo.adapters.resource.scala.api
+Fragment-Host: com.dexels.navajo.adapters.resource;bundle-version="2.0
+ .21.qualifier"
 

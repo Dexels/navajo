@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
-Bundle-Vendor: Dexels
-Fragment-Host: com.dexels.navajo.entity;bundle-version="1.2.49.qualifi
- er"
-Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: com.dexels.navajo.entity.scala.api
+Export-Package: com.dexels.navajo.entity.scala.api
 Bundle-Name: Navajo Entity model implementation Scala Api
+Bundle-Version: 1.0.0.qualifier
 Bundle-ManifestVersion: 2
+Bundle-Vendor: Dexels
 Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
  ment,com.dexels.navajo.adapters.scala.api
-Provide-Package: com.dexels.navajo.entity.scala.api
-Bundle-SymbolicName: com.dexels.navajo.entity.scala.api
+Fragment-Host: com.dexels.navajo.entity;bundle-version="1.2.51.qualifi
+ er"
 

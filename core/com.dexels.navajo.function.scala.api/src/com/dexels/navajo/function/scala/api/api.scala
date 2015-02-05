@@ -378,6 +378,11 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     val function = this.setupFunction(new com.dexels.navajo.functions.GetUrlTime)
     function.evaluate().asInstanceOf[Any]
   }
+  def GetUTF8Length(arg0: java.lang.String): java.lang.Integer = {
+    val function = this.setupFunction(new com.dexels.navajo.functions.GetUTF8Length)
+    function.insertOperand(arg0)
+    function.evaluate().asInstanceOf[java.lang.Integer]
+  }
   def GetValue: Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetValue)
     function.evaluate().asInstanceOf[Any]

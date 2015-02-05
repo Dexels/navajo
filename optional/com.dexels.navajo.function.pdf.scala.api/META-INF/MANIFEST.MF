@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
-Bundle-Vendor: Dexels
-Fragment-Host: com.dexels.navajo.function.pdf;bundle-version="1.0.13.q
- ualifier"
-Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: com.dexels.navajo.function.pdf.scala.api
+Export-Package: com.dexels.navajo.function.pdf.scala.api
 Bundle-Name: Navajo Functions PDF Scala Api
+Bundle-Version: 1.0.0.qualifier
 Bundle-ManifestVersion: 2
+Bundle-Vendor: Dexels
 Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
  ment
-Provide-Package: com.dexels.navajo.function.pdf.scala.api
-Bundle-SymbolicName: com.dexels.navajo.function.pdf.scala.api
+Fragment-Host: com.dexels.navajo.function.pdf;bundle-version="1.0.13.q
+ ualifier"
 
