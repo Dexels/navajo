@@ -599,7 +599,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	@Override
 	public void setTransactionContext(int i) throws UserException {
-
+	    if (i == this.connectionId && i != -1) {
+	        logger.error("Attempting to set transactionContext to my own connection id! " );
+	        return;
+	    }
+	        
 		if (debug) {
 			Access.writeToConsole(myAccess, "IN SETTRANSACTIONCONTEX(), I = "
 					+ i + "\n");
