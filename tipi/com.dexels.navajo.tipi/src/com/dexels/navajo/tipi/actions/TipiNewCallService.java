@@ -1,6 +1,9 @@
 package com.dexels.navajo.tipi.actions;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,16 +43,26 @@ public class TipiNewCallService extends TipiAction {
     private static final long serialVersionUID = -6767560777929847564L;
 
     private final static Logger logger = LoggerFactory.getLogger(TipiNewCallService.class);
+    
+    private static List<TipiNewCallService> requests = new ArrayList<TipiNewCallService>();
+    protected String service;
+    protected Date created;
 
     @Override
     public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException,
             com.dexels.navajo.tipi.TipiBreakException {
 
+       
         getContext().getClient().setLocaleCode(getContext().getApplicationInstance().getLocaleCode());
         getContext().getClient().setSubLocaleCode(getContext().getApplicationInstance().getSubLocaleCode());
 
         String service = (String) getEvaluatedParameterValue("service", event);
         Navajo input = (Navajo) getEvaluatedParameterValue("input", event);
+        this.service = service;
+        this.created = new Date();
+        checkForExistingRequest();
+        requests.add(this);
+        
         String destination = (String) getEvaluatedParameterValue("destination", event);
         String connector = (String) getEvaluatedParameterValue("connector", event);
         Object cached = getEvaluatedParameterValue("cached", event);
@@ -108,7 +121,34 @@ public class TipiNewCallService extends TipiAction {
             }
         }
         setThreadState("busy");
+       
 
+    }
+
+    private void checkForExistingRequest() {
+        List<TipiNewCallService> toRemove = new ArrayList<TipiNewCallService>();
+        for (TipiNewCallService serviceCall : requests) {
+            if (serviceCall == this) {
+                continue;
+            }
+            if (((new Date()).getTime() - serviceCall.created.getTime()) > 10000) { // 10 sec
+                toRemove.add(serviceCall);
+                continue;
+            }
+         
+            if (!serviceCall.service.equals(this.service)) {
+                continue;
+            }
+            if (Math.abs(serviceCall.created.getTime() - this.created.getTime()) > 5) {
+                continue;
+            }
+            // Found a potential duplicate service call!
+            logger.error("------------------------------------");
+            logger.error("POTENTIAL DUPLICATE CALL!");
+            logger.error("------------------------------------");
+        }
+        requests.removeAll(toRemove);
+        
     }
 
     public void oldExecute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException,
