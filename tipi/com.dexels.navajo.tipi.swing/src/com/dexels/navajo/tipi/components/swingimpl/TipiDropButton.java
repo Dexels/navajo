@@ -177,14 +177,16 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 
 	@Override
 	public void eventStarted(TipiExecutable te, Object event) {
-		if (Container.class.isInstance(getContainer())) {
-			runSyncInEventThread(new Runnable() {
-				@Override
-				public void run() {
-					getSwingContainer().setEnabled(false);
-				}
-			});
-		}
+	    // Disabling happened at the doFireAction already. However, just to be sure,
+        // we disable it again in case we got here from elsewhere
+        if (Container.class.isInstance(getContainer())) {
+            runSyncInEventThread(new Runnable() {
+                @Override
+                public void run() {
+                    getSwingContainer().setEnabled(false);
+                }
+            });
+        }
 	}
 
 	@Override
@@ -202,6 +204,15 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 	private void doFireAction(final JComponent myButton) {
 		final JRootPane root = myButton.getRootPane();
 		setWaitCursor(true, root);
+		
+		if (Container.class.isInstance(getContainer())) {
+            runSyncInEventThread(new Runnable() {
+                @Override
+                public void run() {
+                    getSwingContainer().setEnabled(false);
+                }
+            });
+        }
 
 		performTipiEvent("onActionPerformed", null, false, new Runnable() {
 			@Override
