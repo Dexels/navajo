@@ -39,7 +39,6 @@ public class TipiTab extends TipiSwingDataComponentImpl {
 
 	@Override
 	protected void setComponentValue(String name, Object object) {
-		logger.debug("Setting: " + name + " to: " + object);
 		if (name.equals("tabIcon")) {
 			// Don't know why. The propertyChangeListener seems to miss it when
 			// the icon is being set to null.
