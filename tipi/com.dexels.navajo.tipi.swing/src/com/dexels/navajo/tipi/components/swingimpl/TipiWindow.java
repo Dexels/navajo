@@ -20,6 +20,7 @@ import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.core.TipiSupportOverlayPane;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDesktop;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingWindow;
@@ -38,9 +39,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @todo Need to refactor menus in internalframes. Now still uses the old mode
  *       Frank
  */
-public final class TipiWindow
-// extends DefaultTipi {
-		extends TipiSwingDataComponentImpl{
+public final class TipiWindow extends TipiSwingDataComponentImpl implements TipiSupportOverlayPane {
 
 	private static final long serialVersionUID = -4916285139918344888L;
 	private final static Logger logger = LoggerFactory.getLogger(TipiWindow.class);
@@ -385,19 +384,45 @@ public final class TipiWindow
     
     @Override
     public void unhideComponent() {
+
         super.unhideComponent();
         if (hideOnClose) {
-            ((TipiSwingWindow) myWindow).addGlass();
-            this.getSwingContainer().setVisible(true);
+            addOverlayProgressPanel();
+            
+            /*
+             * We want to have a small delay before we unhide the component.
+             * This allows for the early onInstantiate code to already be done,
+             * and prevents some weird (visual) quirks
+             */
+
+            new Thread() {
+                public void run() {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                    }
+                    getSwingContainer().setVisible(true);
+                }
+            }.start();
         }
-       
+
     }
 
     @Override
     public void postOnInstantiate() {
         if (hideOnClose) {
-            ((TipiSwingWindow) myWindow).hideGlass();
+            removeOverlayProgressPanel();
         }
+    }
+    
+    @Override 
+    public void addOverlayProgressPanel() {
+        ((TipiSwingWindow) myWindow).addGlass();
+    } 
+    
+    @Override
+    public void removeOverlayProgressPanel() {
+        ((TipiSwingWindow) myWindow).hideGlass();
     }
     
 

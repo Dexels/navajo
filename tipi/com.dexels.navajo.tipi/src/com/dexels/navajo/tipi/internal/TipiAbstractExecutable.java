@@ -30,7 +30,7 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 	private TipiStackElement stackElement = null;
 	private String myCondition = "";
 	
-	private Map<String, String> eventPropertyMap = new HashMap<String, String>();
+	protected Map<String, String> eventPropertyMap = new HashMap<String, String>();
 
 	private final List<TipiExecutable> myExecutables = new ArrayList<TipiExecutable>();
 	private int currentIndex = 0;

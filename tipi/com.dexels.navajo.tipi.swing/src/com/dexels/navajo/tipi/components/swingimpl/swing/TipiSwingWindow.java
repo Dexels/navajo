@@ -28,12 +28,13 @@ public class TipiSwingWindow extends JInternalFrame {
     private final OverlayProgressPanel glassPanel = new OverlayProgressPanel(3);
 
     public TipiSwingWindow() {
+        setGlassPane(glassPanel);
 
         addComponentListener(new ComponentListener() {
 
             @Override
             public void componentHidden(ComponentEvent c) {
-                setGlassPane(glassPanel);
+
             }
 
             @Override

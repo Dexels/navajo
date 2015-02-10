@@ -19,6 +19,7 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.TipiSuspendException;
 import com.dexels.navajo.tipi.TipiValue;
+import com.dexels.navajo.tipi.components.core.TipiSupportOverlayPane;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
@@ -72,6 +73,11 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 			TipiValue tv = (TipiValue) this.eventParameterMap.get(key).clone();
 			ti.eventParameterMap.put(key, tv);
 		}
+		
+		for (String key : this.eventPropertyMap.keySet()) {
+		    ti.setBlockParam(key, this.getBlockParam(key)  );
+		}
+
 		return ti;
 	}
 
@@ -185,6 +191,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 			TipiExecutable parentExecutable, final Map<String, Object> event,
 			Runnable afterEventParam) {
 
+	    
 		TipiEvent localEvent = (TipiEvent) this.clone();
 		localEvent.loadEventValues(event);
 		// if(!localEvent.checkCondition(localEvent)) {
@@ -232,6 +239,19 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 		if (event != null) {
 			localInstance = (TipiEvent) this.clone();
 			localInstance.loadEventValues(event);
+		}
+		
+		Boolean showOverlay = false;
+		if (localInstance.getBlockParam("showOverlay") != null) {
+		    showOverlay = Boolean.valueOf((String) localInstance.getBlockParam("showOverlay"));
+		}
+
+		TipiSupportOverlayPane overlayComponent = null;
+		if (showOverlay) {
+		    overlayComponent = getComponent().getOverlayComponent();
+		    if (overlayComponent != null) {
+		        overlayComponent.addOverlayProgressPanel();
+		    }
 		}
 		if (!localInstance.checkCondition(localInstance)) {
 			return;
@@ -283,6 +303,10 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 				"event   ",
 				"finished event: " + localInstance.getEventName()
 						+ " in component" + getComponent().getPath());
+		if (showOverlay && overlayComponent != null) { 
+		    overlayComponent.removeOverlayProgressPanel();
+            
+		}
 		listener.eventFinished(localInstance, event);
 	}
 

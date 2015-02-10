@@ -1732,5 +1732,24 @@ public abstract class TipiComponentImpl implements TipiEventListener,
     public void postOnInstantiate() {
         // nothing to do since we didn't hide ourselves in the first place
     }
+    
+    public TipiSupportOverlayPane getOverlayComponent() {
+        if (this instanceof TipiSupportOverlayPane) {
+            return (TipiSupportOverlayPane) this;
+        } else {
+            if (myParent == null) {
+                return null;
+            }
+            return myParent.getOverlayComponent();
+        }
+    }
+
+    public void addOverlayProgressPanel() {
+        // Do nothing
+    }
+
+    public void removeOverlayProgressPanel() {
+        // Do nothing
+    }
 	    
 }

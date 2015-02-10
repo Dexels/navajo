@@ -7,6 +7,7 @@ import java.util.Map;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.components.core.TipiSupportOverlayPane;
 import com.dexels.navajo.tipi.internal.AttributeRef;
 import com.dexels.navajo.tipi.internal.PropertyComponent;
 import com.dexels.navajo.tipi.internal.TipiAction;
@@ -300,6 +301,10 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
     public void unhideComponent();
     
     public void postOnInstantiate();
+
+    public TipiSupportOverlayPane getOverlayComponent();
+
+ 
 
 
 }
