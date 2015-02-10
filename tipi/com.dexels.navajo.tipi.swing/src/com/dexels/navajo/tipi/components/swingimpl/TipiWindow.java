@@ -43,14 +43,11 @@ public final class TipiWindow
 		extends TipiSwingDataComponentImpl{
 
 	private static final long serialVersionUID = -4916285139918344888L;
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(TipiWindow.class);
+	private final static Logger logger = LoggerFactory.getLogger(TipiWindow.class);
 	
 	private JInternalFrame myWindow;
-
+	
 	private JInternalFrame constructWindow() {
-		// isDisposing = false;
 		clearContainer();
 		myWindow = new TipiSwingWindow();
 		TipiHelper th = new TipiSwingHelper();
@@ -59,9 +56,6 @@ public final class TipiWindow
 		myWindow.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		myWindow.setResizable(true);
 		myWindow.setSize(100, 40);
-		// JLabel label = new JLabel("Monkey");
-		// myWindow.getLayeredPane().add(label, 40000);
-		// label.setBounds(10,10,50,20);
 		myWindow.setVisible(true);
 		myWindow.addInternalFrameListener(new InternalFrameAdapter() {
 
@@ -104,32 +98,26 @@ public final class TipiWindow
 			@Override
 			public void internalFrameClosed(InternalFrameEvent e) {
 				if (myWindow != null) {
-					// will re-enter this event, so its a bit defensive
-					JInternalFrame w = myWindow;
-					myWindow = null;
-					w.dispose();
-					myContext.disposeTipiComponent(TipiWindow.this);
+					// internalFrameClosing
 				}
 			}
 
 			@Override
 			public void internalFrameClosing(final InternalFrameEvent e) {
-//				Component cc = ((JInternalFrame) e.getSource()).getFocusOwner();
 				SwingUtilities.invokeLater(new Runnable() {
 
 					@Override
 					public void run() {
 						try {
 							performTipiEvent("onWindowClosed", null, true);
-							((JInternalFrame) e.getSource()).dispose();
+							hideComponent(); // Don't dispose, but hide
 						} catch (TipiException e1) {
 							((JInternalFrame) e.getSource()).dispose();
 							logger.error("Error detected",e1);
 						} catch (TipiBreakException e2) {
 							logger.debug("Breakie breakie", e2);
 							if (e2.getType() == TipiBreakException.COMPONENT_DISPOSED) {
-								// a component disposed event should still close
-								// the window
+								// a component disposed event should still close the window
 								((JInternalFrame) e.getSource()).dispose();
 							}
 						}
@@ -327,16 +315,15 @@ public final class TipiWindow
 		}
 	}
 
-	@Override
-	protected void performComponentMethod(final String name,
-			final TipiComponentMethod compMeth, TipiEvent event) {
-		runSyncInEventThread(new Runnable() {
-			@Override
-			public void run() {
-				doPerformMethod(name, compMeth);
-			}
-		});
-	}
+    @Override
+    protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
+        runSyncInEventThread(new Runnable() {
+            @Override
+            public void run() {
+                doPerformMethod(name, compMeth);
+            }
+        });
+    }
 
 	@Override
 	public boolean isReusable() {
@@ -365,6 +352,22 @@ public final class TipiWindow
 		TipiWindow.super.disposeComponent();
 
 	}
+	   
+    @Override
+     public void hideComponent() {
+        this.getSwingContainer().setVisible(false);
+    }
+    
+    @Override
+    public void unhideComponent() {
+        this.getSwingContainer().setVisible(true);
+    }
+
+    @Override
+    public void finishUnhideComponent() {
+        ((TipiSwingWindow) myWindow).hideGlass();
+    }
+    
 
 	@Override
 	public void reUse() {

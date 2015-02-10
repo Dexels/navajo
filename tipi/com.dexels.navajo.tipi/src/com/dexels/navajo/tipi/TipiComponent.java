@@ -291,4 +291,10 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 	public int generateChildId();
 
     public TipiComponent getCascadeTipiComponent(String s);
+
+    public void hideComponent();
+
+    public void unhideComponent();
+    
+    public void finishUnhideComponent();
 }

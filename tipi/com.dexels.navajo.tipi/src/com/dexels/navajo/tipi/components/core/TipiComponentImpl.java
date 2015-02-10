@@ -1715,4 +1715,19 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 		return localValuesMap.containsKey(expression);
 	}
+	
+    @Override
+    public void hideComponent() {
+        myContext.disposeTipiComponent(this);
+    }
+
+    @Override
+    public void unhideComponent() {
+        // not supported
+    }
+
+    public void finishUnhideComponent() {
+        // not supported
+    }
+	    
 }
