@@ -168,7 +168,10 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 	@Override
 	public boolean performTipiEvent(String type, Map<String, Object> event,
 			boolean sync) throws TipiException, TipiBreakException;
-
+	
+	boolean performTipiEvent(String type, Map<String, Object> event, boolean sync, Runnable afterEvent)
+            throws TipiBreakException;
+	
 	public String getName();
 	public String getComponentType();
 
@@ -296,5 +299,7 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 
     public void unhideComponent();
     
-    public void finishUnhideComponent();
+    public void postOnInstantiate();
+
+
 }

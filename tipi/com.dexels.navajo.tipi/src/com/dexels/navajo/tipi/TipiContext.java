@@ -1059,7 +1059,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
         TipiComponent inst = null;
         synchronized (lock) {
-            TipiComponent comp = parent.getTipiComponentByPath(id);
+            final TipiComponent comp = parent.getTipiComponentByPath(id);
 
             if (comp != null) {
                 // Component exists:
@@ -1068,21 +1068,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                 } else {
                     comp.reUse();
                     comp.unhideComponent();
-
-                    if (comp instanceof TipiComponentImpl) {
-                        final TipiComponentImpl tipicomp = (TipiComponentImpl) comp;
-                        tipicomp.performTipiEvent("onInstantiate", null, false, new Runnable() {
-
-                            @Override
-                            public void run() {
-                                tipicomp.finishUnhideComponent();
-                            }
-
-                        });
-                    } else {
-                        comp.performTipiEvent("onInstantiate", null, true);
-                        comp.finishUnhideComponent();
-                    }
+                    
+                    comp.performTipiEvent("onInstantiate", null, false, new Runnable() {
+                        public void run() {
+                            comp.postOnInstantiate();
+                        }
+                    });
 
                     return comp;
                 }

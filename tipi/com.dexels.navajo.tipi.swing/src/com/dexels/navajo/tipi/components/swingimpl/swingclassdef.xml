@@ -1032,6 +1032,7 @@
          <value direction="inout" name="resizable" type="boolean" value="true" property="resizable" />
          <value direction="inout" name="enabled" type="boolean" value="true" property="enabled" />
          <value direction="inout" name="selected" type="boolean" value="false" property="selected" />
+         <value direction="inout" name="hideOnClose" type="boolean" value="true" property="hideOnClose" />
       </values>
       <methods>
          <method name="iconify" />

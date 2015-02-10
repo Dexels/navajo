@@ -76,7 +76,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 
 	private final Map<String, TipiComponent> tipiComponentMap = new HashMap<String, TipiComponent>();
 	private final Map<String, XMLElement> localMethodsMap = new HashMap<String, XMLElement>();
-	private final Map<String, Object> localValuesMap = new HashMap<String, Object>();
+	private Map<String, Object> localValuesMap = new HashMap<String, Object>();
 
 	protected final List<PropertyComponent> properties = new ArrayList<PropertyComponent>();
 	protected final List<MessageComponent> messages = new ArrayList<MessageComponent>();
@@ -1259,6 +1259,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return performTipiEvent(type, event, sync, null);
 	}
 
+	@Override
 	public boolean performTipiEvent(String type, Map<String, Object> event,
 			boolean sync, Runnable afterEvent) throws TipiBreakException {
 		boolean hasEventType = false;
@@ -1723,11 +1724,13 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 
     @Override
     public void unhideComponent() {
-        // not supported
+        // Clear our localValuesMap - any actual unhiding is left to any subcomponents 
+        // (typically those who have overridden hideComponent).
+        localValuesMap = new HashMap<String, Object>();
     }
 
-    public void finishUnhideComponent() {
-        // not supported
+    public void postOnInstantiate() {
+        // nothing to do since we didn't hide ourselves in the first place
     }
 	    
 }

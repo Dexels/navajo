@@ -46,7 +46,8 @@ public final class TipiWindow
 	private final static Logger logger = LoggerFactory.getLogger(TipiWindow.class);
 	
 	private JInternalFrame myWindow;
-	
+	private boolean hideOnClose = true;
+
 	private JInternalFrame constructWindow() {
 		clearContainer();
 		myWindow = new TipiSwingWindow();
@@ -203,6 +204,15 @@ public final class TipiWindow
 			setContainer(constructWindow());
 		}
 	}
+	
+	@Override
+    protected void setComponentValue(String name, Object object) {
+        if (name.equals("hideOnClose")) {
+           this.hideOnClose = (Boolean) object;
+           return;
+        }
+        super.setComponentValue(name, object);
+    }
 
 	private final void doPerformMethod(String name, TipiComponentMethod compMeth) {
 
@@ -352,22 +362,42 @@ public final class TipiWindow
 		TipiWindow.super.disposeComponent();
 
 	}
+	
+	
 	   
+    public boolean isHideOnClose() {
+        return hideOnClose;
+    }
+
+    public void setHideOnClose(boolean hideOnClose) {
+        this.hideOnClose = hideOnClose;
+    }
+
     @Override
      public void hideComponent() {
         
-        this.getSwingContainer().setVisible(false);
+        if (hideOnClose) {
+            this.getSwingContainer().setVisible(false);
+        } else {
+            myContext.disposeTipiComponent(this);
+        }
     }
     
     @Override
     public void unhideComponent() {
-        ((TipiSwingWindow) myWindow).addGlass();
-        this.getSwingContainer().setVisible(true);
+        super.unhideComponent();
+        if (hideOnClose) {
+            ((TipiSwingWindow) myWindow).addGlass();
+            this.getSwingContainer().setVisible(true);
+        }
+       
     }
 
     @Override
-    public void finishUnhideComponent() {
-        ((TipiSwingWindow) myWindow).hideGlass();
+    public void postOnInstantiate() {
+        if (hideOnClose) {
+            ((TipiSwingWindow) myWindow).hideGlass();
+        }
     }
     
 
