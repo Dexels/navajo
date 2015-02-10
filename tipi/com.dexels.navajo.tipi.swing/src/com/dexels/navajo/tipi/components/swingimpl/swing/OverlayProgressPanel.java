@@ -95,10 +95,10 @@ public class OverlayProgressPanel extends JComponent implements ActionListener, 
 
         // set opaque
         setOpaque(true);
-        //
-        // addMouseListener(this);
-        // addMouseMotionListener(this);
-        // addFocusListener(this);
+
+         addMouseListener(this);
+         addMouseMotionListener(this);
+         addFocusListener(this);
     }
 
     /**
