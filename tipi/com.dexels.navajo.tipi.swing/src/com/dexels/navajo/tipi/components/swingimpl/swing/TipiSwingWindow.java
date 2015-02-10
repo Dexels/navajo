@@ -25,6 +25,7 @@ public class TipiSwingWindow extends JInternalFrame {
     private final static Logger logger = LoggerFactory.getLogger(TipiSwingWindow.class);
     private Point position = null;
     private Dimension oldSize = null;
+    private final OverlayProgressPanel glassPanel = new OverlayProgressPanel(3);
 
     public TipiSwingWindow() {
 
@@ -32,11 +33,7 @@ public class TipiSwingWindow extends JInternalFrame {
 
             @Override
             public void componentHidden(ComponentEvent c) {
-                // Add the glass pane on hiding - then start when the componentShown is triggered
-                OverlayProgressPanel glassPane = new OverlayProgressPanel(3);
-                glassPane.setVisible(true);
-                setGlassPane(glassPane);
-
+                setGlassPane(glassPanel);
             }
 
             @Override
@@ -72,12 +69,6 @@ public class TipiSwingWindow extends JInternalFrame {
 
             @Override
             public void componentShown(ComponentEvent c) {
-
-                if (getGlassPane() instanceof OverlayProgressPanel) {
-                    OverlayProgressPanel p = (OverlayProgressPanel) getGlassPane();
-                    p.start();
-                }
-
             }
         });
 
@@ -155,7 +146,13 @@ public class TipiSwingWindow extends JInternalFrame {
             OverlayProgressPanel p = (OverlayProgressPanel) getGlassPane();
             p.stop();
         }
-
     }
+    
+    public void addGlass() {
+        glassPanel.start();
+        setGlassPane(glassPanel);
+    }
+    
+  
 
 }

@@ -355,11 +355,13 @@ public final class TipiWindow
 	   
     @Override
      public void hideComponent() {
+        
         this.getSwingContainer().setVisible(false);
     }
     
     @Override
     public void unhideComponent() {
+        ((TipiSwingWindow) myWindow).addGlass();
         this.getSwingContainer().setVisible(true);
     }
 
