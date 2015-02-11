@@ -55,6 +55,7 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 			if (multithread) {
 				for (int i = 0; i < getExecutables().size(); i++) {
 					TipiExecutable current = getExecutables().get(i);
+					current.setEvent(te);
 					getContext().debugLog("thread",
 							" multithread . Performing now");
 					logger.info("In multithread block enqueueing: "
