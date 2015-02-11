@@ -46,6 +46,7 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
 	
 	private JInternalFrame myWindow;
 	private boolean hideOnClose = true;
+    private boolean isHidden = false;
 
 	private JInternalFrame constructWindow() {
 		clearContainer();
@@ -377,16 +378,21 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
         
         if (hideOnClose) {
             this.getSwingContainer().setVisible(false);
+            isHidden = true;
         } else {
             myContext.disposeTipiComponent(this);
         }
+        
     }
+    
+    
     
     @Override
     public void unhideComponent() {
 
         super.unhideComponent();
         if (hideOnClose) {
+            isHidden = false;
             addOverlayProgressPanel();
             
             /*
@@ -394,7 +400,6 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
              * This allows for the early onInstantiate code to already be done,
              * and prevents some weird (visual) quirks
              */
-
             new Thread() {
                 public void run() {
                     try {
@@ -433,4 +438,9 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
 		// }
 		// myWindow.setVisible(true);
 	}
+	
+	 @Override 
+	    public boolean isHidden() {
+	        return isHidden;
+	    }
 }

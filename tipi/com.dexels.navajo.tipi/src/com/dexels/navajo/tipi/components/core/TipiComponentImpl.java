@@ -916,24 +916,37 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 			TipiComponentMethod compMeth, TipiEvent event)
 			throws TipiBreakException {
 	}
+	
+	/**
+     * beware, leading slashes will be stripped. To do a global lookup, use the
+     * TipiContext
+     */
+    @Override
+    public TipiComponent getTipiComponentByPath(String path) {
+        return getTipiComponentByPath(path, false);
+    }
 
 	/**
 	 * beware, leading slashes will be stripped. To do a global lookup, use the
 	 * TipiContext
 	 */
 	@Override
-	public TipiComponent getTipiComponentByPath(String path) {
+	public TipiComponent getTipiComponentByPath(String path, boolean hiddenOrVisible) {
 		if (path.equals(".")) {
 			return this;
 		}
 		if (path.equals("..")) {
-			return myParent;
+		    if (hiddenOrVisible || !myParent.isHidden()) {
+		        return myParent;
+		    }
+		    
+		    throw null;
 		}
 		if (path.startsWith("./")) {
-			return getTipiComponentByPath(path.substring(2));
+			return getTipiComponentByPath(path.substring(2), hiddenOrVisible);
 		}
 		if (path.startsWith("../")) {
-			return myParent.getTipiComponentByPath(path.substring(3));
+			return myParent.getTipiComponentByPath(path.substring(3), hiddenOrVisible);
 		}
 		if (path.indexOf("/") == 0) {
 			path = path.substring(1);
@@ -944,15 +957,15 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 			if (path.equals("")) {
 				return myContext.getDefaultTopLevel();
 			}
-			return getTipiComponent(path);
+			return getTipiComponent(path, hiddenOrVisible);
 		} else {
 			String name = path.substring(0, s);
 			String rest = path.substring(s);
-			TipiComponent t = getTipiComponent(name);
+			TipiComponent t = getTipiComponent(name, hiddenOrVisible);
 			if (t == null) {
 				throw new NullPointerException("Did not find Tipi: " + name);
 			}
-			return t.getTipiComponentByPath(rest);
+			return t.getTipiComponentByPath(rest, hiddenOrVisible);
 		}
 	}
 
@@ -967,13 +980,19 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	}
 
 	@Override
-	public final TipiComponent getTipiComponent(String s) {
-		return tipiComponentMap.get(s);
-	}
+    public final TipiComponent getTipiComponent(String s, boolean hiddenOrVisible) {
+        TipiComponent result = tipiComponentMap.get(s);
+        if (result != null) {
+            if (hiddenOrVisible || (!result.isHidden())) {
+                return result;
+            }
+        }
+        return null;
+    }
 	
 	@Override
     public final TipiComponent getCascadeTipiComponent(String s) {
-	    TipiComponent res = getTipiComponent(s);
+	    TipiComponent res = getTipiComponent(s, false);
         if (res != null) {
             return res;
         }
@@ -1744,12 +1763,25 @@ public abstract class TipiComponentImpl implements TipiEventListener,
         }
     }
 
-    public void addOverlayProgressPanel() {
-        // Do nothing
+    
+    @Override
+    public void componentHidden() {
+        // Simply pass on to my children
+        for (TipiComponent child : this.getChildren()) {
+            child.componentHidden();
+        }
     }
-
-    public void removeOverlayProgressPanel() {
-        // Do nothing
+    @Override
+    public void componentUnHidden() {
+     // Simply pass on to my children
+        for (TipiComponent child : this.getChildren()) {
+            child.componentUnHidden();
+        }
+    }
+    
+    @Override 
+    public boolean isHidden() {
+        return false;
     }
 	    
 }
