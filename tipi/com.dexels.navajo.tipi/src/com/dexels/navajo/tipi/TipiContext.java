@@ -1059,7 +1059,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
         TipiComponent inst = null;
         synchronized (lock) {
-            final TipiComponent comp = parent.getTipiComponentByPath(id);
+            final TipiComponent comp = parent.getTipiComponentByPath(id, true);
 
             if (comp != null) {
                 // Component exists:

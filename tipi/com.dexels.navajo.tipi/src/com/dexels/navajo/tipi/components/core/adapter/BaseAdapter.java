@@ -51,7 +51,7 @@ public abstract class BaseAdapter {
 
 	public BaseAdapter getChild(String id) {
 		TipiComponentImpl rr = (TipiComponentImpl) myComponent
-				.getTipiComponent(id);
+				.getTipiComponent(id, false);
 		if (rr == null) {
 			return null;
 		}

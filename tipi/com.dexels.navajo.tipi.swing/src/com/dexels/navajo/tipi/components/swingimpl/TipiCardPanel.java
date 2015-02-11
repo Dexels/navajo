@@ -79,7 +79,7 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
 		super.setComponentValue(name, object);
 		if (name.equals("selected")) {
 			String sel = (String) object;
-			selectedComponent = getTipiComponent(sel);
+			selectedComponent = getTipiComponent(sel, false);
 			myCardLayout.show((Container) getContainer(),
 					selectedComponent.getId());
 			// ( (JTabbedPane) getContainer()).setSelectedComponent( (Component)

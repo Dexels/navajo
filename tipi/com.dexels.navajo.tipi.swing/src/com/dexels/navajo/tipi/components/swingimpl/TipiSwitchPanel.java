@@ -101,7 +101,7 @@ public class TipiSwitchPanel extends TipiPanel {
 			tc = getTipiComponent(selectedIndex.intValue());
 		}
 		if (selectedId != null) {
-			tc = getTipiComponent(selectedId);
+			tc = getTipiComponent(selectedId, false);
 
 		}
 
