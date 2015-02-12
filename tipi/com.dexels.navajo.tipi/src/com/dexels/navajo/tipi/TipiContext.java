@@ -2668,10 +2668,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         try {
             int i = 0;
             for (TipiExecutable current : exe) {
-
-                executableParent.setExecutionIndex(i);
-                current.performAction(te, executableParent, i);
-                i++;
+                // Don't perform action when comp is hidden
+                if (!comp.isHidden()) {
+                    executableParent.setExecutionIndex(i);
+                    current.performAction(te, executableParent, i);
+                    i++;
+                }
+                
             }
         } catch (TipiException ex) {
             logger.error("Error: ", ex);
