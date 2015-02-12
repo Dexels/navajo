@@ -201,14 +201,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 	
 	@Override
     public void removeNavajo() {
-        columnCondition.clear();
         removeAllAggregate();
-        columnSize.clear();
-        columnList.clear();
-        List<Message> ss = columnMessage.getAllMessages();
-        for (Message message : ss) {
-            columnMessage.removeMessage(message);
-        }
+
 
         runSyncInEventThread(new Runnable() {
             @Override
