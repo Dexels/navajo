@@ -258,7 +258,7 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 
 	public TipiComponent getHomeComponent();
 
-	/*
+	/**
 	 * gets all the property components under this property, and also under its
 	 * (recursive) children
 	 */
@@ -268,6 +268,12 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 	 * 
 	 */
 	public void commitToUi();
+	
+
+    /** 
+     * Is called when removing the Navajo that this component is listening to.
+     */
+    public void removeNavajo();
 
 	public String getAlias(String expression);
 
@@ -313,11 +319,6 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
     public void postOnInstantiate();
 
     public TipiSupportOverlayPane getOverlayComponent();
-
-    public void componentHidden();
-    
-    public void componentUnHidden();
-
 
 
 }

@@ -1609,7 +1609,18 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     }
 
     public void removeNavajo(String method) {
-        navajoMap.remove(method);
+        navajoMap.remove(method);    
+        
+
+        List<TipiDataComponent> tipis = getTipiInstancesByService(method);
+        if (tipis != null) {
+            for (int i = 0; i < tipis.size(); i++) {
+                TipiDataComponent current = tipis.get(i);
+
+                current.removeNavajo();
+            }
+        }
+        
     }
 
     public void addNavajo(String method, Navajo navajo) {

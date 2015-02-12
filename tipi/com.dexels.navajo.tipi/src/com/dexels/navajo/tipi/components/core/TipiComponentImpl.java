@@ -1764,19 +1764,9 @@ public abstract class TipiComponentImpl implements TipiEventListener,
     }
 
     
-    @Override
-    public void componentHidden() {
-        // Simply pass on to my children
-        for (TipiComponent child : this.getChildren()) {
-            child.componentHidden();
-        }
-    }
-    @Override
-    public void componentUnHidden() {
-     // Simply pass on to my children
-        for (TipiComponent child : this.getChildren()) {
-            child.componentUnHidden();
-        }
+    @Override 
+    public void removeNavajo() {
+        
     }
     
     @Override 
