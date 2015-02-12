@@ -63,12 +63,13 @@ public class OverlayProgressPanel extends JComponent implements ActionListener, 
     private Color[] colors = null;
     private int colorOffset = 0;
     private boolean tempHide = false;
+    int alpha;
 
     public OverlayProgressPanel() {
-        this(1);
+        this(1, 120);
     }
 
-    public OverlayProgressPanel(double ratio) {
+    public OverlayProgressPanel(double ratio, int alpha) {
 
         this.numBars = DEFAULT_NUMBER_OF_BARS;
 
@@ -96,9 +97,9 @@ public class OverlayProgressPanel extends JComponent implements ActionListener, 
         // set opaque
         setOpaque(true);
 
-         addMouseListener(this);
-         addMouseMotionListener(this);
-         addFocusListener(this);
+        addMouseListener(this);
+        addMouseMotionListener(this);
+        addFocusListener(this);
     }
 
     /**
@@ -160,7 +161,8 @@ public class OverlayProgressPanel extends JComponent implements ActionListener, 
     @Override
     public void paintComponent(Graphics g) {
         if (!tempHide) {
-            g.setColor(new Color(255, 255, 255, 120));
+            
+            g.setColor(new Color(255, 255, 255, alpha));
             g.fillRect(1, 1, this.getWidth(), this.getHeight());
 
             Rectangle oClip = g.getClipBounds();
@@ -288,6 +290,15 @@ public class OverlayProgressPanel extends JComponent implements ActionListener, 
     @Override
     public void mouseReleased(MouseEvent e) {
 
+    }
+
+    public void setType(String type) {
+       if (type.equals("transparent")) {
+           alpha = 30;
+       } else {
+           alpha = 150;
+       }
+        
     }
 
 }

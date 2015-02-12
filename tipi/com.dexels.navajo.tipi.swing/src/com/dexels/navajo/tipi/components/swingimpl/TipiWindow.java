@@ -98,9 +98,7 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
 			
 			@Override
 			public void internalFrameClosed(InternalFrameEvent e) {
-				if (myWindow != null) {
-					// internalFrameClosing
-				}
+			    // Nothing to do anymore - we are already disposed!
 			}
 
 			@Override
@@ -111,16 +109,9 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
 					public void run() {
 						try {
 							performTipiEvent("onWindowClosed", null, true);
-							hideComponent(); // Don't dispose, but hide
-						} catch (TipiException e1) {
-							((JInternalFrame) e.getSource()).dispose();
+							hideComponent();
+						} catch (Exception e1) {
 							logger.error("Error detected",e1);
-						} catch (TipiBreakException e2) {
-							logger.debug("Breakie breakie", e2);
-							if (e2.getType() == TipiBreakException.COMPONENT_DISPOSED) {
-								// a component disposed event should still close the window
-								((JInternalFrame) e.getSource()).dispose();
-							}
 						}
 
 					}
@@ -342,6 +333,7 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
 
 	@Override
 	public void disposeComponent() {
+	    TipiWindow.super.disposeComponent();
 		runSyncInEventThread(new Runnable() {
 
 			@Override
@@ -359,7 +351,7 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
 				myWindow = null;
 			}
 		});
-		TipiWindow.super.disposeComponent();
+		
 
 	}
 	
@@ -374,15 +366,17 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
     }
 
     @Override
-     public void hideComponent() {
-        
+     public synchronized void hideComponent() {
+        if (myWindow == null || isHidden) {
+            // already hidden/disposed
+            return;
+        }
         if (hideOnClose) {
             this.getSwingContainer().setVisible(false);
             isHidden = true;
         } else {
             myContext.disposeTipiComponent(this);
         }
-        
     }
     
     
@@ -393,7 +387,7 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
         super.unhideComponent();
         if (hideOnClose) {
             isHidden = false;
-            addOverlayProgressPanel();
+            addOverlayProgressPanel("default");
             
             /*
              * We want to have a small delay before we unhide the component.
@@ -421,8 +415,9 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
     }
     
     @Override 
-    public void addOverlayProgressPanel() {
-        ((TipiSwingWindow) myWindow).addGlass();
+    public void addOverlayProgressPanel(String type) {
+        
+        ((TipiSwingWindow) myWindow).addGlass(type);
     } 
     
     @Override

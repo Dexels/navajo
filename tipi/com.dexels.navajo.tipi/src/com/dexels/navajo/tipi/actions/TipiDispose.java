@@ -38,9 +38,7 @@ public class TipiDispose extends TipiAction {
         try {
             TipiComponent tp = (TipiComponent) getEvaluatedParameterValue("path", event);
             if (tp != null) {
-                // myContext.disposeTipiComponent(tp);
-
-               // tp.hideComponent();
+               tp.hideComponent();
 
             } else {
                 logger.warn("ATTEMPTING TO DISPOSE NULL component. ");

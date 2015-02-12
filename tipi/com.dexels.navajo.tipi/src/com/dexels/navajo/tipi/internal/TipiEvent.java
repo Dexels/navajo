@@ -241,16 +241,16 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 			localInstance.loadEventValues(event);
 		}
 		
-		Boolean showOverlay = false;
-		if (localInstance.getBlockParam("showOverlay") != null) {
-		    showOverlay = Boolean.valueOf((String) localInstance.getBlockParam("showOverlay"));
+		String overlayType = "none";
+		if (localInstance.getBlockParam("overlay") != null) {
+		    overlayType = localInstance.getBlockParam("overlay");
 		}
 
 		TipiSupportOverlayPane overlayComponent = null;
-		if (showOverlay) {
+		if (!overlayType.equals("none")) {
 		    overlayComponent = getComponent().getOverlayComponent();
 		    if (overlayComponent != null) {
-		        overlayComponent.addOverlayProgressPanel();
+		        overlayComponent.addOverlayProgressPanel(overlayType);
 		    }
 		}
 		if (!localInstance.checkCondition(localInstance)) {
@@ -303,10 +303,10 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 				"event   ",
 				"finished event: " + localInstance.getEventName()
 						+ " in component" + getComponent().getPath());
-		if (showOverlay && overlayComponent != null) { 
+		if (!overlayType.equals("none") && overlayComponent != null) { 
 		    overlayComponent.removeOverlayProgressPanel();
-            
 		}
+		
 		listener.eventFinished(localInstance, event);
 	}
 
