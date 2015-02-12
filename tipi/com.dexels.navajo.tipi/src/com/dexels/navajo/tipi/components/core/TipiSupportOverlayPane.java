@@ -5,4 +5,6 @@ public interface TipiSupportOverlayPane {
     public void addOverlayProgressPanel(String type);
 
     public void removeOverlayProgressPanel();
+    
+    public boolean isHidden();
 }

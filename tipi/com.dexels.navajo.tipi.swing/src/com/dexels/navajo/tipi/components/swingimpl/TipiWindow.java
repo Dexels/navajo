@@ -387,7 +387,7 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
         super.unhideComponent();
         if (hideOnClose) {
             isHidden = false;
-            addOverlayProgressPanel("default");
+            addOverlayProgressPanel("opaque");
             
             /*
              * We want to have a small delay before we unhide the component.
