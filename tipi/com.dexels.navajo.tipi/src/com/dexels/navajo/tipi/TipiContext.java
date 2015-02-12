@@ -1060,10 +1060,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         TipiComponent inst = null;
         synchronized (lock) {
             final TipiComponent comp = parent.getTipiComponentByPath(id, true);
-
+            Object def = tipiComponentMap.get(id);
             if (comp != null) {
-                // Component exists:
-                if (force) {
+                // Component exists - check force or empty definition
+                if (force || def == null) {
                     disposeTipiComponent(comp);
                 } else {
                     comp.reUse();

@@ -119,8 +119,7 @@ public class TipiInstantiateTipi extends TipiAction {
 			}
 		}
 
-		return context.instantiateTipi(this, parent, force, id, constraints, event,
-				xe);
+		return context.instantiateTipi(this, parent, force, id, constraints, event, xe);
 	}
 
 	private String getEscapedString(Object value) {
