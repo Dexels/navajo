@@ -52,7 +52,8 @@ public class CompileServlet extends HttpServlet {
 			}
 //			System.err.println("Force: "+force);
 			bundleCreator.createBundle(script,new Date(),".xml",failures,success,skipped, force,keepIntermediateFiles);
-			tm2 = System.currentTimeMillis() - tm;
+			long tstamp = System.currentTimeMillis();
+			tm2 = tstamp - tm;
 			logger.info("Compiling java complete. took: "+tm2+" millis.");
 			logger.info("Succeeded: "+success.size()+" failed: "+failures.size()+" skipped: "+skipped.size());
 			logger.info("Avg: "+(1000 * (float)success.size() / tm2)+" scripts / sec");
@@ -60,7 +61,7 @@ public class CompileServlet extends HttpServlet {
 				logger.info("Failed: "+failed);
 			}
 		//	bundleCreator.installBundles(script,failures, success, skipped, true,extension);
-			tm3 = System.currentTimeMillis() - tm2;
+			tm3 = System.currentTimeMillis() - tstamp;
 			logger.info("Installing bundles took "+tm3+" millis.");
 			
 		} catch (Throwable e) {
