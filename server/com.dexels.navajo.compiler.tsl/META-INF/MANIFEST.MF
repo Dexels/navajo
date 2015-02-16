@@ -31,14 +31,12 @@ Import-Package: com.dexels.navajo.compiler,
  org.w3c.dom
 Bundle-Activator: navajotsl.Activator
 Service-Component: OSGI-INF/navajoTslCompiler.xml, 
- OSGI-INF/navajo.compiler.tsl.java.internal.xml,
  OSGI-INF/navajo.compiler.tsl.java.xml,
  OSGI-INF/javaCompilerComponent.xml, 
  OSGI-INF/bundleCreator.xml,
  OSGI-INF/navajo.repository.listener.xml,
  OSGI-INF/navajo.bundlecreator.queue.xml,
- OSGI-INF/navajo.compiler.classloader.wrapped.xml,
- OSGI-INF/navajo.compiler.refresh.xml
+ OSGI-INF/navajo.compiler.classloader.wrapped.xml
 Bundle-ClassPath: .,
  lib/org.eclipse.jdt.core-3.11.0-SNAPSHOT-batch-compiler-src.jar,
  lib/org.eclipse.jdt.core-3.11.0-SNAPSHOT-batch-compiler.jar,

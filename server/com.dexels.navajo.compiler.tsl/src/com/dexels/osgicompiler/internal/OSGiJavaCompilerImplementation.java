@@ -22,7 +22,6 @@ import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
-import javax.tools.ToolProvider;
 
 import org.apache.commons.io.IOUtils;
 import org.osgi.framework.BundleContext;
@@ -33,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.compiler.tsl.custom.CustomClassLoader;
 import com.dexels.navajo.compiler.tsl.custom.CustomClassloaderJavaFileManager;
 import com.dexels.navajo.compiler.tsl.custom.CustomJavaFileObject;
-import com.dexels.navajo.compiler.tsl.custom.SimpleClassLoaderFileManager;
 import com.dexels.osgicompiler.OSGiJavaCompiler;
 
 public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
@@ -164,10 +162,14 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 			}
 
 		};
-		CompilationTask task = compiler.getTask(null, customJavaFileManager,
-				compilerOutputListener, new ArrayList<String>(), null,
+		StringWriter swe = new StringWriter();
+		ArrayList<String> options = new ArrayList<String>();
+		options.add("-nowarn");
+		CompilationTask task = compiler.getTask(swe, customJavaFileManager,
+				compilerOutputListener, options, null,
 				fileObjects);
 		task.call();
+//		System.err.println(">>>>>>>>>> "+swe);
 		CustomJavaFileObject jfo = (CustomJavaFileObject) customJavaFileManager
 				.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, className,
 						Kind.CLASS);

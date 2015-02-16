@@ -253,7 +253,7 @@ public class CustomClassloaderJavaFileManager extends
 			BundleWiring bw = bundle.adapt(BundleWiring.class);
 			Iterable<String> pkgs = getAffectedPackages(bw);
 			for (String pkg : pkgs) {
-				System.err.println("Registering package: "+pkg+" for bundle: "+bundle.getSymbolicName());
+//				System.err.println("Registering package: "+pkg+" for bundle: "+bundle.getSymbolicName());
 				getNode(pkg);
 			}
 		}
