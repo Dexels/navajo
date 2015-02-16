@@ -198,6 +198,26 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		mm.doLayout();
 		return mm;
 	}
+	
+	@Override
+    public void removeNavajo() {
+        removeAllAggregate();
+
+
+        runSyncInEventThread(new Runnable() {
+            @Override
+            public void run() {
+                mm.setFooterRenderer(null);
+                mm.removeAllColumns();
+                mm.getTable().updateTableSize();
+                mm.updateTableSize();
+                updateColumnVisibility();
+                mm.updateColumnSizes();
+                mm.revalidate();
+            }
+        });
+    }
+
 
 	@Override
 	public void showPopup(MouseEvent e) {

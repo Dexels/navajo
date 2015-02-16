@@ -52,8 +52,7 @@ public class MainApplication {
 		SwingTipiApplicationInstance instance = runApp(args);
 //		instance.setInstallationFolder(new File("C:/user_projects/SportlinkClub"));
 //        instance.setInstallationFolder(new File("/Users/frank/Documents/workspace-indigo/SportlinkClub"));
-		instance.getCurrentContext().switchToDefinition(
-				instance.getDefinition());
+		instance.getCurrentContext().switchToDefinition(instance.getDefinition());
 	}
 
 	public static SwingTipiApplicationInstance runApp(BundleContext bc, String applicationContext) throws IOException, TipiException {

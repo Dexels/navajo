@@ -597,7 +597,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 						eventParams.put("index", index);
 						eventParams.put("size", al.size());
 						performTipiEvent("onBeforeElement", eventParams, true);
-						TipiComponent child = getTipiComponent("" + index);
+						TipiComponent child = getTipiComponent("" + index, false);
 
 						if (child instanceof MessageComponent) {
 							MessageComponent mc = (MessageComponent) child;

@@ -105,6 +105,11 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 	public TipiComponentMethod getTipiComponentMethod(String methodName);
 
 	public TipiComponent getTipiComponentByPath(String path);
+	
+	/**
+	 * If hiddenOrVisible is false, only visible components are returned
+	 */
+	public TipiComponent getTipiComponentByPath(String path, boolean hiddenOrVisible);
 
 	public void setLayout(TipiLayout tl);
 
@@ -123,8 +128,11 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 			XMLElement classdef, XMLElement definition);
 
 	public TipiLayout getLayout();
-
-	public TipiComponent getTipiComponent(String s);
+ 
+	/**
+	 * If hiddenOrVisible is false, only visible components are returned
+	 */
+	public TipiComponent getTipiComponent(String s, boolean hiddenOrVisible);
 
 	public TipiComponent getTipiComponent(int i);
 
@@ -250,7 +258,7 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 
 	public TipiComponent getHomeComponent();
 
-	/*
+	/**
 	 * gets all the property components under this property, and also under its
 	 * (recursive) children
 	 */
@@ -260,6 +268,12 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 	 * 
 	 */
 	public void commitToUi();
+	
+
+    /** 
+     * Is called when removing the Navajo that this component is listening to.
+     */
+    public void removeNavajo();
 
 	public String getAlias(String expression);
 
@@ -300,11 +314,11 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 
     public void unhideComponent();
     
+    public boolean isHidden();
+    
     public void postOnInstantiate();
 
     public TipiSupportOverlayPane getOverlayComponent();
-
- 
 
 
 }

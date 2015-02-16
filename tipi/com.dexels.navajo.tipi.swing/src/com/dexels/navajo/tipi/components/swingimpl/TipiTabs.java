@@ -141,7 +141,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 			Operand value = compMeth.getEvaluatedParameter("value", event);
 			String tabName = (String) path.value;
 			final boolean enabled = ((Boolean) value.value).booleanValue();
-			final TipiComponent t = getTipiComponent(tabName);
+			final TipiComponent t = getTipiComponent(tabName, false);
 			if (t != null) {
 				runSyncInEventThread(new Runnable() {
 					@Override
@@ -300,7 +300,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		super.setComponentValue(name, object);
 		if (name.equals("selected")) {
 			String sel = (String) object;
-			final TipiComponent tc = getTipiComponent(sel);
+			final TipiComponent tc = getTipiComponent(sel, false);
 			runSyncInEventThread(new Runnable() {
 				@Override
 				public void run() {

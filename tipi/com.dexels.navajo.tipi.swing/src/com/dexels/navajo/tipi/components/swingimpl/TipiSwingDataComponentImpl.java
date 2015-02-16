@@ -89,7 +89,6 @@ public abstract class TipiSwingDataComponentImpl extends TipiDataComponentImpl
 					// TODO ADDED 7/7/2009 I don't know about the performance
 					// hit.
 					((JComponent) getSwingContainer()).revalidate();
-					// getSwingContainer().reva();
 				}
 			});
 		} catch (Throwable e) {

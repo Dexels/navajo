@@ -11,6 +11,7 @@ import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.components.core.TipiSupportOverlayPane;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
@@ -43,24 +44,43 @@ public class TipiMethod extends TipiAbstractExecutable {
 
 	@Override
 	public void performAction(TipiEvent te, TipiExecutable parent, int index)
-			throws TipiBreakException, TipiException {
-		TipiEvent localInstance = (TipiEvent) te.clone();
-		localInstance.setComponent(getComponent());
-		setEvent(localInstance);
-		try {
-				getContext().doActions(localInstance, getComponent(), this,
-						getExecutables());
-			// not sure if this is wise
-			setEvent(null);
-		} catch (TipiBreakException ex) {
-			if (TipiBreakException.BREAK_EVENT == ex.getType()) {
-				throw ex;
-			}
-			return;
-		} catch (Throwable t) {
-			logger.error("Error performing method",t);
-		}
-	}
+ throws TipiBreakException, TipiException {
+        TipiEvent localInstance = (TipiEvent) te.clone();
+        localInstance.setComponent(getComponent());
+        setEvent(localInstance);
+        String overlayType = "none";
+        if (getBlockParam("overlay") != null) {
+            overlayType = getBlockParam("overlay");
+        }
+
+        TipiSupportOverlayPane overlayComponent = null;
+        boolean addedOverlay = false;
+        if (!overlayType.equals("none")) {
+            overlayComponent = localInstance.getComponent().getOverlayComponent();
+            if (overlayComponent != null && !overlayComponent.isHidden()) {
+                overlayComponent.addOverlayProgressPanel(overlayType);
+                addedOverlay = true;
+            }
+        }
+
+        try {
+            getContext().doActions(localInstance, getComponent(), this, getExecutables());
+            // not sure if this is wise
+            setEvent(null);
+        } catch (TipiBreakException ex) {
+            if (TipiBreakException.BREAK_EVENT == ex.getType()) {
+                throw ex;
+            }
+            return;
+        } catch (Throwable t) {
+            logger.error("Error performing method", t);
+        }
+        
+        if (addedOverlay && overlayComponent != null) {
+            overlayComponent.removeOverlayProgressPanel();
+        }
+
+    }
 
 	public void load(XMLElement elm, TipiComponent parent,
 			TipiExecutable parentExe) {

@@ -66,7 +66,7 @@ public class TipiSwitchPanel extends TipiEchoDataComponentImpl {
         if (name.equals("selected")) {
             hideAll();
             String sel = (String) object;
-            final TipiComponent tc = getTipiComponent(sel);
+            final TipiComponent tc = getTipiComponent(sel, false);
             Object o = tc.getContainer();
             if (o != null && o instanceof Component) {
                 ((Component) o).setVisible(true);
