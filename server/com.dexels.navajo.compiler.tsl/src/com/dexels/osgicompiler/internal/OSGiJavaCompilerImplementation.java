@@ -100,13 +100,6 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		this.customClassLoaderRegistration = this.context.registerService(
 				ClassLoader.class, customClassLoader, nsc);
 
-		if (settings != null && settings.get("refreshCount") != null) {
-			int refreshCount = (int) settings.get("refreshCount");
-			logger.info("Refresh done. Refresh # " + refreshCount);
-		} else {
-			logger.info("No refreshCount for compiler");
-		}
-
 	}
 
 	@SuppressWarnings("unchecked")

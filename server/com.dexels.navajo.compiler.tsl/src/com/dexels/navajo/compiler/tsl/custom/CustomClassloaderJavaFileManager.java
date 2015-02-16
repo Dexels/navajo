@@ -6,6 +6,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +40,8 @@ public class CustomClassloaderJavaFileManager extends
 
 	private final Map<String, CustomJavaFileFolder> folderMap = new HashMap<String, CustomJavaFileFolder>();
 	private final Map<String, CustomJavaFileObject> fileMap = new HashMap<String, CustomJavaFileObject>();
+	private final Map<CustomJavaFileFolder, Bundle> bundleMap = new HashMap<CustomJavaFileFolder, Bundle>();
+	private final Set<Bundle> loadedBundles = new HashSet<Bundle>();
 	private BundleContext bundleContext;
 
 	private final static Logger logger = LoggerFactory
@@ -217,7 +220,7 @@ public class CustomClassloaderJavaFileManager extends
 		return findChild(child, paths, index+1);
 	}
 	private CustomJavaFileFolder createPackageNode(String packageName) {
-		CustomJavaFileFolder folder = new CustomJavaFileFolder(bundleContext, packageName);
+		CustomJavaFileFolder folder = new CustomJavaFileFolder(packageName);
 //		folderMap.put(packageName, folder);
 		return folder;
 	}
@@ -228,14 +231,19 @@ public class CustomClassloaderJavaFileManager extends
 	}
 
 	@Override
-	public void bundleChanged(BundleEvent be) {
+	public synchronized void bundleChanged(BundleEvent be) {
 		final Bundle bundle = be.getBundle();
 		switch (be.getType()) {
 		case BundleEvent.UNRESOLVED:
+		case BundleEvent.UNINSTALLED:
+		case BundleEvent.STOPPED:
+			unloadBundle(bundle);
+			break;
 		case BundleEvent.RESOLVED:
-			BundleWiring bw = bundle.adapt(BundleWiring.class);
-			Iterable<String> pkgs = getAffectedPackages(bw);
-			flush(pkgs);
+		case BundleEvent.STARTING:
+		case BundleEvent.STARTED:
+			loadBundle(bundle);
+
 			break;
 
 		}
@@ -249,15 +257,38 @@ public class CustomClassloaderJavaFileManager extends
 	}
 	
 	private void loadBundle(Bundle bundle) {
-		if(bundle.getState() == Bundle.ACTIVE) {
-			BundleWiring bw = bundle.adapt(BundleWiring.class);
-			Iterable<String> pkgs = getAffectedPackages(bw);
-			for (String pkg : pkgs) {
-//				System.err.println("Registering package: "+pkg+" for bundle: "+bundle.getSymbolicName());
-				getNode(pkg);
+			if (!loadedBundles.contains(bundle)) {
+				BundleWiring bw = bundle.adapt(BundleWiring.class);
+				if(bw==null) {
+					return;
+				}
+				Iterable<String> pkgs = getAffectedPackages(bw);
+				for (String pkg : pkgs) {
+					// System.err.println("Registering package: "+pkg+" for bundle: "+bundle.getSymbolicName());
+					CustomJavaFileFolder cjf = getNode(pkg);
+					cjf.linkBundle(bundle);
+				}
+				loadedBundles.add(bundle);
 			}
-		}
 	}
+
+	private void unloadBundle(Bundle bundle) {
+		if(loadedBundles.contains(bundle)) {
+					BundleWiring bw = bundle.adapt(BundleWiring.class);
+					if(bw==null) {
+						return;
+					}
+					Iterable<String> pkgs = getAffectedPackages(bw);
+					for (String pkg : pkgs) {
+						CustomJavaFileFolder cjf = getNode(pkg);
+						cjf.unlinkBundle(bundle);
+					}
+			loadedBundles.remove(bundle);
+		}
+
+	}
+
+	
 	private void flush(Iterable<String> pkgs) {
 		for (String pkg : pkgs) {
 			if (folderMap.containsKey(pkg)) {
