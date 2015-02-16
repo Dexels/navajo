@@ -35,7 +35,7 @@ public class CustomJavaFileFolder {
 		this.packageName = packageName;
 		List<Bundle> foundInBundles = new ArrayList<Bundle>();
 		elements.addAll(findAll(packageName, foundInBundles));
-		System.err.println("Package: "+packageName+" has been found in: "+foundInBundles);
+//		System.err.println("Package: "+packageName+" has been found in: "+foundInBundles);
 		if (foundInBundles.size() > 1) {
 			logger.warn("Split package detected: " + packageName);
 			for (Bundle bundle : foundInBundles) {
@@ -144,17 +144,14 @@ public class CustomJavaFileFolder {
 	}
 
 	public Iterable<JavaFileObject> getRecursiveEntries() {
-		System.err.println("RECURSE, I am: "+this.packageName);
 		Collection<JavaFileObject> files = new ArrayList<JavaFileObject>();
 		appendFiles(files);
 		return files;
 	}
 	
 	private void appendFiles(Collection<JavaFileObject> coll) {
-		System.err.println("APPEND, I am: "+this.packageName);
 		coll.addAll(getEntries());
 		for (Map.Entry<String,CustomJavaFileFolder> e : subFolders.entrySet()) {
-			System.err.println("Appending subfolder: "+e.getKey());
 			e.getValue().appendFiles(coll);
 		}
 	}

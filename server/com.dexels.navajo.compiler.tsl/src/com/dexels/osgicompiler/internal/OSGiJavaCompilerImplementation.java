@@ -84,8 +84,8 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 
 			@Override
 			public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
-				logger.info("Problem in filemanager: "
-						+ diagnostic.getMessage(Locale.ENGLISH));
+//				logger.info("Problem in filemanager: "
+//						+ diagnostic.getMessage(Locale.ENGLISH));
 			}
 		};
 		fileManager = compiler.getStandardFileManager(compilerOutputListener,

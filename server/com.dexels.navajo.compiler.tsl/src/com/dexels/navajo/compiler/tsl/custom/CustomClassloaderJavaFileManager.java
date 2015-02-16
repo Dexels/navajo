@@ -91,7 +91,6 @@ public class CustomClassloaderJavaFileManager extends
 				return sjfo;
 			}
 		}
-		System.err.println("Getting class: "+className);
 		String binaryName = className.replaceAll("\\.", "/");
 		if (kind.equals(Kind.CLASS)) {
 			binaryName = binaryName + ".class";
@@ -147,19 +146,15 @@ public class CustomClassloaderJavaFileManager extends
 	@Override
 	public Iterable<JavaFileObject> list(Location location, String packageName,
 			Set<JavaFileObject.Kind> kinds, boolean recurse) throws IOException {
-		System.err.println("listing: "+packageName+" with recurse: "+recurse);
-		System.err.println("foldermap: "+folderMap.keySet());
 
 		if (location == StandardLocation.PLATFORM_CLASS_PATH) {
 			try {
 				Iterable<JavaFileObject> list = super.list(location, packageName, kinds,
 						recurse);
-				if(!list.iterator().hasNext()) {
-					System.err.println("found in platformpath: "+packageName+"> "+list);
-				}
 				return list;
 			} catch (Throwable e) {
-				e.printStackTrace();
+				System.err.println("Platform class loader failed while trying to load: "+packageName);
+//				e.printStackTrace();
 			}
 		} 
 		if (location == StandardLocation.CLASS_PATH
@@ -191,7 +186,6 @@ public class CustomClassloaderJavaFileManager extends
 			String name = packageName.substring(packageName.lastIndexOf('/')+1,packageName.length());
 			cjf = createPackageNode(packageName);
 
-			System.err.println("Parent: "+parentPath);
 			CustomJavaFileFolder parent = getNode(parentPath);
 			parent.addSubFolder(name,cjf);
 			return cjf;
@@ -199,7 +193,6 @@ public class CustomClassloaderJavaFileManager extends
 	}
 	
 	private CustomJavaFileFolder findNode(String origPackageName) {
-		System.err.println("Finding: "+origPackageName);
 		String packageName = origPackageName.replaceAll("\\.", "/");
 		String[] paths = packageName.split("/");
 		CustomJavaFileFolder cjf = folderMap.get(paths[0]);
