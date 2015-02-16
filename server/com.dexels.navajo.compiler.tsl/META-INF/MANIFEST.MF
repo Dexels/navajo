@@ -21,6 +21,7 @@ Import-Package: com.dexels.navajo.compiler,
  org.apache.commons.compress.archivers.zip;version="[1.5.0,2.0.0)",
  org.apache.commons.io,
  org.apache.commons.io.filefilter;version="2.4.0",
+ org.apache.commons.lang;version="2.6.0",
  org.osgi.framework;version="1.6.0",
  org.osgi.framework.wiring;version="1.0.0",
  org.osgi.service.cm;version="1.3.0",
@@ -29,10 +30,19 @@ Import-Package: com.dexels.navajo.compiler,
  org.slf4j;version="[1.6.1,1.8.0)",
  org.w3c.dom
 Bundle-Activator: navajotsl.Activator
-Service-Component: OSGI-INF/navajoTslCompiler.xml, OSGI-INF/javaCompiler.xml, OSGI-INF/javaCompilerComponent.xml, 
- OSGI-INF/bundleCreator.xml, OSGI-INF/navajo.repository.listener.xml,
- OSGI-INF/navajo.bundlecreator.queue.xml
-Bundle-ClassPath: .
+Service-Component: OSGI-INF/navajoTslCompiler.xml, 
+ OSGI-INF/navajo.compiler.tsl.java.internal.xml,
+ OSGI-INF/navajo.compiler.tsl.java.xml,
+ OSGI-INF/javaCompilerComponent.xml, 
+ OSGI-INF/bundleCreator.xml,
+ OSGI-INF/navajo.repository.listener.xml,
+ OSGI-INF/navajo.bundlecreator.queue.xml,
+ OSGI-INF/navajo.compiler.classloader.wrapped.xml,
+ OSGI-INF/navajo.compiler.refresh.xml
+Bundle-ClassPath: .,
+ lib/org.eclipse.jdt.core-3.11.0-SNAPSHOT-batch-compiler-src.jar,
+ lib/org.eclipse.jdt.core-3.11.0-SNAPSHOT-batch-compiler.jar,
+ lib/org.eclipse.jdt.compiler.tool-1.0.400-SNAPSHOT.jar
 Export-Package: com.dexels.navajo.compiler.tsl,com.dexels.navajo.compi
  ler.tsl.custom;uses:="javax.tools,org.osgi.framework,javax.lang.model
  .element",com.dexels.navajo.compiler.tsl.internal; uses:="org.osgi.se

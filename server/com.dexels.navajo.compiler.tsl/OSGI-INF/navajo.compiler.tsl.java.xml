@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.compiler.tsl.java">
+   <implementation class="com.dexels.osgicompiler.internal.WrappedCompiler"/>
+   <service>
+      <provide interface="com.dexels.osgicompiler.OSGiJavaCompiler"/>
+   </service>
+   <reference bind="setJavaCompiler" cardinality="0..1" interface="com.dexels.osgicompiler.OSGiJavaCompiler" name="OSGiJavaCompiler" policy="dynamic" target="(type=private)" unbind="clearJavaCompiler"/>
+   <property name="type" type="String" value="public"/>
+</scr:component>

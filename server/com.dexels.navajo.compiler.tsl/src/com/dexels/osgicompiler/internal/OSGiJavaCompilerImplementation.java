@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
@@ -32,53 +33,89 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.compiler.tsl.custom.CustomClassLoader;
 import com.dexels.navajo.compiler.tsl.custom.CustomClassloaderJavaFileManager;
 import com.dexels.navajo.compiler.tsl.custom.CustomJavaFileObject;
+import com.dexels.navajo.compiler.tsl.custom.SimpleClassLoaderFileManager;
 import com.dexels.osgicompiler.OSGiJavaCompiler;
 
 public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 
-	
 	private final static Logger logger = LoggerFactory
 			.getLogger(OSGiJavaCompilerImplementation.class);
 	private BundleContext context;
 	private StandardJavaFileManager fileManager;
-	private CustomClassloaderJavaFileManager customJavaFileManager;
+	private JavaFileManager customJavaFileManager;
 	private JavaCompiler compiler;
-//	private DiagnosticListener<JavaFileObject> compilerOutputListener;
+	// private DiagnosticListener<JavaFileObject> compilerOutputListener;
 	private ServiceRegistration<JavaFileManager> fileManagerRegistration;
 	private CustomClassLoader customClassLoader;
 	private ServiceRegistration<ClassLoader> customClassLoaderRegistration;
-	DiagnosticListener<JavaFileObject> compilerOutputListener;
-	
+
+	// DiagnosticListener<JavaFileObject> compilerOutputListener;
+
 	public OSGiJavaCompilerImplementation() {
-		
+
 	}
-	
-	public void activateCompiler(BundleContext context) {
+
+	public void activateCompiler(Map<String, Object> settings,
+			BundleContext context) {
 		logger.info("Activating java compiler.");
 		this.context = context;
-		compiler = ToolProvider.getSystemJavaCompiler();
-		compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
+		modified(settings, context);
+
+	}
+
+	public void modified(Map<String, Object> settings, BundleContext context) {
+		logger.info("Update settings");
+
+		if (fileManagerRegistration != null) {
+			fileManagerRegistration.unregister();
+		}
+		if (customClassLoaderRegistration != null) {
+			customClassLoaderRegistration.unregister();
+		}
+		if (customJavaFileManager != null) {
+			try {
+				customJavaFileManager.close();
+			} catch (IOException e) {
+				logger.error("Error: ", e);
+			}
+		}
+		compiler = getEclipseCompiler(); // ToolProvider.getSystemJavaCompiler();
+		DiagnosticListener<JavaFileObject> compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
 
 			@Override
 			public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
-				logger.info("Problem in filemanager: "+diagnostic.getMessage(Locale.ENGLISH));
+				logger.info("Problem in filemanager: "
+						+ diagnostic.getMessage(Locale.ENGLISH));
 			}
 		};
-		fileManager = compiler.getStandardFileManager(compilerOutputListener, null, null);
-		customJavaFileManager = new CustomClassloaderJavaFileManager(context, getClass().getClassLoader(), fileManager);
+		fileManager = compiler.getStandardFileManager(compilerOutputListener,
+				null, null);
+		customJavaFileManager = new CustomClassloaderJavaFileManager(context,
+				getClass().getClassLoader(), fileManager);
 		this.customClassLoader = new CustomClassLoader(customJavaFileManager);
-		this.fileManagerRegistration = this.context.registerService(JavaFileManager.class, customJavaFileManager, null);
-		
-//		(type=navajoScriptClassLoader)
+		this.fileManagerRegistration = this.context.registerService(
+				JavaFileManager.class, customJavaFileManager, null);
+
+		// (type=navajoScriptClassLoader)
 		Dictionary<String, String> nsc = new Hashtable<String, String>();
 		nsc.put("type", "navajoScriptClassLoader");
-		this.customClassLoaderRegistration = this.context.registerService(ClassLoader.class, customClassLoader, nsc);
+		this.customClassLoaderRegistration = this.context.registerService(
+				ClassLoader.class, customClassLoader, nsc);
+
+		if (settings != null && settings.get("refreshCount") != null) {
+			int refreshCount = (int) settings.get("refreshCount");
+			logger.info("Refresh done. Refresh # " + refreshCount);
+		} else {
+			logger.info("No refreshCount for compiler");
+		}
+
 	}
 
 	@SuppressWarnings("unchecked")
 	protected JavaCompiler getEclipseCompiler() {
 		try {
-			Class<? extends JavaCompiler> jc = (Class<? extends JavaCompiler>) Class.forName("org.eclipse.jdt.internal.compiler.tool.EclipseCompiler");
+			Class<? extends JavaCompiler> jc = (Class<? extends JavaCompiler>) Class
+					.forName("org.eclipse.jdt.internal.compiler.tool.EclipseCompiler");
 			JavaCompiler jj = jc.newInstance();
 			return jj;
 		} catch (Exception e) {
@@ -92,77 +129,89 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		try {
 			customJavaFileManager.close();
 		} catch (IOException e) {
-			logger.error("Error closing custom file manager",e);
+			logger.error("Error closing custom file manager", e);
 		}
-		if(fileManagerRegistration!=null) {
+		if (fileManagerRegistration != null) {
 			fileManagerRegistration.unregister();
 		}
-		if(customClassLoaderRegistration!=null) {
+		if (customClassLoaderRegistration != null) {
 			customClassLoaderRegistration.unregister();
 		}
+		this.compiler = null;
+		this.fileManager = null;
+		this.customClassLoader = null;
+		this.customClassLoaderRegistration = null;
 	}
-	
-	@Override
-	public byte[] compile(String className, InputStream source) throws IOException {
-		 JavaFileObject javaSource = getJavaSourceFileObject(className, source);
-		 Iterable<? extends JavaFileObject> fileObjects = Arrays.asList(javaSource);
-		 final Writer sw = new StringWriter();
-		 DiagnosticListener<JavaFileObject> compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
 
-				@Override
-				public void report(Diagnostic<? extends JavaFileObject> jfo) {
-					try {
-						sw.write("Compilation problem: "+jfo.getMessage(Locale.ENGLISH)+"\n");
-					} catch (IOException e) {
-						logger.error("Compilation problem: ",e);
-					}
-					
+	@Override
+	public byte[] compile(String className, InputStream source)
+			throws IOException {
+		JavaFileObject javaSource = getJavaSourceFileObject(className, source);
+		Iterable<? extends JavaFileObject> fileObjects = Arrays
+				.asList(javaSource);
+		final Writer sw = new StringWriter();
+		DiagnosticListener<JavaFileObject> compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
+
+			@Override
+			public void report(Diagnostic<? extends JavaFileObject> jfo) {
+				try {
+					sw.write("Compilation problem: "
+							+ jfo.getMessage(Locale.ENGLISH) + "\n");
+				} catch (IOException e) {
+					logger.error("Compilation problem: ", e);
 				}
-				
-			};
-		CompilationTask task = compiler.getTask(null, customJavaFileManager, compilerOutputListener,new ArrayList<String>(), null, fileObjects);
+
+			}
+
+		};
+		CompilationTask task = compiler.getTask(null, customJavaFileManager,
+				compilerOutputListener, new ArrayList<String>(), null,
+				fileObjects);
 		task.call();
-		CustomJavaFileObject jfo = (CustomJavaFileObject) customJavaFileManager.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, className, Kind.CLASS);
-		if(jfo==null) {
-			logger.error("Compilation failed: \n"+sw.toString());
+		CustomJavaFileObject jfo = (CustomJavaFileObject) customJavaFileManager
+				.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, className,
+						Kind.CLASS);
+		if (jfo == null) {
+			logger.error("Compilation failed: \n" + sw.toString());
 			return null;
 		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		IOUtils.copy(jfo.openInputStream(),baos);
-		
+		IOUtils.copy(jfo.openInputStream(), baos);
+
 		return baos.toByteArray();
 	}
-	
-//	private void test() throws IOException {
-//		byte[] jfo = compile("mathtest/Calculator",getExampleCode());
-//		if (jfo==null) {
-//			logger.error("compilation failed.");
-//		} else {
-//			logger.info("compilation ok: "+jfo.length);
-//		}
-//	}
 
-//	private InputStream getExampleCode() {
-//        String example = 									
-//        		"package mathtest;\n"+
-//                "public class Calculator { \n"
-//               + "  public void testAdd() { "
-//               + "    System.out.println(200+300); \n"
-//               + "    org.apache.commons.io.IOUtils aaaa; \n"
-//             + "   } \n"
-//               + "  public static void main(String[] args) { \n"
-//               + "    Calculator cal = new Calculator(); \n"
-//               + "    cal.testAdd(); \n"
-//               + "  } " + "} ";	
-//        return new ByteArrayInputStream(example.getBytes());
-//	}
-	
-    private  JavaFileObject getJavaSourceFileObject(String className, InputStream contents) throws IOException
-    {
-        JavaFileObject so = null;
-        className = className.replace("\\", "/");
-        so = new CustomJavaFileObject(className+ Kind.SOURCE.extension, URI.create("file:///" + className.replace('.', '/')
-                    + Kind.SOURCE.extension), contents, Kind.SOURCE);
-        return so;
-    }
+	// private void test() throws IOException {
+	// byte[] jfo = compile("mathtest/Calculator",getExampleCode());
+	// if (jfo==null) {
+	// logger.error("compilation failed.");
+	// } else {
+	// logger.info("compilation ok: "+jfo.length);
+	// }
+	// }
+
+	// private InputStream getExampleCode() {
+	// String example =
+	// "package mathtest;\n"+
+	// "public class Calculator { \n"
+	// + "  public void testAdd() { "
+	// + "    System.out.println(200+300); \n"
+	// + "    org.apache.commons.io.IOUtils aaaa; \n"
+	// + "   } \n"
+	// + "  public static void main(String[] args) { \n"
+	// + "    Calculator cal = new Calculator(); \n"
+	// + "    cal.testAdd(); \n"
+	// + "  } " + "} ";
+	// return new ByteArrayInputStream(example.getBytes());
+	// }
+
+	private JavaFileObject getJavaSourceFileObject(String className,
+			InputStream contents) throws IOException {
+		JavaFileObject so = null;
+		className = className.replace("\\", "/");
+		so = new CustomJavaFileObject(className + Kind.SOURCE.extension,
+				URI.create("file:///" + className.replace('.', '/')
+						+ Kind.SOURCE.extension), contents, Kind.SOURCE);
+		return so;
+	}
 }
