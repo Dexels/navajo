@@ -90,7 +90,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		if (name.equals("tipiCodeBase")) {
 			try {
 				tipiCodeBase = (String) value;
-				stc.getContext().setTipiResourceLoader(tipiCodeBase);
+				stc.getContext().setTipiResourceLoader(tipiCodeBase, null);
 			} catch (MalformedURLException e) {
 				logger.error("Error: ",e);
 			}
@@ -98,7 +98,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		if (name.equals("resourceCodeBase")) {
 			try {
 				resourceCodeBase = (String) value;
-				stc.getContext().setGenericResourceLoader(resourceCodeBase);
+				stc.getContext().setGenericResourceLoader(resourceCodeBase, null);
 			} catch (MalformedURLException e) {
 				logger.error("Error: ",e);
 			}

@@ -51,9 +51,6 @@ public class GeneralCacheManager implements CacheManager {
 
 	@Override
 	public boolean isUpToDate(String location) throws IOException {
-		if("css/club/clubDetailsWindow_nl.css".equals(location)) {
-			System.err.println(">>>");
-		}
 		if(cacheValidator.isLocalValid(location)) {
 			if (!hasLocal(location)) {
 				return false;

@@ -285,7 +285,7 @@ public class EchoTipiContext extends TipiContext {
 	}
 
 	// TODO What's different?
-	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
+	public void setTipiResourceLoader(String tipiCodeBase, String resourceCacheLocation) throws MalformedURLException {
 		if (tipiCodeBase != null) {
 			if (tipiCodeBase.indexOf("http:/") != -1) {
 				setTipiResourceLoader(new HttpResourceLoader(tipiCodeBase,"tipi"));

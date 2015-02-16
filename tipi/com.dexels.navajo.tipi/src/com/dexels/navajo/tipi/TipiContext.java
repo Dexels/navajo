@@ -60,7 +60,6 @@ import com.dexels.navajo.tipi.classdef.ClassManager;
 import com.dexels.navajo.tipi.classdef.IClassManager;
 import com.dexels.navajo.tipi.components.core.ShutdownListener;
 import com.dexels.navajo.tipi.components.core.ThreadActivityListener;
-import com.dexels.navajo.tipi.components.core.TipiComponentImpl;
 import com.dexels.navajo.tipi.components.core.TipiThread;
 import com.dexels.navajo.tipi.components.core.TipiThreadPool;
 import com.dexels.navajo.tipi.connectors.HttpNavajoConnector;
@@ -2313,18 +2312,18 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
     }
 
-    public void setGenericResourceLoader(String resourceCodeBase) throws MalformedURLException {
+    public void setGenericResourceLoader(String resourceCodeBase, String resourceCacheLocation) throws MalformedURLException {
         if (resourceCodeBase != null) {
-            setGenericResourceLoader(createResourceLoader(resourceCodeBase, "generic"));
+            setGenericResourceLoader(createResourceLoader(resourceCodeBase, resourceCacheLocation, "generic"));
         } else {
             // BEWARE: The trailing slash is important!
             setGenericResourceLoader(createDefaultResourceLoader("resource/", useCache()));
         }
     }
 
-    public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
+    public void setTipiResourceLoader(String tipiCodeBase, String resourceCacheLocation) throws MalformedURLException {
         if (tipiCodeBase != null) {
-            setTipiResourceLoader(createResourceLoader(tipiCodeBase, "tipi"));
+            setTipiResourceLoader(createResourceLoader(tipiCodeBase, resourceCacheLocation, "tipi"));
         } else {
             // nothing supplied. Use a file loader with fallback to classloader.
             // BEWARE: The trailing slash is important!
@@ -2333,13 +2332,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         }
     }
 
-    private TipiResourceLoader createResourceLoader(String codebase, String id) throws MalformedURLException {
+    private TipiResourceLoader createResourceLoader(String codebase, String resourceCacheLocation, String id) throws MalformedURLException {
         if (codebase.indexOf("http:/") != -1 || codebase.indexOf("https:/") != -1 || codebase.indexOf("file:/") != -1) {
-            if (useCache()) {
-                return new CachedHttpResourceLoader(id, new File("/Users/frank/tipicache/" + id), new URL(codebase));
-            } else {
-                return new HttpResourceLoader(codebase, id);
-            }
+            if (useCache() && resourceCacheLocation != null ) {
+                try {
+                    return new CachedHttpResourceLoader(id, new File(resourceCacheLocation, id), new URL(codebase));
+                } catch (IOException e) {
+                    logger.error("Error {} on creating CachedHttpResourceLoader - fallback to regular HtppResourceLoader ", e);
+                } 
+            } 
+            return new HttpResourceLoader(codebase, id);
         } else {
             return new FileResourceLoader(new File(codebase));
         }
@@ -2360,9 +2362,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     // }
     // }
     //
-    // private File getCacheDir() {
-    // return new File("/Users/frank/tipicache");
-    // }
 
     /**
      * @return
@@ -2398,8 +2397,14 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if (resourceCodeBase == null) {
             resourceCodeBase = System.getProperty("resourceCodeBase");
         }
-        setTipiResourceLoader(tipiCodeBase);
-        setGenericResourceLoader(resourceCodeBase);
+        
+        String resourceCacheLocation = properties.get("resourceCacheLocation");
+        if (resourceCacheLocation == null) {
+            resourceCacheLocation = System.getProperty("resourceCacheLocation");
+        }
+        
+        setTipiResourceLoader(tipiCodeBase, resourceCacheLocation);
+        setGenericResourceLoader(resourceCodeBase, resourceCacheLocation);
 
         updateValidationProperties();
 
