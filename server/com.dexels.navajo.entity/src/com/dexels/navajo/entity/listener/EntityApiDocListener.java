@@ -283,7 +283,7 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 			return "Create ";
 		}
 		if (op.equals(Operation.PUT)) {
-			return "Update";
+			return "Update ";
 		}
 		if (op.equals(Operation.DELETE)) {
 			return "Delete ";
