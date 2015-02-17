@@ -13,38 +13,38 @@ public class RepoChangeListener implements EventHandler {
 
 	@SuppressWarnings("unused")
 	private BundleCreator bundleCreator = null;
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(RepoChangeListener.class);
-	
+
 	public void setBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = bundleCreator;
 	}
 
 	/**
 	 * 
-	 * @param bundleCreator the bundle creator to clear
+	 * @param bundleCreator
+	 *            the bundle creator to clear
 	 */
 	public void clearBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = null;
 	}
 
-	
 	@Override
 	public void handleEvent(Event e) {
-		logger.info("EVENT FOUND! "+e);
+		logger.info("EVENT FOUND! " + e);
 		for (String p : e.getPropertyNames()) {
 			final Object value = e.getProperty(p);
-			if(value==null) {
+			if (value == null) {
 				continue;
 			}
-			if(value instanceof List) {
-				if (((List<?>)value).isEmpty()) {
+			if (value instanceof List) {
+				if (((List<?>) value).isEmpty()) {
 					continue;
 				}
 			}
-			logger.info("Name: "+p+" value: "+value);
-			
+			logger.info("Name: " + p + " value: " + value);
+
 		}
 	}
 
