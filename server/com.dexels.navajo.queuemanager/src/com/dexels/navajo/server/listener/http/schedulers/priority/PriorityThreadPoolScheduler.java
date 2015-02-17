@@ -312,6 +312,11 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		
 			return;
 		}
+		
+		if (pool.getActiveRequestCount() >= pool.getMaximumActiveRequestCount()) {
+            logger.warn("All {} threads in {} busy - let's queue! {} threads ahead of us",
+                    pool.getMaximumActiveRequestCount(), pool.getId(), pool.getQueueSize());
+		}
 		if( pool.getQueueSize() >= maxbacklog) {
 			run.abort("Server too busy.");
 			return;

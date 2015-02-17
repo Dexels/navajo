@@ -254,7 +254,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 
 	private void callService(String url, Navajo n, final NavajoResponseHandler continuation) throws IOException, NavajoException {
 
-		logger.debug("Calling service: " + n.getHeader().getRPCName());
+		logger.info("Calling service: {} at {} ", n.getHeader().getRPCName(), url);
 		final ContentExchange exchange = new ContentExchange() {
 
 			

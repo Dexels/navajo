@@ -50,8 +50,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	private NavajoIOConfig navajoIOConfig = null;
 	private EventAdmin eventAdmin = null;
-	private final static Logger logger = LoggerFactory
-			.getLogger(BundleCreatorComponent.class);
+	private final static Logger logger = LoggerFactory.getLogger(BundleCreatorComponent.class);
 
 	private ScriptCompiler scriptCompiler;
 	private JavaCompiler javaCompiler;
