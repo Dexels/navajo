@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" errorhandler="error" xsi:noNamespaceSchemaLocation="tipi.xsd">
+    <d.window name="initglobalmethods" visible="false" applyCss="true">
+        <!-- *** THIS FILE ONLY CONTAINS globalmethods which could/should be in init.xml *** -->
+        <l.mig grid="fill, ins 0">
+            <c.panel id="main" constraint="Center, grow">
+                <l.mig grid="fill, ins 0">
+                    <!-- Hidden message labels -->
+                    <c.label id="messageSelectedMultipleClubMembershipActivities" cssClass="'messageSelectedMultipleClubMembershipActivities'" constraint="hidemode 3" visible="true"/>
+                    <!-- The classes are set right after the call, so the css doesn't generate errors about missing properties -->
+                    <c.label id="messageActivityBlockedByClub" cssClass="''" constraint="hidemode 3" visible="true"/>
+                    <c.label id="messageActivityActiveByClub" cssClass="''" constraint="hidemode 3" visible="true"/>
+                    <c.label id="messageHasFinancialTransferBlockOtherClub" cssClass="''" constraint="hidemode 3" visible="true"/>
+                </l.mig>
+            </c.panel>
+        </l.mig>
+        
+
+        <!-- This method can be used for opening the person window -->
+        <!-- When the person is not found, a showInfo with a message from the css file will be shown -->
+        <!-- In order to use this, there are a few globals which can be set -->
+        <!-- 1. PersonId (internal id) -->
+        <!-- 2. RoleId (deprecated?) -->
+        <!-- 3. lastSearchResult (this one is needed to set certain things in the personwindow) -->
+        <!-- 4. isMemberSearchResult (deprecated?) -->
+        <!-- 5. PersonType (deprecated?) -->
+        <!-- 6. PersonExternalId (used for searching the internal id when missing) -->
+        <globalmethod name="OpenPersonWindow">
+            <!-- First check if we need to get the internal id -->
+            <block condition="IsEmpty( {global:/PersonId} ) AND !IsEmpty( {global:/PersonExternalId} )">
+                <callService service="'vla/relation/InitQueryPerson'"/>
+                <setValue to="{propertyref:/vla/relation/InitQueryPerson:/MemberData/PersonId}" from="null"/>
+                <setValue to="{propertyref:/vla/relation/InitQueryPerson:/MemberData/ExternalId}" from="{global:/PersonExternalId}"/>
+                <callService service="'vla/relation/entity/ProcessQueryPersonExists'" input="{navajo:/vla/relation/InitQueryPerson}" breakOnError="true"/>
+                <!-- Check if there's a condition error message. If so, then show message. -->
+                <block condition="{property:/vla/relation/entity/ProcessQueryPersonExists:/Person/PersonExists} == false">
+                    <setValue to="{globalref:/PersonId}" from="null"/>
+                    <setValue to="{globalref:/RoleId}" from="null"/>
+                    <showInfo text="{attribute:/init/toolbar/messagePersonNotFound:text}"/>
+                </block>
+
+                <block condition="{property:/vla/relation/entity/ProcessQueryPersonExists:/Person/PersonExists} == true">
+                    <!-- Now get the data -->
+                    <callService service="'vla/relation/ProcessQueryPerson'" input="{navajo:/vla/relation/InitQueryPerson}" breakOnError="true"/>
+                    <setValue to="{globalref:/PersonId}" from="{property:/vla/relation/ProcessQueryPerson:/MemberData/PersonId}"/>
+                    <setValue to="{globalref:/RoleId}" from="{property:/vla/relation/ProcessQueryPerson:/MemberData/RelationType}"/>
+                </block>
+                
+                <!-- Reset the external id to prevent another search -->
+                <setValue to="{globalref:/PersonExternalId}" from="null"/>
+            </block>
+            <!-- Now set the values in the InitMessageStoreData -->
+            <block condition="!IsEmpty( {global:/PersonId} )">
+                <setValue to="{propertyref:/vla/InitMessageStoreData:/QueryUpdateMember/PersonId}" from="{global:/PersonId}"/>
+                <setValue to="{propertyref:/vla/InitMessageStoreData:/QueryUpdateMember/RoleId}" from="{global:/RoleId}"/>
+            </block>
+            <!-- Finally open the window, but check if necessary globals are filled -->
+            <block condition="!IsEmpty( {global:/PersonId} )">
+                <setValue to="{globalref:/OpenPersonWindow}" from="false"/>
+                <instantiate id="'personWindow'" location="{component://init/desktop}" name="'personWindow'"/>
+            </block>
+        </globalmethod>
+
+
+        <!-- Method in which the selected sportactivities are handled -->
+        <!-- Currently used in insertActivityWindow and personInsertWizardDialog -->
+        <globalmethod name="SaveSports">
+            <setValue to="{globalref:/OpenPersonWindow}" from="false"/>
+            <!-- Set local var to save the data by default -->
+            <setValue to="{globalref:/SaveSportsData}" from="true"/>
+
+            <!-- Store the selected messages and check the message size -->
+            <block condition="{global:/SaveSportsReferringScreen} == 'personInsertWizardDialog'">
+                <setValue to="{globalref:/SaveSportsSizeSelectedUnionMessages}" from="Size( {attribute://init/desktop/personInsertWizardDialog/mainPanel/panelInsertSport/sportPanel/newUnionActivityTable:selectedMessages} )"/>
+                <setValue to="{globalref:/SaveSportsSizeSelectedClubMessages}" from="Size( {attribute://init/desktop/personInsertWizardDialog/mainPanel/panelInsertSport/sportPanel/newClubActivityTable:selectedMessages} )"/>
+                <setValue to="{globalref:/ChosenMemberType}" from="{property:/vla/relation/InitInsertPerson:/MemberData/Type}"/>
+                <block condition="{global:/SaveSportsSizeSelectedUnionMessages} != 0">
+                    <injectMessage service="'SaveSportsSelectedUnionMessages'" message="{attribute://init/desktop/personInsertWizardDialog/mainPanel/panelInsertSport/sportPanel/newUnionActivityTable:selectedMessages}" />
+                </block>
+                <block condition="{global:/SaveSportsSizeSelectedClubMessages} != 0">
+                    <injectMessage service="'SaveSportsSelectedClubMessages'" message="{attribute://init/desktop/personInsertWizardDialog/mainPanel/panelInsertSport/sportPanel/newClubActivityTable:selectedMessages}" />
+                </block>
+                <block condition="{global:/SaveSportsSizeSelectedUnionMessages} != 0 OR {global:/SaveSportsSizeSelectedClubMessages} != 0">
+                    <injectNavajo service="'MemberData'" navajo="{navajo:/vla/relation/InitInsertPerson}"/>
+                </block>
+            </block>
+            <block condition="{global:/SaveSportsReferringScreen} == 'insertActivityWindow'">
+                <setValue to="{globalref:/SaveSportsSizeSelectedUnionMessages}" from="Size( {attribute://init/desktop/insertActivityWindow/bgp/activitiesPanel/newUnionActivityTable:selectedMessages} )"/>
+                <setValue to="{globalref:/SaveSportsSizeSelectedClubMessages}" from="Size( {attribute://init/desktop/insertActivityWindow/bgp/activitiesPanel/newClubActivityTable:selectedMessages} )"/>
+                <setValue to="{globalref:/ChosenMemberType}" from="{property:/vla/relation/ProcessQueryPerson:/MemberData/RelationType}"/>
+                <block condition="{global:/SaveSportsSizeSelectedUnionMessages} != 0">
+                    <injectMessage service="'SaveSportsSelectedUnionMessages'" message="{attribute://init/desktop/insertActivityWindow/bgp/activitiesPanel/newUnionActivityTable:selectedMessages}" />
+                </block>
+                <block condition="{global:/SaveSportsSizeSelectedClubMessages} != 0">
+                    <injectMessage service="'SaveSportsSelectedClubMessages'" message="{attribute://init/desktop/insertActivityWindow/bgp/activitiesPanel/newClubActivityTable:selectedMessages}" />
+                </block>
+                <block condition="{global:/SaveSportsSizeSelectedUnionMessages} != 0 OR {global:/SaveSportsSizeSelectedClubMessages} != 0">
+                    <injectNavajo service="'MemberData'" navajo="{navajo:/vla/relation/ProcessQueryPerson}"/>
+                </block>
+            </block>
+
+            <block condition="{global:/SaveSportsSizeSelectedUnionMessages} != 0 AND {global:/ChosenMemberType} == 'KERNELMEMBER'">
+                <!-- Check if transferrejectreason check needs to be performed -->
+                <!-- If it is required, then it's not allowed to have multiple items selected -->
+                <!-- Show message when so -->
+                <callService service="'vla/relation/sport/PerformTransferRejectReasonCheck'" input="{navajo:/vla/InitMessageStoreData}"/>
+                <setValue to="{globalref:/TransferRejectReasonCheckRequired}" from="{property:/vla/relation/sport/PerformTransferRejectReasonCheck:/TransferReject/CheckTransferRejectReason}"/>
+                <block condition="{global:/TransferRejectReasonCheckRequired} AND {global:/SaveSportsSizeSelectedUnionMessages} &gt; 1">
+                    <setValue to="{globalref:/SaveSportsData}" from="false"/>
+                    <showInfo text="{attribute://init/desktop/initglobalmethods/main/messageSelectedMultipleClubMembershipActivities:text}"/>
+                </block>
+                <!-- I guess we can try to save it -->
+                <block condition="!{global:/TransferRejectReasonCheckRequired} OR ( {global:/TransferRejectReasonCheckRequired} AND {global:/SaveSportsSizeSelectedUnionMessages} == 1 )">
+                    <!-- Perform RejectTransfer check ? -->
+                    <block condition="{global:/TransferRejectReasonCheckRequired}">
+                        <callService service="'vla/sportlinkkernel/member/ProcessCheckTransferRejectReason'" input="{navajo:/SaveSportsSelectedUnionMessages}" breakOnError="true" />
+                        <!-- Set the correct css classes so the correct message will be displayed -->
+                        <label.attribute path="{component://init/desktop/initglobalmethods/main/messageActivityBlockedByClub}" cssClass="'messageActivityBlockedByClub'"/>
+                        <label.attribute path="{component://init/desktop/initglobalmethods/main/messageActivityActiveByClub}" cssClass="'messageActivityActiveByClub'"/>
+                        <applyCss component="{component://init/desktop/initglobalmethods/main}"/>
+
+                        <block condition="!IsNull( {propertyref:/vla/sportlinkkernel/member/ProcessCheckTransferRejectReason:/TransferRequired/PreviousClub} )">
+                            <setValue to="{globalref:/SaveSportsData}" from="false"/>
+                            <showInfo text="{attribute://init/desktop/initglobalmethods/main/messageActivityBlockedByClub:text}"/>
+                        </block>
+                        <block condition="!IsNull( {propertyref:/vla/sportlinkkernel/member/ProcessCheckTransferRejectReason:/AlreadyPlayer/PreviousClub} )">
+                            <setValue to="{globalref:/SaveSportsData}" from="false"/>
+                            <showInfo text="{attribute://init/desktop/initglobalmethods/main/messageActivityActiveByClub:text}"/>
+                        </block>
+                    </block>
+                </block>
+            </block>
+
+            <!-- Update -->
+            <block condition="{global:/SaveSportsData} AND ( {global:/SaveSportsSizeSelectedUnionMessages} != 0 OR {global:/SaveSportsSizeSelectedClubMessages} != 0 )">
+                <callService service="'vla/relation/clubmembershipactivity/ProcessMergeNewActivities'" input="MergeNavajo( {navajo:/vla/InitMessageStoreData}, {navajo:/MemberData} )"/>
+                <block condition="( {global:/SaveSportsSizeSelectedUnionMessages} != 0 AND {global:/SaveSportsSizeSelectedClubMessages} != 0 )">
+                    <!-- Call the Merge webservice, because we need to this more than once -->
+                    <callService service="'vla/relation/clubmembershipactivity/ProcessMergeNewActivities'" input="MergeNavajo( {navajo:/SaveSportsSelectedUnionMessages}, {navajo:/vla/relation/clubmembershipactivity/ProcessMergeNewActivities} )"/>
+                    <callService service="'vla/relation/clubmembershipactivity/ProcessMergeNewActivities'" input="MergeNavajo( {navajo:/SaveSportsSelectedClubMessages}, {navajo:/vla/relation/clubmembershipactivity/ProcessMergeNewActivities} )"/>
+                </block>
+                <block condition="( {global:/SaveSportsSizeSelectedUnionMessages} != 0 AND {global:/SaveSportsSizeSelectedClubMessages} == 0 )">
+                    <callService service="'vla/relation/clubmembershipactivity/ProcessMergeNewActivities'" input="MergeNavajo( {navajo:/SaveSportsSelectedUnionMessages}, {navajo:/vla/relation/clubmembershipactivity/ProcessMergeNewActivities} )"/>
+                </block>
+                <block condition="( {global:/SaveSportsSizeSelectedUnionMessages} == 0 AND {global:/SaveSportsSizeSelectedClubMessages} != 0 )">
+                    <callService service="'vla/relation/clubmembershipactivity/ProcessMergeNewActivities'" input="MergeNavajo( {navajo:/SaveSportsSelectedClubMessages}, {navajo:/vla/relation/clubmembershipactivity/ProcessMergeNewActivities} )"/>
+                </block>
+                
+                <!-- Check if a (financial) transfer block is present -->
+                <callService service="'vla/sportlinkkernel/member/transfer/ProcessCheckTransferClubMembershipActivities'" input="{navajo:/SaveSportsSelectedUnionMessages},"/>
+                <block condition="{property:/vla/sportlinkkernel/member/transfer/ProcessCheckTransferClubMembershipActivities:/Result/HasFinancialTransferBlockOtherClub} == true">
+                    <setValue to="{globalref:/SaveSportsData}" from="false"/>
+                    <label.attribute path="{component://init/desktop/initglobalmethods/main/messageHasFinancialTransferBlockOtherClub}" cssClass="'messageHasFinancialTransferBlockOtherClub'"/>
+                    <applyCss component="{component://init/desktop/initglobalmethods/main}"/>
+                    <showInfo text="{attribute://init/desktop/initglobalmethods/main/messageHasFinancialTransferBlockOtherClub:text}"/>
+                </block>
+                
+                <!-- Finally call the real action ? -->
+                <block condition="{global:/SaveSportsData} == true">
+                    <callService service="'vla/relation/clubmembershipactivity/ProcessInsertClubMembershipActivities'" input="{navajo:/vla/relation/clubmembershipactivity/ProcessMergeNewActivities}"/>
+                    <!-- Check if a conditionerror has occured, because that would stop the personwindow from opening -->
+                    <block condition="!IsNull( {property:/vla/relation/clubmembershipactivity/ProcessInsertClubMembershipActivities:/ConditionErrors@0/Id} )">
+                        <setValue to="{globalref:/OpenPersonWindow}" from="false"/>
+                        <setValue to="{globalref:/SaveSportsData}" from="false"/>
+                    </block>
+                </block>
+            </block>
+            <!-- Reset vars and messages -->
+            <unloadNavajo service="'SaveSportsSelectedUnionMessages'"/>
+            <unloadNavajo service="'SaveSportsSelectedClubMessages'"/>
+            <unloadNavajo service="'MemberData'"/>
+            <setValue to="{globalref:/SaveSportsSizeSelectedUnionMessages}" from="0"/>
+            <setValue to="{globalref:/SaveSportsSizeSelectedClubMessages}" from="0"/>
+            <setValue to="{globalref:/OpenPersonWindow}" from="{global:/SaveSportsData}"/>
+        </globalmethod>
+
+
+        <!-- When appropriate, this method can be called to insert the selected members into the workingset -->
+        <!-- The tablename is important here. That is why i made it a global -->
+        <globalmethod name="AddMembersToWorkingSet">
+            <block condition="!IsEmpty( {global:/TableSourceForWorkingSet} )">
+                <setValue to="{globalref:/WorkingSetSelectedIndex}" from="ToValue( GetAttribute( {global:/TableSourceForWorkingSet}, 'selectedIndex' ) )"/>
+                <setValue to="{globalref:/WorkingSetSelectedMessages}" from="ToValue( GetAttribute( {global:/TableSourceForWorkingSet}, 'selectedMessages' ) )"/>
+
+                <block condition="{global:/WorkingSetSelectedIndex} == -1" >
+                    <showInfo text="'messageNoRowSelected'"/>
+                </block>
+                <block condition="{global:/WorkingSetSelectedIndex} != -1" >
+                    <!-- Start with a dialog for the user to choose the desired workingset -->
+                    <!-- In this dialog the globalmethod AddMembersToWorkingSetAction will be called (see below for the code) -->
+                    <instantiate name="'workingSetSelectionDialog'" id="'workingSetSelectionDialog'" location="{component://init/desktop}" force="true"/>
+                </block>
+            </block>
+        </globalmethod>
+        <!-- This the action part, called from within the instantiated dialog -->
+        <globalmethod name="AddMembersToWorkingSetAction">
+            <block condition="!{global:/HasWorkingSetAccess}">
+                <showInfo text="'messageNoModuleRights'"/>
+            </block>
+            <block condition="{global:/HasWorkingSetAccess} AND {global:/IsWorkingSetAccessReadOnly}">
+                <showInfo text="'messageReadOnlyRights'"/>
+            </block>
+            <block condition="{global:/HasWorkingSetAccess} AND !{global:/IsWorkingSetAccessReadOnly}">
+                <block condition="IsNull( {component://init/desktop/workingSetWindow} )">
+                    <instantiate name="'workingSetWindow'" id="'workingSetWindow'" location="{component://init/desktop}" force="true" />
+                </block>
+                <block condition="Size( {global:/WorkingSetSelectedMessages} ) != 0">
+                    <injectMessage message="{global:/WorkingSetSelectedMessages}" service="'SelectedMessages'" />
+                    <callService service="'vla/workingset/ProcessInsertPersonIntoWorkingSet'" input="MergeNavajo( {navajo:/SelectedMessages}, {navajo:/vla/InitMessageStoreData} )" />
+                </block>
+                <callService service="'vla/workingset/ProcessQueryWorkingSet'" input="{navajo:/vla/InitMessageStoreData}"/>
+                <!-- reset values to null -->
+                <setValue to="{globalref:/TableSourceForWorkingSet}" from="null"/>
+                <setValue to="{globalref:/WorkingSetSelectedIndex}" from="null"/>
+                <setValue to="{globalref:/WorkingSetSelectedMessages}" from="null"/>
+             </block>
+        </globalmethod>
+
+        <!-- Set the (new) active workingset id. This will be used for inserting through the searchresult windows. -->
+        <globalmethod name="SetActiveWorkingSetId">
+            <setValue to="{propertyref:/vla/InitMessageStoreData:/UserData/ActiveWorkingSetId}" from="{global:/ActiveWorkingSetId}"/>
+            <setValue to="{propertyref:/vla/InitMessageStoreData:/UserData/ActiveWorkingSetId}" from="{global:/ActiveWorkingSetId}"/>
+        </globalmethod>
+        
+        <!-- Globalmethod to open the email window, because it useless to copy/paste the code everywhere -->
+        <globalmethod name="OpenSendMultipleEmailWindow">
+            <block condition="!IsEmpty( {global:/SourceComponentMultipleEmail} )">
+                <injectMessage message="{global:/SourceComponentMultipleEmail}" service="'TempResultMultipleEmail'" />
+                <instantiate id="'sendMultipleEmailsDialog'" location="{component://init/desktop}" name="'sendMultipleEmailsDialog'"/>
+                <callService service="'vla/InitSendMultipleEmails'" input="{navajo:/TempResultMultipleEmail}"/>
+                <setValue to="{globalref:/SourceComponentMultipleEmail}" from="null"/>
+            </block>
+        </globalmethod>
+        
+        <!-- Format accountnumber -->
+        <!-- This means filter out spaces, dots and whatever we might think of -->
+        <!-- Return the new value in the same global as it came in with -->
+        <globalmethod name="FormatAccountNumber">
+            <setValue to="{globalref:/AccountNumber}" from="StringFunction('replaceAll', {global:/AccountNumber}, '\.', '')"/>
+            <setValue to="{globalref:/AccountNumber}" from="StringFunction('replaceAll', {global:/AccountNumber}, ' ', '')"/>
+            <!-- When numeric, then remove leading 0 and make sure it's returned as a string -->
+            <block condition="IsNumeric({global:/AccountNumber})">
+                <setValue to="{globalref:/AccountNumber}" from="ToString(ToInteger({global:/AccountNumber}))"/>
+            </block>
+        </globalmethod>
+
+        <!-- Method for opening a wait dialog -->
+        <globalmethod name="OpenRetrievingDataWindow">
+            <block condition="!IsNull( {component://init/desktop/showRetrievingDataWindow} )">
+                <window.attribute path="{component://init/desktop/showRetrievingDataWindow}" visible="true"/>
+            </block>
+            <block condition="IsNull( {component://init/desktop/showRetrievingDataWindow} )">
+                <instantiate id="'showRetrievingDataWindow'" location="{component://init/desktop}" name="'showRetrievingDataWindow'" force="true"/>
+            </block>
+        </globalmethod>
+
+        <!-- Method for closing a wait dialog -->
+        <globalmethod name="CloseRetrievingDataWindow">
+            <block condition="!IsNull( {component://init/desktop/showRetrievingDataWindow} )">
+                <window.attribute path="{component://init/desktop/showRetrievingDataWindow}" visible="false"/>
+            </block>
+        </globalmethod>
+
+        <!-- Set the correct synchronize counter -->
+        <globalmethod name="SetSynchronizationButtonIcon">
+            <block condition="{global:/HasClubMembers} AND {global:/HasSync}">
+                <callService service="'vla/syncunion/ProcessQuerySynchronizationNotificationsExistence'" input="{navajo:/vla/InitMessageStoreData}"/>
+                <block condition="{property:/vla/syncunion/ProcessQuerySynchronizationNotificationsExistence:/Result/NotificationsExist} == false" >
+                    <desktopbutton.attribute path="{component://init/toolbar/synchronizationInfoButton}" icon="{resource:/icons/24/exchange.png}"/>    
+                </block>
+                <block condition="{property:/vla/syncunion/ProcessQuerySynchronizationNotificationsExistence:/Result/NotificationsExist} == true" >
+                    <block condition="{property:/vla/syncunion/ProcessQuerySynchronizationNotificationsExistence:/Result/NotificationCount} == 1" >
+                        <desktopbutton.attribute path="{component://init/toolbar/synchronizationInfoButton}" icon="{resource:/icons/24/exchange_1.png}"/>    
+                    </block>
+                    <block condition="{property:/vla/syncunion/ProcessQuerySynchronizationNotificationsExistence:/Result/NotificationCount} == 2" >
+                        <desktopbutton.attribute path="{component://init/toolbar/synchronizationInfoButton}" icon="{resource:/icons/24/exchange_2.png}"/>    
+                    </block>
+                    <block condition="{property:/vla/syncunion/ProcessQuerySynchronizationNotificationsExistence:/Result/NotificationCount} == 3" >
+                        <desktopbutton.attribute path="{component://init/toolbar/synchronizationInfoButton}" icon="{resource:/icons/24/exchange_3.png}"/>    
+                    </block>
+                    <block condition="{property:/vla/syncunion/ProcessQuerySynchronizationNotificationsExistence:/Result/NotificationCount} == 4" >
+                        <desktopbutton.attribute path="{component://init/toolbar/synchronizationInfoButton}" icon="{resource:/icons/24/exchange_4.png}"/>    
+                    </block>
+                    <block condition="{property:/vla/syncunion/ProcessQuerySynchronizationNotificationsExistence:/Result/NotificationCount} == 5" >
+                        <desktopbutton.attribute path="{component://init/toolbar/synchronizationInfoButton}" icon="{resource:/icons/24/exchange_5.png}"/>    
+                    </block>
+                    <block condition="{property:/vla/syncunion/ProcessQuerySynchronizationNotificationsExistence:/Result/NotificationCount} == 6" >
+                        <desktopbutton.attribute path="{component://init/toolbar/synchronizationInfoButton}" icon="{resource:/icons/24/exchange_6.png}"/>    
+                    </block>
+                    <block condition="{property:/vla/syncunion/ProcessQuerySynchronizationNotificationsExistence:/Result/NotificationCount} == 7" >
+                        <desktopbutton.attribute path="{component://init/toolbar/synchronizationInfoButton}" icon="{resource:/icons/24/exchange_7.png}"/>    
+                    </block>
+                    <block condition="{property:/vla/syncunion/ProcessQuerySynchronizationNotificationsExistence:/Result/NotificationCount} == 8" >
+                        <desktopbutton.attribute path="{component://init/toolbar/synchronizationInfoButton}" icon="{resource:/icons/24/exchange_8.png}"/>    
+                    </block>
+                    <block condition="{property:/vla/syncunion/ProcessQuerySynchronizationNotificationsExistence:/Result/NotificationCount} == 9" >
+                        <desktopbutton.attribute path="{component://init/toolbar/synchronizationInfoButton}" icon="{resource:/icons/24/exchange_9.png}"/>    
+                    </block>
+                    <block condition="{property:/vla/syncunion/ProcessQuerySynchronizationNotificationsExistence:/Result/NotificationCount} &gt; 9" >
+                        <desktopbutton.attribute path="{component://init/toolbar/synchronizationInfoButton}" icon="{resource:/icons/24/exchange_plus.png}"/>    
+                    </block>
+                </block>
+            </block>
+        </globalmethod>
+    </d.window>
+</tid>

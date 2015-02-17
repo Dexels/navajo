@@ -165,7 +165,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     private CookieManager myCookieManager;
 
     protected final Map<String, Navajo> navajoMap = new HashMap<String, Navajo>();
-    private Map<String, Date> cacheTTL = new HashMap<String, Date>();
+    private Map<String, CachedNavajo> navajoCacheMap  = new HashMap<String, CachedNavajo>();
 
     protected TipiThreadPool myThreadPool;
     protected TipiComponent topScreen = null;
@@ -1605,13 +1605,22 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         return navajoMap.get(method);
     }
     
-    public Navajo getNavajo(String method, int maxAgeHours) {
-        Date cachedAt = cacheTTL.get(method);
-        Date now = new Date();
-        if (cachedAt != null && (now.getTime() - cachedAt.getTime()) <  (maxAgeHours * 60 * 60 * 1000)) {
-            return getNavajo(method);
+    public Navajo getCachedNavajo(String method, int maxAgeHours) {
+        CachedNavajo cachedN = navajoCacheMap.get(method);
+        if (cachedN == null) {
+            return null;
         }
-        return null;
+        if (!cachedN.isValid(maxAgeHours)) {
+            // remove from map
+            navajoCacheMap.remove(method);
+            return null;
+        }
+        return cachedN.getNavajo();
+    }
+    
+    public synchronized void cacheNavajo(String method, Navajo n) {
+        CachedNavajo cachedN = new CachedNavajo(n);
+        navajoCacheMap.put(method, cachedN);
     }
 
     public Set<String> getNavajoNames() {
@@ -1640,8 +1649,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             navajo.addHeader(h);
         }
         navajoMap.put(method, navajo);
-        cacheTTL.put(method, new Date());
-
     }
 
     public void loadNavajo(Navajo reply, String method) throws TipiBreakException {

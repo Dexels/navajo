@@ -1,0 +1,331 @@
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../tipi.xsd">
+    <!-- constraints & id have to be added at instantiate time -->
+    <d.panel name="tabPersonWindowCertificates" applyCss="true">
+        <l.mig grid="wrap 1, ins 2, fill">
+            <!-- Certificates -->
+            <c.panel id="memberCertificates" constraint="grow, gapbottom 5, top, pushy" cssClass="'borderCertificates'" opaque="false">
+                <l.mig grid="wrap 1, fill, ins 0">
+                    <c.tipitable id="certificatesTable" constraint="grow" opaque="false" columnsvisible="false" filtersvisible="false" messagepath="'/MemberCertificate'" service="vla/clubcertificate/ProcessQueryMemberCertificates">
+                        <onLoad>
+                            <!-- enable / disable add /remove buttons -->
+                            <block condition="Size( {message:/vla/clubcertificate/ProcessQueryMemberCertificates:/MemberCertificate} ) &gt; 0">
+                                <button.attribute enabled="(({global:/PersonType} != 'CLUBRELATION' AND ( {global:/HasClubMembers} == true AND {global:/IsClubMembersReadOnly} == false ) ) OR ( {global:/PersonType} == 'CLUBRELATION' AND ( {global:/HasClubRelations} == true AND {global:/IsClubRelationsReadOnly} == false ) )) AND {global:/PersonStatus} != 'insync_removed'" path="{component:/../certificatesToolbar/certificateDelete}" />
+                            </block>
+                            <block condition="Size( {message:/vla/clubcertificate/ProcessQueryMemberCertificates:/MemberCertificate} ) == 0">
+                                <button.attribute enabled="false" path="{component:/../certificatesToolbar/certificateDelete}" />
+                            </block>
+                            <button.attribute enabled="( ( {global:/PersonType} != 'CLUBRELATION' AND ( {global:/HasClubMembers} == true AND {global:/IsClubMembersReadOnly} == false ) ) OR ({global:/PersonType} == 'CLUBRELATION' AND ( {global:/HasClubRelations} == true AND {global:/IsClubRelationsReadOnly} == false ) ) ) AND {global:/PersonStatus} != 'insync_removed'" path="{component:/../certificatesToolbar/certificateAdd}" />
+                        </onLoad>
+                        <column editable="false" label="'Naam'" name="Name" size="75" />
+                        <column editable="false" label="'Type'" name="Type" size="75" />
+                        <column editable="false" label="'Vereniging/organisatie'" name="OrganizationName" size="120" />
+                        <column editable="false" label="'Soort/Niveau'" name="TypeOfCertificate" size="75" />
+                        <column editable="false" label="'Vanaf'" name="StartDate" size="75" />
+                        <column editable="false" label="'t/m'" name="EndDate" size="75" />
+                        <column editable="false" label="'Opmerkingen'" name="Remarks" size="175" />
+                        <column-attribute name="Status" type="rowColor">
+                            <param name="insync_removed" value="#BBBBBB" />
+                        </column-attribute>
+                    </c.tipitable>
+                    <!-- certificates toolbar -->
+                    <c.panel id="certificatesToolbar" constraint="growx" opaque="false">
+                        <l.mig grid="ins 5, fillx">
+                            <c.hidden constraint="growx" />
+                            <c.button id="certificateAdd" cssClass="'addButtonSmall'" enabled="false" tooltip="'Invoegen diploma, certificaat'" borderVisible="false">
+                                <onActionPerformed>
+                                    <block condition="{property:/vla/clubcertificate/ProcessQueryMemberCertificates:/NewMemberCertificate/NumberOfClubCertificates} == 0 AND {property:/vla/clubcertificate/ProcessQueryMemberCertificates:/NewMemberCertificate/NumberOfUnionCertificates} == 0" >
+                                        <showInfo text="'Er zijn geen diploma\'s en/of certificaten om toe te voegen'"/>
+                                    </block>
+                                    <block condition="{property:/vla/clubcertificate/ProcessQueryMemberCertificates:/NewMemberCertificate/NumberOfClubCertificates} != 0 OR {property:/vla/clubcertificate/ProcessQueryMemberCertificates:/NewMemberCertificate/NumberOfUnionCertificates} != 0" >
+                                        <instantiate id="'insertMemberCertificateWindow'" location="{component://init/desktop}" name="'insertMemberCertificateWindow'" />
+                                        <injectNavajo service="'vla/clubcertificate/ProcessQueryMemberCertificates'" navajo="{navajo:/vla/clubcertificate/ProcessQueryMemberCertificates}"/>
+                                    </block>
+                                </onActionPerformed>
+                            </c.button>
+                            <c.button id="certificateDelete" cssClass="'deleteButtonSmall'" enabled="false" tooltip="'Verwijderen diploma, certificaat'" borderVisible="false">
+                                <onActionPerformed>
+                                    <setValue to="{localref:/SizeSelectedCertificateMessages}" from="Size( {attribute:/../../certificatesTable:selectedMessages} )"/>
+                                    <block condition="{local:/SizeSelectedCertificateMessages} == 0">
+                                        <showInfo text="'Selecteer een diploma'"/>
+                                    </block>
+                                    <block condition="{local:/SizeSelectedCertificateMessages} != 0">
+                                        <block condition="{local:/SizeSelectedCertificateMessages} == 1">
+                                            <block condition="{property:/../../certificatesTable:selectedMessage:Editable} == 'false'">
+                                                <showInfo text="'U kunt dit diploma niet verwijderen'" />
+                                            </block>
+                                            <block condition="{property:/../../certificatesTable:selectedMessage:Editable} == 'true'">                                                    
+                                                <setValue from="true" to="{propertyref:/../../certificatesTable:selectedMessage:Delete}" />
+                                                <callService service="'vla/clubcertificate/ProcessDeleteMemberCertificates'" input="{navajo:/vla/clubcertificate/ProcessQueryMemberCertificates}" breakOnError="true" />
+                                                <callService service="'vla/clubcertificate/ProcessQueryMemberCertificates'" input="{navajo:/vla/InitMessageStoreData}" />
+                                            </block>
+                                        </block>
+                                        <block condition="{local:/SizeSelectedCertificateMessages} &gt; 1">
+                                            <showInfo text="'messageNoMultipleRowsAllowed'"/>
+                                        </block>
+                                    </block>
+                                </onActionPerformed>
+                            </c.button>
+                        </l.mig>
+                    </c.panel>
+                </l.mig>
+            </c.panel>
+            
+            <!-- Passes -->
+            <c.panel id="memberPasses" constraint="grow, gapbottom 5, top, h 33%!" cssClass="'borderPasses'" opaque="false">
+                <l.mig grid="wrap 1, fill, ins 0">
+                    <c.tipitable id="passesTable" constraint="grow" opaque="false" columnsvisible="false" filtersvisible="false" messagepath="'/Passes'" service="vla/ProcessVLAQueryMemberPasses">
+                        <!--  hide this table for NonSync clubs -->
+                        <onLoad>
+                            <panel.attribute path="{component:/../passesToolbar}" visible="{property:/vla/ProcessVLAQueryMemberPasses:/Actions/Insert} == true OR {property:/vla/ProcessVLAQueryMemberPasses:/Actions/Update} == true OR {property:/vla/ProcessVLAQueryMemberPasses:/Actions/Delete} == true OR {property:/vla/ProcessVLAQueryMemberPasses:/Actions/Duplicate} == true"/>
+                            <button.attribute path="{component:/../passesToolbar/duplicateRequest}" visible="{property:/vla/ProcessVLAQueryMemberPasses:/Actions/Duplicate} == true" enabled="( {global:/HasClubMembers} AND !{global:/IsClubMembersReadOnly} )" />
+                            <button.attribute path="{component:/../passesToolbar/insertPass}" visible="{property:/vla/ProcessVLAQueryMemberPasses:/Actions/Insert} == true" enabled="( {global:/HasClubMembers} AND !{global:/IsClubMembersReadOnly} )" />
+                            <button.attribute path="{component:/../passesToolbar/revokePass}" visible="{property:/vla/ProcessVLAQueryMemberPasses:/Actions/Revoke} == true" enabled="( {global:/HasClubMembers} AND !{global:/IsClubMembersReadOnly} )" />
+                            <block condition="{global:/HasSync} == false">
+                                <setValue from="false" to="{attributeref:/..:visible}" />
+                            </block>
+                        </onLoad>
+                        <column editable="false" label="'Soort'" name="PassTypeDescription" size="150" />
+                        <column editable="false" label="'Categorie'" name="PassSubtypeDescription" size="100" />
+                        <column editable="false" label="'Vereniging'" name="OrganizationName" size="100" />
+                        <column editable="false" label="'Speltype'" name="PassGameType" size="100" />
+                        <column editable="false" label="'Pasnummer'" name="PassCode" size="100" />
+                        <column editable="false" label="'Geldig van'" name="ValidFrom" size="100" />
+                        <column editable="false" label="'Geldig t/m'" name="ValidTo" size="100" />
+                        <column editable="false" label="'Status'" name="StatusDescription" size="100" />
+                        <column editable="false" label="'Opmerkingen'" name="Remarks" size="100" />
+                        <onActionPerformed>
+                            <block condition="{property:/.:selectedMessage:OrganizationId} == {property:/vla/InitMessageStoreData:/Club/ClubIdentifier}">
+                                <block condition="{property:/.:selectedMessage:ActionUpdate} == true AND {property:/.:selectedMessage:PassType} != 'PLAYERS_PASS'">
+                                    <instantiate id="'sportPassDialog'" location="{component://init/desktop}" name="'sportPassDialog'"/>
+                                    <injectMessage service="'vla/ProcessVLAQueryMemberPass'" message="{attribute:/.:selectedMessage}"/>
+                                </block>                                            
+                                <block condition="{property:/.:selectedMessage:ActionUpdate} == false OR {property:/.:selectedMessage:PassType} == 'PLAYERS_PASS'" >
+                                    <showInfo text="'U kunt de gegevens van deze pas niet wijzigen'" />
+                                </block>
+                            </block>
+                            <block condition="{property:/.:selectedMessage:OrganizationId} != {property:/vla/InitMessageStoreData:/Club/ClubIdentifier}">
+                                <showInfo text="'U kunt alleen gegevens wijzigen voor uw eigen vereniging'"/>
+                            </block>
+                        </onActionPerformed>
+                    </c.tipitable>
+                    <!-- Show the personimage date. The property will be used in the css which will be set in the ontabchanged because the property is not yet available -->
+                    <c.panel id="pnlPersonImage" constraint="growx, hidemode 3" visible="true" opaque="false">
+                        <l.mig grid="ins 0, fillx, wrap 2">
+                            <c.label id="lblPersonImageDate"/>
+                            <c.button id="btnResetPersonImageDate" cssClass="'sportlinklogoIconSmall btnResetPersonImageDate'" borderVisible="false" constraint="w 30!, pushx, hidemode 3" visible="false">
+                                <onActionPerformed>
+                                    <askValue text="'lblAskValuePassPhotoDate'" value="'SportlinkPassPhotoDate'"/>
+                                    <block condition="!CheckDate( ParseDate( {global:/SportlinkPassPhotoDate} ) )">
+                                        <showError text="'messageInvalidDate'"/>
+                                    </block>
+                                    <block condition="CheckDate( ParseDate( {global:/SportlinkPassPhotoDate} ) )">
+                                        <callService service="'vla/relation/passes/InitCorrectPassPhotoDate'" input="MergeNavajo( {navajo:/vla/relation/ProcessQueryPerson}, {navajo:/vla/InitMessageStoreData} )"/>
+                                        <setValue to="{propertyref:/vla/relation/passes/InitCorrectPassPhotoDate:/PassPhoto/Created}" from="{global:/SportlinkPassPhotoDate}"/>
+                                        <callService service="'vla/relation/passes/ProcessCorrectPassPhotoDate'" input="{navajo:/vla/relation/passes/InitCorrectPassPhotoDate}" breakOnError="true"/>
+                                    </block>
+                                </onActionPerformed>
+                            </c.button>
+                        </l.mig>
+                    </c.panel>
+
+                    <c.panel id="passesToolbar" constraint="growx, hidemode 3" visible="false" opaque="false">
+                        <l.mig grid="ins 5, fillx">
+                            <c.hidden constraint="growx" />
+                            <c.button id="insertPass" cssClass="'addButtonSmall'" constraint="hidemode 3" visible="false" tooltip="'Nieuw'" borderVisible="false">
+                                <onActionPerformed>
+                                    <block condition="{property:/vla/ProcessVLAQueryMemberPasses:/GetExternalId/ValidPersonExternalId} == false" >
+                                        <showInfo text="'Deze persoon is (nog) geen bondslid. De persoon dient eerst als bondslid geregistreerd te worden'"/>
+                                    </block>
+                                    <block condition="{property:/vla/ProcessVLAQueryMemberPasses:/GetExternalId/ValidPersonExternalId} == true" >
+                                        <instantiate id="'sportPassDialogNew'" location="{component://init/desktop}" name="'sportPassDialogNew'"/>
+                                    </block>
+                                </onActionPerformed>
+                            </c.button>
+                            <c.button id="duplicateRequest" constraint="hidemode 3" visible="false" icon="{resource:/icons/16/id_cards.png}" tooltip="'Aanvragen duplicaat'" borderVisible="false">
+                                <onActionPerformed>
+                                    <block condition="{system:/navajo.globals.DefaultSport} == 'VOLLEYBAL'">
+                                        <block condition="{attribute:/../../passesTable:selectedIndex} == -1">
+                                            <showInfo text="'Selecteer een pas'" />
+                                        </block>
+                                        <block condition="{attribute:/../../passesTable:selectedIndex} != -1">
+                                            <block condition="{property:/../../passesTable:selectedMessage:PassType} != 'PLAYERPASS'">
+                                                <showInfo text="'Alleen van spelerspassen kunt u een duplicaat aanvragen.'" />
+                                            </block>
+                                            <block condition="{property:/../../passesTable:selectedMessage:PassType} == 'PLAYERPASS'">
+                                                <showQuestion text="'Weet u zeker dat u van de geselecteerde pas een duplicaat wilt aanvragen?'" />
+                                                <!-- update old pass -->
+                                                <setValue from="'REVOKED'" to="{propertyref:/../../passesTable:selectedMessage:StatusId}" />
+                                                <setValue from="'Duplicaat voor aangevraagd door vereniging'" to="{propertyref:/../../passesTable:selectedMessage:Remarks}" />
+                                                <setValue from="true" to="{propertyref:/../../passesTable:selectedMessage:Update}" />
+                                                <callService service="'playerspass/ProcessUpdatePasses'" input="{navajo:/vla/ProcessVLAQueryMemberPasses}" />
+                                                <!-- request a new pass -->
+                                                <setValue from="{property:/vla/ProcessVLAQueryMemberPasses:/GetExternalId/PersonExternalId}" to="{propertyref:/vla/ProcessVLAQueryMemberPasses:/NewPass/PersonId}" />
+                                                <setValue from="{property:/vla/InitMessageStoreData:/Club/ClubIdentifier}" to="{propertyref:/vla/ProcessVLAQueryMemberPasses:/NewPass/OrganizationId}" />
+                                                <setValue from="'PLAYERPASS'" to="{propertyref:/vla/ProcessVLAQueryMemberPasses:/NewPass/PassTypeDescription}" />
+                                                <setValue from="{property:/../../passesTable:selectedMessage:ValidTo}" to="{propertyref:/vla/ProcessVLAQueryMemberPasses:/NewPass/ValidTo}" />
+                                                <setValue from="'Aangevraagd door vereniging'" to="{propertyref:/vla/ProcessVLAQueryMemberPasses:/NewPass/Remarks}" />
+                                                <callService service="'playerspass/ProcessInsertPass'" input="{navajo:/vla/ProcessVLAQueryMemberPasses}" />
+                                                <callService service="'vla/ProcessVLAQueryMemberPasses'" input="{navajo:/vla/InitMessageStoreData}" />
+                                                <showInfo text="'Duplicaat aangevraagd. Zodra de pas uitgegeven is, zal deze weer in het overzicht verschijnen'" />
+                                            </block>
+                                        </block>
+                                    </block>
+                                    <block condition="{system:/navajo.globals.DefaultSport} != 'VOLLEYBAL'" >
+                                        <block condition="{property:/vla/ProcessVLAQueryMemberPasses:/GetExternalId/ValidPersonExternalId} == false" >
+                                            <showInfo text="'Deze persoon is (nog) geen bondslid. De persoon dient eerst als bondslid geregistreerd te worden'"/>
+                                        </block>
+                                        <block condition="{property:/vla/ProcessVLAQueryMemberPasses:/GetExternalId/ValidPersonExternalId} == true" >
+                                           <block condition="{attribute:/../../passesTable:selectedIndex} == -1">
+                                                <showInfo text="'Selecteer een pas'" />
+                                            </block>
+                                            <block condition="{attribute:/../../passesTable:selectedIndex} != -1 AND {property:/../../passesTable:selectedMessage:OrganizationId} != {global:/clubIdentifier}">
+                                                <showInfo text="'U kunt alleen een duplicaat aanvragen voor uw eigen vereniging'"/>
+                                            </block>
+                                            <block condition="{attribute:/../../passesTable:selectedIndex} != -1 AND {property:/../../passesTable:selectedMessage:OrganizationId} == {global:/clubIdentifier}">
+                                                <block condition="{property:/../../passesTable:selectedMessage:ActionDuplicate} == false OR {property:/../../passesTable:selectedMessage:OrganizationId} != {property:/vla/InitMessageStoreData:/Club/ClubIdentifier}" >
+                                                    <showInfo text="'U kunt van deze pas geen duplicaat aanvragen'"/>
+                                                </block>
+                                                <block condition="{property:/../../passesTable:selectedMessage:ActionDuplicate} == true AND {property:/../../passesTable:selectedMessage:OrganizationId} == {property:/vla/InitMessageStoreData:/Club/ClubIdentifier}" >
+                                                    <showQuestion text="'Weet u zeker dat u van de geselecteerde pas een duplicaat wilt aanvragen?'" />
+                                                    <setValue from="{property:/vla/ProcessVLAQueryMemberPasses:/GetExternalId/PersonExternalId}" to="{propertyref:/vla/ProcessVLAQueryMemberPasses:/NewPass/PersonId}" />
+                                                    <setValue from="{property:/vla/InitMessageStoreData:/Club/ClubIdentifier}" to="{propertyref:/vla/ProcessVLAQueryMemberPasses:/NewPass/OrganizationId}" />
+                                                    <setValue from="{property:/../../passesTable:selectedMessage:PassType}" to="{propertyref:/vla/ProcessVLAQueryMemberPasses:/NewPass/PassTypeDescription}" />
+                                                    <setValue from="{property:/../../passesTable:selectedMessage:PassSubtype}" to="{propertyref:/vla/ProcessVLAQueryMemberPasses:/NewPass/PassSubtypeDescription}" />
+                                                    <setValue from="true" to="{propertyref:/vla/ProcessVLAQueryMemberPasses:/NewPass/Duplicate}" />
+                                                    <setValue from="{property:/../../passesTable:selectedMessage:ValidTo}" to="{propertyref:/vla/ProcessVLAQueryMemberPasses:/NewPass/ValidTo}" />
+                                                    <callService service="'playerspass/ProcessInsertPass'" input="{navajo:/vla/ProcessVLAQueryMemberPasses}" breakOnError="true" />
+                                                    <callService service="'vla/ProcessVLAQueryMemberPasses'" input="{navajo:/vla/InitMessageStoreData}" />
+                                                    <block condition="{system:/navajo.globals.DefaultSport} == 'HANDBAL'" >
+                                                        <showInfo text="'Duplicaat aangevraagd. Zodra de pas uitgegeven is, zal deze weer in het overzicht verschijnen'" />
+                                                    </block>
+                                                </block>
+                                            </block>
+                                        </block>
+                                    </block>
+                                </onActionPerformed>
+                            </c.button>
+                            <c.button id="revokePass" constraint="hidemode 3" visible="false" icon="{resource:/icons/16/id_card_error2.png}" tooltip="'Intrekken'" borderVisible="false">
+                                <onActionPerformed>
+                                    <block condition="{attribute:/../../passesTable:selectedIndex} == -1" >
+                                        <showInfo text="'Selecteer een pas'" />
+                                    </block>
+                                    <block condition="{attribute:/../../passesTable:selectedIndex} != -1">
+                                        <block condition="{property:/../../passesTable:selectedMessage:ActionRevoke} == false OR {property:/../../passesTable:selectedMessage:OrganizationId} != {property:/vla/InitMessageStoreData:/Club/ClubIdentifier}" >
+                                            <showInfo text="'U kunt deze pas(sen) niet intrekken'"/>
+                                        </block>
+                                        <block condition="{property:/../../passesTable:selectedMessage:ActionRevoke} == true AND {property:/../../passesTable:selectedMessage:OrganizationId} == {property:/vla/InitMessageStoreData:/Club/ClubIdentifier}" >
+                                            <showQuestion text="'Weet u zeker dat u de geselecteerde pas(sen) wilt intrekken?'" />
+                                            <tipitable.setAllSelected propertyName="'Update'" value="true" path="{component:/../../passesTable}"/>
+                                            <callService service="'playerspass/ProcessRevokePasses'" input="{navajo:/vla/ProcessVLAQueryMemberPasses}" />
+                                            <callService service="'vla/ProcessVLAQueryMemberPasses'" input="{navajo:/vla/InitMessageStoreData}" />
+                                        </block>
+                                    </block>
+                                </onActionPerformed>
+                            </c.button>
+                        </l.mig>
+                    </c.panel>
+                </l.mig>
+            </c.panel>
+
+            <!-- TransferBlocks -->
+            <c.panel id="panelTransferBlocks" cssClass="'borderPanelTransferBlocks'" constraint="grow, top, hidemode 3, h 33%!" opaque="false">
+                <l.mig grid="wrap 1, fill, ins 0">
+                    <c.tipitable id="transferBlocksTable" constraint="grow" opaque="false" columnsvisible="false" filtersvisible="false" messagepath="'/TransferBlock'" service="vla/sportlinkkernel/member/transfer/ProcessQueryPersonTransferBlocks">
+                        <column name="FromOrganizationName" size="150" />
+                        <column name="TypeOfBlockDescription" size="100" />
+                        <column name="SportDescription" size="100" />
+                        <column name="StartDate" size="100" />
+                        <column name="EndDate" size="100" />
+                        
+                        <onActionPerformed>
+                            <block condition="{global:/IsContributionReadOnly}">
+                                <showInfo text="'messageReadOnlyRights'"/>
+                            </block>
+                            <block condition="!{global:/IsContributionReadOnly}">
+                                <!-- Don't allow editting someone elses obstruction -->
+                                <block condition="{property:/.:selectedMessage:FromOrganizationId} != {global:/clubIdentifier}">
+                                    <showInfo text="'messageTransferBlockOtherClub'"/>
+                                </block>
+                                <block condition="{property:/.:selectedMessage:FromOrganizationId} == {global:/clubIdentifier}">
+                                    <!-- Set the globals which will be used to requery the transferblock -->
+                                    <setValue to="{globalref:/TransferBlock_TransferId}" from="{property:/.:selectedMessage:TransferId}" />
+                                    <setValue to="{globalref:/TransferBlock_PersonId}" from="{property:/.:selectedMessage:PersonId}" />
+                                    <setValue to="{globalref:/TransferBlock_FromOrganizationId}" from="{property:/.:selectedMessage:FromOrganizationId}" />
+                                    <setValue to="{globalref:/TransferBlock_FromStatusId}" from="{property:/.:selectedMessage:FromStatusId}" />
+                                    <setValue to="{globalref:/TransferBlock_ToOrganizationId}" from="{property:/.:selectedMessage:ToOrganizationId}" />
+                                    <setValue to="{globalref:/TransferBlock_ToStatusId}" from="{property:/.:selectedMessage:ToStatusId}" />
+                                    <setValue to="{globalref:/TransferBlock_UnionStatusId}" from="{property:/.:selectedMessage:UnionStatusId}" />
+                                    <setValue to="{globalref:/TransferBlock_TypeOfBlock}" from="{property:/.:selectedMessage:TypeOfBlock}" />
+                                    <setValue to="{globalref:/TransferBlock_SportId}" from="{property:/.:selectedMessage:SportId}" />
+                                    <setValue to="{globalref:/TransferBlock_StartDate}" from="{property:/.:selectedMessage:StartDate}" />
+                                    <setValue to="{globalref:/TransferBlock_EndDate}" from="{property:/.:selectedMessage:EndDate}" />
+                                    <instantiate id="'upsertPersonTransferBlockDialog'" location="{component://init/desktop}" name="'upsertPersonTransferBlockDialog'" />
+                                </block>
+                            </block>
+                        </onActionPerformed>
+                        <onLoad>
+                            <!-- enable / disable add /remove buttons -->
+                            <block condition="Size( {message:/vla/sportlinkkernel/member/transfer/ProcessQueryPersonTransferBlocks:/TransferBlock} ) &gt; 0">
+                                <button.attribute path="{component:/../transferBlocksToolbar/btnDeleteTransferBlock}" enabled="{global:/PersonType} == 'KERNELMEMBER'" />
+                            </block>
+                            <block condition="Size( {message:/vla/sportlinkkernel/member/transfer/ProcessQueryPersonTransferBlocks:/TransferBlock} ) == 0">
+                                <button.attribute path="{component:/../transferBlocksToolbar/btnDeleteTransferBlock}" enabled="false" />
+                            </block>
+                            <button.attribute path="{component:/../transferBlocksToolbar/btnAddTransferBlock}" enabled="{global:/PersonType} == 'KERNELMEMBER'" />
+                        </onLoad>
+                    </c.tipitable>
+                    <!-- TransferBlocks toolbar -->
+                    <c.panel id="transferBlocksToolbar" constraint="growx" opaque="false">
+                        <l.mig grid="fillx, ins 5">
+                            <c.label cssClass="'messageDoubleClickOnRowToEdit'" />
+                            <c.hidden constraint="growx" />
+                            
+                            <c.button id="btnAddTransferBlock" cssClass="'addButtonSmall'" enabled="true" borderVisible="false">
+                                <onActionPerformed>
+                                    <!-- Set the globals which will be used to requery the transferblock -->
+                                    <setValue to="{globalref:/TransferBlock_TransferId}" from="null" />
+                                    <setValue to="{globalref:/TransferBlock_PersonId}" from="{property:/vla/relation/ProcessQueryPerson:/MemberData/MemberIdentifier}" />
+                                    <setValue to="{globalref:/TransferBlock_FromOrganizationId}" from="{property:/vla/relation/ProcessQueryPerson:/MemberData/ClubIdentifier}" />
+                                    <setValue to="{globalref:/TransferBlock_FromStatusId}" from="null" />
+                                    <setValue to="{globalref:/TransferBlock_ToOrganizationId}" from="{property:/.:selectedMessage:ToOrganizationId}" />
+                                    <setValue to="{globalref:/TransferBlock_ToStatusId}" from="null" />
+                                    <setValue to="{globalref:/TransferBlock_UnionStatusId}" from="null" />
+                                    <setValue to="{globalref:/TransferBlock_TypeOfBlock}" from="null" />
+                                    <setValue to="{globalref:/TransferBlock_SportId}" from="null" />
+                                    <setValue to="{globalref:/TransferBlock_StartDate}" from="null" />
+                                    <setValue to="{globalref:/TransferBlock_EndDate}" from="null" />
+                                    <instantiate id="'upsertPersonTransferBlockDialog'" location="{component://init/desktop}" name="'upsertPersonTransferBlockDialog'" />
+                                </onActionPerformed>
+                            </c.button>
+                            <c.button id="btnDeleteTransferBlock" cssClass="'deleteButtonSmall'" enabled="false" borderVisible="false">
+                                <onActionPerformed>
+                                    <block condition="{attribute:/../../transferBlocksTable:selectedIndex} == '-1'">
+                                        <showWarning text="'messageNoRowSelected'"/>
+                                    </block>
+                                    <block condition="{attribute:/../../transferBlocksTable:selectedIndex} != '-1'">
+                                        <!-- Don't allow editting someone elses obstruction -->
+                                        <block condition="{property:/../../transferBlocksTable:selectedMessage:FromOrganizationId} != {global:/clubIdentifier}">
+                                            <showInfo text="'messageTransferBlockOtherClub'"/>
+                                        </block>
+                                        <block condition="{property:/../../transferBlocksTable:selectedMessage:FromOrganizationId} == {global:/clubIdentifier}">
+                                            <showQuestion text="'questionDeleteTransferBlock'">
+                                                <onYes>
+                                                    <callService service="'vla/sportlinkkernel/member/transfer/InitDeletePersonTransferBlock'"/>
+                                                    <setValue to="{propertyref:/vla/sportlinkkernel/member/transfer/InitDeletePersonTransferBlock:/TransferBlock/TransferId}" from="{property:/../../transferBlocksTable:selectedMessage:TransferId}" />
+                                                    <callService service="'vla/sportlinkkernel/member/transfer/ProcessDeletePersonTransferBlock'" input="{navajo:/vla/sportlinkkernel/member/transfer/InitDeletePersonTransferBlock}"/>
+                                                    <callService service="'vla/sportlinkkernel/member/transfer/ProcessQueryPersonTransferBlocks'" input="{navajo:/vla/relation/ProcessQueryPerson}"/>
+                                                    <!-- Call the correct localmethod in the personWindow -->
+                                                    <executeMethod name="'DoRefreshPersonWindow'" rootComponent="{component://init/desktop/personWindow}"/>
+                                                </onYes>
+                                            </showQuestion>
+                                        </block>
+                                    </block>
+                                </onActionPerformed>
+                            </c.button>
+                        </l.mig>
+                    </c.panel>
+                </l.mig>
+            </c.panel>
+        </l.mig>
+    </d.panel>
+</tid>

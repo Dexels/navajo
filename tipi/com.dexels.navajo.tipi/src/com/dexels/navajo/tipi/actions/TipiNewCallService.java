@@ -3,9 +3,7 @@ package com.dexels.navajo.tipi.actions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,14 +60,18 @@ public class TipiNewCallService extends TipiAction {
         String service = (String) getEvaluatedParameterValue("service", event);
         Navajo input = (Navajo) getEvaluatedParameterValue("input", event);
         
-        this.service = service;
-        this.created = new Date();
-        checkForExistingRequest();
-        requests.add(this);
+//        this.service = service;
+//        this.created = new Date();
+//        checkForExistingRequest();
+//        requests.add(this);
         
         String destination = (String) getEvaluatedParameterValue("destination", event);
         String connector = (String) getEvaluatedParameterValue("connector", event);
-        Object cached = getEvaluatedParameterValue("cached", event);
+        Object cachedObj = getEvaluatedParameterValue("cached", event);
+        boolean cached = false;
+        if (cachedObj != null && cachedObj instanceof Boolean) {
+            cached = (Boolean) cachedObj;
+        }
         Boolean breakOnError = (Boolean) getEvaluatedParameterValue("breakOnError", event);
         if (breakOnError == null) {
             breakOnError = false;
@@ -87,19 +89,17 @@ public class TipiNewCallService extends TipiAction {
             throw new TipiException("Error in callService action: service parameter missing!");
         }
 
-        if (cached != null && cached instanceof Boolean) {
-            if ((Boolean) cached) {
-                Navajo n = myContext.getNavajo(service, 6);
-                if (n != null) {
-                    logger.info("Returning CACHED service : " + service);
-                    myContext.loadNavajo(n, service);
-                    return;
-                    // return n;
-                }
+        if (cached) {
+            Navajo n = myContext.getCachedNavajo(service, 8);
+            if (n != null) {
+                logger.info("Returning CACHED service : " + service);
+                myContext.loadNavajo(n, service);
+                return;
             }
+
         }
 
-        input = enrichInput(input, true);
+       // input = enrichInput(input, true);
 
         setThreadState("waiting");
         if (connector == null) {
@@ -109,17 +109,17 @@ public class TipiNewCallService extends TipiAction {
                 throw new IllegalStateException("No default tipi connector found!");
             }
             Navajo result = defaultConnector.doTransaction(input, service);
-            processResult(breakOnError, destination, service, result);
+            processResult(breakOnError, destination, service, result, cached);
         } else {
             TipiConnector ttt = myContext.getConnector(connector);
             if (ttt == null) {
                 logger.warn("Warning: connector: " + connector + " not found, reverting to default connector");
 
                 Navajo result = defaultConnector.doTransaction(input, service, destination);
-                processResult(breakOnError, destination, service, result);
+                processResult(breakOnError, destination, service, result, cached);
             } else {
                 Navajo result = ttt.doTransaction(input, service, destination);
-                processResult(breakOnError, destination, service, result);
+                processResult(breakOnError, destination, service, result, cached);
             }
         }
         setThreadState("busy");
@@ -197,7 +197,7 @@ public class TipiNewCallService extends TipiAction {
         myContext.fireNavajoSent(input, service);
         try {
             myContext.getClient().doSimpleSend(nn, service);
-            processResult(breakOnError, destination, service, nn);
+            processResult(breakOnError, destination, service, nn, false);
         } catch (ClientException e) {
             e.printStackTrace();
         }
@@ -274,10 +274,13 @@ public class TipiNewCallService extends TipiAction {
         return input;
     }
 
-    private void processResult(boolean breakOnError, String destination, String service, Navajo result)
+    private void processResult(boolean breakOnError, String destination, String service, Navajo result, boolean cache)
             throws TipiException {
 
         myContext.addNavajo(service, result);
+        if (cache) {
+            myContext.cacheNavajo(service, result);
+        }
         // is this correct? It is a bit odd.
         if (result.getHeader() != null) {
             result.getHeader().setHeaderAttribute("sourceScript", result.getHeader().getRPCName());

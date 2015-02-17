@@ -1,0 +1,40 @@
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../tipi.xsd">
+    <!-- constraints & id have to be added at instantiate time -->
+    <d.panel name="tabPersonWindowKernelFunctions" applyCss="true">
+        <l.mig grid="wrap 1, ins 2, fill">
+            <c.tipitable id="currentConsulTable" cssClass="'borderTabPersonWindowKernelFunctionsConsul'" constraint="grow" opaque="false" messagepath="'/KernelConsuls'" service="vla/relation/kernelfunction/ProcessQueryPersonWindowData">
+                <column label="'Vereniging'" name="ClubName" size="150" />
+                <column label="'Accommodatie'" name="FacilityName" size="150" />
+                <column label="'Start'" name="RegistrationDate" size="100" />
+                <column label="'Eind'" name="DeregistrationDate" size="100" />
+                <column-attribute name="Status" type="rowColor">
+                    <param name="insync_removed" value="#BBBBBB" />
+                </column-attribute>
+                <remarks />
+            </c.tipitable>
+            <c.tipitable id="currentOfficialTable" cssClass="'borderTabPersonWindowKernelFunctionsOfficial'" constraint="grow" opaque="false" messagepath="'/KernelOfficials'" service="vla/relation/kernelfunction/ProcessQueryPersonWindowData">
+                <column label="'Naam'" name="OfficialDescription" size="150" />
+                <column label="'Niveau'" name="OfficialLevelDescription" size="150" />                                
+                <column label="'Spelactiviteit'" name="Info" size="150" />
+                <column label="'District'" name="DistrictName" size="150" />
+                <column label="'Start'" name="RegistrationDate" size="100" />
+                <column label="'Eind'" name="DeregistrationDate" size="100" />
+                <column-attribute name="Status" type="rowColor">
+                    <param name="insync_removed" value="#BBBBBB" />
+                </column-attribute>
+                <remarks />
+            </c.tipitable>
+            <c.tipitable id="unionCurrentMemberFunctionTable" cssClass="'borderTabPersonWindowKernelFunctionsKernelFunction'" constraint="grow" opaque="false" messagepath="'/KernelMemberFunctions'" service="vla/relation/kernelfunction/ProcessQueryPersonWindowData">
+                <column label="'Commissie/groep'" name="CommitteeName" size="150" />
+                <column label="'Functie'" name="FunctionType" size="150" />
+                <column label="'District'" name="DistrictName" size="150" />
+                <column label="'Start'" name="RegistrationDate" size="100" />
+                <column label="'Eind'" name="DeregistrationDate" size="100" />
+                <column-attribute name="Status" type="rowColor">
+                    <param name="insync_removed" value="#BBBBBB" />
+                </column-attribute>
+                <remarks />
+            </c.tipitable>
+        </l.mig>
+    </d.panel>
+</tid>
