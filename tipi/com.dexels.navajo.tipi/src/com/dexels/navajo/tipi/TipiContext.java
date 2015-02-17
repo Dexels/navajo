@@ -13,6 +13,7 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -164,6 +165,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     private CookieManager myCookieManager;
 
     protected final Map<String, Navajo> navajoMap = new HashMap<String, Navajo>();
+    private Map<String, Date> cacheTTL = new HashMap<String, Date>();
 
     protected TipiThreadPool myThreadPool;
     protected TipiComponent topScreen = null;
@@ -1602,6 +1604,15 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     public Navajo getNavajo(String method) {
         return navajoMap.get(method);
     }
+    
+    public Navajo getNavajo(String method, int maxAgeHours) {
+        Date cachedAt = cacheTTL.get(method);
+        Date now = new Date();
+        if (cachedAt != null && (now.getTime() - cachedAt.getTime()) <  (maxAgeHours * 60 * 60 * 1000)) {
+            return getNavajo(method);
+        }
+        return null;
+    }
 
     public Set<String> getNavajoNames() {
         return navajoMap.keySet();
@@ -1629,6 +1640,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             navajo.addHeader(h);
         }
         navajoMap.put(method, navajo);
+        cacheTTL.put(method, new Date());
+
     }
 
     public void loadNavajo(Navajo reply, String method) throws TipiBreakException {

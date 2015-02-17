@@ -3,7 +3,9 @@ package com.dexels.navajo.tipi.actions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,9 +47,10 @@ public class TipiNewCallService extends TipiAction {
     private final static Logger logger = LoggerFactory.getLogger(TipiNewCallService.class);
     
     private static List<TipiNewCallService> requests = new ArrayList<TipiNewCallService>();
+    
     protected String service;
     protected Date created;
-
+    
     @Override
     public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException,
             com.dexels.navajo.tipi.TipiBreakException {
@@ -85,9 +88,8 @@ public class TipiNewCallService extends TipiAction {
         }
 
         if (cached != null && cached instanceof Boolean) {
-            boolean c = (Boolean) cached;
-            if (c) {
-                Navajo n = myContext.getNavajo(service);
+            if ((Boolean) cached) {
+                Navajo n = myContext.getNavajo(service, 6);
                 if (n != null) {
                     logger.info("Returning CACHED service : " + service);
                     myContext.loadNavajo(n, service);
