@@ -261,6 +261,14 @@ public abstract void setValidations();
 public void dumpRequest() {
 	  
   }
+
+/* (non-Javadoc)
+* @see com.dexels.navajo.script.api.CompiledScriptInterface#dumpRequest()
+*/
+@Override
+public void dumpResponse() {
+    
+}
   
   /* (non-Javadoc)
  * @see com.dexels.navajo.script.api.CompiledScriptInterface#setDependencies()
@@ -356,8 +364,7 @@ public final void run(Access access) throws Exception {
 			  Message[] failed = checkValidationRules(conditions, access.getInDoc(), outMessage,access);
 			  if (failed != null) {
 				  conditionsFailed = true;
-				  Message msg = NavajoFactory.getInstance().createMessage(outMessage,
-				  "ConditionErrors");
+				  Message msg = NavajoFactory.getInstance().createMessage(outMessage,"ConditionErrors");
 				  outMessage.addMessage(msg);
 				  msg.setType(Message.MSG_TYPE_ARRAY);
 				  for (int i = 0; i < failed.length; i++) {
@@ -380,6 +387,7 @@ public final void run(Access access) throws Exception {
 			  }
 		  }
 	  } finally {
+	      dumpResponse();
 		  // Release acquired locks.
 		  for ( Lock l : acquiredLocks ) {
 			  try {

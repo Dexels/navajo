@@ -3253,14 +3253,26 @@ public class TslCompiler {
 
 		if (debugInput) {
 			generatedCode.append("public final void dumpRequest() {\n");
-			generatedCode
-					.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
+			generatedCode.append("System.err.println(new Date());");
+			generatedCode.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
 			generatedCode.append("myAccess.getInDoc().write(System.err);\n");
-			generatedCode
-					.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
+			generatedCode.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
 			generatedCode.append("}\n\n");
 		}
 	}
+	
+	private void dumpResponseMethod(boolean debugOutput,
+            StringBuffer generatedCode) {
+
+        if (debugOutput) {
+            generatedCode.append("public final void dumpResponse() {\n");
+            generatedCode.append("System.err.println(new Date());");
+            generatedCode.append("System.err.println(\"\\n --------- BEGIN NAVAJO RESPONSE ---------\\n\");\n");
+            generatedCode.append("myAccess.getOutputDoc().write(System.err);\n");
+            generatedCode.append("System.err.println(\"\\n --------- END NAVAJO RESPONSE ---------\\n\");\n");
+            generatedCode.append("}\n\n");
+        }
+    }
 
 	private final void compileScript(InputStream is, String packagePath,
 			String script, String scriptPath, Writer fo, List<Dependency> deps,
@@ -3354,7 +3366,8 @@ public class TslCompiler {
 					+ "import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;\n"
 					+ "import java.util.concurrent.locks.Lock;\n"
 					+ "import java.util.concurrent.TimeUnit;\n"
-					+ "import java.util.Stack;\n\n\n";
+					+ "import java.util.Stack;\n"
+					+ "import java.util.Date;\n\n\n";
 			result.append(importDef);
 
 			result.append("/**\n");
@@ -3406,8 +3419,9 @@ public class TslCompiler {
 				includeNode(scriptPath, includeArray[i], tslDoc, tenant, deps);
 			}
 
-			// Generate dump request Navajo
+			// Generate dump request/response Navajo
 			dumpRequestMethod((debugInput || debugAll), result);
+            dumpResponseMethod((debugOutput || debugAll), result);
 
 			// Generate validation code.
 			generateValidations(tslDoc, result);
@@ -3440,11 +3454,6 @@ public class TslCompiler {
 			}
 
 			result.append("} finally {\n");
-			if (debugOutput || debugAll) {
-				result.append("System.err.println(\"\\n --------- BEGIN NAVAJO RESPONSE ---------\\n\");\n");
-				result.append("access.getOutputDoc().write(System.err);\n");
-				result.append("System.err.println(\"\\n --------- END NAVAJO RESPONSE ---------\\n\");\n");
-			}
 
 			if (broadcast) {
 				result.append("try { \n");
