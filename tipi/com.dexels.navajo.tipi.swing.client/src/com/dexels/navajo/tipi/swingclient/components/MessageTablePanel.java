@@ -458,9 +458,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		// Used in AdvancedMessageTable only.
 	}
 
-	public final void setRowColor(int row, Color c) {
-		messageTable.setRowColor(row, c);
-	}
+	
 
 	public final Color getRowColor(int row) {
 		return messageTable.getRowColor(row);

@@ -725,13 +725,11 @@ public class MessageTable extends JTable implements CellEditorListener,
 		if (row >= myModel.getRowCount()) {
 			return Color.green;
 		}
-		int i = mapRowNumber(row);
-		Integer in = new Integer(i);
-		Color c = rowColorMap.get(in);
+		Color c = rowColorMap.get(row);
 		// logger.info("Looking for color... "+in);
-		if (c == null && !rowColorMap.containsKey(in)) {
-			createRowColor(i);
-			return rowColorMap.get(in);
+		if (c == null && !rowColorMap.containsKey(row)) {
+			createRowColor(row);
+			return rowColorMap.get(row);
 		} else {
 			return c;
 		}
@@ -746,7 +744,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		Message m = getMessageRow(i);
 		Iterator<String> it = columnAttributes.keySet().iterator();
 		if ( !it.hasNext()) {
-			setRowColor(i, null);
+			setRowColor(row, null);
 		}
 		while (it.hasNext()) {
 
@@ -763,9 +761,9 @@ public class MessageTable extends JTable implements CellEditorListener,
 						if (color != null) {
 							// logger.info("Found color: " + color);
 							Color clr = Color.decode(color);
-							setRowColor(i, clr);
+							setRowColor(row, clr);
 						} else {
-							setRowColor(i, null);
+							setRowColor(row, null);
 						}
 					}
 					if (ca.getType().equals(ColumnAttribute.TYPE_FREEROWCOLOR)) {
@@ -777,26 +775,23 @@ public class MessageTable extends JTable implements CellEditorListener,
 								String color = ca.getParam(itkey);
 								if (color != null) {
 									Color clr = Color.decode(color);
-									setRowColor(i, clr);
+									setRowColor(row, clr);
 								} else {
-									setRowColor(i, null);
+									setRowColor(row, null);
 								}
 							}
 						}
 					}
 
 				} else {
-					setRowColor(i, null);
+					setRowColor(row, null);
 				}
 			}
 		}
 	}
 
 	public final void setRowColor(int row, Color c) {
-		int i = mapRowNumber(row);
-		if (c == null) {
-		}
-		rowColorMap.put(new Integer(i), c);
+		rowColorMap.put(new Integer(row), c);
 	}
 
 	public MessageTableModel getMessageModel() {
