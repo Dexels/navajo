@@ -396,16 +396,21 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
                 public void run() {
                     setBounds(new Rectangle(x, y, w, h));
                     if (fullscreen) {
-                        // Use GraphicsEnvironment to support multi-monitor properly
-                        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-                        int width = gd.getDisplayMode().getWidth();
-                        int height = gd.getDisplayMode().getHeight();
+                        String osName = System.getProperty("os.name");
+                        if (osName != null && osName.startsWith("Linux")) {
+                            // Gnome doesn't seem to respond propely to setExtendedState. 
+                            // Therefore manually set size to make sure we are full screen.
+                            // Use GraphicsEnvironment to support multi-monitor properly
+                            GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+                            int width = gd.getDisplayMode().getWidth();
+                            int height = gd.getDisplayMode().getHeight();
+                            ((TipiSwingFrame) getSwingContainer()).setSize(width, height);
+                        }
 
-                        ((TipiSwingFrame) getSwingContainer()).setSize(width, height);
-                        ((TipiSwingFrame) getSwingContainer()).setExtendedState(Frame.MAXIMIZED_BOTH);
-
+                        ((TipiSwingFrame) getSwingContainer()).setExtendedState(JFrame.MAXIMIZED_BOTH);
                     }
                     getSwingContainer().setVisible(visible);
+                   
                 }
 			});
 
