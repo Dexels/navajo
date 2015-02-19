@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Tipi Google maps viewer
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.geo
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.1.5.qualifier
+Bundle-Version: 1.1.6
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi,
  com.dexels.navajo.tipi.swing.deps,
