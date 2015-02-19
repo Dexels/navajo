@@ -41,8 +41,22 @@ public class CreateWindowBorder extends FunctionInterface {
 	 */
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Color startGradientColor = (Color)getOperand(0);
-		Color endGradientColor = (Color)getOperand(1);
+		Object color1 = getOperand(0);
+		Object color2 = getOperand(1);
+		Color startGradientColor = null;
+		Color endGradientColor = null;
+		
+		if ( (color1 instanceof String) ) {
+			startGradientColor = Color.decode( "0x" + ((String)color1).substring(1).toString() );
+		} else {
+			startGradientColor = (Color)color1;
+		}
+		if ( (color2 instanceof String) ) {
+			endGradientColor = Color.decode( "0x" + ((String)color2).substring(1).toString() );
+		} else {
+			endGradientColor = (Color)color2;
+		}
+
 		String gradientLayout = "vertical";
 		if (getOperands().size() >= 3) {
 			gradientLayout = (String)getOperand(2);
