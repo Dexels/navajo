@@ -62,4 +62,6 @@ public interface TipiSwingFrame {
 	public void setDefaultCloseOperation(int type);
 
 	public void addWindowListener(WindowListener wl);
+
+    public void setSize(int width, int height);
 }

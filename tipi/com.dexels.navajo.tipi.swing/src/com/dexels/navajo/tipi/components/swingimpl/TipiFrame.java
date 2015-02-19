@@ -5,8 +5,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Frame;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -393,8 +396,13 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 				public void run() {
 					setBounds(new Rectangle(x, y, w, h));
 					if (fullscreen) {
-						((TipiSwingFrame) getSwingContainer())
-								.setExtendedState(Frame.MAXIMIZED_BOTH);
+					    // Use GraphicsEnvironment to support multi-monitor properly
+					    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+					    int width = gd.getDisplayMode().getWidth();
+					    int height = gd.getDisplayMode().getHeight();
+					    
+						((TipiSwingFrame) getSwingContainer()).setExtendedState(Frame.MAXIMIZED_BOTH);
+						((TipiSwingFrame) getSwingContainer()).setSize(width, height);
 					}
 					getSwingContainer().setVisible(visible);
 				}

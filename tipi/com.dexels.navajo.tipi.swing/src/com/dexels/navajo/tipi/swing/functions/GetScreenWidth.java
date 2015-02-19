@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi.swing.functions;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
 import com.dexels.navajo.parser.FunctionInterface;
@@ -39,7 +41,9 @@ public class GetScreenWidth extends FunctionInterface {
 	 */
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		return Toolkit.getDefaultToolkit().getScreenSize().width;
+	    // Use GraphicsEnvironment to support multi-monitor environments
+	    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+	    return gd.getDisplayMode().getWidth();
 	}
 
 }
