@@ -366,7 +366,7 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
     }
 
     @Override
-     public synchronized void hideComponent() {
+    public synchronized void hideComponent() {
         if (myWindow == null || isHidden) {
             // already hidden/disposed
             return;
@@ -380,7 +380,6 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
     }
     
     
-    
     @Override
     public void unhideComponent() {
 
@@ -388,7 +387,7 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
         if (hideOnClose) {
             isHidden = false;
             addOverlayProgressPanel("opaque");
-            
+
             /*
              * We want to have a small delay before we unhide the component.
              * This allows for the early onInstantiate code to already be done,
@@ -434,8 +433,8 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
 		// myWindow.setVisible(true);
 	}
 	
-	 @Override 
-	    public boolean isHidden() {
-	        return isHidden;
-	    }
+    @Override
+    public boolean isHidden() {
+        return isHidden;
+    }
 }
