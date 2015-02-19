@@ -1746,6 +1746,9 @@ public abstract class TipiComponentImpl implements TipiEventListener,
         // Clear our localValuesMap - any actual unhiding is left to any subcomponents 
         // (typically those who have overridden hideComponent).
         localValuesMap = new HashMap<String, Object>();
+        for (TipiComponent child : tipiComponentList ) {
+           child.unhideComponent(); 
+        }
     }
 
     public void postOnInstantiate() {

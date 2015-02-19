@@ -25,8 +25,11 @@ public class CachedNavajo {
         return n.copy();
     }
 
+    /**
+     * A copy is made to prevent invalidating the cache by changes to the navajo 
+     */
     public void setNavajo(Navajo n) {
-        this.n = n;
+        this.n = n.copy();
     }
 
     public Date getCachedAt() {

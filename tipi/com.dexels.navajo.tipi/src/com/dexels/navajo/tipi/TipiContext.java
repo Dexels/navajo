@@ -519,6 +519,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             String definitionName = iter.next();
             tipiComponentMap.remove(definitionName);
         }
+        navajoCacheMap = new HashMap<String, CachedNavajo>();
     }
 
     public abstract void clearTopScreen();
@@ -1068,7 +1069,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                     disposeTipiComponent(comp);
                 } else {
                     comp.reUse();
-                    comp.unhideComponent();
+                    if (comp.isHidden()) {
+                        comp.unhideComponent();
+                    }
                     
                     comp.performTipiEvent("onInstantiate", null, false, new Runnable() {
                         public void run() {
