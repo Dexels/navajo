@@ -157,7 +157,7 @@ public class CustomClassloaderJavaFileManager extends
 				return list;
 			} catch (Throwable e) {
 				System.err.println("Platform class loader failed while trying to load: "+packageName);
-//				e.printStackTrace();
+				e.printStackTrace();
 			}
 		} 
 		if (location == StandardLocation.CLASS_PATH

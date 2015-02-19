@@ -129,7 +129,6 @@ public class BundleCreatorComponent implements BundleCreator {
 			String scriptExtension, List<String> failures,
 			List<String> success, List<String> skipped, boolean force,
 			boolean keepIntermediate) throws Exception {
-		// TODO does scriptExtension always include the dot?
 		if (!scriptExtension.startsWith(".")) {
 			throw new IllegalAccessError(
 					"Script extension did not start with a dot!");
