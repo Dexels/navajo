@@ -31,6 +31,7 @@ import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.core.TipiSupportOverlayPane;
 import com.dexels.navajo.tipi.components.swingimpl.swing.JExtendedInternalFrame;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiModalInternalFrame;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDialog;
@@ -56,7 +57,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @author not attributable
  * @version 1.0
  */
-public class TipiDialog extends TipiSwingDataComponentImpl{
+public class TipiDialog extends TipiSwingDataComponentImpl implements TipiSupportOverlayPane {
 
 	private static final long serialVersionUID = 8645510349158311190L;
 	private boolean modal = false;
@@ -863,6 +864,25 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 		}
 		dlg.setSize(dlgSize);
 	}
+	
+	  
+    @Override
+    public void addOverlayProgressPanel(String type) {
+        if (myRootPaneContainer instanceof TipiSwingDialog) {
+            TipiSwingDialog dia = (TipiSwingDialog) myRootPaneContainer;
+            dia.addGlass(type);
+        }
+
+    }
+
+    @Override
+    public void removeOverlayProgressPanel() {
+        if (myRootPaneContainer instanceof TipiSwingDialog) {
+            TipiSwingDialog dialog = (TipiSwingDialog) myRootPaneContainer;
+            dialog.hideGlass();
+        }
+
+    }
 
 	// public boolean showQuestionDialog(String s) {
 	// int response = JOptionPane.showConfirmDialog( (Component)
