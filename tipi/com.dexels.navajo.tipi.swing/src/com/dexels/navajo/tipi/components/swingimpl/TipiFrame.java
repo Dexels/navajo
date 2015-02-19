@@ -393,19 +393,20 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 		if (getContainer() instanceof TipiSwingFrame) {
 			runSyncInEventThread(new Runnable() {
 				@Override
-				public void run() {
-					setBounds(new Rectangle(x, y, w, h));
-					if (fullscreen) {
-					    // Use GraphicsEnvironment to support multi-monitor properly
-					    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-					    int width = gd.getDisplayMode().getWidth();
-					    int height = gd.getDisplayMode().getHeight();
-					    
-						((TipiSwingFrame) getSwingContainer()).setExtendedState(Frame.MAXIMIZED_BOTH);
-						((TipiSwingFrame) getSwingContainer()).setSize(width, height);
-					}
-					getSwingContainer().setVisible(visible);
-				}
+                public void run() {
+                    setBounds(new Rectangle(x, y, w, h));
+                    if (fullscreen) {
+                        // Use GraphicsEnvironment to support multi-monitor properly
+                        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+                        int width = gd.getDisplayMode().getWidth();
+                        int height = gd.getDisplayMode().getHeight();
+
+                        ((TipiSwingFrame) getSwingContainer()).setSize(width, height);
+                        ((TipiSwingFrame) getSwingContainer()).setExtendedState(Frame.MAXIMIZED_BOTH);
+
+                    }
+                    getSwingContainer().setVisible(visible);
+                }
 			});
 
 		}
