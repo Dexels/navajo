@@ -82,8 +82,7 @@ public class CalendarTableModel implements TableModel {
 				Date d = navajoDateFormat.parse(current.getProperty(
 						"CalendarDate").getValue());
 				c.setTime(d);
-				String key = "" + c.get(Calendar.DAY_OF_YEAR)
-						+ c.get(Calendar.YEAR);
+				String key = "" + c.get(Calendar.DAY_OF_YEAR) + c.get(Calendar.YEAR);
 				Day day = dayMap.get(key);
 				if (day == null) {
 					day = new Day();

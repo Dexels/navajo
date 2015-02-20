@@ -282,8 +282,7 @@ public class MessageTableModel extends AbstractTableModel {
 		} else {
 			if (myColumnTitles.size() > 0) {
 				String s = ((column - subsractColumnCount) < myColumnTitles
-						.size()) ? (String) myColumnTitles.get(column
-						- subsractColumnCount) : null;
+						.size()) ? myColumnTitles.get(column- subsractColumnCount) : null;
 				if (s == null) {
 					return super.getColumnName(column - subsractColumnCount);
 				} else {
@@ -370,7 +369,7 @@ public class MessageTableModel extends AbstractTableModel {
 			logger.info("Nothing in editablelist");
 			return false;
 		}
-		if (b.booleanValue() == false) {
+		if (!b.booleanValue()) {
 			return false;
 		}
 		Message m = getMessageRow(rowIndex);

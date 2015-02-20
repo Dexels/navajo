@@ -111,7 +111,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	// private MouseAdapter headerMouseAdapter = null;
 	private final List<ActionListener> actionListeners = new ArrayList<ActionListener>();
 	private Map<String, List<ColumnAttribute>> columnAttributes;
-	private final Map<Integer, RowAttribute> rowAttributesMap = new HashMap<Integer, RowAttribute>();
+	private final Map<Integer, Map<Integer, RowAttribute>> rowColumnAttributesMap = new HashMap<Integer, Map<Integer, RowAttribute>>();
 	protected String columnPathString = null;
 	private boolean changed;
 	protected boolean savePathJustChanged = false;
@@ -721,11 +721,45 @@ public class MessageTable extends JTable implements CellEditorListener,
 		myScroll = jp;
 	}
 
-	public final Color getRowBackgroundColor(int row) {
+	/** Performs a lookup in the rowAttributesMap. First tries to find the attribute
+	 * specific for this row + column + type. If that fails, look for the row-generic attribute.
+	 * If that also fails, return null;
+	 */
+	private RowAttribute getRowColumnAttribute(int row, int col, int type) {
+	    Map<Integer, RowAttribute> rowMap = rowColumnAttributesMap.get(row);
+	    if (rowMap == null) {
+	        rowMap = new HashMap<Integer, RowAttribute>();
+	        rowColumnAttributesMap.put(row, rowMap);
+	    }
+	    if (rowMap.get(col) != null) {
+	        RowAttribute ra = rowMap.get(col);
+	        if (ra.getAttribute(type) != null) {
+	            return ra;
+	        }
+	    }
+	    if (rowMap.get(-1) != null) {
+	        // No column specific value, but we did find a row-generic one
+	        return rowMap.get(-1);
+	    }
+	    
+	    return null;
+	}
+	
+	private void setRowColumnAttribute(int row, int col, RowAttribute ra) {
+	    Map<Integer, RowAttribute> rowMap = rowColumnAttributesMap.get(row);
+	    rowMap.put(col,  ra);
+	    rowColumnAttributesMap.put(row,  rowMap);
+    }
+	
+	
+	
+	public final Color getRowBackgroundColor(int row, int col) {
 		if (row >= myModel.getRowCount()) {
 			return Color.green;
 		}
-		RowAttribute ra = rowAttributesMap.get(row);
+
+		RowAttribute ra = getRowColumnAttribute(row, col, RowAttribute.ROW_BACKGROUND_COLOR);
+		
 		Color c = null;
 		if (ra != null) {
 		    c = (Color) ra.getAttribute(RowAttribute.ROW_BACKGROUND_COLOR);
@@ -733,17 +767,17 @@ public class MessageTable extends JTable implements CellEditorListener,
 		// logger.info("Looking for color... "+in);
 		if (c == null && ra == null) {
 			createRowColor(row);
-			return getRowBackgroundColor(row);
+			return getRowBackgroundColor(row, col);
 		} else {
 			return c;
 		}
 	}
 	
-	public final Color getRowForegroundColor(int row) {
+	public final Color getRowForegroundColor(int row, int col) {
         if (row >= myModel.getRowCount()) {
             return Color.black;
         }
-        RowAttribute ra = rowAttributesMap.get(row);
+        RowAttribute ra = getRowColumnAttribute(row, col, RowAttribute.ROW_FOREGROUND_COLOR);
         Color c = null;
         if (ra != null) {
             c = (Color) ra.getAttribute(RowAttribute.ROW_FOREGROUND_COLOR);
@@ -751,7 +785,7 @@ public class MessageTable extends JTable implements CellEditorListener,
         // logger.info("Looking for color... "+in);
         if (c == null && ra == null) {
             createRowColor(row);
-            return getRowForegroundColor(row);
+            return getRowForegroundColor(row, col);
         } else {
             return c;
         }
@@ -765,11 +799,11 @@ public class MessageTable extends JTable implements CellEditorListener,
 		int i = mapRowNumber(row);
 		Message m = getMessageRow(i);
 	
-		
+		// Create default null colors
+		 setRowColor(row, "", null, RowAttribute.ROW_BACKGROUND_COLOR);
+         setRowColor(row, "", null, RowAttribute.ROW_BACKGROUND_COLOR);
+         
 		Iterator<String> it = columnAttributes.keySet().iterator();
-		if ( !it.hasNext()) {
-			setRowBackgroundColor(row, null);
-		}
 		while (it.hasNext()) {
 
 			String key = it.next();
@@ -784,10 +818,10 @@ public class MessageTable extends JTable implements CellEditorListener,
 						if (color != null) {
 							// logger.info("Found color: " + color);
 							Color clr = Color.decode(color);
-							setRowBackgroundColor(row, clr);
+							setRowColor(row, ca.getColumnName(), clr, RowAttribute.ROW_BACKGROUND_COLOR);
 							continue;
 						} else {
-							setRowBackgroundColor(row, null);
+						    setRowColor(row, ca.getColumnName(), null, RowAttribute.ROW_BACKGROUND_COLOR);
 							continue;
 						}
 					}
@@ -796,10 +830,11 @@ public class MessageTable extends JTable implements CellEditorListener,
                         if (color != null) {
                             // logger.info("Found color: " + color);
                             Color clr = Color.decode(color);
-                            setRowForegroundColor(row, clr);
+                            setRowColor(row, ca.getColumnName(), clr, RowAttribute.ROW_FOREGROUND_COLOR);
                             continue;
                         } else {
-                            setRowForegroundColor(row, null);
+                            
+                            setRowColor(row, ca.getColumnName(), null, RowAttribute.ROW_FOREGROUND_COLOR);
                             continue;
                         }
                     }
@@ -813,10 +848,10 @@ public class MessageTable extends JTable implements CellEditorListener,
 								String color = ca.getParam(itkey);
 								if (color != null) {
 									Color clr = Color.decode(color);
-									setRowBackgroundColor(row, clr);
+									setRowColor(row, ca.getColumnName(), clr, RowAttribute.ROW_BACKGROUND_COLOR);
 									continue;
 								} else {
-									setRowBackgroundColor(row, null);
+								    setRowColor(row, ca.getColumnName(), null, RowAttribute.ROW_BACKGROUND_COLOR);
 									continue;
 								}
 							}
@@ -824,37 +859,43 @@ public class MessageTable extends JTable implements CellEditorListener,
 					}
 
 				}
-			} else {
-			    setRowBackgroundColor(row, null);
-		        setRowForegroundColor(row, null);
 			}
 		}
 	}
 
-	void setRowForegroundColor(int row, Color c) {
-	    RowAttribute ra = rowAttributesMap.get(row);
-	    if (ra == null) {
-	        ra = new RowAttribute();
-	    }
-        ra.setAttribute(RowAttribute.ROW_FOREGROUND_COLOR, c);
-        rowAttributesMap.put(row, ra);
+	void setRowColor(int row, String columnName, Color c, int type) {
+	    int realCol = -1;
+	    RowAttribute ra = null;
+	    
+	    if (!columnName.equals("")) {
+	        realCol = myModel.getColumnIndex(columnName);
+	    } 
+	    
+	    
+	    Map<Integer, RowAttribute> rowMap = rowColumnAttributesMap.get(row);
+        if (rowMap == null) {
+            rowMap = new HashMap<Integer, RowAttribute>();
+            rowColumnAttributesMap.put(row, rowMap);
+        }
+        if (rowMap.get(realCol) != null) {
+            ra = rowMap.get(realCol);
+        } else {
+            ra = new RowAttribute(); 
+        }
+	    
+	    ra.setAttribute(type, c);
+	    setRowColumnAttribute(row, realCol, ra);
+ 
     }
 
-    public final void setRowBackgroundColor(int row, Color c) {
-	    RowAttribute ra = rowAttributesMap.get(row);
-	    if (ra == null) {
-            ra = new RowAttribute();
-        }
-	    ra.setAttribute(RowAttribute.ROW_BACKGROUND_COLOR, c);
-	    rowAttributesMap.put(row, ra);
-	}
+    
 
 	public MessageTableModel getMessageModel() {
 		return myModel;
 	}
 
 	public final void resetColorMap() {
-	    rowAttributesMap.clear();
+	    rowColumnAttributesMap.clear();
 	}
 
 	public final void fireDataChanged() {
@@ -1510,7 +1551,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 						Property q = null;
 
-						if (p.getType() == Property.SELECTION_PROPERTY
+						if (p.getType().equals(Property.SELECTION_PROPERTY)
 								&& p.getCardinality().equals("+")) {
 							try {
 								q = NavajoFactory.getInstance().createProperty(
@@ -1548,7 +1589,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 					if (p != null) {
 						Property q = null;
 
-						if (p.getType() == Property.SELECTION_PROPERTY
+						if (p.getType().equals(Property.SELECTION_PROPERTY)
 								&& p.getCardinality().equals("+")) {
 							try {
 								q = NavajoFactory.getInstance().createProperty(
@@ -1585,10 +1626,6 @@ public class MessageTable extends JTable implements CellEditorListener,
 		return constructed;
 	}
 
-	@Override
-	public final void tableChanged(TableModelEvent parm1) {
-		super.tableChanged(parm1);
-	}
 
 	public final void addActionListener(ActionListener e) {
 		actionListeners.add(e);
@@ -1658,63 +1695,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 		// logger.info("Editing stopped, in MT");
 		changed = true;
-		// if (current != null &&
-		// Property.SELECTION_PROPERTY.equals(current.getType())) {
-		// // a selection property
-		// if (replacementMap.containsKey(current.getName())) {
-		// //logger.info("You're edititing a cached property");
-		// try {
-		// getSelectedMessage().getProperty( (String)
-		// replacementMap.get(current.getName())).setValue(current.getSelected().getValue());
-		// }
-		// catch (NavajoException ex3) {
-		// ex3.printStackTrace();
-		// }
-		// }
-		// try {
-		// Selection initSel = init.getSelected();
-		// Selection currentSel = current.getSelected();
-		// if (! (initSel != null && currentSel != null &&
-		// initSel.getValue().equals(currentSel.getValue()))) {
-		// // logger.info("Ready for select");
-		// try {
-		// fireChangeEvents(init, current);
-		// return;
-		// }
-		// catch (NavajoException ex) {
-		// ex.printStackTrace();
-		// }
-		// }
-		// }
-		// catch (Exception ex1) {
-		// ex1.printStackTrace();
-		// }
-		// }
-		// else {
-		// if (init != null && current != null) {
-		// if (init.getValue() != null && current.getValue() != null) {
-		// if (!init.getValue().equals(current.getValue())) {
-		// try {
-		// fireChangeEvents(init, current);
-		// }
-		// catch (NavajoException ex) {
-		// ex.printStackTrace();
-		// }
-		// }
-		// else {
-		// // logger.info("Ignoring equal..");
-		// }
-		// }
-		// else {
-		// try {
-		// fireChangeEvents(init, current);
-		// }
-		// catch (NavajoException ex) {
-		// ex.printStackTrace();
-		// }
-		// }
-		// }
-		// }
+
 		try {
 			// List props = myMessage.getRootDoc().refreshExpression();
 
@@ -1723,26 +1704,11 @@ public class MessageTable extends JTable implements CellEditorListener,
 			 *       will be updated anyway
 			 */
 			if (getRefreshAfterEdit()) {
-				// This *MAY* not be enough, as expressions may have references
-				// to properties
-				// outside this table. (Only important if these properties also
-				// have references
-				// to properties in this table.
-				// List props = myMessage.getRootDoc().refreshExpression();
-				// myMessage.refreshExpression();
-				// NavajoFactory.getInstance().getExpressionEvaluator().
-				// logger.info("# of properties changed: "+props.size());
-
-				// getMessageModel().updateProperties(props);
-
+			
 				updateExpressions();
 				// fireDataChanged();
 			}
-			// logger.info("refreshed. Items changed: "+props.size());
-			// for (int i = 0; i < props.size(); i++) {
-			// Property currentProp = (Property)props.get(i);
-			// firePropertyChanged(currentProp);
-			// }
+			
 		} catch (Throwable ex2) {
 			ex2.printStackTrace();
 		}
@@ -1751,10 +1717,6 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 	public void updateExpressions() throws NavajoException {
 		List<Property> props = myMessage.getRootDoc().refreshExpression();
-		// myMessage.refreshExpression();
-		// NavajoFactory.getInstance().getExpressionEvaluator().
-		// logger.info("# of properties changed: " + props.size());
-
 		getMessageModel().updateProperties(props);
 	}
 

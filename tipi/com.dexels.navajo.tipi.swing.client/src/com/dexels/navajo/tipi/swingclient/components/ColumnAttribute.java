@@ -25,6 +25,7 @@ public class ColumnAttribute {
 	private Map<String, String> myParams;
 	private String myType;
 	private String myName;
+	private String columnName;
 	
 	public final static String TYPE_ROWCOLOR = "rowColor";
 	public final static String TYPE_ROWTEXTCOLOR = "rowTextColor";
@@ -62,5 +63,19 @@ public class ColumnAttribute {
 	public Set<String> getParamKeys() {
 		return myParams.keySet();
 	}
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(String columnName) {
+        if (columnName == null) {
+            this.columnName = "";
+            return;
+        }
+        this.columnName = columnName;
+    }
+	
+	
 
 }

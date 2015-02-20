@@ -130,10 +130,5 @@ public final class MessageTableColumnModel extends DefaultTableColumnModel {
 		addColumn(tc);
 	}
 
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		// logger.info("Column selection changed!");
-		super.valueChanged(e);
-	}
 
 }

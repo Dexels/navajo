@@ -9,7 +9,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -309,16 +308,14 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
             }
         }
 
-        Color clr = (myTable != null ? myTable.getRowBackgroundColor(row) : null);
+        Color clr = (myTable != null ? myTable.getRowBackgroundColor(row, col) : null);
         if (clr != null) {
-            Color dark = clr.darker();
-            c.setBackground(isSelected ? dark : clr);
+            c.setBackground(isSelected ? clr.darker() : clr);
         }
 
-        clr = (myTable != null ? myTable.getRowForegroundColor(row) : null);
+        clr = (myTable != null ? myTable.getRowForegroundColor(row, col) : null);
         if (clr != null) {
-            Color dark = clr.darker();
-            c.setForeground(isSelected ? dark : clr);
+            c.setForeground(isSelected ? clr.darker() : clr);
         }
 
     }

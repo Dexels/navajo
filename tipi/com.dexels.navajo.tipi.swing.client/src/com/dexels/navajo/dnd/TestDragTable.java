@@ -52,11 +52,6 @@ public class TestDragTable extends JTable implements Runnable {
 	public static class TransferHandler2 extends TransferHandler {
 		private static final long serialVersionUID = 867827589145563565L;
 
-		@Override
-		public void exportAsDrag(JComponent comp, InputEvent e, int action) {
-			super.exportAsDrag(comp, e, action);
-		}
-
 		TransferHandler2() {
 			super();
 		}

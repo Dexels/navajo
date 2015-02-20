@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
@@ -137,22 +136,6 @@ public class PropertyCellEditor implements TableCellEditor,
 			myProperty.addPropertyChangeListener(this);
 			myPropertyType = myProperty.getType();
 			if (myPropertyType.equals(Property.SELECTION_PROPERTY)) {
-
-				try {
-					if (row == 0) {
-						// logger.info("\n\n=====================================================================================");
-						for (int i = 0; i < myProperty.getAllSelections()
-								.size(); i++) {
-							// logger.info("EDITOR SEL: " + ( (Selection)
-							// myProperty.getAllSelections().get(i)).getName() +
-							// " selected: " + ( (Selection)
-							// myProperty.getAllSelections().get(i)).isSelected());
-						}
-						// logger.info("=====================================================================================");
-					}
-				} catch (Exception e) {
-					logger.error("Error: ",e);
-				}
 
 				if (myProperty.getCardinality().equals("+")) {
 					if (myMultiSelectPropertyBox == null) {
