@@ -50,6 +50,7 @@ import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -99,7 +100,10 @@ import com.dexels.navajo.tipi.swingclient.components.sort.TableSorter;
  */
 public class MessageTable extends JTable implements CellEditorListener,
 		PropertyChangeListener, ListSelectionListener, CopyCompatible {
-	private static final long serialVersionUID = -1174076772355177410L;
+	private final Color DEFAULT_FOREGROUND_COLOR = new JLabel().getForeground();
+    private final Color DEFAULT_BACKGROUND_COLOR = new JLabel().getBackground();
+    
+    private static final long serialVersionUID = -1174076772355177410L;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(MessageTable.class);
@@ -745,12 +749,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	    return null;
 	}
 	
-	private void setRowColumnAttribute(int row, int col, RowAttribute ra) {
-	    Map<Integer, RowAttribute> rowMap = rowColumnAttributesMap.get(row);
-	    rowMap.put(col,  ra);
-	    rowColumnAttributesMap.put(row,  rowMap);
-    }
-	
+		
 	
 	
 	public final Color getRowBackgroundColor(int row, int col) {
@@ -796,47 +795,38 @@ public class MessageTable extends JTable implements CellEditorListener,
 	}
 
 	private final void createRowColor(int row) {
-		int i = mapRowNumber(row);
-		Message m = getMessageRow(i);
+		Message m = getMessageRow(row);
 	
 		// Create default null colors
-		 setRowColor(row, "", null, RowAttribute.ROW_BACKGROUND_COLOR);
-         setRowColor(row, "", null, RowAttribute.ROW_BACKGROUND_COLOR);
+		setRowColor(row, "", DEFAULT_BACKGROUND_COLOR, RowAttribute.ROW_BACKGROUND_COLOR);
+        setRowColor(row, "", DEFAULT_FOREGROUND_COLOR, RowAttribute.ROW_FOREGROUND_COLOR);
          
 		Iterator<String> it = columnAttributes.keySet().iterator();
 		while (it.hasNext()) {
 
 			String key = it.next();
 			Property p = m.getProperty(key);
-			// logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>> Looking for color of row: "
-			// + key);
 			if (p != null) {
 			    for (ColumnAttribute ca : columnAttributes.get(key)) {
 					// logger.info("Got column atributes");
-					if (ca.getType().equals(ColumnAttribute.TYPE_ROWCOLOR)) {
-						String color = ca.getParam(p.getValue());
-						if (color != null) {
-							// logger.info("Found color: " + color);
-							Color clr = Color.decode(color);
-							setRowColor(row, ca.getColumnName(), clr, RowAttribute.ROW_BACKGROUND_COLOR);
-							continue;
-						} else {
-						    setRowColor(row, ca.getColumnName(), null, RowAttribute.ROW_BACKGROUND_COLOR);
-							continue;
-						}
-					}
-					if (ca.getType().equals(ColumnAttribute.TYPE_ROWTEXTCOLOR)) {
+                    if (ca.getType().equals(ColumnAttribute.TYPE_ROWCOLOR)) {
                         String color = ca.getParam(p.getValue());
                         if (color != null) {
-                            // logger.info("Found color: " + color);
+                            Color clr = Color.decode(color);
+                            setRowColor(row, ca.getColumnName(), clr, RowAttribute.ROW_BACKGROUND_COLOR);
+                        }
+                      
+                        continue;
+
+                    }
+                    if (ca.getType().equals(ColumnAttribute.TYPE_ROWTEXTCOLOR)) {
+                        String color = ca.getParam(p.getValue());
+                        if (color != null) {
                             Color clr = Color.decode(color);
                             setRowColor(row, ca.getColumnName(), clr, RowAttribute.ROW_FOREGROUND_COLOR);
-                            continue;
-                        } else {
-                            
-                            setRowColor(row, ca.getColumnName(), null, RowAttribute.ROW_FOREGROUND_COLOR);
-                            continue;
                         }
+                        continue;
+
                     }
 					
 					if (ca.getType().equals(ColumnAttribute.TYPE_FREEROWCOLOR)) {
@@ -849,9 +839,6 @@ public class MessageTable extends JTable implements CellEditorListener,
 								if (color != null) {
 									Color clr = Color.decode(color);
 									setRowColor(row, ca.getColumnName(), clr, RowAttribute.ROW_BACKGROUND_COLOR);
-									continue;
-								} else {
-								    setRowColor(row, ca.getColumnName(), null, RowAttribute.ROW_BACKGROUND_COLOR);
 									continue;
 								}
 							}
@@ -871,7 +858,6 @@ public class MessageTable extends JTable implements CellEditorListener,
 	        realCol = myModel.getColumnIndex(columnName);
 	    } 
 	    
-	    
 	    Map<Integer, RowAttribute> rowMap = rowColumnAttributesMap.get(row);
         if (rowMap == null) {
             rowMap = new HashMap<Integer, RowAttribute>();
@@ -884,7 +870,8 @@ public class MessageTable extends JTable implements CellEditorListener,
         }
 	    
 	    ra.setAttribute(type, c);
-	    setRowColumnAttribute(row, realCol, ra);
+	    rowMap.put(realCol, ra);
+        rowColumnAttributesMap.put(row, rowMap);
  
     }
 
@@ -899,8 +886,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	}
 
 	public final void fireDataChanged() {
-		((TableSorter) getModel())
-				.tableChanged(new TableModelEvent(getModel()));
+		((TableSorter) getModel()).tableChanged(new TableModelEvent(getModel()));
 	}
 
 	public final void fireTableStructureChanged() {
@@ -974,6 +960,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	}
 
 	public void setMessage(Message m) {
+	   
 		Message myOldMessage = myMessage;
 		if (myMessage != null) {
 			myMessage.removePropertyChangeListener(this);
@@ -1005,7 +992,6 @@ public class MessageTable extends JTable implements CellEditorListener,
 		}
 		myMessage = m;
 
-		resetColorMap();
 		if (m.getArraySize() > 0) {
 			mtm.fireTableRowsInserted(0, m.getArraySize() - 1);
 		}

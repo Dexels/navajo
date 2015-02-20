@@ -296,6 +296,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
         if (row < 0) {
             return;
         }
+        String a=  " ";
         JComponent cc = (JComponent) c;
         cc.setOpaque(true);
         if (isSelected) {
