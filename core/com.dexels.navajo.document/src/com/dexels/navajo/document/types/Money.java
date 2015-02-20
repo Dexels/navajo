@@ -282,7 +282,7 @@ public final int compareTo(Money o) {
       return 0;
     }
     Money other = o;
-    if (other.doubleValue() == this.doubleValue()) {
+    if ((Double) other.doubleValue() == (Double) this.doubleValue()) {
       return 0;
     }
     if (this.doubleValue() < other.doubleValue()) {
@@ -324,11 +324,7 @@ public boolean equals(Object obj) {
     if (obj instanceof Money) {
       Money m = (Money) obj;
       if (m.value == null) {
-    	if(value==null) {
-    		return true;
-    	} else {
-            return false;
-    	}
+          return value == null;
       } else {
       	if(value==null) {
     		return false;

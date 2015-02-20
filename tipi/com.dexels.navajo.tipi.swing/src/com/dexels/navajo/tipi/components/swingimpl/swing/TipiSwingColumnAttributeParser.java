@@ -65,7 +65,7 @@ public class TipiSwingColumnAttributeParser {
 		ca.setName(name);
 		ca.setType(myAttributeType);
 		ca.setParams(paramMap);
-		ca.setColumn(column);
+		ca.setColumnName(column);
 		return ca;
 	}
 

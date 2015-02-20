@@ -823,11 +823,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	}
 
 	public boolean needsFullAccessLog() {
-		if ( isDebugAll() || ( getCompiledScript() != null && getCompiledScript().isDebugAll() ) ) {
-			return true;
-		} else {
-			return false;
-		}
+		return isDebugAll() || ( getCompiledScript() != null && getCompiledScript().isDebugAll() );
 	}
 
 

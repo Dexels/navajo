@@ -230,7 +230,6 @@ public class FormatIdentification implements Serializable
 				}
 			} catch (IOException e) {
 				logger.error("Error: ", e);
-				return newDesc;
 			}
 		}
 

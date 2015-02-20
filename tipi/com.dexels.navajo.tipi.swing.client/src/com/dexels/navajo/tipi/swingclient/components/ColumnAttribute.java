@@ -75,7 +75,6 @@ public class ColumnAttribute {
         }
         this.columnName = columnName;
     }
-	
-	
+
 
 }

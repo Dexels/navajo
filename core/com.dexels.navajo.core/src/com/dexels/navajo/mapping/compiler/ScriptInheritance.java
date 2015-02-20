@@ -33,11 +33,7 @@ public class ScriptInheritance {
 		if ( one.getName().equals(two.getName())) {
 			String nameOne = ( one.getAttribute("name") != null ? (String) one.getAttribute("name") : (String) one.getAttribute(BLOCK_ELEMENT) );
 			String nameTwo = ( two.getAttribute("name") != null ? (String) two.getAttribute("name") : (String) two.getAttribute(BLOCK_ELEMENT) );
-			if ( nameOne != null  && nameTwo != null && nameOne.equals(nameTwo)) {
-				return true;
-			} else {
-				return false;
-			}
+			return nameOne != null  && nameTwo != null && nameOne.equals(nameTwo);
 		} else {
 			return false;
 		}
@@ -241,7 +237,7 @@ public class ScriptInheritance {
 					String level = (String) childPrev.getAttribute("level");
 					XMLElement found = findMessageWithLevel(messageName, level, subScript);
 					if ( found != null ) {
-						replaceMessagesWithLevel(new Integer(level).intValue(), 0, i, superScript, found);
+						replaceMessagesWithLevel(Integer.parseInt(level), 0, i, superScript, found);
 					} 
 				}
 			}

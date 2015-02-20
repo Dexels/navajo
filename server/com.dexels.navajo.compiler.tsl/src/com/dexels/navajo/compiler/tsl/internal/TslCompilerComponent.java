@@ -195,7 +195,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.println("	CompiledScript instance = c.newInstance();");
 		w.println("	super.initialize(instance);");
 		w.println("	return instance;");
-		w.println("}");
+		w.println('}');
 		w.println("");
 		for (String res : resources) {
 			addResourceDependency(res, w, "set");
@@ -203,7 +203,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		}
 		w.println("");
 
-		w.println("}");
+		w.println('}');
 		w.flush();
 		w.close();
 
@@ -262,7 +262,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		boolean first = true;
 		while (it.hasNext()) {
 			if (!first) {
-				sb.append(" ");
+				sb.append(' ');
 			}
 			first = false;
 			String pck = it.next();

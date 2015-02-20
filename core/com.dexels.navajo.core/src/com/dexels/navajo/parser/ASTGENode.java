@@ -59,7 +59,7 @@ public final class ASTGENode extends SimpleNode {
                 boolean dum = compare(list.get(i), b).booleanValue();
 
 
-                if (dum == false)
+                if (!(dum))
                     return Boolean.valueOf(false);
                 result = result && dum;
             }

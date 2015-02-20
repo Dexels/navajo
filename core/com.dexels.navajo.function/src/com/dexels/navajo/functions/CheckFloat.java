@@ -93,7 +93,7 @@ public class CheckFloat extends FunctionInterface {
 		System.err.println("result = " + result);
 
 		cf.reset();
-		cf.insertOperand(new String("aap"));
+		cf.insertOperand("aap");
 		result = cf.evaluate();
 		System.err.println("result = " + result);
 

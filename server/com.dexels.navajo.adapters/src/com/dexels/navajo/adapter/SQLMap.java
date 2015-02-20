@@ -571,7 +571,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			// TODO eh? Need to fix?
 			return false;
 		}
-		return ((Boolean) ac).booleanValue();
+		return ac;
 	}
 
 	public void setTransactionIsolationLevel(int j) {
@@ -1623,7 +1623,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 						if (o != null) {
 							queryWithParameters.append(o.toString());
 						} else {
-							queryWithParameters.append("?");
+							queryWithParameters.append('?');
 						}
 					}
 				}

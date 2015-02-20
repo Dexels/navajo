@@ -42,7 +42,7 @@ public class NavajoDocumentTestFicture  {
       //prop6.addSelection(NavajoFactory.getInstance().createSelection(testDoc, "noot", "noot", false));
       msg.addProperty(prop6);
       
-      String binaryString = new String("ASSUMETHISISABINARY");
+      String binaryString = "ASSUMETHISISABINARY";
       Binary b = new Binary(binaryString.getBytes());
       Property prop7 = NavajoFactory.getInstance().createProperty(testDoc, "propbinary", Property.BINARY_PROPERTY, "", 10, "", Property.DIR_OUT);
       prop7.setAnyValue(b);

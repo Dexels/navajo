@@ -139,7 +139,7 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
           normalize();
           return;
         }
-        if (s.startsWith("0"))
+        if (s.length() > 0 && s.charAt(0) == '0')
           s = s.substring(1);
         int h = Integer.parseInt(s);
         if (h >= 0 && h <= 9)

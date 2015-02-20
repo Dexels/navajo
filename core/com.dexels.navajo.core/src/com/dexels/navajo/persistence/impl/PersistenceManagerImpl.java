@@ -270,10 +270,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 
     private final boolean isExpired(long stamp, long interval) {
         long now = System.currentTimeMillis();
-        if ((stamp + interval) <= now)
-            return true;
-        else
-            return false;
+        return (stamp + interval) <= now;
     }
 
     public final Persistable read(String key, String service, long expirationInterval) {

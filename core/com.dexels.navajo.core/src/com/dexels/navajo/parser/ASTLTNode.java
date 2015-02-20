@@ -53,7 +53,7 @@ public final class ASTLTNode extends SimpleNode {
             for (int i = 0; i < list.size(); i++) {
                 boolean dum = compare(list.get(i), b).booleanValue();
 
-                if (dum == false)
+                if (!(dum))
                     return Boolean.valueOf(false);
                 result = result && dum;
             }

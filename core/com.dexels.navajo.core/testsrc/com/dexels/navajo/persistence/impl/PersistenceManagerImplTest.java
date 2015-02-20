@@ -1,6 +1,5 @@
 package com.dexels.navajo.persistence.impl;
 
-import java.io.File;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,12 +12,10 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.persistence.Constructor;
 import com.dexels.navajo.persistence.Persistable;
-import com.dexels.navajo.persistence.PersistenceManagerFactory;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 import com.dexels.navajo.sharedstore.SharedMemoryStore;
-import com.dexels.navajo.sharedstore.SharedStoreFactory;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;
 
 class ConstructorTest implements Constructor {

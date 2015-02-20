@@ -397,11 +397,6 @@ public final void run(Access access) throws Exception {
 			  }
 		  }
 		  access.processingTime = (int) ( System.currentTimeMillis() - start );
-		  try {
-			  //JMXHelper.deregisterMXBean(JMXHelper.SCRIPT_DOMAIN, myThreadName);
-		  } catch (Throwable t) {
-			  System.err.println("WARNING: Could not register script as MBean: " + t.getMessage());
-		  }
 	  }
   }
 

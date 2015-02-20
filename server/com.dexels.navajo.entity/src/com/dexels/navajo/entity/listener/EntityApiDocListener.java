@@ -163,9 +163,7 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 
 				out += "</div>";// description div
 				out += "</li></ul>"; 
-			}
-			;
-			
+			}			
 		}
 		
 		out += "</body>";

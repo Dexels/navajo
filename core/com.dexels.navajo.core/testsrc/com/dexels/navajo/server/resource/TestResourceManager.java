@@ -15,11 +15,7 @@ public class TestResourceManager implements ResourceManager {
 
 	@Override
 	public boolean isAvailable(String resourceId) {
-		if (resourceId.equals("id1")) {
-			return true;
-		} else {
-			return false;
-		}
+		return resourceId.equals("id1");
 	}
 
 	@Override

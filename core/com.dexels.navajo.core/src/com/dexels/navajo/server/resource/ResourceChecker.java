@@ -190,7 +190,7 @@ public class ResourceChecker {
 						if ( health > finalHealth ) {
 							finalHealth = health;
 						}
-						if ( rm.isAvailable(resourceId) == false || health == ServiceAvailability.STATUS_DEAD ) {
+						if ( !(rm.isAvailable(resourceId)) || health == ServiceAvailability.STATUS_DEAD ) {
 							available = false;
 							int wt = rm.getWaitingTime(resourceId);
 							if ( wt > maxWaitingTime ) {

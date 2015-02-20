@@ -129,9 +129,8 @@ public class BundleCreatorComponent implements BundleCreator {
 			String scriptExtension, List<String> failures,
 			List<String> success, List<String> skipped, boolean force,
 			boolean keepIntermediate) throws Exception {
-		if (!scriptExtension.startsWith(".")) {
-			throw new IllegalAccessError(
-					"Script extension did not start with a dot!");
+		if (scriptExtension.length() == 0 || scriptExtension.charAt(0) != '.') {
+			throw new IllegalAccessError("Script extension did not start with a dot!");
 		}
 		String script = scriptName.replaceAll("\\.", "/");
 		String bareScript = scriptName

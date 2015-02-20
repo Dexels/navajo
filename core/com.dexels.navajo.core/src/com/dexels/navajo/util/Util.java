@@ -38,13 +38,9 @@ public final class Util {
 
         if (s.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR))
           return isRegularExpression(s.substring((Navajo.PARENT_MESSAGE +Navajo.MESSAGE_SEPARATOR).length()));
-        if ((s.indexOf("*") != -1) || (s.indexOf(".") != -1)
+        return (s.indexOf("*") != -1) || (s.indexOf(".") != -1)
                 || (s.indexOf("\\") != -1) || (s.indexOf("?") != -1)
-                || (s.indexOf("[") != -1) || (s.indexOf("]") != -1)
-                )
-            return true;
-        else
-            return false;
+                || (s.indexOf("[") != -1) || (s.indexOf("]") != -1);
 
     }
 

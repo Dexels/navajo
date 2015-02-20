@@ -119,7 +119,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			for (Selection s  : this) {
 				sb.append(s.getValue());
 				if(index<size()-1) {
-					sb.append(",");
+					sb.append(',');
 				} 
 				index++;
 			}
@@ -549,6 +549,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			try {
 				refreshExpression();
 			} catch (ExpressionChangedException e) {
+			    logger.warn("ExpressionChangedException error on getEvaluatedType: {}", e);
 			}
 		}
 		return evaluatedType;
@@ -1555,10 +1556,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		return super.hashCode();
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		return super.equals(o);
-	}
+
+
 
 	// public int compare(Property p) {
 	// Comparable ob1 = (Comparable)getAlternativeTypedValue();
@@ -1698,7 +1697,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				for (Selection s  : this) {
 					sb.append(s.getValue());
 					if(index<size()-1) {
-						sb.append(",");
+						sb.append(',');
 					} 
 					index++;
 				}
@@ -1800,11 +1799,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 			java.util.Date myDate = (java.util.Date) getTypedValue();
 			java.util.Date otherDate = (java.util.Date) p.getTypedValue();
-			if (dateFormat2.get().format(myDate).equals(dateFormat2.get().format(otherDate))) {
-				return true;
-			} else {
-				return false;
-			}
+			return dateFormat2.get().format(myDate).equals(dateFormat2.get().format(otherDate));
 		}
 		// Check for selection properties.
 		else if (p.getType().equals(Property.SELECTION_PROPERTY)) {

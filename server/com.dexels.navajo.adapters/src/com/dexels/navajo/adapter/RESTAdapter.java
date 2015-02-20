@@ -164,7 +164,7 @@ public class RESTAdapter extends NavajoMap {
 		http.setHeaderValue("application/json");
 		http.setMethod(method);
 		
-		if (method == "POST" || method == "PUT") {
+		if (method.equals("POST") || method.equals("PUT")) {
 			http.setContent(content);
 			http.setContentType("application/json");
 			http.setContentLength(content.getLength());

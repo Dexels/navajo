@@ -169,7 +169,7 @@ public void kill() {
         showDetails = true;
       }
     }
-    if (showDetails == false) { //Try async store
+    if (!(showDetails)) { //Try async store
       myAccess = com.dexels.navajo.mapping.AsyncStore.getInstance().accessStore.get(id);
       if (myAccess != null) {
         showDetails = true;

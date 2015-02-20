@@ -192,7 +192,7 @@ public class NavajoContextListener implements ServletContextListener {
 				if(contextPath == null || contextPath.isEmpty()) {
 					canonicalContextPath="/";
 				} else {
-					if(contextPath.startsWith("/")) {
+					if(contextPath.length() > 0 && contextPath.charAt(0) == '/') {
 						canonicalContextPath = contextPath.substring(1);
 					} else {
 						canonicalContextPath = contextPath;
