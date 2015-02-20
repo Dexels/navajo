@@ -160,7 +160,7 @@ public final int compareTo(Percentage o) {
       return 0;
     }
     Percentage other = o;
-    if ((Double) other.doubleValue() == (Double) this.doubleValue()) {
+    if (other.doubleValue() == this.doubleValue()) {
       return 0;
     }
     if (this.doubleValue() < other.doubleValue()) {
