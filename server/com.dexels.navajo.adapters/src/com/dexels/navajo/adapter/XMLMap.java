@@ -26,6 +26,7 @@ package com.dexels.navajo.adapter;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -90,10 +91,17 @@ public class XMLMap extends TagMap implements Mappable {
 
 	public Binary getContent() {
 		String r = getString();
-		Binary b = new Binary(r.getBytes());
-		if ( debug ) {
-			logger.debug(new String(b.getData()));
-		}
+                Binary b = new Binary();
+                
+                try {
+                    byte[] bytes = r.getBytes("UTF-8");
+                    b = new Binary(bytes);
+                    if ( debug ) {
+                        logger.debug(new String(bytes));
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    logger.error("UnsupportedEncodingException on getting bytes: {}", e);
+                }
 		return b;
 	}
 
