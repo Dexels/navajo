@@ -74,10 +74,6 @@ public class TipiTimeChart extends TipiChart {
 	    }
 	  }
 
-	@Override
-	protected void setComponentValue(String name, Object object) {
-		super.setComponentValue(name, object);
-	}
 	
 	
 	

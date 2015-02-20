@@ -743,7 +743,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		for (int i = 0; i < addressList.length; i++) {
 			sb.append(addressList[i].toString());
 			if (i != addressList.length - 1) {
-				sb.append(",");
+				sb.append(',');
 			}
 		}
 		addProperty(current, name, sb.toString(), name);

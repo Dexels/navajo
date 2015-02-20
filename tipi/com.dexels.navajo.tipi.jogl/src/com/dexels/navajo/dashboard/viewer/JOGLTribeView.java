@@ -652,10 +652,6 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		}
 	}
 
-	@Override
-	protected void setComponentValue(String name, Object object) {
-		super.setComponentValue(name, object);
-	}
 
 	@Override
 	protected Object getComponentValue(String name) {
@@ -1380,13 +1376,8 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		return null;
 	}
 
-	public static void main(String[] args) {
-		try {
+	
 
-		} catch (Exception e) {
-
-		}
-	}
 
 	@Override
 	public void dispose(GLAutoDrawable arg0) {

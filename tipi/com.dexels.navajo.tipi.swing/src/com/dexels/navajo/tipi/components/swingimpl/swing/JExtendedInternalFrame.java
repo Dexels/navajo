@@ -58,7 +58,7 @@ public class JExtendedInternalFrame extends JInternalFrame {
 		if (isVisible() && !isShowing()) {
 			Component parent = this.getParent();
 			while (parent != null) {
-				if (parent.isVisible() == false) {
+				if (!(parent.isVisible())) {
 					parent.setVisible(true);
 				}
 

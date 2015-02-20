@@ -48,10 +48,6 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 
 	private static final long serialVersionUID = -5204169989328717042L;
 
-	@Override
-	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
-		super.performComponentMethod(name, compMeth, event);
-	}
 
 	@Override
 	public Navajo doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {

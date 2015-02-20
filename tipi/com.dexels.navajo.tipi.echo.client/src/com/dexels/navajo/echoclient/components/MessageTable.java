@@ -304,25 +304,8 @@ public class MessageTable extends PageableSortableTable implements
 			return null;
 		}
 		logger.info("INDEX: " + index);
-		// int sortedPagedIndex= -1;
-		// int pagedSortedIndex= -1;
-		try {
-			// int sortedIndex =
-			// sortablePageableModel.toUnsortedModelRowIndex(index);
-			// logger.info("sorted: " + sortedIndex);
-			// int pagedIndex =
-			// sortablePageableModel.toUnpagedModelRowIndex(index);
-			// logger.info("pagedIndex: " + pagedIndex);
-			// sortedPagedIndex =
-			// sortablePageableModel.toUnpagedModelRowIndex(sortedIndex);
-			// logger.info("sortedPagedIndex: " + sortedPagedIndex);
-			// pagedSortedIndex =
-			// sortablePageableModel.toUnsortedModelRowIndex(pagedIndex);
-			// logger.info("pagedSortedIndex: " + pagedSortedIndex);
-		} catch (Throwable e) {
-			logger.error("Error: ",e);
-		}
-		// Actually removed all the above stuff...
+
+
 		Message selectedMessage = myModel.getMessageRow(index);
 
 		return selectedMessage;

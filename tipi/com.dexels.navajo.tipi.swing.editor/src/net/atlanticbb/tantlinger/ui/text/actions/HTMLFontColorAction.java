@@ -8,7 +8,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.util.Locale;
 
 import javax.swing.Action;
 import javax.swing.JColorChooser;

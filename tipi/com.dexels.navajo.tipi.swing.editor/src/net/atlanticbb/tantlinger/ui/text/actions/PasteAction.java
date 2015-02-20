@@ -17,7 +17,6 @@ import java.io.StringReader;
 import javax.swing.Action;
 import javax.swing.JEditorPane;
 import javax.swing.KeyStroke;
-import javax.swing.text.Document;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 

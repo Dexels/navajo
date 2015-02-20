@@ -9,7 +9,6 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.net.URL;
 
 import javax.swing.ImageIcon;

@@ -49,10 +49,7 @@ public class TipiSwingSplash extends JWindow implements Runnable {
 
 	@Override
 	public void run() {
-		try {
-		} catch (Exception e) {
-			this.setVisible(false);
-		}
+		
 	}
 
 	public void setInfoText(String info) {

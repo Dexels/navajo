@@ -26,11 +26,7 @@ public class GradientDesktop extends JDesktopPane {
 //	BufferedImage bg;
 
 	public GradientDesktop() {
-		try {
-			// bg = ImageIO.read(new
-			// File("/home/aphilip/Desktop/ai-scaled.jpg"));
-		} catch (Exception e) {
-		}
+		
 	}
 
 	@Override

@@ -172,7 +172,7 @@ public class UIUtils
      */
     public static void showError(Frame owner, Throwable th)
     {
-        showError(owner, null, th);;
+        showError(owner, null, th);
     }
     
     /**
@@ -200,7 +200,7 @@ public class UIUtils
      */
     public static void showError(Dialog owner, Throwable th)
     {
-        showError(owner, null, th);;
+        showError(owner, null, th);
     }
     
     /**

@@ -133,14 +133,6 @@ public class PerspectiveImagePanel extends JPanel {
 				previousAngle = angle;
 				currentImg = PerspectiveTransform.transform(img, angle, true, direction);//
 				g2.drawImage(currentImg, 0, 0, currentImg.getWidth(), currentImg.getHeight(), null);
-				try {
-					// ImageIO.write(currentImg, "png", new
-					// File("/home/aphilip/Desktop/img" + angle + ".png"));
-					// ImageIO.write(img2, "png", new
-					// File("/home/aphilip/Desktop/img2.png"));
-				} catch (Exception e) {
-					logger.error("Error: ",e);
-				}
 			} else {
 				currentImg = img;
 				g2.drawImage(currentImg, 0, 0, currentImg.getWidth(), currentImg.getHeight(), null);

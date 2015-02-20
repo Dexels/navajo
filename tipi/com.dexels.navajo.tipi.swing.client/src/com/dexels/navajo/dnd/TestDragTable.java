@@ -1,10 +1,7 @@
 package com.dexels.navajo.dnd;
 
 import java.awt.BorderLayout;
-import java.awt.event.InputEvent;
-
 import javax.swing.DropMode;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.JTextField;

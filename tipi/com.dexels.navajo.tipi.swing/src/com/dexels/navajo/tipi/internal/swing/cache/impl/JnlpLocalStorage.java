@@ -230,9 +230,9 @@ public class JnlpLocalStorage implements LocalStorage {
 		StringBuffer sb = new StringBuffer();
 		for (Entry<String, Long> entry : eset) {
 			sb.append(entry.getKey());
-			sb.append("|");
+			sb.append('|');
 			sb.append(entry.getValue());
-			sb.append("\n");
+			sb.append('\n');
 		}
 		// logger.debug("Modmap: "+sb.toString());
 		byte[] bytes = sb.toString().getBytes();

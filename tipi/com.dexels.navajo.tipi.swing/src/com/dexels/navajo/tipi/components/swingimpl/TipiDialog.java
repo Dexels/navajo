@@ -400,7 +400,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl implements TipiSuppor
 		if (false
 				&& mySwingTipiContext.getAppletRoot() != null
 				|| mySwingTipiContext.getOtherRoot() != null
-				|| (mySwingTipiContext.getDefaultDesktop() != null && forceInternal == true)) {
+				|| (mySwingTipiContext.getDefaultDesktop() != null && forceInternal)) {
 			// logger.debug("Applet root");
 			constructAppletDialog();
 		} else {

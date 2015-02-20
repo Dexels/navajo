@@ -364,17 +364,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 //		}
 //	}
 
-	@Override
-	protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, final TipiEvent event) throws TipiBreakException {
-		super.performComponentMethod(name, compMeth, event);
 
-	}
-
-	@Override
-	protected void setComponentValue(String name, Object object) {
-		super.setComponentValue(name, object);
-
-	}
 
 	@Override
 	public void display(GLAutoDrawable drawable) {
@@ -854,13 +844,8 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
         return t;
     }
 	
-	public static void main(String[] args){
-		try{
-						
-		}catch(Exception e){
-			
-		}
-	}
+	
+
 
 	@Override
 	public void dispose(GLAutoDrawable arg0) {

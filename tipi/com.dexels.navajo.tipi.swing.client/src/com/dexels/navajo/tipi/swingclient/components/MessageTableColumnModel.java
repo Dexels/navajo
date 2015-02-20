@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.swingclient.components;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 

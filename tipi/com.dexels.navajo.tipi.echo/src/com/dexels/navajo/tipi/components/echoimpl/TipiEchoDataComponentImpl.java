@@ -116,19 +116,6 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
             }
     }
 
-    /**
-     * loadData
-     * 
-     * @param n
-     *            Navajo
-     * @param context
-     *            TipiContext
-     * @throws TipiException
-     * @todo Implement this com.dexels.navajo.tipi.TipiDataComponent method
-     */
-    public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
-        super.loadData(n,  method);
-    }
 
     protected void setComponentValue(final String name, final Object object) {
         

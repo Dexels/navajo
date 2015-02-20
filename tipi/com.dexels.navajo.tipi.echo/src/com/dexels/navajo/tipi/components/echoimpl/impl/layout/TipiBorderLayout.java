@@ -47,10 +47,7 @@ public class TipiBorderLayout
     }
   }
 
-  
-  public void loadLayout(XMLElement def, TipiComponent t) throws TipiException {
-	super.loadLayout(def, t);
-}
+
 
 protected void setValue(String name, TipiValue tv) {
     throw new UnsupportedOperationException("Not implemented.");
