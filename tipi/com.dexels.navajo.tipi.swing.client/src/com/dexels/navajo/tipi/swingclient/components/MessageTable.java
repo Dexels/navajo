@@ -110,8 +110,8 @@ public class MessageTable extends JTable implements CellEditorListener,
 	private final MessageTableModel myModel;
 	// private MouseAdapter headerMouseAdapter = null;
 	private final List<ActionListener> actionListeners = new ArrayList<ActionListener>();
-	private Map<String, ColumnAttribute> columnAttributes;
-	private final Map<Integer, Color> rowColorMap = new HashMap<Integer, Color>();
+	private Map<String, List<ColumnAttribute>> columnAttributes;
+	private final Map<Integer, RowAttribute> rowAttributesMap = new HashMap<Integer, RowAttribute>();
 	protected String columnPathString = null;
 	private boolean changed;
 	protected boolean savePathJustChanged = false;
@@ -721,19 +721,41 @@ public class MessageTable extends JTable implements CellEditorListener,
 		myScroll = jp;
 	}
 
-	public final Color getRowColor(int row) {
+	public final Color getRowBackgroundColor(int row) {
 		if (row >= myModel.getRowCount()) {
 			return Color.green;
 		}
-		Color c = rowColorMap.get(row);
+		RowAttribute ra = rowAttributesMap.get(row);
+		Color c = null;
+		if (ra != null) {
+		    c = (Color) ra.getAttribute(RowAttribute.ROW_BACKGROUND_COLOR);
+		}
 		// logger.info("Looking for color... "+in);
-		if (c == null && !rowColorMap.containsKey(row)) {
+		if (c == null && ra == null) {
 			createRowColor(row);
-			return rowColorMap.get(row);
+			return getRowBackgroundColor(row);
 		} else {
 			return c;
 		}
 	}
+	
+	public final Color getRowForegroundColor(int row) {
+        if (row >= myModel.getRowCount()) {
+            return Color.black;
+        }
+        RowAttribute ra = rowAttributesMap.get(row);
+        Color c = null;
+        if (ra != null) {
+            c = (Color) ra.getAttribute(RowAttribute.ROW_FOREGROUND_COLOR);
+        }
+        // logger.info("Looking for color... "+in);
+        if (c == null && ra == null) {
+            createRowColor(row);
+            return getRowForegroundColor(row);
+        } else {
+            return c;
+        }
+    }
 
 	public final void setRenderer(PropertyCellRenderer tr) {
 		myRenderer = tr;
@@ -742,9 +764,11 @@ public class MessageTable extends JTable implements CellEditorListener,
 	private final void createRowColor(int row) {
 		int i = mapRowNumber(row);
 		Message m = getMessageRow(i);
+	
+		
 		Iterator<String> it = columnAttributes.keySet().iterator();
 		if ( !it.hasNext()) {
-			setRowColor(row, null);
+			setRowBackgroundColor(row, null);
 		}
 		while (it.hasNext()) {
 
@@ -753,19 +777,33 @@ public class MessageTable extends JTable implements CellEditorListener,
 			// logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>> Looking for color of row: "
 			// + key);
 			if (p != null) {
-				ColumnAttribute ca = columnAttributes.get(key);
-				if (ca != null) {
+			    for (ColumnAttribute ca : columnAttributes.get(key)) {
 					// logger.info("Got column atributes");
 					if (ca.getType().equals(ColumnAttribute.TYPE_ROWCOLOR)) {
 						String color = ca.getParam(p.getValue());
 						if (color != null) {
 							// logger.info("Found color: " + color);
 							Color clr = Color.decode(color);
-							setRowColor(row, clr);
+							setRowBackgroundColor(row, clr);
+							continue;
 						} else {
-							setRowColor(row, null);
+							setRowBackgroundColor(row, null);
+							continue;
 						}
 					}
+					if (ca.getType().equals(ColumnAttribute.TYPE_ROWTEXTCOLOR)) {
+                        String color = ca.getParam(p.getValue());
+                        if (color != null) {
+                            // logger.info("Found color: " + color);
+                            Color clr = Color.decode(color);
+                            setRowForegroundColor(row, clr);
+                            continue;
+                        } else {
+                            setRowForegroundColor(row, null);
+                            continue;
+                        }
+                    }
+					
 					if (ca.getType().equals(ColumnAttribute.TYPE_FREEROWCOLOR)) {
 						Set<String> s = ca.getParamKeys();
 						Iterator<String> iter = s.iterator();
@@ -775,23 +813,40 @@ public class MessageTable extends JTable implements CellEditorListener,
 								String color = ca.getParam(itkey);
 								if (color != null) {
 									Color clr = Color.decode(color);
-									setRowColor(row, clr);
+									setRowBackgroundColor(row, clr);
+									continue;
 								} else {
-									setRowColor(row, null);
+									setRowBackgroundColor(row, null);
+									continue;
 								}
 							}
 						}
 					}
 
-				} else {
-					setRowColor(row, null);
 				}
+			} else {
+			    setRowBackgroundColor(row, null);
+		        setRowForegroundColor(row, null);
 			}
 		}
 	}
 
-	public final void setRowColor(int row, Color c) {
-		rowColorMap.put(new Integer(row), c);
+	void setRowForegroundColor(int row, Color c) {
+	    RowAttribute ra = rowAttributesMap.get(row);
+	    if (ra == null) {
+	        ra = new RowAttribute();
+	    }
+        ra.setAttribute(RowAttribute.ROW_FOREGROUND_COLOR, c);
+        rowAttributesMap.put(row, ra);
+    }
+
+    public final void setRowBackgroundColor(int row, Color c) {
+	    RowAttribute ra = rowAttributesMap.get(row);
+	    if (ra == null) {
+            ra = new RowAttribute();
+        }
+	    ra.setAttribute(RowAttribute.ROW_BACKGROUND_COLOR, c);
+	    rowAttributesMap.put(row, ra);
 	}
 
 	public MessageTableModel getMessageModel() {
@@ -799,7 +854,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	}
 
 	public final void resetColorMap() {
-		rowColorMap.clear();
+	    rowAttributesMap.clear();
 	}
 
 	public final void fireDataChanged() {
@@ -1233,12 +1288,12 @@ public class MessageTable extends JTable implements CellEditorListener,
 		}
 	}
 
-	public final void setColumnAttributes(Map<String, ColumnAttribute> m) {
+	public final void setColumnAttributes(Map<String, List<ColumnAttribute>> columnAttributes) {
 		// logger.info("MessageTable columnAttributes set.");
-		columnAttributes = m;
+		this.columnAttributes = columnAttributes;
 	}
 
-	public Map<String, ColumnAttribute> getColumnAttributes() {
+	public Map<String, List<ColumnAttribute>> getColumnAttributes() {
 		return columnAttributes;
 	}
 
@@ -2245,5 +2300,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	public void setCurrentEditingComponent(Component doGetEditor) {
 		myCurrentEditingComponent = doGetEditor;
 	}
+
+
 
 }

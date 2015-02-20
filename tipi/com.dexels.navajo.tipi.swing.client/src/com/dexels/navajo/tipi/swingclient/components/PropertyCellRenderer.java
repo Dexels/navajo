@@ -48,7 +48,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
     private StopwatchTimeField myStopwatchTimeField = null;
     private PropertyPasswordField myPasswordField = null;
     private Property myProperty = null;
-    private Map<String, ColumnAttribute> columnAttributes;
+
     private MessageTable myTable;
 
     private final JLabel l;
@@ -119,7 +119,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
 
         if (MessageTable.class.isInstance(table)) {
             myTable = (MessageTable) table;
-            columnAttributes = myTable.getColumnAttributes();
+
         }
 
         if (value == null) {
@@ -300,7 +300,6 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
         JComponent cc = (JComponent) c;
         cc.setOpaque(true);
         if (isSelected) {
-
             c.setBackground(selectedColor);
         } else {
             if (row % 2 == 0) {
@@ -310,32 +309,18 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
             }
         }
 
-        if (columnAttributes != null && myProperty != null) {
-            ColumnAttribute ca = columnAttributes.get(myProperty.getName());
-            if (ca != null) {
-                if (ca.getType().equals(ColumnAttribute.TYPE_ROWCOLOR)) {
-                    String color = ca.getParam(myProperty.getValue());
-                    if (color != null) {
-                        Color clr = Color.decode(color);
-                        if (isSelected) {
-                            // Darker color
-                            Color dark = clr.darker();
-                            clr = dark;
-                        }
-                        c.setBackground(clr);
-                        if (myTable != null) {
-                            myTable.setRowColor(row, clr);
-                        }
-                    }
-                }
-            } else {
-                Color clr = (myTable != null ? myTable.getRowColor(row) : null);
-                if (clr != null) {
-                    Color dark = clr.darker();
-                    c.setBackground(isSelected ? dark : clr);
-                }
-            }
+        Color clr = (myTable != null ? myTable.getRowBackgroundColor(row) : null);
+        if (clr != null) {
+            Color dark = clr.darker();
+            c.setBackground(isSelected ? dark : clr);
         }
+
+        clr = (myTable != null ? myTable.getRowForegroundColor(row) : null);
+        if (clr != null) {
+            Color dark = clr.darker();
+            c.setForeground(isSelected ? dark : clr);
+        }
+
     }
 
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,

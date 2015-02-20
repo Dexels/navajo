@@ -27,9 +27,9 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public class TipiSwingColumnAttributeParser {
-	private String name, type;
-	private String myAttributeType = ColumnAttribute.TYPE_UNKNOWN;
-	private Map<String, String> paramMap = new HashMap<String, String>();
+	private String name, type, column;
+	private String myAttributeType;
+	private Map<String, String> paramMap;
 
 	public TipiSwingColumnAttributeParser() {
 	}
@@ -38,9 +38,15 @@ public class TipiSwingColumnAttributeParser {
 	}
 
 	public ColumnAttribute parseAttribute(XMLElement elm) {
+	    paramMap = new HashMap<String, String>();
+	    myAttributeType = ColumnAttribute.TYPE_UNKNOWN;
+	    name = null;
+	    type = null;
+	    
 		ColumnAttribute ca = new ColumnAttribute();
 		name = (String) elm.getAttribute("name");
 		type = (String) elm.getAttribute("type");
+		column = (String) elm.getAttribute("column");
 		List<XMLElement> kids = elm.getChildren();
 		for (int i = 0; i < kids.size(); i++) {
 			XMLElement child = kids.get(i);
@@ -52,10 +58,14 @@ public class TipiSwingColumnAttributeParser {
 		}
 		if (type.equals(ColumnAttribute.TYPE_ROWCOLOR)) {
 			myAttributeType = ColumnAttribute.TYPE_ROWCOLOR;
+		} else if (type.equals(ColumnAttribute.TYPE_ROWTEXTCOLOR)) {
+		    myAttributeType = ColumnAttribute.TYPE_ROWTEXTCOLOR;
 		}
+		
 		ca.setName(name);
 		ca.setType(myAttributeType);
 		ca.setParams(paramMap);
+		ca.setColumn(column);
 		return ca;
 	}
 

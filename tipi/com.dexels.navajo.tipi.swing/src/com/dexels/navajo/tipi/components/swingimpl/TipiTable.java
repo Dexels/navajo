@@ -73,7 +73,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 	
 	private String messagePath = "";
 	private MessageTablePanel mm;
-	private Map<String, ColumnAttribute> columnAttributes = new HashMap<String, ColumnAttribute>();
+	private Map<String, List<ColumnAttribute>> columnAttributes = new HashMap<String, List<ColumnAttribute>>();
 
 	private final Map<Integer, Integer> columnSize = new HashMap<Integer, Integer>();
 	private final List<String> columnCondition = new ArrayList<String>();
@@ -278,7 +278,12 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 				String type = (String) child.getAttribute("type");
 				if (name != null && type != null && !name.equals("")
 						&& !type.equals("")) {
-					columnAttributes.put(name, cap.parseAttribute(child));
+				    List<ColumnAttribute> attrs = columnAttributes.get(name);
+				    if (attrs == null) {
+				        attrs = new ArrayList<ColumnAttribute>();
+				    }
+				    attrs.add(cap.parseAttribute(child));
+					columnAttributes.put(name, attrs);
 				}
 			}
 			if (child.getName().equals("remarks")) {

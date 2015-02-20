@@ -25,7 +25,9 @@ public class ColumnAttribute {
 	private Map<String, String> myParams;
 	private String myType;
 	private String myName;
+	
 	public final static String TYPE_ROWCOLOR = "rowColor";
+	public final static String TYPE_ROWTEXTCOLOR = "rowTextColor";
 	public final static String TYPE_FREEROWCOLOR = "freeRowColor";
 	public final static String TYPE_CAPITALIZATION = "capitalization";
 	public final static String TYPE_UNKNOWN = "unknown";
