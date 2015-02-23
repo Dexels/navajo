@@ -60,19 +60,19 @@ public final class Access implements java.io.Serializable, Mappable {
 	 */
 	private static final long serialVersionUID = -7782160335447961196L;
 
-	final static Logger logger = LoggerFactory.getLogger(Access.class.getName());
+	static final Logger logger = LoggerFactory.getLogger(Access.class.getName());
 
-	public final static int EXIT_OK = 1;
-	public final static int EXIT_VALIDATION_ERR = 2;
-	public final static int EXIT_BREAk = 3		;
-	public final static int EXIT_USEREXCEPTION = 4	;
-	public final static int EXIT_EXCEPTION = 5	;
+	public static final int EXIT_OK = 1;
+	public static final int EXIT_VALIDATION_ERR = 2;
+	public static final int EXIT_BREAK = 3		;
+	public static final int EXIT_USEREXCEPTION = 4	;
+	public static final int EXIT_EXCEPTION = 5	;
 
 	@SuppressWarnings("unused")
 	private static final String VERSION = "$Id$";
 
 	public java.util.Date created = new java.util.Date();
-	protected static int accessCount = 0;
+	private static int AccessCount = 0;
 	public int threadCount = 0;
 	public double cpuload = -1.0;
 	public String accessID = "";
@@ -149,7 +149,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	// In order to manage continuations, I might need the original runnable.
 	// This service (and it's Access object) may be used by many different threads during its execution, but only
 	// the original knows how to commit the data and finalize the network connection.
-	protected transient TmlRunnable originalRunnable;
+	private transient TmlRunnable originalRunnable;
 
 
 
@@ -212,14 +212,16 @@ public final class Access implements java.io.Serializable, Mappable {
 	 */
 	public void setMergedDoc(Navajo mergedDoc, boolean append) {
 		
-		if ( this.outputDoc != null ) {
+		if ( outputDoc != null ) {
 			try {
 				if ( append ) {
-					this.outputDoc.appendDocBuffer(mergedDoc);
+					outputDoc.appendDocBuffer(mergedDoc);
 				} else {
-					this.outputDoc.merge(mergedDoc);
+					outputDoc.merge(mergedDoc);
 				}
-		    } catch (Exception e) {}
+		    } catch (Exception e) {
+		        logger.error("Exception on merging documents: {}", e);
+		    }
 			return;
 		}
 		if ( mergedDoc == null ) {
@@ -262,12 +264,12 @@ public final class Access implements java.io.Serializable, Mappable {
 	 * @param n
 	 */
 	public void setOutputDoc(Navajo n) {
-		if ( this.mergedDoc != null ) {
+		if ( mergedDoc != null ) {
 			try {
 				if ( n != null ) {
-					this.mergedDoc.appendDocBuffer(n);
+					mergedDoc.appendDocBuffer(n);
 				}
-				outputDoc = this.mergedDoc;
+				outputDoc = mergedDoc;
 			} catch (NavajoException e) {
 				logger.error("Error: ", e);
 			}
@@ -281,7 +283,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	 * @param id, a unique access id
 	 */
 	public void setWaitingForPreviousResponse(String id) {
-		this.waitingForPreviousRequest = id;
+		waitingForPreviousRequest = id;
 	}
 
 	/**
@@ -289,7 +291,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	 * @return, a unique access id
 	 */
 	public String getWaitingForPreviousResponse() {
-		return this.waitingForPreviousRequest;
+		return waitingForPreviousRequest;
 	}
 
 	/**
@@ -297,7 +299,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	 * @param cs
 	 */
 	public void setCompiledScript(CompiledScriptInterface cs) {
-		this.myScript = cs;
+		myScript = cs;
 	}
 
 	/**
@@ -322,7 +324,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	 * @param e
 	 */
 	public void setException(Throwable e) {
-		this.myException = e;
+		myException = e;
 	}
 
 	/**
@@ -330,7 +332,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	 * @return
 	 */
 	public Throwable getException() {
-		return this.myException;
+		return myException;
 	}
 
 	/**
@@ -343,8 +345,8 @@ public final class Access implements java.io.Serializable, Mappable {
 
 		
 		this();
-		accessCount++;
-		this.accessID = created.getTime() + "-" + accessCount;
+		AccessCount++;
+		this.accessID = created.getTime() + "-" + AccessCount;
 		//System.err.println("accessID " + this.accessID + ", WS = " + rpcName + ", USER = " + rpcUser);
 		this.userID = userID;
 		this.serviceID = serviceID;
@@ -354,7 +356,7 @@ public final class Access implements java.io.Serializable, Mappable {
 		this.hostName = hostName;
 		this.ipAddress = ipAddress;
 		this.betaUser = betaUser;
-		this.userCertificate = certificate;
+		userCertificate = certificate;
 	}
 	
 	public Access(int userID, int serviceID, String rpcUser,
@@ -371,8 +373,8 @@ public final class Access implements java.io.Serializable, Mappable {
 		
 		this.accessID = accessID;
 		if (accessID == null) {
-			accessCount++;
-			this.accessID = created.getTime() + "-" + accessCount;
+			AccessCount++;
+			this.accessID = created.getTime() + "-" + AccessCount;
 		}
 		this.userID = userID;
 		this.serviceID = serviceID;
@@ -381,8 +383,8 @@ public final class Access implements java.io.Serializable, Mappable {
 		this.userAgent = userAgent;
 		this.hostName = hostName;
 		this.ipAddress = ipAddress;
-		this.betaUser = false;
-		this.userCertificate = certificate;
+		betaUser = false;
+		userCertificate = certificate;
 		
 	}
 
@@ -395,12 +397,12 @@ public final class Access implements java.io.Serializable, Mappable {
 	public Access cloneWithoutNavajos() {
 		Access a = new Access();
 		
-		a.created = this.created;
-		a.threadCount = this.threadCount;
-		a.cpuload = this.cpuload;
-		a.accessID = this.accessID;
-		a.userID = this.userID;
-		a.serviceID = this.serviceID;
+		a.created = created;
+		a.threadCount = threadCount;
+		a.cpuload = cpuload;
+		a.accessID = accessID;
+		a.userID = userID;
+		a.serviceID = serviceID;
 		a.rpcName = this.rpcName;
 		a.rpcPwd = this.rpcPwd;
 		a.rpcUser = this.rpcUser;
@@ -445,21 +447,21 @@ public final class Access implements java.io.Serializable, Mappable {
 		myThread = Thread.currentThread();
 	}
 	
-	protected final void setUserCertificate(Object cert) {
+	public void setUserCertificate(Object cert) {
 		userCertificate = cert;
 	}
 
-	public final Object getUserCertificate() {
+	public Object getUserCertificate() {
 		return userCertificate;
 	}
 
 
 
-	public final Message getCurrentOutMessage() {
+	public Message getCurrentOutMessage() {
 		return currentOutMessage;
 	}
 
-	public final Message getCurrentInMessage() {
+	public Message getCurrentInMessage() {
 		if ( myScript != null ) {
 			return myScript.getCurrentInMsg();
 		} else {
@@ -467,7 +469,7 @@ public final class Access implements java.io.Serializable, Mappable {
 		}
 	}
 	
-	public final Selection getCurrentInSelection() {
+	public Selection getCurrentInSelection() {
 		if ( myScript != null ) {
 			return myScript.getCurrentSelection();
 		} else {
@@ -475,16 +477,16 @@ public final class Access implements java.io.Serializable, Mappable {
 		}
 	}
 	
-	public final void setCurrentOutMessage(Message currentOutMessage) {
+	public void setCurrentOutMessage(Message currentOutMessage) {
 		this.currentOutMessage = currentOutMessage;
 	}
 
-	public final void setFinished() {
+	public void setFinished() {
 		isFinished = true;
 		totaltime = (int) (System.currentTimeMillis() - created.getTime());
 	}
 
-	public final boolean isFinished() {
+	public boolean isFinished() {
 		return isFinished;
 	}
 
@@ -712,11 +714,8 @@ public final class Access implements java.io.Serializable, Mappable {
 	
 
 	/**
-	 * Static method thaRt does not check for existence of Access object.
-	 * If Access is null, the output is written to System.err
+	 * Static method that does not check for existence of Access object.
 	 * 
-	 * @param a
-	 * @param s
 	 */
 	public final static void writeToConsole(final Access a, final String s) {
 		if ( a != null ) {
@@ -725,16 +724,8 @@ public final class Access implements java.io.Serializable, Mappable {
 		if(s!=null) {
 			logger.info(s.trim());
 		}
-//		System.err.print(s);
 	}
 	
-	/**
-	 * Static method that checks for existence of Access object.
-	 * If Access is null, the output is written to System.err
-	 * 
-	 * @param a
-	 * @return
-	 */
 	public final static PrintWriter getConsoleWriter(final Access a) {
 		return new PrintWriter(System.err);
 	}
