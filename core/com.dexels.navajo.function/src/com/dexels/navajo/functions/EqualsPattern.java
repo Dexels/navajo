@@ -41,8 +41,8 @@ public class EqualsPattern extends FunctionInterface {
 	public static void main(String[] args) throws Exception {
 		EqualsPattern ep = new EqualsPattern();
 		ep.reset();
-		ep.insertOperand(new String("NCX12G1"));
-		ep.insertOperand(new String("[A-Z]{4}[0-9]{2}[A-Z0-9]{1}"));
+		ep.insertOperand("NCX12G1");
+		ep.insertOperand("[A-Z]{4}[0-9]{2}[A-Z0-9]{1}");
 		Object o = ep.evaluate();
 		System.err.println("o =" + o);
 	}

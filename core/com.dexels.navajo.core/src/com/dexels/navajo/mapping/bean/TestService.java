@@ -113,7 +113,7 @@ public class TestService {
 		value = dom.getDomainObjectAttribute("lastname", null);
 		System.err.println("new value = " + value);
 		
-		value = dom.getDomainObjectAttribute("appendedLastname", new Object[]{new String("hallo")});
+		value = dom.getDomainObjectAttribute("appendedLastname", new Object[]{"hallo"});
 		System.err.println("appendedLastname value = " + value);
 		
 		java.lang.reflect.Method[] all = TestBean.class.getMethods();

@@ -469,16 +469,7 @@ public Map<Property,List<Property>> createDependencyMap(Navajo n) throws NavajoE
 
     n.write(System.err);
     List<Property> exprList = dee.getExpressionList(n);
-    for (int i = 0; i < exprList.size(); i++) {
-      Property current = exprList.get(i);
-      List<Property> l = dee.getExpressionDependencies(n, current);
-      if (l != null) {
-        for (int j = 0; j < l.size(); j++) {
-        }
-
-      }
-    }
-
+ 
     Map<Property,List<Property>> depMap = dee.getExpressionDependencyMap(n, exprList);
 
     List<Property> queue = dee.createUpdateQueue(depMap);

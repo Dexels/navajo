@@ -169,11 +169,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         }
     }
 
-   
-    
-    public void removeFromContainer(Object c) {
-		super.removeFromContainer(c);
-	}
+  
 	public void setGroupValid(boolean valid, TipiBaseQuestionGroup group) {
         super.setGroupValid(valid, group);
         int i = myGroups.indexOf(group);

@@ -125,10 +125,7 @@ public void setIntegerProperty(String fullName) {
 
     try {
       Property p = msg.getProperty(fullName);
-      if (p != null)
-       return true;
-     else
-       return false;
+      return p != null;
     } catch (Exception e) {
         return false;
     }

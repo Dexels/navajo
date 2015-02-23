@@ -156,7 +156,7 @@ public class TslCompiler {
 
 	private String replaceQuotes(String str) {
 
-		if (str.startsWith("#")) {
+		if (str.length() > 0 && str.charAt(0) == '#') {
 			str = "(String) userDefinedRules.get(\"" + str.substring(1) + "\")";
 			return str;
 		} else {
@@ -166,9 +166,9 @@ public class TslCompiler {
 				if (c == '"') {
 					result.append("\\\"");
 				} else if (c == '\n') {
-					result.append(" ");
+					result.append(' ');
 				} else if (c == '\r') {
-					result.append(" ");
+					result.append(' ');
 				} else {
 					result.append(c);
 				}
@@ -195,7 +195,7 @@ public class TslCompiler {
 	private String printIdent(int count) {
 		StringBuffer identStr = new StringBuffer();
 		for (int i = 0; i < count; i++) {
-			identStr.append(" ");
+			identStr.append(' ');
 		}
 		return identStr.toString();
 	}
@@ -361,7 +361,7 @@ public class TslCompiler {
 												+ v.getClass().getName()
 												+ " @clause: " + clause);
 							if (allParams.hasMoreElements()) {
-								objectizedParams.append(",");
+								objectizedParams.append(',');
 							}
 						}
 
@@ -458,7 +458,7 @@ public class TslCompiler {
 				// + clause);
 			} catch (SystemException se) {
 				exact = false;
-				if (!clause.startsWith("#")) {
+				if (clause.length() == 0 || clause.charAt(0) != '#') {
 					throw new UserException(-1,
 							"Could not compile script, Invalid expression: "
 									+ clause);
@@ -647,7 +647,7 @@ public class TslCompiler {
 						+ method
 						+ "\", \""
 						+ service;
-				if (validationService != "") {
+				if (!validationService.equals("")) {
 					operationString += "\", \"" + validationService;
 				}
 						
@@ -825,7 +825,7 @@ public class TslCompiler {
 			refOriginal = nextElt.getAttribute("ref");
 			
 			// Check if ref contains [ char, if it does, an array message of a selection property is mapped.
-			if ( refOriginal.startsWith("[") ) {
+			if ( refOriginal.length() > 0 && refOriginal.charAt(0) == '[' ) {
 				refOriginal = refOriginal.replaceAll("\\[", "");
 				refOriginal = refOriginal.replaceAll("\\]", "");
 				isMappedMessage = true;
@@ -946,7 +946,7 @@ public class TslCompiler {
 					+ "outMsgStack.push(currentOutMsg);\n");
 			result.append(printIdent(ident + 2) + "currentOutMsg = "
 					+ messageList + "[messageCount" + (ident) + "];\n");
-			if (extendsMsg != null && extendsMsg != "") {
+			if (extendsMsg != null && !extendsMsg.equals("")) {
 				result.append(printIdent(ident + 2)
 						+ "currentOutMsg.setExtends(\"" + extendsMsg + "\");\n");
 				
@@ -3253,14 +3253,26 @@ public class TslCompiler {
 
 		if (debugInput) {
 			generatedCode.append("public final void dumpRequest() {\n");
-			generatedCode
-					.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
+			generatedCode.append("System.err.println(new Date());");
+			generatedCode.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
 			generatedCode.append("myAccess.getInDoc().write(System.err);\n");
-			generatedCode
-					.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
+			generatedCode.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
 			generatedCode.append("}\n\n");
 		}
 	}
+	
+	private void dumpResponseMethod(boolean debugOutput,
+            StringBuffer generatedCode) {
+
+        if (debugOutput) {
+            generatedCode.append("public final void dumpResponse() {\n");
+            generatedCode.append("System.err.println(new Date());");
+            generatedCode.append("System.err.println(\"\\n --------- BEGIN NAVAJO RESPONSE ---------\\n\");\n");
+            generatedCode.append("myAccess.getOutputDoc().write(System.err);\n");
+            generatedCode.append("System.err.println(\"\\n --------- END NAVAJO RESPONSE ---------\\n\");\n");
+            generatedCode.append("}\n\n");
+        }
+    }
 
 	private final void compileScript(InputStream is, String packagePath,
 			String script, String scriptPath, Writer fo, List<Dependency> deps,
@@ -3354,7 +3366,8 @@ public class TslCompiler {
 					+ "import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;\n"
 					+ "import java.util.concurrent.locks.Lock;\n"
 					+ "import java.util.concurrent.TimeUnit;\n"
-					+ "import java.util.Stack;\n\n\n";
+					+ "import java.util.Stack;\n"
+					+ "import java.util.Date;\n\n\n";
 			result.append(importDef);
 
 			result.append("/**\n");
@@ -3406,8 +3419,9 @@ public class TslCompiler {
 				includeNode(scriptPath, includeArray[i], tslDoc, tenant, deps);
 			}
 
-			// Generate dump request Navajo
+			// Generate dump request/response Navajo
 			dumpRequestMethod((debugInput || debugAll), result);
+            dumpResponseMethod((debugOutput || debugAll), result);
 
 			// Generate validation code.
 			generateValidations(tslDoc, result);
@@ -3440,11 +3454,6 @@ public class TslCompiler {
 			}
 
 			result.append("} finally {\n");
-			if (debugOutput || debugAll) {
-				result.append("System.err.println(\"\\n --------- BEGIN NAVAJO RESPONSE ---------\\n\");\n");
-				result.append("access.getOutputDoc().write(System.err);\n");
-				result.append("System.err.println(\"\\n --------- END NAVAJO RESPONSE ---------\\n\");\n");
-			}
 
 			if (broadcast) {
 				result.append("try { \n");

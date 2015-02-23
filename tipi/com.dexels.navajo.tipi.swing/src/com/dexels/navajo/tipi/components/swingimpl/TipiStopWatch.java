@@ -54,9 +54,6 @@ public class TipiStopWatch extends TipiSwingDataComponentImpl {
 	public TipiStopWatch()
 	{
 		clockTime = ((double)clockTick)/10.0;
-
-		clockTimeString = new Double(clockTime).toString();
-
 		myTimer1 = new Timer(TENTH_SEC, new ActionListener() {
 		public void actionPerformed(ActionEvent evt) {
 			System.out.println(clockTime);
@@ -231,17 +228,17 @@ public class TipiStopWatch extends TipiSwingDataComponentImpl {
 		return topPanel;
 	}
 	
-	private String formatClockTimeString(double input) {
+	private String formatClockTimeString(Double input) {
 		String output = "";
 		if (useDecimals) {
-			output = new Double(input).toString();
+			output = input.toString();
 		} else {
 			if ( ( Math.floor(input) % 1 ) == 0.0 ) {
 				input = Math.floor(clockTick / 10);
 				output = formatNoDecimals.format(input);
 			} else {
 				input = ((double)clockTick) / 10.0;
-				output = new Double(input).toString();
+				output = input.toString();
 			}
 		}
 		return output;

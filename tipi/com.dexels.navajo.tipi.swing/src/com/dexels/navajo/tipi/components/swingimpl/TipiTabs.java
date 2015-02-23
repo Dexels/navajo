@@ -448,6 +448,20 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		});
 
 	}
+	
+	@Override
+	public void unhideComponent() {
+	    JTabbedPane tabPane = (JTabbedPane) getContainer();
+	    if (tabPane.getTabCount() > 0) {
+	        tabPane.setSelectedIndex(0);
+	    }
+	    
+	    
+	    
+	    for (TipiComponent child : getChildren() ) {
+	           child.unhideComponent(); 
+	        }
+	}
 
 	// public void load(XMLElement elm, XMLElement instance, TipiContext
 	// context) throws com.dexels.navajo.tipi.TipiException {

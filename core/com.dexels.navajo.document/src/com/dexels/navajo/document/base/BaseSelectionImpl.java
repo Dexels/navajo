@@ -103,15 +103,10 @@ public final String toString() {
   }
 
 
-  @Override
-public int hashCode() {
-  	return super.hashCode();
-  }
-  
-  @Override
-public boolean equals(Object o) {
-  	return super.equals(o);
-  }
+
+
+
+
   
   @Override
 public final int compareTo(Selection o) {

@@ -80,17 +80,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		NavajoFactory.terminate();
 	}
 
-	@Override
-	public void start(BundleContext bc) throws Exception {
-		super.start(bc);
-	}
 
-	@Override
-	public void stop(BundleContext bc) throws Exception {
-		super.stop(bc);
-	}
-
-	
 
 
 }

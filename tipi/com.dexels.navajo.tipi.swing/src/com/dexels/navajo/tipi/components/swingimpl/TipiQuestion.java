@@ -36,7 +36,7 @@ public class TipiQuestion extends TipiBaseQuestion {
 	@Override
 	public void setValid(boolean b, String msg) {
 
-		if (b == false) {
+		if (!(b)) {
 			Border bbb = BorderFactory.createTitledBorder(
 					BorderFactory.createLineBorder(Color.red), msg);
 			((JComponent) getContainer()).setBorder(bbb);

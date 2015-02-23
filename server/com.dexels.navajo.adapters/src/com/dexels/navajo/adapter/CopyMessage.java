@@ -90,7 +90,7 @@ public void store() throws MappableException, UserException {
     if ( copyMessageTo != null ) {
     	try {
     		to = MappingUtils.addMessage(outputDoc, myAccess.getCurrentOutMessage(), copyMessageTo, null, 
-    				1, ( from.getType() != Message.MSG_TYPE_DEFINITION ? from.getType() : Message.MSG_TYPE_SIMPLE ), "")[0];
+    				1, ( !from.getType().equals(Message.MSG_TYPE_DEFINITION) ? from.getType() : Message.MSG_TYPE_SIMPLE ), "")[0];
     	} catch (Exception e1) {
     		throw new UserException(-1, e1.getMessage(), e1);
     	}

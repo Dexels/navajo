@@ -595,7 +595,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			name = name.substring(2);
 		}
 
-		if (name.startsWith("/")) {
+		if (name.length() > 0 && name.charAt(0) == '/') {
 			return getRootDoc().getMessage(name.substring(1));
 		}
 		if (name.indexOf("/") >= 0) {
@@ -783,7 +783,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	@Override
 	public final Property getProperty(String s) {
-		if (s.startsWith("/")) {
+		if (s.length() > 0 && s.charAt(0) == '/') {
 			return getRootDoc().getProperty(s.substring(1));
 		}
 
@@ -1050,7 +1050,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			return m;
 		}
 
-		if (path.startsWith("/")) {
+		if (path.length() > 0 && path.charAt(0) == '/') {
 			path = path.substring(1);
 		}
 
@@ -1070,7 +1070,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	public final Property getPropertyByPath(String pth) {
 		String path = null;
-		if (pth.startsWith("/")) {
+		if (pth.length() > 0 && pth.charAt(0) == '/') {
 			path = pth.substring(1);
 		} else {
 			path = pth;
@@ -1803,6 +1803,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 					}
 					
 				} catch (NavajoException e) {
+				    logger.error("Navajo Exception on merge: {}", e);
 				}
 			} else {
 				existing.merge(subMessages.get(i), preferThis);
@@ -2047,7 +2048,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		      //prop6.addSelection(NavajoFactory.getInstance().createSelection(testDoc, "noot", "noot", false));
 		      msg.addProperty(prop6);
 		      
-		      String binaryString = new String("ASSUMETHISISABINARY");
+		      String binaryString = "ASSUMETHISISABINARY";
 		      Binary b = new Binary(binaryString.getBytes());
 		      Property prop7 = NavajoFactory.getInstance().createProperty(testDoc, "propbinary", Property.BINARY_PROPERTY, "", 10, "", Property.DIR_OUT);
 		      prop7.setAnyValue(b);

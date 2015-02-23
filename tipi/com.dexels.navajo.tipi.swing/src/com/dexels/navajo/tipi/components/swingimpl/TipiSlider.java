@@ -167,12 +167,5 @@ public class TipiSlider extends TipiSwingComponentImpl {
 		return super.getComponentValue(name);
 	}
 
-	@Override
-	protected void performComponentMethod(String name,
-			TipiComponentMethod compMeth, TipiEvent event)
-			throws TipiBreakException {
-		super.performComponentMethod(name, compMeth, event);
-
-	}
 
 }

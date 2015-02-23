@@ -79,7 +79,7 @@ public class StripBody extends FunctionInterface {
 		StringBuffer sb = new StringBuffer();
 		do {
 			sb.append(line);
-			sb.append("\n");
+			sb.append('\n');
 			line = br.readLine();
 		} while (line != null);
 

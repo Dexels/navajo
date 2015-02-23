@@ -27,7 +27,7 @@ public class EntityHelper {
 			Property e_p = allProperties.next();
 			// Find property in input message.
 			Property p = msg.getProperty(e_p.getName());
-			if (! (e_p.getDirection() == "") || (e_p.getDirection() == direction)) {
+			if (! (e_p.getDirection().equals("")) || (e_p.getDirection().equals(direction))) {
 				// not interested
 				break;
 			}

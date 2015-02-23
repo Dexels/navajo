@@ -150,9 +150,12 @@ public class TipiSwingWindow extends JInternalFrame {
     }
     
     public void addGlass(String type) {
-        glassPanel.setType(type);
-        glassPanel.start();
-        setGlassPane(glassPanel);
+        if (!glassPanel.isVisible()) {
+            glassPanel.setType(type);
+            glassPanel.start();
+            setGlassPane(glassPanel);
+        }
+       
     }
     
   

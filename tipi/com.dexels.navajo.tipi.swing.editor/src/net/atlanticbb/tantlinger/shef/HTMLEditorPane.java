@@ -81,9 +81,7 @@ import org.bushe.swing.action.ActionList;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.ActionUIFactory;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 /**

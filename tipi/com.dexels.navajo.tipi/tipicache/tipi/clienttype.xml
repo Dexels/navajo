@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" errorhandler="error" xsi:noNamespaceSchemaLocation="tipi.xsd">
+    <client-config keystore="{resource:/tipi/club.keystore}" locale="'nl'" password="{system:/navajo.globals.NavajoPwd}" secure="false" server="{system:/navajo.globals.CoreSysPostmanURI}" storepass="'kl1p_g31t'" username="{system:/navajo.globals.NavajoUsr}"/>
+</tid>

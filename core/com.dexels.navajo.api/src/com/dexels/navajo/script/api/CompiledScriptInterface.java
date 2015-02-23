@@ -45,6 +45,8 @@ public interface CompiledScriptInterface {
 	public void setValidations();
 
 	public void dumpRequest();
+	
+	public void dumpResponse();
 
 	public void setDependencies();
 

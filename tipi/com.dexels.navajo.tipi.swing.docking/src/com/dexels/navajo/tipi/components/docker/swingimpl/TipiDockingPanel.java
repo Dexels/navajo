@@ -100,10 +100,6 @@ public class TipiDockingPanel extends TipiPanel {
 		}
 	}
 
-	@Override
-	public void setContainerLayout(Object layout) {
-		super.setContainerLayout(layout);
-	}
 
 	@Override
 	protected void addedToParent() {		

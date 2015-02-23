@@ -142,9 +142,8 @@ public class EclipseCompiler implements JavaCompiler {
               };
       }
       String[] newArgs = new String[args.length+elements.size()];
-      for (int i = 0; i < args.length; i++) {
-        newArgs[i] = args[i];
-    }
+      System.arraycopy(args, 0, newArgs, 0, args.length);
+     
       for (int i = 0; i < elements.size(); i++) {
         newArgs[i+args.length] = (String)elements.get(i);
     }

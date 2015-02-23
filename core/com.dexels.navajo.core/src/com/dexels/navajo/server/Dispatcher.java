@@ -1270,12 +1270,7 @@ public void finalizeService(Navajo inMessage, Access access, String rpcName, Str
 	  if (name == null) {
 		  return false;
 	  }
-	  if ( name.startsWith("navajo") || name.equals("InitNavajoStatus") || name.equals("navajo_logon") ) {
-		  return true;
-	  }
-	  else {
-		  return false;
-	  }
+	  return name.startsWith("navajo") || name.equals("InitNavajoStatus") || name.equals("navajo_logon");
   }
 
   @Override
@@ -1427,7 +1422,7 @@ public String getSnmpManangers() {
 	  for (int i = 0; i < snmpManagers.size(); i++ ) {
 		  SNMPManager snmp = snmpManagers.get(i);
 		  s.append(snmp.getHost() + ":" + snmp.getPort() + ":" + snmp.getSnmpVersion());
-		  s.append(",");
+		  s.append(',');
 	  }
 	  String result = s.toString();
 	  if ( result.length() > 0 ) {

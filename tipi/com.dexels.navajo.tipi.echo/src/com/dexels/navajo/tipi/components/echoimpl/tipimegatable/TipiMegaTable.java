@@ -93,10 +93,6 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
                 logger.info("NUL PATH??******************8");
             }
         }
-        for (int i = 0; i < tableInstances.size(); i++) {
-//            final MessageTable mtp = (MessageTable) tableInstances.get(i);
-            // mtp.updateProperties(updates);
-        }
     }
 
     public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {

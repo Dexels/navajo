@@ -23,10 +23,6 @@ public class TipiSwingViewport extends JViewport {
 		setViewPosition(new Point(0, Math.min(y, height)));
 	}
 
-	@Override
-	public void setViewPosition(Point p) {
-		super.setViewPosition(p);
-	}
 
 	public int getGridWidth() {
 		return gridWidth;

@@ -294,7 +294,7 @@ public class OverlayProgressPanel extends JComponent implements ActionListener, 
 
     public void setType(String type) {
        if (type.equals("transparent")) {
-           alpha = 30;
+           alpha = 35;
        } else {
            alpha = 150;
        }

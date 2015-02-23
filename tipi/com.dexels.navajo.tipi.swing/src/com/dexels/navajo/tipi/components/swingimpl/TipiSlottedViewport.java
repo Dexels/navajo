@@ -48,30 +48,16 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 	public TipiSlottedViewport() {
 	}
 
-	// private JPanel left = null;
-	// private JPanel right = null;
-//	private int axis = BoxLayout.X_AXIS;
-//	private LayoutManager layout;
+
 	private JPanel clientPanel;
 	private TipiSwingViewport view;
 	private Component currentComponent;
 
-	// private int width = 1;
-	// private int height = 2;
-	//
+
 	@Override
 	public Object createContainer() {
 		view = new TipiSwingViewport();
-		// left = new JPanel();
-		// right = new JPanel();
-		// left.setLayout(new BorderLayout());
-		// right.setLayout(new BorderLayout());
 		clientPanel = new JPanel();
-		// layout = new GridLayout();
-		// layout = new BoxLayout(clientPanel, axis);
-		// clientPanel.setLayout(layout);
-		// clientPanel.add(left);
-		// clientPanel.add(right);
 		view.setOpaque(false);
 		view.addComponentListener(new ComponentAdapter() {
 
@@ -129,6 +115,7 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 				clientPanel.add((Component) c, constraints);
 				updateClientSize(view);
 				currentComponent = (Component) c;
+
 				refreshView();
 				if (getChildCount() == 1) {
 					view.setViewPosition(((Component) c).getLocation());
@@ -137,83 +124,22 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 			}
 		});
 
-		// String constr = constraints.toString();
-		// Component cc = (Component) c;
-		// if ("bottom".equals(constr)) {
-		// setAxis("vertical");
-		// right.add(cc, BorderLayout.CENTER);
-		// }
-		// if ("right".equals(constr)) {
-		// setAxis("horizontal");
-		// right.add(cc, BorderLayout.CENTER);
-		// }
-		// if ("top".equals(constr)) {
-		// setAxis("vertical");
-		// left.add(cc, BorderLayout.CENTER);
-		// }
-		// if ("left".equals(constr)) {
-		// setAxis("horizontal");
-		// left.add(cc, BorderLayout.CENTER);
-		// }
-		// left.setMinimumSize(minimumSize);
-		// right.setMinimumSize(minimumSize);
-		// left.setPreferredSize(minimumSize);
-		// right.setPreferredSize(minimumSize);
 	}
+	
+	@Override
+    public void unhideComponent() {
+	    // Go back to point 0,0: first screen
+        view.setViewPosition(new Point());
 
-	//
-	// private void setAxis(String ax) {
-	// if ("vertical".equals(ax)) {
-	// if (BoxLayout.Y_AXIS != axis) {
-	// axis = BoxLayout.Y_AXIS;
-	// updateLayout();
-	// }
-	// }
-	// if ("horizontal".equals(ax)) {
-	//
-	// if (BoxLayout.X_AXIS != axis) {
-	// axis = BoxLayout.X_AXIS;
-	// updateLayout();
-	// }
-	// }
-	// }
+        for (TipiComponent child : getChildren()) {
+            child.unhideComponent();
+        }
+    }
 
-	/**
- * 
- */
-	// private void updateLayout() {
-	// clientPanel.setLayout(new BoxLayout(clientPanel, axis));
-	// }
+
 	@Override
 	public void setComponentValue(String name, final Object object) {
 		super.setComponentValue(name, object);
-		// if (name.equals("x")) {
-		// runSyncInEventThread(new Runnable() {
-		// public void run() {
-		// logger.debug("Setx: "+object);
-		// view.setViewPosition(new Point((Integer) object, 0));
-		// }
-		// });
-		// }
-		//
-		// if (name.equals("y")) {
-		// runSyncInEventThread(new Runnable() {
-		// public void run() {
-		// logger.debug("Sety: "+object);
-		// view.setViewPosition(new Point(0, (Integer) object));
-		// }
-		// });
-		//
-		// }
-		// if (name.equals("dividersize")) {
-		// int size = ( (Integer) object).intValue();
-		// ((TipiSwingSplitPane) getContainer()).setDividerSize(size);
-		// }
-		// if (name.equals("onetouchexpandable")) {
-		// boolean otex = ( (Boolean) object).booleanValue();
-		// ((TipiSwingSplitPane) getContainer()).setOneTouchExpandable(otex);
-		// }
-
 	}
 
 	@Override
@@ -229,10 +155,8 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 
 		}
 		if (name.equals("showAnimated")) {
-			final TipiComponent tc = (TipiComponent) compMeth
-					.getEvaluatedParameterValue("component", event);
-			int duration = (Integer) compMeth.getEvaluatedParameterValue(
-					"duration", event);
+			final TipiComponent tc = (TipiComponent) compMeth.getEvaluatedParameterValue("component", event);
+			int duration = (Integer) compMeth.getEvaluatedParameterValue("duration", event);
 			currentComponent = (Component) tc.getContainer();
 
 			Animator myAnimator = new Animator(duration);

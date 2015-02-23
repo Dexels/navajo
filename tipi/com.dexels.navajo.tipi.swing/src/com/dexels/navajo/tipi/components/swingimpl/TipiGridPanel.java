@@ -354,7 +354,7 @@ public class TipiGridPanel extends TipiPanel {
 				element = element.substring(0, element.length() - 1);
 				// logger.debug("Starr. reuslt: "+element);
 			}
-			int val = new Integer(element).intValue();
+			int val = Integer.parseInt(element);
 			myWidths.add(new Integer(val));
 			addColumnStrut(count, val);
 			count++;

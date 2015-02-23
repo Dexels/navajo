@@ -229,11 +229,6 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		return null;
 	}
 
-	@Override
-	public void instantiateComponent(XMLElement instance, XMLElement classdef)
-			throws TipiException {
-		super.instantiateComponent(instance, classdef);
-	}
 
 	@Override
 	public void setComponentValue(final String name, final Object object) {

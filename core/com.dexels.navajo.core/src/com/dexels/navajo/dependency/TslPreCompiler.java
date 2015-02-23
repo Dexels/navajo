@@ -86,7 +86,7 @@ public class TslPreCompiler {
         NodeList methods = tslDoc.getElementsByTagName("method");
         for (int i = 0; i < methods.getLength(); i++) {
             Element n = (Element) methods.item(i);
-            String methodScript = ((Element) n).getAttribute("name");
+            String methodScript =  n.getAttribute("name");
             if (methodScript == null || methodScript.equals("")) {
                 return;
             }
@@ -132,7 +132,7 @@ public class TslPreCompiler {
         for (int i = 0; i < operations.getLength(); i++) {
             Element n = (Element) operations.item(i);
             
-            String operationScript = ((Element) n).getAttribute("service");
+            String operationScript = n.getAttribute("service");
             if (operationScript == null || operationScript.equals("")) {
                 return;
             }
@@ -178,7 +178,7 @@ public class TslPreCompiler {
         NodeList includes = tslDoc.getElementsByTagName("include");
         for (int i = 0; i < includes.getLength(); i++) {
             Element n = (Element) includes.item(i);
-            String includedScript = ((Element) n).getAttribute("script");
+            String includedScript = n.getAttribute("script");
             if (includedScript == null || includedScript.equals("")) {
                 throw new UserException(-1, "No script name found in include tag (missing or empty script attribute): " + n);
             }

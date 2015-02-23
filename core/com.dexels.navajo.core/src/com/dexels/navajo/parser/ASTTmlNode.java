@@ -70,7 +70,7 @@ public final class ASTTmlNode extends SimpleNode {
         }  else {
             val = val.substring(2, val.length());
         }
-        if (val.startsWith("@")) { // relative param property.
+        if (val.length() > 0 && val.charAt(0) == '@') { // relative param property.
         	isParam = true;
         	val = val.substring(1);
         }

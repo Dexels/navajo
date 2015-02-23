@@ -13,6 +13,7 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -60,7 +61,6 @@ import com.dexels.navajo.tipi.classdef.ClassManager;
 import com.dexels.navajo.tipi.classdef.IClassManager;
 import com.dexels.navajo.tipi.components.core.ShutdownListener;
 import com.dexels.navajo.tipi.components.core.ThreadActivityListener;
-import com.dexels.navajo.tipi.components.core.TipiComponentImpl;
 import com.dexels.navajo.tipi.components.core.TipiThread;
 import com.dexels.navajo.tipi.components.core.TipiThreadPool;
 import com.dexels.navajo.tipi.connectors.HttpNavajoConnector;
@@ -165,6 +165,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     private CookieManager myCookieManager;
 
     protected final Map<String, Navajo> navajoMap = new HashMap<String, Navajo>();
+    private Map<String, CachedNavajo> navajoCacheMap  = new HashMap<String, CachedNavajo>();
 
     protected TipiThreadPool myThreadPool;
     protected TipiComponent topScreen = null;
@@ -518,6 +519,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             String definitionName = iter.next();
             tipiComponentMap.remove(definitionName);
         }
+        navajoCacheMap = new HashMap<String, CachedNavajo>();
     }
 
     public abstract void clearTopScreen();
@@ -1067,7 +1069,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                     disposeTipiComponent(comp);
                 } else {
                     comp.reUse();
-                    comp.unhideComponent();
+                    if (comp.isHidden()) {
+                        comp.unhideComponent();
+                    }
                     
                     comp.performTipiEvent("onInstantiate", null, false, new Runnable() {
                         public void run() {
@@ -1602,6 +1606,24 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
     public Navajo getNavajo(String method) {
         return navajoMap.get(method);
+    }
+    
+    public Navajo getCachedNavajo(String method, int maxAgeHours) {
+        CachedNavajo cachedN = navajoCacheMap.get(method);
+        if (cachedN == null) {
+            return null;
+        }
+        if (!cachedN.isValid(maxAgeHours)) {
+            // remove from map
+            navajoCacheMap.remove(method);
+            return null;
+        }
+        return cachedN.getNavajo();
+    }
+    
+    public synchronized void cacheNavajo(String method, Navajo n) {
+        CachedNavajo cachedN = new CachedNavajo(n);
+        navajoCacheMap.put(method, cachedN);
     }
 
     public Set<String> getNavajoNames() {
@@ -2313,18 +2335,18 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
     }
 
-    public void setGenericResourceLoader(String resourceCodeBase) throws MalformedURLException {
+    public void setGenericResourceLoader(String resourceCodeBase, String resourceCacheLocation) throws MalformedURLException {
         if (resourceCodeBase != null) {
-            setGenericResourceLoader(createResourceLoader(resourceCodeBase, "generic"));
+            setGenericResourceLoader(createResourceLoader(resourceCodeBase, resourceCacheLocation, "generic"));
         } else {
             // BEWARE: The trailing slash is important!
             setGenericResourceLoader(createDefaultResourceLoader("resource/", useCache()));
         }
     }
 
-    public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
+    public void setTipiResourceLoader(String tipiCodeBase, String resourceCacheLocation) throws MalformedURLException {
         if (tipiCodeBase != null) {
-            setTipiResourceLoader(createResourceLoader(tipiCodeBase, "tipi"));
+            setTipiResourceLoader(createResourceLoader(tipiCodeBase, resourceCacheLocation, "tipi"));
         } else {
             // nothing supplied. Use a file loader with fallback to classloader.
             // BEWARE: The trailing slash is important!
@@ -2333,13 +2355,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         }
     }
 
-    private TipiResourceLoader createResourceLoader(String codebase, String id) throws MalformedURLException {
+    private TipiResourceLoader createResourceLoader(String codebase, String resourceCacheLocation, String id) throws MalformedURLException {
         if (codebase.indexOf("http:/") != -1 || codebase.indexOf("https:/") != -1 || codebase.indexOf("file:/") != -1) {
-            if (useCache()) {
-                return new CachedHttpResourceLoader(id, new File("/Users/frank/tipicache/" + id), new URL(codebase));
-            } else {
-                return new HttpResourceLoader(codebase, id);
-            }
+            if (useCache() && resourceCacheLocation != null ) {
+                try {
+                    return new CachedHttpResourceLoader(id, new File(resourceCacheLocation, id), new URL(codebase));
+                } catch (IOException e) {
+                    logger.error("Error {} on creating CachedHttpResourceLoader - fallback to regular HtppResourceLoader ", e);
+                } 
+            } 
+            return new HttpResourceLoader(codebase, id);
         } else {
             return new FileResourceLoader(new File(codebase));
         }
@@ -2360,9 +2385,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     // }
     // }
     //
-    // private File getCacheDir() {
-    // return new File("/Users/frank/tipicache");
-    // }
 
     /**
      * @return
@@ -2398,8 +2420,14 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if (resourceCodeBase == null) {
             resourceCodeBase = System.getProperty("resourceCodeBase");
         }
-        setTipiResourceLoader(tipiCodeBase);
-        setGenericResourceLoader(resourceCodeBase);
+        
+        String resourceCacheLocation = properties.get("resourceCacheLocation");
+        if (resourceCacheLocation == null) {
+            resourceCacheLocation = System.getProperty("resourceCacheLocation");
+        }
+        
+        setTipiResourceLoader(tipiCodeBase, resourceCacheLocation);
+        setGenericResourceLoader(resourceCodeBase, resourceCacheLocation);
 
         updateValidationProperties();
 
@@ -2668,10 +2696,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         try {
             int i = 0;
             for (TipiExecutable current : exe) {
-
-                executableParent.setExecutionIndex(i);
-                current.performAction(te, executableParent, i);
-                i++;
+                // Don't perform action when comp is hidden
+                if (!comp.isHidden()) {
+                    executableParent.setExecutionIndex(i);
+                    current.performAction(te, executableParent, i);
+                    i++;
+                }
+                
             }
         } catch (TipiException ex) {
             logger.error("Error: ", ex);

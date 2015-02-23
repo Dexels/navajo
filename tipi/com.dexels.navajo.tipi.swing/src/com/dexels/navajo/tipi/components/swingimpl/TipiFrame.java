@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Frame;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.net.URL;
@@ -390,14 +392,25 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 		if (getContainer() instanceof TipiSwingFrame) {
 			runSyncInEventThread(new Runnable() {
 				@Override
-				public void run() {
-					setBounds(new Rectangle(x, y, w, h));
-					if (fullscreen) {
-						((TipiSwingFrame) getSwingContainer())
-								.setExtendedState(Frame.MAXIMIZED_BOTH);
-					}
-					getSwingContainer().setVisible(visible);
-				}
+                public void run() {
+                    setBounds(new Rectangle(x, y, w, h));
+                    if (fullscreen) {
+                        String osName = System.getProperty("os.name");
+                        if (osName != null && osName.startsWith("Linux")) {
+                            // Gnome doesn't seem to respond propely to setExtendedState. 
+                            // Therefore manually set size to make sure we are full screen.
+                            // Use GraphicsEnvironment to support multi-monitor properly
+                            GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+                            int width = gd.getDisplayMode().getWidth();
+                            int height = gd.getDisplayMode().getHeight();
+                            ((TipiSwingFrame) getSwingContainer()).setSize(width, height);
+                        }
+
+                        ((TipiSwingFrame) getSwingContainer()).setExtendedState(JFrame.MAXIMIZED_BOTH);
+                    }
+                    getSwingContainer().setVisible(visible);
+                   
+                }
 			});
 
 		}

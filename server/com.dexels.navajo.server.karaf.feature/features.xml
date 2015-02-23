@@ -3,13 +3,13 @@
 	name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
 
-    <feature version="1.0.20" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
+    <feature version="1.0.21" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
         <feature version="[3.0.0,4)">eventadmin</feature>
         <feature version="[3.0.0,4)">scr</feature>
         <feature version="[3.0.0,4)">pax-http</feature>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf.featuresync/1.0.3</bundle>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/4.0.1</bundle>
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.0.18</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.0.21</bundle>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.file/1.0.18</bundle>
         <bundle dependency="true">mvn:com.dexels.thirdparty/javaewah/0.7.9</bundle>
         <bundle dependency="true">mvn:com.jcraft/jsch-bundle/0.1.50</bundle>
@@ -40,7 +40,7 @@
 		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
 		
 	</feature>
-	<feature resolver="(obr)" name='navajo.core' version='3.0.32'
+	<feature resolver="(obr)" name='navajo.core' version='3.0.33'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,4)">pax-http</feature>
@@ -49,11 +49,11 @@
 
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.108</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.14</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/2.0.12</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/2.0.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.5.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.2.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/2.0.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.1.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.1.6</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.0.6</bundle>
 	</feature>
@@ -93,10 +93,10 @@
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.adapter' version='3.0.12'
+	<feature resolver="(obr)" name='navajo.adapter' version='3.0.13'
 		start-level='81'>
 		<feature version="[3.0.0,4)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.0.32</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.0.34</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.kml' version='3.0.2'
@@ -118,13 +118,13 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.30'
+	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.31'
 		start-level='81'>
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/2.0.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.resource/2.0.20</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/3.0.61</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/4.0.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/2.0.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.http/1.0.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource/2.0.0</bundle>
@@ -229,10 +229,10 @@
 	</feature>
 
 
-	<feature resolver="(obr)" name='navajo.dev' version='3.0.6'
+	<feature resolver="(obr)" name='navajo.dev' version='3.0.7'
 		start-level='81'>
 		<feature version="[3.0.0,4)">navajo.server.osgi</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/3.0.12</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/3.0.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.birt.push/2.0.0</bundle>
 	</feature>
 
@@ -339,7 +339,7 @@
 	</feature>
 
 
-	<feature resolver="(obr)" name='dexels.appstore' version='1.0.9'
+	<feature resolver="(obr)" name='dexels.appstore' version='1.0.14'
 		start-level='81'>
 		<feature version="[3.0.0,4)">pax-http</feature>
 		<feature version="[3.0.0,4)">eventadmin</feature>
@@ -347,7 +347,7 @@
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.ant/1.9.4_1</bundle>
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.core/1.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.ant/1.0.3</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.server/1.0.5</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.server/1.0.11</bundle>
 		<bundle dependency='true'>mvn:commons-codec/commons-codec/1.10</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
@@ -377,7 +377,7 @@
 		version='1.3.0' start-level='81'>
 		<feature version="[3.0.4,4)">navajo.enterprise.mongodb</feature>
 		<feature version="[3.0.0,4)">navajo.legacy</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/3.0.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/3.0.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.thirdparty/org.apache.commons.math3/3.3</bundle>
 	</feature>
 

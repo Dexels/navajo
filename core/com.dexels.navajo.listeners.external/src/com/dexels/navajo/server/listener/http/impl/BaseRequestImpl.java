@@ -325,12 +325,7 @@ public class BaseRequestImpl implements AsyncRequest {
 		  if (name == null) {
 			  return false;
 		  }
-		  if ( name.startsWith("navajo") || name.equals("InitNavajoStatus") || name.equals("navajo_logon") ) {
-			  return true;
-		  }
-		  else {
-			  return false;
-		  }
+		  return name.startsWith("navajo") || name.equals("InitNavajoStatus") || name.equals("navajo_logon");
 	  }
 
 }

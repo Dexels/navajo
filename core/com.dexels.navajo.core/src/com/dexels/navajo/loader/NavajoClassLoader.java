@@ -54,10 +54,7 @@ import org.slf4j.LoggerFactory;
 class JarFilter implements FilenameFilter {
     @Override
 	public boolean accept(File f, String name) {
-        if (name.endsWith("jar"))
-            return true;
-        else
-            return false;
+        return name.endsWith("jar");
     }
 }
 
@@ -65,10 +62,7 @@ class JarFilter implements FilenameFilter {
 class BetaJarFilter implements FilenameFilter {
     @Override
 	public boolean accept(File f, String name) {
-        if (name.endsWith("jar_beta"))
-            return true;
-        else
-            return false;
+        return name.endsWith("jar_beta");
     }
 }
 

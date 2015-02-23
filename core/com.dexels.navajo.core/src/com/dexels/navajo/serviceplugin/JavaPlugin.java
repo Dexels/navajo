@@ -61,7 +61,7 @@ public abstract class JavaPlugin extends CompiledScript {
 	}
 	
 	private final Message addMessage(Navajo n, Message parent, String path) {
-		if(path.startsWith("/")) {
+		if(path.length() > 0 && path.charAt(0) == '/') {
 			path = path.substring(1);
 		}
 		Message m = null;

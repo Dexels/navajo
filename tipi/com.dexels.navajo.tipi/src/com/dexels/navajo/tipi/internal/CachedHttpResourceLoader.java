@@ -16,13 +16,12 @@ import com.dexels.navajo.tipi.internal.cache.impl.LocalDigestCacheValidator;
 public class CachedHttpResourceLoader extends CachedResourceLoader {
 
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(CachedHttpResourceLoader.class);
+	private final static Logger logger = LoggerFactory.getLogger(CachedHttpResourceLoader.class);
 	
 	private static final long serialVersionUID = 3322463272837679890L;
 	protected final CacheManager cache;
 
-	public CachedHttpResourceLoader(String id, File baseDir, URL baseUrl) {
+	public CachedHttpResourceLoader(String id, File baseDir, URL baseUrl) throws IOException {
 		final LocalDigestCacheValidator cacheValidator = new LocalDigestCacheValidator();
 		final FileLocalStorage localStore = new FileLocalStorage(baseDir);
 		final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
@@ -31,11 +30,7 @@ public class CachedHttpResourceLoader extends CachedResourceLoader {
 		cacheValidator.setLocalStorage(localStore);
 		cacheValidator.setRemoteStorage(remoteStore);
 		cacheValidator.setId(id);
-		try {
-			cacheValidator.activate();
-		} catch (IOException e) {
-			logger.error("Error: ", e);
-		}
+		cacheValidator.activate();
 	}
 
 	@Override

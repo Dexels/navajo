@@ -40,7 +40,7 @@ public class ColorParser extends TipiTypeParser {
         if (s==null) {
             return null;
         }
-        if (!s.startsWith("#")) {
+        if (s.length() == 0 || s.charAt(0) != '#') {
             throw new RuntimeException("BAD COLOR: " + s);
         }
         String st = s.substring(1);

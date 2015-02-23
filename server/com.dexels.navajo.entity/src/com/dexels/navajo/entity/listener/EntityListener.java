@@ -116,7 +116,7 @@ public class EntityListener extends HttpServlet {
 				request.getRemoteAddr(), entityName, username, method, output);
 		
 		try {
-			if (entityName == "") {
+			if (entityName.equals("")) {
 				logger.error("No entity name found in request. Request URI: {}", request.getRequestURI());
 				throw new EntityException(EntityException.BAD_REQUEST);
 			}

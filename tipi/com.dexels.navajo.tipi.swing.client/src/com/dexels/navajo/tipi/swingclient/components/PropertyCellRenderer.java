@@ -9,7 +9,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -29,425 +28,346 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 
+@SuppressWarnings("rawtypes")
+public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer {
 
-public class PropertyCellRenderer implements TableCellRenderer,
-		ListCellRenderer {
+    private final static Logger logger = LoggerFactory.getLogger(PropertyCellRenderer.class);
+    private String myPropertyType = null;
+    private PropertyBox myPropertyBox = null;
+    private MultiSelectPropertyBox myMultiSelectPropertyBox = null;
+    private TextPropertyField myPropertyField = null;
+    private JLabel formatStringField = null;
+    private PropertyCheckBox myPropertyCheckBox = null;
+    private DatePropertyField myDatePropertyField = null;
+    private IntegerPropertyField myIntegerPropertyField = null;
+    private FloatPropertyField myFloatPropertyField = null;
+    private MoneyField myMoneyPropertyField = null;
+    private PercentageField myPercentagePropertyField = null;
+    private ClockTimeField myClockTimeField = null;
+    private StopwatchTimeField myStopwatchTimeField = null;
+    private PropertyPasswordField myPasswordField = null;
+    private Property myProperty = null;
 
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(PropertyCellRenderer.class);
-	private String myPropertyType = null;
-	private PropertyBox myPropertyBox = null;
-	private MultiSelectPropertyBox myMultiSelectPropertyBox = null;
-	private TextPropertyField myPropertyField = null;
-	private JLabel formatStringField = null;
-	private PropertyCheckBox myPropertyCheckBox = null;
-	private DatePropertyField myDatePropertyField = null;
-	private IntegerPropertyField myIntegerPropertyField = null;
-	private FloatPropertyField myFloatPropertyField = null;
-	private MoneyField myMoneyPropertyField = null;
-	private PercentageField myPercentagePropertyField = null;
-	private ClockTimeField myClockTimeField = null;
-	private StopwatchTimeField myStopwatchTimeField = null;
-	private PropertyPasswordField myPasswordField = null;
-	private Property myProperty = null;
-	private Map<String, ColumnAttribute> columnAttributes;
-	private MessageTable myTable;
-	// private TableCellRenderer def = new DefaultTableCellRenderer();
-	private final JLabel l;
-	private JButton rowButton = new JButton();
-	JLabel readOnlyField = new JLabel();
+    private MessageTable myTable;
 
-	// private static final int DEFAULT_INSET = 1;
+    private final JLabel l;
+    private JButton rowButton = new JButton();
+    JLabel readOnlyField = new JLabel();
 
-	Border b = new LineBorder(Color.black, 2);
-	Border c = new LineBorder(Color.lightGray, 2);
+    Border b = new LineBorder(Color.black, 2);
+    Border c = new LineBorder(Color.lightGray, 2);
 
-	public PropertyCellRenderer() {
-		//
-		myPropertyField = new TextPropertyField();
-		l = new JLabel() {
-			private static final long serialVersionUID = 4291863967079004796L;
+    public PropertyCellRenderer() {
+        //
+        myPropertyField = new TextPropertyField();
+        l = new JLabel() {
+            private static final long serialVersionUID = 4291863967079004796L;
 
-			@Override
-			public boolean isOpaque() {
-				return true;
-			}
-		};
-		l.setPreferredSize(new Dimension(l.getPreferredSize().width, 17));
-		l.setFont(myPropertyField.getFont());
+            @Override
+            public boolean isOpaque() {
+                return true;
+            }
+        };
+        l.setPreferredSize(new Dimension(l.getPreferredSize().width, 17));
+        l.setFont(myPropertyField.getFont());
 
-		rowButton.setMargin(new Insets(0, 1, 0, 1));
-		rowButton.setFont(new Font(rowButton.getFont().getName(), Font.BOLD,
-				rowButton.getFont().getSize()));
-	}
+        rowButton.setMargin(new Insets(0, 1, 0, 1));
+        rowButton.setFont(new Font(rowButton.getFont().getName(), Font.BOLD, rowButton.getFont().getSize()));
+    }
 
-	private Color selectedColor = new Color(220, 220, 255);
-	// private Color selectedColor = new Color(255, 217, 115);
-	private Color highColor = new Color(255, 255, 255);
-	private Color lowColor = new Color(240, 240, 240);
-	private JLabel myPropertyLabel;
+    private Color selectedColor = new Color(220, 220, 255);
+    private Color highColor = new Color(255, 255, 255);
+    private Color lowColor = new Color(240, 240, 240);
+    private JLabel myPropertyLabel;
 
-	public void setHighColor(Color c) {
-		highColor = c;
-	}
+    public void setHighColor(Color c) {
+        highColor = c;
+    }
 
-	public void setLowColor(Color c) {
-		lowColor = c;
-	}
+    public void setLowColor(Color c) {
+        lowColor = c;
+    }
 
-	public void setSelectedColor(Color c) {
-		selectedColor = c;
-	}
+    public void setSelectedColor(Color c) {
+        selectedColor = c;
+    }
 
-	public Color getSelectedColor() {
-		return selectedColor;
-	}
+    public Color getSelectedColor() {
+        return selectedColor;
+    }
 
-	public Color getLowColor() {
-		return lowColor;
-	}
+    public Color getLowColor() {
+        return lowColor;
+    }
 
-	public Color getHighColor() {
-		return highColor;
-	}
+    public Color getHighColor() {
+        return highColor;
+    }
 
-	public JComponent getTableCellRendererComponent(JTable table, Object value,
-			boolean isSelected, boolean hasFocus, int row, int column) {
-		// JPanel myPanel = new JPanel();
-		// myPanel.setLayout(new GridBagLayout());
-		// long tt = System.currentTimeMillis();
+    public JComponent getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+            int row, int column) {
 
-		TableModel tm = table.getModel();
-		if (!table.hasFocus()) {
-			hasFocus = false;
-		}
-		boolean disabled = false;
-		if (table.getSelectedRow() == row) {
-			isSelected = true;
-		}
-		// if(isSelected && table.getEditingColumn() == column){
+        TableModel tm = table.getModel();
+        if (!table.hasFocus()) {
+            hasFocus = false;
+        }
+        boolean disabled = false;
+        if (table.getSelectedRow() == row) {
+            isSelected = true;
+        }
 
-		if (MessageTable.class.isInstance(table)) {
-			myTable = (MessageTable) table;
-			columnAttributes = myTable.getColumnAttributes();
-		}
+        if (MessageTable.class.isInstance(table)) {
+            myTable = (MessageTable) table;
 
-		if (value == null) {
-			// logger.info("Row: "+row+" column: "+column);
-			setComponentColor(l, isSelected, row, column, false,
-					tm.getRowCount(), disabled);
-			// myPanel.add(l,new
-			// GridBagConstraints(0,0,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new
-			// Insets(DEFAULT_INSET,DEFAULT_INSET,DEFAULT_INSET,DEFAULT_INSET),0,0));
-			return l;
-		}
+        }
 
-		if (Integer.class.isInstance(value)) {
-			rowButton.setText("" + (row + 1));
-			// myPanel.add(rowButton,new
-			// GridBagConstraints(0,0,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new
-			// Insets(DEFAULT_INSET,DEFAULT_INSET,DEFAULT_INSET,DEFAULT_INSET),0,0));
+        if (value == null) {
+            // logger.info("Row: "+row+" column: "+column);
+            setComponentColor(l, isSelected, row, column, false, tm.getRowCount(), disabled);
 
-			return rowButton;
-		}
+            return l;
+        }
 
-		if (Property.class.isInstance(value)) {
-			// logger.info("Yes, a property");
-			myProperty = (Property) value;
-			myPropertyType = myProperty.getType();
+        if (Integer.class.isInstance(value)) {
+            rowButton.setText("" + (row + 1));
+            return rowButton;
+        }
 
-			JComponent propComponent = createComponent(myProperty);
-			if (propComponent instanceof PropertyControlled) {
-				PropertyControlled pc = (PropertyControlled) propComponent;
-				pc.setProperty(myProperty);
-			}
-			setComponentColor(propComponent, isSelected, row, column, false,
-					tm.getRowCount(), disabled);
-			// setComponentColor(myPanel, isSelected, row, column,
-			// false,tm.getRowCount(), disabled);
-			if (hasFocus) {
-				if (myTable != null && myTable.isCellEditable(row, column)) {
-					propComponent.setBorder(b);
-				} else {
-					propComponent.setBorder(c);
-				}
-			} else {
-				propComponent.setBorder(BorderFactory.createEmptyBorder());
+        if (Property.class.isInstance(value)) {
+            // logger.info("Yes, a property");
+            myProperty = (Property) value;
+            myPropertyType = myProperty.getType();
 
-			}
-			// myPanel.add(propComponent,new
-			// GridBagConstraints(0,0,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new
-			// Insets(DEFAULT_INSET,DEFAULT_INSET+3,DEFAULT_INSET,DEFAULT_INSET),0,0));
-			// myPanel.revalidate();
-			// ((MessageTable)table).setRowHeight(myPanel.getPreferredSize().height);
+            JComponent propComponent = createComponent(myProperty);
+            if (propComponent instanceof PropertyControlled) {
+                PropertyControlled pc = (PropertyControlled) propComponent;
+                pc.setProperty(myProperty);
+            }
+            setComponentColor(propComponent, isSelected, row, column, false, tm.getRowCount(), disabled);
+            if (hasFocus) {
+                if (myTable != null && myTable.isCellEditable(row, column)) {
+                    propComponent.setBorder(b);
+                } else {
+                    propComponent.setBorder(c);
+                }
+            } else {
+                propComponent.setBorder(BorderFactory.createEmptyBorder());
 
-			return propComponent;
+            }
 
-		}
+            return propComponent;
 
-		return l;
-	}
+        }
 
-	private JComponent createComponent(Property p) {
+        return l;
+    }
 
-		String type = p.getType();
-		if (type.equals(Property.EXPRESSION_PROPERTY)) {
-			try {
-				type = p.getEvaluatedType();
-				if (type == null || "".equals(type)) {
-					type = myTable.getTypeHint(p.getName());
-					if (type != null) {
-						System.err
-								.println("*******************\n**********************\n********************\n Hint found: "
-										+ myPropertyType);
-					}
-				}
-				if (type == null || "".equals(type)) {
-					type = Property.STRING_PROPERTY;
-				}
-				// disabled = true;
-			} catch (Throwable ex1) {
-				ex1.printStackTrace();
-			}
-		}
-		if (type.equals(Property.PASSWORD_PROPERTY)) {
-			if (myPasswordField == null) {
-				myPasswordField = new PropertyPasswordField();
-			}
-			return myPasswordField;
-		}
-		if (type.equals(Property.PASSWORD_PROPERTY)) {
-			if (myStopwatchTimeField == null) {
-				myStopwatchTimeField = new StopwatchTimeField();
-			}
-			return myStopwatchTimeField;
-		}
-		if (type.equals(Property.BOOLEAN_PROPERTY)) {
-			if (myPropertyCheckBox == null) {
-				myPropertyCheckBox = new PropertyCheckBox();
-			}
-			return myPropertyCheckBox;
-		}
-		if (type.equals(Property.PERCENTAGE_PROPERTY)) {
-			if (myPercentagePropertyField == null) {
-				myPercentagePropertyField = new PercentageField();
-			}
-			return myPercentagePropertyField;
-		}
-		if (type.equals(Property.MONEY_PROPERTY)) {
-			if (myMoneyPropertyField == null) {
-				myMoneyPropertyField = new MoneyField();
-			}
-			return myMoneyPropertyField;
-		}
-		if (type.equals(Property.INTEGER_PROPERTY)) {
-			if (myIntegerPropertyField == null) {
-				myIntegerPropertyField = new IntegerPropertyField();
-			}
-			return myIntegerPropertyField;
-		}
-		if (type.equals(Property.FLOAT_PROPERTY)) {
-			if (myFloatPropertyField == null) {
-				myFloatPropertyField = new FloatPropertyField();
-			}
-			return myFloatPropertyField;
-		}
-		if (type.equals(Property.CLOCKTIME_PROPERTY)) {
-			if (myClockTimeField == null) {
-				myClockTimeField = new ClockTimeField();
-			}
-			return myClockTimeField;
-		}
-		if (type.equals(Property.DATE_PROPERTY)) {
-			if (myDatePropertyField == null) {
-				myDatePropertyField = new DatePropertyField();
-				myDatePropertyField.setShowCalendarPickerButton(false);
+    private JComponent createComponent(Property p) {
 
-			}
-			return myDatePropertyField;
-		}
-		if (type.equals(Property.SELECTION_PROPERTY)) {
-			if (p.getCardinality().equals("+")) {
-				if (myMultiSelectPropertyBox == null) {
-					myMultiSelectPropertyBox = new MultiSelectPropertyBox();
-				}
-				return myMultiSelectPropertyBox;
-			} else {
-				if (myPropertyBox == null) {
-					myPropertyBox = new PropertyBox();
-				}
-				return myPropertyBox;
-			}
-		}
+        String type = p.getType();
+        if (type.equals(Property.EXPRESSION_PROPERTY)) {
+            try {
+                type = p.getEvaluatedType();
+                if (type == null || "".equals(type)) {
+                    type = myTable.getTypeHint(p.getName());
+                    if (type != null) {
+                        System.err
+                                .println("*******************\n**********************\n********************\n Hint found: "
+                                        + myPropertyType);
+                    }
+                }
+                if (type == null || "".equals(type)) {
+                    type = Property.STRING_PROPERTY;
+                }
+            } catch (Throwable ex1) {
+                ex1.printStackTrace();
+            }
+        }
+        if (type.equals(Property.PASSWORD_PROPERTY)) {
+            if (myPasswordField == null) {
+                myPasswordField = new PropertyPasswordField();
+            }
+            return myPasswordField;
+        }
+        if (type.equals(Property.PASSWORD_PROPERTY)) {
+            if (myStopwatchTimeField == null) {
+                myStopwatchTimeField = new StopwatchTimeField();
+            }
+            return myStopwatchTimeField;
+        }
+        if (type.equals(Property.BOOLEAN_PROPERTY)) {
+            if (myPropertyCheckBox == null) {
+                myPropertyCheckBox = new PropertyCheckBox();
+            }
+            return myPropertyCheckBox;
+        }
+        if (type.equals(Property.PERCENTAGE_PROPERTY)) {
+            if (myPercentagePropertyField == null) {
+                myPercentagePropertyField = new PercentageField();
+            }
+            return myPercentagePropertyField;
+        }
+        if (type.equals(Property.MONEY_PROPERTY)) {
+            if (myMoneyPropertyField == null) {
+                myMoneyPropertyField = new MoneyField();
+            }
+            return myMoneyPropertyField;
+        }
+        if (type.equals(Property.INTEGER_PROPERTY)) {
+            if (myIntegerPropertyField == null) {
+                myIntegerPropertyField = new IntegerPropertyField();
+            }
+            return myIntegerPropertyField;
+        }
+        if (type.equals(Property.FLOAT_PROPERTY)) {
+            if (myFloatPropertyField == null) {
+                myFloatPropertyField = new FloatPropertyField();
+            }
+            return myFloatPropertyField;
+        }
+        if (type.equals(Property.CLOCKTIME_PROPERTY)) {
+            if (myClockTimeField == null) {
+                myClockTimeField = new ClockTimeField();
+            }
+            return myClockTimeField;
+        }
+        if (type.equals(Property.DATE_PROPERTY)) {
+            if (myDatePropertyField == null) {
+                myDatePropertyField = new DatePropertyField();
+                myDatePropertyField.setShowCalendarPickerButton(false);
 
-		if (type.equals(Property.STRING_PROPERTY)) {
-			if (myProperty.isDirIn()) {
-				if (myPropertyField == null) {
-					myPropertyField = new TextPropertyField();
-				}
-				myPropertyField.setCapitalizationMode(null);
-				myPropertyField.setProperty(myProperty);
-				// setComponentColor(myPropertyField, isSelected, row, column,
-				// false,
-				// tm.getRowCount(), disabled);
-				// updateComponentBorder(myPropertyField,hasFocus, row, column);
-				return myPropertyField;
+            }
+            return myDatePropertyField;
+        }
+        if (type.equals(Property.SELECTION_PROPERTY)) {
+            if (p.getCardinality().equals("+")) {
+                if (myMultiSelectPropertyBox == null) {
+                    myMultiSelectPropertyBox = new MultiSelectPropertyBox();
+                }
+                return myMultiSelectPropertyBox;
+            } else {
+                if (myPropertyBox == null) {
+                    myPropertyBox = new PropertyBox();
+                }
+                return myPropertyBox;
+            }
+        }
 
-			} else {
-				if (formatStringField == null) {
-					formatStringField = new JLabel();
-					if (myPropertyField == null) {
-						myPropertyField = new TextPropertyField();
-					}
-					formatStringField.setFont(myPropertyField.getFont());
-				}
-				// formatStringField.setOpaque(true);
-				Object o = myProperty.getTypedValue();
-				if (o != null) {
-					formatStringField.setText("" + o);
-				} else {
-					formatStringField.setText("");
-				}
-				// if(hasFocus) {
-				// formatStringField.setBorder(c);
-				// }
-				// setComponentColor(formatStringField, isSelected, row, column,
-				// false,
-				// tm.getRowCount(), disabled);
-				// updateComponentBorder(formatStringField,hasFocus, row,
-				// column);
-				//
-				return formatStringField;
-			}
-		}
+        if (type.equals(Property.STRING_PROPERTY)) {
+            if (myProperty.isDirIn()) {
+                if (myPropertyField == null) {
+                    myPropertyField = new TextPropertyField();
+                }
+                myPropertyField.setCapitalizationMode(null);
+                myPropertyField.setProperty(myProperty);
 
-		// logger.info("Mystery type: "+type);
-		if (myPropertyLabel == null) {
-			myPropertyLabel = new JLabel();
-		}
-		myPropertyLabel.setText("" + p.getTypedValue());
-		return myPropertyLabel;
+                return myPropertyField;
 
-	}
+            } else {
+                if (formatStringField == null) {
+                    formatStringField = new JLabel();
+                    if (myPropertyField == null) {
+                        myPropertyField = new TextPropertyField();
+                    }
+                    formatStringField.setFont(myPropertyField.getFont());
+                }
+                Object o = myProperty.getTypedValue();
+                if (o != null) {
+                    formatStringField.setText("" + o);
+                } else {
+                    formatStringField.setText("");
+                }
 
-	// private void updateComponentBorder(JComponent vc, boolean hasFocus, int
-	// row, int column) {
-	// if (hasFocus) {
-	// if (myTable != null && myTable.isCellEditable(row, column)) {
-	// vc.setBorder(b);
-	// } else {
-	// vc.setBorder(c);
-	// }
-	// } else {
-	// vc.setBorder(new CompoundBorder(new EmptyBorder(new Insets(0, 2, 0, 2)),
-	// null));
-	// }
-	// }
+                return formatStringField;
+            }
+        }
 
-	public void setComponentColor(Component c, boolean isSelected, int row,
-			int col, boolean loading, int rowcount, boolean isDisabled) {
-		if (row < 0) {
-			return;
-		}
-		JComponent cc = (JComponent) c;
-		cc.setOpaque(true);
-		if (isSelected) {
+        // logger.info("Mystery type: "+type);
+        if (myPropertyLabel == null) {
+            myPropertyLabel = new JLabel();
+        }
+        myPropertyLabel.setText("" + p.getTypedValue());
+        return myPropertyLabel;
 
-			c.setBackground(selectedColor);
-		} else {
-			if (row % 2 == 0) {
-				c.setBackground(highColor);
-			} else {
-				c.setBackground(lowColor);
-			}
-		}
+    }
 
-		if (columnAttributes != null && myProperty != null) {
-			ColumnAttribute ca = columnAttributes.get(myProperty.getName());
-			if (ca != null) {
-				if (ca.getType().equals(ColumnAttribute.TYPE_ROWCOLOR)) {
-					String color = ca.getParam(myProperty.getValue());
-					if (color != null) {
-						Color clr = Color.decode(color);
-						if (isSelected) {
-							// Darker color
-							Color dark = clr.darker();
-							clr = dark;
-						}
-						c.setBackground(clr);
-						if (myTable != null) {
-							myTable.setRowColor(row, clr);
-						}
-					}
-				}
-			} else {
-				Color clr = (myTable != null ? myTable.getRowColor(row) : null);
-				if (clr != null) {
-					Color dark = clr.darker();
-					c.setBackground(isSelected ? dark : clr);
-				}
-			}
-		}
-	}
+    public void setComponentColor(Component c, boolean isSelected, int row, int col, boolean loading, int rowcount,
+            boolean isDisabled) {
+        if (row < 0) {
+            return;
+        }
+        String a=  " ";
+        JComponent cc = (JComponent) c;
+        cc.setOpaque(true);
+        if (isSelected) {
+            c.setBackground(selectedColor);
+        } else {
+            if (row % 2 == 0) {
+                c.setBackground(highColor);
+            } else {
+                c.setBackground(lowColor);
+            }
+        }
 
-	public Component getListCellRendererComponent(JList list, Object value,
-			int index, boolean isSelected, boolean cellHasFocus) {
-		Selection sel = (Selection) value;
-		l.setText(sel == null ? "" : sel.toString());
-		setComponentColor(l, isSelected, index, -1, false, list.getModel()
-				.getSize(), false);
-		return l;
-	}
+        Color clr = (myTable != null ? myTable.getRowBackgroundColor(row, col) : null);
+        if (clr != null) {
+            c.setBackground(isSelected ? clr.darker() : clr);
+        }
 
-	// public Component getTreeCellRendererComponent(JTree tree, Object value,
-	// boolean selected, boolean expanded, boolean leaf, int row, boolean
-	// hasFocus) {
-	// JTreeTable.TreeTableCellRenderer tt;
-	// }
+        clr = (myTable != null ? myTable.getRowForegroundColor(row, col) : null);
+        if (clr != null) {
+            c.setForeground(isSelected ? clr.darker() : clr);
+        }
 
-	// private String listPropertyType = null;
+    }
 
-	public void setPropertyTypeForListCell(String s) {
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+            boolean cellHasFocus) {
+        Selection sel = (Selection) value;
+        l.setText(sel == null ? "" : sel.toString());
+        setComponentColor(l, isSelected, index, -1, false, list.getModel().getSize(), false);
+        return l;
+    }
 
-	}
+    public void setPropertyTypeForListCell(String s) {
 
-	public static void main(String[] args) {
-		Locale[] locales = NumberFormat.getAvailableLocales();
-		double myNumber = -1234.56;
-		NumberFormat form;
-		for (int j = 0; j < 4; ++j) {
-			logger.info("FORMAT");
-			for (int i = 0; i < locales.length; ++i) {
-				if (locales[i].getCountry().length() == 0) {
-					continue; // Skip language-only locales
-				}
-				System.out.print(locales[i].getDisplayName());
-				switch (j) {
-				case 0:
-					form = NumberFormat.getInstance(locales[i]);
-					break;
-				case 1:
-					form = NumberFormat.getIntegerInstance(locales[i]);
-					break;
-				case 2:
-					form = NumberFormat.getCurrencyInstance(locales[i]);
-					break;
-				default:
-					form = NumberFormat.getPercentInstance(locales[i]);
-					break;
-				}
-				if (form instanceof DecimalFormat) {
-					System.out.print(": " + ((DecimalFormat) form).toPattern());
-				}
-				System.out.print(" -> " + form.format(myNumber));
-				try {
-					logger.info(" -> "
-							+ form.parse(form.format(myNumber)));
-				} catch (ParseException e) {
-				}
-			}
-		}
-	}
+    }
+
+    public static void main(String[] args) {
+        Locale[] locales = NumberFormat.getAvailableLocales();
+        double myNumber = -1234.56;
+        NumberFormat form;
+        for (int j = 0; j < 4; ++j) {
+            logger.info("FORMAT");
+            for (int i = 0; i < locales.length; ++i) {
+                if (locales[i].getCountry().length() == 0) {
+                    continue; // Skip language-only locales
+                }
+                logger.info(locales[i].getDisplayName());
+                switch (j) {
+                case 0:
+                    form = NumberFormat.getInstance(locales[i]);
+                    break;
+                case 1:
+                    form = NumberFormat.getIntegerInstance(locales[i]);
+                    break;
+                case 2:
+                    form = NumberFormat.getCurrencyInstance(locales[i]);
+                    break;
+                default:
+                    form = NumberFormat.getPercentInstance(locales[i]);
+                    break;
+                }
+                if (form instanceof DecimalFormat) {
+                    System.out.print(": " + ((DecimalFormat) form).toPattern());
+                }
+                logger.info(" -> " + form.format(myNumber));
+                try {
+                    logger.info(" -> " + form.parse(form.format(myNumber)));
+                } catch (ParseException e) {
+                }
+            }
+        }
+    }
 
 }

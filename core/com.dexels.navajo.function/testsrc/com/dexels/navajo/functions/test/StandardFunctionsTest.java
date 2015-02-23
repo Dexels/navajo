@@ -134,7 +134,7 @@ public class StandardFunctionsTest {
 		// Test bogus.
 		boolean bogus = false;
 		fi.reset();
-		fi.insertOperand(new String("-10"));
+		fi.insertOperand("-10");
 		try {
 			o = fi.evaluateWithTypeChecking();
 		} catch (TMLExpressionException e) {
@@ -352,7 +352,7 @@ public class StandardFunctionsTest {
 		assertNull(o);
 
 		System.err.println(System.currentTimeMillis());
-		long l = (new Long("1234567890000").longValue() - System
+		long l = (Long.parseLong("1234567890000") - System
 				.currentTimeMillis());
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MILLISECOND, (int) l);
@@ -431,7 +431,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToMemo");
 		fi.reset();
-		fi.insertOperand(new String("20"));
+		fi.insertOperand("20");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Memo.class, o.getClass());
@@ -1418,8 +1418,8 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "FormatStringList");
 		fi.reset();
 		ArrayList<String> list = new ArrayList<String>();
-		list.add(new String("10"));
-		list.add(new String("20"));
+		list.add("10");
+		list.add("20");
 		fi.insertOperand(list);
 		fi.insertOperand("&");
 
@@ -1731,8 +1731,8 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "Contains");
 		fi.reset();
 		ArrayList<String> list = new ArrayList<String>();
-		list.add(new String("10"));
-		list.add(new String("20"));
+		list.add("10");
+		list.add("20");
 		fi.insertOperand(list);
 		fi.insertOperand("10");
 
@@ -1948,14 +1948,14 @@ public class StandardFunctionsTest {
 
 		// Empty String.
 		fi.reset();
-		fi.insertOperand(new String(""));
+		fi.insertOperand("");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Boolean.TRUE, o);
 
 		// Non Empty String.
 		fi.reset();
-		fi.insertOperand(new String("aap"));
+		fi.insertOperand("aap");
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Boolean.FALSE, o);
@@ -1976,7 +1976,7 @@ public class StandardFunctionsTest {
 
 		// Non Empty list.
 		fi.reset();
-		fi.insertOperand(new ArrayList<String>().add(new String("noot")));
+		fi.insertOperand(new ArrayList<String>().add("noot"));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Boolean.FALSE, o);

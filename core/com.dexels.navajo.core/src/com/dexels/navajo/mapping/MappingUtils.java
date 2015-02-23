@@ -395,7 +395,7 @@ public final class MappingUtils {
 	   if ( name.startsWith("../") ) {
 		   return getBaseMessageName(name.substring(3));
 	   }
-	   if ( name.startsWith("/") ) {
+	   if ( name.length() > 0 && name.charAt(0) == '/' ) {
 		   return name.substring(1);
 	   }
 	   return name;
@@ -426,7 +426,7 @@ public static final Message[] addMessage(Navajo doc, Message parent, String mess
 	/**
 	 * Added 22/5/2007: support for relative message creation.
 	 */
-    if ( !message.startsWith("/") && message.indexOf(Navajo.MESSAGE_SEPARATOR) != -1 && parent == null ) {
+    if ( (message.length() == 0 || message.charAt(0) != '/') && message.indexOf(Navajo.MESSAGE_SEPARATOR) != -1 && parent == null ) {
       throw new MappingException(
           "No submessage constructs allowed in non-nested <message> tags: " + message);
     }
@@ -441,7 +441,7 @@ public static final Message[] addMessage(Navajo doc, Message parent, String mess
     /**
      * Get the real parent message given the fact that message could contain a relative name.
      */
-    parent = ( message.startsWith("/") ? null : getParentMessage(parent, message) );
+    parent = ( message.length() > 0 && message.charAt(0) == '/' ? null : getParentMessage(parent, message) );
     
     if (parent != null) {
       existing = parent.getMessage(getBaseMessageName(message));
@@ -742,12 +742,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
     if (prop == null) {
       return false;
     }
-    if (prop.getType().equals(Property.SELECTION_PROPERTY)) {
-      return true;
-    }
-    else {
-      return false;
-    }
+    return prop.getType().equals(Property.SELECTION_PROPERTY);
   }
 
   public static final String constructGetMethod(String name) {
@@ -841,7 +836,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
   
   public static final String createPackageName(String packagePath) throws Exception {
 
-	if (packagePath.startsWith("/")) {
+	if (packagePath.length() > 0 && packagePath.charAt(0) == '/') {
 		throw new Exception("Invalid package name: '" + packagePath + "'. It should not start with a slash");
 	}
 	

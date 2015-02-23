@@ -47,11 +47,6 @@ public class TipiPeelPanel extends TipiPanel {
 	}
 
 	
-	@Override
-	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
-		super.performComponentMethod(name, compMeth, event);
-		
-	}
 
 	public static void main(String[] args) {
 		new TipiPeelPanel();

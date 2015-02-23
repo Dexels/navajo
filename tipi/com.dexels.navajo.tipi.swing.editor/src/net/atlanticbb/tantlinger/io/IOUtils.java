@@ -37,7 +37,7 @@ public class IOUtils
         File[] list = rootdir.listFiles();
         for(int i = 0; i < list.length; i++)
         {
-            File eachFile = (java.io.File)list[i];
+            File eachFile = list[i];
             if(eachFile.isDirectory())
             {
                 getDirectoryContents(onlyFiles, eachFile);

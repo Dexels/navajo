@@ -39,15 +39,17 @@ import com.dexels.navajo.tipi.components.swingimpl.TipiDialog;
 public class TipiSwingDialog extends JDialog {
 
 	private static final long serialVersionUID = -8923819403196803897L;
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(TipiSwingDialog.class);
+	private final static Logger logger = LoggerFactory.getLogger(TipiSwingDialog.class);
 	
 	private ComponentAdapter componentListener;
 	private final JFrame myRootParent;
 
+    private final OverlayProgressPanel glassPanel = new OverlayProgressPanel(4, 120);
+
+
 	public TipiSwingDialog(JFrame f, final TipiDialog comp) {
 		super(f);
+		setGlassPane(glassPanel);
 		myRootParent = f;
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		componentListener = new ComponentAdapter() {
@@ -136,5 +138,24 @@ public class TipiSwingDialog extends JDialog {
 		}
 		return null;
 	}
+	
+
+   
+    
+    public void hideGlass() {
+        if (getGlassPane() instanceof OverlayProgressPanel) {
+            OverlayProgressPanel p = (OverlayProgressPanel) getGlassPane();
+            p.stop();
+        }
+    }
+    
+    public void addGlass(String type) {
+        if (!glassPanel.isVisible()) {
+            glassPanel.setType(type);
+            glassPanel.start();
+            setGlassPane(glassPanel);
+        }
+       
+    }
 
 }

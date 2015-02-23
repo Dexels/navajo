@@ -61,17 +61,9 @@ public class TipiMenuBar extends TipiEchoDataComponentImpl {
 			}
 		}});   	  
       
-//      defaultMenuModel.addItem(fileMenuModel);
-//      defaultMenuModel.addItem(openRecentMenuModel);
-
       return b;
     }
 
-    protected void setComponentValue(String name, Object object) {
-//    	MenuBarPane b = (MenuBarPane) getContainer();
-//    	DefaultMenuModel menuModel = new DefaultMenuModel();
-        super.setComponentValue(name, object);
-    }
 
 	public void addToContainer(Object c, Object constraints) {
 

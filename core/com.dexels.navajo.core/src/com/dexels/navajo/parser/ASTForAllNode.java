@@ -86,9 +86,9 @@ public final class ASTForAllNode extends SimpleNode {
 
                     boolean result = Condition.evaluate(expr, doc, mapObject, parentMsg,access);
 
-                    if ((result == false) && matchAll)
+                    if ((!(result)) && matchAll)
                         return Boolean.FALSE;
-                    if ((result == true) && !matchAll)
+                    if ((result) && !matchAll)
                         return Boolean.TRUE;
                 }
 

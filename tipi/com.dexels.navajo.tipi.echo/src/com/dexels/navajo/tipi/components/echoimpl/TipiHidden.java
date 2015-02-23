@@ -36,8 +36,5 @@ public class TipiHidden extends TipiEchoComponentImpl {
         return b;
     }
 
-    protected void setComponentValue(String name, Object object) {
-        super.setComponentValue(name, object);
-    }
 
 }

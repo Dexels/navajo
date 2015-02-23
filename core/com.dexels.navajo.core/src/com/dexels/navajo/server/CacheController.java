@@ -107,11 +107,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 	}
 	
 	private boolean isConfigModified() {
-		if ( configTimestamp != getConfigTimeStamp() ) {
-			return true;
-		} else {
-			return false;
-		}
+		return configTimestamp != getConfigTimeStamp();
 	}
 	
 	/**

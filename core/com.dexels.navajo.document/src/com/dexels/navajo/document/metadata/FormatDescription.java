@@ -288,41 +288,41 @@ public class FormatDescription implements Comparable<FormatDescription>, Seriali
 	{
 		StringBuffer sb = new StringBuffer(80);
 		sb.append(getGroup());
-		sb.append(";");
+		sb.append(';');
 		sb.append(getShortName());
-		sb.append(";");
+		sb.append(';');
 		sb.append(getLongName());
-		sb.append(";");
+		sb.append(';');
 		if (getMimeTypes() != null)
 		{
 			Iterator<String> iter = getMimeTypes().iterator();
 			while (iter.hasNext())
 			{
 				sb.append(iter.next());
-				sb.append(";");
+				sb.append(';');
 			}
 		}
 		else
 		{
-			sb.append(";");
+			sb.append(';');
 		}
-		sb.append(";");
+		sb.append(';');
 		if (getFileExtensions() != null)
 		{
 			Iterator<String> iter = getFileExtensions().iterator();
 			while (iter.hasNext())
 			{
 				sb.append(iter.next());
-				sb.append(";");
+				sb.append(';');
 			}
 		}
 		else
 		{
-			sb.append(";");
+			sb.append(';');
 		}
 		sb.append(getOffset());
-		sb.append(";");
-		sb.append(";");
+		sb.append(';');
+		sb.append(';');
 		return sb.toString();
 	}
 }

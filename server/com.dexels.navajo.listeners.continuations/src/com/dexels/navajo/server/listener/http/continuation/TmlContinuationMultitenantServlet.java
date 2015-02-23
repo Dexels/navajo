@@ -88,7 +88,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 			return requestInstance;
 		}
 		String pathinfo = req.getPathInfo();
-		if(pathinfo.startsWith("/")) {
+		if(pathinfo.length() > 0 && pathinfo.charAt(0) == '/') {
 			pathinfo = pathinfo.substring(1);
 		}
 		String instance = null;

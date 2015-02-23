@@ -428,11 +428,5 @@ public void kill() {
     super.kill();
   }
   
-  /**
-   * This method can not be deleted because it's used in SQLMapHelper - setBlob
-   */
-  @Override
-public void addToBinaryStreamList(InputStream binaryStream) {
-      super.addToBinaryStreamList(binaryStream);
-  }
+ 
 }

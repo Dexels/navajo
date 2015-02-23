@@ -115,7 +115,7 @@ public class ValueDefinition {
 			expression.setAttribute("xml:space", "preserve");
 			//System.err.println("setterValue = " + setterValue + ", textNode = " + textNode);
 			// Case Ia: stringliteral, create construct <expression>[STRING CONTENT]<expression>
-			if ( textNode && !setterValue.startsWith("{") ) {
+			if ( textNode && (setterValue.length() == 0 || setterValue.charAt(0) != '{') ) {
 				expression.setContent(setterValue);
 			} 
 			// Case Ib: other, if string type automatically put quotes (') around string.
@@ -128,7 +128,7 @@ public class ValueDefinition {
 				//if ( type.equals("string") && !setterValue.startsWith("{") ) {
 				//	setterValue = "'" + setterValue + "'";
 				//}
-				if ( setterValue.startsWith("{") ) {  // Force expression.
+				if ( setterValue.length() > 0 && setterValue.charAt(0) == '{' ) {  // Force expression.
 					//System.err.println("FOUND ESCAPED EXPRESSION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 					setterValue = setterValue.replace('{', ' ');
 					setterValue = setterValue.replace('}', ' ');

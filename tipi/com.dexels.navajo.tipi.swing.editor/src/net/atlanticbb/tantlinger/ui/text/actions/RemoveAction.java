@@ -8,14 +8,11 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.Action;
 import javax.swing.JEditorPane;
-import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
 import net.atlanticbb.tantlinger.ui.text.HTMLUtils;

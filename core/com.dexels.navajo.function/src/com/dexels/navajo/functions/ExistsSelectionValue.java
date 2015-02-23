@@ -79,7 +79,7 @@ public class ExistsSelectionValue extends FunctionInterface {
 			try
 			{
 				Selection s = p.getSelectionByValue((String) v);
-				return s.getValue() != Selection.DUMMY_ELEMENT;
+				return !s.getValue().equals(Selection.DUMMY_ELEMENT);
 			}
 			catch(NavajoException ne)
 			{
