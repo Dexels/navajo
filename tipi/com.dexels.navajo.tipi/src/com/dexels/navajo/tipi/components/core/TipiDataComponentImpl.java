@@ -478,7 +478,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
                         tcomp.loadPropertiesFromNavajo(n);
                     }
                 } else {
-                   logger.warn("Stopping cascase load at {} since we seem to be listening to other services", tcomp);
+                   logger.warn("Stopping cascade load at {} since we seem to be listening to other services", tcomp);
                 }
             }
         }
