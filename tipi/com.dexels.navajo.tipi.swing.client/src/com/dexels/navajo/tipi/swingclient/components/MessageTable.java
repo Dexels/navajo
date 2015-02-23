@@ -794,61 +794,66 @@ public class MessageTable extends JTable implements CellEditorListener,
 		myRenderer = tr;
 	}
 
-	private final void createRowColor(int row) {
-		Message m = getMessageRow(row);
-	
-		// Create default null colors
-		setRowColor(row, "", DEFAULT_BACKGROUND_COLOR, RowAttribute.ROW_BACKGROUND_COLOR);
+    private final void createRowColor(int row) {
+        Message m = getMessageRow(row);
+
+        // Create default null colors
+        setRowColor(row, "", DEFAULT_BACKGROUND_COLOR, RowAttribute.ROW_BACKGROUND_COLOR);
         setRowColor(row, "", DEFAULT_FOREGROUND_COLOR, RowAttribute.ROW_FOREGROUND_COLOR);
-         
-		Iterator<String> it = columnAttributes.keySet().iterator();
-		while (it.hasNext()) {
 
-			String key = it.next();
-			Property p = m.getProperty(key);
-			if (p != null) {
-			    for (ColumnAttribute ca : columnAttributes.get(key)) {
-					// logger.info("Got column atributes");
-                    if (ca.getType().equals(ColumnAttribute.TYPE_ROWCOLOR)) {
-                        String color = ca.getParam(p.getValue());
-                        if (color != null) {
-                            Color clr = Color.decode(color);
-                            setRowColor(row, ca.getColumnName(), clr, RowAttribute.ROW_BACKGROUND_COLOR);
-                        }
-                      
-                        continue;
+        if (columnAttributes == null) {
+            return;
+        }
+        Iterator<String> it = columnAttributes.keySet().iterator();
+        while (it.hasNext()) {
 
+            String key = it.next();
+            Property p = m.getProperty(key);
+            if (p == null) {
+                continue;
+            }
+
+            for (ColumnAttribute ca : columnAttributes.get(key)) {
+                // logger.info("Got column atributes");
+                if (ca.getType().equals(ColumnAttribute.TYPE_ROWCOLOR)) {
+                    String color = ca.getParam(p.getValue());
+                    if (color != null) {
+                        Color clr = Color.decode(color);
+                        setRowColor(row, ca.getColumnName(), clr, RowAttribute.ROW_BACKGROUND_COLOR);
                     }
-                    if (ca.getType().equals(ColumnAttribute.TYPE_ROWTEXTCOLOR)) {
-                        String color = ca.getParam(p.getValue());
-                        if (color != null) {
-                            Color clr = Color.decode(color);
-                            setRowColor(row, ca.getColumnName(), clr, RowAttribute.ROW_FOREGROUND_COLOR);
-                        }
-                        continue;
 
+                    continue;
+
+                }
+                if (ca.getType().equals(ColumnAttribute.TYPE_ROWTEXTCOLOR)) {
+                    String color = ca.getParam(p.getValue());
+                    if (color != null) {
+                        Color clr = Color.decode(color);
+                        setRowColor(row, ca.getColumnName(), clr, RowAttribute.ROW_FOREGROUND_COLOR);
                     }
-					
-					if (ca.getType().equals(ColumnAttribute.TYPE_FREEROWCOLOR)) {
-						Set<String> s = ca.getParamKeys();
-						Iterator<String> iter = s.iterator();
-						while (iter.hasNext()) {
-							String itkey = iter.next();
-							if (p.getValue().indexOf(itkey) >= 0) {
-								String color = ca.getParam(itkey);
-								if (color != null) {
-									Color clr = Color.decode(color);
-									setRowColor(row, ca.getColumnName(), clr, RowAttribute.ROW_BACKGROUND_COLOR);
-									continue;
-								}
-							}
-						}
-					}
+                    continue;
 
-				}
-			}
-		}
-	}
+                }
+
+                if (ca.getType().equals(ColumnAttribute.TYPE_FREEROWCOLOR)) {
+                    Set<String> s = ca.getParamKeys();
+                    Iterator<String> iter = s.iterator();
+                    while (iter.hasNext()) {
+                        String itkey = iter.next();
+                        if (p.getValue().indexOf(itkey) >= 0) {
+                            String color = ca.getParam(itkey);
+                            if (color != null) {
+                                Color clr = Color.decode(color);
+                                setRowColor(row, ca.getColumnName(), clr, RowAttribute.ROW_BACKGROUND_COLOR);
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
 
 	void setRowColor(int row, String columnName, Color c, int type) {
 	    int realCol = -1;
