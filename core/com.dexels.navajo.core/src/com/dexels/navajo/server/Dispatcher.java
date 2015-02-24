@@ -976,11 +976,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
             if (origRunnable != null) {
                 access.setOriginalRunnable(origRunnable);
-
                 // and vice versa, for the endTransaction;
-
                 origRunnable.setAttribute("access", access);
-
             }
 
             String fullLog = inMessage.getHeader().getHeaderAttribute("fullLog");
@@ -989,9 +986,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 access.setDebugAll(true);
             }
 
-            if ((access.userID == -1) || (access.serviceID == -1)) { // ACCESS
-                                                                     // NOT
-                                                                     // GRANTED.
+            if ((access.userID == -1) || (access.serviceID == -1)) { // ACCESS NOTGRANTED.
 
                 String errorMessage = "";
 
@@ -1031,15 +1026,14 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     if (validTimeSpecification(inMessage.getHeader().getSchedule())) {
 
                         scheduledWebservice = true;
-                        System.err.println("Scheduling webservice: " + inMessage.getHeader().getRPCName() + " on "
-                                + inMessage.getHeader().getSchedule());
+                        logger.info("Scheduling webservice: {}  on {} ", inMessage.getHeader().getRPCName(), inMessage
+                                .getHeader().getSchedule());
                         TaskRunnerInterface trf = TaskRunnerFactory.getInstance();
                         TaskInterface ti = TaskRunnerFactory.getTaskInstance();
                         try {
                             ti.setTrigger(inMessage.getHeader().getSchedule());
                             ti.setNavajo(inMessage);
-                            ti.setPersisted(true); // Make sure task gets
-                                                   // persisted in tasks.xml
+                            ti.setPersisted(true); // Make sure task gets persisted in tasks.xml
                             if (inMessage.getHeader().getHeaderAttribute("keeprequestresponse") != null
                                     && inMessage.getHeader().getHeaderAttribute("keeprequestresponse").equals("true")) {
                                 ti.setKeepRequestResponse(true);
@@ -1047,8 +1041,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                             trf.addTask(ti);
                             outMessage = generateScheduledMessage(inMessage.getHeader(), ti.getId(), false);
                         } catch (UserException e) {
-                            System.err.println("WARNING: Invalid trigger specified for task " + ti.getId() + ": "
-                                    + inMessage.getHeader().getSchedule());
+                            logger.info("WARNING: Invalid trigger specified for task {}: {}", ti.getId(), inMessage
+                                    .getHeader().getSchedule());
                             trf.removeTask(ti);
                             outMessage = generateErrorMessage(access, "Could not schedule task:" + e.getMessage(), -1,
                                     -1, e);
@@ -1077,8 +1071,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                             outMessage = useProxy;
                         }
                     } else {
-                        throw new UnsupportedOperationException(
-                                "I've removed this code because I assumed it wasn't used any more");
+                        throw new UnsupportedOperationException("I've removed this code because I assumed it wasn't used any more");
                     }
                 }
 
