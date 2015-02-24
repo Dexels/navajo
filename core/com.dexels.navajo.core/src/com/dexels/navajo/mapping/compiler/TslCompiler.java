@@ -982,7 +982,7 @@ public class TslCompiler {
 					+ "// Map message(s) to message\n");
 			String messageListName = "messages" + ident;
 
-			result.append(printIdent(ident + 2) + "ArrayList "
+			result.append(printIdent(ident + 2) + "List "
 					+ messageListName + " = null;\n");
 			result.append(printIdent(ident + 2)
 					+ "inSelectionRef = MappingUtils.isSelection(currentInMsg, access.getInDoc(), \""
@@ -2128,7 +2128,7 @@ public class TslCompiler {
 					+ "// Map message(s) to field\n");
 			String messageListName = "messages" + ident;
 
-			result.append(printIdent(ident + 2) + "ArrayList "
+			result.append(printIdent(ident + 2) + "List "
 					+ messageListName + " = null;\n");
 			result.append(printIdent(ident + 2)
 					+ "inSelectionRef = MappingUtils.isSelection(currentInMsg, access.getInDoc(), \""
@@ -3371,6 +3371,7 @@ public class TslCompiler {
 					+ "import com.dexels.navajo.parser.*;\n"
 					+ "import com.dexels.navajo.script.api.*;\n"
 					+ "import java.util.ArrayList;\n"
+					+ "import java.util.List;\n"
 					+ "import java.util.HashMap;\n"
 					+ "import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;\n"
@@ -3541,8 +3542,8 @@ public class TslCompiler {
 		String fullScriptPath = scriptPath + "/" + packagePath + "/" + script +  extension;
 		
 
-		ArrayList<String> inheritedScripts = new ArrayList<String>();
-		ArrayList<String> extendEntities = new ArrayList<String>();
+		List<String> inheritedScripts = new ArrayList<String>();
+		List<String> extendEntities = new ArrayList<String>();
 		InputStream is = null;
 
 		try {

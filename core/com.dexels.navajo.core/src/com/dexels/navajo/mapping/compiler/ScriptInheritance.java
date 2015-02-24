@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
@@ -273,7 +274,7 @@ public class ScriptInheritance {
 	
 	}
 	
-	private void doInject(XMLElement subScript, XMLElement child, String scriptPath, ArrayList<String> inheritedScripts) throws Exception {
+	private void doInject(XMLElement subScript, XMLElement child, String scriptPath, List<String> inheritedScripts) throws Exception {
 		// find inject tags.
 		
 		Vector<XMLElement> children = ( child == null ? subScript.getChildren() : child.getChildren() );
@@ -334,7 +335,7 @@ public class ScriptInheritance {
 		
 	}
 	
-	public static InputStream inherit(InputStream raw, String scriptPath, ArrayList<String> inheritedScripts) throws Exception {
+	public static InputStream inherit(InputStream raw, String scriptPath, List<String> inheritedScripts) throws Exception {
 		
 		ScriptInheritance ti = new ScriptInheritance();
 		
