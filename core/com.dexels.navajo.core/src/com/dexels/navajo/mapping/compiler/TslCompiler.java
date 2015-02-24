@@ -1279,6 +1279,9 @@ public class TslCompiler {
 						+ "currentMap = new MappableTreeNode(access, currentMap, "
 						+ mappableArrayName + ".next(), true);\n");
 			}
+			result.append(printIdent(ident + 4)
+			            + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
+			
 
 			// If filter is specified, evaluate filter first:
 			if (filter != null && !filter.equals("")) {
@@ -1377,6 +1380,9 @@ public class TslCompiler {
 							+ ((ref.charAt(0) + "").toUpperCase() + ref
 									.substring(1)) + "(), false);\n");
 				}
+				result.append(printIdent(ident + 4)
+                        + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
+				
 
 			} else {
 				String localObjectName = "mappableObject" + (objectCounter++);
@@ -1403,6 +1409,9 @@ public class TslCompiler {
 							+ ((ref.charAt(0) + "").toUpperCase() + ref
 									.substring(1)) + "(), false);\n");
 				}
+				result.append(printIdent(ident + 4)
+                        + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
+				
 			}
 
 			result.append(printIdent(ident + 2)
@@ -1695,6 +1704,8 @@ public class TslCompiler {
 			result.append(printIdent(ident + 4)
 					+ "currentMap = new MappableTreeNode(access, currentMap, "
 					+ mappableArrayName + "[i" + (ident + 2) + "], true);\n");
+			result.append(printIdent(ident + 4)
+                    + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
 
 			// If filter is specified, evaluate filter first (31/1/2007)
 			if (!filter.equals("")) {
@@ -2245,7 +2256,8 @@ public class TslCompiler {
 				result.append(printIdent(ident)
 						+ "currentMap = new MappableTreeNode(access, currentMap, classLoader.getClass(\""
 						+ type + "\").newInstance(), false);\n");
-
+				result.append(printIdent(ident + 4)
+                        + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
 				result.append(printIdent(ident)
 						+ "if ( currentMap.myObject instanceof Mappable ) {  ((Mappable) currentMap.myObject).load(access);}\n");
 				result.append(printIdent(ident) + subObjectsName + "["
@@ -2318,6 +2330,9 @@ public class TslCompiler {
 				result.append(printIdent(ident)
 						+ "currentMap = new MappableTreeNode(access, currentMap, classLoader.getClass(\""
 						+ type + "\").newInstance(), false);\n");
+				result.append(printIdent(ident + 4)
+                        + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
+				
 
 				// Create local variable to address new object.
 				String subObjectsName = "subObject" + subObjectCounter;
@@ -2498,7 +2513,7 @@ public class TslCompiler {
 				+ replaceQuotes(value)
 				+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
 		result.append(printIdent(ident)
-				+ "Access.writeToConsole(access, \"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value + \"\\n\");\n");
+				+ "Access.writeToConsole(access, \"DEBUG: \" + op.value );\n");
 		return result.toString();
 	}
 
@@ -2792,6 +2807,8 @@ public class TslCompiler {
 			result.append(printIdent(ident)
 					+ "currentMap = new MappableTreeNode(access, currentMap, classLoader.getClass(\""
 					+ object + "\").newInstance(), false);\n");
+			result.append("currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
+			n.getAttribute("navajoScript");
 			String objectName = "mappableObject" + (objectCounter++);
 			result.append(printIdent(ident) + objectName + " = (" + className
 					+ ") currentMap.myObject;\n");
@@ -2892,8 +2909,7 @@ public class TslCompiler {
 		} else {
 			fileName = script;
 			includedFile = new File(scriptPath + "/" + fileName + ".xml");
-			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(
-					includedFile), false);
+			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
 		}
 
 		// Add dependency.

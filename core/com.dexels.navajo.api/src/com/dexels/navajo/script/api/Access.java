@@ -175,14 +175,13 @@ public final class Access implements java.io.Serializable, Mappable {
 		this.breakWasSet = breakWasSet;
 	}
 
-	public void updateStatistics(MapStatistics ms, int levelId, String mapName, long totalTime, int elementCount, boolean isArrayElement) {
-
+	public void updateStatistics(MapStatistics ms, int levelId, String mapName, int totalTime, int elementCount, boolean isArrayElement, int navajoLineNr) {
 		ms.levelId = levelId;
 		ms.mapName = mapName;
 		ms.elementCount = elementCount;
 		ms.totalTime = totalTime;
 		ms.isArrayElement = isArrayElement;
-
+		ms.linenr = navajoLineNr;
 	}
 
 	/**
