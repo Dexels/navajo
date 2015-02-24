@@ -202,7 +202,7 @@ public void testOracle() throws Exception, SQLException {
 		
 		JDBCMap jm = new JDBCMap();
 		jm.setDebug(true);
-		Access a = new Access(1, 2,"demo","rpcname","agent","ip","host",null,null);
+		Access a = new Access(1, 2,"demo","rpcname","agent","ip","host",null,false, null);
 		jm.load(a);
 		jm.setDatasource("mysql_swingstreet");
 		jm.setQuery("select name from jos_components");

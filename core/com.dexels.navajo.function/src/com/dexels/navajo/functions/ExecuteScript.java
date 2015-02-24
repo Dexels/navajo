@@ -32,7 +32,7 @@ public String remarks() {
 public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     GenericHandler gh = new GenericHandler(DispatcherFactory.getInstance().getNavajoConfig());
     String script = (String) getOperand(0);
-    Access access = new Access(1, 1, 1, "ANONYMOUS", script, "", "", "", false, null);
+    Access access = new Access(1, 1, "ANONYMOUS", script, "", "", "", null, false, "1");
     access.setInDoc(inMessage);
     inMessage.getHeader().setRequestId("");
     gh.setInput(access);

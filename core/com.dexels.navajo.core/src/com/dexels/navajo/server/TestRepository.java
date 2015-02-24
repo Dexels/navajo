@@ -24,7 +24,7 @@ public class TestRepository extends SimpleRepository {
 				throw new AuthorizationException(false, true, username, "Not allowed to use this service");
 			}
 			
-			return new Access(1, 1, username, service, "Navajo Client", "1.1.1.1", "myhost", null, accessID);
+			return new Access(1, 1, username, service, "Navajo Client", "1.1.1.1", "myhost", null, false, accessID);
 			
 		} else {
 			throw new AuthorizationException(true, false, username, "Unknown user");

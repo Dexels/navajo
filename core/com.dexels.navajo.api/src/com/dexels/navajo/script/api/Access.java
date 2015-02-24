@@ -150,10 +150,32 @@ public final class Access implements java.io.Serializable, Mappable {
 
     // In order to manage continuations, I might need the original runnable.
     // This service (and it's Access object) may be used by many different
-    // threads during its execution, but only
-    // the original knows how to commit the data and finalize the network
-    // connection.
+    // threads during its execution, but only the original knows how to 
+    // commit the data and finalise the network connection.
     private transient TmlRunnable originalRunnable;
+  
+    public Access(int userID, int serviceID, String rpcUser, String rpcName, String userAgent, String ipAddress,
+            String hostName, Object certificate, boolean betaUser, String accessID) {
+
+        this();
+
+        this.accessID = accessID;
+        if (accessID == null) {
+            AccessCount++;
+            this.accessID = created.getTime() + "-" + AccessCount;
+        }
+        this.userID = userID;
+        this.serviceID = serviceID;
+        this.rpcName = rpcName;
+        this.rpcUser = rpcUser;
+        this.userAgent = userAgent;
+        this.hostName = hostName;
+        this.ipAddress = ipAddress;
+        this.betaUser = betaUser;
+        userCertificate = certificate;
+
+    }
+
 
     public MapStatistics createStatistics() {
         MapStatistics ms = new MapStatistics();
@@ -348,50 +370,6 @@ public final class Access implements java.io.Serializable, Mappable {
      */
     public Throwable getException() {
         return myException;
-    }
-
-    /**
-     * @param accessID
-     */
-    public Access(int accessID, int userID, int serviceID, String rpcUser, String rpcName, String userAgent,
-            String ipAddress, String hostName, boolean betaUser, Object certificate) {
-
-        this();
-        AccessCount++;
-        this.accessID = created.getTime() + "-" + AccessCount;
-        // System.err.println("accessID " + this.accessID + ", WS = " + rpcName
-        // + ", USER = " + rpcUser);
-        this.userID = userID;
-        this.serviceID = serviceID;
-        this.rpcName = rpcName;
-        this.rpcUser = rpcUser;
-        this.userAgent = userAgent;
-        this.hostName = hostName;
-        this.ipAddress = ipAddress;
-        this.betaUser = betaUser;
-        userCertificate = certificate;
-    }
-
-    public Access(int userID, int serviceID, String rpcUser, String rpcName, String userAgent, String ipAddress,
-            String hostName, Object certificate, String accessID) {
-
-        this();
-
-        this.accessID = accessID;
-        if (accessID == null) {
-            AccessCount++;
-            this.accessID = created.getTime() + "-" + AccessCount;
-        }
-        this.userID = userID;
-        this.serviceID = serviceID;
-        this.rpcName = rpcName;
-        this.rpcUser = rpcUser;
-        this.userAgent = userAgent;
-        this.hostName = hostName;
-        this.ipAddress = ipAddress;
-        betaUser = false;
-        userCertificate = certificate;
-
     }
 
     /**
