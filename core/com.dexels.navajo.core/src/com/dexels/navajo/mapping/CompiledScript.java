@@ -373,6 +373,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
                 Message[] failed = checkValidationRules(conditions, access.getInDoc(), outMessage, access);
                 if (failed != null) {
                     conditionsFailed = true;
+                    access.setExitCode(Access.EXIT_VALIDATION_ERR);
                     Message msg = NavajoFactory.getInstance().createMessage(outMessage, "ConditionErrors");
                     outMessage.addMessage(msg);
                     msg.setType(Message.MSG_TYPE_ARRAY);
@@ -384,9 +385,15 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
             if (!conditionsFailed) {
                 try {
                     execute(access);
+                    access.setExitCode(Access.EXIT_OK);
                 } catch (com.dexels.navajo.mapping.BreakEvent be) {
+                    access.setExitCode(Access.EXIT_BREAK);
                     throw be;
+                } catch (UserException e) {
+                    access.setExitCode(Access.EXIT_USEREXCEPTION);
+                    throw e;
                 } catch (Exception e) {
+                    access.setExitCode(Access.EXIT_EXCEPTION);
                     throw e;
                 } finally {
                     // TODO Will fail epically with continuations. Just because
