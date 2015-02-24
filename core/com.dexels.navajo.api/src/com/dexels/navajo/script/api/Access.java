@@ -46,826 +46,802 @@ import com.dexels.navajo.document.types.Binary;
 
 /**
  * An Access object is created for each web service access to the Navajo server.
- * An Access object is a handle for all relevant information relating to a specific web service access:
- * the request Navajo, the response Navajo, but also basic information like the username, web service name,
- * time of creation, processing times, etc.
+ * An Access object is a handle for all relevant information relating to a
+ * specific web service access: the request Navajo, the response Navajo, but
+ * also basic information like the username, web service name, time of creation,
+ * processing times, etc.
  * 
  * @author arjen
  *
  */
 public final class Access implements java.io.Serializable, Mappable {
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = -7782160335447961196L;
-
-	static final Logger logger = LoggerFactory.getLogger(Access.class.getName());
-
-	public static final int EXIT_OK = 1;
-	public static final int EXIT_VALIDATION_ERR = 2;
-	public static final int EXIT_BREAK = 3		;
-	public static final int EXIT_USEREXCEPTION = 4	;
-	public static final int EXIT_EXCEPTION = 5	;
-
-	@SuppressWarnings("unused")
-	private static final String VERSION = "$Id$";
-
-	public java.util.Date created = new java.util.Date();
-	private static int AccessCount = 0;
-	public int threadCount = 0;
-	public double cpuload = -1.0;
-	public String accessID = "";
-	public String parentAccessId = "";
-	public int userID;
-	public int serviceID;
-	public String rpcName = "";
-	public String rpcPwd = "";
-	public String rpcUser = "";
-	public String userAgent;
-	public String ipAddress;
-	public String hostName;
-	public boolean betaUser = false;
-	public transient CompiledScriptInterface myScript = null;
-	public int queueSize;
-	public String queueId;
-	
-	/**
-	 * Response time breakdown
-	 */
-	private int totaltime;
-	public int parseTime;
-	public int queueTime;
-	public int authorisationTime;
-	public int clientTime;
-	public int transferTime;
-	public int processingTime;
-	public int beforeServiceTime;
-	public int afterServiceTime;
-	public String requestEncoding;
-	public boolean compressedReceive = false;
-	public boolean compressedSend = false;
-	public boolean isFinished = false;
-	public int contentLength;
-	public transient Binary requestNavajo;
-	public transient Binary responseNavajo;
-	public boolean debugAll;
-	
-	
-
-	// Flag to indicate that during the execution of the webservice, break was called.
-	private boolean breakWasSet = false;
-	
-	private transient Object scriptEnvironment = null;
-	private String requestUrl;
-	private int requestNavajoSize; // in bytes
-	private int responseNavajoSize; // in bytes
-	private int exitCode;
-	private transient Throwable myException;
-	private Navajo outputDoc;
-	private Navajo inDoc;
-	// The mergedDoc can be used to merge a previously set Navajo with the outputDoc.
-	// If the mergeDoc is not empty, it will ALWAYS be merged when setOutputDoc is called.
-	private transient Navajo mergedDoc;
-	private transient Message currentOutMessage;
-	private transient Object userCertificate;
-	private transient Set<Map<?,?>> piggyBackData = null;
-	private String clientToken = null;
-	private String clientInfo = null;
-	private String instance;
-
-	/**
-	 * Create a private logging console for this access object.
-	 * TODO: Maybe restrict maximum size of console... or use Binary...
-	 */
-	private transient StringWriter consoleContent = new StringWriter();
-	private transient PrintWriter consoleOutput = new PrintWriter(consoleContent);
-
-	private transient String waitingForPreviousRequest = null;
-	private transient Thread myThread = null;
-
-	private transient HashMap<Integer, MapStatistics> mapStatistics = null;
-
-	// In order to manage continuations, I might need the original runnable.
-	// This service (and it's Access object) may be used by many different threads during its execution, but only
-	// the original knows how to commit the data and finalize the network connection.
-	private transient TmlRunnable originalRunnable;
-
-
-
-	
-	public MapStatistics createStatistics() {
-		MapStatistics ms = new MapStatistics();
-		if ( mapStatistics == null ) { // First map.
-			mapStatistics = new HashMap<Integer, MapStatistics>();
-		}
-		Integer count = new Integer(mapStatistics.size());
-		mapStatistics.put(count, ms);
-
-		return ms;
-	}
-
-	
-
-	public boolean isBreakWasSet() {
-		return breakWasSet;
-	}
-
-	public void setBreakWasSet(boolean breakWasSet) {
-		this.breakWasSet = breakWasSet;
-	}
-
-	public void updateStatistics(MapStatistics ms, int levelId, String mapName, int totalTime, int elementCount, boolean isArrayElement, int navajoLineNr) {
-		ms.levelId = levelId;
-		ms.mapName = mapName;
-		ms.elementCount = elementCount;
-		ms.totalTime = totalTime;
-		ms.isArrayElement = isArrayElement;
-		ms.linenr = navajoLineNr;
-	}
-
-	/**
-	 * Gets the Navajo that is associated with the so called merged document.
-	 * A merged document will ALWAYS be merged with the Navajo outputDoc. If the current mergedDoc is null, 
-	 * a new Navajo will be returned.
-	 * 
-	 * @return
-	 */
-	public Navajo getMergedDoc() {
-		if ( mergedDoc != null ) {
-			return mergedDoc;
-		} else {
-			mergedDoc = NavajoFactory.getInstance().createNavajo();
-			return mergedDoc;
-		}
-	}
-
-	/**
-	 * Sets the Navajo that is going to be used as a merged document, i.e. a Navajo document
-	 * that will be merged with the outDoc Navajo.
-	 * 
-	 * @param mergedDoc
-	 * @param append, if set to true Navajo mergedDoc is appended, messages of original are overwritten.
-	 *                if set to false Navajo mergedDoc is merged, messages of original are merged with mergedDoc, properties
-	 *                of mergedDoc have precedence over original.
-	 */
-	public void setMergedDoc(Navajo mergedDoc, boolean append) {
-		
-		if ( outputDoc != null ) {
-			try {
-				if ( append ) {
-					outputDoc.appendDocBuffer(mergedDoc);
-				} else {
-					outputDoc.merge(mergedDoc);
-				}
-		    } catch (Exception e) {
-		        logger.error("Exception on merging documents: {}", e);
-		    }
-			return;
-		}
-		if ( mergedDoc == null ) {
-			this.mergedDoc = null;
-			return;
-		}
-		if ( this.mergedDoc == null ) {
-			this.mergedDoc = mergedDoc;
-		} else {
-			try {
-				if ( append ) {
-					this.mergedDoc.appendDocBuffer(mergedDoc);
-				} else {
-					this.mergedDoc.merge(mergedDoc);
-				}
-			} catch (NavajoException e) {
-				logger.error("Error: ", e);
-			}
-		}
-	}
-	
-	/**
-	 * Return the Navajo response (being) created. Return empty Navajo if no current output doc is present yet.
-	 * @return
-	 */
-	public Navajo getOutputDoc() {
-		return outputDoc;
-	}
-
-	/**
-	 * Checks whether a security token was used for this access.
-	 * @return
-	 */
-	public boolean hasCertificate() {
-		return (userCertificate != null);
-	}
-
-	/**
-	 * Sets the response Navajo to be used for generating the response.
-	 * @param n
-	 */
-	public void setOutputDoc(Navajo n) {
-		if ( mergedDoc != null ) {
-			try {
-				if ( n != null ) {
-					mergedDoc.appendDocBuffer(n);
-				}
-				outputDoc = mergedDoc;
-			} catch (NavajoException e) {
-				logger.error("Error: ", e);
-			}
-		} else {
-			outputDoc = n;
-		}
-	}
-
-	/**
-	 * Inform the access object that it is waiting for the termination of a previous access.
-	 * @param id, a unique access id
-	 */
-	public void setWaitingForPreviousResponse(String id) {
-		waitingForPreviousRequest = id;
-	}
-
-	/**
-	 * Returns the access id for which this access is waiting
-	 * @return, a unique access id
-	 */
-	public String getWaitingForPreviousResponse() {
-		return waitingForPreviousRequest;
-	}
-
-	/**
-	 * Sets the compiled script that is used to handle this access.
-	 * @param cs
-	 */
-	public void setCompiledScript(CompiledScriptInterface cs) {
-		myScript = cs;
-	}
-
-	/**
-	 * Get the compiled script used for handling this access.
-	 * (Used from within scripts)
-	 * @return
-	 */
-	public CompiledScriptInterface getMyScript() {
-		return myScript;
-	}
-
-	/**
-	 * Get the compiled script used for handling this access.
-	 * @return
-	 */
-	public CompiledScriptInterface getCompiledScript() {
-		return myScript;
-	}
-
-	/**
-	 * Method to be used when an exception has occurred while processing this access.
-	 * @param e
-	 */
-	public void setException(Throwable e) {
-		myException = e;
-	}
-
-	/**
-	 * Optionally returns an exception if one occurred.
-	 * @return
-	 */
-	public Throwable getException() {
-		return myException;
-	}
-
-	/**
-	 * @param accessID  
-	 */
-	public Access(int accessID, int userID, int serviceID, String rpcUser,
-			String rpcName, String userAgent, String ipAddress,
-			String hostName,
-			boolean betaUser, Object certificate) {
-
-		
-		this();
-		AccessCount++;
-		this.accessID = created.getTime() + "-" + AccessCount;
-		//System.err.println("accessID " + this.accessID + ", WS = " + rpcName + ", USER = " + rpcUser);
-		this.userID = userID;
-		this.serviceID = serviceID;
-		this.rpcName = rpcName;
-		this.rpcUser = rpcUser;
-		this.userAgent = userAgent;
-		this.hostName = hostName;
-		this.ipAddress = ipAddress;
-		this.betaUser = betaUser;
-		userCertificate = certificate;
-	}
-	
-	public Access(int userID, int serviceID, String rpcUser,
-			String rpcName, String userAgent, String ipAddress,
-			String hostName, Object certificate) {
-		this(null, userID, serviceID, rpcUser, rpcName, userAgent, ipAddress, hostName, certificate);
-	}
-	
-	public Access(String accessID, int userID, int serviceID, String rpcUser,
-			String rpcName, String userAgent, String ipAddress,
-			String hostName, Object certificate) {
-
-		this();
-		
-		this.accessID = accessID;
-		if (accessID == null) {
-			AccessCount++;
-			this.accessID = created.getTime() + "-" + AccessCount;
-		}
-		this.userID = userID;
-		this.serviceID = serviceID;
-		this.rpcName = rpcName;
-		this.rpcUser = rpcUser;
-		this.userAgent = userAgent;
-		this.hostName = hostName;
-		this.ipAddress = ipAddress;
-		betaUser = false;
-		userCertificate = certificate;
-		
-	}
-
-	
-	/**
-	 * Clone an Access object without cloning requestNavajo and responseNavajo.
-	 * 
-	 * @return
-	 */
-	public Access cloneWithoutNavajos() {
-		Access a = new Access();
-		
-		a.created = created;
-		a.threadCount = threadCount;
-		a.cpuload = cpuload;
-		a.accessID = accessID;
-		a.userID = userID;
-		a.serviceID = serviceID;
-		a.rpcName = this.rpcName;
-		a.rpcPwd = this.rpcPwd;
-		a.rpcUser = this.rpcUser;
-		a.userAgent = this.userAgent;
-		a.ipAddress = this.ipAddress;
-		a.hostName = this.hostName;
-		a.betaUser = this.betaUser;
-		a.totaltime = this.totaltime;
-		a.parseTime = this.parseTime;
-		a.authorisationTime = this.authorisationTime;
-		a.clientTime = this.clientTime;
-		a.queueTime = this.queueTime;
-		a.queueSize = this.queueSize;
-		a.queueId = this.queueId;
-		a.processingTime = this.processingTime;
-		a.beforeServiceTime = this.beforeServiceTime;
-		a.afterServiceTime = this.afterServiceTime;
-		a.requestEncoding = this.requestEncoding;
-		a.compressedReceive = this.compressedReceive;
-		a.compressedSend = this.compressedSend;
-		a.isFinished = this.isFinished;
-		a.contentLength = this.contentLength;
-		a.clientToken = this.clientToken;
-		a.clientInfo = this.clientInfo;
-		a.userCertificate = this.userCertificate;
-		a.piggyBackData = this.piggyBackData;
-		a.myException = this.myException;
-		a.mapStatistics = this.mapStatistics;
-		a.consoleOutput = this.consoleOutput;
-		a.consoleContent = this.consoleContent;
-		a.parentAccessId = this.parentAccessId;
-		a.debugAll = this.debugAll;
-		a.exitCode = this.exitCode;
-		a.requestNavajoSize = this.requestNavajoSize;
-		a.responseNavajoSize = this.responseNavajoSize;
-		return a;
-	}
-	/**
-	 * Dummy access.
-	 */
-	public Access() {
-		myThread = Thread.currentThread();
-	}
-	
-	public void setUserCertificate(Object cert) {
-		userCertificate = cert;
-	}
-
-	public Object getUserCertificate() {
-		return userCertificate;
-	}
-
-
-
-	public Message getCurrentOutMessage() {
-		return currentOutMessage;
-	}
-
-	public Message getCurrentInMessage() {
-		if ( myScript != null ) {
-			return myScript.getCurrentInMsg();
-		} else {
-			return null;
-		}
-	}
-	
-	public Selection getCurrentInSelection() {
-		if ( myScript != null ) {
-			return myScript.getCurrentSelection();
-		} else {
-			return null;
-		}
-	}
-	
-	public void setCurrentOutMessage(Message currentOutMessage) {
-		this.currentOutMessage = currentOutMessage;
-	}
-
-	public void setFinished() {
-		isFinished = true;
-		totaltime = (int) (System.currentTimeMillis() - created.getTime());
-	}
-
-	public boolean isFinished() {
-		return isFinished;
-	}
-
-	public int getTotaltime() {
-		return totaltime;
-	}
-
-	public int getQueueTime() {
-		return queueTime;
-	}
-
-	public int getBeforeServiceTime() {
-		return beforeServiceTime;
-	}
-
-	public void setBeforeServiceTime(int beforeServiceTime) {
-		this.beforeServiceTime = beforeServiceTime;
-	}
-
-	public int getAfterServiceTime() {
-		return afterServiceTime;
-	}
-
-	public void setAfterServiceTime(int afterServiceTime) {
-		this.afterServiceTime = afterServiceTime;
-	}
-	
-	public Navajo getInDoc() {
-		return inDoc;
-	}
-
-	public void setInDoc(Navajo in) {
-		
-		if ( in == null ) {
-			return;
-		}
-		
-		this.inDoc = in;
-		if ( in.getHeader() != null ) {
-			// Check for parent access id header.
-			String s = in.getHeader().getHeaderAttribute("parentaccessid");
-			if ( s != null && !s.equals("") ) {
-				setParentAccessId(s);
-			}
-		}
-		// Check if __parms__ exists.
-		Message msg = inDoc.getMessage("__parms__");
-		if (msg == null) {
-			msg = NavajoFactory.getInstance().createMessage(inDoc, "__parms__");
-			try {
-				inDoc.addMessage(msg);
-			} catch (NavajoException e) {
-			}
-		}
-	}
-
-	public int getThreadCount() {
-		return threadCount;
-	}
-
-	public void setThreadCount(int threadCount) {
-		this.threadCount = threadCount;
-	}
-
-	public void storeStatistics(Header h) {
-		if (h!=null) {
-			h.setHeaderAttribute("accessId", this.accessID);
-			h.setHeaderAttribute("serverTime",""+getTotaltime());
-			h.setHeaderAttribute("authorisationTime",""+authorisationTime);
-			h.setHeaderAttribute("requestParseTime",""+parseTime);
-			h.setHeaderAttribute("queueTime",""+queueTime);
-			h.setHeaderAttribute("queueId",""+queueId);
-			h.setHeaderAttribute("queueSize",""+queueSize);
-			h.setHeaderAttribute("processingTime",""+processingTime);
-			h.setHeaderAttribute("beforeServiceTime",""+beforeServiceTime);
-			h.setHeaderAttribute("afterServiceTime",""+afterServiceTime);
-			h.setHeaderAttribute("threadCount", this.threadCount+"");
-			h.setHeaderAttribute("cpuload", cpuload+"");
-		}
-	}
-
-	public HashMap<Integer, MapStatistics> getMapStatistics() {
-		return mapStatistics;
-	}
-
-	public void addPiggybackData(Map<?,?> element) {
-		if (piggyBackData==null) {
-			piggyBackData = new HashSet<Map<?,?>>();
-		}
-		piggyBackData.add(element);
-	}
-
-	public Set<?> getPiggybackData() {
-		return piggyBackData;
-	}
-
-	public String getClientInfo() {
-		return this.clientInfo;
-	}
-	
-	public String getAgentId() {
-		return "[deprecated]";
-	}
-	
-	public String getClientToken() {
-		return clientToken ;
-	}
-
-	public void setClientToken(String clientToken) {
-		this.clientToken = clientToken;
-	}
-
-	public Thread getThread() {
-		return myThread;
-	}
-
-	public String getAccessID() {
-		return this.accessID;
-	}
-
-	@Override
-	public void kill() {
-		if ( myScript != null ) {
-			myScript.kill();
-		}
-	}
-
-	@Override
-	public void load(Access access) throws MappableException, UserException {
-		
-	}
-
-	@Override
-	public void store() throws MappableException, UserException {
-		if ( myScript != null ) {
-			myScript.store();
-		}
-	}
-
-	public String getRpcUser() {
-		return rpcUser;
-	}
-
-	public int getProcessingTime() {
-		return processingTime;
-	}
-
-	public String getRequestEncoding() {
-		return requestEncoding;
-	}
-
-	public String getRpcName() {
-		return rpcName;
-	}
-
-	public String getUserAgent() {
-		return userAgent;
-	}
-
-	public java.util.Date getCreated() {
-		return created;
-	}
-
-	public String getHostName() {
-		return hostName;
-	}
-
-	public String getIpAddress() {
-		return ipAddress;
-	}
-
-	public double getCpuload() {
-		return cpuload;
-	}
-
-	public void setCpuload(double cpuload) {
-		this.cpuload = cpuload;
-	}
-
-	public Binary getRequestNavajo() throws UserException {
-		Binary b = new Binary();
-		if ( inDoc != null ) {
-			try { 
-				OutputStream os = b.getOutputStream();
-				inDoc.write(os);
-				os.close();
-			} catch (Throwable t) {
-				throw new UserException(-1, t.getMessage(), t);
-			}
-		}
-		return b;
-	}
-
-	public Binary getResponseNavajo() throws UserException {
-		Binary b = new Binary();
-		if ( outputDoc != null ) {
-			try { 
-				OutputStream os = b.getOutputStream();
-				outputDoc.write(os);
-				os.close();
-			} catch (Throwable t) {
-				throw new UserException(-1, t.getMessage(), t);
-			}
-		}
-		return b;
-	}
-
-	/**
-	 * Gets the current console buffer.
-	 * 
-	 * @return
-	 */
-	public String getConsoleOutput() {
-		return consoleContent.toString();
-	}
-
-	/**
-	 * Writes a string to the access' object private console.
-	 * 
-	 * @param s
-	 */
-	private final void writeToConsole(String s) {
-		consoleOutput.write(s);
-	}
-	
-
-	/**
-	 * Static method that does not check for existence of Access object.
-	 * 
-	 */
-	public final static void writeToConsole(final Access a, final String s) {
-		if ( a != null ) {
-			a.writeToConsole(s);
-		} 
-		if(s!=null) {
-			logger.info(s.trim());
-		}
-	}
-	
-	public final static PrintWriter getConsoleWriter(final Access a) {
-		return new PrintWriter(System.err);
-	}
-
-	/**
-	 * Checks whether this Access objects needs full debug.
-	 * 
-	 * @return
-	 */
-	public boolean isDebugAll() {
-		return debugAll;
-	}
-
-	/**
-	 * Setter to indicate whether this Access object needs full debug.
-	 * 
-	 * @param debugAll
-	 */
-	public void setDebugAll(boolean debugAll) {
-		this.debugAll = debugAll;
-	}
-
-	public void setClientInfo(String clientInfo) {
-		this.clientInfo = clientInfo;
-	}
-	
-	public String getParentAccessId() {
-		return parentAccessId;
-	}
-
-	public void setParentAccessId(String parentAccessId) {
-		this.parentAccessId = parentAccessId;
-	}
-	
-	public void setScriptEnvironment(Object scriptEnvironment) {
-		this.scriptEnvironment = scriptEnvironment;
-	}
-
-
-	public Object getScriptEnvironment() {
-		return this.scriptEnvironment;
-	}
-
-	
-	public String getRequestUrl() {
-		if(requestUrl==null) {
-			String hardCoded = "http://spiritus.dexels.nl:9080/JsSportlink/Comet";
-			System.err.println("\n\n\nWARNING HARDCODED URL:"+hardCoded+"!!!!\n\n");
-			return hardCoded;
-		}
-		return requestUrl;
-	}
-
-	public void setRequestUrl(String requestUrl) {
-		this.requestUrl = requestUrl;
-	}
-
-
-
-	public TmlRunnable getOriginalRunnable() {
-		return originalRunnable;
-	}
-
-
-
-	public void setOriginalRunnable(TmlRunnable originalRunnable) {
-		this.originalRunnable = originalRunnable;
-	}
-
-
-
-	public int getQueueSize() {
-		return queueSize;
-	}
-
-
-
-	public void setQueueSize(int queueSize) {
-		this.queueSize = queueSize;
-	}
-
-
-
-	public String getQueueId() {
-		return queueId;
-	}
-
-	public boolean needsFullAccessLog() {
-		return isDebugAll() || ( getCompiledScript() != null && getCompiledScript().isDebugAll() );
-	}
-
-
-	public void setQueueId(String queueId) {
-		this.queueId = queueId;
-	}
-
-
-	public void setInstance(String instance) {
-		this.instance = instance;
-	}
-
-	public String getInstance() {
-		return this.instance;
-	}
-
-
-
-	public int getRequestNavajoSize() {
-		return requestNavajoSize;
-	}
-
-
-
-	public void setRequestNavajoSize(int requestNavajoSize) {
-		this.requestNavajoSize = requestNavajoSize;
-	}
-
-
-
-	public int getResponseNavajoSize() {
-		return responseNavajoSize;
-	}
-
-
-
-	public void setResponseNavajoSize(int responseNavajoSize) {
-		this.responseNavajoSize = responseNavajoSize;
-	}
-
-
-
-	public int getExitCode() {
-		return exitCode;
-	}
-
-
-
-	public void setExitCode(int exitCode) {
-		this.exitCode = exitCode;
-	}
-	
-	
+    private static final long serialVersionUID = -7782160335447961196L;
+
+    static final Logger logger = LoggerFactory.getLogger(Access.class.getName());
+
+    public static final int EXIT_OK = 1;
+    public static final int EXIT_VALIDATION_ERR = 2;
+    public static final int EXIT_BREAK = 3;
+    public static final int EXIT_USEREXCEPTION = 4;
+    public static final int EXIT_EXCEPTION = 5;
+
+    @SuppressWarnings("unused")
+    private static final String VERSION = "$Id$";
+
+    public java.util.Date created = new java.util.Date();
+    private static int AccessCount = 0;
+    public int threadCount = 0;
+    public double cpuload = -1.0;
+    public String accessID = "";
+    public String parentAccessId = "";
+    public int userID;
+    public int serviceID;
+    public String rpcName = "";
+    public String rpcPwd = "";
+    public String rpcUser = "";
+    public String userAgent;
+    public String ipAddress;
+    public String hostName;
+    public boolean betaUser = false;
+    public transient CompiledScriptInterface myScript = null;
+    public int queueSize;
+    public String queueId;
+
+    /**
+     * Response time breakdown
+     */
+    private int totaltime;
+    public int parseTime;
+    public int queueTime;
+    public int authorisationTime;
+    public int clientTime;
+    public int transferTime;
+    public int processingTime;
+    public int beforeServiceTime;
+    public int afterServiceTime;
+    public String requestEncoding;
+    public boolean compressedReceive = false;
+    public boolean compressedSend = false;
+    public boolean isFinished = false;
+    public int contentLength;
+    public transient Binary requestNavajo;
+    public transient Binary responseNavajo;
+    public boolean debugAll;
+
+    // Flag to indicate that during the execution of the webservice, break was
+    // called.
+    private boolean breakWasSet = false;
+
+    private transient Object scriptEnvironment = null;
+    private String requestUrl;
+    private int requestNavajoSize; // in bytes
+    private int responseNavajoSize; // in bytes
+    private int exitCode;
+    private transient Throwable myException;
+    private Navajo outputDoc;
+    private Navajo inDoc;
+    // The mergedDoc can be used to merge a previously set Navajo with the
+    // outputDoc.
+    // If the mergeDoc is not empty, it will ALWAYS be merged when setOutputDoc
+    // is called.
+    private transient Navajo mergedDoc;
+    private transient Message currentOutMessage;
+    private transient Object userCertificate;
+    private transient Set<Map<?, ?>> piggyBackData = null;
+    private String clientToken = null;
+    private String clientInfo = null;
+    private String instance;
+
+    /**
+     * Create a private logging console for this access object. TODO: Maybe
+     * restrict maximum size of console... or use Binary...
+     */
+    private transient StringWriter consoleContent = new StringWriter();
+    private transient PrintWriter consoleOutput = new PrintWriter(consoleContent);
+
+    private transient String waitingForPreviousRequest = null;
+    private transient Thread myThread = null;
+
+    private transient HashMap<Integer, MapStatistics> mapStatistics = null;
+
+    // In order to manage continuations, I might need the original runnable.
+    // This service (and it's Access object) may be used by many different
+    // threads during its execution, but only
+    // the original knows how to commit the data and finalize the network
+    // connection.
+    private transient TmlRunnable originalRunnable;
+
+    public MapStatistics createStatistics() {
+        MapStatistics ms = new MapStatistics();
+        if (mapStatistics == null) { // First map.
+            mapStatistics = new HashMap<Integer, MapStatistics>();
+        }
+        Integer count = new Integer(mapStatistics.size());
+        mapStatistics.put(count, ms);
+
+        return ms;
+    }
+
+    public boolean isBreakWasSet() {
+        return breakWasSet;
+    }
+
+    public void setBreakWasSet(boolean breakWasSet) {
+        this.breakWasSet = breakWasSet;
+    }
+
+    public void updateStatistics(MapStatistics ms, int levelId, String mapName, int totalTime, int elementCount,
+            boolean isArrayElement, int navajoLineNr) {
+        ms.levelId = levelId;
+        ms.mapName = mapName;
+        ms.elementCount = elementCount;
+        ms.totalTime = totalTime;
+        ms.isArrayElement = isArrayElement;
+        ms.linenr = navajoLineNr;
+    }
+
+    /**
+     * Gets the Navajo that is associated with the so called merged document. A
+     * merged document will ALWAYS be merged with the Navajo outputDoc. If the
+     * current mergedDoc is null, a new Navajo will be returned.
+     * 
+     * @return
+     */
+    public Navajo getMergedDoc() {
+        if (mergedDoc != null) {
+            return mergedDoc;
+        } else {
+            mergedDoc = NavajoFactory.getInstance().createNavajo();
+            return mergedDoc;
+        }
+    }
+
+    /**
+     * Sets the Navajo that is going to be used as a merged document, i.e. a
+     * Navajo document that will be merged with the outDoc Navajo.
+     * 
+     * @param mergedDoc
+     * @param append
+     *            , if set to true Navajo mergedDoc is appended, messages of
+     *            original are overwritten. if set to false Navajo mergedDoc is
+     *            merged, messages of original are merged with mergedDoc,
+     *            properties of mergedDoc have precedence over original.
+     */
+    public void setMergedDoc(Navajo mergedDoc, boolean append) {
+
+        if (outputDoc != null) {
+            try {
+                if (append) {
+                    outputDoc.appendDocBuffer(mergedDoc);
+                } else {
+                    outputDoc.merge(mergedDoc);
+                }
+            } catch (Exception e) {
+                logger.error("Exception on merging documents: {}", e);
+            }
+            return;
+        }
+        if (mergedDoc == null) {
+            this.mergedDoc = null;
+            return;
+        }
+        if (this.mergedDoc == null) {
+            this.mergedDoc = mergedDoc;
+        } else {
+            try {
+                if (append) {
+                    this.mergedDoc.appendDocBuffer(mergedDoc);
+                } else {
+                    this.mergedDoc.merge(mergedDoc);
+                }
+            } catch (NavajoException e) {
+                logger.error("Error: ", e);
+            }
+        }
+    }
+
+    /**
+     * Return the Navajo response (being) created. Return empty Navajo if no
+     * current output doc is present yet.
+     * 
+     * @return
+     */
+    public Navajo getOutputDoc() {
+        return outputDoc;
+    }
+
+    /**
+     * Checks whether a security token was used for this access.
+     * 
+     * @return
+     */
+    public boolean hasCertificate() {
+        return (userCertificate != null);
+    }
+
+    /**
+     * Sets the response Navajo to be used for generating the response.
+     * 
+     * @param n
+     */
+    public void setOutputDoc(Navajo n) {
+        if (mergedDoc != null) {
+            try {
+                if (n != null) {
+                    mergedDoc.appendDocBuffer(n);
+                }
+                outputDoc = mergedDoc;
+            } catch (NavajoException e) {
+                logger.error("Error: ", e);
+            }
+        } else {
+            outputDoc = n;
+        }
+    }
+
+    /**
+     * Inform the access object that it is waiting for the termination of a
+     * previous access.
+     * 
+     * @param id
+     *            , a unique access id
+     */
+    public void setWaitingForPreviousResponse(String id) {
+        waitingForPreviousRequest = id;
+    }
+
+    /**
+     * Returns the access id for which this access is waiting
+     * 
+     * @return, a unique access id
+     */
+    public String getWaitingForPreviousResponse() {
+        return waitingForPreviousRequest;
+    }
+
+    /**
+     * Sets the compiled script that is used to handle this access.
+     * 
+     * @param cs
+     */
+    public void setCompiledScript(CompiledScriptInterface cs) {
+        myScript = cs;
+    }
+
+    /**
+     * Get the compiled script used for handling this access. (Used from within
+     * scripts)
+     * 
+     * @return
+     */
+    public CompiledScriptInterface getMyScript() {
+        return myScript;
+    }
+
+    /**
+     * Get the compiled script used for handling this access.
+     * 
+     * @return
+     */
+    public CompiledScriptInterface getCompiledScript() {
+        return myScript;
+    }
+
+    /**
+     * Method to be used when an exception has occurred while processing this
+     * access.
+     * 
+     * @param e
+     */
+    public void setException(Throwable e) {
+        myException = e;
+    }
+
+    /**
+     * Optionally returns an exception if one occurred.
+     * 
+     * @return
+     */
+    public Throwable getException() {
+        return myException;
+    }
+
+    /**
+     * @param accessID
+     */
+    public Access(int accessID, int userID, int serviceID, String rpcUser, String rpcName, String userAgent,
+            String ipAddress, String hostName, boolean betaUser, Object certificate) {
+
+        this();
+        AccessCount++;
+        this.accessID = created.getTime() + "-" + AccessCount;
+        // System.err.println("accessID " + this.accessID + ", WS = " + rpcName
+        // + ", USER = " + rpcUser);
+        this.userID = userID;
+        this.serviceID = serviceID;
+        this.rpcName = rpcName;
+        this.rpcUser = rpcUser;
+        this.userAgent = userAgent;
+        this.hostName = hostName;
+        this.ipAddress = ipAddress;
+        this.betaUser = betaUser;
+        userCertificate = certificate;
+    }
+
+    public Access(int userID, int serviceID, String rpcUser, String rpcName, String userAgent, String ipAddress,
+            String hostName, Object certificate, String accessID) {
+
+        this();
+
+        this.accessID = accessID;
+        if (accessID == null) {
+            AccessCount++;
+            this.accessID = created.getTime() + "-" + AccessCount;
+        }
+        this.userID = userID;
+        this.serviceID = serviceID;
+        this.rpcName = rpcName;
+        this.rpcUser = rpcUser;
+        this.userAgent = userAgent;
+        this.hostName = hostName;
+        this.ipAddress = ipAddress;
+        betaUser = false;
+        userCertificate = certificate;
+
+    }
+
+    /**
+     * Clone an Access object without cloning requestNavajo and responseNavajo.
+     * 
+     * @return
+     */
+    public Access cloneWithoutNavajos() {
+        Access a = new Access();
+
+        a.created = created;
+        a.threadCount = threadCount;
+        a.cpuload = cpuload;
+        a.accessID = accessID;
+        a.userID = userID;
+        a.serviceID = serviceID;
+        a.rpcName = this.rpcName;
+        a.rpcPwd = this.rpcPwd;
+        a.rpcUser = this.rpcUser;
+        a.userAgent = this.userAgent;
+        a.ipAddress = this.ipAddress;
+        a.hostName = this.hostName;
+        a.betaUser = this.betaUser;
+        a.totaltime = this.totaltime;
+        a.parseTime = this.parseTime;
+        a.authorisationTime = this.authorisationTime;
+        a.clientTime = this.clientTime;
+        a.queueTime = this.queueTime;
+        a.queueSize = this.queueSize;
+        a.queueId = this.queueId;
+        a.processingTime = this.processingTime;
+        a.beforeServiceTime = this.beforeServiceTime;
+        a.afterServiceTime = this.afterServiceTime;
+        a.requestEncoding = this.requestEncoding;
+        a.compressedReceive = this.compressedReceive;
+        a.compressedSend = this.compressedSend;
+        a.isFinished = this.isFinished;
+        a.contentLength = this.contentLength;
+        a.clientToken = this.clientToken;
+        a.clientInfo = this.clientInfo;
+        a.userCertificate = this.userCertificate;
+        a.piggyBackData = this.piggyBackData;
+        a.myException = this.myException;
+        a.mapStatistics = this.mapStatistics;
+        a.consoleOutput = this.consoleOutput;
+        a.consoleContent = this.consoleContent;
+        a.parentAccessId = this.parentAccessId;
+        a.debugAll = this.debugAll;
+        a.exitCode = this.exitCode;
+        a.requestNavajoSize = this.requestNavajoSize;
+        a.responseNavajoSize = this.responseNavajoSize;
+        return a;
+    }
+
+    /**
+     * Dummy access.
+     */
+    public Access() {
+        myThread = Thread.currentThread();
+    }
+
+    public void setUserCertificate(Object cert) {
+        userCertificate = cert;
+    }
+
+    public Object getUserCertificate() {
+        return userCertificate;
+    }
+
+    public Message getCurrentOutMessage() {
+        return currentOutMessage;
+    }
+
+    public Message getCurrentInMessage() {
+        if (myScript != null) {
+            return myScript.getCurrentInMsg();
+        } else {
+            return null;
+        }
+    }
+
+    public Selection getCurrentInSelection() {
+        if (myScript != null) {
+            return myScript.getCurrentSelection();
+        } else {
+            return null;
+        }
+    }
+
+    public void setCurrentOutMessage(Message currentOutMessage) {
+        this.currentOutMessage = currentOutMessage;
+    }
+
+    public void setFinished() {
+        isFinished = true;
+        totaltime = (int) (System.currentTimeMillis() - created.getTime());
+    }
+
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    public int getTotaltime() {
+        return totaltime;
+    }
+
+    public int getQueueTime() {
+        return queueTime;
+    }
+
+    public int getBeforeServiceTime() {
+        return beforeServiceTime;
+    }
+
+    public void setBeforeServiceTime(int beforeServiceTime) {
+        this.beforeServiceTime = beforeServiceTime;
+    }
+
+    public int getAfterServiceTime() {
+        return afterServiceTime;
+    }
+
+    public void setAfterServiceTime(int afterServiceTime) {
+        this.afterServiceTime = afterServiceTime;
+    }
+
+    public Navajo getInDoc() {
+        return inDoc;
+    }
+
+    public void setInDoc(Navajo in) {
+
+        if (in == null) {
+            return;
+        }
+
+        this.inDoc = in;
+        if (in.getHeader() != null) {
+            // Check for parent access id header.
+            String s = in.getHeader().getHeaderAttribute("parentaccessid");
+            if (s != null && !s.equals("")) {
+                setParentAccessId(s);
+            }
+        }
+        // Check if __parms__ exists.
+        Message msg = inDoc.getMessage("__parms__");
+        if (msg == null) {
+            msg = NavajoFactory.getInstance().createMessage(inDoc, "__parms__");
+            try {
+                inDoc.addMessage(msg);
+            } catch (NavajoException e) {
+            }
+        }
+    }
+
+    public int getThreadCount() {
+        return threadCount;
+    }
+
+    public void setThreadCount(int threadCount) {
+        this.threadCount = threadCount;
+    }
+
+    public void storeStatistics(Header h) {
+        if (h != null) {
+            h.setHeaderAttribute("accessId", this.accessID);
+            h.setHeaderAttribute("serverTime", "" + getTotaltime());
+            h.setHeaderAttribute("authorisationTime", "" + authorisationTime);
+            h.setHeaderAttribute("requestParseTime", "" + parseTime);
+            h.setHeaderAttribute("queueTime", "" + queueTime);
+            h.setHeaderAttribute("queueId", "" + queueId);
+            h.setHeaderAttribute("queueSize", "" + queueSize);
+            h.setHeaderAttribute("processingTime", "" + processingTime);
+            h.setHeaderAttribute("beforeServiceTime", "" + beforeServiceTime);
+            h.setHeaderAttribute("afterServiceTime", "" + afterServiceTime);
+            h.setHeaderAttribute("threadCount", this.threadCount + "");
+            h.setHeaderAttribute("cpuload", cpuload + "");
+        }
+    }
+
+    public HashMap<Integer, MapStatistics> getMapStatistics() {
+        return mapStatistics;
+    }
+
+    public void addPiggybackData(Map<?, ?> element) {
+        if (piggyBackData == null) {
+            piggyBackData = new HashSet<Map<?, ?>>();
+        }
+        piggyBackData.add(element);
+    }
+
+    public Set<?> getPiggybackData() {
+        return piggyBackData;
+    }
+
+    public String getClientInfo() {
+        return this.clientInfo;
+    }
+
+    public String getAgentId() {
+        return "[deprecated]";
+    }
+
+    public String getClientToken() {
+        return clientToken;
+    }
+
+    public void setClientToken(String clientToken) {
+        this.clientToken = clientToken;
+    }
+
+    public Thread getThread() {
+        return myThread;
+    }
+
+    public String getAccessID() {
+        return this.accessID;
+    }
+
+    @Override
+    public void kill() {
+        if (myScript != null) {
+            myScript.kill();
+        }
+    }
+
+    @Override
+    public void load(Access access) throws MappableException, UserException {
+
+    }
+
+    @Override
+    public void store() throws MappableException, UserException {
+        if (myScript != null) {
+            myScript.store();
+        }
+    }
+
+    public String getRpcUser() {
+        return rpcUser;
+    }
+
+    public int getProcessingTime() {
+        return processingTime;
+    }
+
+    public String getRequestEncoding() {
+        return requestEncoding;
+    }
+
+    public String getRpcName() {
+        return rpcName;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public java.util.Date getCreated() {
+        return created;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public double getCpuload() {
+        return cpuload;
+    }
+
+    public void setCpuload(double cpuload) {
+        this.cpuload = cpuload;
+    }
+
+    public Binary getRequestNavajo() throws UserException {
+        Binary b = new Binary();
+        if (inDoc != null) {
+            try {
+                OutputStream os = b.getOutputStream();
+                inDoc.write(os);
+                os.close();
+            } catch (Throwable t) {
+                throw new UserException(-1, t.getMessage(), t);
+            }
+        }
+        return b;
+    }
+
+    public Binary getResponseNavajo() throws UserException {
+        Binary b = new Binary();
+        if (outputDoc != null) {
+            try {
+                OutputStream os = b.getOutputStream();
+                outputDoc.write(os);
+                os.close();
+            } catch (Throwable t) {
+                throw new UserException(-1, t.getMessage(), t);
+            }
+        }
+        return b;
+    }
+
+    /**
+     * Gets the current console buffer.
+     * 
+     * @return
+     */
+    public String getConsoleOutput() {
+        return consoleContent.toString();
+    }
+
+    /**
+     * Writes a string to the access' object private console.
+     * 
+     * @param s
+     */
+    private final void writeToConsole(String s) {
+        consoleOutput.write(s);
+    }
+
+    /**
+     * Static method that does not check for existence of Access object.
+     * 
+     */
+    public final static void writeToConsole(final Access a, final String s) {
+        if (a != null) {
+            a.writeToConsole(s);
+        }
+        if (s != null) {
+            logger.info(s.trim());
+        }
+    }
+
+    public final static PrintWriter getConsoleWriter(final Access a) {
+        return new PrintWriter(System.err);
+    }
+
+    /**
+     * Checks whether this Access objects needs full debug.
+     * 
+     * @return
+     */
+    public boolean isDebugAll() {
+        return debugAll;
+    }
+
+    /**
+     * Setter to indicate whether this Access object needs full debug.
+     * 
+     * @param debugAll
+     */
+    public void setDebugAll(boolean debugAll) {
+        this.debugAll = debugAll;
+    }
+
+    public void setClientInfo(String clientInfo) {
+        this.clientInfo = clientInfo;
+    }
+
+    public String getParentAccessId() {
+        return parentAccessId;
+    }
+
+    public void setParentAccessId(String parentAccessId) {
+        this.parentAccessId = parentAccessId;
+    }
+
+    public void setScriptEnvironment(Object scriptEnvironment) {
+        this.scriptEnvironment = scriptEnvironment;
+    }
+
+    public Object getScriptEnvironment() {
+        return this.scriptEnvironment;
+    }
+
+    public String getRequestUrl() {
+        if (requestUrl == null) {
+            String hardCoded = "http://spiritus.dexels.nl:9080/JsSportlink/Comet";
+            System.err.println("\n\n\nWARNING HARDCODED URL:" + hardCoded + "!!!!\n\n");
+            return hardCoded;
+        }
+        return requestUrl;
+    }
+
+    public void setRequestUrl(String requestUrl) {
+        this.requestUrl = requestUrl;
+    }
+
+    public TmlRunnable getOriginalRunnable() {
+        return originalRunnable;
+    }
+
+    public void setOriginalRunnable(TmlRunnable originalRunnable) {
+        this.originalRunnable = originalRunnable;
+    }
+
+    public int getQueueSize() {
+        return queueSize;
+    }
+
+    public void setQueueSize(int queueSize) {
+        this.queueSize = queueSize;
+    }
+
+    public String getQueueId() {
+        return queueId;
+    }
+
+    public boolean needsFullAccessLog() {
+        return isDebugAll() || (getCompiledScript() != null && getCompiledScript().isDebugAll());
+    }
+
+    public void setQueueId(String queueId) {
+        this.queueId = queueId;
+    }
+
+    public void setInstance(String instance) {
+        this.instance = instance;
+    }
+
+    public String getInstance() {
+        return this.instance;
+    }
+
+    public int getRequestNavajoSize() {
+        return requestNavajoSize;
+    }
+
+    public void setRequestNavajoSize(int requestNavajoSize) {
+        this.requestNavajoSize = requestNavajoSize;
+    }
+
+    public int getResponseNavajoSize() {
+        return responseNavajoSize;
+    }
+
+    public void setResponseNavajoSize(int responseNavajoSize) {
+        this.responseNavajoSize = responseNavajoSize;
+    }
+
+    public int getExitCode() {
+        return exitCode;
+    }
+
+    public void setExitCode(int exitCode) {
+        this.exitCode = exitCode;
+    }
 
 }
