@@ -13,7 +13,6 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1622,6 +1621,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     }
     
     public synchronized void cacheNavajo(String method, Navajo n) {
+        // Some sanity checks on the navajo
+        if ((n.getMessage("error") != null) || n.getMessage("AuthenticationError") != null
+                || n.getMessage("ConditionErrors") != null || n.getMessages().size() < 1) {
+            return;
+        }
+
         CachedNavajo cachedN = new CachedNavajo(n);
         navajoCacheMap.put(method, cachedN);
     }

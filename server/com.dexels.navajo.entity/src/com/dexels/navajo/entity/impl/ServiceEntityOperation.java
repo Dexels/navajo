@@ -41,7 +41,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	String[] validMessages = null;
 
 	
-	public ServiceEntityOperation(EntityManager m, DispatcherInterface c, Operation o) throws EntityException {
+	public ServiceEntityOperation(EntityManager m, DispatcherInterfacef c, Operation o) throws EntityException {
 		this.manager = m;
 		this.dispatcher = c;
 		this.myOperation = o;
@@ -684,7 +684,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		// No transaction support yet
 		Navajo result =  commitOperation(request, myOperation);
 		
-		if (result.getMessage("errors") != null) {
+		if (result.getMessage("error") != null) {
 			throw new EntityException(EntityException.SERVER_ERROR);
 		}
 		return result;
