@@ -27,16 +27,17 @@ package com.dexels.navajo.script.api;
 import java.io.Serializable;
 
 public class MapStatistics implements Serializable {
-	
-	/**
+
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = -5971580806985961800L;
-	
-	public int levelId;
-	public String mapName;
-	public boolean isArrayElement;
-	public int elementCount;
-	public long totalTime;
+    private static final long serialVersionUID = -5971580806985961800L;
+
+    public int levelId;
+    public String mapName;
+    public boolean isArrayElement;
+    public int elementCount;
+    public int totalTime;
+    public int linenr;
 
 }
