@@ -505,7 +505,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 //	}
 
 	@Override
-	public final ArrayList<Property> getProperties(String regularExpression) throws NavajoException {
+	public final List<Property> getProperties(String regularExpression) throws NavajoException {
 
 		if (regularExpression.startsWith(Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR)) {
 			regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR).length());
@@ -519,7 +519,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			return d.getProperties(regularExpression.substring(1));
 		} else {
 			ArrayList<Property> props = new ArrayList<Property>();
-			ArrayList<Message> messages = null;
+			List<Message> messages = null;
 			String property = null;
 			Message message = null;
 
@@ -664,11 +664,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	 * starting at the root level.
 	 */
 	@Override
-	public ArrayList<Message> getMessages(String regularExpression) throws NavajoException {
+	public List<Message> getMessages(String regularExpression) throws NavajoException {
 
 		// ArrayList messages = new ArrayList();
-		ArrayList<Message> sub = null;
-		ArrayList<Message> sub2 = null;
+	    List<Message> sub = null;
+		List<Message> sub2 = null;
 
 		if (regularExpression.startsWith(Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR)) {
 			regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR).length());

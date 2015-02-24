@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -363,9 +364,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 						if (datasourceName.equals("")) {
 							// Get other data sources.
 							if(configFile!=null) {
-								ArrayList all = configFile.getMessages("/datasources/.*");
+								List<Message> all = configFile.getMessages("/datasources/.*");
 								for (int i = 0; i < all.size(); i++) {
-									Message body = (Message) all.get(i);
+									Message body = all.get(i);
 									createDataSource(body, navajoConfig);
 								}
 							} else {

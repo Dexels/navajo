@@ -105,14 +105,13 @@ public class MessageTable extends JTable implements CellEditorListener,
     
     private static final long serialVersionUID = -1174076772355177410L;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(MessageTable.class);
+	private final static Logger logger = LoggerFactory.getLogger(MessageTable.class);
+	
+	
 	private final PropertyCellEditor myEditor = new PropertyCellEditor(this);
-
 	private PropertyCellRenderer myRenderer = new PropertyCellRenderer();
 	private Message myMessage = null;
 	private final MessageTableModel myModel;
-	// private MouseAdapter headerMouseAdapter = null;
 	private final List<ActionListener> actionListeners = new ArrayList<ActionListener>();
 	private Map<String, List<ColumnAttribute>> columnAttributes;
 	private final Map<Integer, Map<Integer, RowAttribute>> rowColumnAttributesMap = new HashMap<Integer, Map<Integer, RowAttribute>>();
@@ -120,15 +119,12 @@ public class MessageTable extends JTable implements CellEditorListener,
 	private boolean changed;
 	protected boolean savePathJustChanged = false;
 	private JScrollPane myScroll = null;
-	// private boolean autoStoreSizes = false;
 	private String primaryKeyColumn = null;
 	private boolean showHeader = true;
 	private final List<ChangeListener> changelisteners = new ArrayList<ChangeListener>();
-	// private boolean enabled;
 	private MessageTableFooter tableFooter = null;
 	protected final Map<Integer, Integer> columnSizeMap = new HashMap<Integer, Integer>();
 	private final Map<String, Property> cachedColumns = new HashMap<String, Property>();
-	// private final Map replacementMap = new HashMap();
 	private final TableSorter mySorter;
 	private boolean refreshAfterEdit = false;
 	private EditRowDialog bd = null;
@@ -1201,7 +1197,6 @@ public class MessageTable extends JTable implements CellEditorListener,
 		try {
 			File columnFile = new File(columnPathString);
 			if (columnFile.exists()) {
-				// logger.info("Getting coldefs..");
 				fis = new FileInputStream(columnPathString);
 				Navajo n = NavajoFactory.getInstance().createNavajo(fis);
 				Message cdef = n.getMessage("columndef");
@@ -1209,21 +1204,14 @@ public class MessageTable extends JTable implements CellEditorListener,
 					columnFile.delete();
 					return;
 				}
-				// logger.info("Found " + cdef.getArraySize() +
-				// " columns");
 				for (int i = 0; i < cdef.getArraySize(); i++) {
 					Message current = cdef.getMessage(i);
-					// logger.info("Checking message for column " +
-					// column);
-					// current.write(System.err);
 
 					Property id = current.getProperty("id");
 					Property name = current.getProperty("name");
 					if (id != null) {
 						if (column.equals(id.getValue())) {
 							name.setValue(title);
-							// logger.info("Renamed column: " + column +
-							// " to " + title);
 						}
 					}
 				}
@@ -1287,14 +1275,10 @@ public class MessageTable extends JTable implements CellEditorListener,
 		}
 		createDefaultColumnsFromModel();
 
-		// MessageTableColumnModel tcm = (MessageTableColumnModel)
-		// getColumnModel();
 		final int sortedColumn = Integer.parseInt(cdef.getProperty(
 				"sortedColumn").getValue());
 		final boolean sortedDirection = cdef.getProperty("sortedDirection")
 				.getValue().equals("true");
-		// logger.info("sortedDirection: " +
-		// cdef.getProperty("sortedDirection").getValue());
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
@@ -1309,12 +1293,10 @@ public class MessageTable extends JTable implements CellEditorListener,
 		}
 		for (int i = 0; i < cdef.getArraySize() + substractCount; i++) {
 			if (i == 0 && myModel.isShowingRowHeaders()) {
-				// logger.info("Setting editcolumn to width: 45");
 				setColumnWidth(i, 45);
 			} else {
 				Message m = cdef.getMessage(i - substractCount);
 				int width = Integer.parseInt(m.getProperty("width").getValue());
-				// logger.info("Setting " + i + " to width: " + width);
 				setColumnWidth(i, width);
 			}
 		}
@@ -1325,9 +1307,6 @@ public class MessageTable extends JTable implements CellEditorListener,
 		this.columnAttributes = columnAttributes;
 	}
 
-	public Map<String, List<ColumnAttribute>> getColumnAttributes() {
-		return columnAttributes;
-	}
 
 	public final int addColumn(String id, String title, boolean editable) {
 		MessageTableModel mtm = getMessageModel();

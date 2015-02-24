@@ -12,6 +12,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -161,7 +162,7 @@ public class TipiNavajoView extends TipiPanel {
 		layout.setName("l.gridbag");
 		e.addChild(layout);
 
-		ArrayList<Message> aaa = n.getAllMessages();
+		List<Message> aaa = n.getAllMessages();
 		int index = 0;
 		for (Message message : aaa) {
 			appendMessage(layout, message, index++);
@@ -200,7 +201,7 @@ public class TipiNavajoView extends TipiPanel {
 
 	private void appendmethods(XMLElement toolbar, Navajo n) {
 		String myName = n.getHeader().getRPCName();
-		ArrayList<Method> mm = n.getAllMethods();
+		List<Method> mm = n.getAllMethods();
 		for (Method method : mm) {
 
 			XMLElement button = new CaseSensitiveXMLElement();

@@ -126,9 +126,9 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
         out.addMessage(outMessage);
         out.addMessage(outResult);
 
-        ArrayList al = myNavajo.getAllMessages();
+        List<Message> al = myNavajo.getAllMessages();
         for (int i = 0; i < al.size(); i++) {
-            flatten((Message) al.get(i), outResult);
+            flatten(al.get(i), outResult);
         }
 
 //        logger.info("FLATTENING FINISHED **********************************");

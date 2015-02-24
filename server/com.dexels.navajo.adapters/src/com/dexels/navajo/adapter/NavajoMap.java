@@ -1195,7 +1195,7 @@ public void kill() {
   public void setSendThrough(boolean b) throws UserException {
 
     try {
-      ArrayList<Message> all = inMessage.getAllMessages();
+      List<Message> all = inMessage.getAllMessages();
       for (int i = 0; i < all.size(); i++) {
         Message m = inMessage.copyMessage( all.get(i), outDoc);
         outDoc.addMessage(m);

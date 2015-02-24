@@ -18,6 +18,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -563,11 +564,11 @@ public static final Message[] addMessage(Navajo doc, Message parent, String mess
 
 
   
-public static final ArrayList getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o, 
+public static final List<Message> getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o, 
   		Message currentParamMsg, Access access) throws
       NavajoException, SystemException, TMLExpressionException {
     //try {
-      ArrayList result = new ArrayList();
+    List<Message> result = new ArrayList();
 
       // Simply return current message if . is given.
       if (str.equals(".")) {

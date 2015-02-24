@@ -178,7 +178,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		out.addMessage(outMessage);
 		out.addMessage(outResult);
 
-		ArrayList<Message> al = myNavajo.getAllMessages();
+		List<Message> al = myNavajo.getAllMessages();
 		for (int i = 0; i < al.size(); i++) {
 			flatten(al.get(i), outResult);
 		}

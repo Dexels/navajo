@@ -124,6 +124,8 @@ public final class Access implements java.io.Serializable, Mappable {
     private transient Throwable myException;
     private Navajo outputDoc;
     private Navajo inDoc;
+    private String outputDocHash;
+    private String inDocHash;
     // The mergedDoc can be used to merge a previously set Navajo with the
     // outputDoc.
     // If the mergeDoc is not empty, it will ALWAYS be merged when setOutputDoc
@@ -421,6 +423,7 @@ public final class Access implements java.io.Serializable, Mappable {
         a.exitCode = this.exitCode;
         a.requestNavajoSize = this.requestNavajoSize;
         a.responseNavajoSize = this.responseNavajoSize;
+        
         return a;
     }
 

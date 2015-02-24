@@ -2,6 +2,7 @@ package com.dexels.navajo.client;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -292,7 +293,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 		Navajo result = myClient.doSimpleSend(input,
 				"tests/ProcessTestProperties");
-		ArrayList<Message> allMessages = result.getAllMessages();
+		List<Message> allMessages = result.getAllMessages();
 		for (int i = 0; i < allMessages.size(); i++) {
 			Message m = allMessages.get(i);
 			checkBooleans(m);
@@ -306,7 +307,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 		myClient.doSimpleSend(input, "tests/ProcessTestProperties");
 		Navajo result = myClient.doSimpleSend(input, "tests/ProcessTestFields");
 
-		ArrayList<Message> allMessages = result.getAllMessages();
+		List<Message> allMessages = result.getAllMessages();
 		for (int i = 0; i < allMessages.size(); i++) {
 			Message m = allMessages.get(i);
 			checkBooleans(m);
@@ -319,7 +320,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 		Navajo result = myClient.doSimpleSend(input, "tests/InitNavajoMapTest");
 
-		ArrayList<Message> allMessages = result.getAllMessages();
+		List<Message> allMessages = result.getAllMessages();
 		for (int i = 0; i < allMessages.size(); i++) {
 			Message m = allMessages.get(i);
 			checkBooleans(m);
@@ -333,7 +334,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 		Navajo result = myClient
 				.doSimpleSend(input, "tests/InitNavajoMapTest2");
 
-		ArrayList<Message> allMessages = result.getAllMessages();
+		List<Message> allMessages = result.getAllMessages();
 		for (int i = 0; i < allMessages.size(); i++) {
 			Message m = allMessages.get(i);
 			checkBooleans(m);
@@ -347,7 +348,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 		Navajo result = myClient.doSimpleSend(input,
 				"tests/InitNavajoMapTestNewStyle");
 
-		ArrayList<Message> allMessages = result.getAllMessages();
+		List<Message> allMessages = result.getAllMessages();
 		for (int i = 0; i < allMessages.size(); i++) {
 			Message m = allMessages.get(i);
 			checkBooleans(m);

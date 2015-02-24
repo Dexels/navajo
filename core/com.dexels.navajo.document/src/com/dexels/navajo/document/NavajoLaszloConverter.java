@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,7 +116,7 @@ public class NavajoLaszloConverter {
 				tml.setAttribute("rpc_name", serviceName);
 			}
 			root.appendChild(tml);
-			ArrayList<Message> l = in.getAllMessages();
+			List<Message> l = in.getAllMessages();
 			for (int i = 0; i < l.size(); i++) {
 				appendMessage(l.get(i), tml, doc, includeSelections);
 			}
