@@ -710,7 +710,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public ArrayList<Operation> getAllOperations() {
+    public List<Operation> getAllOperations() {
         return myOperations.getAllOperations();
     }
 

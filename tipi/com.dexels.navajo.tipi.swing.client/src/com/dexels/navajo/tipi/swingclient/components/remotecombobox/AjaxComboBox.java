@@ -10,6 +10,7 @@ import java.awt.event.KeyListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -218,7 +219,7 @@ public class AjaxComboBox extends JComboBox {
 
 		if (n != null) {
 			m = n.getMessage(messagePath);
-			ArrayList<Message> ll = m.getAllMessages();
+			List<Message> ll = m.getAllMessages();
 			for (int i = 0; i < ll.size(); i++) {
 				Message current = ll.get(i);
 				Property pp = current.getProperty(propertyName);

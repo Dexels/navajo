@@ -10,7 +10,6 @@ import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -274,12 +273,12 @@ public class TipiNavajoView extends TipiPanel {
 			XMLElement layout = new CaseSensitiveXMLElement();
 			layout.setName("l.gridbag");
 			e.addChild(layout);
-			ArrayList<Message> aaa = message.getAllMessages();
+			List<Message> aaa = message.getAllMessages();
 			int ind = 0;
 			for (Message m : aaa) {
 				appendMessage(layout, m, ind++);
 			}
-			ArrayList<Property> ppp = message.getAllProperties();
+			List<Property> ppp = message.getAllProperties();
 			// int pind = 0;
 			for (Property p : ppp) {
 				appendProperty(layout, p, ind++);

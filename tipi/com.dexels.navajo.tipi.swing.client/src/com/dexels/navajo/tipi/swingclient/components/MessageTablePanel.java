@@ -407,7 +407,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 	}
 
 	private final void invertSelection(int column) {
-		ArrayList<Message> messages = getMessage().getAllMessages();
+	    List<Message> messages = getMessage().getAllMessages();
 		for (int i = 0; i < getRowCount(); i++) {
 			Object o = messageTable.getValueAt(i, column);
 			Property p = messages.get(i).getProperty(((Property) o).getName());
@@ -430,7 +430,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 
 	private final void setSelectAll(int column, boolean value) {
 
-		ArrayList<Message> selected = getMessage().getAllMessages();
+	    List<Message> selected = getMessage().getAllMessages();
 		final int rowCount = getRowCount();
 		for (int i = 0; i < rowCount; i++) {
 			Object o = messageTable.getValueAt(i, column);
@@ -657,7 +657,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 			}
 		}
 		removeAllColumns();
-		ArrayList<Property> al = def.getAllProperties();
+		List<Property> al = def.getAllProperties();
 		for (int i = 0; i < al.size(); i++) {
 			Property current = al.get(i);
 			String desc = current.getDescription();
@@ -675,7 +675,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 			return;
 		}
 		removeAllColumns();
-		ArrayList<Property> al = def.getAllProperties();
+		List<Property> al = def.getAllProperties();
 		for (int i = 0; i < al.size(); i++) {
 			Property current = al.get(i);
 			String desc = current.getDescription();

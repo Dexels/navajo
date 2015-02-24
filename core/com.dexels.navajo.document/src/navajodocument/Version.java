@@ -24,7 +24,6 @@
  */
 package navajodocument;
 
-import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.document.NavajoFactory;
 

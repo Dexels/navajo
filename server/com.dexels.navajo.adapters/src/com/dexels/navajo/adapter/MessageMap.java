@@ -98,11 +98,11 @@ public class MessageMap implements Mappable {
 	}
 	
 	private void clearPropertyValues(Message m) throws UserException {
-		ArrayList<Property> properties = m.getAllProperties();
+	    List<Property> properties = m.getAllProperties();
 		for ( int i = 0; i < properties.size(); i++ ) {
 			properties.get(i).setAnyValue(null);
 		}
-		ArrayList<Message> subMessages = m.getAllMessages();
+		List<Message> subMessages = m.getAllMessages();
 		for ( int i = 0; i < subMessages.size(); i++ ) {
 			clearPropertyValues(subMessages.get(i));
 		}
@@ -206,7 +206,7 @@ public class MessageMap implements Mappable {
 
 		ArrayList<ResultMessage> resultingMessage = new ArrayList<ResultMessage>();
 
-		ArrayList<Message> children = this.msg1.getAllMessages();
+		List<Message> children = this.msg1.getAllMessages();
 		// Determine definition message, unless groupBy is defined.
 		if ( groupBy == null && this.msg1.getDefinitionMessage() != null ) {
 			definitionMsg1 = this.msg1.getDefinitionMessage();
@@ -233,7 +233,7 @@ public class MessageMap implements Mappable {
 			boolean foundJoinMessage = false;
 
 			if ( this.msg2 != null ) {
-				ArrayList<Message> children2 = this.msg2.getAllMessages();
+			    List<Message> children2 = this.msg2.getAllMessages();
 
 				for (int j = 0; j < children2.size(); j++) {
 					msg2pointer = children2.get(j);

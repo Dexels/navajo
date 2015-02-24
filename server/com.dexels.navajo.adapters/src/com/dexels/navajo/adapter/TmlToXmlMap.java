@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,13 +105,13 @@ public class TmlToXmlMap implements Mappable {
 					content.setAttributeName("xmlns");
 					content.setAttributeText(targetNamespace);
 				}
-				ArrayList<Property> allProperties = root.getAllProperties();
+				List<Property> allProperties = root.getAllProperties();
 				for (int i = 0; i < allProperties.size(); i++) {
 					appendProperty(allProperties.get(i), content);
 				}
 				
 				// Watch it, we assume the root has no properies
-				ArrayList<Message> allMessages = root.getAllMessages();
+				List<Message> allMessages = root.getAllMessages();
 				for (int i = 0; i < allMessages.size(); i++) {
 					appendMessages(allMessages.get(i), content);
 				}
@@ -160,12 +161,12 @@ public class TmlToXmlMap implements Mappable {
 				child = parent;
 			}
 
-			ArrayList<Property> allProperties = m.getAllProperties();
+			List<Property> allProperties = m.getAllProperties();
 			for (int i = 0; i < allProperties.size(); i++) {
 				appendProperty(allProperties.get(i), child);
 			}
 
-			ArrayList<Message> allMessages = m.getAllMessages();
+			List<Message> allMessages = m.getAllMessages();
 			for (int i = 0; i < allMessages.size(); i++) {
 				appendMessages(allMessages.get(i), child);
 			}

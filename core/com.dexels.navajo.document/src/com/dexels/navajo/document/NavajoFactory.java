@@ -53,10 +53,19 @@ public abstract class NavajoFactory {
 			logger.info("Bootstrap classloader detected!");
 			cl = ClassLoader.getSystemClassLoader();
 		}
-		InputStream is = cl.getResourceAsStream("navajotypes.xml");
-		CaseSensitiveXMLElement types = new CaseSensitiveXMLElement();
-		types.parseFromStream(is);
-		is.close();
+		InputStream is = null;
+		CaseSensitiveXMLElement types = null;
+		try {
+		    cl.getResourceAsStream("navajotypes.xml");
+		    types = new CaseSensitiveXMLElement();
+	        types.parseFromStream(is);
+		} finally {
+		    if (is != null) {
+		        is.close();
+		    }
+		}
+		
+		
 
 		Vector<XMLElement> children = types.getChildren();
 		for (int i = 0; i < children.size(); i++) {
@@ -235,9 +244,6 @@ public abstract class NavajoFactory {
 				String key = next.substring(0, i);
 				String value = next.substring(i + 1, next.length());
 				m.put(key, value);
-			} else {
-				// logger.info("--> WARNING: found '" + next +
-				// "' subtype, this does not appear to be a key=value pair");
 			}
 		}
 		return m;

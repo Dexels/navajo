@@ -119,7 +119,7 @@ private boolean checkProperty(Property p) throws NavajoException {
         }else{
           name = myValue.getValue();
         }
-        ArrayList<Selection> l = p.getAllSelections();
+        List<Selection> l = p.getAllSelections();
         for(int i=0;i<l.size();i++){
           Selection s = l.get(i);
           if(s.getName().equals(name)){

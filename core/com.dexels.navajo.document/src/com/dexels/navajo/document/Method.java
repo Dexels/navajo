@@ -72,7 +72,7 @@ public interface Method
    * Return a list of required message names.
    * @return ArrayList messagenames
    */
-  public ArrayList<String> getRequiredMessages();
+  public List<String> getRequiredMessages();
 
   /**
    * Return the internal implementation specific representation of the Method.

@@ -325,7 +325,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	public final String getValue() {
 		if (myBinary != null) {
 			logger.info("Do you REALLY want this binary as a string? You really shouldn't..");
-			Thread.dumpStack();
 			return myBinary.getBase64();
 		}
 		return myValue;
@@ -474,7 +473,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	private void setSelectionList(List<?> list) {
-		ArrayList<String> values = new ArrayList<String>();
+		ArrayList<String> values= new ArrayList<String>();
 		for (Object s : list) {
 			values.add(((Selection)s).getValue());
 		}
@@ -585,7 +584,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		}
 	}
 
-	private void updateExpressionSelections(ArrayList<Selection> list) throws NavajoException {
+	private void updateExpressionSelections(List<Selection> list) throws NavajoException {
 		removeAllSelections();
 		for (int i = 0; i < list.size(); i++) {
 			Selection s = list.get(i);
