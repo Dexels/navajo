@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.node.ObjectNode;
@@ -22,25 +24,24 @@ import com.dexels.navajo.article.ArticleException;
 public class ArticleListServlet extends HttpServlet implements Servlet {
 
 	private static final long serialVersionUID = -6895324256139435015L;
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(ArticleListServlet.class);
-	
 
 	private ArticleContext context;
-	
+
 	public ArticleListServlet() {
-		
+
 	}
-	
-//	public void activate() {
-//		logger.info("Activating acticle component");
-//	}
-//
-//	public void deactivate() {
-//		logger.info("Deactivating acticle component");
-//	}
-	
+
+	// public void activate() {
+	// logger.info("Activating acticle component");
+	// }
+	//
+	// public void deactivate() {
+	// logger.info("Deactivating acticle component");
+	// }
+
 	public ArticleContext getContext() {
 		return context;
 	}
@@ -55,30 +56,45 @@ public class ArticleListServlet extends HttpServlet implements Servlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		try {
-			resp.addHeader("Access-Control-Allow-Origin", "*");
-			resp.setContentType("application/json; charset=utf-8");
-			ObjectMapper mapper = new ObjectMapper();
-			ObjectNode rootNode = mapper.createObjectNode(); 
-			String requestedArticle = req.getParameter("article");
-			if(requestedArticle!=null) {
+			throws ServletException {
+		resp.addHeader("Access-Control-Allow-Origin", "*");
+		resp.setContentType("application/json; charset=utf-8");
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode rootNode = mapper.createObjectNode();
+		String requestedArticle = req.getParameter("article");
+		if (requestedArticle != null) {
+			try {
 				context.writeArticleMeta(requestedArticle, rootNode, mapper);
-			} else {
-				List<String> articles = context.listArticles();
-				for (String article : articles) {
-					context.writeArticleMeta(article, rootNode,mapper);
-					// context.getArticleMeta(article);
-				}
+			} catch (Throwable e) {
+				logger.error("Error generating metadata for article: "
+						+ requestedArticle, e);
 			}
-			mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
-			ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-			writer.writeValue(resp.getWriter(), rootNode);
-		} catch (ArticleException e) {
-			logger.error("Error: ", e);
+		} else {
+			List<String> articles = context.listArticles();
+			for (String article : articles) {
+				try {
+					context.writeArticleMeta(article, rootNode, mapper);
+				} catch (Throwable e) {
+					logger.error("Error generating metadata for article: "
+							+ article, e);
+				}
+				// context.getArticleMeta(article);
+			}
 		}
-
+		// mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+		try {
+			writer.writeValue(resp.getWriter(), rootNode);
+			if (resp.getWriter() != null) {
+				resp.getWriter().close();
+			}
+		} catch (JsonGenerationException e) {
+			throw new ServletException("Error generating JSON", e);
+		} catch (JsonMappingException e) {
+			throw new ServletException("Error generating JSON", e);
+		} catch (IOException e) {
+			throw new ServletException("Error writing JSON", e);
+		}
 	}
-
 
 }
