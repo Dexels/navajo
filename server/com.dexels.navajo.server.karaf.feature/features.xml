@@ -3,19 +3,14 @@
 	name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
 
-    <feature version="1.0.23" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
+    <feature version="1.1.0" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
         <feature version="[3.0.0,4)">eventadmin</feature>
         <feature version="[3.0.0,4)">scr</feature>
         <feature version="[3.0.0,4)">pax-http</feature>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf.featuresync/1.0.3</bundle>
-<<<<<<< HEAD
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/4.0.1</bundle>
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.0.21</bundle>
-=======
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/4.0.2</bundle>
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.0.20</bundle>
->>>>>>> Feature releases
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.file/1.0.18</bundle>
+       <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/5.0.0</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.0.22</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.file/1.0.20</bundle>
         <bundle dependency="true">mvn:com.dexels.thirdparty/javaewah/0.7.9</bundle>
         <bundle dependency="true">mvn:com.jcraft/jsch-bundle/0.1.50</bundle>
         <bundle dependency="true">mvn:org.eclipse.jgit/org.eclipse.jgit/3.6.0.201411121045-m1</bundle>
@@ -230,7 +225,7 @@
 	<feature resolver="(obr)" name='navajo.repository.file'
 		version='3.0.6' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.repository.file/3.0.19</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.repository.file/1.0.20</bundle>
 	</feature>
 
 
@@ -338,7 +333,7 @@
 		<bundle dependency='true'>mvn:org.eclipse.jgit/org.eclipse.jgit/3.1.0.201310021548-r</bundle>
 		<bundle dependency='true'>mvn:com.dexels.thirdparty/javaewah/0.5.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jgit/3.0.39</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.repository.api/2.0.19</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.repository.api/5.0.0</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
 	</feature>
