@@ -28,10 +28,9 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	String group = "testgroup";
 	
 	private PersistenceManager myPersistenceManager;
-//	private Repository myRepository;
 	private NavajoClassSupplier myClassloader;
+	private final File configRoot;
 	
-	private SharedFileStore sharedFileStore;
 	
 	
 	private final static Logger logger = LoggerFactory
@@ -42,13 +41,14 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	}
 	
 	public TestNavajoConfig(File configRoot) throws Exception {
+		this.configRoot = configRoot;
 		setClassloader( new NavajoClassLoader(this.getClass().getClassLoader()));
-		sharedFileStore = new SharedFileStore(configRoot,this);
 	}
 	
 	public TestNavajoConfig(String name, String group) {
 		this.name = name;
 		this.group = group;
+		this.configRoot = null;
 	}
 	
 	
@@ -64,9 +64,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 
 	@Override
 	public PersistenceManager getPersistenceManager() {
-//		if ( myPersistenceManager == null ) {
-//			myPersistenceManager = PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
-//		}
 		return myPersistenceManager;
 	}
 
@@ -128,7 +125,7 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 
 	@Override
 	public String getCompiledScriptPath() {
-		return null;
+		return new File(configRoot,"classes").getAbsolutePath();
 	}
 
 	@Override
@@ -143,7 +140,7 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 
 	@Override
 	public String getScriptPath() {
-		return null;
+		return new File(configRoot,"scripts").getAbsolutePath();
 	}
 
 	@Override
