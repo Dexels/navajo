@@ -184,6 +184,8 @@ public class TipiInstantiateTipi extends TipiAction {
 		} catch (Exception ex) {
 			logger.error("Error: ",ex);
 		}
+		myContext.addInitiateStatisticsStart(id);
+		
 		if (byClass) {
 			instantiateTipi(myContext, getComponent(), byClass, parent, force,
 					id, (String) getEvaluatedParameter("class", event).value,

@@ -236,6 +236,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 			TipiExecutable executableParent, Map<String, Object> event)
 			throws TipiBreakException {
 		TipiEvent localInstance = this;
+		getContext().addTipiEventStatisticsStart(getComponent(), this.getEventName());
 		if (event != null) {
 			localInstance = (TipiEvent) this.clone();
 			localInstance.loadEventValues(event);
@@ -306,6 +307,8 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 		if (!overlayType.equals("none") && overlayComponent != null) { 
 		    overlayComponent.removeOverlayProgressPanel();
 		}
+	      getContext().addTipiEventStatisticsFinished(getComponent(),  getEventName());
+
 		
 		listener.eventFinished(localInstance, event);
 	}

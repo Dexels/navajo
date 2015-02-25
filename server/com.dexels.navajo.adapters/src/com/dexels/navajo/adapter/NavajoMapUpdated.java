@@ -559,7 +559,7 @@ public void store() throws MappableException, UserException {
 //				  nc.setSecure(keyStore, keyPassword, true);
 //			  }
 			  if ( trigger == null ) {
-				  inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true, false);
+				  inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true, false, true);
 			  } else {
 				  inDoc = nc.doScheduledSend(outDoc, method, "now", "", "");
 			  }

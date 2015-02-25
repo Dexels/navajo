@@ -246,7 +246,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 			throw new ClientException(1, 1, "No host set!");
 		}
 		return doSimpleSend(out, getCurrentHost(), method, username, password,
-				expirationInterval, allowCompression, false);
+				expirationInterval, allowCompression, false, true);
 	}
 
 	private final void copyResource(OutputStream out, InputStream in) {
@@ -515,7 +515,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 			String user, String password, long expirationInterval)
 			throws ClientException {
 		return doSimpleSend(out, server, method, user, password,
-				expirationInterval, allowCompression, false);
+				expirationInterval, allowCompression, false, true);
 	}
 
 	// navajo://frank:aap@192.0.0.1/InitUpdateMember
@@ -578,7 +578,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 	@Override
 	public final Navajo doSimpleSend(Navajo out, String server, String method,
 			String user, String password, long expirationInterval,
-			boolean useCompression, boolean allowPreparseProxy)
+			boolean useCompression, boolean allowPreparseProxy, boolean addPiggybackData)
 			throws ClientException {
 		// NOTE: prefix persistence key with method, because same Navajo object
 		// could be used as a request
@@ -623,7 +623,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 			try {
 
 				if (protocol == HTTP_PROTOCOL) {
-					if (out.getHeader() != null) {
+					if (out.getHeader() != null && addPiggybackData) {
 						processPiggybackData(out.getHeader());
 					}
 
@@ -1171,6 +1171,11 @@ public class NavajoClient implements ClientInterface, Serializable {
 	public void setAllowCompression(boolean allowCompression) {
 		this.allowCompression = allowCompression;
 	}
+	
+	@Override
+    public boolean getAllowCompression() {
+        return this.allowCompression ;
+    }
 
 	@Override
 	public void setForceGzip(boolean forceGzip) {

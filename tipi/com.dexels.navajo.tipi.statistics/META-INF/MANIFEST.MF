@@ -1,0 +1,12 @@
+Bundle-Name: Navajo Tipi
+Bundle-SymbolicName: com.dexels.navajo.tipi.statistics
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Dexels
+Bundle-ClassPath: .
+Service-Component: OSGI-INF/*.xml
+Import-Package: com.dexels.navajo.document;version="2.2.1",
+ com.dexels.navajo.server.listener.http,
+ com.jcraft.jzlib,
+ javax.servlet;version="3.0.0",
+ javax.servlet.http
