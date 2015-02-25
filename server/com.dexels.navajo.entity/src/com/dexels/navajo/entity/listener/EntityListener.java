@@ -37,6 +37,10 @@ import com.dexels.navajo.script.api.LocalClient;
 
 
 public class EntityListener extends HttpServlet {
+
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = -6681359881499760460L;
 	private final static String DEFAULT_OUTPUT_FORMAT = "json";
 	private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json", "xml", "tml"));

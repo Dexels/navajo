@@ -408,7 +408,6 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
 
     @Override
     public void postOnInstantiate() {
-        super.postOnInstantiate();
         if (hideOnClose) {
             removeOverlayProgressPanel();
         }

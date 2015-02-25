@@ -98,7 +98,7 @@ public class TipiNewCallService extends TipiAction {
             }
 
         }
-        
+
        // input = enrichInput(input, true);
 
         setThreadState("waiting");

@@ -1209,7 +1209,6 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		
 		try {
 			c.performTipiEvent("onInstantiate", null, true);
-			postOnInstantiate();
 		} catch (TipiException ex) {
 			logger.error("Error: ",ex);
 		} catch (TipiBreakException e) {
@@ -1521,7 +1520,8 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	public TipiComponent addComponentInstance(TipiContext context,
 			XMLElement inst, Object constraints) throws TipiException {
 		// TODO add TipiEvent as parameter
-		TipiComponent ti = (context.instantiateComponent(inst, null, null, this));
+		TipiComponent ti = (context
+				.instantiateComponent(inst, null, null, this));
 		if (ti.getId() == null) {
 			ti.setId(myContext.generateComponentId(this, ti));
 		}
