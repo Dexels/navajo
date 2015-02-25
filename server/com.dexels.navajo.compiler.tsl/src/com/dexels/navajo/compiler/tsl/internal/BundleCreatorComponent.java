@@ -125,7 +125,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	 * scriptName includes the _TENANT part
 	 */
 	@Override
-	public void createBundle(String scriptName, Date compilationDate,
+	public synchronized void createBundle(String scriptName, Date compilationDate,
 			String scriptExtension, List<String> failures,
 			List<String> success, List<String> skipped, boolean force,
 			boolean keepIntermediate) throws Exception {

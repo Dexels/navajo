@@ -40,7 +40,7 @@ public class CustomClassloaderJavaFileManager extends
 
 	private final Map<String, CustomJavaFileFolder> folderMap = new HashMap<String, CustomJavaFileFolder>();
 	private final Map<String, CustomJavaFileObject> fileMap = new HashMap<String, CustomJavaFileObject>();
-	private final Map<CustomJavaFileFolder, Bundle> bundleMap = new HashMap<CustomJavaFileFolder, Bundle>();
+//	private final Map<CustomJavaFileFolder, Bundle> bundleMap = new HashMap<CustomJavaFileFolder, Bundle>();
 	private final Set<Bundle> loadedBundles = new HashSet<Bundle>();
 	private BundleContext bundleContext;
 

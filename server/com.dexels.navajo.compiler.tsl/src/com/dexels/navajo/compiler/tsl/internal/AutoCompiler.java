@@ -14,23 +14,33 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.server.NavajoIOConfig;
+import com.dexels.navajo.server.test.TestNavajoConfig;
 
 public class AutoCompiler {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AutoCompiler.class);
+	   
 	private NavajoIOConfig navajoIOConfig;
 	private BundleCreator bundleCreator;
-	private static final String SCRIPTS_FOLDER = "scripts" + File.separator;
 
 	
 	public void activate(Map<String,Object> settings) {
-		navajoIOConfig.getScriptPath();
+		logger.info("Scanning auto");
+		scan();
 	}
 
 	public void deactivate() {
 		
 	}
 	
+	private void scan() {
+		scan(Paths.get(navajoIOConfig.getScriptPath()),Paths.get(navajoIOConfig.getCompiledScriptPath()));
+	}
 	private void scan(final Path scriptPath,final Path compiledPath) {
 		 try {
 		    Files.walkFileTree(scriptPath, new SimpleFileVisitor<Path>(){
@@ -52,11 +62,14 @@ public class AutoCompiler {
 			FileTime lastModifiedTime) throws IOException {
 
 		 Path pathRelative = scriptPath.relativize(script);
-		 String comp = compiledPath.resolve(pathRelative).toString();
+		 String comp = pathRelative.toString(); // 
+		 
 		 // replace extension
 		 if(comp.endsWith(".xml")) {
-			 String jarPathString = comp.substring(0,comp.length()-".xml".length())+".jar";
-			 Path jarPath = Paths.get(jarPathString);
+			 String cleanPath = comp.substring(0,comp.length()-".xml".length());
+//			 String jarPathString = cleanPath+".jar";
+			 Path jarPath = compiledPath.resolve(cleanPath+".jar");
+//			 Path jarPath = Paths.get(jarPathString);
 			 boolean needRecompile = false;
 			 if(jarPath.toFile().exists()) {
 				 FileTime jarLastMod = Files.getLastModifiedTime(jarPath);
@@ -66,10 +79,10 @@ public class AutoCompiler {
 				 needRecompile = true;
 			 }
 			 if(needRecompile) {
-				 System.err.println("Need to recompile : "+pathRelative);
+				 System.err.println("Need to recompile : "+cleanPath);
 				 List<String> success = new ArrayList<String>();
 				 try {
-					bundleCreator.createBundle(comp, new Date(), ".xml", new ArrayList<String>(), success, new ArrayList<String>(), false, false);
+					bundleCreator.createBundle(cleanPath, new Date(), ".xml", new ArrayList<String>(), success, new ArrayList<String>(), false, false);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -105,8 +118,12 @@ public class AutoCompiler {
 	}
 	
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		AutoCompiler ac = new AutoCompiler();
-		ac.scan(Paths.get("/Users/frank/git/sportlink.restructure/scripts"),Paths.get("/Users/frank/git/sportlink.restructure/classes"));
+		NavajoIOConfig nc = new TestNavajoConfig(new File("/Users/frank/git/sportlink.restructure"));
+		ac.setNavajoIOConfig(nc);
+//		ac.setBundleCreator(new BundleCreator());
+		ac.scan();
+//		ac.scan(Paths.get("/Users/frank/git/sportlink.restructure/scripts"),Paths.get("/Users/frank/git/sportlink.restructure/classes"));
 	}
 }
