@@ -41,7 +41,7 @@ public class QDParser {
         String tagName = null;
         String lvalue = null;
         String rvalue = null;
-        Map<String,String> attrs = null;
+        Hashtable<String,String> attrs = null;
         Stack<Integer> st = new Stack<Integer>();
         doc.startDocument();
         int line = 1, col = 0;

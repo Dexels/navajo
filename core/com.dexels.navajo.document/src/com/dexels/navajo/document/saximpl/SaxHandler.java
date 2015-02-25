@@ -38,7 +38,7 @@ public final class SaxHandler implements DocHandler {
 
       
     @Override
-	public final void startElement(String tag, Map<String, String> h) throws Exception {
+	public final void startElement(String tag, Hashtable<String,String> h) throws Exception {
 //        logger.info("starting element: "+tag+" attrs: "+h);
 //        currentTag = tag;
         
@@ -56,7 +56,7 @@ public final class SaxHandler implements DocHandler {
             if (val!=null) {
 
             	// Dit kan NOG strakker. Niet alle types hoeven geunescaped worder
-            	Map<String,String> h2 = new Hashtable<String,String>(h); // $codepro.audit.disable declareAsInterface
+            	Hashtable<String,String> h2 = new Hashtable<String,String>(h);
     			val = BaseNode.XMLUnescape(val);
     			h2.put("value", val);
                 parseProperty(h2);
@@ -69,7 +69,7 @@ public final class SaxHandler implements DocHandler {
         if (tag.equals("option")) {
             String val = h.get("value");
             String name = h.get("name");
-            Map<String,String>  h2 = new Hashtable<String,String>(h);
+            Hashtable<String,String> h2 = new Hashtable<String,String>(h);
     		val = BaseNode.XMLUnescape(val);
     		name = BaseNode.XMLUnescape(name);
     		h2.put("value", val);
@@ -131,17 +131,23 @@ public final class SaxHandler implements DocHandler {
         
     }
     
-    private final void parseAgent(Map<String, String> h) {
+    
+    /**
+	 * @param h parameter callback 
+	 */
+    private final void parseAgent(Hashtable<String,String> h) {
         // TODO Auto-generated method stub
+        
     }
 
-    private final void parseRequired(Map<String, String> h) {
+
+    private final void parseRequired(Hashtable<String,String> h) {
         // TODO Auto-generated method stub
         currentMethod.addRequired(h.get("name"));
     }
-    
- 
-    private final void parseObject(Map<String,String> h) {
+
+
+    private final void parseObject(Hashtable<String,String> h) {
     	
     	if ( h.get("ref") == null || (h.get("ref")).equals("") ) {
     		return;
@@ -172,12 +178,12 @@ public final class SaxHandler implements DocHandler {
     /**
 	 * @param h parameter callback 
 	 */
-    private final void parseMethods(Map<String,String> h) {
+    private final void parseMethods(Hashtable<String,String> h) {
         // TODO Auto-generated method stub
         
     }
 
-    private final void parseOperations(Map<String,String> h) {
+    private final void parseOperations(Hashtable<String,String> h) {
         // TODO Auto-generated method stub
         
     }
@@ -185,14 +191,14 @@ public final class SaxHandler implements DocHandler {
     /**
 	 * @param h parameter callback 
 	 */
-    private final void parseCallback(Map<String,String> h) {
+    private final void parseCallback(Hashtable<String,String> h) {
         // TODO: Should use the navajo factory for these functions
         if (currentHeader==null) {
             throw new IllegalArgumentException("Callback tag outside header tag.");
         }       
     }
 
-    private final void parseTransaction(Map<String,String> h) {
+    private final void parseTransaction(Hashtable<String,String> h) {
         if (currentHeader==null) {
             throw new IllegalArgumentException("Callback tag outside header tag.");
         }
@@ -205,7 +211,7 @@ public final class SaxHandler implements DocHandler {
         currentHeader.addTransaction(bci);        
     }
 
-    private final void parsePiggyback(Map<String,String> h) {
+    private final void parsePiggyback(Hashtable<String,String> h) {
         if (currentHeader==null) {
             throw new IllegalArgumentException("Piggyback tag outside header tag.");
         }
@@ -223,7 +229,7 @@ public final class SaxHandler implements DocHandler {
     }
     
     
-    private final void parseHeader(Map<String,String> h) {
+    private final void parseHeader(Hashtable<String,String> h) {
         // TODO: Should use the navajo factory for these functions
 //                NavajoFactory.getInstance().createHeader(current, rpcName, rpcUser, rpcPassword, expiration_interval)
         BaseHeaderImpl bhi = new BaseHeaderImpl(currentDocument);
@@ -239,13 +245,13 @@ public final class SaxHandler implements DocHandler {
         
     }
 
-    private final void parseMethod(Map<String,String> h) throws NavajoException {
+    private final void parseMethod(Hashtable<String,String> h) throws NavajoException {
         String name = h.get("name");
         currentMethod = NavajoFactory.getInstance().createMethod(currentDocument, name, null);
         currentDocument.addMethod(currentMethod);
     }
 
-    private final void parseSelection(Map<String,String> h) throws NavajoException {
+    private final void parseSelection(Hashtable<String,String> h) throws NavajoException {
     	String name = h.get("name");
     	String value = h.get("value");
     	int selected = Integer.parseInt(h.get("selected"));
@@ -274,7 +280,7 @@ public final class SaxHandler implements DocHandler {
     	
     }
 
-    private final void parseProperty(Map<String,String> h) throws NavajoException {
+    private final void parseProperty(Hashtable<String,String> h) throws NavajoException {
 //        logger.info("NAME: "+(String)h.get("name"));
         String sLength = null;
         String myName = h.get(Property.PROPERTY_NAME);
@@ -387,7 +393,7 @@ public final class SaxHandler implements DocHandler {
         	  }
         	  type = Property.SELECTION_PROPERTY;
         	  
-        	  List<Selection> l = definitionProperty.getAllSelections();
+        	  ArrayList<Selection> l = definitionProperty.getAllSelections();
         	  for (int i = 0; i < l.size(); i++) {
         		  BaseSelectionImpl s1 = (BaseSelectionImpl) l.get(i);
         		  BaseSelectionImpl s2 = (BaseSelectionImpl) s1.copy(currentDocument);
@@ -411,7 +417,7 @@ public final class SaxHandler implements DocHandler {
       }
     
 
-    private final void parseMessage(Map<String,String> h) throws NavajoException {
+    private final void parseMessage(Hashtable<String,String> h) throws NavajoException {
         String name = h.get("name");
         String type = h.get("type");
         String orderby = h.get("orderby");
@@ -483,6 +489,8 @@ public final class SaxHandler implements DocHandler {
 
     @Override
 	public final void endElement(String tag) throws Exception {
+        if (tag.equals("tml")) {
+         }
         if (tag.equals("message")) {
             mergeDefinitionMessage();
             messageStack.pop();
@@ -490,11 +498,17 @@ public final class SaxHandler implements DocHandler {
         if (tag.equals("property")) {
             currentProperty = null;
         }
-
+        if (tag.equals("option")) {
+        }
+        if (tag.equals("method")) {
+        }
         if (tag.equals("header")) {
             currentHeader = null;
         }
-
+        if (tag.equals("transaction")) {
+        }
+        if (tag.equals("callback")) {
+        }
     }
 
 

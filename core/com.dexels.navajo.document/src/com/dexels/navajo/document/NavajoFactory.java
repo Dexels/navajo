@@ -47,38 +47,28 @@ public abstract class NavajoFactory {
 	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoFactory.class);
 
-	private void readTypes() throws Exception {
-		ClassLoader cl = getClass().getClassLoader();
-		if (cl == null) {
-			logger.info("Bootstrap classloader detected!");
-			cl = ClassLoader.getSystemClassLoader();
-		}
-		InputStream is = null;
-		CaseSensitiveXMLElement types = null;
-		try {
-		    cl.getResourceAsStream("navajotypes.xml");
-		    types = new CaseSensitiveXMLElement();
-	        types.parseFromStream(is);
-		} finally {
-		    if (is != null) {
-		        is.close();
-		    }
-		}
-		
-		
-
-		Vector<XMLElement> children = types.getChildren();
-		for (int i = 0; i < children.size(); i++) {
-			XMLElement child = children.get(i);
-			String navajotype = (String) child.getAttribute("name");
-			String javaclass = (String) child.getAttribute("type");
-			String generic = (String) child.getAttribute("generic");
-			Class<?> c = Class.forName(javaclass);
-			toJavaType.put(navajotype, c);
-			toJavaGenericType.put(navajotype, generic);
-			toNavajoType.put(c, navajotype);
-		}
-	}
+    private void readTypes() throws Exception {
+        ClassLoader cl = getClass().getClassLoader();
+        if (cl == null) {
+            logger.info("Bootstrap classloader detected!");
+            cl = ClassLoader.getSystemClassLoader();
+        }
+        InputStream is = cl.getResourceAsStream("navajotypes.xml");
+        CaseSensitiveXMLElement types = new CaseSensitiveXMLElement();
+        types.parseFromStream(is);
+        is.close();
+        Vector<XMLElement> children = types.getChildren();
+        for (int i = 0; i < children.size(); i++) {
+            XMLElement child = children.get(i);
+            String navajotype = (String) child.getAttribute("name");
+            String javaclass = (String) child.getAttribute("type");
+            String generic = (String) child.getAttribute("generic");
+            Class<?> c = Class.forName(javaclass);
+            toJavaType.put(navajotype, c);
+            toJavaGenericType.put(navajotype, generic);
+            toNavajoType.put(c, navajotype);
+        }
+    }
 
 	public void addNavajoType(String typeId, Class<?> clz) {
 		toJavaType.put(typeId, clz);
