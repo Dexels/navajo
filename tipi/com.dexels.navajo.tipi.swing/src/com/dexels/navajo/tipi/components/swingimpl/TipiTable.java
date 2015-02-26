@@ -977,7 +977,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 							event);
 					logger.debug("Value: " + value.value);
 					logger.debug("PropertyName: " + propertyName.value);
-					ArrayList<Message> al = mm.getMessage().getAllMessages();
+					ArrayList<Message> al = (ArrayList<Message>) mm.getMessage().getAllMessages();
 					if (al == null || al.size() < 1) {
 						// Nothing is selected
 						return;
