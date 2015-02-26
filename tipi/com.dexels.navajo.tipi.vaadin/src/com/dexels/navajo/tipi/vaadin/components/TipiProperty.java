@@ -322,6 +322,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 			});
 			
 //			value = new OptionGroup("Combo:",new SelectionListBridge(property));
+			t.setNullSelectionAllowed(false);
 			t.setImmediate(true);
 			addPropertyComponent(value);
 			SelectionBridge selected = selectionListBridge.getSelected();
