@@ -261,6 +261,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		Collection<Object> selectedCollection = selectionListBridge.getSelectedCollection();
 		t.setValue(selectedCollection);
 		t.setImmediate(true);
+		t.setNullSelectionAllowed(false);
 		t.addListener(new Property.ValueChangeListener() {
 			
 			private static final long serialVersionUID = 1L;
@@ -322,6 +323,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 			});
 			
 //			value = new OptionGroup("Combo:",new SelectionListBridge(property));
+			t.setNullSelectionAllowed(false);
 			t.setImmediate(true);
 			addPropertyComponent(value);
 			SelectionBridge selected = selectionListBridge.getSelected();
