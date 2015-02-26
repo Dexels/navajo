@@ -580,7 +580,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 
 			@Override
 			public void run() {
-				ArrayList<Message> al = m.getAllMessages();
+			    List<Message> al = m.getAllMessages();
 
 				Map<String, Object> staticParams = new HashMap<String, Object>();
 				staticParams.put("array", m);

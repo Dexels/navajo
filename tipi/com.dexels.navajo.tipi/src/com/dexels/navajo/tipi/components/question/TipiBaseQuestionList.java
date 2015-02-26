@@ -224,7 +224,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		Message answers = NavajoFactory.getInstance().createMessage(n,
 				"Answers", Message.MSG_TYPE_ARRAY);
 		n.addMessage(answers);
-		ArrayList<Message> questionGroups = questionList.getMessage("Group")
+		List<Message> questionGroups = questionList.getMessage("Group")
 				.getAllMessages();
 		for (int i = 0; i < questionGroups.size(); i++) {
 			Message group = questionGroups.get(i);

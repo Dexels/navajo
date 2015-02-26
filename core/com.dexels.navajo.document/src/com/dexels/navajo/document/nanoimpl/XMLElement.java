@@ -212,7 +212,7 @@ public class XMLElement implements java.io.Serializable {
 	 * </dd>
 	 * </dl>
 	 */
-	private Hashtable<String,char[]> entities;
+	private Map<String,char[]> entities;
 
 	/**
 	 * The line number where the element starts.
@@ -361,7 +361,7 @@ public class XMLElement implements java.io.Serializable {
 	 * @see nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean)
 	 *      XMLElement(Hashtable, boolean)
 	 */
-	public XMLElement(Hashtable<String,char[]> entities) {
+	public XMLElement(Map<String,char[]> entities) {
 		this(entities, false, true, true);
 	}
 
@@ -449,7 +449,7 @@ public class XMLElement implements java.io.Serializable {
 	 * @see nanoxml.XMLElement#XMLElement(java.util.Hashtable)
 	 *      XMLElement(Hashtable)
 	 */
-	public XMLElement(Hashtable<String,char[]> entities, boolean skipLeadingWhitespace) {
+	public XMLElement(Map<String,char[]> entities, boolean skipLeadingWhitespace) {
 		this(entities, skipLeadingWhitespace, true, true);
 	}
 
@@ -498,7 +498,7 @@ public class XMLElement implements java.io.Serializable {
 	 * @see nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean)
 	 *      XMLElement(Hashtable, boolean)
 	 */
-	public XMLElement(Hashtable<String,char[]> entities, boolean skipLeadingWhitespace, boolean ignoreCase) {
+	public XMLElement(Map<String,char[]> entities, boolean skipLeadingWhitespace, boolean ignoreCase) {
 		this(entities, skipLeadingWhitespace, true, ignoreCase);
 	}
 
@@ -553,7 +553,7 @@ public class XMLElement implements java.io.Serializable {
 	 * 
 	 * @see nanoxml.XMLElement#createAnotherElement()
 	 */
-	protected XMLElement(Hashtable<String,char[]> entities, boolean skipLeadingWhitespace, boolean fillBasicConversionTable, boolean ignoreCase) {
+	protected XMLElement(Map<String,char[]> entities, boolean skipLeadingWhitespace, boolean fillBasicConversionTable, boolean ignoreCase) {
 		this.ignoreWhitespace = skipLeadingWhitespace;
 		this.ignoreCase = ignoreCase;
 		this.name = null;
@@ -1864,15 +1864,28 @@ public class XMLElement implements java.io.Serializable {
 	 */
 	@Override
 	public String toString() {
+	    ByteArrayOutputStream out = null;
+	    OutputStreamWriter writer = null;
 		try {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			OutputStreamWriter writer = new OutputStreamWriter(out);
+			out = new ByteArrayOutputStream();
+			writer = new OutputStreamWriter(out);
 			this.write(writer);
 			writer.flush();
 			return new String(out.toByteArray());
 		} catch (IOException e) {
 			// Java exception handling suxx
 			return super.toString();
+		} finally {
+		    if (writer != null) {
+                try {
+                    writer.close();
+                } catch (Exception e) { }
+            }
+		    if (out != null) {
+		        try {
+                    out.close();
+                } catch (Exception e) { }
+		    }
 		}
 	}
 

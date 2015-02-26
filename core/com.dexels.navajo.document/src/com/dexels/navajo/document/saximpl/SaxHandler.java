@@ -476,7 +476,7 @@ public final class SaxHandler implements DocHandler {
         if (def==null) {
             return;
         }
-        ArrayList<Property> props = def.getAllProperties();
+        List<Property> props = def.getAllProperties();
         for (int i = 0; i < props.size(); i++) {
             Property src = props.get(i);
             Property dest = currentMessage.getProperty(src.getName());

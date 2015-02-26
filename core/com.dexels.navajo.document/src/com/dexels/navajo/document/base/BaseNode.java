@@ -203,7 +203,7 @@ protected Navajo myDocRoot;
 			return;
 		}
 		// group the childred to see if JSONArrays must be created
-		HashMap<String, List<BaseNode>> groupedChildren = new HashMap<String,List<BaseNode>>();
+		Map<String, List<BaseNode>> groupedChildren = new HashMap<String,List<BaseNode>>();
 		for (int j = 0; j < list.size(); j++) {
 			BaseNode child = list.get(j);
 			String key = child.getTagName();
@@ -254,7 +254,6 @@ protected Navajo myDocRoot;
 
 	/**
 	 * @param sw The writer to write to 
-	 * @throws IOException 
 	 */
 	public void printElementJSONTypeless(final Writer sw) throws IOException  {
 		getAttributes();
@@ -271,15 +270,24 @@ protected Navajo myDocRoot;
  }
 
  
-  public void write(final OutputStream stream) throws NavajoException {
-	  try {
-		  OutputStreamWriter osw = new OutputStreamWriter(stream,"UTF-8");
-		  printElement(osw,0);
-		  osw.flush();
-	  } catch (IOException e) {
-		  throw new NavajoExceptionImpl(e);
-	  }
-   }  
+    public void write(final OutputStream stream) throws NavajoException {
+        try {
+            OutputStreamWriter osw = null;
+            try {
+                osw = new OutputStreamWriter(stream, "UTF-8");
+                printElement(osw, 0);
+                osw.flush();
+            } finally {
+                try {
+                    osw.close();
+                } catch (Exception e) {
+                }
+            }
+
+        } catch (IOException e) {
+            throw new NavajoExceptionImpl(e);
+        }
+    }  
    
   public boolean hasTextNode() {
       return false;
@@ -289,7 +297,7 @@ protected Navajo myDocRoot;
  * @param w the writer to write to 
  * @throws IOException 
  */
-public void writeText(Writer w) throws IOException {
+public void writeText(Writer w) throws IOException  {
       // default impl. Only used for properties. 
        
   }

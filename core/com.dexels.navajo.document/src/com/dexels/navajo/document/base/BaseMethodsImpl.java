@@ -56,8 +56,8 @@ public class BaseMethodsImpl extends BaseNode {
         return null;
       }
 
-    public ArrayList<Method> getAllMethods() {
-    	ArrayList<Method> al = new ArrayList<Method>();
+    public List<Method> getAllMethods() {
+        List<Method> al = new ArrayList<Method>();
         for (int i = 0; i < myMethods.size(); i++) {
             Method m = (Method)myMethods.get(i);
             al.add(m);

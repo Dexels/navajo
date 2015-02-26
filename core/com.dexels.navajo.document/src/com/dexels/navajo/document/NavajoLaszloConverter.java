@@ -17,7 +17,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.types.ClockTime;
@@ -38,9 +37,6 @@ public class NavajoLaszloConverter {
 				Node nn = nl.item(i);
 				if(nn==null) {
 					logger.error("WTF?!");
-				}
-				if(nn instanceof Text) {
-//					Text t = (Text)nn;
 				}
 				
 				if(nn instanceof Element) {
@@ -136,7 +132,7 @@ public class NavajoLaszloConverter {
 		root.appendChild(tml);
 
 		try {
-			ArrayList<Message> l = in.getAllMessages();
+			List<Message> l = in.getAllMessages();
 			for (int i = 0; i < l.size(); i++) {
 				appendMessage(l.get(i), tml, doc, includeSelections);
 			}
@@ -151,14 +147,14 @@ public class NavajoLaszloConverter {
 		try {
 			if (m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
 				Element row = d.createElement("row");
-				ArrayList<Property> allProp = m.getAllProperties();
+				List<Property> allProp = m.getAllProperties();
 				for (int j = 0; j < allProp.size(); j++) {
 					Property cp = allProp.get(j);
 					if (cp.getType().equals(Property.SELECTION_PROPERTY)) {
 
 						if (includeSelections) {
 							Element prop = d.createElement(cp.getName());
-							ArrayList<Selection> sel = cp.getAllSelections();
+							List<Selection> sel = cp.getAllSelections();
 							for (int k = 0; k < sel.size(); k++) {
 								Selection s = sel.get(k);
 								Element option = d.createElement("option");
@@ -227,7 +223,7 @@ public class NavajoLaszloConverter {
 			}
 			if (m.getType().equals(Message.MSG_TYPE_SIMPLE) || m.getType().equals(Message.MSG_TYPE)) {
 				Element mes = d.createElement("m_" + m.getName());
-				ArrayList<Message> allMes = m.getAllMessages();
+				List<Message> allMes = m.getAllMessages();
 				for (int k = 0; k < allMes.size(); k++) {
 					Message cm = allMes.get(k);
 					appendMessage(cm, mes, d, includeSelections);
@@ -359,7 +355,7 @@ public class NavajoLaszloConverter {
 
 	private static void appendProperties(Message m, Element e, Document d) {
 		try {
-			ArrayList<Property> allProp = m.getAllProperties();
+		    List<Property> allProp = m.getAllProperties();
 			for (int i = 0; i < allProp.size(); i++) {
 				Property current = allProp.get(i);
 

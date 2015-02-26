@@ -195,14 +195,14 @@ public class XMLDocumentUtils {
         	logger.error("Error: ", exception);
             throw NavajoFactory.getInstance().createNavajoException(exception.getMessage());
         } finally {
-           // ALWAYS CLOSE STREAM!!
-          try {
+            // ALWAYS CLOSE STREAM!!
             if (source != null) {
-              source.close();
+                try {
+                    source.close();
+                } catch (Exception ex) {
+                }
             }
-          }
-          catch (IOException ex) {
-          }
+
         }
     }
 

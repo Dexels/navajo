@@ -272,7 +272,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 	}
 
 	private void checkBooleans(Message m) throws Exception {
-		ArrayList<Property> allProperties = m.getAllProperties();
+		List<Property> allProperties = m.getAllProperties();
 		for (int j = 0; j < allProperties.size(); j++) {
 			Property p = allProperties.get(j);
 			if (p.getTypedValue() instanceof Boolean
@@ -282,7 +282,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 				System.err.println("ok: " + p.getFullPropertyName());
 			}
 		}
-		ArrayList<Message> children = m.getAllMessages();
+		List<Message> children = m.getAllMessages();
 		for (int j = 0; j < children.size(); j++) {
 			checkBooleans(children.get(j));
 		}

@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,9 +161,9 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 					if (m != null) {
 					if (!colDefs) {
 						mm.removeAllColumns();
-						ArrayList props = m.getMessage(0).getAllProperties();
+						List<Property> props = m.getMessage(0).getAllProperties();
 						for (int i = 0; i < props.size(); i++) {
-							Property p = (Property) props.get(i);
+							Property p = props.get(i);
 							mm.addColumn(p.getName(), p.getName(), false, -1);
 						}
 					}

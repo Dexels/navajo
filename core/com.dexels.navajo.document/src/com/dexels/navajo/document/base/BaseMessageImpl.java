@@ -547,7 +547,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			Pattern pattern = Pattern.compile(realProperty);
 			for (int i = 0; i < messages.size(); i++) {
 				message = messages.get(i);
-				ArrayList<Property> allProps = message.getAllProperties();
+				List<Property> allProps = message.getAllProperties();
 				try {
 					for (int j = 0; j < allProps.size(); j++) {
 						String name = allProps.get(j).getName();
@@ -845,7 +845,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	 * @param m
 	 * @param properties
 	 */
-	private final void addProperties(Message m, ArrayList<Property> properties, boolean preferMyProperties) {
+	private final void addProperties(Message m, List<Property> properties, boolean preferMyProperties) {
 		
 		for (int i = 0; i < properties.size(); i++) {
 			m.addProperty(properties.get(i), preferMyProperties);
@@ -878,8 +878,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 		
 		// Find overlapping children.
-		ArrayList<Message> childrenPrev = origMsg.getAllMessages();
-		ArrayList<Message> childrenNew = mergeThisMsg.getAllMessages();
+		List<Message> childrenPrev = origMsg.getAllMessages();
+		List<Message> childrenNew = mergeThisMsg.getAllMessages();
 		for (int i = 0; i < childrenPrev.size(); i++) {
 			Message childPrev = childrenPrev.get(i);
 			for (int j = 0; j < childrenNew.size(); j++) {
@@ -1784,7 +1784,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			incoming.setName(getName());
 		}
 
-		ArrayList<Message> subMessages = incoming.getAllMessages();
+		List<Message> subMessages = incoming.getAllMessages();
 		for (int i = 0; i < subMessages.size(); i++) {
 			String newMsgName = subMessages.get(i).getName();
 			Message existing = this.getMessage(newMsgName);
@@ -1810,7 +1810,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			}
 		}
 
-		ArrayList<Property> properties = incoming.getAllProperties();
+		List<Property> properties = incoming.getAllProperties();
 		for (int i = 0; i < properties.size(); i++) {
 			Property p = (Property) properties.get(i).clone();
 			Property o_p = null;

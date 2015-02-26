@@ -101,7 +101,6 @@ public class FormatIdentification implements Serializable
 		{
 			in = new RandomAccessFile(file, "r");
 			in.read( data, 0, numBytes );
-			in.close();
 		}
 		catch (IOException ioe)
 		{
@@ -129,7 +128,7 @@ public class FormatIdentification implements Serializable
 		// Create a tmp file for the method to use.
 		// Location is the java.io.tmp
 		File file = null;
-		FileOutputStream fos;
+		FileOutputStream fos = null;
 		try {
 			UUID uuid = UUID.randomUUID();
             String fileName = uuid.toString();						
@@ -137,13 +136,19 @@ public class FormatIdentification implements Serializable
 			fos = new FileOutputStream(file);
 			fos.write(data);
 			fos.flush();
-			fos.close();
 		} catch (FileNotFoundException e) {
 			logger.error("Error: ", e);
 			return file;
 		} catch (IOException e) {
 			logger.error("Error: ", e);
 			return file;
+		} finally {
+		    if (fos != null) {
+		        try {
+		            fos.close();
+		        
+		        } catch (Exception e) {}
+		    }
 		}
 		return file;
 	}
@@ -243,11 +248,9 @@ public class FormatIdentification implements Serializable
 		try
 		{
 			InputStream input =  FormatIdentification.class.getResource("formats.txt").openStream();
-			if (input == null)
-			{
+			if (input == null) {
 				return;
-			} else {
-                        }
+			}
 			FormatDescriptionReader in = new FormatDescriptionReader(new InputStreamReader(input,"UTF-8"));
 			FormatDescription desc;
 			while ((desc = in.read()) != null)

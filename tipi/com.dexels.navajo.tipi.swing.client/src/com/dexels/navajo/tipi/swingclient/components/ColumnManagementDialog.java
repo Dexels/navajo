@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -125,7 +126,7 @@ public class ColumnManagementDialog extends JDialog {
 
 		Message m = mt.getMessage();
 		Message first = m.getMessage(0);
-		ArrayList<Property> props = first.getAllProperties();
+		List<Property> props = first.getAllProperties();
 
 		for (int i = 0; i < props.size(); i++) {
 			Property current = props.get(i);

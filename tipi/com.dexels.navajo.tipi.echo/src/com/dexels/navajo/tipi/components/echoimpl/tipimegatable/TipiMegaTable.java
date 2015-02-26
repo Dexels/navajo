@@ -200,9 +200,9 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
     private final void flatten(Message in, Message out) {
         Property p = in.getProperty("Code");
         if (p != null && p.getValue() != null) {
-            ArrayList pl = in.getAllProperties();
+            List<Property> pl = in.getAllProperties();
             for (int i = 0; i < pl.size(); i++) {
-                Property current = (Property) pl.get(i);
+                Property current = pl.get(i);
                 if (!current.getType().equals(Property.EXPRESSION_PROPERTY) && current.isDirIn() && !"".equals(p.getValue())) {
                     Message m = NavajoFactory.getInstance().createMessage(out.getRootDoc(), "Answers");
                     out.addMessage(m);
@@ -220,9 +220,9 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
                 }
             }
         }
-        ArrayList al = in.getAllMessages();
+        List<Message> al = in.getAllMessages();
         for (int i = 0; i < al.size(); i++) {
-            flatten((Message) al.get(i), out);
+            flatten(al.get(i), out);
         }
 
     }

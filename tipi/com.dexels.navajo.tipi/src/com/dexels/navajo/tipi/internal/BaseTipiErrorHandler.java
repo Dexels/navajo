@@ -3,7 +3,7 @@ package com.dexels.navajo.tipi.internal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -63,7 +63,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 				errorMessage = error.getProperty("message").getValue();
 				return errorMessage;
 			} else if (conditions != null) {
-				ArrayList<Message> failures = conditions.getAllMessages();
+			    List<Message> failures = conditions.getAllMessages();
 				errorMessage = "";
 				for (int i = 0; i < failures.size(); i++) {
 					Message current = failures.get(i);
