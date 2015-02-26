@@ -2915,9 +2915,9 @@ public class TslCompiler {
 		// Add dependency.
 		addDependency(
 				"dependentObjects.add( new IncludeDependency( new Long(\""
-						+ IncludeDependency.getScriptTimeStamp(fileName)
+						+ IncludeDependency.getFileTimeStamp(includedFile)
 						+ "\"), \"" + script + "\"));\n", "INCLUDE" + script);
-		deps.add(new IncludeDependency(IncludeDependency.getScriptTimeStamp(fileName), script , fileName));
+		deps.add(new IncludeDependency(IncludeDependency.getFileTimeStamp(includedFile), script , fileName));
 
 		
 
@@ -3577,10 +3577,10 @@ public class TslCompiler {
 			sis.close();
 			
 			for (int i = 0; i < inheritedScripts.size(); i++) {
+			    File inheritedFile = new File(scriptPath + "/" + inheritedScripts .get(i) + ".xml");
 				addDependency(
 						"dependentObjects.add( new InheritDependency( new Long(\""
-								+ IncludeDependency.getScriptTimeStamp(inheritedScripts
-										.get(i)) + "\"), \""
+								+ IncludeDependency.getFileTimeStamp(inheritedFile) + "\"), \""
 								+ inheritedScripts.get(i) + "\"));\n",
 						"INHERIT" + inheritedScripts.get(i));
 			}
