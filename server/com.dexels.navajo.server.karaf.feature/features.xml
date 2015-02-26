@@ -40,13 +40,14 @@
 		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
 		
 	</feature>
-	<feature resolver="(obr)" name='navajo.core' version='3.0.33'
+	<feature resolver="(obr)" name='navajo.core' version='3.0.34'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,4)">pax-http</feature>
 		<feature version="[3.0.0,4)">eventadmin</feature>
 		<feature version="[3.0.0,4)">navajo.core.dependencies</feature>
-
+		
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.repository.api/4.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.108</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/2.0.14</bundle>
@@ -168,6 +169,8 @@
 		<feature version="[3.0.0,4)">tipi.core</feature>
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.4.2</bundle>
+		
+		
 	</feature>
 	<feature resolver="(obr)" name='tipi.vaadin.touch' version='3.0.0'
 		start-level='81'>
