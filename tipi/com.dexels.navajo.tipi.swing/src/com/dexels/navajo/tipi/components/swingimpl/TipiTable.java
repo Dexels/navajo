@@ -969,6 +969,27 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 							(String) delimiter.value);
 				}
 
+				if ("setAll".equals(name)) {
+					logger.debug("In setAll");
+					Operand propertyName = compMeth.getEvaluatedParameter(
+							"propertyName", event);
+					Operand value = compMeth.getEvaluatedParameter("value",
+							event);
+					logger.debug("Value: " + value.value);
+					logger.debug("PropertyName: " + propertyName.value);
+					ArrayList<Message> al = (ArrayList<Message>) mm.getMessage().getAllMessages();
+					if (al == null || al.size() < 1) {
+						// Nothing is selected
+						return;
+					}
+					logger.debug("# of msgs: " + al.size());
+					for (int i = 0; i < al.size(); i++) {
+						Message current = al.get(i);
+						Property cp = current.getProperty("" + propertyName.value);
+						cp.setAnyValue(value.value);
+					}
+				}
+				
 				if ("setAllSelected".equals(name)) {
 					logger.debug("In setAllSelected");
 					Operand propertyName = compMeth.getEvaluatedParameter(

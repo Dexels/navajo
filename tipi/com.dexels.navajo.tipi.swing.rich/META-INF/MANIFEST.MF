@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Rich Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.rich
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.19.qualifier
+Bundle-Version: 1.0.21.qualifier
 Export-Package: com.dexels.navajo.tipi.components.rich,
  com.dexels.navajo.tipi.components.rich.ui
 Bundle-Vendor: Dexels
