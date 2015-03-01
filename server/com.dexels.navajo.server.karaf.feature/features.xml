@@ -23,10 +23,10 @@
         <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/1.0.17</bundle>
     </feature>
 
-	<feature version="1.0.8" start-level="80" name="dexels.oauth" resolver="(obr)">
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/1.4.0</bundle>
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.8</bundle>
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.9</bundle>
+	<feature version="1.0.10" start-level="80" name="dexels.oauth" resolver="(obr)">
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/2.0.0</bundle>
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.11</bundle>
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.11</bundle>
 	</feature>
 
 
@@ -125,7 +125,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.32'
+	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.33'
 		start-level='81'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
@@ -148,6 +148,7 @@
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.javax.mail/1.4.1_5</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jsch/0.1.50_1</bundle>
 		<bundle dependency='true'>mvn:org.apache.commons/commons-compress/1.5</bundle>
+		<bundle dependency='true'>mvn:commons-lang/commons-lang/2.6</bundle>
 
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.webconsole.branding.karaf/1.0.5</bundle> -->
 
@@ -258,10 +259,10 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.9' start-level='81'>
+		version='3.0.16' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.1.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.0.10</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.1.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.0.20</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.8</bundle>
 	</feature>
 
@@ -284,10 +285,10 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.cluster'
-		version='3.0.4' start-level='81'>
+		version='3.0.5' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.enterprise.core</feature>
 		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.6.9</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.0.6</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.0.8</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='sportlink.libraries' version='3.0.18'
