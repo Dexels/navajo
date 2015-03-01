@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tsl compiler for Navajo
 Bundle-SymbolicName: com.dexels.navajo.compiler.tsl
-Bundle-Version: 4.0.3.qualifier
+Bundle-Version: 4.0.4
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.dependency,
@@ -16,6 +16,10 @@ Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
  com.dexels.navajo.server.test,
+ javax.lang.model,
+ javax.lang.model.element,
+ javax.lang.model.type,
+ javax.lang.model.util,
  javax.tools,
  javax.xml.transform,
  org.apache.commons.compress.archivers;version="[1.5.0,2.0.0)",
