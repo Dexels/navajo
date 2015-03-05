@@ -29,8 +29,13 @@ public class AutoCompiler {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AutoCompiler.class);
 	
-	private final long warmupWait = 20000;
-	private final long scheduleWait = 60000;
+	private final int DEFAULT_WARMUP_WAIT = 20000;
+	// default to 15m
+	private final int DEFAULT_SCHEDULE_WAIT = 900000;
+
+	private long warmupWait = DEFAULT_WARMUP_WAIT;
+	private long scheduleWait = DEFAULT_SCHEDULE_WAIT;
+
 	
 	private NavajoIOConfig navajoIOConfig;
 	private BundleCreator bundleCreator;
@@ -40,6 +45,8 @@ public class AutoCompiler {
 
 	
 	public void activate(Map<String,Object> settings) {
+		this.warmupWait = parseValue(settings,"warmupWait",DEFAULT_WARMUP_WAIT);
+		this.scheduleWait = parseValue(settings,"scheduleWait",DEFAULT_SCHEDULE_WAIT);
 		logger.info("Scanning auto");
 		this.executor = Executors.newFixedThreadPool(1);
 		this.executor.execute(new Runnable(){
@@ -53,6 +60,23 @@ public class AutoCompiler {
 			}});
 		active.set(true);
 		scanFiles();
+	}
+
+	private int parseValue(Map<String, Object> settings, String key, int defaultValue) {
+		if(settings==null) {
+			return defaultValue;
+		}
+		Object value = settings.get(key);
+		if(value!=null) {
+			if(value instanceof String) {
+				return Integer.parseInt((String)value);
+			}
+			if(value instanceof Integer) {
+				return (Integer)value;
+			}
+			logger.warn("Weird settings type for key: "+key+" in autocompiler component. Returning default: "+defaultValue);
+		}
+		return defaultValue;
 	}
 
 	public void scanFiles() {
@@ -132,7 +156,7 @@ public class AutoCompiler {
 				 try {
 					bundleCreator.createBundle(cleanPath, new Date(), ".xml", new ArrayList<String>(), success, new ArrayList<String>(), false, false);
 				} catch (Throwable e) {
-					logger.error("Bundle creation problem for bundle: "+cleanPath,e);
+					logger.warn("Bundle creation problem for bundle: "+cleanPath,e);
 				}
 			 }
 		 } else {

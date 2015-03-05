@@ -29,6 +29,7 @@ import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.compiler.CompilationException;
 import com.dexels.navajo.compiler.tsl.custom.CustomClassLoader;
 import com.dexels.navajo.compiler.tsl.custom.CustomClassloaderJavaFileManager;
 import com.dexels.navajo.compiler.tsl.custom.CustomJavaFileObject;
@@ -136,7 +137,7 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 
 	@Override
 	public byte[] compile(String className, InputStream source)
-			throws IOException {
+			throws IOException, CompilationException {
 		JavaFileObject javaSource = getJavaSourceFileObject(className, source);
 		Iterable<? extends JavaFileObject> fileObjects = Arrays
 				.asList(javaSource);
@@ -161,7 +162,11 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		CompilationTask task = compiler.getTask(swe, customJavaFileManager,
 				compilerOutputListener, options, null,
 				fileObjects);
-		task.call();
+		boolean success = task.call();
+		if(!success) {
+			throw new CompilationException(sw.toString());
+		}
+		
 //		System.err.println(">>>>>>>>>> "+swe);
 		CustomJavaFileObject jfo = (CustomJavaFileObject) customJavaFileManager
 				.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, className,

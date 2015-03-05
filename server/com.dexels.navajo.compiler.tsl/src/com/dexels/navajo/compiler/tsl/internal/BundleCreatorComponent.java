@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
+import com.dexels.navajo.compiler.CompilationException;
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.compiler.ScriptCompiler;
 import com.dexels.navajo.dependency.Dependency;
@@ -175,7 +176,7 @@ public class BundleCreatorComponent implements BundleCreator {
 						compileAndCreateBundle(script, formatCompilationDate,
 								scriptExtension, d.getTentantDependee(),
 								hasTenantSpecificFile, true, keepIntermediate,
-								success, skipped);
+								success, skipped,failures);
 					}
 
 				}
@@ -183,7 +184,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 			compileAndCreateBundle(script, formatCompilationDate,
 					scriptExtension, scriptTenant, hasTenantSpecificFile,
-					false, keepIntermediate, success, skipped);
+					false, keepIntermediate, success, skipped,failures);
 		}
 
 	}
@@ -192,8 +193,8 @@ public class BundleCreatorComponent implements BundleCreator {
 			final String formatCompilationDate, String scriptExtension,
 			final String scriptTenant, boolean hasTenantSpecificFile,
 			boolean forceTenant, boolean keepIntermediate,
-			List<String> success, List<String> skipped) throws Exception,
-			IOException {
+			List<String> success, List<String> skipped, List<String> failures) throws Exception,
+			IOException,CompilationException {
 		List<com.dexels.navajo.script.api.Dependency> dependencies = new ArrayList<com.dexels.navajo.script.api.Dependency>();
 		String myScript = script;
 		if (forceTenant) {
@@ -277,7 +278,7 @@ public class BundleCreatorComponent implements BundleCreator {
 				createBundle(withoutEx, compileDate, extension, failures,
 						success, skipped, force, keepIntermediate);
 			} catch (Exception e) {
-				logger.error("Error compiling script: " + relative, e);
+				logger.warn("Error compiling script: " + relative, e);
 				failures.add("Error compiling script: " + relative);
 				reportCompilationError(relative, e);
 			}
