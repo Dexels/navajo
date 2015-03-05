@@ -126,6 +126,7 @@ public class AutoCompiler {
 				 needRecompile = true;
 			 }
 			 if(needRecompile) {
+				 cleanPath = cleanPath.replace('\\', '/');
 				 System.err.println("Need to recompile : "+cleanPath);
 				 List<String> success = new ArrayList<String>();
 				 try {
