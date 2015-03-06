@@ -39,13 +39,15 @@ public final class TipiSetAttributes extends TipiAction {
 
 		Object o = getEvaluatedParameterValue("path", event);
 		if (o == null) {
+			Object path = getParameter("path");
 			throw new TipiException(
-					"TipiSetAttributes: Path component missing ");
+					"TipiSetAttributes: Path component missing (from path: " + path + ")");
 
 		}
 		if (!(o instanceof TipiComponent)) {
+			Object path = getParameter("path");
 			throw new TipiException(
-					"TipiSetAttributes: Path component wrong type");
+					"TipiSetAttributes: Path component wrong type (from path: " + path + ")");
 		}
 		TipiComponent tc = (TipiComponent) o;
 		Set<String> p = getParameterNames();
