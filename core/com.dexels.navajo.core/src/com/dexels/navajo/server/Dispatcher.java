@@ -1029,7 +1029,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                         logger.info("Scheduling webservice: {}  on {} ", inMessage.getHeader().getRPCName(), inMessage
                                 .getHeader().getSchedule());
                         TaskRunnerInterface trf = TaskRunnerFactory.getInstance();
-                        TaskInterface ti = TaskRunnerFactory.getTaskInstance();
+                        TaskInterface ti = trf.createTask();
                         try {
                             ti.setTrigger(inMessage.getHeader().getSchedule());
                             ti.setNavajo(inMessage);
