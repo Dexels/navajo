@@ -25,8 +25,6 @@ import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
 import org.osgi.framework.wiring.BundleCapability;
 import org.osgi.framework.wiring.BundleWiring;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author atamur
@@ -44,8 +42,6 @@ public class CustomClassloaderJavaFileManager extends
 	private final Set<Bundle> loadedBundles = new HashSet<Bundle>();
 	private BundleContext bundleContext;
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(CustomClassloaderJavaFileManager.class);
 
 	public CustomClassloaderJavaFileManager(BundleContext context,
 			ClassLoader classLoader, JavaFileManager standardFileManager) {
@@ -284,17 +280,6 @@ public class CustomClassloaderJavaFileManager extends
 						cjf.unlinkBundle(bundle);
 					}
 			loadedBundles.remove(bundle);
-		}
-
-	}
-
-	
-	private void flush(Iterable<String> pkgs) {
-		for (String pkg : pkgs) {
-			if (folderMap.containsKey(pkg)) {
-				logger.info("Flushed package: " + pkg);
-			}
-			folderMap.remove(pkg);
 		}
 
 	}
