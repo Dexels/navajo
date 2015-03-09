@@ -54,9 +54,11 @@ public class OracleWrapped implements DataSource {
 			props.put(element.getKey(),element.getValue());
 			
 		}
+		props.put("ValidateConnection", "true");
 	    ods.setConnectionCachingEnabled(true); // be sure set to true    
 	    ods.setConnectionCacheProperties (props);    
-//	    ods.setConnectionCacheName("ImplicitCache01"); // this cache's name    
+//	    ods.setConnectionCacheName("ImplicitCache01"); // this cache's name  
+//	    ods.set
 	    String databaseName =(String) settings.get("databaseName");
 	    if(databaseName!=null) {
         	ods.setDatabaseName(databaseName);
@@ -97,6 +99,7 @@ public class OracleWrapped implements DataSource {
         if(username!=null) {
         	ods.setUser(username);
         }
+       
 //        if (props.containsKey(DataSourceFactory.JDBC_USER)) {
 //        	ods.setUser(props.getProperty(DataSourceFactory.JDBC_USER));
 //        }
