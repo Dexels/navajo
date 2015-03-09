@@ -3,6 +3,7 @@ package com.dexels.navajo.client.stream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +17,12 @@ public class MeasuredInputStream extends FilterInputStream {
 	private String label;
 	private TransferDataListener transferDataListener;
 	private long started;
+	private AtomicBoolean closed = new AtomicBoolean(false);
 	
     @Override
 	public void close() throws IOException {
     	logger.debug("Transfer: "+label+" complete. Used bytes: "+totalNumBytesRead);
-    	if(transferDataListener!=null) {
+    	if(transferDataListener!=null && closed.compareAndSet(false, true)) {
     		transferDataListener.transferCompleted(label,totalNumBytesRead,(System.currentTimeMillis() - started));
     	}
     	totalNumBytesRead = 0;
