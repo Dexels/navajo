@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Utilities
 Bundle-SymbolicName: com.dexels.navajo.utilities
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.0.6
+Bundle-Version: 3.0.7.qualifier
 Bundle-Vendor: Dexels
 Bundle-ClassPath: lib/ganymed-ssh2-build210.jar,.
 Export-Package: com.dexels.navajo.install,
