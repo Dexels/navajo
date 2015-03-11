@@ -180,7 +180,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
                     type = Property.STRING_PROPERTY;
                 }
             } catch (Throwable ex1) {
-                ex1.printStackTrace();
+            	logger.error("Error: ", ex1);
             }
         }
         if (type.equals(Property.PASSWORD_PROPERTY)) {

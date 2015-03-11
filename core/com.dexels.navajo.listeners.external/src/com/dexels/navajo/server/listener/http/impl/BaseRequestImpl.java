@@ -226,9 +226,9 @@ public class BaseRequestImpl implements AsyncRequest {
 		if (inDoc != null
 				&& inDoc.getHeader() != null
 				&& outDoc.getHeader() != null
-				&& isSpecialwebservice(inDoc.getHeader()
+				&& !isSpecialwebservice(inDoc.getHeader()
 						.getRPCName())) {
-			statLogger.error("("
+			statLogger.info("("
 					+ instance
 					+ "): "
 					+ new java.util.Date(connectedAt)

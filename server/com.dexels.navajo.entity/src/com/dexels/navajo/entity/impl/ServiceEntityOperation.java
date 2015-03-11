@@ -269,7 +269,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				ServiceEntityOperation seo = new ServiceEntityOperation(EntityManager.getInstance(), DispatcherFactory.getInstance(), o);
 				seo.perform(r_n);
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
+				logger.error("Error: ", e);
 			}
 		}
 	}
@@ -314,7 +314,7 @@ public class ServiceEntityOperation implements EntityOperation {
 								entityObj = seo.perform(referencedEntities.get(entityName));
 								cachedEntities.put(entityName, entityObj);
 							} catch (Exception e) {
-								e.printStackTrace(System.err);
+								logger.error("Error: ", e);
 							}
 						} else {
 							entityObj = cachedEntities.get(entityName);

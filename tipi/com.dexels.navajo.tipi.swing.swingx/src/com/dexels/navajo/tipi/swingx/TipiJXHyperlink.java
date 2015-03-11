@@ -34,7 +34,7 @@ public class TipiJXHyperlink extends TipiSwingDataComponentImpl {
 				try {
 					performTipiEvent("onActionPerformed", null, false);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 			}
 		});

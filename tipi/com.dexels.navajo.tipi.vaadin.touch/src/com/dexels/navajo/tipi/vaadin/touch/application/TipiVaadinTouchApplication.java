@@ -131,7 +131,7 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 			setCurrentContext(createContext());
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 
 	}

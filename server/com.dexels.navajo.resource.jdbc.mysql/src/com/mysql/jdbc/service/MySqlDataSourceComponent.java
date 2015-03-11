@@ -29,7 +29,7 @@ public class MySqlDataSourceComponent implements DataSource {
 			try {
 				datasource = createDataSource(pr);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		} catch (Throwable e) {
 			logger.error("Error activating datasource:",e);

@@ -34,7 +34,7 @@ public class OracleWrapped implements DataSource {
 		try {
 			wrapped = new OracleDataSource();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("Error creating oracle: ", e);
 		}
 		try {
 			setup(wrapped,settings);

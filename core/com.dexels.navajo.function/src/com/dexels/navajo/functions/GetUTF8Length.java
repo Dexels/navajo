@@ -2,6 +2,10 @@ package com.dexels.navajo.functions;
 
 
 import java.io.UnsupportedEncodingException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
@@ -17,6 +21,10 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class GetUTF8Length extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GetUTF8Length.class);
+	
     public GetUTF8Length() {}
 
     @Override
@@ -45,7 +53,7 @@ public final class GetUTF8Length extends FunctionInterface {
 	    try {
 			return str.getBytes("UTF-8").length;
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	    return new Integer(0);
     }

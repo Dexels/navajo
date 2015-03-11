@@ -25,6 +25,8 @@ import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
 import org.osgi.framework.wiring.BundleCapability;
 import org.osgi.framework.wiring.BundleWiring;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author atamur
@@ -41,7 +43,10 @@ public class CustomClassloaderJavaFileManager extends
 //	private final Map<CustomJavaFileFolder, Bundle> bundleMap = new HashMap<CustomJavaFileFolder, Bundle>();
 	private final Set<Bundle> loadedBundles = new HashSet<Bundle>();
 	private BundleContext bundleContext;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CustomClassloaderJavaFileManager.class);
+	
 
 	public CustomClassloaderJavaFileManager(BundleContext context,
 			ClassLoader classLoader, JavaFileManager standardFileManager) {
@@ -152,8 +157,7 @@ public class CustomClassloaderJavaFileManager extends
 						recurse);
 				return list;
 			} catch (Throwable e) {
-				System.err.println("Platform class loader failed while trying to load: "+packageName);
-				e.printStackTrace();
+				logger.error("Platform class loader failed while trying to load: "+packageName,e);
 			}
 		} 
 		if (location == StandardLocation.CLASS_PATH

@@ -6,6 +6,9 @@ import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oauth.signpost.basic.DefaultOAuthProvider;
 import winterwell.jtwitter.Message;
 import winterwell.jtwitter.OAuthSignpostClient;
@@ -29,6 +32,9 @@ public class TwitterAdapter implements Mappable{
 	
 	private OAuthSignpostClient mySignPost = null; 
 		
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TwitterAdapter.class);
 	
 	final static String API_KEY = "UVyOkSE0F1i2YcqaPc0jYg";
 	private final static String API_SECRET = "7Uhm0fVFrSesY0Czamuy86ZnyetVPkYjLLgG8N3rabE";
@@ -78,7 +84,7 @@ public class TwitterAdapter implements Mappable{
 			twit.setSource("Navajo Integrator");
 			twit.updateStatus(statusText);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	
@@ -86,7 +92,7 @@ public class TwitterAdapter implements Mappable{
 		try {
 			setStatus(status.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	

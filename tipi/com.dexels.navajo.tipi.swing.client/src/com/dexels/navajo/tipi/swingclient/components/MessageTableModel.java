@@ -140,9 +140,9 @@ public class MessageTableModel extends AbstractTableModel {
 
 							}
 						} catch (InterruptedException e1) {
-							e1.printStackTrace();
+							logger.error("Error: ", e1);
 						} catch (InvocationTargetException e1) {
-							e1.printStackTrace();
+							logger.error("Error: ", e1);
 						}
 					}
 

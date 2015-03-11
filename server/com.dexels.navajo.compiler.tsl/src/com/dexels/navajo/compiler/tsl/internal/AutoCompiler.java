@@ -125,7 +125,7 @@ public class AutoCompiler {
 		      }
 		     });
 		 } catch (IOException e) {
-		      e.printStackTrace();
+			 logger.error("Error",e);
 		 }
 	}
 

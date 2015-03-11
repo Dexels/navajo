@@ -41,7 +41,7 @@ public class WebsocketSession implements WebSocket.OnTextMessage {
    	 try {
 		tipiWebsocketConnector.restart();
 	} catch (Exception e) {
-		e.printStackTrace();
+		logger.error("Error: ", e);
 	}
     }
 

@@ -13,6 +13,9 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.StyledEditorKit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.PropertyHandler;
 import com.dexels.navajo.tipi.TipiEventListener;
@@ -49,6 +52,10 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
 	private PropertyHandler myHandler;
 	private Property myProperty;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiHtmlLabel.class);
+	
 	@Override
 	public Object createContainer() {
 		myHandler = new PropertyHandler(this, null);
@@ -153,9 +160,9 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
     		                    Desktop.getDesktop().browse(url.toURI());
     		                }
     		                catch (IOException e1) {
-					 e1.printStackTrace();
-				} catch (URISyntaxException e2) {
-    		                	e2.printStackTrace();
+    		                	logger.error("Error: ", e1);
+    		                } catch (URISyntaxException e2) {
+    		                	logger.error("Error: ", e2);
     		                }
     		            }
     		        }

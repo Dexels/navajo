@@ -6,18 +6,22 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 
 public abstract class BaseComboBox extends JComboBox {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 2894805109531627299L;
 	DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseComboBox.class);
+	
 	public BaseComboBox() {
 		// this.setPreferredSize(new Dimension(125,
 		// ComponentConstants.PREFERRED_HEIGHT));
@@ -47,7 +51,7 @@ public abstract class BaseComboBox extends JComboBox {
 				}
 			}
 		} catch (NavajoException ex) {
-			ex.printStackTrace(System.err);
+			logger.error("Error: ", ex);
 		}
 	}
 

@@ -206,15 +206,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     private final List<TipiDefinitionListener> tipiDefinitionListeners = new LinkedList<TipiDefinitionListener>();
 
     private TipiValidationDecorator tipiValidationManager;
-    // Temp construct, until the connector pattern is fully functional
-    // TODO, fix and remove
+
     protected ClientInterface clientInterface;
 
     protected final TipiApplicationInstance myApplication;
 
     private transient ScriptEngineManager scriptManager;
-
-    // private boolean osgiMode;
 
     public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
         this.myApplication = myApplication;
@@ -2639,7 +2636,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             try {
                 propertyBindMap.put(service + ":" + master.getFullPropertyName(), xx);
             } catch (NavajoException e1) {
-                e1.printStackTrace();
+            	logger.error("Error: ", e1);
             }
         }
         // TODO beware, equality depends on equal property paths
@@ -2815,7 +2812,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     public void showInternalError(String errorString, Throwable t) {
         logger.error(errorString);
         if (t != null) {
-            t.printStackTrace();
+        	logger.error("Error: ", t);
         }
     }
 

@@ -116,7 +116,7 @@ public class JExtendedInternalFrame extends JInternalFrame {
 				}
 			}
 		} catch (InterruptedException exception) {
-			exception.printStackTrace();
+			logger.error("Error: ", exception);
 		}
 	}
 

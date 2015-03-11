@@ -445,7 +445,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 										}
 									}
 								} catch (NavajoException ex) {
-									ex.printStackTrace();
+									logger.error("Error: ", ex);
 								}
 							}
 						}
@@ -647,7 +647,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 				try {
 					fw.close();
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 			}
 		}
@@ -1104,7 +1104,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		try {
 			loadColumnsNavajo();
 		} catch (FileNotFoundException ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 	}
 
@@ -1660,7 +1660,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 				}
 			}
 		} catch (NavajoException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 
 		// logger.info("Editing stopped, in MT");
@@ -1680,7 +1680,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 			}
 			
 		} catch (Throwable ex2) {
-			ex2.printStackTrace();
+			logger.error("Error: ", ex2);
 		}
 
 	}

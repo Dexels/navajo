@@ -63,7 +63,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled,
 						.println("Attempting to load property box from non-selection property");
 			}
 		} catch (NavajoException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 		setEnabled(p.isDirIn());
 
@@ -140,7 +140,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled,
 		try {
 			setSelectionProperty();
 		} catch (NavajoException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 
 	}

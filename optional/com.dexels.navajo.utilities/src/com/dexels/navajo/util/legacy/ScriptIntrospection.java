@@ -6,6 +6,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;
@@ -24,6 +27,9 @@ import com.dexels.navajo.server.test.TestDispatcher;
 public class ScriptIntrospection {
 
 	public static final String DEFAULT_SERVER_XML = "config/server.xml";
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ScriptIntrospection.class);
 	
 	// Setters
 	public String script;
@@ -45,7 +51,7 @@ public class ScriptIntrospection {
 			initializeDispatcher(rootPath);
 			this.script = script;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	

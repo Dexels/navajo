@@ -243,7 +243,7 @@ public class TipiExportDialog extends TipiDialog {
 				fw.flush();
 				fw.close();
 			} catch (IOException ex2) {
-				ex2.printStackTrace();
+				logger.error("Error: ", ex2);
 			}
 		}
 	}

@@ -218,7 +218,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 							filterPanel.showColumnManagementDialog();
 							filterPanel.loadColumns();
 						} catch (Exception ex) {
-							ex.printStackTrace();
+							logger.error("Error: ", ex);
 						}
 					}
 				});
@@ -230,7 +230,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 						try {
 							getTable().saveColumnsNavajo();
 						} catch (Exception ex) {
-							ex.printStackTrace();
+							logger.error("Error: ", ex);
 						}
 					}
 				});
@@ -242,7 +242,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 						try {
 							getTable().removeColumnsNavajo();
 						} catch (Exception ex) {
-							ex.printStackTrace();
+							logger.error("Error: ", ex);
 						}
 					}
 				});
@@ -256,7 +256,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 							try {
 								getFilterPanel().showColumnManagementDialog();
 							} catch (Exception ex) {
-								ex.printStackTrace();
+								logger.error("Error: ", ex);
 							}
 						}
 					});
@@ -272,7 +272,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 							BinaryOpenerFactory.getInstance().open(b);
 
 						} catch (Exception ex) {
-							ex.printStackTrace();
+							logger.error("Error: ", ex);
 						}
 					}
 				});
@@ -398,7 +398,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 			fireDataChanged();
 			fireHeaderMenuEvent();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 	}
 

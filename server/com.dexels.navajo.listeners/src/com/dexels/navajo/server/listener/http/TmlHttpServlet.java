@@ -229,7 +229,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			tbMessage = constructFromRequest(request);
 			Navajo resultMessage = handleTransaction(instance, dis, tbMessage, null, null);
 			sendResponse(request, response, resultMessage);
-
+			statLogger.info("direct legacy call");
 		} catch (Exception ce) {
 			logger.error("Error: ", ce);
 		} finally {

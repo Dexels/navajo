@@ -419,7 +419,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 				try {
 					performTipiEvent("onMailError", m, false);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 			}
 		}
@@ -435,7 +435,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 				try {
 					performTipiEvent("onMailError", m, false);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 			}
 		}
@@ -459,7 +459,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		try {
 			ensureOpenConnection();
 		} catch (MessagingException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 
 		if (p < 1 || p > getPageCount() || p == currentPage) {
@@ -484,7 +484,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 					performTipiEvent("onConnectionClosed", null, false);
 					store = null;
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 			}
 
@@ -494,7 +494,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 					performTipiEvent("onConnectionLost", null, false);
 					store = null;
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 			}
 
@@ -507,7 +507,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 					performTipiEvent("onConnectionCreated", params, false);
 //					logger.info("Connection created event!");
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 			}
 		};

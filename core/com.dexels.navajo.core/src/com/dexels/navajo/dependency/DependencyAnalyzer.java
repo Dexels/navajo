@@ -144,7 +144,7 @@ public class DependencyAnalyzer {
         try {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(depsFile, dependencies);
         } catch (IOException e) {
-            e.printStackTrace();
+        	logger.error("Error: ", e);
         }
 
     }

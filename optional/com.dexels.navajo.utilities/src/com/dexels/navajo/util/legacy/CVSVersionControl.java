@@ -8,6 +8,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CVSVersionControl {
 
 	private String version;
@@ -16,6 +19,10 @@ public class CVSVersionControl {
 	private String versionInfo;
 	private String cvsRoot;
 	private String repository;
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CVSVersionControl.class);
 	
 	public CVSVersionControl(File f) {
 		findIdTag(f);
@@ -52,7 +59,7 @@ public class CVSVersionControl {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		} finally {
 			if ( br != null ) {
 				try {
@@ -70,8 +77,7 @@ public class CVSVersionControl {
 			br =  new BufferedReader(new FileReader(f));
 			line = br.readLine();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			logger.error("Error: ", e);
 		}  finally {
 			if ( br != null ) {
 				try {
@@ -117,8 +123,8 @@ public class CVSVersionControl {
 			this.version = tokens[2];
 			this.date = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy").parse(tokens[3]);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			logger.error("Error: ", e);
+			
 		}  finally {
 			if ( br != null ) {
 				try {

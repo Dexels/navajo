@@ -131,7 +131,7 @@ public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel
 			myProperty.addPropertyChangeListener(this);
 			// updateUI();
 		} catch (NavajoException ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 	}
 

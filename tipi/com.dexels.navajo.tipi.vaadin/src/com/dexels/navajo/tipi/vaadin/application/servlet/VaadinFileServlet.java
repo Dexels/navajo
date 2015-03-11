@@ -181,8 +181,7 @@ public class VaadinFileServlet extends HttpServlet{
 			}	
 
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} finally {
 			// Gently close streams.
 			close(output);

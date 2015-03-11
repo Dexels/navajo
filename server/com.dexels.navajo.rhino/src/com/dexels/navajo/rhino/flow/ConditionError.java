@@ -36,7 +36,7 @@ public class ConditionError extends RuntimeException {
 			try {
 				conditionNavajo.addMessage(conditionMessage);
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 		

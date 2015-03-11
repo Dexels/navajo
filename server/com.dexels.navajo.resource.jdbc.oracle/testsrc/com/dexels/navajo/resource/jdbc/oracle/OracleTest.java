@@ -11,7 +11,15 @@ import java.util.concurrent.Executors;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class OracleTest {
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(OracleTest.class);
+	
 	public static void main(String args[]) throws SQLException,
 			InterruptedException {
 
@@ -45,7 +53,7 @@ public class OracleTest {
 						try {
 							testConnection(ow);
 						} catch (SQLException e) {
-							e.printStackTrace();
+							logger.error("Error: ", e);
 						}
 					}
 				}
@@ -55,8 +63,8 @@ public class OracleTest {
 		executor.shutdown();
 		while (!executor.isTerminated()) {
 		}
-		System.out.println("Finished all threads");
-		System.err.println("Took: " + (System.currentTimeMillis() - start));
+		logger.info("Finished all threads");
+		logger.info("Took: " + (System.currentTimeMillis() - start));
 	}
 
 	private static void testConnection(DataSource pc) throws SQLException {

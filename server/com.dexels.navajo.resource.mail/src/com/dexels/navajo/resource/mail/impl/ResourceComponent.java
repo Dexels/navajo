@@ -132,8 +132,6 @@ public class ResourceComponent implements MailResource {
 		} catch (AddressException e) {
 			throw new UserException("Error sending mail:", e);
 		} catch (MessagingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
             throw new UserException("Error sending mail:", e);
         }
 

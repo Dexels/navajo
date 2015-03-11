@@ -1,5 +1,8 @@
 package com.dexels.navajo.entity.adapters;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.entity.transactions.NavajoTransaction;
 import com.dexels.navajo.entity.transactions.NavajoTransactionManager;
 import com.dexels.navajo.entity.transactions.TransactionalAdapter;
@@ -12,19 +15,22 @@ public class ExampleTransactionalAdapter implements TransactionalAdapter, Mappab
 
 	private String action;
 	private NavajoTransaction myTransaction = null;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ExampleTransactionalAdapter.class);
+	
 	public void setAction(String a) {
 		this.action = a;
 	}
 
 	@Override
 	public void commit() {
-		System.err.println("Committing action via NavajoTransaction: " + action);
+		logger.info("Committing action via NavajoTransaction: " + action);
 	}
 
 	@Override
 	public void rollback() {
-		System.err.println("Rollback action via NavajoTransaction: " + action);
+		logger.info("Rollback action via NavajoTransaction: " + action);
 	}
 
 	@Override
@@ -35,22 +41,21 @@ public class ExampleTransactionalAdapter implements TransactionalAdapter, Mappab
 				myTransaction.addTransactionalResource(this);
 			}
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 	}
 
 	@Override
 	public void store() throws MappableException, UserException {
 		if ( myTransaction != null ) {
-			System.err.println("Do not commit " + action + " yet.");
+			logger.info("Do not commit " + action + " yet.");
 		} else {
-			System.err.println("Committing " + action);
+			logger.info("Committing " + action);
 		}
 	}
 
 	@Override
 	public void kill() {
-		// TODO Auto-generated method stub
 
 	}
 

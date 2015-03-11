@@ -37,14 +37,12 @@ public class TestLock {
 				try {
 					l.connect("spiritus.dexels.nl", 5222, "conference", "dexels.nl", name);
 				} catch (XMPPException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 				l.debug("Hello!");
 				try {
 					Thread.sleep(before);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					logger.error("Error: ",e);
 				}
 
@@ -79,7 +77,6 @@ public class TestLock {
 				try {
 					Thread.sleep(timeout);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					logger.error("Error: ",e);
 				}
 				if (l.isLocked()) {

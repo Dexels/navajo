@@ -75,7 +75,7 @@ public class TipiTransferHandler extends TransferHandler {
 		} catch (IOException e1) {
 			logger.error("Error detected",e1);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Error: ", t);
 		}
 
 		return super.canImport(support);

@@ -572,7 +572,7 @@ public class GenericPropertyComponent extends JPanel {
 				// make sure it got evaluated
 				p.getTypedValue();
 			} catch (NavajoException ex) {
-				ex.printStackTrace();
+				logger.error("Error: ", ex);
 			}
 		}
 

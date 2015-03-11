@@ -188,7 +188,6 @@ public abstract class BaseServiceRunner  implements
 	public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException,
 			FileNotFoundException, UnsupportedEncodingException,
 			NavajoException {
-		System.err.println("BSR: --");
 		TmlScheduler ts = getTmlScheduler();
 		String schedulingStatus = null;
 		if (ts != null) {
