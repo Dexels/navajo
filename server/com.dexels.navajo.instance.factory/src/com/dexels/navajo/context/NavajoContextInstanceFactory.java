@@ -675,4 +675,22 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		return repositoryInstance.getRepositoryFolder().getAbsolutePath();
 	}
 
+	@Override
+	public String getOutputPath() {
+		File outputFolder = repositoryInstance.getOutputFolder();
+		if(outputFolder!=null) {
+			return outputFolder.getAbsolutePath();
+		}
+		return getInstallationPath();
+	}
+
+	@Override
+	public String getTempPath() {
+		File tempFolder = repositoryInstance.getTempFolder();
+		if(tempFolder!=null) {
+			return tempFolder.getAbsolutePath();
+		}
+		return getInstallationPath();
+	}
+
 }
