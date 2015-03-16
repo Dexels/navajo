@@ -977,14 +977,10 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 							event);
 					logger.debug("Value: " + value.value);
 					logger.debug("PropertyName: " + propertyName.value);
-					ArrayList<Message> al = (ArrayList<Message>) mm.getMessage().getAllMessages();
-					if (al == null || al.size() < 1) {
-						// Nothing is selected
-						return;
-					}
-					logger.debug("# of msgs: " + al.size());
-					for (int i = 0; i < al.size(); i++) {
-						Message current = al.get(i);
+					int rowCount = mm.getRowCount();
+					logger.debug("# of msgs: " + rowCount);
+					for (int i = 0; i < rowCount; i++) {
+						Message current = mm.getMessageRow(i);
 						Property cp = current.getProperty("" + propertyName.value);
 						cp.setAnyValue(value.value);
 					}
