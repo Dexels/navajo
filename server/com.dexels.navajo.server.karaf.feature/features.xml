@@ -23,10 +23,10 @@
         <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/1.0.18</bundle>
     </feature>
 
-	<feature version="1.0.12" start-level="80" name="dexels.oauth" resolver="(obr)">
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/3.0.0</bundle>
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.13</bundle>
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.12</bundle>
+	<feature version="1.0.13" start-level="80" name="dexels.oauth" resolver="(obr)">
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/4.0.0</bundle>
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.14</bundle>
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.13</bundle>
 	</feature>
 
 
@@ -291,7 +291,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.0.8</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='sportlink.libraries' version='3.0.20'
+	<feature resolver="(obr)" name='sportlink.libraries' version='3.0.21'
 		start-level='82'>
 		<feature version="[3.0.0,4)">navajo.function</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
@@ -304,7 +304,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.tensing/1.1.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.optimizepool/3.0.16</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.nevobo.dps/1.0.5</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.oauth/1.1.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.oauth/1.1.2</bundle>
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.crystal/1.0.5</bundle> -->
 	</feature>
 
