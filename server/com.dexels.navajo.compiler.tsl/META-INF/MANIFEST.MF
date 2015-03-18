@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tsl compiler for Navajo
 Bundle-SymbolicName: com.dexels.navajo.compiler.tsl
-Bundle-Version: 4.0.11.qualifier
+Bundle-Version: 4.0.13.qualifier
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.dependency,
@@ -35,8 +35,14 @@ Import-Package: com.dexels.navajo.compiler,
  org.slf4j;version="[1.6.1,1.8.0)",
  org.w3c.dom
 Bundle-Activator: navajotsl.Activator
-Service-Component: OSGI-INF/navajo.compiler.tsl.xml, OSGI-INF/navajo.compiler.tsl.java.xml,OSGI-INF/navajo.compiler.java.xml, OSGI-INF/navajo.compiler.bundlecreator.xml,OSGI-INF/navajo.repository.listener.xml,OSGI-INF/navajo.bundlecreator.queue.xml,OSGI-INF/navajo.compiler.classloader.wrapped.xml,
- OSGI-INF/navajo.compiler.autocompiler.xml, OSGI-INF/navajo.compiler.tsl.xml
+Service-Component: OSGI-INF/navajo.compiler.tsl.xml,
+ OSGI-INF/navajo.compiler.tsl.java.xml,
+ OSGI-INF/navajo.compiler.java.xml,
+ OSGI-INF/navajo.compiler.bundlecreator.xml,
+ OSGI-INF/navajo.repository.listener.xml,
+ OSGI-INF/navajo.bundlecreator.queue.xml,
+ OSGI-INF/navajo.compiler.classloader.wrapped.xml,
+ OSGI-INF/navajo.compiler.autocompiler.xml
 Bundle-ClassPath: .,
  lib/org.eclipse.jdt.core-3.11.0-SNAPSHOT-batch-compiler.jar,
  lib/org.eclipse.jdt.compiler.tool-1.0.400-SNAPSHOT.jar
