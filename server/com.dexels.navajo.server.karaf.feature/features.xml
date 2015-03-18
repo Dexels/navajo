@@ -194,20 +194,23 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.websocket/1.0.11</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.camel' version='3.0.21'
+	<feature resolver="(obr)" name='navajo.camel' version='3.0.25'
 		start-level='81'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/2.1.20</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/2.2.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.camel/2.1.0</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.javax.mail/1.4.1_5</bundle>
 		<bundle dependency='true'>mvn:org.apache.james.protocols/protocols-api/1.6.3</bundle>
 		<bundle dependency='true'>mvn:org.apache.james.protocols/protocols-netty/1.6.3</bundle>
 		<bundle dependency='true'>mvn:org.apache.james.protocols/protocols-smtp/1.6.3</bundle>
 		<bundle dependency='true'>mvn:io.netty/netty/3.9.0.Final</bundle>
-		<bundle dependency='true'>mvn:org.apache.camel/camel-core/2.13.2</bundle>
-	    <bundle dependency='true'>mvn:org.apache.camel/camel-spring/2.13.2</bundle>
-		<bundle dependency='true'>mvn:org.apache.camel/camel-blueprint/2.13.2</bundle>
-		<bundle dependency='true'>mvn:org.apache.camel/camel-http/2.13.2</bundle>
+		<bundle dependency='true'>mvn:org.apache.camel/camel-core/2.13.4</bundle>
+	    <bundle dependency='true'>mvn:org.apache.camel/camel-spring/2.13.4</bundle>
+		<bundle dependency='true'>mvn:org.apache.camel/camel-blueprint/2.13.4</bundle>
+		<bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-httpclient/3.1_7</bundle>
+		<bundle dependency="true">mvn:commons-codec/commons-codec/1.8</bundle>
+		<bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-servlet_3.0_spec/1.0</bundle>
+		<bundle dependency='true'>mvn:org.apache.camel/camel-http/2.13.4</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.multitenant' version='3.1.1'
