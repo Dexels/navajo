@@ -194,10 +194,10 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.websocket/1.0.11</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.camel' version='3.0.19'
+	<feature resolver="(obr)" name='navajo.camel' version='3.0.21'
 		start-level='81'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/2.1.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/2.1.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.camel/2.1.0</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.javax.mail/1.4.1_5</bundle>
 		<bundle dependency='true'>mvn:org.apache.james.protocols/protocols-api/1.6.3</bundle>
@@ -208,7 +208,6 @@
 	    <bundle dependency='true'>mvn:org.apache.camel/camel-spring/2.13.2</bundle>
 		<bundle dependency='true'>mvn:org.apache.camel/camel-blueprint/2.13.2</bundle>
 		<bundle dependency='true'>mvn:org.apache.camel/camel-http/2.13.2</bundle>
-		<bundle dependency='true'>mvn:commons-httpclient/commons-httpclient/3.1</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.multitenant' version='3.1.1'
