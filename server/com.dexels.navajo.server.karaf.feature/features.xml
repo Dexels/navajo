@@ -354,8 +354,12 @@
 		<bundle dependency='true'>mvn:com.dexels.thirdparty/org.apache.commons.math3/3.3</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.entity' version='1.1.0'
-start-level='81'>
+	<feature resolver="(obr)" name='navajo.entity' version='1.1.1'
+		start-level='81'>
+		<feature version="[3.0.0,4)">navajo.dev</feature>
+		<feature version="[3.0.0,4)">navajo.multitenant</feature>
+		<feature version="[3.0.0,4)">navajo.jgit</feature>
+		<feature version="[3.0.0,4)">navajo.function</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.entity/1.2.54</bundle>
 	</feature>
 
