@@ -1212,6 +1212,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		} catch (TipiException ex) {
 			logger.error("Error: ",ex);
 		} catch (TipiBreakException e) {
+		    
 		}
 	}
 
@@ -1743,11 +1744,30 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 
     @Override
     public void unhideComponent() {
-        // Clear our localValuesMap - any actual unhiding is left to any subcomponents 
-        // (typically those who have overridden hideComponent).
+        // Clear our localValuesMap - any actual unhiding is left to 
+        // any subcomponents (typically those who have overridden hideComponent).
         localValuesMap = new HashMap<String, Object>();
-        for (TipiComponent child : tipiComponentList ) {
-           child.unhideComponent(); 
+        for (TipiComponent child : tipiComponentList) {
+            child.unhideComponent();
+        }
+    }
+    
+    @Override
+    public void performInstantiateEvents() {
+
+        for (TipiComponent child : tipiComponentList) {
+            // HomeComponents should trigger their own intialisation. To prevent 
+            // double inits we don't init them.
+            if (!child.isHomeComponent()) {
+                child.performInstantiateEvents();
+                try {
+                    child.performTipiEvent("onInstantiate", null, true);
+                } catch (Exception e) {
+                    // Whateva!
+                }
+
+            }
+
         }
     }
 

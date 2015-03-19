@@ -314,6 +314,9 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 
     public void unhideComponent();
     
+    public void performInstantiateEvents();
+    
+
     public boolean isHidden();
     
     public void postOnInstantiate();

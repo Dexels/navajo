@@ -272,22 +272,13 @@ protected Navajo myDocRoot;
  
     public void write(final OutputStream stream) throws NavajoException {
         try {
-            OutputStreamWriter osw = null;
-            try {
-                osw = new OutputStreamWriter(stream, "UTF-8");
-                printElement(osw, 0);
-                osw.flush();
-            } finally {
-                try {
-                    osw.close();
-                } catch (Exception e) {
-                }
-            }
-
+            OutputStreamWriter osw = new OutputStreamWriter(stream, "UTF-8");
+            printElement(osw, 0);
+            osw.flush();
         } catch (IOException e) {
             throw new NavajoExceptionImpl(e);
         }
-    }  
+    } 
    
   public boolean hasTextNode() {
       return false;

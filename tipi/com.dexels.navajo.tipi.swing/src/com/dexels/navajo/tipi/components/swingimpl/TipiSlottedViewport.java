@@ -128,12 +128,11 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 	
 	@Override
     public void unhideComponent() {
+	    super.unhideComponent();
+	    
 	    // Go back to point 0,0: first screen
         view.setViewPosition(new Point());
 
-        for (TipiComponent child : getChildren()) {
-            child.unhideComponent();
-        }
     }
 
 
