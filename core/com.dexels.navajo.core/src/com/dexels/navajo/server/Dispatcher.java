@@ -964,7 +964,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             GlobalManager gm = null;
             if (globalManagerInstance != null) {
                 if (instance == null) {
-                    gm = globalManagerInstance.getDefaultGlobalManager();
+                	gm = globalManagerInstance.getGlobalManager("default");
                 } else {
                     gm = globalManagerInstance.getGlobalManager(instance);
                 }
