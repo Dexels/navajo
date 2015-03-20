@@ -48,7 +48,7 @@
 		
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.0.39'
+	<feature resolver="(obr)" name='navajo.core' version='3.0.40'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,4)">pax-http</feature>
@@ -61,7 +61,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.5.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.2.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/2.0.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.2.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.2.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.0.12</bundle>
 	</feature>
 	<feature resolver="(obr)" name='navajo.function' version='3.0.8'
@@ -217,10 +217,10 @@
 		<bundle dependency='true'>mvn:org.apache.camel/camel-http/2.13.2</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.multitenant' version='3.1.1'
+	<feature resolver="(obr)" name='navajo.multitenant' version='3.1.2'
 		start-level='81'>
 		<feature version="[3.0.32,4)">navajo.server.osgi</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.instance.factory/2.1.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.instance.factory/2.1.4</bundle>
 
 	</feature>
 
