@@ -61,10 +61,10 @@ public class SetValueCommand implements ArticleCommand {
 		}
 		if(value.startsWith("@")) {
 			String resolved = runtime.resolveArgument(value);
-			if(resolved==null) {
-				throw new ArticleException("Article problem in "+runtime.getArticleName()+". setvalue refers to argument: "+value+" which is not supplied");
+			if(resolved!=null) {
+//				throw new ArticleException("Article problem in "+runtime.getArticleName()+". setvalue refers to argument: "+value+" which is not supplied");
+				p.setValue(resolved);
 			}
-			p.setValue(resolved);
 		} else if(value.startsWith("$")) {
 			p.setAnyValue(runtime.resolveScope(value));
 		} else {
