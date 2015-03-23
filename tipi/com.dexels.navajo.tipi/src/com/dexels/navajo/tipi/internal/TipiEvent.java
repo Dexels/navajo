@@ -258,8 +258,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 		}
 
 		Thread currentThread = Thread.currentThread();
-		final Stack<TipiExecutable> s = getContext().getThreadPool()
-				.getThreadStack(currentThread);
+		final Stack<TipiExecutable> s = getContext().getThreadPool().getThreadStack(currentThread);
 		TipiExecutable parentEvent = null;
 
 		if (s != null && !s.isEmpty()) {
@@ -298,14 +297,16 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 							+ " for component: " + getComponent().getPath()
 							+ " action: " + last + " : " + ex.getMessage(), ex);
 			logger.error("Error: ",ex);
+		} finally {
+			if (!overlayType.equals("none") && overlayComponent != null) { 
+			    overlayComponent.removeOverlayProgressPanel();
+			}
 		}
 		getContext().debugLog(
 				"event   ",
 				"finished event: " + localInstance.getEventName()
 						+ " in component" + getComponent().getPath());
-		if (!overlayType.equals("none") && overlayComponent != null) { 
-		    overlayComponent.removeOverlayProgressPanel();
-		}
+		
 		
 		listener.eventFinished(localInstance, event);
 	}

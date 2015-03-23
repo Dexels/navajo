@@ -752,7 +752,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 								} else {
 
 									try {
-										result.add(m.getMessage(Integer.parseInt(index)));
+										if (m.getMessage(Integer.parseInt(index)) != null) {
+											result.add(m.getMessage(Integer.parseInt(index)));
+										}
+										
 									} catch (Exception pe) {
 										throw new NavajoExceptionImpl("Could not parse array index: " + index);
 									}
