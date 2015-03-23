@@ -48,7 +48,7 @@
 		
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.0.39'
+	<feature resolver="(obr)" name='navajo.core' version='3.0.41'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,4)">pax-http</feature>
@@ -58,10 +58,10 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/3.0.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/2.0.16</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.5.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.5.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.2.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/2.0.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.2.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.2.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.0.12</bundle>
 	</feature>
 	<feature resolver="(obr)" name='navajo.function' version='3.0.8'
@@ -300,7 +300,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.0.8</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='sportlink.libraries' version='3.0.22'
+	<feature resolver="(obr)" name='sportlink.libraries' version='3.0.25'
 		start-level='82'>
 		<feature version="[3.0.0,4)">navajo.function</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
@@ -313,7 +313,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.tensing/1.1.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.optimizepool/3.0.16</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.nevobo.dps/1.0.5</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.oauth/1.1.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.oauth/1.1.8</bundle>
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.crystal/1.0.5</bundle> -->
 	</feature>
 
