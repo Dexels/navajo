@@ -381,13 +381,13 @@
 			<value name="method" type="string" required="false" direction="in" />
 			<value name="useCurrentOutDoc" type="boolean" required="false" direction="in" />
 			<value name="useCurrentMessages" type="string" required="false" direction="in" />
-                        <value name="copyInputMessages" type="string" required="false" direction="in" />
+            <value name="copyInputMessages" type="string" required="false" direction="in" />
 			<value name="messagePointer" type="string" required="false" direction="in" />
 			<value name="selectionPointer" type="string" required="false" direction="in" />
 			<value name="message" map="messagemap" required="false" direction="out" />
 			<value name="messages" map="messagemap []" required="false" direction="out" />
 			<value name="username" type="string" required="false" direction="in" />
-                        <value name="password" type="string" required="false" direction="in" />
+            <value name="password" type="string" required="false" direction="in" />
 		</values>
 		<methods>
 			<!-- Creates a new property -->
@@ -405,15 +405,16 @@
 				<param name="name" field="deleteMessage" type="string" required="true" />
 			</method>
 			<method name="addparameter">
-                                <param name="name" field="parameterName" type="string" required="true" />
-                                <param name="value" field="parameterValue" type="string" required="true" />
-                        </method>
-                        <method name="addheader">
-                                <param name="name" field="headerKey" type="string" required="true" />
-                                <param name="value" field="headerValue" type="string" required="true" />
-                        </method>
+				<param name="name" field="parameterName" type="string" required="true" />
+				<param name="value" field="parameterValue" type="string" required="true" />
+			</method>
+			<method name="addheader">
+				<param name="name" field="headerKey" type="string" required="true" />
+				<param name="value" field="headerValue" type="string" required="true" />
+			</method>
 
 			<method name="callservice">
+				<param name="breakOnException" field="breakOnException" type="boolean" required="false" />
 				<param name="url" field="url" type="string" required="true" />
 				<param name="method" field="method" type="string" required="true" />
 				<param name="topMessage" field="topMessage" type="string" required="false" />
@@ -422,7 +423,7 @@
 				<param name="appendTo" field="appendTo" type="string" required="false" />
 				<param name="append" field="append" type="string" required="false" />
 				<param name="username" field="username" type="string" required="false" />
-                                <param name="password" field="password" type="string" required="false" />
+                <param name="password" field="password" type="string" required="false" />
 			</method>
 		</methods>
 	</map>
