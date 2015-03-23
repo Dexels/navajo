@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1345">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1349">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.3.201305221702"/>
@@ -186,6 +186,7 @@
 <plugin id="org.eclipse.equinox.cm"/>
 <plugin id="org.eclipse.equinox.common" version="3.6.200.v20130402-1505"/>
 <plugin id="org.eclipse.equinox.concurrent"/>
+<plugin id="org.eclipse.equinox.console"/>
 <plugin id="org.eclipse.equinox.console.ssh"/>
 <plugin id="org.eclipse.equinox.coordinator"/>
 <plugin id="org.eclipse.equinox.device"/>
