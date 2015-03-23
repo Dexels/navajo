@@ -17,8 +17,9 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
-
+ 
 public class RESTAdapter extends NavajoMap {
+	private final static Logger logger = LoggerFactory.getLogger(RESTAdapter.class);
 
 	public String url;
 	public String method;
@@ -33,6 +34,7 @@ public class RESTAdapter extends NavajoMap {
 	public String parameterValue = null;
 	public String headerKey = null;
 	public String headerValue = null;
+	private String rawResult;
 	
 	public void setTopMessage(String topMessage) {
 		this.topMessage = topMessage;
@@ -87,6 +89,7 @@ public class RESTAdapter extends NavajoMap {
 			addHeader();
 		}
 	}
+
 	
 	public void setHeaderValue(String value){
 		headerValue = value;
@@ -105,8 +108,7 @@ public class RESTAdapter extends NavajoMap {
 			SystemException {
 		// Prepare JSON content.
 		JSONTML json = JSONTMLFactory.getInstance();
-		Binary bContent = new Binary();
-		
+
 		// Remove globals and parms message
 		if (od.getMessage("__globals__") != null) {
 			od.removeMessage("__globals__");
@@ -115,9 +117,13 @@ public class RESTAdapter extends NavajoMap {
 			od.removeMessage("__parms__");
 		}
 		
+		Writer w = new StringWriter();
+		Binary bContent = new Binary();
 		try {
-			json.format(od, bContent.getOutputStream(), removeTopMessage);
+			json.format(od, w, removeTopMessage);
+			bContent.getOutputStream().write(w.toString().getBytes("UTF-8"));
 		} catch (Exception e) {
+			logger.error("Exception on parsing input navajo as JSON! Not performing REST call!");
 			throw new UserException(e.getMessage(), e);
 		}
 		HTTPMap http = new HTTPMap();
@@ -125,16 +131,23 @@ public class RESTAdapter extends NavajoMap {
 		setupHttpMap(http, bContent);
 		http.setDoSend(true);
 		Binary result = http.getResult();
+		
 		responseCode = http.getResponseCode();
 		responseMessage = http.getResponseMessage();
 		try {
 			if (result != null) {
+				rawResult = new String(result.getData());
 				inDoc = json.parse(result.getDataAsStream(), topMessage);
 			} else {
 				inDoc = NavajoFactory.getInstance().createNavajo();
 			}
 		} catch (Exception e) {
-			throw new UserException(e.getMessage(), e);
+			if (breakOnException) {
+				throw new UserException(e.getMessage(), e);
+			} else {
+				logger.warn("Exception on parsing response, but breakOnException was set. Continuing!");
+			}
+			
 		}
 	}
 
@@ -187,6 +200,14 @@ public class RESTAdapter extends NavajoMap {
 
 	public String getMethod() {
 		return method;
+	}
+	
+	/** 
+	 * @return Returns the result of the REST call, without attempting to make sensible
+	 *  data of it again (e.g. parse as JSON). Can be useful for error handling
+	 */
+	public String getRawResult() {
+		return rawResult;
 	}
 
 }
