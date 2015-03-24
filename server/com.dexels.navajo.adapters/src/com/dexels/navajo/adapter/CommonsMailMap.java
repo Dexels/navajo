@@ -50,7 +50,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 	// Mail stuff
 	public String nonHtmlText = "Your email client does not support HTML messages";
 	public String mailServer = "";
-	public String mailPort = "";
+	public String mailPort = "9025";
 	public String smtpUser = "";
 	public String smtpPass = "";
 	public String from = null;
@@ -260,7 +260,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 		props.putAll( System.getProperties());
 		props.put("mail.smtp.host", mailServer);
 		
-		String port = "";
+		String port = null;
 		if (mailPort != null) {
 			port = mailPort;
 		}
