@@ -32,6 +32,7 @@ public class AutoCompiler {
 	private final int DEFAULT_WARMUP_WAIT = 20000;
 	// default to 15m
 	private final int DEFAULT_SCHEDULE_WAIT = 900000;
+	private final boolean DEFAULT_ENABLED = true;
 
 	private long warmupWait = DEFAULT_WARMUP_WAIT;
 	private long scheduleWait = DEFAULT_SCHEDULE_WAIT;
@@ -44,7 +45,11 @@ public class AutoCompiler {
 	private ExecutorService executor;
 
 	
-	public void activate(Map<String,Object> settings) {
+	public void activate(Map<String, Object> settings) {
+		Boolean enabled = DEFAULT_ENABLED;
+		if (settings.containsKey("enabled")) {
+			enabled =  Boolean.valueOf((String) settings.get("enabled"));
+		}
 		this.warmupWait = parseValue(settings,"warmupWait",DEFAULT_WARMUP_WAIT);
 		this.scheduleWait = parseValue(settings,"scheduleWait",DEFAULT_SCHEDULE_WAIT);
 		logger.info("Scanning auto");
@@ -58,7 +63,7 @@ public class AutoCompiler {
 				} catch (InterruptedException e) {
 				}
 			}});
-		active.set(true);
+		active.set(enabled);
 		scanFiles();
 	}
 
