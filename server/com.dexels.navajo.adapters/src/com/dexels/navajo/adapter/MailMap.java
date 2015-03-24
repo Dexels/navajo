@@ -12,6 +12,7 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
+import javax.mail.Message;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -217,6 +218,8 @@ public class MailMap implements MailMapInterface, Mappable,
 
 			if (attachments == null && contentType.equals("text/plain")) {
 				msg.setText(result);
+			} else if ( attachments == null || attachments.size() == 0 ) {
+				msg.setContent( result, contentType ); 
 			} else {
 				Multipart multipart = (relatedMultipart ? new MimeMultipart(
 						"related") : new MimeMultipart());
