@@ -72,6 +72,8 @@ public class MailMap implements MailMapInterface, Mappable,
 	public String xslFile = "";
 	public String text = "";
 	public String contentType = "text/plain";
+	
+	private Integer port;
 
 	public String smtpUser = "";
 	public String smtpPass = "";
@@ -286,15 +288,18 @@ public class MailMap implements MailMapInterface, Mappable,
 		Properties props = new Properties();
 		props.putAll( System.getProperties());
 		props.put("mail.smtp.host", mailServer);
-
+		String actualport = port.toString();
+		if (actualport == null || actualport.equals("")) {
+			actualport = useEncryption ?  "465" : "25";
+		}
 		if (smtpUser != null && !"".equals(smtpUser)) {
 			// Use auth
 			props.put("mail.smtp.auth", "true");
 			props.put("mail.debug", "true");
 			if (useEncryption) {
 				logger.info("Using encrypt + auth. ");
-				props.put("mail.smtp.port", "465");
-				props.put("mail.smtp.socketFactory.port", "465");
+				props.put("mail.smtp.port", actualport);
+				props.put("mail.smtp.socketFactory.port", actualport);
 				props.put("mail.smtp.socketFactory.class",
 						"javax.net.ssl.SSLSocketFactory");
 				props.put("mail.smtp.socketFactory.fallback", "false");
@@ -303,7 +308,7 @@ public class MailMap implements MailMapInterface, Mappable,
 			Session session = Session.getInstance(props, auth);
 			return session;
 		} else {
-			props.put("mail.smtp.port", "25");
+			props.put("mail.smtp.port", actualport);
 			Session session = Session.getInstance(props);
 			return session;
 		}
@@ -565,5 +570,15 @@ public class MailMap implements MailMapInterface, Mappable,
 	public boolean getQueuedSend() {
 		return queuedSend;
 	}
+
+	public Integer getPort() {
+		return port;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
+	}
+	
+	
 
 }
