@@ -1068,9 +1068,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                     comp.reUse();
                     if (comp.isHidden()) {
                         comp.unhideComponent();
-                        comp.performInstantiateEvents();
+                        
                     }
-                    
+                    comp.performInstantiateEvents();
                     comp.performTipiEvent("onInstantiate", null, false, new Runnable() {
                         public void run() {
                             comp.postOnInstantiate();
