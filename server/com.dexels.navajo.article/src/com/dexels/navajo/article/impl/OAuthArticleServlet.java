@@ -42,7 +42,13 @@ public class OAuthArticleServlet extends ArticleServlet {
 		String errorMessage = "No token or invalid token supplied";
 		if(token==null) {
 			// fallback:
-			final String clientId = req.getParameter("clientId");
+			String clientId = req.getParameter("client_id");
+			if(clientId==null) {
+				clientId = req.getParameter("clientId");
+				if(clientId!=null) {
+					logger.warn("Warning, using the wrong clientId parameter name: 'clientId'. Use: 'client_id'");
+				}
+			}
 			if(clientId==null) {
 				resp.sendError(400, "Invalid clientId");
 				return;

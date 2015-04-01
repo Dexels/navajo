@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" errorhandler="error" xsi:noNamespaceSchemaLocation="tipi.xsd">
+    <d.window name="initauthorizationglobals" visible="false">
+    
+        <globalmethod name="SetSubscriptionValues">
+            <!-- global properties defined by subscription -->
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/SubscriptionId}" to="{globalref:/SubscriptionId}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/HasIdeal}" to="{globalref:/HasIdeal}" />
+            <!-- For clubsites we need to determine more than 1 property -->
+            <setValue to="{globalref:/HasClubsite}" from="false" />
+            <block condition="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/HasAthlete} == true OR {property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/HasClubSiteFull} == true OR {property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/HasClubSitePlugins} == true OR {property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/HasClubSitePluginsPlus} == true">
+                <setValue to="{globalref:/HasClubsite}" from="true" />
+            </block>
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/HasSync}" to="{globalref:/HasSync}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/HasMatchForms}" to="{globalref:/HasMatchForms}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/HasMatchResults}" to="{globalref:/HasMatchResults}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/HasKernelTeams}" to="{globalref:/HasKernelTeams}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/HasCertificates}" to="{globalref:/HasCertificates}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/HasProfessional}" to="{globalref:/HasProfessional}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/IsStartCommunity}" to="{globalref:/IsStartCommunity}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/HasLite}" to="{globalref:/HasLite}" />
+        </globalmethod>
+
+        <!-- global properties defined by subscription AND user profile -->
+        <globalmethod name="SetHasModuleGlobals">
+            <!-- Contacts -->
+            <setValue from="{global:/IsUserNameSportlink}" to="{globalref:/HasContacts}" />
+            <!-- Vaartuigen -->
+            <setValue from="{global:/IsUserNameSportlink}" to="{globalref:/HasVessels}" />
+
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasClubMenu}" to="{globalref:/HasClubMenu}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasClubRelations}" to="{globalref:/HasClubRelations}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasTeams}" to="{globalref:/HasTeams}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasCommittees}" to="{globalref:/HasCommittees}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasVolunteers}" to="{globalref:/HasVolunteers}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasJuniorTraining}" to="{globalref:/HasJuniorTraining}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasActivities}" to="{globalref:/HasActivities}" />
+            <!-- In SLC the HasFinancial is refactored to HasContribution, but not in the databases and webservices!! -->
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasFinancial}" to="{globalref:/HasContribution}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasAccounting}" to="{globalref:/HasAccounting}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasClubMembers}" to="{globalref:/HasClubMembers}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasRunningAccount}" to="{globalref:/HasRunningAccount}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasSportlinkDWF}" to="{globalref:/HasSportlinkDWF}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasTrainings}" to="{globalref:/HasTrainings}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/FacilityOccupation}" to="{globalref:/FacilityOccupation}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/TeamRegistration}" to="{globalref:/TeamRegistration}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/TeamsAdmin}" to="{globalref:/TeamsAdmin}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/Discipline}" to="{globalref:/Discipline}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/EmailModule}" to="{globalref:/EmailModule}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasSearchScreenAccess}" to="{globalref:/HasSearchScreenAccess}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasWorkingSetAccess}" to="{globalref:/HasWorkingSetAccess}" />                            
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/DWFOnly}" to="{globalref:/DWFOnly}" />
+            <setValue from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasManagementInfoMembers}" to="{globalref:/HasManagementInfoMembers}" />
+        </globalmethod>
+
+        <!-- In this method the globals are begin set which control readonly modes for the different modules -->
+        <globalmethod name="SetAuthorizationGlobals">
+            <!-- There are several places where a check on username = sportlink is done -->
+            <!-- Put it in a global as a boolean -->
+            <setValue to="{globalref:/IsUserNameSportlink}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/UserName} == 'sportlink'"/>
+
+            <!-- Start with declaring all the different globals and set them default to what the corresponding module value is -->
+            <setValue to="{globalref:/IsClubRelationsReadOnly}" from="! {global:/HasClubRelations}"/>
+            <setValue to="{globalref:/IsTeamsReadOnly}" from="! {global:/HasTeams}"/>
+            <setValue to="{globalref:/IsCommitteesReadOnly}" from="! {global:/HasCommittees}"/>
+            <setValue to="{globalref:/IsVolunteersReadOnly}" from="! {global:/HasVolunteers}"/>
+            <setValue to="{globalref:/IsActivitiesReadOnly}" from="! {global:/HasActivities}"/>
+            <setValue to="{globalref:/IsContributionReadOnly}" from="! {global:/HasContribution}"/>
+            <setValue to="{globalref:/IsAccountingReadOnly}" from="! {global:/HasAccounting}"/>
+            <setValue to="{globalref:/IsClubMembersReadOnly}" from="! {global:/HasClubMembers}"/>
+            <setValue to="{globalref:/IsRunningAccountReadOnly}" from="! {global:/HasRunningAccount}"/>
+            <setValue to="{globalref:/IsSportlinkDWFReadOnly}" from="! {global:/HasSportlinkDWF}"/>
+            <setValue to="{globalref:/IsTrainingsReadOnly}" from="! {global:/HasTrainings}"/>
+            <setValue to="{globalref:/IsFacilityOccupationReadOnly}" from="! {global:/FacilityOccupation}"/>
+            <setValue to="{globalref:/IsTeamsAdminReadOnly}" from="! {global:/TeamsAdmin}"/>
+            <setValue to="{globalref:/IsDisciplineReadOnly}" from="! {global:/Discipline}"/>
+            <setValue to="{globalref:/IsEmailModuleReadOnly}" from="! {global:/EmailModule}"/>
+            <setValue to="{globalref:/IsWorkingSetAccessReadOnly}" from="! {global:/HasWorkingSetAccess}"/>
+            
+            <!-- Now we start with checking if the club is a liquidated one. -->
+            <setValue to="{globalref:/IsClubLiquidated}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/IsClubLiquidated}"/>
+            <!-- In that case, we need to set everything to readonly except possibly the accounting part -->
+            <block condition="{global:/IsClubLiquidated} == true">
+                <setValue to="{globalref:/IsClubRelationsReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsTeamsReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsCommitteesReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsVolunteersReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsActivitiesReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsContributionReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsAccountingReadOnly}" from="! {global:/HasAccounting}"/>
+                <setValue to="{globalref:/IsClubMembersReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsRunningAccountReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsSportlinkDWFReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsTrainingsReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsFacilityOccupationReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsTeamsAdminReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsDisciplineReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsEmailModuleReadOnly}" from="true"/>
+                <setValue to="{globalref:/IsWorkingSetAccessReadOnly}" from="true"/>
+            </block>
+
+            <!-- Normal club, so do the various checks -->
+            <block condition="{global:/IsClubLiquidated} == false">
+                <setValue to="{globalref:/IsClubRelationsReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasClubRelationsReadOnly}"/>
+                <setValue to="{globalref:/IsTeamsReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasTeamsReadOnly}"/>
+                <setValue to="{globalref:/IsCommitteesReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasCommitteesReadOnly}"/>
+                <setValue to="{globalref:/IsVolunteersReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasVolunteersReadOnly}"/>
+                <setValue to="{globalref:/IsActivitiesReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasActivitiesReadOnly}"/>
+                <setValue to="{globalref:/IsContributionReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasFinancialReadOnly}"/>
+                <setValue to="{globalref:/IsAccountingReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasAccountingReadOnly}"/>
+                <setValue to="{globalref:/IsClubMembersReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasClubMembersReadOnly}"/>
+                <setValue to="{globalref:/IsRunningAccountReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasRunningAccountReadOnly}"/>
+                <setValue to="{globalref:/IsSportlinkDWFReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasSportlinkDWFReadOnly}"/>
+                <setValue to="{globalref:/IsTrainingsReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasTrainingsReadOnly}"/>
+                <setValue to="{globalref:/IsFacilityOccupationReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/FacilityOccupationReadOnly}"/>
+                <setValue to="{globalref:/IsTeamsAdminReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/TeamsAdminReadOnly}"/>
+                <setValue to="{globalref:/IsDisciplineReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/DisciplineReadOnly}"/>
+                <setValue to="{globalref:/IsEmailModuleReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/EmailModuleReadOnly}"/>
+                <setValue to="{globalref:/IsWorkingSetAccessReadOnly}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/HasWorkingSetAccessReadOnly}"/>
+            </block>
+                            
+            <!-- TODO: refactor this so personWindow uses the separate globals and not IsPersonWindowReadOnly -->
+            <!-- Check if a user has any edit rights whatsoever. -->
+            <setValue to="{globalref:/IsPersonWindowReadOnly}" from="false"/>
+            <block condition="!{global:/HasClubRelations} AND !{global:/HasClubMembers}">
+                <setValue to="{globalref:/IsPersonWindowReadOnly}" from="true"/>
+            </block>
+            <!-- This part is more definitive Check for the separate read only modules -->
+            <!-- HasClubMembers and HasClubRelations both have access, but what if one of them is read only (which is the default setting for when you don't have it). -->
+            <block condition="{global:/HasClubMembers} OR {global:/HasClubRelations}">
+                <block condition="{global:/IsClubMembersReadOnly} AND {global:/IsClubRelationsReadOnly}">
+                    <setValue to="{globalref:/IsPersonWindowReadOnly}" from="true"/>
+                </block>
+            </block>
+    
+            <!-- If the club is liquidated, then make sure the personwindow is read only -->
+            <block condition="{global:/IsClubLiquidated}">
+                <setValue to="{globalref:/IsPersonWindowReadOnly}" from="true"/>
+            </block>
+            
+            <!-- debug info -->
+            <block condition="{system:/DTAP} == 'DEVELOPMENT' OR {system:/DTAP} == 'TESTING'">
+                <debug value="'Liquidated club              : ' + {global:/IsClubLiquidated}"/>
+                <debug value="'ClubRelations ReadOnly       : ' + {global:/IsClubRelationsReadOnly}"/>
+                <debug value="'HasTeams ReadOnly            : ' + {global:/IsTeamsReadOnly}"/>
+                <debug value="'HasCommittees ReadOnly       : ' + {global:/IsCommitteesReadOnly}"/>
+                <debug value="'HasVolunteers ReadOnly       : ' + {global:/IsVolunteersReadOnly}"/>
+                <debug value="'HasActivities ReadOnly       : ' + {global:/IsActivitiesReadOnly}"/>
+                <debug value="'HasContribution ReadOnly     : ' + {global:/IsContributionReadOnly}"/>
+                <debug value="'HasAccounting ReadOnly       : ' + {global:/IsAccountingReadOnly}"/>
+                <debug value="'ClubMembers ReadOnly         : ' + {global:/IsClubMembersReadOnly}"/>
+                <debug value="'HasRunningAccount ReadOnly   : ' + {global:/IsRunningAccountReadOnly}"/>
+                <debug value="'SportlinkDWF ReadOnly        : ' + {global:/IsSportlinkDWFReadOnly}"/>
+                <debug value="'HasTrainings ReadOnly        : ' + {global:/IsTrainingsReadOnly}"/>
+                <debug value="'FacilityOccupation ReadOnly  : ' + {global:/IsFacilityOccupationReadOnly}"/>
+                <debug value="'HasTeamsAdmin ReadOnly       : ' + {global:/IsTeamsAdminReadOnly}"/>
+                <debug value="'Discipline ReadOnly          : ' + {global:/IsDisciplineReadOnly}"/>
+                <debug value="'EmailModule ReadOnly         : ' + {global:/IsEmailModuleReadOnly}"/>
+                <debug value="'HasWorkingSetAccess ReadOnly : ' + {global:/IsWorkingSetAccessReadOnly}"/>
+                <debug value="'OPEN PersonWindow   ReadOnly : ' + {global:/IsPersonWindowReadOnly}"/>
+            </block>
+        </globalmethod>
+    </d.window>
+</tid>

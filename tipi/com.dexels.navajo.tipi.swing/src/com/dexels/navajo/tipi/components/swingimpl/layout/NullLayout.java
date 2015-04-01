@@ -14,13 +14,19 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponent;
 
 public class NullLayout implements LayoutManager2 {
 
 	private Dimension mySize;
 	private Map<Component, Rectangle> components = new HashMap<Component, Rectangle>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NullLayout.class);
+	
 	private Container parent = null;
 //	private TipiXYLayout myLayout;
 //	private TipiComponent myComponent;
@@ -94,9 +100,9 @@ public class NullLayout implements LayoutManager2 {
 					layoutContainer(getParent());
 				}});
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		
 	}

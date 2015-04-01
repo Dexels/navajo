@@ -42,7 +42,7 @@ public class IsNumeric extends FunctionInterface {
     public static void main(String [] args) throws TMLExpressionException {
         IsNumeric in = new IsNumeric();
         in.reset();
-        in.insertOperand(new String("1234112534534534 A"));
+        in.insertOperand("1234112534534534 A");
         System.err.println("Value is numeric = " + in.evaluate());
     }
 }

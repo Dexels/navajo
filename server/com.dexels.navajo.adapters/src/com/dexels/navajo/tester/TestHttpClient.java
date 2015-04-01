@@ -68,7 +68,7 @@ public class TestHttpClient extends Thread implements NavajoResponseHandler {
 			for ( int i = 0; i < value.size(); i++ ) {
 				sb.append(value.get(i)+",");
 			}
-			sb.append("\n");
+			sb.append('\n');
 		}
 		
 		return sb.toString();

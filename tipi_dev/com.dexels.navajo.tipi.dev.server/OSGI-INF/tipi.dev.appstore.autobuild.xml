@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="tipi.dev.appstore.autobuild">
-   <implementation class="com.dexels.navajo.tipi.dev.server.appmanager.impl.AutoBuildServiceImpl"/>
-   <reference bind="setAppStoreData" cardinality="1..1" interface="com.dexels.navajo.tipi.dev.server.appmanager.AppStoreData" name="AppStoreData" policy="dynamic" unbind="clearAppStoreData"/>
-   <reference bind="addRepositoryInstance" cardinality="0..n" interface="com.dexels.navajo.repository.api.RepositoryInstance" name="RepositoryInstance" policy="dynamic" unbind="removeRepositoryInstance"/>
-   <reference bind="setJnlpBuild" cardinality="1..1" interface="com.dexels.navajo.repository.api.AppStoreOperation" name="JnlpBuild" policy="dynamic" target="(name=build)" unbind="clearJnlpBuild"/>
-</scr:component>

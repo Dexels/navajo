@@ -8,7 +8,6 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
@@ -23,14 +22,7 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoServerContextComponent.class);
 	
-//	@Override
-//	public DispatcherInterface getDispatcher() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-	
 	private ConfigurationAdmin myConfigurationAdmin = null;
-//	private final Set<Configuration> monitoredFolderConfigurations = new HashSet<Configuration>();
 	private final Map<String,Configuration> resourcePids = new HashMap<String,Configuration>();
 
 	protected boolean suppressAdapters = false;;
@@ -70,15 +62,6 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 
 	protected void initializeContext(String installationPath,String contextPath) throws IOException {
 		this.installationPath = installationPath;
-//		try {
-//			if(!suppressAdapters) {
-//				addFolderMonitorListener(contextPath,installationPath,"adapters");
-//			}
-//			addFolderMonitorListener(contextPath,installationPath,"camel");
-//			addFolderMonitorListener(contextPath,installationPath,"features");
-//		} catch (InvalidSyntaxException e) {
-//			logger.error("Error creating folder monitor: ",e);
-//		}
 		emitLogbackConfiguration(installationPath);
 	}
 	
@@ -101,58 +84,22 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 	public String getInstallationPath() {
 		return installationPath;
 	}
+	
 
-	/**
-	 * This is no longer necessary, as the RepositoryInstance will do this for you. As both check for duplicates
-	 * @param contextPath
-	 * @param installPath
-	 * @param subFolder
-	 * @throws IOException
-	 * @throws InvalidSyntaxException
-	 */
-	private void addFolderMonitorListener(String contextPath, String installPath, String subFolder) throws IOException, InvalidSyntaxException {
-		File cp = new File(installPath);
-		File monitoredFolder = new File(cp,subFolder);
-		if(!monitoredFolder.exists()) {
-			logger.warn("FileInstaller should monitor folder: {} but it does not exist. Will not try again.", monitoredFolder.getAbsolutePath());
-			return;
-		}
-		//fileInstallConfiguration = myConfigurationAdmin.createFactoryConfiguration("org.apache.felix.fileinstall",null);
-//		monitoredFolder.getCanonicalFile().getAbsolutePath()
-		final String absolutePath = monitoredFolder.getCanonicalFile().getAbsolutePath();
-		Configuration newConfig = getUniqueResourceConfig(contextPath, absolutePath);
-		Dictionary<String,Object> d = newConfig.getProperties();
-		if(d==null) {
-			d = new Hashtable<String,Object>();
-		}
-		d.put("felix.fileinstall.dir",absolutePath );
-		d.put("contextPath",contextPath );
-		d.put("injectedBy","repository-instance" );
-		String pid = newConfig.getPid();
-		resourcePids.put(pid, newConfig);
-		newConfig.update(d);	
+	@Override
+	public String getOutputPath() {
+		return getInstallationPath();
+	}
+
+	@Override
+	public String getTempPath() {
+		return getInstallationPath();
 	}
 	
-	private Configuration getUniqueResourceConfig(String name, String path)
-			throws IOException, InvalidSyntaxException {
-		final String factoryPid = "org.apache.felix.fileinstall";
-		Configuration[] cc = myConfigurationAdmin
-				.listConfigurations("(&(service.factoryPid=" + factoryPid
-						+ ")(felix.fileinstall.dir=" + path + "))");
-		if (cc != null) {
 
-			if (cc.length != 1) {
-				logger.info("Odd length: " + cc.length);
-			}
-			return cc[0];
-		} else {
-			logger.info("Not found: " + name+" creating a new factory config for: "+factoryPid);
-			Configuration c = myConfigurationAdmin.createFactoryConfiguration(
-					factoryPid, null);
-			return c;
-		}
-	}
 	
+	@Deprecated
+	// shouldn't be necessary, move log config to the log components
 	private void emitLogbackConfiguration(String filePath) throws IOException {
 		final String logbackPath = "config/logback.xml";
 //		emitIfChanged("navajo.logback", filter, settings)
@@ -186,7 +133,6 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 			c.update(settings);
 		}
 	}
-	
 
 
 }

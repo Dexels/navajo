@@ -495,7 +495,7 @@ public class BirtUtils {
 	}
 
 	private String locateArrayMessage(Navajo n) throws NavajoException {
-		ArrayList<Message> mm = n.getAllMessages();
+		List<Message> mm = n.getAllMessages();
 		for (Iterator<Message> iter = mm.iterator(); iter.hasNext();) {
 			Message m = iter.next();
 			if (Message.MSG_TYPE_ARRAY.equals(m.getType())) {

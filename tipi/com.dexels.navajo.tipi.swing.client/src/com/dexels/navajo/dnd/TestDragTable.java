@@ -1,10 +1,7 @@
 package com.dexels.navajo.dnd;
 
 import java.awt.BorderLayout;
-import java.awt.event.InputEvent;
-
 import javax.swing.DropMode;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -51,11 +48,6 @@ public class TestDragTable extends JTable implements Runnable {
 
 	public static class TransferHandler2 extends TransferHandler {
 		private static final long serialVersionUID = 867827589145563565L;
-
-		@Override
-		public void exportAsDrag(JComponent comp, InputEvent e, int action) {
-			super.exportAsDrag(comp, e, action);
-		}
 
 		TransferHandler2() {
 			super();

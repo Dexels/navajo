@@ -152,6 +152,7 @@ public class CommandHandler {
 	}
 
 	public void deactivate() {
+		logger.info("Deactivating command handler");
 		for (ServiceRegistration<?> sr : registeredCommands) {
 			sr.unregister();
 		}

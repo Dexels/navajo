@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" errorhandler="error" xsi:noNamespaceSchemaLocation="tipi.xsd">
+    <d.dialog h="300" w="580" name="loginDialog" service="vla/authorization/InitLoginSystemUser" title="'Inloggen'" cssClass="'loginWindowIcon loginWindowTitle'" applyCss="true">
+        <onLoad>
+            <block condition="!IsEmpty( {cookie:/spClub} )">
+                <setValue to="{attributeref:/~/bgp/panel/clubIdentifier:propertyValue}" from="{cookie:/spClub}" />
+                <setValue to="{attributeref:/~/bgp/panel/save:selected}" from="true" />
+            </block>
+            <block condition="!IsEmpty( {cookie:/spClubUser} )">
+                <setValue to="{attributeref:/~/bgp/panel/userName:propertyValue}" from="{cookie:/spClubUser}" />
+            </block>
+            <block condition="!IsEmpty( {cookie:/spClubPass} )">
+                <setValue to="{attributeref:/~/bgp/panel/password:propertyValue}" from="{cookie:/spClubPass}" />
+            </block>
+            <dialog.show path="{component:/~}"/>
+            <block condition="!IsEmpty( {cookie:/spClubUser} )">
+                <property.requestFocus path="{component:/~/bgp/panel/password}"/>
+            </block>
+            <block condition="IsEmpty( {cookie:/spClubUser} )">
+                <property.requestFocus path="{component:/~/bgp/panel/clubIdentifier}"/>
+            </block>
+        </onLoad>
+        <onInstantiate>
+            <executeMethod name="'SetSpecialLoginDialogStyle'"/>
+            <setValue to="{localref:/TimesFailedLogin}" from="0"/>
+        </onInstantiate>
+        <l.mig grid="fill, ins 0">
+            <c.panel id="bgp" constraint="Center, grow" cssClass="'backgroundLoginPanel'">
+                <l.mig grid="fill, ins 0">
+                    <c.panel id="panel" constraint="Center, grow" opaque="false">
+                        <onLoad>
+                            <executeMethod name="'DoRefreshCaptcha'"/>
+                        </onLoad>
+                        <l.mig grid="wrap 3, fillx" >
+                            <c.label id="logo" constraint="spany 7, gapright 10, gapleft 10, top" cssClass="'loginIcon'" />
+                            <c.label cssClass="'lblLoginClub'" constraint="gapleft 4" id="clubIdentifierLabel"/>
+                            <c.property id="clubIdentifier" constraint="growx, gapleft 20, gapright 3" capitalization="'upper'" showlabel="false" propertyname="'/Club/ClubIdentifier'" />
+                            <c.label cssClass="'lblLoginUsername'" constraint="gapleft 4" id="userNameLabel"/>
+                            <c.property id="userName" constraint="growx, gapleft 20, gapright 3" showlabel="false" propertyname="'/UserData/UserName'" />
+                            <c.label cssClass="'lblLoginPassword'" constraint="gapleft 4" id="passwordLabel"/>
+                            <c.property id="password" constraint="growx, gapleft 20, gapright 3" showlabel="false" propertyname="'/UserData/PassWord'">
+                                <onKey>
+                                    <block condition="{event:/mode} == 'released' AND {event:/key} == 'Enter'">
+                                        <property.updateProperty path="{component:/~/bgp/panel/password}"/>
+                                        <button.fireAction path="{component:/~/bgp/toolbar/btnLogin}"/>
+                                    </block>
+                                </onKey>
+                            </c.property>
+                            <c.label cssClass="'lblLoginCaptchaImage'" constraint="gapleft 4" id="captchaimageLabel"/>
+                            <c.panel id="captchaPanel" opaque="false" constraint="gapright 3">
+                                <l.mig grid="wrap 2, fillx">
+                                    <c.label id="captchaimage" constraint="growx, gapleft 12, gapright 12" icon="null" />
+                                    <c.button id="refreshCaptcha" cssClass="'resetButtonMedium refreshCaptcha'" constraint="right, gapright 3" borderVisible="false">
+                                        <onActionPerformed>
+                                            <executeMethod name="'DoRefreshCaptcha'"/>
+                                        </onActionPerformed>
+                                    </c.button>
+                                </l.mig>
+                            </c.panel>
+                            <c.label cssClass="'lblLoginCaptchaText'" constraint="gapleft 4" id="captchatextLabel"/>
+                            <c.property id="captchatext" constraint="growx, gapleft 20, gapright 3" showlabel="false" propertyname="'/SecureImage/UserInputValue'">
+                                <onKey>
+                                    <block condition="{event:/mode} == 'released' AND {event:/key} == 'Enter'">
+                                        <property.updateProperty path="{component:/~/bgp/panel/captchatext}"/>
+                                        <button.fireAction path="{component:/~/bgp/toolbar/btnLogin}"/>
+                                    </block>
+                                </onKey>
+                            </c.property>
+        
+                            <c.checkbox cssClass="'chkLoginRememberDecision'" id="save"/>
+                        </l.mig>
+                    </c.panel>
+                    <c.panel id="toolbar" constraint="South, growx" opaque="false">
+                        <l.mig grid="ins 3, fillx">
+                            <c.hidden constraint="growx"/>
+                            <c.button cssClass="'txtLoginForgotPassword'" borderVisible="false" constraint="gapright 3, gapbottom 3">
+                                <onActionPerformed>                    
+                                    <instantiate id="'passwordRecoveryDialog'" location="{component://init/desktop}" name="'passwordRecoveryDialog'" />
+                                </onActionPerformed>                
+                            </c.button>
+                            <c.button id="btnLogin" cssClass="'okButtonMedium btnLoginEnter'" constraint="right, gapright 3, gapbottom 3" borderVisible="false" >
+                                <onActionPerformed>
+                                    <executeMethod name="'DoLogin'"/>
+                                </onActionPerformed>
+                            </c.button>
+                        </l.mig>
+                    </c.panel>
+                </l.mig>
+            </c.panel>
+        </l.mig>
+        
+        
+        <!-- Functionality for showing special styles on special dates -->
+        <localmethod name="SetSpecialLoginDialogStyle">
+            <!-- Union specific stuff which might be overruled below -->
+            
+            <!-- *** GENERIC *** -->
+            <block condition="ToUpper( {system:/navajo.globals.DefaultSport} ) == 'GENERIC'">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelGeneric'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconGeneric'"/>
+            </block>
+            <!-- *** JBN *** -->
+            <block condition="ToUpper( {system:/navajo.globals.DefaultSport} ) == 'JUDO'">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelJBN'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconJBN'"/>
+            </block>
+            <!-- *** KNAU *** -->
+            <block condition="ToUpper( {system:/navajo.globals.DefaultSport} ) == 'ATLETIEK'">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelKNAU'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconKNAU'"/>
+            </block>
+            <!-- *** KNBSB *** -->
+            <block condition="ToUpper( {system:/navajo.globals.DefaultSport} ) == 'HONKBAL'">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelKNBSB'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconKNBSB'"/>
+            </block>
+            <!-- *** KNHB *** -->
+            <block condition="ToUpper( {system:/navajo.globals.DefaultSport} ) == 'HOCKEY'">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelKNHB'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconKNHB'"/>
+            </block>
+            <!-- *** KNKV *** -->
+            <block condition="ToUpper( {system:/navajo.globals.DefaultSport} ) == 'KORFBAL'">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelKNKV'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconKNKV'"/>
+            </block>
+            <!-- *** KNVB *** -->
+            <block condition="ToUpper( {system:/navajo.globals.DefaultSport} ) == 'VOETBAL'">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelKNVB'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconKNVB'"/>
+            </block>
+            <!-- *** KNZB *** -->
+            <block condition="ToUpper( {system:/navajo.globals.DefaultSport} ) == 'ZWEMMEN'">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelKNZB'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconKNZB'"/>
+            </block>
+            <!-- *** NEVOBO *** -->
+            <block condition="ToUpper( {system:/navajo.globals.DefaultSport} ) == 'VOLLEYBAL'">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelNEVOBO'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconNEVOBO'"/>
+            </block>
+            <!-- *** NHV *** -->
+            <block condition="ToUpper( {system:/navajo.globals.DefaultSport} ) == 'HANDBAL'">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelNHV'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconNHV'"/>
+            </block>
+            <!-- *** REDNED *** -->
+            <block condition="ToUpper( {system:/navajo.globals.DefaultSport} ) == 'REDDEN'">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelREDNED'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconREDNED'"/>
+            </block>
+
+            <!-- 27-04 -->
+            <block condition="Trunc( Today() ) == Trunc( ParseDate( FormatDate( Today(), 'yyyy' ) + '-04-27' ) )">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelKingsday'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconKingsday'"/>
+            </block>
+            <!-- 05-12 -->
+            <block condition="Trunc( Today() ) == Trunc( ParseDate( FormatDate( Today(), 'yyyy' ) + '-12-05' ) )">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelSinterklaas'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconSinterklaas'"/>
+            </block>
+            <!-- 25-12 and 26-12 -->
+            <block condition="Trunc( Today() ) == Trunc( ParseDate( FormatDate( Today(), 'yyyy' ) + '-12-25' ) ) OR Trunc( Today() ) == Trunc( ParseDate( FormatDate( Today(), 'yyyy' ) + '-12-26' ) )">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelChristmas'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconChristmas'"/>
+            </block>
+            <!-- 31-12 and 01-01 -->
+            <block condition="Trunc( Today() ) == Trunc( ParseDate( FormatDate( Today(), 'yyyy' ) + '-12-31' ) ) OR Trunc( Today() ) == Trunc( ParseDate( FormatDate( Today(), 'yyyy' ) + '-01-01' ) )">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelNewYear'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconNewYear'"/>
+            </block>
+
+            <!-- ***** HERE ARE THE SPECIAL STYLES ***** -->
+            <!-- FIFA: 13-06, 18-06, 23-06, 29-06, 05-07, 09-07, 12-07 -->
+            <block condition="{system:/navajo.globals.DefaultSport} == 'VOETBAL' AND ( Trunc( Today() ) == Trunc( ParseDate( '2014-07-12' ) ) )">
+                <panel.attribute path="{component:/~/bgp}" cssClass="'backgroundLoginPanelFootballMatch'"/>
+                <label.attribute path="{component:/~/bgp/panel/logo}" cssClass="'loginIconFootballMatch'"/>
+            </block>
+            
+            <!-- Apply everything -->
+            <applyCss component="{component:/~}"/>
+            
+            <!-- When it concerns a different environment than production, make it clear -->
+            <!-- This needs to be here otherwise the applyCss overrules this -->
+            <setValue to="{localref:/InlogTitle}" from="{attribute:/~:title}"/>
+            <block condition="{system:/DTAP} == 'DEVELOPMENT'">
+                <setValue to="{localref:/InlogTitle}" from="{local:/InlogTitle} + ' Ontwikkelomgeving'"/>
+            </block>
+            <block condition="{system:/DTAP} == 'TESTING'">
+                <setValue to="{localref:/InlogTitle}" from="{local:/InlogTitle} + ' Testomgeving'"/>
+            </block>
+            <block condition="{system:/DTAP} == 'TRAINING'">
+                <setValue to="{localref:/InlogTitle}" from="{local:/InlogTitle} + ' Trainingomgeving'"/>
+            </block>
+            <block condition="{system:/DTAP} == 'ACCEPTANCE'">
+                <setValue to="{localref:/InlogTitle}" from="{local:/InlogTitle} + ' Acceptatieomgeving'"/>
+            </block>
+            <setValue to="{attributeref:/~:title}" from="{local:/InlogTitle}"/>
+        </localmethod>
+        
+        <localmethod name="DoRefreshCaptcha">
+            <!-- Showing the property directly results in magic buttons appearing... -->
+            <!-- Use a label instead and set the icon -->
+            <callService service="'vla/authentication/captcha/ProcessGenerateSecureImage'"/>
+            <!-- Set the captcha values, because they are coming from another webservice -->
+            <setValue to="{propertyref:/vla/authorization/InitLoginSystemUser:/SecureImage/Image}" from="{property:/vla/authentication/captcha/ProcessGenerateSecureImage:/SecureImage/Image}"/>
+            <setValue to="{propertyref:/vla/authorization/InitLoginSystemUser:/SecureImage/CheckStringValue}" from="{property:/vla/authentication/captcha/ProcessGenerateSecureImage:/SecureImage/CheckStringValue}"/>
+            <setValue to="{propertyref:/vla/authorization/InitLoginSystemUser:/SecureImage/UserInputValue}" from="null"/>
+            <!-- Setting to null = a workaround -->
+            <!-- The binary comparison fails. Needs to be fixed. -->
+            <label.attribute path="{component:/~/bgp/panel/captchaPanel/captchaimage}" icon="null"/>
+            <label.attribute path="{component:/~/bgp/panel/captchaPanel/captchaimage}" icon="{property:/vla/authentication/captcha/ProcessGenerateSecureImage:/SecureImage/Image}"/>
+        </localmethod>
+        
+        <!-- When login fails, then this action will be taken -->
+        <!-- Keep track of how many times people try, but fail. 3 (index 0 based) strikes = out -->
+        <localmethod name="DoLoginFailed">
+            <block condition="{local:/TimesFailedLogin} == 2">
+                <showInfo text="'messageLoginFailedShutdown'"/>
+                <exit />
+            </block>
+            <block condition="{local:/TimesFailedLogin} != 2">
+                <showInfo text="'messageLoginFailed'" />
+                <block condition="IsNull( {component://init/desktop/loginDialog} )">
+                    <instantiate id="'loginDialog'" location="{component://init/desktop}" name="'loginDialog'" />
+                </block>
+                <block condition="!IsNull( {component://init/desktop/loginDialog} )">
+                    <dialog.show path="{component://init/desktop/loginDialog}"/>
+                </block>
+                <!-- -Refresh the captcha -->
+                <executeMethod name="'DoRefreshCaptcha'"/>
+                <property.attribute path="{component:/~/bgp/panel/password}" propertyValue="null"/>
+                <setValue to="{localref:/TimesFailedLogin}" from="{local:/TimesFailedLogin} + 1"/>
+            </block>
+        </localmethod>
+        
+        <!-- This method is also being used in the set language dialog so be aware of the changes -->
+        <localmethod name="SetApplicationTitle">
+            <setValue to="{localref:/SLCTitle}" from="null"/>
+            <block condition="{global:/HasLite} == true AND {system:/DTAP} == 'PRODUCTION'">
+                <setValue to="{localref:/SLCTitle}" from="{property:/vla/authorization/ProcessLoginSystemUser:/AuthenticationData/ApplicationDescription} + ' (Lite-versie)' + ' - ' + {property:/vla/authorization/ProcessLoginSystemUser:/Club/ClubName}"/>
+            </block>
+            <block condition="{global:/HasLite} == false AND {system:/DTAP} == 'PRODUCTION'">
+                <setValue to="{localref:/SLCTitle}" from="{property:/vla/authorization/ProcessLoginSystemUser:/AuthenticationData/ApplicationDescription} + ' - ' + {property:/vla/authorization/ProcessLoginSystemUser:/Club/ClubName}"/>
+            </block>
+            <block condition="{system:/DTAP} == 'ACCEPTANCE'">
+                <setValue to="{localref:/SLCTitle}" from="{property:/vla/authorization/ProcessLoginSystemUser:/AuthenticationData/ApplicationDescription} + ' Acceptatieversie - ' + {property:/vla/authorization/ProcessLoginSystemUser:/Club/ClubName}"/>
+            </block>
+            <block condition="{system:/DTAP} == 'TRAINING'">
+                <setValue to="{localref:/SLCTitle}" from="{property:/vla/authorization/ProcessLoginSystemUser:/AuthenticationData/ApplicationDescription} + ' Trainingversie - ' + {property:/vla/authorization/ProcessLoginSystemUser:/Club/ClubName}"/>
+            </block>
+            <block condition="{system:/DTAP} == 'TESTING'">
+                <setValue to="{localref:/SLCTitle}" from="{property:/vla/authorization/ProcessLoginSystemUser:/AuthenticationData/ApplicationDescription} + ' Testversie - ' + {property:/vla/authorization/ProcessLoginSystemUser:/Club/ClubName}"/>
+            </block>
+            <block condition="{system:/DTAP} == 'DEVELOPMENT'">
+                <setValue to="{localref:/SLCTitle}" from="{property:/vla/authorization/ProcessLoginSystemUser:/AuthenticationData/ApplicationDescription} + ' Ontwikkelversie - ' + {property:/vla/authorization/ProcessLoginSystemUser:/Club/ClubName}"/>
+            </block>
+            <!-- Liquidated? -->
+            <block condition="{global:/IsClubLiquidated}">
+                <setValue to="{localref:/SLCTitle}" from="{local:/SLCTitle} + ' (Opgeheven/gefuseerd per ' + FormatDate( {property:/vla/authorization/ProcessLoginSystemUser:/UserData/ClubLiquidationDate}, 'dd-MMM-yyyy' ) + ')'"/>
+            </block>
+
+            <!-- Maybe include the districtname (don't do this for Generic -> makes no sense) -->
+            <block condition="ToUpper( {system:/navajo.globals.DefaultSport} ) == 'GENERIC'">
+                <setValue to="{localref:/SLCTitle}" from="{local:/SLCTitle} + ' (' + {global:/clubIdentifier} + ')'"/>
+            </block>
+            <block condition="ToUpper( {system:/navajo.globals.DefaultSport} ) != 'GENERIC'">
+                <setValue to="{localref:/SLCTitle}" from="{local:/SLCTitle} + ' (' + {global:/clubIdentifier} + ' - ' + {property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/DistrictName} + ')'"/>
+            </block>
+            <!-- Finally set the title -->
+            <window.attribute path="{component://init}" title="{local:/SLCTitle}"/>
+        </localmethod>
+        
+        <!-- The all important method: the login procedure -->
+        <localmethod name="DoLogin">
+            <setValue to="{globalref:/clubIdentifier}" from="{attribute:/~/bgp/panel/clubIdentifier:propertyValue}" />
+            <!-- Save clubcode and username to cookie -->
+            <!-- This will also be done in init.xml, but in case of failed login, this is nice. -->
+            <block condition="{attribute:/~/bgp/panel/save:selected}">
+                <setCookie name="'spClub'" value="{global:/clubIdentifier}" />
+                <setCookie name="'spClubUser'" value="{attribute:/~/bgp/panel/userName:propertyValue}" />
+            </block>
+            <!-- Call the login webservice and deal with all the stuff -->
+            <callService service="'vla/authorization/ProcessLoginSystemUser'" input="{navajo:/vla/authorization/InitLoginSystemUser}" />
+            
+            <block condition="{property:/vla/authorization/ProcessLoginSystemUser:/AuthenticationData/IsAuthenticated} == false" >
+                <executeMethod name="'DoLoginFailed'"/>
+            </block>
+            <block condition="{property:/vla/authorization/ProcessLoginSystemUser:/AuthenticationData/IsAuthenticated} == true" >
+                <!-- Do the login magic!!! -->
+                <block condition="!IsEmpty( {property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/SubscriptionId} )">
+                    <dialog.hide path="{component://init/desktop/loginDialog}"/>
+
+                    <!-- set the correct postman (if not running locally) -->
+                    <block condition="{system:/keepServer} == 'true'">
+                        <log text="'Not switching server.'" level="'info'"/>
+                        <setPostman password="DecryptString( {property:/vla/authorization/ProcessLoginSystemUser:/AuthenticationData/PassWord}, {property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/PinCode} )" server="{system:/navajo.globals.CoreSysPostmanURI}" username="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/NavajoUsr}" />
+                    </block>
+                    <block condition="{system:/keepServer} != 'true'">
+                        <setPostman password="DecryptString( {property:/vla/authorization/ProcessLoginSystemUser:/AuthenticationData/PassWord}, {property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/PinCode} )" server="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/Postman}" username="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/NavajoUsr}" />
+                    </block>
+                    
+                    <!-- these globals are needed before all others, so it can be used for css styling -->
+                    <setValue to="{globalref:/Locale}" from="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/Locale}" />
+                    <setValue to="{globalref:/SubLocale}" from="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/UnionCode}" />
+                    <!-- This one is different and stays unchanged, because it is used to do some checking -->
+                    <!-- For instance in personWindow, check on valid SocialSecurityNumber or not -->
+                    <setValue to="{globalref:/ApplicationLocale}" from="{property:/vla/authorization/ProcessLoginSystemUser:/ClubSubscription/Locale}" />
+                    
+                    <!-- global properties which hold the filenames of the css files -->
+                    <!-- If the locale css file doesn't exist, then switch to NL (which should exist) -->
+                    <!-- Some locales might be treated the same (e.g. EN and US) -->
+                    <!-- Maintain the original locale and unionIdentifier and use copies for possible switching later on -->
+                    <block condition="!IsEmpty( {property:/vla/authorization/ProcessLoginSystemUser:/UserData/DefaultUserLanguage} )">
+                        <setValue to="{globalref:/Locale}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/DefaultUserLanguage}" />
+                    </block>
+
+                    <!-- set locale and sublocale -->
+                    <setLocale locale="{global:/Locale}" subLocale="{global:/SubLocale}"/>
+
+                    <!-- Set the system userid. Needed for user settings. -->
+                    <setValue to="{globalref:/UserId}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/UserId}" />
+                    <setValue to="{globalref:/UserName}" from="{property:/vla/authorization/ProcessLoginSystemUser:/UserData/UserName}" />
+                    
+                    <!-- Set the subscription stuff (see initauthorizationglobals) -->
+                    <executeMethod name="'SetSubscriptionValues'"/>
+                    <!-- global properties defined by subscription AND user profile (see initauthorizationglobals) -->
+                    <executeMethod name="'SetHasModuleGlobals'"/>
+                    <!-- If a dissolved or merged club tries to login, then set modes to readonly (see initauthorizationglobals) -->
+                    <!-- See initauthorizationglobals for details -->
+                    <executeMethod name="'SetAuthorizationGlobals'"/>
+                
+                    <!-- Call the InitMessageStoreData webservice and check if everything worked out ok -->
+                    <callService service="'vla/InitMessageStoreData'" input="{navajo:/vla/authorization/ProcessLoginSystemUser}" />
+                    
+                    <setValue to="{propertyref:/vla/InitMessageStoreData:/Club/DefaultSport}" from="{system:/navajo.globals.DefaultSport}" />
+                    <setValue to="{propertyref:/vla/InitMessageStoreData:/Club/HasIdeal}" from="{global:/HasIdeal}" />
+                    <!-- set user theme -->
+                    <setSkin value="ToString( {property:/vla/InitMessageStoreData:/LookAndFeel/SubstanceFiveSkin} )" />
+                    <!-- Set the cookies -->
+                    <block condition="{attribute://init/desktop/loginDialog/bgp/panel/save:selected}">
+                        <setCookie name="'spClub'" value="{property:/vla/InitMessageStoreData:/Club/ClubIdentifier}" />
+                        <setCookie name="'spClubUser'" value="{global:/UserName}" />
+                    </block>
+
+                    <!-- For performance reasons no need to get all the club info here. Just the logo -->
+                    <callService service="'vla/sportlinkkernel/club/ProcessQueryClubLogo'" input="{navajo:/vla/InitMessageStoreData}"/>
+                    <executeMethod name="'DoSetBorders'" rootComponent="{component://init}"/>
+                    <!-- Set the window title -->
+                    <executeMethod name="'SetApplicationTitle'"/>
+
+                    <!-- load the user settings in one swoop -->
+                    <callService service="'vla/tools/user_settings/InitQueryProperties'" input="{navajo:/vla/InitMessageStoreData}"/>
+                    <callService service="{global:/userSettingsService}" input="{navajo:/vla/tools/user_settings/InitQueryProperties}"/>
+                    <!-- set db column storage id -->
+                    <setStorageInstanceId id="{global:/SubLocale} + '_' + [/Club/ClubIdentifier]" />
+                    
+                    <!-- Set desktop button authorization -->
+                    <executeMethod name="'SetDesktopButtonAuthorization'" rootComponent="{component://init}"/>
+                    
+                    <!-- Set the extra user properties -->
+                    <setValue to="{globalref:/ActiveWorkingSetId}" from="{property:/vla/tools/user_settings/ProcessQueryAllPropertiesForUser:/UserProperties/WorkingSetId}" />
+                    <executeMethod name="'SetActiveWorkingSetId'"/>
+                    
+                    <!-- Open window(s) on startup -->
+<!-- CRM part -->
+<!--                     <setValue to="{globalref:/OpenOnStartupUserToDoListDialog}" from="{property:/vla/tools/user_settings/ProcessQueryAllPropertiesForUser:/UserProperties/OpenUserToDoListDialog}" /> -->
+<!--                     <block condition="{global:/OpenOnStartupUserToDoListDialog}"> -->
+<!--                         <instantiate id="'userToDoListDialog'" name="'userToDoListDialog'" location="{component://init/desktop}" force="true"/> -->
+<!--                     </block> -->
+                    <setValue to="{globalref:/OpenOnStartupAnniversaryListDialog}" from="{property:/vla/tools/user_settings/ProcessQueryAllPropertiesForUser:/UserProperties/OpenAnniversaryListDialog}" />
+                    <block condition="{global:/OpenOnStartupAnniversaryListDialog} == true">
+                        <instantiate id="'anniversaryListDialog'" name="'anniversaryListDialog'" location="{component://init/desktop}" force="true"/>
+                    </block>
+
+                    <!-- instantiate menu and report store -->
+                    <instantiate id="'mymenu'" location="{component://init}" name="'mymenu'" force="true"/>
+                    <setValue from="true" to="{attributeref://init/toolbar:visible}" />
+
+                    <instantiate id="'reportPrintStore'" location="{component://init/desktop}" name="'reportPrintStore'" />
+                    <!-- Set the synchronizationbutton icon -->
+                    <button.fireAction path="{component://init/toolbar/btnSetSynchronizationIcon}"/>
+
+                    <!-- Startup actions caught in 1 webservice for performance reasons -->
+                    <button.fireAction path="{component://init/toolbar/btnDoAsyncStartupActions}"/>
+                    
+                    <!-- Close this dialog if still open -->
+                    <block condition="!IsNull( {component://init/desktop/loginDialog} )">
+                        <dialog.dispose path="{component://init/desktop/loginDialog}"/>
+                    </block>
+                </block>
+            </block>
+        </localmethod>
+        
+        <onWindowClosed>
+            <block condition="IsNull( {navajo:/vla/authorization/ProcessLoginSystemUser} ) OR IsNull( {property:/vla/authorization/ProcessLoginSystemUser:/AuthenticationData/IsAuthenticated} ) OR {property:/vla/authorization/ProcessLoginSystemUser:/AuthenticationData/IsAuthenticated} == false">
+            	<exit />
+            </block>
+            <dispose path="{component:/~}"/>
+        </onWindowClosed>
+    </d.dialog>
+</tid>

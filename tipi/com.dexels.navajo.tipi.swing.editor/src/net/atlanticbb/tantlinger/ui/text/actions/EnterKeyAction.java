@@ -7,7 +7,6 @@ package net.atlanticbb.tantlinger.ui.text.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.StringWriter;
-import java.lang.annotation.ElementType;
 import java.util.Enumeration;
 
 import javax.swing.Action;

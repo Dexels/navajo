@@ -325,7 +325,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			// to allow it to run straight from main:
 			return n;
 		} catch (NavajoException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		} catch (TipiBreakException e) {
 			logger.debug("Error: ",e);
 		}
@@ -642,7 +642,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			try {
 				sendMessage("Shake it!", destination);
 			} catch (XMPPException e1) {
-				e1.printStackTrace();
+				logger.error("Error: ", e1);
 			}
 
 		}

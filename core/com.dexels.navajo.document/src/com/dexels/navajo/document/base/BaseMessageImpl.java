@@ -505,7 +505,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 //	}
 
 	@Override
-	public final ArrayList<Property> getProperties(String regularExpression) throws NavajoException {
+	public final List<Property> getProperties(String regularExpression) throws NavajoException {
 
 		if (regularExpression.startsWith(Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR)) {
 			regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR).length());
@@ -519,7 +519,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			return d.getProperties(regularExpression.substring(1));
 		} else {
 			ArrayList<Property> props = new ArrayList<Property>();
-			ArrayList<Message> messages = null;
+			List<Message> messages = null;
 			String property = null;
 			Message message = null;
 
@@ -547,7 +547,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			Pattern pattern = Pattern.compile(realProperty);
 			for (int i = 0; i < messages.size(); i++) {
 				message = messages.get(i);
-				ArrayList<Property> allProps = message.getAllProperties();
+				List<Property> allProps = message.getAllProperties();
 				try {
 					for (int j = 0; j < allProps.size(); j++) {
 						String name = allProps.get(j).getName();
@@ -595,7 +595,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			name = name.substring(2);
 		}
 
-		if (name.startsWith("/")) {
+		if (name.length() > 0 && name.charAt(0) == '/') {
 			return getRootDoc().getMessage(name.substring(1));
 		}
 		if (name.indexOf("/") >= 0) {
@@ -664,11 +664,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	 * starting at the root level.
 	 */
 	@Override
-	public ArrayList<Message> getMessages(String regularExpression) throws NavajoException {
+	public List<Message> getMessages(String regularExpression) throws NavajoException {
 
 		// ArrayList messages = new ArrayList();
-		ArrayList<Message> sub = null;
-		ArrayList<Message> sub2 = null;
+	    List<Message> sub = null;
+		List<Message> sub2 = null;
 
 		if (regularExpression.startsWith(Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR)) {
 			regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR).length());
@@ -752,7 +752,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 								} else {
 
 									try {
-										result.add(m.getMessage(Integer.parseInt(index)));
+										if (m.getMessage(Integer.parseInt(index)) != null) {
+											result.add(m.getMessage(Integer.parseInt(index)));
+										}
+										
 									} catch (Exception pe) {
 										throw new NavajoExceptionImpl("Could not parse array index: " + index);
 									}
@@ -783,7 +786,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	@Override
 	public final Property getProperty(String s) {
-		if (s.startsWith("/")) {
+		if (s.length() > 0 && s.charAt(0) == '/') {
 			return getRootDoc().getProperty(s.substring(1));
 		}
 
@@ -845,7 +848,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	 * @param m
 	 * @param properties
 	 */
-	private final void addProperties(Message m, ArrayList<Property> properties, boolean preferMyProperties) {
+	private final void addProperties(Message m, List<Property> properties, boolean preferMyProperties) {
 		
 		for (int i = 0; i < properties.size(); i++) {
 			m.addProperty(properties.get(i), preferMyProperties);
@@ -878,8 +881,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 		
 		// Find overlapping children.
-		ArrayList<Message> childrenPrev = origMsg.getAllMessages();
-		ArrayList<Message> childrenNew = mergeThisMsg.getAllMessages();
+		List<Message> childrenPrev = origMsg.getAllMessages();
+		List<Message> childrenNew = mergeThisMsg.getAllMessages();
 		for (int i = 0; i < childrenPrev.size(); i++) {
 			Message childPrev = childrenPrev.get(i);
 			for (int j = 0; j < childrenNew.size(); j++) {
@@ -1050,7 +1053,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			return m;
 		}
 
-		if (path.startsWith("/")) {
+		if (path.length() > 0 && path.charAt(0) == '/') {
 			path = path.substring(1);
 		}
 
@@ -1070,7 +1073,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	public final Property getPropertyByPath(String pth) {
 		String path = null;
-		if (pth.startsWith("/")) {
+		if (pth.length() > 0 && pth.charAt(0) == '/') {
 			path = pth.substring(1);
 		} else {
 			path = pth;
@@ -1784,7 +1787,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			incoming.setName(getName());
 		}
 
-		ArrayList<Message> subMessages = incoming.getAllMessages();
+		List<Message> subMessages = incoming.getAllMessages();
 		for (int i = 0; i < subMessages.size(); i++) {
 			String newMsgName = subMessages.get(i).getName();
 			Message existing = this.getMessage(newMsgName);
@@ -1803,13 +1806,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 					}
 					
 				} catch (NavajoException e) {
+				    logger.error("Navajo Exception on merge: {}", e);
 				}
 			} else {
 				existing.merge(subMessages.get(i), preferThis);
 			}
 		}
 
-		ArrayList<Property> properties = incoming.getAllProperties();
+		List<Property> properties = incoming.getAllProperties();
 		for (int i = 0; i < properties.size(); i++) {
 			Property p = (Property) properties.get(i).clone();
 			Property o_p = null;
@@ -2047,7 +2051,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		      //prop6.addSelection(NavajoFactory.getInstance().createSelection(testDoc, "noot", "noot", false));
 		      msg.addProperty(prop6);
 		      
-		      String binaryString = new String("ASSUMETHISISABINARY");
+		      String binaryString = "ASSUMETHISISABINARY";
 		      Binary b = new Binary(binaryString.getBytes());
 		      Property prop7 = NavajoFactory.getInstance().createProperty(testDoc, "propbinary", Property.BINARY_PROPERTY, "", 10, "", Property.DIR_OUT);
 		      prop7.setAnyValue(b);

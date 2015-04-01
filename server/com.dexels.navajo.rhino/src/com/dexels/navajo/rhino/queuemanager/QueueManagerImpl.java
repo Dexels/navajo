@@ -188,7 +188,7 @@ public class QueueManagerImpl implements QueueManager {
 				try {
 					fr.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 			}
 			if(globalScope!=null) {

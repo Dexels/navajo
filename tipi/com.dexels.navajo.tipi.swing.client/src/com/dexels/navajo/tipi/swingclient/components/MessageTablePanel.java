@@ -218,7 +218,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 							filterPanel.showColumnManagementDialog();
 							filterPanel.loadColumns();
 						} catch (Exception ex) {
-							ex.printStackTrace();
+							logger.error("Error: ", ex);
 						}
 					}
 				});
@@ -230,7 +230,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 						try {
 							getTable().saveColumnsNavajo();
 						} catch (Exception ex) {
-							ex.printStackTrace();
+							logger.error("Error: ", ex);
 						}
 					}
 				});
@@ -242,7 +242,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 						try {
 							getTable().removeColumnsNavajo();
 						} catch (Exception ex) {
-							ex.printStackTrace();
+							logger.error("Error: ", ex);
 						}
 					}
 				});
@@ -256,7 +256,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 							try {
 								getFilterPanel().showColumnManagementDialog();
 							} catch (Exception ex) {
-								ex.printStackTrace();
+								logger.error("Error: ", ex);
 							}
 						}
 					});
@@ -272,7 +272,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 							BinaryOpenerFactory.getInstance().open(b);
 
 						} catch (Exception ex) {
-							ex.printStackTrace();
+							logger.error("Error: ", ex);
 						}
 					}
 				});
@@ -398,7 +398,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 			fireDataChanged();
 			fireHeaderMenuEvent();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 	}
 
@@ -407,7 +407,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 	}
 
 	private final void invertSelection(int column) {
-		ArrayList<Message> messages = getMessage().getAllMessages();
+	    List<Message> messages = getMessage().getAllMessages();
 		for (int i = 0; i < getRowCount(); i++) {
 			Object o = messageTable.getValueAt(i, column);
 			Property p = messages.get(i).getProperty(((Property) o).getName());
@@ -430,7 +430,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 
 	private final void setSelectAll(int column, boolean value) {
 
-		ArrayList<Message> selected = getMessage().getAllMessages();
+	    List<Message> selected = getMessage().getAllMessages();
 		final int rowCount = getRowCount();
 		for (int i = 0; i < rowCount; i++) {
 			Object o = messageTable.getValueAt(i, column);
@@ -458,16 +458,10 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		// Used in AdvancedMessageTable only.
 	}
 
-	public final void setRowColor(int row, Color c) {
-		messageTable.setRowColor(row, c);
-	}
 
-	public final Color getRowColor(int row) {
-		return messageTable.getRowColor(row);
-	}
 
-	public final void setColumnAttributes(Map<String, ColumnAttribute> m) {
-		columnAttributes = m;
+
+	public final void setColumnAttributes(Map<String, List<ColumnAttribute>> columnAttributes) {
 		messageTable.setColumnAttributes(columnAttributes);
 	}
 
@@ -663,7 +657,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 			}
 		}
 		removeAllColumns();
-		ArrayList<Property> al = def.getAllProperties();
+		List<Property> al = def.getAllProperties();
 		for (int i = 0; i < al.size(); i++) {
 			Property current = al.get(i);
 			String desc = current.getDescription();
@@ -681,7 +675,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 			return;
 		}
 		removeAllColumns();
-		ArrayList<Property> al = def.getAllProperties();
+		List<Property> al = def.getAllProperties();
 		for (int i = 0; i < al.size(); i++) {
 			Property current = al.get(i);
 			String desc = current.getDescription();

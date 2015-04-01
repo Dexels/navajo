@@ -36,7 +36,7 @@ public final class Contains extends FunctionInterface {
                 result = contains((List<?>) a, o);
             else
                 result = Utils.equals(a, o);
-            if (result == true)
+            if (result)
                 i = list.size() + 1;
         }
         return result;

@@ -92,7 +92,7 @@ public class SimpleRepository implements Repository, GlobalManager {
 		} catch (NavajoException e) {
 			logger.error("Error: ", e);
 		}
-		Access a = new Access(accessID, 1, 1, username, service, "", "", "", certificate);
+		Access a = new Access(1, 1, username, service, "", "", "", certificate, false, accessID);
 		if (setAccessPassword) {
 			a.rpcPwd = password;
 		}

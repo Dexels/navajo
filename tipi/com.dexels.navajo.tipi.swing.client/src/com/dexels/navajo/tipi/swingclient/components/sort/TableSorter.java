@@ -379,6 +379,7 @@ public class TableSorter extends TableMap {
 						ascending = true;
 					}
 					doSort(tableView, viewColumn, ascending);
+					tableView.resetColorMap();
 				}
 			}
 

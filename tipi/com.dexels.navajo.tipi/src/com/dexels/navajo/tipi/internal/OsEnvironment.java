@@ -222,7 +222,7 @@ public class OsEnvironment {
 			else if (OS.indexOf("sunos") > -1) {
 				windowsEnvironment = new Boolean(false);
 			} else {
-				new Exception("OS not known: " + OS).printStackTrace();
+				logger.warn("OS not known: " + OS,new Exception("OS not known: " + OS));
 				windowsEnvironment = new Boolean(false);
 			}
 		}

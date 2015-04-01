@@ -52,7 +52,6 @@ public void doFilter(ServletRequest rq, ServletResponse rs, FilterChain chain) t
 
 public void activate(Map<String,Object> settings) {
 	this.filterString = (String)settings.get("filterstring");
-	System.out.println("FilterString " + this.filterString);
 	
 }
 

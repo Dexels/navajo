@@ -69,7 +69,7 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 		if ( extraMessage == null ) {
 			return null;
 		}
-		ArrayList<BaseNode> children =  new ArrayList<BaseNode>();
+		List<BaseNode> children =  new ArrayList<BaseNode>();
 		children.add((BaseMessageImpl )extraMessage);
 		return children;
 	}

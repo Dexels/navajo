@@ -238,9 +238,16 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 	public Navajo createNavajo(InputStream stream) {
 		try {
 			SaxHandler sax = new SaxHandler();
-			InputStreamReader isr = new InputStreamReader(stream,"UTF-8");
-
-			QDParser.parse(sax,isr);
+			InputStreamReader isr = null;
+			
+			try {
+			    isr = new InputStreamReader(stream,"UTF-8");
+			    QDParser.parse(sax,isr);
+			} finally {
+			    if (isr != null) {
+			        isr.close();
+			    }
+			}
 			return  sax.getNavajo();
 		} catch (Exception e) {
 			throw new RuntimeException(e);

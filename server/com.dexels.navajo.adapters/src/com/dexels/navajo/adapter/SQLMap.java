@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -363,9 +364,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 						if (datasourceName.equals("")) {
 							// Get other data sources.
 							if(configFile!=null) {
-								ArrayList all = configFile.getMessages("/datasources/.*");
+								List<Message> all = configFile.getMessages("/datasources/.*");
 								for (int i = 0; i < all.size(); i++) {
-									Message body = (Message) all.get(i);
+									Message body = all.get(i);
 									createDataSource(body, navajoConfig);
 								}
 							} else {
@@ -571,7 +572,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			// TODO eh? Need to fix?
 			return false;
 		}
-		return ((Boolean) ac).booleanValue();
+		return ac;
 	}
 
 	public void setTransactionIsolationLevel(int j) {
@@ -599,7 +600,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	@Override
 	public void setTransactionContext(int i) throws UserException {
-
+	    if (i == this.connectionId && i != -1) {
+	        logger.error("Attempting to set transactionContext to my own connection id! " );
+	        return;
+	    }
+	        
 		if (debug) {
 			Access.writeToConsole(myAccess, "IN SETTRANSACTIONCONTEX(), I = "
 					+ i + "\n");
@@ -1619,7 +1624,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 						if (o != null) {
 							queryWithParameters.append(o.toString());
 						} else {
-							queryWithParameters.append("?");
+							queryWithParameters.append('?');
 						}
 					}
 				}

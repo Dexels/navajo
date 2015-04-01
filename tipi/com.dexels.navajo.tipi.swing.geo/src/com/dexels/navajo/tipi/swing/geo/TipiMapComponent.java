@@ -9,8 +9,8 @@ import java.awt.event.ComponentListener;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -130,7 +130,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 			@Override
 			public void run() {
-				ArrayList<Message> al = m.getAllMessages();
+			    List<Message> al = m.getAllMessages();
 				try {
 					performTipiEvent("onClear", null, true);
 				} catch (TipiException e) {

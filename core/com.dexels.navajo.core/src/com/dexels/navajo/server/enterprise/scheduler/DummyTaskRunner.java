@@ -28,4 +28,9 @@ public class DummyTaskRunner implements TaskRunnerInterface {
 		
 	}
 
+	@Override
+	public TaskInterface createTask() {
+		return new DummyTask();
+	}
+
 }

@@ -26,6 +26,17 @@ public class NavajoRepositoryContextImpl extends NavajoServerContextComponent im
 	public String getInstallationPath() {
 		return repositoryInstance.getRepositoryFolder().getAbsolutePath();
 	}
+
+	@Override
+	public String getOutputPath() {
+		return repositoryInstance.getOutputFolder().getAbsolutePath();
+	}
+
+	@Override
+	public String getTempPath() {
+		return repositoryInstance.getTempFolder().getAbsolutePath();
+	}
+	
 	
 	public void activate() throws IOException, InvalidSyntaxException {
 		String suppressAdapters = System.getProperty("navajo.suppress.adaptersfolder");

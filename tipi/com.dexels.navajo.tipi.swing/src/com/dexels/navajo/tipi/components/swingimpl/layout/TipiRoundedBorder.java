@@ -142,7 +142,7 @@ public class TipiRoundedBorder extends AbstractBorder {
             g2d.fill (rect);
             // use the border??
             if (this.useBorderlineAroundGradient) {
-                g2d.setColor(this.linecolor);;
+                g2d.setColor(this.linecolor);
             }
         }
         

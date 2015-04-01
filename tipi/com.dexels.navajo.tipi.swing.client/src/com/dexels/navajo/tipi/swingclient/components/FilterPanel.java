@@ -101,7 +101,7 @@ public class FilterPanel extends JPanel {
 		try {
 			jbInit();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 		setupAdvancedFilter();
 	}
@@ -322,7 +322,7 @@ public class FilterPanel extends JPanel {
 					myTable.loadColumnsNavajo();
 					myTable.resizeColumns(myTable.getMessage());
 				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 				myTable.getMessageModel().fireTableStructureChanged();
 				filterCount++;
@@ -404,9 +404,9 @@ public class FilterPanel extends JPanel {
 			// myTable.setColumnDefinitionSavePath("c:/vladb/columns.tml");
 			myTable.saveColumnsNavajo();
 		} catch (NavajoException ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 	}
 

@@ -3,6 +3,8 @@ package navajoentity;
 import navajoextension.AbstractCoreExtension;
 
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.entity.adapters.NavajoEntityAdapterLibrary;
 
@@ -35,7 +37,9 @@ import com.dexels.navajo.entity.adapters.NavajoEntityAdapterLibrary;
 
 public class Version extends AbstractCoreExtension {
 
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(Version.class);
+	
 	private static BundleContext bundleContext;
 	
 	public Version() {
@@ -49,7 +53,7 @@ public class Version extends AbstractCoreExtension {
 			NavajoEntityAdapterLibrary library = new NavajoEntityAdapterLibrary();
 			registerAll(library);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	

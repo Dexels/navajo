@@ -324,11 +324,7 @@ public boolean equals(Object obj) {
     if (obj instanceof Money) {
       Money m = (Money) obj;
       if (m.value == null) {
-    	if(value==null) {
-    		return true;
-    	} else {
-            return false;
-    	}
+          return value == null;
       } else {
       	if(value==null) {
     		return false;

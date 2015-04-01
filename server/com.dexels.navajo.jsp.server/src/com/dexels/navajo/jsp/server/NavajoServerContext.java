@@ -404,7 +404,6 @@ public class NavajoServerContext {
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
 		}
-		System.err.println("Fail?");
 		return null;
 	}
 	

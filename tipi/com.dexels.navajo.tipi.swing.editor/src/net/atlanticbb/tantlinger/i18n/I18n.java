@@ -9,11 +9,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -97,7 +95,7 @@ public class I18n {
 	}
 
 	public static synchronized I18n getInstance(String _package) {
-		I18n i18n = (I18n) I18NS.get(_package);
+		I18n i18n = I18NS.get(_package);
 		if (i18n == null) {
 			i18n = new I18n(_package);
 			I18NS.put(_package, i18n);
@@ -138,11 +136,11 @@ public class I18n {
 		StringBuffer sb = new StringBuffer();
 		StringTokenizer st = new StringTokenizer(path, "/");
 		while (st.hasMoreTokens()) {
-			sb.append(".");
+			sb.append('.');
 			sb.append(st.nextToken());
 		}
 
-		if (sb.toString().startsWith("."))
+		if (sb.toString().length() > 0 && sb.toString().charAt(0) == '.')
 			sb.deleteCharAt(0);
 
 		return sb.toString();
@@ -162,7 +160,7 @@ public class I18n {
 		else
 			BUNDLE_PROPS.setProperty(_package, bundle);
 
-		I18n i18n = (I18n) I18NS.get(_package);
+		I18n i18n = I18NS.get(_package);
 		if (i18n != null)
 			i18n.bundle = null; // reset to null so the bundle is recreated for
 								// the new name

@@ -12,6 +12,9 @@ package com.dexels.navajo.tipi.swingclient.components.sort;
 /**
  * @deprecated
  */
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
@@ -24,7 +27,10 @@ import com.dexels.navajo.document.Selection;
 public class PropertyFilter {
 	private Property myProperty;
 	private String myValue;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PropertyFilter.class);
+	
 	public PropertyFilter(Property p, String value) {
 		myProperty = p;
 		myValue = value;
@@ -40,7 +46,7 @@ public class PropertyFilter {
 			try {
 				s = p.getSelectionByValue(myValue);
 			} catch (NavajoException ex) {
-				ex.printStackTrace();
+				logger.error("Error: ", ex);
 				return true;
 			}
 			if (s != null) {

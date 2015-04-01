@@ -126,7 +126,7 @@ private String region;
 		}
 		TipiScreen echo = (TipiScreen) context.getDefaultTopLevel();
  
-		TipiFrame w = (TipiFrame) echo.getTipiComponent("init");
+		TipiFrame w = (TipiFrame) echo.getTipiComponent("init", false);
 		if (w == null) {
 			throw new RuntimeException("No toplevel found!");
 		}

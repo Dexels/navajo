@@ -24,8 +24,8 @@ import com.dexels.navajo.tipi.internal.swing.cache.impl.CachedHttpJnlpResourceLo
 
 public class WebStartProxy {
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(WebStartProxy.class);
+	private final static Logger logger = LoggerFactory.getLogger(WebStartProxy.class);
+	
 	public static void appendJnlpCodeBase(SwingTipiContext myContext,
 			String loaderType) {
 		try {
@@ -35,8 +35,8 @@ public class WebStartProxy {
 			URL tipiCodeBase = new URL(bs.getCodeBase(), loaderType);
 			URL resourceCodeBase = new URL(bs.getCodeBase(), "resource");
 
-			myContext.setTipiResourceLoader(tipiCodeBase.toString());
-			myContext.setGenericResourceLoader(resourceCodeBase.toString());
+			myContext.setTipiResourceLoader(tipiCodeBase.toString(), null);
+			myContext.setGenericResourceLoader(resourceCodeBase.toString(), null);
 		} catch (javax.jnlp.UnavailableServiceException e) {
 		} catch (MalformedURLException e) {
 			logger.error("Error detected",e);

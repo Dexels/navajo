@@ -98,7 +98,7 @@ public class TextPropertyField extends PropertyField {
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 
 	}
@@ -123,7 +123,7 @@ public class TextPropertyField extends PropertyField {
 							+ " is not of string type! Value: " + p.getValue()
 							+ "");
 				} catch (NavajoException ex) {
-					ex.printStackTrace();
+					logger.error("Error: ", ex);
 				}
 			} else {
 				// Toch maar eerst kijken wat nu de waarde is voordat je hem
@@ -134,7 +134,7 @@ public class TextPropertyField extends PropertyField {
 					try {
 						logger.info("Name: " + p.getFullPropertyName());
 					} catch (NavajoException ex1) {
-						ex1.printStackTrace();
+						logger.error("Error: ", ex1);
 					}
 				}
 				if (o != null) {

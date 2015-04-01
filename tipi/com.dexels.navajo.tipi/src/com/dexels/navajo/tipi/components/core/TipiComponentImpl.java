@@ -76,7 +76,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 
 	private final Map<String, TipiComponent> tipiComponentMap = new HashMap<String, TipiComponent>();
 	private final Map<String, XMLElement> localMethodsMap = new HashMap<String, XMLElement>();
-	private final Map<String, Object> localValuesMap = new HashMap<String, Object>();
+	private Map<String, Object> localValuesMap = new HashMap<String, Object>();
 
 	protected final List<PropertyComponent> properties = new ArrayList<PropertyComponent>();
 	protected final List<MessageComponent> messages = new ArrayList<MessageComponent>();
@@ -916,24 +916,37 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 			TipiComponentMethod compMeth, TipiEvent event)
 			throws TipiBreakException {
 	}
+	
+	/**
+     * beware, leading slashes will be stripped. To do a global lookup, use the
+     * TipiContext
+     */
+    @Override
+    public TipiComponent getTipiComponentByPath(String path) {
+        return getTipiComponentByPath(path, false);
+    }
 
 	/**
 	 * beware, leading slashes will be stripped. To do a global lookup, use the
 	 * TipiContext
 	 */
 	@Override
-	public TipiComponent getTipiComponentByPath(String path) {
+	public TipiComponent getTipiComponentByPath(String path, boolean hiddenOrVisible) {
 		if (path.equals(".")) {
 			return this;
 		}
 		if (path.equals("..")) {
-			return myParent;
+		    if (hiddenOrVisible || !myParent.isHidden()) {
+		        return myParent;
+		    }
+		    
+		    throw null;
 		}
 		if (path.startsWith("./")) {
-			return getTipiComponentByPath(path.substring(2));
+			return getTipiComponentByPath(path.substring(2), hiddenOrVisible);
 		}
 		if (path.startsWith("../")) {
-			return myParent.getTipiComponentByPath(path.substring(3));
+			return myParent.getTipiComponentByPath(path.substring(3), hiddenOrVisible);
 		}
 		if (path.indexOf("/") == 0) {
 			path = path.substring(1);
@@ -944,15 +957,15 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 			if (path.equals("")) {
 				return myContext.getDefaultTopLevel();
 			}
-			return getTipiComponent(path);
+			return getTipiComponent(path, hiddenOrVisible);
 		} else {
 			String name = path.substring(0, s);
 			String rest = path.substring(s);
-			TipiComponent t = getTipiComponent(name);
+			TipiComponent t = getTipiComponent(name, hiddenOrVisible);
 			if (t == null) {
 				throw new NullPointerException("Did not find Tipi: " + name);
 			}
-			return t.getTipiComponentByPath(rest);
+			return t.getTipiComponentByPath(rest, hiddenOrVisible);
 		}
 	}
 
@@ -967,13 +980,19 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	}
 
 	@Override
-	public final TipiComponent getTipiComponent(String s) {
-		return tipiComponentMap.get(s);
-	}
+    public final TipiComponent getTipiComponent(String s, boolean hiddenOrVisible) {
+        TipiComponent result = tipiComponentMap.get(s);
+        if (result != null) {
+            if (hiddenOrVisible || (!result.isHidden())) {
+                return result;
+            }
+        }
+        return null;
+    }
 	
 	@Override
     public final TipiComponent getCascadeTipiComponent(String s) {
-	    TipiComponent res = getTipiComponent(s);
+	    TipiComponent res = getTipiComponent(s, false);
         if (res != null) {
             return res;
         }
@@ -1193,6 +1212,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		} catch (TipiException ex) {
 			logger.error("Error: ",ex);
 		} catch (TipiBreakException e) {
+		    
 		}
 	}
 
@@ -1259,6 +1279,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return performTipiEvent(type, event, sync, null);
 	}
 
+	@Override
 	public boolean performTipiEvent(String type, Map<String, Object> event,
 			boolean sync, Runnable afterEvent) throws TipiBreakException {
 		boolean hasEventType = false;
@@ -1715,4 +1736,65 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 		return localValuesMap.containsKey(expression);
 	}
+	
+    @Override
+    public void hideComponent() {
+        myContext.disposeTipiComponent(this);
+    }
+
+    @Override
+    public void unhideComponent() {
+        // Clear our localValuesMap - any actual unhiding is left to 
+        // any subcomponents (typically those who have overridden hideComponent).
+        localValuesMap = new HashMap<String, Object>();
+        for (TipiComponent child : tipiComponentList) {
+            child.unhideComponent();
+        }
+    }
+    
+    @Override
+    public void performInstantiateEvents() {
+
+        for (TipiComponent child : tipiComponentList) {
+            // HomeComponents should trigger their own intialisation. To prevent 
+            // double inits we don't init them.
+            if (!child.isHomeComponent()) {
+                child.performInstantiateEvents();
+                try {
+                    child.performTipiEvent("onInstantiate", null, true);
+                } catch (Exception e) {
+                    // Whateva!
+                }
+
+            }
+
+        }
+    }
+
+    public void postOnInstantiate() {
+        // nothing to do since we didn't hide ourselves in the first place
+    }
+    
+    public TipiSupportOverlayPane getOverlayComponent() {
+        if (this instanceof TipiSupportOverlayPane) {
+            return (TipiSupportOverlayPane) this;
+        } else {
+            if (myParent == null) {
+                return null;
+            }
+            return myParent.getOverlayComponent();
+        }
+    }
+
+    
+    @Override 
+    public void removeNavajo() {
+        
+    }
+    
+    @Override 
+    public boolean isHidden() {
+        return false;
+    }
+	    
 }

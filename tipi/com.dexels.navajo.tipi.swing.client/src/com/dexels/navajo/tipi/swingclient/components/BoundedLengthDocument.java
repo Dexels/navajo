@@ -4,6 +4,9 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * Title: Seperate project for Navajo Swing client
@@ -23,9 +26,11 @@ import javax.swing.text.PlainDocument;
  */
 
 class BoundedLengthDocument extends PlainDocument {
-	/**
-	 * 
-	 */
+
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BoundedLengthDocument.class);
+	
 	private static final long serialVersionUID = -2888344441704553296L;
 	// private Property myProperty = null;
 	private String myCapitalizationMode = "off";
@@ -115,7 +120,7 @@ class BoundedLengthDocument extends PlainDocument {
 				}
 
 			} catch (BadLocationException ex) {
-				ex.printStackTrace();
+				logger.error("Error: ", ex);
 			}
 		}
 		if ("upper".equals(myCapitalizationMode)) {
@@ -128,7 +133,7 @@ class BoundedLengthDocument extends PlainDocument {
 					setCheck(true);
 				}
 			} catch (BadLocationException ex) {
-				ex.printStackTrace();
+				logger.error("Error: ", ex);
 			}
 		}
 		if ("lower".equals(myCapitalizationMode)) {
@@ -141,7 +146,7 @@ class BoundedLengthDocument extends PlainDocument {
 					setCheck(true);
 				}
 			} catch (BadLocationException ex) {
-				ex.printStackTrace();
+				logger.error("Error: ", ex);
 			}
 		}
 

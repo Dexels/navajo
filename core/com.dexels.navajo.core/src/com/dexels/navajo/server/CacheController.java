@@ -1,7 +1,7 @@
 package com.dexels.navajo.server;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,11 +107,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 	}
 	
 	private boolean isConfigModified() {
-		if ( configTimestamp != getConfigTimeStamp() ) {
-			return true;
-		} else {
-			return false;
-		}
+		return configTimestamp != getConfigTimeStamp();
 	}
 	
 	/**
@@ -128,7 +124,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 		Navajo config = DispatcherFactory.getInstance().getNavajoConfig().readConfig(CACHE_CONFIG);
 
 		if ( config != null ) {
-			ArrayList<Message> messages = config.getMessages("Cache/Entries");
+		    List<Message> messages = config.getMessages("Cache/Entries");
 			if ( messages != null ) {
 				expirations.clear();
 				for (int i = 0; i < messages.size(); i++) {

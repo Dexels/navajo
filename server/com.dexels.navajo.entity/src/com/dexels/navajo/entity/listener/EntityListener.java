@@ -34,6 +34,7 @@ import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
 import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.server.DispatcherFactory;
 
 
 public class EntityListener extends HttpServlet {
@@ -48,18 +49,11 @@ public class EntityListener extends HttpServlet {
 	private final static Logger entityLogger = LoggerFactory.getLogger("entity");
 
 	private EntityManager myManager;
-	private LocalClient myClient;
 	private String urlOutput;
 	private String username;
 	private String password;
 
-	public void setClient(LocalClient client) {
-		this.myClient = client;
-	}
 
-	public void clearClient(LocalClient client) {
-		this.myClient = null;
-	}
 	public void setEntityManager(EntityManager em) {
 		myManager = em;
 	}
@@ -116,7 +110,7 @@ public class EntityListener extends HttpServlet {
 				request.getRemoteAddr(), entityName, username, method, output);
 		
 		try {
-			if (entityName == "") {
+			if (entityName.equals("")) {
 				logger.error("No entity name found in request. Request URI: {}", request.getRequestURI());
 				throw new EntityException(EntityException.BAD_REQUEST);
 			}
@@ -152,7 +146,6 @@ public class EntityListener extends HttpServlet {
 			
 			// Merge input.
 			input.getMessage(entityMessage.getName()).merge(entityMessage, true);
-			//EntityHelper.mergeWithEntityTemplate( ), entityMessage , "in");
 			
 			etag = request.getHeader("If-Match");
 			if (etag == null) {
@@ -166,13 +159,13 @@ public class EntityListener extends HttpServlet {
 			
 			Operation o = myManager.getOperation(entityName, method);
 			logger.debug("Found matching entity operation"); 
-			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, myClient, o);
+			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, DispatcherFactory.getInstance(), o);
 			result = seo.perform(input);
 			logger.debug("Performed entity operation"); 
 
 		} catch (Exception ex) {
 			result = handleException(ex, request, response);
-		}
+		} 
 		writeOutput(result, response, output);
 		resetParameters();
 	}

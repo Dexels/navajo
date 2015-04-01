@@ -152,7 +152,7 @@ public final class PropertyRadioSelection extends JPanel implements
 
 			}
 		} catch (NavajoException ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 
 	}
@@ -217,13 +217,8 @@ public final class PropertyRadioSelection extends JPanel implements
 				myProperty.clearSelections();
 			}
 		} catch (NavajoException ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
-		// for (int i = 0; i < myActionListeners.size(); i++) {
-		// ActionListener current = (ActionListener)myActionListeners.get(i);
-		// current.actionPerformed(new ActionEvent(source,-1,""));
-		// }
-
 	}
 
 	public final void addActionListener(ActionListener al) {

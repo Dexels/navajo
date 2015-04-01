@@ -41,7 +41,7 @@ public abstract class AbstractPropertyField extends JTextField implements
 		}
 		else
 		{
-			final FocusListener fl = (FocusListener) this;
+			final FocusListener fl = this;
 			this.addFocusListener(new java.awt.event.FocusAdapter() {
 				@Override
 				public void focusGained(FocusEvent e) {

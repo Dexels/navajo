@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -76,14 +77,13 @@ public class CalendarTableModel implements TableModel {
 			SimpleDateFormat navajoDateFormat = new SimpleDateFormat(
 					"yyyy-MM-dd");
 			Calendar c = Calendar.getInstance();
-			ArrayList<Message> kids = myData.getAllMessages();
+			List<Message> kids = myData.getAllMessages();
 			for (int i = 0; i < kids.size(); i++) {
 				Message current = kids.get(i);
 				Date d = navajoDateFormat.parse(current.getProperty(
 						"CalendarDate").getValue());
 				c.setTime(d);
-				String key = "" + c.get(Calendar.DAY_OF_YEAR)
-						+ c.get(Calendar.YEAR);
+				String key = "" + c.get(Calendar.DAY_OF_YEAR) + c.get(Calendar.YEAR);
 				Day day = dayMap.get(key);
 				if (day == null) {
 					day = new Day();

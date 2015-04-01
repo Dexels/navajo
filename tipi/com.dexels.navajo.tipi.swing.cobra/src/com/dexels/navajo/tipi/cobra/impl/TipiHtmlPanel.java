@@ -21,11 +21,6 @@ public class TipiHtmlPanel extends HtmlPanel {
 		return super.getSelectionText();
 	}
 
-	@Override
-	public void setHtml(String htmlSource, String uri, HtmlRendererContext rcontext) {
-		// TODO Auto-generated method stub
-		super.setHtml(htmlSource, uri, rcontext);
-	}
 	
 	public void setHtml(String text) {
 		this.setHtml(text, "file://", getRenderingContext());

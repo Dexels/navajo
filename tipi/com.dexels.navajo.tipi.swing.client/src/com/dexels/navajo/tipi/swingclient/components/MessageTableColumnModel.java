@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.swingclient.components;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 
@@ -130,10 +129,5 @@ public final class MessageTableColumnModel extends DefaultTableColumnModel {
 		addColumn(tc);
 	}
 
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		// logger.info("Column selection changed!");
-		super.valueChanged(e);
-	}
 
 }

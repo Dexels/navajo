@@ -111,11 +111,11 @@ public class TipiScreen extends TipiSwingDataComponentImpl{
 			if (path.equals("")) {
 				return myContext.getDefaultTopLevel();
 			}
-			return getTipiComponent(path);
+			return getTipiComponent(path, false);
 		} else {
 			String name = path.substring(0, s);
 			String rest = path.substring(s);
-			TipiComponent t = getTipiComponent(name);
+			TipiComponent t = getTipiComponent(name, false);
 			if (t == null) {
 				throw new NullPointerException("Did not find Tipi: " + name);
 			}

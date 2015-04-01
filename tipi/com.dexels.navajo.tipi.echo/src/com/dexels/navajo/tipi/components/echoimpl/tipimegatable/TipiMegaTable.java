@@ -93,10 +93,6 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
                 logger.info("NUL PATH??******************8");
             }
         }
-        for (int i = 0; i < tableInstances.size(); i++) {
-//            final MessageTable mtp = (MessageTable) tableInstances.get(i);
-            // mtp.updateProperties(updates);
-        }
     }
 
     public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
@@ -130,9 +126,9 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
         out.addMessage(outMessage);
         out.addMessage(outResult);
 
-        ArrayList al = myNavajo.getAllMessages();
+        List<Message> al = myNavajo.getAllMessages();
         for (int i = 0; i < al.size(); i++) {
-            flatten((Message) al.get(i), outResult);
+            flatten(al.get(i), outResult);
         }
 
 //        logger.info("FLATTENING FINISHED **********************************");
@@ -204,9 +200,9 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
     private final void flatten(Message in, Message out) {
         Property p = in.getProperty("Code");
         if (p != null && p.getValue() != null) {
-            ArrayList pl = in.getAllProperties();
+            List<Property> pl = in.getAllProperties();
             for (int i = 0; i < pl.size(); i++) {
-                Property current = (Property) pl.get(i);
+                Property current = pl.get(i);
                 if (!current.getType().equals(Property.EXPRESSION_PROPERTY) && current.isDirIn() && !"".equals(p.getValue())) {
                     Message m = NavajoFactory.getInstance().createMessage(out.getRootDoc(), "Answers");
                     out.addMessage(m);
@@ -224,9 +220,9 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
                 }
             }
         }
-        ArrayList al = in.getAllMessages();
+        List<Message> al = in.getAllMessages();
         for (int i = 0; i < al.size(); i++) {
-            flatten((Message) al.get(i), out);
+            flatten(al.get(i), out);
         }
 
     }

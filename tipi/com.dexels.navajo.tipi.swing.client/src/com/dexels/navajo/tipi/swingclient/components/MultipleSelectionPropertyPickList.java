@@ -215,7 +215,7 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 			}
 			myProperty.setSelected(ll);
 		} catch (NavajoException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 		buildListModel(myProperty);
 
@@ -249,7 +249,7 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 			ArrayList<String> invLL = invertSelection(myProperty, ll);
 			myProperty.setSelected(invLL);
 		} catch (NavajoException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 		buildListModel(myProperty);
 

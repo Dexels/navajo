@@ -13,7 +13,7 @@ public final class ASTOrNode extends SimpleNode {
         if(a==null) {
         	a = Boolean.FALSE;
         }
-        if (a.booleanValue() == true)
+        if (a.booleanValue())
             return Boolean.TRUE;
 
         // System.out.println("Got first argument");

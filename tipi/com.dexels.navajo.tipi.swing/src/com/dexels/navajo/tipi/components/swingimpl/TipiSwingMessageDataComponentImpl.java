@@ -214,12 +214,6 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 		}
 	}
 
-	@Override
-	protected void performComponentMethod(final String name,
-			final TipiComponentMethod compMeth, TipiEvent event)
-			throws TipiBreakException {
-		super.performComponentMethod(name, compMeth, event);
-	}
 
 	@Override
 	public void setPaint(Paint p) {
@@ -230,10 +224,6 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 		return myPaint;
 	}
 
-	@Override
-	public void commitToUi() {
-		super.commitToUi();
-	}
 
 	@Override
 	public void animateTransition(TipiEvent te,

@@ -60,7 +60,7 @@ public final class JarResources {
     }
 
     public URL getPathURL(String path) throws MalformedURLException {
-        if (!path.startsWith("/")) {
+        if (path.length() == 0 || path.charAt(0) != '/') {
             path = "/" + path;
         }
         String contents = "jar:" + getJarURL().toString() + "!" + path;

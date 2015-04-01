@@ -73,7 +73,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 	
 	private String messagePath = "";
 	private MessageTablePanel mm;
-	private Map<String, ColumnAttribute> columnAttributes = new HashMap<String, ColumnAttribute>();
+	private Map<String, List<ColumnAttribute>> columnAttributes = new HashMap<String, List<ColumnAttribute>>();
 
 	private final Map<Integer, Integer> columnSize = new HashMap<Integer, Integer>();
 	private final List<String> columnCondition = new ArrayList<String>();
@@ -198,6 +198,26 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		mm.doLayout();
 		return mm;
 	}
+	
+	@Override
+    public void removeNavajo() {
+        removeAllAggregate();
+
+
+        runSyncInEventThread(new Runnable() {
+            @Override
+            public void run() {
+                mm.setFooterRenderer(null);
+                mm.removeAllColumns();
+                mm.getTable().updateTableSize();
+                mm.updateTableSize();
+                updateColumnVisibility();
+                mm.updateColumnSizes();
+                mm.revalidate();
+            }
+        });
+    }
+
 
 	@Override
 	public void showPopup(MouseEvent e) {
@@ -258,7 +278,12 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 				String type = (String) child.getAttribute("type");
 				if (name != null && type != null && !name.equals("")
 						&& !type.equals("")) {
-					columnAttributes.put(name, cap.parseAttribute(child));
+				    List<ColumnAttribute> attrs = columnAttributes.get(name);
+				    if (attrs == null) {
+				        attrs = new ArrayList<ColumnAttribute>();
+				    }
+				    attrs.add(cap.parseAttribute(child));
+					columnAttributes.put(name, attrs);
 				}
 			}
 			if (child.getName().equals("remarks")) {
@@ -944,6 +969,23 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 							(String) delimiter.value);
 				}
 
+				if ("setAll".equals(name)) {
+					logger.debug("In setAll");
+					Operand propertyName = compMeth.getEvaluatedParameter(
+							"propertyName", event);
+					Operand value = compMeth.getEvaluatedParameter("value",
+							event);
+					logger.debug("Value: " + value.value);
+					logger.debug("PropertyName: " + propertyName.value);
+					int rowCount = mm.getRowCount();
+					logger.debug("# of msgs: " + rowCount);
+					for (int i = 0; i < rowCount; i++) {
+						Message current = mm.getMessageRow(i);
+						Property cp = current.getProperty("" + propertyName.value);
+						cp.setAnyValue(value.value);
+					}
+				}
+				
 				if ("setAllSelected".equals(name)) {
 					logger.debug("In setAllSelected");
 					Operand propertyName = compMeth.getEvaluatedParameter(

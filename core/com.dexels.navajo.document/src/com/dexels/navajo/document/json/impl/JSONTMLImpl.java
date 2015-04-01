@@ -14,6 +14,8 @@ import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -29,6 +31,9 @@ import com.dexels.navajo.document.json.JSONTML;
  *
  */
 public class JSONTMLImpl implements JSONTML {
+    
+    private final static Logger logger = LoggerFactory.getLogger(JSONTMLImpl.class);
+
 
 	private JsonFactory jsonFactory = null;
 	private ObjectMapper om = null;
@@ -90,19 +95,19 @@ public class JSONTMLImpl implements JSONTML {
 	 */
 	@Override
 	public void format(Navajo n, OutputStream os) throws Exception {
+	    JsonGenerator jg = null;
 		try {
-
-
-			//ObjectMapper mapper = new ObjectMapper().enableDefaultTyping();
-
-			JsonGenerator jg = jsonFactory.createJsonGenerator(os); 
+			jg = jsonFactory.createJsonGenerator(os); 
 
 			jg.useDefaultPrettyPrinter();
 			format(jg, n);
-			jg.close();
 		} catch (Exception e) {
 			throw new Exception("Could not parse JSON inputstream: " + e.getMessage());
-		} 
+		} finally {
+		    if (jg != null) {
+		        jg.close();
+		    }
+		}
 
 	}
 
@@ -117,14 +122,18 @@ public class JSONTMLImpl implements JSONTML {
 	 */
 	@Override
 	public void format(Navajo n, Writer w) throws Exception {
+	    JsonGenerator jg = null;
 		try {
-			JsonGenerator jg = jsonFactory.createJsonGenerator(w); 
+			jg = jsonFactory.createJsonGenerator(w); 
 			jg.useDefaultPrettyPrinter();
 			format(jg, n);
-			jg.close();
 		} catch (Exception e) {
 			throw new Exception("Could not parse JSON inputstream" ,e);
-		} 
+		} finally {
+		    if (jg != null) {
+		        jg.close();
+		    }
+		}
 	}
 
 	@Override
@@ -156,7 +165,7 @@ public class JSONTMLImpl implements JSONTML {
 				om.writeValue(jg, p.getType());
 			} else {
 				Object value = p.getTypedValue();
-				if (p.getType() == Property.BINARY_PROPERTY) {
+				if (p.getType().equals(Property.BINARY_PROPERTY)) {
 					value = p.getValue();
 				} 
 				om.writeValue(jg, value );
@@ -255,9 +264,7 @@ public class JSONTMLImpl implements JSONTML {
 					prop.setType(ep.getType());
 					prop.setMethod(ep.getMethod());
 				}
-			} else {
-				//System.err.println("Could not find property in template: " + prop.getFullPropertyName());
-			}
+ 			}
 		}
 
 	}
@@ -314,7 +321,7 @@ public class JSONTMLImpl implements JSONTML {
 			} else {
 				String value = jp.getText();
 				if ( parent == null ) {
-					System.err.println("JSONTMLImpl: Could not find message, creating dummy");
+					logger.info("JSONTMLImpl: Could not find message, creating dummy");
 					parent = NavajoFactory.getInstance().createMessage(n, (topLevelMessageName != null ? topLevelMessageName : "Request" ) );
 					n.addMessage(parent);
 				}

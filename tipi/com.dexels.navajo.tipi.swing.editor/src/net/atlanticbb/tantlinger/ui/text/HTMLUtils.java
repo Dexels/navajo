@@ -821,7 +821,7 @@ public class HTMLUtils
             
             String at = atVal.substring(0, equalPos);
             String val = atVal.substring(atVal.indexOf('=') + 1, atVal.length());
-            if(val.startsWith("\""))
+            if(val.length() > 0 && val.charAt(0) == '"')
                 val = val.substring(1, val.length());
             if(val.endsWith("\""))
                 val = val.substring(0, val.length() - 1);
@@ -841,7 +841,7 @@ public class HTMLUtils
      */
     public static String colorToHex(Color color) 
     {
-        String colorstr = new String("#");
+        String colorstr = "#";
 
         // Red
         String str = Integer.toHexString(color.getRed());
@@ -883,7 +883,7 @@ public class HTMLUtils
     {
         String digits;
         //int n = value.length();
-        if(value.startsWith("#"))        
+        if(value.length() > 0 && value.charAt(0) == '#')        
             digits = value.substring(1, Math.min(value.length(), 7));        
         else         
             digits = value;

@@ -73,6 +73,7 @@ public class LocalDigestCacheValidator implements CacheValidator {
 			remoteDigestProperties.load(in);
 		} else {
 			logger.warn("No remote digest properties found");
+			throw new IOException("No remote digest properties found");
 		}
 		
 	}

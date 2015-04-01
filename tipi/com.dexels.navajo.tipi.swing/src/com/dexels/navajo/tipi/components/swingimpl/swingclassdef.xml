@@ -560,6 +560,14 @@
             <param name="header" type="string" />
             <param name="footer" type="string" />
          </method>
+         <method name="setAll">
+            <description>
+               Select all rows and set the value with the following condition:
+               Property named propertyName has the supplied value
+            </description>
+            <param name="propertyName" type="string" required="true" />
+            <param name="value" type="object" required="true" />
+         </method>
          <method name="setAllSelected">
             <description>
                Select all rows with the following condition:
@@ -1032,6 +1040,7 @@
          <value direction="inout" name="resizable" type="boolean" value="true" property="resizable" />
          <value direction="inout" name="enabled" type="boolean" value="true" property="enabled" />
          <value direction="inout" name="selected" type="boolean" value="false" property="selected" />
+         <value direction="inout" name="hideOnClose" type="boolean" value="true" property="hideOnClose" />
       </values>
       <methods>
          <method name="iconify" />

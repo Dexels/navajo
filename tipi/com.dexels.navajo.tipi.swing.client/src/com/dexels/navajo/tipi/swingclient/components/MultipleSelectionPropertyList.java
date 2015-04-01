@@ -146,7 +146,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements
 
 			updateUI();
 		} catch (NavajoException ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 		isReloading = false;
 
@@ -171,7 +171,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements
 		try {
 			myProperty.setSelected(selected);
 		} catch (NavajoException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 	}
 

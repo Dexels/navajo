@@ -217,6 +217,8 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			return;
 		}
 		
+		final String instance = determineInstanceFromRequest(request);
+
 		// PrintWriter out = response.getWriter();
 
 		Navajo tbMessage = null;
@@ -225,9 +227,9 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		try {
 
 			tbMessage = constructFromRequest(request);
-			Navajo resultMessage = handleTransaction(dis, tbMessage, null, null);
+			Navajo resultMessage = handleTransaction(instance, dis, tbMessage, null, null);
 			sendResponse(request, response, resultMessage);
-
+			statLogger.info("direct legacy call");
 		} catch (Exception ce) {
 			logger.error("Error: ", ce);
 		} finally {
@@ -345,6 +347,24 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 
 	private static void setStreamingMode(boolean b) {
 		streamingMode = b;
+	}
+	
+	private String determineInstanceFromRequest(final HttpServletRequest req) {
+		String requestInstance = req.getHeader("X-Navajo-Instance");
+		if(requestInstance!=null) {
+			return requestInstance;
+		}
+		String pathinfo = req.getPathInfo();
+		if(pathinfo.length() > 0 && pathinfo.charAt(0) == '/') {
+			pathinfo = pathinfo.substring(1);
+		}
+		String instance = null;
+		if(pathinfo.indexOf('/')!=-1) {
+			instance = pathinfo.substring(0, pathinfo.indexOf('/'));
+		} else {
+			instance = pathinfo;
+		}
+		return instance;
 	}
 
 	/**
@@ -482,7 +502,9 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 							.equals(COMPRESS_JZLIB))),
 					request.getContentLength(), created);
 
-			Navajo outDoc = handleTransaction(dis, in, certObject, clientInfo);
+			String instance = determineInstanceFromRequest(request);
+			
+			Navajo outDoc = handleTransaction(instance,dis, in, certObject, clientInfo);
 
 			response.setContentType("text/xml; charset=UTF-8");
 			response.setHeader("Accept-Ranges", "none");
@@ -576,8 +598,9 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Navajo handleTransaction(DispatcherInterface dis, Navajo in,
+	private Navajo handleTransaction(String instance, DispatcherInterface dis, Navajo in,
 			Object certObject, ClientInfo clientInfo) throws FatalException {
+		// 
 		if(this.bundleContext!=null) {
 			// OSGi environment:
 			ServiceReference sr = bundleContext.getServiceReference(LocalClient.class.getName());
@@ -586,7 +609,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 				return fallbackHandleTransaction(dis, in, certObject, clientInfo);
 			}
 			LocalClient lc =  (LocalClient)bundleContext.getService(sr);
-			Navajo nn = lc.handleInternal(null, in, certObject, clientInfo);
+			Navajo nn = lc.handleInternal(instance, in, certObject, clientInfo);
 			bundleContext.ungetService(sr);
 			lc = null;
 			return nn;

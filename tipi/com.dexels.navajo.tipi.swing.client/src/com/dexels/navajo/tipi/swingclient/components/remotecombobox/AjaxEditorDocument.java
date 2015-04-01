@@ -52,7 +52,7 @@ public class AjaxEditorDocument extends PlainDocument {
 			text = sp.toString();
 			AjaxEditorDocument.super.removeUpdate(chng);
 		} catch (BadLocationException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 			return;
 		}
 		try {

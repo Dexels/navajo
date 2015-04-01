@@ -35,7 +35,8 @@ public class TipiMenuItem extends TipiSwingComponentImpl {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setWaitCursor(true);
-
+				disableAction(); // Disable immediately
+				
 				performTipiEvent("onActionPerformed", null, false,
 						new Runnable() {
 							@Override
@@ -83,7 +84,12 @@ public class TipiMenuItem extends TipiSwingComponentImpl {
 	 */
 	@Override
 	public void eventStarted(TipiExecutable te, Object event) {
-		if (Container.class.isInstance(getContainer())) {
+	    // We should already be disabled, but just to be sure we do it again
+		disableAction();
+	}
+
+    protected void disableAction() {
+        if (Container.class.isInstance(getContainer())) {
 			runSyncInEventThread(new Runnable() {
 				@Override
 				public void run() {
@@ -92,7 +98,7 @@ public class TipiMenuItem extends TipiSwingComponentImpl {
 				}
 			});
 		}
-	}
+    }
 
 	@Override
 	public void eventFinished(TipiExecutable te, Object event) {

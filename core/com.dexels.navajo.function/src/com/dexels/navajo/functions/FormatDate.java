@@ -79,7 +79,7 @@ public final class FormatDate extends FunctionInterface {
     	FormatDate fd = new FormatDate();
     	fd.reset();
     	fd.insertOperand(new java.util.Date());
-    	fd.insertOperand(new java.lang.String("yyyy-mm-dd"));
+    	fd.insertOperand("yyyy-mm-dd");
     	Object o = fd.evaluateWithTypeChecking();
     	System.err.println(o);
     }

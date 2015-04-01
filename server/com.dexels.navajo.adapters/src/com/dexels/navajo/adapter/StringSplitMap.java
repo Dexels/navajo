@@ -2,7 +2,6 @@ package com.dexels.navajo.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;

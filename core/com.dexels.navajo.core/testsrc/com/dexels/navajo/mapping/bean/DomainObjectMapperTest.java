@@ -61,7 +61,7 @@ public class DomainObjectMapperTest {
 		m = dom.setMethodReference(TestPOJO.class, "name", new Class[] {
 				Relation.class, String.class });
 		assertNotNull(m);
-		m.invoke(tp, new Object[] { r, new String("school") });
+		m.invoke(tp, new Object[] { r, "school" });
 		assertEquals("basisschool", tp.getName());
 	}
 
@@ -159,7 +159,7 @@ public class DomainObjectMapperTest {
 		assertEquals("Suk", result.toString());
 
 		result = dom.getDomainObjectAttribute("name",
-				new Object[] { new String("Hallo") });
+				new Object[] { "Hallo" });
 		assertNotNull(result);
 		assertEquals("Hallo", result.toString());
 
@@ -167,7 +167,7 @@ public class DomainObjectMapperTest {
 		assertNotNull(dom.getMethod("name", new Class[] { String.class }));
 
 		result = dom.getDomainObjectAttribute("name", new Object[] {
-				new String("soep"), new String("kip") });
+				"soep", "kip" });
 		assertNotNull(result);
 		assertEquals("soepkip", result.toString());
 

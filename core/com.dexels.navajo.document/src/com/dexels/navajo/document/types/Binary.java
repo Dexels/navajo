@@ -305,12 +305,20 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	this();
     	// TODO: For sandbox, set inMemory directly to data
         if (data != null) {
+            OutputStream fos =null;
             try {
-                OutputStream fos = createTempFileOutputStream();
+                fos = createTempFileOutputStream();
                 fos.write(data);
                 fos.close();
             } catch (IOException e) {
             	logger.error("Error: ", e);
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (Exception e) {
+                    }
+                }
             }
             
             this.mimetype = guessContentType();
@@ -329,21 +337,32 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
 
     private void parseFromReader(Reader reader) throws IOException {
-        OutputStream fos = createTempFileOutputStream();
-        PushbackReader pr = null;
-        if (reader instanceof PushbackReader) {
-            pr = (PushbackReader) reader;
-        } else {
-            pr = new PushbackReader(reader, QDParser.PUSHBACK_SIZE);
-        }
-
-        Writer w = Base64.newDecoder(fos);
+        OutputStream fos = null;
         try {
-            copyBufferedBase64Resource(w, pr);
-        } catch (Base64DecodingFinishedException e) {
+            fos = createTempFileOutputStream();
+            PushbackReader pr = null;
+            if (reader instanceof PushbackReader) {
+                pr = (PushbackReader) reader;
+            } else {
+                pr = new PushbackReader(reader, QDParser.PUSHBACK_SIZE);
+            }
+
+            Writer w = Base64.newDecoder(fos);
+            try {
+                copyBufferedBase64Resource(w, pr);
+            } catch (Base64DecodingFinishedException e) {
+            }
+            w.flush();
+        } finally {
+            if (fos != null) {
+                try{ 
+                    fos.close();
+                } catch (Exception e) {
+                    
+                }
+            }
         }
-        w.flush();
-        fos.close();
+      
         this.mimetype = getSubType("mime");
         this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
 //		setDigest(messageDigest.digest());
@@ -552,12 +571,16 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     public final void write(OutputStream to, boolean close) throws IOException {
         InputStream in = getDataAsStream();
         if (in != null) {
-            copyResource(to, in, close);
             try {
-                in.close();
-            } catch (Exception e) {
-                // Don't care
+                copyResource(to, in, close);
+            } finally {
+                try {
+                    in.close();
+                } catch (Exception e) {
+                    // Don't care
+                }
             }
+
         }
     }
 

@@ -60,4 +60,16 @@ public class NavajoServerInstance implements NavajoServerContext {
 		}
 	}
 
+
+	@Override
+	public String getOutputPath() {
+		return installationPath;
+	}
+
+
+	@Override
+	public String getTempPath() {
+		return installationPath;
+	}
+
 }

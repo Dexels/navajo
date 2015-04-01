@@ -478,7 +478,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
                         tcomp.loadPropertiesFromNavajo(n);
                     }
                 } else {
-                   logger.warn("Stopping cascase load at {} since we seem to be listening to other services", tcomp);
+                   logger.warn("Stopping cascade load at {} since we seem to be listening to other services", tcomp);
                 }
             }
         }
@@ -580,7 +580,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 
 			@Override
 			public void run() {
-				ArrayList<Message> al = m.getAllMessages();
+			    List<Message> al = m.getAllMessages();
 
 				Map<String, Object> staticParams = new HashMap<String, Object>();
 				staticParams.put("array", m);
@@ -597,7 +597,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 						eventParams.put("index", index);
 						eventParams.put("size", al.size());
 						performTipiEvent("onBeforeElement", eventParams, true);
-						TipiComponent child = getTipiComponent("" + index);
+						TipiComponent child = getTipiComponent("" + index, false);
 
 						if (child instanceof MessageComponent) {
 							MessageComponent mc = (MessageComponent) child;

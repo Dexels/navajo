@@ -25,10 +25,6 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 	
 	private HTMLEditorPane editor = null;
 
-	@Override
-	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
-		super.performComponentMethod(name, compMeth, event);
-	}
 	
 
 	public Object createContainer() {

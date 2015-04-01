@@ -27,18 +27,10 @@ public class NavajoHtmlRendererContext extends SimpleHtmlRendererContext {
 		this.owner = owner;
 	}
 
-	@Override
-	public void alert(String message) {
-		super.alert(message);
-	}
 
 
 	
 
-	@Override
-	public void error(String message, Throwable throwable) {
-		super.error(message, throwable);
-	}
 
 	@Override
 	public String prompt(String message, String inputDefault) {
@@ -71,10 +63,6 @@ public class NavajoHtmlRendererContext extends SimpleHtmlRendererContext {
 	@Override
 	public String getStatus() {
 		return (String) owner.getValue("status");
-	}
-	@Override
-	public void warn(String message, Throwable throwable) {
-		super.warn(message, throwable);
 	}
 
 }

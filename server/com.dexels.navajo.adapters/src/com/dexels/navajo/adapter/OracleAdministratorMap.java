@@ -170,7 +170,7 @@ public class OracleAdministratorMap extends SQLMap {
 			final String t = iter.next();
 			tableBuf.append("'" + t + "'");
 			if (iter.hasNext()) {
-				tableBuf.append(",");
+				tableBuf.append(',');
 			}
 
 		}

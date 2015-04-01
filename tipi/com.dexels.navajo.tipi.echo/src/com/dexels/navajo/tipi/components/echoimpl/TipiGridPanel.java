@@ -277,7 +277,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
                 element = element.substring(0, element.length() - 1);
                 // logger.info("Starr. reuslt: "+element);
             }
-            int val = new Integer(element).intValue();
+            int val = Integer.parseInt(element);
             myWidths.add(new Integer(val));
             // addColumnStrut(count, val);
             count++;

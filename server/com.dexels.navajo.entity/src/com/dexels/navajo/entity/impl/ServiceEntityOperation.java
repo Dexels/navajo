@@ -269,7 +269,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				ServiceEntityOperation seo = new ServiceEntityOperation(EntityManager.getInstance(), DispatcherFactory.getInstance(), o);
 				seo.perform(r_n);
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
+				logger.error("Error: ", e);
 			}
 		}
 	}
@@ -314,7 +314,7 @@ public class ServiceEntityOperation implements EntityOperation {
 								entityObj = seo.perform(referencedEntities.get(entityName));
 								cachedEntities.put(entityName, entityObj);
 							} catch (Exception e) {
-								e.printStackTrace(System.err);
+								logger.error("Error: ", e);
 							}
 						} else {
 							entityObj = cachedEntities.get(entityName);
@@ -684,7 +684,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		// No transaction support yet
 		Navajo result =  commitOperation(request, myOperation);
 		
-		if (result.getMessage("errors") != null) {
+		if (result.getMessage("error") != null) {
 			throw new EntityException(EntityException.SERVER_ERROR);
 		}
 		return result;
@@ -796,7 +796,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				} 
 			}
 			if ( dispatcher != null ) {
-				return dispatcher.handle(cleaned, true);
+				return dispatcher.handle(cleaned, false);
 			} else
 				if ( client != null ) {
 					return client.call(cleaned);

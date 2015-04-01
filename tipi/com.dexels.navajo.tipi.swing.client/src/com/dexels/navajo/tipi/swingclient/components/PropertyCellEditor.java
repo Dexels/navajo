@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
@@ -90,7 +89,7 @@ public class PropertyCellEditor implements TableCellEditor,
 				try {
 					myTable.showEditDialog("Edit", lastSelectedRow);
 				} catch (Exception ex) {
-					ex.printStackTrace();
+					logger.error("Error: ", ex);
 				}
 			}
 		});
@@ -137,22 +136,6 @@ public class PropertyCellEditor implements TableCellEditor,
 			myProperty.addPropertyChangeListener(this);
 			myPropertyType = myProperty.getType();
 			if (myPropertyType.equals(Property.SELECTION_PROPERTY)) {
-
-				try {
-					if (row == 0) {
-						// logger.info("\n\n=====================================================================================");
-						for (int i = 0; i < myProperty.getAllSelections()
-								.size(); i++) {
-							// logger.info("EDITOR SEL: " + ( (Selection)
-							// myProperty.getAllSelections().get(i)).getName() +
-							// " selected: " + ( (Selection)
-							// myProperty.getAllSelections().get(i)).isSelected());
-						}
-						// logger.info("=====================================================================================");
-					}
-				} catch (Exception e) {
-					logger.error("Error: ",e);
-				}
 
 				if (myProperty.getCardinality().equals("+")) {
 					if (myMultiSelectPropertyBox == null) {
@@ -219,7 +202,7 @@ public class PropertyCellEditor implements TableCellEditor,
 										// checkPropertyUpdate(myProperty,
 										// myPropertyBox.getLastSelection());
 									} catch (NavajoException e1) {
-										e1.printStackTrace();
+										logger.error("Error: ", e1);
 									}
 									stopCellEditing();
 									// }
@@ -264,7 +247,7 @@ public class PropertyCellEditor implements TableCellEditor,
 										!myPropertyCheckBox.isSelected(),
 										myPropertyCheckBox.isSelected());
 							} catch (NavajoException e1) {
-								e1.printStackTrace();
+								logger.error("Error: ", e1);
 							}
 							// Since a change in a checkbox can cause immediate
 							// changes in sorting, stopCellEditing mode to allow
@@ -273,14 +256,6 @@ public class PropertyCellEditor implements TableCellEditor,
 						}
 					});
 				}
-				// myPropertyCheckBox.addFocusListener(new FocusAdapter(){
-				// public void focusLost(FocusEvent e){
-				// ((PropertyControlled)e.getSource()).update();
-				// stopCellEditing();
-				// logger.info("CHECKOBOX FIRED TOWARDS EDITOR");
-				// }
-				// });
-
 				myPropertyCheckBox.setProperty(myProperty);
 				myPropertyCheckBox.setEnabled(myProperty.isDirIn());
 				lastComponent = myPropertyCheckBox;
@@ -362,8 +337,7 @@ public class PropertyCellEditor implements TableCellEditor,
 					myIntegerPropertyField.getProperty().setValue(
 							myIntegerPropertyField.getText());
 				} catch (PropertyTypeException ex) {
-					logger.info(ex.getMessage());
-					ex.printStackTrace();
+					logger.info(ex.getMessage(),ex);
 					myIntegerPropertyField.setText(""
 							+ myIntegerPropertyField.getProperty()
 									.getTypedValue());

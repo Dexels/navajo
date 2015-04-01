@@ -119,7 +119,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			for (Selection s  : this) {
 				sb.append(s.getValue());
 				if(index<size()-1) {
-					sb.append(",");
+					sb.append(',');
 				} 
 				index++;
 			}
@@ -325,7 +325,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	public final String getValue() {
 		if (myBinary != null) {
 			logger.info("Do you REALLY want this binary as a string? You really shouldn't..");
-			Thread.dumpStack();
 			return myBinary.getBase64();
 		}
 		return myValue;
@@ -474,7 +473,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	private void setSelectionList(List<?> list) {
-		ArrayList<String> values = new ArrayList<String>();
+		ArrayList<String> values= new ArrayList<String>();
 		for (Object s : list) {
 			values.add(((Selection)s).getValue());
 		}
@@ -549,6 +548,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			try {
 				refreshExpression();
 			} catch (ExpressionChangedException e) {
+			    logger.warn("ExpressionChangedException error on getEvaluatedType: {}", e);
 			}
 		}
 		return evaluatedType;
@@ -584,7 +584,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		}
 	}
 
-	private void updateExpressionSelections(ArrayList<Selection> list) throws NavajoException {
+	private void updateExpressionSelections(List<Selection> list) throws NavajoException {
 		removeAllSelections();
 		for (int i = 0; i < list.size(); i++) {
 			Selection s = list.get(i);
@@ -1555,10 +1555,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		return super.hashCode();
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		return super.equals(o);
-	}
+
+
 
 	// public int compare(Property p) {
 	// Comparable ob1 = (Comparable)getAlternativeTypedValue();
@@ -1698,7 +1696,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				for (Selection s  : this) {
 					sb.append(s.getValue());
 					if(index<size()-1) {
-						sb.append(",");
+						sb.append(',');
 					} 
 					index++;
 				}
@@ -1800,11 +1798,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 			java.util.Date myDate = (java.util.Date) getTypedValue();
 			java.util.Date otherDate = (java.util.Date) p.getTypedValue();
-			if (dateFormat2.get().format(myDate).equals(dateFormat2.get().format(otherDate))) {
-				return true;
-			} else {
-				return false;
-			}
+			return dateFormat2.get().format(myDate).equals(dateFormat2.get().format(otherDate));
 		}
 		// Check for selection properties.
 		else if (p.getType().equals(Property.SELECTION_PROPERTY)) {

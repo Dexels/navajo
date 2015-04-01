@@ -349,7 +349,7 @@ public abstract class AbstractKMLMap {
 
 		// Introspect other properties.
 		StringBuffer descr = new StringBuffer();
-		ArrayList<Property> properties = message.getAllProperties();
+		List<Property> properties = message.getAllProperties();
 		for (Iterator<Property> iterator = properties.iterator(); iterator.hasNext();) {
 			Property property = iterator.next();
 			if (!(property.getName().equals("Longitude") || property.getName().equals("Latitude") || property.getName().equals("Id") || property.getName().equals("Name"))) {

@@ -90,6 +90,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		File globalPropertyFile = new File(settings, "application.properties");
 		Map<String, Object> globalProperties = readProperties(
 				globalPropertyFile, deployment);
+		registerGlobalConfiguration(globalProperties);
 		Map<String, Set<String>> aliases = new HashMap<String, Set<String>>();
 		Map<String, Message> globalResources = readResources(
 				globalResourceFile, aliases, deployment);
@@ -430,6 +431,27 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			addDatasource(name, dataSource, aliases);
 		}
 	}
+	
+	private void registerGlobalConfiguration(Map<String, Object> map) {
+
+		Dictionary<String, Object> settings = new Hashtable<String, Object>();
+		final String filter = "(&(instance=default) (factoryPid=" + "navajo.global.manager"
+				+ "))";
+		settings.put("instance", "default");
+		Configuration cc;
+		try {
+			cc = createOrReuse("navajo.global.manager", filter);
+			for (Entry<String, Object> x : map.entrySet()) {
+				settings.put(x.getKey(), x.getValue());
+			}
+			updateIfChanged(cc, settings);
+		} catch (IOException e) {
+			logger.error("Error appending global config: {}",  e);
+		}
+		
+
+
+	}
 
 	// navajo.instance.properties
 	private void registerInstanceProperties(String instance,
@@ -673,6 +695,24 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	@Override
 	public String getInstallationPath() {
 		return repositoryInstance.getRepositoryFolder().getAbsolutePath();
+	}
+
+	@Override
+	public String getOutputPath() {
+		File outputFolder = repositoryInstance.getOutputFolder();
+		if(outputFolder!=null) {
+			return outputFolder.getAbsolutePath();
+		}
+		return getInstallationPath();
+	}
+
+	@Override
+	public String getTempPath() {
+		File tempFolder = repositoryInstance.getTempFolder();
+		if(tempFolder!=null) {
+			return tempFolder.getAbsolutePath();
+		}
+		return getInstallationPath();
 	}
 
 }

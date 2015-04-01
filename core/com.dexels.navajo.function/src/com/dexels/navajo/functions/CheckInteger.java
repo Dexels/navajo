@@ -71,7 +71,7 @@ public String usage() {
   public static void main(String [] args) throws Exception {
     CheckInteger ci = new CheckInteger();
     ci.reset();
-    ci.insertOperand(new String("aap"));
+    ci.insertOperand("aap");
     Object result = ci.evaluate();
     System.err.println("result = " + result);
 

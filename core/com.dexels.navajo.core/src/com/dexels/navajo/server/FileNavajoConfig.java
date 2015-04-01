@@ -190,7 +190,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 			return qualifiedFile;
 		}
 		if(!generalFile.exists()) {
-			throw new FileNotFoundException("Script not found: "+rpcName);
+			throw new FileNotFoundException("Script not found: "+rpcName+" no such file: "+generalFile.getAbsolutePath());
 		}
 		return generalFile;
 	}

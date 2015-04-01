@@ -366,7 +366,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 			throw new UserException(-1, "No mappable message specified.");
 		}
 
-		ArrayList<Property> allProperties = mapMsg.getAllProperties();
+		List<Property> allProperties = mapMsg.getAllProperties();
 		for ( int i = 0; i < allProperties.size(); i++ ) {
 			Property p = allProperties.get(i);
 			if ( !isAnExcludedProperty(p.getName()) ) {

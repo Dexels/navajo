@@ -226,9 +226,9 @@ public class BaseRequestImpl implements AsyncRequest {
 		if (inDoc != null
 				&& inDoc.getHeader() != null
 				&& outDoc.getHeader() != null
-				&& isSpecialwebservice(inDoc.getHeader()
+				&& !isSpecialwebservice(inDoc.getHeader()
 						.getRPCName())) {
-			statLogger.info ("("
+			statLogger.info("("
 					+ instance
 					+ "): "
 					+ new java.util.Date(connectedAt)
@@ -325,12 +325,7 @@ public class BaseRequestImpl implements AsyncRequest {
 		  if (name == null) {
 			  return false;
 		  }
-		  if ( name.startsWith("navajo") || name.equals("InitNavajoStatus") || name.equals("navajo_logon") ) {
-			  return true;
-		  }
-		  else {
-			  return false;
-		  }
+		  return name.startsWith("navajo") || name.equals("InitNavajoStatus") || name.equals("navajo_logon");
 	  }
 
 }

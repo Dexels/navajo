@@ -64,6 +64,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+			    
 				doFireAction(myButton);
 			}
 		};
@@ -71,6 +72,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+			    
 				buttonAction.actionPerformed(e);
 			}
 		});
@@ -161,16 +163,16 @@ public class TipiButton extends TipiSwingComponentImpl {
 	// private boolean enabled = false;
 	@Override
 	public void eventStarted(TipiExecutable te, Object event) {
-		if (Container.class.isInstance(getContainer())) {
-			runSyncInEventThread(new Runnable() {
-				@Override
-				public void run() {
-					// enabled = ( (Container) getContainer()).isEnabled();
-					getSwingContainer().setEnabled(false);
-					// setCursor(Cursor.WAIT_CURSOR);
-				}
-			});
-		}
+		// Disabling happened at the doFireAction already. However, just to be sure,
+	    // we disable it again in case we got here from elsewhere
+	    if (Container.class.isInstance(getContainer())) {
+            runSyncInEventThread(new Runnable() {
+                @Override
+                public void run() {
+                    getSwingContainer().setEnabled(false);
+                }
+            });
+        }
 	}
 
 	@Override
@@ -180,7 +182,6 @@ public class TipiButton extends TipiSwingComponentImpl {
 				@Override
 				public void run() {
 					((Container) getContainer()).setEnabled(iAmEnabled);
-					// setCursor(Cursor.DEFAULT_CURSOR);
 				}
 			});
 		}
@@ -190,6 +191,16 @@ public class TipiButton extends TipiSwingComponentImpl {
 		final JRootPane root = myButton.getRootPane();
 		setWaitCursor(true, root);
 
+		// Disable button straight away to prevent duplicate clicks
+        if (Container.class.isInstance(getContainer())) {
+            runSyncInEventThread(new Runnable() {
+                @Override
+                public void run() {
+                    getSwingContainer().setEnabled(false);
+                }
+            });
+        }
+        
 		performTipiEvent("onActionPerformed", null, false, new Runnable() {
 			@Override
 			public void run() {

@@ -42,7 +42,7 @@ public class NavajoCamelProducer extends DefaultProducer {
 	public void process(Exchange exchange) throws Exception {
 //    	exchange.get
     	Message in = exchange.getIn();
-    	Object rawbody = in.getBody();
+    	Object rawbody = in.getBody(Navajo.class);
     	if(rawbody instanceof Navajo) {
     		Navajo navajoDoc = (Navajo) rawbody;
     		setupHeader(navajoDoc);

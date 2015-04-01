@@ -1,0 +1,185 @@
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../tipi.xsd">
+    <!-- constraints & id have to be added at instantiate time -->
+    <d.panel name="tabPersonWindowClubFunctions" applyCss="true">
+        <l.mig grid="wrap 1, ins 2, fill">
+            <c.panel id="memberFunctions" constraint="Center, grow" opaque="false" cssClass="'borderMemberFunctions'">
+                <l.mig grid="wrap 1, ins 0, fill">
+                    <c.tipitable id="currentFunctionTable" constraint="Center, grow" opaque="false" columnsvisible="false" filtersvisible="false" messagepath="'/MemberFunctions'" service="vla/ProcessVLAQueryMemberFunctions">
+                        <onLoad>
+                            <!-- enable / disable add /remove buttons -->
+                            <block condition="Size( {message:/vla/ProcessVLAQueryMemberFunctions:/MemberFunctions} ) &gt; 0">
+                                <button.attribute enabled="({global:/PersonStatus} == 'created' OR {global:/PersonStatus} == 'insync' OR {global:/PersonStatus} == 'changed' OR {global:/PersonStatus} == 'removed') AND (({global:/PersonType} != 'CLUBRELATION' AND ( {global:/HasClubMembers} AND !{global:/IsClubMembersReadOnly} ) ) OR ({global:/PersonType} == 'CLUBRELATION' AND ( {global:/HasClubRelations} AND !{global:/IsClubRelationsReadOnly})))" path="{component:/../functionsToolbar/functionDelete}" />
+                            </block>
+                            <block condition="Size( {message:/vla/ProcessVLAQueryMemberFunctions:/MemberFunctions} ) == 0">
+                                <button.attribute enabled="false" path="{component:/../functionsToolbar/functionDelete}" />
+                            </block>
+                            <button.attribute enabled="({global:/PersonStatus} == 'created' OR {global:/PersonStatus} == 'insync' OR {global:/PersonStatus} == 'changed' OR {global:/PersonStatus} == 'removed') AND (({global:/PersonType} != 'CLUBRELATION' AND ( {global:/HasClubMembers} AND !{global:/IsClubMembersReadOnly} ) ) OR ({global:/PersonType} == 'CLUBRELATION' AND ( {global:/HasClubRelations} AND !{global:/IsClubRelationsReadOnly} )))" path="{component:/../functionsToolbar/functionAdd}" />
+                        </onLoad>
+                        <onValueChanged>
+                            <set value="true" element="{propertyref:/.:selectedMessage:Update}" />
+                        </onValueChanged>
+                        <column label="'Functie'" name="FunctionType" size="150" />
+                        <column label="'Start'" name="RegistrationDate" size="100" editable="true" />
+                        <column label="'Eind'" name="DeregistrationDate" size="100" />
+                        <column-attribute name="UpdateStatus" type="rowColor">
+                            <param name="created" value="#FFAAAA" />
+                            <param name="removed" value="#666666" />
+                            <param name="insync_removed" value="#BBBBBB" />
+                            <param name="parked" value="#999999" />
+                        </column-attribute>
+                        <remarks />
+                    </c.tipitable>
+                    <!-- functions toolbar -->
+                    <c.panel id="functionsToolbar" constraint="South, growx" opaque="false">
+                        <l.mig grid="fillx, ins 5">
+                            <c.hidden constraint="growx" />
+                            <c.button id="functionAdd" cssClass="'addButtonSmall'" enabled="false" tooltip="'Invoegen functie'" borderVisible="false">
+                                <onActionPerformed>
+                                    <instantiate id="'insertFunctionWindow'" location="{component://init/desktop}" name="'insertFunctionWindow'" />
+                                    <setValue to="{propertyref:/vla/InitMessageStoreData:/QueryUpdateMember/RoleId}" from="{global:/PersonType}"/>
+                                    <callService service="'vla/ProcessVLAQueryMemberFunctions'" input="{navajo:/vla/InitMessageStoreData}"/>
+                                </onActionPerformed>
+                            </c.button>
+                            <c.button id="functionDelete" cssClass="'deleteButtonSmall'" enabled="false" tooltip="'Verwijderen functie'" borderVisible="false">
+                                <onActionPerformed>
+                                    <block condition="{property:/../../currentFunctionTable:selectedMessage:UpdateStatus} == 'insync_removed'">
+                                        <showQuestion text="'Deze actie verwijdert de historie van dit lid. Weet u het zeker?'" />
+                                        <setValue from="true" to="{propertyref:/../../currentFunctionTable:selectedMessage:Delete}" />
+                                        <callService service="'vla/ProcessVLADeleteMemberFunction'" input="{navajo:/vla/ProcessVLAQueryMemberFunctions}" breakOnError="true"/>
+                                        <callService service="'vla/ProcessVLAQueryMemberFunctions'" input="{navajo:/vla/InitMessageStoreData}" />
+                                        <set value="-1" element="{attributeref:/../../currentFunctionTable:selectedIndex}" />
+                                    </block>
+                                    <block condition="{attribute:/../../currentFunctionTable:selectedIndex} != '-1' AND {property:/../../currentFunctionTable:selectedMessage:UpdateStatus} != 'insync_removed'">
+                                        <showQuestion text="'Deze actie beeindigt de functie en kan niet ongedaan worden gemaakt. Weet u het zeker?'" />
+                                        <setValue from="true" to="{propertyref:/../../currentFunctionTable:selectedMessage:Delete}" />
+                                        <callService service="'vla/ProcessVLADeleteMemberFunction'" input="{navajo:/vla/ProcessVLAQueryMemberFunctions}" breakOnError="true"/>
+                                        <callService service="'vla/ProcessVLAQueryMemberFunctions'" input="{navajo:/vla/InitMessageStoreData}" />
+                                    </block>
+                                </onActionPerformed>
+                            </c.button>
+                        </l.mig>
+                    </c.panel>
+                </l.mig>
+            </c.panel>
+
+            <c.panel id="clubTrainers" constraint="Center, grow" opaque="false" cssClass="'borderClubTrainers'">
+                <l.mig grid="wrap 1, ins 0, fill">
+                    <c.tipitable id="currentTrainerTable" constraint="Center, grow" opaque="false" columnsvisible="false" filtersvisible="false" messagepath="'/ClubTrainers'" service="vla/ProcessVLAQueryClubTrainers">
+                        <onLoad>
+                            <!-- enable / disable add /remove buttons -->
+                            <block condition="Size({message:/vla/ProcessVLAQueryClubTrainers:/ClubTrainers}) &gt; 0">
+                                <button.attribute enabled="({global:/PersonStatus} == 'created' OR {global:/PersonStatus} == 'insync' OR {global:/PersonStatus} == 'changed' OR {global:/PersonStatus} == 'removed') AND (({global:/PersonType} != 'CLUBRELATION' AND {global:/HasClubMembers}) OR ({global:/PersonType} == 'CLUBRELATION' AND ( {global:/HasClubRelations} AND !{global:/IsClubRelationsReadOnly} ) ))" path="{component:/../trainersToolbar/trainerDelete}" />
+                            </block>
+                            <block condition="Size({message:/vla/ProcessVLAQueryClubTrainers:/ClubTrainers}) == 0">
+                                <button.attribute enabled="false" path="{component:/../trainersToolbar/trainerDelete}" />
+                            </block>
+                            <button.attribute enabled="({global:/PersonStatus} == 'created' OR {global:/PersonStatus} == 'insync' OR {global:/PersonStatus} == 'changed' OR {global:/PersonStatus} == 'removed') AND (({global:/PersonType} != 'CLUBRELATION' AND {global:/HasClubMembers}) OR ({global:/PersonType} == 'CLUBRELATION' AND ( {global:/HasClubRelations} AND !{global:/IsClubRelationsReadOnly} ) ))" path="{component:/../trainersToolbar/trainerAdd}" />
+                        </onLoad>
+                        <column editable="false" label="'Speltype'" name="GameTypeDescription" size="70" />
+                        <column editable="false" label="'Speeldag'" name="CompetitionTypeDescription" size="70" />
+                        <column editable="false" label="'Trainersoort'" name="TrainerTypeDescription" size="200" />
+                        <column editable="false" label="'Bezoldigd'" name="Payed" size="100" />
+                        <column editable="false" label="'Start'" name="RegistrationDate" size="100" />
+                        <column editable="false" label="'Eind'" name="DeregistrationDate" size="100" />
+                        <column-attribute name="UpdateStatus" type="rowColor">
+                            <param name="created" value="#FFAAAA" />
+                            <param name="removed" value="#666666" />
+                            <param name="insync_removed" value="#BBBBBB" />
+                            <param name="parked" value="#999999" />
+                        </column-attribute>
+                        <remarks />
+                    </c.tipitable>
+                    <!-- trainers toolbar -->
+                    <c.panel id="trainersToolbar" constraint="South, growx" opaque="false">
+                        <l.mig grid="fillx, ins 5">
+                            <c.hidden constraint="growx" />
+                            <c.button id="trainerAdd" cssClass="'addButtonSmall'" enabled="false" tooltip="'Invoegen trainerschap'" borderVisible="false">
+                                <onActionPerformed>
+                                    <instantiate id="'insertTrainerWindow'" location="{component://init/desktop}" name="'insertTrainerWindow'" />
+                                    <setValue to="{propertyref:/vla/InitMessageStoreData:/QueryUpdateMember/RoleId}" from="{global:/PersonType}"/>
+                                    <callService service="'vla/ProcessVLAQueryClubTrainers'" input="{navajo:/vla/InitMessageStoreData}"/>
+                                </onActionPerformed>
+                            </c.button>
+                            <c.button id="trainerDelete" cssClass="'deleteButtonSmall'" enabled="false" tooltip="'Verwijderen trainerschap'" borderVisible="false">
+                                <onActionPerformed>
+                                    <block condition="{property:/../../currentTrainerTable:selectedMessage:UpdateStatus} == 'insync_removed'">
+                                        <showQuestion text="'Deze actie verwijdert de historie van dit lid. Weet u het zeker?'" />
+                                        <setValue from="true" to="{propertyref:/../../currentTrainerTable:selectedMessage:Delete}" />
+                                        <callService service="'vla/ProcessVLADeleteClubTrainer'" input="{navajo:/vla/ProcessVLAQueryClubTrainers}" breakOnError="true"/>
+                                        <callService service="'vla/ProcessVLAQueryClubTrainers'" input="{navajo:/vla/InitMessageStoreData}" />
+                                        <set value="-1" element="{attributeref:/../../currentTrainerTable:selectedIndex}" />
+                                    </block>
+                                    <block condition="{attribute:/../../currentTrainerTable:selectedIndex} != '-1' AND {property:/../../currentTrainerTable:selectedMessage:UpdateStatus} != 'insync_removed'">
+                                        <showQuestion text="'Deze actie beeindigt het trainerschap en kan niet ongedaan worden gemaakt. Weet u het zeker?'" />
+                                        <setValue from="true" to="{propertyref:/../../currentTrainerTable:selectedMessage:Delete}" />
+                                        <callService service="'vla/ProcessVLADeleteClubTrainer'" input="{navajo:/vla/ProcessVLAQueryClubTrainers}" breakOnError="true"/>
+                                        <callService service="'vla/ProcessVLAQueryClubTrainers'" input="{navajo:/vla/InitMessageStoreData}" />
+                                    </block>
+                                </onActionPerformed>
+                            </c.button>
+                        </l.mig>
+                    </c.panel>
+                </l.mig>
+            </c.panel>
+            
+            <c.panel id="committees" constraint="Center, grow" opaque="false" cssClass="'borderCommittees'">
+                <l.mig grid="wrap 1, ins 0, fill">
+                    <c.tipitable id="currentCommitteesTable" constraint="Center, grow" opaque="false" messagepath="'/CommitteeParticipant'" service="vla/committee/ProcessQueryPersonCommittees">
+                        <onLoad>
+                            <!-- enable / disable add /remove buttons -->
+                            <block condition="Size({message:/vla/committee/ProcessQueryPersonCommittees:/CommitteeParticipant}) &gt; 0">
+                                <button.attribute enabled="{global:/HasCommittees} AND {global:/PersonStatus} != 'insync_removed'" path="{component:/../committeesToolbar/committeeDelete}" />
+                            </block>
+                            <block condition="Size({message:/vla/committee/ProcessQueryPersonCommittees:/CommitteeParticipant}) == 0">
+                                <button.attribute enabled="false" path="{component:/../committeesToolbar/committeeDelete}" />
+                            </block>
+                            <button.attribute enabled="{global:/HasCommittees} AND {global:/PersonStatus} != 'insync_removed'" path="{component:/../committeesToolbar/committeeInsert}" />
+                            <!-- Set buttons to disabled when user has readonly rights -->
+                            <executeMethod name="'SetReadOnlyModes'" rootComponent="{component://init/desktop/personWindow}"/>
+                        </onLoad>
+                        <onValueChanged>
+                            <set value="true" element="{propertyref:/.:selectedMessage:Update}" />
+                        </onValueChanged>
+                        <column editable="false" label="'Commissie'" name="CommitteeName" size="100" />
+                        <column editable="false" label="'Functie'" name="FunctionDesc" size="100" />
+                        <column editable="false" label="'Start'" name="RelationStart" size="100" />
+                        <column editable="false" label="'Eind'" name="RelationEnd" size="100" />
+                        <column-attribute name="UpdateStatus" type="rowColor">
+                            <param name="created" value="#FFAAAA" />
+                            <param name="removed" value="#666666" />
+                            <param name="insync_removed" value="#BBBBBB" />
+                            <param name="parked" value="#999999" />
+                        </column-attribute>
+                        <remarks />
+                    </c.tipitable>
+                    <!-- committees toolbar -->
+                    <c.panel id="committeesToolbar" constraint="South, growx" opaque="false">
+                        <l.mig grid="fillx, ins 5">
+                            <c.hidden constraint="growx" />
+                            <c.button id="committeeInsert" cssClass="'addButtonSmall'" enabled="false" text="''" tooltip="'ken deelnemer toe aan een commissie'" borderVisible="false">
+                                <onActionPerformed>
+                                    <instantiate id="'committeeInsertCommitteeParticipantDialog'" location="{component://init/desktop}" name="'committeeInsertCommitteeParticipantDialog'" />
+                                </onActionPerformed>
+                            </c.button>
+                            <c.button id="committeeDelete" cssClass="'deleteButtonSmall'" enabled="false" tooltip="'Verwijderen deelnemer'" borderVisible="false">
+                                <onActionPerformed>
+                                    <block condition="!IsEmpty({property:/../../currentCommitteesTable:selectedMessage:RelationEnd})">
+                                        <showQuestion text="'Deze actie verwijdert de historie van dit lid. Weet u het zeker?'" />
+                                        <setValue from="true" to="{propertyref:/../../currentCommitteesTable:selectedMessage:Delete}" />
+                                        <callService service="'vla/committee/ProcessDeleteCommitteeParticipants'" input="{navajo:/vla/committee/ProcessQueryPersonCommittees}"/>
+                                    </block>
+                                    <block condition="IsEmpty({property:/../../currentCommitteesTable:selectedMessage:RelationEnd})">
+                                        <setValue from="true" to="{propertyref:/../../currentCommitteesTable:selectedMessage:Delete}" />
+                                        <callService service="'vla/committee/ProcessDeleteCommitteeParticipants'" input="{navajo:/vla/committee/ProcessQueryPersonCommittees}"/>
+                                    </block>
+                                    <!-- Refresh list -->
+                                    <callService service="'vla/committee/ProcessQueryPersonCommittees'" input="{navajo:/vla/InitMessageStoreData}" />
+                                </onActionPerformed>
+                            </c.button>
+                        </l.mig>
+                    </c.panel>
+                </l.mig>
+            </c.panel>
+        </l.mig>
+    </d.panel>
+</tid>

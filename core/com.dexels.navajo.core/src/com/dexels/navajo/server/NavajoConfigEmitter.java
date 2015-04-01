@@ -303,7 +303,7 @@ public class NavajoConfigEmitter implements EventHandler {
  */
 	private void addAllProperties(Message message,
 			Dictionary<String, Object> data) {
-		ArrayList<Property> all = message.getAllProperties();
+	    List<Property> all = message.getAllProperties();
 		for (Property property : all) {
 			String name = property.getName();
 			final Object old = data.get(name);

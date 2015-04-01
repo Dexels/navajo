@@ -34,13 +34,17 @@ public class IncludeDependency extends Dependency {
 	public final static long getScriptTimeStamp(String id) {
 		// Try to find included script.
 		String scriptPath =  DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
-		File f = new File(scriptPath, id + ".xml");
-		if ( f.exists() ) {
-			return f.lastModified();
-		} else {
-			return -1;
-		}
+		return getFileTimeStamp(new File(scriptPath, id + ".xml"));
 	}
+	
+	public final static long getFileTimeStamp(File f) {
+        // Try to find included script.
+        if ( f.exists() ) {
+            return f.lastModified();
+        } else {
+            return -1;
+        }
+    }
 	
 	public boolean isTentantSpecificInclude() {
 		return tenantFromScriptPath(scriptPath) != null;

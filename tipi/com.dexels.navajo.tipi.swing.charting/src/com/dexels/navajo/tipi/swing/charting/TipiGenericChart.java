@@ -47,10 +47,6 @@ public class TipiGenericChart extends TipiSwingDataComponentImpl {
 		return myChart;
 	}
 	
-	@Override
-	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {				
-		super.loadData(n, method);
-	}	
 	
 	@SuppressWarnings("rawtypes")
 	public JFreeChart createChart(Navajo n) {

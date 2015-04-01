@@ -156,7 +156,7 @@ public class TslCompiler {
 
 	private String replaceQuotes(String str) {
 
-		if (str.startsWith("#")) {
+		if (str.length() > 0 && str.charAt(0) == '#') {
 			str = "(String) userDefinedRules.get(\"" + str.substring(1) + "\")";
 			return str;
 		} else {
@@ -166,9 +166,9 @@ public class TslCompiler {
 				if (c == '"') {
 					result.append("\\\"");
 				} else if (c == '\n') {
-					result.append(" ");
+					result.append(' ');
 				} else if (c == '\r') {
-					result.append(" ");
+					result.append(' ');
 				} else {
 					result.append(c);
 				}
@@ -195,7 +195,7 @@ public class TslCompiler {
 	private String printIdent(int count) {
 		StringBuffer identStr = new StringBuffer();
 		for (int i = 0; i < count; i++) {
-			identStr.append(" ");
+			identStr.append(' ');
 		}
 		return identStr.toString();
 	}
@@ -361,7 +361,7 @@ public class TslCompiler {
 												+ v.getClass().getName()
 												+ " @clause: " + clause);
 							if (allParams.hasMoreElements()) {
-								objectizedParams.append(",");
+								objectizedParams.append(',');
 							}
 						}
 
@@ -458,7 +458,7 @@ public class TslCompiler {
 				// + clause);
 			} catch (SystemException se) {
 				exact = false;
-				if (!clause.startsWith("#")) {
+				if (clause.length() == 0 || clause.charAt(0) != '#') {
 					throw new UserException(-1,
 							"Could not compile script, Invalid expression: "
 									+ clause);
@@ -647,7 +647,7 @@ public class TslCompiler {
 						+ method
 						+ "\", \""
 						+ service;
-				if (validationService != "") {
+				if (!validationService.equals("")) {
 					operationString += "\", \"" + validationService;
 				}
 						
@@ -825,7 +825,7 @@ public class TslCompiler {
 			refOriginal = nextElt.getAttribute("ref");
 			
 			// Check if ref contains [ char, if it does, an array message of a selection property is mapped.
-			if ( refOriginal.startsWith("[") ) {
+			if ( refOriginal.length() > 0 && refOriginal.charAt(0) == '[' ) {
 				refOriginal = refOriginal.replaceAll("\\[", "");
 				refOriginal = refOriginal.replaceAll("\\]", "");
 				isMappedMessage = true;
@@ -946,7 +946,7 @@ public class TslCompiler {
 					+ "outMsgStack.push(currentOutMsg);\n");
 			result.append(printIdent(ident + 2) + "currentOutMsg = "
 					+ messageList + "[messageCount" + (ident) + "];\n");
-			if (extendsMsg != null && extendsMsg != "") {
+			if (extendsMsg != null && !extendsMsg.equals("")) {
 				result.append(printIdent(ident + 2)
 						+ "currentOutMsg.setExtends(\"" + extendsMsg + "\");\n");
 				
@@ -982,7 +982,7 @@ public class TslCompiler {
 					+ "// Map message(s) to message\n");
 			String messageListName = "messages" + ident;
 
-			result.append(printIdent(ident + 2) + "ArrayList "
+			result.append(printIdent(ident + 2) + "List "
 					+ messageListName + " = null;\n");
 			result.append(printIdent(ident + 2)
 					+ "inSelectionRef = MappingUtils.isSelection(currentInMsg, access.getInDoc(), \""
@@ -1279,6 +1279,9 @@ public class TslCompiler {
 						+ "currentMap = new MappableTreeNode(access, currentMap, "
 						+ mappableArrayName + ".next(), true);\n");
 			}
+			result.append(printIdent(ident + 4)
+			            + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
+			
 
 			// If filter is specified, evaluate filter first:
 			if (filter != null && !filter.equals("")) {
@@ -1377,6 +1380,9 @@ public class TslCompiler {
 							+ ((ref.charAt(0) + "").toUpperCase() + ref
 									.substring(1)) + "(), false);\n");
 				}
+				result.append(printIdent(ident + 4)
+                        + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
+				
 
 			} else {
 				String localObjectName = "mappableObject" + (objectCounter++);
@@ -1403,6 +1409,9 @@ public class TslCompiler {
 							+ ((ref.charAt(0) + "").toUpperCase() + ref
 									.substring(1)) + "(), false);\n");
 				}
+				result.append(printIdent(ident + 4)
+                        + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
+				
 			}
 
 			result.append(printIdent(ident + 2)
@@ -1695,6 +1704,8 @@ public class TslCompiler {
 			result.append(printIdent(ident + 4)
 					+ "currentMap = new MappableTreeNode(access, currentMap, "
 					+ mappableArrayName + "[i" + (ident + 2) + "], true);\n");
+			result.append(printIdent(ident + 4)
+                    + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
 
 			// If filter is specified, evaluate filter first (31/1/2007)
 			if (!filter.equals("")) {
@@ -2117,7 +2128,7 @@ public class TslCompiler {
 					+ "// Map message(s) to field\n");
 			String messageListName = "messages" + ident;
 
-			result.append(printIdent(ident + 2) + "ArrayList "
+			result.append(printIdent(ident + 2) + "List "
 					+ messageListName + " = null;\n");
 			result.append(printIdent(ident + 2)
 					+ "inSelectionRef = MappingUtils.isSelection(currentInMsg, access.getInDoc(), \""
@@ -2245,7 +2256,8 @@ public class TslCompiler {
 				result.append(printIdent(ident)
 						+ "currentMap = new MappableTreeNode(access, currentMap, classLoader.getClass(\""
 						+ type + "\").newInstance(), false);\n");
-
+				result.append(printIdent(ident + 4)
+                        + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
 				result.append(printIdent(ident)
 						+ "if ( currentMap.myObject instanceof Mappable ) {  ((Mappable) currentMap.myObject).load(access);}\n");
 				result.append(printIdent(ident) + subObjectsName + "["
@@ -2318,6 +2330,9 @@ public class TslCompiler {
 				result.append(printIdent(ident)
 						+ "currentMap = new MappableTreeNode(access, currentMap, classLoader.getClass(\""
 						+ type + "\").newInstance(), false);\n");
+				result.append(printIdent(ident + 4)
+                        + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
+				
 
 				// Create local variable to address new object.
 				String subObjectsName = "subObject" + subObjectCounter;
@@ -2498,7 +2513,7 @@ public class TslCompiler {
 				+ replaceQuotes(value)
 				+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
 		result.append(printIdent(ident)
-				+ "Access.writeToConsole(access, \"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value + \"\\n\");\n");
+				+ "Access.writeToConsole(access, \"DEBUG: \" + op.value );\n");
 		return result.toString();
 	}
 
@@ -2792,6 +2807,8 @@ public class TslCompiler {
 			result.append(printIdent(ident)
 					+ "currentMap = new MappableTreeNode(access, currentMap, classLoader.getClass(\""
 					+ object + "\").newInstance(), false);\n");
+			result.append("currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
+			n.getAttribute("navajoScript");
 			String objectName = "mappableObject" + (objectCounter++);
 			result.append(printIdent(ident) + objectName + " = (" + className
 					+ ") currentMap.myObject;\n");
@@ -2892,16 +2909,15 @@ public class TslCompiler {
 		} else {
 			fileName = script;
 			includedFile = new File(scriptPath + "/" + fileName + ".xml");
-			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(
-					includedFile), false);
+			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
 		}
 
 		// Add dependency.
 		addDependency(
 				"dependentObjects.add( new IncludeDependency( new Long(\""
-						+ IncludeDependency.getScriptTimeStamp(fileName)
+						+ IncludeDependency.getFileTimeStamp(includedFile)
 						+ "\"), \"" + script + "\"));\n", "INCLUDE" + script);
-		deps.add(new IncludeDependency(IncludeDependency.getScriptTimeStamp(fileName), script , fileName));
+		deps.add(new IncludeDependency(IncludeDependency.getFileTimeStamp(includedFile), script , fileName));
 
 		
 
@@ -3253,14 +3269,26 @@ public class TslCompiler {
 
 		if (debugInput) {
 			generatedCode.append("public final void dumpRequest() {\n");
-			generatedCode
-					.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
+			generatedCode.append("System.err.println(new Date());");
+			generatedCode.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
 			generatedCode.append("myAccess.getInDoc().write(System.err);\n");
-			generatedCode
-					.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
+			generatedCode.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
 			generatedCode.append("}\n\n");
 		}
 	}
+	
+	private void dumpResponseMethod(boolean debugOutput,
+            StringBuffer generatedCode) {
+
+        if (debugOutput) {
+            generatedCode.append("public final void dumpResponse() {\n");
+            generatedCode.append("System.err.println(new Date());");
+            generatedCode.append("System.err.println(\"\\n --------- BEGIN NAVAJO RESPONSE ---------\\n\");\n");
+            generatedCode.append("myAccess.getOutputDoc().write(System.err);\n");
+            generatedCode.append("System.err.println(\"\\n --------- END NAVAJO RESPONSE ---------\\n\");\n");
+            generatedCode.append("}\n\n");
+        }
+    }
 
 	private final void compileScript(InputStream is, String packagePath,
 			String script, String scriptPath, Writer fo, List<Dependency> deps,
@@ -3343,6 +3371,7 @@ public class TslCompiler {
 					+ "import com.dexels.navajo.parser.*;\n"
 					+ "import com.dexels.navajo.script.api.*;\n"
 					+ "import java.util.ArrayList;\n"
+					+ "import java.util.List;\n"
 					+ "import java.util.HashMap;\n"
 					+ "import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;\n"
@@ -3354,7 +3383,8 @@ public class TslCompiler {
 					+ "import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;\n"
 					+ "import java.util.concurrent.locks.Lock;\n"
 					+ "import java.util.concurrent.TimeUnit;\n"
-					+ "import java.util.Stack;\n\n\n";
+					+ "import java.util.Stack;\n"
+					+ "import java.util.Date;\n\n\n";
 			result.append(importDef);
 
 			result.append("/**\n");
@@ -3406,8 +3436,9 @@ public class TslCompiler {
 				includeNode(scriptPath, includeArray[i], tslDoc, tenant, deps);
 			}
 
-			// Generate dump request Navajo
+			// Generate dump request/response Navajo
 			dumpRequestMethod((debugInput || debugAll), result);
+            dumpResponseMethod((debugOutput || debugAll), result);
 
 			// Generate validation code.
 			generateValidations(tslDoc, result);
@@ -3440,11 +3471,6 @@ public class TslCompiler {
 			}
 
 			result.append("} finally {\n");
-			if (debugOutput || debugAll) {
-				result.append("System.err.println(\"\\n --------- BEGIN NAVAJO RESPONSE ---------\\n\");\n");
-				result.append("access.getOutputDoc().write(System.err);\n");
-				result.append("System.err.println(\"\\n --------- END NAVAJO RESPONSE ---------\\n\");\n");
-			}
 
 			if (broadcast) {
 				result.append("try { \n");
@@ -3516,8 +3542,8 @@ public class TslCompiler {
 		String fullScriptPath = scriptPath + "/" + packagePath + "/" + script +  extension;
 		
 
-		ArrayList<String> inheritedScripts = new ArrayList<String>();
-		ArrayList<String> extendEntities = new ArrayList<String>();
+		List<String> inheritedScripts = new ArrayList<String>();
+		List<String> extendEntities = new ArrayList<String>();
 		InputStream is = null;
 
 		try {
@@ -3551,10 +3577,10 @@ public class TslCompiler {
 			sis.close();
 			
 			for (int i = 0; i < inheritedScripts.size(); i++) {
+			    File inheritedFile = new File(scriptPath + "/" + inheritedScripts .get(i) + ".xml");
 				addDependency(
 						"dependentObjects.add( new InheritDependency( new Long(\""
-								+ IncludeDependency.getScriptTimeStamp(inheritedScripts
-										.get(i)) + "\"), \""
+								+ IncludeDependency.getFileTimeStamp(inheritedFile) + "\"), \""
 								+ inheritedScripts.get(i) + "\"));\n",
 						"INHERIT" + inheritedScripts.get(i));
 			}

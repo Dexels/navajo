@@ -89,7 +89,6 @@ public abstract class TipiSwingDataComponentImpl extends TipiDataComponentImpl
 					// TODO ADDED 7/7/2009 I don't know about the performance
 					// hit.
 					((JComponent) getSwingContainer()).revalidate();
-					// getSwingContainer().reva();
 				}
 			});
 		} catch (Throwable e) {
@@ -219,12 +218,6 @@ public abstract class TipiSwingDataComponentImpl extends TipiDataComponentImpl
 		}
 	}
 
-	@Override
-	protected void performComponentMethod(final String name,
-			final TipiComponentMethod compMeth, TipiEvent event)
-			throws TipiBreakException {
-		super.performComponentMethod(name, compMeth, event);
-	}
 
 	@Override
 	public void setPaint(Paint p) {
@@ -235,10 +228,6 @@ public abstract class TipiSwingDataComponentImpl extends TipiDataComponentImpl
 		return myPaint;
 	}
 
-	@Override
-	public void commitToUi() {
-		super.commitToUi();
-	}
 
 	@Override
 	public void animateTransition(TipiEvent te,

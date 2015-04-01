@@ -33,7 +33,7 @@ public class TransactionMap implements Mappable {
 		try {
 			NavajoTransactionManager.getInstance().rollback();
 		} catch (Exception e) {
-			//throw new UserException(-1, e.getMessage(), e);
+		    //throw new UserException(-1, e.getMessage(), e);
 		}
 	}
 

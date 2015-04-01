@@ -62,9 +62,9 @@ public class PullComponent {
 			try {
 				debugRepositories();
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 			logger.info("Activating OBR took: "
 					+ (System.currentTimeMillis() - stamp) + " millis. ");

@@ -75,7 +75,7 @@ public class FloatPropertyField extends PropertyField implements
 				myDocument.insertString(0, "" + val, null);
 			}
 		} catch (BadLocationException ex1) {
-			ex1.printStackTrace();
+			logger.error("Error: ", ex1);
 		}
 		setEditable(p.isDirIn());
 		super.setProperty(p);
@@ -147,7 +147,7 @@ public class FloatPropertyField extends PropertyField implements
 				// setChanged(true);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 	}
 

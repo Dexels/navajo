@@ -35,7 +35,7 @@ public class ColorParser extends TipiTypeParser {
 	}
 
 	private Color parseColor(String s) {
-		if (!s.startsWith("#")) {
+		if (s.length() == 0 || s.charAt(0) != '#') {
 			throw new RuntimeException("BAD COLOR: " + s);
 		}
 		String st = s.substring(1);

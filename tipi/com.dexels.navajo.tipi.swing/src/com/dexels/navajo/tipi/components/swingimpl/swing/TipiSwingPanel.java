@@ -104,7 +104,8 @@ public class TipiSwingPanel extends JPanel implements Scrollable, TipiDndCapable
 
 	@Override
 	public Dimension getPreferredSize() {
-		return checkMaxMin(super.getPreferredSize());
+	    return super.getPreferredSize();
+		//return checkMaxMin(super.getPreferredSize());
 	}
 
 	@Override

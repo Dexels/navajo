@@ -460,7 +460,7 @@ public void store() throws MappableException, UserException {
   }
 
   public void setPropertyName(String fullName) throws UserException {
-    currentFullName = ((messagePointer == null || messagePointer.equals("")) ? fullName : messagePointer + "/" + ((fullName.startsWith("/") ? fullName.substring(1) : fullName)));
+    currentFullName = ((messagePointer == null || messagePointer.equals("")) ? fullName : messagePointer + "/" + ((fullName.length() > 0 && fullName.charAt(0) == '/' ? fullName.substring(1) : fullName)));
     String propName = MappingUtils.getStrippedPropertyName(fullName);
     try {
       if (msgPointer != null)
@@ -1195,7 +1195,7 @@ public void kill() {
   public void setSendThrough(boolean b) throws UserException {
 
     try {
-      ArrayList<Message> all = inMessage.getAllMessages();
+      List<Message> all = inMessage.getAllMessages();
       for (int i = 0; i < all.size(); i++) {
         Message m = inMessage.copyMessage( all.get(i), outDoc);
         outDoc.addMessage(m);

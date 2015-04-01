@@ -81,7 +81,7 @@ public class TipiRunScript extends TipiAction {
 		TipiComponentImpl defaultTopLevel = (TipiComponentImpl) getComponent()
 				.getContext().getDefaultTopLevel();
 		TipiComponentImpl frame = (TipiComponentImpl) defaultTopLevel
-				.getTipiComponent("init");
+				.getTipiComponent("init", false);
 		BaseAdapter root = frame.createAdapter(this, event);
 		scr.put("root", root);
 		scr.put("params", event.getEvaluatedParameters());

@@ -20,6 +20,7 @@ import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.core.TipiSupportOverlayPane;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDesktop;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingWindow;
@@ -38,19 +39,16 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @todo Need to refactor menus in internalframes. Now still uses the old mode
  *       Frank
  */
-public final class TipiWindow
-// extends DefaultTipi {
-		extends TipiSwingDataComponentImpl{
+public final class TipiWindow extends TipiSwingDataComponentImpl implements TipiSupportOverlayPane {
 
 	private static final long serialVersionUID = -4916285139918344888L;
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(TipiWindow.class);
+	private final static Logger logger = LoggerFactory.getLogger(TipiWindow.class);
 	
 	private JInternalFrame myWindow;
+	private boolean hideOnClose = true;
+    private boolean isHidden = false;
 
 	private JInternalFrame constructWindow() {
-		// isDisposing = false;
 		clearContainer();
 		myWindow = new TipiSwingWindow();
 		TipiHelper th = new TipiSwingHelper();
@@ -59,9 +57,6 @@ public final class TipiWindow
 		myWindow.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		myWindow.setResizable(true);
 		myWindow.setSize(100, 40);
-		// JLabel label = new JLabel("Monkey");
-		// myWindow.getLayeredPane().add(label, 40000);
-		// label.setBounds(10,10,50,20);
 		myWindow.setVisible(true);
 		myWindow.addInternalFrameListener(new InternalFrameAdapter() {
 
@@ -103,35 +98,20 @@ public final class TipiWindow
 			
 			@Override
 			public void internalFrameClosed(InternalFrameEvent e) {
-				if (myWindow != null) {
-					// will re-enter this event, so its a bit defensive
-					JInternalFrame w = myWindow;
-					myWindow = null;
-					w.dispose();
-					myContext.disposeTipiComponent(TipiWindow.this);
-				}
+			    // Nothing to do anymore - we are already disposed!
 			}
 
 			@Override
 			public void internalFrameClosing(final InternalFrameEvent e) {
-//				Component cc = ((JInternalFrame) e.getSource()).getFocusOwner();
 				SwingUtilities.invokeLater(new Runnable() {
 
 					@Override
 					public void run() {
 						try {
 							performTipiEvent("onWindowClosed", null, true);
-							((JInternalFrame) e.getSource()).dispose();
-						} catch (TipiException e1) {
-							((JInternalFrame) e.getSource()).dispose();
+							hideComponent();
+						} catch (Exception e1) {
 							logger.error("Error detected",e1);
-						} catch (TipiBreakException e2) {
-							logger.debug("Breakie breakie", e2);
-							if (e2.getType() == TipiBreakException.COMPONENT_DISPOSED) {
-								// a component disposed event should still close
-								// the window
-								((JInternalFrame) e.getSource()).dispose();
-							}
 						}
 
 					}
@@ -215,6 +195,15 @@ public final class TipiWindow
 			setContainer(constructWindow());
 		}
 	}
+	
+	@Override
+    protected void setComponentValue(String name, Object object) {
+        if (name.equals("hideOnClose")) {
+           this.hideOnClose = (Boolean) object;
+           return;
+        }
+        super.setComponentValue(name, object);
+    }
 
 	private final void doPerformMethod(String name, TipiComponentMethod compMeth) {
 
@@ -327,16 +316,15 @@ public final class TipiWindow
 		}
 	}
 
-	@Override
-	protected void performComponentMethod(final String name,
-			final TipiComponentMethod compMeth, TipiEvent event) {
-		runSyncInEventThread(new Runnable() {
-			@Override
-			public void run() {
-				doPerformMethod(name, compMeth);
-			}
-		});
-	}
+    @Override
+    protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
+        runSyncInEventThread(new Runnable() {
+            @Override
+            public void run() {
+                doPerformMethod(name, compMeth);
+            }
+        });
+    }
 
 	@Override
 	public boolean isReusable() {
@@ -345,6 +333,7 @@ public final class TipiWindow
 
 	@Override
 	public void disposeComponent() {
+	    TipiWindow.super.disposeComponent();
 		runSyncInEventThread(new Runnable() {
 
 			@Override
@@ -362,9 +351,79 @@ public final class TipiWindow
 				myWindow = null;
 			}
 		});
-		TipiWindow.super.disposeComponent();
+		
 
 	}
+	
+	
+	   
+    public boolean isHideOnClose() {
+        return hideOnClose;
+    }
+
+    public void setHideOnClose(boolean hideOnClose) {
+        this.hideOnClose = hideOnClose;
+    }
+
+    @Override
+    public synchronized void hideComponent() {
+        if (myWindow == null || isHidden) {
+            // already hidden/disposed
+            return;
+        }
+        if (hideOnClose) {
+            this.getSwingContainer().setVisible(false);
+            isHidden = true;
+        } else {
+            myContext.disposeTipiComponent(this);
+        }
+    }
+    
+    
+    @Override
+    public void unhideComponent() {
+
+        super.unhideComponent();
+        if (hideOnClose) {
+            isHidden = false;
+            addOverlayProgressPanel("opaque");
+
+            /*
+             * We want to have a small delay before we unhide the component.
+             * This allows for the early onInstantiate code to already be done,
+             * and prevents some weird (visual) quirks
+             */
+            new Thread() {
+                public void run() {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                    }
+                    getSwingContainer().setVisible(true);
+                }
+            }.start();
+        }
+
+    }
+
+    @Override
+    public void postOnInstantiate() {
+        if (hideOnClose) {
+            removeOverlayProgressPanel();
+        }
+    }
+    
+    @Override 
+    public void addOverlayProgressPanel(String type) {
+        
+        ((TipiSwingWindow) myWindow).addGlass(type);
+    } 
+    
+    @Override
+    public void removeOverlayProgressPanel() {
+        ((TipiSwingWindow) myWindow).hideGlass();
+    }
+    
 
 	@Override
 	public void reUse() {
@@ -373,4 +432,9 @@ public final class TipiWindow
 		// }
 		// myWindow.setVisible(true);
 	}
+	
+    @Override
+    public boolean isHidden() {
+        return isHidden;
+    }
 }

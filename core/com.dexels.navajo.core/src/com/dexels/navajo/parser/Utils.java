@@ -107,15 +107,9 @@ public final class Utils extends Exception {
         }
         else if (b == null) {
             if (compareChar.equals("==")) {
-              if (a == null)
-                  return true;
-              else
-                  return false;
+              return a == null;
             } else {
-              if (a == null)
-                return false;
-              else
-                return true;
+              return !(a == null);
             }
         } else
             throw new TMLExpressionException("Invalid date comparison (a =" + a + ", b = " + b + ")");
@@ -426,7 +420,7 @@ public final class Utils extends Exception {
 
             for (int i = 0; i < list.size(); i++) {
                 boolean dum = isEqual(list.get(i), b);
-                if (dum == false)
+                if (!(dum))
                     return false;
                 result = result && dum;
             }

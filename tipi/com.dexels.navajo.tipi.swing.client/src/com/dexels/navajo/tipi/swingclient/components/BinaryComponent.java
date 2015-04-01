@@ -205,7 +205,7 @@ public class BinaryComponent extends JPanel implements PropertyControlled,
 
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 	}
 

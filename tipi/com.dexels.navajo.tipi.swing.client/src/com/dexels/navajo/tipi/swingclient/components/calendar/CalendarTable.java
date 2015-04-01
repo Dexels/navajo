@@ -121,12 +121,10 @@ public class CalendarTable extends JTable {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				return;
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				return;
 			}
 		});
 

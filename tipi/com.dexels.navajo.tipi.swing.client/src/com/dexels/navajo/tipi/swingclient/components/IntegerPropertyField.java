@@ -146,7 +146,7 @@ public final class IntegerPropertyField extends PropertyField implements
 				}
 			}
 			setText("");
-			ex1.printStackTrace();
+			logger.error("Error: ", ex1);
 		}
 	}
 
@@ -165,7 +165,7 @@ public final class IntegerPropertyField extends PropertyField implements
 			initProperty.setValue(getText());
 
 		} catch (PropertyTypeException ex1) {
-			ex1.printStackTrace();
+			logger.error("Error: ", ex1);
 		}
 
 	}

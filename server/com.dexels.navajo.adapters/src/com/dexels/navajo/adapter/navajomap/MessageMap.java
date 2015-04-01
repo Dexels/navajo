@@ -3,6 +3,7 @@ package com.dexels.navajo.adapter.navajomap;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoException;
@@ -125,10 +126,7 @@ public void setIntegerProperty(String fullName) {
 
     try {
       Property p = msg.getProperty(fullName);
-      if (p != null)
-       return true;
-     else
-       return false;
+      return p != null;
     } catch (Exception e) {
         return false;
     }
@@ -189,7 +187,7 @@ public void setIntegerProperty(String fullName) {
 
   public MessageMap [] getMessages() throws UserException {
     try {
-      ArrayList<Message> all = msg.getMessages(messagePointer);
+      List<Message> all = msg.getMessages(messagePointer);
       if ((all == null))
         throw new UserException(-1, "Could not find messages: " + messagePointer + " in response document (" + msg.getName() + ")");
       messages = new MessageMap[all.size()];

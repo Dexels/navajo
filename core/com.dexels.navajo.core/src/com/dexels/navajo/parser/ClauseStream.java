@@ -109,12 +109,12 @@ public class ClauseStream {
                     this.unary = c;
                 }
 
-                if ((start > 0) && (end == false)) {
+                if ((start > 0) && (!(end))) {
                     if (!((start == 1) && (c == beginChar))) {
                         value.append(c);
                     }
                 }
-                if (end == true) {
+                if (end) {
                     startChar = i + 1;
                     return value.toString();
                 }

@@ -39,12 +39,12 @@ class IntHashMap {
     /**
      * The hash table data.
      */
-    private transient Entry table[];
+    private Entry table[];
 
     /**
      * The total number of entries in the hash table.
      */
-    private transient int count;
+    private int count;
 
     /**
      * The table is rehashed when its size exceeds this threshold.  (The

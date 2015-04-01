@@ -19,6 +19,7 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.TipiSuspendException;
 import com.dexels.navajo.tipi.TipiValue;
+import com.dexels.navajo.tipi.components.core.TipiSupportOverlayPane;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
@@ -72,6 +73,11 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 			TipiValue tv = (TipiValue) this.eventParameterMap.get(key).clone();
 			ti.eventParameterMap.put(key, tv);
 		}
+		
+		for (String key : this.eventPropertyMap.keySet()) {
+		    ti.setBlockParam(key, this.getBlockParam(key)  );
+		}
+
 		return ti;
 	}
 
@@ -185,6 +191,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 			TipiExecutable parentExecutable, final Map<String, Object> event,
 			Runnable afterEventParam) {
 
+	    
 		TipiEvent localEvent = (TipiEvent) this.clone();
 		localEvent.loadEventValues(event);
 		// if(!localEvent.checkCondition(localEvent)) {
@@ -233,13 +240,25 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 			localInstance = (TipiEvent) this.clone();
 			localInstance.loadEventValues(event);
 		}
+		
+		String overlayType = "none";
+		if (localInstance.getBlockParam("overlay") != null) {
+		    overlayType = localInstance.getBlockParam("overlay");
+		}
+
+		TipiSupportOverlayPane overlayComponent = null;
+		if (!overlayType.equals("none")) {
+		    overlayComponent = getComponent().getOverlayComponent();
+		    if (overlayComponent != null) {
+		        overlayComponent.addOverlayProgressPanel(overlayType);
+		    }
+		}
 		if (!localInstance.checkCondition(localInstance)) {
 			return;
 		}
 
 		Thread currentThread = Thread.currentThread();
-		final Stack<TipiExecutable> s = getContext().getThreadPool()
-				.getThreadStack(currentThread);
+		final Stack<TipiExecutable> s = getContext().getThreadPool().getThreadStack(currentThread);
 		TipiExecutable parentEvent = null;
 
 		if (s != null && !s.isEmpty()) {
@@ -278,11 +297,17 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 							+ " for component: " + getComponent().getPath()
 							+ " action: " + last + " : " + ex.getMessage(), ex);
 			logger.error("Error: ",ex);
+		} finally {
+			if (!overlayType.equals("none") && overlayComponent != null) { 
+			    overlayComponent.removeOverlayProgressPanel();
+			}
 		}
 		getContext().debugLog(
 				"event   ",
 				"finished event: " + localInstance.getEventName()
 						+ " in component" + getComponent().getPath());
+		
+		
 		listener.eventFinished(localInstance, event);
 	}
 

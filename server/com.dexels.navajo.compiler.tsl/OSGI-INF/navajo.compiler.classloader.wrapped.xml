@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.compiler.classloader.wrapped">
+   <implementation class="com.dexels.osgicompiler.internal.WrappedClassLoader"/>
+   <reference bind="setClassLoader" cardinality="0..1" interface="java.lang.ClassLoader" name="ClassLoader" policy="dynamic" target="(type=navajoScriptClassLoader)" unbind="clearClassLoader"/>
+   <service>
+      <provide interface="java.lang.ClassLoader"/>
+   </service>
+   <property name="type" type="String" value="wrappedClassLoader"/>
+</scr:component>

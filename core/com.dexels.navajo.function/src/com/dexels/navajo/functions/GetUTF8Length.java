@@ -2,17 +2,10 @@ package com.dexels.navajo.functions;
 
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.parser.Expression;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
@@ -28,6 +21,10 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class GetUTF8Length extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GetUTF8Length.class);
+	
     public GetUTF8Length() {}
 
     @Override
@@ -56,7 +53,7 @@ public final class GetUTF8Length extends FunctionInterface {
 	    try {
 			return str.getBytes("UTF-8").length;
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	    return new Integer(0);
     }
@@ -73,7 +70,7 @@ public final class GetUTF8Length extends FunctionInterface {
 
     public static void main(String [] args) throws Exception {
         String simple = "Marte is gek";
-        String diacritic = "Martë is gek";
+        String diacritic = "Martï¿½ is gek";
         GetUTF8Length e = new GetUTF8Length();
         e.reset();
         e.insertOperand(simple);

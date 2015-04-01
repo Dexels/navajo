@@ -39,7 +39,7 @@ public final class Expression {
         if (clause.trim().equals("")) {
           return new Operand(null, "", "");
         }
-        if(clause.startsWith("=") && clause.endsWith(";")) {
+        if((clause.length() > 0 && clause.charAt(0) == '=') && clause.endsWith(";")) {
       	  
       	  clause = clause.substring(1, clause.length()-1);
         }
@@ -126,7 +126,7 @@ public final class Expression {
             else
                 properties = parent.getProperties(matchSet);
             for (int i = 0; i < properties.size(); i++) {
-                Property prop = (Property) properties.get(i);
+                Property prop =  properties.get(i);
                 Message parentMsg = prop.getParentMessage();
 
                 if (prop.getValue().equals(value.value))

@@ -320,7 +320,7 @@ public interface Message
    * absolute message references starting at the root level.
    * @return ArrayList of Property objects that match the given regular expression
    */
-  public ArrayList<Property> getProperties(String regularExpression) throws
+  public List<Property> getProperties(String regularExpression) throws
       NavajoException;
 
   /**
@@ -328,7 +328,7 @@ public interface Message
    * absolute message references starting at the root level.
    * @return ArrayList with Message objects that match the given regular expression
    */
-  public ArrayList<Message> getMessages(String regularExpression) throws NavajoException;
+  public List<Message> getMessages(String regularExpression) throws NavajoException;
 
   /**
    * Get an array element message with a given index.
@@ -364,13 +364,13 @@ public interface Message
    * Return all properties in this message. Properties in submessages are not included(!).
    * @return ArrayList containing all this Message's Property objects
    */
-  public ArrayList<Property> getAllProperties();
+  public List<Property> getAllProperties();
 
   /**
    * Return all messages in this message. Only first level sub-messages are returned(!).
    * @return ArrayList containting all this Message's submessages
    */
-  public ArrayList<Message> getAllMessages();
+  public List<Message> getAllMessages();
 
   /**
    * Check if this message contains a property with a specific name. Property name may include references

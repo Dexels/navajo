@@ -15,7 +15,7 @@ public final class ASTAndNode extends SimpleNode {
         if(a==null) {
         	return Boolean.FALSE;
         }
-        if (a.booleanValue() == false) {
+        if (!(a.booleanValue())) {
 			return a;
 		}
         Boolean b = (Boolean) jjtGetChild(1).interpret();

@@ -25,7 +25,10 @@ public class ColumnAttribute {
 	private Map<String, String> myParams;
 	private String myType;
 	private String myName;
+	private String columnName;
+	
 	public final static String TYPE_ROWCOLOR = "rowColor";
+	public final static String TYPE_ROWTEXTCOLOR = "rowTextColor";
 	public final static String TYPE_FREEROWCOLOR = "freeRowColor";
 	public final static String TYPE_CAPITALIZATION = "capitalization";
 	public final static String TYPE_UNKNOWN = "unknown";
@@ -60,5 +63,18 @@ public class ColumnAttribute {
 	public Set<String> getParamKeys() {
 		return myParams.keySet();
 	}
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(String columnName) {
+        if (columnName == null) {
+            this.columnName = "";
+            return;
+        }
+        this.columnName = columnName;
+    }
+
 
 }

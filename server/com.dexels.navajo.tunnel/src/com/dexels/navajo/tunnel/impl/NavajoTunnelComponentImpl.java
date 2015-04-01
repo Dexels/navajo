@@ -226,9 +226,9 @@ public class NavajoTunnelComponentImpl {
 			throws JSchException {
 		String[] forwards = forwardsString.split(",");
 		for (String forward : forwards) {
-			System.err.println("forward: " + forward);
+			logger.info("forward: " + forward);
 			boolean remote = forward.indexOf('<') != -1;
-			System.err.println("remote: " + remote);
+			logger.info("remote: " + remote);
 			String[] parts = forward.split(remote ? "<" : ">");
 			String from = parts[0];
 			String to = parts[1];
@@ -239,22 +239,21 @@ public class NavajoTunnelComponentImpl {
 			String toRemoteHost = toParts[0];
 			int toP = Integer.parseInt(toParts[1]);
 
-			System.err.println("Adding " + (remote ? "remote" : "local")
+			logger.info("Adding " + (remote ? "remote" : "local")
 					+ " forward from host: " + fromLocalHost + " port: "
 					+ fromP + " to host: " + toRemoteHost + " port: " + toP);
 			if (remote) {
 				session.setPortForwardingR(toP, toRemoteHost, fromP);
 			} else {
 				int result = session.setPortForwardingL(fromLocalHost, fromP, toRemoteHost, toP);
-				System.err.println("setPortForwardingL("+fromLocalHost+","+fromP+", "+toRemoteHost+", "+toP+") = "+result);
+				logger.info("setPortForwardingL("+fromLocalHost+","+fromP+", "+toRemoteHost+", "+toP+") = "+result);
 			}
 		}
 		session.setDaemonThread(true);
 		try {
 			session.sendKeepAliveMsg();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 //		System.err.println("assigned: " + assigned);
 //

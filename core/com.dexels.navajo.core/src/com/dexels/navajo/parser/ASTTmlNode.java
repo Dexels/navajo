@@ -4,6 +4,7 @@ package com.dexels.navajo.parser;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -41,7 +42,7 @@ public final class ASTTmlNode extends SimpleNode {
     @Override
 	public final Object interpret() throws TMLExpressionException {
 
-        ArrayList match = null;
+        List match = null;
         ArrayList resultList = new ArrayList();
         boolean singleMatch = true;
        // boolean selectionProp = false;
@@ -70,7 +71,7 @@ public final class ASTTmlNode extends SimpleNode {
         }  else {
             val = val.substring(2, val.length());
         }
-        if (val.startsWith("@")) { // relative param property.
+        if (val.length() > 0 && val.charAt(0) == '@') { // relative param property.
         	isParam = true;
         	val = val.substring(1);
         }

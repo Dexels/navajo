@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 
 /**
@@ -25,6 +28,7 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
 	 * 
 	 */
 	private static final long serialVersionUID = -1867359996556685730L;
+    private final static Logger logger = LoggerFactory.getLogger(ClockTime.class);
 
 	public final static String VERSION = "$Id$";
 
@@ -139,7 +143,7 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
           normalize();
           return;
         }
-        if (s.startsWith("0"))
+        if (s.length() > 0 && s.charAt(0) == '0')
           s = s.substring(1);
         int h = Integer.parseInt(s);
         if (h >= 0 && h <= 9)
@@ -333,7 +337,7 @@ public boolean isEmpty() {
 		  DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN);
 		  df.format(new java.util.Date());
 	  }
-	  System.err.println("Per call (1): " + ( System.currentTimeMillis() - l ) );
+	  logger.info("Per call (1): " + ( System.currentTimeMillis() - l ) );
 	  
 	  l = System.currentTimeMillis();
 	  ThreadLocal<DateFormat> a = new ThreadLocal<DateFormat>() {
@@ -346,7 +350,7 @@ public boolean isEmpty() {
 	  for ( int i = 0; i < 1000000; i++ ) {
 		  a.get().format(new java.util.Date());
 	  }
-	  System.err.println("Per call (2): " + ( System.currentTimeMillis() - l ) );
+	  logger.info("Per call (2): " + ( System.currentTimeMillis() - l ) );
 	  
   }
 
