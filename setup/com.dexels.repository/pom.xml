@@ -183,7 +183,7 @@
 							</arguments>
 						</configuration>
 					</plugin>
-                                       <plugin>
+                                        <plugin>
                                                 <groupId>com.dexels.navajo.scalacompiler</groupId>
                                                 <artifactId>scalacompiler</artifactId>
                                                 <version>1.0.0-SNAPSHOT</version>

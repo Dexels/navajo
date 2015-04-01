@@ -7,6 +7,6 @@ Bundle-ManifestVersion: 2
 Bundle-Vendor: Dexels
 Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
  ment
-Fragment-Host: com.dexels.navajo.function;bundle-version="3.2.18.quali
- fier"
+Fragment-Host: com.dexels.navajo.function;bundle-version="3.3.3.qualif
+ ier"
 

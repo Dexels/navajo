@@ -697,6 +697,20 @@ class MAIL(instance: com.dexels.navajo.adapter.MailMap = new com.dexels.navajo.a
     instance.setUseEncryption(useEncryption)
     return this
   }
+  def port: java.lang.Integer = {
+    return instance.getPort
+  }
+  def port(port: java.lang.Integer): MAIL = {
+    instance.setPort(port)
+    return this
+  }
+  def contentType: java.lang.String = {
+    return instance.getContentType
+  }
+  def contentType(contentType: java.lang.String): MAIL = {
+    instance.setContentType(contentType)
+    return this
+  }
 }
 
 class MAILALTERNATIVE(instance: com.dexels.navajo.adapter.MailMapAlternative = new com.dexels.navajo.adapter.MailMapAlternative) extends Adapter(instance) {
@@ -841,6 +855,13 @@ class COMMONSMAILMAP(instance: com.dexels.navajo.adapter.CommonsMailMap = new co
   }
   def useEncryption(useEncryption: java.lang.Boolean): COMMONSMAILMAP = {
     instance.setUseEncryption(useEncryption)
+    return this
+  }
+  def mailPort: java.lang.String = {
+    return instance.getMailPort
+  }
+  def mailPort(mailPort: java.lang.String): COMMONSMAILMAP = {
+    instance.setMailPort(mailPort)
     return this
   }
 }
@@ -1139,7 +1160,8 @@ class REST(instance: com.dexels.navajo.adapter.RESTAdapter = new com.dexels.nava
     instance.setHeaderKey(name)
     instance.setHeaderValue(value)
   }
-  def callservice(url: java.lang.String, method: java.lang.String, topMessage: java.lang.String, removeTopMessage: java.lang.Boolean, appendTo: java.lang.String, append: java.lang.String, username: java.lang.String, password: java.lang.String): Unit = {
+  def callservice(breakOnException: java.lang.Boolean, url: java.lang.String, method: java.lang.String, topMessage: java.lang.String, removeTopMessage: java.lang.Boolean, appendTo: java.lang.String, append: java.lang.String, username: java.lang.String, password: java.lang.String): Unit = {
+    instance.setBreakOnException(breakOnException)
     instance.setUrl(url)
     instance.setMethod(method)
     instance.setTopMessage(topMessage)

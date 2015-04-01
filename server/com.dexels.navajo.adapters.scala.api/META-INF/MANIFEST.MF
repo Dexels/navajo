@@ -5,7 +5,8 @@ Bundle-Name: Navajo Adapters Scala Api
 Bundle-Version: 1.0.0.qualifier
 Bundle-ManifestVersion: 2
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.navajo.scala,
- com.dexels.navajo.scala.document
-Fragment-Host: com.dexels.navajo.adapters;bundle-version="2.0.33.qualifier"
+Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
+ ment
+Fragment-Host: com.dexels.navajo.adapters;bundle-version="2.1.7.qualif
+ ier"
 

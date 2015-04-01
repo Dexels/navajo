@@ -7,6 +7,6 @@ Bundle-ManifestVersion: 2
 Bundle-Vendor: Dexels
 Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
  ment,com.dexels.navajo.adapters.scala.api
-Fragment-Host: com.dexels.navajo.entity;bundle-version="1.2.51.qualifi
+Fragment-Host: com.dexels.navajo.entity;bundle-version="1.2.59.qualifi
  er"
 
