@@ -582,6 +582,9 @@ public class MailMap implements MailMapInterface, Mappable,
 		this.port = port;
 	}
 	
-	
+	public String getContentType() {
+		return this.contentType;
+	}
 
+	
 }
