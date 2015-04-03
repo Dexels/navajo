@@ -429,11 +429,8 @@ public class BundleCreatorComponent implements BundleCreator {
 					reportInstallationError(scriptPath, e);
 				}
 			} else {
-				// someone else is installing our bundle - simply wait for them
-				// to finish
-				logger.info(
-						"Simultaneous installing of {} - going to wait it out...",
-						scriptPath);
+				// someone else is installing our bundle - simply wait for them to finish
+				logger.info("Simultaneous installing of {} - going to wait it out...", scriptPath);
 				lockObject.lock();
 			}
 		} finally {
@@ -548,18 +545,10 @@ public class BundleCreatorComponent implements BundleCreator {
 		File factoryClassFileInPlace = new File(bundlePackageDir, script
 				+ "Factory.class");
 
-		if (extension == ".scala") { 
-		    // assume Scala script
-//		    List<File> files = (List<File>) FileUtils.listFiles(scalaClassDir, TrueFileFilter.INSTANCE, null);
-//	        for (File file : files) {
-//	            FileUtils.copyFileToDirectory(file, bundlePackageDir);
-//	        }
-		    
-		} else {
+		// Scala compiled files are already in the right location
+		if (!extension.equals(".scala")) { 
 		    FileUtils.copyFile(classFile, classFileInPlace);
-		}
-		
-		
+		} 
 		
 		FileUtils.copyFile(factoryClassFile, factoryClassFileInPlace);
 		FileUtils.copyFile(manifestFile, metainfManifest);
