@@ -156,7 +156,7 @@ public class AutoCompiler {
 			 }
 			 if(needRecompile) {
 				 cleanPath = cleanPath.replace('\\', '/');
-				 logger.debug("Need to recompile : "+cleanPath);
+				 logger.trace("Need to recompile : "+cleanPath);
 				 List<String> success = new ArrayList<String>();
 				 try {
 					bundleCreator.createBundle(cleanPath, new Date(), ".xml", new ArrayList<String>(), success, new ArrayList<String>(), false, false);

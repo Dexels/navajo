@@ -25,6 +25,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.AbstractFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -53,7 +54,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	private EventAdmin eventAdmin = null;
 	private final static Logger logger = LoggerFactory.getLogger(BundleCreatorComponent.class);
 
-	private ScriptCompiler scriptCompiler;
+	private Map<String, ScriptCompiler> compilers = new HashMap<String, ScriptCompiler>();
 	private JavaCompiler javaCompiler;
 
 	private Map<String, ReentrantLock> lockmap;
@@ -68,22 +69,19 @@ public class BundleCreatorComponent implements BundleCreator {
 	private BundleContext bundleContext;
 	private DependencyAnalyzer depanalyzer;
 
-	public void setScriptCompiler(ScriptCompiler scriptCompiler) {
-		this.scriptCompiler = scriptCompiler;
+	public void addScriptCompiler(ScriptCompiler sc) {
+	    compilers.put(sc.getScriptExtension(), sc);
 	}
+	
+	public void removeScriptCompiler(ScriptCompiler sc) {
+	    compilers.remove(sc.getScriptExtension());
+    }
 
 	public void setJavaCompiler(JavaCompiler javaCompiler) {
 		this.javaCompiler = javaCompiler;
 	}
 
-	/**
-	 * The script compiler to clear
-	 * 
-	 * @param scriptCompiler
-	 */
-	public void clearScriptCompiler(ScriptCompiler scriptCompiler) {
-		this.scriptCompiler = null;
-	}
+
 
 	public void setDependencyAnalyzer(DependencyAnalyzer depa) {
 		depanalyzer = depa;
@@ -163,7 +161,7 @@ public class BundleCreatorComponent implements BundleCreator {
 				return;
 			}
 
-			depanalyzer.addDependencies(scriptName);
+			depanalyzer.addDependencies(scriptName, scriptExtension);
 			List<Dependency> dependencies = depanalyzer.getDependencies(
 					scriptName, Dependency.INCLUDE_DEPENDENCY);
 			if (!hasTenantSpecificFile && dependencies != null) {
@@ -184,7 +182,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 			compileAndCreateBundle(script, formatCompilationDate,
 					scriptExtension, scriptTenant, hasTenantSpecificFile,
-					false, keepIntermediate, success, skipped,failures);
+					false, true, success, skipped,failures);
 		}
 
 	}
@@ -195,7 +193,6 @@ public class BundleCreatorComponent implements BundleCreator {
 			boolean forceTenant, boolean keepIntermediate,
 			List<String> success, List<String> skipped, List<String> failures) throws Exception,
 			IOException,CompilationException {
-		List<com.dexels.navajo.script.api.Dependency> dependencies = new ArrayList<com.dexels.navajo.script.api.Dependency>();
 		String myScript = script;
 		if (forceTenant) {
 			myScript = script + "_" + scriptTenant;
@@ -205,10 +202,12 @@ public class BundleCreatorComponent implements BundleCreator {
 		try {
 			if (lockObject.tryLock()) {
 				try {
-					scriptCompiler.compileTsl(script, formatCompilationDate,
-							dependencies, scriptTenant, hasTenantSpecificFile,
-							forceTenant);
-					javaCompiler.compileJava(myScript);
+					getScriptCompiler(scriptExtension).compile(script, formatCompilationDate,
+							scriptTenant, hasTenantSpecificFile, forceTenant);
+					if (getScriptCompiler(scriptExtension).scriptNeedsCompilation()){
+					    javaCompiler.compileJava(myScript);
+					}
+				
 					javaCompiler.compileJava(myScript + "Factory");
 					createBundleJar(myScript, scriptTenant, keepIntermediate,
 							hasTenantSpecificFile, scriptExtension);
@@ -226,13 +225,19 @@ public class BundleCreatorComponent implements BundleCreator {
 						script);
 				lockObject.lock();
 			}
+		} catch (Exception e) {
+		    logger.error("Exception in compiling bundle {}: {}", script, e);
 		} finally {
 			releaseLock(script, "compile", lockObject);
 		}
 		logger.info("Finished compiling and bundling {}", script);
 	}
 
-	private synchronized ReentrantLock getLock(String script, String context) {
+	private ScriptCompiler getScriptCompiler(String scriptExtension) throws Exception {
+	    return compilers.get(scriptExtension);
+    }
+
+    private synchronized ReentrantLock getLock(String script, String context) {
 		String key = script + context;
 		if (!lockmap.containsKey(key)) {
 			lockmap.put(key, new ReentrantLock());
@@ -506,6 +511,8 @@ public class BundleCreatorComponent implements BundleCreator {
 		File factoryJavaFile = new File(compiledScriptPath, scriptPath
 				+ "Factory.java");
 		File classFile = new File(outPath, scriptPath + ".class");
+		File scalaClassDir = new File(compiledScriptPath, packagePath +  File.separator + "_scala" + File.separator + fixOffset);
+		
 		File factoryClassFile = new File(outPath, scriptPath + "Factory.class");
 		File manifestFile = new File(compiledScriptPath, scriptPath + ".MF");
 		File dsFile = new File(compiledScriptPath, scriptPath + ".xml");
@@ -541,7 +548,19 @@ public class BundleCreatorComponent implements BundleCreator {
 		File factoryClassFileInPlace = new File(bundlePackageDir, script
 				+ "Factory.class");
 
-		FileUtils.copyFile(classFile, classFileInPlace);
+		if (extension == ".scala") { 
+		    // assume Scala script
+//		    List<File> files = (List<File>) FileUtils.listFiles(scalaClassDir, TrueFileFilter.INSTANCE, null);
+//	        for (File file : files) {
+//	            FileUtils.copyFileToDirectory(file, bundlePackageDir);
+//	        }
+		    
+		} else {
+		    FileUtils.copyFile(classFile, classFileInPlace);
+		}
+		
+		
+		
 		FileUtils.copyFile(factoryClassFile, factoryClassFileInPlace);
 		FileUtils.copyFile(manifestFile, metainfManifest);
 		FileUtils.copyFile(dsFile, osgiinfScript);
@@ -811,7 +830,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		List<String> skipped = new ArrayList<String>();
 		// so no resolution
 		if (needsCompilation(scriptName, extension) || force) {
-			createBundle(scriptName, new Date(), ".xml", failures, success,
+			createBundle(scriptName, new Date(), ".scala", failures, success,
 					skipped, force, false);
 			forceReinstall = true;
 

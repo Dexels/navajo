@@ -392,9 +392,6 @@ class FILEENTRY(instance: com.dexels.navajo.adapter.dirmap.FileEntryMap = new co
   def name: java.lang.String = {
     return instance.getName
   }
-  def absolutePath: java.lang.String = {
-    return instance.getAbsolutePath
-  }
   def absolutePath(absolutePath: java.lang.String): FILEENTRY = {
     instance.setAbsolutePath(absolutePath)
     return this
@@ -419,9 +416,6 @@ class FILEENTRY(instance: com.dexels.navajo.adapter.dirmap.FileEntryMap = new co
 class DIRMAP(instance: com.dexels.navajo.adapter.DirMap = new com.dexels.navajo.adapter.DirMap) extends Adapter(instance) {
   def instance(f: com.dexels.navajo.adapter.DirMap => Unit) {
     f(instance)
-  }
-  def path: java.lang.String = {
-    return instance.getPath
   }
   def path(path: java.lang.String): DIRMAP = {
     instance.setPath(path)
@@ -469,29 +463,17 @@ class COPYMESSAGE(instance: com.dexels.navajo.adapter.CopyMessage = new com.dexe
   def instance(f: com.dexels.navajo.adapter.CopyMessage => Unit) {
     f(instance)
   }
-  def useOutputDoc: java.lang.Boolean = {
-    return instance.getUseOutputDoc
-  }
   def useOutputDoc(useOutputDoc: java.lang.Boolean): COPYMESSAGE = {
     instance.setUseOutputDoc(useOutputDoc)
     return this
-  }
-  def useDefinitionMessage: java.lang.Boolean = {
-    return instance.getUseDefinitionMessage
   }
   def useDefinitionMessage(useDefinitionMessage: java.lang.Boolean): COPYMESSAGE = {
     instance.setUseDefinitionMessage(useDefinitionMessage)
     return this
   }
-  def copyMessageFrom: java.lang.String = {
-    return instance.getCopyMessageFrom
-  }
   def copyMessageFrom(copyMessageFrom: java.lang.String): COPYMESSAGE = {
     instance.setCopyMessageFrom(copyMessageFrom)
     return this
-  }
-  def copyMessageTo: java.lang.String = {
-    return instance.getCopyMessageTo
   }
   def copyMessageTo(copyMessageTo: java.lang.String): COPYMESSAGE = {
     instance.setCopyMessageTo(copyMessageTo)
@@ -503,50 +485,29 @@ class CSV(instance: com.dexels.navajo.adapter.CSVMap = new com.dexels.navajo.ada
   def instance(f: com.dexels.navajo.adapter.CSVMap => Unit) {
     f(instance)
   }
-  def maximumImportCount: java.lang.Integer = {
-    return instance.getMaximumImportCount
-  }
   def maximumImportCount(maximumImportCount: java.lang.Integer): CSV = {
     instance.setMaximumImportCount(maximumImportCount)
     return this
-  }
-  def skipFirstRow: java.lang.Boolean = {
-    return instance.getSkipFirstRow
   }
   def skipFirstRow(skipFirstRow: java.lang.Boolean): CSV = {
     instance.setSkipFirstRow(skipFirstRow)
     return this
   }
-  def fileName: java.lang.String = {
-    return instance.getFileName
-  }
   def fileName(fileName: java.lang.String): CSV = {
     instance.setFileName(fileName)
     return this
-  }
-  def fileContent: com.dexels.navajo.document.types.Binary = {
-    return instance.getFileContent
   }
   def fileContent(fileContent: com.dexels.navajo.document.types.Binary): CSV = {
     instance.setFileContent(fileContent)
     return this
   }
-  def separator: java.lang.String = {
-    return instance.getSeparator
-  }
   def separator(separator: java.lang.String): CSV = {
     instance.setSeparator(separator)
     return this
   }
-  def update: java.lang.Boolean = {
-    return instance.getUpdate
-  }
   def update(update: java.lang.Boolean): CSV = {
     instance.setUpdate(update)
     return this
-  }
-  def includeEmpty: java.lang.Boolean = {
-    return instance.getIncludeEmpty
   }
   def includeEmpty(includeEmpty: java.lang.Boolean): CSV = {
     instance.setIncludeEmpty(includeEmpty)
@@ -567,43 +528,25 @@ class HTTP(instance: com.dexels.navajo.adapter.HTTPMap = new com.dexels.navajo.a
   def instance(f: com.dexels.navajo.adapter.HTTPMap => Unit) {
     f(instance)
   }
-  def url: java.lang.String = {
-    return instance.getUrl
-  }
   def url(url: java.lang.String): HTTP = {
     instance.setUrl(url)
     return this
-  }
-  def method: java.lang.String = {
-    return instance.getMethod
   }
   def method(method: java.lang.String): HTTP = {
     instance.setMethod(method)
     return this
   }
-  def textContent: java.lang.String = {
-    return instance.getTextContent
-  }
   def textContent(textContent: java.lang.String): HTTP = {
     instance.setTextContent(textContent)
     return this
-  }
-  def contentType: java.lang.String = {
-    return instance.getContentType
   }
   def contentType(contentType: java.lang.String): HTTP = {
     instance.setContentType(contentType)
     return this
   }
-  def content: com.dexels.navajo.document.types.Binary = {
-    return instance.getContent
-  }
   def content(content: com.dexels.navajo.document.types.Binary): HTTP = {
     instance.setContent(content)
     return this
-  }
-  def queuedSend: java.lang.Boolean = {
-    return instance.getQueuedSend
   }
   def queuedSend(queuedSend: java.lang.Boolean): HTTP = {
     instance.setQueuedSend(queuedSend)
@@ -618,50 +561,29 @@ class MAIL(instance: com.dexels.navajo.adapter.MailMap = new com.dexels.navajo.a
   def instance(f: com.dexels.navajo.adapter.MailMap => Unit) {
     f(instance)
   }
-  def mailServer: java.lang.String = {
-    return instance.getMailServer
-  }
   def mailServer(mailServer: java.lang.String): MAIL = {
     instance.setMailServer(mailServer)
     return this
-  }
-  def queuedSend: java.lang.Boolean = {
-    return instance.getQueuedSend
   }
   def queuedSend(queuedSend: java.lang.Boolean): MAIL = {
     instance.setQueuedSend(queuedSend)
     return this
   }
-  def ignoreFailures: java.lang.Boolean = {
-    return instance.getIgnoreFailures
-  }
   def ignoreFailures(ignoreFailures: java.lang.Boolean): MAIL = {
     instance.setIgnoreFailures(ignoreFailures)
     return this
-  }
-  def sender: java.lang.String = {
-    return instance.getSender
   }
   def sender(sender: java.lang.String): MAIL = {
     instance.setSender(sender)
     return this
   }
-  def subject: java.lang.String = {
-    return instance.getSubject
-  }
   def subject(subject: java.lang.String): MAIL = {
     instance.setSubject(subject)
     return this
   }
-  def text: java.lang.String = {
-    return instance.getText
-  }
   def text(text: java.lang.String): MAIL = {
     instance.setText(text)
     return this
-  }
-  def recipients: java.lang.String = {
-    return instance.getRecipients
   }
   def recipients(recipients: java.lang.String): MAIL = {
     instance.setRecipients(recipients)
@@ -676,36 +598,21 @@ class MAIL(instance: com.dexels.navajo.adapter.MailMap = new com.dexels.navajo.a
       f(new ATTACHMENT(i))
     return this
   }
-  def smtpUser: java.lang.String = {
-    return instance.getSmtpUser
-  }
   def smtpUser(smtpUser: java.lang.String): MAIL = {
     instance.setSmtpUser(smtpUser)
     return this
-  }
-  def smtpPass: java.lang.String = {
-    return instance.getSmtpPass
   }
   def smtpPass(smtpPass: java.lang.String): MAIL = {
     instance.setSmtpPass(smtpPass)
     return this
   }
-  def useEncryption: java.lang.Boolean = {
-    return instance.getUseEncryption
-  }
   def useEncryption(useEncryption: java.lang.Boolean): MAIL = {
     instance.setUseEncryption(useEncryption)
     return this
   }
-  def port: java.lang.Integer = {
-    return instance.getPort
-  }
   def port(port: java.lang.Integer): MAIL = {
     instance.setPort(port)
     return this
-  }
-  def contentType: java.lang.String = {
-    return instance.getContentType
   }
   def contentType(contentType: java.lang.String): MAIL = {
     instance.setContentType(contentType)
@@ -717,50 +624,29 @@ class MAILALTERNATIVE(instance: com.dexels.navajo.adapter.MailMapAlternative = n
   def instance(f: com.dexels.navajo.adapter.MailMapAlternative => Unit) {
     f(instance)
   }
-  def mailServer: java.lang.String = {
-    return instance.getMailServer
-  }
   def mailServer(mailServer: java.lang.String): MAILALTERNATIVE = {
     instance.setMailServer(mailServer)
     return this
-  }
-  def queuedSend: java.lang.Boolean = {
-    return instance.getQueuedSend
   }
   def queuedSend(queuedSend: java.lang.Boolean): MAILALTERNATIVE = {
     instance.setQueuedSend(queuedSend)
     return this
   }
-  def ignoreFailures: java.lang.Boolean = {
-    return instance.getIgnoreFailures
-  }
   def ignoreFailures(ignoreFailures: java.lang.Boolean): MAILALTERNATIVE = {
     instance.setIgnoreFailures(ignoreFailures)
     return this
-  }
-  def sender: java.lang.String = {
-    return instance.getSender
   }
   def sender(sender: java.lang.String): MAILALTERNATIVE = {
     instance.setSender(sender)
     return this
   }
-  def subject: java.lang.String = {
-    return instance.getSubject
-  }
   def subject(subject: java.lang.String): MAILALTERNATIVE = {
     instance.setSubject(subject)
     return this
   }
-  def text: java.lang.String = {
-    return instance.getText
-  }
   def text(text: java.lang.String): MAILALTERNATIVE = {
     instance.setText(text)
     return this
-  }
-  def recipients: java.lang.String = {
-    return instance.getRecipients
   }
   def recipients(recipients: java.lang.String): MAILALTERNATIVE = {
     instance.setRecipients(recipients)
@@ -785,43 +671,25 @@ class COMMONSMAILMAP(instance: com.dexels.navajo.adapter.CommonsMailMap = new co
   def instance(f: com.dexels.navajo.adapter.CommonsMailMap => Unit) {
     f(instance)
   }
-  def mailServer: java.lang.String = {
-    return instance.getMailServer
-  }
   def mailServer(mailServer: java.lang.String): COMMONSMAILMAP = {
     instance.setMailServer(mailServer)
     return this
-  }
-  def queuedSend: java.lang.Boolean = {
-    return instance.getQueuedSend
   }
   def queuedSend(queuedSend: java.lang.Boolean): COMMONSMAILMAP = {
     instance.setQueuedSend(queuedSend)
     return this
   }
-  def from: java.lang.String = {
-    return instance.getFrom
-  }
   def from(from: java.lang.String): COMMONSMAILMAP = {
     instance.setFrom(from)
     return this
-  }
-  def subject: java.lang.String = {
-    return instance.getSubject
   }
   def subject(subject: java.lang.String): COMMONSMAILMAP = {
     instance.setSubject(subject)
     return this
   }
-  def bodyText: java.lang.String = {
-    return instance.getBodyText
-  }
   def bodyText(bodyText: java.lang.String): COMMONSMAILMAP = {
     instance.setBodyText(bodyText)
     return this
-  }
-  def to: java.lang.String = {
-    return instance.getTo
   }
   def to(to: java.lang.String): COMMONSMAILMAP = {
     instance.setTo(to)
@@ -836,29 +704,17 @@ class COMMONSMAILMAP(instance: com.dexels.navajo.adapter.CommonsMailMap = new co
       f(new ATTACHMENT(i))
     return this
   }
-  def smtpUser: java.lang.String = {
-    return instance.getSmtpUser
-  }
   def smtpUser(smtpUser: java.lang.String): COMMONSMAILMAP = {
     instance.setSmtpUser(smtpUser)
     return this
-  }
-  def smtpPass: java.lang.String = {
-    return instance.getSmtpPass
   }
   def smtpPass(smtpPass: java.lang.String): COMMONSMAILMAP = {
     instance.setSmtpPass(smtpPass)
     return this
   }
-  def useEncryption: java.lang.Boolean = {
-    return instance.getUseEncryption
-  }
   def useEncryption(useEncryption: java.lang.Boolean): COMMONSMAILMAP = {
     instance.setUseEncryption(useEncryption)
     return this
-  }
-  def mailPort: java.lang.String = {
-    return instance.getMailPort
   }
   def mailPort(mailPort: java.lang.String): COMMONSMAILMAP = {
     instance.setMailPort(mailPort)
@@ -867,15 +723,9 @@ class COMMONSMAILMAP(instance: com.dexels.navajo.adapter.CommonsMailMap = new co
 }
 
 class ATTACHMENT(instance: com.dexels.navajo.adapter.mailmap.AttachementMap) extends Adapter(instance) {
-  def attachFileName: java.lang.String = {
-    return instance.getAttachFileName
-  }
   def attachFileName(attachFileName: java.lang.String): ATTACHMENT = {
     instance.setAttachFileName(attachFileName)
     return this
-  }
-  def attachFileContent: com.dexels.navajo.document.types.Binary = {
-    return instance.getAttachFileContent
   }
   def attachFileContent(attachFileContent: com.dexels.navajo.document.types.Binary): ATTACHMENT = {
     instance.setAttachFileContent(attachFileContent)
@@ -911,92 +761,53 @@ class NAVAJOMAP(instance: com.dexels.navajo.adapter.NavajoMap = new com.dexels.n
   def instance(f: com.dexels.navajo.adapter.NavajoMap => Unit) {
     f(instance)
   }
-  def trigger: java.lang.String = {
-    return instance.getTrigger
-  }
   def trigger(trigger: java.lang.String): NAVAJOMAP = {
     instance.setTrigger(trigger)
     return this
-  }
-  def sendThrough: java.lang.Boolean = {
-    return instance.getSendThrough
   }
   def sendThrough(sendThrough: java.lang.Boolean): NAVAJOMAP = {
     instance.setSendThrough(sendThrough)
     return this
   }
-  def server: java.lang.String = {
-    return instance.getServer
-  }
   def server(server: java.lang.String): NAVAJOMAP = {
     instance.setServer(server)
     return this
-  }
-  def id: java.lang.String = {
-    return instance.getId
   }
   def id(id: java.lang.String): NAVAJOMAP = {
     instance.setId(id)
     return this
   }
-  def block: java.lang.Boolean = {
-    return instance.getBlock
-  }
   def block(block: java.lang.Boolean): NAVAJOMAP = {
     instance.setBlock(block)
     return this
-  }
-  def username: java.lang.String = {
-    return instance.getUsername
   }
   def username(username: java.lang.String): NAVAJOMAP = {
     instance.setUsername(username)
     return this
   }
-  def password: java.lang.String = {
-    return instance.getPassword
-  }
   def password(password: java.lang.String): NAVAJOMAP = {
     instance.setPassword(password)
     return this
-  }
-  def resource: java.lang.String = {
-    return instance.getResource
   }
   def resource(resource: java.lang.String): NAVAJOMAP = {
     instance.setResource(resource)
     return this
   }
-  def useCurrentOutDoc: java.lang.Boolean = {
-    return instance.getUseCurrentOutDoc
-  }
   def useCurrentOutDoc(useCurrentOutDoc: java.lang.Boolean): NAVAJOMAP = {
     instance.setUseCurrentOutDoc(useCurrentOutDoc)
     return this
-  }
-  def useCurrentMessages: java.lang.String = {
-    return instance.getUseCurrentMessages
   }
   def useCurrentMessages(useCurrentMessages: java.lang.String): NAVAJOMAP = {
     instance.setUseCurrentMessages(useCurrentMessages)
     return this
   }
-  def copyInputMessages: java.lang.String = {
-    return instance.getCopyInputMessages
-  }
   def copyInputMessages(copyInputMessages: java.lang.String): NAVAJOMAP = {
     instance.setCopyInputMessages(copyInputMessages)
     return this
   }
-  def messagePointer: java.lang.String = {
-    return instance.getMessagePointer
-  }
   def messagePointer(messagePointer: java.lang.String): NAVAJOMAP = {
     instance.setMessagePointer(messagePointer)
     return this
-  }
-  def selectionPointer: java.lang.String = {
-    return instance.getSelectionPointer
   }
   def selectionPointer(selectionPointer: java.lang.String): NAVAJOMAP = {
     instance.setSelectionPointer(selectionPointer)
@@ -1062,57 +873,33 @@ class REST(instance: com.dexels.navajo.adapter.RESTAdapter = new com.dexels.nava
   def instance(f: com.dexels.navajo.adapter.RESTAdapter => Unit) {
     f(instance)
   }
-  def sendThrough: java.lang.Boolean = {
-    return instance.getSendThrough
-  }
   def sendThrough(sendThrough: java.lang.Boolean): REST = {
     instance.setSendThrough(sendThrough)
     return this
-  }
-  def url: java.lang.String = {
-    return instance.getUrl
   }
   def url(url: java.lang.String): REST = {
     instance.setUrl(url)
     return this
   }
-  def method: java.lang.String = {
-    return instance.getMethod
-  }
   def method(method: java.lang.String): REST = {
     instance.setMethod(method)
     return this
-  }
-  def useCurrentOutDoc: java.lang.Boolean = {
-    return instance.getUseCurrentOutDoc
   }
   def useCurrentOutDoc(useCurrentOutDoc: java.lang.Boolean): REST = {
     instance.setUseCurrentOutDoc(useCurrentOutDoc)
     return this
   }
-  def useCurrentMessages: java.lang.String = {
-    return instance.getUseCurrentMessages
-  }
   def useCurrentMessages(useCurrentMessages: java.lang.String): REST = {
     instance.setUseCurrentMessages(useCurrentMessages)
     return this
-  }
-  def copyInputMessages: java.lang.String = {
-    return instance.getCopyInputMessages
   }
   def copyInputMessages(copyInputMessages: java.lang.String): REST = {
     instance.setCopyInputMessages(copyInputMessages)
     return this
   }
-  def messagePointer: java.lang.String = {
-    return instance.getMessagePointer
-  }
   def messagePointer(messagePointer: java.lang.String): REST = {
     instance.setMessagePointer(messagePointer)
     return this
-  }
-  def selectionPointer: java.lang.String = {
-    return instance.getSelectionPointer
   }
   def selectionPointer(selectionPointer: java.lang.String): REST = {
     instance.setSelectionPointer(selectionPointer)
@@ -1127,15 +914,9 @@ class REST(instance: com.dexels.navajo.adapter.RESTAdapter = new com.dexels.nava
       f(new MESSAGEMAP(i))
     return this
   }
-  def username: java.lang.String = {
-    return instance.getUsername
-  }
   def username(username: java.lang.String): REST = {
     instance.setUsername(username)
     return this
-  }
-  def password: java.lang.String = {
-    return instance.getPassword
   }
   def password(password: java.lang.String): REST = {
     instance.setPassword(password)
@@ -1178,9 +959,6 @@ class NAVAJOLISTENER(instance: com.dexels.navajo.adapter.NavajoMap = new com.dex
   def instance(f: com.dexels.navajo.adapter.NavajoMap => Unit) {
     f(instance)
   }
-  def taskId: java.lang.String = {
-    return instance.getTaskId
-  }
   def taskId(taskId: java.lang.String): NAVAJOLISTENER = {
     instance.setTaskId(taskId)
     return this
@@ -1191,36 +969,21 @@ class SQLQUERY(instance: com.dexels.navajo.adapter.SQLMap = new com.dexels.navaj
   def instance(f: com.dexels.navajo.adapter.SQLMap => Unit) {
     f(instance)
   }
-  def query: java.lang.String = {
-    return instance.getQuery
-  }
   def query(query: java.lang.String): SQLQUERY = {
     instance.setQuery(query)
     return this
-  }
-  def update: java.lang.String = {
-    return instance.getUpdate
   }
   def update(update: java.lang.String): SQLQUERY = {
     instance.setUpdate(update)
     return this
   }
-  def binaryQuery: com.dexels.navajo.document.types.Binary = {
-    return instance.getBinaryQuery
-  }
   def binaryQuery(binaryQuery: com.dexels.navajo.document.types.Binary): SQLQUERY = {
     instance.setBinaryQuery(binaryQuery)
     return this
   }
-  def binaryUpdate: com.dexels.navajo.document.types.Binary = {
-    return instance.getBinaryUpdate
-  }
   def binaryUpdate(binaryUpdate: com.dexels.navajo.document.types.Binary): SQLQUERY = {
     instance.setBinaryUpdate(binaryUpdate)
     return this
-  }
-  def debug: java.lang.Boolean = {
-    return instance.getDebug
   }
   def debug(debug: java.lang.Boolean): SQLQUERY = {
     instance.setDebug(debug)
@@ -1233,22 +996,13 @@ class SQLQUERY(instance: com.dexels.navajo.adapter.SQLMap = new com.dexels.navaj
     instance.setTransactionContext(transactionContext)
     return this
   }
-  def datasource: java.lang.String = {
-    return instance.getDatasource
-  }
   def datasource(datasource: java.lang.String): SQLQUERY = {
     instance.setDatasource(datasource)
     return this
   }
-  def username: java.lang.String = {
-    return instance.getUsername
-  }
   def username(username: java.lang.String): SQLQUERY = {
     instance.setUsername(username)
     return this
-  }
-  def parameter: java.lang.Object = {
-    return instance.getParameter
   }
   def parameter(parameter: java.lang.Object): SQLQUERY = {
     instance.setParameter(parameter)
@@ -1274,43 +1028,25 @@ class STOREDPROC(instance: com.dexels.navajo.adapter.SPMap = new com.dexels.nava
   def instance(f: com.dexels.navajo.adapter.SPMap => Unit) {
     f(instance)
   }
-  def query: java.lang.String = {
-    return instance.getQuery
-  }
   def query(query: java.lang.String): STOREDPROC = {
     instance.setQuery(query)
     return this
-  }
-  def update: java.lang.String = {
-    return instance.getUpdate
   }
   def update(update: java.lang.String): STOREDPROC = {
     instance.setUpdate(update)
     return this
   }
-  def debug: java.lang.Boolean = {
-    return instance.getDebug
-  }
   def debug(debug: java.lang.Boolean): STOREDPROC = {
     instance.setDebug(debug)
     return this
-  }
-  def transactionContext: java.lang.Integer = {
-    return instance.getTransactionContext
   }
   def transactionContext(transactionContext: java.lang.Integer): STOREDPROC = {
     instance.setTransactionContext(transactionContext)
     return this
   }
-  def datasource: java.lang.String = {
-    return instance.getDatasource
-  }
   def datasource(datasource: java.lang.String): STOREDPROC = {
     instance.setDatasource(datasource)
     return this
-  }
-  def username: java.lang.String = {
-    return instance.getUsername
   }
   def username(username: java.lang.String): STOREDPROC = {
     instance.setUsername(username)
@@ -1336,9 +1072,6 @@ class STOREDPROC(instance: com.dexels.navajo.adapter.SPMap = new com.dexels.nava
 }
 
 class RESULTROW(instance: com.dexels.navajo.adapter.sqlmap.ResultSetMap) extends Adapter(instance) {
-  def columnName: java.lang.String = {
-    return instance.getColumnName
-  }
   def columnName(columnName: java.lang.String): RESULTROW = {
     instance.setColumnName(columnName)
     return this
@@ -1371,9 +1104,6 @@ class XML(instance: com.dexels.navajo.adapter.XMLStreamMap = new com.dexels.nava
   def content: com.dexels.navajo.document.types.Binary = {
     return instance.getContent
   }
-  def indent: java.lang.Integer = {
-    return instance.getIndent
-  }
   def indent(indent: java.lang.Integer): XML = {
     instance.setIndent(indent)
     return this
@@ -1400,15 +1130,9 @@ class XMLMAP(instance: com.dexels.navajo.adapter.XMLMap = new com.dexels.navajo.
   def instance(f: com.dexels.navajo.adapter.XMLMap => Unit) {
     f(instance)
   }
-  def stringContent: java.lang.String = {
-    return instance.getStringContent
-  }
   def stringContent(stringContent: java.lang.String): XMLMAP = {
     instance.setStringContent(stringContent)
     return this
-  }
-  def indent: java.lang.Integer = {
-    return instance.getIndent
   }
   def indent(indent: java.lang.Integer): XMLMAP = {
     instance.setIndent(indent)
@@ -1417,9 +1141,6 @@ class XMLMAP(instance: com.dexels.navajo.adapter.XMLMap = new com.dexels.navajo.
   def withChild(f: TAGMAP => Unit): XMLMAP = {
     f(new TAGMAP(instance.getChild))
     return this
-  }
-  def start: java.lang.String = {
-    return instance.getStart
   }
   def start(start: java.lang.String): XMLMAP = {
     instance.setStart(start)
@@ -1448,15 +1169,9 @@ class TAGMAP(instance: com.dexels.navajo.adapter.xmlmap.TagMap = new com.dexels.
     f(new TAGMAP(instance.getChild))
     return this
   }
-  def name: java.lang.String = {
-    return instance.getName
-  }
   def name(name: java.lang.String): TAGMAP = {
     instance.setName(name)
     return this
-  }
-  def text: java.lang.String = {
-    return instance.getText
   }
   def text(text: java.lang.String): TAGMAP = {
     instance.setText(text)
@@ -1477,15 +1192,9 @@ class SOAP(instance: com.dexels.navajo.adapter.SOAPMap = new com.dexels.navajo.a
   def instance(f: com.dexels.navajo.adapter.SOAPMap => Unit) {
     f(instance)
   }
-  def soapAction: java.lang.String = {
-    return instance.getSoapAction
-  }
   def soapAction(soapAction: java.lang.String): SOAP = {
     instance.setSoapAction(soapAction)
     return this
-  }
-  def url: java.lang.String = {
-    return instance.getUrl
   }
   def url(url: java.lang.String): SOAP = {
     instance.setUrl(url)
@@ -1509,9 +1218,6 @@ class SOAP(instance: com.dexels.navajo.adapter.SOAPMap = new com.dexels.navajo.a
 class TML2XML(instance: com.dexels.navajo.adapter.TmlToXmlMap = new com.dexels.navajo.adapter.TmlToXmlMap) extends Adapter(instance) {
   def instance(f: com.dexels.navajo.adapter.TmlToXmlMap => Unit) {
     f(instance)
-  }
-  def rootPath: java.lang.String = {
-    return instance.getRootPath
   }
   def rootPath(rootPath: java.lang.String): TML2XML = {
     instance.setRootPath(rootPath)

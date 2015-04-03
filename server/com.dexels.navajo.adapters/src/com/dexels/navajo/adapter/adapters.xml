@@ -456,7 +456,7 @@
 			<value name="binaryQuery" type="binary" required="false" direction="in" />
 			<value name="binaryUpdate" type="binary" required="false" direction="in" />
 			<value name="debug" type="boolean" required="false" direction="in" />
-			<value name="transactionContext" type="integer" required="false" direction="in" />
+			<value name="transactionContext" type="integer" required="false" direction="inout" />
 			<value name="datasource" type="string" required="false" direction="in" />
 			<value name="username" type="string" required="false" direction="in" />
 			<value name="parameter" type="any" required="false" direction="in" cardinality="+" />

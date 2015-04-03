@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: com.dexels.navajo.compiler.scala
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: DEXELS
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ClassPath: .,
+ lib/org.scala-lang.scala-compiler_2.11.6.jar,
+ lib/org.scala-lang.scala-library_2.11.6.jar,
+ lib/org.scala-lang.scala-reflect_2.11.6.jar
+Service-Component: OSGI-INF/scalacompiler.xml
+Import-Package: com.dexels.navajo.compiler,
+ com.dexels.navajo.compiler.tsl.custom,
+ com.dexels.navajo.scala,
+ com.dexels.navajo.scala.document,
+ com.dexels.navajo.server,
+ org.osgi.framework;version="1.8.0",
+ org.slf4j;version="1.4.3"
+Require-Bundle: org.scala-lang.scala-library;bundle-version="2.11.2"
+

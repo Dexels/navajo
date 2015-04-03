@@ -37,78 +37,45 @@ class ENTITY(instance: com.dexels.navajo.entity.adapters.EntityMap = new com.dex
   def instance(f: com.dexels.navajo.entity.adapters.EntityMap => Unit) {
     f(instance)
   }
-  def entity: java.lang.String = {
-    return instance.getEntity
-  }
   def entity(entity: java.lang.String): ENTITY = {
     instance.setEntity(entity)
     return this
-  }
-  def sendThrough: java.lang.Boolean = {
-    return instance.getSendThrough
   }
   def sendThrough(sendThrough: java.lang.Boolean): ENTITY = {
     instance.setSendThrough(sendThrough)
     return this
   }
-  def server: java.lang.String = {
-    return instance.getServer
-  }
   def server(server: java.lang.String): ENTITY = {
     instance.setServer(server)
     return this
-  }
-  def id: java.lang.String = {
-    return instance.getId
   }
   def id(id: java.lang.String): ENTITY = {
     instance.setId(id)
     return this
   }
-  def block: java.lang.Boolean = {
-    return instance.getBlock
-  }
   def block(block: java.lang.Boolean): ENTITY = {
     instance.setBlock(block)
     return this
-  }
-  def username: java.lang.String = {
-    return instance.getUsername
   }
   def username(username: java.lang.String): ENTITY = {
     instance.setUsername(username)
     return this
   }
-  def password: java.lang.String = {
-    return instance.getPassword
-  }
   def password(password: java.lang.String): ENTITY = {
     instance.setPassword(password)
     return this
-  }
-  def resource: java.lang.String = {
-    return instance.getResource
   }
   def resource(resource: java.lang.String): ENTITY = {
     instance.setResource(resource)
     return this
   }
-  def useCurrentOutDoc: java.lang.Boolean = {
-    return instance.getUseCurrentOutDoc
-  }
   def useCurrentOutDoc(useCurrentOutDoc: java.lang.Boolean): ENTITY = {
     instance.setUseCurrentOutDoc(useCurrentOutDoc)
     return this
   }
-  def messagePointer: java.lang.String = {
-    return instance.getMessagePointer
-  }
   def messagePointer(messagePointer: java.lang.String): ENTITY = {
     instance.setMessagePointer(messagePointer)
     return this
-  }
-  def selectionPointer: java.lang.String = {
-    return instance.getSelectionPointer
   }
   def selectionPointer(selectionPointer: java.lang.String): ENTITY = {
     instance.setSelectionPointer(selectionPointer)

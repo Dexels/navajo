@@ -9,4 +9,5 @@ Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
  ment
 Fragment-Host: com.dexels.navajo.function;bundle-version="3.3.3.qualif
  ier"
+Require-Bundle: org.scala-lang.scala-library;bundle-version="2.11.2"
 

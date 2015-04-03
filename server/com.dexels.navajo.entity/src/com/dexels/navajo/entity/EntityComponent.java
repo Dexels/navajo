@@ -24,9 +24,9 @@ public class EntityComponent extends Entity {
 		entityName = (String) properties.get("entity.name");
 		messageName = (String) properties.get("entity.message");
 
-		Navajo entityNavajo = entityManager.getEntityNavajo((String) properties.get("service.name"));
-		activateMessage(entityNavajo);
-		entityManager.registerEntity(this);
+		//Navajo entityNavajo = entityManager.getEntityNavajo((String) properties.get("service.name"));
+		//activateMessage(entityNavajo);
+		//entityManager.registerEntity(this);
 	}
 
 	public void deactivateComponent() throws Exception {
