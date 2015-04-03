@@ -3,6 +3,7 @@ Bundle-SymbolicName: com.dexels.navajo.adapters.resource.scala.api
 Export-Package: com.dexels.navajo.adapters.resource.scala.api
 Bundle-Name: Navajo Adapters Resource Scala Api
 Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.scala-lang.scala-library
 Bundle-ManifestVersion: 2
 Bundle-Vendor: Dexels
 Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
