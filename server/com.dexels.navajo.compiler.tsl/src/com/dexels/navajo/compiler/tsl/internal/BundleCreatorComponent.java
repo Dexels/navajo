@@ -798,8 +798,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		if (sc != null) {
 			boolean needsRecompile = false;
 			try {
-				needsRecompile = checkForRecompile(rpcName, tenant,
-						hasTenantScriptFile, extension);
+				needsRecompile = checkForRecompile(rpcName, tenant, hasTenantScriptFile, extension);
 			} catch (FileNotFoundException e) {
 				logger.warn(
 						"Can not find scriptfile, but the service seems available. Uninstalling service: ",
@@ -819,14 +818,13 @@ public class BundleCreatorComponent implements BundleCreator {
 		List<String> skipped = new ArrayList<String>();
 		// so no resolution
 		if (needsCompilation(scriptName, extension) || force) {
-			createBundle(scriptName, new Date(), ".scala", failures, success,
+			createBundle(scriptName, new Date(), extension, failures, success,
 					skipped, force, false);
 			forceReinstall = true;
 
 		}
 
-		installBundle(scriptName, failures, success, skipped, forceReinstall,
-				extension);
+		installBundle(scriptName, failures, success, skipped, forceReinstall, extension);
 
 		logger.debug("On demand installation finished, waiting for service...");
 		return getCompiledScript(rpcName, tenant, extension,
