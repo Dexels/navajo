@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" deactivate="deactivate" enabled="true" immediate="true" name="navajo.enterprise.compiler.scala.config">
+   <implementation class="com.dexels.navajo.compiler.scala.ScalaCompilerWhiteListConf"/>
+   <reference bind="setConfigAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="dynamic" unbind="clearConfigAdmin"/>
+   <reference bind="setRepositoryInstance" cardinality="1..1" interface="com.dexels.navajo.repository.api.RepositoryInstance" name="RepositoryInstance" policy="dynamic" unbind="clearRepositoryInstance"/>
+   
+</scr:component>

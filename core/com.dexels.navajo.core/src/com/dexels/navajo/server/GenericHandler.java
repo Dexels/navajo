@@ -453,7 +453,7 @@ public class GenericHandler extends ServiceHandler {
 
         try {
             // Should method getCompiledNavaScript be fully synced???
-        	CompiledScriptInterface cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName,false,".xml");
+        	CompiledScriptInterface cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName,false, ".scala");
         	if(cso!=null) {
         		boolean dirty = cso.hasDirtyDependencies(access);
         		if(dirty) {

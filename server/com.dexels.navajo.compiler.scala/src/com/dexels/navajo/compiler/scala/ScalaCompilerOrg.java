@@ -45,7 +45,6 @@ public class ScalaCompilerOrg extends ScriptCompiler {
         }
 
         MutableSettings.PathSetting a = (MutableSettings.PathSetting) settings.bootclasspath();
-        
         a.v_$eq(compilerPath + File.pathSeparator + libPath + File.pathSeparator + scalaDoc);
         settings.outputDirs().setSingleOutput("/home/chris/scala/") ;
         ((BooleanSetting) settings.usejavacp()).value_$eq(true);

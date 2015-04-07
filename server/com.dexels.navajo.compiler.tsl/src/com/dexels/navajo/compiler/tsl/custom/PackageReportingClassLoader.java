@@ -1,11 +1,13 @@
 package com.dexels.navajo.compiler.tsl.custom;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class PackageReportingClassLoader extends ClassLoader {
 	private Set<PackageListener> packageListeners = new HashSet<PackageListener>();
 
+	
 	// private final static Logger logger = LoggerFactory
 	// .getLogger(PackageReportingClassLoader.class);
 
@@ -22,6 +24,12 @@ public class PackageReportingClassLoader extends ClassLoader {
 	}
 
 	private void reportPackageName(String packageName) {
+	    if (packageName.equals("") || packageName.equals("<root>") || packageName.startsWith("java")) {
+	        // ignore
+	        return;
+	    }
+
+	   
 		for (PackageListener p : packageListeners) {
 			p.packageFound(packageName);
 		}
@@ -33,7 +41,7 @@ public class PackageReportingClassLoader extends ClassLoader {
 		String packageName = null;
 		if (name.indexOf(".") > 0) {
 			packageName = name.substring(0, name.lastIndexOf("."));
-		} else {
+		} else { 
 			packageName = "";
 		}
 		return packageName;
