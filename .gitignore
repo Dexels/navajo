@@ -9,3 +9,4 @@ server/com.dexels.navajo.integration/navajo/logs/
 .DS_Store
 *.war
 *.jar
+.cache
