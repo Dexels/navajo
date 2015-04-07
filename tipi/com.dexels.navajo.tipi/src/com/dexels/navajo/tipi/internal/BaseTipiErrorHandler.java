@@ -138,7 +138,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 					logger.error("Getting validation.properties from server failed. Is validation.properties in *resources*, not *tipi*?");
 				}
 			} catch (IOException e) {
-				logger.error("Getting validation.properties from server failed. Is validation.properties in *resources*, not *tipi*?");
+				logger.error("Getting validation.properties from server failed. Is validation.properties in *resources*, not *tipi*?",e);
 			}
 		}
 	}
