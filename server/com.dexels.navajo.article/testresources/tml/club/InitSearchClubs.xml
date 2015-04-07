@@ -32,7 +32,7 @@
       <property direction="out" name="VLAApplicationMode" value="ASP" length="10" type="string"/>
       <property direction="out" name="BrokerURL" value="http://80.79.42.72/" length="10" type="string"/>
       <property direction="out" name="DefaultUnionIdentifier" value="KNVB-UNION" length="10" type="string"/>
-      <property direction="out" name="NavajoPwd" value="R20T" length="10" type="string"/>
+      <property direction="out" name="NavajoPwd" value="" length="10" type="string"/>
       <property direction="out" name="SmartStreamLogin" value="fransw/tripod" length="10" type="string"/>
       <property direction="out" name="CrystalDatasourceUser" value="knvbkern" length="10" type="string"/>
       <property direction="out" name="SynchronizeWithSybase" value="0" length="10" type="string"/>
