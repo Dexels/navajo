@@ -47,7 +47,6 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	
 	@Override
 	public String resolveArgument(String name) throws ArticleException {
-		// TODO use optionality / default value
 		final String trimmedName = name.substring(1);
 		String res = request.getParameter(trimmedName);
 		if(res!=null) {
@@ -64,7 +63,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 				boolean optional = xmlElement.getBooleanAttribute("optional", "true", "false", false);
 				if(!optional) {
 					// not optional + no value = fail
-					return null;
+					throw new ArticleException("Missing parameter not optional: " + trimmedName);
 				}
 				return xmlElement.getStringAttribute("default");
 			}
