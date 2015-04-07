@@ -453,11 +453,11 @@ public class GenericHandler extends ServiceHandler {
 
         try {
             // Should method getCompiledNavaScript be fully synced???
-        	CompiledScriptInterface cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName,false, ".scala");
+        	CompiledScriptInterface cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, false);
         	if(cso!=null) {
         		boolean dirty = cso.hasDirtyDependencies(access);
         		if(dirty) {
-                	cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName,true,".xml");
+                	cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName,true);
             		logger.warn(">>>>>>>>>>>>>>>> dirty script!");
         		}
         	}
@@ -576,14 +576,14 @@ public class GenericHandler extends ServiceHandler {
 //	}
 
 	// THIS rpcName seems to have a tenant suffix
-	private CompiledScriptInterface loadOnDemand(BundleContext bundleContext, String rpcName,boolean force,String extension) throws Exception {
+	private CompiledScriptInterface loadOnDemand(BundleContext bundleContext, String rpcName,boolean force) throws Exception {
 		if(bundleContext==null) {
 			logger.debug("No OSGi context found");
 			return null;
 		}
 		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
 		BundleCreator bc = bundleContext.getService(ref);
-//		BundleCreator bc = getBundleCreator(bundleContext);
+
 		if(bc==null) {
 			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
 			return null;
@@ -596,10 +596,20 @@ public class GenericHandler extends ServiceHandler {
 			tenant = access.getInstance();
 		}
 		
+		String extension = ".xml";
+		
+		// Going to see if we can find a script with this extension
+		try {
+		    tenantConfig.getApplicableScriptFile(rpcName, tenant, extension);
+		} catch (FileNotFoundException e) {
+		    // Nothing found? Let's try scala!
+		    extension = ".scala";
+		    tenantConfig.getApplicableScriptFile(rpcName, tenant, extension);
+		}
+		
 		boolean hasTenantScriptFile = tenantConfig.hasTenantScriptFile(rpcName,tenant,extension);
 		String scriptName = hasTenantScriptFile ? rpcName + "_" + tenant : rpcName;
-        CompiledScriptInterface sc = bc.getOnDemandScriptService(scriptName, rpcName, tenant, hasTenantScriptFile,
-                force, extension);
+        CompiledScriptInterface sc = bc.getOnDemandScriptService(scriptName, rpcName, tenant, hasTenantScriptFile, force, extension);
 		// wait for it..
 		bundleContext.ungetService(ref);
 		return sc;
