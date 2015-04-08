@@ -127,7 +127,7 @@ public abstract class TestContextImpl extends BaseContextImpl {
 
 			@Override
 			public File getApplicableBundleForScript(String rpcName,
-					String tenant,String extension)  {
+					String tenant, String extension)  {
 				return null;
 			}
 
@@ -141,6 +141,11 @@ public abstract class TestContextImpl extends BaseContextImpl {
 					throws IOException {
 				return null;
 			}
+
+            @Override
+            public String determineScriptExtension(String scriptName, String tenant) {
+                return ".xml";
+            }
 		});
 		final ElementCommand element = new ElementCommand("element");
 		

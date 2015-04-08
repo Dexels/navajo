@@ -84,9 +84,9 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 		}
 		String path = null;
 		if(hasTenantScriptFile(name, tenant, extension)) {
-			path = scriptPath + name +"_"+tenant+ ".xml";
+            path = scriptPath + name + "_" + tenant + extension;
 		} else {
-			path = scriptPath + name + ".xml";
+			path = scriptPath + name + extension;
 		}
 		input = inputStreamReader.getResource(path);
 		if(input==null) {
@@ -125,7 +125,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 
 		try {
 			if(hasTenantScriptFile(rpcName, tenant,extension)) {
-				return getApplicableFile(rpcName, tenant, getCompiledScriptPath(), ".jar",false);
+                return getApplicableFile(rpcName, tenant, getCompiledScriptPath(), ".jar", false);
 			} else {
 				return getGenericFile(rpcName, getCompiledScriptPath(),  ".jar");
 			}
@@ -153,6 +153,21 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, getScriptPath(),extension,true);
 		return qualifiedFile!=null;
 	}
+	
+    @Override
+    public String determineScriptExtension(String scriptName, String tenant) {
+        
+        if ((new File(getScriptPath(), scriptName + "_" + tenant + ".xml")).exists() ||
+                (new File(getScriptPath(), scriptName + ".xml")).exists() ) {
+            return ".xml";
+        }
+        
+        if ((new File(getScriptPath(), scriptName + "_" + tenant + ".scala")).exists() ||
+                (new File(getScriptPath(), scriptName + ".scala")).exists() ) {
+            return ".scala";
+        }
+        return null;
+    }
 	
 	
 	private File getTenantSpecificFile(String rpcName, String tenant, String parent, String extension, boolean checkIfExists) {

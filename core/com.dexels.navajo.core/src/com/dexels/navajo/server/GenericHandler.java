@@ -388,7 +388,7 @@ public class GenericHandler extends ServiceHandler {
 									tslCompiler.compileScript(serviceName, 
     										scriptPath,
     										properties.getCompiledScriptPath(),
-    										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps,tenant,tenantConfig.hasTenantScriptFile(serviceName, tenant,".xml"), false);
+    										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps,tenant,tenantConfig.hasTenantScriptFile(serviceName, tenant, null), false);
     							} catch (SystemException ex) {
     								sourceFile.delete();
     								AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER , ex.getMessage(), Level.SEVERE, a.accessID);
@@ -596,20 +596,11 @@ public class GenericHandler extends ServiceHandler {
 			tenant = access.getInstance();
 		}
 		
-		String extension = ".xml";
 		
-		// Going to see if we can find a script with this extension
-		try {
-		    tenantConfig.getApplicableScriptFile(rpcName, tenant, extension);
-		} catch (FileNotFoundException e) {
-		    // Nothing found? Let's try scala!
-		    extension = ".scala";
-		    tenantConfig.getApplicableScriptFile(rpcName, tenant, extension);
-		}
-		
-		boolean hasTenantScriptFile = tenantConfig.hasTenantScriptFile(rpcName,tenant,extension);
+
+		boolean hasTenantScriptFile = tenantConfig.hasTenantScriptFile(rpcName,tenant, null);
 		String scriptName = hasTenantScriptFile ? rpcName + "_" + tenant : rpcName;
-        CompiledScriptInterface sc = bc.getOnDemandScriptService(scriptName, rpcName, tenant, hasTenantScriptFile, force, extension);
+        CompiledScriptInterface sc = bc.getOnDemandScriptService(scriptName, rpcName, tenant, hasTenantScriptFile, force, null);
 		// wait for it..
 		bundleContext.ungetService(ref);
 		return sc;

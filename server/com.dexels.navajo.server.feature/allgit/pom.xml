@@ -38,6 +38,7 @@
 		<module>../../com.dexels.navajo.tunnel</module>
 		<module>../../com.dexels.navajo.entity</module>
 		<module>../../com.dexels.navajo.instance.factory</module>
+		<module>../../com.dexels.navajo.status</module>
 		<module>../</module>
 
 	</modules>
