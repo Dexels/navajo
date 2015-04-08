@@ -28,7 +28,6 @@ public class CompileServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String script = req.getParameter("script");
 		Thread.currentThread().setName("Compile");
-		final String extension = ".xml";
 		if(script==null) {
 			resp.sendError(400,"No script parameter supplied");
 			return;
@@ -51,7 +50,7 @@ public class CompileServlet extends HttpServlet {
 				script = "";
 			}
 //			System.err.println("Force: "+force);
-			bundleCreator.createBundle(script,new Date(),".xml",failures,success,skipped, force,keepIntermediateFiles);
+			bundleCreator.createBundle(script,new Date(),failures,success,skipped, force,keepIntermediateFiles, null);
 			long tstamp = System.currentTimeMillis();
 			tm2 = tstamp - tm;
 			logger.info("Compiling java complete. took: "+tm2+" millis.");

@@ -466,5 +466,11 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 		return navajoIOConfig.getScript(name, tenant,extension);
 	}
 
+
+    @Override
+    public String determineScriptExtension(String scriptName, String tenant) {
+        return navajoIOConfig.determineScriptExtension(scriptName, tenant);
+    }
+
 	
 }
