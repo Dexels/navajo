@@ -596,11 +596,12 @@ public class GenericHandler extends ServiceHandler {
 			tenant = access.getInstance();
 		}
 		
-		
+        
+        String extension = tenantConfig.determineScriptExtension(rpcName, tenant);
 
-		boolean hasTenantScriptFile = tenantConfig.hasTenantScriptFile(rpcName,tenant, null);
+		boolean hasTenantScriptFile = tenantConfig.hasTenantScriptFile(rpcName,tenant, extension);
 		String scriptName = hasTenantScriptFile ? rpcName + "_" + tenant : rpcName;
-        CompiledScriptInterface sc = bc.getOnDemandScriptService(scriptName, rpcName, tenant, hasTenantScriptFile, force, null);
+        CompiledScriptInterface sc = bc.getOnDemandScriptService(scriptName, rpcName, tenant, hasTenantScriptFile, force, extension);
 		// wait for it..
 		bundleContext.ungetService(ref);
 		return sc;
