@@ -25,7 +25,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.AbstractFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -189,7 +188,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 			compileAndCreateBundle(script, formatCompilationDate,
 					scriptExtension, scriptTenant, hasTenantSpecificFile,
-					false, keepIntermediate, success, skipped,failures);
+					false, true, success, skipped,failures);
 		}
 
 	}
@@ -787,10 +786,6 @@ public class BundleCreatorComponent implements BundleCreator {
 				hasTenantScriptFile);
 
 		boolean forceReinstall = false;
-        if (extension == null) {
-            extension= navajoIOConfig.determineScriptExtension(scriptName, tenant);
-            logger.info("No known extension for {} - determined {} as script extension!", scriptName, extension);
-        }
         
 		if (sc != null) {
 			boolean needsRecompile = false;
