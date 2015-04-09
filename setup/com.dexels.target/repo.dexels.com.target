@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1349">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1378">
 <locations>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.3.201305221702"/>
-<repository location="http://repo.dexels.com/eclipse/jetty8"/>
-</location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
 <unit id="org.eclipse.jgit.feature.group" version="3.1.0.201310021548-r"/>
@@ -20,8 +16,16 @@
 <repository location="http://repo.dexels.com/eclipse/equinox_luna_sr1"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.23.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.23"/>
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.2.10.201503131614"/>
+<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.2.10.v20150310/"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.3.201305221702"/>
+<repository location="http://repo.dexels.com/eclipse/jetty8"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.28.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.28"/>
 </location>
 </locations>
 <includeBundles>
@@ -44,7 +48,7 @@
 <plugin id="com.google.guava"/>
 <plugin id="com.google.inject"/>
 <plugin id="com.hazelcast"/>
-<plugin id="com.jcraft.jsch" version="0.1.46.v201205102330"/>
+<plugin id="com.jcraft.jsch" version="0.1.50.v201403120620"/>
 <plugin id="com.jcraft.jzlib"/>
 <plugin id="com.jogamp.jogl"/>
 <plugin id="com.mysql.jdbc"/>
@@ -82,7 +86,6 @@
 <plugin id="org.apache.camel.camel-ftp"/>
 <plugin id="org.apache.camel.camel-http"/>
 <plugin id="org.apache.camel.camel-jdbc"/>
-<plugin id="org.apache.camel.camel-jetty"/>
 <plugin id="org.apache.camel.camel-mail"/>
 <plugin id="org.apache.camel.camel-stream"/>
 <plugin id="org.apache.commons.beanutils"/>
@@ -205,19 +208,15 @@
 <plugin id="org.eclipse.equinox.simpleconfigurator"/>
 <plugin id="org.eclipse.equinox.supplement"/>
 <plugin id="org.eclipse.equinox.util"/>
-<plugin id="org.eclipse.jetty.ajp"/>
 <plugin id="org.eclipse.jetty.annotations"/>
 <plugin id="org.eclipse.jetty.client"/>
-<plugin id="org.eclipse.jetty.continuation" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.http" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.io" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.nosql"/>
+<plugin id="org.eclipse.jetty.continuation" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.http" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.io" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.osgi.httpservice"/>
-<plugin id="org.eclipse.jetty.security" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.server" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.servlet" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.servlets"/>
-<plugin id="org.eclipse.jetty.util" version="8.1.11.v20130520"/>
+<plugin id="org.eclipse.jetty.security" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.servlets" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.util" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jgit" version="3.6.0.201411121045-m1"/>
 <plugin id="org.eclipse.jgit.archive"/>
 <plugin id="org.eclipse.jgit.java7"/>
