@@ -61,4 +61,6 @@ public interface TriggerInterface extends Listener {
 	@Override
 	public abstract void setLocal();
 
+	public String getOwnerInstance();
+
 }

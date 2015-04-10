@@ -22,6 +22,7 @@ public interface TaskInterface extends Serializable, TaskMXBean {
 	public void setWorkflowDefinition(String workflowDefinition);
 	public void setForceSync(boolean b);
 	public boolean isProxy();
+	public String getOwner();
 	
 	
 }
