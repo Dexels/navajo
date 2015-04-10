@@ -59,7 +59,11 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
      */
 	@Override
     public final InputStream getResourceBundle(String name) throws IOException {
-   	File adPath = new File(getAdapterPath());
+   	String adapterPath = getAdapterPath();
+   	if(adapterPath==null) {
+   		return null;
+   	}
+	File adPath = new File(adapterPath);
 		File bundleFile = new File(adPath,name+".properties");
 		if(!bundleFile.exists()) {
 			logger.debug("Bundle: "+name+" not found. Resolved to non-existing file: "+bundleFile.getAbsolutePath());
