@@ -4,7 +4,7 @@ import com.dexels.navajo.scala.document._
 
 import com.dexels.navajo.scala._
 
-trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexels.navajo.scala.Base { self: com.dexels.navajo.scala.ScalaCompiledScript => 
+trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexels.navajo.scala.Base { self: com.dexels.navajo.scala.ScalaScript => 
   def Abs(arg0: java.lang.Double): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.Abs)
     function.insertOperand(arg0)

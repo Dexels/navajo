@@ -4,7 +4,7 @@ import com.dexels.navajo.scala.document._
 
 import com.dexels.navajo.scala._
 
-trait ResourceAdaptersComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexels.navajo.scala.Base { self: com.dexels.navajo.scala.ScalaCompiledScript => 
+trait ResourceAdaptersComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexels.navajo.scala.Base { self: com.dexels.navajo.scala.ScalaScript => 
   def jdbcquery(message: NavajoMessage, f: JDBCQUERY => Unit): Unit = {
     val instance = new JDBCQUERY
     setupMap(message, instance, f)

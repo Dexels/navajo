@@ -4,7 +4,7 @@ import com.dexels.navajo.scala.document._
 
 import com.dexels.navajo.scala._
 
-trait AdaptersComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexels.navajo.scala.Base { self: com.dexels.navajo.scala.ScalaCompiledScript => 
+trait AdaptersComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexels.navajo.scala.Base { self: com.dexels.navajo.scala.ScalaScript => 
   def GetSequenceValue(arg0: java.lang.Integer, arg1: java.lang.String): java.lang.Integer = {
     val function = this.setupFunction(new com.dexels.navajo.adapter.functions.GetSequenceValue)
     function.insertOperand(arg0)

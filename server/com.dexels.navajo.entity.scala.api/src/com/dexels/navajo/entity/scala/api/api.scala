@@ -6,7 +6,7 @@ import com.dexels.navajo.scala.document._
 
 import com.dexels.navajo.scala._
 
-trait EntityComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexels.navajo.scala.Base { self: com.dexels.navajo.scala.ScalaCompiledScript => 
+trait EntityComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexels.navajo.scala.Base { self: com.dexels.navajo.scala.ScalaScript => 
   def exampletransactionaladapter(message: NavajoMessage, f: EXAMPLETRANSACTIONALADAPTER => Unit): Unit = {
     val instance = new EXAMPLETRANSACTIONALADAPTER
     setupMap(message, instance, f)

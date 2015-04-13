@@ -4,7 +4,7 @@ import com.dexels.navajo.scala.document._
 
 import com.dexels.navajo.scala._
 
-trait EventEmitterComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexels.navajo.scala.Base { self: com.dexels.navajo.scala.ScalaCompiledScript => 
+trait EventEmitterComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexels.navajo.scala.Base { self: com.dexels.navajo.scala.ScalaScript => 
   def sendevent(message: NavajoMessage, f: SENDEVENT => Unit): Unit = {
     val instance = new SENDEVENT
     setupMap(message, instance, f)

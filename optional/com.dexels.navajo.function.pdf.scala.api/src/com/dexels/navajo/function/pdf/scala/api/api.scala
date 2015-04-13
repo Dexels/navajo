@@ -4,7 +4,7 @@ import com.dexels.navajo.scala.document._
 
 import com.dexels.navajo.scala._
 
-trait PdfFunctionsComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexels.navajo.scala.Base { self: com.dexels.navajo.scala.ScalaCompiledScript => 
+trait PdfFunctionsComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexels.navajo.scala.Base { self: com.dexels.navajo.scala.ScalaScript => 
   def MergePDF(arg0: com.dexels.navajo.document.types.Binary, arg1: com.dexels.navajo.document.types.Binary): com.dexels.navajo.document.types.Binary = {
     val function = this.setupFunction(new com.dexels.navajo.pdf.functions.MergePDF)
     function.insertOperand(arg0)
