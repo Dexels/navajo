@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.2.7.qualifier
+Bundle-Version: 2.2.11.qualifier
 Bundle-Activator: tipipackage.Version
 Export-Package: com.dexels.navajo.tipi;version="1.1.42";
   uses:="com.dexels.navajo.client,

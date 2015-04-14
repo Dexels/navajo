@@ -60,6 +60,7 @@ import com.dexels.navajo.tipi.classdef.ClassManager;
 import com.dexels.navajo.tipi.classdef.IClassManager;
 import com.dexels.navajo.tipi.components.core.ShutdownListener;
 import com.dexels.navajo.tipi.components.core.ThreadActivityListener;
+import com.dexels.navajo.tipi.components.core.TipiSupportOverlayPane;
 import com.dexels.navajo.tipi.components.core.TipiThread;
 import com.dexels.navajo.tipi.components.core.TipiThreadPool;
 import com.dexels.navajo.tipi.connectors.HttpNavajoConnector;
@@ -1067,9 +1068,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                     comp.reUse();
                     if (comp.isHidden()) {
                         comp.unhideComponent();
-                        comp.performInstantiateEvents();
+                        
                     }
-                    
+                    comp.performInstantiateEvents();
                     comp.performTipiEvent("onInstantiate", null, false, new Runnable() {
                         public void run() {
                             comp.postOnInstantiate();
@@ -1762,11 +1763,22 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         for (int i = 0; i < tipiList.size(); i++) {
             TipiDataComponent t = tipiList.get(i);
             debugLog("data    ", " delivering data from method: " + method + " to tipi: " + t.getId());
-            try {
-                t.loadData(reply, method);
-            } catch (TipiBreakException e) {
-                logger.debug("Data refused by component");
-            }
+            TipiSupportOverlayPane overlayComponent = t.getOverlayComponent();
+            boolean hidden = false;
+		    if (overlayComponent != null) {
+		        hidden = overlayComponent.isHidden();
+		    }
+		    
+		    if (!hidden) {
+		    	  try {
+		                t.loadData(reply, method);
+		            } catch (TipiBreakException e) {
+		                logger.debug("Data refused by component");
+		            }
+		    } else {
+		    	logger.debug("Not delivering navajo data to hidden component {}", t.getId());
+		    }
+          
         }
 
         fireNavajoReceived(reply, method);
@@ -1816,7 +1828,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         return evaluate(expr, tc, event, nearestNavajo, currentMessage);
     }
 
-    public Operand evaluate(String expr, TipiComponent tc, TipiEvent event, Navajo n, Message currentMessage) {
+    @SuppressWarnings("deprecation")
+	public Operand evaluate(String expr, TipiComponent tc, TipiEvent event, Navajo n, Message currentMessage) {
         Operand o = null;
         if (expr == null) {
             return null;

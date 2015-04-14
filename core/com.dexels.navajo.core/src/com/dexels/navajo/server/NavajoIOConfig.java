@@ -62,5 +62,7 @@ public interface NavajoIOConfig {
 	 */
 	public boolean hasTenantScriptFile(String rpcName, String tenant, String extension);
 
+    public String determineScriptExtension(String scriptName, String tenant);
+
 
 }

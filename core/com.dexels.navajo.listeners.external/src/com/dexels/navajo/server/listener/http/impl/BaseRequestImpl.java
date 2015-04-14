@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
@@ -119,13 +122,13 @@ public class BaseRequestImpl implements AsyncRequest {
 		BufferedReader r;
 		//InputStream is = getRequestInputStream();
 		Navajo in = null;
-		logger.debug("Send encoding: "+acceptEncoding);
-		if (acceptEncoding != null
-				&& acceptEncoding.equals(AsyncRequest.COMPRESS_JZLIB)) {
+		logger.debug("Send encoding: "+contentEncoding);
+		if (contentEncoding != null
+				&& contentEncoding.equals(AsyncRequest.COMPRESS_JZLIB)) {
 			r = new BufferedReader(new java.io.InputStreamReader(
 					new InflaterInputStream(is), "UTF-8"));
-		} else if (acceptEncoding != null
-				&& acceptEncoding.equals(AsyncRequest.COMPRESS_GZIP)) {
+		} else if (contentEncoding != null
+				&& contentEncoding.equals(AsyncRequest.COMPRESS_GZIP)) {
 			r = new BufferedReader(new java.io.InputStreamReader(
 					new java.util.zip.GZIPInputStream(is), "UTF-8"));
 		} else {
@@ -170,28 +173,39 @@ public class BaseRequestImpl implements AsyncRequest {
 		return cert;
 	}
 
+	private static OutputStream getOutputStreamByEncoding(String encoding, OutputStream source) throws IOException {
+		if(COMPRESS_JZLIB.equals(encoding)) {
+			return new DeflaterOutputStream(source);
+		} else if(COMPRESS_GZIP.equals(encoding)) {
+			return new java.util.zip.GZIPOutputStream(source);
+		}
+		// unsupported:
+		return null;
+	}
+	private  OutputStream getOutputStream(String acceptEncoding, OutputStream source) throws IOException {
+		if(acceptEncoding == null) {
+			return source;
+		} else {
+			List<String> accepted = Arrays.asList(acceptEncoding.split(","));
+			for (String encoding : accepted) {
+				OutputStream o = getOutputStreamByEncoding(encoding, source);
+				if(o!=null) {
+					response.setHeader("Content-Encoding", encoding);
+					return o;
+				}
+			}
+			return source;
+		}
+
+	}
 	@Override
 	public void writeOutput(Navajo inDoc, Navajo outDoc,long scheduledAt, long startedAt, String threadStatus) throws IOException,
 			FileNotFoundException, UnsupportedEncodingException,
 			NavajoException {
-		OutputStream out;
 		response.setContentType("text/xml; charset=UTF-8");
 //		response.setHeader("Connection", "close"); 
-		// THIS IS NOT SUPPORTED,
-													// I.E. IT DOES NOT
-													// WORK...EH.. PROBABLY..
 
-		if (contentEncoding != null && contentEncoding.equals(COMPRESS_JZLIB)) {
-			response.setHeader("Content-Encoding", COMPRESS_JZLIB);
-			out = new DeflaterOutputStream(response.getOutputStream());
-		} else if (contentEncoding != null && contentEncoding.equals(COMPRESS_GZIP)) {
-			response.setHeader("Content-Encoding", COMPRESS_GZIP);
-			out = new java.util.zip.GZIPOutputStream(response.getOutputStream());
-		} else {
-//			logger.warn("No content encoding specified: (" + sendEncoding + "/"
-//					+ recvEncoding + ")");
-			out = response.getOutputStream();
-		}
+		OutputStream out = getOutputStream(acceptEncoding, response.getOutputStream());
 
 		long finishedScriptAt = System.currentTimeMillis();
 		// postTime =
@@ -207,7 +221,6 @@ public class BaseRequestImpl implements AsyncRequest {
 			response.sendError(500, "No response header received, possible scheduling problem.");
 			return;
 		}
-
 		outDoc.getHeader().setHeaderAttribute("postTime", "" + postTime);
 		outDoc.getHeader().setHeaderAttribute("queueTime", "" + queueTime);
 		outDoc.getHeader().setHeaderAttribute("serverTime", "" + serverTime);

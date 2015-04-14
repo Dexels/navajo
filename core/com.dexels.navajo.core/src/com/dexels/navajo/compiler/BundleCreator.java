@@ -1,6 +1,5 @@
 package com.dexels.navajo.compiler;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
@@ -30,8 +29,8 @@ public interface BundleCreator {
 	
 //	public Collection<Long> installBundles(String scriptPrefix) throws BundleException;
 
-	public void createBundle(String script, Date date, String extension,
-			List<String> failures, List<String> success, List<String> skipped, boolean force,boolean keepIntermediateFiles) throws Exception;
+	public void createBundle(String script, Date date, List<String> failures,
+			List<String> success, List<String> skipped, boolean force, boolean keepIntermediateFiles, String extension) throws Exception;
 
 	public Date getBundleInstallationDate(String scriptPath, String tenant, String extension);
 	public Date getScriptModificationDate(String scriptPath, String tenant,String extension) throws FileNotFoundException;
@@ -58,7 +57,7 @@ public interface BundleCreator {
 	 * @return Null if not found
 	 * @throws ClassNotFoundException if something weird happened
 	 */
-	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant,String extension, boolean tenantQualified) throws ClassNotFoundException;
+	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant,boolean tenantQualified) throws ClassNotFoundException;
 
 	/**
 	 * Same as getCompiledScript, only will try to install (and compile if needed) bundle if it isn't there.

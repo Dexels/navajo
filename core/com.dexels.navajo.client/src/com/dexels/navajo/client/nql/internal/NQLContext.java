@@ -321,7 +321,7 @@ public class NQLContext implements NqlContextApi {
 		};
 		
 		
-		nc.setupClient("penelope1.dexels.com/sportlink/knvb1_test/servlet/Postman", "ROOT", "R20T");
+		nc.setupClient("penelope1.dexels.com/sportlink/knvb1_test/servlet/Postman", "xyz", "abc");
 		nq.setNavajoContext(nc);
 		String nql = "service:club/InitSearchClubs|ClubSearch/ShortName:Hoek|service:club/ProcessSearchClubs|output:Club|format:csv";
 	

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="navajo.server.status">
+   <implementation class="com.dexels.navajo.status.StatusServlet"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="alias" type="String" value="/status"/>
+   <property name="servlet-name" type="String" value="status"/>
+   <reference bind="setDispatcherInterface" cardinality="0..1" interface="com.dexels.navajo.server.DispatcherInterface" name="DispatcherInterface" policy="dynamic" unbind="clearDispatcherInterface"/>
+   <reference bind="setRepository" cardinality="0..1" interface="com.dexels.navajo.server.Repository" name="Repository" policy="dynamic" unbind="clearRepository"/>
+   <reference bind="setJavaCompiler" cardinality="0..1" interface="com.dexels.navajo.compiler.JavaCompiler" name="JavaCompiler" policy="dynamic" unbind="clearJavaCompiler"/>
+   <reference bind="setNavajoConfig" cardinality="0..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfigInterface" policy="dynamic" unbind="clearNavajoConfig"/>
+   
+</scr:component>

@@ -1138,6 +1138,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             }
             logger.warn("No access returned from multitenant, instance specific authorization. Instance: " + instance);
         }
+        // I have doubts if this is the way to go, if the instance is missing (for example, if someone uses the wrong database, it
+        // will use a *random one*.
         if (access == null) {
             access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage,
                     userCertificate, accessID);

@@ -57,7 +57,7 @@ public class CompileCommand extends OsgiCommandSupport  {
 			List<String> success = new ArrayList<String>();
 			List<String> failures = new ArrayList<String>();
 			List<String> skipped = new ArrayList<String>();
-			bundleCreator.createBundle(script,new Date(),".xml",failures,success,skipped, force,keepIntermediateFiles);
+			bundleCreator.createBundle(script,new Date(),failures,success,skipped,force, keepIntermediateFiles, null);
 			long tm2 = System.currentTimeMillis() - tm;
 			System.err.println("Compiling java complete. took: "+tm2+" millis.");
 			System.err.println("Succeeded: "+success.size()+" failed: "+failures.size()+" skipped: "+skipped.size());
