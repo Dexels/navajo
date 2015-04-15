@@ -736,36 +736,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         return doc;
     }
 
-    /**
-     * Handle a webservice (without ClientInfo object given).
-     *
-     * @param inMessage
-     * @param userCertificate
-     * @return
-     * @throws FatalException
-     */
     @Override
-    public final Navajo handle(Navajo inMessage, TmlRunnable origRunnable, Object userCertificate, ClientInfo clientInfo)
+    public final Navajo handle(Navajo inMessage, String instance, boolean skipAuth, AfterWebServiceEmitter emit, ClientInfo clientInfo)
             throws FatalException {
-        return processNavajo(inMessage, "default", userCertificate, clientInfo, false, origRunnable, null);
-    }
-
-    /**
-     * Handle a webservice (without ClientInfo and certificate).
-     *
-     * @param inMessage
-     * @return
-     * @throws FatalException
-     */
-    @Override
-    public final Navajo handle(Navajo inMessage, boolean skipAuth, AfterWebServiceEmitter emit) throws FatalException {
-        return processNavajo(inMessage, null, null, null, skipAuth, null, emit);
-    }
-
-    @Override
-    public final Navajo handle(Navajo inMessage, boolean skipAuth, AfterWebServiceEmitter emit, ClientInfo clientInfo)
-            throws FatalException {
-        return processNavajo(inMessage, null, null, clientInfo, skipAuth, null, emit);
+        return processNavajo(inMessage, instance, null, clientInfo, skipAuth, null, emit);
 
     }
 
