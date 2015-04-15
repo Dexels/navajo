@@ -74,10 +74,10 @@ public class TipiMethod extends TipiAbstractExecutable {
             return;
         } catch (Throwable t) {
             logger.error("Error performing method", t);
-        }
-        
-        if (addedOverlay && overlayComponent != null) {
-            overlayComponent.removeOverlayProgressPanel();
+        } finally {
+            if (addedOverlay && overlayComponent != null) {
+                overlayComponent.removeOverlayProgressPanel();
+            }
         }
 
     }
