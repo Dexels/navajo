@@ -1404,7 +1404,7 @@ public void run()  {
 		  h.setRequestId(null);
 		  h.setHeaderAttribute("parentaccessid", access.accessID);
 
-		  inDoc = DispatcherFactory.getInstance().handle(outDoc,access.getInstance(), true);
+		  inDoc = DispatcherFactory.getInstance().handle(outDoc,access.getTenant(), true);
 		  serviceFinished = true;
 		  serviceCalled = true;
 		  

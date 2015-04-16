@@ -917,7 +917,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
                 } else {
                     String instance = null;
                     if (myAccess != null) {
-                        instance = myAccess.getInstance();
+                        instance = myAccess.getTenant();
                     }
 
                     if (GrusProviderFactory.getInstance().threadContainsConnection(instance, datasource)) {

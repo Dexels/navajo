@@ -343,7 +343,7 @@ public abstract class FunctionInterface {
 		if (this.access==null) {
 			return null;
 		} else {
-			return this.access.getInstance();
+			return this.access.getTenant();
 		}
 	}
 }

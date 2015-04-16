@@ -909,9 +909,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             if (access == null) {
                 throw new FatalException("Error acquiring Access object in dispatcher. Severe.");
             }
-            if (access.getInstance() == null) {
+            if (access.getTenant() == null) {
                 // repairing missing instance:
-                access.setInstance(instance);
+                access.setTenant(instance);
             }
             if (clientInfo != null) {
                 access.ipAddress = clientInfo.getIP();
@@ -985,8 +985,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 MDC.put("accessId", access.accessID);
                 MDC.put("rpcName", access.getRpcName());
                 MDC.put("rpcUser", access.getRpcUser());
-                if (access.getInstance() != null) {
-                    MDC.put("tenant", access.getInstance());
+                if (access.getTenant() != null) {
+                    MDC.put("tenant", access.getTenant());
                 }
                 MDC.put("rootPath", getNavajoConfig().getRootPath());
                 MDC.put("instanceName", getNavajoConfig().getInstanceName());
@@ -1118,7 +1118,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage,
                     userCertificate, accessID);
         }
-        access.setInstance(instance);
+        access.setTenant(instance);
         return access;
     }
 
