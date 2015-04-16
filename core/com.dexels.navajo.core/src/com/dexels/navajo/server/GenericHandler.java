@@ -168,10 +168,10 @@ public class GenericHandler extends ServiceHandler {
           pathPrefix = rpcName.substring(0, strip) + "/";
         }
         final String applicationGroup;
-        if (access.getInstance()==null) {
+        if (access.getTenant()==null) {
         	applicationGroup = this.tenantConfig.getInstanceGroup();
 		} else {
-			applicationGroup = access.getInstance();
+			applicationGroup = access.getTenant();
 		}
         
     	File scriptFile = new File(scriptPath + "/" + rpcName + "_" + applicationGroup + ".xml");
@@ -590,10 +590,10 @@ public class GenericHandler extends ServiceHandler {
 		}
 		
 		final String tenant;
-		if (access.getInstance()==null) {
+		if (access.getTenant()==null) {
 			tenant = tenantConfig.getInstanceGroup();
 		} else {
-			tenant = access.getInstance();
+			tenant = access.getTenant();
 		}
 		
         

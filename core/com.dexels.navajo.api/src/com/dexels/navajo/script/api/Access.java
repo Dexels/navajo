@@ -136,7 +136,7 @@ public final class Access implements java.io.Serializable, Mappable {
     private transient Set<Map<?, ?>> piggyBackData = null;
     private String clientToken = null;
     private String clientInfo = null;
-    private String instance;
+    private String tenant;
 
     /**
      * Create a private logging console for this access object. TODO: Maybe
@@ -793,12 +793,12 @@ public final class Access implements java.io.Serializable, Mappable {
         this.queueId = queueId;
     }
 
-    public void setInstance(String instance) {
-        this.instance = instance;
+    public void setTenant(String instance) {
+        this.tenant = instance;
     }
 
-    public String getInstance() {
-        return this.instance;
+    public String getTenant() {
+        return this.tenant;
     }
 
     public int getRequestNavajoSize() {
