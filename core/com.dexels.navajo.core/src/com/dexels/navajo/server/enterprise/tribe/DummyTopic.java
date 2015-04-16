@@ -1,38 +1,46 @@
 package com.dexels.navajo.server.enterprise.tribe;
 
 import java.io.Serializable;
-
+import java.util.HashSet;
+import java.util.Set;
 
 public class DummyTopic implements TribalTopic {
 
+	final String topicName;
+	final Set<TopicListener> listeners = new HashSet<TopicListener>();
+	int count;
+	
+	public DummyTopic(String s) {
+		topicName = s;
+	}
+	
 	@Override
 	public void addTopicListener(TopicListener tl) {
-		// TODO Auto-generated method stub
-
+		listeners.add(tl);
+		count++;
 	}
 
 	@Override
 	public void publish(Serializable s) {
-		// TODO Auto-generated method stub
-
+		for ( TopicListener tl : listeners ) {
+			tl.onTopic(new DummyTopicEvent(s));
+		}
 	}
 
 	@Override
 	public void removeTopicListener(TopicListener tl) {
-		// TODO Auto-generated method stub
-		
+		listeners.remove(tl);
+		count--;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return topicName;
 	}
 
 	@Override
 	public long getInterestCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return count;
 	}
 
 }

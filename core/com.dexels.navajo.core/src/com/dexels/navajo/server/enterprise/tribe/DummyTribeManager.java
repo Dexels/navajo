@@ -189,7 +189,7 @@ public class DummyTribeManager implements TribeManagerInterface {
 		if ( topics.containsKey(name) ) {
 			return topics.get(name);
 		} else {
-			DummyTopic dt = new DummyTopic();
+			DummyTopic dt = new DummyTopic(name);
 			topics.put(name, dt);
 			return dt;
 		}
