@@ -47,8 +47,7 @@ public final class PropertyRadioSelection extends JPanel implements
 
 	private static final long serialVersionUID = 2786990335267017128L;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(PropertyRadioSelection.class);
+	private final static Logger logger = LoggerFactory.getLogger(PropertyRadioSelection.class);
 	private Property myProperty = null;
 	private final ButtonGroup myGroup = new ButtonGroup();
 	private JRadioButton lastButtonOfGroup = null;
@@ -154,6 +153,8 @@ public final class PropertyRadioSelection extends JPanel implements
 		} catch (NavajoException ex) {
 			logger.error("Error: ", ex);
 		}
+		
+		setOpaque(false);
 
 	}
 
@@ -169,6 +170,9 @@ public final class PropertyRadioSelection extends JPanel implements
 		if (s.isSelected()) {
 			jr.setSelected(true);
 		}
+		jr.setOpaque(false);
+		jr.setContentAreaFilled(false);
+		jr.setBorderPainted(false);
 		lastButtonOfGroup = jr;
 		// jr.addItemListener(new ItemListener() {
 		// public void itemStateChanged(ItemEvent ce) {
