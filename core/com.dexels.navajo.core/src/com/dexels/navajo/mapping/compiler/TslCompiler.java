@@ -3505,14 +3505,16 @@ public class TslCompiler {
 
 			// Add getDescription() and getAuthor()
 			if (author != null) {
+			    String flatAuthor = description.replace("\n", "").replace("\r", "");
 				result.append("public String getAuthor() {\n");
-				result.append("   return \"" + author + "\";\n");
+				result.append("   return \"" + flatAuthor + "\";\n");
 				result.append("}\n\n");
 			}
 
 			if (description != null) {
+			    String flatDescription = description.replace("\n", "").replace("\r", "");
 				result.append("public String getDescription() {\n");
-				result.append("   return \"" + description + "\";\n");
+				result.append("   return \"" + flatDescription + "\";\n");
 				result.append("}\n\n");
 			}
 
