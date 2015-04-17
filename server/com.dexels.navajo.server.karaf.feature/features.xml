@@ -23,10 +23,10 @@
         <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/1.1.4</bundle>
     </feature>    
 
-	<feature version="1.0.23" start-level="80" name="dexels.oauth" resolver="(obr)">
+	<feature version="1.0.24" start-level="80" name="dexels.oauth" resolver="(obr)">
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/5.0.0</bundle>
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.16</bundle>
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.26</bundle>
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.27</bundle>
 	</feature>
 
 
