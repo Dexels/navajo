@@ -260,8 +260,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		if ("".equals(script)) {
 			return true;
 		}
-		final boolean equalsCanonical = f.getCanonicalPath().equals(
-				scriptFolder.getCanonicalFile() + "/" + script);
+		final boolean equalsCanonical = f.getCanonicalPath().equals(scriptFolder.getCanonicalFile() + File.separator + script);
 		final boolean isDir = f.isDirectory();
 		return isDir && equalsCanonical;
 	}
