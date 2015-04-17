@@ -20,7 +20,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.script.api.FatalException;
-import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.DispatcherFactory;
 
 /**
@@ -36,7 +35,6 @@ public class EntityManager {
 
 	private static EntityManager instance;
 	private BundleQueue bundleQueue;
-	private LocalClient myClient;
 
 	public EntityManager() {
 	}
@@ -155,7 +153,6 @@ public class EntityManager {
 		}
 		
 		buildAndLoadScript(entityDir);
-
 	}
 
 	// Can be called on file or directory. If on directory, call recursively on each file
@@ -185,27 +182,18 @@ public class EntityManager {
 		this.bundleQueue = null;
 	}
 
-	public void setClient(LocalClient client) {
-		this.myClient = client;
-	}
-
-	public void clearClient(LocalClient client) {
-		this.myClient = null;
-	}
 	
 	public Navajo getEntityNavajo(String serviceName) throws InterruptedException, FatalException {
 		Navajo in = NavajoFactory.getInstance().createNavajo();
 		Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
 		in.addHeader(h);
+		
 		try {
-			return myClient.call(in);
-		} catch (FatalException e) {
-			logger.warn("Error in getting EntityNavajo - perhaps OSGi activation problem? Trying one last time in 5 seconds...");
-			// OSGi activation - dispatcher might not be fully configured yet.
-			// Sleep a bit to allow for activation, then retry one last time
-			Thread.sleep(5000);
+		    return DispatcherFactory.getInstance().handle(in, true);
+		} catch (Exception e) {
+		    logger.error("Exception on getting the Entity Navajo. - cannot activate {}! {} ",serviceName, e);
+		    throw new FatalException("Exception on getting the Entity Navajo.");
 		}
-		return myClient.call(in);
 	}
 
 	public Map<String, Map<String, Operation>> getOperationsMap() {

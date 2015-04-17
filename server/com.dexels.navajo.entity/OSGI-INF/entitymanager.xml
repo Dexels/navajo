@@ -5,5 +5,5 @@
       <provide interface="com.dexels.navajo.entity.EntityManager"/>
    </service>
    <reference bind="setBundleQueue" cardinality="1..1" interface="com.dexels.navajo.compiler.tsl.BundleQueue" name="BundleQueue" policy="dynamic" unbind="clearBundleQueue"/>
-   <reference bind="setClient" cardinality="1..1" interface="com.dexels.navajo.script.api.LocalClient" name="ClientInterface" policy="dynamic" unbind="clearClient"/>
+   <reference cardinality="1..1" interface="com.dexels.navajo.server.DispatcherInterface" name="DispatcherInterface" policy="dynamic"/>
 </scr:component>
