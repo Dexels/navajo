@@ -131,26 +131,9 @@ public class BundleCreatorComponent implements BundleCreator {
 			List<String> skipped, boolean force, boolean keepIntermediate,
 			String scriptExtension) throws Exception {
 	    
-        if (scriptExtension == null) {
-            scriptExtension= navajoIOConfig.determineScriptExtension(scriptName, null);
-            logger.info("No known extension for {} - determined {} as script extension!", scriptName, scriptExtension);
-        }
-        
-        
-		if (scriptExtension.length() == 0 || scriptExtension.charAt(0) != '.') {
-			throw new IllegalAccessError("Script extension did not start with a dot!");
-		}
+       
 		String script = scriptName.replaceAll("\\.", "/");
-		String bareScript = scriptName
-				.substring(scriptName.lastIndexOf("/") + 1);
-		String rpcName = scriptName;
-
-		if (bareScript.indexOf("_") > 0) {
-			rpcName = scriptName.substring(0, rpcName.lastIndexOf("_"));
-		}
-
-		final String scriptTenant = tenantFromScriptPath(scriptName);
-
+		
 		File scriptFolder = new File(navajoIOConfig.getScriptPath());
 		File f = new File(scriptFolder, script);
 
@@ -159,6 +142,24 @@ public class BundleCreatorComponent implements BundleCreator {
 			compileAllIn(f, compilationDate, failures, success, skipped, force,
 					keepIntermediate, scriptExtension);
 		} else {
+		    if (scriptExtension == null) {
+	            scriptExtension= navajoIOConfig.determineScriptExtension(scriptName, null);
+	            logger.info("No known extension for {} - determined {} as script extension!", scriptName, scriptExtension);
+	        }
+	        
+	        
+	        if (scriptExtension.length() == 0 || scriptExtension.charAt(0) != '.') {
+	            throw new IllegalAccessError("Script extension did not start with a dot!");
+	        }
+	        
+		    String bareScript = scriptName.substring(scriptName.lastIndexOf("/") + 1);
+		    String rpcName = scriptName;
+
+	        if (bareScript.indexOf("_") > 0) {
+	            rpcName = scriptName.substring(0, rpcName.lastIndexOf("_"));
+	        }
+		    final String scriptTenant = tenantFromScriptPath(scriptName);
+		    
 			File scriptFile = navajoIOConfig.getApplicableScriptFile(rpcName,
 					scriptTenant, scriptExtension);
 			boolean hasTenantSpecificFile = navajoIOConfig.hasTenantScriptFile(
@@ -272,18 +273,16 @@ public class BundleCreatorComponent implements BundleCreator {
 		File scriptPath = new File(navajoIOConfig.getScriptPath());
 
 		Iterator<File> it = FileUtils.iterateFiles(baseDir,
-				new String[] { "xml" }, true);
+				new String[] { "xml" ,"scala" }, true);
 		while (it.hasNext()) {
 			File file = it.next();
 			String relative = getRelative(file, scriptPath);
-			if (!relative.endsWith(extension)) {
-				logger.warn("Odd: " + relative);
-			}
+			
 			// logger.info("File: "+relative);
 			String withoutEx = relative.substring(0, relative.lastIndexOf('.'));
 			try {
 				createBundle(withoutEx, compileDate, failures, success,
-						skipped, force, keepIntermediate, extension);
+						skipped, force, keepIntermediate, "." + FilenameUtils.getExtension(file.getAbsolutePath()));
 			} catch (Exception e) {
 				logger.warn("Error compiling script: " + relative, e);
 				failures.add("Error compiling script: " + relative);
