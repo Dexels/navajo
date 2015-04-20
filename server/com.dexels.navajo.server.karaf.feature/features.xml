@@ -3,13 +3,13 @@
 	name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
 
-    <feature version="1.1.5" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
+    <feature version="1.1.6" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
         <feature version="[3.0.0,4)">eventadmin</feature>
         <feature version="[3.0.0,4)">scr</feature>
         <feature version="[3.0.0,4)">pax-http</feature>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf.featuresync/1.0.4</bundle>
        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/6.1.1</bundle>
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.0.25</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.0.26</bundle>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.file/1.0.22</bundle>
         <bundle dependency="true">mvn:com.dexels.thirdparty/javaewah/0.7.9</bundle>
         <bundle dependency="true">mvn:com.jcraft/jsch-bundle/0.1.50</bundle>
@@ -23,10 +23,10 @@
         <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/1.1.4</bundle>
     </feature>    
 
-	<feature version="1.0.25" start-level="80" name="dexels.oauth" resolver="(obr)">
+	<feature version="1.0.26" start-level="80" name="dexels.oauth" resolver="(obr)">
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/5.0.0</bundle>
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.16</bundle>
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.28</bundle>
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.29</bundle>
 	</feature>
 
 
@@ -100,10 +100,10 @@
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.adapter' version='3.0.17'
+	<feature resolver="(obr)" name='navajo.adapter' version='3.0.18'
 		start-level='81'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.1.6</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.1.8</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.kml' version='3.0.4'
