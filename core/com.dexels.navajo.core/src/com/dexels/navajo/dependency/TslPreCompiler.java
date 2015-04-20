@@ -225,8 +225,7 @@ public class TslPreCompiler {
     protected void findNavajoDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc)
             throws XPathExpressionException {
         XPath xPath = XPathFactory.newInstance().newXPath();
-        NodeList nodes = (NodeList) xPath.evaluate(
-                "//map[@object='com.dexels.navajo.adapter.NavajoMap']/field[@name='doSend']/expression/value",
+        NodeList nodes = (NodeList) xPath.evaluate("//map[@object='com.dexels.navajo.adapter.NavajoMap']/field[@name='doSend']/expression/value",
                 tslDoc.getDocumentElement(), XPathConstants.NODESET);
 
         for (int i = 0; i < nodes.getLength(); ++i) {
@@ -239,9 +238,11 @@ public class TslPreCompiler {
                     addNavajoDependency(scriptFile, scriptTenant, deps, res, scriptFolder, getLineNr( value));
                 }
 
+            } else if (navajoScript.startsWith("[/")) {
+               // The navajo script is retrieved from the Indoc or database result - not supported
+                deps.add(new Dependency(scriptFile, "", Dependency.UNKNOWN_TYPE, getLineNr( value)));
             } else {
                 addNavajoDependency(scriptFile, scriptTenant, deps, navajoScript, scriptFolder, getLineNr( value));
-
             }
         }
     }
