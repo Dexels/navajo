@@ -36,7 +36,6 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.Repository;
 import com.dexels.navajo.util.AuditLog;
 
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
@@ -246,8 +245,8 @@ public void load(Access access) throws UserException, MappableException {
 
   
     private boolean isLegacyMode() {
-		Repository r = DispatcherFactory.getInstance().getNavajoConfig().getRepository();
-		return r.useLegacyDateMode();
+		//Repository r = DispatcherFactory.getInstance().getNavajoConfig().getRepository();
+		return  DispatcherFactory.getInstance().getNavajoConfig().useLegacyDateMode();
 	}
 
   @Override

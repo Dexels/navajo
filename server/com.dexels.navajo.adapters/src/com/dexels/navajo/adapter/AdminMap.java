@@ -290,14 +290,8 @@ public void kill() {
   public String getVersion() {
 	    return "Undefined, check OSGi";
   }
-  public String getRepository() {
-    if (com.dexels.navajo.server.DispatcherFactory.getInstance().getNavajoConfig().getRepository() != null) {
-      return com.dexels.navajo.server.DispatcherFactory.getInstance().getNavajoConfig().getRepository().getClass().
-          getName();
-    } else {
-      return "No repository configured";
-    }
-  }
+  
+
   public String getConfigPath() {
     return configPath;
   }

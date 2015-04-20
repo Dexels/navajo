@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.Repository;
 
 public class StatusServlet extends HttpServlet {
 
@@ -22,7 +21,6 @@ public class StatusServlet extends HttpServlet {
 
 	private DispatcherInterface dispatcherInterface;
 	private JavaCompiler javaCompiler;
-	private Repository repository;
 	private NavajoConfigInterface navajoConfig;
 	
 	
@@ -59,11 +57,6 @@ public class StatusServlet extends HttpServlet {
 			logger.info("Status failed: 502, no java compiler");
 			return;
 		}
-		if(repository==null) {
-			resp.sendError(503, "No repository");
-			logger.info("Status failed: 503, no repository");
-			return;
-		}
 		logger.debug("Navajo status ok");
 		resp.setContentType("text/plain");
 		PrintWriter writer = resp.getWriter();
@@ -94,12 +87,5 @@ public class StatusServlet extends HttpServlet {
 		this.dispatcherInterface = null;
 	}
 
-	public void setRepository(Repository repository) {
-		this.repository = repository;
-	}
-	
-	public void clearRepository(Repository repository) {
-		this.repository = null;
-	}
 
 }
