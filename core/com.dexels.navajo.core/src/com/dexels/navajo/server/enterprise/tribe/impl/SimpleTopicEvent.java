@@ -1,12 +1,14 @@
-package com.dexels.navajo.server.enterprise.tribe;
+package com.dexels.navajo.server.enterprise.tribe.impl;
 
 import java.io.Serializable;
 
-public class DummyTopicEvent implements TopicEvent {
+import com.dexels.navajo.server.enterprise.tribe.TopicEvent;
+
+public class SimpleTopicEvent implements TopicEvent {
 
 	private final Serializable myMessage;
 	
-	public DummyTopicEvent(Serializable msg) {
+	public SimpleTopicEvent(Serializable msg) {
 		myMessage = msg;
 	}
 	

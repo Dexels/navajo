@@ -1,8 +1,11 @@
-package com.dexels.navajo.server.enterprise.tribe;
+package com.dexels.navajo.server.enterprise.tribe.impl;
 
 import java.util.Date;
 
-public class DummyTribeMemberImpl implements TribeMemberInterface {
+import com.dexels.navajo.server.enterprise.tribe.PingAnswer;
+import com.dexels.navajo.server.enterprise.tribe.TribeMemberInterface;
+
+public class SimpleTribeMember implements TribeMemberInterface {
 
 	@Override
 	public String getMemberName() {

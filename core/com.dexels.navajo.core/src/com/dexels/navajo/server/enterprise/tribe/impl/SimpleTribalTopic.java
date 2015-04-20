@@ -1,16 +1,19 @@
-package com.dexels.navajo.server.enterprise.tribe;
+package com.dexels.navajo.server.enterprise.tribe.impl;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DummyTopic implements TribalTopic {
+import com.dexels.navajo.server.enterprise.tribe.TopicListener;
+import com.dexels.navajo.server.enterprise.tribe.TribalTopic;
+
+public class SimpleTribalTopic implements TribalTopic {
 
 	final String topicName;
 	final Set<TopicListener> listeners = new HashSet<TopicListener>();
 	int count;
 	
-	public DummyTopic(String s) {
+	public SimpleTribalTopic(String s) {
 		topicName = s;
 	}
 	
@@ -23,7 +26,7 @@ public class DummyTopic implements TribalTopic {
 	@Override
 	public void publish(Serializable s) {
 		for ( TopicListener tl : listeners ) {
-			tl.onTopic(new DummyTopicEvent(s));
+			tl.onTopic(new SimpleTopicEvent(s));
 		}
 	}
 

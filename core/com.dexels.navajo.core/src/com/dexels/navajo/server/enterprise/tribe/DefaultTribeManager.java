@@ -13,8 +13,10 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.enterprise.tribe.impl.SimpleTribalTopic;
+import com.dexels.navajo.server.enterprise.tribe.impl.SimpleTribeMember;
 
-public class DummyTribeManager implements TribeManagerInterface {
+public class DefaultTribeManager implements TribeManagerInterface {
 
 //	private NavajoConfigInterface navajoConfig;
 
@@ -28,7 +30,7 @@ public class DummyTribeManager implements TribeManagerInterface {
 	public void terminate() {
 	}
 
-	public DummyTribeManager() {
+	public DefaultTribeManager() {
 //		if(!Version.osgiActive()) {
 //			navajoConfig = DispatcherFactory.getInstance().getNavajoConfig();
 //		}
@@ -73,7 +75,7 @@ public class DummyTribeManager implements TribeManagerInterface {
 	@Override
 	public Set<TribeMemberInterface> getAllMembers() {
 		Set<TribeMemberInterface> s =  new HashSet<TribeMemberInterface>();
-		s.add(new DummyTribeMemberImpl());
+		s.add(new SimpleTribeMember());
 		return s;
 	}
 	
@@ -90,7 +92,7 @@ public class DummyTribeManager implements TribeManagerInterface {
 
 	@Override
 	public TribeMemberInterface getMyMembership() {
-		return new DummyTribeMemberImpl();
+		return new SimpleTribeMember();
 	}
 
 	@Override
@@ -189,7 +191,7 @@ public class DummyTribeManager implements TribeManagerInterface {
 		if ( topics.containsKey(name) ) {
 			return topics.get(name);
 		} else {
-			DummyTopic dt = new DummyTopic(name);
+			SimpleTribalTopic dt = new SimpleTribalTopic(name);
 			topics.put(name, dt);
 			return dt;
 		}
