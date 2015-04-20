@@ -118,21 +118,9 @@ public class NavajoConfigEmitter implements EventHandler {
 		}
 
 		// Get the instance name.
-		String instanceName = (body.getProperty("instance_name") != null ? body
-				.getProperty("instance_name").getValue() : null);
-		if (instanceName == null) {
-			throw new IllegalArgumentException(
-					"instance_name in server.xml not found.");
-		}
-		data.put("instanceName", instanceName);
+		data.put("instanceName", getInstanceName(body));
 		// Get the instance group.
-		String instanceGroup = (body.getProperty("instance_group") != null ? body
-				.getProperty("instance_group").getValue() : null);
-		if (instanceGroup == null) {
-			throw new IllegalArgumentException(
-					"instance_group in server.xml not found.");
-		}
-		data.put("instanceGroup", instanceGroup);
+		data.put("instanceGroup", getInstanceGroup(body));
 
 //		File rootFile = new File(rootPath);
 
@@ -295,6 +283,42 @@ public class NavajoConfigEmitter implements EventHandler {
 		
 		addAllProperties(body.getMessage("parameters"),data);
 		updateIfChanged("navajo.server.config", data);
+	}
+
+
+	private String getInstanceGroup(Message body) {
+		String instanceGroup = (body.getProperty("instance_group") != null ? body
+				.getProperty("instance_group").getValue() : null);
+		String env = System.getenv("CLUSTER");
+		if(env!=null) {
+			if(instanceGroup!=null) {
+				logger.warn("Instance group defined in server.xml: "+instanceGroup+" but overridden by environment var CLUSTER: "+env);
+			}
+			return env;
+		}
+		if (instanceGroup == null) {
+			throw new IllegalArgumentException(
+					"instance_group in server.xml not found.");
+		}
+		return instanceGroup;
+	}
+
+
+	private String getInstanceName(Message body) {
+		String instanceName = (body.getProperty("instance_name") != null ? body
+				.getProperty("instance_name").getValue() : null);
+		String env = System.getenv("INSTANCENAME");
+		if(env!=null) {
+			if(instanceName!=null) {
+				logger.warn("Instance name defined in server.xml: "+instanceName+" but overridden by environment var INSTANCENAME: "+env);
+			}
+			return env;
+		}
+		if (instanceName == null) {
+			throw new IllegalArgumentException(
+					"instance_name in server.xml not found.");
+		}
+		return instanceName;
 	}
 /**
  * Dump all parameter properties into the fray:
