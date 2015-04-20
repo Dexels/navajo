@@ -65,7 +65,6 @@ public class Dependency {
         String scriptFileRel = null;
         if (scriptFile.indexOf("workflows") > 0) {
             scriptFileRel = scriptFile.split("workflows")[1];
-            return scriptFileRel.substring(1, scriptFileRel.indexOf('.'));
         } else {
             scriptFileRel = scriptFile.split("scripts")[1];
         }
@@ -81,7 +80,6 @@ public class Dependency {
         String scriptFileRel = null;
         if (dependeeFile.indexOf("workflows") > 0) {
             scriptFileRel = dependeeFile.split("workflows")[1];
-            
         } else {
             scriptFileRel = dependeeFile.split("scripts")[1];
         }
