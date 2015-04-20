@@ -27,8 +27,6 @@ import com.dexels.navajo.persistence.impl.PersistenceManagerImpl;
 import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.NavajoIOConfig;
-import com.dexels.navajo.server.Repository;
-import com.dexels.navajo.server.RepositoryFactory;
 import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
@@ -38,7 +36,6 @@ import com.dexels.navajo.sharedstore.SharedStoreInterface;
 public class NavajoConfigComponent implements NavajoConfigInterface {
 
 	private NavajoIOConfig navajoIOConfig = null;
-	private RepositoryFactory repositoryFactory;
 	protected NavajoClassLoader betaClassloader;
 	protected NavajoClassSupplier adapterClassloader;
 	private Map<String, Object> properties;
@@ -228,18 +225,7 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 		}
 	}
 	
-	public void setRepositoryFactory(RepositoryFactory rf) {
-		this.repositoryFactory = rf;
-	}
 	
-	public void clearRepositoryFactory(RepositoryFactory rf) {
-		this.repositoryFactory = null;
-	}
-
-	@Override
-	public Repository getRepository() {
-		return repositoryFactory.getRepository((String) properties.get("repositoryClass"));
-	}
 
 	@Override
 	public StatisticsRunnerInterface getStatisticsRunner() {
@@ -472,5 +458,9 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
         return navajoIOConfig.determineScriptExtension(scriptName, tenant);
     }
 
+    @Override 
+    public boolean useLegacyDateMode() {
+        return false;
+    }
 	
 }

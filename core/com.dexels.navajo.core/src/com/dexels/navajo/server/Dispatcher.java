@@ -390,14 +390,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         }
     }
 
-    /*
-     * Get a reference to the Navajo repository object.
-     * 
-     * @return
-     */
-    public final Repository getRepository() {
-        return navajoConfig.getRepository();
-    }
+ 
 
     /*
      * Process a webservice using a special handler class.
@@ -878,10 +871,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                         throw new FatalException("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
                     }
 
-                    if (navajoConfig.getRepository() == null) {
-                        logger.error("Bad initialization or missing repository");
-                        throw new FatalException("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
-                    }
                     access = authenticateUser(inMessage, instance, userCertificate, rpcName, rpcUser, rpcPassword,
                             requestEventAccess.accessID);
                 } catch (AuthorizationException ex) {
@@ -898,9 +887,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     return outMessage;
                 }
             } else {
-                // Use SimpleRepository authorisation is skipped.
-                access = RepositoryFactoryImpl.getRepository("com.dexels.navajo.server.SimpleRepository", navajoConfig)
-                        .authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null, requestEventAccess.accessID);
+                // Skip auth - create access object ourselves
+                access =  new Access(1, 1, rpcUser, rpcName, "", "", "", null, false, requestEventAccess.accessID);
+                
             }
 
             // System.err.println("Created Access: " + access.accessID + ", " +
@@ -1099,27 +1088,20 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         return access.getOutputDoc();
     }
 
-    private Access authenticateUser(Navajo inMessage, String instance, Object userCertificate, String rpcName,
+    private Access authenticateUser(Navajo inMessage, String tenant, Object userCertificate, String rpcName,
             String rpcUser, String rpcPassword, String accessID) throws SystemException, AuthorizationException {
-        Access access = null;
-        if (instance != null) {
-            // logger.info("using multitenant: "+instance, new Exception());
 
-            AAAInterface aaai = getAuthorizator(instance);
-            if (aaai != null) {
-                access = aaai.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
-                return access;
-            }
-            logger.warn("No access returned from multitenant, instance specific authorization. Instance: " + instance);
+        if (tenant == null) {
+            throw new SystemException(-1, "No tenant set -cannot authenticate!");
         }
-        // I have doubts if this is the way to go, if the instance is missing (for example, if someone uses the wrong database, it
-        // will use a *random one*.
-        if (access == null) {
-            access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage,
-                    userCertificate, accessID);
+        // logger.info("using multitenant: "+instance, new Exception());
+
+        AAAInterface aaai = getAuthorizator(tenant);
+        if (aaai == null) {
+            throw new SystemException(-1, "No authenticater for tenant "+tenant+" -cannot authenticate!");
         }
-        access.setTenant(instance);
-        return access;
+           
+        return aaai.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
     }
 
     @Override
