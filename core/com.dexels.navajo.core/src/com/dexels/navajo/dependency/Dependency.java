@@ -12,6 +12,7 @@ public class Dependency {
     public static final int TASK_DEPENDENCY = 5;
     public static final int WORKFLOW_DEPENDENCY = 6;
     public static final int BROKEN_DEPENDENCY = 7;
+    public static final int TIPI_DEPENDENCY = 8;
 
     private int type;
     private String scriptFile;
@@ -63,8 +64,10 @@ public class Dependency {
     @JsonIgnore
     public String getScript() {
         String scriptFileRel = null;
-        if (scriptFile.indexOf("workflows") > 0) {
+        if (type == WORKFLOW_DEPENDENCY) {
             scriptFileRel = scriptFile.split("workflows")[1];
+        } else if (type == TIPI_DEPENDENCY) {
+            scriptFileRel = scriptFile.split("tipi")[1];
         } else {
             scriptFileRel = scriptFile.split("scripts")[1];
         }
@@ -77,12 +80,7 @@ public class Dependency {
 
     @JsonIgnore
     public String getDependee() {
-        String scriptFileRel = null;
-        if (dependeeFile.indexOf("workflows") > 0) {
-            scriptFileRel = dependeeFile.split("workflows")[1];
-        } else {
-            scriptFileRel = dependeeFile.split("scripts")[1];
-        }
+        String scriptFileRel =  dependeeFile.split("scripts")[1];
         String script = scriptFileRel.substring(1, scriptFileRel.indexOf('.'));
         
         // Replace win32 slashes to be consistent with Navajo script slashes        
