@@ -120,7 +120,6 @@ public class SimpleRepository implements Repository, GlobalManager {
 			try {
 				stream = config.getResourceBundle("application");
 				if(stream==null) {
-					logger.debug("Also not found, no globals then.");
 					return;
 				}
 				PropertyResourceBundle prb = new PropertyResourceBundle(stream);

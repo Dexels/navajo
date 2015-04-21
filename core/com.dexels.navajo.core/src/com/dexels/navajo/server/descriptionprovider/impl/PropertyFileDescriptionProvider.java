@@ -28,7 +28,7 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider
 
 	private final Map<String,Properties> localeProperties = new HashMap<String, Properties>();
 	@Override
-	public void updateProperty(Navajo in, Property element, String locale) {
+	public void updateProperty(Navajo in, Property element, String locale, String tenant) {
 		if(locale==null) {
 			logger.warn("No locale set!");
 		}

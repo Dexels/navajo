@@ -66,7 +66,6 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 	File adPath = new File(adapterPath);
 		File bundleFile = new File(adPath,name+".properties");
 		if(!bundleFile.exists()) {
-			logger.debug("Bundle: "+name+" not found. Resolved to non-existing file: "+bundleFile.getAbsolutePath());
 			return null;
 		}
 		FileInputStream fix = new FileInputStream(bundleFile);

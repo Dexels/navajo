@@ -6,7 +6,7 @@ import com.dexels.navajo.document.Property;
 public class NullDescriptionProvider extends BaseDescriptionProvider {
 
 	@Override
-	public void updateProperty(Navajo in, Property element, String locale) {
+	public void updateProperty(Navajo in, Property element, String locale, String tenant) {
 		// leave all properties alone
 	}
 

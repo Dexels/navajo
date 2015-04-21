@@ -1193,7 +1193,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 access.setFinished();
 
                 // Translate property descriptions.
-                updatePropertyDescriptions(inMessage, outMessage);
+                updatePropertyDescriptions(inMessage, outMessage, access.getTenant());
                 access.storeStatistics(h);
 
                 // Call Navajoresponse event.
@@ -1218,13 +1218,13 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         }
     }
 
-    private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage) {
+    private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage, String tenant) {
         final DescriptionProviderInterface descriptionProvider = navajoConfig.getDescriptionProvider();
         if (descriptionProvider == null) {
             return;
         }
         try {
-            descriptionProvider.updatePropertyDescriptions(inMessage, outMessage);
+            descriptionProvider.updatePropertyDescriptions(inMessage, outMessage,tenant);
         } catch (NavajoException e) {
             logger.error("Error: ", e);
         }
