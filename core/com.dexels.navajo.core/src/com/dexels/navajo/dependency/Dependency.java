@@ -67,6 +67,10 @@ public class Dependency {
         return isBroken;
     }
 
+    public void setBroken(boolean isBroken) {
+        this.isBroken = isBroken;
+    }
+
     @JsonIgnore
     public String getScript() {
         String scriptFileRel = null;
