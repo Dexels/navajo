@@ -160,7 +160,7 @@ Service-Component: OSGI-INF/simpleRepository.xml, OSGI-INF/repositoryFactory.xml
  OSGI-INF/jabberWorkerFactory.xml,
  OSGI-INF/localClient.xml,OSGI-INF/navajoIOConfig.xml,OSGI-INF/localClientContext.xml,OSGI-INF/navajoConfigEmitter.xml,
  OSGI-INF/navajoConfig.xml,OSGI-INF/dispatcher.xml, OSGI-INF/expressionEvaluator.xml,OSGI-INF/navajoEventRegistry.xml,
- OSGI-INF/sharedFileStore.xml,OSGI-INF/dummyTribeManager.xml,OSGI-INF/dummyJabberWorker.xml,OSGI-INF/asyncStoreRunner.xml,
+ OSGI-INF/sharedFileStore.xml,OSGI-INF/navajo.server.tribemanager.default.xml,OSGI-INF/dummyJabberWorker.xml,OSGI-INF/asyncStoreRunner.xml,
  OSGI-INF/navajo.server.http.osgi.xml,OSGI-INF/dummyIntegrityWorker.xml,OSGI-INF/sharedMemoryStore.xml,
  OSGI-INF/propertyFileDescriptionProvider.xml,OSGI-INF/navajo.repository.context.xml,
  OSGI-INF/navajoGlobalManager.xml,OSGI-INF/navajo.local.client.xml,OSGI-INF/dependencyanalyzer.xml
