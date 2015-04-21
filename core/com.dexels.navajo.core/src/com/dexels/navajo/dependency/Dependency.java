@@ -11,23 +11,28 @@ public class Dependency {
     public static final int ENTITY_DEPENDENCY = 4;
     public static final int TASK_DEPENDENCY = 5;
     public static final int WORKFLOW_DEPENDENCY = 6;
-    public static final int BROKEN_DEPENDENCY = 7;
-    public static final int TIPI_DEPENDENCY = 8;
+    public static final int TIPI_DEPENDENCY = 7;
 
     private int type;
     private String scriptFile;
     private String dependeeFile;
     private int linenr;
+    private boolean isBroken = false;
     
     public Dependency() {
         // JSON serialisation likes to have a constructor...
     }
 
     public Dependency(String scriptFile, String dependeeFile, int type, int linenr) {
+        this(scriptFile, dependeeFile, type, linenr, false);
+    }
+    
+    public Dependency(String scriptFile, String dependeeFile, int type, int linenr, boolean broken) {
         this.scriptFile = scriptFile;
         this.dependeeFile = dependeeFile;
         this.type = type;
         this.linenr = linenr;
+        this.isBroken = broken;
     }
 
     public int getType() {
@@ -53,13 +58,14 @@ public class Dependency {
     public void setDependeeFile(String dependeeFile) {
         this.dependeeFile = dependeeFile;
     }
-    
-    
 
     public int getLinenr() {
         return linenr;
     }
 
+    public boolean isBroken() {
+        return isBroken;
+    }
 
     @JsonIgnore
     public String getScript() {
