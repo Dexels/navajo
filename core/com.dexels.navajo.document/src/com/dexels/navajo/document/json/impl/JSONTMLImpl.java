@@ -298,16 +298,17 @@ public class JSONTMLImpl implements JSONTML {
 
 	private void parseMessage(String name, Navajo n, Message parent, JsonParser jp) throws Exception {
 		Message m = NavajoFactory.getInstance().createMessage(n, name);
-		if ( parent != null ) {
-			parent.addMessage(m);
-		} else {
-			n.addMessage(m);
-		}
+		parent.addMessage(m);
 		parse(n, m, jp);
 	}
 
 	private void parse(Navajo n, Message parent, JsonParser jp) throws Exception {
-		
+	    if ( parent == null ) {
+            logger.info("JSONTMLImpl: Could not find message, creating dummy");
+            parent = NavajoFactory.getInstance().createMessage(n, (topLevelMessageName != null ? topLevelMessageName : "Request" ) );
+            n.addMessage(parent);
+        }
+	    
 		while ( jp.nextToken() != JsonToken.END_OBJECT) {
 			String name = jp.getCurrentName();
 			if ( name != null && jp.getCurrentToken() == JsonToken.FIELD_NAME ) {
@@ -320,11 +321,7 @@ public class JSONTMLImpl implements JSONTML {
 				parseArrayMessage(name, n, parent, jp);
 			} else {
 				String value = jp.getText();
-				if ( parent == null ) {
-					logger.info("JSONTMLImpl: Could not find message, creating dummy");
-					parent = NavajoFactory.getInstance().createMessage(n, (topLevelMessageName != null ? topLevelMessageName : "Request" ) );
-					n.addMessage(parent);
-				}
+			
 				parseProperty(name, value, parent, jp);
 			}
 		}
