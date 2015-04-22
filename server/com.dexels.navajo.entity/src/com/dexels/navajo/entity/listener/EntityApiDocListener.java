@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.JSONTML;
@@ -256,14 +255,7 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 		}
 		return StringEscapeUtils.escapeHtml(writer.toString());
 	}
-	
-	private String writeEntityXmlBirt(Navajo n) throws ServletException {
-		StringWriter writer = new StringWriter();
-		NavajoLaszloConverter.writeBirtXml(n, writer);
-		String xml = writer.toString();
-		return xml.replace(">",">\n");
-	}
-	
+		
 	private String writeEntityXml(Navajo n) throws ServletException {
 		StringWriter writer = new StringWriter();
 		n.write(writer);

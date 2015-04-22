@@ -194,7 +194,6 @@ public class ServiceEntityOperation implements EntityOperation {
 						&& inputP.getValue() != null && !"".equals(inputP.getValue())) {
 					// BasePropertyImpl does not throw exception on invalid date format. Thus we perform an extra check here on that
 					if (!(inputP.getTypedValue() instanceof Date)) {
-						Object val =  inputP.getValue();
 						invalidProperties.add(inputP.getFullPropertyName() + ":" + inputP.getType() + "<-" + entityP.getType());
 
 					}
