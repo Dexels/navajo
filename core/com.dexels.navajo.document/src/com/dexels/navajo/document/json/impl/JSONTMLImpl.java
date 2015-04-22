@@ -272,7 +272,7 @@ public class JSONTMLImpl implements JSONTML {
 	private void parseArrayMessageElement(Message arrayMessage, JsonParser jp) throws Exception {
 		Message m = NavajoFactory.getInstance().createMessage(arrayMessage.getRootDoc(), arrayMessage.getName());
 		arrayMessage.addElement(m);
-		if (jp.getCurrentToken() == JsonToken.END_OBJECT) {
+		if (jp.getCurrentToken() == JsonToken.START_OBJECT) {
 			// Array with sub message structure
 			parse(arrayMessage.getRootDoc(), m, jp);
 		} else {
