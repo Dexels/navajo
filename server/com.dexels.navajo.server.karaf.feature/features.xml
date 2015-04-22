@@ -3,7 +3,7 @@
 	name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
 
-    <feature version="1.1.6" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
+    <feature version="1.1.9" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
         <feature version="[3.0.0,4)">eventadmin</feature>
         <feature version="[3.0.0,4)">scr</feature>
         <feature version="[3.0.0,4)">pax-http</feature>
@@ -20,7 +20,7 @@
         <bundle dependency="true">mvn:org.apache.httpcomponents/httpcore-osgi/4.3.3</bundle>
         <bundle dependency="true">mvn:org.apache.httpcomponents/httpclient-osgi/4.3.6</bundle>
         <bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.6.9</bundle>
-        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/1.1.4</bundle>
+        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/1.1.7</bundle>
     </feature>    
 
 	<feature version="1.0.26" start-level="80" name="dexels.oauth" resolver="(obr)">
@@ -276,10 +276,10 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.20' start-level='81'>
+		version='3.0.21' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.1.8</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.1.6</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.1.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.10</bundle>
 	</feature>
 
@@ -302,10 +302,10 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.cluster'
-		version='3.1.1' start-level='81'>
+		version='3.1.2' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.enterprise.core</feature>
 		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.6.9</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.1.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.1.4</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.dbreplication'
