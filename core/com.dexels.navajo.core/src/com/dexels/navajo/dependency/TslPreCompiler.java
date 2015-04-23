@@ -226,24 +226,35 @@ public class TslPreCompiler {
     protected void findNavajoDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc)
             throws XPathExpressionException {
         XPath xPath = XPathFactory.newInstance().newXPath();
-        NodeList nodes = (NodeList) xPath.evaluate("//map[@object='com.dexels.navajo.adapter.NavajoMap']/field[@name='doSend']/expression/value",
+
+        // Tsl scripts seem to have a slightly different xml model than
+        // navascript...
+
+        NodeList nodes = (NodeList) xPath.evaluate("//map[@object='com.dexels.navajo.adapter.NavajoMap']/field[@name='doSend']/expression",
                 tslDoc.getDocumentElement(), XPathConstants.NODESET);
 
         for (int i = 0; i < nodes.getLength(); ++i) {
-            Element value = (Element) nodes.item(i);
-            String navajoScript = value.getTextContent();
+            Element expression = (Element) nodes.item(i);
+            String navajoScript = expression.getAttribute("value");
+            if (navajoScript.equals("")) {
+                // Dealing with navascript, wher the value is a sub element
+                // instead of an attribute of expression
+                Element value = (Element) expression.getElementsByTagName("value").item(0);
+                navajoScript = value.getTextContent();
+            }
             if (navajoScript.contains("@")) {
                 // Going to try to parse param ...
                 List<String> result = getParamValue(tslDoc, navajoScript);
                 for (String res : result) {
-                    addNavajoDependency(scriptFile, scriptTenant, deps, res, scriptFolder, getLineNr( value));
+                    addNavajoDependency(scriptFile, scriptTenant, deps, res, scriptFolder, getLineNr(expression));
                 }
 
             } else if (navajoScript.startsWith("[/")) {
-               // The navajo script is retrieved from the Indoc or database result - not supported
-                deps.add(new Dependency(scriptFile, "", Dependency.UNKNOWN_TYPE, getLineNr( value)));
+                // The navajo script is retrieved from the Indoc or database
+                // result - not supported
+                deps.add(new Dependency(scriptFile, "", Dependency.UNKNOWN_TYPE, getLineNr(expression)));
             } else {
-                addNavajoDependency(scriptFile, scriptTenant, deps, navajoScript, scriptFolder, getLineNr( value));
+                addNavajoDependency(scriptFile, scriptTenant, deps, navajoScript, scriptFolder, getLineNr(expression));
             }
         }
     }

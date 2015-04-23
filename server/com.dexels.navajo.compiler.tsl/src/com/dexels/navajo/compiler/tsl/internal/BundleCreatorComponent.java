@@ -222,7 +222,7 @@ public class BundleCreatorComponent implements BundleCreator {
 							hasTenantSpecificFile, scriptExtension);
 					success.add(myScript);
 				} catch (SkipCompilationException e) {
-					logger.debug("Script fragment: {} ignored.", script);
+					logger.debug("Script fragment: {} ignored: {}", script, e);
 					skipped.add(script);
 				}
 			} else {
