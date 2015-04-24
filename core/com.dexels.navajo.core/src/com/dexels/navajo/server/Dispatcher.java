@@ -857,6 +857,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         // Later use this accessID for the real access object
         Access requestEventAccess = new Access(1, 1, rpcUser, rpcName, "", "", "", null, false, null);
         NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(requestEventAccess));
+        appendGlobals(inMessage, instance);
 
         try {
             /**
@@ -930,22 +931,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 Thread.currentThread().setName(getThreadName(access));
             }
 
-            final GlobalManagerRepository globalManagerInstance = GlobalManagerRepositoryFactory
-                    .getGlobalManagerInstance();
-            if (globalManagerInstance == null) {
-                logger.debug("No global manager found");
-            }
-            GlobalManager gm = null;
-            if (globalManagerInstance != null) {
-                if (instance == null) {
-                	gm = globalManagerInstance.getGlobalManager("default");
-                } else {
-                    gm = globalManagerInstance.getGlobalManager(instance);
-                }
-            }
-            if (gm != null) {
-                gm.initGlobals(inMessage);
-            }
             // register TmlRunnable with access object:
 
             if (origRunnable != null) {
@@ -1098,6 +1083,25 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
         return access.getOutputDoc();
     }
+
+	private void appendGlobals(Navajo inMessage, String instance) {
+		final GlobalManagerRepository globalManagerInstance = GlobalManagerRepositoryFactory
+		        .getGlobalManagerInstance();
+		if (globalManagerInstance == null) {
+		    logger.debug("No global manager found");
+		}
+		GlobalManager gm = null;
+		if (globalManagerInstance != null) {
+		    if (instance == null) {
+		    	gm = globalManagerInstance.getGlobalManager("default");
+		    } else {
+		        gm = globalManagerInstance.getGlobalManager(instance);
+		    }
+		}
+		if (gm != null) {
+		    gm.initGlobals(inMessage);
+		}
+	}
 
     private Access authenticateUser(Navajo inMessage, String instance, Object userCertificate, String rpcName,
             String rpcUser, String rpcPassword, String accessID) throws SystemException, AuthorizationException {
