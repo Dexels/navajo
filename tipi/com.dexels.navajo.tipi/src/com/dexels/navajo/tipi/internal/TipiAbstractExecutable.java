@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.parser.Expression;
@@ -31,6 +32,8 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 	private String myCondition = "";
 	
 	protected Map<String, String> eventPropertyMap = new HashMap<String, String>();
+	
+	protected Map<String, String> MDCMap = new HashMap<String, String>();
 
 	private final List<TipiExecutable> myExecutables = new ArrayList<TipiExecutable>();
 	private int currentIndex = 0;
@@ -277,5 +280,13 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 	@Override
 	public TipiExecutable getParent() {
 		return this.myParent;
+	}
+	
+	public void setMDCMap(Map<String, String> mdc) {
+	    this.MDCMap = mdc;
+	}
+	
+	public void restoreMDC() {
+	    MDC.setContextMap(MDCMap);
 	}
 }
