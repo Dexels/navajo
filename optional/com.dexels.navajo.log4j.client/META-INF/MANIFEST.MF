@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Log appender for Navajo
-Bundle-SymbolicName: com.dexels.navajo.logclient
+Bundle-SymbolicName: com.dexels.navajo.log4j.client
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
