@@ -31,6 +31,7 @@ import navajo.ExtensionDefinition;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import tipi.TipiApplicationInstance;
 import tipi.TipiExtension;
@@ -40,6 +41,7 @@ import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.ConditionErrorHandler;
 import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -213,6 +215,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     protected final TipiApplicationInstance myApplication;
 
     private transient ScriptEngineManager scriptManager;
+    
+    
 
     public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
         this.myApplication = myApplication;
@@ -227,6 +231,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         this.myApplication = myApplication;
         classManager = new ClassManager(getClass().getClassLoader());
         initializeContext(myApplication, extensionList, null);
+        FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
+    }
+    
+
+    public TipiContext(TipiApplicationInstance myApplication, List<TipiExtension> preload, TipiContext parent,
+            Map<String, String> systemProperties) {
+        this.myApplication = myApplication;
+        this.systemPropertyMap.putAll(systemProperties);
+        classManager = new ClassManager(getClass().getClassLoader());
+        initializeContext(myApplication, preload, parent);
         FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
     }
 
@@ -250,14 +264,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         return extensionList;
     }
 
-    public TipiContext(TipiApplicationInstance myApplication, List<TipiExtension> preload, TipiContext parent,
-            Map<String, String> systemProperties) {
-        this.myApplication = myApplication;
-        this.systemPropertyMap.putAll(systemProperties);
-        classManager = new ClassManager(getClass().getClassLoader());
-        initializeContext(myApplication, preload, parent);
-        FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
-    }
 
     @SuppressWarnings("unchecked")
     private void initializeContext(TipiApplicationInstance myApplication, List<TipiExtension> preload,
@@ -282,6 +288,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         } catch (Throwable e) {
             hasDebugger = false;
         }
+        MDC.put("sessionToken", SessionTokenFactory.getSessionTokenProvider().getSessionToken());
+        logger.info("SESSION");
     }
 
     public TipiApplicationInstance getApplicationInstance() {
