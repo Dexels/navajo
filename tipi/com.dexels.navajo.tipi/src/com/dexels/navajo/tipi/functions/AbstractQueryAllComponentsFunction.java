@@ -30,38 +30,35 @@ public abstract class AbstractQueryAllComponentsFunction extends FunctionInterfa
      * @return
      */
     protected Boolean queryAllComponents(TipiComponent root, String queryType) {
-        Boolean result;
-        if (queryType == null || queryType.equals(QUERY_TYPE_AND)) {
-            result = Boolean.TRUE;
-            queryType = QUERY_TYPE_AND;
-        } else if (queryType.equals(QUERY_TYPE_OR)) {
-            result = Boolean.FALSE;
+        if (queryType.equals(QUERY_TYPE_OR)) {
+            return queryAllComponentsOr(root);
         } else {
-            throw new IllegalArgumentException("Wrong queryType (" + queryType + ") for queryAllComponents.");
+            return queryAllComponentsAnd(root);
         }
-        if (root.getChildCount() == 0) {
-            return querySingleComponent(root);
-        } else {
-            for (TipiComponent child : root.getChildren()) {
-                Boolean singleResult = queryAllComponents(child, queryType);
-                if (queryType.equals(QUERY_TYPE_AND)) {
-                    result = result && singleResult;
-                    if (result.equals(Boolean.FALSE)) { // stop looping since
-                                                        // the result can no
-                                                        // longer change
-                        return result;
-                    }
-                } else if (queryType.equals(QUERY_TYPE_OR)) {
-                    result = result || singleResult;
-                    if (result.equals(Boolean.TRUE)) { // stop looping since the
-                                                       // result can no longer
-                                                       // change
-                        return result;
-                    }
-                }
+    }
+
+    private Boolean queryAllComponentsAnd(TipiComponent component) {
+        Boolean result = querySingleComponent(component);
+        if (!result) {
+            return result; // return immediately
+        }
+        for (TipiComponent child : component.getChildren()) {
+            result &= queryAllComponentsAnd(child);
+            if (!result) {
+                return result; // return immediately
             }
-            return result;
         }
+
+        return result;
+    }
+
+    private Boolean queryAllComponentsOr(TipiComponent component) {
+        Boolean result = querySingleComponent(component);
+        for (TipiComponent child : component.getChildren()) {
+            result |= queryAllComponentsOr(child);
+        }
+
+        return result;
     }
 
 }

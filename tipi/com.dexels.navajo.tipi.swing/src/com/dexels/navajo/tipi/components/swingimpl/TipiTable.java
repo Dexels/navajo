@@ -49,6 +49,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.QueryableComponent;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiContext;
@@ -63,7 +64,7 @@ import com.dexels.navajo.tipi.swingclient.components.MessageTableModel;
 import com.dexels.navajo.tipi.swingclient.components.MessageTablePanel;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListener {
+public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListener, QueryableComponent{
 
     private static final long serialVersionUID = 1181069408393438266L;
 
@@ -1211,6 +1212,11 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
     @Override
     public Object getActualComponent() {
         return mm.getTable();
+    }
+
+    @Override
+    public Boolean containsDirtyPropertyComponents() {
+        return false;
     }
 
 }

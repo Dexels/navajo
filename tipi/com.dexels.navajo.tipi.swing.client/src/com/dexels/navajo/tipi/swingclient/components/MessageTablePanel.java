@@ -68,7 +68,6 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 	private boolean enabled = true;
 	private boolean showColumnEditDialog = false;
 	final FilterPanel filterPanel = new FilterPanel();
-	private Map<String, ColumnAttribute> columnAttributes;
 	private List<HeaderMenuListener> headerMenuListeners = new ArrayList<HeaderMenuListener>();
 	private boolean copyMenuVisible = false;
 

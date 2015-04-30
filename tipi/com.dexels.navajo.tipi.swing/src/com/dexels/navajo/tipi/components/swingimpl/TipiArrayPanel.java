@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import javax.swing.JPanel;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.tipi.QueryableComponent;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiHelper;
@@ -25,7 +26,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
  * @author not attributable
  * @version 1.0
  */
-public class TipiArrayPanel extends TipiSwingDataComponentImpl {
+public class TipiArrayPanel extends TipiSwingDataComponentImpl implements QueryableComponent {
 
 	/**
 	 * 
@@ -71,5 +72,10 @@ public class TipiArrayPanel extends TipiSwingDataComponentImpl {
 	protected void cascadeLoad(Navajo n, String method) throws TipiException {
 		// logger.debug("ArrayPanell: Not cascading: "+method);
 	}
+
+    @Override
+    public Boolean containsDirtyPropertyComponents() {
+        return false;
+    }
 
 }
