@@ -1174,6 +1174,7 @@
       <values>
          <!--           <value direction="inout" name="selected" type="tipi"/>
             <value direction="inout" name="lastselected" type="tipi"/>-->
+         <value direction="in" name="opaque" type="boolean" property="opaque" />
          <value direction="inout" name="selected" type="component" />
          <value direction="inout" name="selectedindex" type="integer" />
          <value direction="out" name="lastselectedindex" type="integer" />
@@ -1203,6 +1204,7 @@
       <events>
       </events>
       <values>
+         <value direction="in" name="opaque" type="boolean" property="opaque" />
          <value direction="in" name="tabForeground" type="color" property="tabForegroundColor" />
          <value direction="in" name="tabBackground" type="color" property="tabBackgroundColor" />
          <value direction="in" name="tabIcon" type="resource" property="iconUrl" />
