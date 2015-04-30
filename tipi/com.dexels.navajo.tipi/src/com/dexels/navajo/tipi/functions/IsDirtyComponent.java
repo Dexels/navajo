@@ -20,7 +20,7 @@ public class IsDirtyComponent extends AbstractQueryAllComponentsFunction {
      * @see com.dexels.navajo.parser.FunctionInterface#remarks()
      */
     @Override
-	public String remarks() {
+    public String remarks() {
         return "Returns whether the given component or one of its children is dirty. Properties can be dirty if the value changed since instantiation or the last call to clearDirty.";
     }
 
@@ -30,7 +30,7 @@ public class IsDirtyComponent extends AbstractQueryAllComponentsFunction {
      * @see com.dexels.navajo.parser.FunctionInterface#usage()
      */
     @Override
-	public String usage() {
+    public String usage() {
         return "IsDirtyComponent(TipiComponent source)";
     }
 
@@ -40,7 +40,7 @@ public class IsDirtyComponent extends AbstractQueryAllComponentsFunction {
      * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
      */
     @Override
-	public Object evaluate() throws TMLExpressionException {
+    public Object evaluate() throws TMLExpressionException {
         Object pp = getOperand(0);
         if (pp == null) {
             return null;
@@ -52,16 +52,13 @@ public class IsDirtyComponent extends AbstractQueryAllComponentsFunction {
         return queryAllComponents(tc, QUERY_TYPE_OR);
     }
 
-	@Override
-	protected Boolean querySingleComponent(TipiComponent tc) {
-		if (tc instanceof PropertyComponent)
-		{
-			PropertyComponent pc = (PropertyComponent) tc;
-			return pc.isDirty();
-		}
-		else
-		{
-			return Boolean.FALSE;
-		}
-	}
+    @Override
+    protected Boolean querySingleComponent(TipiComponent tc) {
+        if (tc instanceof PropertyComponent) {
+            PropertyComponent pc = (PropertyComponent) tc;
+            return pc.isDirty();
+        } else {
+            return Boolean.FALSE;
+        }
+    }
 }
