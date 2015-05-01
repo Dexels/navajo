@@ -1283,7 +1283,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 			@Override
 			public void run() {
-				logger.info("BEWARE OF THE WOBBLE!");
+				logger.debug("BEWARE OF THE WOBBLE!");
 				doSort(sortedColumn, sortedDirection);
 			}
 		});
