@@ -12,10 +12,6 @@
 		<module>../../com.dexels.navajo.utilities</module>
 		<module>../../com.dexels.navajo.function.pdf</module>
 		<module>../../com.dexels.navajo.fileuploadservlet</module>
-		<module>../../com.dexels.navajo.kml</module>
-		<module>../../com.dexels.navajo.geo</module>
-		<module>../../com.dexels.navajo.svg</module>
-		<module>../../com.dexels.navajo.twitter</module>
 		<module>../</module>
 
 	</modules>
