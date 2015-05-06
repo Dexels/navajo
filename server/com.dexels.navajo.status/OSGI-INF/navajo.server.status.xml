@@ -3,6 +3,7 @@
    <implementation class="com.dexels.navajo.status.StatusServlet"/>
    <service>
       <provide interface="javax.servlet.Servlet"/>
+      <provide interface="com.dexels.navajo.repository.api.ServerStatusChecker"/>
    </service>
    <property name="alias" type="String" value="/status"/>
    <property name="servlet-name" type="String" value="status"/>
