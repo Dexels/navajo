@@ -74,7 +74,7 @@ public class MailMap implements MailMapInterface, Mappable,
 	public String text = "";
 	public String contentType = "text/plain";
 	
-	private Integer port;
+	private Integer port = null;
 
 	public String smtpUser = "";
 	public String smtpPass = "";
@@ -291,7 +291,7 @@ public class MailMap implements MailMapInterface, Mappable,
 		Properties props = new Properties();
 		props.putAll( System.getProperties());
 		props.put("mail.smtp.host", mailServer);
-		String actualport = port.toString();
+		String actualport = port == null ? null: port.toString(); 
 		if (actualport == null || actualport.equals("")) {
 			actualport = useEncryption ?  "465" : "25";
 		}
