@@ -243,7 +243,7 @@ public void store() throws MappableException, UserException {
   protected synchronized void waitForResult() throws UserException {
 	  
           // Blocking internal request is ALWAYS synchronous, return immediately.
-	  if ( block && server == null ) {
+	  if ( block && (server == null && resource==null) ) {
 		  return;
 	  }
 	  
@@ -825,7 +825,7 @@ public void store() throws MappableException, UserException {
 		  if(this.resource!=null) {
 			  serviceCalled = true;
 			  AsyncClient ac = NavajoClientResourceManager.getInstance().getAsyncClient(this.resource);
-			  ac.callService(outDoc, method);
+			  ac.callService(outDoc, method,this);
 		  } else 
 			  if (server != null) { // External request.
 				  try {
