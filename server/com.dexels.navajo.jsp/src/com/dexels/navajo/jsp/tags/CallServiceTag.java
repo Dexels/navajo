@@ -98,11 +98,11 @@ public class CallServiceTag extends BaseNavajoTag {
 		logger.debug("Calling service: "+myService);
 		LocalClient lc = (LocalClient) getPageContext().getServletContext().getAttribute("localClient");
 		Map<String,LocalClient> localClients = (Map<String,LocalClient>) getPageContext().getServletContext().getAttribute("localClients");
-		if(localClients==null) {
-			logger.warn("No localClients in JSP environment. No multitenant, perhaps?");
-		} else {
-			logger.warn(">>>>> Number of localClients: "+localClients.size());
-		}
+//		if(localClients==null) {
+//			logger.warn("No localClients in JSP environment. No multitenant, perhaps?");
+//		} else {
+//			logger.warn(">>>>> Number of localClients: "+localClients.size());
+//		}
 
 		boolean multitenant = localClients!=null&&localClients.size()>0;
 		
