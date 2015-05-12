@@ -490,8 +490,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	@Override
 	public void store() throws MappableException, UserException {
 
-		if ( con == null && gc == null ) {
-			logger.warn("SQLMap.store() called on empty connection.");
+		if ( con == null && gc == null) {
+		    logger.warn("SQLMap closed without executing any queries!");
 			return;
 		}
 		
