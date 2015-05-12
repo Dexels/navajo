@@ -30,7 +30,7 @@ public class StatisticsRunnerFactory {
 				if ( instance == null ) {
 					logger.info("Getting statistics runner interface with storePath: {} and parameters: {}",storeClass,parameters);
 					try {
-						instance = getStatisticsRunnerInstanceOSGi(storePath, parameters, storeClass);
+						instance = getStatisticsRunnerInstanceOSGi();
 						if(instance!=null) {
 							logger.info("Acquiring statistics runner from OSGi services succeeded");
 							return instance;
@@ -62,9 +62,8 @@ public class StatisticsRunnerFactory {
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
-	private static StatisticsRunnerInterface getStatisticsRunnerInstanceOSGi(String storePath,
-			Map parameters, String storeClass) throws InvalidSyntaxException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static StatisticsRunnerInterface getStatisticsRunnerInstanceOSGi() throws Exception {
 		BundleContext bc = null;
 		try {
 			bc = Version.getDefaultBundleContext();
@@ -75,7 +74,7 @@ public class StatisticsRunnerFactory {
 		if(bc==null) {
 			return null;
 		}
-		ServiceReference[] c = bc.getServiceReferences(StatisticsRunnerInterface.class.getName(), "(threadClass=com.dexels.navajo.server.statistics.StatisticsRunner)");
+		ServiceReference[] c = bc.getServiceReferences(StatisticsRunnerInterface.class.getName(), "");
 		if(c== null ||  c.length==0) {
 			return null;
 		}
@@ -84,7 +83,7 @@ public class StatisticsRunnerFactory {
 		if(sri==null) {
 			return null;
 		}
-		sri.initialize(storePath, parameters, storeClass);
+
 		return sri;
 	}
 	
