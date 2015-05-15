@@ -276,19 +276,19 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.21' start-level='81'>
+		version='3.0.22' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.1.8</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.1.12</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.1.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.10</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.mongodb'
-		version='3.0.14' start-level='81'>
+		version='3.0.15' start-level='81'>
 		<feature version="[3.0.32,4)">navajo.server.osgi</feature>
 		<feature version="[1.0.8,2)">dexels.oauth</feature>
 		
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo/3.0.18</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo/3.0.22</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo.navajostore/3.0.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.oauth.mongodb/1.0.11</bundle>
 	</feature>
