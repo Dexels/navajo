@@ -3,7 +3,7 @@
     <AD name="host"   id="host"   required="true"  type="String" default="localhost"/>   
     <AD name="port"   id="port"   required="true"  type="String" default="25"/>   
     <AD name="name"  id="name" required="true" type="String" default="mail"/>
-    <AD name="username"  id="username" required="false" type="String"/>
+    <AD name="user"  id="user" required="false" type="String"/>
     <AD name="password"  id="password" required="false" type="String"/>
     <AD name="encrypt"  id="encrypt" required="false" type="boolean" default="false"/>
     <AD name="instance"  id="instance" required="false" type="String" default="*"/>

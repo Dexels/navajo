@@ -9,7 +9,7 @@
 			<value name="sender" type="string" required="false" direction="in" />
 			<value name="subject" type="string" required="false" direction="in" />
 			<value name="text" type="string" required="false" direction="in" />
-			<value name="recipients" type="string" required="false" direction="in" />
+			<value name="recipients" type="string" required="true" direction="in" />
 			<value name="attachment" map="attachment" required="false" direction="in" />
 			<value name="multipleAttachments" map="attachment []" required="false" direction="in" />
 		</values>

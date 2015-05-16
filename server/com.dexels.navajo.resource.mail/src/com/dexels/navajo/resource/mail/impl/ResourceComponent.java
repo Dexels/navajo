@@ -146,11 +146,27 @@ public class ResourceComponent implements MailResource {
 	public void activate(Map<String,Object> settings) {
 
 		final String host = (String)settings.get("host");
-		final Integer port = (Integer)settings.get("port");
-		final String username = (String)settings.get("username");
-		final String password = (String)settings.get("password");
-		final Boolean encrypt = (Boolean)settings.get("encrypt");
+		Integer port = null;
+		Object rawPort = settings.get("port");
+		if(rawPort!=null) {
+			if(rawPort instanceof String) {
+				port = Integer.parseInt((String)settings.get("port"));
+			} else if (rawPort instanceof Integer) {
+				port = (Integer)settings.get("port");
+			}
+		}
 
+		final String username = (String)settings.get("user");
+		final String password = (String)settings.get("password");
+		final Object rawEncrypt = settings.get("encrypt");
+		boolean encrypt = false;
+		if(rawEncrypt!=null) {
+			if(rawEncrypt instanceof String) {
+				encrypt = Boolean.parseBoolean((String) rawEncrypt);
+			} else if (rawEncrypt instanceof Boolean) {
+				encrypt = (Boolean)rawEncrypt;
+			}
+		}
 		Properties props = new Properties();
 		props.putAll( System.getProperties());
 		props.put("mail.smtp.host", host);
@@ -159,7 +175,7 @@ public class ResourceComponent implements MailResource {
 			// Use auth
 			props.put("mail.smtp.auth", "true");
 			props.put("mail.debug", "true");
-			if (encrypt!=null && encrypt) {
+			if (encrypt) {
 				logger.info("Using encrypt + auth. ");
 				if(port!=null) {
 					props.put("mail.smtp.port",""+port);
