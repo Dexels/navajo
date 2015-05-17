@@ -48,6 +48,8 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
 	public Object createContainer() {
 		left = new JPanel();
 		right = new JPanel();
+		left.setOpaque(false);
+		right.setOpaque(false);
 		left.setLayout(new BorderLayout());
 		right.setLayout(new BorderLayout());
 		TipiSwingSplitPane sp = new TipiSwingSplitPane(
@@ -59,6 +61,7 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
 		sp.setDividerSize(10);
 		sp.setDividerLocation(0.5);
 		sp.setContinuousLayout(true);
+		sp.setOpaque(false);
 		sp.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {

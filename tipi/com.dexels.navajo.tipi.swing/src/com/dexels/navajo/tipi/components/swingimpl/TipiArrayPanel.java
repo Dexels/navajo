@@ -37,6 +37,7 @@ public class TipiArrayPanel extends TipiSwingDataComponentImpl implements Querya
 	@Override
 	public Object createContainer() {
 		JPanel myPanel = new JPanel();
+		myPanel.setOpaque(false);
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
 		addHelper(th);
@@ -70,7 +71,7 @@ public class TipiArrayPanel extends TipiSwingDataComponentImpl implements Querya
 
 	@Override
 	protected void cascadeLoad(Navajo n, String method) throws TipiException {
-		// logger.debug("ArrayPanell: Not cascading: "+method);
+		// logger.debug("ArrayPanel: Not cascading: "+method);
 	}
 
     @Override
