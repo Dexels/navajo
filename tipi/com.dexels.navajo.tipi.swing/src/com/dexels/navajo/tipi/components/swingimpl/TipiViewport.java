@@ -40,6 +40,8 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 		view = new TipiSwingViewport();
 		left = new JPanel();
 		right = new JPanel();
+		left.setOpaque(false);
+		right.setOpaque(false);
 		left.setLayout(new BorderLayout());
 		right.setLayout(new BorderLayout());
 		clientPanel = new JPanel();
@@ -48,6 +50,7 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 		clientPanel.setLayout(layout);
 		clientPanel.add(left);
 		clientPanel.add(right);
+		clientPanel.setOpaque(false);
 		view.setOpaque(false);
 		view.addComponentListener(new ComponentAdapter() {
 
@@ -75,7 +78,7 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 				c = constraint;
 			}
 		}
-		logger.debug("Consttraints::: " + constraint);
+		logger.debug("Constraints::: " + constraint);
 		super.initBeforeBuildingChildren(instance, classdef, definition);
 	}
 
@@ -117,10 +120,6 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 			setAxis("horizontal");
 			left.add(cc, BorderLayout.CENTER);
 		}
-		// left.setMinimumSize(minimumSize);
-		// right.setMinimumSize(minimumSize);
-		// left.setPreferredSize(minimumSize);
-		// right.setPreferredSize(minimumSize);
 	}
 
 	private void setAxis(String ax) {
@@ -149,50 +148,5 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 	@Override
 	public void setComponentValue(String name, final Object object) {
 		super.setComponentValue(name, object);
-		// if (name.equals("x")) {
-		// runSyncInEventThread(new Runnable() {
-		// public void run() {
-		// logger.debug("Setx: "+object);
-		// view.setViewPosition(new Point((Integer) object, 0));
-		// }
-		// });
-		// }
-		//
-		// if (name.equals("y")) {
-		// runSyncInEventThread(new Runnable() {
-		// public void run() {
-		// logger.debug("Sety: "+object);
-		// view.setViewPosition(new Point(0, (Integer) object));
-		// }
-		// });
-		//
-		// }
-		// if (name.equals("dividersize")) {
-		// int size = ( (Integer) object).intValue();
-		// ((TipiSwingSplitPane) getContainer()).setDividerSize(size);
-		// }
-		// if (name.equals("onetouchexpandable")) {
-		// boolean otex = ( (Boolean) object).booleanValue();
-		// ((TipiSwingSplitPane) getContainer()).setOneTouchExpandable(otex);
-		// }
-
 	}
-
-	// private void updateDividerLocation(){
-	// if(!inverse_oriented){
-	// ((TipiSwingSplitPane)
-	// getContainer()).setDividerLocation(dividerlocation);
-	// }else{
-	// int orientation = ((TipiSwingSplitPane) getContainer()).getOrientation();
-	// int loc = dividerlocation;
-	// if(orientation == JSplitPane.HORIZONTAL_SPLIT){
-	// loc = ((TipiSwingSplitPane) getContainer()).getWidth() - dividerlocation;
-	// }else if(orientation == JSplitPane.VERTICAL_SPLIT){
-	// loc = ((TipiSwingSplitPane) getContainer()).getHeight() -
-	// dividerlocation;
-	// }
-	// ((TipiSwingSplitPane) getContainer()).setDividerLocation(loc);
-	// }
-	// }
-
 }

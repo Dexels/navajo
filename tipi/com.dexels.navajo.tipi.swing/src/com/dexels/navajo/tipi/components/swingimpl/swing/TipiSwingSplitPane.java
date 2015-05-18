@@ -12,12 +12,7 @@ public class TipiSwingSplitPane extends JSplitPane {
 
 	public TipiSwingSplitPane(int orientation, JPanel left, JPanel right) {
 		super(orientation, left, right);
-	
-//		ComponentState end = 
-//			new ComponentState(this);
-
-		// Move effect = new Move();
-		// EffectsManager.setEffect(this, effect, TransitionType.DISAPPEARING);
+		this.setOpaque(false);
 	}
 
 	public void setStringOrientation(String orientation) {
