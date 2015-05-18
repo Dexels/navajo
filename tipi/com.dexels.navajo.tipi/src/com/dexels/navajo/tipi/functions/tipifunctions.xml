@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <functiondef>
-    <function name="ChooseColor" class="com.dexels.navajo.tipi.functions.ChooseColor">
-        <description>Choose a color</description>
-        <input>empty</input>
-        <result>color</result>
-    </function>
     <function name="ExistsResource" class="com.dexels.navajo.tipi.functions.ExistsResource">
         <description>Checks for the existence of the given resource</description>
         <input>context,string</input>

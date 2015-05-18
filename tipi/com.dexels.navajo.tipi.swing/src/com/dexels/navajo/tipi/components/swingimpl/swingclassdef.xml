@@ -229,6 +229,22 @@
          </event>
       </events>
    </tipiaction>
+   <tipiaction name="chooseColor" class="TipiChooseColor" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+        <description>
+            Opens a JColorChooser, and sets the result to the setTo parameter.
+        </description>
+
+      <param name="setTo" type="string" required="true">
+        <description>
+            The name of the local property to store the result in.
+       </description>
+      </param>
+      <param name="initialValue" type="string" >
+        <description>
+            The initial color value (e.g. "#FFFFFF").
+        </description>
+      </param>
+   </tipiaction>
 
 
    <!-- Actually a copy of tipi, with a forced layout, used for echo compatibility
