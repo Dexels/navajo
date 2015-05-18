@@ -37,6 +37,9 @@ public class TipiChooseColor extends TipiAction {
             public void run() {
                 // JColorChooser c = new JColorChooser();
                 Color c = JColorChooser.showDialog((Component) getComponent().getContainer(), getDialogTitle(), initialColor);
+                if (c == null) {
+                    return;
+                }
                 String color = toHexString(c);
 
                 // Set the value to the 'setTo' parameter
@@ -47,9 +50,7 @@ public class TipiChooseColor extends TipiAction {
                     TipiReference p = (TipiReference) evaluated.value;
                     p.setValue(color);
                 }
-
             }
-
         });
 
     }
