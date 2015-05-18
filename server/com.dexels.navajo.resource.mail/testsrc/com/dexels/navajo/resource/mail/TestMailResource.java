@@ -25,7 +25,7 @@ public class TestMailResource {
 		Map<String,Object> settings = new HashMap<String, Object>();
 		settings.put("name", "junit.mail");
 		settings.put("host", "smtp.gmail.com");
-		settings.put("username", "dexels@gmail.com");
+		settings.put("user", "dexels@gmail.com");
 		settings.put("password", getPassword());
 		settings.put("encrypt", true);
 		component.activate(settings);
