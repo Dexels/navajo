@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <functiondef>
-    <function name="ChooseColor" class="com.dexels.navajo.tipi.functions.ChooseColor">
-        <description>Choose a color</description>
-        <input>empty</input>
+    <function name="ToJavaColor" class="com.dexels.navajo.tipi.functions.ToJavaColor">
+        <description>Convert Hexcolor to java color</description>
+        <input>string</input>
         <result>color</result>
     </function>
     <function name="NavajoRequestToString" class="com.dexels.navajo.tipi.functions.NavajoRequestToString">

@@ -91,6 +91,11 @@
         <input>string,boolean|empty</input>
         <result>string</result>
     </function>
+    <function name="ToJavaColor" class="com.dexels.navajo.tipi.functions.ToJavaColor">
+        <description>Convert Hexcolor to java color</description>
+        <input>string</input>
+        <result>color</result>
+    </function>
     <function name="ToPlainText" class="com.dexels.navajo.tipi.functions.ToPlainText">
         <description>Make text plain and simple. Html-style (depending on 2nd parameter including html tag)</description>
         <input>string,boolean|empty</input>
