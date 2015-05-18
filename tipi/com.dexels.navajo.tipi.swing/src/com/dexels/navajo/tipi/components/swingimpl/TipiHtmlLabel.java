@@ -88,6 +88,9 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
 			setHtmlText("" + object);
 			return;
 		}
+		if (name.equals("opaque")) {
+			setOpaque((boolean) object);
+		}
 		if (name.equals("propertyName")) {
 			myPropertyName = (String) object;
 		}
@@ -103,6 +106,16 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
 			public void run() {
 				myLabel.setText(text);
 				myLabel.setCaretPosition(0);
+			}
+		});
+
+	}
+
+	private void setOpaque(final boolean opaque) {
+		runSyncInEventThread(new Runnable() {
+			@Override
+			public void run() {
+				myLabel.setOpaque(opaque);
 			}
 		});
 
