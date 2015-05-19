@@ -125,7 +125,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.46'
+	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.47'
 		start-level='81'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
@@ -142,7 +142,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.mail/1.0.3</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tunnel/2.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.status/1.0.3</bundle>
-		<bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/2.12.4</bundle>
+		<bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/2.13.1</bundle>
 		<bundle dependency='true'>mvn:mysql/mysql-connector-java/5.1.34</bundle>
 		<bundle dependency='true'>mvn:com.h2database/h2/1.3.175</bundle>
 		<bundle dependency='true'>mvn:com.oracle/com.oracle.jdbc.driver/11.2.33</bundle>
