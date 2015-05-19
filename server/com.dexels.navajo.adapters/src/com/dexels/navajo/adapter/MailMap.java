@@ -30,6 +30,7 @@ import com.dexels.navajo.adapter.mailmap.AttachementMap;
 import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
 import com.dexels.navajo.datasource.BinaryDataSource;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.DependentResource;
@@ -37,6 +38,7 @@ import com.dexels.navajo.mapping.GenericDependentResource;
 import com.dexels.navajo.mapping.HasDependentResources;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Debugable;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;
@@ -56,7 +58,7 @@ import com.dexels.navajo.util.AuditLog;
  * This business object is used as a mail agent in Navajo Script files.
  */
 public class MailMap implements MailMapInterface, Mappable,
-		HasDependentResources,
+		HasDependentResources, Debugable,
 		com.dexels.navajo.server.enterprise.queue.Queuable {
 
 	/**
@@ -104,6 +106,8 @@ public class MailMap implements MailMapInterface, Mappable,
 	private final static Logger logger = LoggerFactory.getLogger(MailMap.class);
 	
 	private boolean useEncryption = false;
+
+	private boolean debug = false;
 
 	public MailMap() {
 	}
@@ -290,15 +294,17 @@ public class MailMap implements MailMapInterface, Mappable,
 	private Session createSession() {
 		Properties props = new Properties();
 		props.putAll( System.getProperties());
-		props.put("mail.smtp.host", mailServer);
+		props.put("mail.smtp.host", getMailServer());
 		String actualport = port == null ? null: port.toString(); 
 		if (actualport == null || actualport.equals("")) {
 			actualport = useEncryption ?  "465" : "25";
 		}
-		if (smtpUser != null && !"".equals(smtpUser)) {
+		if (getSmtpUser() != null && !"".equals(getSmtpUser())) {
 			// Use auth
 			props.put("mail.smtp.auth", "true");
-			props.put("mail.debug", "true");
+			if(this.debug) {
+				props.put("mail.debug", "true");
+			}
 			if (useEncryption) {
 				logger.info("Using encrypt + auth. ");
 				props.put("mail.smtp.port", actualport);
@@ -325,7 +331,7 @@ public class MailMap implements MailMapInterface, Mappable,
 
 		@Override
 		public PasswordAuthentication getPasswordAuthentication() {
-			return new PasswordAuthentication(smtpUser, smtpPass);
+			return new PasswordAuthentication(getSmtpUser(), getSmtpPass());
 		}
 	}
 
@@ -339,6 +345,13 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	public String getSmtpUser() {
+		if(smtpUser!=null && !"".equals(smtpUser)) {
+			return smtpUser;
+		}
+		Property mailUserProperty = myNavajo.getProperty("__globals__/MailUser");
+		if(mailUserProperty!=null) {
+			return mailUserProperty.getValue();
+		}
 		return smtpUser;
 	}
 
@@ -347,6 +360,13 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	public String getSmtpPass() {
+		if(smtpPass!=null && !"".equals(smtpPass)) {
+			return smtpPass;
+		}
+		Property mailPassProperty = myNavajo.getProperty("__globals__/MailPassword");
+		if(mailPassProperty!=null) {
+			return mailPassProperty.getValue();
+		}
 		return smtpPass;
 	}
 
@@ -551,6 +571,13 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	public String getMailServer() {
+		if(mailServer!=null && !"".equals(mailServer)) {
+			return mailServer;
+		}
+		Property mailServerProperty = myNavajo.getProperty("__globals__/MailServer");
+		if(mailServerProperty!=null) {
+			return mailServerProperty.getValue();
+		}
 		return mailServer;
 	}
 
@@ -584,6 +611,16 @@ public class MailMap implements MailMapInterface, Mappable,
 	
 	public String getContentType() {
 		return this.contentType;
+	}
+
+	@Override
+	public void setDebug(boolean b) {
+		this.debug = b;
+	}
+
+	@Override
+	public boolean getDebug() {
+		return this.debug;
 	}
 
 	
