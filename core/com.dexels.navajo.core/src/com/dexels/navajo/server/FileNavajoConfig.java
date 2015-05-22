@@ -247,7 +247,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 	}    
     @Override
     public final Navajo readConfig(String name) throws IOException {
-    	InputStream is = inputStreamReader.getResource(getConfigPath() + "/" + name);
+    	InputStream is = inputStreamReader.getResource(getConfigPath() + File.separator + name);
     	try {
     		if (is == null) {
     			return null;
