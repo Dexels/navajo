@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mail resource connector
 Bundle-SymbolicName: com.dexels.navajo.resource.mail
-Bundle-Version: 1.0.5
+Bundle-Version: 1.0.6.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Service-Component: OSGI-INF/mailResourceComponent.xml,
