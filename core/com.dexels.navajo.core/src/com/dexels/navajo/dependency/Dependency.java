@@ -79,7 +79,7 @@ public class Dependency {
             scriptFileRel = scriptFile.split("workflows")[1];
         } else if (type == TIPI_DEPENDENCY) {
             scriptFileRel = scriptFile.split("tipi")[1];
-        }  if (type == ARTICLE_DEPENDENCY) {
+        } else if (type == ARTICLE_DEPENDENCY) {
             scriptFileRel = scriptFile.split("article")[1];
         } else {
             scriptFileRel = scriptFile.split("scripts")[1];
