@@ -10,6 +10,7 @@ import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.sharedstore.SharedStoreFactory;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;
+import com.sun.accessibility.internal.resources.accessibility;
 
 public class StoreBinary extends FunctionInterface {
 
@@ -38,7 +39,7 @@ public class StoreBinary extends FunctionInterface {
 		
 		SharedStoreInterface mss = SharedStoreFactory.getInstance();
 		try {
-			OutputStream os = mss.getOutputStream(GetBinary.PARENT_LOCATION, id, false);
+			OutputStream os = mss.getOutputStream(getAccess().getTenant(), GetBinary.PARENT_LOCATION, id, false);
 			n.write(os);
 			os.close();
 		} catch (Exception e) {

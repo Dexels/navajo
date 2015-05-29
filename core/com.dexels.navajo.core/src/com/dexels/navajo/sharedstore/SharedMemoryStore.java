@@ -2,6 +2,7 @@ package com.dexels.navajo.sharedstore;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SharedMemoryStore implements SharedStoreInterface {
+public class SharedMemoryStore extends AbstractSharedStore implements SharedStoreInterface {
 
 	Map<String, SharedStoreEntry> store = null;
 	SharedStoreEntryFactory ssf = null;
@@ -93,6 +94,11 @@ public class SharedMemoryStore implements SharedStoreInterface {
 	public void  createParent(String parent) throws SharedStoreException {
 		// Do nothing.
 	}
+	
+	@Override
+    public void remove(String tenant, String parent, String name) {
+        removeEntry(parent, getTenantSpecificName(tenant, name));
+    }
 
 	@Override
 	public void remove(String parent, String name) {
@@ -132,6 +138,12 @@ public class SharedMemoryStore implements SharedStoreInterface {
 			e.setLastModified(l);
 		}
 	}
+	
+
+    @Override
+    public boolean exists(String tenant, String parent, String name) {
+        return exists(parent, getTenantSpecificName(tenant, name));
+    }
 
 	@Override
 	public boolean exists(String parent, String name) {
@@ -159,6 +171,11 @@ public class SharedMemoryStore implements SharedStoreInterface {
 			throw new SharedStoreException("No such object: " + parent + "/" + name);
 		}
 	}
+	
+	@Override
+    public InputStream getStream(String tenant, String parent, String name) throws SharedStoreException {
+	    return getStream(parent, getTenantSpecificName(tenant, name));
+	}
 
 	@Override
 	public InputStream getStream(String parent, String name) throws SharedStoreException {
@@ -170,6 +187,13 @@ public class SharedMemoryStore implements SharedStoreInterface {
 		return new ByteArrayInputStream(value);
 		
 	}
+	
+
+    @Override
+    public OutputStream getOutputStream(String tenant, String parent, String name, boolean requireLock)
+            throws SharedStoreException {
+        return getOutputStream(parent, getTenantSpecificName(tenant, name), requireLock);
+    }
 
 	@Override
 	public OutputStream getOutputStream(final String parent, final String name, final boolean requireLock) throws SharedStoreException {	
@@ -273,5 +297,7 @@ public class SharedMemoryStore implements SharedStoreInterface {
 	public long getNextAtomicLong(String id) {
 		return 0;
 	}
+
+
 
 }

@@ -50,6 +50,16 @@ public interface SharedStoreInterface {
 	 */
 	public void remove(String parent, String name);
 	
+	   
+    /**
+     * Remove an object with the specified name of the specified parent
+     * 
+     * @Param tenant
+     * @param parent
+     * @param name
+     */
+    public void remove(String tenant, String parent, String name);
+	
 	/**
 	 * Remove all objects of the specified parent
 	 * 
@@ -107,6 +117,14 @@ public interface SharedStoreInterface {
 	 */
 	public void setLastModified(String parent, String name, long l) throws IOException;
 	
+	   /**
+     * Check whether object exists in the shared store.
+     * 
+     * @param parent
+     * @param name
+     * @return
+     */
+    public boolean exists(String tenant, String parent, String name);
 	/**
 	 * Check whether object exists in the shared store.
 	 * 
@@ -149,6 +167,30 @@ public interface SharedStoreInterface {
 	 */
 	public InputStream getStream(String parent, String name) throws SharedStoreException;
 	
+	/**
+     * Gets an object from the store as a stream for reading.
+     * 
+     * @Param tenant
+     * @param parent
+     * @param name
+     * @return
+     * @throws SharedStoreException
+     */
+    public InputStream getStream(String tenant, String parent, String name) throws SharedStoreException;
+	
+    
+    
+    /**
+     * Gets an object from the store as a stream for writing.
+     * 
+     * @param parent
+     * @param name
+     * @param requireLock
+     * @return
+     * @throws SharedStoreException
+     */
+    public OutputStream getOutputStream(String tenant, String parent, String name, boolean requireLock) throws SharedStoreException;
+    
 	/**
 	 * Gets an object from the store as a stream for writing.
 	 * 

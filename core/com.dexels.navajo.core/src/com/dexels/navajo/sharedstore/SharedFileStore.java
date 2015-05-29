@@ -114,7 +114,7 @@ class FileComparator implements Comparator<File>{
  * @author arjen
  *
  */
-public class SharedFileStore implements SharedStoreInterface, HasMetrics {
+public class SharedFileStore extends AbstractSharedStore implements SharedStoreInterface, HasMetrics {
 
 	
 	private final static Logger logger = LoggerFactory
@@ -297,6 +297,14 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 		File f = new File(sharedStore, parent + "/" + name);
 		return f.exists();
 	}
+	
+	
+
+
+    @Override
+    public boolean exists(String tenant, String parent, String name) {        
+        return exists(parent, getTenantSpecificName(tenant, name));
+    }
 
 	/**
 	 * Return inputstream for a file,  given its parent (path) and its name.
@@ -310,6 +318,12 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 			throw new SharedStoreException(e.getMessage(), e);
 		}
 	}
+	
+
+    @Override
+    public InputStream getStream(String tenant, String parent, String name) throws SharedStoreException {
+        return getStream(parent, getTenantSpecificName(tenant, name));
+    }
 	
 	/**
 	 * Returns the Object that was serialized in the file identified by its parent (path) and its name.
@@ -560,12 +574,18 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	 */
 	@Override
 	public void remove(String parent, String name) {
-		long start = System.currentTimeMillis();
-		File f = new File(sharedStore, parent + "/" + name);
-		f.delete();
-		deleteCount++;
-		deleteLatency += ( System.currentTimeMillis() - start );
+	    long start = System.currentTimeMillis();
+        File f = new File(sharedStore, parent + "/" + name);
+        f.delete();
+        deleteCount++;
+        deleteLatency += ( System.currentTimeMillis() - start );
 	}
+	
+
+    @Override
+    public void remove(String tenant, String parent, String name) {
+        remove(parent, getTenantSpecificName(tenant, name));
+    }
 
 	/**
 	 * Create a parent path
@@ -647,6 +667,12 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 			}
 		}
 	}
+	
+	   @Override
+	    public OutputStream getOutputStream(String tenant, String parent, String name, boolean requireLock)
+	            throws SharedStoreException {
+	       return getOutputStream(parent, getTenantSpecificName(tenant, name), requireLock);
+	    }
 
 	/**
 	 * Gets an outputstream for an object given parent and name. If requireLock is set to true, the outputstream is only
@@ -798,4 +824,8 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 			}
 		}
 	}
+
+
+
+ 
 }
