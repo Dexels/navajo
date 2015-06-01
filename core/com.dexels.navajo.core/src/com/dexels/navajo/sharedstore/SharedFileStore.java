@@ -298,13 +298,6 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 		return f.exists();
 	}
 	
-	
-
-
-    @Override
-    public boolean exists(String tenant, String parent, String name) {        
-        return exists(parent, getTenantSpecificName(tenant, name));
-    }
 
 	/**
 	 * Return inputstream for a file,  given its parent (path) and its name.
@@ -318,12 +311,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 			throw new SharedStoreException(e.getMessage(), e);
 		}
 	}
-	
 
-    @Override
-    public InputStream getStream(String tenant, String parent, String name) throws SharedStoreException {
-        return getStream(parent, getTenantSpecificName(tenant, name));
-    }
 	
 	/**
 	 * Returns the Object that was serialized in the file identified by its parent (path) and its name.
@@ -580,12 +568,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
         deleteCount++;
         deleteLatency += ( System.currentTimeMillis() - start );
 	}
-	
 
-    @Override
-    public void remove(String tenant, String parent, String name) {
-        remove(parent, getTenantSpecificName(tenant, name));
-    }
 
 	/**
 	 * Create a parent path
@@ -667,12 +650,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 			}
 		}
 	}
-	
-	   @Override
-	    public OutputStream getOutputStream(String tenant, String parent, String name, boolean requireLock)
-	            throws SharedStoreException {
-	       return getOutputStream(parent, getTenantSpecificName(tenant, name), requireLock);
-	    }
+
 
 	/**
 	 * Gets an outputstream for an object given parent and name. If requireLock is set to true, the outputstream is only

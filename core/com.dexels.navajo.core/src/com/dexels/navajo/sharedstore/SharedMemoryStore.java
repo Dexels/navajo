@@ -94,11 +94,7 @@ public class SharedMemoryStore extends AbstractSharedStore implements SharedStor
 	public void  createParent(String parent) throws SharedStoreException {
 		// Do nothing.
 	}
-	
-	@Override
-    public void remove(String tenant, String parent, String name) {
-        removeEntry(parent, getTenantSpecificName(tenant, name));
-    }
+
 
 	@Override
 	public void remove(String parent, String name) {
@@ -140,10 +136,6 @@ public class SharedMemoryStore extends AbstractSharedStore implements SharedStor
 	}
 	
 
-    @Override
-    public boolean exists(String tenant, String parent, String name) {
-        return exists(parent, getTenantSpecificName(tenant, name));
-    }
 
 	@Override
 	public boolean exists(String parent, String name) {
@@ -171,11 +163,7 @@ public class SharedMemoryStore extends AbstractSharedStore implements SharedStor
 			throw new SharedStoreException("No such object: " + parent + "/" + name);
 		}
 	}
-	
-	@Override
-    public InputStream getStream(String tenant, String parent, String name) throws SharedStoreException {
-	    return getStream(parent, getTenantSpecificName(tenant, name));
-	}
+
 
 	@Override
 	public InputStream getStream(String parent, String name) throws SharedStoreException {
@@ -188,12 +176,6 @@ public class SharedMemoryStore extends AbstractSharedStore implements SharedStor
 		
 	}
 	
-
-    @Override
-    public OutputStream getOutputStream(String tenant, String parent, String name, boolean requireLock)
-            throws SharedStoreException {
-        return getOutputStream(parent, getTenantSpecificName(tenant, name), requireLock);
-    }
 
 	@Override
 	public OutputStream getOutputStream(final String parent, final String name, final boolean requireLock) throws SharedStoreException {	

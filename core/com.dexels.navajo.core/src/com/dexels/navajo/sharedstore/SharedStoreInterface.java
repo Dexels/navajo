@@ -80,6 +80,17 @@ public interface SharedStoreInterface {
 	public void store(String parent, String name, Serializable value, boolean append, boolean requireLock) throws SharedStoreException;
 	
 	/**
+     * Store an object in the shared store. If object with same name already exists, a SharedStoreException is thrown.
+     * 
+     * @param parent
+     * @param name
+     * @param value, the object to the shared store object referenced by name.
+     * @param append, if set to true the object is appended to an existing value. 
+     * @param requireLock, if requireLock is set; the call will block until a lock could be set.
+     */
+    public void store(String tenant, String parent, String name, Serializable value, boolean append, boolean requireLock) throws SharedStoreException;
+	
+	/**
 	 * Store text in the shared store. If store object with same name already exists, a SharedStoreException is thrown.
 	 * 
 	 * @param parent
