@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import com.sun.javafx.image.impl.ByteIndexed.Getter;
-
 public class SharedStoreSession {
 
 	SharedStoreInterface mySharedStore;
