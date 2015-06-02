@@ -49,9 +49,10 @@ public class GrusProviderImpl implements GrusProvider {
 			defaultDataSources.put(name, source);
 			if (aliases != null) {
 				for (String alias : aliases) {
-					defaultSettingsMap
-							.put("navajo.resource." + alias, settings);
+					defaultSettingsMap.put("navajo.resource." + alias, settings);
 					defaultDataSources.put("navajo.resource." + alias, source);
+					defaultSettingsMap.put(alias, settings);
+					defaultDataSources.put(alias, source);
 				}
 			}
 
@@ -181,6 +182,9 @@ public class GrusProviderImpl implements GrusProvider {
 
         if (settings == null && dataSourceInstance == null) {
             settings = defaultSettingsMap.get(name);
+            if(settings==null) {
+            	throw new UserException(-1, "Could not find settings for tenant-less datasource: "+name+" available (tenant-less) datasources: "+defaultSettingsMap.keySet());
+            }
             dataSourceInstance = defaultDataSources.get(name);
         }
 
