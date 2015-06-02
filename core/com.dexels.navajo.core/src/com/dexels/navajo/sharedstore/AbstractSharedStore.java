@@ -4,12 +4,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public abstract class AbstractSharedStore implements SharedStoreInterface {
     private static final String prefix = "$__";
     private static final String postfix = "__$";
 
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(AbstractSharedStore.class);
+	
     protected String getTenantSpecificName(String tenant, String name) {
-        return prefix + tenant + postfix + name;
+        String tenantSpecificName = prefix + tenant + postfix + name;
+    	logger.debug("Determined tenant specific name: "+tenantSpecificName);
+		return tenantSpecificName;
     }
 
     protected String getName(String name) {
