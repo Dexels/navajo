@@ -9,6 +9,7 @@ public class DummyTask implements TaskInterface {
 	private TriggerInterface trigger;
 	private String workflowDefinition;
 	private String owner = null;
+	private String tenant;
 	
 
 	@Override
@@ -85,7 +86,6 @@ public class DummyTask implements TaskInterface {
 
 	@Override
 	public String getWorkflowId() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -117,6 +117,17 @@ public class DummyTask implements TaskInterface {
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+
+	@Override
+	public void setTenant(String tenant) {
+		this.tenant = tenant;
+	}
+
+	@Override
+	public String getTenant() {
+		// TODO Auto-generated method stub
+		return this.tenant;
 	}
 
 }

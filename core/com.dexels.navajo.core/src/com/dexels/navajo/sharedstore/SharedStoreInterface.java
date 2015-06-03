@@ -41,7 +41,10 @@ public interface SharedStoreInterface {
 	public static final int READ_WRITE_LOCK = 0;
 	public static final int WRITE_LOCK = 1;
 
-	
+	public static final String TENANT_PREFIX = "$__";
+	public static final String TENANT_PREFIX_ESC = "\\$__";
+	public static final String TENANT_POSTFIX = "__$";
+	public static final String TENANT_POSTFIX_ESC = "__\\$";
 	/**
 	 * Remove an object with the specified name of the specified parent
 	 * 

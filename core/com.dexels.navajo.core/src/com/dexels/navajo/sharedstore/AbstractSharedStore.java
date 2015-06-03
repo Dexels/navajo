@@ -8,29 +8,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class AbstractSharedStore implements SharedStoreInterface {
-    private static final String prefix = "$__";
-    private static final String postfix = "__$";
 
     
 	private final static Logger logger = LoggerFactory
 			.getLogger(AbstractSharedStore.class);
 	
     protected String getTenantSpecificName(String tenant, String name) {
-        String tenantSpecificName = prefix + tenant + postfix + name;
+    	if(name.startsWith(TENANT_PREFIX)) {
+    		return name;
+    	}
+        String tenantSpecificName = SharedStoreInterface.TENANT_PREFIX + tenant + SharedStoreInterface.TENANT_POSTFIX + name;
     	logger.debug("Determined tenant specific name: "+tenantSpecificName);
 		return tenantSpecificName;
     }
 
     protected String getName(String name) {
-        if (name.startsWith(prefix)) {
-            return name.substring(name.indexOf(postfix) + postfix.length());
+        if (name.startsWith(TENANT_PREFIX)) {
+            return name.substring(name.indexOf(TENANT_POSTFIX) + TENANT_POSTFIX.length());
         }
         return name;
     }
 
     @Override
     public void remove(String tenant, String parent, String name) {
-        remove(parent, getTenantSpecificName(tenant, name));
+//        remove(parent, getTenantSpecificName(tenant, name));
     }
 
     @Override
@@ -46,7 +47,9 @@ public abstract class AbstractSharedStore implements SharedStoreInterface {
     @Override
     public OutputStream getOutputStream(String tenant, String parent, String name, boolean requireLock)
             throws SharedStoreException {
-        return getOutputStream(parent, getTenantSpecificName(tenant, name), requireLock);
+    	System.err.println("outputStream: "+name+" tenant: "+tenant+" parent: ");
+
+    	return getOutputStream(parent, getTenantSpecificName(tenant, name), requireLock);
     }
 
     @Override

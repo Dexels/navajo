@@ -23,6 +23,8 @@ public interface TaskInterface extends Serializable, TaskMXBean {
 	public void setForceSync(boolean b);
 	public boolean isProxy();
 	public String getOwner();
+	public void setTenant(String tenant);
+	public String getTenant();
 	
 	
 }
