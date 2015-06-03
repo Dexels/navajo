@@ -135,6 +135,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			Dictionary<String, Object> d = new Hashtable<String, Object>();
 			d.put("felix.fileinstall.dir", folder.getAbsolutePath());
 			d.put("felix.fileinstall.filter", fileFilter);
+			d.put("felix.fileinstall.enableConfigSave", "false");
 			d.put("configName", configName);
 			updateIfChanged(cc, d);
 			ownedConfigurations.add(cc);
