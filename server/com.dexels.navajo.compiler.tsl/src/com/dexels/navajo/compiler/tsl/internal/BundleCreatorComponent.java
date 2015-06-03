@@ -240,7 +240,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		logger.info("Finished compiling and bundling {}", script);
 	}
 
-	private synchronized ReentrantLock getLock(String script, String context) {
+	private ReentrantLock getLock(String script, String context) {
 		String key = script + context;
 		if (!lockmap.containsKey(key)) {
 			lockmap.put(key, new ReentrantLock());
@@ -249,7 +249,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		return lockmap.get(key);
 	}
 
-	private synchronized void releaseLock(String script, String context,
+	private void releaseLock(String script, String context,
 			ReentrantLock lock) {
 		lock.unlock();
 		lockmap.remove(script + context);
