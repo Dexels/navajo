@@ -84,7 +84,10 @@ public class TslCompilerComponent implements ScriptCompiler {
 		// }
 		String scriptString = null;
 		if ("".equals(scriptPackage)) {
-			scriptString = scriptPath;
+		    scriptString = script.replaceAll("_", "|");
+            if (forceTenant) {
+                scriptString =(script + "_" + tenant).replaceAll("_", "|");
+            }
 		} else {
 			scriptString = packagePath + "/" + script.replaceAll("_", "|");
 			if (forceTenant) {

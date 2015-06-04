@@ -125,7 +125,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	/**
 	 * scriptName includes the _TENANT part
 	 */
-	@Override
+    @Override
 	public synchronized void createBundle(String scriptName, Date compilationDate,
 			List<String> failures, List<String> success,
 			List<String> skipped, boolean force, boolean keepIntermediate,
@@ -142,6 +142,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			compileAllIn(f, compilationDate, failures, success, skipped, force,
 					keepIntermediate, scriptExtension);
 		} else {
+		    
 		    if (scriptExtension == null) {
 	            scriptExtension= navajoIOConfig.determineScriptExtension(scriptName, null);
 	            logger.info("No known extension for {} - determined {} as script extension!", scriptName, scriptExtension);
@@ -166,21 +167,25 @@ public class BundleCreatorComponent implements BundleCreator {
 					rpcName, scriptTenant, scriptExtension);
 
 			if (!scriptFile.exists()) {
-				logger.error("Script or folder not found: " + script
+				logger.error("Script or  folder not found: " + script
 						+ " full path: " + scriptFile.getAbsolutePath());
 				return;
 			}
 
+	        removeOldCompiledScriptFiles(rpcName);
+
+			List<String> newTenants = new ArrayList<>();
+			
 			depanalyzer.addDependencies(scriptName);
 			List<Dependency> dependencies = depanalyzer.getDependencies(
 					scriptName, Dependency.INCLUDE_DEPENDENCY);
+			
 			if (!hasTenantSpecificFile && dependencies != null) {
-				// We are not tenant-specific, but check whether we include any
-				// tenant-specific files.
-				// If so, compile all versions as if we are tenant-specific
-				// (forceTenant)
+				// We are not tenant-specific, but check whether we include any tenant-specific files.
+				// If so, compile all versions as if we are tenant-specific (forceTenant)
 				for (Dependency d : dependencies) {
 					if (d.isTentantSpecificDependee()) {
+					    newTenants.add(d.getTentantDependee());
 						compileAndCreateBundle(script, formatCompilationDate,
 								scriptExtension, d.getTentantDependee(),
 								hasTenantSpecificFile, true, keepIntermediate,
@@ -189,6 +194,14 @@ public class BundleCreatorComponent implements BundleCreator {
 
 				}
 			}
+			
+			if (!hasTenantSpecificFile) {
+                // We are not tenant-specific, but check whether we used to have any includes that
+			    // were tenant-specific, that furthermore no longer exist in the new version.
+			    // If so, those must be removed.
+                uninstallObsoleteTenantScript(rpcName, newTenants);
+                
+            }
 
 			compileAndCreateBundle(script, formatCompilationDate,
 					scriptExtension, scriptTenant, hasTenantSpecificFile,
@@ -196,6 +209,49 @@ public class BundleCreatorComponent implements BundleCreator {
 		}
 
 	}
+
+    private void removeOldCompiledScriptFiles(String rpcName) {
+        AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getBaseName(rpcName) + "*.jar");
+        File compiledPath = new File(navajoIOConfig.getCompiledScriptPath(), FilenameUtils.getPath(rpcName));
+        Collection<File> files = FileUtils.listFiles(compiledPath, fileFilter, null);
+
+        for (File bundleFile : files) {
+            if (bundleFile.isFile() && bundleFile.exists()) {
+                bundleFile.delete();
+            }
+
+        }
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void uninstallObsoleteTenantScript(String rpcName, List<String> newTenants) {
+        String osgiScriptName = rpcName.replaceAll("/", ".");
+        String filter = "(navajo.scriptName=" + osgiScriptName + ")";
+
+        try {
+            ServiceReference<CompiledScriptFactory>[] sr;
+            sr = (ServiceReference<CompiledScriptFactory>[]) bundleContext.getServiceReferences(
+                    CompiledScriptFactory.class.getName(), filter);
+            if (sr == null) {
+                return;
+            }
+
+            for (int i = 0; i < sr.length; i++) {
+                String tenant = (String) sr[i].getProperty("navajo.tenant");
+                if (tenant.equals("default")) {
+                    continue;
+                }
+                if (! newTenants.contains(tenant)) {
+                    (sr[i]).getBundle().uninstall();
+                }
+            }
+        } catch (InvalidSyntaxException e) {
+            logger.error("Invalid syntax in querying Navajo service: {}", e);
+        } catch (BundleException e) {
+            logger.error("Bundle exception in attempting to stop bundle for non-existing script {}", e);
+        }
+    }
 
 	private void compileAndCreateBundle(String script,
 			final String formatCompilationDate, String scriptExtension,
@@ -830,16 +886,12 @@ public class BundleCreatorComponent implements BundleCreator {
 		String filter = null;
 
 		if (hasTenantScriptFile) {
-			filter = "(&(navajo.scriptName=" + scriptName + ")(navajo.tenant="
-					+ tenant + "))";
-		} else {
-			// Not tentantQualified, but script might include tenant-specific
-			// files. Therefore
-			// prefer tenant-specific file (using service ranking)
-			filter = "(&(navajo.scriptName=" + scriptName
-					+ ") (|(navajo.tenant=" + tenant
-					+ ") (navajo.tenant=default)))";
-		}
+			filter = "(&(navajo.scriptName=" + scriptName + ")(navajo.tenant=" + tenant + "))";
+        } else {
+            // Not tentantQualified, but script might include tenant-specific
+            // files. Therefore  prefer tenant-specific file (using service ranking)
+            filter = "(&(navajo.scriptName=" + scriptName + ") (|(navajo.tenant=" + tenant + ") (navajo.tenant=default)))";
+        }
 
 		ServiceReference<CompiledScriptFactory>[] sr;
 		try {

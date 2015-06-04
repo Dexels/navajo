@@ -2,8 +2,10 @@ package com.dexels.navajo.compiler.tsl.internal;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -22,6 +24,7 @@ import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 public class BundleQueueComponent implements EventHandler, BundleQueue {
 
 	private static final String SCRIPTS_FOLDER = "scripts" + File.separator;
+	private static final List<String> SUPPORTED_EXTENSIONS =  Arrays.asList(".xml",".scala");
 	private BundleCreator bundleCreator = null;
 	private ExecutorService executor;
 	private DependencyAnalyzer depanalyzer;
@@ -117,78 +120,72 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 	}
 
 	@Override
-	public void handleEvent(Event e) {
-		RepositoryInstance ri = (RepositoryInstance) e
-				.getProperty("repository");
-		List<String> changedScripts = RepositoryEventParser.filterChanged(e,
-				SCRIPTS_FOLDER);
-		for (String changedScript : changedScripts) {
-			// Replace windows backslashes with normal ones
-			changedScript = changedScript.replace("\\", "/");
-			try {
-				File location = new File(ri.getRepositoryFolder(),
-						changedScript);
-				if (location.isFile()) {
-					extractScript(changedScript);
-				}
-			} catch (IllegalArgumentException e1) {
-				logger.warn("Error: ", e1);
-			}
-		}
+    public void handleEvent(Event e) {
+        RepositoryInstance ri = (RepositoryInstance) e.getProperty("repository");
+        List<String> changedScripts = RepositoryEventParser.filterChanged(e, SCRIPTS_FOLDER);
+        for (String changedScript : changedScripts) {
+            // Replace windows backslashes with normal ones
+            changedScript = changedScript.replace("\\", "/");
+            try {
+                File location = new File(ri.getRepositoryFolder(), changedScript);
+                if (location.isFile()) {
+                    extractScript(changedScript);
+                }
+            } catch (IllegalArgumentException e1) {
+                logger.warn("Error: ", e1);
+            }
+        }
 
-		// Uninstall deleted files
-		List<String> deletedScripts = RepositoryEventParser.filterDeleted(e,
-				SCRIPTS_FOLDER);
-		for (String deletedScript : deletedScripts) {
-			// Uninstall bundle
-			String stripped = deletedScript.substring(SCRIPTS_FOLDER.length());
-			int dotIndex = stripped.lastIndexOf(".");
-			if (dotIndex < 0) {
-				throw new IllegalArgumentException(
-						"Scripts need an extension, and " + deletedScript
-								+ " has none. Ignoring.");
-			}
-			String scriptName = stripped.substring(0, dotIndex);
-			// String extension =
-			// stripped.substring(dotIndex,stripped.length());
-
-			enqueueDeleteScript(scriptName);
-			// enqueueDeleteDependentScripts(scriptName);
-		}
-	}
+        // Uninstall deleted files
+        List<String> deletedScripts = RepositoryEventParser.filterDeleted(e, SCRIPTS_FOLDER);
+        for (String deletedScript : deletedScripts) {
+            // Uninstall bundle
+            String stripped = deletedScript.substring(SCRIPTS_FOLDER.length());
+            int dotIndex = stripped.lastIndexOf(".");
+            if (dotIndex < 0) {
+                logger.info("Scripts need an extension, and {} has none. Ignoring.");
+                continue;
+            }
+            
+            String extension = stripped.substring(dotIndex, stripped.length());
+            if (!SUPPORTED_EXTENSIONS.contains(extension)) {
+                logger.info("Ignoring file delete {} due to non-matching extension: {} ", deletedScript, extension);
+                return;
+            }
+            
+            String scriptName = stripped.substring(0, dotIndex);
+            enqueueDeleteScript(scriptName);
+        }
+    }
 
 	private void extractScript(String changedScript) {
 		String stripped = changedScript.substring(SCRIPTS_FOLDER.length());
 		int dotIndex = stripped.lastIndexOf(".");
 		if (dotIndex < 0) {
-			throw new IllegalArgumentException(
-					"Scripts need an extension, and " + changedScript
-							+ " has none. Ignoring.");
+		    logger.info("Scripts need an extension, and {} has none. Ignoring update.", stripped);
+		    return;
 		}
 		String scriptName = stripped.substring(0, dotIndex);
 		String extension = stripped.substring(dotIndex, stripped.length());
-
+		if (!SUPPORTED_EXTENSIONS.contains(extension)) {
+            logger.info("Ignoring file update {} due to non-matching extension: {} ", scriptName, extension);
+            return;
+        }
+		
+		
 		logger.debug("scriptName: " + scriptName);
 		logger.debug("extension: " + extension);
-		if (".rptdesign".equals(extension)) {
-			logger.info("Ignoring report " + scriptName);
-			return;
-		}
 		enqueueScript(scriptName, extension);
-
 		enqueueDependentScripts(scriptName);
 	}
 
-	private void enqueueDependentScripts(String script) {
-		List<Dependency> dependencies = depanalyzer.getDependencies(script,
-				Dependency.INCLUDE_DEPENDENCY);
-		for (Dependency dep : dependencies) {
-			logger.debug(
-					"Compiling {}; the following script should be recompiled too: {}",
-					script, dep.getDependee());
-			// enqueueScript(dependentScript, ".xml");
-		}
-	}
+    private void enqueueDependentScripts(String script) {
+        List<Dependency> dependencies = depanalyzer.getDependencies(script, Dependency.INCLUDE_DEPENDENCY);
+        for (Dependency dep : dependencies) {
+            logger.debug("Compiling {}; the following script should be recompiled too: {}", script, dep.getDependee());
+            // enqueueScript(dependentScript, ".xml");
+        }
+    }
 
 	public static void main(String[] args) {
 		BundleQueueComponent bqc = new BundleQueueComponent();

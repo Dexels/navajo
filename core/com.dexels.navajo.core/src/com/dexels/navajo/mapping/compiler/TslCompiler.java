@@ -2916,8 +2916,8 @@ public class TslCompiler {
 		addDependency(
 				"dependentObjects.add( new IncludeDependency( new Long(\""
 						+ IncludeDependency.getFileTimeStamp(includedFile)
-						+ "\"), \"" + script + "\"));\n", "INCLUDE" + script);
-		deps.add(new IncludeDependency(IncludeDependency.getFileTimeStamp(includedFile), script , fileName));
+						+ "\"), \"" + fileName + "\"));\n", "INCLUDE" + script);
+		deps.add(new IncludeDependency(IncludeDependency.getFileTimeStamp(includedFile), fileName , fileName));
 
 		
 
