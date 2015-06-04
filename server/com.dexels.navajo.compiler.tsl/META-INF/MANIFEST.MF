@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tsl compiler for Navajo
 Bundle-SymbolicName: com.dexels.navajo.compiler.tsl
-Bundle-Version: 1.0.19.qualifier
+Bundle-Version: 4.0.20
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.dependency,
