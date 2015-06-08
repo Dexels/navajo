@@ -14,7 +14,7 @@ public abstract class AbstractSharedStore implements SharedStoreInterface {
 			.getLogger(AbstractSharedStore.class);
 	
     protected String getTenantSpecificName(String tenant, String name) {
-    	if(name.startsWith(TENANT_PREFIX)) {
+    	if(name.startsWith(TENANT_PREFIX) || tenant == null) {
     		return name;
     	}
         String tenantSpecificName = SharedStoreInterface.TENANT_PREFIX + tenant + SharedStoreInterface.TENANT_POSTFIX + name;
