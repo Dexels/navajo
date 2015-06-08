@@ -155,17 +155,6 @@ public class TslCompilerComponent implements ScriptCompiler {
 			Set<String> resources) throws IOException {
 
 		String javaPackagePath = packagePath.replaceAll("/", ".");
-		// public CompiledScript getCompiledScript() throws
-		// InstantiationException, IllegalAccessException,
-		// ClassNotFoundException {
-		// Class<? extends CompiledScript> c;
-		// logger.info("About to load class: "+serviceName+" I am: "+getClass().getName());
-		// c = (Class<? extends CompiledScript>) Class.forName(getScriptName());
-		// CompiledScript instance = c.newInstance();
-		// return instance;
-		// }
-		//
-
 		PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(
 				navajoIOConfig.getCompiledScriptPath(), packagePath, script
 						+ "Factory", ".java"));
@@ -372,99 +361,87 @@ public class TslCompilerComponent implements ScriptCompiler {
 
 	private void generateEntityDs(String packagePath, String script,
 			List<Dependency> dependencies, Set<String> dependentResources)
-			throws IOException {
-		String fullName;
-		if (packagePath.equals("")) {
-			fullName = script;
-		} else {
-			fullName = packagePath + "/" + script;
-		}
-		String entityName = fullName.substring(fullName.indexOf("/") + 1)
-				.replaceAll("/", ".");
+            throws IOException {
+        String fullName;
+        if (packagePath.equals("")) {
+            fullName = script;
+        } else {
+            fullName = packagePath + "/" + script;
+        }
+        String entityName = fullName.substring(fullName.indexOf("/") + 1).replaceAll("/", ".");
 
-		String symbolicName = rpcNameFromScriptPath(fullName).replaceAll("/",
-				".");
+        String symbolicName = rpcNameFromScriptPath(fullName).replaceAll("/", ".");
 
-		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
-		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
-		xe.setAttribute("immediate", "true");
-		xe.setAttribute("name", "navajo.entities." + symbolicName);
-		xe.setAttribute("activate", "activateComponent");
-		xe.setAttribute("deactivate", "deactivateComponent");
-		xe.setAttribute("enabled", "true");
+        XMLElement xe = new CaseSensitiveXMLElement("scr:component");
+        xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
+        xe.setAttribute("immediate", "true");
+        xe.setAttribute("name", "navajo.entities." + symbolicName);
+        xe.setAttribute("activate", "activateComponent");
+        xe.setAttribute("deactivate", "deactivateComponent");
+        xe.setAttribute("enabled", "true");
 
-		XMLElement implementation = new CaseSensitiveXMLElement(
-				"implementation");
-		xe.addChild(implementation);
-		implementation.setAttribute("class",
-				"com.dexels.navajo.entity.EntityComponent");
-		XMLElement service = new CaseSensitiveXMLElement("service");
-		xe.addChild(service);
-		XMLElement provide = new CaseSensitiveXMLElement("provide");
-		service.addChild(provide);
-		provide.setAttribute("interface", "com.dexels.navajo.entity.Entity");
+        XMLElement implementation = new CaseSensitiveXMLElement("implementation");
+        xe.addChild(implementation);
+        implementation.setAttribute("class", "com.dexels.navajo.entity.Entity");
+        XMLElement service = new CaseSensitiveXMLElement("service");
+        xe.addChild(service);
+        XMLElement provide = new CaseSensitiveXMLElement("provide");
+        service.addChild(provide);
+        provide.setAttribute("interface", "com.dexels.navajo.entity.Entity");
 
-		addProperty("entity.name", "String", entityName, xe);
-		addProperty("service.name", "String", fullName, xe);
-		addProperty("entity.message", "String", script, xe);
+        addProperty("entity.name", "String", entityName, xe);
+        addProperty("service.name", "String", fullName, xe);
+        addProperty("entity.message", "String", script, xe);
 
-		XMLElement refMan = new CaseSensitiveXMLElement("reference");
-		refMan.setAttribute("bind", "setEntityManager");
-		refMan.setAttribute("unbind", "clearEntityManager");
-		refMan.setAttribute("policy", "dynamic");
-		refMan.setAttribute("cardinality", "1..1");
-		refMan.setAttribute("interface",
-				"com.dexels.navajo.entity.EntityManager");
-		refMan.setAttribute("name", "EntityManager");
-		xe.addChild(refMan);
+        XMLElement refMan = new CaseSensitiveXMLElement("reference");
+        refMan.setAttribute("bind", "setEntityManager");
+        refMan.setAttribute("unbind", "clearEntityManager");
+        refMan.setAttribute("policy", "dynamic");
+        refMan.setAttribute("cardinality", "1..1");
+        refMan.setAttribute("interface", "com.dexels.navajo.entity.EntityManager");
+        refMan.setAttribute("name", "EntityManager");
+        xe.addChild(refMan);
 
-		XMLElement refScript = new CaseSensitiveXMLElement("reference");
-		refScript.setAttribute("cardinality", "1..1");
-		refScript.setAttribute("interface",
-				"com.dexels.navajo.script.api.CompiledScriptFactory");
-		refScript.setAttribute("name", "CompiledScript");
-		refScript.setAttribute("target",
-				"(component.name=" + symbolicName.replace("/", ".") + ")");
-		xe.addChild(refScript);
+        XMLElement refScript = new CaseSensitiveXMLElement("reference");
+        refScript.setAttribute("cardinality", "1..1");
+        refScript.setAttribute("interface", "com.dexels.navajo.script.api.CompiledScriptFactory");
+        refScript.setAttribute("name", "CompiledScript");
+        refScript.setAttribute("target", "(component.name=" + symbolicName.replace("/", ".") + ")");
+        xe.addChild(refScript);
 
-		for (int i = 0; i < dependencies.size(); i++) {
-			Dependency d = dependencies.get(i);
-			if (d instanceof ExtendDependency) {
-				String extendedEntity = d.getId().replaceAll("/", ".");
-				XMLElement depref = new CaseSensitiveXMLElement("reference");
-				depref.setAttribute("name", "SuperEntity" + i);
-				depref.setAttribute("policy", "static");
-				depref.setAttribute("cardinality", "1..1");
-				depref.setAttribute("interface",
-						"com.dexels.navajo.entity.Entity");
-				depref.setAttribute("target", "(entity.name=" + extendedEntity
-						+ ")");
-				depref.setAttribute("bind", "addSuperEntity");
-				depref.setAttribute("unbind", "removeSuperEntity");
-				xe.addChild(depref);
-			}
-		}
+        for (int i = 0; i < dependencies.size(); i++) {
+            Dependency d = dependencies.get(i);
+            if (d instanceof ExtendDependency) {
+                String extendedEntity = d.getId().replaceAll("/", ".");
+                XMLElement depref = new CaseSensitiveXMLElement("reference");
+                depref.setAttribute("name", "SuperEntity" + i);
+                depref.setAttribute("policy", "static");
+                depref.setAttribute("cardinality", "1..1");
+                depref.setAttribute("interface", "com.dexels.navajo.entity.Entity");
+                depref.setAttribute("target", "(entity.name=" + extendedEntity + ")");
+                depref.setAttribute("bind", "addSuperEntity");
+                depref.setAttribute("unbind", "removeSuperEntity");
+                xe.addChild(depref);
+            }
+        }
 
-		for (String resource : dependentResources) {
-			XMLElement dep = new CaseSensitiveXMLElement("reference");
-			dep.setAttribute("bind", "set" + resource);
-			dep.setAttribute("unbind", "clear" + resource);
-			dep.setAttribute("policy", "static");
-			dep.setAttribute("cardinality", "1..1");
-			dep.setAttribute("interface", "javax.sql.DataSource");
-			dep.setAttribute("target", "(navajo.resource.name=" + resource
-					+ ")");
-			xe.addChild(dep);
-		}
+        for (String resource : dependentResources) {
+            XMLElement dep = new CaseSensitiveXMLElement("reference");
+            dep.setAttribute("bind", "set" + resource);
+            dep.setAttribute("unbind", "clear" + resource);
+            dep.setAttribute("policy", "static");
+            dep.setAttribute("cardinality", "1..1");
+            dep.setAttribute("interface", "javax.sql.DataSource");
+            dep.setAttribute("target", "(navajo.resource.name=" + resource + ")");
+            xe.addChild(dep);
+        }
 
-		PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(
-				navajoIOConfig.getCompiledScriptPath(), packagePath, "entity",
-				".xml"));
-		w.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		xe.write(w);
-		w.flush();
-		w.close();
-	}
+        PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath,"entity", ".xml"));
+        w.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        xe.write(w);
+        w.flush();
+        w.close();
+    }
 
 	protected void addProperty(final String key, final String type,
 			final String value, final XMLElement xe) {
