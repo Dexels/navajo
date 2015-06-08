@@ -19,7 +19,9 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 	protected String validationService;
 	protected String entityName;
 	protected Message extraMessage;
-	
+	protected boolean debugInput;
+	protected boolean debugOutput;
+
 	public BaseOperationImpl(Navajo n) {
 		super(n);
 	}
@@ -107,4 +109,29 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 		return validationService;
 	}
 
+	@Override
+    public void setDebug(String debugString) {
+	    String clean = debugString.trim();
+        if (clean.equals("true")) {
+            debugInput = true;
+            debugOutput = true;
+        } else if (clean.equals("request")) {
+             debugInput = true;
+        } else if (clean.equals("response")){
+            debugOutput = true;
+        } else {
+            //logger.warn("Unsupported debug value for Operation {} {}: {}", service, method, debugString);
+        }
+    }
+	
+
+    @Override
+    public boolean debugInput() {
+        return debugInput;
+    }
+
+    @Override
+    public boolean debugOutput() {
+        return debugOutput;
+    }
 }

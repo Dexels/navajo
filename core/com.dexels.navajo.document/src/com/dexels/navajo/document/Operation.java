@@ -49,4 +49,11 @@ public interface Operation {
 
 	public Operation copy(Navajo n);
 	
+	public void setDebug(String debugString);
+
+    public boolean debugInput();
+
+    public boolean debugOutput();
+	
+	
 }

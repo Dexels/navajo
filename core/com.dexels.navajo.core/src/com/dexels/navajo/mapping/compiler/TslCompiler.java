@@ -38,7 +38,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
-import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -638,7 +637,8 @@ public class TslCompiler {
 				String service = e.getAttribute("service");
 				String validationService = e.getAttribute("validationService");
 				String method = e.getAttribute("method");
-
+				String debug = e.getAttribute("debug");
+				
 				result.append(printIdent(ident) + "if (true) {\n");
 
 				String operationString = "com.dexels.navajo.document.Operation o = "
@@ -701,6 +701,9 @@ public class TslCompiler {
 
 					result.append(printIdent(ident + 2) + extraNavajoOperation);
 
+				}
+				if (debug != null && !debug.equals("")) {
+				    result.append(printIdent(ident + 2) + "o.setDebug(\"" + debug + "\");\n");
 				}
 
 				result.append(printIdent(ident + 2)
