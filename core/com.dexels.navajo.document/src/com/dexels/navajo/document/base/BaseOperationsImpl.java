@@ -59,7 +59,7 @@ public class BaseOperationsImpl extends BaseNode {
     public List<Operation> getAllOperations() {
     	List<Operation> al = new ArrayList<Operation>();
         for (int i = 0; i < myOperations.size(); i++) {
-        	Operation m = (Operation)myOperations.get(i);
+        	Operation m = (Operation) myOperations.get(i);
             al.add(m);
         }
         return al;
