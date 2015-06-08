@@ -51,6 +51,8 @@ public class EntityListener extends HttpServlet {
 	private String urlOutput;
 	private String username;
 	private String password;
+	
+	private int requestCounter = 0;
 
 	public void activate() {
         logger.info("Entity servlet component activated");
@@ -79,6 +81,13 @@ public class EntityListener extends HttpServlet {
 		Navajo result = null;
 		String method = request.getMethod();
 		String path = request.getPathInfo();
+		int myRequestCount = -1;
+		
+		synchronized(this) {
+		    myRequestCount = requestCounter;
+	        requestCounter++;
+		}
+		
 		
 		// Check for a .<format> in the URL - can be in RequestURI or QueryString
 		String dotString = null; 
@@ -112,8 +121,8 @@ public class EntityListener extends HttpServlet {
 		Navajo input = null;
 		String etag = null;
 		
-		logger.info("Incoming entity request from {}: entity={}, user={}, method={}, output={}",
-				request.getRemoteAddr(), entityName, username, method, output);
+		logger.info("Incoming entity request: entity={}, user={}, method={} counter={}, ip={}",
+				request.getRemoteAddr(), entityName, username, method, myRequestCount);
 		
 		try {
 			if (entityName.equals("")) {
@@ -143,9 +152,6 @@ public class EntityListener extends HttpServlet {
 					throw new EntityException(EntityException.BAD_REQUEST);
 				}
 			}
-			//if (e.debugInput()) {
-		         entityLogger.debug("Entity request: {}", input);
-			//}
 
 			if (input.getMessage(entityMessage.getName()) == null) {
 				logger.error("Entity name not found in input - format incorrect or bad request"); 
@@ -166,11 +172,18 @@ public class EntityListener extends HttpServlet {
 			input.getMessage(entityMessage.getName()).setEtag(etag);
 			
 			Operation o = myManager.getOperation(entityName, method);
+			
 			logger.debug("Found matching entity operation"); 
+	        if (o.debugInput()) {
+	            entityLogger.info("Entity request {}: {}", myRequestCount, input);
+            }
+
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, DispatcherFactory.getInstance(), o);
 			result = seo.perform(input);
-			logger.debug("Performed entity operation"); 
-
+			
+			if (o.debugOutput()) {
+                entityLogger.info("Entity response {}: {}", myRequestCount, result);
+            }
 		} catch (Exception ex) {
 			result = handleException(ex, request, response);
 		} 

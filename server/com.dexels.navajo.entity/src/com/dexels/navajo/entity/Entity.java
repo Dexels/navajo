@@ -81,7 +81,7 @@ public class Entity  {
 		logger.debug("Activating entity");
 
 		if ( activated ) {
-			logger.info("Re-activate of entity {} - nothing to do", this.getName());
+			logger.info("Re-activate of entity {}? Nothing to do", this.getName());
 			return;
 		}
 		// Set activate flag immediately to prevent looping
@@ -322,9 +322,4 @@ public class Entity  {
 	public Set<Key> getKeys() {
 		return myKeys;
 	}
-
-    public boolean debugInput() {
-        return false;
-    }
-
 }

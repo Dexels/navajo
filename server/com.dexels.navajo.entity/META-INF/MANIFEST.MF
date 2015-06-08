@@ -1,17 +1,19 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Entity model implementation
 Bundle-SymbolicName: com.dexels.navajo.entity
+Bundle-Description: Entity
+Bundle-ManifestVersion: 2
 Bundle-Version: 1.3.1.qualifier
+Bundle-Activator: navajoentity.Version
+Bundle-ClassPath: .
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Navajo-Extension: com/dexels/navajo/entity/adapters/adapters.xml
 Navajo-Name: Entity
-Eclipse-ExtensibleAPI: true
 Import-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.client,
  com.dexels.navajo.compiler.tsl,
  com.dexels.navajo.document,
+ com.dexels.navajo.document.base;version="2.2.1",
  com.dexels.navajo.document.json,
  com.dexels.navajo.script.api,
  com.dexels.navajo.server,
@@ -36,5 +38,3 @@ Export-Package: com.dexels.navajo.entity,
  com.dexels.navajo.entity.impl,
  com.dexels.navajo.entity.transactions,
  com.dexels.navajo.entity.util
-Bundle-ClassPath: .
-Bundle-Activator: navajoentity.Version
