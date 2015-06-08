@@ -75,15 +75,15 @@ public class TestEntity {
         manager.registerEntity(e2);
 
         e1.registerSuperEntity(e2);
-        e1.activate();
-        e2.activate();
+        e1.startEntity();
+        e2.startEntity();
 
     }
 
     @Test
     public void testEntityGetKeySize() throws Exception {
         Entity e = manager.getEntity("MyEntity");
-        e.activate();
+        e.startEntity();
         Assert.assertEquals(4, e.getKeys().size());
         System.err.println("AFTER EXTEND: ******************************************* ");
         e.getMessage().write(System.err);
@@ -92,7 +92,7 @@ public class TestEntity {
     @Test
     public void testEntityGetKeyMessage() throws Exception {
         Entity e = manager.getEntity("MyEntity");
-        e.activate();
+        e.startEntity();
         Set<Key> keys = e.getKeys();
         int found = 3;
         for (Key k : keys) {
@@ -123,7 +123,7 @@ public class TestEntity {
         HashSet<Property> matchingProperties = new HashSet<Property>();
         matchingProperties.add(f.createProperty(p_n, "MatchId", Property.INTEGER_PROPERTY, "100", 0, "", ""));
         Entity e = manager.getEntity("MyEntity");
-        e.activate();
+        e.startEntity();
         Key k = e.getKey(matchingProperties);
         Assert.assertNotNull(k);
         Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/MatchId"));
@@ -137,7 +137,7 @@ public class TestEntity {
         HashSet<Property> matchingProperties = new HashSet<Property>();
         matchingProperties.add(f.createProperty(p_n, "MatchId", Property.STRING_PROPERTY, "", 0, "", ""));
         Entity e = manager.getEntity("MyEntity");
-        e.activate();
+        e.startEntity();
         Key k = e.getKey(matchingProperties);
         Assert.assertNull(k);
     }
@@ -150,7 +150,7 @@ public class TestEntity {
         matchingProperties.add(f.createProperty(p_n, "MatchId", Property.INTEGER_PROPERTY, "100", 0, "", ""));
         matchingProperties.add(f.createProperty(p_n, "Irrelevant", Property.INTEGER_PROPERTY, "5", 0, "", ""));
         Entity e = manager.getEntity("MyEntity");
-        e.activate();
+        e.startEntity();
         Key k = e.getKey(matchingProperties);
         Assert.assertNotNull(k);
         Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/MatchId"));
@@ -163,7 +163,7 @@ public class TestEntity {
         HashSet<Property> matchingProperties = new HashSet<Property>();
         matchingProperties.add(f.createProperty(p_n, "_id", Property.STRING_PROPERTY, "12", 0, "", ""));
         Entity e = manager.getEntity("MyEntity");
-        e.activate();
+        e.startEntity();
         Key k = e.getKey(matchingProperties);
         Assert.assertNotNull(k);
         Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/_id"));
@@ -179,7 +179,7 @@ public class TestEntity {
         matchingProperties.add(f.createProperty(p_n, "ExternalMatchId", Property.STRING_PROPERTY, "2", 0, "", ""));
         matchingProperties.add(f.createProperty(p_n, "OrganizingDistrictId", Property.STRING_PROPERTY, "3", 0, "", ""));
         Entity e = manager.getEntity("MyEntity");
-        e.activate();
+        e.startEntity();
         Key k = e.getKey(matchingProperties);
         Assert.assertNotNull(k);
         Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/SeasonId"));
@@ -192,7 +192,7 @@ public class TestEntity {
     public void testMatchKeyById() throws Exception {
 
         Entity e = manager.getEntity("MyEntity");
-        e.activate();
+        e.startEntity();
         Key k = e.getKey("ALT");
         Assert.assertNotNull(k);
         Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/SeasonId"));
@@ -205,7 +205,7 @@ public class TestEntity {
     public void testSetMessageChangedSuperEntity() throws Exception {
 
         Entity m = manager.getEntity("MyEntity");
-        m.activate();
+        m.startEntity();
         Assert.assertEquals(1, m.getSuperEntities().size());
 
         m.getMessage().setExtends("");

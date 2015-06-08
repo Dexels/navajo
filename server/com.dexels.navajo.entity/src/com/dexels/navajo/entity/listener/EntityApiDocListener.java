@@ -49,7 +49,6 @@ public class EntityApiDocListener extends HttpServlet  implements ResourceMappin
 	public void activate() {
 		resourceMapping.setAlias("/entityApi");
 		resourceMapping.setPath("entityApi");
-
 	}
 
 	@Override

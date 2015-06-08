@@ -52,6 +52,13 @@ public class EntityListener extends HttpServlet {
 	private String username;
 	private String password;
 
+	public void activate() {
+        logger.info("Entity servlet component activated");
+    }
+
+    public void deactivate() {
+        logger.info("Entity servlet component deactivated");
+    }
 
 	public void setEntityManager(EntityManager em) {
 		myManager = em;
@@ -136,7 +143,9 @@ public class EntityListener extends HttpServlet {
 					throw new EntityException(EntityException.BAD_REQUEST);
 				}
 			}
-			entityLogger.debug("Entity request: {}", input);
+			//if (e.debugInput()) {
+		         entityLogger.debug("Entity request: {}", input);
+			//}
 
 			if (input.getMessage(entityMessage.getName()) == null) {
 				logger.error("Entity name not found in input - format incorrect or bad request"); 

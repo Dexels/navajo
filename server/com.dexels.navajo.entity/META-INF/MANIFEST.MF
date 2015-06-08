@@ -4,23 +4,17 @@ Bundle-Name: Navajo Entity model implementation
 Bundle-SymbolicName: com.dexels.navajo.entity
 Bundle-Version: 1.2.63.qualifier
 Bundle-Vendor: Dexels
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Navajo-Extension: com/dexels/navajo/entity/adapters/adapters.xml
 Navajo-Name: Entity
 Eclipse-ExtensibleAPI: true
 Import-Package: com.dexels.navajo.adapter,
- com.dexels.navajo.adapter.messagemap,
  com.dexels.navajo.client,
- com.dexels.navajo.compiler,
  com.dexels.navajo.compiler.tsl,
  com.dexels.navajo.document,
  com.dexels.navajo.document.json,
- com.dexels.navajo.mapping,
  com.dexels.navajo.script.api,
  com.dexels.navajo.server,
- com.dexels.navajo.server.api,
- com.dexels.navajo.server.test,
- javax.activation;version="1.1.0",
  javax.servlet;version="3.0.0",
  javax.servlet.http;version="3.0.0",
  javax.transaction;version="1.1.0",
@@ -34,12 +28,13 @@ Import-Package: com.dexels.navajo.adapter,
  org.junit.runners;version="4.0.0";resolution:=optional,
  org.ops4j.pax.web.extender.whiteboard;version="3.0.6",
  org.ops4j.pax.web.extender.whiteboard.runtime;version="3.0.6",
- org.ops4j.pax.web.service;version="3.0.6",
  org.osgi.framework;version="1.6.0",
- org.osgi.service.http;version="1.2.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/*.xml
-Export-Package: com.dexels.navajo.entity,com.dexels.navajo.entity.adap
- ters,com.dexels.navajo.entity.impl,com.dexels.navajo.entity.transacti
- ons,com.dexels.navajo.entity.util
+Export-Package: com.dexels.navajo.entity,
+ com.dexels.navajo.entity.adapters,
+ com.dexels.navajo.entity.impl,
+ com.dexels.navajo.entity.transactions,
+ com.dexels.navajo.entity.util
+Bundle-ClassPath: .
 Bundle-Activator: navajoentity.Version

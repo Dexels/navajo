@@ -65,8 +65,20 @@ public class Entity  {
 		superEntities.clear();
 	}
 	
-	public synchronized void activate() throws EntityException {
-		logger.info("Activating entity");
+	public void activate(Map<String, Object> properties)
+            throws Exception {
+        
+        entityName = (String) properties.get("entity.name");
+        messageName = (String) properties.get("entity.message");
+
+        Navajo entityNavajo = entityManager.getEntityNavajo((String) properties.get("service.name"));
+        activateMessage(entityNavajo);
+        entityManager.registerEntity(this);
+    }
+	
+	
+	public synchronized void startEntity() throws EntityException {
+		logger.debug("Activating entity");
 
 		if ( activated ) {
 			logger.info("Re-activate of entity {} - nothing to do", this.getName());
@@ -77,10 +89,9 @@ public class Entity  {
 		
 		findSuperEntities(myMessage);
 		findKeys();
-		
 
 		for ( Entity sub : subEntities ) {
-			sub.activate();
+			sub.startEntity();
 		}
 		logger.info("Entity {} activated", this.getName());
 	}
@@ -141,7 +152,7 @@ public class Entity  {
 		// First deactivate.
 		deactivate();
 		myMessage = entity;
-		activate();
+		startEntity();
 
 	}
 	
@@ -201,11 +212,10 @@ public class Entity  {
 		m.merge(superEntity.getMessage().copy(m.getRootDoc()));
 		registerSuperEntity(superEntity);
 	}
-
-	// Non-osgi
-	protected Entity getSuperEntity(String extendedEntity) {
-		return entityManager.getEntity(extendedEntity);
-	}
+    
+    protected Entity getSuperEntity(String extendedEntity) {
+        return superEntitiesMap.get(extendedEntity);
+    }
 
 	private void findSuperEntities(Message m) throws EntityException {
 
@@ -312,5 +322,9 @@ public class Entity  {
 	public Set<Key> getKeys() {
 		return myKeys;
 	}
+
+    public boolean debugInput() {
+        return false;
+    }
 
 }
