@@ -74,7 +74,7 @@ public class TestEntity {
         manager.registerEntity(e1);
         manager.registerEntity(e2);
 
-        e1.registerSuperEntity(e2);
+        e1.addSuperEntity(e2, null);
         e1.startEntity();
         e2.startEntity();
 
