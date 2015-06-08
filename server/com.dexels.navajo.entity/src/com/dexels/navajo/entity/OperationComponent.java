@@ -103,17 +103,16 @@ public class OperationComponent implements Operation {
 
     @Override
     public void setDebug(String debugString) {
-        String clean = debugString.trim();
-        if (clean.equals("all")) {
+        if (debugString.trim().equals("true")) {
             debugInput = true;
             debugOutput = true;
-        } else if (clean.equals("request")) {
+            return;
+        }
+        if (debugString.contains("request")) {
             debugInput = true;
-        } else if (clean.equals("response")) {
+        }
+        if (debugString.contains("response")) {
             debugOutput = true;
-        } else {
-            // logger.warn("Unsupported debug value for Operation {} {}: {}",
-            // service, method, debugString);
         }
     }
 

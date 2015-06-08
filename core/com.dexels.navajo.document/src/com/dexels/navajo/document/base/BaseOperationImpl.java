@@ -111,16 +111,16 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 
 	@Override
     public void setDebug(String debugString) {
-	    String clean = debugString.trim();
-        if (clean.equals("true")) {
+        if (debugString.trim().equals("true")) {
             debugInput = true;
             debugOutput = true;
-        } else if (clean.equals("request")) {
-             debugInput = true;
-        } else if (clean.equals("response")){
+            return;
+        }
+        if (debugString.contains("request")) {
+            debugInput = true;
+        }
+        if (debugString.contains("response")) {
             debugOutput = true;
-        } else {
-            //logger.warn("Unsupported debug value for Operation {} {}: {}", service, method, debugString);
         }
     }
 	
