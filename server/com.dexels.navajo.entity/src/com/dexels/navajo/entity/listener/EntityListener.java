@@ -136,7 +136,7 @@ public class EntityListener extends HttpServlet {
 					throw new EntityException(EntityException.BAD_REQUEST);
 				}
 			}
-			entityLogger.info("Entity request: {}", input);
+			entityLogger.debug("Entity request: {}", input);
 
 			if (input.getMessage(entityMessage.getName()) == null) {
 				logger.error("Entity name not found in input - format incorrect or bad request"); 
@@ -174,13 +174,13 @@ public class EntityListener extends HttpServlet {
 		if (result == null) {
 			throw new ServletException("No output found");
 		}
-		logger.info("Writing entity output");
+		logger.debug("Writing entity output");
 
 		if (result.getMessage("errors") != null) {
 			String status = result.getMessage("errors").getProperty("Status").toString();
 			if (status.equals("304")) {
 				// No content
-				logger.info("Returning HTTP code 304 - not modified");
+				logger.debug("Returning HTTP code 304 - not modified");
 				return;
 			}
 		}
@@ -217,13 +217,13 @@ public class EntityListener extends HttpServlet {
 		// TODO: better security, such as API keys
 		// Furthermore check authorization
 		basicAuthentication(request);
-		if (username == null || username.trim().equals("")) {
-			// TODO: This is very unsafe
-			logger.warn("No basic auth - attemping username/password parameter");
+		if (username == null || username.trim().equals("")) {	
 			if (request.getParameterMap().containsKey("username")) {
-				logger.info("Taking username/password from URI parameters");
+				logger.warn("No basic authentication - getting username/password from URL parameters");
 				username = request.getParameter("username");
 				password = request.getParameter("password");
+			} else {
+			    logger.warn("No username/password found!");
 			}
 		}
 	}	
@@ -319,7 +319,7 @@ public class EntityListener extends HttpServlet {
 		}
 
 		if (!SUPPORTED_OUTPUT.contains(mimeResult)) {
-			logger.info("No supported output format requested - using default output");
+			logger.info("No supported output format requested - using default output: {}", DEFAULT_OUTPUT_FORMAT);
 			mimeResult = DEFAULT_OUTPUT_FORMAT;
 		}
 		return mimeResult;
