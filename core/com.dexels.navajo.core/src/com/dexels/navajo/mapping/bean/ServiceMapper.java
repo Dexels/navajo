@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
@@ -25,6 +28,9 @@ public class ServiceMapper implements Mappable {
 	
 	private List<Object> methodParameters = new ArrayList<Object>();
 	private Object result;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ServiceMapper.class);
 	
 //	private Access myAccess;
 	
@@ -56,7 +62,7 @@ public class ServiceMapper implements Mappable {
 	private void listAllMethods() throws Exception {
 		Method [] am = getServiceObject().getClass().getMethods();
 		for (int i = 0; i < am.length; i++) {
-			System.err.println(am[i].getName() + ", parameters: " + listParameterTypes(am[i].getParameterTypes()));
+			logger.info(am[i].getName() + ", parameters: " + listParameterTypes(am[i].getParameterTypes()));
 		}
 	}
 	
@@ -140,7 +146,7 @@ public class ServiceMapper implements Mappable {
 	 * Add a simple (non domain object class) parameter (String, Integer, Float, Double, Date, Boolean, etc.)
 	 */
 	public void setAddParameter(Object o) {
-		//System.err.println("addParameter: " + o.getClass());
+		//logger.info("addParameter: " + o.getClass());
 		methodParameters.add(o);
 	}
 	
@@ -205,7 +211,7 @@ public class ServiceMapper implements Mappable {
 		sm.setInvoke(true);
 		
 		
-		System.err.println("Next...");
+		logger.info("Next...");
 		
 		sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
@@ -213,9 +219,9 @@ public class ServiceMapper implements Mappable {
 		sm.setAddParameter("Arjen");
 		sm.setInvoke(true);
 		DomainObjectMapper result = sm.getDomainObjectResult();
-		System.err.println("result = " + result.getMyObject());
+		logger.info("result = " + result.getMyObject());
 	
-		System.err.println("Again...");
+		logger.info("Again...");
 		
 		sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
@@ -225,10 +231,10 @@ public class ServiceMapper implements Mappable {
 		DomainObjectMapper [] results = sm.getDomainObjectResults(); 
 	
 		for ( int i = 0; i < results.length; i++ ) {
-			System.err.println("result[" + i + "]=" + results[i].getMyObject());
+			logger.info("result[" + i + "]=" + results[i].getMyObject());
 		}
 		
-		System.err.println("Try using Lists...");
+		logger.info("Try using Lists...");
 		
 		sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
@@ -238,10 +244,10 @@ public class ServiceMapper implements Mappable {
 		results = sm.getDomainObjectResults(); 
 	
 		for ( int i = 0; i < results.length; i++ ) {
-			System.err.println("LIST result[" + i + "]=" + results[i].getMyObject());
+			logger.info("LIST result[" + i + "]=" + results[i].getMyObject());
 		}
 		
-		System.err.println("Try something simple...");
+		logger.info("Try something simple...");
 		
 		sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
@@ -249,7 +255,7 @@ public class ServiceMapper implements Mappable {
 		sm.setAddParameter(2);
 		sm.setInvoke(true);
 		Object or = sm.getResult(); 
-		System.err.println("or = " + or);
+		logger.info("or = " + or);
 		
 		sm.listAllMethods();
 	}

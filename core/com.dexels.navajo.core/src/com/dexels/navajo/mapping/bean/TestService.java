@@ -3,10 +3,16 @@ package com.dexels.navajo.mapping.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TestService {
 
 	DomainObjectMapper dom;
 	TestBean myBean;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TestService.class);
 	
 	public String getLastname(TestBean dom) throws Exception {
 		return dom.getLastname();
@@ -17,12 +23,12 @@ public class TestService {
 	 * @param tb2  the second bean to merge
 	 */
 	public TestBean mergeBeans(TestBean tb, TestBean tb2) {
-		System.err.println("In mergBeans");
+		logger.info("In mergBeans");
 		return tb;
 	}
 	
 	public TestBean mergeBeans(TestBean tb, TestBean tb2, TestBean tb3) {
-		System.err.println("In mergBeans");
+		logger.info("In mergBeans");
 		String lastname = tb.getLastname() + tb2.getLastname() + tb3.getLastname();
 		TestBean tb4 = new TestBean();
 		tb4.setLastname(lastname);
@@ -65,14 +71,14 @@ public class TestService {
 	public void setTestBean(DomainObjectMapper d) throws Exception {
 		this.dom = d;
 		this.myBean = (TestBean) d.getMyObject();
-		System.err.println("TestBean: lastname: " + myBean.getLastname());
+		logger.info("TestBean: lastname: " + myBean.getLastname());
 	}
 
 	public DomainObjectMapper getTestBean() throws Exception {
 		myBean = new TestBean();
 		myBean.setFirstname("Harry");
 		myBean.setLastname("Nak");
-		System.err.println("In getTestBean. LastName: " + myBean.getLastname());
+		logger.info("In getTestBean. LastName: " + myBean.getLastname());
 		return new DomainObjectMapper(myBean);
 	}
 	
@@ -92,10 +98,10 @@ public class TestService {
 	}
 	
 	public void setTestBeans(DomainObjectMapper [] doms) throws Exception {
-		System.err.println("In setTestBeans(). Received " + doms.length + " objects");
+		logger.info("In setTestBeans(). Received " + doms.length + " objects");
 		for (int i = 0; i < doms.length; i++) {
 			TestBean tb = (TestBean) doms[i].getMyObject();
-			System.err.println("RECEIVED: " + tb.getFirstname() + " " + tb.getLastname());
+			logger.info("RECEIVED: " + tb.getFirstname() + " " + tb.getLastname());
 		}
 	}
 	
@@ -107,18 +113,18 @@ public class TestService {
 		DomainObjectMapper dom = new DomainObjectMapper(tb);
 		
 		Object value = dom.getDomainObjectAttribute("lastname", null);
-		System.err.println("value = " + value);
+		logger.info("value = " + value);
 		
 		dom.setDomainObjectAttribute("lastname", "Philip");
 		value = dom.getDomainObjectAttribute("lastname", null);
-		System.err.println("new value = " + value);
+		logger.info("new value = " + value);
 		
 		value = dom.getDomainObjectAttribute("appendedLastname", new Object[]{"hallo"});
-		System.err.println("appendedLastname value = " + value);
+		logger.info("appendedLastname value = " + value);
 		
 		java.lang.reflect.Method[] all = TestBean.class.getMethods();
 		for (int i = 0; i < all.length; i++) {
-				System.err.println(all[i].getName() + ", params=" + all[i].getParameterTypes().length);
+				logger.info(all[i].getName() + ", params=" + all[i].getParameterTypes().length);
 			
 		}
 	}

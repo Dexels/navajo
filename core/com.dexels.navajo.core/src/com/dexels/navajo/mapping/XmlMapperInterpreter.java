@@ -21,10 +21,4 @@ public final class XmlMapperInterpreter {
     return name.substring(0, e);
   }
 
-  public static void main(String[] args) {
-    String s = "";
-    System.out.println("isAssignable = " +
-                       Object.class.isAssignableFrom(s.getClass()));
-    System.out.println("isAssignable = " + s.getClass().isAssignableFrom(Object.class));
-  }
 }

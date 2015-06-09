@@ -599,7 +599,6 @@ public static final List<Message> getMessageList(Message msg, Navajo doc, String
           for (int i = 0; i < result.size(); i++) {
             Message parent = (Message) result.get(i);
             boolean match = Condition.evaluate(filter, doc, o, parent, currentParamMsg,access);
-            //System.err.println("getMessageList(), filter = " + filter + ", match = " + match);
             if (match) {
               dummy.add(parent);
             }
@@ -946,7 +945,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 //	  n.write(System.err);
 	  
 	  
-	 System.err.println(createPackageName("include/SelectedGlobals.xml".replaceAll("\\.xml", "")));
+//	 System.err.println(createPackageName("include/SelectedGlobals.xml".replaceAll("\\.xml", "")));
 //	  SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 //	  System.err.println(sdf.format(new Date()));
 	  

@@ -1134,9 +1134,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             String[] allRefs = inMessage.getHeader().getCallBackPointers();
             if (AsyncStore.getInstance().getInstance(allRefs[0]) == null) {
                 RemoteAsyncRequest rasr = new RemoteAsyncRequest(allRefs[0]);
+                logger.info("Broadcasting async pointer: "+allRefs[0]);
                 RemoteAsyncAnswer rasa = (RemoteAsyncAnswer) TribeManagerFactory.getInstance().askAnybody(rasr);
                 if (rasa != null) {
-                    System.err.println("ASYNC OWNER: " + rasa.getOwnerOfRef() + "(" + rasa.getHostNameOwnerOfRef()
+                    logger.info("ASYNC OWNER: " + rasa.getOwnerOfRef() + "(" + rasa.getHostNameOwnerOfRef()
                             + ")" + " FOR REF " + allRefs[0]);
                     try {
                         Navajo result = TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef());
@@ -1146,7 +1147,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     }
 
                 } else {
-                    System.err.println("DID NOT FIND ANY OWNERS OF ASYNCREF...");
+                    logger.warn("DID NOT FIND ANY OWNERS OF ASYNCREF...");
                 }
             }
         }
