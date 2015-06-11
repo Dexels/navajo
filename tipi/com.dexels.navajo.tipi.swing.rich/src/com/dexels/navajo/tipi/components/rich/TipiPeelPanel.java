@@ -3,10 +3,7 @@ package com.dexels.navajo.tipi.components.rich;
 import javax.swing.JComponent;
 
 import com.dexels.navajo.rich.components.PeelPanel;
-import com.dexels.navajo.tipi.TipiBreakException;
-import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.components.swingimpl.TipiPanel;
-import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiPeelPanel extends TipiPanel {
 

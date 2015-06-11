@@ -15,7 +15,6 @@ import com.dexels.navajo.article.DirectOutputThrowable;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.types.Binary;
 

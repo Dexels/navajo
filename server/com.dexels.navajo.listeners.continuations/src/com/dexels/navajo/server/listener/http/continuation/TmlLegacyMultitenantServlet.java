@@ -22,7 +22,7 @@ public class TmlLegacyMultitenantServlet extends HttpServlet {
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		LocalClient client = clients.get(determineInstanceFromRequest(req));
+		//LocalClient client = clients.get(determineInstanceFromRequest(req));
 
 	}
 
@@ -34,7 +34,8 @@ public class TmlLegacyMultitenantServlet extends HttpServlet {
 		clients.remove(settings.get("instance"));
 	}
 	
-	private String determineInstanceFromRequest(final HttpServletRequest req) {
+	@SuppressWarnings("unused")
+    private String determineInstanceFromRequest(final HttpServletRequest req) {
 		String requestInstance = req.getHeader("X-Navajo-Instance");
 		if(requestInstance!=null) {
 			return requestInstance;

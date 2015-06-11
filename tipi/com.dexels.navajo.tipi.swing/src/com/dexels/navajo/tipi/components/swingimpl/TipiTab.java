@@ -1,9 +1,5 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingTab;
 
 
@@ -11,7 +7,6 @@ public class TipiTab extends TipiSwingDataComponentImpl {
 
 	private static final long serialVersionUID = -6335980072890167067L;
 	
-	private final static Logger logger = LoggerFactory.getLogger(TipiTab.class);
 	private TipiSwingTab myTab;
 
 	@Override

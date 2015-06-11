@@ -23,15 +23,6 @@ import java.awt.Rectangle;
  */
 
 public class TipiGradientPaint extends GradientPaint {
-	private final String NORTH = "north";
-	private final String SOUTH = "south";
-	private final String EAST = "east";
-	private final String WEST = "west";
-	private final String NORTHEAST = "northeast";
-	private final String NORTHWEST = "northwest";
-	private final String SOUTHEAST = "southeast";
-	private final String SOUTHWEST = "southwest";
-
 	private String direction;
 	private Color colorOne, colorTwo;
 	private Rectangle bounds = new Rectangle(0, 0, 0, 0);

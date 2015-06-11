@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.cobra.impl;
 
-import org.lobobrowser.html.HtmlRendererContext;
 import org.lobobrowser.html.gui.HtmlPanel;
 
 public class TipiHtmlPanel extends HtmlPanel {

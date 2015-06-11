@@ -44,8 +44,7 @@ public class BasicClientTest {
 		for (int i = 0; i < 500; i++) {
 			long start = System.currentTimeMillis();
 			Navajo reply = myClient.doSimpleSend("club/InitUpdateClub");
-			
-			//			reply.write(System.err);
+			reply.write(System.err);
 			long time = System.currentTimeMillis() - start;
 			total+=time;
 			double avg = total / (i+1);

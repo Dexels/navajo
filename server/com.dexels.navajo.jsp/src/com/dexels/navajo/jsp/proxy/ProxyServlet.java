@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Date;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -51,7 +50,6 @@ public class ProxyServlet extends HttpServlet {
 			throws IOException, ServletException {
 
 		MDC.clear();
-		Date created = new java.util.Date();
 //		String service = request.getParameter("service");
 		String acceptEncoding = request.getHeader("Accept-Encoding");
 		String contentEncoding = request.getHeader("Content-Encoding");
