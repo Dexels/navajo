@@ -5,7 +5,7 @@ Bundle-SymbolicName: com.dexels.navajo.tipi.css
 Bundle-Version: 1.0.44.qualifier
 Bundle-Activator: tipicss.TipiCssExtension
 Bundle-Vendor: DEXELS
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.client;version="1.0.0",
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.tipi,

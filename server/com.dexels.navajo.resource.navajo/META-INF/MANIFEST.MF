@@ -4,7 +4,7 @@ Bundle-Name: Http HTTP connector
 Bundle-SymbolicName: com.dexels.navajo.resource.navajo
 Bundle-Version: 1.0.1.qualifier
 Bundle-Vendor: DEXELS
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Service-Component: OSGI-INF/navajoResourceComponent.xml
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.async,

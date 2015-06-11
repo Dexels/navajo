@@ -5,7 +5,7 @@ Bundle-SymbolicName: com.dexels.navajo.rhino.continuations
 Bundle-Version: 2.0.1.qualifier
 Bundle-Activator: navajorhinocontinuations.Version
 Bundle-Vendor: DEXELS
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.client,
  com.dexels.navajo.client.async,

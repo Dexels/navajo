@@ -41,4 +41,4 @@ Service-Component: OSGI-INF/jdbcBroker.xml,
  OSGI-INF/navajo.server.grusprovider.xml
 Export-Package: com.dexels.navajo.adapter.resource,
  com.dexels.navajo.adapter.resource.jdbcbroker
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

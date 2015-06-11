@@ -4,7 +4,7 @@ Bundle-Name: Navajo Camel / Continuation servlet
 Bundle-SymbolicName: com.dexels.navajo.listeners.camel
 Bundle-Version: 2.1.1.qualifier
 Bundle-Vendor: DEXELS
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.camel.component,
  com.dexels.navajo.camel.consumer,
  com.dexels.navajo.script.api,
