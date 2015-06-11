@@ -199,10 +199,10 @@ public class EclipseCompiler implements JavaCompiler {
                         source
                     };
             }
-            System.err.println("Arguments:");
-            for (int i = 0; i < args.length; i++) {
-                System.err.println(">"+args[i]+"<");
-            }
+//            System.err.println("Arguments:");
+//            for (int i = 0; i < args.length; i++) {
+//                System.err.println(">"+args[i]+"<");
+//            }
 //            PrintWriter w = new PrintWriter(out);
             compile.invoke(null, new Object[] {args});
 //            w.close();

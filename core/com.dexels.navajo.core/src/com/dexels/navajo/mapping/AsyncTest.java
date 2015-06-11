@@ -66,11 +66,16 @@ public class AsyncTest extends AsyncMappable {
 			if (this.isStopped()) {
 				logger.info("KILLING THREAD...");
 				i = iter + 1;
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					logger.error("Error: ", e);
+				}
 			} else if (this.isInterrupted()) {
 				goToSleep();
 			}
 			if (i % 1000000 == 0)
-//				System.out.print(".");
+				System.out.print(".");
 			result = a;
 		}
 		logger.info("leaving AsyncTest run()");

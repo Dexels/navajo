@@ -164,14 +164,14 @@ public class TslMetaDataHandler implements MetaDataListener {
      */
     private void parseMetaData(XMLElement e) {
         if (!"metadata".equals(e.getName())) {
-           System.err.println("Unknown root tag in metadata: "+e.getName());
+           logger.info("Unknown root tag in metadata: "+e.getName());
            return;
         }
         Vector<XMLElement> v = e.getChildren();
         for (Iterator<XMLElement> iter = v.iterator(); iter.hasNext();) {
             XMLElement element = iter.next();
             if (!"script".equals(element.getName())) {
-                System.err.println("Unknown tag within metadata: "+element.getName());
+            	logger.info("Unknown tag within metadata: "+element.getName());
                 return;
             }
 

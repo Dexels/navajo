@@ -183,11 +183,11 @@ public final class Expression {
        
        String exp = "FormatStringList([/Test/Selection:value], ';')";
        Operand op = Expression.evaluate(exp, doc);
-       System.err.println("result = " + op.value);
-       
-       StringTokenizer tok = new StringTokenizer("1", ",");
-   	   while ( tok.hasMoreTokens()  ) {
-   		   System.err.println(tok.nextToken());
-   	   }
+//       System.err.println("result = " + op.value);
+//       
+//       StringTokenizer tok = new StringTokenizer("1", ",");
+//   	   while ( tok.hasMoreTokens()  ) {
+//   		   System.err.println(tok.nextToken());
+//   	   }
     }
 }

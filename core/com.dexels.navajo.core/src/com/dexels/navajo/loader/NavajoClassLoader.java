@@ -218,7 +218,6 @@ public class NavajoClassLoader extends MultiClassLoader {
     	try {
     		return Class.forName(className, false, this);
     	} catch (ClassNotFoundException cnfe) {
-    		System.err.println("ERROR: COULD NOT FIND CLASS: " + className);
     		throw cnfe;
     	}
     }
@@ -246,7 +245,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     protected final void initializeJarResources() {
 
     	if ( adapterPath == null || !new File(adapterPath).exists() ) {
-    		System.err.println("No adapters found!");
+    		logger.debug("No adapters found!");
     		return;
     	}
     	
@@ -265,7 +264,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     				jarResources = new HashSet<JarResources>();
     				for (int i = 0; i < files.length; i++) {
     					try {
-    						System.err.println("Checking file: "+files[i].getAbsolutePath());
+    						logger.debug("Checking file: "+files[i].getAbsolutePath());
 							JarResources d = new JarResources(files[i]);
 							jarResources.add(d);
 						} catch (Throwable e) {
