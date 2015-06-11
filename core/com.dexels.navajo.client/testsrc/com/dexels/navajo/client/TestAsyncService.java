@@ -72,10 +72,10 @@ public class TestAsyncService {
 	}
 	public static void main(String[] args) throws ClientException {
 		TestAsyncService tas = new TestAsyncService();
-		NavajoClientFactory.getClient().setUsername("ROOT");
-		NavajoClientFactory.getClient().setPassword("bla");
-		NavajoClientFactory.getClient().setServerUrl("http://localhost:9090/navajo/KNZB");
-		Navajo n = NavajoClientFactory.getClient().doSimpleSend("InitAsync");
+		NavajoClientFactory.getClient().setUsername("");
+		NavajoClientFactory.getClient().setPassword("");
+		NavajoClientFactory.getClient().setServerUrl("http://localhost:8080/navajo/KNZB");
+		final Navajo n = NavajoClientFactory.getClient().doSimpleSend("InitAsync");
 		tas.test(n);
 	}
 
