@@ -8,7 +8,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
-import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.resource.ResourceManager;
 
 public interface DispatcherInterface extends ResourceManager {

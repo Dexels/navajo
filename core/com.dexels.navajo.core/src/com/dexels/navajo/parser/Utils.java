@@ -331,7 +331,7 @@ public final class Utils extends Exception {
         } else if ((a instanceof Boolean && b instanceof Boolean)) {
           Boolean ba = (Boolean) a;
           Boolean bb = (Boolean) b;
-          System.err.println("ba = " + ba.booleanValue() + ", bb = " + bb.booleanValue());
+//          System.err.println("ba = " + ba.booleanValue() + ", bb = " + bb.booleanValue());
           return new Integer( (ba.booleanValue() ? 1 : 0 ) + (bb.booleanValue() ? 1 : 0 ));
         }
         else

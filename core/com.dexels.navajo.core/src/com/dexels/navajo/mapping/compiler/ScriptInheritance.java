@@ -386,9 +386,9 @@ public class ScriptInheritance {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
 		String line = null;
-		while ( ( line = br.readLine() ) != null ) {
-			System.err.println(line);
-		}
+//		while ( ( line = br.readLine() ) != null ) {
+//			System.err.println(line);
+//		}
 //		StringWriter writer = new StringWriter();
 //			
 //		BufferedReader br2 = new BufferedReader(new FileReader("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/PageableService.xml"));

@@ -18,87 +18,93 @@ import com.dexels.navajo.script.api.UserException;
 
 public class AsyncTest extends AsyncMappable {
 
-  public double result = 0.0;
-  public double d = 1.0;
-  public int iter = 1000000;
-  
-  private final static Logger logger = LoggerFactory.getLogger(AsyncTest.class);
+	public double result = 0.0;
+	public double d = 1.0;
+	public int iter = 1000000;
 
-  private float ready = (float) 0.0;
+	private final static Logger logger = LoggerFactory
+			.getLogger(AsyncTest.class);
 
-  @Override
-  public void load(Access access) throws UserException, MappableException {
-    System.out.println("in AsyncTest load()");
-  }
+	private float ready = (float) 0.0;
 
-  @Override
-public void kill() {
-    System.out.println("in AsyncTest kill()");
-  }
+	@Override
+	public void load(Access access) throws UserException, MappableException {
+		logger.info("in AsyncTest load()");
+	}
 
-  @Override
-  public void store() throws UserException, MappableException {
-    System.out.println("in AsyncTest store()");
-  }
+	@Override
+	public void kill() {
+		logger.info("in AsyncTest kill()");
+	}
 
-  public void setIter(int i) {
-    this.iter = i;
-  }
+	@Override
+	public void store() throws UserException, MappableException {
+		logger.info("in AsyncTest store()");
+	}
 
-  public void setD(double d) {
-    System.out.println("in AsyncTest setD(), d = " + d);
-    this.d = d;
-  }
+	public void setIter(int i) {
+		this.iter = i;
+	}
 
-  public double getResult() {
-    System.out.println("in AsyncTest getResult()");
-    return result;
-  }
+	public void setD(double d) {
+		logger.info("in AsyncTest setD(), d = " + d);
+		this.d = d;
+	}
 
-  @Override
-  public void run() throws UserException {
-      System.out.println("in AsyncTest run()");
-      double a = 1000000000.0;
-      for (int i = 0; i < iter; i++) {
-        a = a/d;
-        ready = (float) i / (float) (iter+1) * 100;
-        if (this.isStopped()) {
-          System.out.println("KILLING THREAD...");
-          i = iter + 1;
-        } else if (this.isInterrupted()) {
-          goToSleep();
-        }
-        if (i % 1000000 == 0)
-          System.out.print(".");
-        result = a;
-      }
-      System.out.println("leaving AsyncTest run()");
-  }
+	public double getResult() {
+		logger.info("in AsyncTest getResult()");
+		return result;
+	}
 
-  @Override
-public int getPercReady() {
-    return (int) ready;
-  }
+	@Override
+	public void run() throws UserException {
+		logger.info("in AsyncTest run()");
+		double a = 1000000000.0;
+		for (int i = 0; i < iter; i++) {
+			a = a / d;
+			ready = (float) i / (float) (iter + 1) * 100;
+			if (this.isStopped()) {
+				logger.info("KILLING THREAD...");
+				i = iter + 1;
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					logger.error("Error: ", e);
+				}
+			} else if (this.isInterrupted()) {
+				goToSleep();
+			}
+			if (i % 1000000 == 0)
+				System.out.print(".");
+			result = a;
+		}
+		logger.info("leaving AsyncTest run()");
+	}
 
-  @Override
-public void afterRequest() {
-    System.out.println("AsyncTest: in afterReqeust()");
-  }
+	@Override
+	public int getPercReady() {
+		return (int) ready;
+	}
 
-  @Override
-public void beforeResponse(Access access) {
-    System.out.println("AsyncTest: in beforeResponse()");
-  }
+	@Override
+	public void afterRequest() {
+		logger.info("AsyncTest: in afterReqeust()");
+	}
 
-  @Override
-public void afterResponse() {
-    // Wait for couple of seconds.
-    System.out.println("AsyncTest: in afterResponse()");
-    try {
-      Thread.sleep(3000);
-    } catch (Exception e) {
-    	logger.error("Error: ", e);
-    }
-  }
+	@Override
+	public void beforeResponse(Access access) {
+		logger.info("AsyncTest: in beforeResponse()");
+	}
+
+	@Override
+	public void afterResponse() {
+		// Wait for couple of seconds.
+		logger.info("AsyncTest: in afterResponse()");
+		try {
+			Thread.sleep(3000);
+		} catch (Exception e) {
+			logger.error("Error: ", e);
+		}
+	}
 
 }

@@ -209,7 +209,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
 
     @Override
     public void kill() {
-        System.err.println("Calling kill from JMX");
+        logger.warn("Calling kill from JMX");
         myAccess.getCompiledScript().setKill(true);
     }
 
@@ -574,7 +574,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
         while (st.hasMoreTokens()) {
             String element = st.nextToken();
             if (!"..".equals(element)) {
-                System.err.println("Huh? : " + element);
+                logger.warn("Huh? : " + element);
             }
             count++;
         }
@@ -772,7 +772,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
             throw new Exception("Either user or service or both should be specified.");
         }
         String lockName = user + "-" + service + "-" + key;
-        System.err.println("lockname: " + lockName);
+        logger.debug("lockname: " + lockName);
         Lock l = TribeManagerFactory.getInstance().getLock(lockName);
         acquiredLocks.add(l);
 

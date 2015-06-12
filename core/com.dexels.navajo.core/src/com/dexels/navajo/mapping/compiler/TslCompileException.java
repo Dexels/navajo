@@ -8,6 +8,9 @@ package com.dexels.navajo.mapping.compiler;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 /**
@@ -20,6 +23,10 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class TslCompileException extends Exception {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TslCompileException.class);
+	
     /**
 	 * 
 	 */
@@ -89,7 +96,7 @@ public class TslCompileException extends Exception {
         solutions = alternatives;
         startOffset = n.getAttributeOffset(attributeName);
         endOffset = n.getAttributeEndOffset(attributeName);
-        System.err.println("Attribute problem: "+attributeName+" solutions: "+alternatives+" startOffset: "+startOffset+" endOff: "+endOffset);
+        logger.debug("Attribute problem: "+attributeName+" solutions: "+alternatives+" startOffset: "+startOffset+" endOff: "+endOffset);
     }
 	@SuppressWarnings("rawtypes")
 	public void setTagProblem(Map alternatives, XMLElement n) {
@@ -97,7 +104,7 @@ public class TslCompileException extends Exception {
         solutions = alternatives;
         startOffset = n.getStartTagOffset()+1;
         endOffset = startOffset+n.getName().length();
-        System.err.println("Tag problem. solutions: "+alternatives);
+        logger.debug("Tag problem. solutions: "+alternatives);
     }
     
     public boolean isAttributeProblem() {

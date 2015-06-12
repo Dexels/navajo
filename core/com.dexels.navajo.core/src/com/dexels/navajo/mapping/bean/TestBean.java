@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
@@ -18,6 +21,10 @@ public class TestBean implements Mappable {
 	public int num;
 	public double dub;
 	public float flt;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TestBean.class);
+	
 	
 	public String getLastname() {
 		return lastname;
@@ -35,7 +42,7 @@ public class TestBean implements Mappable {
 		SubBean [] beans = new SubBean[2]; 
 		beans[0] = new SubBean();
 		beans[1] = new SubBean();
-		System.err.println("GOT " + beans.length + " sub beans");
+		logger.info("GOT " + beans.length + " sub beans");
 		return beans;
 	}
 	
@@ -55,7 +62,7 @@ public class TestBean implements Mappable {
 	}
 	
 	public void setLastname(String lastname) {
-		System.err.println("In TestBean.setLastName: " + lastname);
+		logger.info("In TestBean.setLastName: " + lastname);
 		this.lastname = lastname;
 	}
 	

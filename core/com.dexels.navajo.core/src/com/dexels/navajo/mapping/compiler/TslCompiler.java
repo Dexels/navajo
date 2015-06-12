@@ -2461,7 +2461,7 @@ public class TslCompiler {
 		while (st.hasMoreTokens()) {
 			String element = st.nextToken();
 			if (!"..".equals(element)) {
-				System.err.println("Huh? : " + element);
+				logger.debug("Huh? : " + element);
 			}
 			count++;
 		}
