@@ -252,7 +252,7 @@ public class TslPreCompiler {
             } else if (navajoScript.startsWith("[/")) {
                 // The navajo script is retrieved from the Indoc or database
                 // result - not supported
-                deps.add(new Dependency(scriptFile, "", Dependency.UNKNOWN_TYPE, getLineNr(expression)));
+                deps.add(new Dependency(scriptFile, "scripts/__unknown__.xml", Dependency.UNKNOWN_TYPE, getLineNr(expression)));
             } else {
                 addNavajoDependency(scriptFile, scriptTenant, deps, navajoScript, scriptFolder, getLineNr(expression));
             }
