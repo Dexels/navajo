@@ -52,7 +52,7 @@ public class SharedMemoryStoreTest {
 
 	@Before
 	public void setUp() throws Exception {
-		si = new SharedMemoryStore(new ConcurrentHashMap<String, SharedStoreEntry>(), new DefaultSharedStoreEntryFactoryImplementation());
+		si = new SharedMemoryStore(new ConcurrentHashMap<Object, Object>(), new DefaultSharedStoreEntryFactoryImplementation());
 	}
 
 

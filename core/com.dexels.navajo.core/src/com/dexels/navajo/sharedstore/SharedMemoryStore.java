@@ -2,7 +2,6 @@ package com.dexels.navajo.sharedstore;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 public class SharedMemoryStore extends AbstractSharedStore implements SharedStoreInterface {
 
-	Map<String, SharedStoreEntry> store = null;
+	Map<Object,Object> store = null;
 	SharedStoreEntryFactory ssf = null;
 	private Map<String,SharedStoreLock> mLocks = new ConcurrentHashMap<String,SharedStoreLock>();
 	
@@ -43,13 +42,13 @@ public class SharedMemoryStore extends AbstractSharedStore implements SharedStor
 		}
 	}
 	
-	public SharedMemoryStore(Map<String, SharedStoreEntry> storeImpl, SharedStoreEntryFactory entryFactory) {
+	public SharedMemoryStore(Map<Object,Object> storeImpl, SharedStoreEntryFactory entryFactory) {
 		store = storeImpl;
 		ssf = entryFactory;
 	}
 	
 	public SharedMemoryStore() {
-		store = new ConcurrentHashMap<String, SharedStoreEntry>();
+		store = new ConcurrentHashMap<Object,Object>();
 		ssf = new DefaultSharedStoreEntryFactoryImplementation();
 	}
 	
@@ -57,19 +56,19 @@ public class SharedMemoryStore extends AbstractSharedStore implements SharedStor
 		ssf = entryFactory;
 	}
 	
-	public void setStoreImplementation(Map<String,SharedStoreEntry> storeImpl) {
+	public void setStoreImplementation(Map<Object,Object> storeImpl) {
 		this.store = storeImpl;
 	}
 	
-	public Map<String, SharedStoreEntry> getStoreImplementation() {
+	public Map<Object, Object> getStoreImplementation() {
 		return this.store;
 	}
 	
 	@Override
 	public void removeAll(String parent) {
-		Iterator<String> entries = new HashSet<String>(store.keySet()).iterator();
+		Iterator<Object> entries = new HashSet<Object>(store.keySet()).iterator();
 		while ( entries.hasNext() ) {
-			String key = entries.next();
+			String key = (String) entries.next();
 			if ( key.startsWith(parent + "/") ) {
 				store.remove(key);
 			}
@@ -102,14 +101,14 @@ public class SharedMemoryStore extends AbstractSharedStore implements SharedStor
 	}
 	
 	protected void removeEntry(String parent, String name) {
-		SharedStoreEntry e = store.get(constructName(parent, name));
+		SharedStoreEntry e = (SharedStoreEntry) store.get(constructName(parent, name));
 		if ( e != null ) {
 			store.remove(constructName(parent, name));
 		}
 	}
 	
 	private SharedStoreEntry getEntry(String parent, String name) {
-		SharedStoreEntry e = store.get(constructName(parent, name));
+		SharedStoreEntry e = (SharedStoreEntry) store.get(constructName(parent, name));
 		if ( e != null ) {
 			return e;
 		}
@@ -223,9 +222,9 @@ public class SharedMemoryStore extends AbstractSharedStore implements SharedStor
 	public String[] getObjects(String parent) {
 		
 		Set<String> entries = new HashSet<String>();
-		Iterator<String> allObjects = store.keySet().iterator();
+		Iterator<Object> allObjects = store.keySet().iterator();
 		while ( allObjects.hasNext() ) {
-			String key = allObjects.next();
+			String key = (String) allObjects.next();
 			// Fetch name part.
 			String name = key.substring(key.lastIndexOf("/") + 1);
 			if ( (parent+"/"+name).equals(key) ) {
@@ -255,11 +254,11 @@ public class SharedMemoryStore extends AbstractSharedStore implements SharedStor
 	@Override
 	public SharedStoreEntry[] getEntries(String parent) {
 		Set<SharedStoreEntry> entries = new HashSet<SharedStoreEntry>();
-		Iterator<String> allObjects = store.keySet().iterator();
+		Iterator<Object> allObjects = store.keySet().iterator();
 		while ( allObjects.hasNext() ) {
-			String key = allObjects.next();
+			String key = (String) allObjects.next();
 			// Fetch name part.
-			SharedStoreEntry sse = store.get(key);
+			SharedStoreEntry sse = (SharedStoreEntry) store.get(key);
 			String name = key.substring(key.lastIndexOf("/") + 1);
 			if ( (parent+"/"+name).equals(key) ) {
 				entries.add(sse);
