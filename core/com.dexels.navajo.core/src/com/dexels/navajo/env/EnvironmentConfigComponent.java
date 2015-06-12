@@ -1,8 +1,13 @@
 package com.dexels.navajo.env;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
 
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +15,10 @@ import org.slf4j.LoggerFactory;
 public class EnvironmentConfigComponent {
 
 	private ConfigurationAdmin configAdmin;
-	
+
+	private Set<Configuration> ownedConfigurations = new HashSet<Configuration>();
+	private final Set<String> resourcePids = new HashSet<String>();
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(EnvironmentConfigComponent.class);
 	
@@ -21,11 +29,14 @@ public class EnvironmentConfigComponent {
 		try {
 			Map<String, String> env = System.getenv();
 			boolean isDev = "true".equals(env.get("DEVELOP_MODE"));
+			Configuration config = null;
 			if (isDev) {
-				configAdmin.getConfiguration("navajo.sharedstore.file");
+				config = configAdmin.getConfiguration("navajo.sharedstore.file",null);
 			} else {
-				configAdmin.getConfiguration("navajo.sharedstore.mongo");
+				config = configAdmin.getConfiguration("navajo.sharedstore.mongo",null);
 			}
+			config.update(new Hashtable<String, Object>());
+			
 		} catch (IOException e) {
 			logger.error("Error: ", e);
 		}
