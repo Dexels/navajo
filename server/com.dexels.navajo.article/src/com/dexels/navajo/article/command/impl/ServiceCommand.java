@@ -13,6 +13,7 @@ import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.command.ArticleCommand;
+import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -93,13 +94,18 @@ public class ServiceCommand implements ArticleCommand {
 		return null;
 	}
 
-	protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n,
- String instance) throws ArticleException {
+	protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n, String instance) throws ArticleException {
         try {
             Navajo result = null;
             if (runtime.getURL() != null && !runtime.getURL().equals("")) {
-                result = NavajoClientFactory.getClient().doSimpleSend(n, runtime.getURL(), name, n.getHeader().getRPCUser(),
-                        n.getHeader().getRPCPassword(), -1);
+                ClientInterface client = NavajoClientFactory.getClient();
+                client.setServerUrl(runtime.getURL());
+                client.setUsername(n.getHeader().getRPCUser());
+                client.setPassword(n.getHeader().getRPCPassword());
+                client.setRetryAttempts(0);
+                 
+                result = client.doSimpleSend(n, name);
+
             } else {
                 if (localClient == null) {
                     throw new ArticleException("Navajo server not (yet?) initialized");
