@@ -46,9 +46,11 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	private final ObjectNode rootNode;
 
 	private final String instance;
+    private String url;
 
 	private final Map<String, Object> userAttributes;
 	private final Token token;
+
 
 	protected BaseRuntimeImpl(String articleName, XMLElement article, Set<String> suppliedScopes, String instance) {
 		rootNode = mapper.createObjectNode();
@@ -175,6 +177,16 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	public String getInstance() {
 		return instance;
 	}
+	
+	@Override
+    public String getURL() {
+        return url;
+    }
+	
+	@Override
+    public void setURL(String url) {
+        this.url = url;
+    }
 	
 	@Override
 	public void execute(ArticleContext context) throws ArticleException, DirectOutputThrowable {

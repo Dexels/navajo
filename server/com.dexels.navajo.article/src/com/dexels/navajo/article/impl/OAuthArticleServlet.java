@@ -93,6 +93,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 		String username = cr.getUsername();
 		String pathInfo = req.getPathInfo();
 		String instance = cr.getInstance();
+		String url = cr.getURL();
 		logger.info("clientInstance: "+instance);
 		if(instance==null) {
 			instance = determineInstanceFromRequest(req);
@@ -107,6 +108,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 			try {
 				runtime.setUsername(cr.getUsername());
 				runtime.setPassword(cr.getPassword());
+				runtime.setURL(url);
 				runtime.execute(context);
 				resp.setContentType("application/json; charset=utf-8");
 			} catch (ArticleException e) {
