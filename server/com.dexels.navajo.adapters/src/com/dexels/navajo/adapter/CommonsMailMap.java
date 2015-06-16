@@ -130,6 +130,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 	 */
 	public void sendMail() throws UserException {
 		try {
+			logger.info("Sending mail to: "+to+" subject: "+subject);
 			// Create the email message and fill the basics
 			HtmlEmail email = getNewHtmlEmail();
 			fillHtmlEmailBasics(email);
@@ -153,7 +154,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 					}
 					File fl = new File(fileName);
 					URL url = fl.toURI().toURL();
-					
+					logger.info("Using url: "+url);
 					if (contentDisposition != null && contentDisposition.equalsIgnoreCase("Inline")) {
 					    // embed the image and get the content id
 					    inlineImages.add(email.embed(url, userFileName));
@@ -161,6 +162,8 @@ public class CommonsMailMap implements Mappable, Queuable {
 						email.attach(this.getEmailAttachment(fileName, url, contentDisposition, userFileName, userFileName));
 					}
 				}
+			} else {
+				logger.info("No attachments");
 			}
 		  
 		  // Replace any inline image tags with the created ones
@@ -277,7 +280,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 		if (getSmtpUser() != null && !"".equals(getSmtpUser())) {
 			// Use auth
 			props.put("mail.smtp.auth", "true");
-			props.put("mail.debug", "true");
+//			props.put("mail.debug", "true");
 			if (useEncryption) {
 				logger.info("Using encrypt + auth. ");
 
