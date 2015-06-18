@@ -249,6 +249,7 @@
 			<value name="smtpPass" type="string" required="false" direction="in" />
 			<value name="useEncryption" type="boolean" required="false" direction="in" />
             <value name="mailPort" type="string" required="false" direction="in" />
+			<value name="debug" type="boolean" required="false" direction="in" />
 		</values>
 	</map>
 	<map abstract="true">
