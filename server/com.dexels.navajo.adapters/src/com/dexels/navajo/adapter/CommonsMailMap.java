@@ -28,6 +28,7 @@ import com.dexels.navajo.mapping.DependentResource;
 import com.dexels.navajo.mapping.GenericDependentResource;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Debugable;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;
@@ -35,7 +36,7 @@ import com.dexels.navajo.server.enterprise.queue.Queuable;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.util.AuditLog;
 
-public class CommonsMailMap implements Mappable, Queuable {
+public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	private static final long serialVersionUID = 5625969473841204407L;
 	private final static Logger logger = LoggerFactory.getLogger(CommonsMailMap.class);
 	@SuppressWarnings("unused")
@@ -67,6 +68,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 	public AttachementMap[] multipleAttachments = null;
 	public AttachementMap attachment = null;
 	private Integer port = null;
+	private boolean debug;
 
 	
 
@@ -133,6 +135,9 @@ public class CommonsMailMap implements Mappable, Queuable {
 			logger.info("Sending mail to: "+to+" subject: "+subject);
 			// Create the email message and fill the basics
 			HtmlEmail email = getNewHtmlEmail();
+			if(debug) {
+				email.setDebug(debug);
+			}
 			fillHtmlEmailBasics(email);
 		    // add attachments
 			List<String> inlineImages = new ArrayList<String>();
@@ -170,6 +175,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 		  bodyText = replaceInlineImageTags(bodyText, inlineImages);
 		  // Finally set the complete html
 		  email.setHtmlMsg(bodyText);
+		  
 
 		  // set the alternative message
 		  email.setTextMsg(this.getNonHtmlText());
@@ -581,5 +587,15 @@ public class CommonsMailMap implements Mappable, Queuable {
 			attachments = new ArrayList<AttachementMap>();
 		}
 		attachments.add(m);
+	}
+
+	@Override
+	public void setDebug(boolean b) {
+		this.debug = b;
+	}
+
+	@Override
+	public boolean getDebug() {
+		return this.debug;
 	}
 }
