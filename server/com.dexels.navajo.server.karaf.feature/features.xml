@@ -23,9 +23,9 @@
         <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/2.0.0</bundle>
     </feature>    
 
-	<feature version="1.0.29" start-level="80" name="dexels.oauth" resolver="(obr)">
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/5.0.0</bundle>
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.17</bundle>
+	<feature version="1.0.30" start-level="80" name="dexels.oauth" resolver="(obr)">
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/5.1.0</bundle>
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.18</bundle>
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.32</bundle>
 	</feature>
 
