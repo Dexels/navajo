@@ -3,25 +3,25 @@
 	name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
 
-    <feature version="1.1.15" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
+    <feature version="1.1.16" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
         <feature version="[3.0.0,4)">eventadmin</feature>
         <feature version="[3.0.0,4)">scr</feature>
         <feature version="[3.0.0,4)">pax-http</feature>
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf.featuresync/1.0.4</bundle>
-       <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/6.2.1</bundle>
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.1.4</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf.featuresync/1.1.2</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/6.2.1</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.1.7</bundle>
         <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.file/1.0.25</bundle>
         <bundle dependency="true">mvn:com.dexels.thirdparty/javaewah/0.7.9</bundle>
         <bundle dependency="true">mvn:com.jcraft/jsch-bundle/0.1.50</bundle>
         <bundle dependency="true">mvn:org.eclipse.jgit/org.eclipse.jgit/3.6.0.201411121045-m1</bundle>
         <bundle dependency="true">mvn:commons-io/commons-io/2.4</bundle>
-        <bundle dependency="true">mvn:org.codehaus.jackson/jackson-mapper-acoresl/1.9.11</bundle>
+        <bundle dependency="true">mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
         <bundle dependency="true">mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
         <bundle dependency="true">mvn:org.apache.httpcomponents/httpcore-osgi/4.3.3</bundle>
         <bundle dependency="true">mvn:org.apache.httpcomponents/httpclient-osgi/4.3.6</bundle>
         <bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.6.9</bundle>
-        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/2.0.0</bundle>
-    </feature>    
+        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/3.0.1</bundle>
+    </feature>  
 
 	<feature version="1.0.31" start-level="80" name="dexels.oauth" resolver="(obr)">
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/5.1.0</bundle>
