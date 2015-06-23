@@ -143,6 +143,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 			List<String> inlineImages = new ArrayList<String>();
 			if (this.attachments != null) {
 				for (int i = 0; i < this.attachments.size(); i++) {
+					logger.info("# of attachments found: "+attachments.size());
 					AttachmentMapInterface am = this.attachments.get(i);
 					String file = am.getAttachFile();
 					String userFileName = am.getAttachFileName();
@@ -170,10 +171,12 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 			} else {
 				logger.info("No attachments");
 			}
+		logger.info("Setting body, before replace: "+bodyText);
 		  
 		  // Replace any inline image tags with the created ones
 		  bodyText = replaceInlineImageTags(bodyText, inlineImages);
 		  // Finally set the complete html
+		  logger.info("Setting body: "+bodyText);
 		  email.setHtmlMsg(bodyText);
 		  
 
