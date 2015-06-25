@@ -50,7 +50,8 @@ public class CallService extends FunctionInterface {
 				DispatcherInterface dispatcher = DispatcherFactory.getInstance();
 				Navajo input = getNavajo().copy();
 				input.getHeader().setRPCName(serviceName);
-				response = dispatcher.handle(input, true);
+				response = dispatcher.handle(input, this.getAccess().getTenant(), true);
+				
 				getNavajo().addNavajo(serviceName, response);
 			}
 			
