@@ -47,7 +47,7 @@ public interface TribeManagerInterface {
 	 * @return
 	 * @throws Exception
 	 */
-	public Navajo forward(Navajo in) throws Exception;
+	public Navajo forward(Navajo in, String tenant) throws Exception;
 	
 	/**
 	 * Forward a Navajo Request to a SPECIFIC other Tribal Member.
@@ -56,7 +56,7 @@ public interface TribeManagerInterface {
 	 * @return
 	 * @throws Exception
 	 */
-	public Navajo forward(Navajo in, Object address) throws Exception;
+	public Navajo forward(Navajo in, Object address, String tenant) throws Exception;
 	
 	
 	/**
@@ -64,7 +64,7 @@ public interface TribeManagerInterface {
 	 * @param in
 	 * @throws Exception
 	 */
-	public void broadcast(Navajo in) throws Exception;
+	public void broadcast(Navajo in, String tenant) throws Exception;
 	
 	/**
 	 * Broadcast a SmokeSignal to ALL Tribal Members.

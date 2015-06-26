@@ -64,10 +64,10 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.4.18</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.0.14</bundle>
 	</feature>
-	<feature resolver="(obr)" name='navajo.function' version='3.0.9'
+	<feature resolver="(obr)" name='navajo.function' version='3.0.10'
 		start-level='80'>
 		<feature version="[3.0.34,4)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.3.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.3.6</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.log' version='1.0.0'
@@ -275,10 +275,10 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.39' start-level='81'>
+		version='3.0.40' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.2.16</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.2.12</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.2.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.12</bundle>
 	</feature>
 

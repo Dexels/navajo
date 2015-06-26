@@ -842,7 +842,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         int accessSetSize = accessSet.size();
         setRequestRate(clientInfo, accessSetSize);
 
-        Navajo result = handleCallbackPointers(inMessage);
+        Navajo result = handleCallbackPointers(inMessage,instance);
         if (result != null) {
             return result;
         }
@@ -1127,7 +1127,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
 
     @Override
-    public Navajo handleCallbackPointers(Navajo inMessage) {
+    public Navajo handleCallbackPointers(Navajo inMessage, String tenant) {
         // Check whether unkown callbackpointers are present that need to be
         // handled by another instance.
         if (inMessage.getHeader().hasCallBackPointers()) {
@@ -1141,7 +1141,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     logger.info("ASYNC OWNER: " + rasa.getOwnerOfRef() + "(" + rasa.getHostNameOwnerOfRef()
                             + ")" + " FOR REF " + allRefs[0]);
                     try {
-                        Navajo result = TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef());
+                        Navajo result = TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef(),tenant);
                         return result;
                     } catch (Exception e) {
                         logger.error("Error: ", e);

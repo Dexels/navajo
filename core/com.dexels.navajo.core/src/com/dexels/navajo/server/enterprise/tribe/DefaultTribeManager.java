@@ -45,12 +45,12 @@ public class DefaultTribeManager implements TribeManagerInterface {
 	}
 	
 	@Override
-	public Navajo forward(Navajo in) throws Exception {
+	public Navajo forward(Navajo in,String tenant) throws Exception {
 		return null;
 	}
 
 	@Override
-	public void broadcast(Navajo in) throws Exception {
+	public void broadcast(Navajo in,String tenant) throws Exception {
 		
 	}
 
@@ -106,7 +106,7 @@ public class DefaultTribeManager implements TribeManagerInterface {
 	}
 
 	@Override
-	public Navajo forward(Navajo in, Object address) throws Exception {
+	public Navajo forward(Navajo in, Object address,String tenant) throws Exception {
 		return null;
 	}
 
