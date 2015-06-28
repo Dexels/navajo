@@ -18,7 +18,6 @@ public abstract class AbstractSharedStore implements SharedStoreInterface {
     		return name;
     	}
         String tenantSpecificName = SharedStoreInterface.TENANT_PREFIX + tenant + SharedStoreInterface.TENANT_POSTFIX + name;
-    	logger.debug("Determined tenant specific name: "+tenantSpecificName);
 		return tenantSpecificName;
     }
 
@@ -47,8 +46,6 @@ public abstract class AbstractSharedStore implements SharedStoreInterface {
     @Override
     public OutputStream getOutputStream(String tenant, String parent, String name, boolean requireLock)
             throws SharedStoreException {
-    	System.err.println("outputStream: "+name+" tenant: "+tenant+" parent: ");
-
     	return getOutputStream(parent, getTenantSpecificName(tenant, name), requireLock);
     }
 
