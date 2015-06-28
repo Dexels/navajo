@@ -3477,7 +3477,7 @@ public class TslCompiler {
 
 			if (broadcast) {
 				result.append("try { \n");
-				result.append("   TribeManagerFactory.getInstance().broadcast(inDoc);\n");
+				result.append("   TribeManagerFactory.getInstance().broadcast(inDoc, access.getTenant());\n");
 				result.append("} catch (Exception e) { \n");
 				result.append("   e.printStackTrace(System.err);\n");
 				result.append("}\n");
