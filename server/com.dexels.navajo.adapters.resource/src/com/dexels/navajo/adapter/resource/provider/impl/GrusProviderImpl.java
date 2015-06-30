@@ -134,7 +134,7 @@ public class GrusProviderImpl implements GrusProvider {
 			return dataSource;
 		}
 		logger.warn("No datasource found for instance: " + instance
-				+ " and name: " + name+ " datasource keys: "+defaultDataSources.keySet());
+				+ " and name: " + name+ " datasource keys: "+defaultDataSources.keySet(), new Exception());
 		return null;
 	}
 
