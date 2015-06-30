@@ -126,7 +126,9 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				  }
 			  }
 			  throw new ServletException(e);
-		  } 
+		  } finally {
+			  MDC.clear();
+		  }
 	  }
 
 	private void resumeContinuation() {
