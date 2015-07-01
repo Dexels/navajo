@@ -275,9 +275,9 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.43' start-level='81'>
+		version='3.0.44' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.2.20</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.2.22</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.2.16</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.12</bundle>
 	</feature>
@@ -308,9 +308,9 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.dbreplication'
-		version='3.0.5' start-level='81'>
+		version='3.0.6' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.enterprise.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.dbreplication/3.1.6</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.dbreplication/3.1.8</bundle>
 	</feature>
 
 

@@ -234,6 +234,10 @@ public final class Access implements java.io.Serializable, Mappable {
      *            properties of mergedDoc have precedence over original.
      */
     public void setMergedDoc(Navajo mergedDoc, boolean append) {
+        if (mergedDoc == null) {
+            this.mergedDoc = null;
+            return;
+        }
 
         if (outputDoc != null) {
             try {
@@ -245,10 +249,6 @@ public final class Access implements java.io.Serializable, Mappable {
             } catch (Exception e) {
                 logger.error("Exception on merging documents: {}", e);
             }
-            return;
-        }
-        if (mergedDoc == null) {
-            this.mergedDoc = null;
             return;
         }
         if (this.mergedDoc == null) {
