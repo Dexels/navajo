@@ -453,15 +453,18 @@ public class GenericHandler extends ServiceHandler {
 
         try {
             // Should method getCompiledNavaScript be fully synced???
-        	CompiledScriptInterface cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, false);
-        	if(cso!=null) {
-        		boolean dirty = cso.hasDirtyDependencies(access);
-        		if(dirty) {
-                	cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName,true);
-            		logger.warn(">>>>>>>>>>>>>>>> dirty script!");
-        		}
-        	}
-        	//(access.rpcName);
+        	CompiledScriptInterface cso;
+        	synchronized (this) {
+				cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, false);
+				if (cso != null) {
+					boolean dirty = cso.hasDirtyDependencies(access);
+					if (dirty) {
+						cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, true);
+						logger.warn(">>>>>>>>>>>>>>>> dirty script!");
+					}
+				}
+			}
+			//(access.rpcName);
         	if(cso==null) {
         		if(Version.osgiActive()) {
         			logger.warn("Script not found from OSGi registry while OSGi is active");
