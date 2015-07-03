@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Core
 Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.6.4
+Bundle-Version: 3.6.5.qualifier
 Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
 Navajo-Name: Core
 Eclipse-ExtensibleAPI: true
