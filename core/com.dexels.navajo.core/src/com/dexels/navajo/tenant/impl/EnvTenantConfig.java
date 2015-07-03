@@ -17,16 +17,24 @@ public class EnvTenantConfig implements TenantConfig {
 	private final Set<String> tenants = new HashSet<String>();
 	private final Set<String> mastertenants = new HashSet<String>();
 	
+	private boolean wildcard = false;
+	
 	private final static Logger logger = LoggerFactory
 			.getLogger(EnvTenantConfig.class);
 	
 	@Override
 	public boolean isMasterForTenant(String tenant) {
+		if(wildcard) {
+			return true;
+		}
 		return mastertenants.contains(tenant);
 	}
 
 	@Override
 	public Set<String> isMasterForTenants() {
+		if(wildcard) {
+			return Collections.unmodifiableSet(tenants);
+		}
 		return Collections.unmodifiableSet(mastertenants);
 	}
 
@@ -46,7 +54,8 @@ public class EnvTenantConfig implements TenantConfig {
 		}
 		String tenantlist = System.getenv("TENANT_MASTER");
 		if(tenantlist==null) {
-			logger.info("No setup for task tenants, ignoring");
+			logger.info("No setup for task tenants, setting wildcard");
+			this.wildcard = true;
 			return;
 		}
 		String parts[] = tenantlist.split(",");
@@ -59,6 +68,7 @@ public class EnvTenantConfig implements TenantConfig {
 		logger.info("Deactivate env-based tenant config");
 		tenants.clear();
 		mastertenants.clear();
+		wildcard = false;
 		
 	}
 
