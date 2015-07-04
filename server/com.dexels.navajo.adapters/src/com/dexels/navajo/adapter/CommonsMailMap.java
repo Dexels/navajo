@@ -182,6 +182,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 
 		  // set the alternative message
 		  email.setTextMsg(this.getNonHtmlText());
+			logger.info("Sending mail to "+to+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
 
 		  // send the email
 		  email.send();
