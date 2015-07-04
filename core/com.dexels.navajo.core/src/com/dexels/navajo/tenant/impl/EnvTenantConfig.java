@@ -58,6 +58,10 @@ public class EnvTenantConfig implements TenantConfig {
 			this.wildcard = true;
 			return;
 		}
+		if(tenantlist.equals("-")) {
+			logger.info("Tenant master operations blocked. No tasks/workflows will be activated");
+			return;
+		}
 		String parts[] = tenantlist.split(",");
 		for (String tenant : parts) {
 			mastertenants.add(tenant);
