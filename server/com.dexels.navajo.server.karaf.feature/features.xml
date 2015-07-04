@@ -48,7 +48,7 @@
 		
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.3.2'
+	<feature resolver="(obr)" name='navajo.core' version='3.3.3'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,4)">pax-http</feature>
@@ -61,7 +61,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.5.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.2.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/2.0.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.6.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.6.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.0.14</bundle>
 	</feature>
 	<feature resolver="(obr)" name='navajo.function' version='3.0.10'
@@ -100,10 +100,10 @@
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.adapter' version='3.0.25'
+	<feature resolver="(obr)" name='navajo.adapter' version='3.0.26'
 		start-level='81'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.1.22</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.1.24</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.kml' version='3.0.4'
@@ -275,9 +275,9 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.48' start-level='81'>
+		version='3.0.49' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.2.30</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.2.32</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.2.16</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.13</bundle>
 	</feature>
