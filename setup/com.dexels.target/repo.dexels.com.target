@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1477">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1482">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
@@ -24,8 +24,8 @@
 <repository location="http://repo.dexels.com/eclipse/jetty8"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.52.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.52"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.53.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.53"/>
 </location>
 </locations>
 <includeBundles>
@@ -177,10 +177,12 @@
 <plugin id="org.apache.servicemix.bundles.jsch"/>
 <plugin id="org.apache.servicemix.bundles.junit"/>
 <plugin id="org.apache.servicemix.bundles.lucene"/>
+<plugin id="org.apache.servicemix.bundles.saaj-impl"/>
 <plugin id="org.apache.servicemix.bundles.xalan"/>
 <plugin id="org.apache.servicemix.bundles.xerces"/>
 <plugin id="org.apache.servicemix.bundles.xmlresolver"/>
 <plugin id="org.apache.servicemix.specs.activation-api-1.1"/>
+<plugin id="org.apache.servicemix.specs.saaj-api-1.3"/>
 <plugin id="org.apache.sshd.core"/>
 <plugin id="org.apache.tika.bundle"/>
 <plugin id="org.apache.tika.core"/>
@@ -235,6 +237,8 @@
 <plugin id="org.jboss.netty"/>
 <plugin id="org.jgroups"/>
 <plugin id="org.jledit.core"/>
+<plugin id="org.jvnet.mimepull"/>
+<plugin id="org.jvnet.staxex.stax-ex"/>
 <plugin id="org.kjkoster.zapcat"/>
 <plugin id="org.mongodb.mongo-java-driver"/>
 <plugin id="org.ops4j.base.io"/>
