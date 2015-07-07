@@ -152,7 +152,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 			}
 			clearThreadLocal(true);
 			String instance = getRequest().getInstance();
-			logger.info("instance: "+instance);
 			if(instance!=null && globalManagerInstance!=null) {
 
 				GlobalManager gm = globalManagerInstance.getGlobalManager(instance);
