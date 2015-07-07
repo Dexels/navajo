@@ -619,38 +619,7 @@
 			</method>
 		</methods>
 	</map>
-	<!-- com.dexels.navajo.mapping.bean.ServiceMapper -->
-	<!-- This one should be declared in navajo's own adapters. I think there is no problem now, as NavajoAdapters 
-		uses a filthy DynamicImport flag -->
-	<!-- <map> <tagname>service</tagname> <object>com.dexels.navajo.mapping.bean.ServiceMapper</object> 
-		<values> <value name="serviceClass" type="string" required="true" direction="in"/> <value name="serviceMethod" 
-		type="string" required="true" direction="in"/> </values> <methods> <method name="invoke"> <param 
-		name="value" field="invoke" type="boolean" required="automatic" value="true"/> </method> </methods> 
-		</map> -->
-	<!-- SOAP adapter -->
-	<map>
-		<tagname>soap</tagname>
-		<object>com.dexels.navajo.adapter.SOAPMap</object>
-		<values>
-			<value name="soapAction" type="string" required="false" direction="in" />
-			<value name="url" type="string" required="false" direction="in" />
-		</values>
-		<methods>
-			<method name="addNamespace">
-				<param name="value" field="namespace" type="string" required="true" />
-			</method>
-			<method name="requestBody">
-				<param name="value" field="requestBody" type="binary" required="true" />
-			</method>
-			<method name="request">
-				<param name="header" field="requestHeader" type="binary" required="false" />
-				<param name="value" field="requestBody" type="binary" required="true" />
-			</method>
-			<method name="doSend">
-				<param name="value" field="doSend" type="boolean" required="automatic" value="true" />
-			</method>
-		</methods>
-	</map>
+
 	<!-- TmlToXml adapter -->
 	<map>
 		<tagname>tml2xml</tagname>
