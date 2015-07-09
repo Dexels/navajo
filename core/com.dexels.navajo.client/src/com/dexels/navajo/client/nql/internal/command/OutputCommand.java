@@ -10,7 +10,7 @@ public class OutputCommand implements NQLCommand {
 
 	private String path = null;
 	@Override
-	public void execute(NQLContext context, OutputCallback callback) throws ClientException,NavajoException {
+	public void execute(NQLContext context,String tenant, String username, String password, OutputCallback callback) throws ClientException,NavajoException {
 		context.output(path);
 	}
 

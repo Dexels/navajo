@@ -12,7 +12,7 @@ public class FormatCommand implements NQLCommand {
 
 	private String format = null;
 	@Override
-	public void execute(NQLContext context, OutputCallback callback) throws ClientException,NavajoException, IOException {
+	public void execute(NQLContext context,String tenant, String username, String password, OutputCallback callback) throws ClientException,NavajoException, IOException {
 		context.format(format,callback);
 	}
 
