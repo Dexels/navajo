@@ -42,10 +42,10 @@
         <result />
     </function>
 	<function name="CallService" class="com.dexels.navajo.functions.CallService">
-		<description>Calls a service using request Navajo and evaluates an
-			expression
+		<description>Calls a service using request Navajo and either evaluates an
+			expression (if given) or returns the response document as a Binary xml
 		</description>
-		<input>string,string</input>
+		<input>string,string|empty</input>
 		<result>any</result>
 	</function>
 	<function name="CheckDate" class="com.dexels.navajo.functions.CheckDate">
@@ -199,13 +199,6 @@
 		</description>
 		<input>string</input>
 		<result>string</result>
-	</function>
-	<function name="ExecuteScript" class="com.dexels.navajo.functions.ExecuteScript">
-		<description>ExecuteScript is used execute a Navajo script, the result
-			is a Binary (xml) object
-		</description>
-		<input />
-		<result />
 	</function>
 	<function name="Exists" class="com.dexels.navajo.functions.Exists">
 		<description>Evaluates a condition (expression evaluating to a
