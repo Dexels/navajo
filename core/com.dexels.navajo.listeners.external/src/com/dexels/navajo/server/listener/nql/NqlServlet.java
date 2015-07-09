@@ -60,7 +60,7 @@ public class NqlServlet extends HttpServlet {
 		String server = req.getParameter("server");
 		String query = req.getParameter("query");
 		String ping = req.getParameter("ping");
-
+		String tenant = req.getParameter("tenant");
 		if (ping != null) {
 			if (!checkPing(username, resp)) {
 				throw new ServletException("ping failed.");
@@ -76,7 +76,8 @@ public class NqlServlet extends HttpServlet {
 		nc.setNavajoContext(getClientContext());
 		
 		try {
-			nc.executeCommand(query,new OutputCallback() {
+			nc.executeCommand(query,tenant,username, password, 
+					new OutputCallback() {
 
 				@Override
 				public void setOutputType(String mime) {
