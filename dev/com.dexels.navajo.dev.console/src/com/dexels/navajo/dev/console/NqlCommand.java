@@ -19,11 +19,11 @@ public class NqlCommand extends ConsoleCommand {
 	}
 
 	 public void nql(final CommandSession session) {
-		 nql(session,"service:club/InitSearchClubs|ClubSearch/ShortName:Hoek|service:club/ProcessSearchClubs|output:Club|format:csv");
+		 nql(session,null,"service:club/InitSearchClubs|ClubSearch/ShortName:Hoek|service:club/ProcessSearchClubs|output:Club|format:csv");
 	 }
 	
 		@Descriptor(value = "execute an nql command") 
-	 public void nql(final CommandSession session, String command) {
+	 public void nql(final CommandSession session, String tenant,  String command) {
 //		 List<NQLCommand> commands = nqlContext.parseCommand(command);
 		 final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		 
@@ -45,7 +45,7 @@ public class NqlCommand extends ConsoleCommand {
 			}
 		};
 		 try {
-			nqlContext.executeCommand(command, oc);
+			nqlContext.executeCommand(command,tenant,"unknown","unknown", oc);
 		} catch (NavajoException e) {
 			e.printStackTrace(session.getConsole());
 		} catch (ClientException e) {

@@ -47,10 +47,10 @@ public class CallServiceTag extends BaseNavajoTag {
 		logger.debug("Calling service: "+myService);
 		try {
 			if (myNavajo==null) {
-				getNavajoContext().callService(myService);
+				getNavajoContext().callService(myService,null);
 			} else {
 				Navajo navajo = getNavajoContext().getNavajo(myNavajo);
-				getNavajoContext().callService(myService, navajo);
+				getNavajoContext().callService(myService, null,null,null, navajo);
 			}
 		} catch (ClientException e) {
 			throw new JspException("Navajo service error while calling service: "+myService,e);
