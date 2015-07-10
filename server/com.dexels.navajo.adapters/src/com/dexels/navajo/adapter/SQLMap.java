@@ -58,6 +58,7 @@ import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.AuditLog;
+import com.dexels.navajo.version.Version;
 
 /**
  * Title:        Navajopa
@@ -338,6 +339,10 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	@Deprecated
 	public void setReload(String datasourceName) throws MappableException, UserException {
 
+		if(Version.osgiActive()) {
+			// this method makes no sense in OSGi
+			return;
+		}
 		// synchronized ( semaphore ) {
 		if (debug) {
 			Access.writeToConsole(myAccess, "SQLMAP setReload(" + datasourceName + ") called!\n");
