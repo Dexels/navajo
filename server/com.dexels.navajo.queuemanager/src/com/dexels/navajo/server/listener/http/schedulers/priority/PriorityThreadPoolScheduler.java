@@ -148,22 +148,27 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	public void activate(Map<String,Object> params ) {
 		logger.info("Activating prio...");
 		try {
-			Integer normalPoolSize = (Integer) params.get("normalPoolSize");
-			if(normalPoolSize==null) {
-				normalPoolSize = 14;
-			}
-			Integer priorityPoolSize = (Integer) params.get("priorityPoolSize");
-			if(priorityPoolSize==null) {
-				priorityPoolSize = 14;
-			}
-			Integer systemPoolSize = (Integer) params.get("systemPoolSize");
-			if(systemPoolSize==null) {
-				systemPoolSize = 14;
-			}
+			Integer normalPoolSize = extractInt(params,"normalPoolSize");
+			Integer priorityPoolSize = extractInt(params,"priorityPoolSize");
+			Integer systemPoolSize = extractInt(params,"systemPoolSize");
 			createPools(normalPoolSize,priorityPoolSize,systemPoolSize);
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
 		}
+	}
+
+	private Integer extractInt(Map<String, Object> params, String key) {
+		Object value = params.get(key);
+		if(value==null) {
+			return DEFAULT_POOL_SIZE;
+		}
+		if(value instanceof Integer) {
+			return (Integer) params.get(key);
+		}
+		if(value instanceof String) {
+			return Integer.parseInt((String) value);
+		}
+		return DEFAULT_POOL_SIZE;
 	}
 	
 	public void deactivate() {
