@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
 import java.util.List;
-
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -743,5 +743,20 @@ public class TestMessage {
 	  
   }
   
+	
+	@Test
+	public void testValueMap() {
+		Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message.xml"));
+		Message m = n.getMessage("SimpleMessage");
+		Map<String,Object> vv = m.getValueMap();
+		Assert.assertNotNull(vv);
+		Object pString = vv.get("pString");
+		Assert.assertNotNull(pString);
+		Assert.assertTrue(pString instanceof String);
+		Object pBoolean = vv.get("pBoolean");
+		Assert.assertNotNull(pBoolean);
+		Assert.assertTrue(pBoolean instanceof Boolean);
+		Assert.assertEquals(3,vv.size());
+	}
 
 }
