@@ -18,7 +18,7 @@ public class BasicNavajoServerTests extends BasicClientTest {
 
 	@Test
 	public void testAlive() throws Exception {
-		Navajo n = myClient.doSimpleSend("navajo_ping");
+		Navajo n = myClient.doSimpleSend("NavajoPing");
 		Assert.assertNotNull(n.getMessage("ping"));
 	}
 
