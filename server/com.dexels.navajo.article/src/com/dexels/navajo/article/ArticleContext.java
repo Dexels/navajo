@@ -22,7 +22,7 @@ public interface ArticleContext {
 	
 	public List<String> listArticles();
 	
-	public void writeArticleMeta(String name,ObjectNode rootNode, ObjectMapper mapper) throws ArticleException, IOException;
+	public void writeArticleMeta(String name,ObjectNode rootNode, ObjectMapper mapper, boolean extended) throws ArticleException, IOException;
 
 	public Map<String,Object> getScopes(String token) throws TokenException;
 }

@@ -34,6 +34,11 @@ public abstract class BaseContextImpl implements ArticleContext {
 	private final Map<String, ArticleCommand> commands = new HashMap<String, ArticleCommand>();
 	private NavajoIOConfig config;
 	private TokenStore tokenStore;
+	
+	private static String ARTICLE_TYPE = "type";
+	private static String ARTICLE_TYPE_QUERY = "query";
+	private static String ARTICLE_TYPE_FORM = "form";
+	private static String ARTICLE_TYPE_DISPLAY = "display";
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseContextImpl.class);
@@ -184,7 +189,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 	}
 
 	public void interpretMeta(XMLElement article, ObjectMapper mapper,
-			ObjectNode articleNode) throws ArticleException {
+			ObjectNode articleNode, boolean extended) throws ArticleException {
 
 		String outputType = article.getStringAttribute("output");
 		if (outputType != null) {
@@ -199,6 +204,13 @@ public abstract class BaseContextImpl implements ArticleContext {
 			}
 			articleNode.put("scopes", scopeArgs);
 		}
+		
+		String description = article.getStringAttribute("description");
+		if (extended && description != null && description.length() != 0) {
+			articleNode.put("description", description);
+		}
+		
+		articleNode.put(ARTICLE_TYPE, article.getStringAttribute(ARTICLE_TYPE, ARTICLE_TYPE_DISPLAY));
 
 		XMLElement argTag = article.getChildByTagName("_arguments");
 		ArrayNode inputArgs = mapper.createArrayNode();
@@ -263,7 +275,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 	}
 
 	@Override
-	public void writeArticleMeta(String name, ObjectNode w, ObjectMapper mapper)
+	public void writeArticleMeta(String name, ObjectNode w, ObjectMapper mapper, boolean extended)
 			throws ArticleException {
 		File in = resolveArticle(name);
 		FileReader fr = null;
@@ -274,7 +286,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 			XMLElement x = new CaseSensitiveXMLElement();
 			x.parseFromReader(fr);
 			article.put("name", name);
-			interpretMeta(x, mapper, article);
+			interpretMeta(x, mapper, article, extended);
 		} catch (IOException e) {
 			logger.error("Problem parsing article: ", e);
 		} finally {
