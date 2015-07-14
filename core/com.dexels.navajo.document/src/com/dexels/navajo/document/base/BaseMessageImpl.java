@@ -2122,4 +2122,16 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		return myMethod;
 	}
 
+	@Override
+	public Map<String, Object> getValueMap() {
+		Map<String,Object> result = new HashMap<String, Object>();
+		for(Map.Entry<String,Property> e : propertyMap.entrySet()) {
+			Object o = e.getValue().getTypedValue();
+			if(o!=null) {
+				result.put(e.getKey(), o);
+			}
+		}
+		return Collections.unmodifiableMap(result);
+	}
+
 }

@@ -47,6 +47,10 @@ public class EnvTenantConfig implements TenantConfig {
 		logger.info("Activate env-based tenant config");
 		File root = new File(config.getRootPath());
 		File settings = new File(root,"settings");
+		if(!settings.exists()) {
+			logger.warn("No tenant settings found, not injecting tenant config");
+			return;
+		}
 		for(File f : settings.listFiles()) {
 			if(f.isDirectory()) {
 				tenants.add(f.getName());

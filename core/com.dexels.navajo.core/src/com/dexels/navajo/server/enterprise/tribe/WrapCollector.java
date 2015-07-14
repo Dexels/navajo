@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.sharedstore.SerializationUtil;
+import com.dexels.navajo.version.Version;
 
 public class WrapCollector extends GenericThread {
 
@@ -17,24 +18,45 @@ public class WrapCollector extends GenericThread {
 	private final static int TOO_OLD = 24 * 60 * 60 * 1000; // 24 hours is too old, remove it.
 	
 	// Use Cluster wide Map to store reference count.
-	private final ConcurrentMap<String,Wrapper> referenceCount;
+	private ConcurrentMap<String,Wrapper> referenceCount;
 	private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
+	private TribeManagerInterface tribeManager;
 	
 	private final static Logger logger = LoggerFactory.getLogger(WrapCollector.class);
 	
 	@SuppressWarnings("unchecked")
 	public WrapCollector() {
+		if(!Version.osgiActive()) {
+			setTribeManager(TribeManagerFactory.getInstance());
+			activate();
+		}
+	}
+		
+	
+	public void activate() {
 		threadId = "Navajo Wrap Collector";
 		if ( TribeManagerFactory.getInstance() != null ) {
 			logger.info("Using Tribal NavajoWrap Reference Count Map");
-			referenceCount = (ConcurrentMap) TribeManagerFactory.getInstance().getDistributedMap("NavajoWrapReferenceCount");
+			referenceCount = (ConcurrentMap) tribeManager.getDistributedMap("NavajoWrapReferenceCount");
 			//referenceCount = new ConcurrentHashMap<String,Wrapper>();
 		} else {
 			logger.warn("Using non-tribal referencecount map");
 			referenceCount = new ConcurrentHashMap<String,Wrapper>();
 		}
 	}
-		
+	
+	public void deactivate() {
+		kill();
+	}
+	
+	public void setTribeManager(TribeManagerInterface tribeManager) {
+		this.tribeManager = tribeManager;
+	}
+
+	public void clearTribeManager(TribeManagerInterface tribeManager) {
+		this.tribeManager = null;
+	}
+
 	protected void updateReferenceCount(final boolean increase, final DefaultNavajoWrap wrap) {
 		executor.submit(new ReferenceCounter(referenceCount, wrap, increase));
 	}

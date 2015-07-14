@@ -562,6 +562,14 @@ public interface Message
 
 	public List<Message> getElements();
 
+	/**
+	 * Returns a map of names->property values.
+	 * 
+	 * Nested messages will be ignored
+	 * @return
+	 */
+	public Map<String, Object> getValueMap();
+
 
 
 }

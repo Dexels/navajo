@@ -871,7 +871,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 throw new FatalException("No script defined");
             }
             // If web service is ping webservice, skip authentication.
-            if (useAuthorisation && !skipAuth && !rpcName.equals("navajo_ping")) {
+            if (useAuthorisation && !skipAuth && !rpcName.equals("NavajoPing")) {
                 try {
 
                     if (navajoConfig == null) {

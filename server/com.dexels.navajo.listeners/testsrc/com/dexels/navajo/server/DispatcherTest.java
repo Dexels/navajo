@@ -24,7 +24,7 @@ public class DispatcherTest {
 
 	@Test public void testHandle1() throws Exception {
 		Navajo doc = NavajoFactory.getInstance().createNavajo();
-		Header h = NavajoFactory.getInstance().createHeader(doc, "navajo_ping", "test", "test", -1);
+		Header h = NavajoFactory.getInstance().createHeader(doc, "NavajoPing", "test", "test", -1);
 		doc.addHeader(h);
 		
 		Navajo r = DispatcherFactory.getInstance().handle(doc, true);
