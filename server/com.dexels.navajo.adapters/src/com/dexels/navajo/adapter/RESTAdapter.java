@@ -17,7 +17,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
@@ -215,8 +214,4 @@ public class RESTAdapter extends NavajoMap {
 	 */
 	public String getRawResult() {
 		return rawResult;
-	}
-
- 
-
-}
+	}}
