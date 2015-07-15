@@ -1897,11 +1897,15 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 				continue;
 			}
 			
+			// Check if message m exists in the mask. If the mask is an array message, we must 
+			// look in the definition message. 
 			if (mask.isArrayMessage() && mask.getDefinitionMessage() != null) {
 				if (mask.getDefinitionMessage().getMessage(m.getName()) == null) {
 					removeMessage(m);
 					continue;
-				}
+				} 
+                m.maskMessage(mask.getDefinitionMessage().getMessage(m.getName()), method);
+                continue;
 			} else {
 				if (mask.getMessage(m.getName()) == null) {
 					removeMessage(m);
@@ -1909,8 +1913,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 				}
 			} 
 
+			// If message m is an array message, mask each element
 			if (m.isArrayMessage()) {
-				
 				for (int i = 0; i < m.getElements().size(); i++) {
 					if (mask.getDefinitionMessage() != null) {
 						m.getElements().get(i).maskMessage(mask.getDefinitionMessage().getMessage(m.getName()), method);
