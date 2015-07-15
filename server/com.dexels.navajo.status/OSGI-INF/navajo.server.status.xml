@@ -12,6 +12,6 @@
    <reference bind="setJavaCompiler" cardinality="0..1" interface="com.dexels.navajo.compiler.JavaCompiler" name="JavaCompiler" policy="dynamic" unbind="clearJavaCompiler"/>
    <reference bind="setNavajoConfig" cardinality="0..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfigInterface" policy="dynamic" unbind="clearNavajoConfig"/>
    <reference bind="setTribeManagerInterface" cardinality="0..1" interface="com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface" name="TribeManagerInterface" policy="dynamic" unbind="clearTribeManagerInterface"/>
-   <reference bind="setWorkFlowManagerInterface" cardinality="0..1" interface="com.dexels.navajo.server.enterprise.workflow.WorkFlowManagerInterface" name="WorkFlowManagerInterface" policy="dynamic" unbind="clearWorkFlowManagerInterface"/>
+   <reference bind="setWorkflowManagerInterface" cardinality="0..1" interface="com.dexels.navajo.server.enterprise.workflow.WorkFlowManagerInterface" name="WorkFlowManagerInterface" policy="dynamic" unbind="clearWorkflowManagerInterface"/>
    
 </scr:component>

@@ -144,9 +144,6 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker {
 		this.tribeManagerInterface = null;
 	}
 
-	public WorkFlowManagerInterface getWorkflowManagerInterface() {
-		return workflowManagerInterface;
-	}
 
 	public void setWorkflowManagerInterface(WorkFlowManagerInterface workflowManagerInterface) {
 		this.workflowManagerInterface = workflowManagerInterface;
