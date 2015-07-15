@@ -17,6 +17,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
@@ -106,11 +107,12 @@ public class RESTAdapter extends NavajoMap {
 	public void setMethod(String method) {
 		this.method = method.trim();
 	}
-
-	@Override
-	public void setDoSend(String m, Navajo od) throws UserException, ConditionErrorException,
+	
+	public void setDoSend(String url, Navajo od) throws UserException, ConditionErrorException,
 			SystemException {
 		// Prepare JSON content.
+	    this.url = url.trim();
+	    
 		JSONTML json = JSONTMLFactory.getInstance();
 
 		// Remove globals and parms message
@@ -145,6 +147,7 @@ public class RESTAdapter extends NavajoMap {
 			} else {
 				inDoc = NavajoFactory.getInstance().createNavajo();
 			}
+			continueAfterRun();
 		} catch (Exception e) {
 			if (breakOnException) {
 				throw new UserException(e.getMessage(), e);
@@ -213,5 +216,7 @@ public class RESTAdapter extends NavajoMap {
 	public String getRawResult() {
 		return rawResult;
 	}
+
+ 
 
 }
