@@ -24,7 +24,6 @@ public class WrapCollector extends GenericThread {
 	
 	private final static Logger logger = LoggerFactory.getLogger(WrapCollector.class);
 	
-	@SuppressWarnings("unchecked")
 	public WrapCollector() {
 		if(!Version.osgiActive()) {
 			setTribeManager(TribeManagerFactory.getInstance());
@@ -35,7 +34,7 @@ public class WrapCollector extends GenericThread {
 	
 	public void activate() {
 		threadId = "Navajo Wrap Collector";
-		if ( TribeManagerFactory.getInstance() != null ) {
+		if (tribeManager != null ) {
 			logger.info("Using Tribal NavajoWrap Reference Count Map");
 			referenceCount = (ConcurrentMap) tribeManager.getDistributedMap("NavajoWrapReferenceCount");
 			//referenceCount = new ConcurrentHashMap<String,Wrapper>();

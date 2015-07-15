@@ -238,4 +238,9 @@ public class DefaultTribeManager implements TribeManagerInterface {
 		return null;
 	}
 
+	@Override
+	public boolean isActive() {
+		return true;
+	}
+
 }
