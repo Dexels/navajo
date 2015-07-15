@@ -27,7 +27,9 @@ public class DefaultNavajoWrap implements NavajoRug {
 	 */
 	private static final long serialVersionUID = -4689405438923422437L;
 	private transient Navajo myNavajo = null;
-	private final static TribalNumber uniqueId = TribeManagerFactory.getInstance().getDistributedCounter("DefaultNavajoWrap");
+	
+//	private final TribeManagerInterface tribeManager;
+//	private final static TribalNumber uniqueId = TribeManagerFactory.getInstance().getDistributedCounter("DefaultNavajoWrap");
 	private final static WrapCollector wrapCollector;
 	private final long created;
 	/**
@@ -55,12 +57,12 @@ public class DefaultNavajoWrap implements NavajoRug {
 	 * 
 	 * @param n
 	 */
-	public DefaultNavajoWrap(Navajo n) {
+	public DefaultNavajoWrap(Navajo n, TribalNumber navajoWrapCounter) {
 		if ( n == null ) {
 			logger.error("Cannot wrap null Navajo");
 		}
 		created = System.currentTimeMillis();
-		reference = SerializationUtil.serializeNavajo(n, created + "-" + uniqueId.incrementAndGet() + ".xml");
+		reference = SerializationUtil.serializeNavajo(n, created + "-" + navajoWrapCounter.incrementAndGet() + ".xml");
 	}
 	
 	/**
@@ -68,21 +70,22 @@ public class DefaultNavajoWrap implements NavajoRug {
 	 * 
 	 * @param n
 	 */
-	public DefaultNavajoWrap(Navajo n, int interestCount) {
+	public DefaultNavajoWrap(Navajo n, int interestCount, TribalNumber navajoWrapCounter) {
 		this.interestCount = interestCount;
 		if ( n == null ) {
 			logger.error("Cannot wrap null Navajo");
 		}
 		created = System.currentTimeMillis();
-		reference = SerializationUtil.serializeNavajo(n, created + "-" + uniqueId.incrementAndGet() + ".xml");
+		reference = SerializationUtil.serializeNavajo(n, created + "-" + navajoWrapCounter.incrementAndGet() + ".xml");
 	}
 	
 	/**
 	 * Create a DefaultNavajoWrap with a given id and unknown interestCount.
 	 * 
 	 * @param n
+	 * @param tribeManager 
 	 */
-	public DefaultNavajoWrap(Navajo n, String id) {
+	public DefaultNavajoWrap(Navajo n, String id, TribalNumber navajoWrapCounter) {
 		if ( n == null ) {
 			logger.error("Cannot wrap null Navajo: " + id);
 		}
