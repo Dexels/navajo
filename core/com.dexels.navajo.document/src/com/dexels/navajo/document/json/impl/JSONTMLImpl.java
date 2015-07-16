@@ -308,11 +308,14 @@ public class JSONTMLImpl implements JSONTML {
             parent = NavajoFactory.getInstance().createMessage(n, (topLevelMessageName != null ? topLevelMessageName : "Request" ) );
             n.addMessage(parent);
         }
-	    
-		while ( jp.nextToken() != JsonToken.END_OBJECT) {
+	    JsonToken nextToken =  jp.nextToken();
+		while ( nextToken != JsonToken.END_OBJECT && nextToken != JsonToken.END_ARRAY) {
 			String name = jp.getCurrentName();
 			if ( name != null && jp.getCurrentToken() == JsonToken.FIELD_NAME ) {
 				jp.nextToken();
+			}
+			if (name == null) {
+			    name = topLevelMessageName != null ? topLevelMessageName : "Request"; 
 			}
 			
 			if ( jp.getCurrentToken() == JsonToken.START_OBJECT ) {
@@ -324,13 +327,24 @@ public class JSONTMLImpl implements JSONTML {
 			
 				parseProperty(name, value, parent, jp);
 			}
+			nextToken =  jp.nextToken();
 		}
 	}
 
 	private Navajo parse(JsonParser jp) throws Exception {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
-		while ( jp.nextToken() != null ) {
-			parse(n, null, jp);
+		JsonToken token = jp.nextToken(); 
+		while (token != null ) {
+		    if (token.equals(JsonToken.START_ARRAY)) {
+		        Message parent = NavajoFactory.getInstance().createMessage(n, (topLevelMessageName != null ? topLevelMessageName : "Request" ) );
+		        parent.setType(Message.MSG_TYPE_ARRAY);
+	            n.addMessage(parent);
+	            parse(n, parent, jp); 
+		    } else {
+		        parse(n, null, jp); 
+		    }
+			
+			token = jp.nextToken(); 
 		}
 		return n;
 	}

@@ -147,6 +147,7 @@ public class RESTAdapter extends NavajoMap {
 				inDoc = NavajoFactory.getInstance().createNavajo();
 			}
 			continueAfterRun();
+			serviceCalled = true;
 		} catch (Exception e) {
 			if (breakOnException) {
 				throw new UserException(e.getMessage(), e);
@@ -155,6 +156,7 @@ public class RESTAdapter extends NavajoMap {
 			}
 			
 		}
+		
 	}
 
 	private void setupHttpMap(HTTPMap http, Binary content) throws UserException {
