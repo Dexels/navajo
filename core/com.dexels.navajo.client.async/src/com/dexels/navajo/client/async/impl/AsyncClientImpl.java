@@ -311,7 +311,8 @@ public class AsyncClientImpl implements ManualAsyncClient {
 				// TODO: Add streaming?
 				int status = super.getResponseStatus();
 				if ( status != 200 ) {
-					onException(new Exception("Could not open URL:" + server));
+				    logger.error("Repsonse code = {}, message: {}", getResponseStatus(), getResponseContent());
+					onException(new Exception("Could not open URL:" + getRequestURI()));
 					return;
 				}
 				byte[] responseContentBytes = getResponseContentBytes();
