@@ -5,7 +5,8 @@
       <provide interface="javax.servlet.Servlet"/>
    </service>
    <property name="servlet-name" type="String" value="laszlo"/>
-   <property name="alias" type="String" value="/laszlo"/>
+   <property name="alias" type="String" value="/Laszlo"/>
    <reference bind="setRequestWrapper" cardinality="1..1" interface="com.dexels.navajo.server.listener.http.wrapper.NavajoRequestWrapper" name="NavajoRequestWrapper" policy="dynamic" target="(name=laszlo)" unbind="clearRequestWrapper"/>
    <reference bind="setResponseWrapper" cardinality="1..1" interface="com.dexels.navajo.server.listener.http.wrapper.NavajoResponseWrapper" name="NavajoResponseWrapper" policy="dynamic" target="(name=laszlo)" unbind="clearResponseWrapper"/>
-</scr:component>
+   <reference bind="addLocalClient" cardinality="0..n" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="dynamic" unbind="removeLocalClient"/>
+p</scr:component>
