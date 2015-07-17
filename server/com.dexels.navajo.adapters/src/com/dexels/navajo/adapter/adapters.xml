@@ -392,8 +392,11 @@
 			<value name="messages" map="messagemap []" required="false" direction="out" />
 			<value name="username" type="string" required="false" direction="in" />
             <value name="password" type="string" required="false" direction="in" />
-            <value name="url" type="string" required="false" direction="in" />
-            
+            <value name="dateformat" type="string" required="false" direction="in" />
+            <value name="appendTo" type="string" required="false"  direction="in"  />
+            <value name="append" type="string" required="false"  direction="in" />
+            <value name="topMessage" type="string" required="false"  direction="in" />
+            <value name="method" type="string" required="false"  direction="in" />
 		</values>
 		<methods>
 			<!-- Creates a new property -->
@@ -421,8 +424,6 @@
 
 			<method name="callservice">
 				<param name="breakOnException" field="breakOnException" type="boolean" required="false" />
-				<param name="method" field="method" type="string" required="true" />
-				<param name="topMessage" field="topMessage" type="string" required="false" />
 				<param name="removeTopMessage" field="removeTopMessage" type="boolean" required="false" />
 				<param name="username" field="username" type="string" required="false" />
                 <param name="password" field="password" type="string" required="false" />
