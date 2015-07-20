@@ -397,6 +397,7 @@
             <value name="append" type="string" required="false"  direction="in" />
             <value name="topMessage" type="string" required="false"  direction="in" />
             <value name="method" type="string" required="false"  direction="in" />
+            <value name="messagesPerRequest" type="integer" required="false"  direction="in" />
 		</values>
 		<methods>
 			<!-- Creates a new property -->

@@ -13,6 +13,7 @@ import org.dexels.utils.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.json.JSONTML;
@@ -25,22 +26,30 @@ import com.dexels.navajo.server.ConditionErrorException;
 
 public class RESTAdapter extends NavajoMap {
     private final static Logger logger = LoggerFactory.getLogger(RESTAdapter.class);
-
+    private JSONTML json;
+    
+    public boolean removeTopMessage = false;
     public String url;
     public String method;
     public int responseCode;
     public String responseMessage;
     public String topMessage = "Response";
-    public boolean removeTopMessage = false;
-    protected List<String> parameters = new ArrayList<String>();
-    protected Map<String, String> headers = new HashMap<String, String>();
-
     public String parameterName = null;
     public String parameterValue = null;
     public String headerKey = null;
     public String headerValue = null;
+    
+    private int messagesPerRequest;
     private String rawResult;
     private String dateFormat;
+    
+    protected List<String> parameters = new ArrayList<String>();
+    protected Map<String, String> headers = new HashMap<String, String>();
+
+    
+    public RESTAdapter() {
+        json = JSONTMLFactory.getInstance();
+    }
 
     public void setTopMessage(String topMessage) {
         this.topMessage = topMessage;
@@ -93,12 +102,63 @@ public class RESTAdapter extends NavajoMap {
             addHeader();
         }
     }
-    
+
     public void setDateformat(String format) {
         dateFormat = format;
     }
-    
-    
+
+    public void setMessagesPerRequest(int count) {
+        this.messagesPerRequest = count;
+    }
+
+    @Override
+    public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException {
+
+        if (messagesPerRequest < 1 || useCurrentMessages == null) {
+            setDoSend(method, prepareOutDoc());
+            serviceCalled = true;
+        } else {
+            String[] messages = useCurrentMessages.split(",");
+            Navajo copy = outDoc.copy();
+            Navajo indoc = null;
+            if (inDoc == null) {
+                indoc = NavajoFactory.getInstance().createNavajo();
+            } else {
+                indoc  = inDoc.copy();
+            }
+            
+            for (String msgName : messages) {
+                Message msg = access.getOutputDoc().getMessage(msgName);
+
+                if (msg != null && msg.isArrayMessage()) {
+                    
+                    Message outMsg = NavajoFactory.getInstance().createMessage(outDoc, msgName);
+                    outMsg.setType("array");
+                    int counter = 0;
+                    for (Message element : msg.getElements()) {
+                        outMsg.addElement(element);
+                        counter++;
+                        if (counter >= messagesPerRequest) {
+                            outDoc.addMessage(outMsg);
+                            setDoSend(method, outDoc);
+                            indoc.merge(inDoc);
+                            
+                            // Going to clear data 
+                            outDoc = copy.copy();
+                            outMsg = NavajoFactory.getInstance().createMessage(outDoc, msgName);
+                            outMsg.setType("array");
+                            counter = 0;
+                        }
+                    }
+                    inDoc = indoc.copy();
+                } else {
+                    throw new UserException(2, "Message "+msgName+ "not found or not array message!");
+                }
+
+            }
+            serviceCalled = true;
+        }
+    }
 
     @Override
     public void setMethod(String method) {
@@ -106,11 +166,8 @@ public class RESTAdapter extends NavajoMap {
     }
 
     public void setDoSend(String url, Navajo od) throws UserException, ConditionErrorException, SystemException {
-        // Prepare JSON content.
         this.url = url.trim();
-
-        JSONTML json = JSONTMLFactory.getInstance();
-
+        
         if (dateFormat != null && !dateFormat.equals("")) {
             json.setDateFormat(new SimpleDateFormat(dateFormat));
         }
@@ -125,7 +182,7 @@ public class RESTAdapter extends NavajoMap {
         Writer w = new StringWriter();
         Binary bContent = new Binary();
         try {
-            json.format(od, w, removeTopMessage);
+            json.format(od, w, true);
             bContent.getOutputStream().write(w.toString().getBytes("UTF-8"));
         } catch (Exception e) {
             logger.error("Exception on parsing input navajo as JSON! Not performing REST call!");
@@ -147,7 +204,7 @@ public class RESTAdapter extends NavajoMap {
                 inDoc = NavajoFactory.getInstance().createNavajo();
             }
             continueAfterRun();
-            serviceCalled = true;
+
         } catch (Exception e) {
             if (breakOnException) {
                 throw new UserException(e.getMessage(), e);
@@ -220,6 +277,10 @@ public class RESTAdapter extends NavajoMap {
 
     public String getResponseMessage() {
         return responseMessage;
+    }
+
+    public int messagesPerRequest() {
+        return messagesPerRequest;
     }
 
     /**
