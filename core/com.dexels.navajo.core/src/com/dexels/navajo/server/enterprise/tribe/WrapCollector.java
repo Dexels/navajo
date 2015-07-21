@@ -72,7 +72,7 @@ public class WrapCollector extends GenericThread {
 		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 
 		if (referenceCount == null) {
-		    logger.warn("referenceCount map is null - cannot do anything!");
+		    logger.debug("referenceCount map is null - cannot do anything!");
 		    return;
 		}
 		try {
