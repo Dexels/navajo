@@ -162,8 +162,6 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	private final void sendMail() throws UserException {
-
-		logger.warn("Sending mail: "+this.recipients+" = "+this.subject+" text: "+this.text, new Exception());
 		retries++;
 
 		try {
