@@ -1111,7 +1111,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
             AAAInterface aaai = getAuthorizator(instance);
             if (aaai != null) {
-                access = aaai.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+                access = aaai.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate, accessID);
                 return access;
             }
             logger.warn("No access returned from multitenant, instance specific authorization. Instance: " + instance);
