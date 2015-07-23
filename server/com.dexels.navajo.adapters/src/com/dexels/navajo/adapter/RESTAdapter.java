@@ -135,10 +135,12 @@ public class RESTAdapter extends NavajoMap {
                     Message outMsg = NavajoFactory.getInstance().createMessage(outDoc, msgName);
                     outMsg.setType("array");
                     int counter = 0;
+                    int totalCounter = 0;
                     for (Message element : msg.getElements()) {
                         outMsg.addElement(element);
                         counter++;
-                        if (counter >= messagesPerRequest) {
+                        totalCounter++;
+                        if (counter >= messagesPerRequest || totalCounter >= msg.getArraySize()) {
                             outDoc.addMessage(outMsg);
                             setDoSend(method, outDoc);
                             indoc.merge(inDoc);
@@ -199,7 +201,13 @@ public class RESTAdapter extends NavajoMap {
         try {
             if (result != null) {
                 rawResult = new String(result.getData());
-                inDoc = json.parse(result.getDataAsStream(), topMessage);
+                // TODO: remove this ugly stuff as soon as Lukkien fixed their server
+                if (! rawResult.equals("\"\"")) {
+                    inDoc = json.parse(result.getDataAsStream(), topMessage);
+                } else {
+                    inDoc = NavajoFactory.getInstance().createNavajo();
+                }
+                
             } else {
                 inDoc = NavajoFactory.getInstance().createNavajo();
             }
