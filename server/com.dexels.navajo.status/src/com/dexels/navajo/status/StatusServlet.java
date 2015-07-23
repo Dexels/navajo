@@ -13,11 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.repository.api.ServerStatusChecker;
+import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.Repository;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 import com.dexels.navajo.server.enterprise.workflow.WorkFlowManagerInterface;
+import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler;
 
 public class StatusServlet extends HttpServlet implements ServerStatusChecker {
 
@@ -29,6 +31,7 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker {
     private NavajoConfigInterface navajoConfig;
     private TribeManagerInterface tribeManagerInterface;
     private WorkFlowManagerInterface workflowManagerInterface;
+    private TmlScheduler tmlScheduler;
     
     
     private final static Logger logger = LoggerFactory.getLogger(StatusServlet.class);
@@ -42,6 +45,37 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker {
 
     public void deactivate() {
         logger.info("Navajo Status servlet deactivated");
+    }
+    
+   
+ 
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String requestTpe = req.getParameter("type");
+        String res = null;
+        if (requestTpe.equals("normalpoolstatus")) {
+            if (tmlScheduler == null) {
+                res = "error";
+            } else {
+                res = tmlScheduler.getDefaultQueue().getActiveRequestCount() + "/"
+                        + tmlScheduler.getDefaultQueue().getMaximumActiveRequestCount() + "/"
+                        + tmlScheduler.getDefaultQueue().getQueueSize();
+            }
+           
+
+        } else  if (requestTpe.equals("memory")) {
+         // Check current memory usage.
+            long max = Runtime.getRuntime().maxMemory();
+            long total = Runtime.getRuntime().totalMemory();
+            long free = Runtime.getRuntime().freeMemory();
+            res = (total - free) + "/" + max;
+
+        }
+        resp.setContentType("text/plain");
+        PrintWriter writer = resp.getWriter();
+        writer.write(res);
+        writer.close();
     }
 
     @Override
@@ -152,4 +186,13 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker {
 	public void clearWorkflowManagerInterface(WorkFlowManagerInterface workflowManagerInterface) {
 		this.workflowManagerInterface = null;
 	}
+	
+	public void setPriorityTmlScheduler(TmlScheduler sched) {
+	    this.tmlScheduler = sched;
+	}
+	
+	public void clearPriorityTmlScheduler(TmlScheduler sched) {
+        this.tmlScheduler = null;
+    }
+	
 }

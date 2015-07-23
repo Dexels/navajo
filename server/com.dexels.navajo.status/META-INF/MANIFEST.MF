@@ -12,6 +12,7 @@ Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.server,
  com.dexels.navajo.server.enterprise.tribe,
  com.dexels.navajo.server.enterprise.workflow,
+ com.dexels.navajo.server.listener.http.schedulers.priority,
  javax.servlet;version="3.0.0",
  javax.servlet.http;version="3.0.0",
  org.slf4j;version="1.7.1"
