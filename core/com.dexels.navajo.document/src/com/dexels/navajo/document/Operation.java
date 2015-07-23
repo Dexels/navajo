@@ -54,6 +54,11 @@ public interface Operation {
     public boolean debugInput();
 
     public boolean debugOutput();
+    
+    public void setTenant(String tenant);
+    
+    public String getTenant();
+    
 	
 	
 }

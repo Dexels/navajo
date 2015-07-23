@@ -13,6 +13,7 @@ public class OperationComponent implements Operation {
     private String method;
     private String service;
     private String entityName;
+    protected String tenant;
     private Message extraMessage;
     private String validationService;
     private boolean debugInput;
@@ -124,5 +125,15 @@ public class OperationComponent implements Operation {
     @Override
     public boolean debugOutput() {
         return debugOutput;
+    }
+    
+    @Override
+    public void setTenant(String tenant) {
+        this.tenant = tenant; 
+    }
+
+    @Override
+    public String getTenant() {
+        return tenant;
     }
 }
