@@ -988,7 +988,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
                     con.setTransactionIsolation(transactionIsolation);
                 }
                 // Set session identification.
-                SessionIdentification.setSessionId(this.getMetaData() != null ? this.getMetaData().getVendor(): "Unknown", con, this.myAccess);
+               // SessionIdentification.setSessionId(this.getMetaData() != null ? this.getMetaData().getVendor(): "Unknown", con, this.myAccess);
             }
 
             if (this.con != null) {
