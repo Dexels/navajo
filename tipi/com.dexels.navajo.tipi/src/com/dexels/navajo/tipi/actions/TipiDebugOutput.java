@@ -41,13 +41,11 @@ public class TipiDebugOutput extends TipiAction {
 			throws com.dexels.navajo.tipi.TipiBreakException,
 			com.dexels.navajo.tipi.TipiException {
 		Operand value = getEvaluatedParameter("value", event);
-		logger.debug("******** DEBUG *********");
+		
 		if (value != null) {
-			logger.debug("VALUE: >" + value.value + "<");
-			logger.debug("TYPE: >" + value.type + "<");
+		    logger.debug("DEBUG: Value={}, type={} for event: {}", value.value, value.type, event.getEventName() );
 		} else {
-			logger.debug("NULL EVALUATION!");
+		    logger.debug("DEBUG: value evaluated to null for event {}", event.getEventName());
 		}
-		logger.debug("******** END *********");
 	}
 }
