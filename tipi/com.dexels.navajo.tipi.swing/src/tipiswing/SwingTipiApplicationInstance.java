@@ -129,7 +129,7 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 			
 			logger.debug("Systemprop: "+context.systemPropertyMap);
 			// TODO Fix support for HTTP based runs
-			logger.debug("********** ENTERING FILE BASED MODE **********");
+			logger.debug("ENTERING FILE BASED MODE");
 			File tipi = new File(tipiInstallationFolder,"tipi");
 			File resource = new File(tipiInstallationFolder,"resource");
 			context.setTipiResourceLoader(new FileResourceLoader(tipi));
