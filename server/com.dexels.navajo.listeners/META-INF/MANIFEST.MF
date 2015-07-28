@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Listeners
 Bundle-SymbolicName: com.dexels.navajo.listeners
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.2.15.qualifier
+Bundle-Version: 3.2.16
 Bundle-Activator: navajolisteners.Version
 Bundle-ClassPath: .
 Include-Resource: lib
