@@ -275,11 +275,12 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.65' start-level='81'>
+		version='3.0.68' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.2.66</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.2.16</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.3.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.13</bundle>
+        <bundle dependency='true'>mvn:commons-net/commons-net/3.3</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.mongodb'
