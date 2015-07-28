@@ -492,7 +492,12 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 					.getAttribute("javax.servlet.request.X509Certificate");
 
 			// Call Dispatcher with parsed TML document as argument.
-			ClientInfo clientInfo = new ClientInfo(request.getRemoteAddr(),
+			String ip = request.getHeader("X-Forwarded-For");
+		    if (ip == null || ip.equals("")) {
+		        ip = request.getRemoteAddr();
+		    }
+		        
+			ClientInfo clientInfo = new ClientInfo(ip,
 					"unknown", recvEncoding, pT,
 					(recvEncoding != null && (recvEncoding
 							.equals(COMPRESS_GZIP) || recvEncoding
