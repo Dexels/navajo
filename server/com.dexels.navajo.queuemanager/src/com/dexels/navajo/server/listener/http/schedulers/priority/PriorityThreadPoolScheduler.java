@@ -2,6 +2,7 @@ package com.dexels.navajo.server.listener.http.schedulers.priority;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,58 +101,37 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		// =====
 		logger.info("Non osgi (web.xml based) Priority thread queue available. Setting up pools.");
 		
+		Map<String, Object> initParams = new HashMap<>();
+		Enumeration<String> paramNames = context.getInitParameterNames();
+		
+		while (paramNames.hasMoreElements()) {
+		    String key = paramNames.nextElement();
+		    initParams.put(key, context.getInitParameter(key));
+		}
+		
 		// Start normal pool.
-		int normalPoolSize;
-		String stringPoolSize = context.getInitParameter("normalPoolSize");
-		if (stringPoolSize == null) {
-			normalPoolSize = DEFAULT_POOL_SIZE;
-		} else {
-			normalPoolSize = Integer.parseInt(stringPoolSize);
-		}
-		
-		// Start priority pool.
-		stringPoolSize = context.getInitParameter("priorityPoolSize");
-		int priorityPoolSize;
-		if (stringPoolSize == null) {
-			priorityPoolSize = DEFAULT_POOL_SIZE;
-		} else {
-			priorityPoolSize = Integer.parseInt(stringPoolSize);
-		}
-		
-		// Start system pool.
-		stringPoolSize = context.getInitParameter("systemPoolSize");
-		int systemPoolSize;
-		if (stringPoolSize == null) {
-			systemPoolSize = DEFAULT_POOL_SIZE;
-		} else {
-			systemPoolSize = Integer.parseInt(stringPoolSize);
-		}
+		Integer normalPoolSize = extractInt(initParams, "normalPoolSize");
+		Integer priorityPoolSize = extractInt(initParams, "priorityPoolSize");
+		Integer systemPoolSize = extractInt(initParams, "systemPoolSize");
+		Integer fastPoolSize = extractInt(initParams, "fastPoolSize");
+		Integer slowPoolSize = extractInt(initParams, "slowPoolSize");
 
-//		RequestQueue normalPool = ThreadPoolRequestQueue.create(this, "normalThead", 3, normalPoolSize);
-//		RequestQueue priorityPool = ThreadPoolRequestQueue.create(this, "priorityThread", 8, priorityPoolSize);
-//		RequestQueue systemPool = ThreadPoolRequestQueue.create(this, "systemThread", 10, systemPoolSize);
-//		RequestQueue slowPool = ThreadPoolRequestQueue.create(this, "slowThread", 3, 1);
-//		RequestQueue fastPool = ThreadPoolRequestQueue.create(this, "fastThread", 7, normalPool.getMaximumActiveRequestCount() * 2);
-		
-//		queueMap.put("fastThread",fastPool);
-//		queueMap.put("slowThread",slowPool);
-//		queueMap.put("normalThread",normalPool);
-//		queueMap.put("priorityThread",priorityPool);
-//		queueMap.put("systemThread", systemPool);
 		queueManager = QueueManagerFactory.getInstance();
 		queueManager.setQueueContext(this);
 		queueManager.setScriptDir(new File(DispatcherFactory.getInstance().getNavajoConfig().getConfigPath()));
 		
-		createPools(normalPoolSize, priorityPoolSize, systemPoolSize);
+		createPools(normalPoolSize, priorityPoolSize, fastPoolSize, systemPoolSize, slowPoolSize);
 	}
 
 	public void activate(Map<String,Object> params ) {
-		logger.info("Activating prio...");
+		logger.info("Activating prio threadpool scheduler...");
 		try {
-			Integer normalPoolSize = extractInt(params,"normalPoolSize");
-			Integer priorityPoolSize = extractInt(params,"priorityPoolSize");
-			Integer systemPoolSize = extractInt(params,"systemPoolSize");
-			createPools(normalPoolSize,priorityPoolSize,systemPoolSize);
+            Integer normalPoolSize = extractInt(params, "normalPoolSize");
+            Integer priorityPoolSize = extractInt(params, "priorityPoolSize");
+            Integer systemPoolSize = extractInt(params, "systemPoolSize");
+            Integer fastPoolSize = extractInt(params, "fastPoolSize");
+            Integer slowPoolSize = extractInt(params, "slowPoolSize");
+            createPools(normalPoolSize, priorityPoolSize, fastPoolSize, systemPoolSize, slowPoolSize);
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
 		}
@@ -175,13 +155,12 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		logger.debug("Deactivating priority queue");
 	}
 
-	private void createPools(int normalPoolSize, int priorityPoolSize,
-			int systemPoolSize) {
-		RequestQueue normalPool = createThreadPool(this, "normalPool", 3, normalPoolSize);
-		createThreadPool(this, "priorityPool", 8, normalPool.getMaximumActiveRequestCount() * 5);
+	private void createPools(int normalPoolSize, int priorityPoolSize, int fastPoolSize, int systemPoolSize, int slowPoolSize) {
+		createThreadPool(this, "normalPool", 5, normalPoolSize);
+		createThreadPool(this, "priorityPool", 8, priorityPoolSize);
 		createThreadPool(this, "systemPool", 10, systemPoolSize);
-		createThreadPool(this, "slowPool", 3, 1);
-		createThreadPool(this, "fastPool", 7, normalPool.getMaximumActiveRequestCount() * 4);
+		createThreadPool(this, "slowPool", 3, slowPoolSize);
+		createThreadPool(this, "fastPool", 7, fastPoolSize);
 	}
 	
 	private RequestQueue createThreadPool(Scheduler scheduler, String name, int priority, int size) {
