@@ -17,6 +17,7 @@ import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.article.ArticleClientException;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -46,7 +47,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 
 	
 	@Override
-	public String resolveArgument(String name) throws ArticleException {
+	public String resolveArgument(String name) throws ArticleException, ArticleClientException {
 		final String trimmedName = name.substring(1);
 		String res = request.getParameter(trimmedName);
 		if(res!=null) {
@@ -63,7 +64,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 				boolean optional = xmlElement.getBooleanAttribute("optional", "true", "false", false);
 				if(!optional) {
 					// not optional + no value = fail
-					throw new ArticleException("Missing parameter not optional: " + trimmedName);
+					throw new ArticleClientException("Missing parameter not optional: " + trimmedName);
 				}
 				return xmlElement.getStringAttribute("default");
 			}

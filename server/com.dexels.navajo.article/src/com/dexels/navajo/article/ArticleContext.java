@@ -16,7 +16,7 @@ public interface ArticleContext {
 	public ArticleCommand getCommand(String name);
 
 	public void interpretArticle(File article, ArticleRuntime ac) throws IOException,
-			ArticleException, DirectOutputThrowable;
+			ArticleException, DirectOutputThrowable, ArticleClientException;
 
 	public File resolveArticle(String pathInfo);
 	

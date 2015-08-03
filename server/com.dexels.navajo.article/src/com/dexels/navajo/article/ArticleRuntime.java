@@ -13,9 +13,9 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.oauth.api.Token;
 
 public interface ArticleRuntime {
-	public String resolveArgument(String name) throws ArticleException;
+	public String resolveArgument(String name) throws ArticleException, ArticleClientException;
 
-	public void execute(ArticleContext articleServlet) throws ArticleException, DirectOutputThrowable;
+	public void execute(ArticleContext articleServlet) throws ArticleException, ArticleClientException, DirectOutputThrowable;
 
 	public void pushNavajo(String name,Navajo res);
 

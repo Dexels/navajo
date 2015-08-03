@@ -21,6 +21,7 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.article.ArticleClientException;
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
@@ -189,7 +190,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
     }
 	
 	@Override
-	public void execute(ArticleContext context) throws ArticleException, DirectOutputThrowable {
+	public void execute(ArticleContext context) throws ArticleException, ArticleClientException, DirectOutputThrowable {
 		verifyScopes();
 		List<XMLElement> children = article.getChildren();
 		try {
@@ -213,7 +214,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 					parameters.put(attributeName,
 							e.getStringAttribute(attributeName));
 				}
-				JsonNode node =ac.execute(this, context, parameters, e);
+				JsonNode node = ac.execute(this, context, parameters, e);
 				
 				if (node!=null) {
 					elements.add(node);

@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.article.ArticleClientException;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.DirectOutputThrowable;
@@ -39,7 +40,9 @@ public class OAuthArticleServlet extends ArticleServlet {
 		Token t = null;
 		ClientRegistration cr = null;
 		
+		
 		String errorMessage = "No token or invalid token supplied";
+		int statuscode = 500;
 		if(token==null) {
 			// fallback:
 			String clientId = req.getParameter("client_id");
@@ -79,6 +82,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 					
 					if (cr == null) {
 						errorMessage = "Invalid clientId";
+						statuscode = 400;
 					}
 				} catch (ClientStoreException e) {
 					throw new ServletException("Client Store problem",e);
@@ -87,7 +91,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 		}
 		
 		if(cr==null) {
-			resp.sendError(400, errorMessage);
+			resp.sendError(statuscode, errorMessage);
 			return;
 		}
 		String username = cr.getUsername();
@@ -111,6 +115,9 @@ public class OAuthArticleServlet extends ArticleServlet {
 				runtime.setURL(url);
 				runtime.execute(context);
 				resp.setContentType("application/json; charset=utf-8");
+			} catch (ArticleClientException e) {
+				resp.sendError(400, e.getMessage());
+				return;
 			} catch (ArticleException e) {
 				throw new ServletException("Problem executing article", e);
 			} catch (DirectOutputThrowable e) {

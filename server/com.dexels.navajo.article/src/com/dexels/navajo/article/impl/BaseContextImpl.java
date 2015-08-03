@@ -17,6 +17,7 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.article.ArticleClientException;
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
@@ -168,7 +169,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 
 	@Override
 	public void interpretArticle(File article, ArticleRuntime ac)
-			throws IOException, ArticleException, DirectOutputThrowable {
+			throws IOException, ArticleException, ArticleClientException, DirectOutputThrowable {
 		XMLElement articleXml = new CaseSensitiveXMLElement();
 		Reader r = null;
 		try {
