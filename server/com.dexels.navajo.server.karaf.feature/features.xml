@@ -379,9 +379,9 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.download/1.0.1</bundle>
 	</feature>
 	
-	<feature name='logback.redis' version='1.0.31'>
+	<feature name='logback.redis' version='1.0.33'>
 		<feature version="[3.0.0,4)">scr</feature>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.logback.redis/2.1.19</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.logback.redis/2.1.23</bundle>
 		<bundle dependency='true'>mvn:ch.qos.logback/logback-classic/1.1.2</bundle>
 		<bundle dependency='true'>mvn:ch.qos.logback/logback-core/1.1.2</bundle>
 	</feature>
