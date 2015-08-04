@@ -7,6 +7,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.codehaus.jackson.JsonFactory;
@@ -220,31 +221,52 @@ public class JSONTMLImpl implements JSONTML {
 
 	}
 
-	private void format(JsonGenerator jg, Navajo n) throws Exception {
-		String origName = TOP_LEVEL_MSG;
-		try {
-			jg.writeStartObject();
-			List<Message> messages = n.getAllMessages();
-			for ( Message m: messages) {
-				try {
-					if (skipTopLevelMessage && !m.isArrayMessage()) {
-						origName = m.getName();
-						m.setName(TOP_LEVEL_MSG);
-					}
-					format(jg, m, false);
-				} finally {
-					if (skipTopLevelMessage) {
-						m.setName(origName);
-					}
-				}
-			}
-			jg.writeEndObject();
-		} catch (IOException ioe) {
-			throw ioe;
-		} catch (Exception e) {
-			throw new Exception("Could not format Navajo as JSON stream" ,e);
-		}
-	}
+    private void format(JsonGenerator jg, Navajo n) throws Exception {
+        try {
+            if (skipTopLevelMessage && n.getMessages().size() == 1) {
+                // If skipTopLevelMessage=true, we have one message to write and
+                // this is an array message, we have to start our message as an 
+                // array rather than object.
+
+                Collection<Message> messages = n.getMessages().values();
+                Message msg = messages.iterator().next();
+                if (msg.isArrayMessage()) {
+                    jg.writeStartArray();
+                    for (Message arrayElement : msg.getElements()) {
+                        format(jg, arrayElement, true);
+                    }
+                    jg.writeEndArray();
+                    return;
+                }
+            }
+
+            jg.writeStartObject();
+            formatMessages(jg, n.getAllMessages());
+            jg.writeEndObject();
+
+        } catch (IOException ioe) {
+            throw ioe;
+        } catch (Exception e) {
+            throw new Exception("Could not format Navajo as JSON stream", e);
+        }
+    }
+
+    private void formatMessages(JsonGenerator jg, List<Message> messages) throws Exception {
+        for (Message m : messages) {
+            String origName = TOP_LEVEL_MSG;
+            try {
+                if (skipTopLevelMessage && !m.isArrayMessage()) {
+                    origName = m.getName();
+                    m.setName(TOP_LEVEL_MSG);
+                }
+                format(jg, m, false);
+            } finally {
+                if (skipTopLevelMessage) {
+                    m.setName(origName);
+                }
+            }
+        }
+    }
 
 	private void parseProperty(String name, String value, Message p, JsonParser jp) throws Exception {
 		if (name == null) {
@@ -302,36 +324,51 @@ public class JSONTMLImpl implements JSONTML {
 		parse(n, m, jp);
 	}
 
-	private void parse(Navajo n, Message parent, JsonParser jp) throws Exception {
-	    if ( parent == null ) {
-            logger.info("JSONTMLImpl: Could not find message, creating dummy");
-            parent = NavajoFactory.getInstance().createMessage(n, (topLevelMessageName != null ? topLevelMessageName : "Request" ) );
-            n.addMessage(parent);
+    private void parse(Navajo n, Message parent, JsonParser jp) throws Exception {
+        if (jp.getCurrentToken() == JsonToken.START_ARRAY) {
+            parent.setType("array");
+            while (jp.nextToken() != JsonToken.END_ARRAY) {
+                Message m = NavajoFactory.getInstance().createMessage(n, topLevelMessageName != null ? topLevelMessageName : "Request");
+                parent.addMessage(m);
+                parse(n, m, jp);
+                
+            }
+        } else if (jp.getCurrentToken() == JsonToken.START_OBJECT) {
+            while (jp.nextToken() != JsonToken.END_OBJECT) {
+                String name = jp.getCurrentName();
+                if (name != null && jp.getCurrentToken() == JsonToken.FIELD_NAME) {
+                    jp.nextToken();
+                }
+                if (name == null) {
+                    name = topLevelMessageName != null ? topLevelMessageName : "Request";
+                }
+
+                if (jp.getCurrentToken() == JsonToken.START_OBJECT) {
+                    parseMessage(name, n, parent, jp);
+                } else if (jp.getCurrentToken() == JsonToken.START_ARRAY) {
+                    parseArrayMessage(name, n, parent, jp);
+                } else {
+                    String value = jp.getText();
+
+                    parseProperty(name, value, parent, jp);
+                }
+
+            }
+        } else {
+            throw new Exception("Unexpected character - expected { or [ but got: " + jp.getCurrentToken().asString());
         }
-	    
-		while ( jp.nextToken() != JsonToken.END_OBJECT) {
-			String name = jp.getCurrentName();
-			if ( name != null && jp.getCurrentToken() == JsonToken.FIELD_NAME ) {
-				jp.nextToken();
-			}
-			
-			if ( jp.getCurrentToken() == JsonToken.START_OBJECT ) {
-				parseMessage(name, n, parent, jp);
-			} else if ( jp.getCurrentToken() == JsonToken.START_ARRAY ) {
-				parseArrayMessage(name, n, parent, jp);
-			} else {
-				String value = jp.getText();
-			
-				parseProperty(name, value, parent, jp);
-			}
-		}
-	}
+
+    }
 
 	private Navajo parse(JsonParser jp) throws Exception {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
-		while ( jp.nextToken() != null ) {
-			parse(n, null, jp);
-		}
+
+        Message parent = NavajoFactory.getInstance().createMessage(n,(topLevelMessageName != null ? topLevelMessageName : "Request"));
+        n.addMessage(parent);
+        
+        while (jp.nextToken() != null) {
+            parse(n, parent, jp);
+        }
 		return n;
 	}
 

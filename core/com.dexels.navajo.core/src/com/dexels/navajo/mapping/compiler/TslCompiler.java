@@ -635,6 +635,7 @@ public class TslCompiler {
 				Element e = (Element) children.item(i);
 				String entity = e.getAttribute("entity");
 				String service = e.getAttribute("service");
+				String tenant = e.getAttribute("tenant");
 				String validationService = e.getAttribute("validationService");
 				String method = e.getAttribute("method");
 				String debug = e.getAttribute("debug");
@@ -705,6 +706,9 @@ public class TslCompiler {
 				if (debug != null && !debug.equals("")) {
 				    result.append(printIdent(ident + 2) + "o.setDebug(\"" + debug + "\");\n");
 				}
+				if (tenant != null && !tenant.equals("")) {
+                    result.append(printIdent(ident + 2) + "o.setTenant(\"" + tenant + "\");\n");
+                }
 
 				result.append(printIdent(ident + 2)
 						+ "access.getOutputDoc().addOperation(o);\n");

@@ -13,9 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.repository.api.ServerStatusChecker;
+import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.Repository;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
+import com.dexels.navajo.server.enterprise.workflow.WorkFlowManagerInterface;
+import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler;
 
 public class StatusServlet extends HttpServlet implements ServerStatusChecker {
 
@@ -25,7 +29,11 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker {
     private JavaCompiler javaCompiler;
     private Repository repository;
     private NavajoConfigInterface navajoConfig;
-
+    private TribeManagerInterface tribeManagerInterface;
+    private WorkFlowManagerInterface workflowManagerInterface;
+    private TmlScheduler tmlScheduler;
+    
+    
     private final static Logger logger = LoggerFactory.getLogger(StatusServlet.class);
 
     public StatusServlet() {
@@ -37,6 +45,37 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker {
 
     public void deactivate() {
         logger.info("Navajo Status servlet deactivated");
+    }
+    
+   
+ 
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String requestTpe = req.getParameter("type");
+        String res = null;
+        if (requestTpe.equals("normalpoolstatus")) {
+            if (tmlScheduler == null) {
+                res = "error";
+            } else {
+                res = tmlScheduler.getDefaultQueue().getActiveRequestCount() + "/"
+                        + tmlScheduler.getDefaultQueue().getMaximumActiveRequestCount() + "/"
+                        + tmlScheduler.getDefaultQueue().getQueueSize();
+            }
+           
+
+        } else  if (requestTpe.equals("memory")) {
+         // Check current memory usage.
+            long max = Runtime.getRuntime().maxMemory();
+            long total = Runtime.getRuntime().totalMemory();
+            long free = Runtime.getRuntime().freeMemory();
+            res = (total - free) + "/" + max;
+
+        }
+        resp.setContentType("text/plain");
+        PrintWriter writer = resp.getWriter();
+        writer.write(res);
+        writer.close();
     }
 
     @Override
@@ -62,7 +101,21 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker {
                 logger.info("Status failed: 503, no repository");
                 return;
             }
-
+            if (tribeManagerInterface == null) {
+                resp.sendError(504, "No tribe manager");
+                logger.info("Status failed: 504, no repository");
+                return;
+            }
+            if (!tribeManagerInterface.isActive()) {
+                resp.sendError(505, "No activate tribe manager");
+                logger.info("Status failed: 505, no repository");
+                return;
+            }
+            if (workflowManagerInterface == null) {
+                resp.sendError(506, "No workflow manager");
+                logger.info("Status failed: 506, no repository");
+                return;
+            }
             // Shouldn't happen?
             return;
         }
@@ -105,10 +158,41 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker {
     public void clearRepository(Repository repository) {
         this.repository = null;
     }
+    
 
     @Override
     public Boolean isOk() {
-        return navajoConfig != null && dispatcherInterface != null && javaCompiler != null && repository != null;
+        return navajoConfig != null && dispatcherInterface != null && javaCompiler != null 
+        		&& repository != null && workflowManagerInterface!=null && tribeManagerInterface!=null;
     }
 
+	public TribeManagerInterface getTribeManagerInterface() {
+		return tribeManagerInterface;
+	}
+
+	public void setTribeManagerInterface(TribeManagerInterface tribeManagerInterface) {
+		this.tribeManagerInterface = tribeManagerInterface;
+	}
+
+	public void clearTribeManagerInterface(TribeManagerInterface tribeManagerInterface) {
+		this.tribeManagerInterface = null;
+	}
+
+
+	public void setWorkflowManagerInterface(WorkFlowManagerInterface workflowManagerInterface) {
+		this.workflowManagerInterface = workflowManagerInterface;
+	}
+
+	public void clearWorkflowManagerInterface(WorkFlowManagerInterface workflowManagerInterface) {
+		this.workflowManagerInterface = null;
+	}
+	
+	public void setPriorityTmlScheduler(TmlScheduler sched) {
+	    this.tmlScheduler = sched;
+	}
+	
+	public void clearPriorityTmlScheduler(TmlScheduler sched) {
+        this.tmlScheduler = null;
+    }
+	
 }

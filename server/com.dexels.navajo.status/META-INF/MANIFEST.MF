@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Status Servlet
 Bundle-SymbolicName: com.dexels.navajo.status
-Bundle-Version: 1.0.6.qualifier
+Bundle-Version: 1.0.8.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.compiler,
@@ -10,6 +10,9 @@ Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.repository.api;version="[5.1.0,7.0.0)",
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
+ com.dexels.navajo.server.enterprise.tribe,
+ com.dexels.navajo.server.enterprise.workflow,
+ com.dexels.navajo.server.listener.http.schedulers.priority,
  javax.servlet;version="3.0.0",
  javax.servlet.http;version="3.0.0",
  org.slf4j;version="1.7.1"

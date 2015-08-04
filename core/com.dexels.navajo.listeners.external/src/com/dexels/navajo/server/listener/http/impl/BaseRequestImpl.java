@@ -151,8 +151,12 @@ public class BaseRequestImpl implements AsyncRequest {
 	@Override
 	public ClientInfo createClientInfo(long scheduledAt, long startedAt,
 			int queueLength, String queueId) {
+	    String ip = request.getHeader("X-Forwarded-For");
+	    if (ip == null || ip.equals("")) {
+	        ip = request.getRemoteAddr();
+	    }
 		ClientInfo clientInfo = new ClientInfo(
-				request.getRemoteAddr(),
+				ip,
 				"unknown",
 				contentEncoding,
 				(int) (scheduledAt - connectedAt),

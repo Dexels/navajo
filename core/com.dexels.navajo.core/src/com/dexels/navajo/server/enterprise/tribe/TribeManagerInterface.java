@@ -163,4 +163,5 @@ public interface TribeManagerInterface {
 
 	List<TribalNumber> getDistributedCounters();
     
+	public boolean isActive();
 }

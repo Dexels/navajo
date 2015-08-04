@@ -795,7 +795,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				} 
 			}
 			if ( dispatcher != null ) {
-				return dispatcher.handle(cleaned, false);
+				return dispatcher.handle(cleaned, myOperation.getTenant(), false);
 			} else
 				if ( client != null ) {
 					return client.call(cleaned);

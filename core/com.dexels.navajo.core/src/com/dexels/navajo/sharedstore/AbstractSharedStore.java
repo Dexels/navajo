@@ -30,7 +30,7 @@ public abstract class AbstractSharedStore implements SharedStoreInterface {
 
     @Override
     public void remove(String tenant, String parent, String name) {
-//        remove(parent, getTenantSpecificName(tenant, name));
+        remove(parent, getTenantSpecificName(tenant, name));
     }
 
     @Override

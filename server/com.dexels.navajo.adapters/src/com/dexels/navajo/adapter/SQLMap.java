@@ -988,8 +988,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
                     con.setTransactionIsolation(transactionIsolation);
                 }
                 // Set session identification.
-                SessionIdentification.setSessionId(this.getMetaData() != null ? this.getMetaData().getVendor()
-                        : "Unknown", con, this.myAccess);
+               // SessionIdentification.setSessionId(this.getMetaData() != null ? this.getMetaData().getVendor(): "Unknown", con, this.myAccess);
             }
 
             if (this.con != null) {
@@ -1377,11 +1376,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		if (fixedBroker == null || myConnectionBroker == null) {
 			if(GrusProviderFactory.getInstance()==null) {
 				throw new UserException(-1,
-						"Could not create connection to datasource "
-								+ this.datasource + ", using username "
-								+ this.username);
+						"Could not create connection to datasource " + this.datasource + ", using username " + this.username);
 			} else {
-//				logger.warn("Metadata not yet implemented in multi tenant");
+			    // TODO: Fix this in OSGi
+			    logger.trace("Database Metadata not yet implemented in OSGi");
+			    return null;
 			}
 		}
 		return fixedBroker.getMetaData(this.datasource, null, null);

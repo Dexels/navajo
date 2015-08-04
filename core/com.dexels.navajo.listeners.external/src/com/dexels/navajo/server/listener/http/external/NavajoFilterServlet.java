@@ -1,6 +1,8 @@
 package com.dexels.navajo.server.listener.http.external;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,18 +32,19 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 
 	private NavajoRequestWrapper requestWrapper;
 	private LocalClient localClient;
+	private final Map<String,LocalClient> localClients = new HashMap<String, LocalClient>();
 
 	@Override
 	protected void service(final HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
 			String instance = determineInstanceFromRequest(req);
-			Navajo input = buildRequest(getInitParameter("inputFilterClass"), req);
 			LocalClient localClient = getLocalClient();
 			if ( localClient == null ) {
 				localClient = getLocalClient(req);
 			} 
 			logger.info("Instance determined from request: "+instance);
+			Navajo input = buildRequest(getInitParameter("inputFilterClass"), req);
 			Navajo result = localClient.call(instance, input);
 			responseWrapper.processResponse(req, input, result, resp);
 
@@ -53,7 +56,28 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 		}
 	}
 	
+	public void addLocalClient(LocalClient localClient, Map<String,Object> settings) {
+		String name = (String) settings.get("instance");
+		if (name==null) {
+			this.localClient  = localClient;
+		} else {
+			this.localClients.put(name, localClient);
+		}
+		
+	}
 	
+	
+
+	public void removeLocalClient(LocalClient localClient, Map<String,Object> settings) {
+		String name = (String) settings.get("instance");
+		if (name==null) {
+			this.localClient  = null;
+		} else {
+			this.localClients.remove(name);
+		}
+//		this.localClient = null;
+	}
+
 	private Navajo buildRequest(String inFilter, HttpServletRequest request)
 			throws ServletException, IOException {
 		NavajoRequestWrapper nrw = getRequestWrapper(inFilter);
@@ -109,13 +133,13 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 		return localClient;
 	}
 
-	public void setLocalClient(LocalClient localClient) {
-		this.localClient = localClient;
-	}
-
-	public void clearLocalClient(LocalClient localClient) {
-		this.localClient = null;
-	}
+//	public void setLocalClient(LocalClient localClient) {
+//		this.localClient = localClient;
+//	}
+//
+//	public void clearLocalClient(LocalClient localClient) {
+//		this.localClient = null;
+//	}
 
 	@SuppressWarnings("unchecked")
 	private NavajoRequestWrapper getRequestWrapper(String inFilter) {
