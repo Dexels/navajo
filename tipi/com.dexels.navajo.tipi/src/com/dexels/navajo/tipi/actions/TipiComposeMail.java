@@ -57,7 +57,7 @@ public class TipiComposeMail extends TipiAction {
 				emailAddress = current.getProperty(propertyName).getValue();
 				if (emailAddress != null && !"".equals(emailAddress.trim())) {
 					recipientsFound = true;
-					emailString = emailString + emailAddress + ",";
+					emailString = emailString + emailAddress + ";";
 				}
 			}
 			if (recipientsFound) {
