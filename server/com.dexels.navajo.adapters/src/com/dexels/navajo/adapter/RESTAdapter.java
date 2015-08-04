@@ -201,13 +201,7 @@ public class RESTAdapter extends NavajoMap {
         try {
             if (result != null) {
                 rawResult = new String(result.getData());
-                // TODO: remove this ugly stuff as soon as Lukkien fixed their server
-                if (! rawResult.equals("\"\"")) {
-                    inDoc = json.parse(result.getDataAsStream(), topMessage);
-                } else {
-                    inDoc = NavajoFactory.getInstance().createNavajo();
-                }
-                
+                inDoc = json.parse(result.getDataAsStream(), topMessage);
             } else {
                 inDoc = NavajoFactory.getInstance().createNavajo();
             }
