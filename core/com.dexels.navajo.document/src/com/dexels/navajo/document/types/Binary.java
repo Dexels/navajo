@@ -85,7 +85,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 
     private FormatDescription currentFormatDescription;
 
-	private final transient MessageDigest messageDigest;
+	private transient MessageDigest messageDigest;
 
 	private byte[] digest;
     
@@ -224,6 +224,15 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
     
 	private OutputStream createTempFileOutputStream() throws IOException, FileNotFoundException {
+		if(messageDigest==null) {
+	        MessageDigest md = null;
+			try {
+				md = MessageDigest.getInstance("MD5");
+			} catch (NoSuchAlgorithmException e1) {
+				logger.warn("Failed creating messageDigest in binary. Expect problems", e1);
+			}
+			this.messageDigest = md;
+		}
 		messageDigest.reset();
     	if(NavajoFactory.getInstance().isSandboxMode()) {
     		ByteArrayOutputStream baos = new ByteArrayOutputStream() {
