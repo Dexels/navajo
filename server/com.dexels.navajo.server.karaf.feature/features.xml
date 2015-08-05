@@ -28,8 +28,8 @@
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.20</bundle>
 	</feature>
 
-	<feature version="1.0.1" start-level="80" name="dexels.oauth.web" resolver="(obr)">
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.36</bundle>
+	<feature version="1.0.2" start-level="80" name="dexels.oauth.web" resolver="(obr)">
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.37</bundle>
 	</feature>
 
 
