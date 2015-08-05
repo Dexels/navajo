@@ -68,6 +68,7 @@ public final class Access implements java.io.Serializable, Mappable {
     public static final int EXIT_BREAK = 3;
     public static final int EXIT_USEREXCEPTION = 4;
     public static final int EXIT_EXCEPTION = 5;
+    public static final int EXIT_SCRIPT_NOT_FOUND = 6;
 
     @SuppressWarnings("unused")
     private static final String VERSION = "$Id$";
