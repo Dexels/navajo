@@ -103,10 +103,10 @@
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.adapter' version='3.0.34'
+	<feature resolver="(obr)" name='navajo.adapter' version='3.0.35'
 		start-level='81'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.2.14</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.2.16</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.kml' version='3.0.4'
@@ -385,4 +385,10 @@
 		<bundle dependency='true'>mvn:ch.qos.logback/logback-classic/1.1.2</bundle>
 		<bundle dependency='true'>mvn:ch.qos.logback/logback-core/1.1.2</bundle>
 	</feature>
+    
+        
+    <feature name='rackermon' version='1.0.0'>
+        <feature version="[1.1.0,2)">dexels.repository</feature>
+        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.monitor.rackermon/1.0.1</bundle>
+    </feature>
 </features>
