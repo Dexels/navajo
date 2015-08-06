@@ -387,9 +387,9 @@
 	</feature>
     
         
-    <feature name='rackermon' version='1.0.1'>
+    <feature name='rackermon' version='1.0.2'>
         <feature version="[1.1.0,2)">dexels.repository</feature>
         <bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/3.0.3</bundle>
-        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.monitor.rackermon/1.0.1</bundle>
+        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.monitor.rackermon/1.0.2</bundle>
     </feature>
 </features>
