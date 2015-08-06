@@ -28,8 +28,8 @@
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.20</bundle>
 	</feature>
 
-	<feature version="1.0.1" start-level="80" name="dexels.oauth.web" resolver="(obr)">
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.36</bundle>
+	<feature version="1.0.2" start-level="80" name="dexels.oauth.web" resolver="(obr)">
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.37</bundle>
 	</feature>
 
 
@@ -51,14 +51,14 @@
 		
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.4.10'
+	<feature resolver="(obr)" name='navajo.core' version='3.4.11'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,4)">pax-http</feature>
 		<feature version="[3.0.0,4)">eventadmin</feature>
 		<feature version="[3.0.2,4)">navajo.core.dependencies</feature>
 
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/3.0.22</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/3.0.24</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/2.1.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.6.0</bundle>
