@@ -853,25 +853,33 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
         boolean preventFinalize = false;
 
-        // Log request event ASAP - create a dummy Access object for it
-        // Later use this accessID for the real access object
-        Access requestEventAccess = new Access(1, 1, rpcUser, rpcName, "", "", "", null, false, null);
-        NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(requestEventAccess));
-        appendGlobals(inMessage, instance);
-
         try {
             /**
              * Phase II: Authorisation/Authentication of the user. Is the user
              * known and valid and may it use the specified service? Also log
              * the access.
              */
-
+            
             long startAuth = System.currentTimeMillis();
             if (rpcName == null) {
                 throw new FatalException("No script defined");
             }
-            // If web service is ping webservice, skip authentication.
-            if (useAuthorisation && !skipAuth && !rpcName.equals("NavajoPing")) {
+            
+            if (rpcName.equals("navajo_ping")) {
+                // Ping!
+                outMessage = NavajoFactory.getInstance().createNavajo();
+                Header h = NavajoFactory.getInstance().createHeader(outMessage, "", "", "", -1);
+                outMessage.addHeader(h);
+                return outMessage;
+            }
+            
+            // Log request event - create a dummy Access object for it
+            // Later use this accessID for the real access object
+            Access requestEventAccess = new Access(1, 1, rpcUser, rpcName, "", "", "", null, false, null);
+            NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(requestEventAccess));
+            appendGlobals(inMessage, instance);
+            
+            if (useAuthorisation && !skipAuth) {
                 try {
 
                     if (navajoConfig == null) {
