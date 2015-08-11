@@ -322,14 +322,17 @@ public class TagMap implements Mappable {
 	}
 
 	public TagMap [] getChildren() {
-
-		children = new TagMap[tagList.size()];
-
-		for ( int i = 0; i < tagList.size(); i++) {
-			children[i] = tags.get( tagList.get(i) );
+		if (tags != null)
+		{
+			children = new TagMap[tagList.size()];
+	
+			for ( int i = 0; i < tagList.size(); i++) {
+				children[i] = tags.get( tagList.get(i) );
+			}
+	
+			return children;
 		}
-
-		return children;
+		return new TagMap[0];
 	}
 
 	public void setChildren(TagMap [] all) throws UserException  {

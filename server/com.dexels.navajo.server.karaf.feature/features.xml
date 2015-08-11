@@ -28,8 +28,8 @@
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.20</bundle>
 	</feature>
 
-	<feature version="1.0.1" start-level="80" name="dexels.oauth.web" resolver="(obr)">
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.36</bundle>
+	<feature version="1.0.2" start-level="80" name="dexels.oauth.web" resolver="(obr)">
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.37</bundle>
 	</feature>
 
 
@@ -51,20 +51,20 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.4.10'
+	<feature resolver="(obr)" name='navajo.core' version='3.4.13'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,4)">pax-http</feature>
 		<feature version="[3.0.0,4)">eventadmin</feature>
 		<feature version="[3.0.2,4)">navajo.core.dependencies</feature>
 
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/3.0.22</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/3.0.24</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/2.1.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.6.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.2.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/2.0.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.7.14</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.7.18</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.1.6</bundle>
 	</feature>
 	<feature resolver="(obr)" name='navajo.function' version='3.0.11'
@@ -103,10 +103,10 @@
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.adapter' version='3.0.34'
+	<feature resolver="(obr)" name='navajo.adapter' version='3.0.35'
 		start-level='81'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.2.14</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.2.16</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.kml' version='3.0.4'
@@ -363,10 +363,10 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.soap/1.0.13</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.entity' version='1.1.11'
+	<feature resolver="(obr)" name='navajo.entity' version='1.1.12'
 		start-level='81'>
         <feature version="[3.0.8,4)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.entity/1.3.10</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.entity/1.4.0</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='sportlink.renflex' version='1.0.3' start-level='81'>
@@ -385,4 +385,11 @@
 		<bundle dependency='true'>mvn:ch.qos.logback/logback-classic/1.1.2</bundle>
 		<bundle dependency='true'>mvn:ch.qos.logback/logback-core/1.1.2</bundle>
 	</feature>
+
+
+    <feature name='rackermon' version='1.0.7'>
+        <feature version="[1.1.0,2)">dexels.repository</feature>
+        <bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/3.0.3</bundle>
+        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.monitor.rackermon/1.1.2</bundle>
+    </feature>
 </features>
