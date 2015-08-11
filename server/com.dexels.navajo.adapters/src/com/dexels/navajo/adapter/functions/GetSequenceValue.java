@@ -42,6 +42,7 @@ public class GetSequenceValue extends FunctionInterface {
         // Use SingleValueQuery to execute the statement
         SingleValueQuery query = new SingleValueQuery();
         query.reset();
+        query.setAccess(getAccess());
         // Insert parameters
         if (transactionContext != -1) {
             query.insertOperand(transactionContext);
