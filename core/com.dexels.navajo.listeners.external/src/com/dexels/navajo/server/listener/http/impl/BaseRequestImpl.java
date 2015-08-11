@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,8 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.ClientInfo;
 
@@ -40,7 +43,10 @@ public class BaseRequestImpl implements AsyncRequest {
 	private String url;
 	private Navajo inDoc;
 	private final String instance;
-
+	private String dataPath = null;
+	private String fileName;
+	private String contentType;
+	
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseRequestImpl.class);
 	
@@ -61,6 +67,9 @@ public class BaseRequestImpl implements AsyncRequest {
 		setUrl(createUrl(this.request));
 		this.inDoc = parseInputNavajo(request.getInputStream());
 		this.instance = instance;
+		this.dataPath = request.getParameter("dataPath");
+		this.fileName = request.getParameter("fileName");
+		this.contentType = request.getParameter("ContentType");
 	}
 
 	public BaseRequestImpl(Navajo in, HttpServletRequest request, HttpServletResponse response, String instance)  {
@@ -74,6 +83,10 @@ public class BaseRequestImpl implements AsyncRequest {
 		setUrl(createUrl(this.request));
 		this.inDoc = in;
 		this.instance = instance;
+		this.dataPath = request.getParameter("dataPath");
+		this.fileName = request.getParameter("fileName");
+		this.contentType = request.getParameter("ContentType");
+		
 	}
 	
 	@Override
@@ -205,16 +218,42 @@ public class BaseRequestImpl implements AsyncRequest {
 	public void writeOutput(Navajo inDoc, Navajo outDoc,long scheduledAt, long startedAt, String threadStatus) throws IOException,
 			FileNotFoundException, UnsupportedEncodingException,
 			NavajoException {
-		response.setContentType("text/xml; charset=UTF-8");
-//		response.setHeader("Connection", "close"); 
-
-		OutputStream out = getOutputStream(acceptEncoding, response.getOutputStream());
 
 		long finishedScriptAt = System.currentTimeMillis();
 		// postTime =
 		long postTime = scheduledAt - connectedAt;
 		long queueTime = startedAt - scheduledAt;
 		long serverTime = finishedScriptAt - startedAt;
+		if(dataPath!=null) {
+			Property data = outDoc.getProperty(dataPath);
+			Object dataObject = data.getTypedValue();
+			if(dataObject instanceof Binary) {
+				Binary b = (Binary)dataObject;
+				if(contentType!=null) {
+					response.setContentType(contentType);
+				} else {
+					response.setContentType(b.guessContentType());
+				}
+				if(this.fileName!=null) {
+					response.setHeader("Content-Disposition","attachment; filename="+this.fileName);
+
+				}
+				OutputStream out = getOutputStream(acceptEncoding, response.getOutputStream());
+				b.write(out);
+				out.close();
+				return;
+			} else {
+				response.setContentType("text/plain; charset=UTF-8");
+				OutputStream out = getOutputStream(acceptEncoding, response.getOutputStream());
+				OutputStreamWriter osw = new OutputStreamWriter(out);
+				osw.write(""+dataObject);
+				osw.close();
+			}
+		}
+		OutputStream out = getOutputStream(acceptEncoding, response.getOutputStream());
+		response.setContentType("text/xml; charset=UTF-8");
+//		response.setHeader("Connection", "close"); 
+
 		if(outDoc==null) {
 			logger.warn("Null outDoc. This is going to hurt");
 			response.sendError(500, "No response received, possible scheduling problem.");
