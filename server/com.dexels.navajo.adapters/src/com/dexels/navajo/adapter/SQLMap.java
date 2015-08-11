@@ -572,6 +572,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	}
 
 	public void setAutoCommit(boolean b) throws UserException {
+		
+		if ( transactionContext != -1 ) {
+			logger.warn("Cannot set auto commit flag on existing transaction context.");
+			return;
+		}
 		try {
 			createConnection();
 			if (con != null
