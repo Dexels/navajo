@@ -912,7 +912,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
                     }
 
                     if (GrusProviderFactory.getInstance().threadContainsConnection(instance, datasource)) {
-                        logger.warn("Opening yet another connection {} for {} in the same thread!", datasource, instance);
+                        logger.debug("Opening yet another connection {} for {} in the same thread!", datasource, instance);
                         // gc = GrusProviderFactory.getInstance().requestExistingConnection(instance, datasource);
                         // this.ownConnection = false;
                         // transactionContext = ((Long) gc.getId()).intValue();
