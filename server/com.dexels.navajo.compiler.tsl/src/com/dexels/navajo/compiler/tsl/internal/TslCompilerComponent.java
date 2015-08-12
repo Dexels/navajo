@@ -307,6 +307,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		}
 		xe.setAttribute("activate", "activate");
 		xe.setAttribute("deactivate", "deactivate");
+		xe.setAttribute("configuration-policy", "optional");
 		XMLElement implementation = new CaseSensitiveXMLElement(
 				"implementation");
 		xe.addChild(implementation);

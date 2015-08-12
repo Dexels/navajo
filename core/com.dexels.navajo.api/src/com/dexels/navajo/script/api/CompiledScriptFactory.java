@@ -13,6 +13,7 @@ public abstract class CompiledScriptFactory {
 			.getLogger(CompiledScriptFactory.class);
 	
 	private String serviceName;
+	private String debug;
 	private final Map<String,Object> resources = new HashMap<String, Object>();
 	
 	public abstract CompiledScriptInterface getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException;
@@ -37,6 +38,7 @@ public abstract class CompiledScriptFactory {
 				return Class.forName(className, true, CompiledScriptFactory.this.getClass().getClassLoader()); 
 			}
 		});
+		instance.setDebugMode(debug);
 		instance.setFactory(this);
 	}
 	
@@ -44,6 +46,7 @@ public abstract class CompiledScriptFactory {
 	
 	public void activate(Map<String,String> properties) {
 		serviceName = properties.get("navajo.scriptName");
+		debug = properties.get("navajo.debug");
 	}
 
 	public void deactivate() {

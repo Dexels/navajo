@@ -710,6 +710,9 @@ public final class Access implements java.io.Serializable, Mappable {
     }
 
     public final static PrintWriter getConsoleWriter(final Access a) {
+        if (a != null) {
+            return a.consoleOutput;
+        }
         return new PrintWriter(System.err);
     }
 
@@ -784,8 +787,16 @@ public final class Access implements java.io.Serializable, Mappable {
         return queueId;
     }
 
-    public boolean needsFullAccessLog() {
+    public boolean logFullAccessLog() {
         return isDebugAll() || (getCompiledScript() != null && getCompiledScript().isDebugAll());
+    }
+    
+    public boolean logRequestAccessLog() {
+        return getCompiledScript() != null && getCompiledScript().debugRequest();
+    }
+    
+    public boolean logResponseAccessLog() {
+        return getCompiledScript() != null && getCompiledScript().debugResponse();
     }
 
     public void setQueueId(String queueId) {

@@ -67,7 +67,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
 
     protected NavajoClassSupplier classLoader;
     private final HashMap functions = new HashMap();
-
+    private String debugMode = "none";
     /**
      * Fields accessable by webservice via Mappable interface.
      */
@@ -79,7 +79,6 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     protected String lockName;
     protected String lockOwner;
     protected String lockClass;
-    protected boolean debugAll = false;
 
     protected MappableTreeNode currentMap = null;
     protected final Stack treeNodeStack = new Stack();
@@ -284,7 +283,11 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
      */
     @Override
     public void dumpRequest() {
-
+        if (debugRequest() &&  System.getenv("DEBUG_SCRIPTS") != null &&  System.getenv("DEBUG_SCRIPTS").equals("true") ) {
+            System.err.println(" --------- BEGIN NAVAJO REQUEST ---------");
+            myAccess.getInDoc().write(System.err);
+            System.err.println("--------- END NAVAJO REQUEST ---------");
+        }
     }
 
     /*
@@ -294,7 +297,44 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
      */
     @Override
     public void dumpResponse() {
+        if (System.getenv("DEBUG_SCRIPTS") != null &&  System.getenv("DEBUG_SCRIPTS").equals("true") ) {
+            if (debugResponse()) {
+                System.err.println(" --------- BEGIN NAVAJO RESPONSE ---------");
+                myAccess.getOutputDoc().write(System.err);
+                System.err.println("--------- END NAVAJO RESPONSE ---------");
+            }
+           
 
+            String consoleOutput = myAccess.getConsoleOutput();
+            if (consoleOutput != null && !consoleOutput.trim().equals("")) {
+                System.err.println(" --------- BEGIN NAVAJO CONSOLE OUTPUT ---------");
+                System.err.println(consoleOutput);
+                System.err.println("--------- END NAVAJO CONSOLE OUTPUT ---------");
+                
+            }
+        }
+    }
+    
+    @Override
+    public boolean debugRequest() {
+        return (debugMode.indexOf("request") != -1) ||  isDebugAll();
+    }
+    
+    @Override
+    public boolean debugResponse() {
+        return (debugMode.indexOf("response") != -1) || isDebugAll();
+    }
+    
+    @Override
+    public boolean isDebugAll() {
+        return debugMode.indexOf("true") != -1;
+    }
+    
+    @Override
+    public void setDebugMode(String mode) {
+        if (mode != null && !mode.equals("")) {
+            this.debugMode = mode;
+        }
     }
 
     /*
@@ -668,26 +708,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
         return "tsl";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.dexels.navajo.script.api.CompiledScriptInterface#isDebugAll()
-     */
-    @Override
-    public boolean isDebugAll() {
-        return debugAll;
-    }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.dexels.navajo.script.api.CompiledScriptInterface#setDebugAll(boolean)
-     */
-    @Override
-    public void setDebugAll(boolean debugAll) {
-        this.debugAll = debugAll;
-    }
 
     /*
      * (non-Javadoc)

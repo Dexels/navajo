@@ -3350,9 +3350,7 @@ public class TslCompiler {
 						+ scriptPath);
 			}
 			String debugLevel = tslElt.getAttribute("debug");
-			debugInput = (debugLevel.indexOf("request") != -1);
-			debugOutput = (debugLevel.indexOf("response") != -1);
-			debugAll = (debugLevel.indexOf("true") != -1);
+			
 			String description = tslElt.getAttribute("notes");
 			String author = tslElt.getAttribute("author");
 
@@ -3455,10 +3453,8 @@ public class TslCompiler {
 
 			String methodDef = "public final void execute(Access access) throws Exception { \n\n";
 			result.append(methodDef);
-
-			if (debugAll) {
-				result.append("setDebugAll(true);\n");
-			}
+			
+			result.append("setDebugMode(\"" + debugLevel + "\");\n");			
 
 			result.append("try {\n");
 

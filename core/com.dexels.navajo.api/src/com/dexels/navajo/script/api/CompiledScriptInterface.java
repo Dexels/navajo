@@ -95,10 +95,14 @@ public interface CompiledScriptInterface {
 	public String getAuthor();
 
 	public String getScriptType();
+	
+	public void setDebugMode(String mode);
 
 	public boolean isDebugAll();
-
-	public void setDebugAll(boolean debugAll);
+	
+	public boolean debugRequest();
+	
+	public boolean debugResponse();
 
 	public Message getCurrentOutMsg();
 
@@ -123,5 +127,7 @@ public interface CompiledScriptInterface {
 	public Navajo getInDoc();
 
 	public Stack<Message> getOutMsgStack();
+
+  
 
 }
