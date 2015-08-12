@@ -508,6 +508,10 @@ public class GenericHandler extends ServiceHandler {
               throw (AuthorizationException) e;
             }
             else {
+                if ( e instanceof FileNotFoundException ) {
+                    access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
+                }
+                
             	AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, e.getMessage() + (!compilerErrors.toString().trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), Level.SEVERE, access.accessID);
             	throw new SystemException( -1, e.getMessage() + (!compilerErrors.toString().trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), e);
             }
