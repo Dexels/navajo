@@ -122,7 +122,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	public void setContext(TipiContext c) {
 		context = c;
 		String lcode = c.getApplicationInstance().getLocaleCode();
-		
+//		c.get
 		String lcSpecificValidations = lcode ==null? "validation.properties" : "validation_" + lcode + ".properties";
 		if (errorMessageBundle == null) {
 			// attempt remote propertyresource bundle;
