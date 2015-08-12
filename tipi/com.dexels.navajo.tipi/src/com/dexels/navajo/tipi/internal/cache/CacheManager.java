@@ -16,4 +16,5 @@ public interface CacheManager {
 	public URL getLocalURL(String location) throws IOException;
 
 	public void flushCache();
+
 }

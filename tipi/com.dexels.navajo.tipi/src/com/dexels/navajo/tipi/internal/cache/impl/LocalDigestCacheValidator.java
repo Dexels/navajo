@@ -1,7 +1,10 @@
 package com.dexels.navajo.tipi.internal.cache.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -37,7 +40,7 @@ public class LocalDigestCacheValidator implements CacheValidator {
 		String localDigest = (String) localDigestProperties.get(location);
 		String remoteDigest = (String) remoteDigestProperties.get(location);
 		if(remoteDigest==null) {
-			logger.info("No remote found for: "+location+" assuming absent in loader: "+id);
+			logger.info("No remote found for: "+location+" assuming absent in loader: "+id+" # of loaded resources: "+remoteDigestProperties.size());
 			throw new IOException("Resource absent");
 		}
 		if(localDigest==null || remoteDigest == null) {
@@ -79,6 +82,7 @@ public class LocalDigestCacheValidator implements CacheValidator {
 	}
 	private void loadDigestFile(String location) throws IOException {
 		InputStream in = localStorage.getLocalData(location);
+		logger.info("Getting location: "+location);
 		if(in !=null) {
 			try {
 				localDigestProperties.load(in);
@@ -100,6 +104,19 @@ public class LocalDigestCacheValidator implements CacheValidator {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+
+	@Override
+	public void update(String location) throws IOException {
+		localDigestProperties.put(location, remoteDigestProperties.get(location));
+//		localStorage.s
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		localDigestProperties.store(baos, "Update at: "+new Date());
+		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+		Map<String, Object> metadata = new HashMap<String, Object>();
+		localStorage.storeData(LOCAL_DIGEST_PROPERTIES, bais, metadata);
+		bais.close();
 	}
 
 }

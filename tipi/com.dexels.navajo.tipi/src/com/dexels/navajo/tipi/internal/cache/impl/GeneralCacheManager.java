@@ -41,6 +41,7 @@ public class GeneralCacheManager implements CacheManager {
 			return null;
 		}
 		local.storeData(location, is, metadata);
+		cacheValidator.update(location);
 		return local.getLocalData(location);
 	}
 

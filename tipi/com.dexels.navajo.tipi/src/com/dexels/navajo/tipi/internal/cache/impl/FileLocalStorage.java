@@ -42,6 +42,7 @@ public class FileLocalStorage implements LocalStorage {
 
 	
 	public FileLocalStorage(File base) {
+		logger.info("Creating local storage at: "+base.getAbsolutePath());
 		this.baseFile = base;
 		if(!baseFile.exists()) {
 			baseFile.mkdirs();
