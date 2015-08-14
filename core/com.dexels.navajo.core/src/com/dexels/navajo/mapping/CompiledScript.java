@@ -59,6 +59,7 @@ import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionData;
+import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 
@@ -458,6 +459,9 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
                     throw be;
                 } catch (UserException e) {
                     access.setExitCode(Access.EXIT_USEREXCEPTION);
+                    throw e;
+                } catch (ConditionErrorException e) {
+                    access.setExitCode(Access.EXIT_VALIDATION_ERR);
                     throw e;
                 } catch (Exception e) {
                     access.setExitCode(Access.EXIT_EXCEPTION);
