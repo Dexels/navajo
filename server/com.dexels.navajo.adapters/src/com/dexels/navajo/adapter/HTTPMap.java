@@ -321,7 +321,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 	}
 
 	protected void decreaseInstanceCount() {
-		instances++;
+		instances--;
 	}
 	
 
