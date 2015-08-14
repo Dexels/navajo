@@ -38,7 +38,7 @@ public abstract class CompiledScriptFactory {
 				return Class.forName(className, true, CompiledScriptFactory.this.getClass().getClassLoader()); 
 			}
 		});
-		instance.setDebugMode(debug);
+		instance.setConfigDebugMode(debug);
 		instance.setFactory(this);
 	}
 	

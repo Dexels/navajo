@@ -64,10 +64,10 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, CompiledScriptInterface {
-
+    private final static String UNSET_CONFIG_MODE = "unset";
     protected NavajoClassSupplier classLoader;
     private final HashMap functions = new HashMap();
-    private String debugMode = "none";
+    private String configDebugMode = UNSET_CONFIG_MODE;
     /**
      * Fields accessable by webservice via Mappable interface.
      */
@@ -316,25 +316,52 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     }
     
     @Override
+    public boolean isDebugAll() {
+        if (!configDebugMode.equals(UNSET_CONFIG_MODE)) {
+            return debugAll(configDebugMode);
+        }
+        return debugAll(getScriptDebugMode());
+    }
+    @Override
     public boolean debugRequest() {
-        return (debugMode.indexOf("request") != -1) ||  isDebugAll();
+        if (!configDebugMode.equals(UNSET_CONFIG_MODE)) {
+            return debugRequest(configDebugMode);
+        }
+        return  debugRequest(getScriptDebugMode());
     }
     
     @Override
     public boolean debugResponse() {
-        return (debugMode.indexOf("response") != -1) || isDebugAll();
+        if (!configDebugMode.equals(UNSET_CONFIG_MODE)) {
+            return debugResponse(configDebugMode);
+        } 
+        return debugResponse(getScriptDebugMode());
+    }
+    
+    
+    public boolean debugRequest(String type) {
+        return (type.indexOf("request") != -1) ||  debugAll(type);
+    }
+    
+ 
+    public boolean debugResponse(String type) {
+        return (type.indexOf("response") != -1) || debugAll(type);
+    }
+    
+    public boolean debugAll(String type) {
+        return type.indexOf("true") != -1;
     }
     
     @Override
-    public boolean isDebugAll() {
-        return debugMode.indexOf("true") != -1;
-    }
-    
-    @Override
-    public void setDebugMode(String mode) {
+    public void setConfigDebugMode(String mode) {
         if (mode != null && !mode.equals("")) {
-            this.debugMode = mode;
+            this.configDebugMode = mode;
         }
+    }
+    
+    @Override
+    public String getScriptDebugMode() {
+        return "";
     }
 
     /*

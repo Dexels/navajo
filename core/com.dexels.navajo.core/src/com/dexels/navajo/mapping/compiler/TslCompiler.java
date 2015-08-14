@@ -3271,31 +3271,14 @@ public class TslCompiler {
 
 	}
 
-	private void dumpRequestMethod(boolean debugInput,
-			StringBuffer generatedCode) {
-
-		if (debugInput) {
-			generatedCode.append("public final void dumpRequest() {\n");
-			generatedCode.append("System.err.println(new Date());");
-			generatedCode.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
-			generatedCode.append("myAccess.getInDoc().write(System.err);\n");
-			generatedCode.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
-			generatedCode.append("}\n\n");
-		}
-	}
-	
-	private void dumpResponseMethod(boolean debugOutput,
-            StringBuffer generatedCode) {
-
-        if (debugOutput) {
-            generatedCode.append("public final void dumpResponse() {\n");
-            generatedCode.append("System.err.println(new Date());");
-            generatedCode.append("System.err.println(\"\\n --------- BEGIN NAVAJO RESPONSE ---------\\n\");\n");
-            generatedCode.append("myAccess.getOutputDoc().write(System.err);\n");
-            generatedCode.append("System.err.println(\"\\n --------- END NAVAJO RESPONSE ---------\\n\");\n");
-            generatedCode.append("}\n\n");
-        }
+    private void generateSetScriptDebug(String value, StringBuffer generatedCode) {
+        generatedCode.append("@Override \n");
+        generatedCode.append("public final String getScriptDebugMode() {\n");
+        generatedCode.append("    return \"" + value + "\";");
+        generatedCode.append("}\n\n");
     }
+	
+
 
 	private final void compileScript(InputStream is, String packagePath,
 			String script, String scriptPath, Writer fo, List<Dependency> deps,
@@ -3440,10 +3423,7 @@ public class TslCompiler {
 				// includeArray[i]);
 				includeNode(scriptPath, includeArray[i], tslDoc, tenant, deps);
 			}
-
-			// Generate dump request/response Navajo
-			dumpRequestMethod((debugInput || debugAll), result);
-            dumpResponseMethod((debugOutput || debugAll), result);
+			generateSetScriptDebug(debugLevel, result);
 
 			// Generate validation code.
 			generateValidations(tslDoc, result);
@@ -3454,8 +3434,6 @@ public class TslCompiler {
 			String methodDef = "public final void execute(Access access) throws Exception { \n\n";
 			result.append(methodDef);
 			
-			result.append("setDebugMode(\"" + debugLevel + "\");\n");			
-
 			result.append("try {\n");
 
 			result.append("inDoc = access.getInDoc();\n");

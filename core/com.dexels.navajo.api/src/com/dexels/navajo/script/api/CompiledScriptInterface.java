@@ -96,7 +96,9 @@ public interface CompiledScriptInterface {
 
 	public String getScriptType();
 	
-	public void setDebugMode(String mode);
+	public void setConfigDebugMode(String mode);
+
+	public String getScriptDebugMode();
 
 	public boolean isDebugAll();
 	
@@ -127,6 +129,7 @@ public interface CompiledScriptInterface {
 	public Navajo getInDoc();
 
 	public Stack<Message> getOutMsgStack();
+
 
   
 
