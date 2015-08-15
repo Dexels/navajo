@@ -51,9 +51,9 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.4.15'
+	<feature resolver="(obr)" name='navajo.core' version='3.4.16'
 		start-level='80'>
-		<details>Navajo Core Components</details>
+		<details>Navajo Core Components</details> 
 		<feature version="[3.0.0,4)">pax-http</feature>
 		<feature version="[3.0.0,4)">eventadmin</feature>
 		<feature version="[3.0.2,4)">navajo.core.dependencies</feature>
@@ -64,7 +64,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.6.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.2.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/2.0.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.8.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.8.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.1.8</bundle>
 	</feature>
 	<feature resolver="(obr)" name='navajo.function' version='3.0.11'
@@ -386,10 +386,10 @@
 	</feature>
 
 
-    <feature name='rackermon' version='1.0.23'>
+    <feature name='rackermon' version='1.0.24'>
         <feature version="[1.1.0,2)">dexels.repository</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.javax.mail/1.4.1_5</bundle>
         <bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/3.0.3</bundle>
-        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.monitor.rackermon/1.1.18</bundle>
+        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.monitor.rackermon/1.1.19</bundle>
     </feature>
 </features>
