@@ -176,6 +176,7 @@ public class VaadinTipiContext extends TipiContext {
 			String encoded = URLEncoder.encode(expression,"UTF-8");
 			TipiVaadinApplication tva = (TipiVaadinApplication) getVaadinApplication();
 			String referer = tva.getReferer();
+			logger.info("Ref: "+referer+" : "+expression+" mime: "+mime);
 			if(referer!=null) {
 				URL contextUrl = getVaadinApplication().getContextUrl();
 				String path = contextUrl.getPath()+"?evaluate="+encoded;
