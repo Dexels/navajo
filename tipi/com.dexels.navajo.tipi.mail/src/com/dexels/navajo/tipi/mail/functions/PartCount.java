@@ -37,9 +37,9 @@ public class PartCount extends FunctionInterface {
 			MimeMultipart mmp = new MimeMultipart(ds);
 			return mmp.getCount();
 		} catch (MessagingException e) {
-			logger.error("Error: ",e);
+			logger.error("Can not parse as multipart, assuming single part. ");
+			return 1;
 		}
-		return null;
 
 	}
 	
