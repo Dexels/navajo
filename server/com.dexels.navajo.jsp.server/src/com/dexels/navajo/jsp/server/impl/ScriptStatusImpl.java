@@ -101,21 +101,36 @@ public class ScriptStatusImpl implements ScriptStatus {
 	 * @return
 	 */
 	private File getSource(File sourceDir, final String serviceName) {
-		File[] files = sourceDir.listFiles(new FilenameFilter() {
-			
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.startsWith(serviceName);
-			}
-		});
-		if(files==null || files.length==0) {
+	    File[] filesExact = sourceDir.listFiles(new FilenameFilter() {
+            
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.equals(serviceName+".xml");
+            }
+        });
+	    File[] filesStarting = sourceDir.listFiles(new FilenameFilter() {
+            
+            @Override
+            public boolean accept(File dir, String name) {
+                if (serviceName.contains("_")) {
+                    return name.startsWith(serviceName);
+                } else {
+                    return name.startsWith(serviceName+"_");
+                }
+               
+            }
+        });
+	    
+	    if (filesExact != null && filesExact.length > 0) {
+	        return filesExact[0];
+	    }
+		
+		if(filesStarting==null || filesStarting.length==0) {
 			logger.error("No qualifying script found in folder: "+sourceDir.getAbsolutePath()+" with name like: "+serviceName+".*");
 			return null;
 		}
-		if(files.length>1) {
-			
-		}
-		return files[0];
+		// TODO : which file is best?
+		return filesStarting[0];
 	}
 	
 	@Override
