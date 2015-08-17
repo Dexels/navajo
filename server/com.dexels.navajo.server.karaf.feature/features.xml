@@ -3,7 +3,7 @@
 	name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
 
-    <feature version="1.1.18" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
+    <feature version="1.1.19" start-level="80" name="dexels.repository" install="auto" resolver="(obr)">
         <feature version="[3.0.0,4)">eventadmin</feature>
         <feature version="[3.0.0,4)">scr</feature>
         <feature version="[3.0.0,4)">pax-http</feature>
@@ -20,7 +20,7 @@
         <bundle dependency="true">mvn:org.apache.httpcomponents/httpcore-osgi/4.3.3</bundle>
         <bundle dependency="true">mvn:org.apache.httpcomponents/httpclient-osgi/4.3.6</bundle>
         <bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.6.9</bundle>
-        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/3.0.2</bundle>
+        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/3.0.3</bundle>
     </feature>
 
 	<feature version="1.0.34" start-level="80" name="dexels.oauth" resolver="(obr)">
