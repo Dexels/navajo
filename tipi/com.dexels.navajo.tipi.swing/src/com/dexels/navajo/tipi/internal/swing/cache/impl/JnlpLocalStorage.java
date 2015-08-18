@@ -1,22 +1,15 @@
 package com.dexels.navajo.tipi.internal.swing.cache.impl;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.StringTokenizer;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.FileContents;
@@ -32,7 +25,6 @@ import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 
 public class JnlpLocalStorage implements LocalStorage {
 
-	private static final String MODMAP_KEY = "modificationmap";
 	private static final long DEFAULT_SIZE = 1000000;
 	private final PersistenceService ps;
 	private final BasicService bs;
@@ -44,7 +36,7 @@ public class JnlpLocalStorage implements LocalStorage {
 			.getLogger(JnlpLocalStorage.class);
 	
 	
-	private final Map<String, Long> localModificationMap = new HashMap<String, Long>();
+//	private final Map<String, Long> localModificationMap = new HashMap<String, Long>();
 	private final String id;
 
 	public JnlpLocalStorage(String relativePath, CookieManager cm, String id)
@@ -54,41 +46,41 @@ public class JnlpLocalStorage implements LocalStorage {
 				.lookup("javax.jnlp.PersistenceService");
 		bs = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
 		this.relativePath = relativePath.replaceAll("/", "_");
-		try {
-			parseModMap();
-		} catch (IOException e) {
-			logger.error("Error detected",e);
-		}
+//		try {
+//			parseModMap();
+//		} catch (IOException e) {
+//			logger.error("Error detected",e);
+//		}
 	}
 
-	private void parseModMap() throws IOException {
-		InputStream is = getLocalData(MODMAP_KEY);
-		if (is == null) {
-			// never mind
-			return;
-		}
-		BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
-		String line = null;
-		line = br.readLine();
-		do {
-			if (line.equals("")) {
-				line = br.readLine();
-				break;
-			}
-			if (line.indexOf("|") == -1) {
-				line = br.readLine();
-				break;
-
-			}
-			StringTokenizer st = new StringTokenizer(line, "|");
-			String path = st.nextToken();
-			long l = Long.parseLong(st.nextToken());
-			localModificationMap.put(path, l);
-			line = br.readLine();
-		} while (line != null);
-
-		is.close();
-	}
+//	private void parseModMap() throws IOException {
+//		InputStream is = getLocalData(MODMAP_KEY);
+//		if (is == null) {
+//			// never mind
+//			return;
+//		}
+//		BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+//		String line = null;
+//		line = br.readLine();
+//		do {
+//			if (line.equals("")) {
+//				line = br.readLine();
+//				break;
+//			}
+//			if (line.indexOf("|") == -1) {
+//				line = br.readLine();
+//				break;
+//
+//			}
+//			StringTokenizer st = new StringTokenizer(line, "|");
+//			String path = st.nextToken();
+//			long l = Long.parseLong(st.nextToken());
+//			localModificationMap.put(path, l);
+//			line = br.readLine();
+//		} while (line != null);
+//
+//		is.close();
+//	}
 
 	private URL getCacheBaseURL()  {
 		// return new URL(new URL(bs.getCodeBase(),cacheBase),relativePath);
@@ -143,12 +135,7 @@ public class JnlpLocalStorage implements LocalStorage {
 
 	@Override
 	public long getLocalModificationDate(String location) throws IOException {
-		Long mod = localModificationMap.get(location);
-		if (mod == null) {
-			return -1;
-		}
-		return mod;
-		// return 0;
+		 return 0;
 	}
 
 	@Override
@@ -220,38 +207,9 @@ public class JnlpLocalStorage implements LocalStorage {
 		fc = ps.get(muffinUrl);
 		OutputStream os = fc.getOutputStream(true);
 		copyResource(os, data);
-		if (!location.equals(MODMAP_KEY)) {
-			localModificationMap.put(location, System.currentTimeMillis());
-			// logger.debug("Data saved and modentry added, Local modmap size: "+localModificationMap.size());
-			saveModMap();
-		}
+
 		logger.info("Stored entry into muffinstore. Location: "+location+ " id: "+id+" muffinurl: "+muffinUrl);
 		// throw new IOException("JNLP Storage not yet implemeented");
-	}
-
-	private void saveModMap() {
-		// logger.debug("Saving modmap: "+localModificationMap);
-		Set<Entry<String, Long>> eset = localModificationMap.entrySet();
-		StringBuffer sb = new StringBuffer();
-		for (Entry<String, Long> entry : eset) {
-			sb.append(entry.getKey());
-			sb.append('|');
-			sb.append(entry.getValue());
-			sb.append('\n');
-		}
-		// logger.debug("Modmap: "+sb.toString());
-		byte[] bytes = sb.toString().getBytes();
-		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-		Map<String, Object> meta = new HashMap<String, Object>();
-		meta.put("length", bytes.length);
-		try {
-			storeData(MODMAP_KEY, bais, meta);
-			bais.close();
-		} catch (IOException e) {
-			logger.error("Error detected",e);
-		}
-		// myCookieMananger.setCookie(MODMAP_KEY, sb.toString());
-
 	}
 
 	private final void copyResource(OutputStream out, InputStream in)
