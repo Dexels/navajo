@@ -32,6 +32,7 @@ public class GeneralCacheManager implements CacheManager {
 	@Override
 	public InputStream getContents(String location) throws IOException {
 		final boolean isUpToDate = isUpToDate(location);
+		logger.info("Is up to date: {} == {}",location,isUpToDate);
 		if (isUpToDate) {
 			return local.getLocalData(location);
 		}
@@ -47,7 +48,10 @@ public class GeneralCacheManager implements CacheManager {
 
 	@Override
 	public boolean hasLocal(String location) throws IOException {
-		return local.hasLocal(location);
+		
+		boolean hasLocal = local.hasLocal(location);
+		logger.info("Local present for location: {} == {} ",location,hasLocal);
+		return hasLocal;
 	}
 
 	@Override
