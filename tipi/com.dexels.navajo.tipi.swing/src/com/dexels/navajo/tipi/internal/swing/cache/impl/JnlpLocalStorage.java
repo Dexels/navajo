@@ -108,7 +108,7 @@ public class JnlpLocalStorage implements LocalStorage {
 
 	@Override
 	public void flush(String location) throws IOException {
-		ps.delete(createMuffinUrl(location));
+		delete(location);
 	}
 
 	@Override
@@ -127,6 +127,7 @@ public class JnlpLocalStorage implements LocalStorage {
 			if (fc == null) {
 				return null;
 			}
+			logger.info("Getting local data from JNLP store: "+location);
 			return fc.getInputStream();
 		} catch (MalformedURLException e) {
 			logger.error("Error detected",e);
@@ -152,6 +153,7 @@ public class JnlpLocalStorage implements LocalStorage {
 
 	@Override
 	public URL getURL(String location) throws IOException {
+		logger.debug("URL not happy getting "+location);
 		File f = File.createTempFile("tipiCache", "");
 		InputStream is = getLocalData(location);
 		OutputStream os = new FileOutputStream(f);
@@ -269,8 +271,12 @@ public class JnlpLocalStorage implements LocalStorage {
 
 	@Override
 	public void delete(String location) {
-		// TODO Auto-generated method stub
-		
+		try {
+			ps.delete(createMuffinUrl(location));
+		} catch (IOException e) {
+			logger.error("Error: ", e);
+		}
+
 	}
 
 }

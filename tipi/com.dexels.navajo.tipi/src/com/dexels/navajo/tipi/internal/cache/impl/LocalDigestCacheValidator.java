@@ -116,7 +116,7 @@ public class LocalDigestCacheValidator implements CacheValidator {
 		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 		Map<String, Object> metadata = new HashMap<String, Object>();
 		localStorage.storeData(LOCAL_DIGEST_PROPERTIES, bais, metadata);
+		logger.info("Saved local digest: {}, and location: ",LOCAL_DIGEST_PROPERTIES,location);
 		bais.close();
 	}
-
 }
