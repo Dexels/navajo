@@ -51,7 +51,7 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.4.16'
+	<feature resolver="(obr)" name='navajo.core' version='3.4.17'
 		start-level='80'>
 		<details>Navajo Core Components</details> 
 		<feature version="[3.0.0,4)">pax-http</feature>
@@ -64,7 +64,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.6.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.2.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/2.0.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.8.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.8.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.1.8</bundle>
 	</feature>
 	<feature resolver="(obr)" name='navajo.function' version='3.0.11'
@@ -103,10 +103,10 @@
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.adapter' version='3.0.37'
+	<feature resolver="(obr)" name='navajo.adapter' version='3.0.38'
 		start-level='81'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.2.20</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.2.22</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.kml' version='3.0.4'
@@ -160,9 +160,9 @@
 		     			<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.1.0</bundle> -->
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.status' version='1.0.6'
+	<feature resolver="(obr)" name='navajo.status' version='1.0.7'
 		start-level='81'>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.status/1.0.7</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.status/1.0.9</bundle>
 	</feature>
 
 
@@ -278,11 +278,11 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.71' start-level='81'>
+		version='3.0.72' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.3.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.4.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.4.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.13</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.15</bundle>
         <bundle dependency='true'>mvn:commons-net/commons-net/3.3</bundle>
 	</feature>
 
@@ -305,16 +305,16 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.cluster'
-		version='3.1.11' start-level='81'>
+		version='3.1.12' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.enterprise.core</feature>
 		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.6.9</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.1.22</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.2.0</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.dbreplication'
-		version='3.0.8' start-level='81'>
+		version='3.0.9' start-level='81'>
 		<feature version="[3.0.0,4)">navajo.enterprise.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.dbreplication/3.1.12</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.dbreplication/3.2.0</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='sportlink.libraries' version='3.1.9'
