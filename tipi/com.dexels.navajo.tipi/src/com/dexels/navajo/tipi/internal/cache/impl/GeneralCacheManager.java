@@ -67,6 +67,7 @@ public class GeneralCacheManager implements CacheManager {
 
 	@Override
 	public URL getLocalURL(String location) throws IOException {
+		logger.info("Getting local URL location: {}. Just sayin'",location);
 		if (isUpToDate(location)) {
 			return local.getURL(location);
 		}
