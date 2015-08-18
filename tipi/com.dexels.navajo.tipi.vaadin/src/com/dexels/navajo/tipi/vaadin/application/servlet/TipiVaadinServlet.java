@@ -184,7 +184,7 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		String logoutURL = null;
 		
 		if(referer!=null) {
-			logoutURL = "http://" + referer + request.getRequestURI();
+			logoutURL = referer + request.getRequestURI();
 		} else {
 			logoutURL = request.getRequestURL().toString();
 		}
@@ -205,6 +205,7 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		if(proto==null) {
 			proto = "http";
 		}
+		logger.info("Extracting referer. Proto: "+proto+" : "+host+" : "+url);
 		if(url !=null && host!=null) {
 			return proto+"://"+host+url;
 		}
