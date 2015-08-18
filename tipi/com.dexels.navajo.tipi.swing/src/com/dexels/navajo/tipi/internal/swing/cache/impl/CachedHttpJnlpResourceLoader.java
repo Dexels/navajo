@@ -32,6 +32,8 @@ public class CachedHttpJnlpResourceLoader extends CachedResourceLoader {
 		final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
 		cache = new GeneralCacheManager(localstore,remoteStore,cacheValidator);
 		cacheValidator.setId(id);
+		cacheValidator.setLocalStorage(localstore);
+		cacheValidator.setRemoteStorage(remoteStore);
 		try {
 			cacheValidator.activate();
 		} catch (IOException e) {
