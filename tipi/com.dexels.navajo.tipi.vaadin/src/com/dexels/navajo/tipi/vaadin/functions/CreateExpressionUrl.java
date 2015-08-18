@@ -1,11 +1,18 @@
 package com.dexels.navajo.tipi.vaadin.functions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 
 public class CreateExpressionUrl extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CreateExpressionUrl.class);
+	
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() < 2) {
@@ -22,6 +29,7 @@ public class CreateExpressionUrl extends FunctionInterface {
 		VaadinTipiContext ee = (VaadinTipiContext)getOperand(0);
 		String expression = (String)getOperand(1);
 		String result = ee.createExpressionUrl(expression,mime);
+		logger.info("Expression result: "+result);
 		return result;
 	}
 

@@ -22,6 +22,7 @@ public interface Listener extends Serializable {
 	 */
 	public Navajo perform();
 	
+	public boolean isWorkflowTrigger();
 	
 	/**
 	 * Get owner host.
