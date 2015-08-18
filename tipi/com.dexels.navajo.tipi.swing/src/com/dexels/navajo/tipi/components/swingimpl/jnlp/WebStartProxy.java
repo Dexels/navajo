@@ -44,7 +44,7 @@ public class WebStartProxy {
 //	}
 
 	public static TipiResourceLoader createDefaultWebstartLoader(
-			String relativePath, boolean useCache, CookieManager manager)
+			String relativePath, boolean useCache, CookieManager manager, String id)
 			throws IOException {
 		javax.jnlp.BasicService bs;
 		try {
