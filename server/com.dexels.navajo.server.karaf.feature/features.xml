@@ -160,8 +160,9 @@
 		     			<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.1.0</bundle> -->
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.status' version='1.0.7'
+	<feature resolver="(obr)" name='navajo.status' version='1.0.8'
 		start-level='81'>
+        <bundle dependency='true'>mvn:com.google.guava/guava/18.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.status/1.0.9</bundle>
 	</feature>
 
