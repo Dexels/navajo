@@ -178,12 +178,13 @@ public class VaadinTipiContext extends TipiContext {
 			String referer = tva.getReferer();
 			logger.info("Ref: "+referer+" : "+expression+" mime: "+mime);
 			if(referer!=null) {
-				URL contextUrl = getVaadinApplication().getContextUrl();
-				String path = contextUrl.getPath()+"?evaluate="+encoded;
+//				URL contextUrl = getVaadinApplication().getContextUrl();
+				String path = referer+"?evaluate="+encoded+"&rdm="+randomizer.nextLong();
 				if(mime!=null) {
 					path = path+"&mime="+mime;
 				}
-				URL prot = new URL(contextUrl.getProtocol(),referer,path);
+				
+				URL prot = new URL(path);
 				return  prot;
 			} else {
 				URL contextUrl = getVaadinApplication().getContextUrl();
