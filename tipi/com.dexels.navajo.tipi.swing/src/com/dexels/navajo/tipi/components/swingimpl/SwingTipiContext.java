@@ -549,6 +549,7 @@ public class SwingTipiContext extends TipiContext {
 	protected TipiResourceLoader createDefaultResourceLoader(String loaderType,
 			boolean useCache) {
 		if (hasJnlpContext()) {
+			logger.info("JNLP detected, cache: {}. Instantiating webstart loader",useCache);
 			try {
 				return WebStartProxy.createDefaultWebstartLoader(loaderType,
 						useCache, getCookieManager());
