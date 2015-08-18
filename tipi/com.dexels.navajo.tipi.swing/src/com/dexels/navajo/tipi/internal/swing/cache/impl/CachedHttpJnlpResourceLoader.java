@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.internal.swing.cache.impl;
 
+import java.io.IOException;
 import java.net.URL;
 
 import javax.jnlp.UnavailableServiceException;
@@ -31,6 +32,13 @@ public class CachedHttpJnlpResourceLoader extends CachedResourceLoader {
 		final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
 		cache = new GeneralCacheManager(localstore,remoteStore,cacheValidator);
 		cacheValidator.setId(id);
+		cacheValidator.setLocalStorage(localstore);
+		cacheValidator.setRemoteStorage(remoteStore);
+		try {
+			cacheValidator.activate();
+		} catch (IOException e) {
+			logger.error("Error: ", e);
+		}
 	}
 
 	@Override
