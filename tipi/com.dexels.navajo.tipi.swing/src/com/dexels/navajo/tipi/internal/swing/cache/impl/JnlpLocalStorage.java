@@ -115,7 +115,9 @@ public class JnlpLocalStorage implements LocalStorage {
 	public InputStream getLocalData(String location) {
 		FileContents fc;
 		try {
-			fc = ps.get(createMuffinUrl(location));
+			URL muffinUrl = createMuffinUrl(location);
+			logger.info("Reading muffinurl: "+muffinUrl);
+			fc = ps.get(muffinUrl);
 			if (fc == null) {
 				return null;
 			}
@@ -125,6 +127,7 @@ public class JnlpLocalStorage implements LocalStorage {
 			logger.error("Error detected",e);
 		} catch (FileNotFoundException e) {
 			// regular cache miss
+			logger.info("not found: {} ",location);
 			return null;
 		} catch (IOException e) {
 			logger.error("Error detected",e);
