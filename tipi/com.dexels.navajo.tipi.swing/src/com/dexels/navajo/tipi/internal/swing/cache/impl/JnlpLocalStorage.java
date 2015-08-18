@@ -45,9 +45,11 @@ public class JnlpLocalStorage implements LocalStorage {
 	
 	
 	private final Map<String, Long> localModificationMap = new HashMap<String, Long>();
+	private final String id;
 
-	public JnlpLocalStorage(String relativePath, CookieManager cm)
+	public JnlpLocalStorage(String relativePath, CookieManager cm, String id)
 			throws UnavailableServiceException {
+		this.id = id;
 		ps = (PersistenceService) ServiceManager
 				.lookup("javax.jnlp.PersistenceService");
 		bs = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
@@ -201,7 +203,7 @@ public class JnlpLocalStorage implements LocalStorage {
 		// long length = l==null?DEFAULT_SIZE:l;
 		long length = DEFAULT_SIZE;
 		// logger.debug("JNLP storage. Storing: "+length+" bytes.");
-
+		
 		try {
 			ff = ps.get(muffinUrl);
 			ff.setMaxLength(length);
@@ -221,6 +223,7 @@ public class JnlpLocalStorage implements LocalStorage {
 			// logger.debug("Data saved and modentry added, Local modmap size: "+localModificationMap.size());
 			saveModMap();
 		}
+		logger.info("Stored entry into muffinstore. Location: "+location+ " id: "+id+" muffinurl: "+muffinUrl);
 		// throw new IOException("JNLP Storage not yet implemeented");
 	}
 

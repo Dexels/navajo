@@ -181,11 +181,11 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css/1.0.43</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css.tkui/1.0.27</bundle>
 	</feature>
-	<feature resolver="(obr)" name='tipi.vaadin' version='3.2.4'
+	<feature resolver="(obr)" name='tipi.vaadin' version='3.2.6'
 		start-level='81'>
 		<feature version="[3.2.0,4)">tipi.core</feature>
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.14</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.4.8</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.4.12</bundle>
 	</feature>
 	<feature resolver="(obr)" name='tipi.vaadin.touch' version='3.0.0'
 		start-level='81'>

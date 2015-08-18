@@ -24,12 +24,13 @@ public class CachedHttpJnlpResourceLoader extends CachedResourceLoader {
 	
 
 	public CachedHttpJnlpResourceLoader(String relativePath, URL baseUrl,
-			CookieManager cm) throws UnavailableServiceException {
+			CookieManager cm, String id) throws UnavailableServiceException {
 		logger.info("Creating JNLP-backed local cache");
 		final LocalDigestCacheValidator cacheValidator = new LocalDigestCacheValidator();
-		final JnlpLocalStorage localstore = new JnlpLocalStorage(relativePath, cm);
+		final JnlpLocalStorage localstore = new JnlpLocalStorage(relativePath, cm,id);
 		final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
 		cache = new GeneralCacheManager(localstore,remoteStore,cacheValidator);
+		cacheValidator.setId(id);
 	}
 
 	@Override
