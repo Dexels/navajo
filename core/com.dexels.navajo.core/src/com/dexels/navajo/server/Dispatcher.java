@@ -42,6 +42,8 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -107,6 +109,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     public static final String FILE_VERSION = "$Id$";
     public static final String vendor = "Dexels BV";
     public static final String product = "Navajo Service Delivery Platform";
+    public static final String NAVAJO_TOPIC = "navajo/request";
+    
     public volatile static String edition;
     private final Map<String, GlobalManager> globalManagers = new HashMap<String, GlobalManager>();
     private final Map<String, AAAInterface> authenticators = new HashMap<String, AAAInterface>();
@@ -138,6 +142,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     public long requestCount = 0;
     private NavajoConfigInterface navajoConfig;
 
+    private EventAdmin eventAdmin;
+
+    
     private String keyStore;
     private String keyPassword;
 
@@ -1083,7 +1090,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             return errorHandler(access, e, inMessage);
         } finally {
             if (!preventFinalize) {
-                // System.err.println("prevent Finalize not set, so finalizing service");
                 finalizeService(inMessage, access, rpcName, rpcUser, myException, origThreadName, scheduledWebservice,
                         afterWebServiceActivated, emit);
             }
@@ -1226,10 +1232,24 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 accessSet.remove(access);
             }
         }
+        
+        generateNavajoRequestEvent(myException != null);
 
         if (origThreadName != null) {
             Thread.currentThread().setName(origThreadName);
         }
+    }
+
+    private void generateNavajoRequestEvent(boolean hadException) {
+        Map<String, Object> properties = new HashMap<String, Object>();
+        if (hadException) {
+            properties.put("type", "navajoexception");
+        } else {
+            properties.put("type", "navajo");
+        }
+        Event event = new Event(Dispatcher.NAVAJO_TOPIC, properties);
+        eventAdmin.postEvent(event);
+        
     }
 
     private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage, String tenant) {
@@ -1537,6 +1557,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
     private int health;
 
+
     @Override
     public int getHealth(String resourceId) {
         return health;
@@ -1584,6 +1605,13 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
     public void removeAuthenticator(AAAInterface gm, Map<String, Object> settings) {
         authenticators.remove(settings.get("instance"));
+    }
+    public void setEventAdmin(EventAdmin eventAdmin) {
+        this.eventAdmin = eventAdmin;
+    }
+
+    public void clearEventAdmin(EventAdmin eventAdmin) {
+        this.eventAdmin = null;
     }
 
 }
