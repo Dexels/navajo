@@ -94,10 +94,8 @@ public class WebStartProxy {
 							+ fc.getMaxLength());
 				}
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				logger.error("Error detected",e);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				logger.error("Error detected",e);
 			}
 		} catch (UnavailableServiceException e) {
