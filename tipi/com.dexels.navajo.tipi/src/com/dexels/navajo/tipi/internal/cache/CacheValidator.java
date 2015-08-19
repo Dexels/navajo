@@ -9,4 +9,5 @@ public interface CacheValidator {
 	public void setLocalStorage(LocalStorage localStorage);
 
 	public void setRemoteStorage(RemoteStorage remoteStorage);
+	public void invalidate();
 }

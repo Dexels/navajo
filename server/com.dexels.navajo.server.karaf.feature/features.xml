@@ -7,10 +7,10 @@
         <feature version="[3.0.0,4)">eventadmin</feature>
         <feature version="[3.0.0,4)">scr</feature>
         <feature version="[3.0.0,4)">pax-http</feature>
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf.featuresync/1.1.3</bundle>
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/6.2.1</bundle>
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.1.7</bundle>
-        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.file/1.0.25</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf.featuresync/1.1.4</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/7.0.0</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.1.9</bundle>
+        <bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.file/1.0.26</bundle>
         <bundle dependency="true">mvn:com.dexels.thirdparty/javaewah/0.7.9</bundle>
         <bundle dependency="true">mvn:com.jcraft/jsch-bundle/0.1.50</bundle>
         <bundle dependency="true">mvn:org.eclipse.jgit/org.eclipse.jgit/3.6.0.201411121045-m1</bundle>
@@ -335,14 +335,14 @@
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.crystal/1.0.5</bundle> -->
 	</feature>
 
-	<feature resolver="(obr)" name='dexels.appstore' version='1.1.3'
+	<feature resolver="(obr)" name='dexels.appstore' version='1.1.4'
 		start-level='81'>
 		<feature version="[3.0.0,4)">pax-http</feature>
 		<feature version="[3.0.0,4)">eventadmin</feature>
 		<feature version="[1.1.0,2)">dexels.repository</feature>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.ant/1.9.4_1</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.core/3.0.1</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.ant/1.0.8</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.core/3.0.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.ant/1.0.9</bundle>
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.server/1.0.17</bundle>
 		<bundle dependency='true'>mvn:commons-codec/commons-codec/1.10</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>

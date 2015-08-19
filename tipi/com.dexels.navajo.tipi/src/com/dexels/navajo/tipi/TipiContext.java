@@ -2931,8 +2931,5 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         return globalMethodsMap.get(name);
     }
 
-    // public void setOSGiMode(boolean b) {
-    // this.osgiMode = b;
-    // }
 
 }

@@ -26,4 +26,5 @@ public class CachedFileResourceLoader extends CachedResourceLoader {
 		return cache;
 	}
 
+	
 }

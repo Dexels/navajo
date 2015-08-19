@@ -281,8 +281,8 @@
       </events>
    </tipiaction>
    <tipiaction name="flushCache" class="TipiFlushCache" package="com.dexels.navajo.tipi.actions">
-      <param name="context" type="context" required="false" />
-      <param name="service" type="string" required="false" />
+   </tipiaction>
+   <tipiaction name="invalidateCache" class="TipiInvalidateCache" package="com.dexels.navajo.tipi.actions">
    </tipiaction>
    <tipiaction name="loadStateNavajo" class="TipiLoadStateNavajo" package="com.dexels.navajo.tipi.actions">
       <param name="context" type="context" required="false" />

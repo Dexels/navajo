@@ -116,6 +116,11 @@ public class GeneralCacheManager implements CacheManager {
 			logger.error("Error: ",e);
 		}
 	}
+	
+	@Override
+	public void invalidate() {
+		cacheValidator.invalidate();
+	}
 
 	private final void copyResource(OutputStream out, InputStream in)
 			throws IOException {
