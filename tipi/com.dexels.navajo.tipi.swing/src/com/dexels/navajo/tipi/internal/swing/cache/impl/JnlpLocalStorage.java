@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.internal.swing.cache.impl;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -207,6 +208,7 @@ public class JnlpLocalStorage implements LocalStorage {
 		}
 		if (ff == null) {
 			long grantedSize = ps.create(muffinUrl, length);
+			logger.info("Created element: "+muffinUrl+" for size: "+ grantedSize);
 		}
 
 		fc = ps.get(muffinUrl);
@@ -217,10 +219,15 @@ public class JnlpLocalStorage implements LocalStorage {
 		// throw new IOException("JNLP Storage not yet implemeented");
 		URL url = new URL(getCacheBaseURL(), cacheBase + relativePath);
 		String[] names = ps.getNames(url);
-		logger.info("Listing:");
+		logger.info("Listing: (size: {})",names.length);
 		for (String element : names) {
 			logger.info("File: "+element);
 		}
+		logger.info("Now retrieving: "+location);
+		InputStream is = getLocalData(location);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		copyResource(baos, is);
+		logger.info("Result: "+baos.toByteArray().length+" bytes retrieved");
 	}
 
 	private final void copyResource(OutputStream out, InputStream in)
