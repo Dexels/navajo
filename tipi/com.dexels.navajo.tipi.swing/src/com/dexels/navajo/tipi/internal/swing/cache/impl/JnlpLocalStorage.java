@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.internal.swing.cache.impl;
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -54,34 +53,6 @@ public class JnlpLocalStorage implements LocalStorage {
 //		}
 	}
 
-//	private void parseModMap() throws IOException {
-//		InputStream is = getLocalData(MODMAP_KEY);
-//		if (is == null) {
-//			// never mind
-//			return;
-//		}
-//		BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
-//		String line = null;
-//		line = br.readLine();
-//		do {
-//			if (line.equals("")) {
-//				line = br.readLine();
-//				break;
-//			}
-//			if (line.indexOf("|") == -1) {
-//				line = br.readLine();
-//				break;
-//
-//			}
-//			StringTokenizer st = new StringTokenizer(line, "|");
-//			String path = st.nextToken();
-//			long l = Long.parseLong(st.nextToken());
-//			localModificationMap.put(path, l);
-//			line = br.readLine();
-//		} while (line != null);
-//
-//		is.close();
-//	}
 
 	private URL getCacheBaseURL()  {
 		// return new URL(new URL(bs.getCodeBase(),cacheBase),relativePath);
@@ -117,19 +88,17 @@ public class JnlpLocalStorage implements LocalStorage {
 		FileContents fc;
 		try {
 			URL muffinUrl = createMuffinUrl(location);
-			logger.info("Reading muffinurl: "+muffinUrl);
 			fc = ps.get(muffinUrl);
 			if (fc == null) {
-				logger.info("Not found");
+				logger.debug("Not found");
 				return null;
 			}
-			logger.info("Getting local data from JNLP store: "+location+" length: "+fc.getLength());
 			return fc.getInputStream();
 		} catch (MalformedURLException e) {
 			logger.error("Error detected",e);
 		} catch (FileNotFoundException e) {
 			// regular cache miss
-			logger.info("not found: {} ",location);
+			logger.debug("not found: {} ",location);
 			return null;
 		} catch (IOException e) {
 			logger.error("Error detected",e);
@@ -145,7 +114,6 @@ public class JnlpLocalStorage implements LocalStorage {
 
 	@Override
 	public URL getURL(String location) throws IOException {
-		logger.debug("URL not happy getting "+location);
 		File f = File.createTempFile("tipiCache", "");
 		InputStream is = getLocalData(location);
 		OutputStream os = new FileOutputStream(f);
@@ -158,7 +126,7 @@ public class JnlpLocalStorage implements LocalStorage {
 
 	@Override
 	public boolean hasLocal(String location) {
-		logger.info("Checking haslocal for location: {}",location);
+		logger.debug("Checking haslocal for location: {}",location);
 		FileContents fc = null;
 		try {
 			fc = ps.get(createMuffinUrl(location));
@@ -176,17 +144,17 @@ public class JnlpLocalStorage implements LocalStorage {
 			logger.error("Error detected",e);
 		}
 		if (fc == null) {
-			logger.info("Has local for: {}: no",location);
+			logger.debug("Has local for: {}: no",location);
 			return false;
 		} else {
 			try {
-				logger.info("Has local for: {}: length: {}, so {}",location,fc.getLength(),fc.getLength() != 0);
+				logger.debug("Has local for: {}: length: {}, so {}",location,fc.getLength(),fc.getLength() != 0);
 
 				return fc.getLength() != 0;
 			} catch (IOException e) {
 				logger.error("Error detected",e);
 			}
-			logger.info("Has local for {} failed",location);
+			logger.debug("Has local for {} failed",location);
 			return false;
 		}
 	}
@@ -213,26 +181,21 @@ public class JnlpLocalStorage implements LocalStorage {
 		}
 		if (ff == null) {
 			long grantedSize = ps.create(muffinUrl, length);
-			logger.info("Created element: "+muffinUrl+" for size: "+ grantedSize);
+			logger.debug("Created element: "+muffinUrl+" for size: "+ grantedSize);
 		}
 
 		fc = ps.get(muffinUrl);
 		OutputStream os = fc.getOutputStream(true);
 		copyResource(os, data);
 
-		logger.info("Stored entry into muffinstore. Location: "+location+ " id: "+id+" muffinurl: "+muffinUrl);
+		logger.debug("Stored entry into muffinstore. Location: "+location+ " id: "+id+" muffinurl: "+muffinUrl);
 		// throw new IOException("JNLP Storage not yet implemeented");
-		URL url = new URL(getCacheBaseURL(), cacheBase + relativePath);
-		String[] names = ps.getNames(url);
-		logger.info("Listing: (size: {})",names.length);
-		for (String element : names) {
-			logger.info("File: "+element);
-		}
-		logger.info("Now retrieving: "+location);
-		InputStream is = getLocalData(location);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		copyResource(baos, is);
-		logger.info("Result: "+baos.toByteArray().length+" bytes retrieved");
+//		URL url = new URL(getCacheBaseURL(), cacheBase + relativePath);
+//		logger.info("Now retrieving: "+location);
+//		InputStream is = getLocalData(location);
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		copyResource(baos, is);
+//		logger.info("Result: "+baos.toByteArray().length+" bytes retrieved");
 	}
 
 	private final void copyResource(OutputStream out, InputStream in)

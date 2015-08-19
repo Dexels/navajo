@@ -37,7 +37,7 @@ public class GeneralCacheManager implements CacheManager {
 	@Override
 	public InputStream getContents(String location) throws IOException {
 		final boolean isUpToDate = isUpToDate(location);
-		logger.info("Is up to date: {} == {}",location,isUpToDate);
+		logger.debug("Is up to date: {} == {}",location,isUpToDate);
 		if (isUpToDate) {
 			return local.getLocalData(location);
 		}
@@ -60,7 +60,7 @@ public class GeneralCacheManager implements CacheManager {
 	public boolean hasLocal(String location) throws IOException {
 		
 		boolean hasLocal = local.hasLocal(location);
-		logger.info("Local present for location: {} == {} ",location,hasLocal);
+		logger.debug("Local present for location: {} == {} ",location,hasLocal);
 		return hasLocal;
 	}
 
@@ -68,21 +68,21 @@ public class GeneralCacheManager implements CacheManager {
 	public boolean isUpToDate(String location) throws IOException {
 		if(cacheValidator.isLocalValid(location)) {
 			if (!hasLocal(location)) {
-				logger.info("Not up to date: {}, has no local",location);
+				logger.debug("Not up to date: {}, has no local",location);
 				return false;
 			}
-			logger.info("Up to date: {}, local found",location);
+			logger.debug("Up to date: {}, local found",location);
 			return true;
 		}
-		logger.info("Not up to date: {}, local invalid",location);
+		logger.debug("Not up to date: {}, local invalid",location);
 		return false;
 	}
 
 	@Override
 	public URL getLocalURL(String location) throws IOException {
-		logger.info("Getting local URL location: {}. I am: {}",location,id);
+		logger.debug("Getting local URL location: {}. I am: {}",location,id);
 		if (!isUpToDate(location)) {
-			logger.info("Not up to date, downloading {}",location);
+			logger.debug("Not up to date, downloading {}",location);
 			downloadLocation(location);
 		}
 		URL localURL = local.getURL(location);
