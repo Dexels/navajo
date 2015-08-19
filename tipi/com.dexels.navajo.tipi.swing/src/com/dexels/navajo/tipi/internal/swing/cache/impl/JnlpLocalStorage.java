@@ -119,9 +119,10 @@ public class JnlpLocalStorage implements LocalStorage {
 			logger.info("Reading muffinurl: "+muffinUrl);
 			fc = ps.get(muffinUrl);
 			if (fc == null) {
+				logger.info("Not found");
 				return null;
 			}
-			logger.info("Getting local data from JNLP store: "+location);
+			logger.info("Getting local data from JNLP store: "+location+" length: "+fc.getLength());
 			return fc.getInputStream();
 		} catch (MalformedURLException e) {
 			logger.error("Error detected",e);
@@ -198,13 +199,14 @@ public class JnlpLocalStorage implements LocalStorage {
 		
 		try {
 			ff = ps.get(muffinUrl);
-			ff.setMaxLength(length);
+//			ps.
+//			ff.setMaxLength(length);
 
 		} catch (FileNotFoundException e) {
 			// logger.debug("Not found. fine.");
 		}
 		if (ff == null) {
-			ps.create(muffinUrl, length);
+			long grantedSize = ps.create(muffinUrl, length);
 		}
 
 		fc = ps.get(muffinUrl);
@@ -213,6 +215,12 @@ public class JnlpLocalStorage implements LocalStorage {
 
 		logger.info("Stored entry into muffinstore. Location: "+location+ " id: "+id+" muffinurl: "+muffinUrl);
 		// throw new IOException("JNLP Storage not yet implemeented");
+		URL url = new URL(getCacheBaseURL(), cacheBase + relativePath);
+		String[] names = ps.getNames(url);
+		logger.info("Listing:");
+		for (String element : names) {
+			logger.info("File: "+element);
+		}
 	}
 
 	private final void copyResource(OutputStream out, InputStream in)
