@@ -44,6 +44,7 @@ public class LocalDigestCacheValidator implements CacheValidator {
 			throw new IOException("Resource absent");
 		}
 		if(localDigest==null) {
+			logger.info("No digest found for location: {} Keys: {}",location, localDigestProperties.keySet());
 			return false;
 		}
 		final boolean equals = localDigest.equals(remoteDigest);
