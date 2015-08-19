@@ -1,7 +1,11 @@
 package com.dexels.navajo.tipi.internal.cache.impl;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,14 +41,19 @@ public class GeneralCacheManager implements CacheManager {
 		if (isUpToDate) {
 			return local.getLocalData(location);
 		}
+		downloadLocation(location);
+		return local.getLocalData(location);
+	}
+
+	private void downloadLocation(String location) throws IOException {
 		Map<String, Object> metadata = new HashMap<String, Object>();
 		InputStream is = remote.getContents(location, metadata);
 		if (is == null) {
-			return null;
+			logger.warn("Error while downloading location {} : No such item.");
+			return;
 		}
 		local.storeData(location, is, metadata);
 		cacheValidator.update(location);
-		return local.getLocalData(location);
 	}
 
 	@Override
@@ -72,16 +81,26 @@ public class GeneralCacheManager implements CacheManager {
 	@Override
 	public URL getLocalURL(String location) throws IOException {
 		logger.info("Getting local URL location: {}. I am: {}",location,id);
-		if (isUpToDate(location)) {
-			logger.info("Seems up to date, getting local");
-			return local.getURL(location);
+		if (!isUpToDate(location)) {
+			logger.info("Not up to date, downloading {}",location);
+			downloadLocation(location);
 		}
+		URL localURL = local.getURL(location);
+		if(localURL==null) {
+			// localstorage does not support 'direct' url's, create temp one:
+			return createTempURL(local.getLocalData(location));
+		} else {
+			return localURL;
+		}
+	}
 
-		logger.info("Not up to date, downloading remote. location: {}. I am: {}",location,id);
-		Map<String, Object> metadata = new HashMap<String, Object>();
-		InputStream is = remote.getContents(location, metadata);
-		local.storeData(location, is, metadata);
-		return local.getURL(location);
+	private URL createTempURL(InputStream localData) throws IOException {
+		File f = File.createTempFile("tipiCache", "");
+//		InputStream is = getLocalData(location);
+		OutputStream os = new FileOutputStream(f);
+		copyResource(os, localData);
+		f.deleteOnExit();
+		return f.toURI().toURL();
 	}
 
 	@Override
@@ -96,6 +115,21 @@ public class GeneralCacheManager implements CacheManager {
 		} catch (IOException e) {
 			logger.error("Error: ",e);
 		}
+	}
+
+	private final void copyResource(OutputStream out, InputStream in)
+			throws IOException {
+		// BufferedInputStream bin = new BufferedInputStream(in);
+		BufferedOutputStream bout = new BufferedOutputStream(out);
+		byte[] buffer = new byte[1024];
+		int read;
+		while ((read = in.read(buffer)) > -1) {
+			// logger.debug("Read: "+read+" bytes from class: "+in);
+			bout.write(buffer, 0, read);
+		}
+		in.close();
+		bout.flush();
+		bout.close();
 	}
 
 }
