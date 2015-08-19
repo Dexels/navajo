@@ -387,10 +387,10 @@
 	</feature>
 
 
-    <feature name='rackermon' version='1.0.37'>
+    <feature name='rackermon' version='1.0.39'>
         <feature version="[1.1.0,2)">dexels.repository</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.javax.mail/1.4.1_5</bundle>
         <bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/3.0.3</bundle>
-        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.monitor.rackermon/1.2.11</bundle>
+        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.monitor.rackermon/1.2.14</bundle>
     </feature>
 </features>
