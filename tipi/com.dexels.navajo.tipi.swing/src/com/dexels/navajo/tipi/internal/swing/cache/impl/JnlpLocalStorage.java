@@ -158,6 +158,7 @@ public class JnlpLocalStorage implements LocalStorage {
 
 	@Override
 	public boolean hasLocal(String location) {
+		logger.info("Checking haslocal for location: {}",location);
 		FileContents fc = null;
 		try {
 			fc = ps.get(createMuffinUrl(location));
@@ -175,13 +176,17 @@ public class JnlpLocalStorage implements LocalStorage {
 			logger.error("Error detected",e);
 		}
 		if (fc == null) {
+			logger.info("Has local for: {}: no",location);
 			return false;
 		} else {
 			try {
+				logger.info("Has local for: {}: length: {}, so {}",location,fc.getLength(),fc.getLength() != 0);
+
 				return fc.getLength() != 0;
 			} catch (IOException e) {
 				logger.error("Error detected",e);
 			}
+			logger.info("Has local for {} failed",location);
 			return false;
 		}
 	}

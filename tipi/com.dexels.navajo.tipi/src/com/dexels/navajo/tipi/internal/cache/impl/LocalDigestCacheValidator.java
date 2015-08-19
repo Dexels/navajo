@@ -43,7 +43,7 @@ public class LocalDigestCacheValidator implements CacheValidator {
 			logger.info("No remote found for: "+location+" assuming absent in loader: "+id+" # of loaded resources: "+remoteDigestProperties.size());
 			throw new IOException("Resource absent");
 		}
-		if(localDigest==null || remoteDigest == null) {
+		if(localDigest==null) {
 			return false;
 		}
 		final boolean equals = localDigest.equals(remoteDigest);
