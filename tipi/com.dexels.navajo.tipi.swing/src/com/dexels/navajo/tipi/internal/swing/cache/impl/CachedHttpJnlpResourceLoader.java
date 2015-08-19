@@ -30,7 +30,7 @@ public class CachedHttpJnlpResourceLoader extends CachedResourceLoader {
 		final LocalDigestCacheValidator cacheValidator = new LocalDigestCacheValidator();
 		final JnlpLocalStorage localstore = new JnlpLocalStorage(relativePath, cm,id);
 		final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
-		cache = new GeneralCacheManager(localstore,remoteStore,cacheValidator);
+		cache = new GeneralCacheManager(localstore,remoteStore,cacheValidator,id);
 		cacheValidator.setId(id);
 		cacheValidator.setLocalStorage(localstore);
 		cacheValidator.setRemoteStorage(remoteStore);

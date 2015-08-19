@@ -19,14 +19,15 @@ public class GeneralCacheManager implements CacheManager {
 	private final LocalStorage local;
 	private final RemoteStorage remote;
 	private final CacheValidator cacheValidator;
+	private final String id;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(GeneralCacheManager.class);
-	public GeneralCacheManager(LocalStorage l, RemoteStorage r, CacheValidator vc) {
+	public GeneralCacheManager(LocalStorage l, RemoteStorage r, CacheValidator vc, String id) {
 		this.local = l;
 		this.remote = r;
 		this.cacheValidator = vc;
-		
+		this.id = id;
 	}
 
 	@Override
@@ -58,19 +59,25 @@ public class GeneralCacheManager implements CacheManager {
 	public boolean isUpToDate(String location) throws IOException {
 		if(cacheValidator.isLocalValid(location)) {
 			if (!hasLocal(location)) {
+				logger.info("Not up to date: {}, has no local",location);
 				return false;
 			}
+			logger.info("Up to date: {}, local found",location);
 			return true;
 		}
+		logger.info("Not up to date: {}, local invalid",location);
 		return false;
 	}
 
 	@Override
 	public URL getLocalURL(String location) throws IOException {
-		logger.info("Getting local URL location: {}. Just sayin'",location);
+		logger.info("Getting local URL location: {}. I am: {}",location,id);
 		if (isUpToDate(location)) {
+			logger.info("Seems up to date, getting local");
 			return local.getURL(location);
 		}
+
+		logger.info("Not up to date, downloading remote. location: {}. I am: {}",location,id);
 		Map<String, Object> metadata = new HashMap<String, Object>();
 		InputStream is = remote.getContents(location, metadata);
 		local.storeData(location, is, metadata);
