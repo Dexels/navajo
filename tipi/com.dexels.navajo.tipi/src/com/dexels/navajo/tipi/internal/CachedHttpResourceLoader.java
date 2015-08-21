@@ -39,4 +39,5 @@ public class CachedHttpResourceLoader extends CachedResourceLoader {
 		return cache;
 	}
 
+
 }

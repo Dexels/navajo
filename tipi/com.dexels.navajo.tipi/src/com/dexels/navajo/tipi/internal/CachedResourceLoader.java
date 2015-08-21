@@ -45,4 +45,11 @@ public abstract class CachedResourceLoader extends ClassPathResourceLoader {
 			c.flushCache();
 		}
 	}
+	
+	@Override
+	public void invalidate() throws IOException {
+		getCacheManager().invalidate();
+	}
+
+	
 }

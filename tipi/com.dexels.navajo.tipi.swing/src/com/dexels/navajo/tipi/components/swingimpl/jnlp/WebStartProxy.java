@@ -25,24 +25,6 @@ public class WebStartProxy {
 	
 	private final static Logger logger = LoggerFactory.getLogger(WebStartProxy.class);
 	
-//	public static void appendJnlpCodeBase(SwingTipiContext myContext,
-//			String loaderType) {
-//		try {
-//			javax.jnlp.BasicService bs = (javax.jnlp.BasicService) javax.jnlp.ServiceManager
-//					.lookup("javax.jnlp.BasicService");
-//
-//			URL tipiCodeBase = new URL(bs.getCodeBase(), loaderType);
-//			URL resourceCodeBase = new URL(bs.getCodeBase(), "resource");
-//
-//			myContext.setTipiResourceLoader(tipiCodeBase.toString(), null);
-//			myContext.setGenericResourceLoader(resourceCodeBase.toString(), null);
-//		} catch (javax.jnlp.UnavailableServiceException e) {
-//		} catch (MalformedURLException e) {
-//			logger.error("Error detected",e);
-//		}
-//
-//	}
-
 	public static TipiResourceLoader createDefaultWebstartLoader(
 			String relativePath, boolean useCache, CookieManager manager, String id)
 			throws IOException {

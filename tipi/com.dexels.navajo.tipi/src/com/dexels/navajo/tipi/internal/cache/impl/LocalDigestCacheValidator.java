@@ -81,6 +81,13 @@ public class LocalDigestCacheValidator implements CacheValidator {
 		}
 		
 	}
+	
+	@Override
+	public void invalidate() {
+		localDigestProperties.clear();
+		localStorage.delete(LOCAL_DIGEST_PROPERTIES);
+	}
+	
 	private void loadDigestFile(String location) throws IOException {
 		InputStream in = localStorage.getLocalData(location);
 		logger.debug("Getting location: "+location);

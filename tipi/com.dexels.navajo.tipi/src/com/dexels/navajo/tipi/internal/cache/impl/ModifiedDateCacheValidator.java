@@ -31,8 +31,12 @@ public class ModifiedDateCacheValidator implements CacheValidator {
 
 	@Override
 	public void update(String location) throws IOException {
-		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void invalidate() {
+		// nothing to do
 	}
 	
 

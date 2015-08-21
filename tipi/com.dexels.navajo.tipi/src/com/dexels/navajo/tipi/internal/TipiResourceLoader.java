@@ -54,4 +54,10 @@ public interface TipiResourceLoader {
 	 * Only applies for cached loaders. Will remove local cache
 	 */
 	public void flushCache() throws IOException;
+
+	/**
+	 * Only applies for cached loaders. Invalidates the cache
+	 */
+	public void invalidate() throws IOException;
+
 }
