@@ -194,9 +194,14 @@ public class BundleCreatorComponent implements BundleCreator {
     }
 
     private void removeOldCompiledScriptFiles(String rpcName) {
-        AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getBaseName(rpcName) + "*.jar");
+        AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getBaseName(rpcName) + "_*.jar");
         File compiledPath = new File(navajoIOConfig.getCompiledScriptPath(), FilenameUtils.getPath(rpcName));
         if (compiledPath.isDirectory()) {
+            // Removing jar itself
+            File jarFile = new File(compiledPath, FilenameUtils.getBaseName(rpcName) + ".jar");
+            if (jarFile.exists()) {
+                jarFile.delete();
+            }
             Collection<File> files = FileUtils.listFiles(compiledPath, fileFilter, null);
 
             for (File bundleFile : files) {
@@ -466,9 +471,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
         for (File bundleFile : files) {
 
-            final String uri = bundleFile.toURI().toURL().toString(); // SCRIPTPROTOCOL
-                                                                      // +
-                                                                      // scriptPath;
+            final String uri = bundleFile.toURI().toURL().toString();
             Bundle previous = bundleContext.getBundle(uri);
             if (previous != null) {
                 if (force) {
