@@ -187,7 +187,10 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 //            }
 //        }
         
-        String rpcName = script.substring(0, script.lastIndexOf("_"));
+        String rpcName = script;
+        if (script.indexOf("_") > 0) {
+        	rpcName = script.substring(0, script.lastIndexOf("_"));
+        }
         List<Dependency>  dependencies = depanalyzer.getReverseDependencies(rpcName);
         for (Dependency dep : dependencies) {
             if (dep.getType() ==  Dependency.INCLUDE_DEPENDENCY) {
