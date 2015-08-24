@@ -23,6 +23,7 @@ public class NavajoAccess implements Mappable {
     public String rpcUser;
     public String rpcPwd;
     public String configPath;
+    public String tenant;
 
     public NavajoAccess() {}
 
@@ -31,6 +32,10 @@ public class NavajoAccess implements Mappable {
         this.access = access;
     }
 
+    public String getTenant() {
+    	return access.getTenant();
+    }
+    
     public String getRpcName() {
         return access.rpcName;
     }
