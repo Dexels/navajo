@@ -156,14 +156,17 @@ public final class Access implements java.io.Serializable, Mappable {
     private transient TmlRunnable originalRunnable;
   
     public Access(int userID, int serviceID, String rpcUser, String rpcName, String userAgent, String ipAddress,
-            String hostName, Object certificate, boolean betaUser, String accessID) {
+ String hostName,
+            Object certificate, boolean betaUser, String accessID) {
 
         this();
 
         this.accessID = accessID;
         if (accessID == null) {
-            AccessCount++;
-            this.accessID = created.getTime() + "-" + AccessCount;
+            synchronized (Access.class) {
+                AccessCount++;
+                this.accessID = created.getTime() + "-" + AccessCount;
+            }
         }
         this.userID = userID;
         this.serviceID = serviceID;
