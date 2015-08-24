@@ -251,7 +251,6 @@ public class NQLContext implements NqlContextApi {
 			 context.callService(service,tenant,username,password,current);
 		 }
 		 current = context.getNavajo(service);
-		 current.write(System.err);
 	}
 
 	

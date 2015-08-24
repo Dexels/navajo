@@ -26,7 +26,7 @@ public class CachedHttpResourceLoader extends CachedResourceLoader {
 		final FileLocalStorage localStore = new FileLocalStorage(baseDir);
 		final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
 		cache = new GeneralCacheManager(localStore,
-				remoteStore, cacheValidator);
+				remoteStore, cacheValidator,id);
 		cacheValidator.setLocalStorage(localStore);
 		cacheValidator.setRemoteStorage(remoteStore);
 		cacheValidator.setId(id);
@@ -38,5 +38,6 @@ public class CachedHttpResourceLoader extends CachedResourceLoader {
 	public CacheManager getCacheManager() {
 		return cache;
 	}
+
 
 }

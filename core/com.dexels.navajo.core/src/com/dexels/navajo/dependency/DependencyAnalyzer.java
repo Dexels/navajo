@@ -92,7 +92,7 @@ public class DependencyAnalyzer {
         if (reverseDependencies.containsKey(script)) {
             return reverseDependencies.get(script);
         }
-        return null;
+        return new ArrayList<>();
 
     }
 

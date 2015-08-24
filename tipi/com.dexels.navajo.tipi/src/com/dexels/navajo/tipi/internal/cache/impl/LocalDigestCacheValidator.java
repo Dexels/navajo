@@ -43,12 +43,13 @@ public class LocalDigestCacheValidator implements CacheValidator {
 			logger.info("No remote found for: "+location+" assuming absent in loader: "+id+" # of loaded resources: "+remoteDigestProperties.size());
 			throw new IOException("Resource absent");
 		}
-		if(localDigest==null || remoteDigest == null) {
+		if(localDigest==null) {
+			logger.debug("No digest found for location: {} Keys: {}",location, localDigestProperties.keySet());
 			return false;
 		}
 		final boolean equals = localDigest.equals(remoteDigest);
 		if(!equals) {
-			System.err.println("\n>>\n>>\n>> Changed to : "+location +" in loader: "+id);
+			logger.info("Digest changed for location: {} Local: {} Remote: {}",location,localDigest,remoteDigest);
 		}
 		return equals;
 	}
@@ -80,9 +81,16 @@ public class LocalDigestCacheValidator implements CacheValidator {
 		}
 		
 	}
+	
+	@Override
+	public void invalidate() {
+		localDigestProperties.clear();
+		localStorage.delete(LOCAL_DIGEST_PROPERTIES);
+	}
+	
 	private void loadDigestFile(String location) throws IOException {
 		InputStream in = localStorage.getLocalData(location);
-		logger.info("Getting location: "+location);
+		logger.debug("Getting location: "+location);
 		if(in !=null) {
 			try {
 				localDigestProperties.load(in);
@@ -116,7 +124,7 @@ public class LocalDigestCacheValidator implements CacheValidator {
 		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 		Map<String, Object> metadata = new HashMap<String, Object>();
 		localStorage.storeData(LOCAL_DIGEST_PROPERTIES, bais, metadata);
+		logger.debug("Saved local digest: {}, and location: ",LOCAL_DIGEST_PROPERTIES,location);
 		bais.close();
 	}
-
 }

@@ -5,7 +5,7 @@ import java.net.URL;
 
 public class ManagedGeneralCacheManager extends GeneralCacheManager {
 
-	public ManagedGeneralCacheManager(File baseDir, URL baseUrl) {
-		super(new FileLocalStorage(baseDir),new HttpRemoteStorage(baseUrl),new LocalDigestCacheValidator());
+	public ManagedGeneralCacheManager(File baseDir, URL baseUrl, String id) {
+		super(new FileLocalStorage(baseDir),new HttpRemoteStorage(baseUrl),new LocalDigestCacheValidator(),id);
 	}
 }

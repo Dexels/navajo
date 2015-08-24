@@ -179,10 +179,25 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 	}
 
     private void enqueueDependentScripts(String script) {
-        List<Dependency> dependencies = depanalyzer.getDependencies(script, Dependency.INCLUDE_DEPENDENCY);
+//        List<Dependency> dependencies = depanalyzer.getReverseDependencies(script, Dependency.INCLUDE_DEPENDENCY);
+//        for (Dependency dep : dependencies) {
+//            if (dep.getType() ==  Dependency.INCLUDE_DEPENDENCY) {
+//                logger.debug("Compiling {}; the following script should be recompiled too: {}", script, dep.getDependee());
+//                enqueueScript( dep.getDependee(), ".xml");
+//            }
+//        }
+        
+        String rpcName = script;
+        if (script.indexOf("_") > 0) {
+        	rpcName = script.substring(0, script.lastIndexOf("_"));
+        }
+        List<Dependency>  dependencies = depanalyzer.getReverseDependencies(rpcName);
         for (Dependency dep : dependencies) {
-            logger.debug("Compiling {}; the following script should be recompiled too: {}", script, dep.getDependee());
-            // enqueueScript(dependentScript, ".xml");
+            if (dep.getType() ==  Dependency.INCLUDE_DEPENDENCY) {
+                logger.debug("Compiling {}; the following script should be recompiled too: {}", script, dep.getDependee());
+                enqueueScript( dep.getScript(), ".xml");
+            }
+         
         }
     }
 

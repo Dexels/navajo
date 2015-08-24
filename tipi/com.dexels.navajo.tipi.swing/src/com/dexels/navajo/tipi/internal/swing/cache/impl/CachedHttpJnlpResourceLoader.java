@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.internal.swing.cache.impl;
 
+import java.io.IOException;
 import java.net.URL;
 
 import javax.jnlp.UnavailableServiceException;
@@ -24,12 +25,20 @@ public class CachedHttpJnlpResourceLoader extends CachedResourceLoader {
 	
 
 	public CachedHttpJnlpResourceLoader(String relativePath, URL baseUrl,
-			CookieManager cm) throws UnavailableServiceException {
-		logger.info("Creating JNLP-backed local cache");
+			CookieManager cm, String id) throws UnavailableServiceException {
+		logger.info("Creating JNLP-backed local cache: relativePath: {} and id: {}",relativePath,id);
 		final LocalDigestCacheValidator cacheValidator = new LocalDigestCacheValidator();
-		final JnlpLocalStorage localstore = new JnlpLocalStorage(relativePath, cm);
+		final JnlpLocalStorage localstore = new JnlpLocalStorage(relativePath, cm,id);
 		final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
-		cache = new GeneralCacheManager(localstore,remoteStore,cacheValidator);
+		cache = new GeneralCacheManager(localstore,remoteStore,cacheValidator,id);
+		cacheValidator.setId(id);
+		cacheValidator.setLocalStorage(localstore);
+		cacheValidator.setRemoteStorage(remoteStore);
+		try {
+			cacheValidator.activate();
+		} catch (IOException e) {
+			logger.error("Error: ", e);
+		}
 	}
 
 	@Override

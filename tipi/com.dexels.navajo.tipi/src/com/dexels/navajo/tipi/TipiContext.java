@@ -2364,7 +2364,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             setGenericResourceLoader(createResourceLoader(resourceCodeBase, resourceCacheLocation, "generic"));
         } else {
             // BEWARE: The trailing slash is important!
-            setGenericResourceLoader(createDefaultResourceLoader("resource/", useCache()));
+            setGenericResourceLoader(createDefaultResourceLoader("resource/", useCache(),"generic"));
         }
     }
 
@@ -2375,7 +2375,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             // nothing supplied. Use a file loader with fallback to classloader.
             // BEWARE: The trailing slash is important!
 
-            setTipiResourceLoader(createDefaultResourceLoader("tipi/", useCache()));
+            setTipiResourceLoader(createDefaultResourceLoader("tipi/", useCache(),"tipi"));
         }
     }
 
@@ -2413,7 +2413,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     /**
      * @return
      */
-    protected TipiResourceLoader createDefaultResourceLoader(String loaderType, boolean cache) {
+    protected TipiResourceLoader createDefaultResourceLoader(String loaderType, boolean cache, String id) {
         return new FileResourceLoader(new File(loaderType));
     }
 
@@ -2931,8 +2931,5 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         return globalMethodsMap.get(name);
     }
 
-    // public void setOSGiMode(boolean b) {
-    // this.osgiMode = b;
-    // }
 
 }
