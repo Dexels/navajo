@@ -121,7 +121,7 @@ public class BundleCreatorComponent implements BundleCreator {
      * scriptName includes the _TENANT part
      */
     @Override
-    public synchronized void createBundle(String scriptName, Date compilationDate, List<String> failures, List<String> success,
+    public void createBundle(String scriptName, Date compilationDate, List<String> failures, List<String> success,
             List<String> skipped, boolean force, boolean keepIntermediate, String scriptExtension) throws Exception {
 
         String script = scriptName.replaceAll("\\.", "/");
@@ -275,12 +275,13 @@ public class BundleCreatorComponent implements BundleCreator {
                 lockObject.lock();
             }
         } finally {
+            logger.info("Releasing lock for {} - {}", script, Thread.currentThread().getId());
             releaseLock(script, "compile", lockObject);
         }
-        logger.info("Finished compiling and bundling {}", script);
+        logger.info("Finished compiling and bundling {} - {}", script,Thread.currentThread().getId() );
     }
 
-    private ReentrantLock getLock(String script, String context) {
+    private synchronized ReentrantLock getLock(String script, String context) {
         String key = script + context;
         if (!lockmap.containsKey(key)) {
             lockmap.put(key, new ReentrantLock());
@@ -289,7 +290,7 @@ public class BundleCreatorComponent implements BundleCreator {
         return lockmap.get(key);
     }
 
-    private void releaseLock(String script, String context, ReentrantLock lock) {
+    private synchronized void releaseLock(String script, String context, ReentrantLock lock) {
         lock.unlock();
         lockmap.remove(script + context);
     }
@@ -679,6 +680,15 @@ public class BundleCreatorComponent implements BundleCreator {
             logger.error("No modification date for script: " + rpcName + " this is weird.");
             return false;
         }
+        
+        List<Dependency> dependencies = depanalyzer.getDependencies(rpcName, Dependency.INCLUDE_DEPENDENCY);
+        for (Dependency d : dependencies) {
+            
+            if (needsCompilation(d.getDependee(), extension)) {
+                return true;
+            }
+        }
+        
         Date install = getBundleInstallationDate(rpcName, tenant, extension);
         if (install != null) {
             if (install.before(mod)) {
@@ -763,7 +773,7 @@ public class BundleCreatorComponent implements BundleCreator {
             }
         }
         CompiledScriptInterface sc = getCompiledScript(rpcName, tenant, hasTenantScriptFile);
-
+        
         boolean forceReinstall = false;
         if (extension == null) {
             extension = navajoIOConfig.determineScriptExtension(scriptName, tenant);
@@ -795,10 +805,10 @@ public class BundleCreatorComponent implements BundleCreator {
             forceReinstall = true;
 
         }
-
+        logger.info("going to install {} - {}", scriptName, Thread.currentThread().getId());
         installBundle(scriptName, failures, success, skipped, forceReinstall, extension);
 
-        logger.debug("On demand installation finished, waiting for service...");
+        logger.debug("On demand installation of {} finished, waiting for service... {}", scriptName, Thread.currentThread().getId());
         return getCompiledScript(rpcName, tenant, hasTenantScriptFile);
     }
 
@@ -817,19 +827,35 @@ public class BundleCreatorComponent implements BundleCreator {
             filter = "(&(navajo.scriptName=" + scriptName + ") (|(navajo.tenant=" + tenant + ") (navajo.tenant=default)))";
         }
 
-        ServiceReference<CompiledScriptFactory>[] sr;
+        ServiceReference<CompiledScriptFactory>[] servicereferences;
         try {
-            sr = (ServiceReference<CompiledScriptFactory>[]) bundleContext
+            servicereferences = (ServiceReference<CompiledScriptFactory>[]) bundleContext
                     .getServiceReferences(CompiledScriptFactory.class.getName(), filter);
-            if (sr != null && sr.length != 0) {
-                CompiledScriptFactory csf = bundleContext.getService(sr[0]);
-                if (csf == null) {
-                    logger.warn("Script with filter: " + filter + " found, but could not be resolved.");
-                    return null;
+            if (servicereferences != null) {
+             // First try to find one that matches our tenant
+                for (ServiceReference<CompiledScriptFactory> srinstance : servicereferences) {
+                    if (srinstance.getProperty("navajo.tenant").equals(tenant)) {
+                        CompiledScriptFactory csf = bundleContext.getService(srinstance);
+                        if (csf == null) {
+                            logger.warn("Script with filter: " + filter + " found, but could not be resolved.");
+                            return null;
+                        }
+                        return csf.getCompiledScript();
+                    }
                 }
-                CompiledScriptInterface cs = csf.getCompiledScript();
-                return cs;
+              
+                // if that fails, simply return first one (probably "default")
+                if (servicereferences.length > 0) {
+                    ServiceReference<CompiledScriptFactory> srinstance = servicereferences[0];
+                    CompiledScriptFactory csf = bundleContext.getService(srinstance);
+                    if (csf == null) {
+                        logger.warn("Script with filter: " + filter + " found, but could not be resolved.");
+                        return null;
+                    }
+                    return csf.getCompiledScript();
+                }
             }
+            
         } catch (InvalidSyntaxException e) {
             throw new ClassNotFoundException("Error resolving script service for: " + rpcName, e);
         } catch (InstantiationException e) {

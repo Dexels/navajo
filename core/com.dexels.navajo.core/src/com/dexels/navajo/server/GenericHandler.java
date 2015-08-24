@@ -452,44 +452,42 @@ public class GenericHandler extends ServiceHandler {
         outDoc = NavajoFactory.getInstance().createNavajo();
 
         try {
-            // Should method getCompiledNavaScript be fully synced???
-        	CompiledScriptInterface cso;
-        	synchronized (this) {
-				cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, false);
-				if (cso != null) {
-					boolean dirty = cso.hasDirtyDependencies(access);
-					if (dirty) {
-						cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, true);
-						logger.warn(">>>>>>>>>>>>>>>> dirty script!");
-					}
-				}
-			}
-			//(access.rpcName);
-        	if(cso==null) {
-        		if(Version.osgiActive()) {
-        			logger.warn("Script not found from OSGi registry while OSGi is active");
-        		} else {
-                	cso = compileScript(access, compilerErrors);
-                	if(cso==null) {
-                		logger.error("Can not find OSGi script for rpc: {} ",access.rpcName);
-                		throw new RuntimeException("Can not resolve script (non OSGi): "+access.rpcName);
-                	}
-        		}
-        	}
-        	if(cso==null) {
-        		logger.error("No compiled script found, proceeding further is useless.");
-        		throw new RuntimeException("Can not resolve script: "+access.rpcName);
-        	}
+            CompiledScriptInterface cso;
+            cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, false);
+            if (cso != null) {
+                boolean dirty = cso.hasDirtyDependencies(access);
+                if (dirty) {
+                    cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, true);
+                    logger.warn(">>>>>>>>>>>>>>>> dirty script!");
+                }
+
+            }
+            // (access.rpcName);
+            if (cso == null) {
+                if (Version.osgiActive()) {
+                    logger.warn("Script not found from OSGi registry while OSGi is active");
+                } else {
+                    cso = compileScript(access, compilerErrors);
+                    if (cso == null) {
+                        logger.error("Can not find OSGi script for rpc: {} ", access.rpcName);
+                        throw new RuntimeException("Can not resolve script (non OSGi): " + access.rpcName);
+                    }
+                }
+            }
+            if (cso == null) {
+                logger.error("No compiled script found, proceeding further is useless.");
+                throw new RuntimeException("Can not resolve script: " + access.rpcName);
+            }
             access.setOutputDoc(outDoc);
             access.setCompiledScript(cso);
-            if (cso.getClassLoader()==null) {
-				logger.error("No classloader present!");
-			} 
-            
+            if (cso.getClassLoader() == null) {
+                logger.error("No classloader present!");
+            }
+
             cso.run(access);
 
             return access.getOutputDoc();
-          } catch (Throwable e) {
+        } catch (Throwable e) {
             if (e instanceof com.dexels.navajo.mapping.BreakEvent) {
               // Create dummy header to set breakwasset attribute.
               Header h = NavajoFactory.getInstance().createHeader(outDoc, "", "", "", -1);
