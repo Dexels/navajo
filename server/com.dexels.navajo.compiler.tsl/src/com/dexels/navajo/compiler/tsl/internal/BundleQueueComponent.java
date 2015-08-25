@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -121,7 +123,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 	@Override
     public void handleEvent(Event e) {
         RepositoryInstance ri = (RepositoryInstance) e.getProperty("repository");
-        List<String> changedScripts = RepositoryEventParser.filterChanged(e, SCRIPTS_FOLDER);
+        Set<String> changedScripts = new HashSet<String>(RepositoryEventParser.filterChanged(e, SCRIPTS_FOLDER));
         for (String changedScript : changedScripts) {
             // Replace windows backslashes with normal ones
             changedScript = changedScript.replace("\\", "/");
@@ -179,14 +181,6 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 	}
 
     private void enqueueDependentScripts(String script) {
-//        List<Dependency> dependencies = depanalyzer.getReverseDependencies(script, Dependency.INCLUDE_DEPENDENCY);
-//        for (Dependency dep : dependencies) {
-//            if (dep.getType() ==  Dependency.INCLUDE_DEPENDENCY) {
-//                logger.debug("Compiling {}; the following script should be recompiled too: {}", script, dep.getDependee());
-//                enqueueScript( dep.getDependee(), ".xml");
-//            }
-//        }
-        
         String rpcName = script;
         if (script.indexOf("_") > 0) {
         	rpcName = script.substring(0, script.lastIndexOf("_"));
