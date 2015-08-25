@@ -32,7 +32,7 @@ public class RepoChangeListener implements EventHandler {
 
 	@Override
 	public void handleEvent(Event e) {
-		logger.info("EVENT FOUND! " + e);
+		logger.debug("EVENT FOUND! " + e);
 		for (String p : e.getPropertyNames()) {
 			final Object value = e.getProperty(p);
 			if (value == null) {
@@ -43,7 +43,7 @@ public class RepoChangeListener implements EventHandler {
 					continue;
 				}
 			}
-			logger.info("Name: " + p + " value: " + value);
+			logger.debug("Name: " + p + " value: " + value);
 
 		}
 	}
