@@ -253,31 +253,18 @@ public class BundleCreatorComponent implements BundleCreator {
             myScript = script + "_" + scriptTenant;
         }
 
-        ReentrantLock lockObject = getLock(script, "compile");
-        try {
-            if (lockObject.tryLock()) {
-                try {
-                    scriptCompiler.compileTsl(script, formatCompilationDate, dependencies, scriptTenant, hasTenantSpecificFile,
-                            forceTenant);
-                    javaCompiler.compileJava(myScript);
-                    javaCompiler.compileJava(myScript + "Factory");
-                    createBundleJar(myScript, scriptTenant, keepIntermediate, hasTenantSpecificFile, scriptExtension);
-                    success.add(myScript);
-                } catch (SkipCompilationException e) {
-                    logger.debug("Script fragment: {} ignored: {}", script, e);
-                    skipped.add(script);
-                }
-            } else {
-                // Someone else is already compiling this script. Wait for it
-                // to release the lock, and then we can return immediately
-                // since they compiled the script for us
-                logger.info("Simultaneous compiling of {} - going to wait it out...", script);
-                lockObject.lock();
-            }
-        } finally {
-            logger.info("Releasing lock for {} - {}", script, Thread.currentThread().getId());
-            releaseLock(script, "compile", lockObject);
+        try{
+            scriptCompiler.compileTsl(script, formatCompilationDate, dependencies, scriptTenant, hasTenantSpecificFile,
+                    forceTenant);
+            javaCompiler.compileJava(myScript);
+            javaCompiler.compileJava(myScript + "Factory");
+            createBundleJar(myScript, scriptTenant, keepIntermediate, hasTenantSpecificFile, scriptExtension);
+            success.add(myScript);
+        } catch (SkipCompilationException e) {
+            logger.debug("Script fragment: {} ignored: {}", script, e);
+            skipped.add(script);
         }
+          
         logger.info("Finished compiling and bundling {} - {}", script,Thread.currentThread().getId() );
     }
 
@@ -429,37 +416,23 @@ public class BundleCreatorComponent implements BundleCreator {
     @Override
     public void installBundle(String scriptPath, List<String> failures, List<String> success, List<String> skipped, boolean force,
             String extension) {
-
-        ReentrantLock lockObject = getLock(scriptPath, "install");
         try {
-            if (lockObject.tryLock()) {
-                // we got the lock!
-                try {
-                    Bundle b = doInstall(scriptPath, force, extension);
-                    if (b == null) {
-                        skipped.add(scriptPath);
-                    } else {
-                        success.add(b.getSymbolicName());
-                    }
-                } catch (BundleException e) {
-                    failures.add(e.getLocalizedMessage());
-                    reportInstallationError(scriptPath, e);
-                } catch (FileNotFoundException e1) {
-                    failures.add(e1.getLocalizedMessage());
-                    reportInstallationError(scriptPath, e1);
-                } catch (MalformedURLException e) {
-                    failures.add(e.getLocalizedMessage());
-                    reportInstallationError(scriptPath, e);
-                }
+            Bundle b = doInstall(scriptPath, force, extension);
+            if (b == null) {
+                skipped.add(scriptPath);
             } else {
-                // someone else is installing our bundle - simply wait for them to finish
-                logger.info("Simultaneous installing of {} - going to wait it out...", scriptPath);
-                lockObject.lock();
+                success.add(b.getSymbolicName());
             }
-        } finally {
-            releaseLock(scriptPath, "install", lockObject);
+        } catch (BundleException e) {
+            failures.add(e.getLocalizedMessage());
+            reportInstallationError(scriptPath, e);
+        } catch (FileNotFoundException e1) {
+            failures.add(e1.getLocalizedMessage());
+            reportInstallationError(scriptPath, e1);
+        } catch (MalformedURLException e) {
+            failures.add(e.getLocalizedMessage());
+            reportInstallationError(scriptPath, e);
         }
-
     }
 
     private Bundle doInstall(String scriptPath, boolean force, String extension)
@@ -675,20 +648,25 @@ public class BundleCreatorComponent implements BundleCreator {
 
     private boolean checkForRecompile(String rpcName, String tenant, boolean tenantQualified, String extension)
             throws FileNotFoundException {
+      
+        // Check for changed dependencies
+        List<Dependency> dependencies = depanalyzer.getDependencies(rpcName, Dependency.INCLUDE_DEPENDENCY);
+        for (Dependency d : dependencies) {
+            Date scriptCompiledDate = getCompiledModificationDate(rpcName, extension);
+            Date includeModDate = getScriptModificationDate(rpcNameFromScriptPath(d.getDependee()), d.getTentantDependee(), extension);
+            if (includeModDate == null || scriptCompiledDate == null) {
+                // weird, why can't I find the include or compiled script??
+            }
+
+            if (scriptCompiledDate.compareTo(includeModDate) < 0) {
+                return true;
+            }
+        }
         Date mod = getScriptModificationDate(rpcName, tenant, extension);
         if (mod == null) {
             logger.error("No modification date for script: " + rpcName + " this is weird.");
             return false;
         }
-        
-        List<Dependency> dependencies = depanalyzer.getDependencies(rpcName, Dependency.INCLUDE_DEPENDENCY);
-        for (Dependency d : dependencies) {
-            
-            if (needsCompilation(d.getDependee(), extension)) {
-                return true;
-            }
-        }
-        
         Date install = getBundleInstallationDate(rpcName, tenant, extension);
         if (install != null) {
             if (install.before(mod)) {
@@ -768,47 +746,57 @@ public class BundleCreatorComponent implements BundleCreator {
             }
         } else {
             if (rpcName.indexOf('_') != -1) {
-                throw new IllegalArgumentException(
-                        "rpcName should not have a tenant suffix: " + rpcName + " scriptName: " + scriptName);
+                throw new IllegalArgumentException("rpcName should not have a tenant suffix: " + rpcName + " scriptName: " + scriptName);
             }
         }
-        CompiledScriptInterface sc = getCompiledScript(rpcName, tenant, hasTenantScriptFile);
-        
         boolean forceReinstall = false;
-        if (extension == null) {
-            extension = navajoIOConfig.determineScriptExtension(scriptName, tenant);
-            logger.info("No known extension for {} - determined {} as script extension!", scriptName, extension);
-        }
+        // Use ReentrantLock to prevent compiling/installing the same script simultaneously 
+        ReentrantLock lockObject = getLock(scriptName, "compile");
+        try {
+            if (lockObject.tryLock()) {
+                CompiledScriptInterface sc = getCompiledScript(rpcName, tenant, hasTenantScriptFile);
+                
+                if (extension == null) {
+                    extension = navajoIOConfig.determineScriptExtension(scriptName, tenant);
+                    logger.info("No known extension for {} - determined {} as script extension!", scriptName, extension);
+                }
+        
+                if (sc != null) {
+                    boolean needsRecompile = false;
+                    try {
+                        needsRecompile = checkForRecompile(rpcName, tenant, hasTenantScriptFile, extension);
+                    } catch (FileNotFoundException e) {
+                        logger.warn("Can not find scriptfile, but the service seems available. Uninstalling service: ", e);
+                        uninstallBundle(scriptName);
+                        return null;
+                    }
+                    if (!force && !needsRecompile) {
+                        return sc;
+                    }
+                    if (needsRecompile) {
+                        forceReinstall = true;
+                    }
+                }
+                List<String> failures = new ArrayList<String>();
+                List<String> success = new ArrayList<String>();
+                List<String> skipped = new ArrayList<String>();
 
-        if (sc != null) {
-            boolean needsRecompile = false;
-            try {
-                needsRecompile = checkForRecompile(rpcName, tenant, hasTenantScriptFile, extension);
-            } catch (FileNotFoundException e) {
-                logger.warn("Can not find scriptfile, but the service seems available. Uninstalling service: ", e);
-                uninstallBundle(scriptName);
-                return null;
+                if (needsCompilation(scriptName, extension) || force) {
+                    createBundle(scriptName, new Date(), failures, success, skipped, force, false, extension);
+                    forceReinstall = true;
+                }
+                installBundle(scriptName, failures, success, skipped, forceReinstall, extension);
+            } else {
+                // Someone else is already compiling this script. Wait for it to release the lock, 
+                // and then we can return immediately since they compiled the script for us
+                logger.info("Simultaneous creating and installing of {} - going to wait it out...", scriptName);
+                lockObject.lock();
             }
-            if (!force && !needsRecompile) {
-                return sc;
-            }
-            if (needsRecompile) {
-                forceReinstall = true;
-            }
-        }
-        List<String> failures = new ArrayList<String>();
-        List<String> success = new ArrayList<String>();
-        List<String> skipped = new ArrayList<String>();
+        } finally {
+            releaseLock(scriptName, "compile", lockObject);
+        }   
 
-        if (needsCompilation(scriptName, extension) || force) {
-            createBundle(scriptName, new Date(), failures, success, skipped, force, false, extension);
-            forceReinstall = true;
-
-        }
-        logger.info("going to install {} - {}", scriptName, Thread.currentThread().getId());
-        installBundle(scriptName, failures, success, skipped, forceReinstall, extension);
-
-        logger.debug("On demand installation of {} finished, waiting for service... {}", scriptName, Thread.currentThread().getId());
+        logger.debug("On demand installation of {} finished, waiting for service...", scriptName);
         return getCompiledScript(rpcName, tenant, hasTenantScriptFile);
     }
 
