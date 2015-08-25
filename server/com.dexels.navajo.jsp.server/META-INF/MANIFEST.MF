@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Jsp Server
 Bundle-SymbolicName: com.dexels.navajo.jsp.server
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.1.19.qualifier
+Bundle-Version: 1.1.20
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.7"
 Import-Package: com.dexels.navajo.client,
