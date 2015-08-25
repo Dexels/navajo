@@ -454,14 +454,7 @@ public class GenericHandler extends ServiceHandler {
         try {
             CompiledScriptInterface cso;
             cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, false);
-            if (cso != null) {
-                boolean dirty = cso.hasDirtyDependencies(access);
-                if (dirty) {
-                    cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, true);
-                    logger.warn(">>>>>>>>>>>>>>>> dirty script!");
-                }
-
-            }
+            
             // (access.rpcName);
             if (cso == null) {
                 if (Version.osgiActive()) {
@@ -515,70 +508,6 @@ public class GenericHandler extends ServiceHandler {
             }
           }
         }
-
-//	private CompiledScript getOSGiService(String scriptName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-//		final BundleContext bundleContext = Version.getDefaultBundleContext();
-//		if(bundleContext==null) {
-//			logger.debug("No OSGi context found");
-//			return null;
-//		}
-//		String rpcName = scriptName.replaceAll("/", ".");
-//		
-//		String filter = "(navajo.scriptName="+rpcName+")";
-//		ServiceReference<?>[] sr;
-//		try {
-//			sr = bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filter);
-//		} catch (InvalidSyntaxException e) {
-//			logger.error("Filter syntax problem for: "+filter,e);
-//			return null;
-//		}
-//		if(sr==null || sr.length==0) {
-//			logger.error("No service reference found for "+filter);
-//			try {
-//				CompiledScript ss = loadOnDemand(bundleContext, rpcName, filter);
-//				return ss;
-//			} catch (Exception e) {
-//				logger.error("Service  "+filter,e);
-//			}
-//		}
-//		
-//		if(sr!=null && sr.length>1) {
-//			logger.warn("Multiple references ({}) found for {}",sr.length,filter);
-//		}
-//		
-//		if(sr==null) {
-//			logger.error("BundleContext is null. Why?!");
-//		}
-//		CompiledScriptFactory csf = null;
-//		if(sr!=null) {
-//			 csf = (CompiledScriptFactory) bundleContext.getService(sr[0]);
-//			 if(csf!=null ) {
-//				 return csf.getCompiledScript();
-//			 }			
-//		}
-//		 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter);
-//		 BundleCreator bc = DispatcherFactory.getInstance().getBundleCreator();
-//		 if(bc!=null) {
-//			 try {
-//				CompiledScript ss = bc.getOnDemandScriptService(rpcName);
-//				return ss;
-//			} catch (Exception e) {
-//				logger.error("on demand script resolution failed.",e);
-//			}
-//		 }
-//		return null;
-//
-////		 CompiledScript ss;
-////		try {
-////			ss = csf.getCompiledScript();
-////			final CompiledScript ccs = ss;
-////		} catch (Exception e) {
-////			 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter,e);
-////			 return null;
-////		}
-////		bundleContext.ungetService(sr[0]);
-////		 return ss;
-//	}
 
 	// THIS rpcName seems to have a tenant suffix
 	private CompiledScriptInterface loadOnDemand(BundleContext bundleContext, String rpcName,boolean force) throws Exception {
