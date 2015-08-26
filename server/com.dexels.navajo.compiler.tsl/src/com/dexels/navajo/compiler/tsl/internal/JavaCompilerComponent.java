@@ -48,7 +48,7 @@ public class JavaCompilerComponent implements JavaCompiler {
 
 	
 	@Override
-	public void compileJava(String script) throws Exception {
+	public synchronized void compileJava(String script) throws Exception {
 		// grab the file from the orig location
 		final File file = new File(navajoIOConfig.getCompiledScriptPath()+"/"+script+".java");
 		// but alter the path dir for the compiler:
