@@ -243,4 +243,9 @@ public class DefaultTribeManager implements TribeManagerInterface {
 		return true;
 	}
 
+    @Override
+    public Object getMember(String id) {
+        return new SimpleTribeMember();
+    }
+
 }

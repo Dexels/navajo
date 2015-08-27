@@ -160,6 +160,8 @@ public interface TribeManagerInterface {
 	public String getChiefName();
 
 	String getMyUniqueId();
+	
+	public Object getMember(String id);
 
 	List<TribalNumber> getDistributedCounters();
     

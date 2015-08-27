@@ -12,8 +12,8 @@ public class RemoteAsyncAnswer extends Answer {
 
     private static final long serialVersionUID = 489178532753193613L;
 
-    private Object ownerOfRef = null;
-    private Object hostNameOwnerOfRef = null;
+    private String ownerOfRefId = null;
+    private String hostNameOwnerOfRef = null;
     private boolean acknowledged = false;
 
     public RemoteAsyncAnswer(RemoteAsyncRequest q) {
@@ -25,7 +25,7 @@ public class RemoteAsyncAnswer extends Answer {
         if (AsyncStore.getInstance().getInstance(ref) != null) {
             logger.info("Found ref {} in my AsyncStore!", ref);
             acknowledged = true;
-            ownerOfRef = TribeManagerFactory.getInstance().getMyMembership().getAddress();
+            ownerOfRefId = TribeManagerFactory.getInstance().getMyMembership().getMemberId();
             hostNameOwnerOfRef = TribeManagerFactory.getInstance().getMyMembership().getMemberName();
         }
 
@@ -37,10 +37,10 @@ public class RemoteAsyncAnswer extends Answer {
     }
 
     public Object getOwnerOfRef() {
-        return ownerOfRef;
+       return TribeManagerFactory.getInstance().getMember(ownerOfRefId);
     }
 
-    public Object getHostNameOwnerOfRef() {
+    public String getHostNameOwnerOfRef() {
         return hostNameOwnerOfRef;
     }
 
