@@ -21,8 +21,9 @@ public class RemoteAsyncAnswer extends Answer {
 
         RemoteAsyncRequest rasr = (RemoteAsyncRequest) getMyRequest();
         String ref = rasr.getRef();
+        logger.info("Constructing RemoteAsyncAnswer for: {}", ref );
         if (AsyncStore.getInstance().getInstance(ref) != null) {
-            logger.debug("Found ref {} in my AsyncStore!", ref);
+            logger.info("Found ref {} in my AsyncStore!", ref);
             acknowledged = true;
             ownerOfRef = TribeManagerFactory.getInstance().getMyMembership().getAddress();
             hostNameOwnerOfRef = TribeManagerFactory.getInstance().getMyMembership().getMemberName();

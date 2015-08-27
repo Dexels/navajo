@@ -19,11 +19,13 @@ public class RemoteAsyncRequest extends Request {
     @Override
     public Answer getAnswer() {
         Answer a = null;
+        logger.info("Constructing RemoteAsyncRequest answer for: {}", ref);
         try {
             a = new RemoteAsyncAnswer(this);
         } catch (Exception e) {
             logger.error("Exception on constructing RemoteAsyncAnswer: ", e);
         }
+        logger.info("Returning RemoteAsyncRequest answer for: {}", ref);
         return a;
     }
 
