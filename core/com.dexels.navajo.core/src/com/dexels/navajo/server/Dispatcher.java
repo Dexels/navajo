@@ -1034,7 +1034,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     // Create beforeWebservice event.
                     access.setInDoc(inMessage);
                     long b_start = System.currentTimeMillis();
-                    Navajo useProxy = WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
+                    Navajo useProxy = ( WebserviceListenerFactory.getInstance() != null ?  
+                    		WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access) : null);
                     access.setBeforeServiceTime((int) (System.currentTimeMillis() - b_start));
 
                     if (useAuthorisation) {
@@ -1206,7 +1207,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
                 // Call after web service event...
                 long a_start = System.currentTimeMillis();
-                afterWebServiceActivated = WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
+                afterWebServiceActivated = ( WebserviceListenerFactory.getInstance() != null ? 
+                		WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access) : false);
                 access.setAfterServiceTime((int) (System.currentTimeMillis() - a_start));
 
                 // Set access to finished state.
