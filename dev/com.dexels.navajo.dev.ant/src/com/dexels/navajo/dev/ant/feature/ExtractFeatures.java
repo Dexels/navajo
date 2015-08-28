@@ -13,8 +13,12 @@ import org.apache.tools.ant.Task;
 
 public class ExtractFeatures extends Task {
 
+	private static final String DEFAULT_NAMESPACE = "http://karaf.apache.org/xmlns/features/v1.2.0";
 	private String destination;
 	private String input;
+	private String namespace;
+	private boolean clean = false;
+
 
 	public ExtractFeatures() {
 	}
@@ -25,6 +29,13 @@ public class ExtractFeatures extends Task {
 
 	public void setInput(String input) {
 		this.input = input;
+	}
+
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
+	}
+	public void setClean(boolean clean) {
+		this.clean = clean;
 	}
 
 	@Override
@@ -58,6 +69,7 @@ public class ExtractFeatures extends Task {
 			if(!xe.getName().equals("features")) {
 				throw new IllegalArgumentException("Top level name should be 'features' not: "+xe.getName());
 			}
+			System.err.println("Writing features to destination: "+destDir.getAbsolutePath());
 			List<XMLElement> l = xe.getChildren();
 			for (XMLElement xmlElement : l) {
 				convertElement(xmlElement,destDir);
@@ -76,8 +88,23 @@ public class ExtractFeatures extends Task {
 		String featureName = xmlElement.getStringAttribute("name")+"-"+xmlElement.getStringAttribute("version");
 //		<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-[[VERSION]]">
 		XMLElement features = new CaseSensitiveXMLElement("features");
-		features.setAttribute("xmlns", "http://karaf.apache.org/xmlns/features/v1.2.0");
+		features.setAttribute("xmlns", this.namespace==null?DEFAULT_NAMESPACE:namespace);
 		features.setAttribute("name", featureName);
+//		features.setAttribute("bla", "ble");
+		
+		if(clean) {
+			System.err.println("Clean ON!");
+			xmlElement.removeAttribute("resolver");
+			for(XMLElement bundle : xmlElement.getAllElementsByTagName("bundle")) {
+				bundle.removeAttribute("dependency");
+				System.err.println("Cleaning: "+bundle);
+			}
+			for(XMLElement feature : xmlElement.getAllElementsByTagName("feature")) {
+				feature.removeAttribute("resolver");
+				System.err.println("Cleaning feature: "+feature);
+			}
+
+		}
 		features.addChild(xmlElement);
 		String outputName = featureName+".xml";
 		File outputFile = new File(destDir,outputName);

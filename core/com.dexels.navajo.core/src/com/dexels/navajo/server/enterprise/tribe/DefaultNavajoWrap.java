@@ -3,6 +3,7 @@ package com.dexels.navajo.server.enterprise.tribe;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +29,8 @@ public class DefaultNavajoWrap implements NavajoRug {
      */
     private static final long serialVersionUID = -4689405438923422437L;
     private transient Navajo myNavajo = null;
-
-    // private final TribeManagerInterface tribeManager;
-    // private final static TribalNumber uniqueId =
-    // TribeManagerFactory.getInstance().getDistributedCounter("DefaultNavajoWrap");
     private final long created;
+    
     /**
      * interestCount can be used to indicate how many 'clients' will read the
      * Navajo enclosed in this Wrap.
@@ -46,7 +44,20 @@ public class DefaultNavajoWrap implements NavajoRug {
     protected final String reference;
 
     private final static Logger logger = LoggerFactory.getLogger(DefaultNavajoWrap.class);
-
+    private final static Random rand = new Random(System.currentTimeMillis());
+    
+    /*
+     * Return a unique id for this wrap. If TribalNumber are available use those, if not use random long.
+     */
+    private final synchronized long getWrapCounter() {
+    	if ( TribeManagerFactory.getInstance() != null ) {
+    		TribalNumber tribalNumber =  TribeManagerFactory.getInstance().getDistributedCounter("DefaultNavajoWrap");
+    		return tribalNumber.incrementAndGet();
+    	} else {
+    		return rand.nextLong();
+    	}
+    }
+    
     /**
      * Create a DefaultNavajoWrap with auto id and unknown interestCount.
      * Interest will be derived from number of readObject (deserialization)
@@ -55,12 +66,12 @@ public class DefaultNavajoWrap implements NavajoRug {
      * 
      * @param n
      */
-    public DefaultNavajoWrap(Navajo n, TribalNumber navajoWrapCounter) {
+    public DefaultNavajoWrap(Navajo n) {
         if (n == null) {
             logger.error("Cannot wrap null Navajo");
         }
         created = System.currentTimeMillis();
-        reference = SerializationUtil.serializeNavajo(n, created + "-" + navajoWrapCounter.incrementAndGet() + ".xml");
+        reference = SerializationUtil.serializeNavajo(n, created + "-" + getWrapCounter() + ".xml");
     }
 
     /**
@@ -68,13 +79,13 @@ public class DefaultNavajoWrap implements NavajoRug {
      * 
      * @param n
      */
-    public DefaultNavajoWrap(Navajo n, int interestCount, TribalNumber navajoWrapCounter) {
-        this.interestCount = interestCount;
+    public DefaultNavajoWrap(Navajo n, int interestCount) {
+    	this.interestCount = interestCount;
         if (n == null) {
             logger.error("Cannot wrap null Navajo");
         }
         created = System.currentTimeMillis();
-        reference = SerializationUtil.serializeNavajo(n, created + "-" + navajoWrapCounter.incrementAndGet() + ".xml");
+        reference = SerializationUtil.serializeNavajo(n, created + "-" + getWrapCounter() + ".xml");
     }
 
     /**
@@ -83,8 +94,8 @@ public class DefaultNavajoWrap implements NavajoRug {
      * @param n
      * @param tribeManager
      */
-    public DefaultNavajoWrap(Navajo n, String id, TribalNumber navajoWrapCounter) {
-        if (n == null) {
+    public DefaultNavajoWrap(Navajo n, String id) {
+    	if (n == null) {
             logger.error("Cannot wrap null Navajo: " + id);
         }
         if (!id.endsWith(".xml")) {

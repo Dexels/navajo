@@ -1,0 +1,11 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo Oracle driver" name="Remote Navajo Map" id="navajo.resource.navajo">
+    <AD name="server"    id="server"   required="true"  type="String" default="navajoserver/Postman"/>   
+    <AD name="username"  id="username" required="true" type="String" default="demo"/>
+    <AD name="password"  id="password" required="true" type="String" default="demo"/>
+    <AD name="name"  id="name" required="false" type="String" default="navajo.resource.navajoserver"/>
+  </OCD>
+  <Designate factoryPid="navajo.resource.navajo" pid="navajo.resource.navajo">
+     <Object ocdref="navajo.resource.navajo"/>
+  </Designate>
+</metatype:MetaData>
