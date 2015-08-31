@@ -16,12 +16,12 @@ import com.dexels.navajo.article.ArticleClientException;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.DirectOutputThrowable;
-import com.dexels.oauth.api.ClientRegistration;
+import com.dexels.oauth.api.Client;
 import com.dexels.oauth.api.ClientStore;
 import com.dexels.oauth.api.ClientStoreException;
-import com.dexels.oauth.api.Token;
-import com.dexels.oauth.api.TokenException;
+import com.dexels.oauth.api.OAuthToken;
 import com.dexels.oauth.api.TokenStore;
+import com.dexels.oauth.api.TokenStoreException;
 
 public class OAuthArticleServlet extends ArticleServlet {
 	
@@ -37,8 +37,8 @@ public class OAuthArticleServlet extends ArticleServlet {
 		String token = req.getParameter("token");
 		resp.addHeader("Access-Control-Allow-Origin", "*");		
 
-		Token t = null;
-		ClientRegistration cr = null;
+		OAuthToken t = null;
+		Client cr = null;
 		
 		
 		String errorMessage = "No token or invalid token supplied";
@@ -72,13 +72,24 @@ public class OAuthArticleServlet extends ArticleServlet {
 			}
 		} else {
 			try {
-				t = tokenStore.getTokenByString(token);
-			} catch (TokenException e) {
-				throw new ServletException("Token problem",e);
+				t = tokenStore.getToken(token);
+				
+				if (t != null && t.isExpired()) {
+					try {
+						tokenStore.delete(t.getClientId(), t.getCode());
+						logger.info("Token is expired remove it!");
+					} catch (TokenStoreException e) {
+						logger.error(e.getMessage());
+					} finally {
+						t = null;
+					}
+				}
+			} catch (TokenStoreException e) {
+				throw new ServletException("Token problem", e);
 			}
 			if(t!=null) {
 				try {
-					cr = clientStore.getClient(t.clientId());
+					cr = clientStore.getClient(t.getClientId());
 					
 					if (cr == null) {
 						errorMessage = "Invalid clientId";
@@ -97,7 +108,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 		String username = cr.getUsername();
 		String pathInfo = req.getPathInfo();
 		String instance = cr.getInstance();
-		String url = cr.getURL();
+		String url = cr.getRedirectURLPrefix();
 		logger.info("clientInstance: "+instance);
 		if(instance==null) {
 			instance = determineInstanceFromRequest(req);

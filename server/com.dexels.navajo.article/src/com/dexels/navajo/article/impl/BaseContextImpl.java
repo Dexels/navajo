@@ -26,9 +26,9 @@ import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.server.NavajoIOConfig;
-import com.dexels.oauth.api.TokenException;
+import com.dexels.oauth.api.OAuthToken;
 import com.dexels.oauth.api.TokenStore;
-import com.dexels.oauth.api.Token;
+import com.dexels.oauth.api.TokenStoreException;
 
 public abstract class BaseContextImpl implements ArticleContext {
 
@@ -37,8 +37,6 @@ public abstract class BaseContextImpl implements ArticleContext {
 	private TokenStore tokenStore;
 	
 	private static String ARTICLE_TYPE = "type";
-	private static String ARTICLE_TYPE_QUERY = "query";
-	private static String ARTICLE_TYPE_FORM = "form";
 	private static String ARTICLE_TYPE_DISPLAY = "display";
 
 	private final static Logger logger = LoggerFactory
@@ -75,17 +73,15 @@ public abstract class BaseContextImpl implements ArticleContext {
 	}
 
 	@Override
-	public Map<String, Object> getScopes(String token) throws TokenException {
+	public Map<String, Object> getScopes(String token) throws TokenStoreException {
 		Map<String, Object> result = new HashMap<String, Object>();
-		Token t = tokenStore.getTokenByString(token);
-		
+		OAuthToken t = tokenStore.getToken(token);
+
 		if (token != null) {
-			result.putAll(t.getUserAttributes());
-			result.put("clientId", t.clientId());
-			result.put("username", t.getUsername());
-			
-		} else {
+			result.putAll(t.getAttributes());
+			result.put("clientId", t.getClientId());
 		}
+		
 		return result;
 	}
 

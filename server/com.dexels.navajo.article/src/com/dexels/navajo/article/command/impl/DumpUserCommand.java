@@ -1,6 +1,5 @@
 package com.dexels.navajo.article.command.impl;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -19,7 +18,6 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 public class DumpUserCommand implements ArticleCommand {
 
 	private String name;
-	
 	
 	public DumpUserCommand() {
 		// default constructor
@@ -55,24 +53,19 @@ public class DumpUserCommand implements ArticleCommand {
 			scopesObject.add(e);
 		}
 
-//		on.put("scopes", scopesObject);
+		on.put("scopes", scopesObject);
 		ObjectNode userObject = on.putObject("user");
-		for (Entry<String,Object> e : runtime.getUserAttributes().entrySet()) {
+		for (Entry<String, Object> e : runtime.getUserAttributes().entrySet()) {
 			userObject.put(e.getKey(), ""+e.getValue());
 		}
 		on.put("user", userObject);
-		Date expiryDate = runtime.getToken().getExpiryDate();
-		if(expiryDate!=null) {
-			on.put("expireDate", expiryDate.toString());
-		}
+		long expireTimestamp = runtime.getToken().getExpireTimestamp();
+		on.put("expireTimestamp", expireTimestamp);
 		return on;
 	}
 	
-
-
 	@Override
 	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,ObjectMapper mapper) {
 		return false;
 	}
-
 }
