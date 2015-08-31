@@ -38,7 +38,7 @@
 	</target>
 
 	<target name="extract" depends="clean">
-		<featureextract  clean="true" destination="${extractFolder}" input="features.xml" />
+		<featureextract destination="${extractFolder}" input="features.xml" />
 	</target>
 
 	<target name="loop" depends="extract">
@@ -69,13 +69,13 @@
 		<copy tofile="${output}/${artifactname}.xml" verbose="true" file="${theFile}" overwrite="true" />
 
 		<artifact:pom id="mypom" file="${output}/${artifactname}_pom.xml" />
-<!--
-		<artifact:deploy file="${output}/${artifactname}.xml" pomrefid="mypom">
+
+		<artifact:deploy uniqueversion="true" file="${output}/${artifactname}.xml" pomrefid="mypom">
 			<remoterepository url="${release}" id="dexels" />
 			<remotesnapshotrepository url="${snapshot}" id="dexels_snap_test" />
 			<attach  file="${output}/${artifactname}.xml" classifier="features" type="xml" />
 		</artifact:deploy>
--->
+
 	</target>
 
 	<!-- mvn:com.dexels.navajo/com.dexels.navajo.karaf.feature/1.0.35/features.xml -->
