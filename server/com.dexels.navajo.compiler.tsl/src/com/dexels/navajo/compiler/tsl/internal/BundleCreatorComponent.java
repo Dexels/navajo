@@ -654,9 +654,13 @@ public class BundleCreatorComponent implements BundleCreator {
         for (Dependency d : dependencies) {
             Date scriptCompiledDate = getCompiledModificationDate(rpcName, extension);
             Date includeModDate = getScriptModificationDate(rpcNameFromScriptPath(d.getDependee()), d.getTentantDependee(), extension);
+            
+            
             if (includeModDate == null || scriptCompiledDate == null) {
                 // weird, why can't I find the include or compiled script??
-            }
+                logger.info("Null IncludeModDate ({}) or ScriptCompileDate ({}): recompile!", includeModDate, scriptCompiledDate );
+                return true;
+            } 
 
             if (scriptCompiledDate.compareTo(includeModDate) < 0) {
                 return true;
