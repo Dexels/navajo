@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.NavajoResponseHandler;
+import com.dexels.navajo.client.async.AsyncClientFactory;
 import com.dexels.navajo.client.async.ManualAsyncClient;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
@@ -97,6 +98,8 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		setUsername((String) settings.get("username"));
 		setPassword((String) settings.get("password"));
 		setName((String) settings.get("name"));
+		
+		AsyncClientFactory.setInstance(this);
 	}
 
 	public void deactivate() {
