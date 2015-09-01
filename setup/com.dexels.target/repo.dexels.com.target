@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1525">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1529">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
@@ -218,6 +218,7 @@
 <plugin id="org.eclipse.jetty.http" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.io" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.osgi.httpservice" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.proxy"/>
 <plugin id="org.eclipse.jetty.security" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.servlets" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.util" version="9.2.10.v20150310"/>
