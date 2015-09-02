@@ -110,7 +110,7 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.4.21'
+	<feature resolver="(obr)" name='navajo.core' version='3.5.1'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,5)">pax-http</feature>
@@ -125,7 +125,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.6.2
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.2.10
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/2.0.0
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/2.0.6
 		</bundle>
@@ -137,10 +137,16 @@
 	
 	<feature resolver="(obr)" name='navajo.client.jetty8' version='1.0.0'
 		start-level='80'>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async.jetty8/1.0.1
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async.jetty8/1.0.0
 		</bundle>		
 	</feature>	
-	
+
+	<feature resolver="(obr)" name='navajo.client.jetty9' version='1.0.0'
+		start-level='80'>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async.jetty9/1.0.0
+		</bundle>		
+	</feature>	
+		
 	<feature resolver="(obr)" name='navajo.function' version='3.0.11'
 		start-level='80'>
 		<feature version="[3.0.34,4)">navajo.core</feature>
