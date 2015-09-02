@@ -34,12 +34,12 @@
 		</bundle>
 	</feature>
 
-	<feature version="1.3.1" name="dexels.karaf4.repository"
+	<feature version="1.3.2" name="dexels.karaf4.repository"
 		install="auto">
 		<feature version="[3.0.0,5)">eventadmin</feature>
 		<feature version="[3.0.0,5)">scr</feature>
 		<feature version="[3.0.0,5)">pax-http</feature>
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf4.featuresync/2.0.2
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.karaf4.featuresync/2.0.4
 		</bundle>
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/7.0.0
 		</bundle>
@@ -76,15 +76,15 @@
 	</feature>
 
 
-	<feature version="1.0.34" name="dexels.oauth" resolver="(obr)">
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/5.1.0
+	<feature version="1.1.0" name="dexels.oauth" resolver="(obr)">
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/9.0.0
 		</bundle>
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.20
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.25
 		</bundle>
 	</feature>
 
-	<feature version="1.0.2" name="dexels.oauth.web" resolver="(obr)">
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.37
+	<feature version="1.0.4" name="dexels.oauth.web" resolver="(obr)">
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.42
 		</bundle>
 	</feature>
 
@@ -117,7 +117,7 @@
 		<feature version="[3.0.0,5)">eventadmin</feature>
 		<feature version="[3.0.2,4)">navajo.core.dependencies</feature>
 
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/3.0.24
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/3.0.26
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.14
 		</bundle>
@@ -162,17 +162,17 @@
 	</feature>
 
 
-	<feature resolver="(obr)" name='navajo.server' version='3.1.4'>
+	<feature resolver="(obr)" name='navajo.server' version='3.1.5'>
 		<feature version="[3.0.34,4)">navajo.core</feature>
 		<feature version="[3.0.0,5)">pax-war</feature>
 		<feature version="[3.0.0,5)">pax-http-whiteboard</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/2.1.0
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/2.2.0
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.20
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/2.0.14
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.2.16
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.2.18
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.queuemanager/1.0.44
 		</bundle>
@@ -361,10 +361,10 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.article' version='3.0.29'>
+	<feature resolver="(obr)" name='navajo.article' version='3.1.0'>
 		<feature version="[3.0.32,4)">navajo.server.osgi</feature>
 		<feature version="[1.0.8,2)">dexels.oauth</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/2.1.18
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/3.0.0
 		</bundle>
 	</feature>
 
