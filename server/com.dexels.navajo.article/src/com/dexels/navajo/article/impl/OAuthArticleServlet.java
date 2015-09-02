@@ -76,7 +76,7 @@ public class OAuthArticleServlet extends ArticleServlet {
 				
 				if (t != null && t.isExpired()) {
 					try {
-						tokenStore.delete(t.getClientId(), t.getCode());
+						tokenStore.delete(t.getCode());
 						logger.info("Token is expired remove it!");
 					} catch (TokenStoreException e) {
 						logger.error(e.getMessage());
