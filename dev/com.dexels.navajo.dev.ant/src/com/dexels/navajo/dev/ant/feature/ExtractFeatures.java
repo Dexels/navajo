@@ -98,10 +98,19 @@ public class ExtractFeatures extends Task {
 			for(XMLElement bundle : xmlElement.getAllElementsByTagName("bundle")) {
 				bundle.removeAttribute("dependency");
 				System.err.println("Cleaning: "+bundle);
+				String content = bundle.getContent();
+				if(content!=null) {
+					bundle.setContent(content.trim());
+				}
 			}
 			for(XMLElement feature : xmlElement.getAllElementsByTagName("feature")) {
 				feature.removeAttribute("resolver");
 				System.err.println("Cleaning feature: "+feature);
+				String content = feature.getContent();
+				if(content!=null) {
+					feature.setContent(content.trim());
+				}
+
 			}
 
 		}
