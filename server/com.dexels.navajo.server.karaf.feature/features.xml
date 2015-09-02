@@ -447,8 +447,10 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.dbreplication'
-		version='3.0.11'>
+		version='3.0.12'>
 		<feature version="[3.0.0,4)">navajo.enterprise.core</feature>
+		<feature version="[3.0.59,4)">navajo.server.osgi</feature>
+		
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.dbreplication/3.2.4
 		</bundle>
 	</feature>
@@ -515,8 +517,9 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.entity' version='1.1.12'>
+	<feature resolver="(obr)" name='navajo.entity' version='1.1.13'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
+		<feature version="[3.0.59,4)">navajo.server.osgi</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.entity/1.4.0
 		</bundle>
 	</feature>
