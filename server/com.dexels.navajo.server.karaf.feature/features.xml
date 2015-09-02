@@ -170,7 +170,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.20
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/2.0.16
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/2.0.18
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.2.18
 		</bundle>
