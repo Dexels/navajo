@@ -404,9 +404,9 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.78'>
+		version='3.0.81'>
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.4.10
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.4.16
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.4.2
 		</bundle>
