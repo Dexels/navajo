@@ -95,7 +95,7 @@
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/1.3_5
 		</bundle>
 		<!-- consider update to: <bundle dependency='true'>mvn:commons-codec/commons-codec/1.10</bundle> 
-		     			(used in appstore) -->
+			(used in appstore) -->
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1
 		</bundle>
 		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
@@ -110,7 +110,7 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.4.23'
+	<feature resolver="(obr)" name='navajo.core' version='3.5.2'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,5)">pax-http</feature>
@@ -125,7 +125,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.6.2
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.2.10
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/2.0.0
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/2.0.6
 		</bundle>
@@ -134,6 +134,19 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.1.8
 		</bundle>
 	</feature>
+	
+	<feature resolver="(obr)" name='navajo.client.jetty8' version='1.0.0'
+		start-level='80'>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async.jetty8/1.0.0
+		</bundle>		
+	</feature>	
+
+	<feature resolver="(obr)" name='navajo.client.jetty9' version='1.0.0'
+		start-level='80'>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async.jetty9/1.0.0
+		</bundle>		
+	</feature>	
+		
 	<feature resolver="(obr)" name='navajo.function' version='3.0.11'
 		start-level='80'>
 		<feature version="[3.0.34,4)">navajo.core</feature>
@@ -256,7 +269,7 @@
 
 		<!-- Logback isn't present in Karaf, although it can be added -->
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.server.logback/1.0.1</bundle> 
-		     			<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.1.0</bundle> -->
+			<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.1.0</bundle> -->
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.status' version='1.0.8'>
@@ -537,10 +550,9 @@
 		</bundle>
 		<bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/3.0.3
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.thirdparty/htmlunit-osgi/2.17
+		<bundle dependency='true'>mvn:com.dexels.thirdparty/htmlunit-osgi/2.18
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.monitor.rackermon/1.2.31
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.monitor.rackermon/1.2.32
 		</bundle>
 	</feature>
 </features>
-

@@ -15,6 +15,7 @@
 		<module>../../com.dexels.navajo.client.jabber</module>
 		<module>../../com.dexels.navajo.core</module>
 		<module>../../com.dexels.navajo.client.async</module>
+		<module>../../com.dexels.navajo.client.async.jetty8</module>
 		<module>../../com.dexels.navajo.client.async.jetty9</module>
 		<module>../../com.dexels.navajo.function</module>
 		<module>../../com.dexels.navajo.api</module>
