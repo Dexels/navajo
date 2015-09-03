@@ -33,7 +33,7 @@ public class TestConnection {
 	public void testInsert() throws IOException {
 		ElasticSearchComponent esc = new ElasticSearchComponent();
 		Map<String,Object> settings = new HashMap<>();
-		settings.put("url", "http://docker.local:9200");
+		settings.put("url", "http://cloud.sendrato.com:9200");
 		settings.put("index", "sendrato");
 		settings.put("type", "cashless");
 		settings.put("id_property", "_id");
@@ -41,7 +41,7 @@ public class TestConnection {
 		esc.activate(settings);
 		Message m = tmlDoc.getMessage("Transaction");
 		for (Message e : m.getAllMessages()) {
-			esc.insert(e);
+			ElasticSearchFactory.getInstance().insert(e);
 		}
 	}
 
@@ -49,7 +49,8 @@ public class TestConnection {
 	public void testMessageToJSON() throws JsonGenerationException, JsonMappingException, IOException {
 		Message m = tmlDoc.getMessage("Transaction");
 		ObjectMapper objectMapper = new ObjectMapper();
-		ArrayNode nn = (ArrayNode) ElasticSearchAdapter.messageToJSON(m, objectMapper);
+		ElasticSearchComponent e = new ElasticSearchComponent();
+		ArrayNode nn = (ArrayNode) e.messageToJSON(m);
 		objectMapper.writer().withDefaultPrettyPrinter().writeValue(System.err, nn);
 		Assert.assertEquals(m.getArraySize(), nn.size());
 	}

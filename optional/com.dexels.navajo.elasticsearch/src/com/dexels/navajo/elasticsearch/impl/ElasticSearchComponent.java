@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.elasticsearch.ElasticSearchFactory;
 import com.dexels.navajo.elasticsearch.ElasticSearchService;
 
 public class ElasticSearchComponent implements ElasticSearchService {
@@ -49,9 +50,11 @@ public class ElasticSearchComponent implements ElasticSearchService {
 		this.index = (String)settings.get("index");
 		this.type = (String)settings.get("type");
 		this.id_property = (String)settings.get("id_property");
+		ElasticSearchFactory.setInstance(this);
 	}
 	
 	public void deactivate() {
+		ElasticSearchFactory.setInstance(null);
 		if(httpclient!=null) {
 			try {
 				httpclient.close();
@@ -59,6 +62,7 @@ public class ElasticSearchComponent implements ElasticSearchService {
 				logger.error("Error: ", e);
 			}
 		}
+
 	}
 	@Override
 	public void insert(Message m) throws IOException {
@@ -99,7 +103,7 @@ public class ElasticSearchComponent implements ElasticSearchService {
 		if(Property.DATE_PROPERTY.equals(property.getType())) {
 			Date d = (Date) property.getTypedValue();
 			
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 			an.put(property.getName(),df.format(d));
 		} else if(Property.INTEGER_PROPERTY.equals(property.getType())) {
 			Integer d = (Integer) property.getTypedValue();
