@@ -481,6 +481,7 @@ public class GenericHandler extends ServiceHandler {
 
             return access.getOutputDoc();
         } catch (Throwable e) {
+           
             if (e instanceof com.dexels.navajo.mapping.BreakEvent) {
               // Create dummy header to set breakwasset attribute.
               Header h = NavajoFactory.getInstance().createHeader(outDoc, "", "", "", -1);
@@ -499,6 +500,7 @@ public class GenericHandler extends ServiceHandler {
               throw (AuthorizationException) e;
             }
             else {
+                logger.error("Exception in GenericHandler.doService: ", e);
                 if ( e instanceof FileNotFoundException ) {
                     access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
                 }
