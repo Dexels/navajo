@@ -75,7 +75,6 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 		} else {
 			logger.info("No profile bundles present.");
 		}
-		logger.info("Settings: "+bundleValues);
 		Map<String,String> resolvedValues = new HashMap<String, String>();
 		for (Entry<String,String> entry : bundleValues.entrySet()) {
 			if(entry.getKey().indexOf("/")<0) {
