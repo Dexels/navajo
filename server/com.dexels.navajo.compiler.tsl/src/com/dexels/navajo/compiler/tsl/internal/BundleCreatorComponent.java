@@ -652,17 +652,17 @@ public class BundleCreatorComponent implements BundleCreator {
         // Check for changed dependencies
         List<Dependency> dependencies = depanalyzer.getDependencies(rpcName, Dependency.INCLUDE_DEPENDENCY);
         for (Dependency d : dependencies) {
-            Date scriptCompiledDate = getCompiledModificationDate(rpcName, extension);
+            Date installDate = getBundleInstallationDate(rpcName, tenant, extension);
             Date includeModDate = getScriptModificationDate(rpcNameFromScriptPath(d.getDependee()), d.getTentantDependee(), extension);
             
             
-            if (includeModDate == null || scriptCompiledDate == null) {
+            if (includeModDate == null || installDate == null) {
                 // weird, why can't I find the include or compiled script??
-                logger.info("Null IncludeModDate ({}) or ScriptCompileDate ({}): recompile!", includeModDate, scriptCompiledDate );
+                logger.info("Null IncludeModDate ({}) or installDate ({}): recompile!", includeModDate, installDate );
                 return true;
             } 
 
-            if (scriptCompiledDate.compareTo(includeModDate) < 0) {
+            if (installDate.compareTo(includeModDate) < 0) {
                 return true;
             }
         }
