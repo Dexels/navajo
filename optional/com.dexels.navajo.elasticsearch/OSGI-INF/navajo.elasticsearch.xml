@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" configuration-policy="require" name="navajo.elasticsearch">
+   <implementation class="com.dexels.navajo.elasticsearch.impl.ElasticSearchComponent"/>
+   <reference cardinality="1..1" interface="com.dexels.navajo.elasticsearch.ElasticSearchService" name="ElasticSearchService" policy="static"/>
+</scr:component>
