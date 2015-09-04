@@ -83,8 +83,8 @@
 		</bundle>
 	</feature>
 
-	<feature version="1.0.6" name="dexels.oauth.web" resolver="(obr)">
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.44
+	<feature version="1.0.7" name="dexels.oauth.web" resolver="(obr)">
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.45
 		</bundle>
 	</feature>
 
