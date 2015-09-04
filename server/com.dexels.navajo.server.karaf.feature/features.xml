@@ -76,15 +76,15 @@
 	</feature>
 
 
-	<feature version="1.1.1" name="dexels.oauth" resolver="(obr)">
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/10.0.0
+	<feature version="1.1.2" name="dexels.oauth" resolver="(obr)">
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/11.0.0
 		</bundle>
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.26
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.27
 		</bundle>
 	</feature>
 
-	<feature version="1.0.5" name="dexels.oauth.web" resolver="(obr)">
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.43
+	<feature version="1.0.6" name="dexels.oauth.web" resolver="(obr)">
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.44
 		</bundle>
 	</feature>
 
