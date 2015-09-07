@@ -45,6 +45,7 @@ public class ElasticSearchComponent implements ElasticSearchService {
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	
 	public void activate(Map<String,Object> settings) {
+		logger.info("Activating elasticsearch");
 		httpclient = HttpClients.createDefault();
 		this.url = (String)settings.get("url");
 		this.index = (String)settings.get("index");
@@ -54,6 +55,7 @@ public class ElasticSearchComponent implements ElasticSearchService {
 	}
 	
 	public void deactivate() {
+		logger.info("Deactivating elasticsearch");
 		ElasticSearchFactory.setInstance(null);
 		if(httpclient!=null) {
 			try {
