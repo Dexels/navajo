@@ -557,4 +557,9 @@
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.monitor.rackermon/1.2.42
 		</bundle>
 	</feature>
+    
+    <feature name='elasticsearch.adapter' version='1.0.0'>
+        <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.elasticsearch/1.0.1
+        </bundle>
+    </feature>
 </features>
