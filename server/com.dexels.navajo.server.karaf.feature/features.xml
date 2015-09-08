@@ -469,7 +469,7 @@
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.crystal/1.0.5</bundle> -->
 	</feature>
 
-	<feature resolver="(obr)" name='dexels.appstore' version='1.1.12'>
+	<feature resolver="(obr)" name='dexels.appstore' version='1.1.13'>
 		<feature version="[3.0.0,5)">pax-http</feature>
 		<feature version="[3.0.0,5)">eventadmin</feature>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.ant/1.9.4_1
@@ -478,7 +478,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.ant/1.0.9
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.server/4.0.9
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.server/4.0.10
 		</bundle>
 		<bundle dependency='true'>mvn:commons-codec/commons-codec/1.10
 		</bundle>
@@ -495,7 +495,13 @@
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.websocket/0.1.2
 		</bundle>
 	</feature>
-	
+
+	<feature resolver="(obr)" name='dexels.log4j.server' version='1.0.0'>
+		<feature version="[1,2)">dexels.appstore</feature>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.log4j.server/1.0.6
+		</bundle>
+	</feature>
+		
 	<feature resolver="(obr)" name='dexels.log4j.server' version='1.0.0'>
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.log4j.server/1.0.5
 		</bundle>
