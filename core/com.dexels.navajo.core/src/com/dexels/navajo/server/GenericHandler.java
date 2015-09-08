@@ -10,12 +10,11 @@ import java.util.logging.Level;
 
 import navajocore.Version;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
+import com.dexels.navajo.compiler.BundleCreatorFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -450,11 +449,12 @@ public class GenericHandler extends ServiceHandler {
         Navajo outDoc = null;
     	StringBuffer compilerErrors = new StringBuffer();
         outDoc = NavajoFactory.getInstance().createNavajo();
+        
+        
 
         try {
-            CompiledScriptInterface cso;
-            cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, false);
-            
+            CompiledScriptInterface cso = loadOnDemand(access.rpcName, false);
+
             // (access.rpcName);
             if (cso == null) {
                 if (Version.osgiActive()) {
@@ -512,18 +512,8 @@ public class GenericHandler extends ServiceHandler {
         }
 
 	// THIS rpcName seems to have a tenant suffix
-	private CompiledScriptInterface loadOnDemand(BundleContext bundleContext, String rpcName,boolean force) throws Exception {
-		if(bundleContext==null) {
-			logger.debug("No OSGi context found");
-			return null;
-		}
-		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
-		BundleCreator bc = bundleContext.getService(ref);
-
-		if(bc==null) {
-			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
-			return null;
-		}
+	private CompiledScriptInterface loadOnDemand(String rpcName, boolean force) throws Exception {
+		
 		
 		final String tenant;
 		if (access.getTenant()==null) {
@@ -532,25 +522,14 @@ public class GenericHandler extends ServiceHandler {
 			tenant = access.getTenant();
 		}
 		
-        
         String extension = tenantConfig.determineScriptExtension(rpcName, tenant);
 
 		boolean hasTenantScriptFile = tenantConfig.hasTenantScriptFile(rpcName,tenant, extension);
 		String scriptName = hasTenantScriptFile ? rpcName + "_" + tenant : rpcName;
-        CompiledScriptInterface sc = bc.getOnDemandScriptService(scriptName, rpcName, tenant, hasTenantScriptFile, force, extension);
-		// wait for it..
-		bundleContext.ungetService(ref);
+        CompiledScriptInterface sc = BundleCreatorFactory.getInstance().getOnDemandScriptService(scriptName, rpcName, tenant,
+                hasTenantScriptFile, force, extension);
 		return sc;
 	}
-
-//	/**
-//	 * Bit of a hack, should be really DInjected
-//	 * @return
-//	 */
-//	private BundleCreator getBundleCreator(BundleContext bundleContext) {
-//		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
-//		return DispatcherFactory.getInstance().getBundleCreator();
-//	}
 
 	@SuppressWarnings("unused")
 	@Deprecated

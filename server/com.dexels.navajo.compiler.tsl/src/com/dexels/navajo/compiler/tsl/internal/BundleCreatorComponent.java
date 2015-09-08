@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
+import com.dexels.navajo.compiler.BundleCreatorFactory;
 import com.dexels.navajo.compiler.CompilationException;
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.compiler.ScriptCompiler;
@@ -57,6 +58,8 @@ public class BundleCreatorComponent implements BundleCreator {
     private JavaCompiler javaCompiler;
 
     private Map<String, ReentrantLock> lockmap;
+    
+    private Map<String, Map<String,CompiledScriptFactory>> scriptsMap = new HashMap<>();
 
     /* (non-Javadoc)
      * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String ) */
@@ -124,74 +127,92 @@ public class BundleCreatorComponent implements BundleCreator {
     public void createBundle(String scriptName, Date compilationDate, List<String> failures, List<String> success,
             List<String> skipped, boolean force, boolean keepIntermediate, String scriptExtension) throws Exception {
 
-        String script = scriptName.replaceAll("\\.", "/");
+        // Use ReentrantLock to ensure we don't compile same script twice at the same time
+        ReentrantLock lockObject = getLock(scriptName, "compile");
+        try {
+            if (lockObject.tryLock()) {
+                String script = scriptName.replaceAll("\\.", "/");
 
-        File scriptFolder = new File(navajoIOConfig.getScriptPath());
-        File f = new File(scriptFolder, script);
+                File scriptFolder = new File(navajoIOConfig.getScriptPath());
+                File f = new File(scriptFolder, script);
 
-        final String formatCompilationDate = formatCompilationDate(compilationDate);
-        if (isDirectory(script, scriptFolder, f)) {
-            compileAllIn(f, compilationDate, failures, success, skipped, force, keepIntermediate, scriptExtension);
-        } else {
+                final String formatCompilationDate = formatCompilationDate(compilationDate);
+                if (isDirectory(script, scriptFolder, f)) {
+                    compileAllIn(f, compilationDate, failures, success, skipped, force, keepIntermediate, scriptExtension);
+                } else {
 
-            if (scriptExtension == null) {
-                scriptExtension = navajoIOConfig.determineScriptExtension(scriptName, null);
-                logger.info("No known extension for {} - determined {} as script extension!", scriptName, scriptExtension);
-            }
-
-            if (scriptExtension.length() == 0 || scriptExtension.charAt(0) != '.') {
-                throw new IllegalAccessError("Script extension did not start with a dot!");
-            }
-
-            String bareScript = scriptName.substring(scriptName.lastIndexOf("/") + 1);
-            String rpcName = scriptName;
-
-            if (bareScript.indexOf("_") > 0) {
-                rpcName = scriptName.substring(0, rpcName.lastIndexOf("_"));
-            }
-            final String scriptTenant = tenantFromScriptPath(scriptName);
-
-            File scriptFile = navajoIOConfig.getApplicableScriptFile(rpcName, scriptTenant, scriptExtension);
-            boolean hasTenantSpecificFile = navajoIOConfig.hasTenantScriptFile(rpcName, scriptTenant, scriptExtension);
-
-            if (!scriptFile.exists()) {
-                logger.error("Script or  folder not found: " + script + " full path: " + scriptFile.getAbsolutePath());
-                return;
-            }
-
-            removeOldCompiledScriptFiles(rpcName);
-
-            List<String> newTenants = new ArrayList<>();
-
-            depanalyzer.addDependencies(scriptName);
-            List<Dependency> dependencies = depanalyzer.getDependencies(scriptName, Dependency.INCLUDE_DEPENDENCY);
-
-            if (!hasTenantSpecificFile && dependencies != null) {
-                // We are not tenant-specific, but check whether we include any tenant-specific files.
-                // If so, compile all versions as if we are tenant-specific (forceTenant)
-                for (Dependency d : dependencies) {
-                    if (d.isTentantSpecificDependee()) {
-                        newTenants.add(d.getTentantDependee());
-                        compileAndCreateBundle(script, formatCompilationDate, scriptExtension, d.getTentantDependee(),
-                                hasTenantSpecificFile, true, keepIntermediate, success, skipped, failures);
+                    if (scriptExtension == null) {
+                        scriptExtension = navajoIOConfig.determineScriptExtension(scriptName, null);
+                        logger.info("No known extension for {} - determined {} as script extension!", scriptName, scriptExtension);
                     }
 
+                    if (scriptExtension.length() == 0 || scriptExtension.charAt(0) != '.') {
+                        throw new IllegalAccessError("Script extension did not start with a dot!");
+                    }
+
+                    String bareScript = scriptName.substring(scriptName.lastIndexOf("/") + 1);
+                    String rpcName = scriptName;
+
+                    if (bareScript.indexOf("_") > 0) {
+                        rpcName = scriptName.substring(0, rpcName.lastIndexOf("_"));
+                    }
+                    final String scriptTenant = tenantFromScriptPath(scriptName);
+
+                    File scriptFile = navajoIOConfig.getApplicableScriptFile(rpcName, scriptTenant, scriptExtension);
+                    boolean hasTenantSpecificFile = navajoIOConfig.hasTenantScriptFile(rpcName, scriptTenant, scriptExtension);
+
+                    if (!scriptFile.exists()) {
+                        logger.error("Script or  folder not found: " + script + " full path: " + scriptFile.getAbsolutePath());
+                        return;
+                    }
+
+                    removeOldCompiledScriptFiles(rpcName);
+
+                    List<String> newTenants = new ArrayList<>();
+
+                    depanalyzer.addDependencies(scriptName);
+                    List<Dependency> dependencies = depanalyzer.getDependencies(scriptName, Dependency.INCLUDE_DEPENDENCY);
+
+                    if (!hasTenantSpecificFile && dependencies != null) {
+                        // We are not tenant-specific, but check whether we include any tenant-specific files.
+                        // If so, compile all versions as if we are tenant-specific (forceTenant)
+                        for (Dependency d : dependencies) {
+                            if (d.isTentantSpecificDependee()) {
+                                newTenants.add(d.getTentantDependee());
+                                compileAndCreateBundle(script, formatCompilationDate, scriptExtension, d.getTentantDependee(),
+                                        hasTenantSpecificFile, true, keepIntermediate, success, skipped, failures);
+                            }
+
+                        }
+                    }
+
+                    if (!hasTenantSpecificFile) {
+                        // We are not tenant-specific, but check whether we used to have any includes that
+                        // were tenant-specific, that furthermore no longer exist in the new version.
+                        // If so, those must be removed.
+                        uninstallObsoleteTenantScript(rpcName, newTenants);
+
+                    }
+
+                    compileAndCreateBundle(script, formatCompilationDate, scriptExtension, scriptTenant, hasTenantSpecificFile, false,
+                            keepIntermediate, success, skipped, failures);
                 }
+            } else {
+                // Someone else is already compiling this script. Wait for it to release the lock,
+                // and then we can return immediately since they compiled the script for us
+                logger.info("Simultaneous compiling of {} - going to wait it out...", scriptName);
+                lockObject.lock();
+                return;
             }
-
-            if (!hasTenantSpecificFile) {
-                // We are not tenant-specific, but check whether we used to have any includes that
-                // were tenant-specific, that furthermore no longer exist in the new version.
-                // If so, those must be removed.
-                uninstallObsoleteTenantScript(rpcName, newTenants);
-
-            }
-
-            compileAndCreateBundle(script, formatCompilationDate, scriptExtension, scriptTenant, hasTenantSpecificFile, false,
-                    keepIntermediate, success, skipped, failures);
+        } finally {
+            releaseLock(scriptName, "compile", lockObject);
         }
+        
+      
 
     }
+    
+
 
     private void removeOldCompiledScriptFiles(String rpcName) {
         AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getBaseName(rpcName) + "_*.jar");
@@ -360,6 +381,7 @@ public class BundleCreatorComponent implements BundleCreator {
             for (int i = 0; i < sr.length; i++) {
                 (sr[i]).getBundle().uninstall();
             }
+            scriptsMap.remove(rpcName);
         } catch (InvalidSyntaxException e) {
             logger.error("Invalid syntax in querying Navajo service: {}", e);
         } catch (BundleException e) {
@@ -388,13 +410,6 @@ public class BundleCreatorComponent implements BundleCreator {
         }
     }
 
-    private String scriptPathFromRpcNameAndTenant(String rpcName, String tenant) {
-        if (tenant == null) {
-            return rpcName;
-        }
-        return rpcName + "_" + tenant;
-    }
-
     private void installBundles(File baseDir, List<String> failures, List<String> success, List<String> skipped, boolean force,
             String scriptExtension) throws Exception {
         final String extension = "jar";
@@ -416,22 +431,37 @@ public class BundleCreatorComponent implements BundleCreator {
     @Override
     public void installBundle(String scriptPath, List<String> failures, List<String> success, List<String> skipped, boolean force,
             String extension) {
+        
+        ReentrantLock lockObject = getLock(scriptPath, "install");
         try {
-            Bundle b = doInstall(scriptPath, force, extension);
-            if (b == null) {
-                skipped.add(scriptPath);
+            if (lockObject.tryLock()) {
+                
+                try {
+                    Bundle b = doInstall(scriptPath, force, extension);
+                    if (b == null) {
+                        skipped.add(scriptPath);
+                    } else {
+                        success.add(b.getSymbolicName());
+                    }
+                } catch (BundleException e) {
+                    failures.add(e.getLocalizedMessage());
+                    reportInstallationError(scriptPath, e);
+                } catch (FileNotFoundException e1) {
+                    failures.add(e1.getLocalizedMessage());
+                    reportInstallationError(scriptPath, e1);
+                } catch (MalformedURLException e) {
+                    failures.add(e.getLocalizedMessage());
+                    reportInstallationError(scriptPath, e);
+                }
             } else {
-                success.add(b.getSymbolicName());
+                // Someone else is already compiling this script. Wait for it to release the lock,
+                // and then we can return immediately since they compiled the script for us
+                logger.info("Simultaneous installing of {} - going to wait it out...", scriptPath);
+                lockObject.lock();
+                return;
             }
-        } catch (BundleException e) {
-            failures.add(e.getLocalizedMessage());
-            reportInstallationError(scriptPath, e);
-        } catch (FileNotFoundException e1) {
-            failures.add(e1.getLocalizedMessage());
-            reportInstallationError(scriptPath, e1);
-        } catch (MalformedURLException e) {
-            failures.add(e.getLocalizedMessage());
-            reportInstallationError(scriptPath, e);
+        } finally {
+            releaseLock(scriptPath, "install", lockObject);
         }
     }
 
@@ -443,8 +473,9 @@ public class BundleCreatorComponent implements BundleCreator {
         File compiledPath = new File(navajoIOConfig.getCompiledScriptPath(), FilenameUtils.getPath(rpcName));
         Collection<File> files = FileUtils.listFiles(compiledPath, fileFilter, null);
 
+        
         for (File bundleFile : files) {
-
+            
             final String uri = bundleFile.toURI().toURL().toString();
             Bundle previous = bundleContext.getBundle(uri);
             if (previous != null) {
@@ -457,12 +488,14 @@ public class BundleCreatorComponent implements BundleCreator {
                     continue;
                 }
             }
-
             logger.debug("Installing script: " + bundleFile.getName());
             FileInputStream fis = new FileInputStream(bundleFile);
             b = this.bundleContext.installBundle(uri, fis);
             b.start();
+           
         }
+
+        scriptsMap.remove(rpcName);
         return b;
 
     }
@@ -597,6 +630,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
     public void activate(BundleContext bundleContext) {
         logger.debug("Activating Bundle creator");
+        BundleCreatorFactory.setInstance(this);
         this.bundleContext = bundleContext;
         lockmap = new HashMap<String, ReentrantLock>();
     }
@@ -646,56 +680,7 @@ public class BundleCreatorComponent implements BundleCreator {
         return new Date(jarFile.lastModified());
     }
 
-    private boolean checkForRecompile(String rpcName, String tenant, boolean tenantQualified, String extension)
-            throws FileNotFoundException {
-      
-        // Check for changed dependencies
-        List<Dependency> dependencies = depanalyzer.getDependencies(rpcName, Dependency.INCLUDE_DEPENDENCY);
-        for (Dependency d : dependencies) {
-            Date installDate = getBundleInstallationDate(rpcName, tenant, extension);
-            Date includeModDate = getScriptModificationDate(rpcNameFromScriptPath(d.getDependee()), d.getTentantDependee(), extension);
-            
-            
-            if (includeModDate == null || installDate == null) {
-                // weird, why can't I find the include or compiled script??
-                logger.info("Null IncludeModDate ({}) or installDate ({}): recompile!", includeModDate, installDate );
-                return true;
-            } 
-
-            if (installDate.compareTo(includeModDate) < 0) {
-                return true;
-            }
-        }
-        Date mod = getScriptModificationDate(rpcName, tenant, extension);
-        if (mod == null) {
-            logger.error("No modification date for script: " + rpcName + " this is weird.");
-            return false;
-        }
-        Date install = getBundleInstallationDate(rpcName, tenant, extension);
-        if (install != null) {
-            if (install.before(mod)) {
-                logger.debug("Install: " + install);
-                logger.debug("mod: " + mod);
-                logger.debug("comp: ", getCompiledModificationDate(scriptPathFromRpcNameAndTenant(rpcName, tenant), extension));
-                logger.debug("Obsolete script found. Needs recompile.");
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean needsCompilation(String scriptPath, String extension) throws FileNotFoundException {
-        Date compiled = getCompiledModificationDate(scriptPath, extension);
-        Date script = getScriptModificationDate(rpcNameFromScriptPath(scriptPath), tenantFromScriptPath(scriptPath), extension);
-        if (script == null) {
-            throw new FileNotFoundException("Script " + scriptPath + " is missing!");
-        }
-        if (compiled == null) {
-            return true;
-        }
-        return compiled.compareTo(script) < 0;
-
-    }
+   
 
     private void reportInstallationError(String path, Throwable e) {
         Dictionary<String, Object> params = new Hashtable<String, Object>();
@@ -739,69 +724,47 @@ public class BundleCreatorComponent implements BundleCreator {
     /**
      * rpcName does not include tenant suffix
      */
-    @Override
+    @Override 
     public CompiledScriptInterface getOnDemandScriptService(String scriptName, String rpcName, String tenant,
-            boolean hasTenantScriptFile, boolean force, String extension) throws Exception {
-        if (rpcName.indexOf("/") != -1) {
-            String bareScript = rpcName.substring(scriptName.lastIndexOf("/") + 1);
-            if (bareScript.indexOf('_') != -1) {
-                throw new IllegalArgumentException("rpcName should not have a tenant suffix: " + rpcName + " scriptName: "
-                        + scriptName + " bare: " + bareScript);
-            }
-        } else {
-            if (rpcName.indexOf('_') != -1) {
-                throw new IllegalArgumentException("rpcName should not have a tenant suffix: " + rpcName + " scriptName: " + scriptName);
-            }
-        }
-        boolean forceReinstall = false;
-        // Use ReentrantLock to prevent compiling/installing the same script simultaneously 
-        ReentrantLock lockObject = getLock(scriptName, "compile");
+            boolean hasTenantScriptFile, boolean force, String extension) {
         try {
-            if (lockObject.tryLock()) {
-                CompiledScriptInterface sc = getCompiledScript(rpcName, tenant, hasTenantScriptFile);
-                
+            if (rpcName.indexOf("/") != -1) {
+                String bareScript = rpcName.substring(scriptName.lastIndexOf("/") + 1);
+                if (bareScript.indexOf('_') != -1) {
+                    throw new IllegalArgumentException("rpcName should not have a tenant suffix: " + rpcName + " scriptName: "
+                            + scriptName + " bare: " + bareScript);
+                }
+            } else {
+                if (rpcName.indexOf('_') != -1) {
+                    throw new IllegalArgumentException(
+                            "rpcName should not have a tenant suffix: " + rpcName + " scriptName: " + scriptName);
+                }
+            }
+            CompiledScriptInterface sc = getCompiledScript(rpcName, tenant, hasTenantScriptFile);
+
+            if (sc != null && !force) {
+                return sc;
+            } else {
                 if (extension == null) {
                     extension = navajoIOConfig.determineScriptExtension(scriptName, tenant);
                     logger.info("No known extension for {} - determined {} as script extension!", scriptName, extension);
                 }
-        
-                if (sc != null) {
-                    boolean needsRecompile = false;
-                    try {
-                        needsRecompile = checkForRecompile(rpcName, tenant, hasTenantScriptFile, extension);
-                    } catch (FileNotFoundException e) {
-                        logger.warn("Can not find scriptfile, but the service seems available. Uninstalling service: ", e);
-                        uninstallBundle(scriptName);
-                        return null;
-                    }
-                    if (!force && !needsRecompile) {
-                        return sc;
-                    }
-                    if (needsRecompile) {
-                        forceReinstall = true;
-                    }
-                }
+
                 List<String> failures = new ArrayList<String>();
                 List<String> success = new ArrayList<String>();
                 List<String> skipped = new ArrayList<String>();
 
-                if (needsCompilation(scriptName, extension) || force) {
-                    createBundle(scriptName, new Date(), failures, success, skipped, force, false, extension);
-                    forceReinstall = true;
-                }
-                installBundle(scriptName, failures, success, skipped, forceReinstall, extension);
-            } else {
-                // Someone else is already compiling this script. Wait for it to release the lock, 
-                // and then we can return immediately since they compiled the script for us
-                logger.info("Simultaneous creating and installing of {} - going to wait it out...", scriptName);
-                lockObject.lock();
+                createBundle(scriptName, new Date(), failures, success, skipped, force, false, extension);
+                installBundle(scriptName, failures, success, skipped, force, extension);
             }
-        } finally {
-            releaseLock(scriptName, "compile", lockObject);
-        }   
 
-        logger.debug("On demand installation of {} finished, waiting for service...", scriptName);
-        return getCompiledScript(rpcName, tenant, hasTenantScriptFile);
+            logger.debug("Finished on demand compiling of: {}", scriptName);
+            return getCompiledScript(rpcName, tenant, hasTenantScriptFile);
+        } catch (Exception e) {
+            logger.error("Error on getting script {}: {}", scriptName, e);
+        }
+        return null;
+
     }
 
     @SuppressWarnings("unchecked")
@@ -810,6 +773,24 @@ public class BundleCreatorComponent implements BundleCreator {
             throws ClassNotFoundException {
         String scriptName = rpcName.replaceAll("/", ".");
         String filter = null;
+        
+        String realTenant = "default";
+        if (tenant != null) {
+            realTenant = tenant;
+        }
+        
+        if (scriptsMap.containsKey(rpcName)) {
+            Map<String, CompiledScriptFactory> myScripts = scriptsMap.get(rpcName);
+            
+            CompiledScriptFactory csf = myScripts.get(realTenant);
+            if (csf != null) {
+                try {
+                    return csf.getCompiledScript();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    logger.error("Exception on retrieving cached CompiledScriptFactory for {} {} - going to try non-cached one", rpcName, realTenant);
+                }
+            }
+        }
 
         if (hasTenantScriptFile) {
             filter = "(&(navajo.scriptName=" + scriptName + ")(navajo.tenant=" + tenant + "))";
@@ -832,6 +813,7 @@ public class BundleCreatorComponent implements BundleCreator {
                             logger.warn("Script with filter: " + filter + " found, but could not be resolved.");
                             return null;
                         }
+                        updateCachedCompiledScript(rpcName, realTenant, csf);
                         return csf.getCompiledScript();
                     }
                 }
@@ -844,6 +826,7 @@ public class BundleCreatorComponent implements BundleCreator {
                         logger.warn("Script with filter: " + filter + " found, but could not be resolved.");
                         return null;
                     }
+                    updateCachedCompiledScript(rpcName, realTenant, csf);
                     return csf.getCompiledScript();
                 }
             }
@@ -857,6 +840,16 @@ public class BundleCreatorComponent implements BundleCreator {
         }
 
         return null;
+    }
+
+    private synchronized void updateCachedCompiledScript(String rpcName, String realTenant, CompiledScriptFactory csf) {
+        Map<String,CompiledScriptFactory> subMap = scriptsMap.get(rpcName);
+        if (subMap == null) {
+            subMap = new HashMap<>();
+        }
+        subMap.put(realTenant, csf);
+        scriptsMap.put(rpcName,  subMap);
+        
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
