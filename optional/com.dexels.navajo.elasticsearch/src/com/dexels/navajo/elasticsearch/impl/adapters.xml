@@ -1,0 +1,12 @@
+<adapterdef>
+	<map>
+		<tagname>elasticsearch</tagname>
+		<object>com.dexels.navajo.elasticsearch.adapters.ElasticSearchAdapter</object>
+		<values>
+			<value name="name" type="name" required="true" direction="in" />
+			<value name="messagePath" type="name" required="true" direction="in" />
+		</values>
+		<methods>
+		</methods>
+	</map>
+</adapterdef>

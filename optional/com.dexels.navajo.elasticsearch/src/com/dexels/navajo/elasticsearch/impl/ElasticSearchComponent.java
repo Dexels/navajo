@@ -41,10 +41,14 @@ public class ElasticSearchComponent implements ElasticSearchService {
 	private String index;
 	private String id_property;
 
+	DateFormat df = null;
 	private String type;
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	
 	public void activate(Map<String,Object> settings) {
+	     df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	    
+		logger.info("Activating elasticsearch");
 		httpclient = HttpClients.createDefault();
 		this.url = (String)settings.get("url");
 		this.index = (String)settings.get("index");
@@ -54,6 +58,7 @@ public class ElasticSearchComponent implements ElasticSearchService {
 	}
 	
 	public void deactivate() {
+		logger.info("Deactivating elasticsearch");
 		ElasticSearchFactory.setInstance(null);
 		if(httpclient!=null) {
 			try {
@@ -94,6 +99,8 @@ public class ElasticSearchComponent implements ElasticSearchService {
 			for (Property property : properties) {
 				setPropertyValue(an,property,objectMapper);
 			}
+			
+			an.put("@timestamp", df.format(new Date()));
 			return an;
 		}
 
@@ -103,7 +110,7 @@ public class ElasticSearchComponent implements ElasticSearchService {
 		if(Property.DATE_PROPERTY.equals(property.getType())) {
 			Date d = (Date) property.getTypedValue();
 			
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+			
 			an.put(property.getName(),df.format(d));
 		} else if(Property.INTEGER_PROPERTY.equals(property.getType())) {
 			Integer d = (Integer) property.getTypedValue();
