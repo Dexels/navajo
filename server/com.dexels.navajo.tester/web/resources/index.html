@@ -25,9 +25,9 @@
 <ul class="scripts">
     {{#each this}} 
 		{{#equals this.type 'FOLDER'}}
- 			<li> <div class="folder"> {{name}} </div> </li> 
+ 			<li> <div class="folder" id="{{path}}"> {{name}} </div> </li> 
 	 	{{else}}
-			 <li> <div class="script"> {{name}} </div>  </li>
+			 <li> <div class="script" id="{{path}}"> {{name}} </div>  </li>
 		{{/equals}}
        
         
@@ -35,8 +35,30 @@
  </ul>
 </script>
 
+<script id="folder-template" type="text/x-handlebars-template">
+
+<ul class="scripts">
+    {{#each this}} 
+        {{#equals this.type 'FOLDER'}}
+            <li> <div class="folder" id="{{path}}" > {{name}} </div> </li> 
+        {{else}}
+             <li> <div class="script" id="{{path}}"> {{name}} </div>  </li>
+        {{/equals}}
+       
+        
+    {{/each}}
+ </ul>
+</script>
+
 <script>
-$(document).ready(
+Array.prototype.indexOfPath = function(path) {
+    for (var i = 0; i < this.length; i++)
+        if (this[i].path === path)
+            return i;
+    return -1;
+}
+
+	$(document).ready(
             function() {
                 
                 Handlebars.registerHelper('equals', function(v1, v2, options) {
@@ -52,24 +74,56 @@ $(document).ready(
             });
 
     function getScripts() {
-        var source = $("#scripts-template").html();
-        var template = Handlebars.compile(source);
+        var scriptssource = $("#scripts-template").html();
+        var scriptstemplate = Handlebars.compile(scriptssource);
+        
+        var foldersource = $("#folder-template").html();
+        var foldertemplate = Handlebars.compile(foldersource);
+        
         $.getJSON("/testerapi?query=getscripts", function(data) {
             data.sort(function(a, b) {
             	return a.name.localeCompare(b.name);
         	});
-            $("#scripts").html(template(data));
-            $('.script').on( "click", function() {
+            $("#scripts").html(scriptstemplate(data));
+            $(document).on('click', '.script', function(){
                 window.alert('Going to run: ' +  $( this ).text());
             });
-            $('.folder').on( "click", function() {
-                window.alert('Opening folder:' +  $( this ).text());
+            $(document).on('click', '.folder', function(e){ 
+                if ($(this).children().length > 0 ) {
+                   $(this).children().remove();
+                } else {
+                    // Find higest element
+                    var entries = getMyEntries(data, $(this))
+                    $( this ).append(foldertemplate(entries));
+                }
+                e.stopPropagation();
             });
-
 
         });
         
        
+    };
+    
+    function getMyEntries(data, element) {
+      	if (element.parents('.folder').length < 1) {
+      	  	var itemsIndex = data.indexOfPath(element.attr('id'));
+          	var subEntries = data[itemsIndex].entries;
+          	subEntries.sort(function(a, b) {
+          		return a.name.localeCompare(b.name);
+      		});
+          	return subEntries;
+      	} else {
+      	    // Find my parents entries and check him
+      	    var myParent = element.parents('.folder').first();
+      	    var myParentEntries = getMyEntries(data, myParent);
+      	    var itemsIndex = myParentEntries.indexOfPath(element.attr('id'));
+        	var subEntries = myParentEntries[itemsIndex].entries;
+        	subEntries.sort(function(a, b) {
+        		return a.name.localeCompare(b.name);
+    		});
+        	return subEntries;
+        	
+      	}
     };
 </script>
 <body>
