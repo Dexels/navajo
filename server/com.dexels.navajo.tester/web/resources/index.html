@@ -22,6 +22,7 @@
 
 <script id="scripts-template" type="text/x-handlebars-template">
 <h2 class="title"> Folders and scripts </h2>
+<input id="scriptsFilter" type="text" />
 <ul class="scripts">
     {{#each this}} 
 		{{#equals this.type 'FOLDER'}}
@@ -37,7 +38,7 @@
 
 <script id="folder-template" type="text/x-handlebars-template">
 
-<ul class="scripts">
+<ul>
     {{#each this}} 
         {{#equals this.type 'FOLDER'}}
             <li> <div class="folder" id="{{path}}" > {{name}} </div> </li> 
@@ -51,12 +52,12 @@
 </script>
 
 <script>
-Array.prototype.indexOfPath = function(path) {
-    for (var i = 0; i < this.length; i++)
-        if (this[i].path === path)
-            return i;
-    return -1;
-}
+    Array.prototype.indexOfPath = function(path) {
+        for (var i = 0; i < this.length; i++)
+            if (this[i].path === path)
+                return i;
+        return -1;
+    }
 
 	$(document).ready(
             function() {
@@ -67,11 +68,10 @@ Array.prototype.indexOfPath = function(path) {
                       }
                       return options.inverse(this);
                 });
-                
-            
                	getScripts();
-               	
-            });
+            }
+    );
+	
 
     function getScripts() {
         var scriptssource = $("#scripts-template").html();
@@ -79,6 +79,8 @@ Array.prototype.indexOfPath = function(path) {
         
         var foldersource = $("#folder-template").html();
         var foldertemplate = Handlebars.compile(foldersource);
+        
+
         
         $.getJSON("/testerapi?query=getscripts", function(data) {
             data.sort(function(a, b) {
@@ -88,6 +90,7 @@ Array.prototype.indexOfPath = function(path) {
             $(document).on('click', '.script', function(){
                 window.alert('Going to run: ' +  $( this ).text());
             });
+            
             $(document).on('click', '.folder', function(e){ 
                 if ($(this).children().length > 0 ) {
                    $(this).children().remove();
@@ -98,12 +101,18 @@ Array.prototype.indexOfPath = function(path) {
                 }
                 e.stopPropagation();
             });
+            
+            $(document).on("change", "#scriptsFilter", function(e){  
+                var filter = $(this).val();
+               
+            });
 
         });
         
        
     };
     
+  
     function getMyEntries(data, element) {
       	if (element.parents('.folder').length < 1) {
       	  	var itemsIndex = data.indexOfPath(element.attr('id'));
@@ -151,8 +160,7 @@ Array.prototype.indexOfPath = function(path) {
             <div id="content" class="content">
                
                 <div id="scripts" class="scriptsbar">
-                    abc <br/>
-                    def
+                    
                 </div>
                 
                  <div id="mainview" class="mainview">
