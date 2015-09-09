@@ -24,7 +24,12 @@
 <h2 class="title"> Folders and scripts </h2>
 <ul class="scripts">
     {{#each this}} 
-        <li> <div class="plus"> + </div> {{name}} 
+		{{#equals this.type 'FOLDER'}}
+ 			<li> <div class="folder"> {{name}} </div> </li> 
+	 	{{else}}
+			 <li> <div class="script"> {{name}} </div>  </li>
+		{{/equals}}
+       
         
     {{/each}}
  </ul>
@@ -33,14 +38,34 @@
 <script>
 $(document).ready(
             function() {
+                
+                Handlebars.registerHelper('equals', function(v1, v2, options) {
+                    if(v1 === v2) {
+                        return options.fn(this);
+                      }
+                      return options.inverse(this);
+                });
+                
+            
                	getScripts();
+               	
             });
 
     function getScripts() {
         var source = $("#scripts-template").html();
         var template = Handlebars.compile(source);
         $.getJSON("/testerapi?query=getscripts", function(data) {
+            data.sort(function(a, b) {
+            	return a.name.localeCompare(b.name);
+        	});
             $("#scripts").html(template(data));
+            $('.script').on( "click", function() {
+                window.alert('Going to run: ' +  $( this ).text());
+            });
+            $('.folder').on( "click", function() {
+                window.alert('Opening folder:' +  $( this ).text());
+            });
+
 
         });
         

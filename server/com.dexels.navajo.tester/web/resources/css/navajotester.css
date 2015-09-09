@@ -328,3 +328,19 @@ section p:last-child {
 	float: center;
 }
 
+
+.script {
+	 cursor: pointer;
+}
+
+.script:before{
+  content:url('/img/xml-file.png')
+}
+
+.folder {
+	 cursor: pointer;
+}
+.folder:before{
+  content:url('/img/folder.png')
+  
+}
