@@ -37,6 +37,11 @@ public class NavajoTesterServlet extends HttpServlet {
             response.setContentType("text/plain");
         }
         
+        if (query.equals("run")) {
+            result = helper.runScript(request.getParameter("service"), "KNVB");
+            response.setContentType("text/plain");
+        }
+        
        
         PrintWriter writer = response.getWriter();
         writer.write(result);

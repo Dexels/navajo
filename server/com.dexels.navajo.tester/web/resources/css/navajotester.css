@@ -55,8 +55,8 @@ body {
 	color: #505050;
 	font-family: "Ubuntu", sans-serif;
 	font-weight: 300;
-	font-size: 11px;
-	line-height: 1.2;
+	font-size: 10px;
+	line-height: 1.0;
 }
 
 /* Headings */
@@ -322,12 +322,13 @@ section p:last-child {
 
 .scriptsbar {
 	float: left;
-	overflow: hidden;
 }
 
 .mainview {
-	float: center;
-	overflow: hidden;
+	float: right;
+	padding-left: 30px;
+	padding-right: 30px;
+	width: 75%;
 }
 
 

@@ -27,11 +27,11 @@
 <ul class="scripts">
     {{#each this}} 
 		{{#equals this.type 'FOLDER'}}
- 			<li> <div class="folder" id="{{path}}"> {{name}} </div> 
+ 			<li> <div class="folder" id="{{script}}"> {{name}} </div> 
 				{{> subscripts this }}
 			</li> 
 	 	{{else}}
-			 <li> <div class="script" id="{{path}}"> {{name}} </div>  </li>
+			 <li> <div class="script" id="{{script}}"> {{name}} </div>  </li>
 		{{/equals}}
        
         
@@ -43,11 +43,11 @@
 <ul >
     {{#each this.entries}} 
         {{#equals this.type 'FOLDER'}}
-            <li style="display: none"> <div class="folder" id="{{path}}" > {{name}} </div> 
+            <li style="display: none"> <div class="folder" id="{{script}}" > {{name}} </div> 
 				{{> subscripts this }}
 			</li> 
         {{else}}
-             <li style="display: none"> <div class="script" id="{{path}}"> {{name}} </div>  </li>
+             <li style="display: none"> <div class="script" id="{{script}}"> {{name}} </div>  </li>
         {{/equals}}
        
         
@@ -91,8 +91,12 @@
             	return a.name.localeCompare(b.name);
         	});
             $("#scripts").html(scriptstemplate(data));
+            
             $(document).on('click', '.script', function(){
                 getFileContent($( this ).attr('id'));
+            });
+            $(document).on('click', '#runScript', function(){
+                runScript();
             });
             
 //             $(document).on('click', '.folder', function(e){ 
@@ -117,7 +121,18 @@
     };
     
     function getFileContent(fileid) {
+        $('#runScript').attr("script", fileid);
         $.get("/testerapi?query=getfilecontent&file=" + fileid, function(data) {
+            $('#scriptcontent').removeClass('prettyprinted');
+            $('#scriptcontent').text(data)
+     		prettyPrint();
+            $('html, body').animate({scrollTop:0}, 'slow');
+        });
+    }
+    
+    function runScript() {
+        var script = $('#runScript').attr("script");
+        $.get("/testerapi?query=run&service=" + script, function(data) {
             $('#scriptcontent').removeClass('prettyprinted');
             $('#scriptcontent').text(data)
      		prettyPrint();
@@ -208,8 +223,8 @@
                 </div>
                 
                  <div id="mainview" class="mainview">
+                 <a href="#" id="runScript" script=""> run</a>
                     <pre id="scriptcontent" class="prettyprint lang-xml">
-                    
                     </pre>
                 </div>
                 

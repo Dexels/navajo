@@ -4,7 +4,10 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.navajo.server,
+Import-Package: com.dexels.navajo.client;version="1.0.0",
+ com.dexels.navajo.client.context,
+ com.dexels.navajo.document;version="2.2.1",
+ com.dexels.navajo.server,
  javax.servlet;version="2.6.0",
  javax.servlet.http;version="3.0.0",
  org.apache.commons.io;version="1.4.9999",

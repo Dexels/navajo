@@ -2,38 +2,54 @@ package com.dexels.navajo.tester;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.io.StringWriter;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.filefilter.AbstractFileFilter;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.context.ClientContext;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.tester.model.NavajoFileSystemEntry;
 import com.dexels.navajo.tester.model.NavajoFileSystemFolder;
 import com.dexels.navajo.tester.model.NavajoFileSystemScript;
 
 public class NavajoTesterHelper {
     private final static Logger logger = LoggerFactory.getLogger(NavajoTesterHelper.class);
     private NavajoConfigInterface navajoConfig;
-
+    private ClientContext context;
+    
     public void setNavajoConfig(NavajoConfigInterface nci) {
         this.navajoConfig = nci;
     }
 
     public void clearNavajoConfig(NavajoConfigInterface nci) {
         this.navajoConfig = null;
+    }
+    
+    public void setNavajoClientContext(ClientContext context) {
+        this.context = context;
+    }
+    public void clearNavajoClientContext(ClientContext context) {
+        this.context = null;
+    }
+    
+    public String runScript(String service, String tenant) {
+        try {
+            context.callService(service, tenant);
+        } catch (ClientException e) {
+           logger.error("Exception on calling service: {}", e);
+        }
+        
+        Navajo n=  context.getNavajo(service);
+        StringWriter outputWriter = new StringWriter();
+
+        n.write(outputWriter);
+        return outputWriter.toString();
     }
 
     public NavajoFileSystemFolder getAllScripts() {
@@ -52,7 +68,7 @@ public class NavajoTesterHelper {
  
         for (File f : files) {
             
-            if (f.isFile()) {
+            if (f.isFile()) {                
                 folder.addEntry(new NavajoFileSystemScript(f));
             }
         }
@@ -71,7 +87,8 @@ public class NavajoTesterHelper {
     }
 
     public String getFileContent(String path) {
-        File f = new File(path);
+        File scriptsPath = new File(navajoConfig.getScriptPath());
+        File f = new File(scriptsPath, path + ".xml");
         if (f.exists()) {
             try {
                byte[] bytes =  Files.readAllBytes(f.toPath());
