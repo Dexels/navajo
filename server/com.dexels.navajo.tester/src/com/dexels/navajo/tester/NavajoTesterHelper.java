@@ -38,14 +38,21 @@ public class NavajoTesterHelper {
         this.context = null;
     }
     
-    public String runScript(String service, String tenant) {
+    public String runScript(String service, String inputService, String tenant) {
         try {
-            context.callService(service, tenant);
+
+            if (inputService != null && context.getNavajo(inputService) != null) {
+                Navajo input = context.getNavajo(inputService);
+                context.callService(service, tenant, null, null, input);
+            } else {
+                context.callService(service, tenant);
+            }
+
         } catch (ClientException e) {
-           logger.error("Exception on calling service: {}", e);
+            logger.error("Exception on calling service: {}", e);
         }
-        
-        Navajo n=  context.getNavajo(service);
+
+        Navajo n = context.getNavajo(service);
         StringWriter outputWriter = new StringWriter();
 
         n.write(outputWriter);

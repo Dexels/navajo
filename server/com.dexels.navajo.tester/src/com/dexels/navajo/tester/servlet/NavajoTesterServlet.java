@@ -38,7 +38,7 @@ public class NavajoTesterServlet extends HttpServlet {
         }
         
         if (query.equals("run")) {
-            result = helper.runScript(request.getParameter("service"), "KNVB");
+            result = helper.runScript(request.getParameter("service"), request.getParameter("input"), "KNVB");
             response.setContentType("text/plain");
         }
         

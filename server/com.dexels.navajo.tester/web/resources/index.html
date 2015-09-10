@@ -95,21 +95,28 @@
             $("#scripts").html(scriptstemplate(data));
             
             $(document).on('click', '.script', function(){
-                getFileContent($( this ).attr('id'));
+                runScript($(this));
             });
-            $(document).on('click', '#runScript', function(){
-                runScript();
-            });
+           
             
             $(document).on('click', '#HTMLviewLink', function(){
                 $('#HTMLview').show(100);
                 $('#TMLview').hide(100);
+                $('#TMLSourceview').hide(100);
                 return false;
             });
             
             $(document).on('click', '#TMLviewLink', function(){
                 $('#HTMLview').hide(100);
                 $('#TMLview').show(100);
+                $('#TMLSourceview').hide(100);
+                return false;
+            });
+            
+            $(document).on('click', '#TMLSourceviewLink', function(){
+                $('#HTMLview').hide(100);
+                $('#TMLview').hide(100);
+                $('#TMLSourceview').show(100);
                 return false;
             });
             
@@ -136,27 +143,27 @@
        
     };
     
-    function getFileContent(fileid) {
-        $('#runScript').attr("script", fileid);
-        $.get("/testerapi?query=getfilecontent&file=" + fileid, function(data) {
-            $('#scriptcontent').removeClass('prettyprinted');
-            $('#scriptcontent').text(data)
-            $('#HTMLview').hide(100);
-            $('#TMLview').show(100);
-     		prettyPrint();
-            $('html, body').animate({scrollTop:0}, 'slow');
-        });
-    }
-    
-    function runScript() {
-        var script = $('#runScript').attr("script");
-        $.get("/testerapi?query=run&service=" + script, function(data) {
+    function runScript(scriptElement) {
+       
+        var script = scriptElement.attr("id");
+        var inputScript =  $('#loadedScript').text();
+        $('#loadedScript').text(script);
+        
+        $.get("/testerapi?query=run&service=" + script + "&input="+inputScript, function(data) {
             $('#scriptcontent').removeClass('prettyprinted');
             $('#scriptcontent').text(data)
             parseTmlToHtml($('#HTMLview'), data);
      		prettyPrint();
-     		 $('#HTMLview').show(100);
-             $('#TMLview').hide(100);
+     		$('#HTMLview').show(100);
+            $('#TMLview').hide(100);
+            $('#TMLSourceview').hide(100);
+            $('html, body').animate({scrollTop:0}, 'slow');
+        });
+        
+        $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
+            $('#scriptsourcecontent').removeClass('prettyprinted');
+            $('#scriptsourcecontent').text(data)
+     		prettyPrint();
             $('html, body').animate({scrollTop:0}, 'slow');
         });
     }
@@ -235,12 +242,14 @@
                 <div id="scripts" class="scriptsbar"></div>
                 
                  <div id="mainview" class="mainview">
-                     <a href="#" id="runScript" script=""> run</a> <br/> <br/>
-                     
-                     <a id="HTMLviewLink" href="">HTML</a> |<a id="TMLviewLink" href="">TML</a>
+                    <div id="loadedScript"  style="display: none;"></div>
+                     <a id="HTMLviewLink" href="">HTML</a> | <a id="TMLviewLink" href="">TML</a>  | <a id="TMLSourceviewLink" href=""> Source</a>
                      <div id="HTMLview"></div>
                      <div id="TMLview" style="display: none;">
                         <pre id="scriptcontent" class="prettyprint lang-xml"></pre>
+                     </div>
+                      <div id="TMLSourceview" style="display: none;">
+                        <pre id="scriptsourcecontent" class="prettyprint lang-xml"></pre>
                      </div>
                      
                 </div>
