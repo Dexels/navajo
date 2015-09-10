@@ -1,5 +1,6 @@
-function parseTmlToHtml( element, tmlString) {
-    element.html('')
+function parseTmlToHtml( navajoelement, methodselement, tmlString) {
+    navajoelement.html('')
+    methodselement.html('')
     
     var xml = $.parseXML(tmlString),
     $xml = $( xml ),
@@ -10,7 +11,20 @@ function parseTmlToHtml( element, tmlString) {
         html += parseTmlMessage($(this));
     });
     html +='</ul>';
-    element.html(html);
+    navajoelement.html(html);
+    
+    var methodshtml = '<ul>';
+    $tml.children('methods').each(function(){
+        $(this).children('method').each(function() {
+            methodshtml += '<li> <div id="';
+            methodshtml += $(this).attr('name');
+            methodshtml += '"class="script">';
+            methodshtml += $(this).attr('name');
+            methodshtml += '</div></li>';
+        });
+    });
+    methodshtml +='</ul>';
+    methodselement.html(methodshtml);
 }
 
 function parseTmlMessage(message) {

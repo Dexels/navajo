@@ -24,7 +24,6 @@
 </head>
 
 <script id="scripts-template" type="text/x-handlebars-template">
-<h2 class="title"> Folders and scripts </h2>
 <input id="scriptsFilter" type="text" />
 <ul class="scripts">
     {{#each this}} 
@@ -152,7 +151,7 @@
         $.get("/testerapi?query=run&service=" + script + "&input="+inputScript, function(data) {
             $('#scriptcontent').removeClass('prettyprinted');
             $('#scriptcontent').text(data)
-            parseTmlToHtml($('#HTMLview'), data);
+            parseTmlToHtml($('#HTMLview'),$('#methods'), data);
      		prettyPrint();
      		$('#HTMLview').show(100);
             $('#TMLview').hide(100);
@@ -239,7 +238,14 @@
            
             <div id="content" class="content">
                
-                <div id="scripts" class="scriptsbar"></div>
+                <div class="scriptsbar">
+                    <h2 class="title"> Methods </h2>
+                    <div id="methods">
+                    </div>
+                    <h2 class="title"> Folders and scripts </h2>
+                    <div id="scripts">
+                    </div>
+                </div>
                 
                  <div id="mainview" class="mainview">
                     <div id="loadedScript"  style="display: none;"></div>
