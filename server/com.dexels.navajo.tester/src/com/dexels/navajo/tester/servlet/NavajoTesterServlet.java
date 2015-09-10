@@ -3,7 +3,6 @@ package com.dexels.navajo.tester.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,9 +29,15 @@ public class NavajoTesterServlet extends HttpServlet {
         if (query.equals("getscripts")) {
             List<NavajoFileSystemEntry> files = helper.getAllScripts().getEntries();
             result = mapper.writeValueAsString(files);
+            response.setContentType("text/json");
         }
         
-        response.setContentType("text/plain");
+        if (query.equals("getfilecontent")) {
+            result = helper.getFileContent(request.getParameter("file"));
+            response.setContentType("text/plain");
+        }
+        
+       
         PrintWriter writer = response.getWriter();
         writer.write(result);
         writer.close();

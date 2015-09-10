@@ -1,6 +1,9 @@
 package com.dexels.navajo.tester;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -65,5 +68,20 @@ public class NavajoTesterHelper {
 
 
         
+    }
+
+    public String getFileContent(String path) {
+        File f = new File(path);
+        if (f.exists()) {
+            try {
+               byte[] bytes =  Files.readAllBytes(f.toPath());
+               return new String(bytes, "UTF-8");
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        return "";
+       
     }
 }

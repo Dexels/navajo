@@ -13,9 +13,10 @@
 <link href="css/navajotester.css" rel="stylesheet" />
 
 <!-- js -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript">
-    
-</script>
+<!-- <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?autoload=true&amp;lang=css" defer="defer"></script> -->
+<link href="/css/prettify.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="/js/prettify.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
 <script src="js/dexels/navi.js" type="text/javascript"></script>
 <script src="js/handlebars-v3.0.3.js" type="text/javascript"></script>
 </head>
@@ -26,7 +27,9 @@
 <ul class="scripts">
     {{#each this}} 
 		{{#equals this.type 'FOLDER'}}
- 			<li> <div class="folder" id="{{path}}"> {{name}} </div> </li> 
+ 			<li> <div class="folder" id="{{path}}"> {{name}} </div> 
+				{{> subscripts this }}
+			</li> 
 	 	{{else}}
 			 <li> <div class="script" id="{{path}}"> {{name}} </div>  </li>
 		{{/equals}}
@@ -37,13 +40,14 @@
 </script>
 
 <script id="folder-template" type="text/x-handlebars-template">
-
-<ul>
-    {{#each this}} 
+<ul >
+    {{#each this.entries}} 
         {{#equals this.type 'FOLDER'}}
-            <li> <div class="folder" id="{{path}}" > {{name}} </div> </li> 
+            <li style="display: none"> <div class="folder" id="{{path}}" > {{name}} </div> 
+				{{> subscripts this }}
+			</li> 
         {{else}}
-             <li> <div class="script" id="{{path}}"> {{name}} </div>  </li>
+             <li style="display: none"> <div class="script" id="{{path}}"> {{name}} </div>  </li>
         {{/equals}}
        
         
@@ -80,7 +84,7 @@
         var foldersource = $("#folder-template").html();
         var foldertemplate = Handlebars.compile(foldersource);
         
-
+        Handlebars.registerPartial('subscripts', foldertemplate);
         
         $.getJSON("/testerapi?query=getscripts", function(data) {
             data.sort(function(a, b) {
@@ -88,29 +92,69 @@
         	});
             $("#scripts").html(scriptstemplate(data));
             $(document).on('click', '.script', function(){
-                window.alert('Going to run: ' +  $( this ).text());
+                getFileContent($( this ).attr('id'));
             });
             
-            $(document).on('click', '.folder', function(e){ 
-                if ($(this).children().length > 0 ) {
-                   $(this).children().remove();
-                } else {
-                    // Find higest element
-                    var entries = getMyEntries(data, $(this))
-                    $( this ).append(foldertemplate(entries));
-                }
-                e.stopPropagation();
-            });
+//             $(document).on('click', '.folder', function(e){ 
+//                 if ($(this).children().length > 0 ) {
+//                    $(this).children().remove();
+//                 } else {
+//                     // Find higest element
+//                     var entries = getMyEntries(data, $(this))
+//                     $( this ).append(foldertemplate(entries));
+//                 }
+//                 e.stopPropagation();
+//             });
             
             $(document).on("change", "#scriptsFilter", function(e){  
                 var filter = $(this).val();
-               
+                updateVisibility(filter, $(".scripts"))
             });
 
         });
         
        
     };
+    
+    function getFileContent(fileid) {
+        $.get("/testerapi?query=getfilecontent&file=" + fileid, function(data) {
+            $('#scriptcontent').removeClass('prettyprinted');
+            $('#scriptcontent').text(data)
+     		prettyPrint();
+            $('html, body').animate({scrollTop:0}, 'slow');
+        });
+    }
+    
+    function updateVisibility(filter, element) {
+        var anyMatch = false;
+       
+        element.children('li').each(function() {
+            var scriptid = $( this ).children('div').first().attr('id');
+            var className = $( this ).children('div').first().attr('class');
+
+            var match = scriptid.search(new RegExp(filter, "i"));
+			var isFolder = className === 'folder';
+			
+			if (isFolder) {
+			    var childHasMatches = updateVisibility(filter,  $( this ).children('ul').first());
+                if (childHasMatches) {
+                    $(this).show()
+                    anyMatch = true;
+                } else {
+                    $(this).hide()
+                }
+                
+			} else {
+			    if (match < 0) {
+			        $(this).hide()
+			    } else {
+			        $(this).show()
+			        anyMatch = true;
+			    }
+			}
+        });
+        return anyMatch;
+    }
     
   
     function getMyEntries(data, element) {
@@ -164,7 +208,9 @@
                 </div>
                 
                  <div id="mainview" class="mainview">
-                
+                    <pre id="scriptcontent" class="prettyprint lang-xml">
+                    
+                    </pre>
                 </div>
                 
 
