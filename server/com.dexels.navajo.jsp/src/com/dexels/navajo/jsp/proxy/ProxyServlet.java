@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -20,8 +22,10 @@ import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 import com.jcraft.jzlib.DeflaterOutputStream;
 import com.jcraft.jzlib.InflaterInputStream;
 
@@ -140,6 +144,86 @@ public class ProxyServlet extends HttpServlet {
 	}
 	
 	
+	
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		MDC.clear();
+//		String service = request.getParameter("service");
+		String acceptEncoding = request.getHeader("Accept-Encoding");
+		String contentEncoding = request.getHeader("Content-Encoding");
+
+		if(acceptEncoding!=null) {
+			MDC.put("Accept-Encoding", acceptEncoding);
+		}
+		if(contentEncoding!=null) {
+			MDC.put("Content-Encoding", contentEncoding);
+		}
+		BufferedReader r = null;
+		BufferedWriter out = null;
+		try {
+
+			// Create input Navajo based on url parameters
+			Navajo in = NavajoFactory.getInstance().createNavajo();
+			Enumeration<String> names = request.getParameterNames();
+			while(names.hasMoreElements()){
+				String path  = names.nextElement();
+				String value = request.getParameter(path);
+			
+				addProperty(in, path, value);
+			}
+			
+
+			Navajo outDoc = doProxy( in);
+
+			response.setContentType("text/xml; charset=UTF-8");
+			response.setHeader("Accept-Ranges", "none");
+			// Why do we want this?
+			//response.setHeader("Connection", "close");
+			// TODO: support multiple accept encoding
+			
+			if (acceptEncoding != null && acceptEncoding.equals(COMPRESS_JZLIB)) {
+				response.setHeader("Content-Encoding", COMPRESS_JZLIB);
+				out = new BufferedWriter(new OutputStreamWriter(
+						new DeflaterOutputStream(response.getOutputStream()), "UTF-8"));
+			} else if (acceptEncoding != null
+					&& acceptEncoding.equals(COMPRESS_GZIP)) {
+				response.setHeader("Content-Encoding", COMPRESS_GZIP);
+				out = new BufferedWriter(new OutputStreamWriter(
+						new java.util.zip.GZIPOutputStream(
+								response.getOutputStream()), "UTF-8"));
+			} else {
+				out = new BufferedWriter(response.getWriter());
+			}
+
+			outDoc.write(out);
+			out.flush();
+			out.close();
+
+			out = null;
+
+		} catch (Throwable e) {
+			throw new ServletException(e);
+		} finally {
+			if (r != null) {
+				try {
+					r.close();
+				} catch (Exception e) {
+					// NOT INTERESTED.
+				}
+			}
+			if (out != null) {
+				try {
+					out.close();
+				} catch (Exception e) {
+					// NOT INTERESTED.
+				}
+			}
+		}
+	}
+
+
+
 	private Navajo doProxy(Navajo in) throws ClientException {
 		Header h = in.getHeader();
 		if(h==null) {
@@ -183,6 +267,40 @@ public class ProxyServlet extends HttpServlet {
 		}
 		myClient.setServerUrl(server);		
 		myClient.setRetryAttempts(0);
+	}
+	
+	// We do NOT support array messages here. And property types are always String
+	private void addProperty(Navajo in, String path, String value){
+		StringTokenizer tok = new StringTokenizer(path, "/");
+		int count  = tok.countTokens();
+		int current = 1;
+		Message currentMessage = null;
+		
+		while(tok.hasMoreElements()){
+			String name = tok.nextToken();
+			
+			if(current == count){				// Property
+				Property p = NavajoFactory.getInstance().createProperty(in, name, Property.STRING_PROPERTY, null, 128, "", Property.DIR_IN);
+				p.setAnyValue(value);
+				currentMessage.addProperty(p);
+			} else {							// Message
+				if(currentMessage != null){ 	// Look in message
+					Message newMessage = currentMessage.getMessage(name);
+					if(newMessage == null){
+						newMessage = NavajoFactory.getInstance().createMessage(in, name);
+						currentMessage.addMessage(newMessage);
+					}
+					currentMessage = newMessage;
+				} else {						// Look in Navajo
+					currentMessage = in.getMessage(name);
+					if(currentMessage == null){
+						currentMessage = NavajoFactory.getInstance().createMessage(in, name);
+						in.addMessage(currentMessage);
+					} 
+				}
+			}
+			current++;
+		}
 	}
 
 	
