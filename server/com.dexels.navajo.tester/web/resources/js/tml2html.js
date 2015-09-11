@@ -6,56 +6,100 @@ function parseTmlToHtml( navajoelement, methodselement, tmlString) {
     $xml = $( xml ),
     $tml = $xml.children('tml');
     
-    var html = '<ul>';
-    $tml.children('message').each(function(index){
-        html += parseTmlMessage($(this));
-    });
-    html +='</ul>';
-    navajoelement.html(html);
+    var $table = $('<table/>');
     
-    var methodshtml = '<ul>';
+    $tml.children('message').each(function(index){
+        var $row = parseTmlMessage($(this))
+        $row.appendTo($table);
+    });
+    $table.appendTo(navajoelement);
+    
+    
+    $("td input").each(function() {
+        var value = $(this).val();
+        var size  = value.length;
+        if (size < 30) {
+            size= 30;
+        }
+
+        $(this).css("width", (size / 2)+'em');
+    });
+    
+    
+    var $methods = $('<ul>');
     $tml.children('methods').each(function(){
         $(this).children('method').each(function() {
-            methodshtml += '<li> <div id="';
-            methodshtml += $(this).attr('name');
-            methodshtml += '"class="script">';
-            methodshtml += $(this).attr('name');
-            methodshtml += '</div></li>';
+            var $li = $('<li/>');
+            var $div = $('<div/>');
+            $div.attr('id', $(this).attr('name'));
+            $div.attr('class', "script");
+            $div.text($(this).attr('name'));
+            $div.appendTo($li);
+            $li.appendTo($methods)
         });
     });
-    methodshtml +='</ul>';
-    methodselement.html(methodshtml);
+    $methods.appendTo(methodselement)
 }
 
 function parseTmlMessage(message) {
     var name =  message.attr('name');
+    console.log("Going to Start another row! " + name)
+    var $tr = $('<tr />');
+    var $td1 = $('<td />')
+    var $td2 = $('<td />')
     
-    var html = '<li>';
-    html += ' <b>' + name + '</b>';
+    $td1.text(name)
+    $td1.appendTo($tr);
     
+    var $subtable = $('<table />');
     
-    var properties = message.children('property')
-    html += '<ul>'
-    properties.each(function(index){
+    message.children('property').each(function() {
+        var $subtr = $('<tr />');
+        var $subtd1 = $('<td/>');
+        var $subtd2 = $('<td/>');
+        
         var propname = $(this).attr('name');
         var propvalue = $(this).attr('value');
-        html +='<li>';
-        html +=propname;
-        html +=': ';
-        html +=propvalue;
-        html +='</li>';
-    });
-    
-    var submessages = message.children('message')
-    
-    submessages.each(function(index){
-        console.log("In "+ name + " child found: " + $(this).attr('name'))
+        var propdirection = $(this).attr('direction')
+        var proptype = $(this).attr('type')
+                
+        
+        $subtd1.text(propname);
+        $subtd1.appendTo($subtr);
+        
+        $input = $('<input/>');
+        $input.attr('type', tmlTypeToHtml(proptype));
+        $input.attr('value', propvalue);
+        if (propdirection != 'in') {
+            $input.prop('disabled', true);
+        } 
+        $input.appendTo($subtd2);
+        $subtd2.appendTo($subtr);
        
-        html += parseTmlMessage($(this));
-      
+        $subtr.appendTo($subtable);
     });
-    html += '</ul>'
-    html += '</li>'
- 
-    return html;
+   
+    
+    var submessages = message.children('message')    
+    submessages.each(function(index){
+        var $subrow = parseTmlMessage($(this));
+        console.log("about to append to: " + $subtable.clone().html());
+        $subrow.appendTo($subtable);
+        console.log("Appended!")
+    });
+    $subtable.appendTo($td2);
+    $td2.appendTo($tr);
+    console.log("result for "+ name + " = " +  $tr.clone().html());
+    return $tr;
+}
+
+function tmlTypeToHtml(tmlType) {
+    if (tmlType === "string") {
+        return "text";
+    }
+    
+    if (tmlType === "boolean") {
+        return "checkbox";
+    }
+    return "text"
 }

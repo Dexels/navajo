@@ -132,10 +132,23 @@
 //                 e.stopPropagation();
 //             });
             
-            $(document).on("change", "#scriptsFilter", function(e){  
-                var filter = $(this).val();
-                updateVisibility(filter, $(".scripts"))
+            $("#scriptsFilter").bind("input propertychange", function (evt) {
+                // If it's the propertychange event, make sure it's the value that changed.
+                if (window.event && event.type == "propertychange" && event.propertyName != "value")
+                    return;
+            
+                // Clear any previously set timer before setting a fresh one
+                window.clearTimeout($(this).data("timeout"));
+                $(this).data("timeout", setTimeout(function () {
+                    var filter = $("#scriptsFilter").val();
+                    updateVisibility(filter, $(".scripts"))
+                }, 300));
             });
+                        
+//             $(document).on("change", "#scriptsFilter", function(e){  
+//                 var filter = $(this).val();
+//                 updateVisibility(filter, $(".scripts"))
+//             });
 
         });
         
@@ -178,13 +191,21 @@
 			var isFolder = className === 'folder';
 			
 			if (isFolder) {
-			    var childHasMatches = updateVisibility(filter,  $( this ).children('ul').first());
-                if (childHasMatches) {
-                    $(this).show()
-                    anyMatch = true;
-                } else {
-                    $(this).hide()
-                }
+			    // First check for text search
+			    var match = $( this ).text().search(new RegExp(filter, "i"));
+			   	if (match < 0) {
+			   	    // no need to check children at all
+			   	     $(this).hide()
+			   	} else {
+			   	 var childHasMatches = updateVisibility(filter,  $( this ).children('ul').first());
+	                if (childHasMatches) {
+	                    $(this).show()
+	                    anyMatch = true;
+	                } else {
+	                    $(this).hide()
+	                }
+			   	}
+			   
                 
 			} else {
 			    if (match < 0) {
