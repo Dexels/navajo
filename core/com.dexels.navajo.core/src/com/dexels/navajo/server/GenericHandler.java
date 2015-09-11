@@ -500,7 +500,7 @@ public class GenericHandler extends ServiceHandler {
               throw (AuthorizationException) e;
             }
             else {
-                logger.error("Exception in GenericHandler.doService: ", e);
+                logger.error("Exception in GenericHandler.doService: {}", e);
                 if ( e instanceof FileNotFoundException ) {
                     access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
                 }

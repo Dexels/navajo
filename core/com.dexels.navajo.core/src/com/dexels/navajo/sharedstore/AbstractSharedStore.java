@@ -4,28 +4,34 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class AbstractSharedStore implements SharedStoreInterface {
-
+    private static final String TENANT_PREFIX = "$__";
+    private static final String TENANT_POSTFIX = "__$";
     
-	private final static Logger logger = LoggerFactory
-			.getLogger(AbstractSharedStore.class);
-	
-    protected String getTenantSpecificName(String tenant, String name) {
+	@Override
+    public String getTenantSpecificName(String tenant, String name) {
     	if(name.startsWith(TENANT_PREFIX) || tenant == null) {
     		return name;
     	}
-        String tenantSpecificName = SharedStoreInterface.TENANT_PREFIX + tenant + SharedStoreInterface.TENANT_POSTFIX + name;
+        String tenantSpecificName = TENANT_PREFIX + tenant + TENANT_POSTFIX + name;
 		return tenantSpecificName;
     }
 
-    protected String getName(String name) {
+	@Override
+    public  String getName(String name) {
         if (name.startsWith(TENANT_PREFIX)) {
             return name.substring(name.indexOf(TENANT_POSTFIX) + TENANT_POSTFIX.length());
         }
         return name;
+    }
+	
+	@Override
+    public  String getTenant(String name) {
+        if (name.startsWith(TENANT_PREFIX)) {
+            return name.substring(TENANT_PREFIX.length(), name.indexOf(TENANT_POSTFIX));
+        }
+        return null;
     }
 
     @Override
