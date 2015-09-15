@@ -110,62 +110,65 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
     @Override
     public void handleEvent(Event e) {
         try {
-            RepositoryInstance ri = (RepositoryInstance) e.getProperty("repository");
-            Set<String> changedScripts = new HashSet<String>(RepositoryEventParser.filterChanged(e, SCRIPTS_FOLDER));
-            for (String changedScript : changedScripts) {
-                // Replace windows backslashes with normal ones
-                changedScript = changedScript.replace("\\", "/");
-                try {
-                    File location = new File(ri.getRepositoryFolder(), changedScript);
-                    if (location.isFile()) {
-                        extractScript(changedScript);
-                    }
-                } catch (IllegalArgumentException e1) {
-                    logger.warn("Error: ", e1);
-                }
-            }
 
-            // Uninstall deleted files
-            List<String> deletedScripts = RepositoryEventParser.filterDeleted(e, SCRIPTS_FOLDER);
-            for (String deletedScript : deletedScripts) {
-                // Uninstall bundle
-                String stripped = deletedScript.substring(SCRIPTS_FOLDER.length());
-                int dotIndex = stripped.lastIndexOf(".");
-                if (dotIndex < 0) {
-                    logger.info("Scripts need an extension, and {} has none. Ignoring.");
-                    continue;
-                }
-
-                String extension = stripped.substring(dotIndex, stripped.length());
-                if (!SUPPORTED_EXTENSIONS.contains(extension)) {
-                    logger.info("Ignoring file delete {} due to non-matching extension: {} ", deletedScript, extension);
-                    return;
-                }
-
-                String scriptName = stripped.substring(0, dotIndex);
-                enqueueDeleteScript(scriptName);
-            }
+            checkForChangedScripts(e);
+            checkForRemovedScripts(e);
         } catch (Exception e1) {
             logger.error("Exception on handling event: {}", e);
         }
-       
+
     }
 
-    private void extractScript(String changedScript) {
-        String stripped = changedScript.substring(SCRIPTS_FOLDER.length());
-        int dotIndex = stripped.lastIndexOf(".");
-        if (dotIndex < 0) {
-            logger.info("Scripts need an extension, and {} has none. Ignoring update.", stripped);
-            return;
+    private void checkForRemovedScripts(Event e) {
+        List<String> deletedScripts = RepositoryEventParser.filterDeleted(e, SCRIPTS_FOLDER);
+        for (String deletedScript : deletedScripts) {
+            // Uninstall bundle
+            String stripped = deletedScript.substring(SCRIPTS_FOLDER.length());
+            int dotIndex = stripped.lastIndexOf(".");
+            if (dotIndex < 0) {
+                logger.info("Scripts need an extension, and {} has none. Ignoring.");
+                continue;
+            }
+
+            String extension = stripped.substring(dotIndex, stripped.length());
+            if (!SUPPORTED_EXTENSIONS.contains(extension)) {
+                logger.info("Ignoring file delete {} due to non-matching extension: {} ", deletedScript, extension);
+                return;
+            }
+
+            String scriptName = stripped.substring(0, dotIndex);
+            enqueueDeleteScript(scriptName);
         }
-        String scriptName = stripped.substring(0, dotIndex);
-        String extension = stripped.substring(dotIndex, stripped.length());
-        if (!SUPPORTED_EXTENSIONS.contains(extension)) {
-            logger.info("Ignoring file update {} due to non-matching extension: {} ", scriptName, extension);
-            return;
+    }
+
+    private void checkForChangedScripts(Event e) {
+        RepositoryInstance ri = (RepositoryInstance) e.getProperty("repository");
+        Set<String> changedScripts = new HashSet<String>(RepositoryEventParser.filterChanged(e, SCRIPTS_FOLDER));
+        for (String changedScript : changedScripts) {
+            // Replace windows backslashes with normal ones
+            changedScript = changedScript.replace("\\", "/");
+            try {
+                File location = new File(ri.getRepositoryFolder(), changedScript);
+                if (location.isFile()) {
+                    String stripped = changedScript.substring(SCRIPTS_FOLDER.length());
+                    int dotIndex = stripped.lastIndexOf(".");
+                    if (dotIndex < 0) {
+                        logger.info("Scripts need an extension, and {} has none. Ignoring update.", stripped);
+                        continue;
+                    }
+                    String scriptName = stripped.substring(0, dotIndex);
+                    String extension = stripped.substring(dotIndex, stripped.length());
+                    if (!SUPPORTED_EXTENSIONS.contains(extension)) {
+                        logger.info("Ignoring file update {} due to non-matching extension: {} ", scriptName, extension);
+                        continue;
+                    }
+                    enqueueScript(scriptName, extension);
+                    enqueueDependentScripts(scriptName);
+                }
+            } catch (IllegalArgumentException e1) {
+                logger.warn("Error in handling changed script {}: {}", changedScript, e1);
+            }
         }
-        enqueueScript(scriptName, extension);
-        enqueueDependentScripts(scriptName);
     }
 
     private void enqueueDependentScripts(String script) {
@@ -186,13 +189,6 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
             logger.debug("Compiling {}; the following script should be recompiled too: {}", script, depScript);
             enqueueScript(depScript, ".xml");
         }
-    }
-
-    public static void main(String[] args) {
-        BundleQueueComponent bqc = new BundleQueueComponent();
-        bqc.extractScript("scripts/InitAsync_AAP.xml");
-        bqc.extractScript("scripts/InitSomething.xml");
-        bqc.extractScript("scripts/somepack/InitSomething.xml");
     }
 
 }
