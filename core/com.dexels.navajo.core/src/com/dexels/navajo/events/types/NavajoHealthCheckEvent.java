@@ -35,5 +35,9 @@ public class NavajoHealthCheckEvent implements NavajoEvent, LevelEvent {
 	public Level getLevel() {
 		return level;
 	}
+	@Override
+    public boolean isSynchronousEvent() {
+        return false;
+    }
 	
 }

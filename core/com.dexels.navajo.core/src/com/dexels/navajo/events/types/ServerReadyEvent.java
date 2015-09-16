@@ -15,5 +15,10 @@ public class ServerReadyEvent implements NavajoEvent {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+    public boolean isSynchronousEvent() {
+        return false;
+    }
 
 }

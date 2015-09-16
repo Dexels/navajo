@@ -26,5 +26,10 @@ public class QueuableFinishedEvent implements NavajoEvent {
 	public Queuable getMyQueable() {
 		return myQueable;
 	}
+	
+	@Override
+    public boolean isSynchronousEvent() {
+        return false;
+    }
 
 }
