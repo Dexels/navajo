@@ -139,6 +139,12 @@ public class CommandHandler {
 		HelpCommand help = new HelpCommand(this);
 		registerCommand(help, "help");
 		
+		ListenerStore_getServiceListeners getservices = new ListenerStore_getServiceListeners();
+        registerCommand(getservices, "getlisteners");
+        
+        ListenerStore_isRegisteredService isregistered = new ListenerStore_isRegisteredService();
+        registerCommand(isregistered, "isregistered");
+		
 	}
 
 	private void registerCommand(ConsoleCommand c, String command) {
