@@ -468,7 +468,7 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 
 
     @Override
-    public String determineScriptExtension(String scriptName, String tenant) {
+    public String determineScriptExtension(String scriptName, String tenant) throws FileNotFoundException {
         return navajoIOConfig.determineScriptExtension(scriptName, tenant);
     }
 

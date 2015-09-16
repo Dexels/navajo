@@ -158,7 +158,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 	}
 	
     @Override
-    public String determineScriptExtension(String scriptName, String tenant) {
+    public String determineScriptExtension(String scriptName, String tenant) throws FileNotFoundException {
         
         if ((new File(getScriptPath(), scriptName + "_" + tenant + ".xml")).exists() ||
                 (new File(getScriptPath(), scriptName + ".xml")).exists() ) {
@@ -169,7 +169,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
                 (new File(getScriptPath(), scriptName + ".scala")).exists() ) {
             return ".scala";
         }
-        return null;
+        throw new FileNotFoundException("Script not found: "+scriptName);
     }
 	
 	

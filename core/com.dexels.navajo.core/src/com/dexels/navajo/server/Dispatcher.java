@@ -641,10 +641,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     public final Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t)
             throws FatalException {
 
-        if (t != null) {
-            logger.error("Error: ", t);
-        }
-
         if (message == null) {
             message = "Null pointer exception";
 
@@ -907,10 +903,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                             + ", message=" + ex.getMessage(), Level.WARNING);
                     return outMessage;
                 } catch (SystemException se) {
-                    outMessage = generateErrorMessage(access, se.getMessage(), SystemException.NOT_AUTHORISED, 1,
-                            new Exception("NOT AUTHORISED"));
-                    AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
-                            + ", message=" + se.getMessage(), Level.WARNING);
+                    logger.error("SystemException on authenticateUser : ", se);
+                    outMessage = generateErrorMessage(access, se.getMessage(), SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
+                    AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + se.getMessage(), Level.WARNING);
                     return outMessage;
                 }
             } else {
