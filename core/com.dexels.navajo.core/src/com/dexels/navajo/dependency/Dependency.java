@@ -1,8 +1,5 @@
 package com.dexels.navajo.dependency;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
-
 public class Dependency {
     public static final int UNKNOWN_TYPE = 0;
     public static final int INCLUDE_DEPENDENCY = 1;
@@ -72,7 +69,6 @@ public class Dependency {
         this.isBroken = isBroken;
     }
 
-    @JsonIgnore
     public String getScript() {
         String scriptFileRel = null;
         if (type == WORKFLOW_DEPENDENCY) {
@@ -91,7 +87,6 @@ public class Dependency {
         return script;
     }
 
-    @JsonIgnore
     public String getDependee() {
         String scriptFileRel =  dependeeFile.split("scripts")[1];
         String script = scriptFileRel.substring(1, scriptFileRel.indexOf('.'));

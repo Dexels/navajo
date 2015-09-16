@@ -281,8 +281,7 @@ public class RhinoRunner {
 	private void generateErrorMessage(String message, Throwable e, Access a) {
 
 		try {
-			DispatcherFactory.getInstance().generateErrorMessage(a, message,
-					-1, 0, e);
+			DispatcherFactory.getInstance().generateErrorMessage(a, message,-1, 0, e);
 		} catch (FatalException e1) {
 			logger.error("Error: ", e1);
 		}

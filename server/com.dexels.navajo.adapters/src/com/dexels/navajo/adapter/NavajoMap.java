@@ -825,6 +825,9 @@ public void store() throws MappableException, UserException {
 		  if(this.resource!=null) {
 			  serviceCalled = true;
 			  AsyncClient ac = NavajoClientResourceManager.getInstance().getAsyncClient(this.resource);
+			  if (ac == null) {
+			      throw new UserException(-1, "No external resource found for: " + this.resource);
+			  }
 			  ac.callService(outDoc, method,this);
 		  } else 
 			  if (server != null) { // External request.

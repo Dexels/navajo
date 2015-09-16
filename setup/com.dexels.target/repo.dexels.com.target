@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1542">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1550">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
@@ -24,8 +24,8 @@
 <repository location="http://repo.dexels.com/eclipse/jetty8"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.64.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.64"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.65.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.65"/>
 </location>
 </locations>
 <includeBundles>
@@ -35,7 +35,6 @@
 <plugin id="com.dexels.appstore.ant"/>
 <plugin id="com.dexels.appstore.core"/>
 <plugin id="com.dexels.appstore.server"/>
-<plugin id="com.dexels.configurationstore.consul"/>
 <plugin id="com.dexels.hazelcast"/>
 <plugin id="com.dexels.karaf.featuresync"/>
 <plugin id="com.dexels.log4j.httpappender"/>
@@ -48,10 +47,10 @@
 <plugin id="com.dexels.repository.api"/>
 <plugin id="com.dexels.repository.file"/>
 <plugin id="com.dexels.repository.git"/>
+<plugin id="com.dexels.sharedconfigstore"/>
 <plugin id="com.google.guava"/>
 <plugin id="com.google.inject"/>
 <plugin id="com.hazelcast"/>
-<plugin id="com.jcraft.jsch" version="0.1.50.v201403120620"/>
 <plugin id="com.jcraft.jzlib"/>
 <plugin id="com.jogamp.jogl"/>
 <plugin id="com.mysql.jdbc"/>

@@ -122,7 +122,13 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	public void setContext(TipiContext c) {
 		context = c;
 		String lcode = c.getApplicationInstance().getLocaleCode();
-//		c.get
+		if(!getValidationsForLocale(c, null)) {
+			getValidationsForLocale(c, lcode);
+		}
+	}
+
+
+	private boolean getValidationsForLocale(TipiContext c, String lcode) {
 		String lcSpecificValidations = lcode ==null? "validation.properties" : "validation_" + lcode + ".properties";
 		if (errorMessageBundle == null) {
 			// attempt remote propertyresource bundle;
@@ -138,10 +144,13 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 				} else {
 					logger.error("Getting validation.properties from server failed. Is validation.properties in *resources*, not *tipi*?");
 				}
+				return true;
 			} catch (IOException e) {
 				logger.error("Getting validation.properties from server failed. Is validation.properties in *resources*, not *tipi*?",e);
+				return false;
 			}
 		}
+		return true;
 	}
 
 	@Override

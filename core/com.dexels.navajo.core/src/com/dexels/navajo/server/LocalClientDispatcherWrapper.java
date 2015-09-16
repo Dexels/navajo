@@ -64,8 +64,7 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 
 	@Override
 	public Navajo generateAbortMessage(String reason) throws FatalException {
-		Navajo outDoc = dispatcherInterface.generateErrorMessage(null, reason,
-				-1, 0, null);
+		Navajo outDoc = dispatcherInterface.generateErrorMessage(null, reason,-1, 0, null);
 		return outDoc;
 	}
 

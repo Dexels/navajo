@@ -13,7 +13,6 @@ import navajocore.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.BundleCreatorFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
@@ -500,13 +499,12 @@ public class GenericHandler extends ServiceHandler {
               throw (AuthorizationException) e;
             }
             else {
-                logger.error("Exception in GenericHandler.doService: ", e);
                 if ( e instanceof FileNotFoundException ) {
                     access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
                 }
                 
             	AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, e.getMessage() + (!compilerErrors.toString().trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), Level.SEVERE, access.accessID);
-            	throw new SystemException( -1, e.getMessage() + (!compilerErrors.toString().trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), e);
+            	throw new SystemException( -1, e.getMessage(), e);
             }
           }
         }

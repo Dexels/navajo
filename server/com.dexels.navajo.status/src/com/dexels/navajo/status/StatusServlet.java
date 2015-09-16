@@ -55,7 +55,7 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
 
 
     public void activate() {
-        cache = CacheBuilder.newBuilder().expireAfterWrite(60, TimeUnit.MINUTES).softValues()
+        cache = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).softValues()
                 .build(new CacheLoader<String, Integer>() {
                     public Integer load(String key) {
                         return 0;

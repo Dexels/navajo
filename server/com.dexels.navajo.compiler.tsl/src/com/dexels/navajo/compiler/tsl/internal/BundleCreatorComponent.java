@@ -742,6 +742,7 @@ public class BundleCreatorComponent implements BundleCreator {
             }
             CompiledScriptInterface sc = getCompiledScript(rpcName, tenant, hasTenantScriptFile);
 
+
             if (sc != null && !force) {
                 return sc;
             } else {
@@ -761,10 +762,8 @@ public class BundleCreatorComponent implements BundleCreator {
             logger.debug("Finished on demand compiling of: {}", scriptName);
             return getCompiledScript(rpcName, tenant, hasTenantScriptFile);
         } catch (Exception e) {
-            logger.error("Error on getting script {}: {}", scriptName, e);
+            throw new RuntimeException("Error on getting script "  + scriptName, e);
         }
-        return null;
-
     }
 
     @SuppressWarnings("unchecked")

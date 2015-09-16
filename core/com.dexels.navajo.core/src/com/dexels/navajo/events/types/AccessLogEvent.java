@@ -48,4 +48,9 @@ public class AccessLogEvent implements NavajoEvent {
 		return accessLogCount;
 	}
 
+    @Override
+    public boolean isSynchronousEvent() {
+        return false;
+    }
+
 }

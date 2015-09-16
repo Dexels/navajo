@@ -27,4 +27,8 @@ public class QueuableFailureEvent implements NavajoEvent {
 		return myQueable;
 	}
 
+	@Override
+    public boolean isSynchronousEvent() {
+        return false;
+    }
 }

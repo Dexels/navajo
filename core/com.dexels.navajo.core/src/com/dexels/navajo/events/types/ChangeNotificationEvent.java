@@ -38,4 +38,8 @@ public class ChangeNotificationEvent implements NavajoEvent {
 		return myNotification;
 	}
 
+	@Override
+    public boolean isSynchronousEvent() {
+        return false;
+    }
 }
