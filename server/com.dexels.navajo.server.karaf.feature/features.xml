@@ -98,7 +98,7 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.5.6'
+	<feature resolver="(obr)" name='navajo.core' version='3.5.7'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,5)">pax-http</feature>
@@ -117,7 +117,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/2.0.6
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.10.0
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.10.2
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.1.8
 		</bundle>
@@ -171,8 +171,8 @@
 		<bundle dependency='true'>mvn:org.eclipse.jetty/jetty-proxy/9.2.10.v20150310</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.rhino' version='3.0.2'>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino/2.0.4
+	<feature resolver="(obr)" name='navajo.rhino' version='3.0.3'>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino/2.0.6
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino.continuations/2.0.0
 		</bundle>
@@ -211,14 +211,14 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.63'>
+	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.64'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/2.0.4
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.resource/2.0.28
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/4.1.12
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/4.1.14
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/2.0.10
 		</bundle>
@@ -392,9 +392,9 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.84'>
+		version='3.0.85'>
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.5.0
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.5.2
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.4.4
 		</bundle>
