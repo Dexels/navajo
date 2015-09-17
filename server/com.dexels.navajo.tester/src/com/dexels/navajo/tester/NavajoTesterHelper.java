@@ -49,9 +49,7 @@ public class NavajoTesterHelper {
             inputNavajo = NavajoFactory.getInstance().createNavajo(sw);
             inputNavajo.removeHeader();
         }
-      
-       
-        
+
         try {
             context.callService(service, tenant, null, null, inputNavajo);
         } catch (ClientException e) {

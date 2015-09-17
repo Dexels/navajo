@@ -346,7 +346,7 @@ section p:last-child {
 }
 
 .script:before {
-	content: url('/img/xml-file.png');
+	content: url('/testerimg/xml-file.png');
 }
 
 .folder {
@@ -354,7 +354,7 @@ section p:last-child {
 }
 
 .folder:before {
-	content: url('/img/folder.png')
+	content: url('/testerimg/folder.png')
 }
 
 ul {
