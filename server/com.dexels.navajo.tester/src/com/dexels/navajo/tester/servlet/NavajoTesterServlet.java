@@ -1,5 +1,6 @@
 package com.dexels.navajo.tester.servlet;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -24,6 +25,22 @@ public class NavajoTesterServlet extends HttpServlet {
     private ObjectMapper mapper = new ObjectMapper();
 
     protected void service(final HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String inputString = null;
+        
+        if (request.getMethod().equals("POST")) {
+            StringBuilder buffer = new StringBuilder();
+            BufferedReader reader = request.getReader();
+
+            String line;
+            while((line = reader.readLine()) != null){
+                buffer.append(line);
+            }
+            // reqBytes = buffer.toString().getBytes();
+            inputString = buffer.toString();
+        }
+       
+       
+        
         String query = request.getParameter("query");
         String result = null;
         if (query.equals("getscripts")) {
@@ -38,7 +55,7 @@ public class NavajoTesterServlet extends HttpServlet {
         }
         
         if (query.equals("run")) {
-            result = helper.runScript(request.getParameter("service"), request.getParameter("input"), "KNVB");
+            result = helper.runScript(request.getParameter("service"), inputString, "KNVB");
             response.setContentType("text/plain");
         }
         

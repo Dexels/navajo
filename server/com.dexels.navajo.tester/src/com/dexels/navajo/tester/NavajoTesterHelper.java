@@ -2,6 +2,7 @@ package com.dexels.navajo.tester;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.Collection;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.context.ClientContext;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.tester.model.NavajoFileSystemFolder;
 import com.dexels.navajo.tester.model.NavajoFileSystemScript;
@@ -38,16 +40,20 @@ public class NavajoTesterHelper {
         this.context = null;
     }
     
-    public String runScript(String service, String inputService, String tenant) {
+    public String runScript(String service, String input, String tenant) {
+        Navajo inputNavajo = null;
+        if (input == null || input.trim().equals("")) {
+            inputNavajo = NavajoFactory.getInstance().createNavajo();
+        } else {
+            StringReader sw = new StringReader(input);
+            inputNavajo = NavajoFactory.getInstance().createNavajo(sw);
+            inputNavajo.removeHeader();
+        }
+      
+       
+        
         try {
-
-            if (inputService != null && context.getNavajo(inputService) != null) {
-                Navajo input = context.getNavajo(inputService);
-                context.callService(service, tenant, null, null, input);
-            } else {
-                context.callService(service, tenant);
-            }
-
+            context.callService(service, tenant, null, null, inputNavajo);
         } catch (ClientException e) {
             logger.error("Exception on calling service: {}", e);
         }

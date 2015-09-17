@@ -2,7 +2,7 @@ function parseTmlToHtml( navajoelement, methodselement, tmlString) {
     navajoelement.html('')
     methodselement.html('')
     
-    var xml = $.parseXML(tmlString),
+    xml = $.parseXML(tmlString),
     $xml = $( xml ),
     $tml = $xml.children('tml');
     
@@ -38,12 +38,31 @@ function parseTmlToHtml( navajoelement, methodselement, tmlString) {
             $li.appendTo($methods)
         });
     });
-    $methods.appendTo(methodselement)
+    $methods.appendTo(methodselement);
+    
+    // Add change events
+    $(".tmlinput").bind("input propertychange", function (evt) {
+        // If it's the propertychange event, make sure it's the value that changed.
+        if (window.event && event.type == "propertychange" && event.propertyName != "value")
+            return;
+        var xpath = $(this).attr('id');
+        
+        var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
+        console.log(element);
+        if (typeof element == 'undefined') {
+            var str = (new XMLSerializer()).serializeToString(xml);
+            console.log("No element found with " + xpath + " in " + str)
+        } else {
+            var $element = $(element);
+            $element.attr('value',  $(this).val());
+        }
+    });
 }
+
+
 
 function parseTmlMessage(message) {
     var name =  message.attr('name');
-    console.log("Going to Start another row! " + name)
     var $tr = $('<tr />');
     var $td1 = $('<td />')
     var $td2 = $('<td />')
@@ -70,9 +89,11 @@ function parseTmlMessage(message) {
         $input = $('<input/>');
         $input.attr('type', tmlTypeToHtml(proptype));
         $input.attr('value', propvalue);
+        $input.attr('id', getElementXPath(this));
+        $input.attr('class', "tmlinput");
         if (propdirection != 'in') {
             $input.prop('disabled', true);
-        } 
+        }
         $input.appendTo($subtd2);
         $subtd2.appendTo($subtr);
        
@@ -83,13 +104,10 @@ function parseTmlMessage(message) {
     var submessages = message.children('message')    
     submessages.each(function(index){
         var $subrow = parseTmlMessage($(this));
-        console.log("about to append to: " + $subtable.clone().html());
         $subrow.appendTo($subtable);
-        console.log("Appended!")
     });
     $subtable.appendTo($td2);
     $td2.appendTo($tr);
-    console.log("result for "+ name + " = " +  $tr.clone().html());
     return $tr;
 }
 

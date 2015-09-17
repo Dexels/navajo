@@ -1,9 +1,8 @@
 /* =Reset default browser CSS. Based on work by Eric Meyer: http://meyerweb.com/eric/tools/css/reset/index.html
 -------------------------------------------------------------- */
-
 body {
 	line-height: 1;
-		background: transparent;
+	background: transparent;
 	border: 0;
 	margin: 0;
 	padding: 0;
@@ -100,7 +99,7 @@ a:hover {
 	padding: 0 0px;
 	overflow: hidden;
 	min-height: 600px;
-	
+
 	/* border: solid 1px #FFED00; */
 }
 
@@ -212,7 +211,6 @@ header {
 	background-color: #505050;
 }
 
-
 #nav-trigger span.open {
 	border-left: solid 10px transparent;
 	border-top: none;
@@ -247,7 +245,6 @@ nav#nav-main li.open {
 	border-right: solid 1px #505050;
 	padding: 0 5px;
 	background-color: #505050;
-	
 }
 
 nav#nav-main li:last-child {
@@ -258,7 +255,7 @@ nav#nav-main a {
 	display: block;
 	color: white;
 	padding: 10px 30px;
-	outline:none;
+	outline: none;
 }
 
 nav#nav-main a:hover {
@@ -319,7 +316,6 @@ section p:last-child {
 	margin-bottom: 0;
 }
 
-
 .scriptsbar {
 	float: left;
 }
@@ -329,24 +325,38 @@ section p:last-child {
 	padding-left: 30px;
 	padding-right: 30px;
 	width: 75%;
+	position: relative;
 }
 
+.overlay {
+	background: #e9e9e9;
+	position: absolute;
+	display: none;
+	float: right;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	opacity: 0.65;
+	z-index: 100;
+}
 
 .script {
-	 cursor: pointer;
+	cursor: pointer;
 }
 
-.script:before{
-  content: url('/img/xml-file.png');
+.script:before {
+	content: url('/img/xml-file.png');
 }
 
 .folder {
-	 cursor: pointer;
+	cursor: pointer;
 }
-.folder:before{
-  content:url('/img/folder.png')
-  
+
+.folder:before {
+	content: url('/img/folder.png')
 }
+
 ul {
 	padding-left: 20px;
 }
