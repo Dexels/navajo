@@ -12,12 +12,17 @@
 <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
 <link href="/testercss/navajotester.css" rel="stylesheet" />
 <link href="/testercss/prettify.css" type="text/css" rel="stylesheet" />
+<link href="/testercss/chosen.css" type="text/css" rel="stylesheet">
+
 
 <!-- js -->
 <script type="text/javascript" src="/testerjs/prettify.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
 <script src="/testerjs/dexels/navi.js" type="text/javascript"></script>
 <script src="/testerjs/handlebars-v3.0.3.js" type="text/javascript"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.jquery.min.js"></script>
+<script src="/testerjs/jquery.twinkle-0.8.0.min.js" type="text/javascript"></script>
+
 
 <script type="text/javascript" src="/testerjs/dexels/tml2html.js"></script>
 <script type="text/javascript" src="/testerjs/dexels/xpath.js"></script>
@@ -60,17 +65,22 @@
 </script>
 
 <script>
-$(document).ready(
-        function() {
-            Handlebars.registerHelper('equals', function(v1, v2, options) {
-                if(v1 === v2) {
-                    return options.fn(this);
-                  }
-                  return options.inverse(this);
-            });
-           	getScripts();
-        }
-);
+
+$(document).ready(function() {
+    // Add Chosen to dropdowns
+    $("#handlers").chosen({
+        disable_search_threshold : 10,
+        width : "20%"
+    });
+    
+    Handlebars.registerHelper('equals', function(v1, v2, options) {
+        if(v1 === v2) {
+            return options.fn(this);
+          }
+          return options.inverse(this);
+    });
+   	getScripts();
+});
 
 </script>
 <body>
@@ -78,6 +88,23 @@ $(document).ready(
         <header>
             <div id="title" class="container">
                 <h1>Navajo Tester v2</h1>
+                <div class="handlersdrop">
+                    <select data-placeholder="Select an Instance..." id="handlers"> 
+                        <option value=""></option>
+                        <option value="KNAU"> KNAU</option>
+                        <option value="KNKV">KNKV</option>
+                        <option value="KNVB">KNVB</option>
+                        <option value="NeVoBo">NeVoBo</option>
+                        <option value="Generic">Generic</option>
+                        <option value="NHV">NHV</option>
+                        <option value="KNZB">KNZB</option>
+                        <option value="KNBSB">KNBSB</option>
+                        <option value="JBN">JBN</option>
+                        <option value="KNKF">KNKF</option>
+                        <option value="KNHB">KNHB</option>
+                        <option value="Redned">Redned</option>
+                    </select>
+                </div>
             </div>
         </header>
 

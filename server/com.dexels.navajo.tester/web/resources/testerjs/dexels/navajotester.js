@@ -33,6 +33,11 @@ function getScripts() {
 };
 
 function runScript(scriptElement) {
+    var instance =  $( "#handlers option:selected" ).text();
+    if (instance === "") {
+        $('#handlers_chosen').twinkle();    
+        return;
+    }
     $('.overlay').show();
    
     var script = scriptElement.attr("id");

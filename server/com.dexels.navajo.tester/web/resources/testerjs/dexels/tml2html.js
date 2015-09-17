@@ -6,16 +6,16 @@ function parseTmlToHtml( navajoelement, methodselement, tmlString) {
     $xml = $( xml ),
     $tml = $xml.children('tml');
     
-    var $table = $('<table/>');
+    var $messagesdiv = $('<div/>');
     
     $tml.children('message').each(function(index){
-        var $row = parseTmlMessage($(this))
-        $row.appendTo($table);
+        var $messagediv = parseTmlMessage($(this))
+        $messagediv.appendTo($messagesdiv);
     });
-    $table.appendTo(navajoelement);
+    $messagesdiv.appendTo(navajoelement);
     
-    
-    $("td input").each(function() {
+    // Fix input to match their value length
+    $(".propertyvaluediv input").each(function() {
         var value = $(this).val();
         var size  = value.length;
         if (size < 30) {
@@ -45,35 +45,36 @@ function parseTmlToHtml( navajoelement, methodselement, tmlString) {
 
 function parseTmlMessage(message) {
     var name =  message.attr('name');
-    var $tr = $('<tr />');
-    var $td1 = $('<td />')
-    var $td2 = $('<td />')
+    var $div = $('<div />');
+    $div.attr('class', 'messagediv');
     
-    $td1.text(name)
-    $td1.appendTo($tr);
+    var $msgname = $('<h3 />');
+    $msgname.text(name);
+    $msgname.appendTo($div);
     
-    var $subtable = $('<table />');
+    message.children('message').each(function(index){
+        var $messagediv = parseTmlMessage($(this));
+        $messagediv.appendTo($div);
+    });
     
+    // Add all my properties
     message.children('property').each(function() {
-        var $subtr = $('<tr />');
-        var $subtd1 = $('<td/>');
-        var $subtd2 = $('<td/>');
+        var $propertynamediv = $('<div />');
+        var $propertyvaluediv = $('<div />');
+        $propertynamediv.attr('class', 'propertynamediv');
+        $propertyvaluediv.attr('class', 'propertyvaluediv');
         
-        var propname = $(this).attr('name');
+        $propertynamediv.text($(this).attr('name'));
+ 
         var propvalue = $(this).attr('value');
         var propdirection = $(this).attr('direction')
         var proptype = $(this).attr('type')
-        
-        var type = tmlTypeToHtml(proptype)
-        
-        $subtd1.text(propname);
-        $subtd1.appendTo($subtr);
-        
+        var htmltype = tmlTypeToHtml(proptype)
        
-        if (type === 'select') {
+        if (htmltype === 'select') {
             $select = $('<select/>');
             $select.attr('id', getElementXPath(this));
-            $select.attr('class', "tmlinput" + type);
+            $select.attr('class', "tmlinput" + htmltype);
             if ($(this).attr('cardinality') !== '1')  {
                 $select.attr('multiple', 'multiple')
             }
@@ -91,39 +92,40 @@ function parseTmlMessage(message) {
                 $option.text( $(this).attr('name'))
                 $option.appendTo($select);
             });
-            $select.appendTo($subtd2);
-        } else if (type === 'binary') {
-            
+            $select.appendTo($propertyvaluediv);
+        } else if (htmltype === 'binary') {
+            // TODO: display binary somehow
         } else {
             $input = $('<input/>');
-            $input.attr('type', type );
+            $input.attr('type', htmltype );
             $input.attr('value', propvalue);
             $input.attr('id', getElementXPath(this));
-            $input.attr('class', "tmlinput" + type);
+            $input.attr('class', "tmlinput" + htmltype);
             if (propdirection != 'in') {
-                if (type === 'checkbox') {
+                if (htmltype === 'checkbox') {
                     $input.attr('disabled', 'disabled');
                 } else {
                     $input.attr('readOnly', 'readOnly');
                 }
             }
-            $input.appendTo($subtd2);
+            $input.appendTo($propertyvaluediv);
         }
+        
+        var $propertydiv = $('<div />');
+        $propertydiv.attr('class', 'propertydiv');
+
+        
+        $propertynamediv.appendTo($propertydiv);
+        $propertyvaluediv.appendTo($propertydiv);
        
-        $subtd2.appendTo($subtr);
-       
-        $subtr.appendTo($subtable);
+        $propertydiv.appendTo($div);
+        
     });
    
-    
-    var submessages = message.children('message')    
-    submessages.each(function(index){
-        var $subrow = parseTmlMessage($(this));
-        $subrow.appendTo($subtable);
-    });
-    $subtable.appendTo($td2);
-    $td2.appendTo($tr);
-    return $tr;
+
+   
+
+    return $div;
 }
 
 function tmlTypeToHtml(tmlType) {
