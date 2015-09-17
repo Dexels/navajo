@@ -318,6 +318,7 @@ section p:last-child {
 
 .scriptsbar {
 	float: left;
+	font-size: 11px;
 }
 
 .mainview {

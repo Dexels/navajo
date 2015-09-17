@@ -15,19 +15,6 @@ function getScripts() {
             return a.name.localeCompare(b.name);
         });
         $("#scripts").html(scriptstemplate(data));
-
-
-        // $(document).on('click', '.folder', function(e){
-        // if ($(this).children().length > 0 ) {
-        // $(this).children().remove();
-        // } else {
-        // // Find higest element
-        // var entries = getMyEntries(data, $(this))
-        // $( this ).append(foldertemplate(entries));
-        // }
-        // e.stopPropagation();
-        // });
-
     });
 
 };
@@ -35,7 +22,15 @@ function getScripts() {
 function runScript(scriptElement) {
     var instance =  $( "#handlers option:selected" ).text();
     if (instance === "") {
-        $('#handlers_chosen').twinkle();    
+        $('.chosen-single').pulsate({
+            color: '#e26413',                   // set the color of the pulse
+            reach: 100,                          // how far the pulse goes in px
+            speed: 400,                          // how long one pulse takes in ms
+            pause: 0,                           // how long the pause between pulses is in ms
+            glow: true,                          // if the glow should be shown too
+            repeat: 4,                           // will repeat forever if true, if given a number will repeat for that many times
+            onHover: false                       // if true only pulsate if user hovers over the element
+          });
         return;
     }
     $('.overlay').show();
@@ -136,6 +131,21 @@ function getMyEntries(data, element) {
 
 $(document).on('click', '.script', function() {
     runScript($(this));
+});
+
+$(document).on('click', '.folder', function() {
+    $(this).next().children('ul li').toggle();
+});
+
+$(document).on('click', '.folder', function(e) {
+    if ($(this).children().length > 0) {
+        $(this).children().remove();
+    } else {
+        // Find higest element
+        var entries = getMyEntries(data, $(this))
+        $(this).append(foldertemplate(entries));
+    }
+    e.stopPropagation();
 });
 
 $(document).on('click', '#HTMLviewLink', function() {
