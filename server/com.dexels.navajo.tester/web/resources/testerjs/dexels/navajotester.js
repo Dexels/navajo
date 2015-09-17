@@ -16,30 +16,6 @@ function getScripts() {
         });
         $("#scripts").html(scriptstemplate(data));
 
-        $(document).on('click', '.script', function() {
-            runScript($(this));
-        });
-
-        $(document).on('click', '#HTMLviewLink', function() {
-            $('#HTMLview').show(100);
-            $('#TMLview').hide(100);
-            $('#TMLSourceview').hide(100);
-            return false;
-        });
-
-        $(document).on('click', '#TMLviewLink', function() {
-            $('#HTMLview').hide(100);
-            $('#TMLview').show(100);
-            $('#TMLSourceview').hide(100);
-            return false;
-        });
-
-        $(document).on('click', '#TMLSourceviewLink', function() {
-            $('#HTMLview').hide(100);
-            $('#TMLview').hide(100);
-            $('#TMLSourceview').show(100);
-            return false;
-        });
 
         // $(document).on('click', '.folder', function(e){
         // if ($(this).children().length > 0 ) {
@@ -52,28 +28,14 @@ function getScripts() {
         // e.stopPropagation();
         // });
 
-        $("#scriptsFilter").bind("input propertychange", function(evt) {
-            // If it's the propertychange event, make sure it's the value that
-            // changed.
-            if (window.event && event.type == "propertychange" && event.propertyName != "value")
-                return;
-
-            // Clear any previously set timer before setting a fresh one
-            window.clearTimeout($(this).data("timeout"));
-            $(this).data("timeout", setTimeout(function() {
-                var filter = $("#scriptsFilter").val();
-                updateVisibility(filter, $(".scripts"))
-            }, 300));
-        });
-
     });
 
 };
 
 function runScript(scriptElement) {
     $('.overlay').show();
+   
     var script = scriptElement.attr("id");
-    var inputScript = $('#loadedScript').text();
     $('#loadedScript').text(script);
 
     var navajoinput = "";
@@ -84,15 +46,16 @@ function runScript(scriptElement) {
     $.post("/testerapi?query=run&service=" + script, navajoinput, function(data) {
         $('#scriptcontent').removeClass('prettyprinted');
         $('#scriptcontent').text(data)
-        parseTmlToHtml($('#HTMLview'), $('#methods'), data);
         prettyPrint();
-        $('.overlay').hide();
+        parseTmlToHtml($('#HTMLview'), $('#methods'), data);
         $('#HTMLview').show(100);
         $('#TMLview').hide(100);
         $('#TMLSourceview').hide(100);
+        $('.overlay').hide(500);
+        
         $('html, body').animate({
             scrollTop : 0
-        }, 'slow');
+        }, 'fast');
 
     });
 
@@ -100,9 +63,6 @@ function runScript(scriptElement) {
         $('#scriptsourcecontent').removeClass('prettyprinted');
         $('#scriptsourcecontent').text(data)
         prettyPrint();
-        $('html, body').animate({
-            scrollTop : 0
-        }, 'slow');
     });
 
 }
@@ -166,6 +126,101 @@ function getMyEntries(data, element) {
 
     }
 };
+
+/* Event handlers */
+
+$(document).on('click', '.script', function() {
+    runScript($(this));
+});
+
+$(document).on('click', '#HTMLviewLink', function() {
+    $('#HTMLview').show(100);
+    $('#TMLview').hide(100);
+    $('#TMLSourceview').hide(100);
+    return false;
+});
+
+$(document).on('click', '#TMLviewLink', function() {
+    $('#HTMLview').hide(100);
+    $('#TMLview').show(100);
+    $('#TMLSourceview').hide(100);
+    return false;
+});
+
+$(document).on('click', '#TMLSourceviewLink', function() {
+    $('#HTMLview').hide(100);
+    $('#TMLview').hide(100);
+    $('#TMLSourceview').show(100);
+    return false;
+});
+
+$(document).on('input propertychange', '#scriptsFilter', function(evt) {
+    // If it's the propertychange event, make sure it's the value that
+    // changed.
+    if (window.event && event.type == "propertychange" && event.propertyName != "value")
+        return;
+
+    var filter = $("#scriptsFilter").val();
+    if (filter.length < 3) 
+        return;
+    
+    // Clear any previously set timer before setting a fresh one
+    window.clearTimeout($(this).data("timeout"));
+    $(this).data("timeout", setTimeout(function() {
+       
+        updateVisibility(filter, $(".scripts"))
+    }, 300));
+});
+
+// TML change events
+$(document).on('input propertychange', '.tmlinputtext', function(evt) {
+    // If it's the propertychange event, make sure it's the value that changed.
+    if (window.event && event.type == "propertychange" && event.propertyName != "value")
+        return;
+    var xpath = $(this).attr('id');
+    
+    var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
+   
+    if (typeof element != 'undefined') {
+        var $element = $(element);
+        $element.attr('value',  $(this).val());
+    } 
+});
+
+
+
+$(document).on('input change', '.tmlinputcheckbox', function(evt) {
+    var xpath = $(this).attr('id');
+    var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
+    if (typeof element != 'undefined') {
+        var $element = $(element);
+        $element.attr('value',  $(this).prop('checked'));
+    } 
+});
+
+$(document).on('input change', '.tmlinputselect', function(evt) {
+    var  xpath = $(this).attr('id');
+    var $input = $(this);
+    var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
+   
+    
+    if (typeof element != 'undefined') {
+        var $element = $(element);
+        $element.children('option').each(function() {
+            // find option under current input
+            var value = $(this).attr('value');
+            
+            // See whether the option with this name is now selected
+            var isChecked = $input.children('option[value="'+value+'"]').first().prop('selected');
+            if (isChecked) {
+                $(this).attr('selected', 1);
+            } else {
+                $(this).attr('selected', 0);
+            }   
+        }); 
+    } 
+});
+
 
 /* Some helpers */
 Array.prototype.indexOfPath = function(path) {

@@ -39,24 +39,6 @@ function parseTmlToHtml( navajoelement, methodselement, tmlString) {
         });
     });
     $methods.appendTo(methodselement);
-    
-    // Add change events
-    $(".tmlinput").bind("input propertychange", function (evt) {
-        // If it's the propertychange event, make sure it's the value that changed.
-        if (window.event && event.type == "propertychange" && event.propertyName != "value")
-            return;
-        var xpath = $(this).attr('id');
-        
-        var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
-        console.log(element);
-        if (typeof element == 'undefined') {
-            var str = (new XMLSerializer()).serializeToString(xml);
-            console.log("No element found with " + xpath + " in " + str)
-        } else {
-            var $element = $(element);
-            $element.attr('value',  $(this).val());
-        }
-    });
 }
 
 
@@ -81,20 +63,53 @@ function parseTmlMessage(message) {
         var propvalue = $(this).attr('value');
         var propdirection = $(this).attr('direction')
         var proptype = $(this).attr('type')
-                
+        
+        var type = tmlTypeToHtml(proptype)
         
         $subtd1.text(propname);
         $subtd1.appendTo($subtr);
         
-        $input = $('<input/>');
-        $input.attr('type', tmlTypeToHtml(proptype));
-        $input.attr('value', propvalue);
-        $input.attr('id', getElementXPath(this));
-        $input.attr('class', "tmlinput");
-        if (propdirection != 'in') {
-            $input.prop('disabled', true);
+       
+        if (type === 'select') {
+            $select = $('<select/>');
+            $select.attr('id', getElementXPath(this));
+            $select.attr('class', "tmlinput" + type);
+            if ($(this).attr('cardinality') !== '1')  {
+                $select.attr('multiple', 'multiple')
+            }
+            if (propdirection != 'in') {
+                $input.attr('readOnly', 'readOnly');
+            }
+            $(this).children('option').each(function() {
+                
+                $option = $('<option/>');
+                $option.attr('value', $(this).attr('value'));
+                var selected = $(this).attr('selected');
+                if (typeof selected !== typeof undefined && selected === '1') {
+                    $option.attr('selected', 'selected');
+                }
+                $option.text( $(this).attr('name'))
+                $option.appendTo($select);
+            });
+            $select.appendTo($subtd2);
+        } else if (type === 'binary') {
+            
+        } else {
+            $input = $('<input/>');
+            $input.attr('type', type );
+            $input.attr('value', propvalue);
+            $input.attr('id', getElementXPath(this));
+            $input.attr('class', "tmlinput" + type);
+            if (propdirection != 'in') {
+                if (type === 'checkbox') {
+                    $input.attr('disabled', 'disabled');
+                } else {
+                    $input.attr('readOnly', 'readOnly');
+                }
+            }
+            $input.appendTo($subtd2);
         }
-        $input.appendTo($subtd2);
+       
         $subtd2.appendTo($subtr);
        
         $subtr.appendTo($subtable);
@@ -119,5 +134,12 @@ function tmlTypeToHtml(tmlType) {
     if (tmlType === "boolean") {
         return "checkbox";
     }
+    if (tmlType === "selection") {
+        return "select";
+    }
+    if (tmlType === "binary") {
+        return "binary";
+    }
+    
     return "text"
 }

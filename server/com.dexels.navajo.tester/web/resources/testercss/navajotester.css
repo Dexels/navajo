@@ -364,3 +364,7 @@ ul {
 .propertytable {
 	margin-left: 20px;
 }
+
+input[readOnly] {
+	background: #e9e9e9;
+}
