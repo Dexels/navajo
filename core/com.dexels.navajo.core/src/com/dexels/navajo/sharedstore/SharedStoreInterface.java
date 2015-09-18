@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.Date;
 
 
 /**
@@ -50,6 +51,8 @@ public interface SharedStoreInterface {
 	 */
 	public void remove(String parent, String name);
 	
+    public void removeOlderThan(String parentPath, Date date);
+
 	   
     /**
      * Remove an object with the specified name of the specified parent
@@ -275,4 +278,6 @@ public interface SharedStoreInterface {
      * Returns the tenant of the SharedStore object. Returns null if the name is not tenant-specific
      */
     public String getTenant(String fullname);
+
+
 }

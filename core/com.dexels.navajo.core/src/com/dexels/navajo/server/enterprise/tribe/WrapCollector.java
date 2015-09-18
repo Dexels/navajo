@@ -12,6 +12,7 @@ import com.dexels.navajo.sharedstore.SerializationUtil;
 
 public class WrapCollector extends GenericThread {
 
+    private final static int WORKER_SLEEP =  60 * 60 * 1000;
     private final static int MAX_AGE = 10000;
     private final static int TOO_OLD = 24 * 60 * 60 * 1000; // 24 hours is too
                                                             // old, remove it.
@@ -29,6 +30,8 @@ public class WrapCollector extends GenericThread {
         WrapCollectorFactory.setInstance(this);
         logger.info("Using Tribal NavajoWrap Reference Count Map");
         referenceCount = (ConcurrentMap) tribeManager.getDistributedMap("NavajoWrapReferenceCount");
+        setSleepTime(WORKER_SLEEP);
+        startThread(this);
 
     }
 
@@ -55,7 +58,7 @@ public class WrapCollector extends GenericThread {
     @Override
     public synchronized void worker() {
 
-        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+        //Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 
         if (referenceCount == null) {
             logger.debug("referenceCount map is null - cannot do anything!");

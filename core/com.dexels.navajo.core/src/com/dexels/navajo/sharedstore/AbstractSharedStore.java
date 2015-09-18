@@ -3,6 +3,7 @@ package com.dexels.navajo.sharedstore;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.Date;
 
 
 public abstract class AbstractSharedStore implements SharedStoreInterface {
@@ -60,6 +61,10 @@ public abstract class AbstractSharedStore implements SharedStoreInterface {
             throws SharedStoreException {
         store(parent, getTenantSpecificName(tenant, name), value, append, requireLock);
 
+    }
+    @Override
+    public void  removeOlderThan(String parentPath, Date date) {
+        throw new UnsupportedOperationException();
     }
 
 }

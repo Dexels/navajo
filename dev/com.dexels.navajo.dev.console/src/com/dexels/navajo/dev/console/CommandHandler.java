@@ -130,6 +130,9 @@ public class CommandHandler {
 		SharedStore_rm rm = new SharedStore_rm();
 		registerCommand(rm, "rm");
 		
+        SharedStore_rmdate rmdate = new SharedStore_rmdate();
+        registerCommand(rmdate, "rmdate");
+		
 		SharedStore_sharedstore sharedstore = new SharedStore_sharedstore();
 		registerCommand(sharedstore, "sharedstore");
 		
