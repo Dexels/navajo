@@ -24,6 +24,8 @@
  */
 package com.dexels.navajo.server.enterprise.tribe;
 
+import org.slf4j.MDC;
+
 import com.dexels.navajo.document.Navajo;
 
 public class ServiceRequest extends Request {
@@ -36,6 +38,7 @@ public class ServiceRequest extends Request {
 	
 	public ServiceRequest(Navajo request, boolean skipAuthorization, String tenant) {
 		super();
+		
 		this.request = request;
 		this.tenant = tenant;
 		// Set timout to 25 secs. (arbitrary) to prevent 'hanging' service requests on busy servers.
@@ -45,7 +48,7 @@ public class ServiceRequest extends Request {
 	
 	@Override
 	public Answer getAnswer() {
-		
+	    MDC.clear();
 		String origin = getRequest().getHeader().getHeaderAttribute("origin");
 		if ( origin != null && !origin.equals("")) {
 			if ( origin.equals(TribeManagerFactory.getInstance().getMyUniqueId()) ) {
