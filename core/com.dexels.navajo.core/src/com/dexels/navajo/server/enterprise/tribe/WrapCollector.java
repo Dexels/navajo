@@ -12,7 +12,7 @@ import com.dexels.navajo.sharedstore.SerializationUtil;
 
 public class WrapCollector extends GenericThread {
 
-    private final static int WORKER_SLEEP = 2000;
+    private final static int WORKER_SLEEP =  60 * 60 * 1000;
     private final static int MAX_AGE = 10000;
     private final static int TOO_OLD = 24 * 60 * 60 * 1000; // 24 hours is too
                                                             // old, remove it.
