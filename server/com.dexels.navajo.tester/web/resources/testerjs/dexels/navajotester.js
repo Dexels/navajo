@@ -1,5 +1,6 @@
-// Will hold the XML document
-var xml;
+// Holds the input navajo document for the next RPC call
+var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header></tml>');;
+
 
 function getScripts() {
     var scriptssource = $("#scripts-template").html();
@@ -37,17 +38,18 @@ function runScript(scriptElement) {
    
     var script = scriptElement.attr("id");
     $('#loadedScript').text(script);
+    
+    prepareInputNavajo(script);
 
-    var navajoinput = "";
-    if (typeof xml != 'undefined') {
-        navajoinput = (new XMLSerializer()).serializeToString(xml);
-    }
-
-    $.post("/testerapi?query=run&service=" + script, navajoinput, function(data) {
+    navajoinput = (new XMLSerializer()).serializeToString(xml);
+    
+    $.post("/navajo/"+instance , navajoinput, function(xmlobj) {
+        xml = xmlobj;
         $('#scriptcontent').removeClass('prettyprinted');
-        $('#scriptcontent').text(data)
+        var xmltext = (new XMLSerializer()).serializeToString(xmlobj)
+        $('#scriptcontent').text(xmltext)
         prettyPrint();
-        parseTmlToHtml($('#HTMLview'), $('#methods'), data);
+        parseTmlToHtml($('#HTMLview'), $('#methods'));
         $('#HTMLview').show(100);
         $('#TMLview').hide(100);
         $('#TMLSourceview').hide(100);
@@ -65,6 +67,11 @@ function runScript(scriptElement) {
         prettyPrint();
     });
 
+}
+
+function prepareInputNavajo(scrint) {
+    var $xml = $(xml);
+    $xml.find
 }
 
 function updateVisibility(filter, element) {

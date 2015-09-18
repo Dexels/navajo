@@ -1,8 +1,7 @@
-function parseTmlToHtml( navajoelement, methodselement, tmlString) {
+function parseTmlToHtml( navajoelement, methodselement) {
     navajoelement.html('')
     methodselement.html('')
     
-    xml = $.parseXML(tmlString),
     $xml = $( xml ),
     $tml = $xml.children('tml');
     
