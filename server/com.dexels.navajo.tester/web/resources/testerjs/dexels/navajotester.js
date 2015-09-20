@@ -43,7 +43,7 @@ function runScript(scriptElement) {
 
     navajoinput = (new XMLSerializer()).serializeToString(xml);
     
-    $.post("/navajo/"+instance , navajoinput, function(xmlobj) {
+    $.post("/testerapi?query=run&service="+script+"&instance="+instance , navajoinput, function(xmlobj) {
         xml = xmlobj;
         $('#scriptcontent').removeClass('prettyprinted');
         var xmltext = (new XMLSerializer()).serializeToString(xmlobj)
