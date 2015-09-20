@@ -392,9 +392,9 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.85'>
+		version='3.0.86'>
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.5.2
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.5.4
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.4.4
 		</bundle>
@@ -427,10 +427,10 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.cluster'
-		version='3.1.19'>
+		version='3.1.20'>
 		<feature version="[3.0.0,4)">navajo.enterprise.core</feature>
 		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/3.5.1</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.3.16
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.3.18
 		</bundle>
 	</feature>
 
