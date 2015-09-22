@@ -645,8 +645,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             message = "Null pointer exception";
 
         }
-        
-        logger.error("Error", t);
+        if (t != null) {
+            logger.error("Generating error message for: ", t);
+        }
         
         try {
             Navajo outMessage = NavajoFactory.getInstance().createNavajo();
