@@ -1,7 +1,7 @@
 package com.dexels.navajo.jsp.proxy;
 
 import java.net.URI;
-import java.util.concurrent.Executors;
+import java.net.URISyntaxException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -26,14 +26,11 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 	private String username;
 	private String password;
 	private String url;
-//	private String tenant;
 
-//	org.eclipse.jetty.servlets.Pro
-
+	private HttpClient httpClient;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-//		config.getServletContext().setAttribute("org.eclipse.jetty.server.Executor", Executors.newCachedThreadPool());
 		super.init(config);
 		this.server = getApplicationAttribute("NavajoServer",config);
 		this.username = getApplicationAttribute("NavajoUser",config);
@@ -48,13 +45,13 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 	    SslContextFactory sslContextFactory = new SslContextFactory();
         HttpClientTransportOverHTTP transport = new HttpClientTransportOverHTTP();
 
-	    HttpClient httpClient = new HttpClient(transport,sslContextFactory);
+	    httpClient = new HttpClient(transport,sslContextFactory);
         transport.setHttpClient(httpClient);
-	    httpClient.setExecutor(Executors.newFixedThreadPool(3));
+//	    httpClient.setExecutor(Executors.newFixedThreadPool(3));
 	    try {
 			httpClient.start();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	    return httpClient;
 	}
@@ -68,6 +65,7 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 
 	@Override
 	protected URI rewriteURI(HttpServletRequest request) {
+//		String proto = request.getProtocol();
 		String query = request.getQueryString();
 		String pathInfo = request.getPathInfo();
 		String construct = getEntityFromServer();
@@ -77,17 +75,24 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 		if(query!=null) {
 			construct = construct+"?"+query;
 		}
-		logger.info("Constructed: "+construct);
+//		logger.info("Constructed: "+construct);
 		if(this.username!=null) {
 			construct = appendParam(construct,"username",username);
 		}
 		if(this.password!=null) {
 			construct = appendParam(construct,"password",password);
 		}
-		return URI.create(construct);
+		URI finalURI = URI.create(construct);
+//		try {
+//			testURL(finalURI);
+//		} catch (IOException e) {
+//			logger.error("Error: ", e);
+//		}
+		
+		return finalURI;
 //		return URI.create("http://www.dexels.com/");
 	}
-
+	
 	private String appendParam(String url, String key, String value) {
 		return url + (url.contains("?")?"&":"?")+key+"="+value;
 	}
@@ -106,12 +111,12 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 		return null;
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws URISyntaxException {
 		EntityProxyServlet eps = new EntityProxyServlet();
-		eps.server="https://knvb-test.sportlink.com/navajo";
+		eps.server="knvb-test.sportlink.com/navajo";
 //		String construct = 
-//		URI u = eps.getEntityFromServer("tralla");
-//		System.err.println("u: "+u);
+		URI u = new URI(eps.getEntityFromServer());
+		System.err.println("u: "+u);
 	}
 	
 	private String getApplicationAttribute(String key,ServletConfig config) {
