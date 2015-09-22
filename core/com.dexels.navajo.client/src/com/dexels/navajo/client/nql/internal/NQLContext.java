@@ -135,7 +135,7 @@ public class NQLContext implements NqlContextApi {
 			return;
 		}
 		if("binary".equals(type)) {
-			writeBinary(callback.getOutputStream(),callback);
+			writeBinary(callback);
 			return;
 		}
 	}
@@ -168,14 +168,13 @@ public class NQLContext implements NqlContextApi {
 		setMimeType("application/json", callback);
 	}
 
-	private void writeBinary(OutputStream outputStream, OutputCallback callback) throws IOException {
+	private void writeBinary(OutputCallback callback) throws IOException {
 		Binary b = (Binary)content;
 		setMimeType( b.getMimeType(),callback);
 		if ( b.getLength() > 0 ) {
 			setContentLength(b.getLength(),callback);
 		}
 		b.write(callback.getOutputStream());
-		outputStream.write(b.getData());
 	}
 
 	private void writeTML(OutputStream outputStream) throws NavajoException, IOException {
