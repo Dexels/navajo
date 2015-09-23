@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -40,6 +41,10 @@ public class SharedStoreSession {
 		for ( SharedStoreSessionEntry s: matches ) {
 			mySharedStore.remove(parentPath, s.getObjectName());
 		}
+	}
+	
+	public void rmOlderThan(Date date) {
+	    mySharedStore.removeOlderThan(parentPath, date);       
 	}
 	
 	public String rmdir(String name, boolean force) throws Exception {

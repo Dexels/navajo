@@ -21,7 +21,7 @@ import com.dexels.navajo.article.ArticleClientException;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.oauth.api.Token;
+import com.dexels.oauth.api.OAuthToken;
 
 public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements ArticleRuntime {
 
@@ -36,7 +36,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	private final static Logger logger = LoggerFactory
 			.getLogger(ServletArticleRuntimeImpl.class);
 	
-	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, String password, String username, File article,String articleName, Map<String, String[]> parameterMap,String instance,Token t) throws IOException {
+	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, String password, String username, File article,String articleName, Map<String, String[]> parameterMap,String instance,OAuthToken t) throws IOException {
 		super(articleName,article,instance,t);
 		this.request = req;
 		this.parameterMap = parameterMap;

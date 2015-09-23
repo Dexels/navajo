@@ -59,11 +59,12 @@ public class ExceptionFilter implements Filter {
 
     private boolean filterCondition(HttpServletRequest request) {
         String userAgent = request.getHeader("user-agent");
+        String json = request.getParameter("errors_in_json");
         if (userAgent == null) {
             return false;
         }
         userAgent = userAgent.toLowerCase();
-        return userAgent.indexOf("msie") != -1 || userAgent.indexOf("trident") != -1;
+        return userAgent.indexOf("msie") != -1 || userAgent.indexOf("trident") != -1 || json != null;
         // return userAgent.indexOf(filterString)!=-1;
     }
 

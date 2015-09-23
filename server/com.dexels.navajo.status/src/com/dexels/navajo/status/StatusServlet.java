@@ -2,6 +2,10 @@ package com.dexels.navajo.status;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.repository.api.ServerStatusChecker;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
@@ -50,7 +55,7 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
 
 
     public void activate() {
-        cache = CacheBuilder.newBuilder().expireAfterWrite(60, TimeUnit.MINUTES).softValues()
+        cache = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).softValues()
                 .build(new CacheLoader<String, Integer>() {
                     public Integer load(String key) {
                         return 0;
@@ -86,6 +91,21 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
             long total = Runtime.getRuntime().totalMemory();
             long free = Runtime.getRuntime().freeMemory();
             res = (total - free) + "/" + max;
+        } else if (requestTpe.equals("users")) {
+            // Check current memory usage.
+            Set<Access> all = new HashSet<Access>(com.dexels.navajo.server.DispatcherFactory.getInstance().getAccessSet());
+            Map<String, Map<String, String>> resultMap = new HashMap<>();
+            
+            for (Access a : all) {
+                Map<String, String> fields = new HashMap<>();
+                fields.put("startTime", a.getCreated().toString());
+                fields.put("runTime",  new Long( System.currentTimeMillis() - a.created.getTime() ).toString());
+                fields.put("rpcName", a.getRpcName());
+                fields.put("rpcUser", a.getRpcUser());
+                fields.put("async", a.getRpcUser());
+                resultMap.put(a.getAccessID(), fields);
+            }
+            res = resultMap.toString();
 
         } else if (requestTpe.equals("requestcount")) {
             Integer navajo = 0;

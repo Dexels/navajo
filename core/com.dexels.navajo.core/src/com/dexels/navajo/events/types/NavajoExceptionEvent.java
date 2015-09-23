@@ -74,4 +74,8 @@ public class NavajoExceptionEvent implements NavajoEvent {
 	public String getUser() {
 		return user;
 	}
+	@Override
+    public boolean isSynchronousEvent() {
+        return false;
+    }
 }

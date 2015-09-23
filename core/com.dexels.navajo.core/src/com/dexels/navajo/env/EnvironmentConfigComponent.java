@@ -19,8 +19,7 @@ public class EnvironmentConfigComponent {
 	private Set<Configuration> ownedConfigurations = new HashSet<Configuration>();
 	private final Set<String> resourcePids = new HashSet<String>();
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(EnvironmentConfigComponent.class);
+	private final static Logger logger = LoggerFactory.getLogger(EnvironmentConfigComponent.class);
 	
 	public EnvironmentConfigComponent() {
 	}
@@ -28,7 +27,7 @@ public class EnvironmentConfigComponent {
 	public void activate() {
 		try {
 			Map<String, String> env = System.getenv();
-			boolean isDev = "true".equals(env.get("DEVELOP_MODE"));
+			boolean isDev = "true".equals(env.get("SHAREDSTORE_DEVELOP_MODE"));
 			Configuration config = null;
 			if (isDev) {
 				config = configAdmin.getConfiguration("navajo.sharedstore.file",null);

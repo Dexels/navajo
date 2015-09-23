@@ -30,6 +30,8 @@ import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.oauth.api.OAuthToken;
+import com.dexels.oauth.api.Scope;
 import com.dexels.oauth.api.Token;
 
 public abstract class BaseRuntimeImpl implements ArticleRuntime {
@@ -50,7 +52,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
     private String url;
 
 	private final Map<String, Object> userAttributes;
-	private final Token token;
+	private final OAuthToken token;
 
 
 	protected BaseRuntimeImpl(String articleName, XMLElement article, Set<String> suppliedScopes, String instance) {
@@ -63,16 +65,21 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 		this.token = null;
 	}
 
-	protected BaseRuntimeImpl(String articleName, File articleFile,String instance, Token token)
+	protected BaseRuntimeImpl(String articleName, File articleFile,String instance, OAuthToken token)
 			throws IOException {
 		article = new CaseSensitiveXMLElement();
 		rootNode = mapper.createObjectNode();
 		this.token = token;
+		
+		this.suppliedScopes = new HashSet<String>();
 		if(token!=null) {
-			this.suppliedScopes = this.token.scopes();
-			this.userAttributes = this.token.getUserAttributes();
+			for (Scope scope : this.token.getScopes()) {
+				this.suppliedScopes.add(scope.getId());
+			}
+			
+			this.userAttributes = this.token.getAttributes();
 		} else {
-			this.suppliedScopes = new HashSet<String>();
+			
 			this.userAttributes = new HashMap<String, Object>();
 
 		}

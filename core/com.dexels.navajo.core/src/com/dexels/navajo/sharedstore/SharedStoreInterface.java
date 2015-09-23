@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.Date;
 
 
 /**
@@ -41,10 +42,7 @@ public interface SharedStoreInterface {
 	public static final int READ_WRITE_LOCK = 0;
 	public static final int WRITE_LOCK = 1;
 
-	public static final String TENANT_PREFIX = "$__";
-	public static final String TENANT_PREFIX_ESC = "\\$__";
-	public static final String TENANT_POSTFIX = "__$";
-	public static final String TENANT_POSTFIX_ESC = "__\\$";
+
 	/**
 	 * Remove an object with the specified name of the specified parent
 	 * 
@@ -53,6 +51,8 @@ public interface SharedStoreInterface {
 	 */
 	public void remove(String parent, String name);
 	
+    public void removeOlderThan(String parentPath, Date date);
+
 	   
     /**
      * Remove an object with the specified name of the specified parent
@@ -259,4 +259,25 @@ public interface SharedStoreInterface {
 	 * @return
 	 */
 	public long getNextAtomicLong(String id);
+	
+	/**
+     * Returns a tenant-specific name for <code>rawname</code>. If rawname is already
+     * tenant-specific, nothing is added. Otherwise, if tenant != null, a tenant-specific
+     * prefix is added to identify this object.
+     */
+	public String getTenantSpecificName(String tenant, String rawname);
+	
+	
+	/**
+	 * Returns the name of the SharedStore object. If the name is tenant-specific, 
+	 * this is removed from the result;
+	 */
+	public String getName(String fullname);
+	
+	/**
+     * Returns the tenant of the SharedStore object. Returns null if the name is not tenant-specific
+     */
+    public String getTenant(String fullname);
+
+
 }

@@ -47,4 +47,8 @@ public class NavajoCompileScriptEvent implements NavajoEvent {
 		}
 		return input;
 	}
+	@Override
+    public boolean isSynchronousEvent() {
+        return false;
+    }
 }

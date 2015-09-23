@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Core
 Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.9.1.qualifier
+Bundle-Version: 3.10.7.qualifier
 Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
 Navajo-Name: Core
 Eclipse-ExtensibleAPI: true
@@ -142,10 +142,6 @@ Import-Package: com.dexels.navajo.authentication.api,
  navajo,
  org.apache.commons.io;version="2.4.0",
  org.apache.commons.io.filefilter;version="2.4.0",
- org.codehaus.jackson.annotate;version="1.9.11",
- org.codehaus.jackson.map;version="1.9.11",
- org.codehaus.jackson.map.type;version="1.9.11",
- org.codehaus.jackson.type;version="1.9.11",
  org.junit;version="[4.0.0,5.0.0)";resolution:=optional,
  org.junit.rules;version="[4.0.0,5.0.0)";resolution:=optional,
  org.junit.runner;version="[4.0.0,5.0.0)";resolution:=optional,
@@ -166,3 +162,4 @@ Service-Component: OSGI-INF/simpleRepository.xml, OSGI-INF/repositoryFactory.xml
  OSGI-INF/sharedMemoryStore.xml,OSGI-INF/propertyFileDescriptionProvider.xml,OSGI-INF/navajo.repository.context.xml,
  OSGI-INF/navajoGlobalManager.xml,OSGI-INF/navajo.local.client.xml,OSGI-INF/dependencyanalyzer.xml,
  OSGI-INF/navajo.wrap.collector.xml
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

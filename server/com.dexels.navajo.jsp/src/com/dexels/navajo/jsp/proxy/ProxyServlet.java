@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -20,8 +22,10 @@ import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 import com.jcraft.jzlib.DeflaterOutputStream;
 import com.jcraft.jzlib.InflaterInputStream;
 
@@ -138,8 +142,7 @@ public class ProxyServlet extends HttpServlet {
 			}
 		}
 	}
-	
-	
+
 	private Navajo doProxy(Navajo in) throws ClientException {
 		Header h = in.getHeader();
 		if(h==null) {
@@ -183,6 +186,40 @@ public class ProxyServlet extends HttpServlet {
 		}
 		myClient.setServerUrl(server);		
 		myClient.setRetryAttempts(0);
+	}
+	
+	// We do NOT support array messages here. And property types are always String
+	private void addProperty(Navajo in, String path, String value){
+		StringTokenizer tok = new StringTokenizer(path, "/");
+		int count  = tok.countTokens();
+		int current = 1;
+		Message currentMessage = null;
+		
+		while(tok.hasMoreElements()){
+			String name = tok.nextToken();
+			
+			if(current == count){				// Property
+				Property p = NavajoFactory.getInstance().createProperty(in, name, Property.STRING_PROPERTY, null, 128, "", Property.DIR_IN);
+				p.setAnyValue(value);
+				currentMessage.addProperty(p);
+			} else {							// Message
+				if(currentMessage != null){ 	// Look in message
+					Message newMessage = currentMessage.getMessage(name);
+					if(newMessage == null){
+						newMessage = NavajoFactory.getInstance().createMessage(in, name);
+						currentMessage.addMessage(newMessage);
+					}
+					currentMessage = newMessage;
+				} else {						// Look in Navajo
+					currentMessage = in.getMessage(name);
+					if(currentMessage == null){
+						currentMessage = NavajoFactory.getInstance().createMessage(in, name);
+						in.addMessage(currentMessage);
+					} 
+				}
+			}
+			current++;
+		}
 	}
 
 	
