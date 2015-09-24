@@ -128,7 +128,7 @@ public class VaadinTipiContext extends TipiContext {
 	}
 	
 	@Override
-	public void showWarning(String text, String title, TipiComponent tc){
+	public void showWarning(String title, String text, String errormessage, TipiComponent tc){
 		Notification not = new Notification("",text, Notification.TYPE_WARNING_MESSAGE);
 		not.setPosition(7);
 		not.setDelayMsec(1500);

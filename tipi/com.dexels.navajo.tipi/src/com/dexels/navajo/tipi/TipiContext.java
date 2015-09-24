@@ -1704,7 +1704,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             }
             String errorMessage = eHandler.hasErrors(reply);
             if (errorMessage != null) {
-                logger.error("Errors detected. ");
+                logger.warn("Errors in reply detected while loading navajo: {}", method);
                 boolean hasUserDefinedErrorHandler = false;
                 List<TipiDataComponent> tipis = getTipiInstancesByService(method);
                 if (tipis != null) {
@@ -1723,8 +1723,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                     }
                 }
                 if (!hasUserDefinedErrorHandler) {
-                    logger.error("Delivering usererror: \n" + errorMessage);
-                    showWarning(errorMessage, "Invoerfout", event == null ? null : event.getComponent());
+                    showWarning(eHandler.getGenericErrorTitle(), eHandler.getGenericErrorDescription(), errorMessage, event == null ? null : event.getComponent());
+                } else {
+                    logger.info("Not delivering error since one or more components have their own errorhandler defined");
                 }
                 if (breakOnError) {
                     throw new TipiBreakException(TipiBreakException.WEBSERVICE_BREAK);
@@ -1734,10 +1735,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             try {
                 loadTipiMethod(reply, method);
             } catch (Exception ex) {
-                logger.error("Error: ", ex);
+                logger.error("Error in loadTipiMethod: ", ex);
             }
         } else {
-            logger.error("Trying to load null navajo.");
+            logger.error("Refusing to load null navajo for {}", method);
         }
 
     }
@@ -2330,12 +2331,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
     /**
      * Shows an warning popup, can be overridden separately
-     * 
-     * @param text
      * @param title
+     * @param text
+     * @param errormessage TODO
      * @param tc
      */
-    public void showWarning(String text, String title, final TipiComponent tc) {
+    public void showWarning(String title, String text, String errormessage, final TipiComponent tc) {
         showInfo(text, title, tc);
     }
 
@@ -2733,21 +2734,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         }
     }
 
-    // public void continueActions(TipiEvent te, TipiComponent comp,
-    // TipiExecutable executableParent, List<TipiExecutable> exe)
-    // throws TipiBreakException, TipiSuspendException {
-    // try {
-    // int start = executableParent.getExecutionIndex();
-    // for (int i = start; i<exe.size(); i++) {
-    // executableParent.setExecutionIndex(i);
-    // TipiExecutable current = exe.get(i);
-    // current.continueAction(te, executableParent, i);
-    // i++;
-    // }
-    // } catch (TipiException ex) {
-    // logger.error("Error: ",ex);
-    // }
-    // }
+    
+
     /**
      * Parses an connector instance
      * 

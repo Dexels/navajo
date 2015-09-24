@@ -37,14 +37,14 @@ import com.dexels.navajo.tipi.TipiErrorHandler;
  * @version 1.0
  */
 public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
-
+    private final static Logger logger = LoggerFactory.getLogger(BaseTipiErrorHandler.class);
+    private static final String ERROR_MESSAGE = "Error_click_details";
+    private static final String ERROR_TITLE = "Error_click_details_title";
 	private static final long serialVersionUID = -2568512270962339576L;
+	
 	private String errorMessage;
 	private TipiContext context;
 	private transient ResourceBundle errorMessageBundle;
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(BaseTipiErrorHandler.class);
 	
 	public BaseTipiErrorHandler() {
 		// initResource();
@@ -70,8 +70,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 					// String expression =
 					// current.getProperty("FailedExpression").getValue();
 					String id = current.getProperty("Id").getValue();
-					errorMessage = errorMessage
-							+ getConditionErrorDescription(id, current) + "\n";
+					errorMessage = errorMessage + getConditionErrorDescription(id, current) + "\n";
 					try {
 						conditions.write(System.err);
 					} catch (NavajoException e) {
@@ -94,6 +93,40 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 			return null;
 		}
 	}
+	
+	public String getGenericErrorDescription() {
+        // String description = id;
+        try {
+            if(errorMessageBundle==null) {
+                logger.error("Serious problem in Error handler.");
+            } else {
+                String found = errorMessageBundle.getString(ERROR_MESSAGE);
+                if (found != null) {
+                    return found;
+                }
+            }
+        } catch (MissingResourceException ex) {
+            logger.warn("Cannot find reference for  {}", ERROR_MESSAGE);
+        }
+        return "An error occured. ";
+    }
+	
+	public String getGenericErrorTitle() {
+        // String description = id;
+        try {
+            if(errorMessageBundle==null) {
+                logger.error("Serious problem in Error handler.");
+            } else {
+                String found = errorMessageBundle.getString(ERROR_TITLE);
+                if (found != null) {
+                    return found;
+                }
+            }
+        } catch (MissingResourceException ex) {
+            logger.warn("Cannot find reference for  {}", ERROR_TITLE);
+        }
+        return "Error: ";
+    }
 
 	private String getConditionErrorDescription(String id, Message current) {
 		// String description = id;
@@ -107,9 +140,8 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 				}
 			}
 		} catch (MissingResourceException ex) {
-			System.err
-			.println("----> Cannot find reference for condition errorId: "
-					+ id);
+			logger.warn("Cannot find reference for condition errorId: {}", id);
+			
 		}
 		Property description = current.getProperty("Description");
 		if (description != null) {

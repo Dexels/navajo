@@ -28,4 +28,10 @@ public interface TipiErrorHandler {
 	public void setContext(TipiContext c);
 
 	public TipiContext getContext();
+	
+    public String getGenericErrorTitle();
+
+	public String getGenericErrorDescription();
+
+
 }

@@ -451,6 +451,7 @@ public class SwingTipiContext extends TipiContext {
 
 	private void showInfo(final String text, final String title,
 			final int messageType, final TipiComponent tc) {
+	    
 		TipiMessageDialog info = new TipiMessageDialog(tc);
 		info.initialize(this);
 		info.setValue("text", text);
@@ -463,20 +464,34 @@ public class SwingTipiContext extends TipiContext {
 
 	@Override
 	public void showInfo(final String text, final String title, final TipiComponent tc) {
-		logger.info("ShowInfo: "+text+" title: "+title);
+		logger.debug("ShowInfo: "+text+" title: "+title);
 		showInfo(text, title, JOptionPane.INFORMATION_MESSAGE, tc);
 	}
 
 	@Override
 	public void showError(final String text, final String title, final TipiComponent tc) {
-		logger.error("ShowError: "+text+" title: "+title);
+		logger.debug("ShowError: "+text+" title: "+title);
 		showInfo(text, title, JOptionPane.ERROR_MESSAGE, tc);
 	}
 
 	@Override
-	public void showWarning(final String text, final String title, final TipiComponent tc) {
-		logger.warn("ShowWarning: "+text+" title: "+title);
-		showInfo(text, title, JOptionPane.WARNING_MESSAGE, tc);
+	public void showWarning(final String title, final String text, final String errormessage, final TipiComponent tc) {
+		logger.debug("ShowWarning: "+text+" title: "+title);
+		//showInfo(text, title, JOptionPane.WARNING_MESSAGE, tc);
+		
+        
+         if (!SwingUtilities.isEventDispatchThread()) {
+             SwingUtilities.invokeLater(new Runnable() {
+                  public void run() {
+                      SwingExceptionDialog dialog =  new SwingExceptionDialog((JFrame) getTopLevel(), title, text, errormessage);
+                      dialog.display();
+                  }
+             });
+         } else {
+             SwingExceptionDialog dialog =  new SwingExceptionDialog((JFrame) getTopLevel(), title, text, errormessage);
+             dialog.display();
+         }
+		
 	}
 
 	// TODO refactor into more 
