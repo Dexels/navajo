@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.mapping.AsyncStore;
-import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 
@@ -47,6 +46,7 @@ public class NavajoShutdown implements Runnable{
     public void run() {
         NavajoShutdown.shutdownInProgress = true;
     
+        logger.warn("Navajo shutdown scheduled!");
         boolean expired = false;
         startedShutdownAt = new Date().getTime();
         // At this point we can assume no new requests will be coming in
@@ -74,6 +74,7 @@ public class NavajoShutdown implements Runnable{
 
     
     private void startSystemShutdown()  {
+        logger.warn("Actual shutdown imminent");
         boolean tribeSafe = tribeManagerInterface.tribeIsSafe() && tribeManagerInterface.getMyMembership().isSafe();
         
         

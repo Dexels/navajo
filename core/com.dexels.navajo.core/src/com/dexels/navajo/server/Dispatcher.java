@@ -994,6 +994,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 /**
                  * Phase VIa: Check if scheduled webservice
                  */
+                Thread.sleep(600000);
                 if (inMessage.getHeader().getSchedule() != null && !inMessage.getHeader().getSchedule().equals("")) {
 
                     if (validTimeSpecification(inMessage.getHeader().getSchedule())) {

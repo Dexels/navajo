@@ -1,6 +1,7 @@
 package com.dexels.navajo.status;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -10,10 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
-import com.dexels.navajo.server.enterprise.workflow.WorkFlowManagerInterface;
 
 public class ShutdownServlet extends HttpServlet {
     private static final long serialVersionUID = -6253074545952495770L;
@@ -23,14 +22,23 @@ public class ShutdownServlet extends HttpServlet {
     private BundleContext bundleContext;
     private String secret = null;
 
-    public void Activate(BundleContext bc, Map<String, Object> settings) {
+    public void activate(BundleContext bc, Map<String, Object> settings) {
         this.bundleContext = bc;
         this.secret = (String) settings.get("secret");
     }
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        NavajoShutdown shutter = new NavajoShutdown(bundleContext,  dispatcher, tribeManager);
-        new Thread(shutter).start();
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String check = req.getParameter("check");
+        String res = "failed";
+        if (secret.equals(check)) {
+            NavajoShutdown shutter = new NavajoShutdown(bundleContext,  dispatcher, tribeManager);
+            new Thread(shutter).start();
+            res = "ok";
+        }
+        resp.setContentType("text/plain");
+        PrintWriter writer = resp.getWriter();
+        writer.write(res);
+        writer.close();
     }
 
     public void setDispatcherInterface(DispatcherInterface dispatcherInterface) {
