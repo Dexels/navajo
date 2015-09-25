@@ -266,7 +266,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 
     @SuppressWarnings("unchecked")
-    private void initializeContext(TipiApplicationInstance myApplication, List<TipiExtension> preload,
+	private void initializeContext(TipiApplicationInstance myApplication,
+			List<TipiExtension> preload,
             TipiContext parent) {
 
         myParentContext = parent;
@@ -547,6 +548,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             value = sysVal;
         } catch (SecurityException e) {
         }
+        if (value != null) {
+            return value;
+        }
+        value = System.getenv(name);
         return value;
 
     }
