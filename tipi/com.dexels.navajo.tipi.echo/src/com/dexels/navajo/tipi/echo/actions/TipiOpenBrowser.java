@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.actions;
+package com.dexels.navajo.tipi.echo.actions;
 
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.app.Command;

@@ -1,6 +1,7 @@
-package com.dexels.navajo.tipi.actions;
+package com.dexels.navajo.tipi.echo.actions;
 
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.tipi.components.echoimpl.impl.TipiOptionPane;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -22,17 +23,19 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 
-public class TipiEchoShowInfo extends TipiAction {
+public class TipiEchoShowQuestion extends TipiAction {
 
-	private static final long serialVersionUID = 6946313514268068467L;
+	private static final long serialVersionUID = 3346311371242713545L;
 
-	public TipiEchoShowInfo() {
+	public TipiEchoShowQuestion() {
     }
 
     protected void execute(TipiEvent e) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
         Operand text = getEvaluatedParameter("text", e);
-        myContext.showInfo(""+text.value, "Info", e.getComponent());
-
+        // TipiScreen s = (TipiScreen) myContext.getDefaultTopLevel();
+        // Window w = (Window) s.getTopLevel();
+        // ContentPane old = w.getContent();
+        TipiOptionPane.showQuestion(myContext, (String) text.value, "Info:", "Yes", "No");
     }
 
 }

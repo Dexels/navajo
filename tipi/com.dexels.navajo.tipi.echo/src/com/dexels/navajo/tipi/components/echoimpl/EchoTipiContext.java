@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,6 +20,8 @@ import nextapp.echo2.webrender.WebRenderServlet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
@@ -45,8 +48,8 @@ public class EchoTipiContext extends TipiContext {
     private boolean useAsyncThread = false;
     
     private final TipiEchoInstance myInstance;
-    public EchoTipiContext(TipiEchoInstance t, EchoTipiContext parentContext) {
-     	super(t, parentContext);
+    public EchoTipiContext(TipiEchoInstance t, EchoTipiContext parentContext, List<TipiExtension> extensionList) {
+     	super(t, extensionList);
     	myInstance = t;
 		ContainerContext context =(ContainerContext) t.getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
     	Map parameterMap =  context.getInitialRequestParameterMap();
@@ -175,19 +178,41 @@ public class EchoTipiContext extends TipiContext {
 //        return myServerContext;
 //    }
 
+    // not used now
     public void doExit() {
-    	shutdown();
     	ApplicationInstance ai = ApplicationInstance.getActive();
+    	shutdown();
+    	logger.info("Shutdown complete");
          if (ai instanceof TipiEchoInstance) {
              try {
 				((TipiEchoInstance)ai).exitToUrl();
 			} catch (MalformedURLException e) {
 				logger.error("Error: ",e);
 			}
- 		} 
+ 	
+         } else {
+        	 logger.warn("Instance inactive");
          }
-    
+         logger.info("redirect done?");
 
+    }
+    
+    public void exit() {
+    	ApplicationInstance ai = ApplicationInstance.getActive();
+    	shutdown();
+    	logger.info("Shutdown complete");
+         if (ai instanceof TipiEchoInstance) {
+             try {
+				((TipiEchoInstance)ai).exitToUrl();
+			} catch (MalformedURLException e) {
+				logger.error("Error: ",e);
+			}
+ 	
+         } else {
+        	 logger.warn("Instance inactive");
+         }
+         logger.info("redirect done?");
+    }
 
     public URL getDynamicResourceBaseUrl(String path) throws MalformedURLException {
         Connection con = WebRenderServlet.getActiveConnection();
