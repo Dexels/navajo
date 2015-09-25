@@ -166,4 +166,9 @@ public interface TribeManagerInterface {
 	List<TribalNumber> getDistributedCounters();
     
 	public boolean isActive();
+	
+	/** 
+	 * Indicates whether all data is properly migrated and backup up amongst the members
+	 */
+	public boolean tribeIsSafe();
 }

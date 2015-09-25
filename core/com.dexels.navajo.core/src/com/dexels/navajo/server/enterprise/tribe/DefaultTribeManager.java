@@ -248,4 +248,9 @@ public class DefaultTribeManager implements TribeManagerInterface {
         return new SimpleTribeMember();
     }
 
+    @Override
+    public boolean tribeIsSafe() {
+        return true;
+    }
+
 }

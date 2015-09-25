@@ -59,4 +59,10 @@ public class SimpleTribeMember implements TribeMemberInterface {
 		return null;
 	}
 
+    @Override
+    public boolean isSafe() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
 }
