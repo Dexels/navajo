@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
-  <tipiaction name="showEchoInfo"  class="TipiEchoShowInfo" package="com.dexels.navajo.tipi.actions">
+  <tipiaction name="showEchoInfo"  class="TipiEchoShowInfo" package="com.dexels.navajo.tipi.echo.actions">
     <param name="text" type="string"/>
   </tipiaction>
 
-  <tipiaction name="showEchoQuestion"  class="TipiEchoShowQuestion" package="com.dexels.navajo.tipi.actions">
+  <tipiaction name="showEchoQuestion"  class="TipiEchoShowQuestion" package="com.dexels.navajo.tipi.echo.actions">
     <param name="text" type="string"/>
   </tipiaction>
 
-  <tipiaction name="showInfo"  class="TipiEchoShowInfo" package="com.dexels.navajo.tipi.actions">
+  <tipiaction name="showInfo"  class="TipiEchoShowInfo" package="com.dexels.navajo.tipi.echo.actions">
     <param name="text" type="string"/>
   </tipiaction>
 
     
-  <tipiaction name="showQuestion"  class="TipiEchoShowQuestion" package="com.dexels.navajo.tipi.actions">
+  <tipiaction name="showQuestion"  class="TipiEchoShowQuestion" package="com.dexels.navajo.tipi.echo.actions">
     <param name="text" type="string"/>
   </tipiaction>
     <tipiaction name="openBrowser" class="TipiOpenBrowser"
-        package="com.dexels.navajo.tipi.actions">
+        package="com.dexels.navajo.tipi.echo.actions">
         <param name="url" type="string"/>
         <param name="newWindow" type="boolean"/>
     </tipiaction>
   <!-- NOT IMPLEMENTED YET, USES SHOWQUESTION> -->
     <tipiaction name="askValue" class="TipiEchoShowQuestion"
-        package="com.dexels.navajo.tipi.actions">
+        package="com.dexels.navajo.tipi.echo.actions">
         <param name="text" type="string"/>
         <param name="value" type="string"/>
         <param name="initialValue" type="string"/>
@@ -40,7 +40,7 @@
     </tipiaction>
 -->
 
-  <tipiaction name="exitsession"  class="TipiEchoExit" package="com.dexels.navajo.tipi.actions">
+  <tipiaction name="exitsession"  class="TipiEchoExit" package="com.dexels.navajo.tipi.echo.actions">
    <param name="destination" type="string"/>
  </tipiaction>
 
@@ -66,14 +66,14 @@
       <methods />
    </tipiclass>
 
-    <tipiaction name="exit"  class="TipiEchoExit" package="com.dexels.navajo.tipi.actions">
+    <tipiaction name="exit"  class="TipiEchoExit" package="com.dexels.navajo.tipi.echo.actions">
         <!--<param name="destination" type="string"/>-->
     </tipiaction>
     
  <!--  DEPRECATED!!!! -->
 
   
-  <tipiaction name="serveBinary"  class="TipiServeBinary" package="com.dexels.navajo.tipi.actions">
+  <tipiaction name="serveBinary"  class="TipiServeBinary" package="com.dexels.navajo.tipi.echo.actions">
    <description>Either serves a binary directly (by writing it in a local file...) (This is the old school way), or by supplying an expression yielding a binary. This expression (a string) should be quoted. It will be encoded in a URL, which will evaluate this expression. 
    Make sure this expression is context insensitive.
     </description>
@@ -83,7 +83,7 @@
    
   </tipiaction>
   
-    <tipiaction name="openBinary"  class="TipiServeBinary" package="com.dexels.navajo.tipi.actions">
+    <tipiaction name="openBinary"  class="TipiServeBinary" package="com.dexels.navajo.tipi.echo.actions">
    <description>Either serves a binary directly (by writing it in a local file...) (This is the old school way), or by supplying an expression yielding a binary. This expression (a string) should be quoted. It will be encoded in a URL, which will evaluate this expression. 
    Make sure this expression is context insensitive.
     </description>

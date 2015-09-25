@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl.embed;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -23,8 +24,7 @@ public class EchoEmbeddedContext extends EchoTipiContext {
 	TipiEchoStandaloneToplevel top = new TipiEchoStandaloneToplevel();
 	
 	public EchoEmbeddedContext(TipiEchoInstance instance, EchoTipiContext parentContext) {
-		super(instance,parentContext);
-
+		super(instance,parentContext,Collections.EMPTY_LIST);
 		setDefaultTopLevel(top);
 		getDefaultTopLevel().setContext(this);
 

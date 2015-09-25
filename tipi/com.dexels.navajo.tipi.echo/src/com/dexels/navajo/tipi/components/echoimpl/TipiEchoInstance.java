@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -16,9 +17,6 @@ import java.util.StringTokenizer;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import navajo.ExtensionDefinition;
 import nextapp.echo2.app.ApplicationInstance;
@@ -29,7 +27,12 @@ import nextapp.echo2.webcontainer.ContainerContext;
 import nextapp.echo2.webcontainer.command.BrowserRedirectCommand;
 import nextapp.echo2.webrender.Connection;
 import nextapp.echo2.webrender.WebRenderServlet;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import tipi.TipiApplicationInstance;
+import tipi.TipiExtension;
 import tipiecho.TipiEchoExtension;
 
 import com.dexels.navajo.echoclient.components.Styles;
@@ -37,6 +40,7 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiContextListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.connectors.TipiConnector;
+import com.dexels.navajo.tipi.echo.functions.EchoFunctionDefinition;
 import com.dexels.navajo.tipi.locale.LocaleListener;
 
 public class TipiEchoInstance extends ApplicationInstance implements TipiApplicationInstance {
@@ -64,6 +68,8 @@ private String language;
 
 private String region;
 
+private List<TipiExtension> extensionList = null;
+
 	public TipiEchoInstance(ServletConfig sc, ServletContext c) throws Exception {
 		myServletConfig = sc;
 		myServletContext = c;
@@ -74,27 +80,63 @@ private String region;
 		Connection con = WebRenderServlet.getActiveConnection();
 		HttpServletRequest req = con.getRequest();
 		String url = req.getRequestURL().toString();
-
-		URL u = new URL(url);
-		String contextname = con.getRequest().getContextPath();
-		String host = con.getServlet().getInitParameter("host");
-
-		if(host==null) {
-			host = u.getHost();
+		Enumeration<String> en = req.getHeaderNames();
+		while (en.hasMoreElements()) {
+			String header = en.nextElement();
+			System.err.println("HEADER: "+header+" : "+req.getHeader(header));
 		}
+		;
+		
+//		URL u = new URL(url);
+//		String contextname = con.getRequest().getContextPath();
+//		String host = con.getServlet().getInitParameter("host");
+//
+//		if(host==null) {
+//			host = u.getHost();
+//		}
+//
+//		URL rootURL = null;
+//		rootURL = new URL("http://docker.local:8080/logout?destination=Login");
+//		rootURL = new URL(u.getProtocol(),host, u.getPort(), contextname + "/logout?destination=" + u.getPath());
 
-		URL rootURL = null;
-		rootURL = new URL(u.getProtocol(),host, u.getPort(), contextname + "/logout?destination=" + u.getPath());
-		return rootURL;
-
+		return extractURL(req,"/logout");
 	}
 
+	private URL extractURL(HttpServletRequest request,String logoutPath) throws MalformedURLException {
+		URL actual = new URL( request.getRequestURL().toString());
+		String host = request.getHeader("x-forwarded-host");
+		if(host==null) {
+			host = actual.getHost();
+		}
+		String proto = request.getHeader("x-forwarded-proto");
+		if(proto==null) {
+			proto = actual.getProtocol();
+		}
+		String url = request.getHeader("x-forwarded-url");
+		if(url==null) {
+			url = actual.getPath();
+		}
+		if(logoutPath!=null) {
+			url = logoutPath;
+		}
+		
+		
+		if(proto==null) {
+			proto = "http";
+		}
+		logger.info("Extracting URL. Proto: "+proto+" : "+host+" : "+url);
+
+		return new URL(proto,host,url);
+	}
+	
 	public void exitToUrl() throws MalformedURLException {
-		enqueueCommand(new BrowserRedirectCommand(getLogoutUrl().toString()));
-//		ContainerContext containerContext = (ContainerContext) getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
+		String logout = getLogoutUrl().toString();
+		logger.info("Exiting to URL: "+logout);
+		enqueueCommand(new BrowserRedirectCommand(logout));
 	}
 
 	public final void startup() throws IOException {
+			this.extensionList  = TipiEchoExtension.getInstance().getTipiExtensionRegistry().getExtensionList();
 		setCurrentContext(createContext());
 	}
 
@@ -196,16 +238,20 @@ private String region;
 		logger.info("REAL PATH: " + myServletContext.getRealPath("/"));
 		
 		// Title.Sub
-		EchoTipiContext newContext = new EchoTipiContext(this,null);
+		logger.info("Extension list: "+this.extensionList);
+		EchoTipiContext newContext = new EchoTipiContext(this,null,this.extensionList);
 		newContext.setDefaultConnector(defaultConnector);
 		ServletContextResourceLoader servletContextTipiLoader = new ServletContextResourceLoader(myServletContext,"tipi");
 		newContext.setTipiResourceLoader(servletContextTipiLoader);
 		ServletContextResourceLoader servletContextResourceLoader = new ServletContextResourceLoader(myServletContext,"resource");
 		newContext.setGenericResourceLoader(servletContextResourceLoader);
+		
 	//	context.setResourceBaseDirectory(new File(myServletContext.getRealPath("/") + "resource/tipi/"));
 		
 		TipiEchoExtension ed = new TipiEchoExtension();
 		ed.initialize(newContext);
+
+		EchoFunctionDefinition efd = new EchoFunctionDefinition();
 		
 		getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
 		TipiScreen es = new TipiScreen();

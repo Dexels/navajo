@@ -1,4 +1,4 @@
-package com.dexels.navajo.functions;
+package com.dexels.navajo.tipi.echo.functions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

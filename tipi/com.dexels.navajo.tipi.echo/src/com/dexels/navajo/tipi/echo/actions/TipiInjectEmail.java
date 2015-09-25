@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.actions;
+package com.dexels.navajo.tipi.echo.actions;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

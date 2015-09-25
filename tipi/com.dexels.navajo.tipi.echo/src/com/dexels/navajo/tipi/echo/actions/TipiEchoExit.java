@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.actions;
+package com.dexels.navajo.tipi.echo.actions;
 
 import com.dexels.navajo.tipi.components.echoimpl.EchoTipiContext;
 import com.dexels.navajo.tipi.internal.TipiAction;
