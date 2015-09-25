@@ -645,6 +645,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             message = "Null pointer exception";
 
         }
+        if (t != null) {
+            logger.error("Generating error message for: ", t);
+        }
+        
         try {
             Navajo outMessage = NavajoFactory.getInstance().createNavajo();
 
@@ -990,6 +994,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 /**
                  * Phase VIa: Check if scheduled webservice
                  */
+
                 if (inMessage.getHeader().getSchedule() != null && !inMessage.getHeader().getSchedule().equals("")) {
 
                     if (validTimeSpecification(inMessage.getHeader().getSchedule())) {

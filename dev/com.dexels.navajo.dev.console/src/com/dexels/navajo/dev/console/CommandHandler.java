@@ -15,8 +15,8 @@ import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.script.api.LocalClient;
 
 public class CommandHandler {
-	private final static Logger logger = LoggerFactory
-			.getLogger(CommandHandler.class);
+	private final static Logger logger = LoggerFactory .getLogger(CommandHandler.class);
+	
 	private BundleCreator bundleCreator = null;
 	protected final Collection<ServiceRegistration<?>> registeredCommands = new ArrayList<ServiceRegistration<?>>();
 	protected BundleContext bundleContext;
@@ -141,12 +141,7 @@ public class CommandHandler {
 		
 		HelpCommand help = new HelpCommand(this);
 		registerCommand(help, "help");
-		
-		ListenerStore_getServiceListeners getservices = new ListenerStore_getServiceListeners();
-        registerCommand(getservices, "getlisteners");
-        
-        ListenerStore_isRegisteredService isregistered = new ListenerStore_isRegisteredService();
-        registerCommand(isregistered, "isregistered");
+
 		
 	}
 

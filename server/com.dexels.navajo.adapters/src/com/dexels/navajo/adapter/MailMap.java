@@ -354,6 +354,21 @@ public class MailMap implements MailMapInterface, Mappable,
 		return smtpUser;
 	}
 
+	public Integer getPort() {
+		if(port!=null && port>0) {
+			return port;
+		}
+		Property mailPortProperty = myNavajo.getProperty("__globals__/MailPort");
+		if(mailPortProperty!=null) {
+			try {
+				return Integer.parseInt(mailPortProperty.getValue());
+			} catch (NumberFormatException e) {
+				logger.error("Can not parse mail port value: "+mailPortProperty.getValue(), e);
+			}
+		}
+		return port;
+	}
+	
 	public void setSmtpUser(String smtpUser) {
 		this.smtpUser = smtpUser;
 	}
@@ -600,9 +615,7 @@ public class MailMap implements MailMapInterface, Mappable,
 		return queuedSend;
 	}
 
-	public Integer getPort() {
-		return port;
-	}
+
 
 	public void setPort(Integer port) {
 		this.port = port;
