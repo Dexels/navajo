@@ -58,12 +58,16 @@ public class NavajoShutdown implements Runnable {
             if (timeout > 0) {
                 expired = (new Date().getTime() - startedShutdownAt) > (timeout * 1000);
             }
+            
+            if (expired) {
+                logger.warn("Shutdown timeout of {}s expired - commencing shutdown", timeout);
+            }
 
             if (users + async == 0 || expired) {
                 startSystemShutdown();
                 return;
             }
-            logger.info("{} users remaining...", users + async);
+            logger.info("{} users and {} async remaining...", users , async);
 
             try {
                 Thread.sleep(10000);
