@@ -24,8 +24,8 @@
 <repository location="http://repo.dexels.com/eclipse/jetty8"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.65.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.65"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.67.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.67"/>
 </location>
 </locations>
 <includeBundles>
