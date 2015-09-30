@@ -81,23 +81,30 @@ public class NavajoShutdown implements Runnable {
 
     private void startSystemShutdown() {
         logger.warn("Actual shutdown imminent");
-        boolean tribeSafe = tribeManagerInterface.tribeIsSafe() && tribeManagerInterface.getMyMembership().isSafe();
+        try { 
+            boolean tribeSafe = tribeManagerInterface.tribeIsSafe() && tribeManagerInterface.getMyMembership().isSafe();
 
-        while (!tribeSafe && shutdownInProgress) {
-            logger.info("Tribe is not safe! Going to wait until tribe says we are safe. TribeSafe: {} memberSafe: {} ",
-                    tribeManagerInterface.tribeIsSafe(), tribeManagerInterface.getMyMembership().isSafe());
-            
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                logger.warn("Interrupted exception received while waiting on Tribe.isSafe! Going to cancel shutdown");
-                NavajoShutdown.shutdownInProgress = false;
+            while (!tribeSafe && shutdownInProgress) {
+                logger.warn("Tribe is not safe! Going to wait until tribe says we are safe. TribeSafe: {} memberSafe: {} ",
+                        tribeManagerInterface.tribeIsSafe(), tribeManagerInterface.getMyMembership().isSafe());
+                
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    logger.warn("Interrupted exception received while waiting on Tribe.isSafe! Going to cancel shutdown");
+                    NavajoShutdown.shutdownInProgress = false;
+                }
+                tribeSafe = tribeManagerInterface.tribeIsSafe();
             }
-            tribeSafe = tribeManagerInterface.tribeIsSafe();
+        } catch (Exception e) {
+            logger.error("Exception while checking if Tribe is safe - cancelling shutdown ", e);
+            NavajoShutdown.shutdownInProgress = false;
+            return;
         }
+     
 
         // Last chance to stop
-        if (!shutdownInProgress) {
+        if (!NavajoShutdown.shutdownInProgress) {
             logger.warn("Shutdown cancelled!");
             return;
         }
