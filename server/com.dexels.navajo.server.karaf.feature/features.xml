@@ -260,9 +260,9 @@
 			<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.1.0</bundle> -->
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.status' version='1.0.9'>
+	<feature resolver="(obr)" name='navajo.status' version='1.0.10'>
 		<bundle dependency='true'>mvn:com.google.guava/guava/18.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.status/1.1.0
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.status/1.1.2
 		</bundle>
 	</feature>
 
@@ -414,7 +414,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:commons-net/commons-net/3.3</bundle>
 	</feature>
-i 
+
 	<feature resolver="(obr)" name='navajo.enterprise.mongodb'
 		version='3.0.29'>
 		<feature version="[3.0.32,4)">navajo.server.osgi</feature>
