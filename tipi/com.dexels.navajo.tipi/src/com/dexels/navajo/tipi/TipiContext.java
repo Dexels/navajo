@@ -1059,7 +1059,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
      * work.
      */
 
-    public TipiComponent instantiateTipi(TipiInstantiateTipi t, TipiComponent parent, boolean force, String id,
+    public TipiComponent instantiateTipi(TipiInstantiateTipi t, TipiComponent parent, boolean force, final String id,
             Object constraints, TipiEvent event, XMLElement xe) throws TipiException {
         Object lock = null;
         String path = parent.getPath() + "/" + id;
