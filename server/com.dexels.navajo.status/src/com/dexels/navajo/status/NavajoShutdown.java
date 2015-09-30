@@ -51,7 +51,7 @@ public class NavajoShutdown implements Runnable {
         startedShutdownAt = new Date().getTime();
         // At this point we can assume no new requests will be coming in
 
-        while (shutdownInProgress) {
+        while (NavajoShutdown.shutdownInProgress) {
             int users = getUserCount();
             int async = getAsyncCount();
 
@@ -81,39 +81,33 @@ public class NavajoShutdown implements Runnable {
 
     private void startSystemShutdown() {
         logger.warn("Actual shutdown imminent");
-        try { 
-            boolean tribeSafe = tribeManagerInterface.tribeIsSafe() && tribeManagerInterface.getMyMembership().isSafe();
-
-            while (!tribeSafe && shutdownInProgress) {
-                logger.warn("Tribe is not safe! Going to wait until tribe says we are safe. TribeSafe: {} memberSafe: {} ",
-                        tribeManagerInterface.tribeIsSafe(), tribeManagerInterface.getMyMembership().isSafe());
-                
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    logger.warn("Interrupted exception received while waiting on Tribe.isSafe! Going to cancel shutdown");
-                    NavajoShutdown.shutdownInProgress = false;
-                }
-                tribeSafe = tribeManagerInterface.tribeIsSafe();
+        boolean tribeSafe = tribeManagerInterface.tribeIsSafe() && tribeManagerInterface.getMyMembership().isSafe();
+        logger.info("TribeSafe: {}", tribeSafe);
+        while (!tribeSafe && NavajoShutdown.shutdownInProgress) {
+            logger.warn("Tribe is not safe! Going to wait until tribe says we are safe. TribeSafe: {} memberSafe: {} ",
+                    tribeManagerInterface.tribeIsSafe(), tribeManagerInterface.getMyMembership().isSafe());
+            
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                logger.warn("Interrupted exception received while waiting on Tribe.isSafe! Going to cancel shutdown");
+                NavajoShutdown.shutdownInProgress = false;
             }
-        } catch (Exception e) {
-            logger.error("Exception while checking if Tribe is safe - cancelling shutdown ", e);
-            NavajoShutdown.shutdownInProgress = false;
-            return;
+            tribeSafe = tribeManagerInterface.tribeIsSafe();
         }
-     
 
         // Last chance to stop
         if (!NavajoShutdown.shutdownInProgress) {
             logger.warn("Shutdown cancelled!");
             return;
         }
+        logger.warn("Going to stop System Bundle");
         try {
-            logger.info("Stopping system bundle");
             bundlecontext.getBundle(0).stop();
         } catch (BundleException e) {
             logger.error("Bundle 0 ( system-bundle) gave a BundleException: ", e);
         }
+        logger.warn("Shutdown completed");
 
     }
 
