@@ -372,9 +372,9 @@
 		<bundle dependency='true'>mvn:org.apache.pdfbox/jempbox/1.7.1</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.dev' version='3.0.12'>
+	<feature resolver="(obr)" name='navajo.dev' version='3.0.13'>
 		<feature version="[3.0.0,4)">navajo.server.osgi</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/3.0.20
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/3.0.22
 		</bundle>
 	</feature>
     
@@ -414,7 +414,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:commons-net/commons-net/3.3</bundle>
 	</feature>
-
+i 
 	<feature resolver="(obr)" name='navajo.enterprise.mongodb'
 		version='3.0.29'>
 		<feature version="[3.0.32,4)">navajo.server.osgi</feature>
