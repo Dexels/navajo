@@ -29,7 +29,7 @@ public class NavajoShutdown implements Runnable {
     }
 
     public void setTimeout(int timeout) {
-        logger.info("Setting timeout of {} seconds for shutdown");
+        logger.info("Setting timeout of {} seconds for shutdown", timeout);
         this.timeout = timeout;
     }
 
@@ -64,7 +64,11 @@ public class NavajoShutdown implements Runnable {
             }
 
             if (users + async == 0 || expired) {
-                startSystemShutdown();
+                try {
+                    startSystemShutdown();
+                } catch (Exception e) {
+                    logger.error("Exception on performing system shutdown: ", e);
+                }
                 return;
             }
             logger.info("{} users and {} async remaining...", users , async);
