@@ -30,7 +30,7 @@
 		<bundle dependency="true">mvn:org.apache.httpcomponents/httpclient-osgi/4.3.6
 		</bundle>
 		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/3.5.1</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/4.0.4
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/4.0.7
 		</bundle>
 	</feature>
 
@@ -260,9 +260,9 @@
 			<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.1.0</bundle> -->
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.status' version='1.0.8'>
+	<feature resolver="(obr)" name='navajo.status' version='1.0.9'>
 		<bundle dependency='true'>mvn:com.google.guava/guava/18.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.status/1.0.9
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.status/1.1.0
 		</bundle>
 	</feature>
 
@@ -404,9 +404,9 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.87'>
+		version='3.0.88'>
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.5.4
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.5.6
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.4.2
 		</bundle>
