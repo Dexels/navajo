@@ -1,7 +1,6 @@
 // Holds the input navajo document for the next RPC call
 var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header></tml>');;
 
-
 function getScripts() {
     var scriptssource = $("#scripts-template").html();
     var scriptstemplate = Handlebars.compile(scriptssource);
@@ -20,44 +19,71 @@ function getScripts() {
 
 };
 
-function runScript(scriptElement) {
+
+function loginForm(){
+    $('.loginform').hide();
+    sessionStorage.user =     $('#navajousername').val();
+    sessionStorage.password = $('#navajopassword').val();
+    
+    $('#navajousername').val('')
+    $('#navajopassword').val('');
+    
+    // Good to go
+    runScript(sessionStorage.script);
+    
+    return true;
+}
+function runScript(script) {
     var instance =  $( "#handlers option:selected" ).text();
+    $('#loadedScript').text(script);
     if (instance === "") {
         $('.chosen-single').pulsate({
             color: '#e26413',                   // set the color of the pulse
             reach: 100,                          // how far the pulse goes in px
-            speed: 400,                          // how long one pulse takes in ms
+            speed: 200,                          // how long one pulse takes in ms
             pause: 0,                           // how long the pause between pulses is in ms
             glow: true,                          // if the glow should be shown too
-            repeat: 4,                           // will repeat forever if true, if given a number will repeat for that many times
+            repeat: 5,                           // will repeat forever if true, if given a number will repeat for that many times
             onHover: false                       // if true only pulsate if user hovers over the element
-          });
+        });
+        
+        if (!sessionStorage.user) {
+            $('.loginform').show();
+        }
         return;
     }
+    
+    if (!sessionStorage.user) {
+         $('.loginform').show();
+         return;
+    }
+    
+    hourglassOn();
     $('.overlay').show();
-   
-    var script = scriptElement.attr("id");
-    $('#loadedScript').text(script);
     
-    prepareInputNavajo(script);
+    // If we have sourcefile visible, show HTML page. Otherwise leave it
+    if ($('#TMLSourceview').is(":visible")) {
+        $('#TMLSourceview').hide();
+        $('#HTMLview').show();
+    }
 
-    navajoinput = (new XMLSerializer()).serializeToString(xml);
+    navajoinput = prepareInputNavajo(script);
+     
     
-    $.post("/testerapi?query=run&service="+script+"&instance="+instance , navajoinput, function(xmlobj) {
+    $.post("/navajo/" + instance , navajoinput, function(xmlobj) {
         xml = xmlobj;
         $('#scriptcontent').removeClass('prettyprinted');
         var xmltext = (new XMLSerializer()).serializeToString(xmlobj)
         $('#scriptcontent').text(xmltext)
         prettyPrint();
         parseTmlToHtml($('#HTMLview'), $('#methods'));
-        $('#HTMLview').show(100);
-        $('#TMLview').hide(100);
-        $('#TMLSourceview').hide(100);
-        $('.overlay').hide(500);
-        
+       
+        $('.overlay').hide(200);
+        $('#scriptMainView').show();
+        hourglassOff();
         $('html, body').animate({
             scrollTop : 0
-        }, 'fast');
+        }, 50);
 
     });
 
@@ -69,9 +95,25 @@ function runScript(scriptElement) {
 
 }
 
-function prepareInputNavajo(scrint) {
+function hourglassOn() {
+    if ($('style:contains("html.wait")').length < 1) $('<style>').text('html.wait, html.wait * { cursor: wait !important; }').appendTo('head');
+    $('html').addClass('wait');
+}
+
+function hourglassOff() {
+    $('html').removeClass('wait');
+}
+
+
+function prepareInputNavajo(script) {
     var $xml = $(xml);
-    $xml.find
+    var $transaction = $xml.find('tml header transaction')
+   
+    $transaction.attr('rpc_name', script);
+    $transaction.attr('rpc_usr', sessionStorage.user);
+    $transaction.attr('rpc_pwd', sessionStorage.password)
+    
+    return (new XMLSerializer()).serializeToString(xml);
 }
 
 function updateVisibility(filter, element) {
@@ -137,7 +179,7 @@ function getMyEntries(data, element) {
 /* Event handlers */
 
 $(document).on('click', '.script', function() {
-    runScript($(this));
+    runScript($(this).attr("id"));
 });
 
 $(document).on('click', '.folder', function() {
@@ -183,6 +225,11 @@ $(document).on('input propertychange', '#scriptsFilter', function(evt) {
         return;
 
     var filter = $("#scriptsFilter").val();
+    if (filter.length == 0) {
+        getScripts();
+        return;
+    }
+    
     if (filter.length < 3) 
         return;
     

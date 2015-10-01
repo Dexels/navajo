@@ -40,29 +40,6 @@ public class NavajoTesterHelper {
         this.context = null;
     }
     
-    public String runScript(String service, String input, String tenant) {
-        Navajo inputNavajo = null;
-        if (input == null || input.trim().equals("")) {
-            inputNavajo = NavajoFactory.getInstance().createNavajo();
-        } else {
-            StringReader sw = new StringReader(input);
-            inputNavajo = NavajoFactory.getInstance().createNavajo(sw);
-            inputNavajo.removeHeader();
-        }
-
-        try {
-            context.callService(service, tenant, null, null, inputNavajo);
-        } catch (ClientException e) {
-            logger.error("Exception on calling service: {}", e);
-        }
-
-        Navajo n = context.getNavajo(service);
-        StringWriter outputWriter = new StringWriter();
-
-        n.write(outputWriter);
-        return outputWriter.toString();
-    }
-
     public NavajoFileSystemFolder getAllScripts() {
 
         File scriptsPath = new File(navajoConfig.getScriptPath());

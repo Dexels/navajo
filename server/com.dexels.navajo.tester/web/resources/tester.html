@@ -80,10 +80,13 @@ $(document).ready(function() {
           return options.inverse(this);
     });
    	getScripts();
+   
 });
 
 </script>
 <body>
+    <iframe src="empty.html" id="temp" name="temp" style="display:none"></iframe>
+
     <div id="wrapper">
         <header>
             <div id="title" class="container">
@@ -125,15 +128,25 @@ $(document).ready(function() {
                 
                  <div id="mainview" class="mainview">
                     <div class="overlay"> </div>
-                    <div id="loadedScript"  style="display: none;"></div>
-                    <a id="HTMLviewLink" href="">HTML</a> | <a id="TMLviewLink" href="">TML</a>  | <a id="TMLSourceviewLink" href=""> Source</a>
-                    <div id="HTMLview"></div>
-                    <div id="TMLview" style="display: none;">
-                       <pre id="scriptcontent" class="prettyprint lang-xml"></pre>
+                    <div class="loginform" style="display: none;"> 
+                        <form id="loginform"  target="temp" onsubmit="loginForm()">
+                          Username: <input id="navajousername" name="username" type="text" /> <br/>
+                          Password: <input id="navajopassword" name="password" type="password" /><br/><br/>
+                          <input name="doLogin"  type="submit" value="Login" />
+                        </form>
                     </div>
-                     <div id="TMLSourceview" style="display: none;">
-                       <pre id="scriptsourcecontent" class="prettyprint lang-xml"></pre>
+                    <div id="scriptMainView" style="display: none;">
+                        <div id="loadedScript"  style="display: none;"></div>
+                        <a id="HTMLviewLink" href="">HTML</a> | <a id="TMLviewLink" href="">TML</a>  | <a id="TMLSourceviewLink" href=""> Source</a>
+                        <div id="HTMLview"></div>
+                        <div id="TMLview" style="display: none;">
+                           <pre id="scriptcontent" class="prettyprint lang-xml"></pre>
+                        </div>
+                         <div id="TMLSourceview" style="display: none;">
+                           <pre id="scriptsourcecontent" class="prettyprint lang-xml"></pre>
+                        </div>
                     </div>
+                    
                      
                 </div>
             </div>

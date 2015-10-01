@@ -134,7 +134,7 @@ function processProperty(property) {
    
     if (htmltype === 'select') {
         $select = $('<select/>');
-        $select.attr('id', getElementXPath(this));
+        $select.attr('id', getElementXPath(property[0]));
         $select.attr('class', "tmlinput" + htmltype);
         if (property.attr('cardinality') !== '1')  {
             $select.attr('multiple', 'multiple')
@@ -160,7 +160,7 @@ function processProperty(property) {
         $input = $('<input/>');
         $input.attr('type', htmltype );
         $input.attr('value', propvalue);
-        $input.attr('id', getElementXPath(this));
+        $input.attr('id', getElementXPath(property[0]));
         $input.attr('class', "tmlinput" + htmltype);
         if (propdirection != 'in') {
             if (htmltype === 'checkbox') {

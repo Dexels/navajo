@@ -39,7 +39,11 @@ public class NavajoTesterServlet extends HttpServlet {
             inputString = buffer.toString();
         }
        
-       
+        if (inputString != null && inputString.contains("doLogin")) {
+            // Redirect
+            response.sendRedirect("/tester.html");
+            return;
+        }
         
         String query = request.getParameter("query");
         String result = null;
@@ -53,14 +57,7 @@ public class NavajoTesterServlet extends HttpServlet {
             result = helper.getFileContent(request.getParameter("file"));
             response.setContentType("text/plain");
         }
-        
-        if (query.equals("run")) {
-            String instance = request.getParameter("instance");
-            result = helper.runScript(request.getParameter("service"), inputString, instance);
-            response.setContentType("text/xml");
-        }
-        
-       
+   
         PrintWriter writer = response.getWriter();
         writer.write(result);
         writer.close();
