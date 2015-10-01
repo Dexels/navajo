@@ -1,0 +1,401 @@
+/* =Reset default browser CSS. Based on work by Eric Meyer: http://meyerweb.com/eric/tools/css/reset/index.html
+-------------------------------------------------------------- */
+body {
+	line-height: 1;
+	background: transparent;
+	border: 0;
+	margin: 0;
+	padding: 0;
+	vertical-align: baseline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	clear: both;
+	font-weight: normal;
+}
+
+ol, ul {
+	list-style: none;
+}
+
+blockquote {
+	quotes: none;
+}
+
+blockquote:before, blockquote:after {
+	content: '';
+	content: none;
+}
+
+del {
+	text-decoration: line-through;
+}
+
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+a img {
+	border: none;
+}
+
+/* =Global
+-------------------------------------------------------------- */
+*, *:before, *:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #FFED00;
+	color: #505050;
+	font-family: "Ubuntu", sans-serif;
+	font-weight: 300;
+	font-size: 10px;
+	line-height: 1.0;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+	line-height: 1;
+	font-weight: 300;
+}
+
+a {
+	text-decoration: none;
+	color: #a5a5a5;
+}
+
+a:hover {
+	color: #7c001f;
+}
+
+/* =Template
+-------------------------------------------------------------- */
+#wrapper {
+	width: 100%;
+	margin: 0 auto;
+}
+
+#main {
+	background-color: #fff;
+	padding: 15px 0;
+}
+
+.container {
+	width: 80%;
+	margin: 0 auto;
+	padding: 0 0px;
+}
+
+/* =Top Bar
+-------------------------------------------------------------- */
+.content {
+	width: 100%;
+	margin: 0px 10px auto;
+	padding: 0 0px;
+	overflow: hidden;
+	min-height: 600px;
+
+	/* border: solid 1px #FFED00; */
+}
+
+span.all-labs, span.back-to-tutorial {
+	display: block;
+	width: 50%;
+}
+
+span.all-labs {
+	float: left;
+	text-align: left;
+}
+
+span.back-to-tutorial {
+	float: right;
+	text-align: right;
+}
+
+/* =Header
+-------------------------------------------------------------- */
+header {
+/* 	padding: 10px 0; */
+	border-bottom: solid 2px black;
+}
+
+#title {
+	text-align: center;
+}
+
+#title h1 {
+	color: #000;
+	font-size: 30px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+#title h2 {
+	color: #ff4976;
+	font-size: 20px;
+}
+
+/* =Footer
+-------------------------------------------------------------- */
+/* =Extras
+-------------------------------------------------------------- */
+.clearfix:after {
+	visibility: hidden;
+	display: block;
+	content: "";
+	clear: both;
+	height: 0;
+}
+
+/* =Media Queries
+-------------------------------------------------------------- */
+@media all and (max-width: 600px) {
+	.container {
+		width: 100%;
+	}
+	#top-bar a {
+		display: block;
+	}
+	span.all-labs, span.back-to-tutorial {
+		width: 100%;
+	}
+	span.all-labs, span.back-to-tutorial {
+		float: none;
+		text-align: center;
+	}
+	span.all-labs {
+		border-bottom: solid 1px #7c001f;
+	}
+	#title h1 {
+		font-size: 20px;
+	}
+	#title h2 {
+		font-size: 16px;
+	}
+}
+
+/* =Nav
+-------------------------------------------------------------- */
+#nav-trigger {
+	display: none;
+	text-align: center;
+}
+
+#nav-trigger span {
+	display: inline-block;
+	padding: 10px 30px;
+	background-color: #a5a5a5;
+	color: white;
+	cursor: pointer;
+	text-transform: uppercase;
+}
+
+#nav-trigger span:after {
+	display: inline-block;
+	margin-left: 10px;
+	width: 20px;
+	height: 10px;
+	content: "";
+	border-left: solid 10px transparent;
+	border-top: solid 10px #fff;
+	border-right: solid 10px transparent;
+}
+
+#nav-trigger span:hover {
+	background-color: #505050;
+}
+
+#nav-trigger span.open {
+	border-left: solid 10px transparent;
+	border-top: none;
+	border-bottom: solid 10px #fff;
+	border-right: solid 10px transparent;
+}
+
+nav {
+	margin-bottom: 30px;
+}
+
+nav#nav-main {
+	background-color: #a5a5a5;
+	padding: 10px 0;
+}
+
+nav#nav-main ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+nav#nav-main li {
+	display: inline-block;
+	border-right: solid 1px #505050;
+	padding: 0 5px;
+}
+
+nav#nav-main li.open {
+	display: inline-block;
+	border-right: solid 1px #505050;
+	padding: 0 5px;
+	background-color: #505050;
+}
+
+nav#nav-main li:last-child {
+	border-right: none;
+}
+
+nav#nav-main a {
+	display: block;
+	color: white;
+	padding: 10px 30px;
+	outline: none;
+}
+
+nav#nav-main a:hover {
+	background-color: #505050;
+	color: #fff;
+}
+
+nav#nav-mobile {
+	position: relative;
+	display: none;
+}
+
+nav#nav-mobile ul {
+	display: none;
+	list-style-type: none;
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	background-color: #a5a5a5;
+}
+
+nav#nav-mobile li {
+	display: block;
+	padding: 5px 0;
+	margin: 0 5px;
+	border-bottom: solid 1px #505050;
+}
+
+nav#nav-mobile li:last-child {
+	border-bottom: none;
+}
+
+nav#nav-mobile a {
+	display: block;
+	color: white;
+	padding: 10px 30px;
+}
+
+nav#nav-mobile a:hover {
+	background-color: #505050;
+	color: #fff;
+}
+
+/* =Sections
+-------------------------------------------------------------- */
+section h1 {
+	margin-bottom: 10px;
+}
+
+section p {
+	margin-bottom: 30px;
+}
+
+section p:last-child {
+	margin-bottom: 0;
+}
+
+.scriptsbar {
+	float: left;
+	font-size: 11px;
+}
+
+.mainview {
+	float: right;
+	padding-left: 30px;
+	padding-right: 30px;
+	width: 75%;
+	position: relative;
+}
+
+.overlay {
+	background: #e9e9e9;
+	position: absolute;
+	display: none;
+	float: right;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	opacity: 0.65;
+	z-index: 100;
+}
+
+.script {
+	cursor: pointer;
+}
+
+.script:before {
+	content: url('/testerimg/xml-file.png');
+}
+
+.folder {
+	cursor: pointer;
+}
+
+.folder:before {
+	content: url('/testerimg/folder.png')
+}
+
+ul {
+	padding-left: 20px;
+}
+
+.propertytable {
+	margin-left: 20px;
+}
+
+input[readOnly] {
+	background: #e9e9e9;
+}
+
+#HTMLview {
+	margin-top: 15px;
+}
+
+.messagediv {
+	border-radius: 25px;
+	margin: 10px;
+	padding-left: 10px;
+	padding-bottom: 10px;
+    border: 2px solid #dacb07;
+}
+
+.propertydiv {
+	 overflow: hidden;
+}
+
+.propertynamediv {
+	 float:left; 
+	 min-width: 200px;
+}
+
+.propertyvaluediv {
+	 overflow: hidden;
+}
+
+h3 {
+	color: #ff4976;
+	font-size: 16px;
+}
