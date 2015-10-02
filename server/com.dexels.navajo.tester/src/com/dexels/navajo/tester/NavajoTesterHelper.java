@@ -2,8 +2,6 @@ package com.dexels.navajo.tester;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.Collection;
 
@@ -12,10 +10,6 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.ClientException;
-import com.dexels.navajo.client.context.ClientContext;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.tester.model.NavajoFileSystemFolder;
 import com.dexels.navajo.tester.model.NavajoFileSystemScript;
@@ -23,7 +17,6 @@ import com.dexels.navajo.tester.model.NavajoFileSystemScript;
 public class NavajoTesterHelper {
     private final static Logger logger = LoggerFactory.getLogger(NavajoTesterHelper.class);
     private NavajoConfigInterface navajoConfig;
-    private ClientContext context;
     
     public void setNavajoConfig(NavajoConfigInterface nci) {
         this.navajoConfig = nci;
@@ -33,15 +26,8 @@ public class NavajoTesterHelper {
         this.navajoConfig = null;
     }
     
-    public void setNavajoClientContext(ClientContext context) {
-        this.context = context;
-    }
-    public void clearNavajoClientContext(ClientContext context) {
-        this.context = null;
-    }
-    
-    public NavajoFileSystemFolder getAllScripts() {
 
+    public NavajoFileSystemFolder getAllScripts() {
         File scriptsPath = new File(navajoConfig.getScriptPath());
         NavajoFileSystemFolder result = new NavajoFileSystemFolder(scriptsPath);
         addContentsTo(result);
@@ -66,12 +52,7 @@ public class NavajoTesterHelper {
             NavajoFileSystemFolder subDir = new NavajoFileSystemFolder(new File(currentPath, directories[i]));
             addContentsTo(subDir);
             folder.addEntry(subDir);
-        }
-
-        
-
-
-        
+        }  
     }
 
     public String getFileContent(String path) {
@@ -82,8 +63,7 @@ public class NavajoTesterHelper {
                byte[] bytes =  Files.readAllBytes(f.toPath());
                return new String(bytes, "UTF-8");
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.error("Exception on getting file contents: ", e);
             }
         }
         return "";

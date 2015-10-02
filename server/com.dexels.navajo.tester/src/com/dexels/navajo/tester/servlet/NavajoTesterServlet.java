@@ -1,6 +1,5 @@
 package com.dexels.navajo.tester.servlet;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -24,38 +23,18 @@ public class NavajoTesterServlet extends HttpServlet {
     private NavajoTesterHelper helper;
     private ObjectMapper mapper = new ObjectMapper();
 
-    protected void service(final HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String inputString = null;
-        
-        if (request.getMethod().equals("POST")) {
-            StringBuilder buffer = new StringBuilder();
-            BufferedReader reader = request.getReader();
-
-            String line;
-            while((line = reader.readLine()) != null){
-                buffer.append(line);
-            }
-            // reqBytes = buffer.toString().getBytes();
-            inputString = buffer.toString();
-        }
-       
-        if (inputString != null && inputString.contains("doLogin")) {
-            // Redirect
-            response.sendRedirect("/tester.html");
-            return;
-        }
-        
+    protected void service(final HttpServletRequest request, HttpServletResponse response) throws IOException { 
         String query = request.getParameter("query");
-        String result = null;
+        String result = "";
         if (query.equals("getscripts")) {
             List<NavajoFileSystemEntry> files = helper.getAllScripts().getEntries();
             result = mapper.writeValueAsString(files);
             response.setContentType("text/json");
-        }
-        
-        if (query.equals("getfilecontent")) {
+        } else if (query.equals("getfilecontent")) {
             result = helper.getFileContent(request.getParameter("file"));
             response.setContentType("text/plain");
+        } else {
+            logger.warn("Unsupported request: {}", query);
         }
    
         PrintWriter writer = response.getWriter();

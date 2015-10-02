@@ -399,3 +399,24 @@ h3 {
 	color: #ff4976;
 	font-size: 16px;
 }
+
+.headercontainer { 
+	width: 300px; 
+    margin:0 auto;
+    text-align: center;
+}
+
+.handlersdrop {
+	display:inline
+}
+
+.LoginButton {
+	display:inline
+}
+
+.arrow {
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+}
+

@@ -20,44 +20,51 @@ function getScripts() {
 };
 
 
-function loginForm(){
-    $('.loginform').hide();
+function processLoginForm(){
+    hideLoginTable();
     sessionStorage.user =     $('#navajousername').val();
     sessionStorage.password = $('#navajopassword').val();
     
-    $('#navajousername').val('')
     $('#navajopassword').val('');
     
-    // Good to go
-    runScript(sessionStorage.script);
+    if (sessionStorage.script) {
+        runScript(sessionStorage.script);
+    }
     
     return true;
 }
-function runScript(script) {
+
+function loginTableVisible() {
     var instance =  $( "#handlers option:selected" ).text();
+    return (instance === "" || !sessionStorage.user) 
+}
+
+function showLoginTable() {
+    $('#loginform').show();
+    $('#showLessArrow').show();
+    $('#showMoreArrow').hide();
+}
+
+function hideLoginTable() {
+    $('#loginform').hide();
+    $('#showLessArrow').hide();
+    $('#showMoreArrow').show();
+}
+
+function runScript(script) {
+   
     $('#loadedScript').text(script);
-    if (instance === "") {
-        $('.chosen-single').pulsate({
-            color: '#e26413',                   // set the color of the pulse
-            reach: 100,                          // how far the pulse goes in px
-            speed: 200,                          // how long one pulse takes in ms
-            pause: 0,                           // how long the pause between pulses is in ms
-            glow: true,                          // if the glow should be shown too
-            repeat: 5,                           // will repeat forever if true, if given a number will repeat for that many times
-            onHover: false                       // if true only pulsate if user hovers over the element
-        });
-        
-        if (!sessionStorage.user) {
-            $('.loginform').show();
-        }
+    
+    if (loginTableVisible()) {
+        showLoginTable();
+       
+        $('.LoginButton').attr('value', 'Run script');
+        $('#logintable').trigger('startRumble');
+        setTimeout(function(){$('#logintable').trigger('stopRumble');}, 750);
         return;
     }
     
-    if (!sessionStorage.user) {
-         $('.loginform').show();
-         return;
-    }
-    
+    var instance =  $( "#handlers option:selected" ).text();
     hourglassOn();
     $('.overlay').show();
     
@@ -92,7 +99,6 @@ function runScript(script) {
         $('#scriptsourcecontent').text(data)
         prettyPrint();
     });
-
 }
 
 function hourglassOn() {
@@ -196,6 +202,19 @@ $(document).on('click', '.folder', function(e) {
     }
     e.stopPropagation();
 });
+
+$(document).on('click', '#showMoreArrow', function() {
+    $('#loginform').show(200);
+    $('#showLessArrow').show();
+    $('#showMoreArrow').hide();
+})
+
+$(document).on('click', '#showLessArrow', function() {
+    $('#loginform').hide(200);
+    $('#showLessArrow').hide();
+    $('#showMoreArrow').show();
+})
+
 
 $(document).on('click', '#HTMLviewLink', function() {
     $('#HTMLview').show(100);
