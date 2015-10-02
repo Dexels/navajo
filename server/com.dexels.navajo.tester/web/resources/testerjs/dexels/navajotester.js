@@ -82,7 +82,7 @@ function runScript(script) {
         $('#scriptcontent').removeClass('prettyprinted');
         var xmltext = (new XMLSerializer()).serializeToString(xmlobj)
         $('#scriptcontent').text(xmltext)
-        prettyPrint();
+       // prettyPrint();
         parseTmlToHtml($('#HTMLview'), $('#methods'));
        
         $('.overlay').hide(200);
@@ -243,19 +243,19 @@ $(document).on('input propertychange', '#scriptsFilter', function(evt) {
     if (window.event && event.type == "propertychange" && event.propertyName != "value")
         return;
 
-    var filter = $("#scriptsFilter").val();
-    if (filter.length == 0) {
-        getScripts();
-        return;
-    }
-    
-    if (filter.length < 3) 
-        return;
     
     // Clear any previously set timer before setting a fresh one
     window.clearTimeout($(this).data("timeout"));
     $(this).data("timeout", setTimeout(function() {
-       
+        var filter = $("#scriptsFilter").val();
+        if (filter.length == 0) {
+            getScripts();
+            return;
+        }
+        
+        if (filter.length < 3) 
+            return;
+        
         updateVisibility(filter, $(".scripts"))
     }, 300));
 });

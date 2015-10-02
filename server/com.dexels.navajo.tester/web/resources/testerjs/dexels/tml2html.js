@@ -41,6 +41,7 @@ function parseTmlToHtml( navajoelement, methodselement) {
 }
 
 function parseTmlArrayMessage(arraymessage) {
+    console.log("another array message!")
     var name =  arraymessage.attr('name');
     var $div = $('<div />');
     $div.attr('class', 'messagediv');
@@ -50,13 +51,22 @@ function parseTmlArrayMessage(arraymessage) {
     $msgname.appendTo($div);
     
     var $table = $('<table />');
+    $table.attr('class', 'tmlarraymessagetable')
     
+    printArrayHorizontal(arraymessage, $table);
+    $table.appendTo($div);
+    
+    return $div;    
+}
+
+function printArrayHorizontal(arraymessage, $table) {
     // Count the properties an array-element has. We assume the first element contains
     // the same amount as the other elements
     var propcount = arraymessage.find('message[type="array_element"]:eq(0) property').length;
     
     for (var i = 0; i < propcount; i++) { 
         var $tr = $('<tr />');
+        $tr.attr('class', 'tmlarraymessagerow')
         arraymessage.children('message[type="array_element"]').each(function(index){
             $(this).children('property:eq('+i+')').each(function() {
                 if (index == 0) {
@@ -68,6 +78,7 @@ function parseTmlArrayMessage(arraymessage) {
                 var $propertydiv = processProperty($(this));
                 $propertydiv.find('div[class="propertynamediv"]').remove();
                 var $td = $('<td />');
+                $td.attr('class', 'tmlarraymessagetd')
                 
                 $propertydiv.appendTo($td);
                 $td.appendTo($tr);
@@ -77,13 +88,6 @@ function parseTmlArrayMessage(arraymessage) {
         });
         $tr.appendTo($table);
     }
-    
-   
-    $table.appendTo($div);
-    
-    return $div;
-    
-    
 }
 
 function parseTmlMessage(message) {
@@ -134,16 +138,19 @@ function processProperty(property) {
    
     if (htmltype === 'select') {
         $select = $('<select/>');
-        $select.attr('id', getElementXPath(property[0]));
-        $select.attr('class', "tmlinput" + htmltype);
+        
+     
         if (property.attr('cardinality') !== '1')  {
             $select.attr('multiple', 'multiple')
         }
         if (propdirection != 'in') {
             $input.attr('readOnly', 'readOnly');
+        } else {
+            // This is only needed if the elemtent can be changed
+            $select.attr('class', "tmlinput" + htmltype);
+            $select.attr('id', getElementXPath(property[0]));
         }
         property.children('option').each(function() {
-            
             $option = $('<option/>');
             $option.attr('value', $(this).attr('value'));
             var selected = $(this).attr('selected');
@@ -160,14 +167,17 @@ function processProperty(property) {
         $input = $('<input/>');
         $input.attr('type', htmltype );
         $input.attr('value', propvalue);
-        $input.attr('id', getElementXPath(property[0]));
-        $input.attr('class', "tmlinput" + htmltype);
+
         if (propdirection != 'in') {
             if (htmltype === 'checkbox') {
                 $input.attr('disabled', 'disabled');
             } else {
                 $input.attr('readOnly', 'readOnly');
             }
+        } else {
+         // This is only needed if the elemtent can be changed
+            $input.attr('class', "tmlinput" + htmltype);
+            $input.attr('id', getElementXPath(property[0]));
         }
         $input.appendTo($propertyvaluediv);
     }
