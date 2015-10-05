@@ -97,7 +97,7 @@ function runScript(script) {
     $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
         $('#scriptsourcecontent').removeClass('prettyprinted');
         $('#scriptsourcecontent').text(data)
-        prettyPrint();
+      //  prettyPrint();
     });
 }
 

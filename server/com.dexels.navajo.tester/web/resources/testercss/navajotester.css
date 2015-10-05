@@ -383,15 +383,16 @@ input[readOnly] {
 	overflow: auto;
 }
 
+
 table.tmlarraymessagetable td {
 	border-radius: 25px;
 	padding-left: 10px;
 	padding-right: 10px;
 	border-left: 2px solid #dacb07;
 	border-right: 2px solid #dacb07;
-/* 	border-left: 1px solid #000; */
-/* 	border-right: 1px solid #000; */
+	height: 20px;
 }
+
 
 table.tmlarraymessagetable tr:first-child {
 	border-top: 2px solid #dacb07;
