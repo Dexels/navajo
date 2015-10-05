@@ -11,14 +11,24 @@ function getScripts() {
     Handlebars.registerPartial('subscripts', foldertemplate);
 
     $.getJSON("/testerapi?query=getscripts", function(data) {
-        data.sort(function(a, b) {
-            return a.name.localeCompare(b.name);
-        });
+        sortFileObject(data)
         $("#scripts").html(scriptstemplate(data));
     });
 
 };
 
+function sortFileObject(element) {
+    $.each(element, function(index, subelem) {
+        if (subelem.type  === 'FOLDER') {
+           sortFileObject(subelem.entries);
+            
+        }
+    });
+  
+    element.sort(function(a, b) {
+        return a.name.localeCompare(b.name);
+    });
+}
 
 function processLoginForm(){
     hideLoginTable();

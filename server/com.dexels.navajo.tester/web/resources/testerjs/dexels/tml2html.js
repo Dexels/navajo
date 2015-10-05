@@ -63,6 +63,7 @@ function printArrayHorizontal(arraymessage) {
         
     // Store properties in an array to prevent looping over dom element
     var properties = [];
+    var arrayName = arraymessage.attr('name');
     arraymessage.children('message[type="array_element"]').each(function(msgindex){
         if (typeof properties[msgindex] === 'undefined' ) {
             properties[msgindex] = [];
@@ -75,16 +76,25 @@ function printArrayHorizontal(arraymessage) {
     });
     
     // Make header table
-    var tableString = '<div style="float: left;"> <table> ';
-    for (var propindex = 0; propindex < properties[0].length; propindex++) { 
-        tableString += '<tr height="28">'
-        tableString += '<th >' + properties[0][propindex]['name'] + '</th>';
-        tableString += '</tr>';
-    }
-    tableString += '</table></div> <div style="overflow: auto;"> <table class="tmlarraymessagetable"> ';
+    var tableString = '<div style="float: left;"> <table class="tmlarraymessagetable"> ';
+    // create empty row for array index row
+    tableString += '<tr><th ></th></tr>';
     
+    // Print table header for each property'
     for (var propindex = 0; propindex < properties[0].length; propindex++) { 
-        tableString += '<tr height="28">'
+        tableString += '<tr><th >' + properties[0][propindex]['name'] + '</th></tr>';
+    }
+    tableString += '</table></div> <div style="overflow: auto;"> <table class="tmlarraymessagetable"><tr> ';
+    
+    // Print message index first as top row
+    for (var msgindex = 0; msgindex < properties.length; msgindex++) { 
+        tableString += '<th>' + arrayName + '[' + msgindex + '] </th>';
+    }
+    tableString += '</tr>';
+      
+    // Iterate over remaining array
+    for (var propindex = 0; propindex < properties[0].length; propindex++) { 
+        tableString += '<tr>'
             for (var msgindex = 0; msgindex < properties.length; msgindex++) { 
                 tableString += '<td>' + properties[msgindex][propindex]['value']  + '</td>';
             }
@@ -157,7 +167,7 @@ function processProperty(property) {
         if (property.attr('cardinality') !== '1')  {
             propertyString += 'multiple="multiple" ';
         }
-        if (propdirection != 'in') {
+        if (propdirection !== "" && propdirection.indexOf('in') < 1 ) {
             propertyString += 'readOnly="readOnly" ';
         } else {
             propertyString += 'class="tmlinput' + htmltype + '" ';
@@ -177,7 +187,7 @@ function processProperty(property) {
     } else {
         propertyString += '<input type="'+htmltype+'" value="'+propvalue+'" ';
 
-        if (propdirection != 'in') {
+        if (propdirection !== "" && propdirection.indexOf('in') < 1) {
             if (htmltype === 'checkbox') {
                 propertyString += ' disabled="disabled" '
             } else {

@@ -384,30 +384,25 @@ input[readOnly] {
 }
 
 
-table.tmlarraymessagetable td {
-	border-radius: 25px;
-	padding-left: 10px;
-	padding-right: 10px;
-	border-left: 2px solid #dacb07;
-	border-right: 2px solid #dacb07;
-	height: 20px;
+.tmlarraymessagetable td {
+	border-radius: 	25px;
+	padding-left: 	10px;
+	padding-right: 	10px;
+	border-left: 	2px solid #dacb07;
+	border-right: 	2px solid #dacb07;
+	height: 		20px;
 }
 
+.tmlarraymessagetable tr {
+	height: 29px;
+}
 
-table.tmlarraymessagetable tr:first-child {
+.tmlarraymessagetable tr:nth-child(2) {
 	border-top: 2px solid #dacb07;
 }
 
-table.tmlarraymessagetable tr:last-child {
+.tmlarraymessagetable tr:last-child {
 	border-bottom: 2px solid #dacb07;
-}
-
-table.tmlarraymessagetable tr:first-child td:first-child {
-	border-top: 0px;
-}
-
-table.tmlarraymessagetable tr:last-child td:first-child {
-	border-bottom: 0px;
 }
 
 .propertydiv {
