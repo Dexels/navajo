@@ -121,7 +121,7 @@ span.back-to-tutorial {
 /* =Header
 -------------------------------------------------------------- */
 header {
-/* 	padding: 10px 0; */
+	/* 	padding: 10px 0; */
 	border-bottom: solid 2px black;
 }
 
@@ -383,18 +383,21 @@ input[readOnly] {
 	overflow: auto;
 }
 
+td .propertynamediv {
+	display: none;
+}
 
 .tmlarraymessagetable td {
-	border-radius: 	25px;
-	padding-left: 	10px;
-	padding-right: 	10px;
-	border-left: 	2px solid #dacb07;
-	border-right: 	2px solid #dacb07;
-	height: 		20px;
+	border-radius: 25px;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-left: 2px solid #dacb07;
+	border-right: 2px solid #dacb07;
+	height: 20px;
 }
 
 .tmlarraymessagetable tr {
-	height: 29px;
+	height: 30px;
 }
 
 .tmlarraymessagetable tr:nth-child(2) {
@@ -406,16 +409,31 @@ input[readOnly] {
 }
 
 .propertydiv {
-	 overflow: hidden;
+	overflow: hidden;
+	font-size: 12px;
+	margin-bottom: 2px;
 }
 
+/* .propertydiv:nth-of-type(even) { */
+/* 	background-color: #ffffff; */
+/* } */
+
+/* .propertydiv:nth-of-type(odd) { */
+/* 	background-color: #e5e5e5; */
+/* } */
+
+.propdescription {
+	font-size: 10px;
+}
+
+
 .propertynamediv {
-	 float:left; 
-	 min-width: 200px;
+	float: left;
+	min-width: 200px;
 }
 
 .propertyvaluediv {
-	 overflow: hidden;
+	overflow: hidden;
 }
 
 h3 {
@@ -423,18 +441,18 @@ h3 {
 	font-size: 16px;
 }
 
-.headercontainer { 
-	width: 300px; 
-    margin:0 auto;
-    text-align: center;
+.headercontainer {
+	width: 300px;
+	margin: 0 auto;
+	text-align: center;
 }
 
 .handlersdrop {
-	display:inline
+	display: inline
 }
 
 .LoginButton {
-	display:inline
+	display: inline
 }
 
 .arrow {
@@ -442,4 +460,3 @@ h3 {
 	font-weight: bold;
 	cursor: pointer;
 }
-

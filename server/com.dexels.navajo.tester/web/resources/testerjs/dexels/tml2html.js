@@ -70,7 +70,7 @@ function printArrayHorizontal(arraymessage) {
         }
         $(this).children('property').each(function(propindex){ 
             properties[msgindex][propindex] = [];
-            properties[msgindex][propindex]['value'] = processArrayProperty($(this));
+            properties[msgindex][propindex]['value'] = processProperty($(this));
             properties[msgindex][propindex]['name'] = $(this).attr('name');
         });
     });
@@ -117,8 +117,12 @@ function printArrayVertical(arraymessage) {
             tableString += '<th>' + $(this).attr('name') + '</th>';
         }
         
+        $(this).children('message').each(function() {
+            tableString += '<td>' + parseTmlMessage($(this)) + '</td>';
+        });
+        
         $(this).children('property').each(function() {
-            tableString += '<td>' + processArrayProperty($(this)) + '</td>';
+            tableString += '<td>' + processProperty($(this)) + '</td>';
         });
         tableString += '</tr>';
     });
@@ -150,9 +154,14 @@ function parseTmlMessage(message) {
 
 function processProperty(property) {
     // Use strings for performance
-    var propertyString = '<div class="propertydiv"><div class="propertynamediv">'   
+    var propertyString = '<div class="propertydiv"><div class="propertynamediv"><b>'   
     
     propertyString += property.attr('name');
+    propertyString += '</b>';
+    var propdesc = property.attr('description') 
+    if (typeof propdesc != 'undefined' && propdesc !== "") {
+        propertyString += '<div class="propdescription">(' + propdesc + ')</div>';
+    }
     propertyString += '</div><div class="propertyvaluediv">'
     
     var propvalue = property.attr('value');
@@ -204,61 +213,61 @@ function processProperty(property) {
     return propertyString;
 }
 
-
-function processArrayProperty(property) {
-    // Use strings for performance
-    var propertyString = '<div class="propertydiv">'   
-    
-    propertyString += '<div class="propertyvaluediv">'
-    
-    var propvalue = property.attr('value');
-    var propdirection = property.attr('direction')
-    var proptype = property.attr('type')
-    var htmltype = tmlTypeToHtml(proptype)
-
-    // TODO: property description
-   
-    if (htmltype === 'select') {
-        propertyString += '<select ';
-        if (property.attr('cardinality') !== '1')  {
-            propertyString += 'multiple="multiple" ';
-        }
-        if (propdirection != 'in') {
-            propertyString += 'readOnly="readOnly" ';
-        } else {
-            propertyString += 'class="tmlinput' + htmltype + '" ';
-            propertyString += 'id="'+getElementXPath(property[0])+'" >';
-        }
-        property.children('option').each(function() {
-            propertyString += '<option value="'+$(this).attr('value')+'" '
-            var selected = $(this).attr('selected');
-            if (typeof selected !== typeof undefined && selected === '1') {
-                propertyString += 'selected="selected"';
-            }
-            propertyString += '>' +  $(this).attr('name') + '</option>'
-        });
-        propertyString += '</select>';
-    } else if (htmltype === 'binary') {
-        // TODO: display binary somehow
-    } else {
-        propertyString += '<input type="'+htmltype+'" value="'+propvalue+'" ';
-
-        if (propdirection != 'in') {
-            if (htmltype === 'checkbox') {
-                propertyString += ' disabled="disabled" '
-            } else {
-                propertyString += ' readOnly="readOnly" '
-            }
-        } else {
-         // This is only needed if the element can be changed
-            propertyString += ' class="tmlinput' + htmltype + '" '
-            propertyString += ' id="' + getElementXPath(property[0]) + '"'
-
-        }
-    }
-    propertyString += '></div></div>'
-    return propertyString;
-}
+//
+//function processArrayProperty(property) {
+//    // Use strings for performance
+//    var propertyString = '<div class="propertydiv">'   
+//    
+//    propertyString += '<div class="propertyvaluediv">'
+//    
+//    var propvalue = property.attr('value');
+//    var propdirection = property.attr('direction')
+//    var proptype = property.attr('type')
+//    var htmltype = tmlTypeToHtml(proptype)
+//
+//    // TODO: property description
+//   
+//    if (htmltype === 'select') {
+//        propertyString += '<select ';
+//        if (property.attr('cardinality') !== '1')  {
+//            propertyString += 'multiple="multiple" ';
+//        }
+//        if (propdirection != 'in') {
+//            propertyString += 'readOnly="readOnly" ';
+//        } else {
+//            propertyString += 'class="tmlinput' + htmltype + '" ';
+//            propertyString += 'id="'+getElementXPath(property[0])+'" >';
+//        }
+//        property.children('option').each(function() {
+//            propertyString += '<option value="'+$(this).attr('value')+'" '
+//            var selected = $(this).attr('selected');
+//            if (typeof selected !== typeof undefined && selected === '1') {
+//                propertyString += 'selected="selected"';
+//            }
+//            propertyString += '>' +  $(this).attr('name') + '</option>'
+//        });
+//        propertyString += '</select>';
+//    } else if (htmltype === 'binary') {
+//        // TODO: display binary somehow
+//    } else {
+//        propertyString += '<input type="'+htmltype+'" value="'+propvalue+'" ';
+//
+//        if (propdirection != 'in') {
+//            if (htmltype === 'checkbox') {
+//                propertyString += ' disabled="disabled" '
+//            } else {
+//                propertyString += ' readOnly="readOnly" '
+//            }
+//        } else {
+//         // This is only needed if the element can be changed
+//            propertyString += ' class="tmlinput' + htmltype + '" '
+//            propertyString += ' id="' + getElementXPath(property[0]) + '"'
+//
+//        }
+//    }
+//    propertyString += '></div></div>'
+//    return propertyString;
+//}
 
 
 
