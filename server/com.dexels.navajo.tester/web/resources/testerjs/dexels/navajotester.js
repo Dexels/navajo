@@ -32,12 +32,13 @@ function sortFileObject(element) {
 
 function processLoginForm(){
     hideLoginTable();
+    sessionStorage.instance = $( "#handlers option:selected" ).text()
     sessionStorage.user =     $('#navajousername').val();
     sessionStorage.password = $('#navajopassword').val();
     
     $('#navajopassword').val('');
     
-    if (sessionStorage.script) {
+    if (sessionStorage.script && !loginTableVisible()) {
         runScript(sessionStorage.script);
     }
     
@@ -47,6 +48,15 @@ function processLoginForm(){
 function loginTableVisible() {
     var instance =  $( "#handlers option:selected" ).text();
     return (instance === "" || !sessionStorage.user) 
+}
+
+function updateInstanceHandlers() {
+    if (!sessionStorage.instance) {
+        return;
+    }
+    $('#handlers').val(sessionStorage.instance);
+    $('#handlers').trigger("chosen:updated")
+    
 }
 
 function showLoginTable() {

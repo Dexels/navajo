@@ -58,8 +58,6 @@
         {{else}}
              <li style="display: none"> <div class="script" id="{{script}}"> {{name}} </div>  </li>
         {{/equals}}
-       
-        
     {{/each}}
  </ul>
 </script>
@@ -73,6 +71,11 @@ $(document).ready(function() {
         disable_search_threshold : 10,
         width : "150px"
     });
+    $('#handlers').change(function() {
+        sessionStorage.instance = $("#handlers :selected").text();
+    });
+    
+    updateInstanceHandlers();
     
     Handlebars.registerHelper('equals', function(v1, v2, options) {
         if(v1 === v2) {
