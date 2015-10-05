@@ -54,7 +54,7 @@ body {
 	color: #505050;
 	font-family: "Ubuntu", sans-serif;
 	font-weight: 300;
-	font-size: 10px;
+	font-size: 11px;
 	line-height: 1.0;
 }
 
@@ -318,15 +318,18 @@ section p:last-child {
 
 .scriptsbar {
 	float: left;
-	font-size: 11px;
+	font-size: 12px;
+/* 	width: 25%;  */
+/* 	max-width: 400px; */
 }
 
 .mainview {
-	float: right;
+/* 	float: left; */
 	padding-left: 30px;
 	padding-right: 30px;
-	width: 75%;
 	position: relative;
+	overflow:auto;
+	right: 0;
 }
 
 .overlay {

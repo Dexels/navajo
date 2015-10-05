@@ -102,7 +102,7 @@ function runScript(script) {
         $('#scriptcontent').removeClass('prettyprinted');
         var xmltext = (new XMLSerializer()).serializeToString(xmlobj)
         $('#scriptcontent').text(xmltext)
-       // prettyPrint();
+        prettyPrint();
         parseTmlToHtml($('#HTMLview'), $('#methods'));
        
         $('.overlay').hide(200);
@@ -117,7 +117,7 @@ function runScript(script) {
     $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
         $('#scriptsourcecontent').removeClass('prettyprinted');
         $('#scriptsourcecontent').text(data)
-      //  prettyPrint();
+        prettyPrint();
     });
 }
 
