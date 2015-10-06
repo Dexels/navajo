@@ -16,7 +16,7 @@ public class NavajoFileSystemScript implements NavajoFileSystemEntry {
        
         script = path.split("scripts")[1];
         script =  script.substring(1, script.lastIndexOf(FilenameUtils.getExtension(path)) -1);
-        
+        script = script.replace("\\", "/");
     }
 
     @Override
