@@ -180,8 +180,10 @@ function processProperty(property) {
             propertyString += 'readOnly="readOnly" ';
         } else {
             propertyString += 'class="tmlinput' + htmltype + '" ';
-            propertyString += 'id="'+getElementXPath(property[0])+'" >';
+            propertyString += 'id="'+getElementXPath(property[0])+'"';
         }
+        
+        propertyString += '>';
         property.children('option').each(function() {
             propertyString += '<option value="'+$(this).attr('value')+'" '
             var selected = $(this).attr('selected');
@@ -208,8 +210,9 @@ function processProperty(property) {
             propertyString += ' id="' + getElementXPath(property[0]) + '"'
 
         }
+        propertyString += '>';
     }
-    propertyString += '></div></div>'
+    propertyString += '</div></div>'
     return propertyString;
 }
 
