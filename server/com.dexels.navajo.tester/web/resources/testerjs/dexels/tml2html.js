@@ -176,8 +176,9 @@ function processProperty(property) {
         if (property.attr('cardinality') !== '1')  {
             propertyString += 'multiple="multiple" ';
         }
-        if (propdirection !== "" && propdirection.indexOf('in') < 1 ) {
-            propertyString += 'readOnly="readOnly" ';
+        
+        if (propdirection === "out") {
+            propertyString += 'disabled="disabled" ';
         } else {
             propertyString += 'class="tmlinput' + htmltype + '" ';
             propertyString += 'id="'+getElementXPath(property[0])+'"';
@@ -198,7 +199,7 @@ function processProperty(property) {
     } else {
         propertyString += '<input type="'+htmltype+'" value="'+propvalue+'" ';
 
-        if (propdirection !== "" && propdirection.indexOf('in') < 1) {
+        if (propdirection === "out") {
             if (htmltype === 'checkbox') {
                 propertyString += ' disabled="disabled" '
             } else {
