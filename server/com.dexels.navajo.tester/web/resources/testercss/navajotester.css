@@ -319,7 +319,7 @@ section p:last-child {
 .scriptsbar {
 	float: left;
 	font-size: 13px;
-	line-height: 1.2%;
+	line-height: 1.2;
 /* 	width: 25%;  */
 /* 	max-width: 400px; */
 }
