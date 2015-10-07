@@ -476,5 +476,16 @@ h3 {
 
 #methods {
 	line-height: 1.5;
-	
+}
+
+.exportcsv:after {
+	content:  url('/testerimg/export.png');
+	cursor: pointer;
+	margin-left: 4px;
+}
+
+.exportcsv h3 {
+	color: #006000;
+	font-size: 16px;
+	display: inline;
 }

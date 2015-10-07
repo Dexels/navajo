@@ -330,6 +330,77 @@ $(document).on('input change', '.tmlinputselect', function(evt) {
 });
 
 
+var encodedUri;
+var link;
+$(document).on('click', '.exportcsv', function() {
+    var filename = $(this).children('h3').text();
+    console.log(filename);
+    if (typeof filename === 'undefined') {
+        filename = 'export';
+    }
+    
+    var csvContent = getCsvContent($(this));
+    encodedUri = encodeURI(csvContent);
+    link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "export" + filename + ".csv");
+    document.body.appendChild(link);
+    link.click(); // This will download the data file named "my_data.csv".
+    
+    //document.body.removeChild(link);
+});
+
+function getCsvContent(divelement) {
+    var csvData = [];
+    var defdata = [];
+    var  xpath = divelement.attr('id');
+    var  element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
+   
+    if (typeof element != 'undefined') {
+        var $element = $(element);
+        
+        // If we have a definition message, this is put in the header row
+        $element.children('message[type="definition"]').each(function() {
+            $(this).children('property').each(function() {
+                defdata.push($(this).attr('name'));
+            });
+        });
+           
+        // Loop over the array_elements
+        $element.children('message[type="array_element"]').each(function() {
+            var row = [];
+            // go over properties
+            $(this).children('property').each(function() {
+                var proptype = $(this).attr('type')
+                if (proptype === 'selection') {
+                    property.children('option').each(function() {
+                        var selected = $(this).attr('selected');
+                        if (selected) {
+                            row.push($(this).attr('name'));
+                        }
+                    });
+                } else {
+                    row.push($(this).attr('value'));
+                }
+               
+               
+            })
+            csvData.push(row);
+        }); 
+    }
+
+    
+    var csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += defdata.join(",");
+    csvContent += "\n"
+    csvData.forEach(function(infoArray, index){
+       dataString = infoArray.join(";");
+       csvContent += dataString+ "\n";
+    }); 
+
+    return csvContent;
+}
+
 /* Some helpers */
 Array.prototype.indexOfPath = function(path) {
     for (var i = 0; i < this.length; i++)

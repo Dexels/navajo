@@ -50,15 +50,17 @@ function parseTmlToHtml( navajoelement, methodselement) {
 
 function parseTmlArrayMessage(arraymessage) {
     
-    var divString = '<div class="messagediv"><h3> '+arraymessage.attr('name')+'</h3>'
+    var divString = '<div class="messagediv">';
+    divString += '<div class="exportcsv" id="'+getElementXPath(arraymessage[0])+'"> ';
+    divString += '<h3> '+arraymessage.attr('name')+'</h3></div>'
+    
     divString += printArrayHorizontal(arraymessage);
     divString += '</div>'
     return divString;    
 }
 
 function printArrayHorizontal(arraymessage) {
-    
-        
+
     // Store properties in an array to prevent looping over dom element
     var properties = [];
     var arrayName = arraymessage.attr('name');
