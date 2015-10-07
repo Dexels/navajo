@@ -348,8 +348,12 @@ section p:last-child {
 
 .script {
 	cursor: pointer;
-	display: inline;
 }
+
+.script:hover {
+     background: rgba(255,255,0, 0.2);
+} 
+
 
 .script:before {
 	content: url('/testerimg/xml-file.png');
@@ -357,8 +361,9 @@ section p:last-child {
 
 .folder {
 	cursor: pointer;
-	display: inline;
 }
+
+
 
 .folder:before {
 	content: url('/testerimg/folder.png')
