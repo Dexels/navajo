@@ -394,6 +394,15 @@ input[readOnly] {
 	overflow: auto;
 }
 
+.messagediv .messagediv {
+	border-radius: 5px;
+	margin: 10px;
+	padding-left: 10px;
+	padding-bottom: 10px;
+	border: 1px solid #002553;
+	overflow: auto;
+}
+
 td .propertynamediv {
 	display: none;
 }
@@ -403,6 +412,7 @@ td h3 {
 
 td .messagediv {
 	min-width: 350px;
+	border: 1px solid #002553;
 }
 
 
@@ -486,7 +496,7 @@ h3 {
 	overflow: visible
 }
 
-.exportcsv {
+.exportcsv {messagediv
 	margin-top: 6px;
 }
 

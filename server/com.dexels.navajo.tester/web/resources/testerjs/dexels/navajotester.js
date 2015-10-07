@@ -137,7 +137,6 @@ function runScript(script) {
             }
         });
     } catch(err) {
-        console.log("Caugh error " +  err.message);
         $('#HTMLview')[0].innerHTML = "Error on running script: " + err.message;
         $('#scriptMainView').show();
         $('.overlay').hide();

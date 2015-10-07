@@ -9,7 +9,7 @@ $propertyvaluedivElem.attr('class', 'propertyvaluediv');
 function parseTmlToHtml( scriptname, navajoelement, methodselement) {
     navajoelement.html('')
     methodselement.html('')
-    
+     
     $xml = $( xml ),
     $tml = $xml.children('tml');
     
@@ -34,7 +34,6 @@ function parseTmlToHtml( scriptname, navajoelement, methodselement) {
         $(this).css("width", (size / 2)+'em');
     });
     
-    
     var $methods = $(document.createElement('ul'));
     $tml.children('methods').each(function(){
         $(this).children('method').each(function() {
@@ -48,6 +47,7 @@ function parseTmlToHtml( scriptname, navajoelement, methodselement) {
         });
     });
     $methods.appendTo(methodselement);
+
 }
 
 function parseTmlArrayMessage(arraymessage) {
@@ -55,8 +55,9 @@ function parseTmlArrayMessage(arraymessage) {
     var divString = '<div class="messagediv">';
     divString += '<div class="exportcsv" id="'+getElementXPath(arraymessage[0])+'"> ';
     divString += '<h3> '+arraymessage.attr('name')+'</h3></div>'
-    
+   
     divString += printArrayHorizontal(arraymessage);
+   
     divString += '</div>'
     return divString;    
 }
@@ -177,7 +178,7 @@ function processProperty(property) {
     propertyString += '</b>';
     var propdesc = property.attr('description') 
     if (typeof propdesc != 'undefined' && propdesc !== "") {
-        propertyString += '<div class="propdescription">(' + propdesc + ')</div>';
+        propertyString += '<div class="propdescription">' + propdesc + '</div>';
     }
     propertyString += '</div><div class="propertyvaluediv">'
     
