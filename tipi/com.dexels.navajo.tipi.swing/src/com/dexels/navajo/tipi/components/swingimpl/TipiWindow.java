@@ -47,7 +47,8 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
 	private JInternalFrame myWindow;
 	private boolean hideOnClose = true;
     private boolean isHidden = false;
-
+    private int overlayCounter = 0;
+    
 	private JInternalFrame constructWindow() {
 		clearContainer();
 		myWindow = new TipiSwingWindow();
@@ -415,13 +416,23 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
     
     @Override 
     public void addOverlayProgressPanel(String type) {
-        
-        ((TipiSwingWindow) myWindow).addGlass(type);
+        synchronized(this){
+            if (overlayCounter == 0) {
+                ((TipiSwingWindow) myWindow).addGlass(type);
+            }
+            overlayCounter++;
+        }
     } 
     
     @Override
     public void removeOverlayProgressPanel() {
-        ((TipiSwingWindow) myWindow).hideGlass();
+        synchronized(this){
+            overlayCounter--;
+            if (overlayCounter < 1) {
+                ((TipiSwingWindow) myWindow).hideGlass();
+            }
+            overlayCounter = 0;
+        }
     }
     
 
