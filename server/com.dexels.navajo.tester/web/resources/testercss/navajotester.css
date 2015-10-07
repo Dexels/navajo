@@ -386,7 +386,7 @@ input[readOnly] {
 }
 
 .messagediv {
-	border-radius: 10px;
+	border-radius: 5px;
 	margin: 10px;
 	padding-left: 10px;
 	padding-bottom: 10px;
@@ -407,7 +407,6 @@ td .messagediv {
 
 
 .tmlarraymessagetable td {
-	border-radius: 10px;
 	padding-left: 10px;
 	padding-right: 10px;
 	border-left: 2px solid #002553;
@@ -450,6 +449,10 @@ h3 {
 	font-size: 16px;
 }
 
+.messagediv h3 {
+	cursor: pointer;
+}
+
 .headercontainer {
 	width: 300px;
 	margin: 0 auto;
@@ -480,7 +483,7 @@ h3 {
 	cursor: pointer;
 	margin-left: 4px;
 	position: absolute;
-	
+	overflow: visible
 }
 
 .exportcsv {

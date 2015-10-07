@@ -1,3 +1,5 @@
+"use strict"
+
 // Holds the input navajo document for the next RPC call
 var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header></tml>');;
 var serializer = new XMLSerializer();
@@ -98,9 +100,8 @@ function runScript(script) {
             $('#HTMLview').show();
         }
 
-        navajoinput = prepareInputNavajo(script);
+        var navajoinput = prepareInputNavajo(script);
          
-        
         $.post("/navajo/" + instance , navajoinput, function(xmlObj) {
             replaceXml(script, xmlObj);
             var stateObj = { script: script, xml:  serializer.serializeToString(xml) };
@@ -267,6 +268,17 @@ $(document).on('click', '#TMLSourceviewLink', function() {
     return false;
 });
 
+$(document).on('click', '.messagediv h3', function() {
+    $(this).closest('.messagediv').children('div').each(function() {
+        if ($(this).attr('class') !== 'exportcsv') {
+            $(this).toggle();
+        }
+        
+    });
+    return false;
+});
+
+
 $(document).on('input propertychange', '#scriptsFilter', function(evt) {
     // If it's the propertychange event, make sure it's the value that
     // changed.
@@ -297,8 +309,9 @@ $(document).on('input propertychange', '.tmlinputtext', function(evt) {
         return;
     var xpath = $(this).attr('id');
     
-    var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
-   
+    $(document).xpath("*");
+    //var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
+     var element = $(xml).xpath(xpath);
     if (typeof element != 'undefined') {
         var $element = $(element);
         $element.attr('value',  $(this).val());
@@ -309,7 +322,8 @@ $(document).on('input propertychange', '.tmlinputtext', function(evt) {
 
 $(document).on('input change', '.tmlinputcheckbox', function(evt) {
     var xpath = $(this).attr('id');
-    var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
+   // var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
+    var element = $(xml).xpath(xpath);
     if (typeof element != 'undefined') {
         var $element = $(element);
         $element.attr('value',  $(this).prop('checked'));
@@ -319,7 +333,8 @@ $(document).on('input change', '.tmlinputcheckbox', function(evt) {
 $(document).on('input change', '.tmlinputselect', function(evt) {
     var  xpath = $(this).attr('id');
     var $input = $(this);
-    var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
+  //  var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
+    var element = $(xml).xpath(xpath);
    
     
     if (typeof element != 'undefined') {
@@ -346,36 +361,32 @@ window.onpopstate = function(event) {
     } else {
         replaceXml(event.state.script, $.parseXML(event.state.xml));
     }
-  
-   // alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
-  };
+};
 
-var encodedUri;
-var link;
+
 $(document).on('click', '.exportcsv', function() {
-    var filename = $(this).children('h3').text();
-    console.log(filename);
+    var filename = $(this).children('h3').text().trim();
     if (typeof filename === 'undefined') {
         filename = 'export';
     }
-    filename = filename.trim();
-    
+
     var csvContent = getCsvContent($(this));
-    encodedUri = encodeURI(csvContent);
-    link = document.createElement("a");
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", "export" + filename + ".csv");
     document.body.appendChild(link);
-    link.click(); // This will download the data file named "my_data.csv".
-    
-    //document.body.removeChild(link);
+    link.click(); 
+    console.log("Download triggered")
+    document.body.removeChild(link);
 });
 
 function getCsvContent(divelement) {
     var csvData = [];
     var defdata = [];
     var xpath = divelement.attr('id');
-    var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
+ //   var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
+    var element = $(xml).xpath(xpath);
    
     if (typeof element != 'undefined') {
         var $element = $(element);
@@ -415,14 +426,19 @@ function getCsvContent(divelement) {
         }); 
     }
 
+    var csvContent = 'data:text/csv;charset=utf-8,';
+    if (defdata.length > 1) {
+        csvContent += defdata.join(","); 
+        csvContent +=  '\n';
+    }  else {
+        csvContent +=  '\uFEFF';
+    }
     
-    var csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += defdata.join(",");
-    csvContent += "\n"
     csvData.forEach(function(infoArray, index){
-       dataString = infoArray.join(";");
+       var dataString = infoArray.join(";");
        csvContent += dataString+ "\n";
     }); 
+    console.log(csvContent);
 
     return csvContent;
 }
