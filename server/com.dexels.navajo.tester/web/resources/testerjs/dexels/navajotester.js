@@ -102,7 +102,7 @@ function runScript(script) {
         $.post("/navajo/" + instance , navajoinput, function(xmlObj) {
             replaceXml(script, xmlObj);
             var stateObj = { script: script, xml:  serializer.serializeToString(xml) };
-            history.pushState(stateObj, script, "tester.html");
+            history.pushState(stateObj, script, "tester.html?script="+script);
         });
 
     } catch(err) {
@@ -111,6 +111,7 @@ function runScript(script) {
         $('.overlay').hide();
         hourglassOff();
     }
+    
     $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
         $('#scriptsourcecontent').removeClass('prettyprinted');
         $('#scriptsourcecontent').text(data)
@@ -218,8 +219,9 @@ function getMyEntries(data, element) {
 /* Event handlers */
 
 $(document).on('click', '.script', function() {
-    var stateObj = {script: $(this).attr("id"),  xml:  serializer.serializeToString(xml) };
-    history.replaceState(stateObj, $('#loadedScript').text(), "tester.html");
+    var script =  $('#loadedScript').text();
+    var stateObj = {script: script,  xml:  serializer.serializeToString(xml) };
+    history.replaceState(stateObj, script, "tester.html?script=" + script);
     
     
     runScript($(this).attr("id"));
