@@ -1,4 +1,4 @@
-package com.dexels.navajo.tester.model;
+package com.dexels.navajo.tester.js.model;
 
 public interface NavajoFileSystemEntry {
     public static final String TYPE_FILE = "FILE";

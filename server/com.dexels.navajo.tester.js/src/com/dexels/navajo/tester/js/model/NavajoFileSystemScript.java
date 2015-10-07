@@ -1,4 +1,4 @@
-package com.dexels.navajo.tester.model;
+package com.dexels.navajo.tester.js.model;
 
 import java.io.File;
 

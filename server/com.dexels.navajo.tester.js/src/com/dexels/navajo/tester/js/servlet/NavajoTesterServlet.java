@@ -1,4 +1,4 @@
-package com.dexels.navajo.tester.servlet;
+package com.dexels.navajo.tester.js.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,8 +12,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tester.NavajoTesterHelper;
-import com.dexels.navajo.tester.model.NavajoFileSystemEntry;
+import com.dexels.navajo.tester.js.NavajoTesterHelper;
+import com.dexels.navajo.tester.js.model.NavajoFileSystemEntry;
 
 public class NavajoTesterServlet extends HttpServlet {
 

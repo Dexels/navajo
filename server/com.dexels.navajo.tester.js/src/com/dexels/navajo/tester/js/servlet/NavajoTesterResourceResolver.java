@@ -1,4 +1,4 @@
-package com.dexels.navajo.tester.servlet;
+package com.dexels.navajo.tester.js.servlet;
 
 import java.util.Map;
 import org.ops4j.pax.web.extender.whiteboard.ResourceMapping;

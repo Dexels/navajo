@@ -1,5 +1,5 @@
-Bundle-Name: Navajo Tester
-Bundle-SymbolicName: com.dexels.navajo.tester
+Bundle-Name: Navajo Tester JS
+Bundle-SymbolicName: com.dexels.navajo.tester.js
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.1.qualifier
 Bundle-ClassPath: .

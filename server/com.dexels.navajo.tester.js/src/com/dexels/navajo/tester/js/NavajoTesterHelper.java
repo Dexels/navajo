@@ -1,4 +1,4 @@
-package com.dexels.navajo.tester;
+package com.dexels.navajo.tester.js;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.tester.model.NavajoFileSystemFolder;
-import com.dexels.navajo.tester.model.NavajoFileSystemScript;
+import com.dexels.navajo.tester.js.model.NavajoFileSystemFolder;
+import com.dexels.navajo.tester.js.model.NavajoFileSystemScript;
 
 public class NavajoTesterHelper {
     private final static Logger logger = LoggerFactory.getLogger(NavajoTesterHelper.class);
