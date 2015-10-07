@@ -1,5 +1,6 @@
 // Holds the input navajo document for the next RPC call
 var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header></tml>');;
+var serializer = new XMLSerializer();
 
 function getScripts() {
     var scriptssource = $("#scripts-template").html();
@@ -85,40 +86,52 @@ function runScript(script) {
     }
     
     var instance =  $( "#handlers option:selected" ).text();
-    hourglassOn();
-    $('.overlay').show();
-    
-    // If we have sourcefile visible, show HTML page. Otherwise leave it
-    if ($('#TMLSourceview').is(":visible")) {
-        $('#TMLSourceview').hide();
-        $('#HTMLview').show();
-    }
+    try {
+        hourglassOn();
+        $('.overlay').show();
+        
+        // If we have sourcefile visible, show HTML page. Otherwise leave it
+        if ($('#TMLSourceview').is(":visible")) {
+            $('#TMLSourceview').hide();
+            $('#HTMLview').show();
+        }
 
-    navajoinput = prepareInputNavajo(script);
-     
-    
-    $.post("/navajo/" + instance , navajoinput, function(xmlobj) {
-        xml = xmlobj;
-        $('#scriptcontent').removeClass('prettyprinted');
-        var xmltext = (new XMLSerializer()).serializeToString(xmlobj)
-        $('#scriptcontent').text(xmltext)
-        prettyPrint();
-        parseTmlToHtml($('#HTMLview'), $('#methods'));
-       
-        $('.overlay').hide(200);
-        $('#scriptMainView').show();
+        navajoinput = prepareInputNavajo(script);
+         
+        
+        $.post("/navajo/" + instance , navajoinput, function(xmlObj) {
+            replaceXml(script, xmlObj);
+            var stateObj = { script: script, xml:  serializer.serializeToString(xml) };
+            history.pushState(stateObj, script, "tester.html");
+        });
+
+    } catch(err) {
+        console.log("Caugh error " +  err.message);
+        $('#HTMLview')[0].innerHTML = "Error on running script: " + err.message;
+        $('.overlay').hide();
         hourglassOff();
-        $('html, body').animate({
-            scrollTop : 0
-        }, 50);
-
-    });
-
+    }
     $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
         $('#scriptsourcecontent').removeClass('prettyprinted');
         $('#scriptsourcecontent').text(data)
         prettyPrint();
     });
+}
+
+function replaceXml(script, xmlObj) {
+    xml = xmlObj;
+    $('#scriptcontent').removeClass('prettyprinted');
+    var xmltext = serializer.serializeToString(xmlObj)
+    $('#scriptcontent').text(xmltext)
+    prettyPrint();
+    parseTmlToHtml($('#HTMLview'), $('#methods'));
+   
+    $('.overlay').hide(200);
+    $('#scriptMainView').show();
+    hourglassOff();
+    $('html, body').animate({
+        scrollTop : 0
+    }, 50);
 }
 
 function hourglassOn() {
@@ -139,7 +152,7 @@ function prepareInputNavajo(script) {
     $transaction.attr('rpc_usr', sessionStorage.user);
     $transaction.attr('rpc_pwd', sessionStorage.password)
     
-    return (new XMLSerializer()).serializeToString(xml);
+    return serializer.serializeToString(xml);
 }
 
 function updateVisibility(filter, element) {
@@ -205,6 +218,10 @@ function getMyEntries(data, element) {
 /* Event handlers */
 
 $(document).on('click', '.script', function() {
+    var stateObj = {script: $(this).attr("id"),  xml:  serializer.serializeToString(xml) };
+    history.replaceState(stateObj, $('#loadedScript').text(), "tester.html");
+    
+    
     runScript($(this).attr("id"));
 });
 
@@ -330,6 +347,16 @@ $(document).on('input change', '.tmlinputselect', function(evt) {
 });
 
 
+window.onpopstate = function(event) {
+    if (!event.state) {
+        console.log('clear page')
+    } else {
+        replaceXml(event.state.script, $.parseXML(event.state.xml));
+    }
+  
+   // alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
+  };
+
 var encodedUri;
 var link;
 $(document).on('click', '.exportcsv', function() {
@@ -338,6 +365,7 @@ $(document).on('click', '.exportcsv', function() {
     if (typeof filename === 'undefined') {
         filename = 'export';
     }
+    filename = filename.trim();
     
     var csvContent = getCsvContent($(this));
     encodedUri = encodeURI(csvContent);
@@ -353,8 +381,8 @@ $(document).on('click', '.exportcsv', function() {
 function getCsvContent(divelement) {
     var csvData = [];
     var defdata = [];
-    var  xpath = divelement.attr('id');
-    var  element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
+    var xpath = divelement.attr('id');
+    var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
    
     if (typeof element != 'undefined') {
         var $element = $(element);
@@ -373,12 +401,17 @@ function getCsvContent(divelement) {
             $(this).children('property').each(function() {
                 var proptype = $(this).attr('type')
                 if (proptype === 'selection') {
+                    var hasselection = false;
                     property.children('option').each(function() {
                         var selected = $(this).attr('selected');
                         if (selected) {
                             row.push($(this).attr('name'));
+                            hasselection = true;
                         }
                     });
+                    if (!hasselection) {
+                        row.push("");
+                    }
                 } else {
                     row.push($(this).attr('value'));
                 }

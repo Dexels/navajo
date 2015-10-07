@@ -379,7 +379,7 @@ input[readOnly] {
 }
 
 .messagediv {
-	border-radius: 25px;
+	border-radius: 10px;
 	margin: 10px;
 	padding-left: 10px;
 	padding-bottom: 10px;
@@ -400,7 +400,7 @@ td .messagediv {
 
 
 .tmlarraymessagetable td {
-	border-radius: 25px;
+	border-radius: 10px;
 	padding-left: 10px;
 	padding-right: 10px;
 	border-left: 2px solid #002553;
@@ -409,30 +409,20 @@ td .messagediv {
 }
 
 .tmlarraymessagetable tr {
-	height: 30px;
+	height: 31px;
 }
 
 .tmlarraymessagetable tr:nth-child(2) {
-	border-top: 2px solid #002553;
+	border-top: 1px solid #002553;
 }
 
-.tmlarraymessagetable tr:last-child {
-	border-bottom: 2px solid #002553;
-}
 
 .propertydiv {
 	overflow: hidden;
 	font-size: 12px;
-	margin-bottom: 2px;
+	margin-bottom: 3px;
 }
 
-/* .propertydiv:nth-of-type(even) { */
-/* 	background-color: #ffffff; */
-/* } */
-
-/* .propertydiv:nth-of-type(odd) { */
-/* 	background-color: #e5e5e5; */
-/* } */
 
 .propdescription {
 	font-size: 10px;
@@ -460,7 +450,7 @@ h3 {
 }
 
 .handlersdrop {
-	display: inline
+	display: inline;
 }
 
 .LoginButton {
@@ -482,6 +472,12 @@ h3 {
 	content:  url('/testerimg/export.png');
 	cursor: pointer;
 	margin-left: 4px;
+	position: absolute;
+	
+}
+
+.exportcsv {
+	margin-top: 6px;
 }
 
 .exportcsv h3 {
@@ -489,3 +485,4 @@ h3 {
 	font-size: 16px;
 	display: inline;
 }
+
