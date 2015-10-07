@@ -22,11 +22,13 @@ function sortFileObject(element) {
     $.each(element, function(index, subelem) {
         if (subelem.type  === 'FOLDER') {
            sortFileObject(subelem.entries);
-            
         }
     });
   
     element.sort(function(a, b) {
+        if (a.type === 'FILE' && b.type === 'FOLDER') {
+            return 1;
+        }
         return a.name.localeCompare(b.name);
     });
 }
