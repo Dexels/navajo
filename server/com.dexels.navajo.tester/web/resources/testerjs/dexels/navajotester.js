@@ -366,82 +366,33 @@ window.onpopstate = function(event) {
 
 $(document).on('click', '.exportcsv', function() {
     var filename = $(this).children('h3').text().trim();
+   
     if (typeof filename === 'undefined') {
-        filename = 'export';
+        filename = 'export.csv';
+    } else {
+        filename =  "export" + filename + ".csv";
     }
 
-    var csvContent = getCsvContent($(this));
-    var encodedUri = encodeURI(csvContent);
-    var link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "export" + filename + ".csv");
-    document.body.appendChild(link);
-    link.click(); 
-    console.log("Download triggered")
-    document.body.removeChild(link);
+    var blob = getCsvContent($(this));
+   
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, filename)
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { 
+            //  Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", filename);
+            link.style = "visibility:hidden";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }  
+    }
 });
 
-function getCsvContent(divelement) {
-    var csvData = [];
-    var defdata = [];
-    var xpath = divelement.attr('id');
- //   var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
-    var element = $(xml).xpath(xpath);
-   
-    if (typeof element != 'undefined') {
-        var $element = $(element);
-        
-        // If we have a definition message, this is put in the header row
-        $element.children('message[type="definition"]').each(function() {
-            $(this).children('property').each(function() {
-                defdata.push($(this).attr('name'));
-            });
-        });
-           
-        // Loop over the array_elements
-        $element.children('message[type="array_element"]').each(function() {
-            var row = [];
-            // go over properties
-            $(this).children('property').each(function() {
-                var proptype = $(this).attr('type')
-                if (proptype === 'selection') {
-                    var hasselection = false;
-                    property.children('option').each(function() {
-                        var selected = $(this).attr('selected');
-                        if (selected) {
-                            row.push($(this).attr('name'));
-                            hasselection = true;
-                        }
-                    });
-                    if (!hasselection) {
-                        row.push("");
-                    }
-                } else {
-                    row.push($(this).attr('value'));
-                }
-               
-               
-            })
-            csvData.push(row);
-        }); 
-    }
 
-    var csvContent = 'data:text/csv;charset=utf-8,';
-    if (defdata.length > 1) {
-        csvContent += defdata.join(","); 
-        csvContent +=  '\n';
-    }  else {
-        csvContent +=  '\uFEFF';
-    }
-    
-    csvData.forEach(function(infoArray, index){
-       var dataString = infoArray.join(";");
-       csvContent += dataString+ "\n";
-    }); 
-    console.log(csvContent);
-
-    return csvContent;
-}
 
 /* Some helpers */
 Array.prototype.indexOfPath = function(path) {
