@@ -233,17 +233,6 @@ $(document).on('click', '.folder', function() {
     $(this).next().children('ul li').toggle();
 });
 
-$(document).on('click', '.folder', function(e) {
-    if ($(this).children().length > 0) {
-        $(this).children().remove();
-    } else {
-        // Find higest element
-        var entries = getMyEntries(data, $(this))
-        $(this).append(foldertemplate(entries));
-    }
-    e.stopPropagation();
-});
-
 $(document).on('click', '#showMoreArrow', function() {
     $('#loginform').show(200);
     $('#showLessArrow').show();

@@ -348,6 +348,7 @@ section p:last-child {
 
 .script {
 	cursor: pointer;
+	display: inline;
 }
 
 .script:before {
@@ -356,6 +357,7 @@ section p:last-child {
 
 .folder {
 	cursor: pointer;
+	display: inline;
 }
 
 .folder:before {
