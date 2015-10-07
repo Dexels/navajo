@@ -50,7 +50,7 @@ a img {
 }
 
 body {
-	background-color: #FFED00;
+	background-color: #002553;
 	color: #505050;
 	font-family: "Ubuntu", sans-serif;
 	font-weight: 300;
@@ -130,7 +130,7 @@ header {
 }
 
 #title h1 {
-	color: #000;
+	color: #FFFFFF;
 	font-size: 30px;
 	font-weight: bold;
 	margin-bottom: 10px;
@@ -383,7 +383,7 @@ input[readOnly] {
 	margin: 10px;
 	padding-left: 10px;
 	padding-bottom: 10px;
-	border: 2px solid #dacb07;
+	border: 2px solid #002553;
 	overflow: auto;
 }
 
@@ -395,8 +395,8 @@ td .propertynamediv {
 	border-radius: 25px;
 	padding-left: 10px;
 	padding-right: 10px;
-	border-left: 2px solid #dacb07;
-	border-right: 2px solid #dacb07;
+	border-left: 2px solid #002553;
+	border-right: 2px solid #002553;
 	height: 20px;
 }
 
@@ -405,11 +405,11 @@ td .propertynamediv {
 }
 
 .tmlarraymessagetable tr:nth-child(2) {
-	border-top: 2px solid #dacb07;
+	border-top: 2px solid #002553;
 }
 
 .tmlarraymessagetable tr:last-child {
-	border-bottom: 2px solid #dacb07;
+	border-bottom: 2px solid #002553;
 }
 
 .propertydiv {
@@ -441,7 +441,7 @@ td .propertynamediv {
 }
 
 h3 {
-	color: #ff4976;
+	color: #006000;
 	font-size: 16px;
 }
 
