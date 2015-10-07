@@ -5,6 +5,7 @@ var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rp
 var serializer = new XMLSerializer();
 
 function getScripts() {
+    $("#scripts").html("");
     var scriptssource = $("#scripts-template").html();
     var scriptstemplate = Handlebars.compile(scriptssource);
 
@@ -12,11 +13,28 @@ function getScripts() {
     var foldertemplate = Handlebars.compile(foldersource);
 
     Handlebars.registerPartial('subscripts', foldertemplate);
-
-    $.getJSON("/testerapi?query=getscripts", function(data) {
-        sortFileObject(data)
-        $("#scripts").html(scriptstemplate(data));
-    });
+    try {
+        $.ajax({
+            dataType: "json",
+            url: "/testerapi?query=getscripts",
+            success: function(data) {
+                sortFileObject(data)
+                $("#scripts").html(scriptstemplate(data));
+            },
+            error: function () {
+                $("#scripts").html("Error from server - retrying in a few seconds...");
+                setTimeout( function(){getScripts()}, 3000 );
+                
+            }
+            
+        });
+          
+        
+    } catch (err) {
+        $("#scripts").html("Error from server - retrying in a few seconds...");
+        setTimeout( function(){getScripts()}, 3000 );
+    }
+    
 
 };
 
@@ -101,16 +119,27 @@ function runScript(script) {
         }
 
         var navajoinput = prepareInputNavajo(script);
-         
-        $.post("/navajo/" + instance , navajoinput, function(xmlObj) {
-            replaceXml(script, xmlObj);
-            var stateObj = { script: script, xml:  serializer.serializeToString(xml) };
-            history.pushState(stateObj, script, "tester.html?script="+script);
+        
+        $.ajax({
+            type: "POST",
+            url: "/navajo/" + instance,
+            data: navajoinput,
+            success: function(xmlObj) {
+                replaceXml(script, xmlObj);
+                var stateObj = { script: script, xml:  serializer.serializeToString(xml) };
+                history.pushState(stateObj, script, "tester.html?script="+script);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                $('#HTMLview')[0].innerHTML = "Error on running script: <br/><br/>" + xhr.responseText; 
+                $('#scriptMainView').show();
+                $('.overlay').hide();
+                hourglassOff();
+            }
         });
-
     } catch(err) {
         console.log("Caugh error " +  err.message);
         $('#HTMLview')[0].innerHTML = "Error on running script: " + err.message;
+        $('#scriptMainView').show();
         $('.overlay').hide();
         hourglassOff();
     }
@@ -123,19 +152,28 @@ function runScript(script) {
 }
 
 function replaceXml(script, xmlObj) {
-    xml = xmlObj;
-    $('#scriptcontent').removeClass('prettyprinted');
-    var xmltext = serializer.serializeToString(xmlObj)
-    $('#scriptcontent').text(xmltext)
-    prettyPrint();
-    parseTmlToHtml(script, $('#HTMLview'), $('#methods'));
-   
-    $('.overlay').hide(200);
-    $('#scriptMainView').show();
-    hourglassOff();
-    $('html, body').animate({
-        scrollTop : 0
-    }, 50);
+    try {
+        xml = xmlObj;
+        $('#scriptcontent').removeClass('prettyprinted');
+        var xmltext = serializer.serializeToString(xmlObj)
+        $('#scriptcontent').text(xmltext)
+        prettyPrint();
+        parseTmlToHtml(script, $('#HTMLview'), $('#methods'));
+       
+        $('.overlay').hide(200);
+        $('#scriptMainView').show();
+        hourglassOff();
+        $('html, body').animate({
+            scrollTop : 0
+        }, 50);
+    } catch (error) {
+        console.log("Caugh error " +  err.message);
+        $('#HTMLview')[0].innerHTML = "Error on running script: " + err.message;
+        $('#scriptMainView').show();
+        $('.overlay').hide();
+        hourglassOff();
+    }
+    
 }
 
 function hourglassOn() {
@@ -384,7 +422,7 @@ $(document).on('click', '.exportcsv', function() {
             var url = URL.createObjectURL(blob);
             link.setAttribute("href", url);
             link.setAttribute("download", filename);
-            link.style = "visibility:hidden";
+            //link.style = "visibility:hidden";
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
