@@ -51,9 +51,7 @@ function parseTmlToHtml( navajoelement, methodselement) {
 function parseTmlArrayMessage(arraymessage) {
     
     var divString = '<div class="messagediv"><h3> '+arraymessage.attr('name')+'</h3>'
-    console.time("array")
     divString += printArrayHorizontal(arraymessage);
-    console.timeEnd("array")
     divString += '</div>'
     return divString;    
 }
@@ -64,15 +62,27 @@ function printArrayHorizontal(arraymessage) {
     // Store properties in an array to prevent looping over dom element
     var properties = [];
     var arrayName = arraymessage.attr('name');
+    if (arraymessage.children('message[type="array_element"]').length < 1) {
+        // nothing to print
+        return '<span>no array elements</span>';
+    }
     arraymessage.children('message[type="array_element"]').each(function(msgindex){
         if (typeof properties[msgindex] === 'undefined' ) {
             properties[msgindex] = [];
         }
-        $(this).children('property').each(function(propindex){ 
-            properties[msgindex][propindex] = [];
-            properties[msgindex][propindex]['value'] = processProperty($(this));
-            properties[msgindex][propindex]['name'] = $(this).attr('name');
+        $(this).children().each(function(elemindex){ 
+            properties[msgindex][elemindex] = [];
+            if ($(this)[0].tagName === 'property') {
+                properties[msgindex][elemindex]['value'] = processProperty($(this));
+            } else if ($(this)[0].tagName === 'message'){
+                properties[msgindex][elemindex]['value'] = parseTmlMessage($(this));
+            } else {
+                properties[msgindex][elemindex]['value'] = '<span>unknown</span>';
+            }
+            
+            properties[msgindex][elemindex]['name'] = $(this).attr('name');
         });
+       
     });
     
     // Make header table
@@ -96,7 +106,10 @@ function printArrayHorizontal(arraymessage) {
     for (var propindex = 0; propindex < properties[0].length; propindex++) { 
         tableString += '<tr>'
             for (var msgindex = 0; msgindex < properties.length; msgindex++) { 
-                tableString += '<td>' + properties[msgindex][propindex]['value']  + '</td>';
+                if (typeof properties[msgindex][propindex] != 'undefined') {
+                    tableString += '<td>' + properties[msgindex][propindex]['value']  + '</td>'
+                }
+               
             }
         tableString += '</tr>';
     }
@@ -216,64 +229,6 @@ function processProperty(property) {
     propertyString += '</div></div>'
     return propertyString;
 }
-
-//
-//function processArrayProperty(property) {
-//    // Use strings for performance
-//    var propertyString = '<div class="propertydiv">'   
-//    
-//    propertyString += '<div class="propertyvaluediv">'
-//    
-//    var propvalue = property.attr('value');
-//    var propdirection = property.attr('direction')
-//    var proptype = property.attr('type')
-//    var htmltype = tmlTypeToHtml(proptype)
-//
-//    // TODO: property description
-//   
-//    if (htmltype === 'select') {
-//        propertyString += '<select ';
-//        if (property.attr('cardinality') !== '1')  {
-//            propertyString += 'multiple="multiple" ';
-//        }
-//        if (propdirection != 'in') {
-//            propertyString += 'readOnly="readOnly" ';
-//        } else {
-//            propertyString += 'class="tmlinput' + htmltype + '" ';
-//            propertyString += 'id="'+getElementXPath(property[0])+'" >';
-//        }
-//        property.children('option').each(function() {
-//            propertyString += '<option value="'+$(this).attr('value')+'" '
-//            var selected = $(this).attr('selected');
-//            if (typeof selected !== typeof undefined && selected === '1') {
-//                propertyString += 'selected="selected"';
-//            }
-//            propertyString += '>' +  $(this).attr('name') + '</option>'
-//        });
-//        propertyString += '</select>';
-//    } else if (htmltype === 'binary') {
-//        // TODO: display binary somehow
-//    } else {
-//        propertyString += '<input type="'+htmltype+'" value="'+propvalue+'" ';
-//
-//        if (propdirection != 'in') {
-//            if (htmltype === 'checkbox') {
-//                propertyString += ' disabled="disabled" '
-//            } else {
-//                propertyString += ' readOnly="readOnly" '
-//            }
-//        } else {
-//         // This is only needed if the element can be changed
-//            propertyString += ' class="tmlinput' + htmltype + '" '
-//            propertyString += ' id="' + getElementXPath(property[0]) + '"'
-//
-//        }
-//    }
-//    propertyString += '></div></div>'
-//    return propertyString;
-//}
-
-
 
 
 function tmlTypeToHtml(tmlType) {

@@ -130,7 +130,7 @@ header {
 }
 
 #title h1 {
-	color: #FFFFFF;
+	color: #ebebeb;
 	font-size: 30px;
 	font-weight: bold;
 	margin-bottom: 10px;
@@ -319,7 +319,7 @@ section p:last-child {
 .scriptsbar {
 	float: left;
 	font-size: 13px;
-	line-height: 1.2;
+	line-height: 1.4;
 /* 	width: 25%;  */
 /* 	max-width: 400px; */
 }
@@ -390,6 +390,14 @@ input[readOnly] {
 td .propertynamediv {
 	display: none;
 }
+td h3 {
+	display: none;
+}
+
+td .messagediv {
+	min-width: 350px;
+}
+
 
 .tmlarraymessagetable td {
 	border-radius: 25px;
@@ -463,4 +471,10 @@ h3 {
 	font-size: 16px;
 	font-weight: bold;
 	cursor: pointer;
+	color: #ebebeb; 
+}
+
+#methods {
+	line-height: 1.5;
+	
 }
