@@ -589,7 +589,7 @@
     </feature>
     
     <feature name='navajo.tester.js' version='1.0.0'>
-        <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tester.js/1.0.0
+        <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tester.js/1.0.4
         </bundle>
     </feature>
 </features>
