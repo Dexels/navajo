@@ -318,8 +318,7 @@ $(document).on('click', '.messagediv h3', function() {
 
 
 $(document).on('input propertychange', '#scriptsFilter', function(evt) {
-    // If it's the propertychange event, make sure it's the value that
-    // changed.
+    // If it's the propertychange event, make sure it's the value that changed.
     if (window.event && event.type == "propertychange" && event.propertyName != "value")
         return;
 
@@ -348,7 +347,6 @@ $(document).on('input propertychange', '.tmlinputtext', function(evt) {
     var xpath = $(this).attr('id');
     
     $(document).xpath("*");
-    //var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
      var element = $(xml).xpath(xpath);
     if (typeof element != 'undefined') {
         var $element = $(element);
@@ -360,7 +358,6 @@ $(document).on('input propertychange', '.tmlinputtext', function(evt) {
 
 $(document).on('input change', '.tmlinputcheckbox', function(evt) {
     var xpath = $(this).attr('id');
-   // var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
     var element = $(xml).xpath(xpath);
     if (typeof element != 'undefined') {
         var $element = $(element);
@@ -371,7 +368,6 @@ $(document).on('input change', '.tmlinputcheckbox', function(evt) {
 $(document).on('input change', '.tmlinputselect', function(evt) {
     var  xpath = $(this).attr('id');
     var $input = $(this);
-  //  var element = xml.evaluate( xpath, xml, null, XPathResult.ANY_UNORDERED_NODE_TYPE  , null ).singleNodeValue;
     var element = $(xml).xpath(xpath);
    
     
@@ -422,7 +418,6 @@ $(document).on('click', '.exportcsv', function() {
             var url = URL.createObjectURL(blob);
             link.setAttribute("href", url);
             link.setAttribute("download", filename);
-            //link.style = "visibility:hidden";
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
