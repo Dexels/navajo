@@ -127,7 +127,7 @@ function replaceXml(script, xmlObj) {
     var xmltext = serializer.serializeToString(xmlObj)
     $('#scriptcontent').text(xmltext)
     prettyPrint();
-    parseTmlToHtml($('#HTMLview'), $('#methods'));
+    parseTmlToHtml(script, $('#HTMLview'), $('#methods'));
    
     $('.overlay').hide(200);
     $('#scriptMainView').show();

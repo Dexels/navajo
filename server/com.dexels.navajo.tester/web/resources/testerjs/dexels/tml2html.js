@@ -6,14 +6,16 @@ $propertynamedivElem.attr('class', 'propertynamediv');
 $propertyvaluedivElem.attr('class', 'propertyvaluediv');
 
 
-function parseTmlToHtml( navajoelement, methodselement) {
+function parseTmlToHtml( scriptname, navajoelement, methodselement) {
     navajoelement.html('')
     methodselement.html('')
     
     $xml = $( xml ),
     $tml = $xml.children('tml');
     
-    var messagesdiv = '<div>'
+    var messagesdiv = '<div><h2>' ;
+    messagesdiv += scriptname
+    messagesdiv += '</h2> '
     
     $tml.children('message').each(function(index){
         messagesdiv += parseTmlMessage($(this));
