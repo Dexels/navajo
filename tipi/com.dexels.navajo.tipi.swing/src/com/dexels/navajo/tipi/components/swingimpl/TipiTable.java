@@ -551,7 +551,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         m.put("service", method);
         m.put("navajo", n);
         performTipiEvent("onLoad", m, true);
-        mm.repaint();
+        mm.repaint(100);
     }
 
     protected void updateColumnVisibility() {
@@ -1050,7 +1050,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         Object newP = m.get("new");
         flushAggregateValues();
         updateConditionalRemarks();
-        mm.repaint();
+        mm.repaint(100);
         try {
 
             if (old == null) {
