@@ -2142,7 +2142,10 @@ public class GenericPropertyComponent extends JPanel {
 
 	@Override
 	public void setToolTipText(String toolTipText) {
-		logger.info("Setting tooltiptext: " + toolTipText);
+	    if (this.toolTipText.equals(toolTipText)) {
+	        return;
+	    }
+		logger.debug("Setting tooltiptext: " + toolTipText);
 		this.toolTipText = toolTipText;
 		super.setToolTipText(toolTipText);
 		if (currentComponent != null) {

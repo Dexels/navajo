@@ -59,7 +59,7 @@ public class OverlayProgressPanel extends JComponent implements ActionListener, 
     private Rectangle barsBounds = null;
     private Rectangle barsScreenBounds = null;
     private AffineTransform centerAndScaleTransform = null;
-    private Timer timer = new Timer(1000 / 16, this);
+    private Timer timer = new Timer(1000 / 50, this);
     private Color[] colors = null;
     private int colorOffset = 0;
     private boolean tempHide = false;
@@ -97,9 +97,6 @@ public class OverlayProgressPanel extends JComponent implements ActionListener, 
         // set opaque
         setOpaque(true);
 
-        addMouseListener(this);
-        addMouseMotionListener(this);
-        addFocusListener(this);
     }
 
     /**
@@ -116,7 +113,7 @@ public class OverlayProgressPanel extends JComponent implements ActionListener, 
         if (barsScreenBounds != null) {
             repaint(barsScreenBounds);
         } else {
-            repaint();
+            repaint(20);
         }
     }
 
@@ -129,9 +126,16 @@ public class OverlayProgressPanel extends JComponent implements ActionListener, 
         // capture
         if (i_bIsVisible) {
             // start anim
+            addMouseListener(this);
+            addMouseMotionListener(this);
+            addFocusListener(this);
+            
             timer.start();
         } else {
             // stop anim
+            removeMouseListener(this);
+            removeMouseListener(this);
+            removeMouseListener(this);
             timer.stop();
         }
         super.setVisible(i_bIsVisible);

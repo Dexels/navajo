@@ -551,7 +551,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         m.put("service", method);
         m.put("navajo", n);
         performTipiEvent("onLoad", m, true);
-        mm.repaint(100);
+       // mm.repaint(100);
     }
 
     protected void updateColumnVisibility() {
@@ -1139,8 +1139,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
             }
         }
         remarkPanel.setVisible(complied > 0);
-        remarkPanel.revalidate();
-        mm.revalidate();
     }
 
     private Component createRemark(String remark, Color c, Font f) {
@@ -1177,7 +1175,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         // mm.add(remarkPanel, BorderLayout.SOUTH);
         mm.add(remarkPanel, new GridBagConstraints(0, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                 new Insets(2, 2, 2, 2), 0, 0));
-        mm.revalidate();
     }
 
     public void doEmail() {
