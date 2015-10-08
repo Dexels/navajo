@@ -110,6 +110,8 @@ import com.dexels.navajo.tipi.validation.TipiValidationDecorator;
 public abstract class TipiContext implements ITipiExtensionContainer, Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(TipiContext.class);
+    private static final Logger perflogger = LoggerFactory.getLogger("perf");
+    
     private static final long serialVersionUID = 2077449402941300665L;
     public static final long contextStartup = System.currentTimeMillis();
 
@@ -2952,7 +2954,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if (start == null) {
             return;
         }
-        logger.info("Component: {} finished in: {} unhide: {}", id, (end - start), unhide);
+        perflogger.info("Component: {} finished in: {} unhide: {}", id, (end - start), unhide);
         tipiInstantiateStatistics.remove(id);
     }
     
@@ -2973,7 +2975,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if ( parent != null) {
             parentId = parent.getId();
         }
-        logger.info("Tipi Event {} on : {}-{} finished in: {}", eventname, component.getId(), parentId,  (end - start));
+        perflogger.info("Tipi Event {} on : {}-{} finished in: {}", eventname, component.getId(), parentId,  (end - start));
 
         tipiEventStatistics.remove(component.getId()+eventname);
     }
