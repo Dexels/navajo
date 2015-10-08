@@ -9,4 +9,4 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <jsp:useBean id="navajoContext" type="com.dexels.navajo.client.context.ClientContext"  scope="application" />
 Navajo Tester build:  <% out.write(JspComponent.getInstance().getVersion()); %> 
-<a href="tester.html"><div style="font-size: 20px;text-align:right; color:#B50000"> Go to Tester v2</div></a>
+<a href="tester.html"><div style="font-size: 20px;text-align:right; color:#B50000"> Go to Tester JS</div></a>
