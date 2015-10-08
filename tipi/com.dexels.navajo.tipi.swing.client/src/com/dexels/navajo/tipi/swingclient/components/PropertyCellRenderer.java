@@ -299,19 +299,21 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
         String a=  " ";
         JComponent cc = (JComponent) c;
         cc.setOpaque(true);
-        if (isSelected) {
-            c.setBackground(selectedColor);
-        } else {
-            if (row % 2 == 0) {
-                c.setBackground(highColor);
-            } else {
-                c.setBackground(lowColor);
-            }
-        }
+       
 
         Color clr = (myTable != null ? myTable.getRowBackgroundColor(row, col) : null);
         if (clr != null) {
             c.setBackground(isSelected ? clr.darker() : clr);
+        } else {
+            if (isSelected) {
+                c.setBackground(selectedColor);
+            } else {
+                if (row % 2 == 0) {
+                    c.setBackground(highColor);
+                } else {
+                    c.setBackground(lowColor);
+                }
+            }
         }
 
         clr = (myTable != null ? myTable.getRowForegroundColor(row, col) : null);
