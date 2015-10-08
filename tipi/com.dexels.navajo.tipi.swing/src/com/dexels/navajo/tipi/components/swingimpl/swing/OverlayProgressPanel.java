@@ -59,7 +59,7 @@ public class OverlayProgressPanel extends JComponent implements ActionListener, 
     private Rectangle barsBounds = null;
     private Rectangle barsScreenBounds = null;
     private AffineTransform centerAndScaleTransform = null;
-    private Timer timer = new Timer(1000 / 50, this);
+    private Timer timer = new Timer(1000 / 10, this);
     private Color[] colors = null;
     private int colorOffset = 0;
     private boolean tempHide = false;
