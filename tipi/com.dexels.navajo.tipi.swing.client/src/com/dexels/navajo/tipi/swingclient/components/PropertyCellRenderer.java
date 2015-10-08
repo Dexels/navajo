@@ -296,10 +296,6 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
         if (row < 0) {
             return;
         }
-        String a=  " ";
-        JComponent cc = (JComponent) c;
-        cc.setOpaque(true);
-       
 
         Color clr = (myTable != null ? myTable.getRowBackgroundColor(row, col) : null);
         if (clr != null) {
@@ -314,15 +310,15 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
                     c.setBackground(lowColor);
                 }
             }
+
         }
 
         clr = (myTable != null ? myTable.getRowForegroundColor(row, col) : null);
         if (clr != null) {
             c.setForeground(isSelected ? clr.darker() : clr);
         }
-
     }
-
+    
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
             boolean cellHasFocus) {
         Selection sel = (Selection) value;
