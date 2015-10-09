@@ -449,8 +449,6 @@ public class GenericHandler extends ServiceHandler {
     	StringBuffer compilerErrors = new StringBuffer();
         outDoc = NavajoFactory.getInstance().createNavajo();
         
-        
-
         try {
             CompiledScriptInterface cso = loadOnDemand(access.rpcName, false);
 
