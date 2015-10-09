@@ -7,7 +7,6 @@
    <implementation class="com.dexels.navajo.entity.listener.EntityApiDocListener"/>
    <property name="alias" type="String" value="/entityDocumentation"/>
    <property name="servletName" type="String" value="entityDocumentation"/>
-   <property name="servlet-name" type="String" value="entityDocumentation"/>
    <reference bind="setEntityManager" cardinality="1..1" interface="com.dexels.navajo.entity.EntityManager" name="EntityManager" policy="dynamic"/>
    
 </scr:component>
