@@ -3,6 +3,8 @@ package com.dexels.navajo.adapter.mailmap;
 import java.io.File;
 import java.io.Serializable;
 
+import javax.mail.internet.MimeBodyPart;
+
 import com.dexels.navajo.adapter.MailMap;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.script.api.Access;
@@ -34,7 +36,7 @@ public class AttachementMap implements Mappable, Serializable, AttachmentMapInte
   public String attachFile = null;
   
   public String attachContentHeader = null;
-  public String attachContentDisposition = "attachment";
+  public String attachContentDisposition = MimeBodyPart.ATTACHMENT;
   public String attachContentType = null;
   // Encoding is e.g. base64
   public String encoding = null;

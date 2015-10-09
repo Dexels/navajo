@@ -47,6 +47,8 @@ public class CssComponentResponderImpl implements
 	 */
 	private final Map<String, List<String>> tipiCssMap = new HashMap<String, List<String>>();
 
+    private long totalTime = 0;
+
 	public CssComponentResponderImpl(TipiContext tc) {
 		this.context = tc;
 		tc.getApplicationInstance().addLocaleListener(new LocaleListener(){
@@ -61,6 +63,8 @@ public class CssComponentResponderImpl implements
 	}
 
 	private void doComponentInstantiated(TipiComponent tc) {
+	    
+	    long start = System.nanoTime();
 		List<String> definitions = new ArrayList<String>();
 		definitions.add("main");
 		String home = getHomeDefinitionName(tc);
@@ -94,6 +98,10 @@ public class CssComponentResponderImpl implements
 //				applyCss(tc, cssDefinition, null, null);
 //			}
 //		}
+		
+		  long end = System.nanoTime();
+		  totalTime += (end - start);
+		  logger.info("csstime doComponentInstantiated took {} total {}", (end - start)/1000000, totalTime/1000000);
 	}
 
 	
@@ -447,6 +455,7 @@ public class CssComponentResponderImpl implements
 				context.runSyncInEventThread(new Runnable() {
 					@Override
 					public void run() {
+					    
 						doComponentInstantiated(tc);
 
 					}
