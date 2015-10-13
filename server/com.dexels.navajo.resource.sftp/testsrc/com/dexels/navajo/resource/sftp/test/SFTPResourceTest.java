@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.navajo.document.types.Binary;
@@ -34,7 +35,7 @@ public class SFTPResourceTest {
 		factory.addSFTPResource(sftp, settings);
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testSFTP() throws MappableException, UserException, IOException {
 	
 		SFTPResource res = SFTPResourceFactory.getInstance().getHttpResource("test");
@@ -42,7 +43,7 @@ public class SFTPResourceTest {
 		res.send("/share", "monkey2.gif", b);
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testSFTPResourceMap() throws MappableException, UserException {
 		SFTPResourceMap sf = new SFTPResourceMap();
 		sf.load(new Access());
