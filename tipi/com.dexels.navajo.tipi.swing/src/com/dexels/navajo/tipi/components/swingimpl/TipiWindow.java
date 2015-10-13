@@ -389,20 +389,15 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
             isHidden = false;
             addOverlayProgressPanel("opaque");
 
-            /*
-             * We want to have a small delay before we unhide the component.
-             * This allows for the early onInstantiate code to already be done,
-             * and prevents some weird (visual) quirks
-             */
-            new Thread() {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
                 public void run() {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                    }
                     getSwingContainer().setVisible(true);
                 }
-            }.start();
+            });
+                    
+  
         }
 
     }

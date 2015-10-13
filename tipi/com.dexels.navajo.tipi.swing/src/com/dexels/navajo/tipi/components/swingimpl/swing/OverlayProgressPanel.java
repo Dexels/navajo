@@ -41,6 +41,8 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
+import javax.swing.RootPaneContainer;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class OverlayProgressPanel extends JComponent implements ActionListener, MouseListener, MouseMotionListener,
@@ -241,12 +243,29 @@ public class OverlayProgressPanel extends JComponent implements ActionListener, 
         return new Area(body);
     }
 
-    public void start() {
-        setVisible(true);
+    public void start(final RootPaneContainer parent) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                setVisible(true); 
+                parent.setGlassPane(OverlayProgressPanel.this);
+            }
+
+        });
+       
     }
 
     public void stop() {
-        setVisible(false);
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                setVisible(false);
+            }
+
+        });
+
     }
 
     @Override
