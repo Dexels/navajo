@@ -59,7 +59,7 @@ public class CompileServlet extends HttpServlet {
 			for (String failed : failures) {
 				logger.info("Failed: "+failed);
 			}
-		//	bundleCreator.installBundles(script,failures, success, skipped, true,extension);
+		    bundleCreator.installBundles(script,failures, success, skipped, true, null);
 			tm3 = System.currentTimeMillis() - tstamp;
 			logger.info("Installing bundles took "+tm3+" millis.");
 			
