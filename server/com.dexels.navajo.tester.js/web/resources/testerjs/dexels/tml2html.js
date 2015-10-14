@@ -13,9 +13,7 @@ function parseTmlToHtml( scriptname, navajoelement, methodselement) {
     $xml = $( xml ),
     $tml = $xml.children('tml');
     
-    var messagesdiv = '<div><h2>' ;
-    messagesdiv += scriptname
-    messagesdiv += '</h2> '
+    var messagesdiv = '<div>'
     
     $tml.children('message').each(function(index){
         messagesdiv += parseTmlMessage($(this));

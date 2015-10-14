@@ -3,6 +3,11 @@
 // Holds the input navajo document for the next RPC call
 var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header></tml>');;
 var serializer = new XMLSerializer();
+var hooverdiv = '<div class="customRunOption">';
+hooverdiv += '  <div class="scriptcompile">Compile</div>';
+hooverdiv += '  <div class="scriptsource">Source</div>';
+hooverdiv += '  <div class="scriptinput">Custom Input</div>';
+hooverdiv += '</div>';
 
 function getScripts() {
     $("#scripts").html("");
@@ -20,10 +25,27 @@ function getScripts() {
             success: function(data) {
                 sortFileObject(data)
                 $("#scripts").html(scriptstemplate(data));
+                
+                $(".scriptli").hoverIntent({
+                    over: function() {
+                        $(this).append(hooverdiv);
+                     },
+                     out: function() {
+                         $(this).parent().find('.customRunOption').remove();
+                     }, 
+                     interval: 400
+                });
+
             },
             error: function () {
-                $("#scripts").html("Error from server - retrying in a few seconds...");
-                setTimeout( function(){getScripts()}, 3000 );
+                $("#scripts").html("Error getting scripts - retrying in a few seconds...");
+                setTimeout( 
+                        function(){
+                            $("#scripts").html("");
+                        }, 2000  );
+                setTimeout( function(){
+                        getScripts()
+                    }, 3000 );
                 
             }
             
@@ -97,6 +119,9 @@ function hideLoginTable() {
 function runScript(script) {
    
     $('#loadedScript').text(script);
+    $('html, body').animate({
+        scrollTop : 0
+    }, 50);
     
     if (loginTableVisible()) {
         showLoginTable();
@@ -161,10 +186,8 @@ function replaceXml(script, xmlObj) {
        
         $('.overlay').hide(200);
         $('#scriptMainView').show();
+        $('#scriptheader').text(script);
         hourglassOff();
-        $('html, body').animate({
-            scrollTop : 0
-        }, 50);
     } catch (error) {
         console.log("Caugh error " +  err.message);
         $('#HTMLview')[0].innerHTML = "Error on running script: " + err.message;
@@ -258,6 +281,7 @@ function getMyEntries(data, element) {
 
 /* Event handlers */
 
+
 $(document).on('click', '.script', function() {
     var script =  $('#loadedScript').text();
     var stateObj = {script: script,  xml:  serializer.serializeToString(xml) };
@@ -270,6 +294,61 @@ $(document).on('click', '.script', function() {
 $(document).on('click', '.folder', function() {
     $(this).next().children('ul li').toggle();
 });
+
+
+$(document).on('click', '.scriptcompile', function() {
+    var script = $(this).parent().parent().children('.script').attr('id');
+    hourglassOn();
+    
+    $.ajax({
+        type: "GET",
+        url: "/compile?script=" + script,
+        dataType: "text",
+        success: function() {
+            $('.customRunOption').html('<p>OK</p>');
+            hourglassOff();
+            setTimeout( function(){
+                        $('.customRunOption').remove();
+                        }, 1000  
+                    );  
+        }
+    }); 
+    
+});
+
+$(document).on('click', '.scriptinput', function() {
+    var script = $(this).parent().parent().children('.script').attr('id');
+
+    $('html, body').animate({
+        scrollTop : 0
+    }, 50);
+    $('#loadedScript').text(script);
+    $('#scriptheader').text(script);
+    
+    $('#scriptMainView').hide();
+    $('#scriptCustomInputView').show();
+    
+    
+});
+
+$(document).on('click', '.scriptsource', function() {
+    var script = $(this).parent().parent().children('.script').attr('id');
+    hourglassOn();
+    $('html, body').animate({
+        scrollTop : 0
+    }, 50);
+    
+    $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
+        $('#scriptsourcecontent').removeClass('prettyprinted');
+        $('#scriptsourcecontent').text(data)
+        prettyPrint();
+        $('#scriptheader').text(script);
+        $('#scriptMainView').show();
+        $('#TMLSourceviewLink').click();
+        hourglassOff();
+    });
+});
+
 
 $(document).on('click', '#showMoreArrow', function() {
     $('#loginform').show(200);
@@ -304,6 +383,14 @@ $(document).on('click', '#TMLSourceviewLink', function() {
     $('#TMLSourceview').show(100);
     return false;
 });
+
+$(document).on('click', '.CustomInputRunButton', function() {
+    // Going to run loaded script with custom input...
+    window.alert("TODO")
+
+});
+
+
 
 $(document).on('click', '.messagediv h3', function() {
     $(this).closest('.messagediv').children('div').each(function() {

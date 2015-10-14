@@ -354,6 +354,29 @@ section p:last-child {
      background: rgba(255,255,0, 0.2);
 } 
 
+.customRunOption {
+	display: table;
+	width: 100%;
+}
+
+.customRunOption div{ 
+	display: table-cell;
+}
+
+.scriptcompile:hover {
+	cursor: pointer;
+	background: rgba(255,255,0, 0.2);
+}
+
+.scriptinput:hover {
+	cursor: pointer;
+	background: rgba(255,255,0, 0.2);
+}
+
+.scriptsource:hover {
+	cursor: pointer;
+	background: rgba(255,255,0, 0.2);
+}
 
 .script:before {
 	content: url('/testerimg/xml-file.png');
