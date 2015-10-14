@@ -248,10 +248,10 @@ public class MailMap implements MailMapInterface, Mappable,
 							
 						} else if (content != null) {
 
-							BinaryDataSource bds = new BinaryDataSource(content, userFileName);
+							BinaryDataSource bds = new BinaryDataSource(content, "");
 							DataHandler dh = new DataHandler(bds);
 							bp.setDataHandler(dh);
-							bp.setFileName("abc.pdf");
+							bp.setFileName(userFileName);
 							if (encoding != null) {
 								bp.setHeader("Content-Transfer-Encoding", encoding);
 								encoding = null;
