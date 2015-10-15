@@ -2567,6 +2567,9 @@ public class TslCompiler {
 		    throw new Exception("Error in reading Map xml - found map with empty object! Line " + n.getAttribute("linenr") +":"+ n.getAttribute("startoffset"));
 		}
 		
+		// Replace references to nested inner classes ('$') to the standard java notation ('.')
+		String printClassName = className.replace('$', '.');
+		
 		if (contextClass != null) {
 			contextClassStack.push(contextClass);
 		}
@@ -2578,7 +2581,7 @@ public class TslCompiler {
 		}
 
 		addDependency("dependentObjects.add( new JavaDependency( -1, \""
-				+ className + "\"));\n", "JAVA" + className);
+				+ printClassName + "\"));\n", "JAVA" + printClassName);
 
 		if (!name.equals("")) { // We have a potential async mappable object.
 			// //System.out.println("POTENTIAL MAPPABLE OBJECT " + className);
@@ -2631,7 +2634,7 @@ public class TslCompiler {
 			result.append(printIdent(ident)
 					+ aoName
 					+ " = ("
-					+ className
+					+ printClassName
 					+ ") DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().getInstance("
 					+ callbackRefName + ");\n");
 			result.append(printIdent(ident) + interruptTypeName + " = "
@@ -2672,9 +2675,9 @@ public class TslCompiler {
 			result.append(printIdent(ident)
 					+ aoName
 					+ " = ("
-					+ className
+					+ printClassName
 					+ ") classLoader.getClass(\""
-					+ object
+					+ printClassName
 					+ "\").newInstance();\n"
 					+ "  // Call load method for async map in advance:\n"
 					+ "  "
@@ -2813,11 +2816,11 @@ public class TslCompiler {
 					+ "treeNodeStack.push(currentMap);\n");
 			result.append(printIdent(ident)
 					+ "currentMap = new MappableTreeNode(access, currentMap, classLoader.getClass(\""
-					+ object + "\").newInstance(), false);\n");
+					+ printClassName + "\").newInstance(), false);\n");
 			result.append("currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
 			n.getAttribute("navajoScript");
 			String objectName = "mappableObject" + (objectCounter++);
-			result.append(printIdent(ident) + objectName + " = (" + className
+			result.append(printIdent(ident) + objectName + " = (" + printClassName
 					+ ") currentMap.myObject;\n");
 			boolean objectMappable = false;
 
@@ -2834,7 +2837,7 @@ public class TslCompiler {
 						+ ".load(access);\n");
 			}
 
-			String objectDefinition = className + " " + objectName
+			String objectDefinition = printClassName + " " + objectName
 					+ " = null;\n";
 			variableClipboard.add(objectDefinition);
 
