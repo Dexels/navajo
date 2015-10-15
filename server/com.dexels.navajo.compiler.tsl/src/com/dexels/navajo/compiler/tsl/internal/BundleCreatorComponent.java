@@ -766,7 +766,7 @@ public class BundleCreatorComponent implements BundleCreator {
                 List<String> success = new ArrayList<String>();
                 List<String> skipped = new ArrayList<String>();
 
-                createBundle(scriptName, new Date(), failures, success, skipped, force, false, extension);
+                createBundle(scriptName, new Date(), failures, success, skipped, force, true, extension);
                 installBundle(scriptName, failures, success, skipped, force, extension);
             }
 
