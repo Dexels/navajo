@@ -1,7 +1,7 @@
 "use strict"
 
 // Holds the input navajo document for the next RPC call
-var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header></tml>');;
+var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header></tml>');
 var serializer = new XMLSerializer();
 var hooverdiv = '<div class="customRunOption">';
 hooverdiv += '  <div class="scriptcompile">Compile</div>';
@@ -117,7 +117,7 @@ function hideLoginTable() {
 }
 
 function runScript(script) {
-   
+    $('#scriptCustomInputView').hide();
     $('#loadedScript').text(script);
     $('html, body').animate({
         scrollTop : 0
@@ -386,10 +386,38 @@ $(document).on('click', '#TMLSourceviewLink', function() {
 
 $(document).on('click', '.CustomInputRunButton', function() {
     // Going to run loaded script with custom input...
-    window.alert("TODO")
+    var inputString = $('#customInputText').val();
+    var xmlStringStart = '<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header>';
+    var xmlStringEnd = '</tml>';
+    var inputXml =  inputString;
+    var inputtype = $('.custominputtype:checked').val();
+   
 
+    if (inputtype === "JSON") {
+        inputXml = convertJsonToTml(inputString);
+    } 
+
+    try {
+        xml = $.parseXML(xmlStringStart + inputXml + xmlStringEnd);
+    } catch(err) {
+        window.alert("Error parsing XML:\n\n "+  err.message);
+        return;
+    }
+    
+    var script = $('#loadedScript').text();
+    runScript(script)
 });
 
+function convertJsonToTml(jsonString) {
+    var jsonObj = JSON.parse(jsonString);
+    console.log(jsonObj);
+    var xmlString = "";
+    $.each(jsonObj, function(key, value) {
+        
+
+    });
+    return "";
+}
 
 
 $(document).on('click', '.messagediv h3', function() {

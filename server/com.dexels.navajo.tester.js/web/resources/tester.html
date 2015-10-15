@@ -181,11 +181,11 @@ $(document).ready(function() {
                     </div>
                     
                      <div id="scriptCustomInputView" style="display: none;">
-                        <textarea style="width: 80%" name="NavajoCustomInput" cols="40" rows="20"></textarea>
+                        <textarea style="width: 80%" id="customInputText" name="NavajoCustomInput" cols="40" rows="20"></textarea>
                         <br>
-                        <input type="radio" checked name="custominputtype" value="tml">TML
+                        <input type="radio" class="custominputtype" checked="checked" name="custominputtype" value="TML">TML
                         <br>
-                        <input type="radio" name="custominputtype" value="json">JSON
+                        <input type="radio" class="custominputtype" name="custominputtype" value="JSON">JSON
                         <br>
                         <br>
                         <input class="CustomInputRunButton" name="runCustomInput" type="button" value="Run script"/>
