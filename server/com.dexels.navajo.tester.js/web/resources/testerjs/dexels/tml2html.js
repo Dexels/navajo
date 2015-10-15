@@ -213,7 +213,7 @@ function processProperty(property) {
     } else if (htmltype === 'binary') {
         // TODO: display binary somehow
     } else {
-        propertyString += '<input type="'+htmltype+'" value="'+propvalue+'" ';
+        propertyString += '<input type="'+htmltype+'" value="'+propvalue+'" tmltype="'+proptype+'" ';
         if (htmltype === 'checkbox' && propvalue === "true" ) {
             propertyString += 'checked="checked"';
         }

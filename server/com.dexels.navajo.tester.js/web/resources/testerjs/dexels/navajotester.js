@@ -183,12 +183,14 @@ function replaceXml(script, xmlObj) {
         $('#scriptcontent').text(xmltext)
         prettyPrint();
         parseTmlToHtml(script, $('#HTMLview'), $('#methods'));
+        
+        
        
         $('.overlay').hide(200);
         $('#scriptMainView').show();
         $('#scriptheader').text(script);
         hourglassOff();
-    } catch (error) {
+    } catch (err) {
         console.log("Caugh error " +  err.message);
         $('#HTMLview')[0].innerHTML = "Error on running script: " + err.message;
         $('#scriptMainView').show();
