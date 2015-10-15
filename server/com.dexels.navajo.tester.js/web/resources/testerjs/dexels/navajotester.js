@@ -384,18 +384,39 @@ $(document).on('click', '#TMLSourceviewLink', function() {
     return false;
 });
 
-$(document).on('click', '.CustomInputRunButton', function() {
+
+$(document).on('input change', '.custominputtype', function(evt) {
+    var value = $('.custominputtype:checked').val();
+    if (value === "JSON") {
+        $('#CustomInputRunButton').val("Convert to TML");
+    } else {
+        $('#CustomInputRunButton').val("Run Script");
+    }
+});
+
+
+$(document).on('click', '#CustomInputRunButton', function() {
     // Going to run loaded script with custom input...
+    var inputtype = $('.custominputtype:checked').val();
     var inputString = $('#customInputText').val();
+    if (inputtype === "JSON") {
+        try {
+            var inputXml = convertJsonToTml(inputString);
+            $(this).val("Run script");
+            $('#customInputText').val(inputXml);
+            $('.custominputtype[value="TML"]').prop("checked", true)
+        } catch(err) {
+            window.alert("Error parsing JSON:\n\n "+  err.message);
+            return;
+        }
+     
+        return;
+    } 
+    
+   
     var xmlStringStart = '<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header>';
     var xmlStringEnd = '</tml>';
     var inputXml =  inputString;
-    var inputtype = $('.custominputtype:checked').val();
-   
-
-    if (inputtype === "JSON") {
-        inputXml = convertJsonToTml(inputString);
-    } 
 
     try {
         xml = $.parseXML(xmlStringStart + inputXml + xmlStringEnd);
@@ -411,12 +432,31 @@ $(document).on('click', '.CustomInputRunButton', function() {
 function convertJsonToTml(jsonString) {
     var jsonObj = JSON.parse(jsonString);
     console.log(jsonObj);
-    var xmlString = "";
+    var xmlString = '';
     $.each(jsonObj, function(key, value) {
-        
-
+        if (typeof value === "object") {
+            xmlString += '<message name="' + key + '">\n';
+            xmlString += jsonObjToTml(value);
+            xmlString += '</message>\n';
+        } else {
+            xmlString += '    <property name="' + key + '" value="'+value+'" />\n'
+        }
     });
-    return "";
+    return xmlString;
+}
+
+function jsonObjToTml(jsonObj) {
+    var xmlString = '';
+    $.each(jsonObj, function(key, value) {
+        if (typeof value === "object") {
+            xmlString += '    <message name="' + key + '">\n';
+            xmlString += jsonObjToTml(value);
+            xmlString += '    </message>\n';
+        } else {
+            xmlString += '        <property name="' + key + '" value="'+value+'" />\n'
+        }
+    });
+    return xmlString;
 }
 
 
