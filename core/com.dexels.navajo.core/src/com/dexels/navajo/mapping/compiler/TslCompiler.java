@@ -1137,26 +1137,27 @@ public class TslCompiler {
 
 			contextClassStack.push(contextClass);
 			String subClassName = null;
+			String printSubClassName = null ;
 			NodeList children = nextElt.getChildNodes();
 			// contextClass = null;
 			try {
 				subClassName = MappingUtils.getFieldType(contextClass, ref);
+				
 				contextClass = Class.forName(subClassName, false, loader);
 			} catch (Exception e) {
-				isDomainObjectMapper = contextClass
-						.isAssignableFrom(DomainObjectMapper.class);
+				isDomainObjectMapper = contextClass.isAssignableFrom(DomainObjectMapper.class);
 				subClassName = "com.dexels.navajo.mapping.bean.DomainObjectMapper";
 				contextClass = com.dexels.navajo.mapping.bean.DomainObjectMapper.class;
 				if (isDomainObjectMapper) {
 					type = "java.lang.Object";
 				} else {
-					throw new Exception("Could not find adapter: "
-							+ subClassName);
+					throw new Exception("Could not find adapter: "+ subClassName);
 				}
 			}
+			printSubClassName = subClassName.replace('$', '.');
 
 			addDependency("dependentObjects.add( new JavaDependency( -1, \""
-					+ subClassName + "\"));\n", "JAVA" + subClassName);
+					+ printSubClassName + "\"));\n", "JAVA" + printSubClassName);
 
 			// Extract ref....
 			if (mapPath == null) {
@@ -1222,7 +1223,7 @@ public class TslCompiler {
 			}
 
 			String mappableArrayDefinition = (isIterator ? "java.util.Iterator<"
-					+ subClassName + "> " + mappableArrayName + " = null;\n"
+					+ printSubClassName + "> " + mappableArrayName + " = null;\n"
 					: "Object [] " + mappableArrayName + " = null;\n");
 			variableClipboard.add(mappableArrayDefinition);
 
@@ -1326,16 +1327,16 @@ public class TslCompiler {
 
 			String subObjectName = "mappableObject" + (objectCounter++);
 			result.append(printIdent(ident + 4) + subObjectName + " = ("
-					+ subClassName + ") currentMap.myObject;\n");
+					+ printSubClassName + ") currentMap.myObject;\n");
 
-			String objectDefinition = subClassName + " " + subObjectName
+			String objectDefinition = printSubClassName + " " + subObjectName
 					+ " = null;\n";
 			variableClipboard.add(objectDefinition);
 
 			for (int i = 0; i < children.getLength(); i++) {
 				if (children.item(i) instanceof Element) {
 					result.append(compile(ident + 4, children.item(i),
-							subClassName, subObjectName, deps, tenant));
+							printSubClassName, subObjectName, deps, tenant));
 				}
 			}
 
