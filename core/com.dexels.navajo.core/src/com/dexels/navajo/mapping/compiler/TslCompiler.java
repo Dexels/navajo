@@ -3100,18 +3100,19 @@ public class TslCompiler {
 			methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
 			
 			String lock = "Lock l = getLock(" + ( user ? "access.rpcUser" : null) + "," + ( service ? "access.rpcName" : "null" )+ 
-					"," + keyValue + ");\n" + 
-					" try { \n";
+					"," + keyValue + ");\n";
 			
 			String tryLock = null;
 			if ( "".equals(timeout)) {
-				tryLock = "l.lock(); if ( true ) {\n";
+				tryLock = "l.lock(); if(true) {\n";
 			} else {
 				tryLock = "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n";
 			}
 			
+			
 			methodBuffer.append(printIdent(ident) + lock);
 			methodBuffer.append(printIdent(ident) + tryLock);
+			methodBuffer.append(printIdent(ident) + "try {\n");
 			
 			NodeList children = n.getChildNodes();
 			for (int i = 0; i < children.getLength(); i++) {
@@ -3119,12 +3120,13 @@ public class TslCompiler {
 					methodBuffer.append(compile(ident + 4, children.item(i), className, objectName, deps, tenant));
 				}
 			}
-			
+
+	        methodBuffer.append(printIdent(ident) + "} finally {\n");
+            methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
+            methodBuffer.append(printIdent(ident) +"}\n");
 			methodBuffer.append(printIdent(ident) + "}\n");
 			ident -= 2;
-			methodBuffer.append(printIdent(ident) + "} finally {\n");
-			methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
-			methodBuffer.append(printIdent(ident) +"}\n");
+
 			methodBuffer.append(printIdent(ident) +"}\n");
 			methodBuffer.append(printIdent(ident) +"}\n");
 
