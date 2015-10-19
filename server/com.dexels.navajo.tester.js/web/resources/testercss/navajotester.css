@@ -519,7 +519,7 @@ h3 {
 	overflow: visible
 }
 
-.exportcsv {messagediv
+.exportcsv messagediv {
 	margin-top: 6px;
 }
 
@@ -529,3 +529,6 @@ h3 {
 	display: inline;
 }
 
+.tmlbinary {
+	cursor: pointer;
+}

@@ -581,6 +581,61 @@ $(document).on('click', '.exportcsv', function() {
     }
 });
 
+$(document).on('click', '.tmlbinary', function() {
+    var filename = $(this).attr('filename');
+    if (typeof filename === 'undefined') {
+        var filename = "binary";
+    }
+
+    var extension = $(this).attr('extension');
+    if (typeof extension !== 'undefined') {
+        filename += '.' + extension
+    }
+    
+    var mimetype = $(this).attr('mimetype');
+    if (typeof mimetype === 'undefined') {
+        mimetype =  'application/octet-stream';
+    }
+    var data = $(this).attr('data');
+    var blob = base64toBlob(data, mimetype);
+   
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, filename)
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { 
+            //  Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }  
+    }
+
+});
+
+function base64toBlob(base64Data, contentType) {
+    contentType = contentType || '';
+    var sliceSize = 1024;
+    var byteCharacters = atob(base64Data);
+    var bytesLength = byteCharacters.length;
+    var slicesCount = Math.ceil(bytesLength / sliceSize);
+    var byteArrays = new Array(slicesCount);
+
+    for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+        var begin = sliceIndex * sliceSize;
+        var end = Math.min(begin + sliceSize, bytesLength);
+
+        var bytes = new Array(end - begin);
+        for (var offset = begin, i = 0 ; offset < end; ++i, ++offset) {
+            bytes[i] = byteCharacters[offset].charCodeAt(0);
+        }
+        byteArrays[sliceIndex] = new Uint8Array(bytes);
+    }
+    return new Blob(byteArrays, { type: contentType });
+}
 
 
 /* Some helpers */

@@ -211,7 +211,37 @@ function processProperty(property) {
         });
         propertyString += '</select>';
     } else if (htmltype === 'binary') {
-        // TODO: display binary somehow
+      
+        var subtype = property.attr('subtype');
+        if (typeof subtype !== typeof undefined && subtype !== false ) {
+            if (subtype.indexOf("image/png") > 0) {
+                propertyString += '<img alt="Embedded Image" src="data:image/png;base64,' + property.text() + '" />';
+            } else {
+                var filename = property.attr('name');
+                var mime;
+                var extension;
+                
+                var splitted = subtype.split(",");
+                splitted.forEach( function process( item, index ) {
+                    var subsplit = item.split("=");
+                    if (subsplit[0] === "extension") {
+                        extension = subsplit[1];
+                    }
+                    if (subsplit[0] === "mime") {
+                        mime = subsplit[1];
+                    }
+                });
+                
+                propertyString += '<div';
+                propertyString += ' id="' + getElementXPath(property[0]) + '"';
+                propertyString += ' class="tmlbinary" data="';
+                propertyString += property.text();
+                propertyString += '" extension="'+extension+'" mimetype="'+mime+'" filename="'+filename+'"> Download </div>';
+            }
+            
+        }
+        
+        
     } else {
         propertyString += '<input type="'+htmltype+'" value="'+propvalue+'" tmltype="'+proptype+'" ';
         if (htmltype === 'checkbox' && propvalue === "true" ) {
