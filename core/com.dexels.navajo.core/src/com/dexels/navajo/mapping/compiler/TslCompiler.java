@@ -1137,27 +1137,26 @@ public class TslCompiler {
 
 			contextClassStack.push(contextClass);
 			String subClassName = null;
-			String printSubClassName = null ;
 			NodeList children = nextElt.getChildNodes();
 			// contextClass = null;
 			try {
 				subClassName = MappingUtils.getFieldType(contextClass, ref);
-				
 				contextClass = Class.forName(subClassName, false, loader);
 			} catch (Exception e) {
-				isDomainObjectMapper = contextClass.isAssignableFrom(DomainObjectMapper.class);
+				isDomainObjectMapper = contextClass
+						.isAssignableFrom(DomainObjectMapper.class);
 				subClassName = "com.dexels.navajo.mapping.bean.DomainObjectMapper";
 				contextClass = com.dexels.navajo.mapping.bean.DomainObjectMapper.class;
 				if (isDomainObjectMapper) {
 					type = "java.lang.Object";
 				} else {
-					throw new Exception("Could not find adapter: "+ subClassName);
+					throw new Exception("Could not find adapter: "
+							+ subClassName);
 				}
 			}
-			printSubClassName = subClassName.replace('$', '.');
 
 			addDependency("dependentObjects.add( new JavaDependency( -1, \""
-					+ printSubClassName + "\"));\n", "JAVA" + printSubClassName);
+					+ subClassName + "\"));\n", "JAVA" + subClassName);
 
 			// Extract ref....
 			if (mapPath == null) {
@@ -1223,7 +1222,7 @@ public class TslCompiler {
 			}
 
 			String mappableArrayDefinition = (isIterator ? "java.util.Iterator<"
-					+ printSubClassName + "> " + mappableArrayName + " = null;\n"
+					+ subClassName + "> " + mappableArrayName + " = null;\n"
 					: "Object [] " + mappableArrayName + " = null;\n");
 			variableClipboard.add(mappableArrayDefinition);
 
@@ -1327,16 +1326,16 @@ public class TslCompiler {
 
 			String subObjectName = "mappableObject" + (objectCounter++);
 			result.append(printIdent(ident + 4) + subObjectName + " = ("
-					+ printSubClassName + ") currentMap.myObject;\n");
+					+ subClassName + ") currentMap.myObject;\n");
 
-			String objectDefinition = printSubClassName + " " + subObjectName
+			String objectDefinition = subClassName + " " + subObjectName
 					+ " = null;\n";
 			variableClipboard.add(objectDefinition);
 
 			for (int i = 0; i < children.getLength(); i++) {
 				if (children.item(i) instanceof Element) {
 					result.append(compile(ident + 4, children.item(i),
-							printSubClassName, subObjectName, deps, tenant));
+							subClassName, subObjectName, deps, tenant));
 				}
 			}
 
@@ -2568,9 +2567,6 @@ public class TslCompiler {
 		    throw new Exception("Error in reading Map xml - found map with empty object! Line " + n.getAttribute("linenr") +":"+ n.getAttribute("startoffset"));
 		}
 		
-		// Replace references to nested inner classes ('$') to the standard java notation ('.')
-		String printClassName = className.replace('$', '.');
-		
 		if (contextClass != null) {
 			contextClassStack.push(contextClass);
 		}
@@ -2582,7 +2578,7 @@ public class TslCompiler {
 		}
 
 		addDependency("dependentObjects.add( new JavaDependency( -1, \""
-				+ printClassName + "\"));\n", "JAVA" + printClassName);
+				+ className + "\"));\n", "JAVA" + className);
 
 		if (!name.equals("")) { // We have a potential async mappable object.
 			// //System.out.println("POTENTIAL MAPPABLE OBJECT " + className);
@@ -2635,7 +2631,7 @@ public class TslCompiler {
 			result.append(printIdent(ident)
 					+ aoName
 					+ " = ("
-					+ printClassName
+					+ className
 					+ ") DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().getInstance("
 					+ callbackRefName + ");\n");
 			result.append(printIdent(ident) + interruptTypeName + " = "
@@ -2676,9 +2672,9 @@ public class TslCompiler {
 			result.append(printIdent(ident)
 					+ aoName
 					+ " = ("
-					+ printClassName
+					+ className
 					+ ") classLoader.getClass(\""
-					+ printClassName
+					+ object
 					+ "\").newInstance();\n"
 					+ "  // Call load method for async map in advance:\n"
 					+ "  "
@@ -2817,11 +2813,11 @@ public class TslCompiler {
 					+ "treeNodeStack.push(currentMap);\n");
 			result.append(printIdent(ident)
 					+ "currentMap = new MappableTreeNode(access, currentMap, classLoader.getClass(\""
-					+ printClassName + "\").newInstance(), false);\n");
+					+ object + "\").newInstance(), false);\n");
 			result.append("currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
 			n.getAttribute("navajoScript");
 			String objectName = "mappableObject" + (objectCounter++);
-			result.append(printIdent(ident) + objectName + " = (" + printClassName
+			result.append(printIdent(ident) + objectName + " = (" + className
 					+ ") currentMap.myObject;\n");
 			boolean objectMappable = false;
 
@@ -2838,7 +2834,7 @@ public class TslCompiler {
 						+ ".load(access);\n");
 			}
 
-			String objectDefinition = printClassName + " " + objectName
+			String objectDefinition = className + " " + objectName
 					+ " = null;\n";
 			variableClipboard.add(objectDefinition);
 
@@ -3103,16 +3099,17 @@ public class TslCompiler {
 					"," + keyValue + ");\n";
 			
 			String tryLock = null;
+			boolean useTrylock = false;
 			if ( "".equals(timeout)) {
-				tryLock = "l.lock(); if(true) {\n";
+				useTrylock = false;
+				tryLock = "l.lock(); try {\n";
 			} else {
-				tryLock = "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n";
+				useTrylock = true;
+				tryLock = "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n" + "try {\n";
 			}
-			
 			
 			methodBuffer.append(printIdent(ident) + lock);
 			methodBuffer.append(printIdent(ident) + tryLock);
-			methodBuffer.append(printIdent(ident) + "try {\n");
 			
 			NodeList children = n.getChildNodes();
 			for (int i = 0; i < children.getLength(); i++) {
@@ -3120,14 +3117,19 @@ public class TslCompiler {
 					methodBuffer.append(compile(ident + 4, children.item(i), className, objectName, deps, tenant));
 				}
 			}
-
-	        methodBuffer.append(printIdent(ident) + "} finally {\n");
-            methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
-            methodBuffer.append(printIdent(ident) +"}\n");
-			methodBuffer.append(printIdent(ident) + "}\n");
+			
 			ident -= 2;
-
-			methodBuffer.append(printIdent(ident) +"}\n");
+			if ( useTrylock ) {
+				methodBuffer.append(printIdent(ident) + "} finally {\n");
+				methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
+				methodBuffer.append(printIdent(ident) +"}\n");
+				methodBuffer.append(printIdent(ident) + "}\n");
+			} else {
+				methodBuffer.append(printIdent(ident) + "} finally {\n");
+				methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
+				methodBuffer.append(printIdent(ident) +"}\n");
+			}
+			
 			methodBuffer.append(printIdent(ident) +"}\n");
 
 			methodClipboard.add(methodBuffer);
