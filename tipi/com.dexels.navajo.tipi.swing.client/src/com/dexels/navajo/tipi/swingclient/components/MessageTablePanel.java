@@ -1096,12 +1096,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		}
 	}
 
-	@Override
-	public Dimension getPreferredSize() {
-		return checkMaxMin(super.getPreferredSize(), getMaximumSize(),
-				getMinimumSize());
-	}
-
+	
 	private Dimension checkMax(Dimension preferredSize, Dimension maximumSize) {
 		// Dimension maximumSize = getMaximumSize();
 		if (maximumSize == null) {

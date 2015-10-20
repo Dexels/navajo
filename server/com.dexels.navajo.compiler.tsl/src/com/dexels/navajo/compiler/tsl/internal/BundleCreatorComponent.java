@@ -469,11 +469,22 @@ public class BundleCreatorComponent implements BundleCreator {
             throws BundleException, FileNotFoundException, MalformedURLException {
         String rpcName = rpcNameFromScriptPath(scriptPath);
         Bundle b = null;
-        AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getBaseName(rpcName) + "*.jar");
-        File compiledPath = new File(navajoIOConfig.getCompiledScriptPath(), FilenameUtils.getPath(rpcName));
-        Collection<File> files = FileUtils.listFiles(compiledPath, fileFilter, null);
 
+        // Non-tenant specific jar file
+        File compiledPath = new File(navajoIOConfig.getCompiledScriptPath(), FilenameUtils.getPath(rpcName));
         
+        File jarFile = new File(compiledPath, FilenameUtils.getBaseName(rpcName) + ".jar");
+        
+        // Look for other tenant-specific jar files
+        AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getBaseName(rpcName) + "_*.jar");
+        
+        Collection<File> files = FileUtils.listFiles(compiledPath, fileFilter, null);
+        if (jarFile.exists()) {
+            files.add(jarFile);
+        }
+        
+        
+
         for (File bundleFile : files) {
             
             final String uri = bundleFile.toURI().toURL().toString();
@@ -755,7 +766,7 @@ public class BundleCreatorComponent implements BundleCreator {
                 List<String> success = new ArrayList<String>();
                 List<String> skipped = new ArrayList<String>();
 
-                createBundle(scriptName, new Date(), failures, success, skipped, force, false, extension);
+                createBundle(scriptName, new Date(), failures, success, skipped, force, true, extension);
                 installBundle(scriptName, failures, success, skipped, force, extension);
             }
 

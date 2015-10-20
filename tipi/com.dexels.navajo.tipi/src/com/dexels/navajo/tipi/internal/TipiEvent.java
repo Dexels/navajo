@@ -232,6 +232,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 	public void performAction(TipiEventListener listener,
 			TipiExecutable executableParent, Map<String, Object> event)
 			throws TipiBreakException {
+		getContext().addTipiEventStatisticsStart(getComponent(), this.getEventName());
 		TipiEvent localInstance = this;
 		if (event != null) {
 			localInstance = (TipiEvent) this.clone();
@@ -305,6 +306,8 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 						+ " in component" + getComponent().getPath());
 		
 		
+
+		getContext().addTipiEventStatisticsFinished(getComponent(), this.getEventName()); 
 		listener.eventFinished(localInstance, event);
 	}
 

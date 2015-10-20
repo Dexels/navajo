@@ -403,51 +403,45 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		visibilityMap.put(c, visible);
 	}
 
-	public void rebuildTabs() {
-		runSyncInEventThread(new Runnable() {
+    public void rebuildTabs() {
 
-			@Override
-			public void run() {
-				isRebuilding = true;
-				try {
-					JTabbedPane jt = (JTabbedPane) getContainer();
-					jt.removeAll();
+        isRebuilding = true;
+        try {
+            JTabbedPane jt = (JTabbedPane) getContainer();
+            jt.removeAll();
 
-					for (Component c : childList) {
-						boolean isVisible = visibilityMap.get(c);
-						if (isVisible) {
-							if (c instanceof TipiTabbable)
-							{
-								jt.addTab(((TipiTabbable)c).getTabText(), c);
-							}
-							else
-							{
-								jt.addTab(constraintMap.get(c), c);
-							}
-						}
-					}
-					if (lastSelectedTab != null) {
-						logger.debug("last selected null!");
-						boolean found = false;
-						for (int i = 0; i < jt.getComponentCount(); i++) {
-							if (jt.getComponent(i) == lastSelectedTab) {
-								found = true;
-								break;
-							}
-						}
-						if (found) {
-							jt.setSelectedComponent(lastSelectedTab);
-						}
-					} else {
-						jt.setSelectedIndex(0);
-					}
-				} finally {
-					isRebuilding = false;
-				}
-			}
-		});
+            for (Component c : childList) {
+                boolean isVisible = visibilityMap.get(c);
+                if (isVisible) {
+                    if (c instanceof TipiTabbable) {
+                        jt.addTab(((TipiTabbable) c).getTabText(), c);
+                    } else {
+                        jt.addTab(constraintMap.get(c), c);
+                    }
+                }
+            }
+            if (lastSelectedTab != null) {
+                logger.debug("last selected null!");
+                boolean found = false;
+                for (int i = 0; i < jt.getComponentCount(); i++) {
+                    if (jt.getComponent(i) == lastSelectedTab) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+                    jt.setSelectedComponent(lastSelectedTab);
+                }
+            } else {
+                jt.setSelectedIndex(0);
+            }
+        } finally {
+            isRebuilding = false;
+        }
+    }
 
-	}
+
+	
 	
 	@Override
 	public void unhideComponent() {

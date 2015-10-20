@@ -61,7 +61,6 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
                         return 0;
                     }
                 });
-        
         logger.info("Navajo Status servlet activated");
     }
 
@@ -165,6 +164,14 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
                 logger.info("Status failed: 506, no repository");
                 return;
             }
+            
+            if (NavajoShutdown.shutdownInProgress()) {
+                resp.sendError(507, "Shutdown in progress");
+                logger.info("Status failed: 507, shutdown in progress");
+                return;
+            }
+            
+            
             // Shouldn't happen?
             return;
         }
@@ -212,7 +219,7 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
     @Override
     public Boolean isOk() {
         return navajoConfig != null && dispatcherInterface != null && javaCompiler != null 
-        		&& repository != null && workflowManagerInterface!=null && tribeManagerInterface!=null;
+        		&& repository != null && workflowManagerInterface!=null && tribeManagerInterface!=null && !NavajoShutdown.shutdownInProgress();
     }
 
 	public TribeManagerInterface getTribeManagerInterface() {

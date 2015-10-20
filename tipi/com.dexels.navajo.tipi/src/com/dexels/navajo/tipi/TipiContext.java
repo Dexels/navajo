@@ -13,6 +13,7 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -109,6 +110,8 @@ import com.dexels.navajo.tipi.validation.TipiValidationDecorator;
 public abstract class TipiContext implements ITipiExtensionContainer, Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(TipiContext.class);
+    private static final Logger perflogger = LoggerFactory.getLogger("perf");
+    
     private static final long serialVersionUID = 2077449402941300665L;
     public static final long contextStartup = System.currentTimeMillis();
 
@@ -163,7 +166,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     protected final List<TipiActivityListener> myActivityListeners = new ArrayList<TipiActivityListener>();
     private final List<TipiNavajoListener> navajoListenerList = new ArrayList<TipiNavajoListener>();
     private final List<TipiComponentInstantiatedListener> componentInstantiatedListenerList = new ArrayList<TipiComponentInstantiatedListener>();
-
+    private Map<String, Long> tipiInstantiateStatistics = new HashMap<String, Long>();
+    private Map<String, Long> tipiEventStatistics = new HashMap<String, Long>();
+    private List<String> tipiSubscribedEvents = Arrays.asList("onTabChanged", "onActionPerformed");
     private CookieManager myCookieManager;
 
     protected final Map<String, Navajo> navajoMap = new HashMap<String, Navajo>();
@@ -266,7 +271,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 
     @SuppressWarnings("unchecked")
-    private void initializeContext(TipiApplicationInstance myApplication, List<TipiExtension> preload,
+	private void initializeContext(TipiApplicationInstance myApplication,
+			List<TipiExtension> preload,
             TipiContext parent) {
 
         myParentContext = parent;
@@ -547,6 +553,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             value = sysVal;
         } catch (SecurityException e) {
         }
+        if (value != null) {
+            return value;
+        }
+        value = System.getenv(name);
         return value;
 
     }
@@ -1051,7 +1061,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
      * work.
      */
 
-    public TipiComponent instantiateTipi(TipiInstantiateTipi t, TipiComponent parent, boolean force, String id,
+    public TipiComponent instantiateTipi(TipiInstantiateTipi t, TipiComponent parent, boolean force, final String id,
             Object constraints, TipiEvent event, XMLElement xe) throws TipiException {
         Object lock = null;
         String path = parent.getPath() + "/" + id;
@@ -1082,6 +1092,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                     comp.performTipiEvent("onInstantiate", null, false, new Runnable() {
                         public void run() {
                             comp.postOnInstantiate();
+                            addInitiateStatisticsFinished(id, true); 
                         }
                     });
 
@@ -1092,6 +1103,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             // set its ID
             inst.setId(id);
             parent.addComponent(inst, this, constraints);
+            // OnInstantiate event is called sync, so by this time we are actually finished 
+            addInitiateStatisticsFinished(id, false); 
             fireTipiStructureChanged(inst);
         }
         return inst;
@@ -2929,6 +2942,42 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
     public XMLElement getGlobalMethod(String name) {
         return globalMethodsMap.get(name);
+    }
+
+    public synchronized void addInitiateStatisticsStart(String id) {
+        tipiInstantiateStatistics.put(id, System.currentTimeMillis() );
+    }
+    
+    public synchronized void addInitiateStatisticsFinished(String id, boolean unhide) {
+        Long end = System.currentTimeMillis();
+        Long start = tipiInstantiateStatistics.get(id);
+        if (start == null) {
+            return;
+        }
+        perflogger.info("Component: {} finished in: {} unhide: {}", id, (end - start), unhide);
+        tipiInstantiateStatistics.remove(id);
+    }
+    
+    public synchronized void addTipiEventStatisticsStart(TipiComponent component, String eventname) {
+        if (tipiSubscribedEvents.contains(eventname)) {
+            tipiEventStatistics.put(component.getId()+eventname, System.currentTimeMillis() );
+        }
+    }
+    
+    public synchronized void addTipiEventStatisticsFinished(TipiComponent component, String eventname) {
+        Long end = System.currentTimeMillis();
+        Long start = tipiEventStatistics.get(component.getId()+eventname);
+        if (start == null) {
+            return;
+        }
+        TipiComponent parent = component.getHomeComponent();
+        String parentId = "";
+        if ( parent != null) {
+            parentId = parent.getId();
+        }
+        perflogger.info("Tipi Event {} on : {}-{} finished in: {}", eventname, component.getId(), parentId,  (end - start));
+
+        tipiEventStatistics.remove(component.getId()+eventname);
     }
 
 

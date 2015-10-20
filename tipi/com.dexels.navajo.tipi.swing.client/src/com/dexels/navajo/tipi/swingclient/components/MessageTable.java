@@ -197,6 +197,18 @@ public class MessageTable extends JTable implements CellEditorListener,
 	public boolean isShowingRowHeaders() {
 		return myModel.isShowingRowHeaders();
 	}
+	
+	@Override
+    protected void processMouseMotionEvent(MouseEvent e) {
+        switch(e.getID()) {
+          case MouseEvent.MOUSE_MOVED:
+              // Moving the mouse in a MessageTable seems to trigger repainting. Ignore this event
+              // to prevent this.
+              break;
+          default:
+              super.processMouseMotionEvent(e);
+        } 
+    }
 
 	public void determineMinumumColumnWidth(int column) {
 		if (getMessage() != null) {
@@ -337,9 +349,8 @@ public class MessageTable extends JTable implements CellEditorListener,
 						new Insets(4, 4, 4, 4), 0, 0));
 			}
 			// revalidate();
-			// repaint();
-			this.dispatchEvent(new ComponentEvent(this,
-					ComponentEvent.COMPONENT_RESIZED));
+			repaint(50);
+			
 		}
 
 		public void initUI() {
@@ -1608,7 +1619,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	public final void setHeaderVisible(boolean b) {
 		showHeader = b;
 		getTableHeader().setVisible(b);
-		repaint();
+		repaint(50);
 	}
 
 	public final boolean isHeaderVisible() {

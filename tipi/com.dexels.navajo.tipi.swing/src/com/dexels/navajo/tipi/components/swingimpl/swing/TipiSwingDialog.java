@@ -5,12 +5,14 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,7 +146,7 @@ public class TipiSwingDialog extends JDialog {
     
     public void hideGlass() {
         if (getGlassPane() instanceof OverlayProgressPanel) {
-            OverlayProgressPanel p = (OverlayProgressPanel) getGlassPane();
+            final OverlayProgressPanel p = (OverlayProgressPanel) getGlassPane();
             p.stop();
         }
     }
@@ -152,10 +154,9 @@ public class TipiSwingDialog extends JDialog {
     public void addGlass(String type) {
         if (!glassPanel.isVisible()) {
             glassPanel.setType(type);
-            glassPanel.start();
-            setGlassPane(glassPanel);
+            glassPanel.start(this);
         }
-       
+
     }
 
 }

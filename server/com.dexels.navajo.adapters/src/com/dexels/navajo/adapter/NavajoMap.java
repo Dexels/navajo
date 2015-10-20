@@ -72,6 +72,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   public Binary navajo;
   public String username = null;
   public String password = null;
+  public String tenant = null;
   public String server = null;
   // For scheduling tasks from NavajoMap.
   public String trigger = null;
@@ -595,6 +596,10 @@ public void store() throws MappableException, UserException {
     this.server = u;
   }
   
+  public void setTenant(String t) {
+      this.tenant = t;
+    }
+
   /**
    * Set a Navajo object directly.
    * 
@@ -1402,12 +1407,17 @@ public void run()  {
 			  h.setRPCName(method);
 			  h.setRPCPassword(password);
 			  h.setRPCUser(username);
+			 
 		  }
 		  // Clear request id.
 		  h.setRequestId(null);
 		  h.setHeaderAttribute("parentaccessid", access.accessID);
+		  String tenant = access.getTenant();
+		  if (this.tenant != null) {
+		      tenant = this.tenant;
+		  }
 
-		  inDoc = DispatcherFactory.getInstance().handle(outDoc,access.getTenant(), true);
+		  inDoc = DispatcherFactory.getInstance().handle(outDoc, tenant, true);
 		  serviceFinished = true;
 		  serviceCalled = true;
 		  
@@ -1824,6 +1834,9 @@ public String getUsername() {
 }
 public String getServer() {
 	return server;
+}
+public String getTenant() {
+    return tenant;
 }
 public String getTrigger() {
 	return trigger;
