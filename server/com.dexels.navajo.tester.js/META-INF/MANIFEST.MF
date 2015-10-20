@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Tester JS
 Bundle-SymbolicName: com.dexels.navajo.tester.js
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.8
+Bundle-Version: 1.0.9.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.client;version="1.0.0",
