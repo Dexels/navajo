@@ -512,7 +512,7 @@ $(document).on('input propertychange', '.tmlinputtext', function(evt) {
 
 $(document).on('input change', '.tmlinputcheckbox', function(evt) {
     var xpath = $(this).attr('id');
-    var element = $(xml).xpath(xpath);
+    var element = $(xml).xpath(xpath)[0];
     if (typeof element != 'undefined') {
         var $element = $(element);
         $element.attr('value',  $(this).prop('checked'));
@@ -522,7 +522,7 @@ $(document).on('input change', '.tmlinputcheckbox', function(evt) {
 $(document).on('input change', '.tmlinputselect', function(evt) {
     var  xpath = $(this).attr('id');
     var $input = $(this);
-    var element = $(xml).xpath(xpath);
+    var element = $(xml).xpath(xpath)[0];
    
     
     if (typeof element != 'undefined') {
