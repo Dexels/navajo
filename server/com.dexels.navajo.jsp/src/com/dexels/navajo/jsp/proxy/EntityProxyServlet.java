@@ -2,12 +2,14 @@ package com.dexels.navajo.jsp.proxy;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.dexels.utils.Base64;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.Request;
 import org.eclipse.jetty.client.http.HttpClientTransportOverHTTP;
@@ -61,6 +63,14 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 			HttpServletRequest request) {
 		proxyRequest.getHeaders().remove("Host");
 		
+		if (username != null && password != null) {
+            // Use HTTP Basic auth - should only be used over HTTPS!
+            String authString = username + ":" + password;
+            byte[] bytes = authString.getBytes(Charset.forName("UTF-8"));
+            String encoded = Base64.encode(bytes, 0, bytes.length, 0, "");
+            proxyRequest.getHeaders().add("Authorization", "Basic " + encoded);
+        }
+		
 	}
 
 	@Override
@@ -75,28 +85,12 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 		if(query!=null) {
 			construct = construct+"?"+query;
 		}
-//		logger.info("Constructed: "+construct);
-		if(this.username!=null) {
-			construct = appendParam(construct,"username",username);
-		}
-		if(this.password!=null) {
-			construct = appendParam(construct,"password",password);
-		}
+
 		URI finalURI = URI.create(construct);
-//		try {
-//			testURL(finalURI);
-//		} catch (IOException e) {
-//			logger.error("Error: ", e);
-//		}
 		
 		return finalURI;
-//		return URI.create("http://www.dexels.com/");
 	}
 	
-	private String appendParam(String url, String key, String value) {
-		return url + (url.contains("?")?"&":"?")+key+"="+value;
-	}
-
 	private String getEntityFromServer() {
 		if(this.url!=null) {
 			return this.url;
@@ -104,8 +98,6 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 		final String POSTFIX = "/navajo";
 		if(this.server.endsWith(POSTFIX)) {
 			String url = server.substring(0,server.length()-POSTFIX.length())+"/entity";
-//			URI uri = query!=null? URI.create(url + "?" + query ): URI.create(url ) ;
-//			System.err.println("uri assembled: "+uri);
 			return url;
 		}
 		return null;
