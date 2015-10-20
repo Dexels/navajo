@@ -501,9 +501,7 @@ $(document).on('input propertychange', '.tmlinputtext', function(evt) {
     if (window.event && event.type == "propertychange" && event.propertyName != "value")
         return;
     var xpath = $(this).attr('id');
-    
-    $(document).xpath("*");
-     var element = $(xml).xpath(xpath);
+    var element = $(xml).xpath(xpath)[0];
     if (typeof element != 'undefined') {
         var $element = $(element);
         $element.attr('value',  $(this).val());

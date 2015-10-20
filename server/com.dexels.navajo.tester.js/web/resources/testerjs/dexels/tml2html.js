@@ -240,10 +240,23 @@ function processProperty(property) {
             }
             
         }
-        
-        
+    } else if (htmltype === 'textarea') {
+        propertyString += '<textarea rows="5" style="width:70%" tmltype="'+proptype+'" ';
+
+        if (propdirection === "out") {
+            propertyString += ' readOnly="readOnly" '
+        } else {
+         // This is only needed if the element can be changed
+            propertyString += ' class="tmlinput' + htmltype + '" '
+            propertyString += ' id="' + getElementXPath(property[0]) + '"'
+
+        }
+
+
+
+        propertyString += '>' +  propvalue + '</textarea>';
     } else {
-        propertyString += '<input type="'+htmltype+'" value="'+propvalue+'" tmltype="'+proptype+'" ';
+        propertyString += '<input type="'+htmltype+'" value="'+escapeHTML(propvalue)+'" tmltype="'+proptype+'" ';
         if (htmltype === 'checkbox' && propvalue === "true" ) {
             propertyString += 'checked="checked"';
         }
@@ -266,6 +279,20 @@ function processProperty(property) {
     return propertyString;
 }
 
+function escapeHTML(s) {
+    if (typeof s === 'undefined') {
+        return s
+    }
+    return s.replace(/[&"<>]/g, function (c) {
+        return {
+            '&': "&amp;",
+            '"': "&quot;",
+            '<': "&lt;",
+            '>': "&gt;"
+        }[c];
+    });
+}
+
 
 function tmlTypeToHtml(tmlType) {
     if (tmlType === "string") {
@@ -277,6 +304,9 @@ function tmlTypeToHtml(tmlType) {
     }
     if (tmlType === "selection") {
         return "select";
+    }
+    if (tmlType === "memo") {
+        return "textarea";
     }
     if (tmlType === "binary") {
         return "binary";
