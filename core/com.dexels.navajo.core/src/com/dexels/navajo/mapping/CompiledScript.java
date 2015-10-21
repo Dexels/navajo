@@ -482,6 +482,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
 
                 }
             }
+            acquiredLocks.clear();
             access.processingTime = (int) (System.currentTimeMillis() - start);
         }
     }
