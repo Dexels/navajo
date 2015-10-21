@@ -119,6 +119,7 @@ public class EntityListener extends HttpServlet {
 
         HttpBasicAuthentication auth = new HttpBasicAuthentication(request);
         
+        
         String entityName = path.substring(1);
         if (entityName.indexOf('.') > 0) {
             // Remove .<format> from entityName
@@ -142,6 +143,10 @@ public class EntityListener extends HttpServlet {
         logger.debug("entity request count: {}", requestCounter);
 
         try {
+            if (auth.getUsername() == null || auth.getPassword() == null) {
+                throw new EntityException(EntityException.UNAUTHORIZED);
+            }
+            
             if (entityName.equals("")) {
                 logger.error("No entity name found in request. Request URI: {}", request.getRequestURI());
                 throw new EntityException(EntityException.BAD_REQUEST);
