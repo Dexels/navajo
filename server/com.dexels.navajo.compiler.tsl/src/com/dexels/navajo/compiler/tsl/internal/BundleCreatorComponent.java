@@ -284,9 +284,12 @@ public class BundleCreatorComponent implements BundleCreator {
         } catch (SkipCompilationException e) {
             logger.debug("Script fragment: {} ignored: {}", script, e);
             skipped.add(script);
+        } catch (Exception e) {
+            failures.add(script);
+            throw e;
         }
           
-        logger.info("Finished compiling and bundling {} - {}", script,Thread.currentThread().getId() );
+        logger.info("Finished compiling and bundling {}", script);
     }
 
     private synchronized ReentrantLock getLock(String script, String context) {
