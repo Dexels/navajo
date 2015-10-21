@@ -29,6 +29,8 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
     private BundleCreator bundleCreator = null;
     private ExecutorService executor;
     private DependencyAnalyzer depanalyzer;
+    
+    private boolean keepIntermediateFiles = false;
 
     private final static Logger logger = LoggerFactory.getLogger(BundleQueueComponent.class);
 
@@ -38,6 +40,10 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 
     public void activate() {
         this.executor = Executors.newFixedThreadPool(1);
+        
+        if ("true".equals(System.getenv("DEVELOP_MODE"))) {
+            keepIntermediateFiles = true;
+        }
     }
 
     public void deactivate() {
@@ -66,7 +72,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
                 List<String> skipped = new ArrayList<String>();
                 logger.info("Eagerly compiling: " + script);
                 try {
-                    bundleCreator.createBundle(script, new Date(), failures, success, skipped, true, false, extension);
+                    bundleCreator.createBundle(script, new Date(), failures, success, skipped, true, keepIntermediateFiles, extension);
                     bundleCreator.installBundle(script, failures, success, skipped, true, extension);
                     if (!skipped.isEmpty()) {
                         logger.info("Script compilation skipped: " + script);

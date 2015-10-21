@@ -3119,17 +3119,13 @@ public class TslCompiler {
 			}
 			
 			ident -= 2;
+			methodBuffer.append(printIdent(ident) + "} finally {\n");
+            methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
+            methodBuffer.append(printIdent(ident) +"}\n");
 			if ( useTrylock ) {
-				methodBuffer.append(printIdent(ident) + "} finally {\n");
-				methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
-				methodBuffer.append(printIdent(ident) +"}\n");
-				methodBuffer.append(printIdent(ident) + "}\n");
-			} else {
-				methodBuffer.append(printIdent(ident) + "} finally {\n");
-				methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
-				methodBuffer.append(printIdent(ident) +"}\n");
+				methodBuffer.append(printIdent(ident) + "} else { Access.writeToConsole(access, \"No lock was obtained! \"); }\n");
 			}
-			
+			methodBuffer.append(printIdent(ident) +"}\n");
 			methodBuffer.append(printIdent(ident) +"}\n");
 
 			methodClipboard.add(methodBuffer);

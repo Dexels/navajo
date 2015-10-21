@@ -765,8 +765,13 @@ public class BundleCreatorComponent implements BundleCreator {
                 List<String> failures = new ArrayList<String>();
                 List<String> success = new ArrayList<String>();
                 List<String> skipped = new ArrayList<String>();
-
-                createBundle(scriptName, new Date(), failures, success, skipped, force, true, extension);
+                
+                boolean keepIntermediateFiles = false;
+                if ("true".equals(System.getenv("DEVELOP_MODE"))) {
+                    keepIntermediateFiles = true;
+                }
+                
+                createBundle(scriptName, new Date(), failures, success, skipped, force, keepIntermediateFiles, extension);
                 installBundle(scriptName, failures, success, skipped, force, extension);
             }
 
