@@ -56,13 +56,13 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
 
     public void activate() {
         cache = new HashMap<>();
-        LoadingCache<Integer, Integer> navajoCache = CacheBuilder.newBuilder().expireAfterWrite(2, TimeUnit.MINUTES).softValues()
+        LoadingCache<Integer, Integer> navajoCache = CacheBuilder.newBuilder().expireAfterWrite(15, TimeUnit.MINUTES).softValues()
                 .build(new CacheLoader<Integer, Integer>() {
                     public Integer load(Integer key) {
                         return 0;
                     }
                 });
-        LoadingCache<Integer, Integer> navajoExCache = CacheBuilder.newBuilder().expireAfterWrite(2, TimeUnit.MINUTES).softValues()
+        LoadingCache<Integer, Integer> navajoExCache = CacheBuilder.newBuilder().expireAfterWrite(15, TimeUnit.MINUTES).softValues()
                 .build(new CacheLoader<Integer, Integer>() {
                     public Integer load(Integer key) {
                         return 0;
