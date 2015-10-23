@@ -26,6 +26,10 @@ public class DispatcherComponent extends Dispatcher implements
 		logger.info("Activate dispatcher!");
 		new DispatcherFactory(this);
 		myContext = context;
+	    if ("true".equals(System.getenv("SIMULATION_MODE"))) {
+	        simulationMode = true;
+	    }
+		
 		// Register AuditLog.
 //		AuditLog al = new AuditLog(getNavajoConfig().getInstanceName(), myRegistry);
 //		auditLog = al;

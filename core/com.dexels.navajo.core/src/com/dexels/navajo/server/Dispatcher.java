@@ -160,6 +160,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      */
     private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>();
 
+    protected boolean simulationMode;
+
     // optional, can be null
     // private BundleCreator bundleCreator;
 
@@ -174,6 +176,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         navajoConfig = null;
     }
 
+ 
     @Override
     public void generateServerReadyEvent() {
         NavajoEventRegistry.getInstance().publishEvent(new ServerReadyEvent());
@@ -421,7 +424,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      * 
      * @throws Exception
      */
-    private final Navajo dispatch(String handler, Access access) throws Exception {
+    private final Navajo dispatch(Access access) throws Exception {
 
         WorkerInterface integ = null;
         Navajo out = null;
@@ -474,7 +477,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
         try {
 
-            ServiceHandler sh = createHandler(handler, access);
+            ServiceHandler sh = createHandler(access);
 
             // If recompile is needed ALWAYS set expirationInterval to -1.
             // TODO: IMPLEMENT NEEDS RECOMPILE DIFFERENTLY: I DO NOT WANT
@@ -518,8 +521,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
 
     // Overridden for OSGi
-    protected ServiceHandler createHandler(String handler, Access access) {
-        return HandlerFactory.createHandler(handler, navajoConfig, access);
+    protected ServiceHandler createHandler(Access access) {
+        return HandlerFactory.createHandler(navajoConfig, access, simulationMode);
     }
 
     public final boolean doMatchCN() {
@@ -1040,7 +1043,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
                     if (useAuthorisation) {
                         if (useProxy == null) {
-                            outMessage = dispatch(getServlet(access), access);
+                            outMessage = dispatch(access);
                         } else {
                             rpcName = access.rpcName;
                             outMessage = useProxy;
@@ -1170,13 +1173,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         return null;
     }
 
-    private String getServlet(Access access) {
-        String compLanguage = DispatcherFactory.getInstance().getNavajoConfig().getCompilationLanguage();
-        if ("javascript".equals(compLanguage)) {
-            return "com.dexels.navajo.rhino.RhinoHandler";
-        }
-        return "com.dexels.navajo.server.GenericHandler";
-    }
+   
 
     @Override
     public void finalizeService(Navajo inMessage, Access access, String rpcName, String rpcUser, Throwable myException,
