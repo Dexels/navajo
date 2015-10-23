@@ -96,28 +96,25 @@ function loginTableVisible() {
 }
 
 function updateInstanceHandlers() {
-    
+
     if (!sessionStorage.instance) {
-        // Try X-Navajo-Header. To do this we perform a request to the current location
-        $.ajax({
-            type: 'GET',
-            url: document.location,
-            success: function(data, textStatus, request){
-                var navajoInstance = request.getResponseHeader('X-Navajo-Instance');
-                if (typeof navajoInstance !== 'undefined' && navajoInstance != null) {
-                    sessionStorage.instance = navajoInstance;
-                } else {
-                    return;
-                }
-            },
-            error: function (request, textStatus, errorThrown) {
-                return;
+        var match = false;
+        // See if the current url matches one of the handlers. If so, we use
+        // that as default handler
+        $('#handlers option').each(function(index, option) {
+            var optionValue = $(option).attr('value');
+            if (window.location.href.toLowerCase().indexOf(optionValue.toLowerCase()) > -1) {
+                sessionStorage.instance = optionValue;
+                match = true;
             }
-           });
+        });
+        if (!match) {
+            return;
+        }
     }
     $('#handlers').val(sessionStorage.instance);
     $('#handlers').trigger("chosen:updated")
-    
+
 }
 
 function showLoginTable() {
