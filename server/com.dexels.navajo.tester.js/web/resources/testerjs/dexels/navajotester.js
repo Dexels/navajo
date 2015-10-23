@@ -96,8 +96,24 @@ function loginTableVisible() {
 }
 
 function updateInstanceHandlers() {
+    
     if (!sessionStorage.instance) {
-        return;
+        // Try X-Navajo-Header. To do this we perform a request to the current location
+        $.ajax({
+            type: 'GET',
+            url: document.location,
+            success: function(data, textStatus, request){
+                var navajoInstance = request.getResponseHeader('X-Navajo-Instance');
+                if (typeof navajoInstance !== 'undefined' && navajoInstance != null) {
+                    sessionStorage.instance = navajoInstance;
+                } else {
+                    return;
+                }
+            },
+            error: function (request, textStatus, errorThrown) {
+                return;
+            }
+           });
     }
     $('#handlers').val(sessionStorage.instance);
     $('#handlers').trigger("chosen:updated")
