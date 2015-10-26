@@ -96,12 +96,25 @@ function loginTableVisible() {
 }
 
 function updateInstanceHandlers() {
+
     if (!sessionStorage.instance) {
-        return;
+        var match = false;
+        // See if the current url matches one of the handlers. If so, we use
+        // that as default handler
+        $('#handlers option').each(function(index, option) {
+            var optionValue = $(option).attr('value');
+            if (window.location.href.toLowerCase().indexOf(optionValue.toLowerCase()) > -1) {
+                sessionStorage.instance = optionValue;
+                match = true;
+            }
+        });
+        if (!match) {
+            return;
+        }
     }
     $('#handlers').val(sessionStorage.instance);
     $('#handlers').trigger("chosen:updated")
-    
+
 }
 
 function showLoginTable() {
