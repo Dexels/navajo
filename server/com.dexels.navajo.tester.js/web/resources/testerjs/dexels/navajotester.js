@@ -357,6 +357,11 @@ $(document).on('click', '.scriptinput', function() {
     $('#scriptheader').text(script);
     
     $('#scriptMainView').hide();
+    if (localStorage.getItem("scriptinput"+script) !== null) {
+        var custominput = localStorage.getItem("scriptinput"+script);
+        editor.setValue(custominput);   
+    }
+    
     $('#scriptCustomInputView').show();
     
     
@@ -447,7 +452,7 @@ $(document).on('click', '#CustomInputRunButton', function() {
         return;
     } 
     
-   
+  
     var xmlStringStart = '<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header>';
     var xmlStringEnd = '</tml>';
     var inputXml =  inputString;
@@ -460,6 +465,9 @@ $(document).on('click', '#CustomInputRunButton', function() {
     }
     
     var script = $('#loadedScript').text();
+    // Store input in local storage 
+    localStorage.setItem("scriptinput" + script, inputString);
+    editor.setValue("");
     runScript(script)
 });
 
@@ -494,6 +502,7 @@ function jsonObjToTml(jsonObj) {
             } else if (isFloat(value)) {
                 xmlString += ' type="long" value="'+value+'" />\n';
             } else if (isBoolean(value)) {
+                
                 xmlString += ' type="boolean" value="'+value+'" />\n';
             } else {
                 xmlString += ' value="'+value+'" />\n'
@@ -695,7 +704,7 @@ function isFloat(n){
     return n === Number(n) && n % 1 !== 0;
 }
 function isBoolean(n){
-    return n === "true" || n === "false";
+    return n === true || n === false;
 }
 
 function formatXml(xml) {
