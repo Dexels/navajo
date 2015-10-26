@@ -94,7 +94,7 @@ a:hover {
 /* =Top Bar
 -------------------------------------------------------------- */
 .content {
-/* 	width: 100%; */
+	/* 	width: 100%; */
 	margin: 0px 10px auto;
 	padding: 0 0px;
 	overflow: hidden;
@@ -320,16 +320,16 @@ section p:last-child {
 	float: left;
 	font-size: 13px;
 	line-height: 1.4;
-/* 	width: 25%;  */
-/* 	max-width: 400px; */
+	/* 	width: 25%;  */
+	/* 	max-width: 400px; */
 }
 
 .mainview {
-/* 	float: left; */
+	/* 	float: left; */
 	padding-left: 30px;
 	padding-right: 30px;
 	position: relative;
-	overflow:auto;
+	overflow: auto;
 	right: 0;
 }
 
@@ -351,31 +351,31 @@ section p:last-child {
 }
 
 .script:hover {
-     background: rgba(255,255,0, 0.2);
-} 
+	background: rgba(255, 255, 0, 0.2);
+}
 
 .customRunOption {
 	display: table;
 	width: 100%;
 }
 
-.customRunOption div{ 
+.customRunOption div {
 	display: table-cell;
 }
 
 .scriptcompile:hover {
 	cursor: pointer;
-	background: rgba(255,255,0, 0.2);
+	background: rgba(255, 255, 0, 0.2);
 }
 
 .scriptinput:hover {
 	cursor: pointer;
-	background: rgba(255,255,0, 0.2);
+	background: rgba(255, 255, 0, 0.2);
 }
 
 .scriptsource:hover {
 	cursor: pointer;
-	background: rgba(255,255,0, 0.2);
+	background: rgba(255, 255, 0, 0.2);
 }
 
 .script:before {
@@ -385,8 +385,6 @@ section p:last-child {
 .folder {
 	cursor: pointer;
 }
-
-
 
 .folder:before {
 	content: url('/testerimg/folder.png')
@@ -429,6 +427,7 @@ input[readOnly] {
 td .propertynamediv {
 	display: none;
 }
+
 td h3 {
 	display: none;
 }
@@ -437,7 +436,6 @@ td .messagediv {
 	min-width: 350px;
 	border: 1px solid #002553;
 }
-
 
 .tmlarraymessagetable td {
 	padding-left: 10px;
@@ -455,18 +453,15 @@ td .messagediv {
 	border-top: 1px solid #002553;
 }
 
-
 .propertydiv {
 	overflow: hidden;
 	font-size: 12px;
 	margin-bottom: 3px;
 }
 
-
 .propdescription {
 	font-size: 10px;
 }
-
 
 .propertynamediv {
 	float: left;
@@ -504,7 +499,7 @@ h3 {
 	font-size: 16px;
 	font-weight: bold;
 	cursor: pointer;
-	color: #ebebeb; 
+	color: #ebebeb;
 }
 
 #methods {
@@ -512,7 +507,7 @@ h3 {
 }
 
 .exportcsv:after {
-	content:  url('/testerimg/export.png');
+	content: url('/testerimg/export.png');
 	cursor: pointer;
 	margin-left: 4px;
 	position: absolute;
@@ -531,4 +526,12 @@ h3 {
 
 .tmlbinary {
 	cursor: pointer;
+}
+
+#editor {
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 300px;
 }
