@@ -354,17 +354,21 @@ section p:last-child {
 	background: rgba(255, 255, 0, 0.2);
 }
 
-.customRunOption {
+.customRunOptionContainer {
 	display: table;
 	width: 100%;
 }
 
-.customRunOption div {
+.customRunOptionContainer div {
 	display: table-cell;
 }
 
+.customRunOption {
+	padding: 5px;
+}
+
 .scriptcompile:hover {
-	cursor: pointer;
+		cursor: pointer;
 	background: rgba(255, 255, 0, 0.2);
 }
 

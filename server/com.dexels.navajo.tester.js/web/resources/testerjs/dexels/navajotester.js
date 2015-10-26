@@ -5,10 +5,10 @@ var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rp
 var serializer = new XMLSerializer();
 var editor ;
 
-var hooverdiv = '<div class="customRunOption">';
-hooverdiv += '  <div class="scriptcompile">Compile</div>';
-hooverdiv += '  <div class="scriptsource">Source</div>';
-hooverdiv += '  <div class="scriptinput">Custom Input</div>';
+var hooverdiv = '<div class="customRunOptionContainer">';
+hooverdiv += '  <div class="customRunOption scriptcompile">Compile</div> |';
+hooverdiv += '  <div class="customRunOption scriptsource">Source</div> | ';
+hooverdiv += '  <div class="customRunOption scriptinput">Custom Input</div>';
 hooverdiv += '</div>';
 
 
@@ -43,11 +43,7 @@ function getScripts() {
                         $(this).append(hooverdiv);
                      },
                      out: function() {
-                         setTimeout( 
-                                 function(){
-                                     $(this).parent().find('.customRunOption').remove();
-                                 }, 2000  );
-                        
+                         $(this).parent().find('.customRunOptionContainer').remove();       
                      }, 
                      interval: 300
                 });
@@ -318,7 +314,7 @@ $(document).on('click', '.script', function() {
     var stateObj = {script: script,  xml:  serializer.serializeToString(xml) };
     history.replaceState(stateObj, script, "tester.html?script=" + script);
     
-    
+    $(this).append(hooverdiv);
     runScript($(this).attr("id"));
 });
 
