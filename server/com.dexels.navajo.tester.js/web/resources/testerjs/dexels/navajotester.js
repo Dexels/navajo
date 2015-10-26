@@ -353,9 +353,43 @@ $(document).on('click', '.scriptinput', function() {
     $('#scriptheader').text(script);
     
     $('#scriptMainView').hide();
+    editor.setValue("");
     if (localStorage.getItem("scriptinput"+script) !== null) {
         var custominput = localStorage.getItem("scriptinput"+script);
         editor.setValue(custominput);   
+    } else if (script.indexOf("Process") > -1) {
+        var initScript = script.replace("Process", "Init");
+        
+        // Does such an init script exist?
+        
+        var match = $('#scripts').text().search(new RegExp(initScript, "i"));
+        if (match) {
+            hourglassOn();
+            console.log("We found an Init script - going to try to run it")
+            var instance =  $( "#handlers option:selected" ).text();
+            var navajoinput = prepareInputNavajo(initScript);
+            // Going to try to get init script...
+            $.ajax({
+                type: "POST",
+                url: "/navajo/" + instance,
+                data: navajoinput,
+                success: function(xmlObj) {
+                    var messages = $(xmlObj).find('message');
+                    $.each(messages, function(index, message) {
+                        var xmltext = serializer.serializeToString(message)
+                        editor.insert(xmltext);
+                    });
+                    hourglassOff();
+                    //
+                   
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    // ignore
+                    hourglassOff();
+                }
+            });
+        }
+       
     }
     
     $('#scriptCustomInputView').show();
