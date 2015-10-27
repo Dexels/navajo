@@ -244,27 +244,37 @@ public class OverlayProgressPanel extends JComponent implements ActionListener, 
     }
 
     public void start(final RootPaneContainer parent) {
-        SwingUtilities.invokeLater(new Runnable() {
+        if (SwingUtilities.isEventDispatchThread()) {
+            setVisible(true);
+            parent.setGlassPane(OverlayProgressPanel.this);
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
 
-            @Override
-            public void run() {
-                setVisible(true); 
-                parent.setGlassPane(OverlayProgressPanel.this);
-            }
+                @Override
+                public void run() {
+                    setVisible(true);
+                    parent.setGlassPane(OverlayProgressPanel.this);
+                }
 
-        });
-       
+            });
+        }
+
     }
 
     public void stop() {
-        SwingUtilities.invokeLater(new Runnable() {
+        if (SwingUtilities.isEventDispatchThread()) {
+            setVisible(false);
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
 
-            @Override
-            public void run() {
-                setVisible(false);
-            }
+                @Override
+                public void run() {
+                    setVisible(false);
+                }
 
-        });
+            });
+        }
+       
 
     }
 
