@@ -43,23 +43,21 @@ function getScripts() {
                         // Only add if we don't have it yet
                         if ( $(this).find('.customRunOptionContainer').length === 0) {
                             $(this).append(hooverdiv);
-                        } else {
-                            console.log("IK DOE LEKKER NIETS");
-                            console.log(this)
                         }
-                        
                      },
                      out: function() {
                          var activeScript = $('#loadedScript').text();
                          var myScript = $(this).find('.script').attr('id');
+                         console.log(this)
                          if ( myScript !== activeScript && $(this).find('.customRunOptionContainer').length > 0) {
                              // Only remove if we are NOT the active script
                              $(this).find('.customRunOptionContainer').remove();       
                          } else {
-                             console.log("IK DOE OOK LEKKER NIETS");
-                             console.log(this)
+                        	 console.log(activeScript);
+                        	 console.log(myScript);
+                        	 console.log($(this).parent().find('.customRunOptionContainer').length)
+                        	
                          }
-                        
                      }, 
                      interval: 300
                 });
@@ -332,7 +330,7 @@ $(document).on('click', '.script', function() {
     
     // Remove all hoover divs and append the one to the current script
     $('.customRunOptionContainer').remove();
-    $(this).append(hooverdiv);
+    $(this).parent().append(hooverdiv);
     
 
     runScript($(this).attr("id"));
