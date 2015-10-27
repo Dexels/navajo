@@ -275,14 +275,17 @@ function updateVisibility(filter, element) {
             var match = $(this).text().search(new RegExp(filter, "i"));
             if (match < 0) {
                 // no need to check children at all
-                $(this).hide()
+              
+                $(this).find("li").filter(":visible").hide();
+                $(this).hide();
             } else {
                 var childHasMatches = updateVisibility(filter, $(this).children('ul').first());
                 if (childHasMatches) {
                     $(this).show()
                     anyMatch = true;
                 } else {
-                    $(this).hide()
+                    console.error("This shouldn't happen?");
+
                 }
             }
 
@@ -595,7 +598,7 @@ $(document).on('input propertychange', '#scriptsFilter', function(evt) {
         if (filter.length == 0) {
         	console.time('hide')
         	
-        	 $(".scripts").find("li:visible").hide();
+        	$(".scripts").find("li").filter(":visible").hide();
         	console.timeEnd('hide')
         	console.time('show')
         	 $(".scripts").children("li").show();
