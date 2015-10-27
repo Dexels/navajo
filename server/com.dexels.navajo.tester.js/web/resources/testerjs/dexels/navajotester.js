@@ -40,10 +40,26 @@ function getScripts() {
                 
                 $(".scriptli").hoverIntent({
                     over: function() {
-                        $(this).append(hooverdiv);
+                        // Only add if we don't have it yet
+                        if ( $(this).find('.customRunOptionContainer').length === 0) {
+                            $(this).append(hooverdiv);
+                        } else {
+                            console.log("IK DOE LEKKER NIETS");
+                            console.log(this)
+                        }
+                        
                      },
                      out: function() {
-                         $(this).parent().find('.customRunOptionContainer').remove();       
+                         var activeScript = $('#loadedScript').text();
+                         var myScript = $(this).find('.script').attr('id');
+                         if ( myScript !== activeScript && $(this).find('.customRunOptionContainer').length > 0) {
+                             // Only remove if we are NOT the active script
+                             $(this).find('.customRunOptionContainer').remove();       
+                         } else {
+                             console.log("IK DOE OOK LEKKER NIETS");
+                             console.log(this)
+                         }
+                        
                      }, 
                      interval: 300
                 });
@@ -314,7 +330,11 @@ $(document).on('click', '.script', function() {
     var stateObj = {script: script,  xml:  serializer.serializeToString(xml) };
     history.replaceState(stateObj, script, "tester.html?script=" + script);
     
+    // Remove all hoover divs and append the one to the current script
+    $('.customRunOptionContainer').remove();
     $(this).append(hooverdiv);
+    
+
     runScript($(this).attr("id"));
 });
 
@@ -354,48 +374,58 @@ $(document).on('click', '.scriptinput', function() {
     
     $('#scriptMainView').hide();
     editor.setValue("");
+    $('#AddInit').hide();
     if (localStorage.getItem("scriptinput"+script) !== null) {
         var custominput = localStorage.getItem("scriptinput"+script);
         editor.setValue(custominput);   
-    } else if (script.indexOf("Process") > -1) {
-        var initScript = script.replace("Process", "Init");
-        
+    }
+    var scriptName = $(this).parent().parent().children('.script').text();
+    if (scriptName.indexOf("Process") > -1) {
+        var initScript = scriptName.replace("Process", "Init");
         // Does such an init script exist?
-        
         var match = $('#scripts').text().search(new RegExp(initScript, "i"));
-        if (match) {
-            hourglassOn();
-            console.log("We found an Init script - going to try to run it")
-            var instance =  $( "#handlers option:selected" ).text();
-            var navajoinput = prepareInputNavajo(initScript);
-            // Going to try to get init script...
-            $.ajax({
-                type: "POST",
-                url: "/navajo/" + instance,
-                data: navajoinput,
-                success: function(xmlObj) {
-                    var messages = $(xmlObj).find('message');
-                    $.each(messages, function(index, message) {
-                        var xmltext = serializer.serializeToString(message)
-                        editor.insert(xmltext);
-                    });
-                    hourglassOff();
-                    //
-                   
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    // ignore
-                    hourglassOff();
-                }
-            });
+        if (match > -1) {
+            $('#AddInit').show();
         }
-       
     }
     
     $('#scriptCustomInputView').show();
     
     
 });
+
+
+$(document).on('click', '#AddInit', function() {
+    var script = $('#loadedScript').text();
+    var initScript = script.replace("Process", "Init");
+    
+    hourglassOn();
+    var instance =  $( "#handlers option:selected" ).text();
+    var navajoinput = prepareInputNavajo(initScript);
+    // Going to try to get init script...
+    $.ajax({
+        type: "POST",
+        url: "/navajo/" + instance,
+        data: navajoinput,
+        success: function(xmlObj) {
+            var messages = $(xmlObj).find('message');
+            $.each(messages, function(index, message) {
+                if ($(message).attr('name') !== 'error') {
+                    var xmltext = serializer.serializeToString(message)
+                    editor.insert(xmltext);
+                } 
+            });
+            hourglassOff();
+            //
+           
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            // ignore
+            hourglassOff();
+        }
+    });
+});
+
 
 $(document).on('click', '.scriptsource', function() {
     var script = $(this).parent().parent().children('.script').attr('id');

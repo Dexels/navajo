@@ -38,7 +38,7 @@ function parseTmlToHtml( scriptname, navajoelement, methodselement) {
             var $li = $(document.createElement('li'));
             var $div =$(document.createElement('div'));
             $div.attr('id', $(this).attr('name'));
-            $div.attr('class', "script");
+            $div.attr('class', "script clickable");
             $div.text($(this).attr('name'));
             $div.appendTo($li);
             $li.appendTo($methods)

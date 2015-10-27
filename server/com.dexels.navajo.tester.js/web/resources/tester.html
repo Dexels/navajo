@@ -45,7 +45,7 @@
 				{{> subscripts this }}
 			</li> 
 	 	{{else}}
-			 <li class="scriptli"> <div class="script" id="{{script}}"> {{name}} </div>  </li>
+			 <li class="scriptli"> <div class="script clickable" id="{{script}}"> {{name}} </div>  </li>
 		{{/equals}}
        
         
@@ -61,7 +61,7 @@
 				{{> subscripts this }}
 			</li> 
         {{else}}
-             <li class="scriptli" style="display: none"> <div class="script" id="{{script}}"> {{name}} </div>  </li>
+             <li class="scriptli" style="display: none"> <div class="script clickable" id="{{script}}"> {{name}} </div>  </li>
         {{/equals}}
     {{/each}}
  </ul>
@@ -183,6 +183,7 @@ $(document).ready(function() {
                     </div>
                     
                      <div id="scriptCustomInputView" style="display: none;">
+                        <div id="AddInit" class="clickable"  style="display: none;">Add Init</div>
                         <div id="editor"></div>
                         
                         <br>
