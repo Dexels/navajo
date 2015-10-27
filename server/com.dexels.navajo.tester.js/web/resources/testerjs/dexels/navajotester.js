@@ -593,7 +593,13 @@ $(document).on('input propertychange', '#scriptsFilter', function(evt) {
     $(this).data("timeout", setTimeout(function() {
         var filter = $("#scriptsFilter").val();
         if (filter.length == 0) {
-            getScripts();
+        	console.time('hide')
+        	
+        	 $(".scripts").find("li:visible").hide();
+        	console.timeEnd('hide')
+        	console.time('show')
+        	 $(".scripts").children("li").show();
+        	 console.timeEnd('show')
             return;
         }
         
