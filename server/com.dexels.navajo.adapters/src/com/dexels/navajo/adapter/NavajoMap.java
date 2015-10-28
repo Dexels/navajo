@@ -101,8 +101,8 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
  
   public String messagePointer;
 
-
-public String selectionPointer = null;
+  public int serverTimeout = -1;
+  public String selectionPointer = null;
 
   public boolean exists;
   public String append;
@@ -838,7 +838,12 @@ public void store() throws MappableException, UserException {
 			  if (server != null) { // External request.
 				  try {
 					  ManualAsyncClient ac = AsyncClientFactory.getManualInstance();
-					  ac.callService(server.startsWith("http") ? server : "http://" + server, username, password, outDoc, method, this);
+					  String server = this.server.startsWith("http") ? this.server : "http://" +this.server;
+					  Integer timeout = null;
+					  if (serverTimeout > -1) {
+					      timeout = serverTimeout;
+					  }
+					  ac.callService(server, username, password, outDoc, method, this, timeout);
 				  } catch (Exception e) {
 					  throw new UserException(-1, e.getMessage(), e);
 				  }
@@ -1844,4 +1849,12 @@ public String getTrigger() {
 public String getPassword() {
 	return password;
 }
+
+public int getServerTimeout() {
+    return serverTimeout;
+}
+public void setServerTimeout(int serverTimeout) {
+    this.serverTimeout = serverTimeout;
+}
+
 }

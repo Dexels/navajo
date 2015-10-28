@@ -305,6 +305,7 @@
 			<value name="trigger" type="string" required="false" direction="in" />
 			<value name="sendThrough" type="boolean" required="false" direction="in" />
 			<value name="server" type="string" required="false" direction="in" />
+			<value name="serverTimeout" type="integer" required="false" direction="in" />
 			<value name="id" type="string" required="false" direction="in" />
 			<value name="block" type="boolean" required="false" direction="in" />
 			<value name="username" type="string" required="false" direction="in" />
@@ -357,6 +358,7 @@
 					required="false" />
 				<param name="breakOnException" field="breakOnException" type="boolean" required="false" />
 				<param name="server" field="server" type="string" required="false" />
+				<param name="serverTimeout" field="serverTimeout" type="integer" required="false" />
 				<param name="username" field="username" type="string" required="false" />
 				<param name="password" field="password" type="string" required="false" />
                 <param name="tenant" field="tenant" type="string" required="false" />
