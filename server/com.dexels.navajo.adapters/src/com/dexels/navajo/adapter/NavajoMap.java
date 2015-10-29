@@ -1418,7 +1418,7 @@ public void run()  {
 		  h.setRequestId(null);
 		  h.setHeaderAttribute("parentaccessid", access.accessID);
 		  String tenant = access.getTenant();
-		  if (this.tenant != null) {
+		  if (this.tenant != null && ! this.tenant.equals("")) {
 		      tenant = this.tenant;
 		  }
 
