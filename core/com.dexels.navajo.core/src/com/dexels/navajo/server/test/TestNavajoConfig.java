@@ -14,8 +14,6 @@ import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.server.FileNavajoConfig;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.Repository;
-import com.dexels.navajo.server.SimpleRepository;
 import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
@@ -82,10 +80,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 		return 0;
 	}
 
-	@Override
-	public Repository getRepository() {
-		return new SimpleRepository();
-	}
 
 
 	@Override
@@ -261,6 +255,11 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 			return null;
 		}
 	}
+
+    @Override
+    public boolean useLegacyDateMode() {
+        return false;
+    }
 
 
 
