@@ -25,7 +25,6 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.Repository;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 import com.dexels.navajo.server.enterprise.workflow.WorkFlowManagerInterface;
 import com.google.common.cache.CacheBuilder;
@@ -41,7 +40,6 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
     
     private DispatcherInterface dispatcherInterface;
     private JavaCompiler javaCompiler;
-    private Repository repository;
     private NavajoConfigInterface navajoConfig;
     private TribeManagerInterface tribeManagerInterface;
     private WorkFlowManagerInterface workflowManagerInterface;
@@ -155,11 +153,6 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
                 logger.info("Status failed: 502, no java compiler");
                 return;
             }
-            if (repository == null) {
-                resp.sendError(503, "No repository");
-                logger.info("Status failed: 503, no repository");
-                return;
-            }
             if (tribeManagerInterface == null) {
                 resp.sendError(504, "No tribe manager");
                 logger.info("Status failed: 504, no repository");
@@ -217,20 +210,12 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
     public void clearDispatcherInterface(DispatcherInterface dispatcherInterface) {
         this.dispatcherInterface = null;
     }
-
-    public void setRepository(Repository repository) {
-        this.repository = repository;
-    }
-
-    public void clearRepository(Repository repository) {
-        this.repository = null;
-    }
-    
+   
 
     @Override
     public Boolean isOk() {
         return navajoConfig != null && dispatcherInterface != null && javaCompiler != null 
-        		&& repository != null && workflowManagerInterface!=null && tribeManagerInterface!=null && !NavajoShutdown.shutdownInProgress();
+        		&& workflowManagerInterface!=null && tribeManagerInterface!=null && !NavajoShutdown.shutdownInProgress();
     }
 
 	public TribeManagerInterface getTribeManagerInterface() {
