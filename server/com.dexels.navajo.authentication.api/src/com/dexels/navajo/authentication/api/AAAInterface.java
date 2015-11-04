@@ -1,7 +1,5 @@
 package com.dexels.navajo.authentication.api;
 
-import java.util.Map;
-
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
@@ -35,6 +33,12 @@ public interface AAAInterface {
 
     public static final String EMPTY_DISTRICTS = "No districts specified in database";
 
+    
+    public Access performUserAuthorisation(String username, String password, String service, Navajo inMessage,
+            Object certificate, String accessID) throws SystemException, AuthorizationException;
+
+
+    
     /**
      * Return all valid districts for a given user.
      *
@@ -46,19 +50,7 @@ public interface AAAInterface {
     public String [] checkUser(String username, String password) throws AAAException;
 
     
-   // public Access authorizeUser(String username, String password, String service, Navajo inMessage, Object certificate) throws SystemException, AuthorizationException;
 
-    /**
-     * Determine whether a user is autenticated.
-     *
-     * @param username
-     * @param password
-     * @param token
-     * @param authObject
-     * @return userId and region
-     * @throws AAAException
-     */
-    public int isAuthenticated(String username, String password, String token, Object authObject, StringBuffer region) throws AAAException;
 
     /**
      * Determine the number of days left before the password will expire.
@@ -87,23 +79,6 @@ public interface AAAInterface {
      */
 	public boolean checkFirstTimeUse(String username) throws AAAException;
 	
-    /**
-     *
-     * @param region
-     * @param username
-     * @param actionObject
-     * @param inputData
-     * @return
-     * @throws AAAException
-     */
-    public boolean isAuthorizedAccess(String region, String username, String actionObject, Navajo inputData, Map<String,String> extraParams, Access access) throws AAAException;
-
-    
-    public Access authorizeUser(String username, String password, String service, Navajo inMessage,
-			Object certificate) throws SystemException, AuthorizationException;
-
-	public Access authorizeUser(String username, String password, String service, Navajo inMessage,
-			Object certificate, String accessID) throws SystemException, AuthorizationException;
 
 
     /**
@@ -115,32 +90,7 @@ public interface AAAInterface {
      */
     public String [] getUserRoles(String username, String organizationId) throws AAAException;
 
-    /**
-     * Check the validity of a token
-     *
-     * @param token, the token to be checked.
-     *
-     * @return true if the token is valid, false otherwise
-     */
-    public boolean isValidToken(String token) throws AAAException;
 
-    /**
-     * Return the region identifier from the token
-     *
-     * @param token
-     * @return the region (organization) name
-     */
-    public String getRegionFromToken(String token) throws AAAException;
-
-    /**
-     * Construct a token from the following parameters:
-     *
-     * @param region
-     * @param username
-     * @param expiry in millis.
-     * @return a valid token
-     */
-    public String constructToken(String region, String username, long expiry);
 
     /**
      * Reset AAA module, i.e. re-load all configuration data.
@@ -153,27 +103,10 @@ public interface AAAInterface {
      *
      * @param username
      */
-    public void resetUserCredential(String username);
+    public void resetCachedUserCredential(String username);
 
-    /**
-     * Clear cache for valid action objects. Needs to be called in case of any user_role or role changes.
-     *
-     */
+
     public void clearActionObjects();
-    
-    
-    /**
-     * Get priority for OSGi resolution. If there are multiple instances active, the highest one will be chosen
-     * TODO think this through: How do we want to resolve multiple instances?
-     * - Fail completely
-     * - Use all of them
-     * - Use any of them (try until one succeeds)
-     * - Use the one with the LOWEST prio
-     * @return
-     */
-    public int getPriority();
-
-
 
 
 }

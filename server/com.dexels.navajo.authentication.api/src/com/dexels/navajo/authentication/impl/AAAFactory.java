@@ -1,9 +1,8 @@
 package com.dexels.navajo.authentication.impl;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedSet;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.slf4j.Logger;
@@ -37,131 +36,71 @@ import com.dexels.navajo.authentication.api.AuthenticationFactory;
  * ====================================================================
  */
 
-
 /**
  * exported for now, TODO: Refactor everywhere to use a service reference
+ * 
  * @author frank
  *
  */
 public final class AAAFactory implements AuthenticationFactory {
+    private final static Logger             logger     = LoggerFactory.getLogger(AAAFactory.class);
+    private static AuthenticationFactory    instance   = null;
 
-  private final SortedSet<AAAInterface> moduleList;
-  private final Map<String,AAAInterface> moduleMap = new HashMap<String, AAAInterface>();
-private AAAInterface defaultAAAInterface;
-  
-  private final static Logger logger = LoggerFactory.getLogger(AAAFactory.class);
-  private static AuthenticationFactory instance = null;
-  
-  public AAAFactory() {
-	  moduleList = new TreeSet<AAAInterface>(new Comparator<AAAInterface>() {
+    private final Set<AAAInterface>   moduleList = new TreeSet<>();
+    private final Map<String, AAAInterface> moduleMap  = new HashMap<String, AAAInterface>();
 
-		@Override
-		public int compare(AAAInterface o1, AAAInterface o2) {
-			if(o1.getPriority()< o2.getPriority()) {
-				return -1;
-			}
-			if(o1.getPriority()> o2.getPriority()) {
-				return 1;
-			}
-			return 0;
-		}
-	});
-  }
+    public void activate() {
+        logger.debug("AAA Factory started.");
+        instance = this;
+    }
 
+    public void deactivate() {
+        logger.debug("AAA Factory stopped.");
+        instance = null;
+    }
 
-  @Override
-  public void addAuthenticationModule(AAAInterface a, Map<String,Object> settings) {
-	  moduleList.add(a);
-	  
-//	  logger.info("# of auth. modules now: "+moduleList.size());
-	  if(settings!=null) {
-//		  logger.info("Multitenant found: "+settings.get("instance"));
-		  String instance = (String) settings.get("instance");
-		  if(instance!=null) {
-			  moduleMap.put(instance,a);
-		  } else {
-			  logger.warn("Possible problem: AAAInterface found, probably in multitenant mode, but no instance associated: "+a.getClass());
-			  this.defaultAAAInterface = a;
-		  }
-	  }
-  }
-  
-  public void removeAuthenticationModule(AAAInterface a, Map<String,Object> settings) {
-	  moduleList.remove(a);
-	  if(settings!=null) {
-//		  logger.info("Multitenant found: "+settings.get("instance"));
-		  String instance = (String) settings.get("instance");
-		  if(instance!=null) {
-			  moduleMap.remove(instance);
-		  } else {
-			  logger.warn("Possible problem: Removing AAAInterface, probably in multitenant mode, but no instance associated.");
-			  this.defaultAAAInterface = null;
-		  }
-	  }
-//	  logger.info("# of auth. modules now: "+moduleList.size());
-  }
+    @Override
+    public void addAuthenticationModule(AAAInterface a, Map<String, Object> settings) {
+        moduleList.add(a);
 
-  public void activate() {
-	  logger.debug("AAA Factory started.");
-	  instance = this;
-  }
+        if (settings != null) {
+            String instance = (String) settings.get("instance");
+            if (instance != null) {
+                moduleMap.put(instance, a);
+            } else {
+                logger.warn("Possible problem: AAAInterface found, probably in multitenant mode, but no instance associated: " + a.getClass());
+            }
+        }
+    }
 
-  public void deactivate() {
-	  logger.debug("AAA Factory stopped.");
-	  instance = null;
-  }
+    public void removeAuthenticationModule(AAAInterface a, Map<String, Object> settings) {
+        moduleList.remove(a);
+        if (settings != null) {
+            String instance = (String) settings.get("instance");
+            if (instance != null) {
+                moduleMap.remove(instance);
+            } else {
+                logger.warn("Possible problem: Removing AAAInterface, probably in multitenant mode, but no instance associated.");
+            }
+        }
+    }
 
-  @Override
-  public AAAInterface getAuthenticationModule() {
-	  try {
-		  if(defaultAAAInterface!=null) {
-			  return defaultAAAInterface;
-		  }
-		  logger.warn("Looking for AAA interface, not multitenant, no default, getting desparate.");
-		  return moduleList.first();
-	  } catch (Exception  e) {
-		  logger.debug("No AuthenticationModule found. No OSGi?", e);
-		  return null;
-	  }
-  }
+    @Override
+    public AAAInterface getAuthenticationModule(String instance) {
+        try {
+            return moduleMap.get(instance);
+        } catch (Exception e) {
+            logger.warn("No AuthenticationModule found. No OSGi?", e);
+            return null;
+        }
+    }
 
-  @Override
-  public AAAInterface getAuthenticationModule(String instance) {
-	  if(instance==null) {
-		  return getAuthenticationModule();
-	  }
-	  try {
-		  return moduleMap.get(instance);
-	  } catch (Exception  e) {
-		  logger.warn("No AuthenticationModule found. No OSGi?", e);
-		  return null;
-	  }
-  }
-
-  
-  public static AuthenticationFactory getInstance() {
-	  if ( instance == null ) {
-		  logger.debug("No AuthenticatonFactory found. No OSGi?");
-		  instance = new AAAFactory();
-	  } 
-	  return instance;
-  }
-  
-  
-  // hmpf. ugly.
-  public final static void resetUserCredential(String instance, String username) {
-	  AAAInterface authenticationModule = getInstance().getAuthenticationModule(instance);
-	if ( authenticationModule != null ) {
-		  authenticationModule.resetUserCredential(username);
-	  }
-  }
-
-  public final static void clearActionObjects(String instance) {
-	  AAAInterface authenticationModule = getInstance().getAuthenticationModule(instance);
-	if ( authenticationModule != null ) {
-		  authenticationModule.clearActionObjects();
-	  }
-  }
-
+    public static AuthenticationFactory getInstance() {
+        if (instance == null) {
+            logger.warn("No AuthenticatonFactory found. No OSGi?");
+            instance = new AAAFactory();
+        }
+        return instance;
+    }
 
 }

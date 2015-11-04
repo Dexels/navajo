@@ -870,7 +870,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                         throw new FatalException("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
                     }
 
-                    access = authenticateUser(inMessage, instance, userCertificate, rpcName, rpcUser, rpcPassword, requestEventAccess.accessID);
+                    access = performUserAuthentication(inMessage, instance, userCertificate, rpcName, rpcUser, rpcPassword, requestEventAccess.accessID);
                 } catch (AuthorizationException ex) {
                     logger.error("AuthorizationException: ", ex);
                     outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
@@ -1096,7 +1096,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         }
     }
 
-    private Access authenticateUser(Navajo inMessage, String tenant, Object userCertificate, String rpcName, String rpcUser, String rpcPassword,
+    private Access performUserAuthentication(Navajo inMessage, String tenant, Object userCertificate, String rpcName, String rpcUser, String rpcPassword,
             String accessID) throws SystemException, AuthorizationException {
 
         if (tenant == null) {
@@ -1108,7 +1108,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             throw new SystemException(-1, "No authenticater for tenant " + tenant + " -cannot authenticate!");
         }
 
-        return aaai.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+        return aaai.performUserAuthorisation(rpcUser, rpcPassword, rpcName, inMessage, userCertificate, accessID);
     }
 
     @Override
