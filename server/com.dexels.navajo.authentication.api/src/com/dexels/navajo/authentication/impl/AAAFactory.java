@@ -1,9 +1,9 @@
 package com.dexels.navajo.authentication.impl;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,11 +43,10 @@ import com.dexels.navajo.authentication.api.AAAFactoryInterface;
  *
  */
 public final class AAAFactory implements AAAFactoryInterface {
-    private final static Logger             logger     = LoggerFactory.getLogger(AAAFactory.class);
-    private static AAAFactoryInterface    instance   = null;
+    private final static Logger logger = LoggerFactory.getLogger(AAAFactory.class);
+    private static AAAFactoryInterface instance = null;
 
-    private final Set<AAAInterface>   moduleList = new TreeSet<>();
-    private final Map<String, AAAInterface> moduleMap  = new HashMap<String, AAAInterface>();
+    private final Map<String, AAAInterface> moduleMap = new HashMap<String, AAAInterface>();
 
     public void activate() {
         logger.debug("AAA Factory started.");
@@ -61,8 +60,6 @@ public final class AAAFactory implements AAAFactoryInterface {
 
     @Override
     public void addAuthenticationModule(AAAInterface a, Map<String, Object> settings) {
-        moduleList.add(a);
-
         if (settings != null) {
             String instance = (String) settings.get("instance");
             if (instance != null) {
@@ -74,7 +71,6 @@ public final class AAAFactory implements AAAFactoryInterface {
     }
 
     public void removeAuthenticationModule(AAAInterface a, Map<String, Object> settings) {
-        moduleList.remove(a);
         if (settings != null) {
             String instance = (String) settings.get("instance");
             if (instance != null) {
