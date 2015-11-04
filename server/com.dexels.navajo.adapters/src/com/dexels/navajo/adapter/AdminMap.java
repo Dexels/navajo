@@ -41,7 +41,6 @@ public class AdminMap implements Mappable {
   public String vendor;
   public String productName;
   public String version;
-  public String repository;
   public String configPath;
   public String adapterPath;
   public String compiledScriptPath;
