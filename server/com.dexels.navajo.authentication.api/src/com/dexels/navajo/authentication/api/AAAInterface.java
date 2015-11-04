@@ -19,11 +19,10 @@ import com.dexels.navajo.script.api.SystemException;
  */
 
 public interface AAAInterface {
-
-
     public static final String AUTH_PASSWORD = "password";
     public static final String AUTH_TOKEN = "token";
     public static final String AUTH_CERTIFICATE = "certificate";
+    public static final String AUTH_SECRETKEY = "secretkey";
 
     public static final String UNKNOWN_USER = "Unknown user";
     public static final String INVALID_PASSWORD = "Invalid password";

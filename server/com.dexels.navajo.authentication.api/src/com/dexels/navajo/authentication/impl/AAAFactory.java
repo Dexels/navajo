@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.authentication.api.AAAInterface;
-import com.dexels.navajo.authentication.api.AuthenticationFactory;
+import com.dexels.navajo.authentication.api.AAAFactoryInterface;
 
 /**
  * <p>Title: <h3>SportLink Services</h3><br></p>
@@ -42,9 +42,9 @@ import com.dexels.navajo.authentication.api.AuthenticationFactory;
  * @author frank
  *
  */
-public final class AAAFactory implements AuthenticationFactory {
+public final class AAAFactory implements AAAFactoryInterface {
     private final static Logger             logger     = LoggerFactory.getLogger(AAAFactory.class);
-    private static AuthenticationFactory    instance   = null;
+    private static AAAFactoryInterface    instance   = null;
 
     private final Set<AAAInterface>   moduleList = new TreeSet<>();
     private final Map<String, AAAInterface> moduleMap  = new HashMap<String, AAAInterface>();
@@ -95,7 +95,7 @@ public final class AAAFactory implements AuthenticationFactory {
         }
     }
 
-    public static AuthenticationFactory getInstance() {
+    public static AAAFactoryInterface getInstance() {
         if (instance == null) {
             logger.warn("No AuthenticatonFactory found. No OSGi?");
             instance = new AAAFactory();
