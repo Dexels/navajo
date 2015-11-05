@@ -95,7 +95,7 @@ public interface AAAInterface {
      * Reset AAA module, i.e. re-load all configuration data.
      *
      */
-    public void destroy();
+    public void reset();
 
     /**
      * Reset user credentials for specified username.
@@ -103,9 +103,6 @@ public interface AAAInterface {
      * @param username
      */
     public void resetCachedUserCredential(String username);
-
-
-    public void clearActionObjects();
 
 
 }

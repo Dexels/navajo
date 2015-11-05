@@ -1061,10 +1061,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 logger.error("Error: ", ee);
                 return errorHandler(access, ee, inMessage);
             }
-        } catch (Exception e) {
-            logger.error("Error: ", e);
-            myException = e;
-            return errorHandler(access, e, inMessage);
         } catch (Throwable e) {
             logger.error("Error: ", e);
             myException = e;
