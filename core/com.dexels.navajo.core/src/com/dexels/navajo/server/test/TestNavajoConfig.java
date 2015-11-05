@@ -252,16 +252,16 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 		return null;
 	}
 
-	@Override
-	public SharedStoreInterface getSharedStore() {
-		try {
-			return new SharedFileStore();
-		} catch (Exception e) {
-			logger.error("Error: ", e);
-			return null;
-		}
-	}
-
+//	@Override
+//	public SharedStoreInterface getSharedStore() {
+//		try {
+//			return new SharedFileStore();
+//		} catch (Exception e) {
+//			logger.error("Error: ", e);
+//			return null;
+//		}
+//	}
+//
 
 
 }

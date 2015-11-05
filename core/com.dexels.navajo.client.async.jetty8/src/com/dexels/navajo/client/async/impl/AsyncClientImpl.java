@@ -117,7 +117,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 			input = input.copy();
 		}
 		input.addHeader(NavajoFactory.getInstance().createHeader(input, service, username, password, -1));
-		callService(server, input, continuation);
+		callService(server, input, continuation, null);
 	}
 	
 	@Override
@@ -173,15 +173,15 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	 * @see com.dexels.navajo.client.async.AsyncClient#callService(java.lang.String, java.lang.String, java.lang.String, com.dexels.navajo.document.Navajo, java.lang.String, com.dexels.navajo.client.NavajoResponseHandler)
 	 */
 	@Override
-	public void callService(String url, String username, String password, Navajo input, String service, final NavajoResponseHandler continuation) throws IOException,
-	NavajoException {
+    public void callService(String url, String username, String password, Navajo input, String service, final NavajoResponseHandler continuation,
+            Integer timeout) throws IOException, NavajoException {
 		if(input==null) {
 			input = NavajoFactory.getInstance().createNavajo();
 		} else {
 			input = input.copy();
 		}
 		input.addHeader(NavajoFactory.getInstance().createHeader(input, service, username, password, -1));	
-		callService(url, input, continuation);
+		callService(url, input, continuation, timeout);
 	}
 
 	/* (non-Javadoc)
@@ -252,21 +252,21 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		};
 		setActualCalls(getActualCalls()+1);
 
-		callService(currentAccess.getRequestUrl(), input, nrh);
+		callService(currentAccess.getRequestUrl(), input, nrh, null);
 	}
 
-	private void callService(String url, Navajo n, final NavajoResponseHandler continuation) throws IOException, NavajoException {
+    private void callService(final String url,final Navajo n, final NavajoResponseHandler continuation, final Integer timeout) throws IOException, NavajoException {
 
 		logger.info("Calling service: {} at {} ", n.getHeader().getRPCName(), url);
 		final ContentExchange exchange = new ContentExchange() {
 
-			
-			
+
 			@Override
 			protected void onExpire() {
 				super.onExpire();
+				logger.warn("CallService timeout calling {}", url);
 				try {
-					continuation.onFail(null);
+					continuation.onFail(new Throwable("CallService timeout"));
 				} catch (IOException e) {
 					logger.error("Error handling expired connection: ", e);
 				} finally {
@@ -283,10 +283,10 @@ public class AsyncClientImpl implements ManualAsyncClient {
 
 			@Override
 			protected void onConnectionFailed(Throwable x) {
-				logger.debug("Connection failed");
 				super.onConnectionFailed(x);
+				logger.warn("Connection failed to: {}", url);
 				try {
-					continuation.onFail(x);
+					continuation.onFail(new Throwable("CallService connection failed"));
 				} catch (IOException e) {
 					logger.error("Error handling connection: ", x);
 				} finally {
@@ -296,10 +296,10 @@ public class AsyncClientImpl implements ManualAsyncClient {
 
 			@Override
 			protected void onException(Throwable x) {
-				logger.debug("Exception occurred");
 				super.onException(x);
+				logger.warn("Exception occurred calling {}", url, x);
 				try {
-					continuation.onFail(x);
+					continuation.onFail(new Throwable("CallService exception"));
 				} catch (IOException e) {
 					logger.error("Error: ", e);
 				} finally {
@@ -354,6 +354,11 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		exchange.setRequestHeader("Content-Type", "text/xml; charset=utf-8"); 
 		exchange.setRequestContentSource(bais);
 		exchange.setURL(url);
+		
+        if (timeout != null) {
+            exchange.setTimeout(timeout);
+        }
+        
 		setActualCalls(getActualCalls()+1);
 		client.send(exchange);
 	}

@@ -3,11 +3,23 @@
 // Holds the input navajo document for the next RPC call
 var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header></tml>');
 var serializer = new XMLSerializer();
-var hooverdiv = '<div class="customRunOption">';
-hooverdiv += '  <div class="scriptcompile">Compile</div>';
-hooverdiv += '  <div class="scriptsource">Source</div>';
-hooverdiv += '  <div class="scriptinput">Custom Input</div>';
+var editor ;
+
+var hooverdiv = '<div class="customRunOptionContainer">';
+hooverdiv += '  <div class="customRunOption scriptcompile">Compile</div> |';
+hooverdiv += '  <div class="customRunOption scriptsource">Source</div> | ';
+hooverdiv += '  <div class="customRunOption scriptinput">Custom Input</div>';
 hooverdiv += '</div>';
+
+
+function createEditor() {
+    editor= ace.edit("editor");
+    editor.setTheme("ace/theme/eclipse");
+    editor.getSession().setMode("ace/mode/xml");
+    editor.setBehavioursEnabled(true);
+    editor.setHighlightActiveLine(true);
+}
+
 
 function getScripts() {
     $("#scripts").html("");
@@ -28,12 +40,26 @@ function getScripts() {
                 
                 $(".scriptli").hoverIntent({
                     over: function() {
-                        $(this).append(hooverdiv);
+                        // Only add if we don't have it yet
+                        if ( $(this).find('.customRunOptionContainer').length === 0) {
+                            $(this).append(hooverdiv);
+                        }
                      },
                      out: function() {
-                         $(this).parent().find('.customRunOption').remove();
+                         var activeScript = $('#loadedScript').text();
+                         var myScript = $(this).find('.script').attr('id');
+                         console.log(this)
+                         if ( myScript !== activeScript && $(this).find('.customRunOptionContainer').length > 0) {
+                             // Only remove if we are NOT the active script
+                             $(this).find('.customRunOptionContainer').remove();       
+                         } else {
+                        	 console.log(activeScript);
+                        	 console.log(myScript);
+                        	 console.log($(this).parent().find('.customRunOptionContainer').length)
+                        	
+                         }
                      }, 
-                     interval: 400
+                     interval: 300
                 });
 
             },
@@ -249,14 +275,17 @@ function updateVisibility(filter, element) {
             var match = $(this).text().search(new RegExp(filter, "i"));
             if (match < 0) {
                 // no need to check children at all
-                $(this).hide()
+              
+                $(this).find("li").filter(":visible").hide();
+                $(this).hide();
             } else {
                 var childHasMatches = updateVisibility(filter, $(this).children('ul').first());
                 if (childHasMatches) {
                     $(this).show()
                     anyMatch = true;
                 } else {
-                    $(this).hide()
+                    console.error("This shouldn't happen?");
+
                 }
             }
 
@@ -302,7 +331,11 @@ $(document).on('click', '.script', function() {
     var stateObj = {script: script,  xml:  serializer.serializeToString(xml) };
     history.replaceState(stateObj, script, "tester.html?script=" + script);
     
+    // Remove all hoover divs and append the one to the current script
+    $('.customRunOptionContainer').remove();
+    $(this).parent().append(hooverdiv);
     
+
     runScript($(this).attr("id"));
 });
 
@@ -341,10 +374,59 @@ $(document).on('click', '.scriptinput', function() {
     $('#scriptheader').text(script);
     
     $('#scriptMainView').hide();
+    editor.setValue("");
+    $('#AddInit').hide();
+    if (localStorage.getItem("scriptinput"+script) !== null) {
+        var custominput = localStorage.getItem("scriptinput"+script);
+        editor.setValue(custominput);   
+    }
+    var scriptName = $(this).parent().parent().children('.script').text();
+    if (scriptName.indexOf("Process") > -1) {
+        var initScript = scriptName.replace("Process", "Init");
+        // Does such an init script exist?
+        var match = $('#scripts').text().search(new RegExp(initScript, "i"));
+        if (match > -1) {
+            $('#AddInit').show();
+        }
+    }
+    
     $('#scriptCustomInputView').show();
     
     
 });
+
+
+$(document).on('click', '#AddInit', function() {
+    var script = $('#loadedScript').text();
+    var initScript = script.replace("Process", "Init");
+    
+    hourglassOn();
+    var instance =  $( "#handlers option:selected" ).text();
+    var navajoinput = prepareInputNavajo(initScript);
+    // Going to try to get init script...
+    $.ajax({
+        type: "POST",
+        url: "/navajo/" + instance,
+        data: navajoinput,
+        success: function(xmlObj) {
+            var messages = $(xmlObj).find('message');
+            $.each(messages, function(index, message) {
+                if ($(message).attr('name') !== 'error') {
+                    var xmltext = serializer.serializeToString(message)
+                    editor.insert(xmltext);
+                } 
+            });
+            hourglassOff();
+            //
+           
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            // ignore
+            hourglassOff();
+        }
+    });
+});
+
 
 $(document).on('click', '.scriptsource', function() {
     var script = $(this).parent().parent().children('.script').attr('id');
@@ -403,8 +485,10 @@ $(document).on('click', '#TMLSourceviewLink', function() {
 $(document).on('input change', '.custominputtype', function(evt) {
     var value = $('.custominputtype:checked').val();
     if (value === "JSON") {
+        editor.getSession().setMode("ace/mode/json");
         $('#CustomInputRunButton').val("Convert to TML");
     } else {
+        editor.getSession().setMode("ace/mode/xml");
         $('#CustomInputRunButton').val("Run Script");
     }
 });
@@ -413,12 +497,13 @@ $(document).on('input change', '.custominputtype', function(evt) {
 $(document).on('click', '#CustomInputRunButton', function() {
     // Going to run loaded script with custom input...
     var inputtype = $('.custominputtype:checked').val();
-    var inputString = $('#customInputText').val();
+    var inputString = editor.getValue();
     if (inputtype === "JSON") {
         try {
             var inputXml = convertJsonToTml(inputString);
             $(this).val("Run script");
-            $('#customInputText').val(inputXml);
+            editor.getSession().setMode("ace/mode/xml");
+            editor.setValue(inputXml);
             $('.custominputtype[value="TML"]').prop("checked", true)
         } catch(err) {
             window.alert("Error parsing JSON:\n\n "+  err.message);
@@ -428,7 +513,7 @@ $(document).on('click', '#CustomInputRunButton', function() {
         return;
     } 
     
-   
+  
     var xmlStringStart = '<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header>';
     var xmlStringEnd = '</tml>';
     var inputXml =  inputString;
@@ -441,12 +526,14 @@ $(document).on('click', '#CustomInputRunButton', function() {
     }
     
     var script = $('#loadedScript').text();
+    // Store input in local storage 
+    localStorage.setItem("scriptinput" + script, inputString);
+    editor.setValue("");
     runScript(script)
 });
 
 function convertJsonToTml(jsonString) {
     var jsonObj = JSON.parse(jsonString);
-    console.log(jsonObj);
     var xmlString = '';
     $.each(jsonObj, function(key, value) {
         if (typeof value === "object") {
@@ -454,26 +541,38 @@ function convertJsonToTml(jsonString) {
             xmlString += jsonObjToTml(value);
             xmlString += '</message>\n';
         } else {
-            xmlString += '    <property name="' + key + '" value="'+value+'" />\n'
+            xmlString += '<property name="' + key + '" value="'+value+'" />\n'
         }
     });
-    return xmlString;
+    return formatXml(xmlString);
 }
 
 function jsonObjToTml(jsonObj) {
     var xmlString = '';
     $.each(jsonObj, function(key, value) {
-        if (typeof value === "object") {
-            xmlString += '    <message name="' + key + '">\n';
+        if (typeof value === 'undefined' || value === null) {
+            xmlString += '<property name="' + key + '" />\n';
+        } else if (typeof value === "object") {
+            xmlString += '<message name="' + key + '">\n';
             xmlString += jsonObjToTml(value);
-            xmlString += '    </message>\n';
+            xmlString += '</message>\n';
         } else {
-            xmlString += '        <property name="' + key + '" value="'+value+'" />\n'
+            xmlString += '<property name="' + key + '" ';
+            if (isInt(value)) {
+                xmlString += ' type="integer" value="'+value+'" />\n';
+            } else if (isFloat(value)) {
+                xmlString += ' type="long" value="'+value+'" />\n';
+            } else if (isBoolean(value)) {
+                
+                xmlString += ' type="boolean" value="'+value+'" />\n';
+            } else {
+                xmlString += ' value="'+value+'" />\n'
+            }
+           
         }
     });
     return xmlString;
 }
-
 
 $(document).on('click', '.messagediv h3', function() {
     $(this).closest('.messagediv').children('div').each(function() {
@@ -497,7 +596,13 @@ $(document).on('input propertychange', '#scriptsFilter', function(evt) {
     $(this).data("timeout", setTimeout(function() {
         var filter = $("#scriptsFilter").val();
         if (filter.length == 0) {
-            getScripts();
+        	console.time('hide')
+        	
+        	$(".scripts").find("li").filter(":visible").hide();
+        	console.timeEnd('hide')
+        	console.time('show')
+        	 $(".scripts").children("li").show();
+        	 console.timeEnd('show')
             return;
         }
         
@@ -655,4 +760,47 @@ Array.prototype.indexOfPath = function(path) {
         if (this[i].path === path)
             return i;
     return -1;
+}
+
+
+function isInt(n){
+    return Number(n) === n && n % 1 === 0;
+}
+
+function isFloat(n){
+    return n === Number(n) && n % 1 !== 0;
+}
+function isBoolean(n){
+    return n === true || n === false;
+}
+
+function formatXml(xml) {
+    var formatted = '';
+    var reg = /(>)(<)(\/*)/g;
+    xml = xml.replace(reg, '$1\r\n$2$3');
+    var pad = 0;
+    jQuery.each(xml.split('\n'), function(index, node) {
+        var indent = 0;
+        if (node.match(/.+<\/\w[^>]*>$/)) {
+            indent = 0;
+        } else if (node.match(/^<\/\w/)) {
+            if (pad != 0) {
+                pad -= 1;
+            }
+        } else if (node.match(/^<\w[^>]*[^\/]>.*$/)) {
+            indent = 1;
+        } else {
+            indent = 0;
+        }
+
+        var padding = '';
+        for (var i = 0; i < pad; i++) {
+            padding += '    ';
+        }
+
+        formatted += padding + node + '\r\n';
+        pad += indent;
+    });
+
+    return formatted;
 }

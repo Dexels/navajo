@@ -551,7 +551,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     	return repository;
     }
 
-    @Override
+    // Removed from NavajoServerInterface
 	public final SharedStoreInterface getSharedStore() {
     	try {
     		if ( sharedStoreClass != null ) {

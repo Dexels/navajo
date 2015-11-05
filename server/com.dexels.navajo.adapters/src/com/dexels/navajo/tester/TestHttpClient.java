@@ -80,7 +80,7 @@ public class TestHttpClient extends Thread implements NavajoResponseHandler {
 		fail = false;
 		ManualAsyncClient ac = AsyncClientFactory.getManualInstance();
 		ac.callService(host.startsWith("http") ? host : "http://" + host, request.getHeader().getRPCUser(), 
-				request.getHeader().getRPCPassword(), request, request.getHeader().getRPCName(), this);
+				request.getHeader().getRPCPassword(), request, request.getHeader().getRPCName(), this, null);
 
 	}
 	

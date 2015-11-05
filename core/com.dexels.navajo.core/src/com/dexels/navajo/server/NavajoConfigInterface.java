@@ -20,7 +20,7 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	
 	// Available modules.
 	public PersistenceManager getPersistenceManager();
-	public SharedStoreInterface getSharedStore();
+//	public SharedStoreInterface getSharedStore();
 	public Repository getRepository();
 	public StatisticsRunnerInterface getStatisticsRunner();
 	public NavajoClassSupplier getClassloader();

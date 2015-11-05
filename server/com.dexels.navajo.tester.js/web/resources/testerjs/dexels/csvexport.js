@@ -3,7 +3,7 @@ function getCsvContent(divelement) {
     
     var csvData = '';
     var xpath = divelement.attr('id');
-    var element = $(xml).xpath(xpath);
+    var element = $(xml).xpath(xpath)[0];
    
 
     if (typeof element != 'undefined') {
