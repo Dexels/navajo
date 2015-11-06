@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.authentication.api.AAAInterface;
-import com.dexels.navajo.authentication.api.AAAFactoryInterface;
 
 /**
  * <p>Title: <h3>SportLink Services</h3><br></p>
@@ -40,60 +39,19 @@ import com.dexels.navajo.authentication.api.AAAFactoryInterface;
  * @author frank
  *
  */
-public final class AAAFactory implements AAAFactoryInterface {
+public final class AAAFactory {
     private final static Logger logger = LoggerFactory.getLogger(AAAFactory.class);
-    private static AAAFactoryInterface instance = null;
+    private static AAAInterface instance = null;
 
-    private final Map<String, AAAInterface> moduleMap = new HashMap<String, AAAInterface>();
-
-    public void activate() {
-        logger.debug("AAA Factory started.");
-        instance = this;
+    public static void setInstance(AAAInterface instance) {
+        AAAFactory.instance = instance;
     }
 
-    public void deactivate() {
-        logger.debug("AAA Factory stopped.");
-        instance = null;
+    public static void clearInstance() {
+        AAAFactory.instance = null;
     }
 
-    @Override
-    public void addAuthenticationModule(AAAInterface a, Map<String, Object> settings) {
-        if (settings != null) {
-            String instance = (String) settings.get("instance");
-            if (instance != null) {
-                moduleMap.put(instance, a);
-            } else {
-                logger.warn("Possible problem: AAAInterface found, probably in multitenant mode, but no instance associated: " + a.getClass());
-            }
-        }
-    }
-
-    public void removeAuthenticationModule(AAAInterface a, Map<String, Object> settings) {
-        if (settings != null) {
-            String instance = (String) settings.get("instance");
-            if (instance != null) {
-                moduleMap.remove(instance);
-            } else {
-                logger.warn("Possible problem: Removing AAAInterface, probably in multitenant mode, but no instance associated.");
-            }
-        }
-    }
-
-    @Override
-    public AAAInterface getAuthenticationModule(String instance) {
-        try {
-            return moduleMap.get(instance);
-        } catch (Exception e) {
-            logger.warn("No AuthenticationModule found. No OSGi?", e);
-            return null;
-        }
-    }
-
-    public static AAAFactoryInterface getInstance() {
-        if (instance == null) {
-            logger.warn("No AuthenticatonFactory found. No OSGi?");
-            instance = new AAAFactory();
-        }
+    public static AAAInterface getInstance() {
         return instance;
     }
 

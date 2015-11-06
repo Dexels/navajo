@@ -150,7 +150,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	protected final static int INFINITE = 10000;
 	protected final String USERPWDDELIMITER = "/";
-	protected final String DEFAULTSRCNAME = "default";
+//	protected final String USERPWDDELIMITER = "/";
+    protected final String DEFAULTSRCNAME = "default";
 
 	public boolean debug = false;
 	public boolean kill = false;
@@ -230,6 +231,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	protected Access myAccess;
 
 	public int instances;
+	private String instance;
 	private boolean updateOnly;
 	private boolean isLegacyMode;
 	private String dbIdentifier = null;
@@ -911,7 +913,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
                     gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
                     this.ownConnection = false;
                 } else {
-                    String instance = null;
+                    String instance = this.instance;
                     if (myAccess != null) {
                         instance = myAccess.getTenant();
                     }
@@ -1813,4 +1815,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	public Object getParameter() {
 		return parameter;
 	}
+
+    public void setInstance(String instance) {
+        this.instance = instance;
+    }
+
+
+	
 }

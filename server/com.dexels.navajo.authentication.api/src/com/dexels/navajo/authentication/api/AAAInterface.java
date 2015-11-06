@@ -1,5 +1,7 @@
 package com.dexels.navajo.authentication.api;
 
+import java.util.List;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
@@ -29,80 +31,28 @@ public interface AAAInterface {
     public static final String INVALID_TOKEN = "Invalid token";
     public static final String INVALID_CERTIFICATE = "Invalid certificate";
     public static final String EMPTY_CERTIFICATE = "Empty certificate";
-
+    public static final String ACCOUNT_BLOCKED = "Account blocked";
     public static final String EMPTY_DISTRICTS = "No districts specified in database";
+    public static final String ACCOUNT_INACTIVE = "Account not active";
 
     
-    public Access performUserAuthorisation(String username, String password, String service, Navajo inMessage,
-            Object certificate, String accessID) throws SystemException, AuthorizationException;
+    public void performUserAuthorisation(String tenant, String username, String password, String service,
+            Navajo inMessage, Object certificate, Access access) throws SystemException, AuthorizationException;
 
-
-    
-    /**
-     * Return all valid districts for a given user.
-     *
-     * @param username
-     * @param password
-     * @return
-     * @throws AAAException
-     */
-    public String [] checkUser(String username, String password) throws AAAException;
-
-    
-
-
-    /**
-     * Determine the number of days left before the password will expire.
-     *
-     * @param username
-     * @return the number of days left before the password expires
-     * @throws AAAException
-     */
-	public int checkExpiration(String username) throws AAAException;
-	
-    /**
-     * Determine whether an account is blocked.
-     *
-     * @param username
-     * @return true if account is blocked, and false otherwise
-     * @throws AAAException
-     */
-	public boolean checkBlocked(String username) throws AAAException;
-	
-    /**
-     * Determine whether an account is being used for the first time.
-     *
-     * @param username
-     * @return true if account is being accessed for the first time, and false otherwise
-     * @throws AAAException
-     */
-	public boolean checkFirstTimeUse(String username) throws AAAException;
-	
-
-
-    /**
-     * Get the roles of user
-     *
-     * @param username
-     * @param password
-     * @return the names of all the roles
-     */
-    public String [] getUserRoles(String username, String organizationId) throws AAAException;
-
-
+    public List<String> getUserDistricts(String tenant, String username) throws AAAException;
 
     /**
      * Reset AAA module, i.e. re-load all configuration data.
      *
      */
-    public void reset();
+    public void reset(String tenant);
 
     /**
      * Reset user credentials for specified username.
      *
      * @param username
      */
-    public void resetCachedUserCredential(String username);
+    public void resetCachedUserCredential(String tenant, String username);
 
 
 }

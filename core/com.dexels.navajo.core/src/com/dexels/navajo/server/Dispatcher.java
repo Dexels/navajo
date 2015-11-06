@@ -99,23 +99,22 @@ import com.dexels.navajo.util.AuditLog;
  */
 
 public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterface {
+    public static final int rateWindowSize = 20;
+    public static final double requestRate = 0.0;
+    protected static int instances = 0;
+    
+    public static final String FILE_VERSION = "$Id$";
+    public static final String vendor = "Dexels BV";
+    public static final String product = "Navajo Service Delivery Platform";
+    public static final String NAVAJO_TOPIC = "navajo/request";
 
-    protected static int                     instances      = 0;
 
-    /**
-     * Fields accessable by webservices
-     */
-    public Access[]                          users;
-    public static final String               FILE_VERSION   = "$Id$";
-    public static final String               vendor         = "Dexels BV";
-    public static final String               product        = "Navajo Service Delivery Platform";
-    public static final String               NAVAJO_TOPIC   = "navajo/request";
-
-    public volatile static String            edition;
+    public Access[] users;
+   
+    public volatile static String edition;
     private final Map<String, GlobalManager> globalManagers = new HashMap<String, GlobalManager>();
-    private final Map<String, AAAInterface>  authenticators = new HashMap<String, AAAInterface>();
-
-    private final static Logger              logger         = LoggerFactory.getLogger(Dispatcher.class);
+    private AAAInterface authenticator;
+    private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 
     static {
         try {
@@ -130,37 +129,36 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      * Unique dispatcher instance.
      */
     // private static volatile Dispatcher instance = null;
-    private static boolean         servicesBeingStarted = false;
-    private static boolean         servicesStarted      = false;
+    private static boolean servicesBeingStarted = false;
+    private static boolean servicesStarted = false;
 
-    protected boolean              matchCN              = false;
-    public final Set<Access>       accessSet            = Collections.newSetFromMap(new ConcurrentHashMap<Access, Boolean>());
+    protected boolean matchCN = false;
+    public final Set<Access> accessSet = Collections.newSetFromMap(new ConcurrentHashMap<Access, Boolean>());
 
-    public boolean                 useAuthorisation     = true;
-    public static java.util.Date   startTime            = new java.util.Date();
+    public boolean useAuthorisation = true;
+    public static java.util.Date startTime = new java.util.Date();
 
-    public long                    requestCount         = 0;
-    private NavajoConfigInterface  navajoConfig;
+    public long requestCount = 0;
+    private NavajoConfigInterface navajoConfig;
 
-    private EventAdmin             eventAdmin;
+    private EventAdmin eventAdmin;
 
-    private String                 keyStore;
-    private String                 keyPassword;
+    private String keyStore;
+    private String keyPassword;
 
-    public static final int        rateWindowSize       = 20;
-    public static final double     requestRate          = 0.0;
-    private long[]                 rateWindow           = new long[rateWindowSize];
+  
+    private long[] rateWindow = new long[rateWindowSize];
 
     // private static Object semaphore = new Object();
-    private int                    peakAccessSetSize    = 0;
+    private int peakAccessSetSize = 0;
 
     /**
      * Registered SNMP managers.
      */
-    private ArrayList<SNMPManager> snmpManagers         = new ArrayList<SNMPManager>();
+    private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>();
 
-    // optional, can be null
-    // private BundleCreator bundleCreator;
+   
+
 
     public Dispatcher(NavajoConfigInterface nc) {
         navajoConfig = nc;
@@ -858,8 +856,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
             // Log request event - create a dummy Access object for it
             // Later use this accessID for the real access object
-            Access requestEventAccess = new Access(1, 1, rpcUser, rpcName, "", "", "", null, false, null);
-            NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(requestEventAccess));
+            access = new Access(1, 1, rpcUser, rpcName, "", "", "", userCertificate, false, null);
+            access.setTenant(instance);
+            NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(access));
             appendGlobals(inMessage, instance);
 
             if (useAuthorisation && !skipAuth) {
@@ -869,8 +868,13 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                         System.err.println("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
                         throw new FatalException("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
                     }
+                    if (instance == null) {
+                        throw new SystemException(-1, "No tenant set -cannot authenticate!");
+                    }
 
-                    access = performUserAuthentication(inMessage, instance, userCertificate, rpcName, rpcUser, rpcPassword, requestEventAccess.accessID);
+                    authenticator.performUserAuthorisation(instance, rpcUser, rpcPassword, rpcName, inMessage, userCertificate, access);
+                    
+                    
                 } catch (AuthorizationException ex) {
                     logger.error("AuthorizationException: ", ex);
                     outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
@@ -884,21 +888,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                             Level.WARNING);
                     return outMessage;
                 }
-            } else {
-                // Skip auth - create access object ourselves
-                access = new Access(1, 1, rpcUser, rpcName, "", "", "", null, false, requestEventAccess.accessID);
             }
 
-            // System.err.println("Created Access: " + access.accessID + ", " +
-            // access.rpcName + "(" + access.rpcUser + ")");
-
-            if (access == null) {
-                throw new FatalException("Error acquiring Access object in dispatcher. Severe.");
-            }
-            if (access.getTenant() == null) {
-                // repairing missing instance:
-                access.setTenant(instance);
-            }
             if (clientInfo != null) {
                 access.ipAddress = clientInfo.getIP();
                 access.hostName = clientInfo.getHost();
@@ -1090,21 +1081,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         if (gm != null) {
             gm.initGlobals(inMessage);
         }
-    }
-
-    private Access performUserAuthentication(Navajo inMessage, String tenant, Object userCertificate, String rpcName, String rpcUser, String rpcPassword,
-            String accessID) throws SystemException, AuthorizationException {
-
-        if (tenant == null) {
-            throw new SystemException(-1, "No tenant set -cannot authenticate!");
-        }
-
-        AAAInterface aaai = getAuthorizator(tenant);
-        if (aaai == null) {
-            throw new SystemException(-1, "No authenticater for tenant " + tenant + " -cannot authenticate!");
-        }
-
-        return aaai.performUserAuthorisation(rpcUser, rpcPassword, rpcName, inMessage, userCertificate, accessID);
     }
 
     @Override
@@ -1553,21 +1529,19 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         return globalManagers.get(instance);
     }
 
-    public AAAInterface getAuthorizator(String instance) {
-        return authenticators.get(instance);
-    }
-
     public void removeGlobalManager(GlobalManager gm, Map<String, Object> settings) {
         globalManagers.remove(settings.get("instance"));
     }
-
-    public void addAuthenticator(AAAInterface aa, Map<String, Object> settings) {
-        authenticators.put((String) settings.get("instance"), aa);
+    
+    
+    public void setAuthenticator(AAAInterface a) {
+        this.authenticator = a;
+    }
+    
+    public void clearAuthenticator(AAAInterface a) {
+        this.authenticator = null;
     }
 
-    public void removeAuthenticator(AAAInterface gm, Map<String, Object> settings) {
-        authenticators.remove(settings.get("instance"));
-    }
 
     public void setEventAdmin(EventAdmin eventAdmin) {
         this.eventAdmin = eventAdmin;

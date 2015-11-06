@@ -30,4 +30,6 @@ public interface GlobalManager {
      */
     public void initGlobals(Navajo inMessage) throws NavajoException;
 
-}
+    
+
+}  

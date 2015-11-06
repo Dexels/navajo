@@ -305,7 +305,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		Map<String, Message> resources = readResources(instanceResource,
 				aliases, deployment);
 
-		registerAuthorization(name, instanceFolder);
+//		registerAuthorization(name, instanceFolder);
 		// copyOfResources.putAll(resources);
 		// registerInstance(name);
 		registerInstanceProperties(name, copyOfProperties);
