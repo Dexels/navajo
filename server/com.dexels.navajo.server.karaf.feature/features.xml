@@ -527,7 +527,7 @@
 
 
 	<feature resolver="(obr)" name='navajo.enterprise.monitor'
-		version='2.0.1'>
+		version='2.0.2'>
 		<feature version="[3.0.16,4)">navajo.enterprise.mongodb</feature>
 		<feature version="[3.0.0,4)">navajo.legacy</feature>
         
@@ -535,7 +535,7 @@
         </bundle>
         <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.sharedconfigstore/0.9.3
         </bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/5.4.2
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/5.4.4
 		</bundle>
 	</feature>
 
