@@ -53,6 +53,8 @@ public interface AAAQuerier {
      * @param username
      */
     public void resetCachedUserCredential(String tenant, String username);
+    
+    public int getUserId(String tenant, String username);
 
 
 }
