@@ -1,12 +1,6 @@
 package com.dexels.navajo.authentication.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.authentication.api.AAAInterface;
+import com.dexels.navajo.authentication.api.AAAQuerier;
 
 /**
  * <p>Title: <h3>SportLink Services</h3><br></p>
@@ -40,10 +34,9 @@ import com.dexels.navajo.authentication.api.AAAInterface;
  *
  */
 public final class AAAFactory {
-    private final static Logger logger = LoggerFactory.getLogger(AAAFactory.class);
-    private static AAAInterface instance = null;
+    private static AAAQuerier instance = null;
 
-    public static void setInstance(AAAInterface instance) {
+    public static void setInstance(AAAQuerier instance) {
         AAAFactory.instance = instance;
     }
 
@@ -51,7 +44,7 @@ public final class AAAFactory {
         AAAFactory.instance = null;
     }
 
-    public static AAAInterface getInstance() {
+    public static AAAQuerier getInstance() {
         return instance;
     }
 

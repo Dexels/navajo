@@ -6,9 +6,7 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
@@ -20,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.authentication.api.AAAInterface;
+import com.dexels.navajo.authentication.api.AAAQuerier;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -39,6 +37,9 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.global.GlobalManager;
+import com.dexels.navajo.server.global.GlobalManagerRepository;
+import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
 
 public class EntityListener extends HttpServlet {
     private static final long serialVersionUID = -6681359881499760460L;
@@ -46,12 +47,11 @@ public class EntityListener extends HttpServlet {
     private final static String DEFAULT_OUTPUT_FORMAT = "json";
     private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json", "xml", "tml"));
    
- 
-    private final Map<String, AAAInterface> authenticators = new HashMap<String, AAAInterface>();
     private EntityManager myManager;
 
 
     private int requestCounter = 0;
+    private AAAQuerier authenticator;
 
     public void activate() {
         logger.info("Entity servlet component activated");
@@ -69,12 +69,12 @@ public class EntityListener extends HttpServlet {
         myManager = null;
     }
     
-    public void addAuthenticator(AAAInterface aa, Map<String, Object> settings) {
-        authenticators.put((String) settings.get("instance"), aa);
+    public void addAuthenticator(AAAQuerier aa) {
+        authenticator = aa;
     }
 
-    public void removeAuthenticator(AAAInterface gm, Map<String, Object> settings) {
-        authenticators.remove(settings.get("instance"));
+    public void removeAuthenticator(AAAQuerier aa) {
+        authenticator = null;
     }
     
 
@@ -186,7 +186,6 @@ public class EntityListener extends HttpServlet {
             access.created = new Date(requestStart);
             access.ipAddress = ip;
             access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
-            access.setInDoc(input);
             
             header.setHeaderAttribute("parentaccessid", access.accessID);
             if (input.getMessage(entityMessage.getName()) == null) {
@@ -353,21 +352,42 @@ public class EntityListener extends HttpServlet {
     
     private Access authenticateUser(Navajo inDoc, String tenant, String entity,
             String rpcUser, String rpcPassword) throws SystemException, AuthorizationException {
-        Access access = new Access();
+       Access access = new Access(1, 1, rpcUser, entity, "", "", "", null, false, null);
+        access.setTenant(tenant);
+        access.setInDoc(inDoc);
+        appendGlobals(inDoc, tenant);
+        
         if (tenant != null) {
             // logger.info("using multitenant: "+instance, new Exception());
 
-            AAAInterface aaai = authenticators.get(tenant);
-            if (aaai != null) {
-                access = aaai.authorizeUser(rpcUser, rpcPassword, entity, inDoc, null);
+            if (authenticator != null) {
+                authenticator.performUserAuthorisation(tenant, rpcUser, rpcPassword, entity, inDoc, null, access);
             } else {
                 logger.warn("No authenticator found for instance: {}", tenant);
             }           
         } else {
             logger.warn("No tenant defined - unable to authenticate!");
         }
-        
         return access;
+    }
+
+    
+    private void appendGlobals(Navajo inMessage, String tenant) {
+        final GlobalManagerRepository globalManagerInstance = GlobalManagerRepositoryFactory.getGlobalManagerInstance();
+        if (globalManagerInstance == null) {
+            logger.info("No global manager found- not adding globals!");
+            return;
+        }
+        GlobalManager gm = null;
+        if (tenant == null) {
+            gm = globalManagerInstance.getGlobalManager("default");
+        } else {
+            gm = globalManagerInstance.getGlobalManager(tenant);
+        }
+        
+        if (gm != null) {
+            gm.initGlobals(inMessage);
+        }
     }
     
 }

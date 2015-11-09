@@ -20,7 +20,7 @@ import com.dexels.navajo.script.api.SystemException;
  * @version $Id$
  */
 
-public interface AAAInterface {
+public interface AAAQuerier {
     public static final String AUTH_PASSWORD = "password";
     public static final String AUTH_TOKEN = "token";
     public static final String AUTH_CERTIFICATE = "certificate";

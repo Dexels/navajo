@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
-import com.dexels.navajo.authentication.api.AAAInterface;
+import com.dexels.navajo.authentication.api.AAAQuerier;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -113,7 +113,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
    
     public volatile static String edition;
     private final Map<String, GlobalManager> globalManagers = new HashMap<String, GlobalManager>();
-    private AAAInterface authenticator;
+    private AAAQuerier authenticator;
     private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 
     static {
@@ -858,6 +858,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             // Later use this accessID for the real access object
             access = new Access(1, 1, rpcUser, rpcName, "", "", "", userCertificate, false, null);
             access.setTenant(instance);
+            access.setInDoc(inMessage);
             NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(access));
             appendGlobals(inMessage, instance);
 
@@ -1534,11 +1535,11 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
     
     
-    public void setAuthenticator(AAAInterface a) {
+    public void setAuthenticator(AAAQuerier a) {
         this.authenticator = a;
     }
     
-    public void clearAuthenticator(AAAInterface a) {
+    public void clearAuthenticator(AAAQuerier a) {
         this.authenticator = null;
     }
 
