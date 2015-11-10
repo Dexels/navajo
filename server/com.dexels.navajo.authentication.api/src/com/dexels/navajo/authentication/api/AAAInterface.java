@@ -105,16 +105,6 @@ public interface AAAInterface {
 	public Access authorizeUser(String username, String password, String service, Navajo inMessage,
 			Object certificate, String accessID) throws SystemException, AuthorizationException;
 
-    /**
-     * Authenticate a user, using username and password.
-     *
-     * @param username
-     * @param password
-     * @return a String array containg all regions (organizations) in which the user is allowed to log in to.
-     *
-     * @throws AAAException
-     */
-    //public String [] getUserDistricts(String username) throws AAAException;
 
     /**
      * Get the roles of user

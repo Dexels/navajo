@@ -32,7 +32,7 @@ public class NullDescriptionProvider extends BaseDescriptionProvider {
 	}
 
 	@Override
-	public void updatePropertyDescription(PropertyDescription pd) {
+	public void updatePropertyDescription(PropertyDescription pd, String rpcUser) {
 	}
 
 }
