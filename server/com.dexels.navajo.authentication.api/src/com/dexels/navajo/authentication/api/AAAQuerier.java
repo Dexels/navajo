@@ -21,6 +21,11 @@ import com.dexels.navajo.script.api.SystemException;
  */
 
 public interface AAAQuerier {
+    public static final int AUTHENTICATION_OK = 0;
+    public static final int AUTHENTICATION_FAILED = 1;
+    public static final int AUTHENTICATION_FAILED_BLOCKED = 2;
+    public static final int AUTHENTICATION_FAILED_EXPIRED= 3;
+    
     public static final String AUTH_PASSWORD = "password";
     public static final String AUTH_TOKEN = "token";
     public static final String AUTH_CERTIFICATE = "certificate";
@@ -35,6 +40,8 @@ public interface AAAQuerier {
     public static final String EMPTY_DISTRICTS = "No districts specified in database";
     public static final String ACCOUNT_INACTIVE = "Account not active";
 
+    
+    public int tryAuthenticate(String tenant, String username, String password);
     
     public void performUserAuthorisation(String tenant, String username, String password, String service,
             Navajo inMessage, Object certificate, Access access) throws SystemException, AuthorizationException;
