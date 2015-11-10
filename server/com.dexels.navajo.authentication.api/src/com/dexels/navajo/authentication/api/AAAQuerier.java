@@ -62,6 +62,10 @@ public interface AAAQuerier {
     public void resetCachedUserCredential(String tenant, String username);
     
     public int getUserId(String tenant, String username);
+    
+    public boolean isFirstUseAccount(String tenant, String username);
+    
+    public int getDaysUntilExpiration(String tenant, String username);
 
-
+    public String getRegion(String tenant, String username);
 }
