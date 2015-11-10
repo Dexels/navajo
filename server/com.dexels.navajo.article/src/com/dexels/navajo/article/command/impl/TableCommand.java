@@ -163,6 +163,9 @@ public class TableCommand implements ArticleCommand {
 		boolean paramsPresent = resolved.indexOf('?') != -1;
 		StringBuffer sb = new StringBuffer(resolved);
 		for (Entry<String, String[]> e : params.entrySet()) {
+			if (shouldSkipParam(e.getKey()))
+				continue;
+			
 			if (!paramsPresent) {
 				sb.append('?');
 				paramsPresent = true;
@@ -174,6 +177,19 @@ public class TableCommand implements ArticleCommand {
 			sb.append(e.getValue()[0]);
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * We do not want to include the client id or the token in the link. Since this
+	 * will be send to the server and causes a possible security leak in the OAuth 
+	 * protocol. 
+	 * 
+	 * The token should only be known on either the server or the client, never 
+	 * both. The client is public but doesn't have to known on both either, so
+	 * we just disable it.
+	 */
+	private boolean shouldSkipParam (String key) {
+		return "clientId".equals(key) || "client_id".equals(key) || "token".equals(key);
 	}
 
 	private String replaceTokens(String text, Message msg)
