@@ -354,10 +354,10 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.article' version='3.1.1'>
+	<feature resolver="(obr)" name='navajo.article' version='3.1.2'>
 		<feature version="[3.0.32,4)">navajo.server.osgi</feature>
 		<feature version="[1.0.8,2)">dexels.oauth</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/3.0.2
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/3.0.4
 		</bundle>
 	</feature>
 
@@ -409,11 +409,11 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.97'>
+		version='3.0.98'>
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.5.14
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.4.12
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.4.14
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.15
 		</bundle>
