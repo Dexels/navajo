@@ -33,6 +33,7 @@ import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
+import com.dexels.navajo.sharedstore.SharedStoreInterface;
 
 public class NavajoConfigComponent implements NavajoConfigInterface {
 
@@ -48,22 +49,22 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	private PersistenceManagerImpl persistenceManager;
 	private AsyncStore asyncStore;
 	private WorkerInterface integrityWorker;
-//	private SharedStoreInterface sharedStore;
+	private SharedStoreInterface sharedStore;
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoConfigComponent.class);
 	
 	public NavajoConfigComponent() {
 	}
 	
-//	
-//	public void setSharedStore(SharedStoreInterface sharedStore) {
-//		this.sharedStore = sharedStore;
-//	}
-//	
-//	public void clearSharedStore(SharedStoreInterface sharedShore) {
-//		this.sharedStore = null;
-//	}
-//	
+	
+	public void setSharedStore(SharedStoreInterface sharedStore) {
+		this.sharedStore = sharedStore;
+	}
+	
+	public void clearSharedStore(SharedStoreInterface sharedShore) {
+		this.sharedStore = null;
+	}
+	
 	public void setIOConfig(NavajoIOConfig config) {
 		this.navajoIOConfig = config;
 	}
@@ -95,7 +96,7 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 			this.persistenceManager = new PersistenceManagerImpl();
 			if(bundleContext==null) {
 				// just for non-osgi, to be sure
-//				this.persistenceManager.setSharedStore(getSharedStore());
+				this.persistenceManager.setSharedStore(getSharedStore());
 			}
 		} catch (Throwable e) {
 			logger.error("activation error",bundleContext);
@@ -439,10 +440,10 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 		return properties.get(string);
 	}
 
-//	@Override
-//	public SharedStoreInterface getSharedStore() {
-//		return sharedStore;
-//	}
+	@Override
+	public SharedStoreInterface getSharedStore() {
+		return sharedStore;
+	}
 
 	@Override
 	public File getApplicableScriptFile(String rpcName, String tenant, String extension)

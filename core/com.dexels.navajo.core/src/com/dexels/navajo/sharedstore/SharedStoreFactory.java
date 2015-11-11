@@ -55,9 +55,7 @@ public class SharedStoreFactory {
 					return instance;
 				}
 				try {
-					logger.error("No longer supported without OSGi");
-					return null;
-//					DispatcherFactory.getInstance().getNavajoConfig().getSharedStore();
+					DispatcherFactory.getInstance().getNavajoConfig().getSharedStore();
 				} catch (Exception e) {
 					logger.error("Error: ", e);
 					AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, e.getMessage());
