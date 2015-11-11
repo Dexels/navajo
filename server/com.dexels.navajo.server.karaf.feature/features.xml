@@ -71,8 +71,8 @@
 		</bundle>
 	</feature>
 
-	<feature version="1.0.9" name="dexels.oauth.web" resolver="(obr)">
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.47
+	<feature version="1.0.10" name="dexels.oauth.web" resolver="(obr)">
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.48
 		</bundle>
 	</feature>
 
@@ -460,7 +460,7 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='sportlink.libraries' version='3.1.15'
+	<feature resolver="(obr)" name='sportlink.libraries' version='3.1.16'
 		start-level='82'>
 		<feature version="[3.0.0,4)">navajo.function</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
@@ -481,7 +481,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.nevobo.dps/1.0.5
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.oauth/1.1.12
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.oauth/1.1.14
 		</bundle>
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.crystal/1.0.5</bundle> -->
 	</feature>
