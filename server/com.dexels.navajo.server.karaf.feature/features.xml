@@ -71,8 +71,8 @@
 		</bundle>
 	</feature>
 
-	<feature version="1.0.10" name="dexels.oauth.web" resolver="(obr)">
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.48
+	<feature version="1.0.11" name="dexels.oauth.web" resolver="(obr)">
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.web/1.0.49
 		</bundle>
 	</feature>
 
@@ -527,7 +527,7 @@
 
 
 	<feature resolver="(obr)" name='navajo.enterprise.monitor'
-		version='2.0.2'>
+		version='2.0.3'>
 		<feature version="[3.0.16,4)">navajo.enterprise.mongodb</feature>
 		<feature version="[3.0.0,4)">navajo.legacy</feature>
         
@@ -535,7 +535,7 @@
         </bundle>
         <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.sharedconfigstore/0.9.3
         </bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/5.4.4
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/5.4.6
 		</bundle>
 	</feature>
 
