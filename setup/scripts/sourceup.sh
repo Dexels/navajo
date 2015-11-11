@@ -6,8 +6,8 @@ strip=`echo $file | rev | cut -c 5- | rev`
 echo "Before: $strip"
 artifactId="${strip%-*}"
 version="${strip##*-}"
-echo "ArtifactId: ${artifactArray[0]}"
-echo "Version: ${artifactArray[1]}"
+echo "ArtifactId: $artifactId"
+echo "Version: $version"
 mvn deploy:deploy-file -DrepositoryId=dexels_source -Durl=http://10.0.0.1:9090/nexus/content/repositories/thirdparty -DgroupId=$groupId -DartifactId=$artifactId -Dversion=$version -Dfile=$1 -Dpackaging=jar
 
 
