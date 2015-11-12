@@ -1,5 +1,7 @@
 package com.dexels.navajo.dependency;
 
+import java.io.File;
+
 public class Dependency {
     public static final int UNKNOWN_TYPE = 0;
     public static final int INCLUDE_DEPENDENCY = 1;
@@ -78,8 +80,11 @@ public class Dependency {
         } else if (type == ARTICLE_DEPENDENCY) {
             scriptFileRel = scriptFile.split("article")[1];
         } else if (type == TASK_DEPENDENCY) {
-            int idx = scriptFile.indexOf("tasks.xml");
-            scriptFileRel = scriptFile.substring(idx);
+            // Tasks file as a bit special, since they don't have their own directory really
+            // Hence we simulate this
+            String[] filenameParts = scriptFile.split(File.separator);
+            String tenant = filenameParts[filenameParts.length- 3];
+            scriptFileRel = File.separator +  tenant + File.separator + "tasks.xml";
         } else {
             scriptFileRel = scriptFile.split("scripts")[1];
         }
@@ -122,4 +127,13 @@ public class Dependency {
         }
     }
 
+    
+    public static void main(String[] args) {
+        Dependency d = new Dependency("/home/chris/git/sportlink/settings/KNVB/config/tasks.xml", "/home/chris/git/sportlink/scripts/financial/ProcessDistrictDirectMemberContribution.xml", Dependency.TASK_DEPENDENCY, 5);
+        System.out.println(d.getScript());
+        System.out.println(d.getScriptFile());
+        System.out.println(d.getDependee());
+        System.out.println(d.getDependeeFile());
+    }
 }
+
