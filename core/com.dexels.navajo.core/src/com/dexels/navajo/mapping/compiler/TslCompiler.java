@@ -1618,6 +1618,8 @@ public class TslCompiler {
 			if (!isSelection) {
 				result.append(printIdent(ident)
 						+ "sValue = new StringLiteral(\"" + value + "\");\n");
+				result.append(printIdent(ident)
+                        + "matchingConditions = true;\n");
 			} else {
 				result.append(printIdent(ident) + "sValue = new String(\""
 						+ value + "\");\n");
