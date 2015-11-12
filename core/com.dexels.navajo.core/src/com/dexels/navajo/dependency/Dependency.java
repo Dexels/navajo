@@ -77,6 +77,9 @@ public class Dependency {
             scriptFileRel = scriptFile.split("tipi")[1];
         } else if (type == ARTICLE_DEPENDENCY) {
             scriptFileRel = scriptFile.split("article")[1];
+        } else if (type == TASK_DEPENDENCY) {
+            int idx = scriptFile.indexOf("tasks.xml");
+            scriptFileRel = scriptFile.substring(idx);
         } else {
             scriptFileRel = scriptFile.split("scripts")[1];
         }
