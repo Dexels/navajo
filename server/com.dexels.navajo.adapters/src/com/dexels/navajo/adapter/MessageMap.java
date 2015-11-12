@@ -211,6 +211,7 @@ public class MessageMap implements Mappable {
 		if ( groupBy == null && this.msg1.getDefinitionMessage() != null ) {
 			definitionMsg1 = this.msg1.getDefinitionMessage();
 		}
+
 		if (  groupBy == null && definitionMsg1 != null && this.msg2 != null && this.msg2.getDefinitionMessage() != null ) {
 			definitionMsg2 = this.msg2.getDefinitionMessage();
 			definitionMsg1.merge(definitionMsg2);
@@ -303,6 +304,16 @@ public class MessageMap implements Mappable {
 				}
 			}
 		}
+		
+		if (children.size() == 0 && definitionMsg1 != null && msg1 != null) {
+		    // Make sure definition message stays intact
+		    Navajo out = myAccess.getOutputDoc();
+		    Message newMessage = NavajoFactory.getInstance().createMessage(out, msg1.getName(), msg1.getType());
+		    newMessage.addMessage(definitionMsg1.copy(myAccess.getOutputDoc()));
+		    
+		    
+		    myAccess.getOutputDoc().addMessage(newMessage);
+		}
 
 		if ( groupBy != null ) {
 
@@ -371,7 +382,8 @@ public class MessageMap implements Mappable {
 				iter.remove();
 			}
 		}
-
+		
+		
 		this.resultMessage = new ResultMessage[resultingMessage.size()];
 		this.resultMessage = resultingMessage.toArray(resultMessage);
 
