@@ -886,6 +886,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             // Log request event - create a dummy Access object for it
             // Later use this accessID for the real access object
             Access requestEventAccess = new Access(1, 1, rpcUser, rpcName, "", "", "", null, false, null);
+            requestEventAccess.setTenant(instance);
             NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(requestEventAccess));
             appendGlobals(inMessage, instance);
             
