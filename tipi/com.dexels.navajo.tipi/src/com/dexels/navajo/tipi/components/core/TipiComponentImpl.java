@@ -1423,8 +1423,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		if (path.equals("*")) {
 			return true;
 		}
-		TipiComponent tc = (TipiComponent) myContext.getClassManager().parse(this, "component",
-				path, event);
+		TipiComponent tc = (TipiComponent) myContext.getClassManager().parse(this, "component",path, event);
 		return tc == this;
 	}
 

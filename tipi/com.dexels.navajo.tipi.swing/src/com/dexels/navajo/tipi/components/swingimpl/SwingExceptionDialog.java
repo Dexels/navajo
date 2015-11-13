@@ -16,43 +16,51 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiErrorHandler;
+import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
+
 public class SwingExceptionDialog extends JDialog {
-    /**
-     * 
-     */
+    private static final int MAX_STACK_LINE_COUNT = 10;
+    
+    // Provides text
+    TipiErrorHandler  eHandler;
+    
     private static final long serialVersionUID = -5249989486597779365L;
     private int dialogWidth = 500;
     private int dialogHeight = 140;
 
     private JLabel iconLabel = new JLabel();
-
-    // is error panel opened up
+    
     private boolean open = false;
 
     private JLabel errorLabel = new JLabel();
 
-    private JTextArea exceptionTextArea = new JTextArea("");
-    private JScrollPane exceptionTextAreaSP = new JScrollPane();
+    private JTextArea exceptionTextArea;
+    private JScrollPane exceptionTextAreaSP;
 
-    private JButton okButton = new JButton("OK");
-    private JButton viewButton = new JButton("View Error");
+    private JButton okButton = new JButton();
+    private JButton viewButton = new JButton();
 
     private JPanel topPanel = new JPanel(new BorderLayout());
 
-    public SwingExceptionDialog(JFrame frame, String errorLabelText, Throwable e) {
-        this(frame, errorLabelText, null, e);
-    }
+  
 
-    public SwingExceptionDialog(JFrame frame, String title, String errorDescription, String errorMessage) {
-        super(frame, true);
-        createDialog(frame, title, errorDescription, errorMessage);
+    public SwingExceptionDialog(JFrame frame,TipiContext tc, String errorMessage) {
+      
+        super(frame,false);
+        eHandler = new BaseTipiErrorHandler();
+        eHandler.setContext(tc);
+        createDialog(frame, eHandler.getGenericErrorTitle(), eHandler.getGenericErrorDescription(), errorMessage);
     }
 
     public SwingExceptionDialog(JFrame frame, String title, String errorDescription, Throwable e) {
-        super(frame, true);
+        super(frame,false);
+        eHandler= new BaseTipiErrorHandler();
         StringWriter errors = new StringWriter();
         e.printStackTrace(new PrintWriter(errors));
         createDialog(frame, title, errorDescription, errors.toString());
@@ -60,31 +68,37 @@ public class SwingExceptionDialog extends JDialog {
 
     
     
-    private void createDialog(JFrame frame,String title, String errorDescription, String errorMessage) {
+    private void createDialog(JFrame frame, String title, String errorDescription, String errorMessage) {
         setSize(dialogWidth, dialogHeight);
-        setResizable(false);
         setErrorLabelText(errorDescription);
+        int lines = errorMessage.split("\r\n|\r|\n").length;
+        lines = Math.max(3,  lines);
+        int height = Math.min(MAX_STACK_LINE_COUNT, lines);
+        exceptionTextArea = new JTextArea(height, 40);
         exceptionTextArea.setText(errorMessage);
         exceptionTextArea.setVisible(false);
         exceptionTextArea.setEditable(false);
         exceptionTextAreaSP = new JScrollPane(exceptionTextArea);
+        exceptionTextAreaSP.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        
+        okButton.setText(eHandler.getErrorCloseText());
+        viewButton.setText(eHandler.getErrorMoreDetailsText());
         
         iconLabel.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
         iconLabel.setIcon(UIManager.getIcon("OptionPane.errorIcon"));
         this.setTitle(title);
         setupUI(frame);
         setUpListeners();
-
     }
 
     public void setupUI(JFrame parentFrame) {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-
-        buttonPanel.add(okButton);
         buttonPanel.add(viewButton);
+        
+        buttonPanel.add(okButton);
+       
 
         errorLabel.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
-        exceptionTextArea.setPreferredSize(new Dimension(100, 100));
         topPanel.add(iconLabel, BorderLayout.WEST);
 
         JPanel p = new JPanel(new BorderLayout());
@@ -98,7 +112,7 @@ public class SwingExceptionDialog extends JDialog {
         
         setFocusableWindowState(true);
         setMinimumSize(new Dimension(500, 140));
-        setResizable(false);
+        setResizable(true);
         pack();
         setLocationRelativeTo(parentFrame);
         
@@ -126,7 +140,7 @@ public class SwingExceptionDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
 
                 if (open) {
-                    viewButton.setText("View Error");
+                    viewButton.setText("Details");
                     topPanel.remove(exceptionTextAreaSP);
                     SwingExceptionDialog.this.exceptionTextArea.setVisible(false);
                     SwingExceptionDialog.this.pack();
@@ -134,7 +148,7 @@ public class SwingExceptionDialog extends JDialog {
 
                 } else {
 
-                    viewButton.setText("Hide Error");
+                    viewButton.setText("Verberg details ");
 
                     topPanel.add(exceptionTextAreaSP, BorderLayout.SOUTH);
 
@@ -147,11 +161,11 @@ public class SwingExceptionDialog extends JDialog {
         });
 
     }
-    
     public void display() {
         pack();
         setVisible(true);
 
     }
+
 
 }

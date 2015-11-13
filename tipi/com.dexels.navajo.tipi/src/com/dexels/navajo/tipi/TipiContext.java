@@ -1685,6 +1685,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             h = NavajoFactory.getInstance().createHeader(reply, method, "unknown", "unknown", -1);
             reply.addHeader(h);
         }
+        
         loadNavajo(reply, method, "*", null, false);
         Navajo compNavajo = null;
         if (hasDebugger && !"NavajoListNavajo".equals(method)) {
@@ -1703,10 +1704,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         }
 
         assert (reply.getHeader() != null);
+        
     }
+    
 
-    public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event,
-            boolean breakOnError) throws TipiBreakException {
+
+
+    public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError) throws TipiBreakException {
         if (reply != null) {
             // TODO Put this in a more elegant place
             // TODO No remove completely. Don't like it.
@@ -1720,14 +1724,14 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                 logger.warn("Errors in reply detected while loading navajo: {}", method);
                 boolean hasUserDefinedErrorHandler = false;
                 List<TipiDataComponent> tipis = getTipiInstancesByService(method);
+               
                 if (tipis != null) {
                     for (int i = 0; i < tipis.size(); i++) {
                         TipiDataComponent current = tipis.get(i);
 
                         if (current.hasPath(tipiDestinationPath, event)) {
                             boolean hasHandler = false;
-                            debugLog("data    ",
-                                    "delivering error from method: " + method + " to tipi: " + current.getId());
+                            debugLog("data", "delivering error from method: " + method + " to tipi: " + current.getId());
                             hasHandler = current.loadErrors(reply, method);
                             if (hasHandler) {
                                 hasUserDefinedErrorHandler = true;
@@ -1736,11 +1740,15 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                     }
                 }
                 if (!hasUserDefinedErrorHandler) {
-                    showWarning(eHandler.getGenericErrorTitle(), eHandler.getGenericErrorDescription(), errorMessage, event == null ? null : event.getComponent());
+                    if (systemPropertyMap.get("tipi.deploy") != null && !systemPropertyMap.get("tipi.deploy").equals("development")) {
+                        errorMessage = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
+                    } 
+                    TipiComponent tc = event == null ? null : event.getComponent();
+                    showWarning(errorMessage, tc);
                 } else {
                     logger.info("Not delivering error since one or more components have their own errorhandler defined");
                 }
-                if (breakOnError) {
+                if (breakOnError || eHandler.hasServerErrors(reply)) {
                     throw new TipiBreakException(TipiBreakException.WEBSERVICE_BREAK);
                 }
                 return;
@@ -2967,6 +2975,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
         tipiEventStatistics.remove(component.getId()+eventname);
     }
+
+    public void showWarning(String errormessage, TipiComponent tc) {
+        showWarning("Error", "Error", errormessage, tc);
+        
+    }
+
 
 
 }

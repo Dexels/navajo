@@ -22,7 +22,7 @@ import com.dexels.navajo.document.Navajo;
  */
 public interface TipiErrorHandler {
 	public String hasErrors(Navajo n);
-
+	public Boolean hasServerErrors(Navajo n);
 
 	// public Object createContainer();
 	public void setContext(TipiContext c);
@@ -32,6 +32,11 @@ public interface TipiErrorHandler {
     public String getGenericErrorTitle();
 
 	public String getGenericErrorDescription();
+	public String getErrorMoreDetailsText();
+	public String getErrorLessDetailsText();
+	public String getErrorCloseText();
+	
+	
 
 
 }
