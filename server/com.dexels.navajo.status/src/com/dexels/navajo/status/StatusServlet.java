@@ -2,11 +2,11 @@ package com.dexels.navajo.status;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
@@ -48,19 +48,29 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
     private TmlScheduler tmlScheduler;
     
     private Object sync = new Object();
-    private LoadingCache<String, Integer> cache = null;
+    private Map<String, LoadingCache<Integer, Integer>> cache = null;
 
     
     private final static Logger logger = LoggerFactory.getLogger(StatusServlet.class);
 
 
     public void activate() {
-        cache = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).softValues()
-                .build(new CacheLoader<String, Integer>() {
-                    public Integer load(String key) {
+        cache = new HashMap<>();
+        LoadingCache<Integer, Integer> navajoCache = CacheBuilder.newBuilder().expireAfterWrite(15, TimeUnit.MINUTES).softValues()
+                .build(new CacheLoader<Integer, Integer>() {
+                    public Integer load(Integer key) {
                         return 0;
                     }
                 });
+        LoadingCache<Integer, Integer> navajoExCache = CacheBuilder.newBuilder().expireAfterWrite(15, TimeUnit.MINUTES).softValues()
+                .build(new CacheLoader<Integer, Integer>() {
+                    public Integer load(Integer key) {
+                        return 0;
+                    }
+                });
+        cache.put(CACHE_NAVAJO_KEY, navajoCache);
+        cache.put(CACHE_EXCEPTIONS_KEY, navajoExCache);
+        
         logger.info("Navajo Status servlet activated");
     }
 
@@ -110,14 +120,15 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
             Integer navajo = 0;
             Integer exceptions = 0;
             synchronized (sync) {
-                try {
-                    navajo = cache.get(CACHE_NAVAJO_KEY);
-                    exceptions = cache.get(CACHE_EXCEPTIONS_KEY);
-                    res = exceptions.toString() + "/" + navajo.toString();
-                } catch (ExecutionException e) {
-                    logger.warn("ExecutionException exception while getting cached Navajo counters!", e);
-                    res = "error";
+                Map<Integer, Integer> navajoRequests = cache.get(CACHE_NAVAJO_KEY).asMap();
+                for (Integer minute: navajoRequests.keySet()) {
+                    navajo += navajoRequests.get(minute);
                 }
+                Map<Integer, Integer> exceptionsRequests = cache.get(CACHE_EXCEPTIONS_KEY).asMap();
+                for (Integer minute: exceptionsRequests.keySet()) {
+                    exceptions += exceptionsRequests.get(minute);
+                }
+                res = exceptions.toString() + "/" + navajo.toString();
             }
         }
         resp.setContentType("text/plain");
@@ -254,6 +265,8 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
     @Override
     public void handleEvent(Event event) {
         try {
+            int minute = Calendar.getInstance().get(Calendar.MINUTE);
+            
             String type = (String) event.getProperty("type");
             String key = null;
             if (type.equals("navajoexception")) {
@@ -261,9 +274,14 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
             } else if (type.equals("navajo")) {
                 key = CACHE_NAVAJO_KEY;
             }
+           
             synchronized (sync) {
-                Integer current = cache.get(key);
-                cache.put(key, ++current);
+                
+                LoadingCache<Integer, Integer> currentMap = cache.get(key);
+                
+                Integer currentCount = currentMap.get(minute);
+                currentMap.put(minute, ++currentCount);
+                cache.put(key, currentMap);
             }
         } catch (Exception e) {
             logger.error("Someweird weird happened while trying to handle an event! ", e);

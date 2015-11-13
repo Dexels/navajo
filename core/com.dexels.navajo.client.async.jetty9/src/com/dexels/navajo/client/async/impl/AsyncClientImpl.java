@@ -13,6 +13,7 @@ import java.security.cert.CertificateException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -80,12 +81,10 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		// myThreadPool = new NavajoThreadPool();
 		// client.setThreadPool(myThreadPool);
 		// client.setConnectorType(HttpClient.CONNECTOR_SELECT_CHANNEL);
-		client.setMaxConnectionsPerDestination(MAX_CONNECTIONS_PER_ADDRESS); // max
-																				// 200
-																				// concurrent
-																				// connections
-		// to every address
-//		client.setConnectTimeout(CONNECT_TIMEOUT);
+		
+		 // max 200 concurrent connections to every address
+		client.setMaxConnectionsPerDestination(MAX_CONNECTIONS_PER_ADDRESS);
+
 		client.setConnectTimeout(CONNECT_TIMEOUT);
 		// client.setThreadPool(executor);
 		try {
@@ -128,7 +127,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		}
 		input.addHeader(NavajoFactory.getInstance().createHeader(input,
 				service, username, password, -1));
-		callService(server, input, continuation);
+		callService(server, input, continuation, null);
 	}
 
 	@Override
@@ -194,7 +193,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	@Override
 	public void callService(String url, String username, String password,
 			Navajo input, String service,
-			final NavajoResponseHandler continuation) throws IOException,
+			final NavajoResponseHandler continuation, Integer timeout) throws IOException,
 			NavajoException {
 		if (input == null) {
 			input = NavajoFactory.getInstance().createNavajo();
@@ -203,7 +202,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		}
 		input.addHeader(NavajoFactory.getInstance().createHeader(input,
 				service, username, password, -1));
-		callService(url, input, continuation);
+		callService(url, input, continuation, timeout);
 	}
 
 	/*
@@ -263,7 +262,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 			@Override
 			public synchronized void onFail(Throwable t) throws IOException {
 				caughtException = t;
-				logger.error("Error: ", caughtException);
+				logger.warn("Error: ", caughtException);
 				setActualCalls(getActualCalls() - 1);
 				try {
 					if (onFail != null) {
@@ -284,22 +283,27 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		};
 		setActualCalls(getActualCalls() + 1);
 
-		callService(currentAccess.getRequestUrl(), input, nrh);
+		callService(currentAccess.getRequestUrl(), input, nrh, null);
 	}
 
-	private void callService(String url, Navajo n, final NavajoResponseHandler continuation) throws IOException, NavajoException {
+	private void callService(String url, Navajo n, final NavajoResponseHandler continuation, Integer timeout) throws IOException, NavajoException {
 
 		logger.info("Calling service: {} at {} ", n.getHeader().getRPCName(), url);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		n.write(baos);
 		final byte[] byteArray = baos.toByteArray();
+		Integer requestTimeout = READ_TIMEOUT;
+		if (timeout != null) {
+		    requestTimeout = timeout;
+		}
 
-		client.POST(url).header("Content-Length", byteArray.length+"").header("Content-Type", "text/xml; charset=utf-8").content( new BytesContentProvider(byteArray)).send(new BufferingResponseListener(){
+		client.POST(url).timeout(requestTimeout, TimeUnit.MILLISECONDS).header("Content-Length", byteArray.length + "").header("Content-Type", "text/xml; charset=utf-8")
+                .content(new BytesContentProvider(byteArray)).send(new BufferingResponseListener() {
 
 				@Override
 				public void onComplete(Result res) {
 					if(res.isFailed()) {
-						logger.error("HTTP call failed: {}",res.getFailure());
+						logger.error("HTTP call failed: {}", res.getFailure());
 						if(continuation!=null) {
 							try {
 								continuation.onFail(res.getFailure());

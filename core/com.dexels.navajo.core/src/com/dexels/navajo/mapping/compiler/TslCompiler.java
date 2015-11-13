@@ -1618,6 +1618,8 @@ public class TslCompiler {
 			if (!isSelection) {
 				result.append(printIdent(ident)
 						+ "sValue = new StringLiteral(\"" + value + "\");\n");
+				result.append(printIdent(ident)
+                        + "matchingConditions = true;\n");
 			} else {
 				result.append(printIdent(ident) + "sValue = new String(\""
 						+ value + "\");\n");
@@ -3096,14 +3098,16 @@ public class TslCompiler {
 			methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
 			
 			String lock = "Lock l = getLock(" + ( user ? "access.rpcUser" : null) + "," + ( service ? "access.rpcName" : "null" )+ 
-					"," + keyValue + ");\n" + 
-					" try { \n";
+					"," + keyValue + ");\n";
 			
 			String tryLock = null;
+			boolean useTrylock = false;
 			if ( "".equals(timeout)) {
-				tryLock = "l.lock(); if ( true ) {\n";
+				useTrylock = false;
+				tryLock = "l.lock(); try {\n";
 			} else {
-				tryLock = "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n";
+				useTrylock = true;
+				tryLock = "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n" + "try {\n";
 			}
 			
 			methodBuffer.append(printIdent(ident) + lock);
@@ -3116,11 +3120,13 @@ public class TslCompiler {
 				}
 			}
 			
-			methodBuffer.append(printIdent(ident) + "}\n");
 			ident -= 2;
 			methodBuffer.append(printIdent(ident) + "} finally {\n");
-			methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
-			methodBuffer.append(printIdent(ident) +"}\n");
+            methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
+            methodBuffer.append(printIdent(ident) +"}\n");
+			if ( useTrylock ) {
+				methodBuffer.append(printIdent(ident) + "} else { Access.writeToConsole(access, \"No lock was obtained! \"); }\n");
+			}
 			methodBuffer.append(printIdent(ident) +"}\n");
 			methodBuffer.append(printIdent(ident) +"}\n");
 

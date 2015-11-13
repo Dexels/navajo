@@ -132,9 +132,9 @@ public void store() throws MappableException, UserException {
           showMapDetails(currentMap, currentNode);
         } 
         Message requestNavajo = getMessage(user, "RequestNavajo");
-        addProperty(requestNavajo, "Document", getRequestNavajo(), Property.STRING_PROPERTY, -1);
+        addProperty(requestNavajo, "Document", getRequestNavajo(), Property.MEMO_PROPERTY, -1);
         Message responseNavajo = getMessage(user, "ResponseNavajo");
-        addProperty(responseNavajo, "Document", getResponseNavajo(), Property.STRING_PROPERTY, -1);
+        addProperty(responseNavajo, "Document", getResponseNavajo(), Property.MEMO_PROPERTY, -1);
         Message outMessagStack = getMessage(user, "OutMessageStack");
         addProperty(outMessagStack, "Stack", getOutMessageStack(), Property.STRING_PROPERTY, -1);
         Message mapStack = getMessage(user, "MapObjectStack");
@@ -236,8 +236,10 @@ public void kill() {
 	  if (responseNavajo == null) {
 
 		  Navajo in = myAccess.getOutputDoc().copy();
-		  in.removeMessage("__globals__");
-	      in.removeMessage("__parms__");
+		  if (in.getMessage("__globals__") != null)
+		      in.removeMessage("__globals__");
+		  if (in.getMessage("__parms__") != null)
+              in.removeMessage("__parms__");
 	      
 		  java.io.StringWriter sw = new java.io.StringWriter();
 		  in.write(sw);

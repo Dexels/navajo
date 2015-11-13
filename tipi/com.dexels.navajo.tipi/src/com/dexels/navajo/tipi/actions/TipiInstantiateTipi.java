@@ -82,6 +82,7 @@ public class TipiInstantiateTipi extends TipiAction {
 			boolean force, String id, String className, String definitionName,
 			Map<String, TipiValue> paramMap, Object constraints, TipiEvent event)
 			throws TipiException {
+		myContext.addInitiateStatisticsStart(id); 
 
 		XMLElement xe = new CaseSensitiveXMLElement();
 		xe.setName("component");

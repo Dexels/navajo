@@ -12,8 +12,8 @@ import com.dexels.navajo.sharedstore.SerializationUtil;
 
 public class WrapCollector extends GenericThread {
 
-    private final static int WORKER_SLEEP =  60 * 60 * 1000;
-    private final static int MAX_AGE = 10000;
+    private final static int WORKER_SLEEP =  10000;
+    private final static int CHECK_AFTER_AGE = 10000;
     private final static int TOO_OLD = 24 * 60 * 60 * 1000; // 24 hours is too
                                                             // old, remove it.
 
@@ -28,14 +28,17 @@ public class WrapCollector extends GenericThread {
     public void activate() {
         threadId = "Navajo Wrap Collector";
         WrapCollectorFactory.setInstance(this);
-        logger.info("Using Tribal NavajoWrap Reference Count Map");
+        logger.info("Activating WrapCollector");
         referenceCount = (ConcurrentMap) tribeManager.getDistributedMap("NavajoWrapReferenceCount");
+        
         setSleepTime(WORKER_SLEEP);
         startThread(this);
 
     }
 
     public void deactivate() {
+        logger.info("Deactiving WrapCollector");
+        WrapCollectorFactory.setInstance(null);
         kill();
     }
 
@@ -57,36 +60,33 @@ public class WrapCollector extends GenericThread {
 
     @Override
     public synchronized void worker() {
-
-        //Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-
-        if (referenceCount == null) {
-            logger.debug("referenceCount map is null - cannot do anything!");
+        if (!tribeManager.getIsChief()) {
             return;
         }
+        
+        long currentTime = System.currentTimeMillis();
         try {
             for (String reference : referenceCount.keySet()) {
                 try {
                     Wrapper key = referenceCount.get(reference);
 
-                    long age = (System.currentTimeMillis() - key.getLastUse());
-                    if (age > MAX_AGE) {
-                        Integer count = key.getCount();
-                        if (count == null || count.intValue() == 0 || age > TOO_OLD) {
+                    long age = (currentTime - key.getLastUse());
+                    if (age > CHECK_AFTER_AGE) {
+                        if (key.getCount() == 0 || age > TOO_OLD) {
                             try {
-                                SerializationUtil.removeNavajo(key.getReference());
                                 logger.debug("Removing " + key.getReference());
+                                SerializationUtil.removeNavajo(key.getReference());
                             } finally {
                                 referenceCount.remove(reference);
                             }
                         }
                     }
-                } catch (Throwable t) {
-                    logger.error(t.getMessage(), t);
+                } catch (Exception e) {
+                    logger.error("Error on removing Wrapped object: " , e);
                 }
             }
-        } catch (Throwable t) {
-            logger.error(t.getMessage(), t);
+        } catch (Throwable e) {
+            logger.error("Error in retrieving keys from referenceCount map: ", e);
         }
 
     }

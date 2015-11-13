@@ -14,7 +14,7 @@ public interface ManualAsyncClient extends AsyncClient {
 
 	public void callService(String url, String username,
 			String password, Navajo input, String service,
-			NavajoResponseHandler continuation) throws IOException;
+			NavajoResponseHandler continuation, Integer timeout) throws IOException;
 
 	public void callService(Access inputAccess, Navajo input,
 			String service, TmlRunnable onSuccess, TmlRunnable onFail,

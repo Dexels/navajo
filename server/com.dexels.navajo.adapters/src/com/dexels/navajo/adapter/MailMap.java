@@ -223,8 +223,7 @@ public class MailMap implements MailMapInterface, Mappable,
 			} else if ( attachments == null || attachments.size() == 0 ) {
 				msg.setContent( result, contentType ); 
 			} else {
-				Multipart multipart = (relatedMultipart ? new MimeMultipart(
-						"related") : new MimeMultipart());
+				Multipart multipart = (relatedMultipart ? new MimeMultipart("related") : new MimeMultipart());
 				BodyPart textBody = new MimeBodyPart();
 				textBody.setContent(result, contentType);
 
@@ -237,43 +236,44 @@ public class MailMap implements MailMapInterface, Mappable,
 						String userFileName = am.getAttachFileName();
 						Binary content = am.getAttachFileContent();
 						String encoding = am.getEncoding();
+						
 						MimeBodyPart bp = new MimeBodyPart();
 
 						if (file != null) {
 							if (userFileName == null) {
 								userFileName = file;
 							}
-							FileDataSource fileDatasource = new FileDataSource(
-									file);
+							FileDataSource fileDatasource = new FileDataSource( file);
 							bp.setDataHandler(new DataHandler(fileDatasource));
+							
 						} else if (content != null) {
 
-							BinaryDataSource bds = new BinaryDataSource(
-									content, "");
+							BinaryDataSource bds = new BinaryDataSource(content, "");
 							DataHandler dh = new DataHandler(bds);
 							bp.setDataHandler(dh);
-
+							bp.setFileName(userFileName);
 							if (encoding != null) {
-								bp.setHeader("Content-Transfer-Encoding",
-										encoding);
+								bp.setHeader("Content-Transfer-Encoding", encoding);
 								encoding = null;
 							}
 						}
 
-						bp.setFileName(userFileName);
+						
 						if (relatedMultipart) {
 							bp.setHeader("Content-ID", "<attach-nr-" + i + ">");
 						}
+						bp.getFileName();
 
 						// iPhone headers
 						//bp.setDisposition("attachment");
 						bp.setDisposition(am.getAttachContentDisposition());
-
+						
 						multipart.addBodyPart(bp);
 					}
 				}
 				msg.setContent(multipart);
 			}
+			//msg.getContent()
 			logger.info("Sending mail to "+recipients+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
 			Transport.send(msg);
 

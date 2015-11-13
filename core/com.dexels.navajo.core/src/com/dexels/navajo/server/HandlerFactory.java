@@ -4,9 +4,13 @@ import com.dexels.navajo.script.api.Access;
 
 public class HandlerFactory {
 
-	public static ServiceHandler createHandler(String handler, NavajoConfigInterface navajoConfig, Access access) {
-
-		ServiceHandler sh = new GenericHandler(navajoConfig);
+	public static ServiceHandler createHandler(NavajoConfigInterface navajoConfig, Access access, Boolean simulationMode) {
+	    ServiceHandler sh = null;
+	    if (simulationMode) { 
+	        sh = new StressTestHandler();
+	    } else {
+	        sh = new GenericHandler(navajoConfig);
+	    }
 		sh.setInput(access);
 		return sh;
 	}

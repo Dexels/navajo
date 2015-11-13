@@ -1863,6 +1863,7 @@
          <value direction="in" name="dragValue" type="object" />
          <value direction="in" name="dragCategory" type="list" />
          <value direction="in" name="dropCategory" type="list" />
+         <value direction="in" name="handleValueChangeSync" type="boolean" property="handleValueChangeSync" />
       </values>
       <methods>
 

@@ -1398,7 +1398,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                                         compare = c.compare(this, m);
                                     }
                                 } catch (Exception e) {
-                                    logger.error("Error: ", e);
+                                    logger.error("Error on compare message using {}", compareFunction,  e);
                                     compare = 0;
                                 }
 

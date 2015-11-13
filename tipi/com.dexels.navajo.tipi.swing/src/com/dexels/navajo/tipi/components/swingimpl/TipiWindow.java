@@ -47,7 +47,8 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
 	private JInternalFrame myWindow;
 	private boolean hideOnClose = true;
     private boolean isHidden = false;
-
+    private int overlayCounter = 0;
+    
 	private JInternalFrame constructWindow() {
 		clearContainer();
 		myWindow = new TipiSwingWindow();
@@ -388,20 +389,15 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
             isHidden = false;
             addOverlayProgressPanel("opaque");
 
-            /*
-             * We want to have a small delay before we unhide the component.
-             * This allows for the early onInstantiate code to already be done,
-             * and prevents some weird (visual) quirks
-             */
-            new Thread() {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
                 public void run() {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                    }
                     getSwingContainer().setVisible(true);
                 }
-            }.start();
+            });
+                    
+  
         }
 
     }
@@ -415,13 +411,23 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
     
     @Override 
     public void addOverlayProgressPanel(String type) {
-        
-        ((TipiSwingWindow) myWindow).addGlass(type);
+        synchronized(this){
+            if (overlayCounter == 0) {
+                ((TipiSwingWindow) myWindow).addGlass(type);
+            }
+            overlayCounter++;
+        }
     } 
     
     @Override
     public void removeOverlayProgressPanel() {
-        ((TipiSwingWindow) myWindow).hideGlass();
+        synchronized(this){
+            overlayCounter--;
+            if (overlayCounter < 1) {
+                ((TipiSwingWindow) myWindow).hideGlass();
+            }
+            overlayCounter = 0;
+        }
     }
     
 

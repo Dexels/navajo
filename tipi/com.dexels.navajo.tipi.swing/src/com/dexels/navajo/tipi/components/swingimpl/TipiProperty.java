@@ -44,6 +44,8 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 
 	TipiSwingPropertyComponent p = null;
 
+    private Boolean handleValueChangeSync = true;
+
 	public TipiProperty(Property p) {
 		setProperty(p);
 	}
@@ -210,10 +212,19 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 			setLabelFont((Font)object);
 		}
 		
+		  if (name.equals("handleValueChangeSync")) {
+		      setHandleValueChangeSync((Boolean)object);
+	        }
+		
 		super.setComponentValue(name, object);
 	}
 
-	@Override
+	private void setHandleValueChangeSync(Boolean object) {
+        this.handleValueChangeSync = object;
+        
+    }
+
+    @Override
 	public void setProperty(final Property p) {
 		runSyncInEventThread(new Runnable() {
 			@Override
@@ -263,20 +274,6 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 	public void propertyEventFired(Property p, String eventType,
 			Object oldValue, boolean internal) {
 		if ("onValueChanged".equals(eventType)) {
-			// try {
-			// logger.debug("Onvalue Changed: "+oldValue+" new: "+p.getTypedValue()+" path: "+p.getFullPropertyName()+" ");
-			// if(oldValue!=null) {
-			// logger.debug("OLD CLASS: "+p.getTypedValue().getClass());
-			// }
-			// if(p.getTypedValue()!=null) {
-			// logger.debug("NEW CLASS: "+p.getTypedValue().getClass());
-			// }
-			// } catch (NavajoException e) {
-			// logger.error("Error detected",e);
-			// }
-
-			// Thread.dumpStack();
-
 			Object typedValue = p.getTypedValue();
 			if ((typedValue != null && typedValue.equals(oldValue)) || (typedValue == null && oldValue == null)) {
 				logger.debug("No real change. Beware:");
@@ -294,16 +291,12 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 				m.put("internalChange", internal);
 				m.put("old", oldValue);
 				m.put("propertyLength", new Integer(p.getLength()));
-				// PropertyImpl p = (PropertyImpl)myProperty;
-				if (!internal)
-				{
+				if (!internal){
 					for (int i = 0; i < myListeners.size(); i++) {
 						TipiEventListener current = myListeners.get(i);
-						current.performTipiEvent(eventType, m, true);
-						
+						current.performTipiEvent(eventType, m, handleValueChangeSync);
 					}
 				}
-				// performTipiEvent(eventType, m, false);
 			} catch (Exception ex) {
 				logger.error("Error detected",ex);
 			}

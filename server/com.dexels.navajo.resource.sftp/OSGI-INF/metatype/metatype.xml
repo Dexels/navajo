@@ -1,0 +1,12 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo SFTP driver" name="Navajo SFTP driver" id="navajo.resource.sftp">
+    <AD name="name"  id="name" required="true" type="String" />
+    <AD name="server"  id="server" required="true" type="String" />
+    <AD name="username"  id="username" required="true" type="String"/>
+    <AD name="password"  id="password" required="true" type="String" />
+    <AD name="remotePort"  id="remotePort" required="false" type="Integer" default="22"/>
+  </OCD>
+  <Designate factoryPid="navajo.resource.sftp">
+     <Object ocdref="navajo.resource.sftp"/>
+  </Designate>
+</metatype:MetaData>

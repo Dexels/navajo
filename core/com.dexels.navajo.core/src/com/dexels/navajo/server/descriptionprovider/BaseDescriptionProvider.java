@@ -98,7 +98,7 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 	
 
 	@Override
-	public void updatePropertyDescription(PropertyDescription pd) {
+	public void updatePropertyDescription(PropertyDescription pd, String rpcUser) {
 		// TODO Auto-generated method stub
 
 	}
