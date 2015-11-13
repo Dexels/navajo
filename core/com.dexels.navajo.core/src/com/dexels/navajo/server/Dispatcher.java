@@ -99,18 +99,18 @@ import com.dexels.navajo.util.AuditLog;
  */
 
 public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterface {
-    public static final int rateWindowSize = 20;
-    public static final double requestRate = 0.0;
+
     protected static int instances = 0;
-    
+
+    /**
+     * Fields accessable by webservices
+     */
+    public Access[] users;
     public static final String FILE_VERSION = "$Id$";
     public static final String vendor = "Dexels BV";
     public static final String product = "Navajo Service Delivery Platform";
     public static final String NAVAJO_TOPIC = "navajo/request";
-
-
-    public Access[] users;
-   
+    
     public volatile static String edition;
     private final Map<String, GlobalManager> globalManagers = new HashMap<String, GlobalManager>();
     private AAAQuerier authenticator;
@@ -146,7 +146,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     private String keyStore;
     private String keyPassword;
 
-  
+    public static final int rateWindowSize = 20;
+    public static final double requestRate = 0.0;
     private long[] rateWindow = new long[rateWindowSize];
 
     // private static Object semaphore = new Object();
@@ -157,8 +158,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      */
     private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>();
 
-   
+    protected boolean simulationMode;
 
+    // optional, can be null
+    // private BundleCreator bundleCreator;
 
     public Dispatcher(NavajoConfigInterface nc) {
         navajoConfig = nc;
@@ -409,7 +412,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      * 
      * @throws Exception
      */
-    private final Navajo dispatch(String handler, Access access) throws Exception {
+    private final Navajo dispatch(Access access) throws Exception {
 
         WorkerInterface integ = null;
         Navajo out = null;
@@ -462,7 +465,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
         try {
 
-            ServiceHandler sh = createHandler(handler, access);
+            ServiceHandler sh = createHandler(access);
 
             // If recompile is needed ALWAYS set expirationInterval to -1.
             // TODO: IMPLEMENT NEEDS RECOMPILE DIFFERENTLY: I DO NOT WANT
@@ -479,8 +482,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             // persistenceKey.
             in.getHeader().setRPCPassword("");
 
-            out = (Navajo) navajoConfig.getPersistenceManager().get(sh, CacheController.getInstance().getCacheKey(access.rpcUser, access.rpcName, in),
-                    access.rpcName, expirationInterval, (expirationInterval != -1));
+            out = (Navajo) navajoConfig.getPersistenceManager().get(sh,
+                    CacheController.getInstance().getCacheKey(access.rpcUser, access.rpcName, in), access.rpcName,
+                    expirationInterval, (expirationInterval != -1));
 
             access.setOutputDoc(out);
 
@@ -505,8 +509,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
 
     // Overridden for OSGi
-    protected ServiceHandler createHandler(String handler, Access access) {
-        return HandlerFactory.createHandler(handler, navajoConfig, access);
+    protected ServiceHandler createHandler(Access access) {
+        return HandlerFactory.createHandler(navajoConfig, access, simulationMode);
     }
 
     public final boolean doMatchCN() {
@@ -529,7 +533,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
         if (access != null) {
             try {
-                message = e.getClass().toString() + ": " + e.getMessage() + ", " + e.toString() + ", " + e.getLocalizedMessage();
+                message = e.getClass().toString() + ": " + e.getMessage() + ", " + e.toString() + ", "
+                        + e.getLocalizedMessage();
 
                 if (message.equalsIgnoreCase("")) {
                     message = "Undefined Error";
@@ -580,7 +585,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      * @return
      * @throws FatalException
      */
-    private final Navajo generateAuthorizationErrorMessage(Access access, AuthorizationException ae, String rpcName) throws FatalException {
+    private final Navajo generateAuthorizationErrorMessage(Access access, AuthorizationException ae, String rpcName)
+            throws FatalException {
 
         try {
             Navajo outMessage = NavajoFactory.getInstance().createNavajo();
@@ -588,19 +594,23 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             Header h = NavajoFactory.getInstance().createHeader(outMessage, "", "", "", -1);
             outMessage.addHeader(h);
 
-            Message errorMessage = NavajoFactory.getInstance().createMessage(outMessage,
-                    (ae.isNotAuthorized() ? AuthorizationException.AUTHORIZATION_ERROR_MESSAGE : AuthorizationException.AUTHENTICATION_ERROR_MESSAGE));
+            Message errorMessage = NavajoFactory.getInstance().createMessage(
+                    outMessage,
+                    (ae.isNotAuthorized() ? AuthorizationException.AUTHORIZATION_ERROR_MESSAGE
+                            : AuthorizationException.AUTHENTICATION_ERROR_MESSAGE));
             outMessage.addMessage(errorMessage);
 
-            Property prop = NavajoFactory.getInstance().createProperty(outMessage, "Message", Property.STRING_PROPERTY, ae.getMessage(), 0, "Message",
-                    Property.DIR_OUT);
+            Property prop = NavajoFactory.getInstance().createProperty(outMessage, "Message", Property.STRING_PROPERTY,
+                    ae.getMessage(), 0, "Message", Property.DIR_OUT);
 
             errorMessage.addProperty(prop);
-            prop = NavajoFactory.getInstance().createProperty(outMessage, "User", Property.STRING_PROPERTY, ae.getUser(), 0, "User", Property.DIR_OUT);
+            prop = NavajoFactory.getInstance().createProperty(outMessage, "User", Property.STRING_PROPERTY,
+                    ae.getUser(), 0, "User", Property.DIR_OUT);
 
             errorMessage.addProperty(prop);
 
-            prop = NavajoFactory.getInstance().createProperty(outMessage, "Webservice", Property.STRING_PROPERTY, rpcName, 0, "User", Property.DIR_OUT);
+            prop = NavajoFactory.getInstance().createProperty(outMessage, "Webservice", Property.STRING_PROPERTY,
+                    rpcName, 0, "User", Property.DIR_OUT);
 
             errorMessage.addProperty(prop);
 
@@ -619,7 +629,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      * Generate a Navajo error message and log the error to the Database.
      */
     @Override
-    public final Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException {
+    public final Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t)
+            throws FatalException {
 
         if (message == null) {
             message = "Null pointer exception";
@@ -628,7 +639,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         if (t != null) {
             logger.error("Generating error message for: ", t);
         }
-
+        
         try {
             Navajo outMessage = NavajoFactory.getInstance().createNavajo();
 
@@ -640,20 +651,22 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
             outMessage.addMessage(errorMessage);
 
-            Property prop = NavajoFactory.getInstance().createProperty(outMessage, "message", Property.STRING_PROPERTY, message, 200, "Message",
-                    Property.DIR_OUT);
+            Property prop = NavajoFactory.getInstance().createProperty(outMessage, "message", Property.STRING_PROPERTY,
+                    message, 200, "Message", Property.DIR_OUT);
 
             errorMessage.addProperty(prop);
 
-            prop = NavajoFactory.getInstance().createProperty(outMessage, "code", Property.INTEGER_PROPERTY, code + "", 100, "Code", Property.DIR_OUT);
+            prop = NavajoFactory.getInstance().createProperty(outMessage, "code", Property.INTEGER_PROPERTY, code + "",
+                    100, "Code", Property.DIR_OUT);
             errorMessage.addProperty(prop);
 
-            prop = NavajoFactory.getInstance().createProperty(outMessage, "level", Property.INTEGER_PROPERTY, level + "", 100, "Level", Property.DIR_OUT);
+            prop = NavajoFactory.getInstance().createProperty(outMessage, "level", Property.INTEGER_PROPERTY,
+                    level + "", 100, "Level", Property.DIR_OUT);
             errorMessage.addProperty(prop);
 
             if (access != null) {
-                prop = NavajoFactory.getInstance().createProperty(outMessage, "access_id", Property.STRING_PROPERTY, access.accessID + "", 100, "Access id",
-                        Property.DIR_OUT);
+                prop = NavajoFactory.getInstance().createProperty(outMessage, "access_id", Property.STRING_PROPERTY,
+                        access.accessID + "", 100, "Access id", Property.DIR_OUT);
                 errorMessage.addProperty(prop);
                 access.setException(t);
             }
@@ -678,8 +691,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 Message msg = NavajoFactory.getInstance().createMessage(outMessage, "Warning");
                 outMessage.addMessage(msg);
 
-                Property prop = NavajoFactory.getInstance().createProperty(outMessage, "Status", Property.STRING_PROPERTY, "TimeExpired", 32,
-                        "Created by generateScheduledMessage", Property.DIR_OUT);
+                Property prop = NavajoFactory.getInstance().createProperty(outMessage, "Status",
+                        Property.STRING_PROPERTY, "TimeExpired", 32, "Created by generateScheduledMessage",
+                        Property.DIR_OUT);
                 msg.addProperty(prop);
             }
             outMessage.addHeader(hnew);
@@ -721,7 +735,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
 
     @Override
-    public final Navajo handle(Navajo inMessage, String instance, boolean skipAuth, AfterWebServiceEmitter emit, ClientInfo clientInfo) throws FatalException {
+    public final Navajo handle(Navajo inMessage, String instance, boolean skipAuth, AfterWebServiceEmitter emit, ClientInfo clientInfo)
+            throws FatalException {
         return processNavajo(inMessage, instance, null, clientInfo, skipAuth, null, emit);
 
     }
@@ -787,7 +802,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      * @throws FatalException
      */
     @Override
-    public final Navajo handle(Navajo inMessage, String instance, Object userCertificate, ClientInfo clientInfo) throws FatalException {
+    public final Navajo handle(Navajo inMessage, String instance, Object userCertificate, ClientInfo clientInfo)
+            throws FatalException {
         // Maybe use event to trigger handle event.... such that NavajoRequest
         // events can be proxied/intercepted by
         // other classes.
@@ -806,8 +822,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      * @return
      * @throws FatalException
      */
-    private final Navajo processNavajo(Navajo inMessage, String instance, Object userCertificate, ClientInfo clientInfo, boolean skipAuth,
-            TmlRunnable origRunnable, AfterWebServiceEmitter emit) throws FatalException {
+    private final Navajo processNavajo(Navajo inMessage, String instance, Object userCertificate,
+            ClientInfo clientInfo, boolean skipAuth, TmlRunnable origRunnable, AfterWebServiceEmitter emit)
+            throws FatalException {
 
         Access access = null;
         Navajo outMessage = null;
@@ -823,7 +840,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         int accessSetSize = accessSet.size();
         setRequestRate(clientInfo, accessSetSize);
 
-        Navajo result = handleCallbackPointers(inMessage, instance);
+        Navajo result = handleCallbackPointers(inMessage,instance);
         if (result != null) {
             return result;
         }
@@ -879,8 +896,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 } catch (AuthorizationException ex) {
                     logger.error("AuthorizationException: ", ex);
                     outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
-                    AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + ex.getMessage(),
-                            Level.WARNING);
+                    AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
+                            + ", message=" + ex.getMessage(), Level.WARNING);
                     return outMessage;
                 } catch (SystemException se) {
                     logger.error("SystemException on authenticateUser : ", se);
@@ -933,8 +950,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 access.setDebugAll(true);
             }
 
-            if ((access.userID == -1) || (access.serviceID == -1)) { // ACCESS
-                                                                     // NOTGRANTED.
+            if ((access.userID == -1) || (access.serviceID == -1)) { // ACCESS NOTGRANTED.
 
                 String errorMessage = "";
 
@@ -943,7 +959,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 } else {
                     errorMessage = "Cannot authorise use of: " + rpcName;
                 }
-                outMessage = generateErrorMessage(access, errorMessage, SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
+                outMessage = generateErrorMessage(access, errorMessage, SystemException.NOT_AUTHORISED, 1,
+                        new Exception("NOT AUTHORISED"));
                 return outMessage;
 
             } else { // ACCESS GRANTED.
@@ -974,14 +991,14 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     if (validTimeSpecification(inMessage.getHeader().getSchedule())) {
 
                         scheduledWebservice = true;
-                        logger.info("Scheduling webservice: {}  on {} ", inMessage.getHeader().getRPCName(), inMessage.getHeader().getSchedule());
+                        logger.info("Scheduling webservice: {}  on {} ", inMessage.getHeader().getRPCName(), inMessage
+                                .getHeader().getSchedule());
                         TaskRunnerInterface trf = TaskRunnerFactory.getInstance();
                         TaskInterface ti = trf.createTask();
                         try {
                             ti.setTrigger(inMessage.getHeader().getSchedule());
                             ti.setNavajo(inMessage);
-                            ti.setPersisted(true); // Make sure task gets
-                                                   // persisted in tasks.xml
+                            ti.setPersisted(true); // Make sure task gets persisted in tasks.xml
                             if (inMessage.getHeader().getHeaderAttribute("keeprequestresponse") != null
                                     && inMessage.getHeader().getHeaderAttribute("keeprequestresponse").equals("true")) {
                                 ti.setKeepRequestResponse(true);
@@ -989,9 +1006,11 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                             trf.addTask(ti);
                             outMessage = generateScheduledMessage(inMessage.getHeader(), ti.getId(), false);
                         } catch (UserException e) {
-                            logger.info("WARNING: Invalid trigger specified for task {}: {}", ti.getId(), inMessage.getHeader().getSchedule());
+                            logger.info("WARNING: Invalid trigger specified for task {}: {}", ti.getId(), inMessage
+                                    .getHeader().getSchedule());
                             trf.removeTask(ti);
-                            outMessage = generateErrorMessage(access, "Could not schedule task:" + e.getMessage(), -1, -1, e);
+                            outMessage = generateErrorMessage(access, "Could not schedule task:" + e.getMessage(), -1,
+                                    -1, e);
                         }
                     } else { // obsolete time specification
                         outMessage = generateScheduledMessage(inMessage.getHeader(), null, true);
@@ -1006,13 +1025,13 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     // Create beforeWebservice event.
                     access.setInDoc(inMessage);
                     long b_start = System.currentTimeMillis();
-                    Navajo useProxy = (WebserviceListenerFactory.getInstance() != null
-                            ? WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access) : null);
+                    Navajo useProxy = ( WebserviceListenerFactory.getInstance() != null ?  
+                    		WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access) : null);
                     access.setBeforeServiceTime((int) (System.currentTimeMillis() - b_start));
 
                     if (useAuthorisation) {
                         if (useProxy == null) {
-                            outMessage = dispatch(getServlet(access), access);
+                            outMessage = dispatch(access);
                         } else {
                             rpcName = access.rpcName;
                             outMessage = useProxy;
@@ -1030,8 +1049,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
         } catch (AuthorizationException aee) {
             outMessage = generateAuthorizationErrorMessage(access, aee, rpcName);
-            AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + aee.getMessage() + ")",
-                    Level.WARNING);
+            AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
+                    + ", message=" + aee.getMessage() + ")", Level.WARNING);
             return outMessage;
         } catch (UserException ue) {
             try {
@@ -1059,7 +1078,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             return errorHandler(access, e, inMessage);
         } finally {
             if (!preventFinalize) {
-                finalizeService(inMessage, access, rpcName, rpcUser, myException, origThreadName, scheduledWebservice, afterWebServiceActivated, emit);
+                finalizeService(inMessage, access, rpcName, rpcUser, myException, origThreadName, scheduledWebservice,
+                        afterWebServiceActivated, emit);
             }
         }
 
@@ -1092,13 +1112,14 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             String[] allRefs = inMessage.getHeader().getCallBackPointers();
             if (AsyncStore.getInstance().getInstance(allRefs[0]) == null) {
                 RemoteAsyncRequest rasr = new RemoteAsyncRequest(allRefs[0]);
-
-                logger.info("Broadcasting async pointer: " + allRefs[0]);
+                
+                logger.info("Broadcasting async pointer: "+allRefs[0]);
                 RemoteAsyncAnswer rasa = (RemoteAsyncAnswer) TribeManagerFactory.getInstance().askAnybody(rasr);
                 if (rasa != null) {
-                    logger.info("ASYNC OWNER: " + rasa.getOwnerOfRef() + "(" + rasa.getHostNameOwnerOfRef() + ")" + " FOR REF " + allRefs[0]);
+                    logger.info("ASYNC OWNER: " + rasa.getOwnerOfRef() + "(" + rasa.getHostNameOwnerOfRef()
+                            + ")" + " FOR REF " + allRefs[0]);
                     try {
-                        Navajo result = TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef(), tenant);
+                        Navajo result = TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef(),tenant);
                         return result;
                     } catch (Exception e) {
                         logger.error("Error: ", e);
@@ -1121,8 +1142,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
 
     @Override
-    public void finalizeService(Navajo inMessage, Access access, String rpcName, String rpcUser, Throwable myException, String origThreadName,
-            boolean scheduledWebservice, boolean afterWebServiceActivated, AfterWebServiceEmitter emit) {
+    public void finalizeService(Navajo inMessage, Access access, String rpcName, String rpcUser, Throwable myException,
+            String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated,
+            AfterWebServiceEmitter emit) {
         if (access != null && !scheduledWebservice) {
 
             Navajo outMessage = access.getOutputDoc();
@@ -1148,8 +1170,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
                 // Call after web service event...
                 long a_start = System.currentTimeMillis();
-                afterWebServiceActivated = (WebserviceListenerFactory.getInstance() != null
-                        ? WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access) : false);
+                afterWebServiceActivated = ( WebserviceListenerFactory.getInstance() != null ? 
+                		WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access) : false);
                 access.setAfterServiceTime((int) (System.currentTimeMillis() - a_start));
 
                 // Set access to finished state.
@@ -1166,7 +1188,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
                 // Publish exception event if exception occurred.
                 if (myException != null) {
-                    NavajoEventRegistry.getInstance().publishEvent(new NavajoExceptionEvent(rpcName, access.getAccessID(), rpcUser, myException));
+                    NavajoEventRegistry.getInstance().publishEvent(
+                            new NavajoExceptionEvent(rpcName, access.getAccessID(), rpcUser, myException));
                 }
 
             } finally {
@@ -1174,7 +1197,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 accessSet.remove(access);
             }
         }
-
+        
         generateNavajoRequestEvent(myException != null);
 
         if (origThreadName != null) {
@@ -1191,7 +1214,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         }
         Event event = new Event(Dispatcher.NAVAJO_TOPIC, properties);
         eventAdmin.postEvent(event);
-
+        
     }
 
     private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage, String tenant) {
@@ -1200,7 +1223,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             return;
         }
         try {
-            descriptionProvider.updatePropertyDescriptions(inMessage, outMessage, tenant);
+            descriptionProvider.updatePropertyDescriptions(inMessage, outMessage,tenant);
         } catch (NavajoException e) {
             logger.error("Error: ", e);
         }
@@ -1385,8 +1408,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     /*
      * (non-Javadoc)
      * 
-     * @see com.dexels.navajo.server.DispatcherMXBean#setSnmpManagers(java.lang.
-     * String )
+     * @see
+     * com.dexels.navajo.server.DispatcherMXBean#setSnmpManagers(java.lang.String
+     * )
      */
     @Override
     public void setSnmpManagers(String s) {
@@ -1447,8 +1471,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
                 Calendar current = Calendar.getInstance();
 
-                now = 100000000L * current.get(Calendar.YEAR) + 1000000L * (current.get(Calendar.MONTH) + 1) + 10000L * current.get(Calendar.DAY_OF_MONTH)
-                        + 100L * current.get(Calendar.HOUR_OF_DAY) + 1L * current.get(Calendar.MINUTE);
+                now = 100000000L * current.get(Calendar.YEAR) + 1000000L * (current.get(Calendar.MONTH) + 1) + 10000L
+                        * current.get(Calendar.DAY_OF_MONTH) + 100L * current.get(Calendar.HOUR_OF_DAY) + 1L
+                        * current.get(Calendar.MINUTE);
 
                 result = timeSpecified > now;
             }

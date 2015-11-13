@@ -60,6 +60,10 @@ public class WrapCollector extends GenericThread {
 
     @Override
     public synchronized void worker() {
+        if (!tribeManager.getIsChief()) {
+            return;
+        }
+        
         long currentTime = System.currentTimeMillis();
         try {
             for (String reference : referenceCount.keySet()) {

@@ -115,8 +115,8 @@ public class TslPreCompiler {
             deps.add(new Dependency(scriptFile, methodScriptFile, Dependency.METHOD_DEPENDENCY, getLineNr(n), isBroken));
 
             // Going to check for tenant-specific include-variants
-            if (scriptTenant == null) {
-                File scriptFolderFile = new File(methodScriptFile).getParentFile();
+            File scriptFolderFile = new File(methodScriptFile).getParentFile();
+            if (scriptTenant == null && scriptFolderFile.exists()) {
                 AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(methodScript) + "_*.xml");
                 Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
                 for (File f : files) {
