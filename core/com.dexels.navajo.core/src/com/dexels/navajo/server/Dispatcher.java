@@ -890,7 +890,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                         throw new SystemException(-1, "No tenant set -cannot authenticate!");
                     }
 
-                    authenticator.performUserAuthorisation(instance, rpcUser, rpcPassword, rpcName, inMessage, userCertificate, access);
+                    authenticator.process(instance, rpcUser, rpcPassword, rpcName, userCertificate, access);
                     
                     
                 } catch (AuthorizationException ex) {
@@ -1131,14 +1131,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             }
         }
         return null;
-    }
-
-    private String getServlet(Access access) {
-        String compLanguage = DispatcherFactory.getInstance().getNavajoConfig().getCompilationLanguage();
-        if ("javascript".equals(compLanguage)) {
-            return "com.dexels.navajo.rhino.RhinoHandler";
-        }
-        return "com.dexels.navajo.server.GenericHandler";
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.dexels.navajo.authentication.api;
 
 import java.util.List;
 
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.SystemException;
@@ -43,10 +42,12 @@ public interface AAAQuerier {
     
     public int tryAuthenticate(String tenant, String username, String password);
     
-    public void performUserAuthorisation(String tenant, String username, String password, String service,
-            Navajo inMessage, Object certificate, Access access) throws SystemException, AuthorizationException;
+    public void process(String tenant, String username, String password, String service,
+            Object certificate, Access access) throws SystemException, AuthorizationException;
 
     public List<String> getUserDistricts(String tenant, String username) throws AAAException;
+    
+    public String getRegion(String tenant, String username);
 
     /**
      * Reset AAA module, i.e. re-load all configuration data.
@@ -54,18 +55,15 @@ public interface AAAQuerier {
      */
     public void reset(String tenant);
 
-    /**
-     * Reset user credentials for specified username.
-     *
-     * @param username
-     */
     public void resetCachedUserCredential(String tenant, String username);
     
-    public int getUserId(String tenant, String username);
+    public Integer getUserId(String tenant, String username);
+    
+    public String getUserAuthMethod(String tenant, String username);
     
     public boolean isFirstUseAccount(String tenant, String username);
     
     public int getDaysUntilExpiration(String tenant, String username);
 
-    public String getRegion(String tenant, String username);
+    
 }

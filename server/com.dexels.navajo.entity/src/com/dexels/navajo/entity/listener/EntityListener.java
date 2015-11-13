@@ -361,7 +361,7 @@ public class EntityListener extends HttpServlet {
             // logger.info("using multitenant: "+instance, new Exception());
 
             if (authenticator != null) {
-                authenticator.performUserAuthorisation(tenant, rpcUser, rpcPassword, entity, inDoc, null, access);
+                authenticator.process(tenant, rpcUser, rpcPassword, entity, inDoc, null, access);
             } else {
                 logger.warn("No authenticator found for instance: {}", tenant);
             }           
