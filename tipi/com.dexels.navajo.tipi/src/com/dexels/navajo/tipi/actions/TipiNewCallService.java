@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.actions;
 
 import java.util.Collections;
-import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +41,6 @@ public class TipiNewCallService extends TipiAction {
 
     private final static Logger logger = LoggerFactory.getLogger(TipiNewCallService.class);
     
-    protected String service;
-    protected Date created;
     
     @Override
     public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException,
