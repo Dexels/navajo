@@ -1740,7 +1740,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                     }
                 }
                 if (!hasUserDefinedErrorHandler) {
-                    if (systemPropertyMap.get("tipi.deploy") != null && !systemPropertyMap.get("tipi.deploy").equals("development")) {
+                    if (systemPropertyMap.get("DTAP") != null && !systemPropertyMap.get("DTAP").equals("DEVELOPMENT")) {
                         errorMessage = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
                     } 
                     TipiComponent tc = event == null ? null : event.getComponent();
