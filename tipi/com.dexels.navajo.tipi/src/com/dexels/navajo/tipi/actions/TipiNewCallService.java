@@ -56,11 +56,6 @@ public class TipiNewCallService extends TipiAction {
         String service = (String) getEvaluatedParameterValue("service", event);
         Navajo input = (Navajo) getEvaluatedParameterValue("input", event);
         
-//        this.service = service;
-//        this.created = new Date();
-//        checkForExistingRequest();
-//        requests.add(this);
-        
         String destination = (String) getEvaluatedParameterValue("destination", event);
         String connector = (String) getEvaluatedParameterValue("connector", event);
         Object cachedObj = getEvaluatedParameterValue("cached", event);
