@@ -1,6 +1,7 @@
 package com.dexels.navajo.dependency;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 public class Dependency {
     public static final int UNKNOWN_TYPE = 0;
@@ -82,7 +83,8 @@ public class Dependency {
         } else if (type == TASK_DEPENDENCY) {
             // Tasks file as a bit special, since they don't have their own directory really
             // Hence we simulate this
-            String[] filenameParts = scriptFile.split(File.separator);
+            String pattern = Pattern.quote(File.separator);
+            String[] filenameParts = scriptFile.split(pattern);
             String tenant = filenameParts[filenameParts.length- 3];
             scriptFileRel = File.separator +  tenant + File.separator + "tasks.xml";
         } else {
