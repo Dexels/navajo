@@ -37,7 +37,6 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiModalInternalFrame;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDialog;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingPanel;
-import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingWindow;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 

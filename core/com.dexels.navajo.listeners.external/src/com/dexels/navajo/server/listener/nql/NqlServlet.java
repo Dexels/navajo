@@ -61,6 +61,12 @@ public class NqlServlet extends HttpServlet {
 		String query = req.getParameter("query");
 		String ping = req.getParameter("ping");
 		String tenant = req.getParameter("tenant");
+		
+		if (tenant == null) {
+		    // Fall back to header
+		    tenant = req.getHeader("X-Navajo-Instance");
+		}
+		
 		if (ping != null) {
 			if (!checkPing(username, resp)) {
 				throw new ServletException("ping failed.");

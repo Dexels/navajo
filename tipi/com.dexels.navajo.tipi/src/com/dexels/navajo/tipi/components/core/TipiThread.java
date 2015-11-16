@@ -81,7 +81,6 @@ public class TipiThread extends Thread implements Comparable<TipiThread>, Serial
 							te.performAction(te.getEvent(), parentEvent, 0);
 						} catch (Throwable ex) {
 							if (!(ex instanceof TipiBreakException)) {
-								logger.error("Error: ",ex);
 								te.dumpStack("Problem: " + ex.getMessage());
 								logger.error("Exception caught",ex);
 							}

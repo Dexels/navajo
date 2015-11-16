@@ -37,19 +37,26 @@ import com.dexels.navajo.tipi.TipiErrorHandler;
  * @version 1.0
  */
 public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
-
+    private final static Logger logger = LoggerFactory.getLogger(BaseTipiErrorHandler.class);
+    private static final String ERROR_MESSAGE = "Error_click_details";
+    private static final String ERROR_TITLE = "Error_click_details_title";
+    private static final String ERROR_MORE_DETAILS = "Details";
+    private static final String ERROR_LESS_DETAILS = "LessDetails";
+    private static final String ERROR_OK = "Ok";
 	private static final long serialVersionUID = -2568512270962339576L;
+	
 	private String errorMessage;
 	private TipiContext context;
 	private transient ResourceBundle errorMessageBundle;
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(BaseTipiErrorHandler.class);
 	
 	public BaseTipiErrorHandler() {
 		// initResource();
 	}
 
+	@Override
+	public Boolean hasServerErrors(Navajo n) {
+	    return n.getMessage("error") != null;
+	}
 
 	@Override
 	public String hasErrors(Navajo n) {
@@ -70,8 +77,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 					// String expression =
 					// current.getProperty("FailedExpression").getValue();
 					String id = current.getProperty("Id").getValue();
-					errorMessage = errorMessage
-							+ getConditionErrorDescription(id, current) + "\n";
+					errorMessage = errorMessage + getConditionErrorDescription(id, current) + "\n";
 					try {
 						conditions.write(System.err);
 					} catch (NavajoException e) {
@@ -94,23 +100,76 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 			return null;
 		}
 	}
+	
+	public String getGenericErrorDescription() {
+        // String description = id;
+	    String s = retrieveFromMessageBundle(ERROR_MESSAGE);
+        if (s != null) {
+            return s;
+        }
+        return "An error occured. ";
+    }
+	
+	public String getGenericErrorTitle() {
+        String s = retrieveFromMessageBundle(ERROR_TITLE);
+        if (s != null) {
+            return s;
+        }
+        return "Error: ";
+    }
+
+    private String retrieveFromMessageBundle(String key) {
+        try {
+            if(errorMessageBundle==null) {
+                logger.error("Serious problem in Error handler - can't retrieve genericErrorTitle.");
+            } else {
+                String found = errorMessageBundle.getString(key);
+                if (found != null) {
+                    return found;
+                }
+            }
+        } catch (MissingResourceException ex) {
+            logger.warn("Cannot find reference for  {}", ERROR_TITLE);
+        }
+        return null;
+    }
+	
+	public String getErrorMoreDetailsText() {
+        // String description = id;
+	    String s = retrieveFromMessageBundle(ERROR_MORE_DETAILS);
+        if (s != null) {
+            return s;
+        }
+        return "Details";
+    }
+	
+	public String getErrorLessDetailsText() {
+        // String description = id;
+        String s = retrieveFromMessageBundle(ERROR_LESS_DETAILS);
+        if (s != null) {
+            return s;
+        }
+        return "Minder details";
+    }
+	
+	public String getErrorCloseText() {
+        // String description = id;
+	    String s = retrieveFromMessageBundle(ERROR_OK);
+        if (s != null) {
+            return s;
+        }
+        return "OK";
+    }
+	
+	
 
 	private String getConditionErrorDescription(String id, Message current) {
 		// String description = id;
-		try {
-			if(errorMessageBundle==null) {
-				logger.error("Serious problem in Error handler.");
-			} else {
-				String found = errorMessageBundle.getString(id);
-				if (found != null) {
-					return found;
-				}
-			}
-		} catch (MissingResourceException ex) {
-			System.err
-			.println("----> Cannot find reference for condition errorId: "
-					+ id);
-		}
+	    String found = retrieveFromMessageBundle(id);
+	    if (found != null) {
+            return found;
+        }
+	    
 		Property description = current.getProperty("Description");
 		if (description != null) {
 			return "" + description.getTypedValue();
