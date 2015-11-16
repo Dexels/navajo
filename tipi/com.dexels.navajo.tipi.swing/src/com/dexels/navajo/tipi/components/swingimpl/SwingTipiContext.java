@@ -443,8 +443,17 @@ public class SwingTipiContext extends TipiContext {
 
 	@Override
     public void showWarning(final String errormessage, final TipiComponent tc) {
-        final JFrame parentFrame = (JFrame) getTopDialog();
+	    final JFrame parentFrame;
         final TipiContext tcontext = this;
+        
+	    Object topFrame = getTopDialog();
+	    if (topFrame instanceof JFrame) {
+	        parentFrame = (JFrame) topFrame;
+	    } else if (topFrame instanceof JDialog) {
+	        parentFrame = (JFrame) ((JDialog) topFrame).getParent();
+	    } else {
+	        parentFrame = null;
+	    }
 
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(new Runnable() {
@@ -462,8 +471,19 @@ public class SwingTipiContext extends TipiContext {
 
     @Override
     public void showWarning(final String title, final String text, final String errormessage, final TipiComponent tc) {
-        final JFrame parentFrame = (JFrame) getTopDialog();
         final TipiContext tcontext = this;
+        final JFrame parentFrame;
+        
+        Object topFrame = getTopDialog();
+        if (topFrame instanceof JFrame) {
+            parentFrame = (JFrame) topFrame;
+        } else if (topFrame instanceof JDialog) {
+            parentFrame = (JFrame) ((JDialog) topFrame).getParent();
+        } else {
+            parentFrame = null;
+        }
+        
+       
 
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(new Runnable() {
