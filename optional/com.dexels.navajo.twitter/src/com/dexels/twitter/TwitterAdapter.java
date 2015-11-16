@@ -28,13 +28,16 @@ public class TwitterAdapter implements Mappable{
 	private String currentUser;
 	private String token1;
 	private String token2;
-//	private Binary signPost;
+	
+	// When develop_mode is true, the tweets are not actually sent but instead logged
+	private boolean develop_mode;
+
 	
 	private OAuthSignpostClient mySignPost = null; 
 		
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(TwitterAdapter.class);
+	private final static Logger logger = LoggerFactory.getLogger(TwitterAdapter.class);
+	private final static Logger devlogger = LoggerFactory.getLogger("twitter_dev");
 	
 	final static String API_KEY = "UVyOkSE0F1i2YcqaPc0jYg";
 	private final static String API_SECRET = "7Uhm0fVFrSesY0Czamuy86ZnyetVPkYjLLgG8N3rabE";
@@ -82,6 +85,10 @@ public class TwitterAdapter implements Mappable{
 				statusText = statusText.substring(0, 140);
 			}
 			twit.setSource("Navajo Integrator");
+			if (develop_mode) {
+			    devlogger.info("New status: {}", statusText);
+			    return;
+			}
 			twit.updateStatus(statusText);
 		} catch (Exception e) {
 			logger.error("Error: ", e);
@@ -89,6 +96,10 @@ public class TwitterAdapter implements Mappable{
 	}
 	
 	public void setStatus(Object status) {
+	    if (develop_mode) {
+            devlogger.info("New status: {}", status.toString());
+            return;
+        }
 		try {
 			setStatus(status.toString());
 		} catch (Exception e) {
@@ -440,7 +451,7 @@ public class TwitterAdapter implements Mappable{
 
 	@Override
 	public void load(Access access) throws MappableException, UserException {
-		
+	    develop_mode = "true".equals(System.getenv("DEVELOP_MODE"));
 	}
 
 	@Override
