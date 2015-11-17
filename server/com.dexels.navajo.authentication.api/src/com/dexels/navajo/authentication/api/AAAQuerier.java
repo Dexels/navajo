@@ -40,8 +40,12 @@ public interface AAAQuerier {
     public static final String ACCOUNT_INACTIVE = "Account not active";
 
     
-    public int tryAuthenticate(String tenant, String username, String password);
+    public int authenticateUsernamePassword(String tenant, String username, String password);
     
+    
+    /**
+     * Perform the full authentication and authorisation stack
+     */
     public void process(String tenant, String username, String password, String service,
             Object certificate, Access access) throws SystemException, AuthorizationException;
 
