@@ -351,7 +351,7 @@ public class BaseRequestImpl implements AsyncRequest {
 	
 	@Override
 	public void fail(Exception e) {
-		logger.error("Error: ", e);
+//		logger.error("Error: ", e);
 		try {
 			response.sendError(500, e.getMessage());
 		} catch (IOException e1) {
