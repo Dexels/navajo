@@ -7,17 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.authentication.api.LoginStatisticsProvider;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.listener.http.queuemanager.api.InputContext;
 import com.dexels.navajo.listener.http.queuemanager.api.NavajoSchedulingException;
@@ -33,11 +29,8 @@ import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.resource.ResourceCheckerManager;
 import com.dexels.navajo.server.resource.ServiceAvailability;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 
-public final class PriorityThreadPoolScheduler implements TmlScheduler, PriorityThreadPoolSchedulerMBean, QueueContext,  EventHandler {
+public final class PriorityThreadPoolScheduler implements TmlScheduler, PriorityThreadPoolSchedulerMBean, QueueContext {
 	
 	private static final int DEFAULT_POOL_SIZE = 15;
 	private static final int DEFAULT_MAXBACKLOG = 500;
@@ -75,10 +68,6 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	private final Map<String,RequestQueue> queueMap = new HashMap<String,RequestQueue>();
 	
 	
-	private LoadingCache<String, Integer> cache = null;
-    private Integer failedLoginAbortThreshold = 100;
-    private Integer failedLoginSlowpoolThreshold = 5;
-	 
 	// Keep track of last throttle timestamp.
 //	private long throttleTimestamp = 0;
 	
@@ -139,21 +128,6 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 
     public void activate(Map<String, Object> settings) {
         logger.info("Activating prio threadpool scheduler...");
-
-        if (settings.containsKey("failedLoginAbortThreshold")) {
-            failedLoginAbortThreshold = Integer.valueOf((String) settings.get("failedLoginAbortThreshold"));
-
-        }
-        if (settings.containsKey("failedLoginSlowpoolThreshold")) {
-            failedLoginSlowpoolThreshold = Integer.valueOf((String) settings.get("failedLoginSlowpoolThreshold"));
-
-        }
-
-        cache = CacheBuilder.newBuilder().expireAfterWrite(300, TimeUnit.SECONDS).softValues().build(new CacheLoader<String, Integer>() {
-            public Integer load(String key) {
-                return 0;
-            }
-        });
 
         try {
             Integer normalPoolSize = extractInt(settings, "normalPoolSize");
@@ -288,20 +262,12 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
             }
 		};
 		
-		String key = ic.getUserName() + ic.getIpAddress();
-		try {
-		    Integer count = cache.get(key);
-		    if (count > failedLoginAbortThreshold) {
-                logger.info("Too many failed attemps for {} - aborting!", key);
-                return null;
-            }
-            if (count > failedLoginSlowpoolThreshold) {
-                logger.info("Too many failed attemps for {} - putting in slow pool", key);
-                return queueMap.get("slowPool");
-            }
-        } catch (ExecutionException e1) {
-           logger.info("ExecutionException exception on checking failed attemps for {}: ", key, e1);
-        }
+		
+		if (LoginStatisticsProvider.reachedAbortThreshold(ic.getUserName(), ic.getIpAddress())) {
+		    return null;
+		} else if (LoginStatisticsProvider.reachedRateLimitThreshold(ic.getUserName(), ic.getIpAddress())) {
+		    return queueMap.get("slowPool");
+		}
 		
 		String queueName;
 		try {
@@ -666,23 +632,4 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		
 	}
 
-    @Override
-    public void handleEvent(Event e) {
-        if (e.getTopic().equals("aaa/failedlogin")) {
-            // Failed login
-
-            String username = (String) e.getProperty("username");
-            String ip = (String) e.getProperty("ipaddress");
-            String key = username + ip;
-            Integer count;
-            try {
-                count = cache.get(key);
-            } catch (ExecutionException e1) {
-                count = 0;
-            }
-            cache.put(key, ++count);
-            logger.debug("Failed attempt for {} - updated count to: {}", key, count);
-        }
-
-    }
 }

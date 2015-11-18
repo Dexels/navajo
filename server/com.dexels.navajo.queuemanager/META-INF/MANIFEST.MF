@@ -5,7 +5,8 @@ Bundle-Version: 1.0.45.qualifier
 Bundle-ClassPath: .
 Include-Resource: lib
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.navajo.document;version="2.2.0",
+Import-Package: com.dexels.navajo.authentication.api,
+ com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.listener.http.queuemanager.api,
  com.dexels.navajo.script.api,
  com.dexels.navajo.server,

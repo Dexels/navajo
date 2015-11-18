@@ -133,7 +133,8 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		  }
 	  }
 
-	private void resumeContinuation() {
+	@SuppressWarnings("unused")
+    private void resumeContinuation() {
 		if(continuation.isSuspended()) {
 			continuation.resume();
 		}

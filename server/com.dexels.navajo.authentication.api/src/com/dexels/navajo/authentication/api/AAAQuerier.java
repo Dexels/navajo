@@ -41,7 +41,7 @@ public interface AAAQuerier {
 
     public static final String FAILED_LOGIN_TOPIC = "aaa/failedlogin";
     
-    public int authenticateUsernamePassword(String tenant, String username, String password);
+    public int authenticateUsernamePassword(Access access, String username, String password);
     
     
     /**
