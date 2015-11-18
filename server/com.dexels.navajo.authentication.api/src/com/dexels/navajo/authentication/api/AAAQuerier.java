@@ -39,6 +39,7 @@ public interface AAAQuerier {
     public static final String EMPTY_DISTRICTS = "No districts specified in database";
     public static final String ACCOUNT_INACTIVE = "Account not active";
 
+    public static final String FAILED_LOGIN_TOPIC = "aaa/failedlogin";
     
     public int authenticateUsernamePassword(String tenant, String username, String password);
     

@@ -876,6 +876,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             access = new Access(1, 1, rpcUser, rpcName, "", "", "", userCertificate, false, null);
             access.setTenant(instance);
             access.setInDoc(inMessage);
+            if (clientInfo != null) {
+                access.ipAddress = clientInfo.getIP();
+                access.hostName = clientInfo.getHost();
+            }
             NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(access));
             appendGlobals(inMessage, instance);
 

@@ -164,10 +164,7 @@ public class BaseRequestImpl implements AsyncRequest {
 	@Override
 	public ClientInfo createClientInfo(long scheduledAt, long startedAt,
 			int queueLength, String queueId) {
-	    String ip = request.getHeader("X-Forwarded-For");
-	    if (ip == null || ip.equals("")) {
-	        ip = request.getRemoteAddr();
-	    }
+	    String ip = getIpAddress();
 		ClientInfo clientInfo = new ClientInfo(
 				ip,
 				"unknown",
@@ -183,6 +180,15 @@ public class BaseRequestImpl implements AsyncRequest {
 				new java.util.Date(connectedAt));
 		return clientInfo;
 	}
+
+	@Override
+    public String getIpAddress() {
+        String ip = request.getHeader("X-Forwarded-For");
+	    if (ip == null || ip.equals("")) {
+	        ip = request.getRemoteAddr();
+	    }
+        return ip;
+    }
 
 	@Override
 	public Object getCert() {
