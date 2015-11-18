@@ -531,6 +531,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             tipiComponentMap.remove(definitionName);
         }
         navajoCacheMap = new HashMap<String, CachedNavajo>();
+        
+        // Will be updated on the next error, which should re-read validation.properties
+        eHandler = null;
     }
 
     public abstract void clearTopScreen();
