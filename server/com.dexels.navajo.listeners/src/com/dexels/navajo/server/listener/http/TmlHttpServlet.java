@@ -538,36 +538,9 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 					&& outDoc.getHeader() != null
 					&& !Dispatcher.isSpecialwebservice(in.getHeader()
 							.getRPCName())) {
-				statLogger.info("("
-						+ dis.getApplicationId()
-						+ "): "
-						+ new java.util.Date()
-						+ ": "
-						+ outDoc.getHeader().getHeaderAttribute("accessId")
-						+ ":"
-						+ in.getHeader().getRPCName()
-						+ "("
-						+ in.getHeader().getRPCUser()
-						+ "):"
-						+ (System.currentTimeMillis() - start)
-						+ " ms. (st="
-						+ (outDoc.getHeader().getHeaderAttribute("serverTime")
-								+ ",rpt="
-								+ outDoc.getHeader().getHeaderAttribute(
-										"requestParseTime")
-								+ ",at="
-								+ outDoc.getHeader().getHeaderAttribute(
-										"authorisationTime")
-								+ ",pt="
-								+ outDoc.getHeader().getHeaderAttribute(
-										"processingTime")
-								+ ",tc="
-								+ outDoc.getHeader().getHeaderAttribute(
-										"threadCount")
-								+ ",cpu="
-								+ outDoc.getHeader().getHeaderAttribute(
-										"cpuload") + ")" + " (" + sendEncoding
-								+ "/" + recvEncoding + ")"));
+			    
+			    statLogger.info("Finished {} ({}) in {}ms", outDoc.getHeader().getHeaderAttribute("accessId"), in.getHeader().getRPCName(),
+	                    (System.currentTimeMillis() -  start));
 			}
 
 			out = null;

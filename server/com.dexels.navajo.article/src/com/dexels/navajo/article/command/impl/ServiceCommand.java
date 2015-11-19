@@ -26,14 +26,13 @@ import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionErrorException;
 
 public class ServiceCommand implements ArticleCommand {
-
+    private final static Logger statLogger = LoggerFactory.getLogger("stats");
+    private final static Logger logger = LoggerFactory.getLogger(ServiceCommand.class);
+    
 	private String name;
 	private LocalClient localClient;
 	private final Map<String, LocalClient> instanceClients = new HashMap<String, LocalClient>();
 
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(ServiceCommand.class);
 	
 	public ServiceCommand() {
 		// default constructor
@@ -57,6 +56,8 @@ public class ServiceCommand implements ArticleCommand {
 	public JsonNode execute(ArticleRuntime runtime, ArticleContext context,
 			Map<String, String> parameters, XMLElement element)
 			throws ArticleException {
+	    Long startedAt = System.currentTimeMillis();
+	    
 		String name = parameters.get("name");
 		if (name == null) {
 			throw new ArticleException("Command: " + this.getName()
@@ -90,6 +91,8 @@ public class ServiceCommand implements ArticleCommand {
 				runtime.getPassword(), -1);
 		n.addHeader(h);
 		final Navajo result = performCall(runtime, name, n, runtime.getInstance());
+		statLogger.info("Finished {} ({}) in {}ms", h.getHeaderAttribute("accessId"), name,
+                 (System.currentTimeMillis() - startedAt));
 		runtime.pushNavajo(name, result);
 		return null;
 	}
