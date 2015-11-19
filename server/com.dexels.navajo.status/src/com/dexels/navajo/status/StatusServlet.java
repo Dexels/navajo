@@ -99,23 +99,7 @@ public class StatusServlet extends HttpServlet implements ServerStatusChecker, E
             long max = Runtime.getRuntime().maxMemory();
             long total = Runtime.getRuntime().totalMemory();
             long free = Runtime.getRuntime().freeMemory();
-            res = (total - free) + "/" + max;
-        } else if (requestTpe.equals("users")) {
-            // Check current memory usage.
-            Set<Access> all = new HashSet<Access>(com.dexels.navajo.server.DispatcherFactory.getInstance().getAccessSet());
-            Map<String, Map<String, String>> resultMap = new HashMap<>();
-            
-            for (Access a : all) {
-                Map<String, String> fields = new HashMap<>();
-                fields.put("startTime", a.getCreated().toString());
-                fields.put("runTime",  new Long( System.currentTimeMillis() - a.created.getTime() ).toString());
-                fields.put("rpcName", a.getRpcName());
-                fields.put("rpcUser", a.getRpcUser());
-                fields.put("async", a.getRpcUser());
-                resultMap.put(a.getAccessID(), fields);
-            }
-            res = resultMap.toString();
-
+            res = (total - free) + "/" + max; 
         } else if (requestTpe.equals("requestcount")) {
             Integer navajo = 0;
             Integer exceptions = 0;
