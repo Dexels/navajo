@@ -77,111 +77,107 @@ import com.dexels.navajo.util.AuditLog;
 
 public class NavajoMap extends AsyncMappable implements Mappable, HasDependentResources, TmlRunnable, NavajoResponseHandler {
 
-    public String                     doSend;
-    public Binary                     navajo;
-    public String                     username              = null;
-    public String                     password              = null;
-    public String                     tenant                = null;
-    public String                     server                = null;
+    public String doSend;
+    public Binary navajo;
+    public String username = null;
+    public String password = null;
+    public String tenant = null;
+    public String server = null;
     // For scheduling tasks from NavajoMap.
-    public String                     trigger               = null;
-    public String                     taskId                = null;
+    public String trigger = null;
+    public String taskId = null;
 
     /**
-     * For each of the supported property types a corresponding field of the
-     * appropriate type should exist
+     * For each of the supported property types a corresponding field of the appropriate type should exist
      */
-    public boolean                    booleanProperty;
-    public int                        integerProperty;
-    public float                      floatProperty;
-    public String                     stringProperty;
-    public ClockTime                  clockTimeProperty;
-    public Date                       dateProperty;
-    public Money                      moneyProperty;
-    public Binary                     binaryProperty;
-    public Object                     property;
+    public boolean booleanProperty;
+    public int integerProperty;
+    public float floatProperty;
+    public String stringProperty;
+    public ClockTime clockTimeProperty;
+    public Date dateProperty;
+    public Money moneyProperty;
+    public Binary binaryProperty;
+    public Object property;
 
-    public String                     propertyName;
+    public String propertyName;
     // Property id is used to set 'properties' like direction, show, suppress of
     // a specified property.
-    public String                     propertyId;
-    public MessageMap                 message;
-    public MessageMap[]               messages;
-    public OptionMap[]                selections;
+    public String propertyId;
+    public MessageMap message;
+    public MessageMap[] messages;
+    public OptionMap[] selections;
 
-    public String                     messagePointer;
+    public String messagePointer;
 
-    public int                        serverTimeout         = -1;
-    public String                     selectionPointer      = null;
+    public int serverTimeout = -1;
+    public String selectionPointer = null;
 
-    public boolean                    exists;
-    public String                     append;
-    public String                     appendTo;
+    public boolean exists;
+    public String append;
+    public String appendTo;
     // appendParms is used to append entire output doc of called webservice to
     // param block.
-    public String                     appendParms;
-    public boolean                    sendThrough;
+    public String appendParms;
+    public boolean sendThrough;
     /*
-     * if useCurrentOutDoc is set, the NavajoMap will use the outDoc from the
-     * access object instead of creating a new one.
+     * if useCurrentOutDoc is set, the NavajoMap will use the outDoc from the access object instead of creating a new one.
      */
-    public boolean                    useCurrentOutDoc;
-
-    /*
-     * If useCurrentMessages is set, the NavajoMap will copy the comma-seperated
-     * message names of the OUTPUT doc to the request of the called webservice.
-     */
-    public String                     useCurrentMessages    = null;
+    public boolean useCurrentOutDoc;
 
     /*
-     * If copyInputMessages is set, the NavajoMap will copy the comma-seperated
-     * message names of the INPUT doc to the request of the called webservice.
+     * If useCurrentMessages is set, the NavajoMap will copy the comma-seperated message names of the OUTPUT doc to the request of the called webservice.
      */
-    public String                     copyInputMessages     = null;
+    public String useCurrentMessages = null;
 
-    public boolean                    breakOnConditionError = true;
-    public boolean                    breakOnException      = true;
-    public String                     keyStore;
-    public String                     keyPassword;
-    public String                     compare               = "";
-    public String                     skipProperties        = "";
-    public boolean                    isEqual               = false;
-    public boolean                    performOrderBy        = false;
-    public String                     suppressProperties    = null;
-    public String                     showProperties        = null;
-    public String                     inputProperties       = null;
-    public String                     outputProperties      = null;
+    /*
+     * If copyInputMessages is set, the NavajoMap will copy the comma-seperated message names of the INPUT doc to the request of the called webservice.
+     */
+    public String copyInputMessages = null;
 
-    protected Navajo                  inDoc;
-    protected Navajo                  outDoc;
+    public boolean breakOnConditionError = true;
+    public boolean breakOnException = true;
+    public String keyStore;
+    public String keyPassword;
+    public String compare = "";
+    public String skipProperties = "";
+    public boolean isEqual = false;
+    public boolean performOrderBy = false;
+    public String suppressProperties = null;
+    public String showProperties = null;
+    public String inputProperties = null;
+    public String outputProperties = null;
+
+    protected Navajo inDoc;
+    protected Navajo outDoc;
     // private NavajoClient nc;
-    private Property                  currentProperty;
-    private String                    currentFullName;
-    protected Access                  access;
+    private Property currentProperty;
+    private String currentFullName;
+    protected Access access;
 
-    private RequestQueue              myRequestQueue;
-    private final Map<String, Object> attributes            = new HashMap<String, Object>();
+    private RequestQueue myRequestQueue;
+    private final Map<String, Object> attributes = new HashMap<String, Object>();
 
-    protected NavajoConfigInterface   config;
-    protected Navajo                  inMessage;
-    protected Message                 msgPointer;
+    protected NavajoConfigInterface config;
+    protected Navajo inMessage;
+    protected Message msgPointer;
 
-    public String                     method;
+    public String method;
 
     // If block is set, the web service calls blocks until a result is received.
     // Default value is TRUE.
-    public boolean                    block                 = true;
-    protected boolean                 serviceCalled         = false;
-    protected boolean                 serviceFinished       = false;
-    private Exception                 myException           = null;
+    public boolean block = true;
+    protected boolean serviceCalled = false;
+    protected boolean serviceFinished = false;
+    private Exception myException = null;
 
-    private NavajoMapResponseListener myResponseListener    = null;
-    private String                    id;
+    private NavajoMapResponseListener myResponseListener = null;
+    private String id;
 
-    private List<String>              deletedProperties     = new ArrayList<String>();
-    private List<String>              deletedMessages       = new ArrayList<String>();
-    private final static Logger       logger                = LoggerFactory.getLogger(NavajoMap.class);
-    private static final long         MAX_WAITTIME          = 300000;
+    private List<String> deletedProperties = new ArrayList<String>();
+    private List<String> deletedMessages = new ArrayList<String>();
+    private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
+    private static final long MAX_WAITTIME = 300000;
 
     public NavajoMap() {
 
@@ -212,8 +208,8 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
         this.block = block;
     }
 
-    private Object    waitForResult = new Object();
-    private String    resource;
+    private Object waitForResult = new Object();
+    private String resource;
     private Throwable caughtThrowable;
 
     @Override
@@ -241,8 +237,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     /**
-     * Set this to the message path to which the result of the called service
-     * needs to be appended. Always used in conjunction with setAppend().
+     * Set this to the message path to which the result of the called service needs to be appended. Always used in conjunction with setAppend().
      * 
      * @param messageOffset
      * @throws UserException
@@ -276,20 +271,16 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     /**
-     * Set this to a valid message path if the result of the webservices needs
-     * to be appended. If messageOffset = "/" the entire result will be appended
-     * to the current output message pointer.
+     * Set this to a valid message path if the result of the webservices needs to be appended. If messageOffset = "/" the entire result will be appended to the
+     * current output message pointer.
      *
      * @param b
      * @throws UserException
      *
-     *             TODO: FINISH THIS. IMPLEMENT CLONE METHOD IN MESSAGE
-     *             IMPLEMENTATION(!!)
+     *             TODO: FINISH THIS. IMPLEMENT CLONE METHOD IN MESSAGE IMPLEMENTATION(!!)
      *
-     *             (!)if messageOffset is '', the received inDoc document will
-     *             become the new output document for the Navajo service. if
-     *             messageOffset is '/', the messages of the received inDoc will
-     *             be appended to the output document.
+     *             (!)if messageOffset is '', the received inDoc document will become the new output document for the Navajo service. if messageOffset is '/',
+     *             the messages of the received inDoc will be appended to the output document.
      */
     public final void setAppend(String messageOffset) throws UserException {
 
@@ -324,10 +315,8 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             }
 
             /**
-             * appendTo logic. If appendTo ends with '/' append the entire
-             * append message to the defined appendTo message. If appendTo does
-             * not end with '/', merge the append message with the defined
-             * appendTo message.
+             * appendTo logic. If appendTo ends with '/' append the entire append message to the defined appendTo message. If appendTo does not end with '/',
+             * merge the append message with the defined appendTo message.
              */
             boolean appendToComplete = (appendTo != null && !appendTo.equals(Navajo.MESSAGE_SEPARATOR) && appendTo.endsWith(Navajo.MESSAGE_SEPARATOR));
             if (appendToComplete) {
@@ -367,15 +356,10 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                     if (appendTo != null) {
                         if (appendTo.equals(Navajo.MESSAGE_SEPARATOR)) {
                             /**
-                             * NOTE 21/3/2013 (AS): USING ADDMESSAGE USING
-                             * OVERWRITE FLAG WILL CAUSE CURRENTMSG TO BE
-                             * OVERWRITTEN IFF CLONE MSG NAME IS THE SAME!!!
-                             * THIS WILL CREATE A "DANGLING" MSG POINTER
-                             * RENDERING ALL FURTHER MESSAGE ADDITIONS USELESS
-                             * (THEY WILL NOT APPEAR)
+                             * NOTE 21/3/2013 (AS): USING ADDMESSAGE USING OVERWRITE FLAG WILL CAUSE CURRENTMSG TO BE OVERWRITTEN IFF CLONE MSG NAME IS THE
+                             * SAME!!! THIS WILL CREATE A "DANGLING" MSG POINTER RENDERING ALL FURTHER MESSAGE ADDITIONS USELESS (THEY WILL NOT APPEAR)
                              * 
-                             * THEREFORE: CHECK WHETHER NAME OF CURRENT OUT
-                             * MESSAGE POINTER EQUALS THAT OF CLONE MESSAGE.
+                             * THEREFORE: CHECK WHETHER NAME OF CURRENT OUT MESSAGE POINTER EQUALS THAT OF CLONE MESSAGE.
                              */
 
                             if (clone.getName().equals(currentMsg.getName())) {
@@ -451,9 +435,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
      * @param b
      * @throws UserException
      *
-     *             if messageOffset is '/', the messages of the received Doc
-     *             will be appended to the root param block or to the current
-     *             param message.
+     *             if messageOffset is '/', the messages of the received Doc will be appended to the root param block or to the current param message.
      */
     public final void setAppendParms(String messageOffset) throws UserException {
 
@@ -645,8 +627,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     /**
-     * Gets the Navajo object. If inDoc is present return inDoc, else return
-     * inMessage (request Navajo).
+     * Gets the Navajo object. If inDoc is present return inDoc, else return inMessage (request Navajo).
      * 
      * @return
      * @throws UserException
@@ -675,9 +656,8 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             if (this.useCurrentOutDoc) {
                 if (this.outDoc != null) {
                     /**
-                     * NOTE: THIS MERGE OPERATION WILL CAUSE EXISTING PROPERTIES
-                     * IN outDoc TO BE OVERWRITTEN WITH THE SAME PROPERTIES IN
-                     * access.getOutputDoc(). THIS IS NOT EXPECTED BEHAVIOR.
+                     * NOTE: THIS MERGE OPERATION WILL CAUSE EXISTING PROPERTIES IN outDoc TO BE OVERWRITTEN WITH THE SAME PROPERTIES IN access.getOutputDoc().
+                     * THIS IS NOT EXPECTED BEHAVIOR.
                      */
                     this.outDoc.merge(access.getOutputDoc().copy(), true);
                 } else {
@@ -831,9 +811,8 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     /**
-     * Use this method to call another Navajo webservice. If server is not
-     * specified, the Navajo server that is used to handle this request is also
-     * used to handle the new request.
+     * Use this method to call another Navajo webservice. If server is not specified, the Navajo server that is used to handle this request is also used to
+     * handle the new request.
      *
      * @param method
      * @throws UserException
@@ -1082,9 +1061,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     /**
-     * Determine whether a property or message object exists within the response
-     * document. If messagePointer is set, search is relative from
-     * messagePointer.
+     * Determine whether a property or message object exists within the response document. If messagePointer is set, search is relative from messagePointer.
      *
      * @param fullName
      * @return
@@ -1119,12 +1096,9 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     /**
-     * Set the messagePointer to an existin top level message in the current
-     * received Navajo document. The following methods will use this
-     * messagePointer as an offset: - getMessage() - getMessages() -
-     * getDateProperty() - getExists() - getStringProperty() -
-     * getIntegerProperty() - getBooleanProperty() - getFloatProperty() -
-     * getMoneyProperty()
+     * Set the messagePointer to an existin top level message in the current received Navajo document. The following methods will use this messagePointer as an
+     * offset: - getMessage() - getMessages() - getDateProperty() - getExists() - getStringProperty() - getIntegerProperty() - getBooleanProperty() -
+     * getFloatProperty() - getMoneyProperty()
      *
      * @param m
      * @throws UserException
@@ -1155,8 +1129,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     /**
-     * Try to return messages from using messagePointer, if no messages are
-     * found return null.
+     * Try to return messages from using messagePointer, if no messages are found return null.
      *
      * @return
      * @throws UserException
@@ -1222,8 +1195,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     /**
-     * Use sendThrough to send an entire current input message using the
-     * NavajoMap doSend method.
+     * Use sendThrough to send an entire current input message using the NavajoMap doSend method.
      *
      * @param b
      */
@@ -1274,8 +1246,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     /**
-     * If specified, the NavajoMap will break on a condition error and send this
-     * as a response.
+     * If specified, the NavajoMap will break on a condition error and send this as a response.
      * 
      * @param breakOnConditionError
      */
@@ -1647,8 +1618,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     /**
-     * Sets the directive of a property specified by propertyId. Supported
-     * directives: suppress, show, in, out.
+     * Sets the directive of a property specified by propertyId. Supported directives: suppress, show, in, out.
      * 
      * @param directive
      */
