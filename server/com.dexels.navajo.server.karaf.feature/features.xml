@@ -114,7 +114,7 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.6.3'
+	<feature resolver="(obr)" name='navajo.core' version='3.6.4'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,5)">pax-http</feature>
@@ -131,7 +131,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/3.0.0
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/3.0.0
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/3.0.2
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/4.0.4
 		</bundle>
@@ -168,7 +168,7 @@
 	</feature>
 
 
-	<feature resolver="(obr)" name='navajo.server' version='3.2.3'>
+	<feature resolver="(obr)" name='navajo.server' version='3.2.4'>
 		<feature version="[3.0.34,4)">navajo.core</feature>
 		<feature version="[3.0.0,5)">pax-war</feature>
 		<feature version="[3.0.0,5)">pax-http-whiteboard</feature>
@@ -180,7 +180,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.2.20
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.queuemanager/2.0.0
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.queuemanager/2.0.2
 		</bundle>
 		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
 		<bundle dependency='true'>mvn:commons-lang/commons-lang/2.4</bundle>
@@ -478,14 +478,14 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='sportlink.libraries' version='3.2.2'
+	<feature resolver="(obr)" name='sportlink.libraries' version='3.2.3'
 		start-level='82'>
 		<feature version="[3.0.0,4)">navajo.function</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<feature version="[3.0.0,4)">navajo.article</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.aaa/4.0.6
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.aaa/4.0.8
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.1.0
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.1.2
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.functions/3.0.4
 		</bundle>
