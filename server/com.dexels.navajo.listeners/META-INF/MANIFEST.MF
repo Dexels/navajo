@@ -13,7 +13,6 @@ Export-Package: com.dexels.navajo.server.api.impl,
    com.dexels.navajo.mapping,
    com.dexels.navajo.document,
    javax.servlet.http",
- com.dexels.navajo.server.listener.http.filter;uses:="javax.servlet,javax.servlet.http,com.dexels.navajo.document",
  com.dexels.navajo.server.listener.http.schedulers,
  navajolisteners;uses:="dexels"
 Bundle-Vendor: Dexels
@@ -43,5 +42,5 @@ Import-Package: com.dexels.navajo.client,
  org.osgi.framework;version="1.5.0",
  org.osgi.service.cm;version="1.3.0",
  org.slf4j;version="[1.6.1,1.8.0)"
-Service-Component: OSGI-INF/navajo.server.listener.xml,OSGI-INF/navajo.server.listener.filter.xml
+Service-Component: OSGI-INF/navajo.server.listener.xml
  

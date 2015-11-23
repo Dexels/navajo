@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
@@ -21,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.repository.api.ServerStatusChecker;
-import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
