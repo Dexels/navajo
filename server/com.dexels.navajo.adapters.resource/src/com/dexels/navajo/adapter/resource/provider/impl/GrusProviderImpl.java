@@ -122,8 +122,8 @@ public class GrusProviderImpl implements GrusProvider {
 				return dataSource;
 			}
 		}
-	//	final String fullName = name.startsWith("navajo.resource.")?name:"navajo.resource."+name;
-		DataSource dataSource = defaultDataSources.get(name);
+		final String fullName = name.startsWith("navajo.resource.")?name:"navajo.resource."+name;
+		DataSource dataSource = defaultDataSources.get(fullName);
 		if (dataSource != null) {
 			return dataSource;
 		}
