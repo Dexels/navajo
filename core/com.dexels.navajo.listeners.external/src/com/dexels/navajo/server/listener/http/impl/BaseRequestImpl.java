@@ -32,7 +32,9 @@ import com.dexels.navajo.script.api.ClientInfo;
 
 
 public class BaseRequestImpl implements AsyncRequest {
-
+    private final static Logger logger = LoggerFactory.getLogger(BaseRequestImpl.class);
+    private final static Logger statLogger = LoggerFactory.getLogger("stats");
+    
 	protected final HttpServletRequest request;
 	protected HttpServletResponse response;
 
@@ -47,11 +49,7 @@ public class BaseRequestImpl implements AsyncRequest {
 	private String fileName;
 	private String contentType;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(BaseRequestImpl.class);
-	
-	private final static Logger statLogger = LoggerFactory
-			.getLogger("stats");
+
 
 	
 	public BaseRequestImpl(HttpServletRequest request,
@@ -272,53 +270,19 @@ public class BaseRequestImpl implements AsyncRequest {
 		outDoc.getHeader().setHeaderAttribute("postTime", "" + postTime);
 		outDoc.getHeader().setHeaderAttribute("queueTime", "" + queueTime);
 		outDoc.getHeader().setHeaderAttribute("serverTime", "" + serverTime);
-		outDoc.getHeader().setHeaderAttribute("threadName",
-				"" + Thread.currentThread().getName());
+		outDoc.getHeader().setHeaderAttribute("threadName","" + Thread.currentThread().getName());
 
 		outDoc.write(out);
 		
 		out.close();
 		
-		long writeFinishedAt = System.currentTimeMillis();
-		long writeTime = writeFinishedAt - finishedScriptAt;
-
-		// int threadsActive = getActiveCount();
-
 		if (inDoc != null
 				&& inDoc.getHeader() != null
-				&& outDoc.getHeader() != null
-				&& !isSpecialwebservice(inDoc.getHeader()
-						.getRPCName())) {
-			statLogger.info("("
-					+ instance
-					+ "): "
-					+ new java.util.Date(connectedAt)
-					+ ": "
-					+ outDoc.getHeader().getHeaderAttribute("accessId")
-					+ ":"
-					+ inDoc.getHeader().getRPCName()
-					+ "("
-					+ inDoc.getHeader().getRPCUser()
-					+ "):"
-					+ (System.currentTimeMillis() - connectedAt)
-					+ " ms. "
-					+ "(st="
-					+ outDoc.getHeader().getHeaderAttribute("serverTime")
-					+ ",rpt="
-					+ outDoc.getHeader().getHeaderAttribute("requestParseTime")
-					+ ",at="
-					+ outDoc.getHeader()
-							.getHeaderAttribute("authorisationTime") + ",pt="
-					+ outDoc.getHeader().getHeaderAttribute("processingTime")
-					+ ",tc="
-					+ outDoc.getHeader().getHeaderAttribute("threadCount")
-					+ ",cpu="
-					+ outDoc.getHeader().getHeaderAttribute("cpuload")
-					+ ",cpt=" + postTime + ",cqt=" + queueTime + ",qst="
-					+ serverTime + ",cta=" + threadStatus + ",cwt=" + writeTime
-					+ ")" + " (" + acceptEncoding + "/" + contentEncoding +
-
-					")");
+				&& outDoc.getHeader() != null) {
+		    
+            statLogger.info("Finished {} ({}) in {}ms", outDoc.getHeader().getHeaderAttribute("accessId"), inDoc.getHeader().getRPCName(),
+                    (System.currentTimeMillis() - connectedAt));
+			
 		}
 	}
 
@@ -375,18 +339,5 @@ public class BaseRequestImpl implements AsyncRequest {
 		return request;
 	}
 	
-	/**
-	   * Determine if WS is reserved Navajo webservice.
-	   *
-	   * @param name
-	   * @return
-	   */
-	  private static final boolean isSpecialwebservice(String name) {
-		  
-		  if (name == null) {
-			  return false;
-		  }
-		  return name.startsWith("navajo") || name.equals("InitNavajoStatus") || name.equals("navajo_logon");
-	  }
 
 }

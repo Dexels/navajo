@@ -52,14 +52,14 @@ public class SwingExceptionDialog extends JDialog {
 
     public SwingExceptionDialog(JFrame frame,TipiContext tc, String errorMessage) {
       
-        super(frame,false);
+        super(frame, true);
         eHandler = new BaseTipiErrorHandler();
         eHandler.setContext(tc);
         createDialog(frame, eHandler.getGenericErrorTitle(), eHandler.getGenericErrorDescription(), errorMessage);
     }
 
     public SwingExceptionDialog(JFrame frame, String title, String errorDescription, Throwable e) {
-        super(frame,false);
+        super(frame, true);
         eHandler= new BaseTipiErrorHandler();
         StringWriter errors = new StringWriter();
         e.printStackTrace(new PrintWriter(errors));

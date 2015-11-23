@@ -440,11 +440,27 @@ public class SwingTipiContext extends TipiContext {
 		logger.debug("ShowError: "+text+" title: "+title);
 		showInfo(text, title, JOptionPane.ERROR_MESSAGE, tc);
 	}
+	
+	@Override
+    public void showWarning(final String text, final String title, final TipiComponent tc) {
+        logger.warn("ShowWarning: "+text+" title: "+title);
+        showInfo(text, title, JOptionPane.WARNING_MESSAGE, tc);
+    }
+	
 
 	@Override
-    public void showWarning(final String errormessage, final TipiComponent tc) {
-        final JFrame parentFrame = (JFrame) getTopDialog();
+    public void showServerError(final String errormessage, final TipiComponent tc) {
+	    final JFrame parentFrame;
         final TipiContext tcontext = this;
+        
+	    Object topFrame = getTopDialog();
+	    if (topFrame instanceof JFrame) {
+	        parentFrame = (JFrame) topFrame;
+	    } else if (topFrame instanceof JDialog) {
+	        parentFrame = (JFrame) ((JDialog) topFrame).getParent();
+	    } else {
+	        parentFrame = null;
+	    }
 
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(new Runnable() {
@@ -459,27 +475,7 @@ public class SwingTipiContext extends TipiContext {
             dialog.setVisible(true);
         }
     }
-
-    @Override
-    public void showWarning(final String title, final String text, final String errormessage, final TipiComponent tc) {
-        final JFrame parentFrame = (JFrame) getTopDialog();
-        final TipiContext tcontext = this;
-
-        if (!SwingUtilities.isEventDispatchThread()) {
-            SwingUtilities.invokeLater(new Runnable() {
-
-                public void run() {
-                    SwingExceptionDialog dialog = new SwingExceptionDialog(parentFrame, tcontext, errormessage);
-                    dialog.setVisible(true);
-                }
-            });
-        } else {
-            SwingExceptionDialog dialog = new SwingExceptionDialog(parentFrame, tcontext, errormessage);
-            dialog.setVisible(true);
-        }
-
-    }
-
+	
 	// TODO refactor into more 
 	@Override
 	public void processProperties(Map<String, String> properties)

@@ -44,6 +44,8 @@ import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
 public class EntityListener extends HttpServlet {
     private static final long serialVersionUID = -6681359881499760460L;
     private final static Logger logger = LoggerFactory.getLogger(EntityListener.class);
+    private final static Logger statLogger = LoggerFactory.getLogger("stats");
+
     private final static String DEFAULT_OUTPUT_FORMAT = "json";
     private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json", "xml", "tml"));
    
@@ -231,7 +233,10 @@ public class EntityListener extends HttpServlet {
                 access.setFinished();
                 access.setOutputDoc(result);
                 NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
+                statLogger.info("Finished {} ({}) in {}ms", access.accessID, access.getRpcName(),
+                        (System.currentTimeMillis() - requestStart));
             }
+            
         }
         
     }

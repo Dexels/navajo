@@ -8,7 +8,6 @@ import javax.activation.DataSource;
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
@@ -105,7 +104,6 @@ public class GetMailNavajo extends FunctionInterface {
 		MimeMultipart mmp;
 		try {
 			mmp = new MimeMultipart(ds);
-			int count = mmp.getCount();
 			return mmp;
 		} catch (MessagingException e) {
 			logger.info("Can not create multipart.");

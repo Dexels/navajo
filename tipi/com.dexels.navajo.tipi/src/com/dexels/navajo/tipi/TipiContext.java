@@ -531,6 +531,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             tipiComponentMap.remove(definitionName);
         }
         navajoCacheMap = new HashMap<String, CachedNavajo>();
+        
+        // Will be updated on the next error, which should re-read validation.properties
+        eHandler = null;
     }
 
     public abstract void clearTopScreen();
@@ -1740,11 +1743,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                     }
                 }
                 if (!hasUserDefinedErrorHandler) {
-                    if (systemPropertyMap.get("DTAP") != null && !systemPropertyMap.get("DTAP").equals("DEVELOPMENT")) {
-                        errorMessage = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
-                    } 
                     TipiComponent tc = event == null ? null : event.getComponent();
-                    showWarning(errorMessage, tc);
+                    if (eHandler.hasServerErrors(reply)) {
+                        if (systemPropertyMap.get("DTAP") != null && !systemPropertyMap.get("DTAP").equals("DEVELOPMENT")) {
+                            errorMessage = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
+                        } 
+                       
+                        showServerError(errorMessage, tc);
+                    } else {
+                        showWarning(errorMessage, "Invoerfout", tc);
+                    }
                 } else {
                     logger.info("Not delivering error since one or more components have their own errorhandler defined");
                 }
@@ -2349,15 +2357,21 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     public void showError(final String text, final String title, final TipiComponent tc) {
         showInfo(text, title, tc);
     }
+    
+    
+    public void showServerError(final String text, final TipiComponent tc) {
+        showInfo(text, "Invoerfout", tc);
+    }
+    
 
     /**
      * Shows an warning popup, can be overridden separately
-     * @param title
+     * 
      * @param text
-     * @param errormessage TODO
+     * @param title
      * @param tc
      */
-    public void showWarning(String title, String text, String errormessage, final TipiComponent tc) {
+    public void showWarning(String text, String title, final TipiComponent tc) {
         showInfo(text, title, tc);
     }
 
@@ -2975,12 +2989,5 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
         tipiEventStatistics.remove(component.getId()+eventname);
     }
-
-    public void showWarning(String errormessage, TipiComponent tc) {
-        showWarning("Error", "Error", errormessage, tc);
-        
-    }
-
-
 
 }
