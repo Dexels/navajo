@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1591">
+<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1595">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
@@ -41,6 +41,7 @@
 <plugin id="com.dexels.log4j.httpappender"/>
 <plugin id="com.dexels.log4j.server"/>
 <plugin id="com.dexels.logback.redis"/>
+<plugin id="com.dexels.monitor.rackermon"/>
 <plugin id="com.dexels.oauth.api"/>
 <plugin id="com.dexels.oauth.impl"/>
 <plugin id="com.dexels.oauth.web"/>
@@ -48,6 +49,7 @@
 <plugin id="com.dexels.repository.api"/>
 <plugin id="com.dexels.repository.file"/>
 <plugin id="com.dexels.repository.git"/>
+<plugin id="com.dexels.repository.git.api"/>
 <plugin id="com.dexels.sharedconfigstore"/>
 <plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
 <plugin id="com.fasterxml.jackson.core.jackson-core"/>
