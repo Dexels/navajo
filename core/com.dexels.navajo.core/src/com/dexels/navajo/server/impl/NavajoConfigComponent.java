@@ -460,7 +460,15 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 
     @Override 
     public boolean useLegacyDateMode() {
-        return false;
+        Object value = getParameter("isLegacyMode"); 
+        if (value != null) {
+            if(!(value instanceof Boolean)) {
+                logger.error("Error: isLegacy mode is set to: "+value+" this should be boolean type, this will fail");
+                // allow failure
+            }
+            return (Boolean)value;
+        }
+        return true;
     }
 	
 }
