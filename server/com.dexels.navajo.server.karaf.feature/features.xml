@@ -119,7 +119,7 @@
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,5)">pax-http</feature>
 		<feature version="[3.0.0,5)">eventadmin</feature>
-		<feature version="[3.0.2,4)">navajo.core.dependencies</feature>
+		<feature version="[3.0.3,4)">navajo.core.dependencies</feature>
 
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/3.0.26
 		</bundle>
