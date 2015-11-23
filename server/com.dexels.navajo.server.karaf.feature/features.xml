@@ -3,7 +3,7 @@
 	name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
 
-	<feature version="1.4.2" name="dexels.repository" install="auto">
+	<feature version="1.4.5" name="dexels.repository" install="auto">
 		<feature version="[3.0.0,5)">eventadmin</feature>
 		<feature version="[3.0.0,5)">scr</feature>
 		<feature version="[3.0.0,5)">pax-http</feature>
@@ -11,14 +11,16 @@
 		</bundle>
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.api/7.0.3
 		</bundle>
-		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/1.1.15
+		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.git/4.0.1
 		</bundle>
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.repository.file/1.0.30
 		</bundle>
 		<bundle dependency="true">mvn:com.dexels.thirdparty/javaewah/0.7.9
 		</bundle>
 		<bundle dependency="true">mvn:com.jcraft/jsch-bundle/0.1.50</bundle>
-		<bundle dependency="true">mvn:org.eclipse.jgit/org.eclipse.jgit/3.6.0.201411121045-m1
+		<bundle dependency="true">mvn:org.eclipse.jgit/org.eclipse.jgit/4.1.1.201511131810-r
+		</bundle>
+		<bundle dependency="true">mvn:org.eclipse.jgit/org.eclipse.jgit.http.server/4.1.1.201511131810-r
 		</bundle>
 		<bundle dependency="true">mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency="true">mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11
@@ -37,17 +39,34 @@
 
 	<feature version="1.0.0" name="dexels.gitlistener" install="auto">
 		<feature version="[1.3.2,2)">dexels.repository</feature>
-		<bundle dependency='true'>mvn:org.apache.httpcomponents.httpasyncclient/org.apache.httpcomponents.httpasyncclient/4.2.0</bundle>	
+		<bundle dependency='true'>mvn:com.dexels.repository/org.apache.httpcomponents.httpasyncclient/4.2.0</bundle>	
 		<bundle dependency='true'>mvn:commons-codec/commons-codec/1.10</bundle>
-		<bundle dependency='true'>mvn:com.dexels.servicediscovery/com.dexels.consulosgi.api/2.0.4</bundle>
-		<bundle dependency='true'>mvn:com.dexels.servicediscovery/com.dexels.consulosgi/0.10.1</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consulosgi.api/3.0.7</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consulosgi/1.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.servicediscovery/com.dexels.jsonhttp/1.0.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.servicediscovery/com.dexels.consulosgi.configlistener/1.0.1</bundle>
-		<bundle dependency='true'>mvn:com.dexels.servicediscovery/com.dexels.jsonhttp.api/1.0.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.servicediscovery/com.dexels.consulosgi.configlistener/1.0.5</bundle>
+		<bundle dependency='true'>mvn:com.dexels.servicediscovery/com.dexels.jsonhttp.api/2.0.0</bundle>
 		<bundle dependency='true'>mvn:commons-logging/commons-logging/1.2</bundle>
 
 	</feature>
     
+
+	<feature version="1.0.1" name="dexels.consulconfig">
+		<feature version="[1.4.3,2)">dexels.repository</feature>
+		<bundle dependency='true'>mvn:commons-codec/commons-codec/1.10</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consulosgi.api/2.0.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consulosgi/0.10.1</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.jsonhttp/1.0.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consulosgi.configlistener/1.0.3</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.jsonhttp.api/1.0.0</bundle>
+		<bundle dependency='true'>mvn:commons-logging/commons-logging/1.2</bundle>
+	</feature>
+    
+	<feature version="1.0.3" name="dexels.consul.repositoryloader">
+		<feature version="[1.0.1,2)">dexels.consulconfig</feature>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consul.repositoryloader/1.0.1</bundle>
+    </feature>
+ 
     <feature version="1.3.5" name="dexels.karaf4.repository" install="auto">
         <feature version="[3.0.0,5)">eventadmin</feature>
         <feature version="[3.0.0,5)">scr</feature>
