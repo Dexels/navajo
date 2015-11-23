@@ -6,7 +6,6 @@ Bundle-Version: 1.1.15.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.compiler,
- com.dexels.navajo.compiler.tsl,
  com.dexels.navajo.mapping,
  com.dexels.navajo.repository.api;version="[5.1.0,7.0.0)",
  com.dexels.navajo.script.api;version="1.0.0",
