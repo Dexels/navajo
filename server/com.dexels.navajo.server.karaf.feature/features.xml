@@ -168,11 +168,11 @@
 	</feature>
 
 
-	<feature resolver="(obr)" name='navajo.server' version='3.2.0'>
+	<feature resolver="(obr)" name='navajo.server' version='3.2.1'>
 		<feature version="[3.0.34,4)">navajo.core</feature>
 		<feature version="[3.0.0,5)">pax-war</feature>
 		<feature version="[3.0.0,5)">pax-http-whiteboard</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/2.2.0
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/2.1.0
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.20
 		</bundle>
