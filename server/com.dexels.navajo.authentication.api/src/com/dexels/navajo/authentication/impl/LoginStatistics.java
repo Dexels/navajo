@@ -51,7 +51,6 @@ public class LoginStatistics implements EventHandler {
         try {
             Integer count = cache.get(key);
             if (count > failedLoginAbortThreshold) {
-                logger.info("Too many failed attemps for {} - aborting!", key);
                 return true;
             }
 

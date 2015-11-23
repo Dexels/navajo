@@ -264,8 +264,10 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		
 		
 		if (LoginStatisticsProvider.reachedAbortThreshold(ic.getUserName(), ic.getIpAddress())) {
+		    logger.info("Too many failed login attemps for {}@{} - aborting!", ic.getUserName(), ic.getIpAddress());
 		    return null;
 		} else if (LoginStatisticsProvider.reachedRateLimitThreshold(ic.getUserName(), ic.getIpAddress())) {
+		    logger.info("Running request from {}@{} in slowpool due too repeated failed login attempts",ic.getUserName(), ic.getIpAddress() );
 		    return queueMap.get("slowPool");
 		}
 		
