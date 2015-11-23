@@ -114,7 +114,7 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.6.0'
+	<feature resolver="(obr)" name='navajo.core' version='3.6.1'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,5)">pax-http</feature>
