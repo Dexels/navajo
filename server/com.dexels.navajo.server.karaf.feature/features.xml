@@ -92,7 +92,7 @@
 
 
 	<feature resolver="(obr)" name='navajo.core.dependencies'
-		version='3.0.2'>
+		version='3.0.3'>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/1.3_5
 		</bundle>
@@ -109,6 +109,8 @@
 		</bundle>
 		<bundle dependency='true'>mvn:org.apache.commons/commons-compress/1.9
 		</bundle>
+        <bundle dependency='true'>mvn:com.google.guava/guava/18.0
+        </bundle>
 
 	</feature>
 
