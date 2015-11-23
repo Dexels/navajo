@@ -898,13 +898,12 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     
                     
                 } catch (AuthorizationException ex) {
-                    logger.error("AuthorizationException: ", ex);
                     outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
                     AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
                             + ", message=" + ex.getMessage(), Level.WARNING);
                     return outMessage;
                 } catch (SystemException se) {
-                    logger.error("SystemException on authenticateUser : ", se);
+                    logger.error("SystemException on authenticateUser  {} for {}: ", rpcUser, rpcName, se);
                     outMessage = generateErrorMessage(access, se.getMessage(), SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
                     AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + se.getMessage(),
                             Level.WARNING);
