@@ -7,7 +7,7 @@
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<properties>
-		<tycho-version>0.19.0</tycho-version>
+		<tycho-version>0.24.0</tycho-version>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -34,7 +34,7 @@
 						<artifact>
 							<groupId>com.dexels.navajo</groupId>
 							<artifactId>targetplatform</artifactId>
-							<version>1.7.2</version>
+							<version>1.8.0</version>
 							<classifier>repo.dexels.com</classifier>
 						</artifact>
 					</target>
