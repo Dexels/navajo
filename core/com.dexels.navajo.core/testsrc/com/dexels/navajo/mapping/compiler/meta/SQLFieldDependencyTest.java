@@ -4,19 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 public class SQLFieldDependencyTest {
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
 
 	@Test
 	public void testQuery1() {
@@ -31,17 +21,12 @@ public class SQLFieldDependencyTest {
 		SQLFieldDependency s = new SQLFieldDependency(-1, "SQLMap", "sql",
 				example);
 
-		assertTrue(s.hasMultipleDependencies());
-		assertNotNull(s.getMultipleDependencies());
-		assertEquals(1, s.getMultipleDependencies().length);
-		assertEquals("sp_processinsertperson",
-				((AdapterFieldDependency) s.getMultipleDependencies()[0])
-						.getEvaluatedId());
-		assertEquals("sp_processinsertperson",
-				s.getMultipleDependencies()[0].getId());
-		assertEquals("storedproc",
-				((AdapterFieldDependency) s.getMultipleDependencies()[0])
-						.getType());
+        assertTrue(s.hasMultipleDependencies());
+        assertNotNull(s.getMultipleDependencies());
+        assertEquals(1, s.getMultipleDependencies().length);
+        assertEquals("sp_processinsertperson", ((AdapterFieldDependency) s.getMultipleDependencies()[0]).getEvaluatedId());
+        assertEquals("sp_processinsertperson", s.getMultipleDependencies()[0].getId());
+        assertEquals("storedproc", ((AdapterFieldDependency) s.getMultipleDependencies()[0]).getType());
 
 	}
 
@@ -78,14 +63,13 @@ public class SQLFieldDependencyTest {
 		assertEquals(8, s.getMultipleDependencies().length);
 
 		assertEquals("aap", s.getMultipleDependencies()[0].getId());
-		assertEquals("changelogdetail", s.getMultipleDependencies()[1].getId());
-		assertEquals("kibbeling", s.getMultipleDependencies()[2].getId());
+		assertEquals("organizationpersonhistory", s.getMultipleDependencies()[1].getId());
+		assertEquals("vw_code_obj", s.getMultipleDependencies()[2].getId());
 		assertEquals("oerwoud", s.getMultipleDependencies()[3].getId());
-		assertEquals("organizationpersonhistory",
-				s.getMultipleDependencies()[4].getId());
-		assertEquals("vw_person", s.getMultipleDependencies()[5].getId());
-		assertEquals("vw_code_obj", s.getMultipleDependencies()[6].getId());
-		assertEquals("mies", s.getMultipleDependencies()[7].getId());
+		assertEquals("kibbeling", s.getMultipleDependencies()[4].getId());
+		assertEquals("mies", s.getMultipleDependencies()[5].getId());
+		assertEquals("vw_person", s.getMultipleDependencies()[6].getId());
+		assertEquals("changelogdetail", s.getMultipleDependencies()[7].getId());
 
 	}
 
