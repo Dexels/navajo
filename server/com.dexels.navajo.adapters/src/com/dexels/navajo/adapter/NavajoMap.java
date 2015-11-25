@@ -1414,11 +1414,13 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             h.setRequestId(null);
             h.setHeaderAttribute("parentaccessid", access.accessID);
             String tenant = access.getTenant();
+            boolean skipAuth = true;
             if (this.tenant != null && !this.tenant.equals("")) {
                 tenant = this.tenant;
+                skipAuth = false;
             }
 
-            inDoc = DispatcherFactory.getInstance().handle(outDoc, tenant, true);
+            inDoc = DispatcherFactory.getInstance().handle(outDoc, tenant, skipAuth);
             serviceFinished = true;
             serviceCalled = true;
 
