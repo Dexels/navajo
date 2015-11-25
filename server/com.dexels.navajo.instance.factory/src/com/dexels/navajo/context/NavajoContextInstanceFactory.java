@@ -401,29 +401,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 
 	}
 
-	private void registerAuthorization(String instance, File instanceFolder)
-			throws IOException {
-
-		File authFolder = new File(instanceFolder, "authorization");
-		if (!authFolder.exists()) {
-			return;
-		}
-		File[] impls = authFolder.listFiles(new FileFilter() {
-
-			@Override
-			public boolean accept(File f) {
-				return f.isDirectory();
-			}
-		});
-		for (File file : impls) {
-			String name = file.getName();
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("authorizationFolder", file.getAbsolutePath());
-			map.put("multitenant", true);
-			registerConfiguration(instance, map, "navajo.authorization."+name);
-		}
-
-	}
+	
 
 	private void registerInstanceResources(String name,
 			Map<String, Message> resources, Map<String, Set<String>> aliases)
