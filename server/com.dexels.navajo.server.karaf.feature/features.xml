@@ -448,7 +448,7 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.mongodb'
-		version='3.0.35'>
+		version='3.0.36'>
 		<feature version="[3.0.32,4)">navajo.server.osgi</feature>
 		<feature version="[3.0.98,4)">navajo.enterprise.core</feature>
 		<feature version="[1.0.8,2)">dexels.oauth</feature>
@@ -457,7 +457,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo.accessstore/3.2.10
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.oauth.mongodb/1.0.23
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.oauth.mongodb/1.0.25
 		</bundle>
 	</feature>
 
@@ -488,14 +488,14 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='sportlink.libraries' version='3.2.3'
+	<feature resolver="(obr)" name='sportlink.libraries' version='3.2.4'
 		start-level='82'>
 		<feature version="[3.0.0,4)">navajo.function</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<feature version="[3.0.0,4)">navajo.article</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.aaa/4.0.8
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.1.2
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.1.4
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.functions/3.0.4
 		</bundle>
@@ -509,7 +509,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.nevobo.dps/1.0.5
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.oauth/1.1.14
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.oauth/1.2.0
 		</bundle>
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.crystal/1.0.5</bundle> -->
 	</feature>
