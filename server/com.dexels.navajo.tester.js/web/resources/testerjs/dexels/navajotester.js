@@ -87,6 +87,7 @@ function getScripts() {
 };
 
 function sortFileObject(element) {
+	// Sort subentries
     $.each(element, function(index, subelem) {
         if (subelem.type  === 'FOLDER') {
            sortFileObject(subelem.entries);
@@ -94,10 +95,13 @@ function sortFileObject(element) {
     });
   
     element.sort(function(a, b) {
-        if (a.type === 'FILE' && b.type === 'FOLDER') {
-            return 1;
-        }
-        return a.name.localeCompare(b.name);
+    	if (a.type !== b.type) {
+    		// Sort folders before files
+    		return b.type.localeCompare(a.type);
+    	}
+    	// Default sort based on name
+    	return a.name.localeCompare(b.name);
+
     });
 }
 
