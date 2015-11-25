@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1596">
+<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1600">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
@@ -233,10 +233,7 @@
 <plugin id="org.eclipse.jetty.servlets" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.util" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jgit" version="4.1.0.201509280440-r"/>
-<plugin id="org.eclipse.jgit.archive"/>
 <plugin id="org.eclipse.jgit.http.server"/>
-<plugin id="org.eclipse.jgit.java7"/>
-<plugin id="org.eclipse.jgit.pgm"/>
 <plugin id="org.eclipse.osgi"/>
 <plugin id="org.eclipse.osgi.services"/>
 <plugin id="org.eclipse.osgi.util"/>
