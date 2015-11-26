@@ -3593,7 +3593,19 @@ public class TslCompiler {
 
 	}
 
+	// private static void compileStandAlone(boolean all, String script,
+	// String input, String output, String packagePath) {
+	// compileStandAlone(all,script,input,output,packagePath,null);
+	// }
 
+	private String compileToJava(String script, String input, String output,
+			String packagePath, ClassLoader classLoader,
+			NavajoIOConfig navajoIOConfig, List<Dependency> deps,
+			String tenant, boolean hasTenantSpecificScript) throws Exception {
+		return compileToJava(script, input, output, packagePath, packagePath,
+				classLoader, navajoIOConfig, deps, tenant,
+				hasTenantSpecificScript, false);
+	}
 
 	/**
 	 * Only used by OSGi now
@@ -3614,7 +3626,8 @@ public class TslCompiler {
 	 * @throws Exception
 	 */
 	public String compileToJava(String script, String input, String output,
-			String packagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig,
+			String packagePath, String scriptPackagePath,
+			ClassLoader classLoader, NavajoIOConfig navajoIOConfig,
 			List<Dependency> deps, String tenant,
 			boolean hasTenantSpecificScript, boolean forceTenant) throws Exception {
 		String tenantScript = script;
@@ -3639,7 +3652,7 @@ public class TslCompiler {
 			// }
 
 			tslCompiler.compileScript(bareScript, input, output,
-			        packagePath, navajoIOConfig.getOutputWriter(output,
+					scriptPackagePath, navajoIOConfig.getOutputWriter(output,
 							packagePath, tenantScript, ".java"), deps, tenant,
 					hasTenantSpecificScript, forceTenant);
 
@@ -3740,6 +3753,168 @@ public class TslCompiler {
 		}
 	}
 
+	private ArrayList<String> compileDirectoryToJava(File currentDir,
+			File outputPath, String offsetPath, NavajoClassLoader classLoader,
+			NavajoIOConfig navajoConfig, String tenant,
+			boolean hasTenantSpecificScript) {
+		System.err.println("Entering compiledirectory: " + currentDir
+				+ " output: " + outputPath + " offset: " + offsetPath);
+		ArrayList<String> files = new ArrayList<String>();
+		File[] scripts = null;
+		File f = new File(currentDir, offsetPath);
+		scripts = f.listFiles();
+		if (scripts != null) {
+			for (int i = 0; i < scripts.length; i++) {
+				File current = scripts[i];
+				if (current.isDirectory()) {
+					System.err.println("Entering directory: "
+							+ current.getName());
+					ArrayList<String> subDir = compileDirectoryToJava(
+							currentDir, outputPath,
+							offsetPath.equals("") ? current.getName()
+									: (offsetPath + "/" + current.getName()),
+							classLoader, navajoConfig, tenant,
+							hasTenantSpecificScript);
+					files.addAll(subDir);
+				} else {
+					if (current.getName().endsWith(".xml")) {
+						String name = current.getName().substring(0,
+								current.getName().indexOf("."));
+						// System.err.println("Compiling: "+name+" dir: "+ new
+						// File(currentDir,offsetPath).toString()+" outdir: "+new
+						// File(outputPath,offsetPath));
+						System.err.println("Compiling: " + name);
+						File outp = new File(outputPath, offsetPath);
+						if (!outp.exists()) {
+							outp.mkdirs();
+						}
+						String compileName;
+						if (offsetPath.equals("")) {
+							compileName = name;
+						} else {
+							compileName = offsetPath + "/" + name;
+						}
+						String javaFile = null;
+						try {
+							javaFile = compileToJava(compileName,
+									currentDir.toString(),
+									outputPath.toString(), offsetPath,
+									classLoader, navajoConfig,
+									new ArrayList<Dependency>(), tenant,
+									hasTenantSpecificScript);
+							files.add(javaFile);
+						} catch (Exception e) {
+							logger.error("Error: ", e);
+						}
+					}
+				}
+			}
+		}
+		return files;
+	}
+
+	public void fastCompileDirectory(File currentDir, File outputPath,
+			String offsetPath, String[] extraclasspath,
+			NavajoClassLoader classLoader, NavajoIOConfig navajoConfig,
+			String tenant, boolean hasTenantSpecificScript) {
+
+		StringBuffer classPath = new StringBuffer();
+		classPath.append(System.getProperty("java.class.path"));
+
+		if (extraclasspath != null) {
+			for (int i = 0; i < extraclasspath.length; i++) {
+				classPath.append(System.getProperty("path.separator"));
+				classPath.append(extraclasspath[i]);
+			}
+		}
+
+		ArrayList<String> javaFiles = compileDirectoryToJava(currentDir,
+				outputPath, offsetPath, classLoader, navajoConfig, tenant,
+				hasTenantSpecificScript);
+		System.err.println("javaFiles: " + javaFiles);
+		JavaCompiler compiler = new SunJavaCompiler();
+		// StringBuffer javaBuffer = new StringBuffer();
+
+		// System.err.println("JavaBuffer: "+javaBuffer.toString());
+		compiler.setClasspath(classPath.toString());
+		compiler.setOutputDir(outputPath.toString());
+		compiler.setClassDebugInfo(true);
+		compiler.setEncoding("UTF8");
+		compiler.setMsgOutput(System.out);
+		System.err.println("\n\nCLASSPATH: " + classPath.toString());
+		for (int i = 0; i < javaFiles.size(); i++) {
+			compiler.compile(javaFiles.get(i));
+			System.err.println("Compiled: " + javaFiles.get(i));
+			// javaBuffer.append((String)javaFiles.get(i));
+			// javaBuffer.append(" ");
+		}
+
+	}
+
+	/** 
+	 * Non OSGi
+	 * @param currentDir
+	 * @param outputPath
+	 * @param offsetPath
+	 * @param classpath
+	 * @param configPath
+	 * @param tenant
+	 */
+	public static void compileDirectory(File currentDir, File outputPath,
+			String offsetPath, String[] classpath, String configPath,
+			String tenant) {
+
+		final LegacyNavajoIOConfig legacyNavajoIOConfig = new LegacyNavajoIOConfig();
+		TslCompiler compiler = new TslCompiler(null, legacyNavajoIOConfig);
+		List<Dependency> deps = new ArrayList<Dependency>();
+		System.err.println("Entering compiledirectory: " + currentDir
+				+ " output: " + outputPath + " offset: " + offsetPath);
+
+		File[] scripts = null;
+		File f = new File(currentDir, offsetPath);
+		scripts = f.listFiles();
+		if (scripts != null) {
+			for (int i = 0; i < scripts.length; i++) {
+				File current = scripts[i];
+				if (current.isDirectory()) {
+					System.err.println("Entering directory: "
+							+ current.getName());
+					compileDirectory(currentDir, outputPath,
+							offsetPath.equals("") ? current.getName()
+									: (offsetPath + "/" + current.getName()),
+							classpath, configPath, tenant);
+				} else {
+					if (current.getName().endsWith(".xml")) {
+						String name = current.getName().substring(0,
+								current.getName().indexOf("."));
+						// System.err.println("Compiling: "+name+" dir: "+ new
+						// File(currentDir,offsetPath).toString()+" outdir: "+new
+						// File(outputPath,offsetPath));
+						System.err.println("Compiling: " + name);
+						File outp = new File(outputPath, offsetPath);
+						if (!outp.exists()) {
+							outp.mkdirs();
+						}
+						String compileName;
+						if (offsetPath.equals("")) {
+							compileName = name;
+						} else {
+							compileName = offsetPath + "/" + name;
+						}
+						compiler.compileStandAlone(false, compileName,
+								currentDir.toString(), outputPath.toString(),
+								offsetPath, classpath, configPath, deps,
+								tenant, legacyNavajoIOConfig
+										.hasTenantScriptFile(compileName,
+												tenant,".xml"));
+						logger.info("Standalone compile finished. Detected dependencies: "
+								+ deps);
+					}
+				}
+			}
+		}
+	}
+
 	public static String getHostName() {
 
 		if (hostname != null) {
@@ -3782,6 +3957,36 @@ public class TslCompiler {
 
 	}
 
+	public static void main(String[] args) throws Exception {
+		NavajoIOConfig config = new LegacyNavajoIOConfig();
+		System.err.println("today = " + new java.util.Date());
+		final String configPath = config.getConfigPath();
+
+		if (args.length == 0) {
+			System.out
+					.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler <scriptDir> <compiledDir> [-all | scriptName]");
+			System.err
+					.println("NOTE: Startupswitch for extra class path (eg for adding an adaper jar) has not been implemented yet");
+			System.exit(1);
+		}
+
+		boolean all = args[2].equals("-all");
+		if (all) {
+			System.err.println("SCRIPT DIR = " + args[0]);
+		} else {
+			System.err.println("SERVICE = " + args[2]);
+		}
+
+		String input = args[0];
+		String output = args[1];
+		// String service = args[2];
+
+		if (all) {
+			File scriptDir = new File(input);
+			File outDir = new File(output);
+			compileDirectory(scriptDir, outDir, "", null, configPath, "knvb");
+		}
+	}
 
 	public void initJavaCompiler(String outputPath, ArrayList classpath,
 			Class javaCompilerClass) {

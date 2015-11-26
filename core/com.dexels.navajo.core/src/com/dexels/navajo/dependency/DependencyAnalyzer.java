@@ -34,13 +34,13 @@ public class DependencyAnalyzer {
         reverseDependencies = new HashMap<String, List<Dependency>>();
     }
 
-    public void addDependencies(String script, String scriptExtension) {
+    public void addDependencies(String script) {
 
         List<Dependency> myDependencies = new ArrayList<Dependency>();
         String scriptTenant = tenantFromScriptPath(script);
 
         try {
-            precompiler.getAllDependencies(script, scriptExtension, scriptFolder, myDependencies, scriptTenant);
+            precompiler.getAllDependencies(script, scriptFolder, myDependencies, scriptTenant);
             // codeSearch.getAllWorkflowDependencies(scriptFile, scriptPath,
             // scriptFolder, myDependencies);
         } catch (Exception e) {

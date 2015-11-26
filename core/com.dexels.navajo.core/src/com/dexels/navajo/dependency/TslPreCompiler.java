@@ -42,19 +42,14 @@ public class TslPreCompiler {
     
    
 
-    public void getAllDependencies(String script, String scriptExtension, String scriptFolder, List<Dependency> deps, String scriptTenant)
+    public void getAllDependencies(String script, String scriptFolder, List<Dependency> deps, String scriptTenant)
             throws XPathExpressionException, UserException {
         final String extension = ".xml";
         String fullScriptPath = null;
         Document tslDoc = null;
         InputStream is = null;
-        
-        if (scriptExtension != ".xml") {
-            logger.warn("TslPreCompiler not supported on non-tsl scripts!");
-            return;
-        }
 
-        fullScriptPath = scriptFolder + File.separator + script + scriptExtension;
+        fullScriptPath = scriptFolder + File.separator + script + ".xml";
 
         try {
             // Check for metascript.
