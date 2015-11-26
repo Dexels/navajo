@@ -10,8 +10,8 @@ public class CallCommand implements NQLCommand {
 
 	private String service = null;
 	@Override
-	public void execute(NQLContext context, OutputCallback callback) throws ClientException,NavajoException {
-		context.call(service,true);
+	public void execute(NQLContext context,String tenant, String username, String password, OutputCallback callback) throws ClientException,NavajoException {
+		context.call(service,tenant,username,password,true);
 	}
 
 	@Override

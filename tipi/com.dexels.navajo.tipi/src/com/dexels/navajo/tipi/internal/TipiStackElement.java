@@ -81,20 +81,24 @@ public class TipiStackElement implements Serializable {
 	}
 
 	public void dumpStack(String message) {
-		logger.error("Exception: " + message);
-		dumpStack();
+	    String stack = getStack();
+		logger.error("Exception: {} - {} " + message, stack);
+		
 	}
 
-	public void dumpStack() {
-		logger.error(createLine());
+	private String getStack() {
+		String line = createLine();
 		if (getParent() != null) {
-			getParent().dumpStack();
+		    line += "\n";
+		    line += getParent().getStack();
 		} else {
 			if (rootCause != null && rootCause != this) {
-				logger.error("Caused by:");
-				rootCause.dumpStack();
+			    line += "\n";
+			    line += "Caused by: ";
+			    line += rootCause.getStack();				
 			}
 		}
+		return line;
 
 	}
 }

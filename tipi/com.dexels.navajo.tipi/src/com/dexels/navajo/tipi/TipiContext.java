@@ -13,6 +13,7 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,6 +32,7 @@ import navajo.ExtensionDefinition;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import tipi.TipiApplicationInstance;
 import tipi.TipiExtension;
@@ -40,6 +42,7 @@ import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.ConditionErrorHandler;
 import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -107,6 +110,8 @@ import com.dexels.navajo.tipi.validation.TipiValidationDecorator;
 public abstract class TipiContext implements ITipiExtensionContainer, Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(TipiContext.class);
+    private static final Logger perflogger = LoggerFactory.getLogger("perf");
+    
     private static final long serialVersionUID = 2077449402941300665L;
     public static final long contextStartup = System.currentTimeMillis();
 
@@ -161,7 +166,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     protected final List<TipiActivityListener> myActivityListeners = new ArrayList<TipiActivityListener>();
     private final List<TipiNavajoListener> navajoListenerList = new ArrayList<TipiNavajoListener>();
     private final List<TipiComponentInstantiatedListener> componentInstantiatedListenerList = new ArrayList<TipiComponentInstantiatedListener>();
-
+    private Map<String, Long> tipiInstantiateStatistics = new HashMap<String, Long>();
+    private Map<String, Long> tipiEventStatistics = new HashMap<String, Long>();
+    private List<String> tipiSubscribedEvents = Arrays.asList("onTabChanged", "onActionPerformed");
     private CookieManager myCookieManager;
 
     protected final Map<String, Navajo> navajoMap = new HashMap<String, Navajo>();
@@ -213,6 +220,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     protected final TipiApplicationInstance myApplication;
 
     private transient ScriptEngineManager scriptManager;
+    
+    
 
     public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
         this.myApplication = myApplication;
@@ -227,6 +236,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         this.myApplication = myApplication;
         classManager = new ClassManager(getClass().getClassLoader());
         initializeContext(myApplication, extensionList, null);
+        FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
+    }
+    
+
+    public TipiContext(TipiApplicationInstance myApplication, List<TipiExtension> preload, TipiContext parent,
+            Map<String, String> systemProperties) {
+        this.myApplication = myApplication;
+        this.systemPropertyMap.putAll(systemProperties);
+        classManager = new ClassManager(getClass().getClassLoader());
+        initializeContext(myApplication, preload, parent);
         FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
     }
 
@@ -250,17 +269,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         return extensionList;
     }
 
-    public TipiContext(TipiApplicationInstance myApplication, List<TipiExtension> preload, TipiContext parent,
-            Map<String, String> systemProperties) {
-        this.myApplication = myApplication;
-        this.systemPropertyMap.putAll(systemProperties);
-        classManager = new ClassManager(getClass().getClassLoader());
-        initializeContext(myApplication, preload, parent);
-        FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
-    }
 
     @SuppressWarnings("unchecked")
-    private void initializeContext(TipiApplicationInstance myApplication, List<TipiExtension> preload,
+	private void initializeContext(TipiApplicationInstance myApplication,
+			List<TipiExtension> preload,
             TipiContext parent) {
 
         myParentContext = parent;
@@ -282,6 +294,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         } catch (Throwable e) {
             hasDebugger = false;
         }
+        MDC.put("sessionToken", SessionTokenFactory.getSessionTokenProvider().getSessionToken());
+        logger.info("SESSION");
     }
 
     public TipiApplicationInstance getApplicationInstance() {
@@ -517,6 +531,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             tipiComponentMap.remove(definitionName);
         }
         navajoCacheMap = new HashMap<String, CachedNavajo>();
+        
+        // Will be updated on the next error, which should re-read validation.properties
+        eHandler = null;
     }
 
     public abstract void clearTopScreen();
@@ -539,6 +556,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             value = sysVal;
         } catch (SecurityException e) {
         }
+        if (value != null) {
+            return value;
+        }
+        value = System.getenv(name);
         return value;
 
     }
@@ -1043,7 +1064,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
      * work.
      */
 
-    public TipiComponent instantiateTipi(TipiInstantiateTipi t, TipiComponent parent, boolean force, String id,
+    public TipiComponent instantiateTipi(TipiInstantiateTipi t, TipiComponent parent, boolean force, final String id,
             Object constraints, TipiEvent event, XMLElement xe) throws TipiException {
         Object lock = null;
         String path = parent.getPath() + "/" + id;
@@ -1074,6 +1095,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                     comp.performTipiEvent("onInstantiate", null, false, new Runnable() {
                         public void run() {
                             comp.postOnInstantiate();
+                            addInitiateStatisticsFinished(id, true); 
                         }
                     });
 
@@ -1084,6 +1106,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             // set its ID
             inst.setId(id);
             parent.addComponent(inst, this, constraints);
+            // OnInstantiate event is called sync, so by this time we are actually finished 
+            addInitiateStatisticsFinished(id, false); 
             fireTipiStructureChanged(inst);
         }
         return inst;
@@ -1664,6 +1688,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             h = NavajoFactory.getInstance().createHeader(reply, method, "unknown", "unknown", -1);
             reply.addHeader(h);
         }
+        
         loadNavajo(reply, method, "*", null, false);
         Navajo compNavajo = null;
         if (hasDebugger && !"NavajoListNavajo".equals(method)) {
@@ -1682,10 +1707,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         }
 
         assert (reply.getHeader() != null);
+        
     }
+    
 
-    public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event,
-            boolean breakOnError) throws TipiBreakException {
+
+
+    public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError) throws TipiBreakException {
         if (reply != null) {
             // TODO Put this in a more elegant place
             // TODO No remove completely. Don't like it.
@@ -1696,17 +1724,17 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             }
             String errorMessage = eHandler.hasErrors(reply);
             if (errorMessage != null) {
-                logger.error("Errors detected. ");
+                logger.warn("Errors in reply detected while loading navajo: {}", method);
                 boolean hasUserDefinedErrorHandler = false;
                 List<TipiDataComponent> tipis = getTipiInstancesByService(method);
+               
                 if (tipis != null) {
                     for (int i = 0; i < tipis.size(); i++) {
                         TipiDataComponent current = tipis.get(i);
 
                         if (current.hasPath(tipiDestinationPath, event)) {
                             boolean hasHandler = false;
-                            debugLog("data    ",
-                                    "delivering error from method: " + method + " to tipi: " + current.getId());
+                            debugLog("data", "delivering error from method: " + method + " to tipi: " + current.getId());
                             hasHandler = current.loadErrors(reply, method);
                             if (hasHandler) {
                                 hasUserDefinedErrorHandler = true;
@@ -1715,10 +1743,20 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                     }
                 }
                 if (!hasUserDefinedErrorHandler) {
-                    logger.error("Delivering usererror: \n" + errorMessage);
-                    showWarning(errorMessage, "Invoerfout", event == null ? null : event.getComponent());
+                    TipiComponent tc = event == null ? null : event.getComponent();
+                    if (eHandler.hasServerErrors(reply)) {
+                        if (systemPropertyMap.get("DTAP") != null && !systemPropertyMap.get("DTAP").equals("DEVELOPMENT")) {
+                            errorMessage = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
+                        } 
+                       
+                        showServerError(errorMessage, tc);
+                    } else {
+                        showWarning(errorMessage, "Invoerfout", tc);
+                    }
+                } else {
+                    logger.info("Not delivering error since one or more components have their own errorhandler defined");
                 }
-                if (breakOnError) {
+                if (breakOnError || eHandler.hasServerErrors(reply)) {
                     throw new TipiBreakException(TipiBreakException.WEBSERVICE_BREAK);
                 }
                 return;
@@ -1726,10 +1764,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             try {
                 loadTipiMethod(reply, method);
             } catch (Exception ex) {
-                logger.error("Error: ", ex);
+                logger.error("Error in loadTipiMethod: ", ex);
             }
         } else {
-            logger.error("Trying to load null navajo.");
+            logger.error("Refusing to load null navajo for {}", method);
         }
 
     }
@@ -2319,6 +2357,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     public void showError(final String text, final String title, final TipiComponent tc) {
         showInfo(text, title, tc);
     }
+    
+    
+    public void showServerError(final String text, final TipiComponent tc) {
+        showInfo(text, "Invoerfout", tc);
+    }
+    
 
     /**
      * Shows an warning popup, can be overridden separately
@@ -2356,7 +2400,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             setGenericResourceLoader(createResourceLoader(resourceCodeBase, resourceCacheLocation, "generic"));
         } else {
             // BEWARE: The trailing slash is important!
-            setGenericResourceLoader(createDefaultResourceLoader("resource/", useCache()));
+            setGenericResourceLoader(createDefaultResourceLoader("resource/", useCache(),"generic"));
         }
     }
 
@@ -2367,7 +2411,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             // nothing supplied. Use a file loader with fallback to classloader.
             // BEWARE: The trailing slash is important!
 
-            setTipiResourceLoader(createDefaultResourceLoader("tipi/", useCache()));
+            setTipiResourceLoader(createDefaultResourceLoader("tipi/", useCache(),"tipi"));
         }
     }
 
@@ -2405,7 +2449,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     /**
      * @return
      */
-    protected TipiResourceLoader createDefaultResourceLoader(String loaderType, boolean cache) {
+    protected TipiResourceLoader createDefaultResourceLoader(String loaderType, boolean cache, String id) {
         return new FileResourceLoader(new File(loaderType));
     }
 
@@ -2725,21 +2769,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         }
     }
 
-    // public void continueActions(TipiEvent te, TipiComponent comp,
-    // TipiExecutable executableParent, List<TipiExecutable> exe)
-    // throws TipiBreakException, TipiSuspendException {
-    // try {
-    // int start = executableParent.getExecutionIndex();
-    // for (int i = start; i<exe.size(); i++) {
-    // executableParent.setExecutionIndex(i);
-    // TipiExecutable current = exe.get(i);
-    // current.continueAction(te, executableParent, i);
-    // i++;
-    // }
-    // } catch (TipiException ex) {
-    // logger.error("Error: ",ex);
-    // }
-    // }
+    
+
     /**
      * Parses an connector instance
      * 
@@ -2923,8 +2954,40 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         return globalMethodsMap.get(name);
     }
 
-    // public void setOSGiMode(boolean b) {
-    // this.osgiMode = b;
-    // }
+    public synchronized void addInitiateStatisticsStart(String id) {
+        tipiInstantiateStatistics.put(id, System.currentTimeMillis() );
+    }
+    
+    public synchronized void addInitiateStatisticsFinished(String id, boolean unhide) {
+        Long end = System.currentTimeMillis();
+        Long start = tipiInstantiateStatistics.get(id);
+        if (start == null) {
+            return;
+        }
+        perflogger.info("Component: {} finished in: {} unhide: {}", id, (end - start), unhide);
+        tipiInstantiateStatistics.remove(id);
+    }
+    
+    public synchronized void addTipiEventStatisticsStart(TipiComponent component, String eventname) {
+        if (tipiSubscribedEvents.contains(eventname)) {
+            tipiEventStatistics.put(component.getId()+eventname, System.currentTimeMillis() );
+        }
+    }
+    
+    public synchronized void addTipiEventStatisticsFinished(TipiComponent component, String eventname) {
+        Long end = System.currentTimeMillis();
+        Long start = tipiEventStatistics.get(component.getId()+eventname);
+        if (start == null) {
+            return;
+        }
+        TipiComponent parent = component.getHomeComponent();
+        String parentId = "";
+        if ( parent != null) {
+            parentId = parent.getId();
+        }
+        perflogger.info("Tipi Event {} on : {}-{} finished in: {}", eventname, component.getId(), parentId,  (end - start));
+
+        tipiEventStatistics.remove(component.getId()+eventname);
+    }
 
 }

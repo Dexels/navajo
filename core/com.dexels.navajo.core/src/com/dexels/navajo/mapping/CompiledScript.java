@@ -59,15 +59,16 @@ import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionData;
+import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, CompiledScriptInterface {
-
+    private final static String UNSET_CONFIG_MODE = "unset";
     protected NavajoClassSupplier classLoader;
     private final HashMap functions = new HashMap();
-
+    private String configDebugMode = UNSET_CONFIG_MODE;
     /**
      * Fields accessable by webservice via Mappable interface.
      */
@@ -79,7 +80,6 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     protected String lockName;
     protected String lockOwner;
     protected String lockClass;
-    protected boolean debugAll = false;
 
     protected MappableTreeNode currentMap = null;
     protected final Stack treeNodeStack = new Stack();
@@ -209,7 +209,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
 
     @Override
     public void kill() {
-        System.err.println("Calling kill from JMX");
+        logger.warn("Calling kill from JMX");
         myAccess.getCompiledScript().setKill(true);
     }
 
@@ -284,7 +284,11 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
      */
     @Override
     public void dumpRequest() {
-
+        if (debugRequest() &&  System.getenv("DEBUG_SCRIPTS") != null &&  System.getenv("DEBUG_SCRIPTS").equals("true") ) {
+            System.err.println(" --------- BEGIN NAVAJO REQUEST ---------");
+            myAccess.getInDoc().write(System.err);
+            System.err.println("--------- END NAVAJO REQUEST ---------");
+        }
     }
 
     /*
@@ -294,7 +298,71 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
      */
     @Override
     public void dumpResponse() {
+        if (System.getenv("DEBUG_SCRIPTS") != null &&  System.getenv("DEBUG_SCRIPTS").equals("true") ) {
+            if (debugResponse()) {
+                System.err.println(" --------- BEGIN NAVAJO RESPONSE ---------");
+                myAccess.getOutputDoc().write(System.err);
+                System.err.println("--------- END NAVAJO RESPONSE ---------");
+            }
+           
 
+            String consoleOutput = myAccess.getConsoleOutput();
+            if (consoleOutput != null && !consoleOutput.trim().equals("")) {
+                System.err.println(" --------- BEGIN NAVAJO CONSOLE OUTPUT ---------");
+                System.err.println(consoleOutput);
+                System.err.println("--------- END NAVAJO CONSOLE OUTPUT ---------");
+                
+            }
+        }
+    }
+    
+    @Override
+    public boolean isDebugAll() {
+        if (!configDebugMode.equals(UNSET_CONFIG_MODE)) {
+            return debugAll(configDebugMode);
+        }
+        return debugAll(getScriptDebugMode());
+    }
+    @Override
+    public boolean debugRequest() {
+        if (!configDebugMode.equals(UNSET_CONFIG_MODE)) {
+            return debugRequest(configDebugMode);
+        }
+        return  debugRequest(getScriptDebugMode());
+    }
+    
+    @Override
+    public boolean debugResponse() {
+        if (!configDebugMode.equals(UNSET_CONFIG_MODE)) {
+            return debugResponse(configDebugMode);
+        } 
+        return debugResponse(getScriptDebugMode());
+    }
+    
+    
+    public boolean debugRequest(String type) {
+        return (type.indexOf("request") != -1) ||  debugAll(type);
+    }
+    
+ 
+    public boolean debugResponse(String type) {
+        return (type.indexOf("response") != -1) || debugAll(type);
+    }
+    
+    public boolean debugAll(String type) {
+        return type.indexOf("true") != -1;
+    }
+    
+    @Override
+    public void setConfigDebugMode(String mode) {
+        if (mode != null && !mode.equals("")) {
+            this.configDebugMode = mode;
+        }
+    }
+    
+    @Override
+    public String getScriptDebugMode() {
+        return "";
     }
 
     /*
@@ -392,6 +460,9 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
                 } catch (UserException e) {
                     access.setExitCode(Access.EXIT_USEREXCEPTION);
                     throw e;
+                } catch (ConditionErrorException e) {
+                    access.setExitCode(Access.EXIT_VALIDATION_ERR);
+                    throw e;
                 } catch (Exception e) {
                     access.setExitCode(Access.EXIT_EXCEPTION);
                     throw e;
@@ -411,6 +482,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
 
                 }
             }
+            acquiredLocks.clear();
             access.processingTime = (int) (System.currentTimeMillis() - start);
         }
     }
@@ -574,7 +646,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
         while (st.hasMoreTokens()) {
             String element = st.nextToken();
             if (!"..".equals(element)) {
-                System.err.println("Huh? : " + element);
+                logger.warn("Huh? : " + element);
             }
             count++;
         }
@@ -668,26 +740,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
         return "tsl";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.dexels.navajo.script.api.CompiledScriptInterface#isDebugAll()
-     */
-    @Override
-    public boolean isDebugAll() {
-        return debugAll;
-    }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.dexels.navajo.script.api.CompiledScriptInterface#setDebugAll(boolean)
-     */
-    @Override
-    public void setDebugAll(boolean debugAll) {
-        this.debugAll = debugAll;
-    }
 
     /*
      * (non-Javadoc)
@@ -772,7 +825,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
             throw new Exception("Either user or service or both should be specified.");
         }
         String lockName = user + "-" + service + "-" + key;
-        System.err.println("lockname: " + lockName);
+        logger.debug("lockname: " + lockName);
         Lock l = TribeManagerFactory.getInstance().getLock(lockName);
         acquiredLocks.add(l);
 
@@ -780,6 +833,12 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     }
 
     public void releaseLock(Lock l) {
-        l.unlock();
+    	try {
+    		l.unlock();
+    	} catch (Exception e) {
+    		logger.error(e.getMessage(), e);
+    	} finally {
+    		acquiredLocks.remove(l);
+    	}
     }
 }

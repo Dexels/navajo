@@ -12,7 +12,6 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
-import javax.mail.Message;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -30,6 +29,7 @@ import com.dexels.navajo.adapter.mailmap.AttachementMap;
 import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
 import com.dexels.navajo.datasource.BinaryDataSource;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.DependentResource;
@@ -37,6 +37,7 @@ import com.dexels.navajo.mapping.GenericDependentResource;
 import com.dexels.navajo.mapping.HasDependentResources;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Debugable;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;
@@ -56,7 +57,7 @@ import com.dexels.navajo.util.AuditLog;
  * This business object is used as a mail agent in Navajo Script files.
  */
 public class MailMap implements MailMapInterface, Mappable,
-		HasDependentResources,
+		HasDependentResources, Debugable,
 		com.dexels.navajo.server.enterprise.queue.Queuable {
 
 	/**
@@ -74,7 +75,7 @@ public class MailMap implements MailMapInterface, Mappable,
 	public String text = "";
 	public String contentType = "text/plain";
 	
-	private Integer port;
+	private Integer port = null;
 
 	public String smtpUser = "";
 	public String smtpPass = "";
@@ -104,6 +105,8 @@ public class MailMap implements MailMapInterface, Mappable,
 	private final static Logger logger = LoggerFactory.getLogger(MailMap.class);
 	
 	private boolean useEncryption = false;
+
+	private boolean debug = false;
 
 	public MailMap() {
 	}
@@ -159,7 +162,6 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	private final void sendMail() throws UserException {
-
 		retries++;
 
 		try {
@@ -221,8 +223,7 @@ public class MailMap implements MailMapInterface, Mappable,
 			} else if ( attachments == null || attachments.size() == 0 ) {
 				msg.setContent( result, contentType ); 
 			} else {
-				Multipart multipart = (relatedMultipart ? new MimeMultipart(
-						"related") : new MimeMultipart());
+				Multipart multipart = (relatedMultipart ? new MimeMultipart("related") : new MimeMultipart());
 				BodyPart textBody = new MimeBodyPart();
 				textBody.setContent(result, contentType);
 
@@ -235,43 +236,45 @@ public class MailMap implements MailMapInterface, Mappable,
 						String userFileName = am.getAttachFileName();
 						Binary content = am.getAttachFileContent();
 						String encoding = am.getEncoding();
+						
 						MimeBodyPart bp = new MimeBodyPart();
 
 						if (file != null) {
 							if (userFileName == null) {
 								userFileName = file;
 							}
-							FileDataSource fileDatasource = new FileDataSource(
-									file);
+							FileDataSource fileDatasource = new FileDataSource( file);
 							bp.setDataHandler(new DataHandler(fileDatasource));
+							
 						} else if (content != null) {
 
-							BinaryDataSource bds = new BinaryDataSource(
-									content, "");
+							BinaryDataSource bds = new BinaryDataSource(content, "");
 							DataHandler dh = new DataHandler(bds);
 							bp.setDataHandler(dh);
-
+							bp.setFileName(userFileName);
 							if (encoding != null) {
-								bp.setHeader("Content-Transfer-Encoding",
-										encoding);
+								bp.setHeader("Content-Transfer-Encoding", encoding);
 								encoding = null;
 							}
 						}
 
-						bp.setFileName(userFileName);
+						
 						if (relatedMultipart) {
 							bp.setHeader("Content-ID", "<attach-nr-" + i + ">");
 						}
+						bp.getFileName();
 
 						// iPhone headers
 						//bp.setDisposition("attachment");
 						bp.setDisposition(am.getAttachContentDisposition());
-
+						
 						multipart.addBodyPart(bp);
 					}
 				}
 				msg.setContent(multipart);
 			}
+			//msg.getContent()
+			logger.info("Sending mail to "+recipients+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
 			Transport.send(msg);
 
 		} catch (Exception e) {
@@ -290,15 +293,17 @@ public class MailMap implements MailMapInterface, Mappable,
 	private Session createSession() {
 		Properties props = new Properties();
 		props.putAll( System.getProperties());
-		props.put("mail.smtp.host", mailServer);
-		String actualport = port.toString();
+		props.put("mail.smtp.host", getMailServer());
+		String actualport = port == null ? null: port.toString(); 
 		if (actualport == null || actualport.equals("")) {
 			actualport = useEncryption ?  "465" : "25";
 		}
-		if (smtpUser != null && !"".equals(smtpUser)) {
+		if (getSmtpUser() != null && !"".equals(getSmtpUser())) {
 			// Use auth
 			props.put("mail.smtp.auth", "true");
-			props.put("mail.debug", "true");
+			if(this.debug) {
+				props.put("mail.debug", "true");
+			}
 			if (useEncryption) {
 				logger.info("Using encrypt + auth. ");
 				props.put("mail.smtp.port", actualport);
@@ -325,7 +330,7 @@ public class MailMap implements MailMapInterface, Mappable,
 
 		@Override
 		public PasswordAuthentication getPasswordAuthentication() {
-			return new PasswordAuthentication(smtpUser, smtpPass);
+			return new PasswordAuthentication(getSmtpUser(), getSmtpPass());
 		}
 	}
 
@@ -339,14 +344,43 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	public String getSmtpUser() {
+		if(smtpUser!=null && !"".equals(smtpUser)) {
+			return smtpUser;
+		}
+		Property mailUserProperty = myNavajo.getProperty("__globals__/MailUser");
+		if(mailUserProperty!=null) {
+			return mailUserProperty.getValue();
+		}
 		return smtpUser;
 	}
 
+	public Integer getPort() {
+		if(port!=null && port>0) {
+			return port;
+		}
+		Property mailPortProperty = myNavajo.getProperty("__globals__/MailPort");
+		if(mailPortProperty!=null) {
+			try {
+				return Integer.parseInt(mailPortProperty.getValue());
+			} catch (NumberFormatException e) {
+				logger.error("Can not parse mail port value: "+mailPortProperty.getValue(), e);
+			}
+		}
+		return port;
+	}
+	
 	public void setSmtpUser(String smtpUser) {
 		this.smtpUser = smtpUser;
 	}
 
 	public String getSmtpPass() {
+		if(smtpPass!=null && !"".equals(smtpPass)) {
+			return smtpPass;
+		}
+		Property mailPassProperty = myNavajo.getProperty("__globals__/MailPassword");
+		if(mailPassProperty!=null) {
+			return mailPassProperty.getValue();
+		}
 		return smtpPass;
 	}
 
@@ -551,6 +585,13 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	public String getMailServer() {
+		if(mailServer!=null && !"".equals(mailServer)) {
+			return mailServer;
+		}
+		Property mailServerProperty = myNavajo.getProperty("__globals__/MailServer");
+		if(mailServerProperty!=null) {
+			return mailServerProperty.getValue();
+		}
 		return mailServer;
 	}
 
@@ -574,9 +615,7 @@ public class MailMap implements MailMapInterface, Mappable,
 		return queuedSend;
 	}
 
-	public Integer getPort() {
-		return port;
-	}
+
 
 	public void setPort(Integer port) {
 		this.port = port;
@@ -584,6 +623,16 @@ public class MailMap implements MailMapInterface, Mappable,
 	
 	public String getContentType() {
 		return this.contentType;
+	}
+
+	@Override
+	public void setDebug(boolean b) {
+		this.debug = b;
+	}
+
+	@Override
+	public boolean getDebug() {
+		return this.debug;
 	}
 
 	

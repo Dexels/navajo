@@ -15,27 +15,29 @@ import com.dexels.navajo.tipi.internal.cache.impl.LocalDigestCacheValidator;
 
 public class CachedHttpResourceLoader extends CachedResourceLoader {
 
-	
 	private final static Logger logger = LoggerFactory.getLogger(CachedHttpResourceLoader.class);
 	
 	private static final long serialVersionUID = 3322463272837679890L;
 	protected final CacheManager cache;
 
 	public CachedHttpResourceLoader(String id, File baseDir, URL baseUrl) throws IOException {
+	    
 		final LocalDigestCacheValidator cacheValidator = new LocalDigestCacheValidator();
 		final FileLocalStorage localStore = new FileLocalStorage(baseDir);
 		final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
 		cache = new GeneralCacheManager(localStore,
-				remoteStore, cacheValidator);
+				remoteStore, cacheValidator,id);
 		cacheValidator.setLocalStorage(localStore);
 		cacheValidator.setRemoteStorage(remoteStore);
 		cacheValidator.setId(id);
 		cacheValidator.activate();
+		logger.info("Instantiated CachedHttpResourceLoader");
 	}
 
 	@Override
 	public CacheManager getCacheManager() {
 		return cache;
 	}
+
 
 }

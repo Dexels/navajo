@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.Date;
 
 
 /**
@@ -41,7 +42,7 @@ public interface SharedStoreInterface {
 	public static final int READ_WRITE_LOCK = 0;
 	public static final int WRITE_LOCK = 1;
 
-	
+
 	/**
 	 * Remove an object with the specified name of the specified parent
 	 * 
@@ -49,6 +50,18 @@ public interface SharedStoreInterface {
 	 * @param name
 	 */
 	public void remove(String parent, String name);
+	
+    public void removeOlderThan(String parentPath, Date date);
+
+	   
+    /**
+     * Remove an object with the specified name of the specified parent
+     * 
+     * @Param tenant
+     * @param parent
+     * @param name
+     */
+    public void remove(String tenant, String parent, String name);
 	
 	/**
 	 * Remove all objects of the specified parent
@@ -68,6 +81,17 @@ public interface SharedStoreInterface {
 	 * @param requireLock, if requireLock is set; the call will block until a lock could be set.
 	 */
 	public void store(String parent, String name, Serializable value, boolean append, boolean requireLock) throws SharedStoreException;
+	
+	/**
+     * Store an object in the shared store. If object with same name already exists, a SharedStoreException is thrown.
+     * 
+     * @param parent
+     * @param name
+     * @param value, the object to the shared store object referenced by name.
+     * @param append, if set to true the object is appended to an existing value. 
+     * @param requireLock, if requireLock is set; the call will block until a lock could be set.
+     */
+    public void store(String tenant, String parent, String name, Serializable value, boolean append, boolean requireLock) throws SharedStoreException;
 	
 	/**
 	 * Store text in the shared store. If store object with same name already exists, a SharedStoreException is thrown.
@@ -107,6 +131,14 @@ public interface SharedStoreInterface {
 	 */
 	public void setLastModified(String parent, String name, long l) throws IOException;
 	
+	   /**
+     * Check whether object exists in the shared store.
+     * 
+     * @param parent
+     * @param name
+     * @return
+     */
+    public boolean exists(String tenant, String parent, String name);
 	/**
 	 * Check whether object exists in the shared store.
 	 * 
@@ -149,6 +181,30 @@ public interface SharedStoreInterface {
 	 */
 	public InputStream getStream(String parent, String name) throws SharedStoreException;
 	
+	/**
+     * Gets an object from the store as a stream for reading.
+     * 
+     * @Param tenant
+     * @param parent
+     * @param name
+     * @return
+     * @throws SharedStoreException
+     */
+    public InputStream getStream(String tenant, String parent, String name) throws SharedStoreException;
+	
+    
+    
+    /**
+     * Gets an object from the store as a stream for writing.
+     * 
+     * @param parent
+     * @param name
+     * @param requireLock
+     * @return
+     * @throws SharedStoreException
+     */
+    public OutputStream getOutputStream(String tenant, String parent, String name, boolean requireLock) throws SharedStoreException;
+    
 	/**
 	 * Gets an object from the store as a stream for writing.
 	 * 
@@ -203,4 +259,25 @@ public interface SharedStoreInterface {
 	 * @return
 	 */
 	public long getNextAtomicLong(String id);
+	
+	/**
+     * Returns a tenant-specific name for <code>rawname</code>. If rawname is already
+     * tenant-specific, nothing is added. Otherwise, if tenant != null, a tenant-specific
+     * prefix is added to identify this object.
+     */
+	public String getTenantSpecificName(String tenant, String rawname);
+	
+	
+	/**
+	 * Returns the name of the SharedStore object. If the name is tenant-specific, 
+	 * this is removed from the result;
+	 */
+	public String getName(String fullname);
+	
+	/**
+     * Returns the tenant of the SharedStore object. Returns null if the name is not tenant-specific
+     */
+    public String getTenant(String fullname);
+
+
 }

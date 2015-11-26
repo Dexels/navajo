@@ -42,12 +42,14 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
-import com.dexels.navajo.authentication.api.AAAInterface;
+import com.dexels.navajo.authentication.api.AAAQuerier;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -107,10 +109,11 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     public static final String FILE_VERSION = "$Id$";
     public static final String vendor = "Dexels BV";
     public static final String product = "Navajo Service Delivery Platform";
+    public static final String NAVAJO_TOPIC = "navajo/request";
+    
     public volatile static String edition;
     private final Map<String, GlobalManager> globalManagers = new HashMap<String, GlobalManager>();
-    private final Map<String, AAAInterface> authenticators = new HashMap<String, AAAInterface>();
-
+    private AAAQuerier authenticator;
     private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 
     static {
@@ -138,6 +141,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     public long requestCount = 0;
     private NavajoConfigInterface navajoConfig;
 
+    private EventAdmin eventAdmin;
+
     private String keyStore;
     private String keyPassword;
 
@@ -152,6 +157,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      * Registered SNMP managers.
      */
     private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>();
+
+    protected boolean simulationMode;
 
     // optional, can be null
     // private BundleCreator bundleCreator;
@@ -391,15 +398,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
 
     /*
-     * Get a reference to the Navajo repository object.
-     * 
-     * @return
-     */
-    public final Repository getRepository() {
-        return navajoConfig.getRepository();
-    }
-
-    /*
      * Process a webservice using a special handler class.
      * 
      * @param handler the class the will process the webservice.
@@ -414,7 +412,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      * 
      * @throws Exception
      */
-    private final Navajo dispatch(String handler, Access access) throws Exception {
+    private final Navajo dispatch(Access access) throws Exception {
 
         WorkerInterface integ = null;
         Navajo out = null;
@@ -467,7 +465,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
         try {
 
-            ServiceHandler sh = createHandler(handler, access);
+            ServiceHandler sh = createHandler(access);
 
             // If recompile is needed ALWAYS set expirationInterval to -1.
             // TODO: IMPLEMENT NEEDS RECOMPILE DIFFERENTLY: I DO NOT WANT
@@ -511,8 +509,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
 
     // Overridden for OSGi
-    protected ServiceHandler createHandler(String handler, Access access) {
-        return HandlerFactory.createHandler(handler, navajoConfig, access);
+    protected ServiceHandler createHandler(Access access) {
+        return HandlerFactory.createHandler(navajoConfig, access, simulationMode);
     }
 
     public final boolean doMatchCN() {
@@ -634,14 +632,14 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     public final Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t)
             throws FatalException {
 
-        if (t != null) {
-            logger.error("Error: ", t);
-        }
-
         if (message == null) {
             message = "Null pointer exception";
 
         }
+        if (t != null) {
+            logger.error("Generating error message for: ", t);
+        }
+        
         try {
             Navajo outMessage = NavajoFactory.getInstance().createNavajo();
 
@@ -736,36 +734,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         return doc;
     }
 
-    /**
-     * Handle a webservice (without ClientInfo object given).
-     *
-     * @param inMessage
-     * @param userCertificate
-     * @return
-     * @throws FatalException
-     */
     @Override
-    public final Navajo handle(Navajo inMessage, TmlRunnable origRunnable, Object userCertificate, ClientInfo clientInfo)
+    public final Navajo handle(Navajo inMessage, String instance, boolean skipAuth, AfterWebServiceEmitter emit, ClientInfo clientInfo)
             throws FatalException {
-        return processNavajo(inMessage, "default", userCertificate, clientInfo, false, origRunnable, null);
-    }
-
-    /**
-     * Handle a webservice (without ClientInfo and certificate).
-     *
-     * @param inMessage
-     * @return
-     * @throws FatalException
-     */
-    @Override
-    public final Navajo handle(Navajo inMessage, boolean skipAuth, AfterWebServiceEmitter emit) throws FatalException {
-        return processNavajo(inMessage, null, null, null, skipAuth, null, emit);
-    }
-
-    @Override
-    public final Navajo handle(Navajo inMessage, boolean skipAuth, AfterWebServiceEmitter emit, ClientInfo clientInfo)
-            throws FatalException {
-        return processNavajo(inMessage, null, null, clientInfo, skipAuth, null, emit);
+        return processNavajo(inMessage, instance, null, clientInfo, skipAuth, null, emit);
 
     }
 
@@ -868,7 +840,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         int accessSetSize = accessSet.size();
         setRequestRate(clientInfo, accessSetSize);
 
-        Navajo result = handleCallbackPointers(inMessage);
+        Navajo result = handleCallbackPointers(inMessage,instance);
         if (result != null) {
             return result;
         }
@@ -878,11 +850,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         rpcPassword = header.getRPCPassword();
 
         boolean preventFinalize = false;
-
-        // Log request event ASAP - create a dummy Access object for it
-        // Later use this accessID for the real access object
-        Access requestEventAccess = new Access(1, 1, rpcUser, rpcName, "", "", "", null, false, null);
-        NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(requestEventAccess));
 
         try {
             /**
@@ -895,50 +862,55 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             if (rpcName == null) {
                 throw new FatalException("No script defined");
             }
-            // If web service is ping webservice, skip authentication.
-            if (useAuthorisation && !skipAuth && !rpcName.equals("navajo_ping")) {
+
+            if (rpcName.equals("navajo_ping")) {
+                // Ping!
+                outMessage = NavajoFactory.getInstance().createNavajo();
+                Header h = NavajoFactory.getInstance().createHeader(outMessage, "", "", "", -1);
+                outMessage.addHeader(h);
+                return outMessage;
+            }
+
+            // Log request event - create a dummy Access object for it
+            // Later use this accessID for the real access object
+            access = new Access(1, 1, rpcUser, rpcName, "", "", "", userCertificate, false, null);
+            access.setTenant(instance);
+            access.setInDoc(inMessage);
+            if (clientInfo != null) {
+                access.ipAddress = clientInfo.getIP();
+                access.hostName = clientInfo.getHost();
+            }
+            NavajoEventRegistry.getInstance().publishEvent(new NavajoRequestEvent(access));
+            appendGlobals(inMessage, instance);
+
+            if (useAuthorisation && !skipAuth) {
                 try {
 
                     if (navajoConfig == null) {
                         System.err.println("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
                         throw new FatalException("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
                     }
-
-                    if (navajoConfig.getRepository() == null) {
-                        logger.error("Bad initialization or missing repository");
-                        throw new FatalException("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
+                    if (instance == null) {
+                        throw new SystemException(-1, "No tenant set -cannot authenticate!");
                     }
-                    access = authenticateUser(inMessage, instance, userCertificate, rpcName, rpcUser, rpcPassword,
-                            requestEventAccess.accessID);
+
+                    authenticator.process(instance, rpcUser, rpcPassword, rpcName, userCertificate, access);
+                    
+                    
                 } catch (AuthorizationException ex) {
-                    logger.error("AuthorizationException: ", ex);
                     outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
                     AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
                             + ", message=" + ex.getMessage(), Level.WARNING);
                     return outMessage;
                 } catch (SystemException se) {
-                    outMessage = generateErrorMessage(access, se.getMessage(), SystemException.NOT_AUTHORISED, 1,
-                            new Exception("NOT AUTHORISED"));
-                    AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
-                            + ", message=" + se.getMessage(), Level.WARNING);
+                    logger.error("SystemException on authenticateUser  {} for {}: ", rpcUser, rpcName, se);
+                    outMessage = generateErrorMessage(access, se.getMessage(), SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
+                    AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + se.getMessage(),
+                            Level.WARNING);
                     return outMessage;
                 }
-            } else {
-                // Use SimpleRepository authorisation is skipped.
-                access = RepositoryFactoryImpl.getRepository("com.dexels.navajo.server.SimpleRepository", navajoConfig)
-                        .authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null, requestEventAccess.accessID);
             }
 
-            // System.err.println("Created Access: " + access.accessID + ", " +
-            // access.rpcName + "(" + access.rpcUser + ")");
-
-            if (access == null) {
-                throw new FatalException("Error acquiring Access object in dispatcher. Severe.");
-            }
-            if (access.getInstance() == null) {
-                // repairing missing instance:
-                access.setInstance(instance);
-            }
             if (clientInfo != null) {
                 access.ipAddress = clientInfo.getIP();
                 access.hostName = clientInfo.getHost();
@@ -956,22 +928,17 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 Thread.currentThread().setName(getThreadName(access));
             }
 
-            final GlobalManagerRepository globalManagerInstance = GlobalManagerRepositoryFactory
-                    .getGlobalManagerInstance();
-            if (globalManagerInstance == null) {
-                logger.debug("No global manager found");
+            final GlobalManager gm;
+            if (instance != null) {
+                gm = globalManagers.get(instance);
+            } else {
+                gm = globalManagers.get("default");
             }
-            GlobalManager gm = null;
-            if (globalManagerInstance != null) {
-                if (instance == null) {
-                	gm = globalManagerInstance.getGlobalManager("default");
-                } else {
-                    gm = globalManagerInstance.getGlobalManager(instance);
-                }
-            }
+
             if (gm != null) {
                 gm.initGlobals(inMessage);
             }
+
             // register TmlRunnable with access object:
 
             if (origRunnable != null) {
@@ -1011,8 +978,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 MDC.put("accessId", access.accessID);
                 MDC.put("rpcName", access.getRpcName());
                 MDC.put("rpcUser", access.getRpcUser());
-                if (access.getInstance() != null) {
-                    MDC.put("tenant", access.getInstance());
+                if (access.getTenant() != null) {
+                    MDC.put("tenant", access.getTenant());
                 }
                 MDC.put("rootPath", getNavajoConfig().getRootPath());
                 MDC.put("instanceName", getNavajoConfig().getInstanceName());
@@ -1021,6 +988,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 /**
                  * Phase VIa: Check if scheduled webservice
                  */
+
                 if (inMessage.getHeader().getSchedule() != null && !inMessage.getHeader().getSchedule().equals("")) {
 
                     if (validTimeSpecification(inMessage.getHeader().getSchedule())) {
@@ -1060,12 +1028,13 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     // Create beforeWebservice event.
                     access.setInDoc(inMessage);
                     long b_start = System.currentTimeMillis();
-                    Navajo useProxy = WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
+                    Navajo useProxy = ( WebserviceListenerFactory.getInstance() != null ?  
+                    		WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access) : null);
                     access.setBeforeServiceTime((int) (System.currentTimeMillis() - b_start));
 
                     if (useAuthorisation) {
                         if (useProxy == null) {
-                            outMessage = dispatch(getServlet(access), access);
+                            outMessage = dispatch(access);
                         } else {
                             rpcName = access.rpcName;
                             outMessage = useProxy;
@@ -1106,17 +1075,12 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 logger.error("Error: ", ee);
                 return errorHandler(access, ee, inMessage);
             }
-        } catch (Exception e) {
-            logger.error("Error: ", e);
-            myException = e;
-            return errorHandler(access, e, inMessage);
         } catch (Throwable e) {
             logger.error("Error: ", e);
             myException = e;
             return errorHandler(access, e, inMessage);
         } finally {
             if (!preventFinalize) {
-                // System.err.println("prevent Finalize not set, so finalizing service");
                 finalizeService(inMessage, access, rpcName, rpcUser, myException, origThreadName, scheduledWebservice,
                         afterWebServiceActivated, emit);
             }
@@ -1125,62 +1089,51 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         return access.getOutputDoc();
     }
 
-    private Access authenticateUser(Navajo inMessage, String instance, Object userCertificate, String rpcName,
-            String rpcUser, String rpcPassword, String accessID) throws SystemException, AuthorizationException {
-        Access access = null;
-        if (instance != null) {
-            // logger.info("using multitenant: "+instance, new Exception());
-
-            AAAInterface aaai = getAuthorizator(instance);
-            if (aaai != null) {
-                access = aaai.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
-                return access;
+    private void appendGlobals(Navajo inMessage, String instance) {
+        final GlobalManagerRepository globalManagerInstance = GlobalManagerRepositoryFactory.getGlobalManagerInstance();
+        if (globalManagerInstance == null) {
+            logger.debug("No global manager found");
+        }
+        GlobalManager gm = null;
+        if (globalManagerInstance != null) {
+            if (instance == null) {
+                gm = globalManagerInstance.getGlobalManager("default");
+            } else {
+                gm = globalManagerInstance.getGlobalManager(instance);
             }
-            logger.warn("No access returned from multitenant, instance specific authorization. Instance: " + instance);
         }
-        // I have doubts if this is the way to go, if the instance is missing (for example, if someone uses the wrong database, it
-        // will use a *random one*.
-        if (access == null) {
-            access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage,
-                    userCertificate, accessID);
+        if (gm != null) {
+            gm.initGlobals(inMessage);
         }
-        access.setInstance(instance);
-        return access;
     }
 
     @Override
-    public Navajo handleCallbackPointers(Navajo inMessage) {
+    public Navajo handleCallbackPointers(Navajo inMessage, String tenant) {
         // Check whether unkown callbackpointers are present that need to be
         // handled by another instance.
         if (inMessage.getHeader().hasCallBackPointers()) {
             String[] allRefs = inMessage.getHeader().getCallBackPointers();
             if (AsyncStore.getInstance().getInstance(allRefs[0]) == null) {
                 RemoteAsyncRequest rasr = new RemoteAsyncRequest(allRefs[0]);
+                
+                logger.info("Broadcasting async pointer: "+allRefs[0]);
                 RemoteAsyncAnswer rasa = (RemoteAsyncAnswer) TribeManagerFactory.getInstance().askAnybody(rasr);
                 if (rasa != null) {
-                    System.err.println("ASYNC OWNER: " + rasa.getOwnerOfRef() + "(" + rasa.getHostNameOwnerOfRef()
+                    logger.info("ASYNC OWNER: " + rasa.getOwnerOfRef() + "(" + rasa.getHostNameOwnerOfRef()
                             + ")" + " FOR REF " + allRefs[0]);
                     try {
-                        Navajo result = TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef());
+                        Navajo result = TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef(),tenant);
                         return result;
                     } catch (Exception e) {
                         logger.error("Error: ", e);
                     }
 
                 } else {
-                    System.err.println("DID NOT FIND ANY OWNERS OF ASYNCREF...");
+                    logger.warn("DID NOT FIND ANY OWNERS OF ASYNCREF...");
                 }
             }
         }
         return null;
-    }
-
-    private String getServlet(Access access) {
-        String compLanguage = DispatcherFactory.getInstance().getNavajoConfig().getCompilationLanguage();
-        if ("javascript".equals(compLanguage)) {
-            return "com.dexels.navajo.rhino.RhinoHandler";
-        }
-        return "com.dexels.navajo.server.GenericHandler";
     }
 
     @Override
@@ -1212,14 +1165,15 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
                 // Call after web service event...
                 long a_start = System.currentTimeMillis();
-                afterWebServiceActivated = WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
+                afterWebServiceActivated = ( WebserviceListenerFactory.getInstance() != null ? 
+                		WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access) : false);
                 access.setAfterServiceTime((int) (System.currentTimeMillis() - a_start));
 
                 // Set access to finished state.
                 access.setFinished();
 
                 // Translate property descriptions.
-                updatePropertyDescriptions(inMessage, outMessage);
+                updatePropertyDescriptions(inMessage, outMessage, access.getTenant());
                 access.storeStatistics(h);
 
                 // Call Navajoresponse event.
@@ -1238,19 +1192,33 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 accessSet.remove(access);
             }
         }
+        
+        generateNavajoRequestEvent(myException != null);
 
         if (origThreadName != null) {
             Thread.currentThread().setName(origThreadName);
         }
     }
 
-    private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage) {
+    private void generateNavajoRequestEvent(boolean hadException) {
+        Map<String, Object> properties = new HashMap<String, Object>();
+        if (hadException) {
+            properties.put("type", "navajoexception");
+        } else {
+            properties.put("type", "navajo");
+        }
+        Event event = new Event(Dispatcher.NAVAJO_TOPIC, properties);
+        eventAdmin.postEvent(event);
+        
+    }
+
+    private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage, String tenant) {
         final DescriptionProviderInterface descriptionProvider = navajoConfig.getDescriptionProvider();
         if (descriptionProvider == null) {
             return;
         }
         try {
-            descriptionProvider.updatePropertyDescriptions(inMessage, outMessage);
+            descriptionProvider.updatePropertyDescriptions(inMessage, outMessage,tenant);
         } catch (NavajoException e) {
             logger.error("Error: ", e);
         }
@@ -1582,20 +1550,26 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         return globalManagers.get(instance);
     }
 
-    public AAAInterface getAuthorizator(String instance) {
-        return authenticators.get(instance);
-    }
-
     public void removeGlobalManager(GlobalManager gm, Map<String, Object> settings) {
         globalManagers.remove(settings.get("instance"));
     }
-
-    public void addAuthenticator(AAAInterface aa, Map<String, Object> settings) {
-        authenticators.put((String) settings.get("instance"), aa);
+    
+    
+    public void setAuthenticator(AAAQuerier a) {
+        this.authenticator = a;
+    }
+    
+    public void clearAuthenticator(AAAQuerier a) {
+        this.authenticator = null;
     }
 
-    public void removeAuthenticator(AAAInterface gm, Map<String, Object> settings) {
-        authenticators.remove(settings.get("instance"));
+
+    public void setEventAdmin(EventAdmin eventAdmin) {
+        this.eventAdmin = eventAdmin;
+    }
+
+    public void clearEventAdmin(EventAdmin eventAdmin) {
+        this.eventAdmin = null;
     }
 
 }

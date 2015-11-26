@@ -49,9 +49,10 @@ public class GrusProviderImpl implements GrusProvider {
 			defaultDataSources.put(name, source);
 			if (aliases != null) {
 				for (String alias : aliases) {
-					defaultSettingsMap
-							.put("navajo.resource." + alias, settings);
+					defaultSettingsMap.put("navajo.resource." + alias, settings);
 					defaultDataSources.put("navajo.resource." + alias, source);
+					defaultSettingsMap.put(alias, settings);
+					defaultDataSources.put(alias, source);
 				}
 			}
 
@@ -119,8 +120,6 @@ public class GrusProviderImpl implements GrusProvider {
 			DataSource dataSource = getInstanceDataSources(instance).get(name);
 			if (dataSource != null) {
 				return dataSource;
-			} else {
-				logger.info("No instance-specific datasource found for instance: "+instance+" name: "+name+" continuing to look for generic.");
 			}
 		}
 		final String fullName = name.startsWith("navajo.resource.")?name:"navajo.resource."+name;
@@ -128,9 +127,12 @@ public class GrusProviderImpl implements GrusProvider {
 		if (dataSource != null) {
 			return dataSource;
 		}
-
+		dataSource = defaultDataSources.get(name);
+		if (dataSource != null) {
+			return dataSource;
+		}
 		logger.warn("No datasource found for instance: " + instance
-				+ " and name: " + name+ " datasource keys: "+defaultDataSources.keySet());
+				+ " and name: " + name+ " datasource keys: "+defaultDataSources.keySet(), new Exception());
 		return null;
 	}
 
@@ -178,6 +180,9 @@ public class GrusProviderImpl implements GrusProvider {
 
         if (settings == null && dataSourceInstance == null) {
             settings = defaultSettingsMap.get(name);
+            if(settings==null) {
+            	throw new UserException(-1, "Could not find settings for tenant-less datasource: "+name+" available (tenant-less) datasources: "+defaultSettingsMap.keySet());
+            }
             dataSourceInstance = defaultDataSources.get(name);
         }
 

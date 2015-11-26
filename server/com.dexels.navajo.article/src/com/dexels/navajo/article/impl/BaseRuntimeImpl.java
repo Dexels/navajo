@@ -21,6 +21,7 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.article.ArticleClientException;
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
@@ -29,6 +30,8 @@ import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.oauth.api.OAuthToken;
+import com.dexels.oauth.api.Scope;
 import com.dexels.oauth.api.Token;
 
 public abstract class BaseRuntimeImpl implements ArticleRuntime {
@@ -46,9 +49,11 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	private final ObjectNode rootNode;
 
 	private final String instance;
+    private String url;
 
 	private final Map<String, Object> userAttributes;
-	private final Token token;
+	private final OAuthToken token;
+
 
 	protected BaseRuntimeImpl(String articleName, XMLElement article, Set<String> suppliedScopes, String instance) {
 		rootNode = mapper.createObjectNode();
@@ -60,16 +65,21 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 		this.token = null;
 	}
 
-	protected BaseRuntimeImpl(String articleName, File articleFile,String instance, Token token)
+	protected BaseRuntimeImpl(String articleName, File articleFile,String instance, OAuthToken token)
 			throws IOException {
 		article = new CaseSensitiveXMLElement();
 		rootNode = mapper.createObjectNode();
 		this.token = token;
+		
+		this.suppliedScopes = new HashSet<String>();
 		if(token!=null) {
-			this.suppliedScopes = this.token.scopes();
-			this.userAttributes = this.token.getUserAttributes();
+			for (Scope scope : this.token.getScopes()) {
+				this.suppliedScopes.add(scope.getId());
+			}
+			
+			this.userAttributes = this.token.getAttributes();
 		} else {
-			this.suppliedScopes = new HashSet<String>();
+			
 			this.userAttributes = new HashMap<String, Object>();
 
 		}
@@ -177,7 +187,17 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	}
 	
 	@Override
-	public void execute(ArticleContext context) throws ArticleException, DirectOutputThrowable {
+    public String getURL() {
+        return url;
+    }
+	
+	@Override
+    public void setURL(String url) {
+        this.url = url;
+    }
+	
+	@Override
+	public void execute(ArticleContext context) throws ArticleException, ArticleClientException, DirectOutputThrowable {
 		verifyScopes();
 		List<XMLElement> children = article.getChildren();
 		try {
@@ -201,7 +221,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 					parameters.put(attributeName,
 							e.getStringAttribute(attributeName));
 				}
-				JsonNode node =ac.execute(this, context, parameters, e);
+				JsonNode node = ac.execute(this, context, parameters, e);
 				
 				if (node!=null) {
 					elements.add(node);

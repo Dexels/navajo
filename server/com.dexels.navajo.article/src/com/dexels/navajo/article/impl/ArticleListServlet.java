@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
@@ -19,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.article.ArticleContext;
-import com.dexels.navajo.article.ArticleException;
 
 public class ArticleListServlet extends HttpServlet implements Servlet {
 
@@ -27,20 +25,16 @@ public class ArticleListServlet extends HttpServlet implements Servlet {
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(ArticleListServlet.class);
+	
+	private static String kARGUMENT_ARTICLE = "article";
+	private static String kARGUMENT_PRETTY = "pretty";
+	private static String kARGUMENT_EXTENDED = "extended";
 
 	private ArticleContext context;
 
 	public ArticleListServlet() {
 
 	}
-
-	// public void activate() {
-	// logger.info("Activating acticle component");
-	// }
-	//
-	// public void deactivate() {
-	// logger.info("Deactivating acticle component");
-	// }
 
 	public ArticleContext getContext() {
 		return context;
@@ -59,30 +53,35 @@ public class ArticleListServlet extends HttpServlet implements Servlet {
 			throws ServletException {
 		resp.addHeader("Access-Control-Allow-Origin", "*");
 		resp.setContentType("application/json; charset=utf-8");
+		
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode rootNode = mapper.createObjectNode();
-		String requestedArticle = req.getParameter("article");
-		if (requestedArticle != null) {
+		String requestedArticle = req.getParameter(kARGUMENT_ARTICLE);
+		boolean extended = req.getParameter(kARGUMENT_EXTENDED) != null ? true : false;
+
+		List<String> articles = context.listArticles();
+		
+		if (requestedArticle != null && articles.contains(requestedArticle)) {
 			try {
-				context.writeArticleMeta(requestedArticle, rootNode, mapper);
+				context.writeArticleMeta(requestedArticle, rootNode, mapper, extended);
 			} catch (Throwable e) {
 				logger.error("Error generating metadata for article: "
 						+ requestedArticle, e);
 			}
 		} else {
-			List<String> articles = context.listArticles();
 			for (String article : articles) {
 				try {
-					context.writeArticleMeta(article, rootNode, mapper);
+					context.writeArticleMeta(article, rootNode, mapper, extended);
 				} catch (Throwable e) {
 					logger.error("Error generating metadata for article: "
 							+ article, e);
 				}
-				// context.getArticleMeta(article);
 			}
 		}
-		// mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
-		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+
+		ObjectWriter writer = (req.getParameter(kARGUMENT_PRETTY) == null) 
+				? mapper.writer() : mapper.writer().withDefaultPrettyPrinter();
+
 		try {
 			writer.writeValue(resp.getWriter(), rootNode);
 			if (resp.getWriter() != null) {
@@ -96,5 +95,4 @@ public class ArticleListServlet extends HttpServlet implements Servlet {
 			throw new ServletException("Error writing JSON", e);
 		}
 	}
-
 }

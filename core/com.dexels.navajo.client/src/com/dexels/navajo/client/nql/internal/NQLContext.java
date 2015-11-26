@@ -135,7 +135,7 @@ public class NQLContext implements NqlContextApi {
 			return;
 		}
 		if("binary".equals(type)) {
-			writeBinary(callback.getOutputStream(),callback);
+			writeBinary(callback);
 			return;
 		}
 	}
@@ -168,14 +168,13 @@ public class NQLContext implements NqlContextApi {
 		setMimeType("application/json", callback);
 	}
 
-	private void writeBinary(OutputStream outputStream, OutputCallback callback) throws IOException {
+	private void writeBinary(OutputCallback callback) throws IOException {
 		Binary b = (Binary)content;
 		setMimeType( b.getMimeType(),callback);
 		if ( b.getLength() > 0 ) {
 			setContentLength(b.getLength(),callback);
 		}
 		b.write(callback.getOutputStream());
-		outputStream.write(b.getData());
 	}
 
 	private void writeTML(OutputStream outputStream) throws NavajoException, IOException {
@@ -245,10 +244,10 @@ public class NQLContext implements NqlContextApi {
 		}
 	}
 
-	public void call(String service, boolean force) throws ClientException {
+	public void call(String service, String tenant,String username, String password, boolean force) throws ClientException {
 		 boolean present = context.hasNavajo(service);
 		 if(!present || force) {
-			 context.callService(service,current);
+			 context.callService(service,tenant,username,password,current);
 		 }
 		 current = context.getNavajo(service);
 	}
@@ -325,10 +324,10 @@ public class NQLContext implements NqlContextApi {
 		nq.setNavajoContext(nc);
 		String nql = "service:club/InitSearchClubs|ClubSearch/ShortName:Hoek|service:club/ProcessSearchClubs|output:Club|format:csv";
 	
-		nq.executeCommand(nql,outputCallback);
+		nq.executeCommand(nql,"sometenant","abc","def",outputCallback);
 		
 		String nql2 = "service:club/InitUpdateClub|Club/ClubIdentifier:BBFW63X|call:club/ProcessQueryClub|output:ClubData/Logo|format:binary";
-		nq.executeCommand(nql2,outputCallback);
+		nq.executeCommand(nql2,"sometenant","xyz","uvw",outputCallback);
 		logger.info("TYPE: "+nq.mimeType);
 		logger.info("Bytes written: "+baos.size());
 //		logger.info(sw.toString());
@@ -339,10 +338,10 @@ public class NQLContext implements NqlContextApi {
 	 * @see com.dexels.navajo.client.nql.NqlContextApi#executeCommand(java.lang.String)
 	 */
 	@Override
-	public void executeCommand(String nql, OutputCallback ob) throws ClientException, NavajoException, IOException {
+	public void executeCommand(String nql, String tenant, String username, String password, OutputCallback ob) throws ClientException, NavajoException, IOException {
 		List<NQLCommand>aa =  parseCommand(nql);
 		for (NQLCommand nqlCommand : aa) {
-			nqlCommand.execute(this,ob);
+			nqlCommand.execute(this,tenant,username,password, ob);
 		}
 	}
 

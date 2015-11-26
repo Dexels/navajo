@@ -100,7 +100,7 @@ public class CssComponentResponderImpl implements
 	@Override
 	public List<String> getCssDefinitions(String definition)
 	{
-		logger.info("Getting definition: "+definition);
+		logger.debug("Getting definition: "+definition);
 		// perhaps not yet cached? Turn this off for now because it is probably a big performance drain. Do return an empty list though (prevent NPE further on)
 
 		if (!tipiCssMap.containsKey(definition))
@@ -217,8 +217,8 @@ public class CssComponentResponderImpl implements
 	
 	private void loadCssDefinition(String definition, String location) throws IOException
 	{
-		logger.info("Finding CSS files for definition: " + definition + " with location " + location);
-		logger.info("Current locale is " + context.getApplicationInstance().getLocaleCode() + " and current subLocale is " + context.getApplicationInstance().getSubLocaleCode());
+		logger.debug("Finding CSS files for definition: " + definition + " with location " + location);
+		logger.debug("Current locale is " + context.getApplicationInstance().getLocaleCode() + " and current subLocale is " + context.getApplicationInstance().getSubLocaleCode());
 		// first try in the same dir as the definition file (ie location)
 		String strippedLocation = null;
 		if (location != null)

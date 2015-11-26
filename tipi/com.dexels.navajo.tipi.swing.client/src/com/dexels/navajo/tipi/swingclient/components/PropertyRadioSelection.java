@@ -6,6 +6,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,12 +45,11 @@ import com.dexels.navajo.document.Selection;
  */
 
 public final class PropertyRadioSelection extends JPanel implements
-		PropertyControlled, ActionListener {
+		PropertyControlled, ActionListener, ItemListener {
 
 	private static final long serialVersionUID = 2786990335267017128L;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(PropertyRadioSelection.class);
+	private final static Logger logger = LoggerFactory.getLogger(PropertyRadioSelection.class);
 	private Property myProperty = null;
 	private final ButtonGroup myGroup = new ButtonGroup();
 	private JRadioButton lastButtonOfGroup = null;
@@ -154,6 +155,8 @@ public final class PropertyRadioSelection extends JPanel implements
 		} catch (NavajoException ex) {
 			logger.error("Error: ", ex);
 		}
+		
+		setOpaque(false);
 
 	}
 
@@ -165,10 +168,17 @@ public final class PropertyRadioSelection extends JPanel implements
 		jr.setEnabled(editable);
 		myGroup.add(jr);
 		jr.addActionListener(this);
+		jr.addItemListener(this);
 		jr.addFocusListener(myFocusListener);
 		if (s.isSelected()) {
 			jr.setSelected(true);
 		}
+		jr.setOpaque(false);
+		jr.setContentAreaFilled(false);
+		jr.setBorderPainted(false);
+		
+		
+		
 		lastButtonOfGroup = jr;
 		// jr.addItemListener(new ItemListener() {
 		// public void itemStateChanged(ItemEvent ce) {
@@ -198,8 +208,6 @@ public final class PropertyRadioSelection extends JPanel implements
 	@Override
 	public final void actionPerformed(ActionEvent e) {
 		logger.info("Radio action performed");
-		updateProperty((JRadioButton) e.getSource());
-		lastButtonOfGroup.transferFocus();
 	}
 
 	private final void updateProperty(JRadioButton source) {
@@ -236,5 +244,21 @@ public final class PropertyRadioSelection extends JPanel implements
 	public void setColumns(int checkboxGroupColumnCount) {
 		this.checkboxGroupColumnCount = checkboxGroupColumnCount;
 	}
+   
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+       logger.info("RadioButton Item Changed");
+       if (!selectionMap.containsKey(e.getSource())) {
+           // Not for me
+           return;
+       }
+       updateProperty((JRadioButton) e.getSource());
+       if (lastButtonOfGroup != null) {
+           lastButtonOfGroup.transferFocus();
+       }
+
+    }
+    
+  
 
 }

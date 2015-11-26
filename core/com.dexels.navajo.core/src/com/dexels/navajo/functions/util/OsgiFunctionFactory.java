@@ -123,7 +123,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	public  Class<?> getAdapterClass(String adapterClassName, ClassLoader cl) throws ClassNotFoundException {
 			Class<?> osgiResolution = (Class<?>) getComponent(adapterClassName, "adapterClass", Class.class);
 			if (osgiResolution==null) {
-				System.err.println("OSGi failed. Going old skool");
+				logger.info("OSGi failed. Going old skool");
 				return super.getAdapterClass(adapterClassName, cl);
 			} else {
 				return osgiResolution;

@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Adapters Resource
 Bundle-SymbolicName: com.dexels.navajo.adapters.resource
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.0.21.qualifier
+Bundle-Version: 2.0.29.qualifier
 DynamicImport-Package: *
 Bundle-Activator: navajoadaptersresource.Version
 Bundle-Vendor: Dexels
@@ -25,8 +25,6 @@ Import-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.util;version="1.0.0",
  com.dexels.navajo.version,
  javax.activation,
- javax.mail,
- javax.mail.internet,
  javax.servlet;version="[2.5.0,4.0.0)",
  navajo,
  navajoextension,
@@ -41,4 +39,4 @@ Service-Component: OSGI-INF/jdbcBroker.xml,
  OSGI-INF/navajo.server.grusprovider.xml
 Export-Package: com.dexels.navajo.adapter.resource,
  com.dexels.navajo.adapter.resource.jdbcbroker
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -28,6 +28,16 @@ public class ModifiedDateCacheValidator implements CacheValidator {
 	public void setRemoteStorage(RemoteStorage remoteStorage) {
 		this.remoteStorage = remoteStorage;
 	}
+
+	@Override
+	public void update(String location) throws IOException {
+		
+	}
+
+	@Override
+	public void invalidate() {
+		// nothing to do
+	}
 	
 
 }

@@ -757,7 +757,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 				}
 			} catch (Exception e) {
 				logger.error("Error: ", e);
-				throw new ClientException(-1, -1, e.getMessage());
+				throw new ClientException(-1, -1, e.getMessage(),e);
 			}
 		}
 	}

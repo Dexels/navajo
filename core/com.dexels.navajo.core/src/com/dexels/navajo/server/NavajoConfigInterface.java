@@ -21,7 +21,6 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	// Available modules.
 	public PersistenceManager getPersistenceManager();
 	public SharedStoreInterface getSharedStore();
-	public Repository getRepository();
 	public StatisticsRunnerInterface getStatisticsRunner();
 	public NavajoClassSupplier getClassloader();
 	
@@ -33,6 +32,7 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	// Statistics.
 	public double getCurrentCPUload();
 	
+	 public boolean useLegacyDateMode();
 	 
 	// Webservice, user monitoring options
 //	public void setMonitorOn(boolean b);

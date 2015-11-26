@@ -36,6 +36,8 @@ public interface AsyncRequest {
 	public long getConnectedAt();
 
 	public String getUrl();
+	
+	public String getIpAddress();
 
 	public String getInstance();
 

@@ -3,12 +3,19 @@
    <implementation class="com.dexels.navajo.status.StatusServlet"/>
    <service>
       <provide interface="javax.servlet.Servlet"/>
+      <provide interface="com.dexels.navajo.repository.api.ServerStatusChecker"/>
+		<provide interface="org.osgi.service.event.EventHandler" />
    </service>
+   
    <property name="alias" type="String" value="/status"/>
    <property name="servlet-name" type="String" value="status"/>
    <reference bind="setDispatcherInterface" cardinality="0..1" interface="com.dexels.navajo.server.DispatcherInterface" name="DispatcherInterface" policy="dynamic" unbind="clearDispatcherInterface"/>
-   <reference bind="setRepository" cardinality="0..1" interface="com.dexels.navajo.server.Repository" name="Repository" policy="dynamic" unbind="clearRepository"/>
    <reference bind="setJavaCompiler" cardinality="0..1" interface="com.dexels.navajo.compiler.JavaCompiler" name="JavaCompiler" policy="dynamic" unbind="clearJavaCompiler"/>
    <reference bind="setNavajoConfig" cardinality="0..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfigInterface" policy="dynamic" unbind="clearNavajoConfig"/>
-   
+   <reference bind="setTribeManagerInterface" cardinality="0..1" interface="com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface" name="TribeManagerInterface" policy="dynamic" unbind="clearTribeManagerInterface"/>
+   <reference bind="setWorkflowManagerInterface" cardinality="0..1" interface="com.dexels.navajo.server.enterprise.workflow.WorkFlowManagerInterface" name="WorkFlowManagerInterface" policy="dynamic" unbind="clearWorkflowManagerInterface"/>
+   <reference bind="setPriorityTmlScheduler" cardinality="0..1" interface="com.dexels.navajo.script.api.TmlScheduler" name="TmlScheduler"  policy="dynamic" unbind="clearPriorityTmlScheduler"/>
+   <property name="event.topics" type="String">
+		navajo/request
+   </property>
 </scr:component>

@@ -65,6 +65,16 @@ public class TipiLabel extends TipiSwingComponentImpl {
 			((TipiSwingLabel) getContainer()).revalidate();
 			return;
 		}
+		if (name.equals("opaque")) {
+			runSyncInEventThread(new Runnable() {
+				@Override
+				public void run() {
+					((TipiSwingLabel) getContainer()).setOpaque((boolean) object);
+				}
+			});
+			((TipiSwingLabel) getContainer()).revalidate();
+			return;
+		}
 		if (name.equals("icon")) {
 			runSyncInEventThread(new Runnable() {
 				@Override
@@ -83,6 +93,9 @@ public class TipiLabel extends TipiSwingComponentImpl {
 	public Object getComponentValue(String name) {
 		if (name.equals("text")) {
 			return ((TipiSwingLabel) getContainer()).getText();
+		}
+		if (name.equals("opaque")) {
+			return ((TipiSwingLabel) getContainer()).isOpaque();
 		}
 		if (name.equals("icon")) {
 			return ((TipiSwingLabel) getContainer()).getIcon();

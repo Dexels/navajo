@@ -57,7 +57,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 	private String configPath;
 	protected NavajoClassLoader betaClassloader;
 	protected NavajoClassSupplier adapterClassloader;
-	protected volatile com.dexels.navajo.server.Repository repository = null;
 	protected Navajo configuration;
     public int maxAccessSetSize = MAX_ACCESS_SET_SIZE;
     
@@ -519,37 +518,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     	return betaUser;
     }
 
-    /*
-     * Sets the Authentication/Authorization module that will be used by the Navajo Instance.
-     */
-    public final void setRepository(com.dexels.navajo.server.Repository newRepository) {
-        repository = newRepository;
-    }
-
-    /*
-     * Gets the Authentication/Authorization module that will be used by the Navajo Instance.
-     */
-    @Override
-	public final com.dexels.navajo.server.Repository getRepository() {
-
-    	if ( repository != null ) {
-    		return repository;
-    	}
-
-    	synchronized (instance) {
-    		if ( repository == null ) {
-    			RepositoryFactory r = RepositoryFactoryImpl.getInstance();
-    			if(r==null) {
-    				// no instance, means no OSGi, so go legacy:
-        			repository = RepositoryFactoryImpl.getRepository(repositoryClass, this);
-        			return repository;
-    			}
-    			this.repository = r.getRepository(repositoryClass);
-    		} 
-    	}
-
-    	return repository;
-    }
+    
 
     @Override
 	public final SharedStoreInterface getSharedStore() {
@@ -735,7 +704,18 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 		return compilationLanguage;
 	}
 
-
+    @Override
+    public boolean useLegacyDateMode() {
+        Object value = getParameter("isLegacyMode"); 
+        if (value != null) {
+            if(!(value instanceof Boolean)) {
+                logger.error("Error: isLegacy mode is set to: "+value+" this should be boolean type, this will fail");
+                // allow failure
+            }
+            return (Boolean)value;
+        }
+        return true;
+    }
 
 	@Override
 	public Object getParameter(String name) {

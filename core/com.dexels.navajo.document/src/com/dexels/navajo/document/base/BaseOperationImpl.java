@@ -16,10 +16,13 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 
 	protected String method;
 	protected String service;
+	protected String tenant;
 	protected String validationService;
 	protected String entityName;
 	protected Message extraMessage;
-	
+	protected boolean debugInput;
+	protected boolean debugOutput;
+
 	public BaseOperationImpl(Navajo n) {
 		super(n);
 	}
@@ -107,4 +110,39 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 		return validationService;
 	}
 
+	@Override
+    public void setDebug(String debugString) {
+        if (debugString.trim().equals("true")) {
+            debugInput = true;
+            debugOutput = true;
+            return;
+        }
+        if (debugString.contains("request")) {
+            debugInput = true;
+        }
+        if (debugString.contains("response")) {
+            debugOutput = true;
+        }
+    }
+	
+
+    @Override
+    public boolean debugInput() {
+        return debugInput;
+    }
+
+    @Override
+    public boolean debugOutput() {
+        return debugOutput;
+    }
+
+    @Override
+    public void setTenant(String tenant) {
+        this.tenant = tenant; 
+    }
+
+    @Override
+    public String getTenant() {
+        return tenant;
+    }
 }

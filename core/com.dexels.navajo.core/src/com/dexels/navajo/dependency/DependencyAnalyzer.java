@@ -1,24 +1,16 @@
 package com.dexels.navajo.dependency;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.type.CollectionType;
-import org.codehaus.jackson.map.type.MapType;
-import org.codehaus.jackson.map.type.TypeFactory;
-import org.codehaus.jackson.type.JavaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class DependencyAnalyzer {
-    private static final String NAVAJO_DEPS_FILE = ".navajodeps";
     private final static Logger logger = LoggerFactory.getLogger(DependencyAnalyzer.class);
 
     protected TslPreCompiler precompiler;
@@ -27,7 +19,6 @@ public class DependencyAnalyzer {
     protected Map<String, List<Dependency>> dependencies;;
     protected Map<String, List<Dependency>> reverseDependencies;
     protected String scriptFolder;
-    private ObjectMapper objectMapper;
 
     public void activate() {
         logger.debug("Activating DependencyAnalyzer");
@@ -39,7 +30,6 @@ public class DependencyAnalyzer {
     }
 
     protected void initialize() {
-        objectMapper = new ObjectMapper();     
         dependencies = new HashMap<String, List<Dependency>>();
         reverseDependencies = new HashMap<String, List<Dependency>>();
     }
@@ -92,7 +82,7 @@ public class DependencyAnalyzer {
         if (reverseDependencies.containsKey(script)) {
             return reverseDependencies.get(script);
         }
-        return null;
+        return new ArrayList<>();
 
     }
 
@@ -106,48 +96,6 @@ public class DependencyAnalyzer {
         }
     }
 
-    protected void importPersistedDependencies(String scriptPath) {
-        Map<String, List<Dependency>> result = null;
-        
-        File scriptFolder = new File(scriptPath);
-        File depsFile = new File(scriptFolder.getParentFile(), NAVAJO_DEPS_FILE);
-
-        if (!depsFile.exists()) {
-            return;
-        }
-
-        TypeFactory typeFactory = objectMapper.getTypeFactory();
-        JavaType stringType = typeFactory.constructType(String.class);
-        CollectionType listType = typeFactory.constructCollectionType(ArrayList.class, Dependency.class);
-        MapType mapType = typeFactory.constructMapType(HashMap.class, stringType, listType);
-
-        try {
-            result = objectMapper.readValue(depsFile, mapType);
-        } catch (IOException e) {
-            logger.error("Something went wrong de-serializing the NavajoDeps file {}: {}", depsFile, e);
-            return;
-        }
-
-        dependencies.putAll(result);
-
-        // Reverse is updated later
-    }
-
-    protected void persistDependencies(String scriptPath) {
-        File scriptFolder = new File(scriptPath);
-
-        if (!scriptFolder.exists()) {
-            return;
-        }
-
-        File depsFile = new File(scriptFolder.getParentFile(), NAVAJO_DEPS_FILE);
-        try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(depsFile, dependencies);
-        } catch (IOException e) {
-        	logger.error("Error: ", e);
-        }
-
-    }
 
     protected void updateReverseDependencies(List<Dependency> dependencies) {
 

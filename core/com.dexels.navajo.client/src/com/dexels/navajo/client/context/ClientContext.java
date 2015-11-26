@@ -10,13 +10,13 @@ public interface ClientContext {
 
 	public void reset();
 
-	public void callService(String service) throws ClientException;
+	public void callService(String service, String tenant) throws ClientException;
 
 	public Map<String, Navajo> getNavajos();
 
 	public String getServiceName(Navajo n);
 
-	public void callService(String service, Navajo input)
+	public void callService(String service, String tenant, String username, String password, Navajo input)
 			throws ClientException;
 
 	public boolean hasNavajo(String name);

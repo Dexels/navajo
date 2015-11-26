@@ -35,6 +35,7 @@ public class PerformanceTest {
 			Navajo init = client.doSimpleSend("club/InitSearchClub");
 			init.getProperty("ClubSearch/ClubName").setAnyValue(randomString(3));
 			Navajo process = client.doSimpleSend(init, "club/ProcessSearchClub");
+			process.write(System.out);
 		}
 		long after = System.currentTimeMillis();
 		System.err.println("elapsed: "+(after-start));

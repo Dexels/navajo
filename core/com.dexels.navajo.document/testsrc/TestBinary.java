@@ -1,6 +1,10 @@
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
@@ -119,6 +123,23 @@ public class TestBinary {
 		URL url = this.getClass().getResource("doc1.doc");
 		Binary binary_x = new Binary(new File(url.getFile()));
 		Assert.assertEquals("application/msword", binary_x.guessContentType());
+	}
+
+	@Test
+	public void testBinarySerialize() throws IOException, ClassNotFoundException {
+		NavajoFactory.getInstance().setSandboxMode(true);
+		Binary binary_x = new Binary(getClass().getResourceAsStream("binary1.txt"));
+		long l = binary_x.getLength();
+		System.err.println(":: "+l);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(binary_x);
+		byte[] bb = baos.toByteArray();
+		System.err.println("byte: "+bb.length);
+		ObjectInputStream ois =  new ObjectInputStream(new ByteArrayInputStream(bb));
+		Binary ooo = (Binary) ois.readObject();
+		System.err.println(">> "+ooo.equals(binary_x));
+		Assert.assertTrue(ooo.equals(binary_x));
 	}
 
 	@Test

@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi;
 
 import java.util.List;
+import java.util.Map;
 
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiStackElement;
@@ -48,6 +49,9 @@ public interface TipiExecutable {
 	public void setExecutionIndex(int i);
 
 	public int getExecutionIndex();
+	
+	public void setMDCMap(Map<String, String> mdc);
+	public void restoreMDC();
 
 	public List<TipiExecutable> getExecutables();
 	public void continueAction(TipiEvent original)

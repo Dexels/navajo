@@ -69,7 +69,6 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 			if ( localClient == null ) {
 				localClient = getLocalClient(req);
 			} 
-			logger.info("Instance determined from request: "+instance);
 			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,instance);
 			if(instantiateRunnable!=null) {
 				getTmlScheduler().submit(instantiateRunnable, false);

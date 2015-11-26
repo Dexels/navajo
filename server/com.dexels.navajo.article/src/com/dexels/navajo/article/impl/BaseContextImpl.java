@@ -17,6 +17,7 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.article.ArticleClientException;
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
@@ -25,15 +26,18 @@ import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.server.NavajoIOConfig;
-import com.dexels.oauth.api.TokenException;
+import com.dexels.oauth.api.OAuthToken;
 import com.dexels.oauth.api.TokenStore;
-import com.dexels.oauth.api.Token;
+import com.dexels.oauth.api.TokenStoreException;
 
 public abstract class BaseContextImpl implements ArticleContext {
 
 	private final Map<String, ArticleCommand> commands = new HashMap<String, ArticleCommand>();
 	private NavajoIOConfig config;
 	private TokenStore tokenStore;
+	
+	private static String ARTICLE_TYPE = "type";
+	private static String ARTICLE_TYPE_DISPLAY = "display";
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseContextImpl.class);
@@ -69,17 +73,15 @@ public abstract class BaseContextImpl implements ArticleContext {
 	}
 
 	@Override
-	public Map<String, Object> getScopes(String token) throws TokenException {
+	public Map<String, Object> getScopes(String token) throws TokenStoreException {
 		Map<String, Object> result = new HashMap<String, Object>();
-		Token t = tokenStore.getTokenByString(token);
-		
+		OAuthToken t = tokenStore.getToken(token);
+
 		if (token != null) {
-			result.putAll(t.getUserAttributes());
-			result.put("clientId", t.clientId());
-			result.put("username", t.getUsername());
-			
-		} else {
+			result.putAll(t.getAttributes());
+			result.put("clientId", t.getClientId());
 		}
+		
 		return result;
 	}
 
@@ -163,7 +165,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 
 	@Override
 	public void interpretArticle(File article, ArticleRuntime ac)
-			throws IOException, ArticleException, DirectOutputThrowable {
+			throws IOException, ArticleException, ArticleClientException, DirectOutputThrowable {
 		XMLElement articleXml = new CaseSensitiveXMLElement();
 		Reader r = null;
 		try {
@@ -184,7 +186,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 	}
 
 	public void interpretMeta(XMLElement article, ObjectMapper mapper,
-			ObjectNode articleNode) throws ArticleException {
+			ObjectNode articleNode, boolean extended) throws ArticleException {
 
 		String outputType = article.getStringAttribute("output");
 		if (outputType != null) {
@@ -199,6 +201,13 @@ public abstract class BaseContextImpl implements ArticleContext {
 			}
 			articleNode.put("scopes", scopeArgs);
 		}
+		
+		String description = article.getStringAttribute("description");
+		if (extended && description != null && description.length() != 0) {
+			articleNode.put("description", description);
+		}
+		
+		articleNode.put(ARTICLE_TYPE, article.getStringAttribute(ARTICLE_TYPE, ARTICLE_TYPE_DISPLAY));
 
 		XMLElement argTag = article.getChildByTagName("_arguments");
 		ArrayNode inputArgs = mapper.createArrayNode();
@@ -263,7 +272,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 	}
 
 	@Override
-	public void writeArticleMeta(String name, ObjectNode w, ObjectMapper mapper)
+	public void writeArticleMeta(String name, ObjectNode w, ObjectMapper mapper, boolean extended)
 			throws ArticleException {
 		File in = resolveArticle(name);
 		FileReader fr = null;
@@ -274,7 +283,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 			XMLElement x = new CaseSensitiveXMLElement();
 			x.parseFromReader(fr);
 			article.put("name", name);
-			interpretMeta(x, mapper, article);
+			interpretMeta(x, mapper, article, extended);
 		} catch (IOException e) {
 			logger.error("Problem parsing article: ", e);
 		} finally {

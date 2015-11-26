@@ -1,0 +1,398 @@
+<tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" sourceScript="everywear/entity/visitor/InitQueryVisitorPrivateInfo" queueId="normalPool" processingTime="170" accessId="1441286053490-569986" transferTime="359" cpuload="-1.0" threadName="normalPool_6" authorisationTime="0" serverTime="171" threadCount="0" beforeServiceTime="0" queueTime="1" clientTime="530" afterServiceTime="0" postTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="everywear/entity/visitor/ProcessQueryVisitorPrivateInfo" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="Visitor" type="simple">
+      <property direction="" name="FestivalTokens" value="7751" length="" type="integer"/>
+   </message>
+   <message name="Transaction" type="array">
+      <message index="0" name="Transaction" type="array_element">
+         <property direction="in" name="_id" value="55e706152cdcb3488a79d552" length="" type="string"/>
+         <property direction="in" name="Description" value="Voor stefan" length="" type="string"/>
+         <property direction="in" name="Amount" value="111" length="" type="integer"/>
+         <property direction="in" name="ValidTransaction" value="true" length="" type="boolean"/>
+         <property direction="in" name="FromRFID" value="04748B72F13280" length="" type="string"/>
+         <property direction="in" name="ToRFID" value="E00401505C4BD596" length="" type="string"/>
+         <property direction="in" name="To" value="Arjen Schoneveld" length="" type="string"/>
+         <property direction="in" name="From" value="Nathalie Frey" length="" type="string"/>
+         <property direction="in" name="LogDate" value="2015-09-02 16:22:13.299" length="" type="date"/>
+      </message>
+      <message index="1" name="Transaction" type="array_element">
+         <property direction="in" name="_id" value="55e705fa2cdcb3488a79d551" length="" type="string"/>
+         <property direction="in" name="Description" value="Voor de lunch" length="" type="string"/>
+         <property direction="in" name="Amount" value="25" length="" type="integer"/>
+         <property direction="in" name="ValidTransaction" value="true" length="" type="boolean"/>
+         <property direction="in" name="FromRFID" value="04748B72F13280" length="" type="string"/>
+         <property direction="in" name="ToRFID" value="E00401505C4BD596" length="" type="string"/>
+         <property direction="in" name="To" value="Arjen Schoneveld" length="" type="string"/>
+         <property direction="in" name="From" value="Nathalie Frey" length="" type="string"/>
+         <property direction="in" name="LogDate" value="2015-09-02 16:21:46.582" length="" type="date"/>
+      </message>
+      <message index="2" name="Transaction" type="array_element">
+         <property direction="in" name="_id" value="55e6c0a62cdcb3488a79d550" length="" type="string"/>
+         <property direction="in" name="Description" value="Voor het eten" length="" type="string"/>
+         <property direction="in" name="Amount" value="11" length="" type="integer"/>
+         <property direction="in" name="ValidTransaction" value="true" length="" type="boolean"/>
+         <property direction="in" name="FromRFID" value="E00401505C4BD596" length="" type="string"/>
+         <property direction="in" name="ToRFID" value="04748B72F13280" length="" type="string"/>
+         <property direction="in" name="To" value="Nathalie Frey" length="" type="string"/>
+         <property direction="in" name="From" value="Arjen Schoneveld" length="" type="string"/>
+         <property direction="in" name="LogDate" value="2015-09-02 11:25:58.74" length="" type="date"/>
+      </message>
+      <message index="3" name="Transaction" type="array_element">
+         <property direction="in" name="_id" value="55e6b9832cdcb3488a79d54f" length="" type="string"/>
+         <property direction="in" name="Description" value="En dat het in Amersfoort" length="" type="string"/>
+         <property direction="in" name="Amount" value="444" length="" type="integer"/>
+         <property direction="in" name="ValidTransaction" value="true" length="" type="boolean"/>
+         <property direction="in" name="FromRFID" value="04748B72F13280" length="" type="string"/>
+         <property direction="in" name="ToRFID" value="E00401505C4BD596" length="" type="string"/>
+         <property direction="in" name="To" value="Arjen Schoneveld" length="" type="string"/>
+         <property direction="in" name="From" value="Nathalie Frey" length="" type="string"/>
+         <property direction="in" name="LogDate" value="2015-09-02 10:55:31.970" length="" type="date"/>
+      </message>
+      <message index="4" name="Transaction" type="array_element">
+         <property direction="in" name="_id" value="55e6b8a52cdcb3488a79d54e" length="" type="string"/>
+         <property direction="in" name="Description" value="Refund" length="" type="string"/>
+         <property direction="in" name="Amount" value="100" length="" type="integer"/>
+         <property direction="in" name="ValidTransaction" value="true" length="" type="boolean"/>
+         <property direction="in" name="FromRFID" value="E00401505C4BD596" length="" type="string"/>
+         <property direction="in" name="ToRFID" value="04748B72F13280" length="" type="string"/>
+         <property direction="in" name="To" value="Nathalie Frey" length="" type="string"/>
+         <property direction="in" name="From" value="Arjen Schoneveld" length="" type="string"/>
+         <property direction="in" name="LogDate" value="2015-09-02 10:51:49.266" length="" type="date"/>
+      </message>
+      <message index="5" name="Transaction" type="array_element">
+         <property direction="in" name="_id" value="55e6b4ce2cdcb3488a79d54d" length="" type="string"/>
+         <property direction="in" name="Description" value="Test" length="" type="string"/>
+         <property direction="in" name="Amount" value="127" length="" type="integer"/>
+         <property direction="in" name="ValidTransaction" value="true" length="" type="boolean"/>
+         <property direction="in" name="FromRFID" value="04748B72F13280" length="" type="string"/>
+         <property direction="in" name="ToRFID" value="E00401505C4BD596" length="" type="string"/>
+         <property direction="in" name="To" value="Arjen Schoneveld" length="" type="string"/>
+         <property direction="in" name="From" value="Nathalie Frey" length="" type="string"/>
+         <property direction="in" name="LogDate" value="2015-09-02 10:35:26.699" length="" type="date"/>
+      </message>
+      <message index="6" name="Transaction" type="array_element">
+         <property direction="in" name="_id" value="55e6b43d2cdcb3488a79d54c" length="" type="string"/>
+         <property direction="in" name="Description" value="Van de stad" length="" type="string"/>
+         <property direction="in" name="Amount" value="123" length="" type="integer"/>
+         <property direction="in" name="ValidTransaction" value="true" length="" type="boolean"/>
+         <property direction="in" name="FromRFID" value="04748B72F13280" length="" type="string"/>
+         <property direction="in" name="ToRFID" value="E00401505C4BD596" length="" type="string"/>
+         <property direction="in" name="To" value="Arjen Schoneveld" length="" type="string"/>
+         <property direction="in" name="From" value="Nathalie Frey" length="" type="string"/>
+         <property direction="in" name="LogDate" value="2015-09-02 10:33:01.110" length="" type="date"/>
+      </message>
+   </message>
+   <message name="FriendRequest" type="array">
+      <message index="0" name="FriendRequest" type="array_element">
+         <property direction="in" name="_id" value="55e573a11124abcc407f80c0" length="" type="string"/>
+         <property direction="in" name="BaseStationId" value="base_20" length="" type="string"/>
+         <property direction="in" name="TimeStamp" value="2015-08-29 12:49:00.769" length="" type="date"/>
+         <property direction="in" name="WUID_1" value="2762.0" length="" type="float"/>
+         <property direction="in" name="WUID_2" value="29070.0" length="" type="float"/>
+         <property direction="in" name="FirstName_1" value="Nathalie" length="" type="string"/>
+         <property direction="in" name="LastName_1" value="Frey" length="" type="string"/>
+         <property direction="in" name="FacebookURL_1" length="" type="string"/>
+         <property direction="in" name="FirstName_2" value="Arjen" length="" type="string"/>
+         <property direction="in" name="LastName_2" value="Schoneveld" length="" type="string"/>
+         <property direction="in" name="FacebookURL_2" value="https://www.facebook.com/613274909" length="" type="string"/>
+         <property direction="in" name="RFID_1" value="04748B72F13280" length="" type="string"/>
+         <property direction="in" name="RFID_2" value="E00401505C4BD596" length="" type="string"/>
+         <message name="__Mongo__" type="simple">
+            <property direction="" name="Datasource" value="everywear" length="" type="string"/>
+            <property direction="" name="Collection" value="Visitor" length="" type="string"/>
+            <property direction="" name="MessageName" value="Visitor" length="" type="string"/>
+            <property direction="" name="Multiple" value="false" length="" type="boolean"/>
+            <property direction="" name="EntityService" value="everywear/entity/Visitor" length="" type="string"/>
+         </message>
+         <message name="Visitor" type="simple">
+            <property direction="out" name="_id" value="55a7a24498a8ebcb179acc3f" length="" type="string"/>
+            <property direction="in" name="RFID" value="E00401505C4BD596" length="" type="string"/>
+            <property direction="in" name="Telephone" value="" length="" type="string"/>
+            <property direction="in" name="gps_lat" length="" type="float"/>
+            <property direction="in" name="SecurityCode" value="12345" length="" type="string"/>
+            <property direction="in" name="gps_bearing" length="" type="float"/>
+            <property direction="in" name="LastLogDate" value="2015-08-26 16:04:22.192" length="" type="date"/>
+            <property direction="in" name="LastName" value="Schoneveld" length="" type="string"/>
+            <property direction="in" name="Zipcode" value="1031HX" length="" type="string"/>
+            <property direction="in" name="FacebookURL" value="https://www.facebook.com/613274909" length="" type="string"/>
+            <property direction="in" name="WristbandId" value="29070" length="" type="integer"/>
+            <property direction="in" name="gps_lon" length="" type="float"/>
+            <property direction="in" name="Voltage" value="2700.0" length="" type="float"/>
+            <property direction="in" name="BaseStationId_2" value="" length="" type="string"/>
+            <property direction="in" name="BaseStationId_1" value="" length="" type="string"/>
+            <property direction="in" name="FirstName" value="Arjen" length="" type="string"/>
+            <property direction="in" name="BaseStationId_3" value="" length="" type="string"/>
+            <property direction="in" name="FestivalId" value="TML2015" length="" type="string"/>
+            <property direction="in" name="ArticleCode" value="" length="" type="string"/>
+            <property direction="in" name="Description" value="Magical Friday" length="" type="string"/>
+            <property direction="in" name="gps_speed" length="" type="float"/>
+            <property direction="in" subtype="extension=dat,handle=binary_object7464385634861558505navajo,mime=application/unknown" name="FacebookPhoto" length="" type="binary"/>
+            <property direction="in" name="Temperature" value="1890.0" length="" type="float"/>
+            <property direction="in" name="FestivalTokens" value="1299" length="" type="integer"/>
+            <property direction="in" name="BirthDate" value="2015-07-06 00:00:00.00" length="" type="date"/>
+            <property direction="in" name="gps_timestamp" length="" type="long"/>
+            <property direction="in" name="Email" value="arjen@sendrato.com" length="" type="string"/>
+            <property direction="in" name="ClusterId" value="Food South" length="" type="string"/>
+            <property direction="in" name="TicketType" value="079_FRI_regular" length="" type="string"/>
+            <property direction="in" name="Address" value="" length="" type="string"/>
+            <property direction="in" name="Town" value="" length="" type="string"/>
+            <property direction="in" name="RSSI_1" value="0.0" length="" type="float"/>
+            <property direction="in" name="RSSI_2" value="0.0" length="" type="float"/>
+            <property direction="in" name="RSSI_3" value="0.0" length="" type="float"/>
+            <property direction="in" name="LastLogTime" value="16:04:00" length="" type="clocktime"/>
+            <property direction="in" name="Gender" length="" type="selection" cardinality="1">
+               <option selected="1" name="Man" value="male"/>
+               <option selected="0" name="Vrouw" value="female"/>
+            </property>
+            <property direction="in" name="Country" length="" type="selection" cardinality="1">
+               <option selected="0" name="Afghanistan" value="AF"/>
+               <option selected="0" name="Albania" value="AL"/>
+               <option selected="0" name="Algeria" value="DZ"/>
+               <option selected="0" name="American Samoa" value="AS"/>
+               <option selected="0" name="Andorra" value="AD"/>
+               <option selected="0" name="Angola" value="AO"/>
+               <option selected="0" name="Anguilla" value="AI"/>
+               <option selected="0" name="Antarctica" value="AQ"/>
+               <option selected="0" name="Antigua and Barbuda" value="AG"/>
+               <option selected="0" name="Argentina" value="AR"/>
+               <option selected="0" name="Armenia" value="AM"/>
+               <option selected="0" name="Aruba" value="AW"/>
+               <option selected="0" name="Australia" value="AU"/>
+               <option selected="0" name="Austria" value="AT"/>
+               <option selected="0" name="Azerbaijan" value="AZ"/>
+               <option selected="0" name="Bahamas" value="BS"/>
+               <option selected="0" name="Bahrain" value="BH"/>
+               <option selected="0" name="Bangladesh" value="BD"/>
+               <option selected="0" name="Barbados" value="BB"/>
+               <option selected="0" name="Belarus" value="BY"/>
+               <option selected="0" name="Belgium" value="BE"/>
+               <option selected="0" name="Belize" value="BZ"/>
+               <option selected="0" name="Benin" value="BJ"/>
+               <option selected="0" name="Bermuda" value="BM"/>
+               <option selected="0" name="Bhutan" value="BT"/>
+               <option selected="0" name="Bolivia" value="BO"/>
+               <option selected="0" name="Bosnia and Herzegovina" value="BA"/>
+               <option selected="0" name="Botswana" value="BW"/>
+               <option selected="0" name="Brazil" value="BR"/>
+               <option selected="0" name="British Indian Ocean Territory" value="IO"/>
+               <option selected="0" name="British Virgin Islands" value="VG"/>
+               <option selected="0" name="Brunei" value="BN"/>
+               <option selected="0" name="Bulgaria" value="BG"/>
+               <option selected="0" name="Burkina Faso" value="BF"/>
+               <option selected="0" name="Burma (Myanmar)" value="MM"/>
+               <option selected="0" name="Burundi" value="BI"/>
+               <option selected="0" name="Cambodia" value="KH"/>
+               <option selected="0" name="Cameroon" value="CM"/>
+               <option selected="0" name="Canada" value="CA"/>
+               <option selected="0" name="Cape Verde" value="CV"/>
+               <option selected="0" name="Cayman Islands" value="KY"/>
+               <option selected="0" name="Central African Republic" value="CF"/>
+               <option selected="0" name="Chad" value="TD"/>
+               <option selected="0" name="Chile" value="CL"/>
+               <option selected="0" name="China" value="CN"/>
+               <option selected="0" name="Christmas Island" value="CX"/>
+               <option selected="0" name="Cocos (Keeling) Islands" value="CC"/>
+               <option selected="0" name="Colombia" value="CO"/>
+               <option selected="0" name="Comoros" value="KM"/>
+               <option selected="0" name="Cook Islands" value="CK"/>
+               <option selected="0" name="Costa Rica" value="CR"/>
+               <option selected="0" name="Croatia" value="HR"/>
+               <option selected="0" name="Cuba" value="CU"/>
+               <option selected="0" name="Cyprus" value="CY"/>
+               <option selected="0" name="Czech Republic" value="CZ"/>
+               <option selected="0" name="Democratic Republic of the Congo" value="CD"/>
+               <option selected="0" name="Denmark" value="DK"/>
+               <option selected="0" name="Djibouti" value="DJ"/>
+               <option selected="0" name="Dominica" value="DM"/>
+               <option selected="0" name="Dominican Republic" value="DO"/>
+               <option selected="0" name="Ecuador" value="EC"/>
+               <option selected="0" name="Egypt" value="EG"/>
+               <option selected="0" name="El Salvador" value="SV"/>
+               <option selected="0" name="Equatorial Guinea" value="GQ"/>
+               <option selected="0" name="Eritrea" value="ER"/>
+               <option selected="0" name="Estonia" value="EE"/>
+               <option selected="0" name="Ethiopia" value="ET"/>
+               <option selected="0" name="Falkland Islands" value="FK"/>
+               <option selected="0" name="Faroe Islands" value="FO"/>
+               <option selected="0" name="Fiji" value="FJ"/>
+               <option selected="0" name="Finland" value="FI"/>
+               <option selected="0" name="France" value="FR"/>
+               <option selected="0" name="French Polynesia" value="PF"/>
+               <option selected="0" name="Gabon" value="GA"/>
+               <option selected="0" name="Gambia" value="GM"/>
+               <option selected="0" name="Gaza Strip" value="XX"/>
+               <option selected="0" name="Georgia" value="GE"/>
+               <option selected="0" name="Germany" value="DE"/>
+               <option selected="0" name="Ghana" value="GH"/>
+               <option selected="0" name="Gibraltar" value="GI"/>
+               <option selected="0" name="Greece" value="GR"/>
+               <option selected="0" name="Greenland" value="GL"/>
+               <option selected="0" name="Grenada" value="GD"/>
+               <option selected="0" name="Guam" value="GU"/>
+               <option selected="0" name="Guatemala" value="GT"/>
+               <option selected="0" name="Guinea" value="GN"/>
+               <option selected="0" name="Guinea-Bissau" value="GW"/>
+               <option selected="0" name="Guyana" value="GY"/>
+               <option selected="0" name="Haiti" value="HT"/>
+               <option selected="0" name="Holy See (Vatican City)" value="VA"/>
+               <option selected="0" name="Honduras" value="HN"/>
+               <option selected="0" name="Hong Kong" value="HK"/>
+               <option selected="0" name="Hungary" value="HU"/>
+               <option selected="0" name="Iceland" value="IS"/>
+               <option selected="0" name="India" value="IN"/>
+               <option selected="0" name="Indonesia" value="ID"/>
+               <option selected="0" name="Iran" value="IR"/>
+               <option selected="0" name="Iraq" value="IQ"/>
+               <option selected="0" name="Ireland" value="IE"/>
+               <option selected="0" name="Isle of Man" value="IM"/>
+               <option selected="0" name="Israel" value="IL"/>
+               <option selected="0" name="Italy" value="IT"/>
+               <option selected="0" name="Ivory Coast" value="CI"/>
+               <option selected="0" name="Jamaica" value="JM"/>
+               <option selected="0" name="Japan" value="JP"/>
+               <option selected="0" name="Jersey" value="JE"/>
+               <option selected="0" name="Jordan" value="JO"/>
+               <option selected="0" name="Kazakhstan" value="KZ"/>
+               <option selected="0" name="Kenya" value="KE"/>
+               <option selected="0" name="Kiribati" value="KI"/>
+               <option selected="0" name="Kosovo" value="KO"/>
+               <option selected="0" name="Kuwait" value="KW"/>
+               <option selected="0" name="Kyrgyzstan" value="KG"/>
+               <option selected="0" name="Laos" value="LA"/>
+               <option selected="0" name="Latvia" value="LV"/>
+               <option selected="0" name="Lebanon" value="LB"/>
+               <option selected="0" name="Lesotho" value="LS"/>
+               <option selected="0" name="Liberia" value="LR"/>
+               <option selected="0" name="Libya" value="LY"/>
+               <option selected="0" name="Liechtenstein" value="LI"/>
+               <option selected="0" name="Lithuania" value="LT"/>
+               <option selected="0" name="Luxembourg" value="LU"/>
+               <option selected="0" name="Macau" value="MO"/>
+               <option selected="0" name="Macedonia" value="MK"/>
+               <option selected="0" name="Madagascar" value="MG"/>
+               <option selected="0" name="Malawi" value="MW"/>
+               <option selected="0" name="Malaysia" value="MY"/>
+               <option selected="0" name="Maldives" value="MV"/>
+               <option selected="0" name="Mali" value="ML"/>
+               <option selected="0" name="Malta" value="MT"/>
+               <option selected="0" name="Marshall Islands" value="MH"/>
+               <option selected="0" name="Mauritania" value="MR"/>
+               <option selected="0" name="Mauritius" value="MU"/>
+               <option selected="0" name="Mayotte" value="YT"/>
+               <option selected="0" name="Mexico" value="MX"/>
+               <option selected="0" name="Micronesia" value="FM"/>
+               <option selected="0" name="Moldova" value="MD"/>
+               <option selected="0" name="Monaco" value="MC"/>
+               <option selected="0" name="Mongolia" value="MN"/>
+               <option selected="0" name="Montenegro" value="ME"/>
+               <option selected="0" name="Montserrat" value="MS"/>
+               <option selected="0" name="Morocco" value="MA"/>
+               <option selected="0" name="Mozambique" value="MZ"/>
+               <option selected="0" name="Namibia" value="NA"/>
+               <option selected="0" name="Nauru" value="NR"/>
+               <option selected="0" name="Nepal" value="NP"/>
+               <option selected="0" name="Netherlands" value="NL"/>
+               <option selected="0" name="Netherlands Antilles" value="AN"/>
+               <option selected="0" name="New Caledonia" value="NC"/>
+               <option selected="0" name="New Zealand" value="NZ"/>
+               <option selected="0" name="Nicaragua" value="NI"/>
+               <option selected="0" name="Niger" value="NE"/>
+               <option selected="0" name="Nigeria" value="NG"/>
+               <option selected="0" name="Niue" value="NU"/>
+               <option selected="0" name="Norfolk Island" value="NF"/>
+               <option selected="0" name="North Korea" value="KP"/>
+               <option selected="0" name="Northern Mariana Islands" value="MP"/>
+               <option selected="0" name="Norway" value="NO"/>
+               <option selected="0" name="Oman" value="OM"/>
+               <option selected="0" name="Pakistan" value="PK"/>
+               <option selected="0" name="Palau" value="PW"/>
+               <option selected="0" name="Panama" value="PA"/>
+               <option selected="0" name="Papua New Guinea" value="PG"/>
+               <option selected="0" name="Paraguay" value="PY"/>
+               <option selected="0" name="Peru" value="PE"/>
+               <option selected="0" name="Philippines" value="PH"/>
+               <option selected="0" name="Pitcairn Islands" value="PN"/>
+               <option selected="0" name="Poland" value="PL"/>
+               <option selected="0" name="Portugal" value="PT"/>
+               <option selected="0" name="Puerto Rico" value="PR"/>
+               <option selected="0" name="Qatar" value="QA"/>
+               <option selected="0" name="Republic of the Congo" value="CG"/>
+               <option selected="0" name="Romania" value="RO"/>
+               <option selected="0" name="Russia" value="RU"/>
+               <option selected="0" name="Rwanda" value="RW"/>
+               <option selected="0" name="Saint Barthelemy" value="BL"/>
+               <option selected="0" name="Saint Helena" value="SH"/>
+               <option selected="0" name="Saint Kitts and Nevis" value="KN"/>
+               <option selected="0" name="Saint Lucia" value="LC"/>
+               <option selected="0" name="Saint Martin" value="MF"/>
+               <option selected="0" name="Saint Pierre and Miquelon" value="PM"/>
+               <option selected="0" name="Saint Vincent and the Grenadines" value="VC"/>
+               <option selected="0" name="Samoa" value="WS"/>
+               <option selected="0" name="San Marino" value="SM"/>
+               <option selected="0" name="Sao Tome and Principe" value="ST"/>
+               <option selected="0" name="Saudi Arabia" value="SA"/>
+               <option selected="0" name="Senegal" value="SN"/>
+               <option selected="0" name="Serbia" value="RS"/>
+               <option selected="0" name="Seychelles" value="SC"/>
+               <option selected="0" name="Sierra Leone" value="SL"/>
+               <option selected="0" name="Singapore" value="SG"/>
+               <option selected="0" name="Slovakia" value="SK"/>
+               <option selected="0" name="Slovenia" value="SI"/>
+               <option selected="0" name="Solomon Islands" value="SB"/>
+               <option selected="0" name="Somalia" value="SO"/>
+               <option selected="0" name="South Africa" value="ZA"/>
+               <option selected="0" name="South Korea" value="KR"/>
+               <option selected="0" name="Spain" value="ES"/>
+               <option selected="0" name="Sri Lanka" value="LK"/>
+               <option selected="0" name="Sudan" value="SD"/>
+               <option selected="0" name="Suriname" value="SR"/>
+               <option selected="0" name="Svalbard" value="SJ"/>
+               <option selected="0" name="Swaziland" value="SZ"/>
+               <option selected="0" name="Sweden" value="SE"/>
+               <option selected="0" name="Switzerland" value="CH"/>
+               <option selected="0" name="Syria" value="SY"/>
+               <option selected="0" name="Taiwan" value="TW"/>
+               <option selected="0" name="Tajikistan" value="TJ"/>
+               <option selected="0" name="Tanzania" value="TZ"/>
+               <option selected="0" name="Thailand" value="TH"/>
+               <option selected="0" name="Timor-Leste" value="TL"/>
+               <option selected="0" name="Togo" value="TG"/>
+               <option selected="0" name="Tokelau" value="TK"/>
+               <option selected="0" name="Tonga" value="TO"/>
+               <option selected="0" name="Trinidad and Tobago" value="TT"/>
+               <option selected="0" name="Tunisia" value="TN"/>
+               <option selected="0" name="Turkey" value="TR"/>
+               <option selected="0" name="Turkmenistan" value="TM"/>
+               <option selected="0" name="Turks and Caicos Islands" value="TC"/>
+               <option selected="0" name="Tuvalu" value="TV"/>
+               <option selected="0" name="Uganda" value="UG"/>
+               <option selected="0" name="Ukraine" value="UA"/>
+               <option selected="0" name="United Arab Emirates" value="AE"/>
+               <option selected="0" name="United Kingdom" value="GB"/>
+               <option selected="0" name="United States" value="US"/>
+               <option selected="0" name="Uruguay" value="UY"/>
+               <option selected="0" name="US Virgin Islands" value="VI"/>
+               <option selected="0" name="Uzbekistan" value="UZ"/>
+               <option selected="0" name="Vanuatu" value="VU"/>
+               <option selected="0" name="Venezuela" value="VE"/>
+               <option selected="0" name="Vietnam" value="VN"/>
+               <option selected="0" name="Wallis and Futuna" value="WF"/>
+               <option selected="0" name="Western Sahara" value="EH"/>
+               <option selected="0" name="Yemen" value="YE"/>
+               <option selected="0" name="Zambia" value="ZM"/>
+               <option selected="0" name="Zimbabwe" value="ZW"/>
+            </property>
+            <message name="Attributes" type="array"/>
+            <message name="Location" type="simple">
+               <property direction="in" name="Lat" value="51.088362190525174" length="" type="float"/>
+               <property direction="in" name="Lon" value="4.381486488915374" length="" type="float"/>
+            </message>
+         </message>
+      </message>
+   </message>
+   <methods/>
+</tml>

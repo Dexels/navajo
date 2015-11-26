@@ -15,6 +15,7 @@ import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -45,16 +46,14 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 
 	// horrible, but necessary.
 	private boolean isRebuilding = false;
+	
+	private JTabbedPane tabbedpane;
 
 	@Override
 	public Object createContainer() {
 		// final TipiComponent me = this;
 
-		final JTabbedPane jt = new JTabbedPane() {
-
-			/**
-			 * 
-			 */
+	    tabbedpane= new JTabbedPane() {
 			private static final long serialVersionUID = 1661243154472687618L;
 
 			private Dimension checkMax(Dimension preferredSize) {
@@ -91,7 +90,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		th.initHelper(this);
 		addHelper(th);
 
-		jt.addChangeListener(new ChangeListener() {
+		tabbedpane.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent ce) {
 				if (isRebuilding) {
@@ -112,24 +111,23 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					logger.debug("last selected was null");
 
 				}
-				lastSelectedTab = jt.getSelectedComponent();
+				lastSelectedTab = tabbedpane.getSelectedComponent();
 				if (lastSelectedTab == null) {
 					logger.debug("last selected is null");
 					getAttributeProperty("selectedindex").setAnyValue(-1);
 				} else {
-					getAttributeProperty("selectedindex").setAnyValue(
-							jt.getSelectedIndex());
+					getAttributeProperty("selectedindex").setAnyValue(tabbedpane.getSelectedIndex());
 					lastSelectedTab.doLayout();
 				}
 				if (myContext.getTopLevel() instanceof TipiApplet) {
 //					TipiApplet ta = (TipiApplet) myContext.getTopLevel();
 //					JPanel component = (JPanel) ta.getContentPane()
 //							.getComponent(0);
-
+				    
 				}
 			}
 		});
-		return jt;
+		return tabbedpane;
 	}
 
 	@Override
@@ -328,10 +326,12 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					setTabPlacement(sel);
 				}
 			});
-			// ((JTabbedPane)getContainer()).setSelectedComponent(tc.getContainer
-			// ());
 		}
-		/** @todo Override this com.dexels.navajo.tipi.TipiComponent method */
+		
+		if (name.equals("opaque")) {
+		    UIManager.put("TabbedPane.contentOpaque", (Boolean) object);
+            tabbedpane.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI());
+        }
 	}
 
 	public void setTabPlacement(String sel) {
@@ -403,51 +403,45 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		visibilityMap.put(c, visible);
 	}
 
-	public void rebuildTabs() {
-		runSyncInEventThread(new Runnable() {
+    public void rebuildTabs() {
 
-			@Override
-			public void run() {
-				isRebuilding = true;
-				try {
-					JTabbedPane jt = (JTabbedPane) getContainer();
-					jt.removeAll();
+        isRebuilding = true;
+        try {
+            JTabbedPane jt = (JTabbedPane) getContainer();
+            jt.removeAll();
 
-					for (Component c : childList) {
-						boolean isVisible = visibilityMap.get(c);
-						if (isVisible) {
-							if (c instanceof TipiTabbable)
-							{
-								jt.addTab(((TipiTabbable)c).getTabText(), c);
-							}
-							else
-							{
-								jt.addTab(constraintMap.get(c), c);
-							}
-						}
-					}
-					if (lastSelectedTab != null) {
-						logger.debug("last selected null!");
-						boolean found = false;
-						for (int i = 0; i < jt.getComponentCount(); i++) {
-							if (jt.getComponent(i) == lastSelectedTab) {
-								found = true;
-								break;
-							}
-						}
-						if (found) {
-							jt.setSelectedComponent(lastSelectedTab);
-						}
-					} else {
-						jt.setSelectedIndex(0);
-					}
-				} finally {
-					isRebuilding = false;
-				}
-			}
-		});
+            for (Component c : childList) {
+                boolean isVisible = visibilityMap.get(c);
+                if (isVisible) {
+                    if (c instanceof TipiTabbable) {
+                        jt.addTab(((TipiTabbable) c).getTabText(), c);
+                    } else {
+                        jt.addTab(constraintMap.get(c), c);
+                    }
+                }
+            }
+            if (lastSelectedTab != null) {
+                logger.debug("last selected null!");
+                boolean found = false;
+                for (int i = 0; i < jt.getComponentCount(); i++) {
+                    if (jt.getComponent(i) == lastSelectedTab) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+                    jt.setSelectedComponent(lastSelectedTab);
+                }
+            } else {
+                jt.setSelectedIndex(0);
+            }
+        } finally {
+            isRebuilding = false;
+        }
+    }
 
-	}
+
+	
 	
 	@Override
 	public void unhideComponent() {

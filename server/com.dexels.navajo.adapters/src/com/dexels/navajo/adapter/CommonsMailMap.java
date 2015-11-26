@@ -22,11 +22,13 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.adapter.mailmap.AttachementMap;
 import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.DependentResource;
 import com.dexels.navajo.mapping.GenericDependentResource;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Debugable;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;
@@ -34,7 +36,7 @@ import com.dexels.navajo.server.enterprise.queue.Queuable;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.util.AuditLog;
 
-public class CommonsMailMap implements Mappable, Queuable {
+public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	private static final long serialVersionUID = 5625969473841204407L;
 	private final static Logger logger = LoggerFactory.getLogger(CommonsMailMap.class);
 	@SuppressWarnings("unused")
@@ -65,6 +67,8 @@ public class CommonsMailMap implements Mappable, Queuable {
 	private List<AttachementMap> attachments = null;
 	public AttachementMap[] multipleAttachments = null;
 	public AttachementMap attachment = null;
+	private Integer port = null;
+	private boolean debug;
 
 	
 
@@ -128,13 +132,18 @@ public class CommonsMailMap implements Mappable, Queuable {
 	 */
 	public void sendMail() throws UserException {
 		try {
+			logger.info("Sending mail to: "+to+" subject: "+subject);
 			// Create the email message and fill the basics
 			HtmlEmail email = getNewHtmlEmail();
+			if(debug) {
+				email.setDebug(debug);
+			}
 			fillHtmlEmailBasics(email);
 		    // add attachments
 			List<String> inlineImages = new ArrayList<String>();
 			if (this.attachments != null) {
 				for (int i = 0; i < this.attachments.size(); i++) {
+					logger.info("# of attachments found: "+attachments.size());
 					AttachmentMapInterface am = this.attachments.get(i);
 					String file = am.getAttachFile();
 					String userFileName = am.getAttachFileName();
@@ -151,7 +160,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 					}
 					File fl = new File(fileName);
 					URL url = fl.toURI().toURL();
-					
+					logger.info("Using url: "+url);
 					if (contentDisposition != null && contentDisposition.equalsIgnoreCase("Inline")) {
 					    // embed the image and get the content id
 					    inlineImages.add(email.embed(url, userFileName));
@@ -159,15 +168,21 @@ public class CommonsMailMap implements Mappable, Queuable {
 						email.attach(this.getEmailAttachment(fileName, url, contentDisposition, userFileName, userFileName));
 					}
 				}
+			} else {
+				logger.info("No attachments");
 			}
+		logger.info("Setting body, before replace: "+bodyText);
 		  
 		  // Replace any inline image tags with the created ones
 		  bodyText = replaceInlineImageTags(bodyText, inlineImages);
 		  // Finally set the complete html
+		  logger.info("Setting body: "+bodyText);
 		  email.setHtmlMsg(bodyText);
+		  
 
 		  // set the alternative message
 		  email.setTextMsg(this.getNonHtmlText());
+			logger.info("Sending mail to "+to+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
 
 		  // send the email
 		  email.send();
@@ -254,44 +269,45 @@ public class CommonsMailMap implements Mappable, Queuable {
 		}
 		return this.ccArray;
 	}
+	public Integer getPort() {
+		return port;
+	}
 
+	public void setPort(Integer port) {
+		this.port = port;
+	}
+	
 	private Session createSession() {
 		Properties props = new Properties();
 		props.putAll( System.getProperties());
 		props.put("mail.smtp.host", mailServer);
 		
-		String port = "";
-		if (mailPort != null) {
-			port = mailPort;
+		String actualport = getPort() == null ? null: port.toString(); 
+		if (actualport == null || actualport.equals("")) {
+			actualport = useEncryption ?  "465" : "25";
 		}
 
-		if (smtpUser != null && !"".equals(smtpUser)) {
+		if (getSmtpUser() != null && !"".equals(getSmtpUser())) {
 			// Use auth
 			props.put("mail.smtp.auth", "true");
-			props.put("mail.debug", "true");
+//			props.put("mail.debug", "true");
 			if (useEncryption) {
 				logger.info("Using encrypt + auth. ");
-				if (port == null) {
-					port = "465";
-				}
-				props.put("mail.smtp.port", port);
-				props.put("mail.smtp.socketFactory.port", port);
+
+				props.put("mail.smtp.port", actualport);
+				props.put("mail.smtp.socketFactory.port", actualport);
 				props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 				props.put("mail.smtp.socketFactory.fallback", "false");
 			} else {
-				if (port == null) {
-					port = "25";
-				}
-				props.put("mail.smtp.port", port);
+
+				props.put("mail.smtp.port", actualport);
 			}
 			Authenticator auth = new SMTPAuthenticator();
 			Session session = Session.getInstance(props, auth);
 			return session;
 		} else {
-			if (port == null) {
-				port = "25";
-			}
-			props.put("mail.smtp.port", port);
+
+			props.put("mail.smtp.port", actualport);
 			Session session = Session.getInstance(props);
 			return session;
 		}
@@ -304,7 +320,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 	private class SMTPAuthenticator extends javax.mail.Authenticator {
 		@Override
 		public PasswordAuthentication getPasswordAuthentication() {
-			return new PasswordAuthentication(smtpUser, smtpPass);
+			return new PasswordAuthentication(getSmtpUser(), getSmtpPass());
 		}
 	}
 
@@ -372,7 +388,14 @@ public class CommonsMailMap implements Mappable, Queuable {
 	}
 
 	public String getSmtpUser() {
-		return this.smtpUser;
+		if(smtpUser!=null && !"".equals(smtpUser)) {
+			return smtpUser;
+		}
+		Property mailUserProperty = myNavajo.getProperty("__globals__/MailUser");
+		if(mailUserProperty!=null) {
+			return mailUserProperty.getValue();
+		}
+		return smtpUser;
 	}
 
 	public void setSmtpUser(String smtpUser) {
@@ -380,7 +403,14 @@ public class CommonsMailMap implements Mappable, Queuable {
 	}
 
 	public String getSmtpPass() {
-		return this.smtpPass;
+		if(smtpPass!=null && !"".equals(smtpPass)) {
+			return smtpPass;
+		}
+		Property mailPassProperty = myNavajo.getProperty("__globals__/MailPassword");
+		if(mailPassProperty!=null) {
+			return mailPassProperty.getValue();
+		}
+		return smtpPass;
 	}
 
 	public void setSmtpPass(String smtpPass) {
@@ -561,5 +591,15 @@ public class CommonsMailMap implements Mappable, Queuable {
 			attachments = new ArrayList<AttachementMap>();
 		}
 		attachments.add(m);
+	}
+
+	@Override
+	public void setDebug(boolean b) {
+		this.debug = b;
+	}
+
+	@Override
+	public boolean getDebug() {
+		return this.debug;
 	}
 }

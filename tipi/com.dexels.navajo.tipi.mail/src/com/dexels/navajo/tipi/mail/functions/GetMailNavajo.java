@@ -2,10 +2,13 @@ package com.dexels.navajo.tipi.mail.functions;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 import javax.activation.DataSource;
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.slf4j.Logger;
@@ -44,31 +47,49 @@ public class GetMailNavajo extends FunctionInterface {
 		Message parts = NavajoFactory.getInstance().createMessage(result, "Parts",Message.MSG_TYPE_ARRAY);
 		mail.addMessage(parts);
 		try {
-			MimeMultipart mmp = new MimeMultipart(ds);
-			
-			for (int i=0; i<mmp.getCount();i++) {
-				BodyPart bp = mmp.getBodyPart(i);
-				String type = bp.getContentType();
-				Binary partBinary = new Binary( bp.getInputStream(),false);
-
-				if (i==0) {
-//					Property content = NavajoFactory.getInstance().createProperty(result, "Content", Property.BINARY_PROPERTY, null, 0,"",Property.DIR_OUT);
+			MimeMultipart mmp = getMultipartMessage(ds);
+			if(mmp!=null) {
+				for (int i=0; i<mmp.getCount();i++) {
+					BodyPart bp = mmp.getBodyPart(i);
+					String type = bp.getContentType();
+					Binary partBinary = new Binary( bp.getInputStream(),false);
+	
+					if (i==0) {
+	//					Property content = NavajoFactory.getInstance().createProperty(result, "Content", Property.BINARY_PROPERTY, null, 0,"",Property.DIR_OUT);
+						Property mimeType = NavajoFactory.getInstance().createProperty(result, "ContentType", Property.STRING_PROPERTY, type, 0,"",Property.DIR_OUT);
+	//					mail.addProperty(content);
+						mail.addProperty(mimeType);
+	//					content.setAnyValue(partBinary);
+						partBinary.setMimeType(type);
+					}
+					Message element = parts.addElement(NavajoFactory.getInstance().createMessage(result, "Parts",Message.MSG_TYPE_ARRAY_ELEMENT));
+					Property content = NavajoFactory.getInstance().createProperty(result, "Content", Property.BINARY_PROPERTY, null, 0,"",Property.DIR_OUT);
+					element.addProperty(content);
 					Property mimeType = NavajoFactory.getInstance().createProperty(result, "ContentType", Property.STRING_PROPERTY, type, 0,"",Property.DIR_OUT);
-//					mail.addProperty(content);
-					mail.addProperty(mimeType);
-//					content.setAnyValue(partBinary);
+					element.addProperty(mimeType);
+					content.setAnyValue(partBinary);					
 					partBinary.setMimeType(type);
+					content.addSubType("browserMime="+type);
 				}
+			} else {
+				String type = b.guessContentType();
+				MimeMessage mm = new MimeMessage(Session.getDefaultInstance(new Properties()), b.getDataAsStream());
+				
+//				mm.get
+				
+				Binary body = new Binary(mm.getInputStream(),false);
+				//				mm.getC
 				Message element = parts.addElement(NavajoFactory.getInstance().createMessage(result, "Parts",Message.MSG_TYPE_ARRAY_ELEMENT));
 				Property content = NavajoFactory.getInstance().createProperty(result, "Content", Property.BINARY_PROPERTY, null, 0,"",Property.DIR_OUT);
 				element.addProperty(content);
 				Property mimeType = NavajoFactory.getInstance().createProperty(result, "ContentType", Property.STRING_PROPERTY, type, 0,"",Property.DIR_OUT);
+				Property messageMimeType = NavajoFactory.getInstance().createProperty(result, "ContentType", Property.STRING_PROPERTY, type, 0,"",Property.DIR_OUT);
+				mail.addProperty(messageMimeType);
 				element.addProperty(mimeType);
-				content.setAnyValue(partBinary);					
-				partBinary.setMimeType(type);
+				content.setAnyValue(body);					
+				b.setMimeType(mm.getContentType());
 				content.addSubType("browserMime="+type);
 			}
-			
 			return result;
 		} catch (MessagingException e) {
 			logger.error("Error: ",e);
@@ -77,6 +98,17 @@ public class GetMailNavajo extends FunctionInterface {
 		}
 		return null;
 
+	}
+
+	private MimeMultipart getMultipartMessage(DataSource ds) {
+		MimeMultipart mmp;
+		try {
+			mmp = new MimeMultipart(ds);
+			return mmp;
+		} catch (MessagingException e) {
+			logger.info("Can not create multipart.");
+			return null;
+		}
 	}
 	
 	

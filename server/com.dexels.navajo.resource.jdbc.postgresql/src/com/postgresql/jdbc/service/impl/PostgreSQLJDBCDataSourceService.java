@@ -14,6 +14,9 @@ import javax.sql.XADataSource;
 
 
 
+
+
+
 import org.apache.commons.dbcp.ConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
@@ -32,7 +35,7 @@ public class PostgreSQLJDBCDataSourceService implements DataSourceFactory {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(PostgreSQLJDBCDataSourceService.class);
-	private ObjectPool pool;
+	private ObjectPool<Object> pool;
 	
 //	private PoolableConnectionFactory poolableConnectionFactory;
     public void start() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -170,7 +173,7 @@ public class PostgreSQLJDBCDataSourceService implements DataSourceFactory {
        // any ObjectPool implementation will suffice.
        //
 	   
-	   final GenericObjectPool connectionPool = new GenericObjectPool(null);
+	   final GenericObjectPool<Object> connectionPool = new GenericObjectPool<Object>(null);
 
        
        if(minIdle!=null) {

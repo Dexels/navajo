@@ -11,7 +11,7 @@ public interface NqlContextApi {
 
 	public List<NQLCommand> parseCommand(String nql);
 
-	public void executeCommand(String nql, OutputCallback ob) throws ClientException,
+	public void executeCommand(String nql, String tenant, String username, String password, OutputCallback ob) throws ClientException,
 			NavajoException, IOException;
 
 	public void setNavajoContext(ClientContext nrc);

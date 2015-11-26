@@ -15,4 +15,9 @@ public interface TribeMemberInterface {
 	public void setChief(boolean b);
 	public boolean isChief();
 	
+	/** 
+     * Indicates whether all data is properly migrated and backup up amongst the members from this member
+     */
+    public boolean isSafe();
+	
 }

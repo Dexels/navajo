@@ -182,10 +182,9 @@ public Message match(String matchString, Navajo inMessage,
 		} catch (ExpressionChangedException e) {
 		}
     } catch (NavajoException e) {
-        System.err.println("Expression failed: "+current.getValue());
-
+        logger.info("Expression failed: "+current.getValue());
     } catch (Throwable e) {
-    	System.err.println("Expression changed");
+    	logger.info("Expression changed");
 	}
       p = current.peekEvaluatedValue();
       
@@ -371,14 +370,14 @@ public Map<Property,List<Property>> createDependencyMap(Navajo n) throws NavajoE
           break;
         }
         catch (ExpressionDependencyException ex1) {
-          System.err.println("Did not succeed adding. Continuing");
+          logger.info("Did not succeed adding. Continuing",ex1);
         }
 //        for (int i = 0; i < deps.size(); i++) {
 //
 //        }
       }
       if (!found) {
-        System.err.println("Arrrr shiver me timbers");
+//        System.err.println("Arrrr shiver me timbers");
       }
     }
     

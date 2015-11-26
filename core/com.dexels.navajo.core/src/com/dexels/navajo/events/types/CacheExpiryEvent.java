@@ -52,4 +52,8 @@ public class CacheExpiryEvent implements NavajoEvent {
 		return key;
 	}
 
+	@Override
+    public boolean isSynchronousEvent() {
+        return false;
+    }
 }

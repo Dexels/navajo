@@ -307,6 +307,8 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 
 				msg.setContent(multipart);
 			}
+			logger.info("Sending mail to "+recipients+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
+
 			Transport.send(msg);
 
 		} catch (Exception e) {

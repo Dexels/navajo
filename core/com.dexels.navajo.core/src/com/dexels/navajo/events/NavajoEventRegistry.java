@@ -1,6 +1,7 @@
 package com.dexels.navajo.events;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -30,7 +31,10 @@ import com.dexels.navajo.server.jmx.JMXHelper;
  *
  */
 public class NavajoEventRegistry extends NotificationBroadcasterSupport implements NavajoEventRegistryMXBean, NotificationListener {
-
+    private final static String id = "Navajo Event Registry";
+    private final static Logger logger = LoggerFactory.getLogger(NavajoEventRegistry.class);
+    private final static Object semaphore = new Object();
+    public static long notificationSequence = 0;
 	private volatile static NavajoEventRegistry instance = null;
 	
 	private final Map<Class<? extends NavajoEvent>, Set<NavajoListener>> registry = 
@@ -41,15 +45,9 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	private final Set<String> monitoredEvents = Collections.newSetFromMap( new ConcurrentHashMap<String,Boolean>() );
 	private final Map<String,HashSet<String>> monitorLeveledEvents = new ConcurrentHashMap<String,HashSet<String>>();
+	private final Map<String, Object> eventLocks = new ConcurrentHashMap<>();
 	
-	private final static Object semaphore = new Object();
-	public static long notificationSequence = 0;
-	
-	private final static String id = "Navajo Event Registry";
-	
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(NavajoEventRegistry.class);
+
 	
 	public static void clearInstance() {
 		instance = null;
@@ -98,7 +96,10 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	public void addListener(Class<? extends NavajoEvent> type, NavajoListener l) {
 		
 		synchronized (semaphore) {
-			
+		    if (!eventLocks.containsKey(type.getName())) {
+		        eventLocks.put(type.getName(), new Object());
+		    }
+		   
 			Set<NavajoListener> registered = registry.get(type);
 			if ( registered == null ) {
 				registered = Collections.newSetFromMap( new ConcurrentHashMap<NavajoListener,Boolean>() );
@@ -202,26 +203,34 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 * @param ignoreProxyListeners, if set to true, listeners of class NavajoEventProxy are ignored to prevent event ping-pong.
 	 */
 	public void publishEvent(NavajoEvent ne, boolean ignoreProxyListeners) {
+	    final Object lock;
+	    if (ne.isSynchronousEvent() && eventLocks.containsKey(ne.getClass().getName())) {
+	        lock = eventLocks.get(ne.getClass().getName());
+	    } else {
+	        lock = new Object();
+	    }
+        synchronized (lock) {
+            // logger.info("Synchronous Event Triggered: " + ne.getClass());
+            publishMonitoredEvent(ne);
 
-		//logger.info("Synchronous Event Triggered: " + ne.getClass());
-		publishMonitoredEvent(ne);
+            Set<NavajoListener> copy = getInterestedParties(ne);
+            if (copy != null) {
+                Iterator<NavajoListener> i = copy.iterator();
+                while (i.hasNext()) {
+                    NavajoListener nl = i.next();
+                    try {
+                        if (ignoreProxyListeners && (nl instanceof NavajoEventProxyInterface)) {
+
+                        } else {
+                            nl.onNavajoEvent(ne);
+                        }
+                    } catch (Throwable t) {
+                        logger.error("Error in onNavajoEvent {} to {}: {} ", ne, nl, t);
+                    }
+                }
+            }
+        }
 		
-		Set<NavajoListener> copy = getInterestedParties(ne);
-		if ( copy != null )  {
-			Iterator<NavajoListener> i = copy.iterator();
-			while ( i.hasNext() ) {
-				try {
-					NavajoListener nl = i.next();
-					if ( ignoreProxyListeners && ( nl instanceof NavajoEventProxyInterface )) {
-						
-					} else {
-						nl.onNavajoEvent(ne);
-					}
-				} catch (Throwable t) {
-					logger.error("Error: ", t);
-				}
-			}
-		}
 	}
 	
 	/**

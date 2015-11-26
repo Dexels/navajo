@@ -8,6 +8,9 @@ public class DummyTask implements TaskInterface {
 	private static final long serialVersionUID = 4518273204586299917L;
 	private TriggerInterface trigger;
 	private String workflowDefinition;
+	private String owner = null;
+	private String tenant;
+	
 
 	@Override
 	public TaskInterface getInstance() {
@@ -83,7 +86,6 @@ public class DummyTask implements TaskInterface {
 
 	@Override
 	public String getWorkflowId() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -106,6 +108,26 @@ public class DummyTask implements TaskInterface {
 	@Override
 	public boolean isProxy() {
 		return false;
+	}
+
+	@Override
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	@Override
+	public void setTenant(String tenant) {
+		this.tenant = tenant;
+	}
+
+	@Override
+	public String getTenant() {
+		// TODO Auto-generated method stub
+		return this.tenant;
 	}
 
 }

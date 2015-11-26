@@ -280,7 +280,7 @@ public final boolean isStopped() {
 
   @Override
 public void stop() {
-    System.out.println("stop() called...waiting for thread to terminate...");
+    logger.info("stop() called...waiting for thread to terminate...");
     stop = true;
     kill = true;
     try {
@@ -290,7 +290,7 @@ public void stop() {
     } catch (java.lang.InterruptedException ie) {
 
     }
-    System.out.println("calling kill().");
+    logger.info("calling kill().");
     kill();
   }
 

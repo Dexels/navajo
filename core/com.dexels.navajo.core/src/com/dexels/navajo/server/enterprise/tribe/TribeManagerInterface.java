@@ -9,6 +9,7 @@ import java.util.concurrent.locks.Lock;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.Access;
 
+@SuppressWarnings("rawtypes")
 public interface TribeManagerInterface {
 
 	public String getTribalId();
@@ -18,7 +19,7 @@ public interface TribeManagerInterface {
 	 */
 	public TribalTopic getTopic(String name);
 	
-	public Map getDistributedMap(String name);
+    public Map getDistributedMap(String name);
 	
 	public Set getDistributedSet(String name);
 	
@@ -47,7 +48,7 @@ public interface TribeManagerInterface {
 	 * @return
 	 * @throws Exception
 	 */
-	public Navajo forward(Navajo in) throws Exception;
+	public Navajo forward(Navajo in, String tenant) throws Exception;
 	
 	/**
 	 * Forward a Navajo Request to a SPECIFIC other Tribal Member.
@@ -56,7 +57,7 @@ public interface TribeManagerInterface {
 	 * @return
 	 * @throws Exception
 	 */
-	public Navajo forward(Navajo in, Object address) throws Exception;
+	public Navajo forward(Navajo in, Object address, String tenant) throws Exception;
 	
 	
 	/**
@@ -64,7 +65,7 @@ public interface TribeManagerInterface {
 	 * @param in
 	 * @throws Exception
 	 */
-	public void broadcast(Navajo in) throws Exception;
+	public void broadcast(Navajo in, String tenant) throws Exception;
 	
 	/**
 	 * Broadcast a SmokeSignal to ALL Tribal Members.
@@ -160,7 +161,15 @@ public interface TribeManagerInterface {
 	public String getChiefName();
 
 	String getMyUniqueId();
+	
+	public Object getMember(String id);
 
 	List<TribalNumber> getDistributedCounters();
     
+	public boolean isActive();
+	
+	/** 
+	 * Indicates whether all data is properly migrated and backup up amongst the members
+	 */
+	public boolean tribeIsSafe();
 }

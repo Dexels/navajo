@@ -62,4 +62,9 @@ public class ClassPathResourceLoader implements TipiResourceLoader, Serializable
 	public void flushCache() {
 		// DO NOTHING
 	}
+
+	@Override
+	public void invalidate() throws IOException {
+		// DO NOTHING
+	}
 }

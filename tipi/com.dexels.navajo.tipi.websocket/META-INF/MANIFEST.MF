@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Tipi Jabber extension
 Bundle-SymbolicName: com.dexels.navajo.tipi.websocket
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.12.qualifier
+Bundle-Version: 1.0.14.qualifier
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi
 Bundle-Activator: tipiwebsocket.TipiWebsocketExtension

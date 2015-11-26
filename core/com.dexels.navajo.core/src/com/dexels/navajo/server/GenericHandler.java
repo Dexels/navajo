@@ -10,12 +10,10 @@ import java.util.logging.Level;
 
 import navajocore.Version;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.compiler.BundleCreator;
+import com.dexels.navajo.compiler.BundleCreatorFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -168,10 +166,10 @@ public class GenericHandler extends ServiceHandler {
           pathPrefix = rpcName.substring(0, strip) + "/";
         }
         final String applicationGroup;
-        if (access.getInstance()==null) {
+        if (access.getTenant()==null) {
         	applicationGroup = this.tenantConfig.getInstanceGroup();
 		} else {
-			applicationGroup = access.getInstance();
+			applicationGroup = access.getTenant();
 		}
         
     	File scriptFile = new File(scriptPath + "/" + rpcName + "_" + applicationGroup + ".xml");
@@ -450,43 +448,37 @@ public class GenericHandler extends ServiceHandler {
         Navajo outDoc = null;
     	StringBuffer compilerErrors = new StringBuffer();
         outDoc = NavajoFactory.getInstance().createNavajo();
-
+        
         try {
-            // Should method getCompiledNavaScript be fully synced???
-        	CompiledScriptInterface cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, false);
-        	if(cso!=null) {
-        		boolean dirty = cso.hasDirtyDependencies(access);
-        		if(dirty) {
-                	cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName,true);
-            		logger.warn(">>>>>>>>>>>>>>>> dirty script!");
-        		}
-        	}
-        	//(access.rpcName);
-        	if(cso==null) {
-        		if(Version.osgiActive()) {
-        			logger.warn("Script not found from OSGi registry while OSGi is active");
-        		} else {
-                	cso = compileScript(access, compilerErrors);
-                	if(cso==null) {
-                		logger.error("Can not find OSGi script for rpc: {} ",access.rpcName);
-                		throw new RuntimeException("Can not resolve script (non OSGi): "+access.rpcName);
-                	}
-        		}
-        	}
-        	if(cso==null) {
-        		logger.error("No compiled script found, proceeding further is useless.");
-        		throw new RuntimeException("Can not resolve script: "+access.rpcName);
-        	}
+            CompiledScriptInterface cso = loadOnDemand(access.rpcName, false);
+
+            // (access.rpcName);
+            if (cso == null) {
+                if (Version.osgiActive()) {
+                    logger.warn("Script not found from OSGi registry while OSGi is active");
+                } else {
+                    cso = compileScript(access, compilerErrors);
+                    if (cso == null) {
+                        logger.error("Can not find OSGi script for rpc: {} ", access.rpcName);
+                        throw new RuntimeException("Can not resolve script (non OSGi): " + access.rpcName);
+                    }
+                }
+            }
+            if (cso == null) {
+                logger.error("No compiled script found, proceeding further is useless.");
+                throw new RuntimeException("Can not resolve script: " + access.rpcName);
+            }
             access.setOutputDoc(outDoc);
             access.setCompiledScript(cso);
-            if (cso.getClassLoader()==null) {
-				logger.error("No classloader present!");
-			} 
-            
+            if (cso.getClassLoader() == null) {
+                logger.error("No classloader present!");
+            }
+
             cso.run(access);
 
             return access.getOutputDoc();
-          } catch (Throwable e) {
+        } catch (Throwable e) {
+           
             if (e instanceof com.dexels.navajo.mapping.BreakEvent) {
               // Create dummy header to set breakwasset attribute.
               Header h = NavajoFactory.getInstance().createHeader(outDoc, "", "", "", -1);
@@ -505,116 +497,35 @@ public class GenericHandler extends ServiceHandler {
               throw (AuthorizationException) e;
             }
             else {
+                if ( e instanceof FileNotFoundException ) {
+                    access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
+                }
+                
             	AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, e.getMessage() + (!compilerErrors.toString().trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), Level.SEVERE, access.accessID);
-            	throw new SystemException( -1, e.getMessage() + (!compilerErrors.toString().trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), e);
+            	throw new SystemException( -1, e.getMessage(), e);
             }
           }
         }
 
-//	private CompiledScript getOSGiService(String scriptName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-//		final BundleContext bundleContext = Version.getDefaultBundleContext();
-//		if(bundleContext==null) {
-//			logger.debug("No OSGi context found");
-//			return null;
-//		}
-//		String rpcName = scriptName.replaceAll("/", ".");
-//		
-//		String filter = "(navajo.scriptName="+rpcName+")";
-//		ServiceReference<?>[] sr;
-//		try {
-//			sr = bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filter);
-//		} catch (InvalidSyntaxException e) {
-//			logger.error("Filter syntax problem for: "+filter,e);
-//			return null;
-//		}
-//		if(sr==null || sr.length==0) {
-//			logger.error("No service reference found for "+filter);
-//			try {
-//				CompiledScript ss = loadOnDemand(bundleContext, rpcName, filter);
-//				return ss;
-//			} catch (Exception e) {
-//				logger.error("Service  "+filter,e);
-//			}
-//		}
-//		
-//		if(sr!=null && sr.length>1) {
-//			logger.warn("Multiple references ({}) found for {}",sr.length,filter);
-//		}
-//		
-//		if(sr==null) {
-//			logger.error("BundleContext is null. Why?!");
-//		}
-//		CompiledScriptFactory csf = null;
-//		if(sr!=null) {
-//			 csf = (CompiledScriptFactory) bundleContext.getService(sr[0]);
-//			 if(csf!=null ) {
-//				 return csf.getCompiledScript();
-//			 }			
-//		}
-//		 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter);
-//		 BundleCreator bc = DispatcherFactory.getInstance().getBundleCreator();
-//		 if(bc!=null) {
-//			 try {
-//				CompiledScript ss = bc.getOnDemandScriptService(rpcName);
-//				return ss;
-//			} catch (Exception e) {
-//				logger.error("on demand script resolution failed.",e);
-//			}
-//		 }
-//		return null;
-//
-////		 CompiledScript ss;
-////		try {
-////			ss = csf.getCompiledScript();
-////			final CompiledScript ccs = ss;
-////		} catch (Exception e) {
-////			 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter,e);
-////			 return null;
-////		}
-////		bundleContext.ungetService(sr[0]);
-////		 return ss;
-//	}
-
 	// THIS rpcName seems to have a tenant suffix
-	private CompiledScriptInterface loadOnDemand(BundleContext bundleContext, String rpcName,boolean force) throws Exception {
-		if(bundleContext==null) {
-			logger.debug("No OSGi context found");
-			return null;
-		}
-		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
-		BundleCreator bc = bundleContext.getService(ref);
-
-		if(bc==null) {
-			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
-			return null;
-		}
+	private CompiledScriptInterface loadOnDemand(String rpcName, boolean force) throws Exception {
+		
 		
 		final String tenant;
-		if (access.getInstance()==null) {
+		if (access.getTenant()==null) {
 			tenant = tenantConfig.getInstanceGroup();
 		} else {
-			tenant = access.getInstance();
+			tenant = access.getTenant();
 		}
 		
-        
         String extension = tenantConfig.determineScriptExtension(rpcName, tenant);
 
 		boolean hasTenantScriptFile = tenantConfig.hasTenantScriptFile(rpcName,tenant, extension);
 		String scriptName = hasTenantScriptFile ? rpcName + "_" + tenant : rpcName;
-        CompiledScriptInterface sc = bc.getOnDemandScriptService(scriptName, rpcName, tenant, hasTenantScriptFile, force, extension);
-		// wait for it..
-		bundleContext.ungetService(ref);
+        CompiledScriptInterface sc = BundleCreatorFactory.getInstance().getOnDemandScriptService(scriptName, rpcName, tenant,
+                hasTenantScriptFile, force, extension);
 		return sc;
 	}
-
-//	/**
-//	 * Bit of a hack, should be really DInjected
-//	 * @return
-//	 */
-//	private BundleCreator getBundleCreator(BundleContext bundleContext) {
-//		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
-//		return DispatcherFactory.getInstance().getBundleCreator();
-//	}
 
 	@SuppressWarnings("unused")
 	@Deprecated

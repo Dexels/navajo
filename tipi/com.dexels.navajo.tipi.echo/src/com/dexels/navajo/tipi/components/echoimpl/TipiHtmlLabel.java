@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.functions.StripBody;
+import com.dexels.navajo.tipi.echo.functions.StripBody;
 
 import echopointng.TemplatePanel;
 import echopointng.template.StringTemplateDataSource;

@@ -26,7 +26,7 @@ public class WrappedClassLoader extends ClassLoader {
 	}
 	@Override
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
-	       Class loadedClass = findLoadedClass(name);
+	       Class<?> loadedClass = findLoadedClass(name);
 	       if(loadedClass!=null) {
 	    	   return loadedClass;
 	       }
@@ -48,7 +48,7 @@ public class WrappedClassLoader extends ClassLoader {
 	@Override
 	public Class<?> loadClass(String name) throws ClassNotFoundException {
         // First check whether it's already been loaded, if so use it
-        Class loadedClass = findLoadedClass(name);
+        Class<?> loadedClass = findLoadedClass(name);
         
         // Not loaded, try to load it 
         if (loadedClass == null) {

@@ -78,7 +78,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
         }
         // Call setDebug automatically if object class implements Debugable
         // interface and full debug is set for webservice.
-        if (a != null && a.needsFullAccessLog() && Debugable.class.isInstance(o)) {
+        if (a != null && a.logFullAccessLog() && Debugable.class.isInstance(o)) {
             ((Debugable) o).setDebug(true);
         }
     }

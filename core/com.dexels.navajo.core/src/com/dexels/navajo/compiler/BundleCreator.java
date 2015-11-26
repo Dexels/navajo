@@ -65,7 +65,7 @@ public interface BundleCreator {
 	 * @return
 	 * @throws Exception
 	 */
-	public CompiledScriptInterface getOnDemandScriptService(String scriptName, String rpcName, String tenant, boolean tenantQualified,boolean force,String extension) throws Exception;
+	public CompiledScriptInterface getOnDemandScriptService(String scriptName, String rpcName, String tenant, boolean tenantQualified,boolean force,String extension);
 
 	/**
 	 * Uninstall the bundle belonging to <code>scriptName</code>. If <code>scriptName</code> is tenant-specific, only that 

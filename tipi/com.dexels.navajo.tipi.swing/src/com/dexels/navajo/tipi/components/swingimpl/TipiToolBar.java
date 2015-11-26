@@ -39,6 +39,8 @@ public class TipiToolBar extends TipiSwingDataComponentImpl {
 		addHelper(th);
 		ts.setFloatable(false);
 		ts.setMinimumSize(new Dimension(0, 0));
+		ts.setOpaque(false);
+		ts.setBorderPainted(false);
 		// EffectsManager.setEffect(ts, new FadeIn(), TransitionType.APPEARING);
 		// EffectsManager.setEffect(ts, new FadeOut(),
 		// TransitionType.DISAPPEARING);

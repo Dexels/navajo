@@ -893,8 +893,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 			TipiEvent event) throws TipiBreakException {
 		TipiComponentMethod tcm = componentMethods.get(methodName);
 		if (tcm == null) {
-			logger.error("Could not find component method: " + methodName
-					+ " component: " + getPath() + " class: " + getClass()+" ignoring call.");
+            logger.warn("Could not find component method: {} -  component: {}  class: {}. ignoring call...", methodName, getPath(), getClass());
 		} else {
 			tcm.loadInstance(invocation);
 			performComponentMethod(methodName, tcm, event);
@@ -1424,8 +1423,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		if (path.equals("*")) {
 			return true;
 		}
-		TipiComponent tc = (TipiComponent) myContext.getClassManager().parse(this, "component",
-				path, event);
+		TipiComponent tc = (TipiComponent) myContext.getClassManager().parse(this, "component",path, event);
 		return tc == this;
 	}
 

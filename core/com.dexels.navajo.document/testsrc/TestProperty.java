@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,6 +23,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
@@ -57,6 +57,26 @@ public class TestProperty {
 		navajodocumenttestfictureInst.tearDown();
 	}
 
+	@Test
+	public void testCopy() {
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		Selection s1 = NavajoFactory.getInstance().createSelection(n, "aap", "aap", "0");
+		Selection s2 = NavajoFactory.getInstance().createSelection(n, "noot", "noot", "1");
+		Property p = NavajoFactory.getInstance().createProperty(n, "Selectie", "+", "", "out");
+		p.addSelection(s1);
+		p.addSelection(s2);
+		Message m = NavajoFactory.getInstance().createMessage(n, "Soep");	
+		n.addMessage(m);
+		m.addProperty(p);
+		n.write(System.err);
+		
+		Navajo n2 = NavajoFactory.getInstance().createNavajo();
+		Property p2 = p.copy(n2);
+		System.err.println(p2.getTypedValue().getClass().getName());
+		
+		
+	}
+	
 	@Test
 	public void tesSetAnyValue() throws Exception {
 		Navajo n = NavajoFactory.getInstance().createNavajo();

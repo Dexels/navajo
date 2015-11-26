@@ -160,6 +160,20 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 //		logger.info("Mailfile: "+mailFile);
 		Message parts = pp.getMessage("Mail/Parts");
 		Binary body = (Binary) parts.getAllMessages().get(0).getProperty("Content").getTypedValue();
+		// Check if there is a charset defined
+		String charsetName = null;
+		if (parts.getAllMessages().get(0).getProperty("ContentType") != null)
+		{
+			String bodyContentType = parts.getAllMessages().get(0).getProperty("ContentType").getValue();
+			if (bodyContentType != null && bodyContentType.contains("charset"))
+			{
+				Matcher matcher = Pattern.compile("charset=([a-zA-Z0-9-]+)\\b").matcher(bodyContentType);
+				if (matcher.find())
+				{
+					charsetName = matcher.group(1);
+				}
+			}
+		}
 		FileOutputStream foss = new FileOutputStream(mailFile);
 		body.write(foss);
 		foss.close();
@@ -179,7 +193,15 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 				currentFile.deleteOnExit();
 			}
 		}
-		String bodyText = new String(body.getData());
+		String bodyText = null;
+		if (charsetName == null)
+		{
+			bodyText = new String(body.getData());
+		}
+		else
+		{
+			bodyText = new String(body.getData(), charsetName);
+		}
 		String replaced = replaceAttributes("src", bodyText, replacementMap);
 
 		PrintWriter fos = new PrintWriter(new FileWriter(mailFileOutput));

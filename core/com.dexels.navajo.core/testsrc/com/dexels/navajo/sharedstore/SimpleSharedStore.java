@@ -12,7 +12,7 @@ import java.io.Serializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SimpleSharedStore implements SharedStoreInterface {
+public class SimpleSharedStore extends AbstractSharedStore implements SharedStoreInterface {
 
 	File storeRoot;
 	
@@ -30,6 +30,7 @@ public class SimpleSharedStore implements SharedStoreInterface {
 	public void remove(String parent, String name) {
 		new File(storeRoot, parent + "/" + name).delete();
 	}
+
 
 	@Override
 	public void removeAll(String parent) {
@@ -61,6 +62,7 @@ public class SimpleSharedStore implements SharedStoreInterface {
 	public void setLastModified(String parent, String name, long l)
 			throws IOException {
 	}
+	
 
 	@Override
 	public boolean exists(String parent, String name) {
@@ -146,6 +148,9 @@ public class SimpleSharedStore implements SharedStoreInterface {
 	public long getNextAtomicLong(String id) {
 		return 0;
 	}
+
+
+
 	
 }
 

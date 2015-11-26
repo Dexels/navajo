@@ -21,4 +21,9 @@
         <input>color,color,string|empty</input>
         <result>border</result>
     </function>
+      <function name="CreateTipiPaint" class="com.dexels.navajo.tipi.swing.functions.CreateTipiPaint">
+        <description>Create a TipiPaint - CreateTipiPaint(Color startGradientColor, Color endGradientColor, [gradientLayout]</description>
+        <input>color,color,string|empty</input>
+        <result>tipipaint</result>
+    </function>
 </functiondef>

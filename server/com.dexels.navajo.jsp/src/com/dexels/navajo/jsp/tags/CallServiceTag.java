@@ -47,10 +47,10 @@ public class CallServiceTag extends BaseNavajoTag {
 		logger.debug("Calling service: "+myService);
 		try {
 			if (myNavajo==null) {
-				getNavajoContext().callService(myService);
+				getNavajoContext().callService(myService,null);
 			} else {
 				Navajo navajo = getNavajoContext().getNavajo(myNavajo);
-				getNavajoContext().callService(myService, navajo);
+				getNavajoContext().callService(myService, null,null,null, navajo);
 			}
 		} catch (ClientException e) {
 			throw new JspException("Navajo service error while calling service: "+myService,e);
@@ -98,11 +98,11 @@ public class CallServiceTag extends BaseNavajoTag {
 		logger.debug("Calling service: "+myService);
 		LocalClient lc = (LocalClient) getPageContext().getServletContext().getAttribute("localClient");
 		Map<String,LocalClient> localClients = (Map<String,LocalClient>) getPageContext().getServletContext().getAttribute("localClients");
-		if(localClients==null) {
-			logger.warn("No localClients in JSP environment. No multitenant, perhaps?");
-		} else {
-			logger.warn(">>>>> Number of localClients: "+localClients.size());
-		}
+//		if(localClients==null) {
+//			logger.warn("No localClients in JSP environment. No multitenant, perhaps?");
+//		} else {
+//			logger.warn(">>>>> Number of localClients: "+localClients.size());
+//		}
 
 		boolean multitenant = localClients!=null&&localClients.size()>0;
 		

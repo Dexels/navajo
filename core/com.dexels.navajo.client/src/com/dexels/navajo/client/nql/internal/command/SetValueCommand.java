@@ -18,7 +18,7 @@ public class SetValueCommand implements NQLCommand {
 			.getLogger(SetValueCommand.class);
 	
 	@Override
-	public void execute(NQLContext context, OutputCallback callback) throws ClientException,NavajoException {
+	public void execute(NQLContext context,String tenant, String username, String password, OutputCallback callback) throws ClientException,NavajoException {
 		context.set(path, value);
 	}
 

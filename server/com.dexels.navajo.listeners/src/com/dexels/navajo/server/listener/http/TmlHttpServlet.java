@@ -492,7 +492,12 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 					.getAttribute("javax.servlet.request.X509Certificate");
 
 			// Call Dispatcher with parsed TML document as argument.
-			ClientInfo clientInfo = new ClientInfo(request.getRemoteAddr(),
+			String ip = request.getHeader("X-Forwarded-For");
+		    if (ip == null || ip.equals("")) {
+		        ip = request.getRemoteAddr();
+		    }
+		        
+			ClientInfo clientInfo = new ClientInfo(ip,
 					"unknown", recvEncoding, pT,
 					(recvEncoding != null && (recvEncoding
 							.equals(COMPRESS_GZIP) || recvEncoding
@@ -533,36 +538,9 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 					&& outDoc.getHeader() != null
 					&& !Dispatcher.isSpecialwebservice(in.getHeader()
 							.getRPCName())) {
-				statLogger.info("("
-						+ dis.getApplicationId()
-						+ "): "
-						+ new java.util.Date()
-						+ ": "
-						+ outDoc.getHeader().getHeaderAttribute("accessId")
-						+ ":"
-						+ in.getHeader().getRPCName()
-						+ "("
-						+ in.getHeader().getRPCUser()
-						+ "):"
-						+ (System.currentTimeMillis() - start)
-						+ " ms. (st="
-						+ (outDoc.getHeader().getHeaderAttribute("serverTime")
-								+ ",rpt="
-								+ outDoc.getHeader().getHeaderAttribute(
-										"requestParseTime")
-								+ ",at="
-								+ outDoc.getHeader().getHeaderAttribute(
-										"authorisationTime")
-								+ ",pt="
-								+ outDoc.getHeader().getHeaderAttribute(
-										"processingTime")
-								+ ",tc="
-								+ outDoc.getHeader().getHeaderAttribute(
-										"threadCount")
-								+ ",cpu="
-								+ outDoc.getHeader().getHeaderAttribute(
-										"cpuload") + ")" + " (" + sendEncoding
-								+ "/" + recvEncoding + ")"));
+			    
+			    statLogger.info("Finished {} ({}) in {}ms", outDoc.getHeader().getHeaderAttribute("accessId"), in.getHeader().getRPCName(),
+	                    (System.currentTimeMillis() -  start));
 			}
 
 			out = null;

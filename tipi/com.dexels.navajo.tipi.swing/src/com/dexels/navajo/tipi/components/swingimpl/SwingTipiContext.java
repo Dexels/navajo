@@ -98,6 +98,7 @@ public class SwingTipiContext extends TipiContext {
 
 	private RootPaneContainer myOtherRoot;
 
+
 	private static final Logger logger = LoggerFactory.getLogger(SwingTipiContext.class);
 	
 	public SwingTipiContext(SwingTipiApplicationInstance instance,List<TipiExtension> extensionList,
@@ -114,36 +115,18 @@ public class SwingTipiContext extends TipiContext {
 		try {
 
 			if (WebStartProxy.hasJnlpContext()) {
-				// logger.debug("JNLP DETECTED.");
 				setCookieManager(new JnlpCookieManager());
 				try {
 					getCookieManager().loadCookies();
 				} catch (FileNotFoundException e) {
-					// logger.debug("No cookies (yet). No prob.");
 				}
 			} else {
 				createTmpCookieManager();
 			}
 		} catch (Throwable e) {
-			// logger.debug("No jnlp found");
-			// logger.error("Error detected",e);
+
 			createTmpCookieManager();
 		}
-		// hasJnlpContext(
-		// if(false) {
-		// appendJnlpCodeBase();
-		// createJnlpCookieManager();
-		// } else {
-		// createTmpCookieManager();
-		// }
-
-		// if(hasJnlpContext()) {
-		// appendJnlpCodeBase();
-		// createJnlpCookieManager();
-		// } else {
-		// createTmpCookieManager();
-		// }
-		//
 
 	}
 
@@ -193,28 +176,12 @@ public class SwingTipiContext extends TipiContext {
 	@Override
 	public synchronized void setWaiting(boolean b) {
 
-		// if (dialogShowing) {
-		// b = false;
-		// }
-		// logger.debug("SETWAITING: "+b+" thread: "+Thread.currentThread().getName());
-		// Thread.dumpStack();
 		if (getAppletRoot() != null) {
 
 			getAppletRoot().setCursor(
 					b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor
 							.getDefaultCursor());
 		}
-		// for (int i = 0; i < rootPaneList.size(); i++) {
-		// Object obj = rootPaneList.get(i);
-		// if (TipiSwingComponent.class.isInstance(obj)) {
-		// TipiSwingComponent tc = (TipiSwingComponent) obj;
-		// tc.setWaitCursor(b);
-		// } else {
-		// ((Container) obj).setCursor(b ?
-		// Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) :
-		// Cursor.getDefaultCursor());
-		// }
-		// }
 		for (TipiActivityListener ta : myActivityListeners) {
 			ta.setActive(b);
 		}
@@ -451,6 +418,7 @@ public class SwingTipiContext extends TipiContext {
 
 	private void showInfo(final String text, final String title,
 			final int messageType, final TipiComponent tc) {
+	    
 		TipiMessageDialog info = new TipiMessageDialog(tc);
 		info.initialize(this);
 		info.setValue("text", text);
@@ -463,22 +431,51 @@ public class SwingTipiContext extends TipiContext {
 
 	@Override
 	public void showInfo(final String text, final String title, final TipiComponent tc) {
-		logger.info("ShowInfo: "+text+" title: "+title);
+		logger.debug("ShowInfo: "+text+" title: "+title);
 		showInfo(text, title, JOptionPane.INFORMATION_MESSAGE, tc);
 	}
 
 	@Override
 	public void showError(final String text, final String title, final TipiComponent tc) {
-		logger.error("ShowError: "+text+" title: "+title);
+		logger.debug("ShowError: "+text+" title: "+title);
 		showInfo(text, title, JOptionPane.ERROR_MESSAGE, tc);
 	}
+	
+	@Override
+    public void showWarning(final String text, final String title, final TipiComponent tc) {
+        logger.warn("ShowWarning: "+text+" title: "+title);
+        showInfo(text, title, JOptionPane.WARNING_MESSAGE, tc);
+    }
+	
 
 	@Override
-	public void showWarning(final String text, final String title, final TipiComponent tc) {
-		logger.warn("ShowWarning: "+text+" title: "+title);
-		showInfo(text, title, JOptionPane.WARNING_MESSAGE, tc);
-	}
+    public void showServerError(final String errormessage, final TipiComponent tc) {
+	    final JFrame parentFrame;
+        final TipiContext tcontext = this;
+        
+	    Object topFrame = getTopDialog();
+	    if (topFrame instanceof JFrame) {
+	        parentFrame = (JFrame) topFrame;
+	    } else if (topFrame instanceof JDialog) {
+	        parentFrame = (JFrame) ((JDialog) topFrame).getParent();
+	    } else {
+	        parentFrame = null;
+	    }
 
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    SwingExceptionDialog dialog = new SwingExceptionDialog(parentFrame, tcontext, errormessage);
+                    dialog.setVisible(true);
+                }
+            });
+        } else {
+            SwingExceptionDialog dialog = new SwingExceptionDialog(parentFrame, tcontext, errormessage);
+            dialog.setVisible(true);
+        }
+    }
+	
 	// TODO refactor into more 
 	@Override
 	public void processProperties(Map<String, String> properties)
@@ -547,17 +544,18 @@ public class SwingTipiContext extends TipiContext {
 
 	@Override
 	protected TipiResourceLoader createDefaultResourceLoader(String loaderType,
-			boolean useCache) {
+			boolean useCache, String id) {
 		if (hasJnlpContext()) {
+			logger.info("JNLP detected, cache: {}. Instantiating webstart loader loaderType: {}",useCache, loaderType);
 			try {
 				return WebStartProxy.createDefaultWebstartLoader(loaderType,
-						useCache, getCookieManager());
+						useCache, getCookieManager(),id);
 			} catch (IOException e) {
 				logger.error("Error detected",e);
 			}
 
 		}
-		return super.createDefaultResourceLoader(loaderType, useCache);
+		return super.createDefaultResourceLoader(loaderType, useCache,id);
 	}
 
 	public boolean hasJnlpContext() {

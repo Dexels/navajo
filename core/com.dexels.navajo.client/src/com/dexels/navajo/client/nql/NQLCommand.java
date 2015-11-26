@@ -7,6 +7,6 @@ import com.dexels.navajo.client.nql.internal.NQLContext;
 import com.dexels.navajo.document.NavajoException;
 
 public interface NQLCommand {
-	public void execute(NQLContext context, OutputCallback callback) throws ClientException, NavajoException,IOException;
+	public void execute(NQLContext context, String tenant, String username, String password, OutputCallback callback) throws ClientException, NavajoException,IOException;
 	public void parse(String raw);
 }

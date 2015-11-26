@@ -29,8 +29,8 @@ public class NavajoRemoteContext extends NavajoContext {
 	
 	
 	@Override
-	public void callService(String service) throws ClientException {
-		callService(service, null);
+	public void callService(String service,String tenant) throws ClientException {
+		callService(service, tenant,null,null,null);
 	}
 
 
@@ -38,7 +38,7 @@ public class NavajoRemoteContext extends NavajoContext {
 	 * @see com.dexels.navajo.client.context.ClientContext#callService(java.lang.String, com.dexels.navajo.document.Navajo)
 	 */
 	@Override
-	public void callService(String service, Navajo input)
+	public void callService(String service,String tenant,String username, String password, Navajo input)
 			throws ClientException {
 		if(myClient==null) {
 			throw new ClientException(1,-1,"No client has been set up!");
@@ -49,7 +49,7 @@ public class NavajoRemoteContext extends NavajoContext {
 		}
 		Header outHeader = input.getHeader();
 		if(outHeader==null) {
-			outHeader = NavajoFactory.getInstance().createHeader(input, service, null,null, -1);
+			outHeader = NavajoFactory.getInstance().createHeader(input, service, username,password, -1);
 			input.addHeader(outHeader);
 		}
 		

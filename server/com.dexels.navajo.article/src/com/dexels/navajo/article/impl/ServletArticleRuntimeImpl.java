@@ -17,10 +17,11 @@ import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.article.ArticleClientException;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.oauth.api.Token;
+import com.dexels.oauth.api.OAuthToken;
 
 public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements ArticleRuntime {
 
@@ -35,7 +36,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	private final static Logger logger = LoggerFactory
 			.getLogger(ServletArticleRuntimeImpl.class);
 	
-	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, String password, String username, File article,String articleName, Map<String, String[]> parameterMap,String instance,Token t) throws IOException {
+	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, String password, String username, File article,String articleName, Map<String, String[]> parameterMap,String instance,OAuthToken t) throws IOException {
 		super(articleName,article,instance,t);
 		this.request = req;
 		this.parameterMap = parameterMap;
@@ -46,8 +47,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 
 	
 	@Override
-	public String resolveArgument(String name) throws ArticleException {
-		// TODO use optionality / default value
+	public String resolveArgument(String name) throws ArticleException, ArticleClientException {
 		final String trimmedName = name.substring(1);
 		String res = request.getParameter(trimmedName);
 		if(res!=null) {
@@ -64,7 +64,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 				boolean optional = xmlElement.getBooleanAttribute("optional", "true", "false", false);
 				if(!optional) {
 					// not optional + no value = fail
-					return null;
+					throw new ArticleClientException("Missing parameter not optional: " + trimmedName);
 				}
 				return xmlElement.getStringAttribute("default");
 			}

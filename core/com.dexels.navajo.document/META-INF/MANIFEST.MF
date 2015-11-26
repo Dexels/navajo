@@ -1,10 +1,10 @@
 Bundle-Name: Navajo Document reference implementation
 Bundle-SymbolicName: com.dexels.navajo.document
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.0.5.qualifier
+Bundle-Version: 3.0.27.qualifier
 Bundle-Activator: navajodocument.Version
 Bundle-Vendor: Dexels
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.dexels.navajo.document;version="2.2.1",com.dexels.
  navajo.document.base;version="2.2.1",com.dexels.navajo.document.compa
  rator;version="2.2.1",com.dexels.navajo.document.comparatormanager;ve
@@ -29,7 +29,7 @@ Import-Package: com.dexels.navajo.version,
  org.junit;resolution:=optional,
  org.junit.runner;resolution:=optional,
  org.junit.runners;resolution:=optional,
- org.osgi.framework;version="1.5.0",
+ org.osgi.framework;version="1.5.0";resolution:=optional,
  org.slf4j,
  org.w3c.dom,
  org.xml.sax

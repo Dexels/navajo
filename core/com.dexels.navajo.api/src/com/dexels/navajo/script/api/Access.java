@@ -68,6 +68,7 @@ public final class Access implements java.io.Serializable, Mappable {
     public static final int EXIT_BREAK = 3;
     public static final int EXIT_USEREXCEPTION = 4;
     public static final int EXIT_EXCEPTION = 5;
+    public static final int EXIT_SCRIPT_NOT_FOUND = 6;
 
     @SuppressWarnings("unused")
     private static final String VERSION = "$Id$";
@@ -124,8 +125,6 @@ public final class Access implements java.io.Serializable, Mappable {
     private transient Throwable myException;
     private Navajo outputDoc;
     private Navajo inDoc;
-    private String outputDocHash;
-    private String inDocHash;
     // The mergedDoc can be used to merge a previously set Navajo with the
     // outputDoc.
     // If the mergeDoc is not empty, it will ALWAYS be merged when setOutputDoc
@@ -136,7 +135,7 @@ public final class Access implements java.io.Serializable, Mappable {
     private transient Set<Map<?, ?>> piggyBackData = null;
     private String clientToken = null;
     private String clientInfo = null;
-    private String instance;
+    private String tenant;
 
     /**
      * Create a private logging console for this access object. TODO: Maybe
@@ -157,14 +156,17 @@ public final class Access implements java.io.Serializable, Mappable {
     private transient TmlRunnable originalRunnable;
   
     public Access(int userID, int serviceID, String rpcUser, String rpcName, String userAgent, String ipAddress,
-            String hostName, Object certificate, boolean betaUser, String accessID) {
+ String hostName,
+            Object certificate, boolean betaUser, String accessID) {
 
         this();
 
         this.accessID = accessID;
         if (accessID == null) {
-            AccessCount++;
-            this.accessID = created.getTime() + "-" + AccessCount;
+            synchronized (Access.class) {
+                AccessCount++;
+                this.accessID = created.getTime() + "-" + AccessCount;
+            }
         }
         this.userID = userID;
         this.serviceID = serviceID;
@@ -236,6 +238,10 @@ public final class Access implements java.io.Serializable, Mappable {
      *            properties of mergedDoc have precedence over original.
      */
     public void setMergedDoc(Navajo mergedDoc, boolean append) {
+        if (mergedDoc == null) {
+            this.mergedDoc = null;
+            return;
+        }
 
         if (outputDoc != null) {
             try {
@@ -247,10 +253,6 @@ public final class Access implements java.io.Serializable, Mappable {
             } catch (Exception e) {
                 logger.error("Exception on merging documents: {}", e);
             }
-            return;
-        }
-        if (mergedDoc == null) {
-            this.mergedDoc = null;
             return;
         }
         if (this.mergedDoc == null) {
@@ -423,7 +425,7 @@ public final class Access implements java.io.Serializable, Mappable {
         a.exitCode = this.exitCode;
         a.requestNavajoSize = this.requestNavajoSize;
         a.responseNavajoSize = this.responseNavajoSize;
-        
+        a.tenant = this.tenant;
         return a;
     }
 
@@ -711,6 +713,9 @@ public final class Access implements java.io.Serializable, Mappable {
     }
 
     public final static PrintWriter getConsoleWriter(final Access a) {
+        if (a != null) {
+            return a.consoleOutput;
+        }
         return new PrintWriter(System.err);
     }
 
@@ -785,20 +790,28 @@ public final class Access implements java.io.Serializable, Mappable {
         return queueId;
     }
 
-    public boolean needsFullAccessLog() {
+    public boolean logFullAccessLog() {
         return isDebugAll() || (getCompiledScript() != null && getCompiledScript().isDebugAll());
+    }
+    
+    public boolean logRequestAccessLog() {
+        return getCompiledScript() != null && getCompiledScript().debugRequest();
+    }
+    
+    public boolean logResponseAccessLog() {
+        return getCompiledScript() != null && getCompiledScript().debugResponse();
     }
 
     public void setQueueId(String queueId) {
         this.queueId = queueId;
     }
 
-    public void setInstance(String instance) {
-        this.instance = instance;
+    public void setTenant(String instance) {
+        this.tenant = instance;
     }
 
-    public String getInstance() {
-        return this.instance;
+    public String getTenant() {
+        return this.tenant;
     }
 
     public int getRequestNavajoSize() {

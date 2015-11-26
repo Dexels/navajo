@@ -113,15 +113,15 @@ public class TslPreCompiler {
             String methodScriptFile = scriptFolder + File.separator + methodScript + ".xml";
 
             // Check if exists
+            boolean isBroken = false;
             if (!new File(methodScriptFile).exists()) {
-                deps.add(new Dependency(scriptFile, methodScriptFile, Dependency.BROKEN_DEPENDENCY, getLineNr(n)));
-                continue;
+                isBroken = true;
             }
-            deps.add(new Dependency(scriptFile, methodScriptFile, Dependency.METHOD_DEPENDENCY, getLineNr(n)));
+            deps.add(new Dependency(scriptFile, methodScriptFile, Dependency.METHOD_DEPENDENCY, getLineNr(n), isBroken));
 
             // Going to check for tenant-specific include-variants
-            if (scriptTenant == null) {
-                File scriptFolderFile = new File(methodScriptFile).getParentFile();
+            File scriptFolderFile = new File(methodScriptFile).getParentFile();
+            if (scriptTenant == null && scriptFolderFile.exists()) {
                 AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(methodScript) + "_*.xml");
                 Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
                 for (File f : files) {
@@ -159,11 +159,12 @@ public class TslPreCompiler {
             String operationScriptFile = scriptFolder + File.separator + operationScript + ".xml";
 
             // Check if exists
+            boolean isBroken = false;
             if (!new File(operationScriptFile).exists()) {
-                deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.BROKEN_DEPENDENCY, getLineNr(n)));
-                continue;
+                isBroken = true;
             }
-            deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+           
+            deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
 
             // Going to check for tenant-specific include-variants
             if (scriptTenant == null) {
@@ -205,11 +206,11 @@ public class TslPreCompiler {
             String includeScriptFile = scriptFolder + File.separator + includedScript + ".xml";
             
             // Check if exists
+            boolean isBroken = false;
             if (! new File(includeScriptFile).exists()) {
-                deps.add(new Dependency(fullScriptPath, includeScriptFile, Dependency.BROKEN_DEPENDENCY, getLineNr(n)));
-                continue;
+                isBroken = true;
             }
-            deps.add(new Dependency(fullScriptPath, includeScriptFile, Dependency.INCLUDE_DEPENDENCY, getLineNr(n)));
+            deps.add(new Dependency(fullScriptPath, includeScriptFile, Dependency.INCLUDE_DEPENDENCY, getLineNr(n), isBroken));
             
 
             // Going to check for tenant-specific include-variants
@@ -230,23 +231,35 @@ public class TslPreCompiler {
     protected void findNavajoDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc)
             throws XPathExpressionException {
         XPath xPath = XPathFactory.newInstance().newXPath();
-        NodeList nodes = (NodeList) xPath.evaluate(
-                "//map[@object='com.dexels.navajo.adapter.NavajoMap']/field[@name='doSend']/expression/value",
+
+        // Tsl scripts seem to have a slightly different xml model than
+        // navascript...
+
+        NodeList nodes = (NodeList) xPath.evaluate("//map[@object='com.dexels.navajo.adapter.NavajoMap']/field[@name='doSend']/expression",
                 tslDoc.getDocumentElement(), XPathConstants.NODESET);
 
         for (int i = 0; i < nodes.getLength(); ++i) {
-            Element value = (Element) nodes.item(i);
-            String navajoScript = value.getTextContent();
+            Element expression = (Element) nodes.item(i);
+            String navajoScript = expression.getAttribute("value");
+            if (navajoScript.equals("")) {
+                // Dealing with navascript, wher the value is a sub element
+                // instead of an attribute of expression
+                Element value = (Element) expression.getElementsByTagName("value").item(0);
+                navajoScript = value.getTextContent();
+            }
             if (navajoScript.contains("@")) {
                 // Going to try to parse param ...
                 List<String> result = getParamValue(tslDoc, navajoScript);
                 for (String res : result) {
-                    addNavajoDependency(scriptFile, scriptTenant, deps, res, scriptFolder, getLineNr( value));
+                    addNavajoDependency(scriptFile, scriptTenant, deps, res, scriptFolder, getLineNr(expression));
                 }
 
+            } else if (navajoScript.startsWith("[/")) {
+                // The navajo script is retrieved from the Indoc or database
+                // result - not supported
+                deps.add(new Dependency(scriptFile, "scripts/__unknown__.xml", Dependency.UNKNOWN_TYPE, getLineNr(expression)));
             } else {
-                addNavajoDependency(scriptFile, scriptTenant, deps, navajoScript, scriptFolder, getLineNr( value));
-
+                addNavajoDependency(scriptFile, scriptTenant, deps, navajoScript, scriptFolder, getLineNr(expression));
             }
         }
     }
@@ -302,12 +315,14 @@ public class TslPreCompiler {
         String navajoScriptFile = scriptFolder + File.separator + cleanScript + ".xml";
 
         // Check if exists
+        boolean isBroken = false;
         if (!new File(navajoScriptFile).exists()) {
-            deps.add(new Dependency(scriptFile, navajoScriptFile, Dependency.BROKEN_DEPENDENCY, linenr));
-            return;
+            isBroken = true;
         }
+        
+       
 
-        deps.add(new Dependency(scriptFile, navajoScriptFile, Dependency.NAVAJO_DEPENDENCY, linenr));
+        deps.add(new Dependency(scriptFile, navajoScriptFile, Dependency.NAVAJO_DEPENDENCY, linenr, isBroken));
 
         
         // Going to check for tenant-specific include-variants

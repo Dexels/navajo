@@ -144,7 +144,7 @@ public class TipiSwingWindow extends JInternalFrame {
 
     public void hideGlass() {
         if (getGlassPane() instanceof OverlayProgressPanel) {
-            OverlayProgressPanel p = (OverlayProgressPanel) getGlassPane();
+            final OverlayProgressPanel p = (OverlayProgressPanel) getGlassPane();
             p.stop();
         }
     }
@@ -152,10 +152,9 @@ public class TipiSwingWindow extends JInternalFrame {
     public void addGlass(String type) {
         if (!glassPanel.isVisible()) {
             glassPanel.setType(type);
-            glassPanel.start();
-            setGlassPane(glassPanel);
+            glassPanel.start(this);
         }
-       
+
     }
     
   

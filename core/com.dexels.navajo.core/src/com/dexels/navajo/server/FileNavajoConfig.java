@@ -59,10 +59,13 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
      */
 	@Override
     public final InputStream getResourceBundle(String name) throws IOException {
-   	File adPath = new File(getAdapterPath());
+   	String adapterPath = getAdapterPath();
+   	if(adapterPath==null) {
+   		return null;
+   	}
+	File adPath = new File(adapterPath);
 		File bundleFile = new File(adPath,name+".properties");
 		if(!bundleFile.exists()) {
-			logger.debug("Bundle: "+name+" not found. Resolved to non-existing file: "+bundleFile.getAbsolutePath());
 			return null;
 		}
 		FileInputStream fix = new FileInputStream(bundleFile);
@@ -155,7 +158,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 	}
 	
     @Override
-    public String determineScriptExtension(String scriptName, String tenant) {
+    public String determineScriptExtension(String scriptName, String tenant) throws FileNotFoundException {
         
         if ((new File(getScriptPath(), scriptName + "_" + tenant + ".xml")).exists() ||
                 (new File(getScriptPath(), scriptName + ".xml")).exists() ) {
@@ -166,7 +169,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
                 (new File(getScriptPath(), scriptName + ".scala")).exists() ) {
             return ".scala";
         }
-        return null;
+        throw new FileNotFoundException("Script not found: "+scriptName);
     }
 	
 	
@@ -244,7 +247,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 	}    
     @Override
     public final Navajo readConfig(String name) throws IOException {
-    	InputStream is = inputStreamReader.getResource(getConfigPath() + "/" + name);
+    	InputStream is = inputStreamReader.getResource(getConfigPath() + File.separator + name);
     	try {
     		if (is == null) {
     			return null;

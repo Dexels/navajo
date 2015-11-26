@@ -2,17 +2,18 @@ package com.dexels.navajo.server.listener.http.schedulers.priority;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.authentication.api.LoginStatisticsProvider;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.listener.http.queuemanager.api.InputContext;
 import com.dexels.navajo.listener.http.queuemanager.api.NavajoSchedulingException;
@@ -34,6 +35,8 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	private static final int DEFAULT_POOL_SIZE = 15;
 	private static final int DEFAULT_MAXBACKLOG = 500;
 	private static final Logger logger = LoggerFactory.getLogger(PriorityThreadPoolScheduler.class);
+	private static String RESOLUTION_SCRIPT_DOES_NOT_EXIST = "resolutionscript";
+
 //	private RequestQueue normalPool;
 //	private RequestQueue priorityPool;
 //	private RequestQueue systemPool;
@@ -55,15 +58,6 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	private int [] interArrivalTime = new int[500];
 	private long   arrivals = 0;
 	
-	@Override
-	public int getThrottleDelay() {
-		return throttleDelay;
-	}
-
-	@Override
-	public void setThrottleDelay(int throttleDelay) {
-		this.throttleDelay = throttleDelay;
-	}
 
 	private int maxbacklog = DEFAULT_MAXBACKLOG;
 	
@@ -73,7 +67,6 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	private QueueManager queueManager;
 	private final Map<String,RequestQueue> queueMap = new HashMap<String,RequestQueue>();
 	
-	private static String RESOLUTION_SCRIPT_DOES_NOT_EXIST = "resolutionscript";
 	
 	// Keep track of last throttle timestamp.
 //	private long throttleTimestamp = 0;
@@ -88,6 +81,17 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	public void clearQueueManager(QueueManager queueManager) {
 		this.queueManager = null;
 	}
+	
+
+    @Override
+    public int getThrottleDelay() {
+        return throttleDelay;
+    }
+
+    @Override
+    public void setThrottleDelay(int throttleDelay) {
+        this.throttleDelay = throttleDelay;
+    }
 
 	
 	/**
@@ -100,83 +104,67 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		// =====
 		logger.info("Non osgi (web.xml based) Priority thread queue available. Setting up pools.");
 		
+		Map<String, Object> initParams = new HashMap<>();
+		Enumeration<String> paramNames = context.getInitParameterNames();
+		
+		while (paramNames.hasMoreElements()) {
+		    String key = paramNames.nextElement();
+		    initParams.put(key, context.getInitParameter(key));
+		}
+		
 		// Start normal pool.
-		int normalPoolSize;
-		String stringPoolSize = context.getInitParameter("normalPoolSize");
-		if (stringPoolSize == null) {
-			normalPoolSize = DEFAULT_POOL_SIZE;
-		} else {
-			normalPoolSize = Integer.parseInt(stringPoolSize);
-		}
-		
-		// Start priority pool.
-		stringPoolSize = context.getInitParameter("priorityPoolSize");
-		int priorityPoolSize;
-		if (stringPoolSize == null) {
-			priorityPoolSize = DEFAULT_POOL_SIZE;
-		} else {
-			priorityPoolSize = Integer.parseInt(stringPoolSize);
-		}
-		
-		// Start system pool.
-		stringPoolSize = context.getInitParameter("systemPoolSize");
-		int systemPoolSize;
-		if (stringPoolSize == null) {
-			systemPoolSize = DEFAULT_POOL_SIZE;
-		} else {
-			systemPoolSize = Integer.parseInt(stringPoolSize);
-		}
+		Integer normalPoolSize = extractInt(initParams, "normalPoolSize");
+		Integer priorityPoolSize = extractInt(initParams, "priorityPoolSize");
+		Integer systemPoolSize = extractInt(initParams, "systemPoolSize");
+		Integer fastPoolSize = extractInt(initParams, "fastPoolSize");
+		Integer slowPoolSize = extractInt(initParams, "slowPoolSize");
 
-//		RequestQueue normalPool = ThreadPoolRequestQueue.create(this, "normalThead", 3, normalPoolSize);
-//		RequestQueue priorityPool = ThreadPoolRequestQueue.create(this, "priorityThread", 8, priorityPoolSize);
-//		RequestQueue systemPool = ThreadPoolRequestQueue.create(this, "systemThread", 10, systemPoolSize);
-//		RequestQueue slowPool = ThreadPoolRequestQueue.create(this, "slowThread", 3, 1);
-//		RequestQueue fastPool = ThreadPoolRequestQueue.create(this, "fastThread", 7, normalPool.getMaximumActiveRequestCount() * 2);
-		
-//		queueMap.put("fastThread",fastPool);
-//		queueMap.put("slowThread",slowPool);
-//		queueMap.put("normalThread",normalPool);
-//		queueMap.put("priorityThread",priorityPool);
-//		queueMap.put("systemThread", systemPool);
 		queueManager = QueueManagerFactory.getInstance();
 		queueManager.setQueueContext(this);
 		queueManager.setScriptDir(new File(DispatcherFactory.getInstance().getNavajoConfig().getConfigPath()));
 		
-		createPools(normalPoolSize, priorityPoolSize, systemPoolSize);
+		createPools(normalPoolSize, priorityPoolSize, fastPoolSize, systemPoolSize, slowPoolSize);
 	}
 
-	public void activate(Map<String,Object> params ) {
-		logger.info("Activating prio...");
-		try {
-			Integer normalPoolSize = (Integer) params.get("normalPoolSize");
-			if(normalPoolSize==null) {
-				normalPoolSize = 14;
-			}
-			Integer priorityPoolSize = (Integer) params.get("priorityPoolSize");
-			if(priorityPoolSize==null) {
-				priorityPoolSize = 14;
-			}
-			Integer systemPoolSize = (Integer) params.get("systemPoolSize");
-			if(systemPoolSize==null) {
-				systemPoolSize = 14;
-			}
-			createPools(normalPoolSize,priorityPoolSize,systemPoolSize);
-		} catch (Throwable e) {
-			logger.error("Error: ", e);
+    public void activate(Map<String, Object> settings) {
+        logger.info("Activating prio threadpool scheduler...");
+
+        try {
+            Integer normalPoolSize = extractInt(settings, "normalPoolSize");
+            Integer priorityPoolSize = extractInt(settings, "priorityPoolSize");
+            Integer systemPoolSize = extractInt(settings, "systemPoolSize");
+            Integer fastPoolSize = extractInt(settings, "fastPoolSize");
+            Integer slowPoolSize = extractInt(settings, "slowPoolSize");
+            createPools(normalPoolSize, priorityPoolSize, fastPoolSize, systemPoolSize, slowPoolSize);
+        } catch (Throwable e) {
+            logger.error("Error: ", e);
+        }
+    }
+
+	private Integer extractInt(Map<String, Object> params, String key) {
+		Object value = params.get(key);
+		if(value==null) {
+			return DEFAULT_POOL_SIZE;
 		}
+		if(value instanceof Integer) {
+			return (Integer) params.get(key);
+		}
+		if(value instanceof String) {
+			return Integer.parseInt((String) value);
+		}
+		return DEFAULT_POOL_SIZE;
 	}
 	
 	public void deactivate() {
 		logger.debug("Deactivating priority queue");
 	}
 
-	private void createPools(int normalPoolSize, int priorityPoolSize,
-			int systemPoolSize) {
-		RequestQueue normalPool = createThreadPool(this, "normalPool", 3, normalPoolSize);
-		createThreadPool(this, "priorityPool", 8, normalPool.getMaximumActiveRequestCount() * 5);
+	private void createPools(int normalPoolSize, int priorityPoolSize, int fastPoolSize, int systemPoolSize, int slowPoolSize) {
+		createThreadPool(this, "normalPool", 5, normalPoolSize);
+		createThreadPool(this, "priorityPool", 8, priorityPoolSize);
 		createThreadPool(this, "systemPool", 10, systemPoolSize);
-		createThreadPool(this, "slowPool", 3, 1);
-		createThreadPool(this, "fastPool", 7, normalPool.getMaximumActiveRequestCount() * 4);
+		createThreadPool(this, "slowPool", 3, slowPoolSize);
+		createThreadPool(this, "fastPool", 7, fastPoolSize);
 	}
 	
 	private RequestQueue createThreadPool(Scheduler scheduler, String name, int priority, int size) {
@@ -267,7 +255,22 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 					return null;
 				}
 			}
+
+            @Override
+            public String getIpAddress() {
+                return myRunner.getRequest().getIpAddress();
+            }
 		};
+		
+		
+		if (LoginStatisticsProvider.reachedAbortThreshold(ic.getUserName(), ic.getIpAddress())) {
+		    logger.info("Too many failed login attemps for {}@{} - aborting!", ic.getUserName(), ic.getIpAddress());
+		    return null;
+		} else if (LoginStatisticsProvider.reachedRateLimitThreshold(ic.getUserName(), ic.getIpAddress())) {
+		    logger.info("Running request from {}@{} in slowpool due too repeated failed login attempts",ic.getUserName(), ic.getIpAddress() );
+		    return queueMap.get("slowPool");
+		}
+		
 		String queueName;
 		try {
 			queueName = queueManager.resolve(ic, "resolvequeue.js");
@@ -630,4 +633,5 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		
 		
 	}
+
 }

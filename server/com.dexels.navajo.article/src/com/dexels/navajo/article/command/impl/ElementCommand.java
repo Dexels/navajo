@@ -90,16 +90,21 @@ public class ElementCommand implements ArticleCommand {
 			String msgpath = name.substring(0, name.lastIndexOf('/'));
 			String propname = name.substring(name.lastIndexOf('/')+1,name.length());
 			ObjectNode msgNode = runtime.getGroupNode(msgpath);
-			msgNode.put(propname, p.getValue());
+			msgNode.put( propname, getValue( p ) );
+			
 			return null;
 		} else {
 			ObjectNode on = runtime.getRootNode();
-			on.put(name, p.getValue());
+			on.put(name, getValue( p ));
 			return on;
 		}
 	}
 	
-
+	public String getValue( Property property ) {
+		if( property.getType().equals( Property.SELECTION_PROPERTY ) ) 
+			return property.getSelected().getName();
+		return property.getValue();
+	}
 
 	@Override
 	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs, ObjectMapper mapper) {

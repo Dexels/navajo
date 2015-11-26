@@ -1,6 +1,8 @@
 package com.dexels.navajo.server.listener.http.external;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -10,13 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.listener.http.standard.TmlStandardServlet;
 import com.dexels.navajo.server.listener.http.wrapper.NavajoRequestWrapper;
 import com.dexels.navajo.server.listener.http.wrapper.NavajoResponseWrapper;
 import com.dexels.navajo.server.listener.http.wrapper.identity.IdentityRequestWrapper;
-import com.dexels.navajo.server.listener.http.wrapper.identity.IdentityResponseWrapper;
 
 public class NavajoFilterServlet extends TmlStandardServlet {
 
@@ -27,69 +27,55 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoFilterServlet.class);
-	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		doProcess(req, resp);
-	}
+
+	private NavajoResponseWrapper responseWrapper;
+
+	private NavajoRequestWrapper requestWrapper;
+	private LocalClient localClient;
+	private final Map<String,LocalClient> localClients = new HashMap<String, LocalClient>();
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+	protected void service(final HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		doProcess(req, resp);
-	}
-
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		doProcess(req, resp);
-	}
-
-	@Override
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		doProcess(req, resp);
-	}
-
-	@Override
-	protected void doHead(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		doProcess(req, resp);
-	}
-
-	@Override
-	protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		doProcess(req, resp);
-	}
-
-	@Override
-	protected void doTrace(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		doProcess(req, resp);
-	}
-
-	protected void doProcess(final HttpServletRequest req,
-			final HttpServletResponse resp) throws ServletException,
-			IOException {
-
-
-		Navajo input = buildRequest(getInitParameter("inputFilterClass"), req);
-//		boolean check = getTmlScheduler().checkNavajo(input);
-
-		LocalClient lc = (LocalClient) getServletContext().getAttribute("localClient");
-		if(lc==null) {
-			resp.sendError(500,"No navajocontext configured (in NavajoFilterServlet)");
-			return;
-		}
 		try {
-			Navajo output = lc.call(input);
-			processResponse(req, input, output, resp);
+			String instance = determineInstanceFromRequest(req);
+			LocalClient localClient = getLocalClient();
+			if ( localClient == null ) {
+				localClient = getLocalClient(req);
+			} 
+			logger.info("Instance determined from request: "+instance);
+			Navajo input = buildRequest(getInitParameter("inputFilterClass"), req);
+			Navajo result = localClient.call(instance, input);
+			responseWrapper.processResponse(req, input, result, resp);
 
-		} catch (FatalException e1) {
-			throw new ServletException(e1);
+		} catch (Throwable e) {
+			if(e instanceof ServletException) {
+				throw (ServletException)e;
+			}
+			logger.error("Servlet call failed dramatically", e);
 		}
+	}
+	
+	public void addLocalClient(LocalClient localClient, Map<String,Object> settings) {
+		String name = (String) settings.get("instance");
+		if (name==null) {
+			this.localClient  = localClient;
+		} else {
+			this.localClients.put(name, localClient);
+		}
+		
+	}
+	
+	
+
+	public void removeLocalClient(LocalClient localClient, Map<String,Object> settings) {
+		String name = (String) settings.get("instance");
+		if (name==null) {
+			this.localClient  = null;
+		} else {
+			this.localClients.remove(name);
+		}
+//		this.localClient = null;
 	}
 
 	private Navajo buildRequest(String inFilter, HttpServletRequest request)
@@ -100,28 +86,66 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 		}
 		return nrw.processRequestFilter(request);
 	}
-
-	/**
-	 * @param originalRequest
-	 * @param wrappedRequest
-	 *            could be null, if no inputFilter has been supplied
-	 * @param wrappedResponse
-	 *            could be null, if no outputFilter has been supplied
-	 * @param originalResponse
-	 * @throws IOException
-	 */
-	private void processResponse(HttpServletRequest originalRequest,
-			Navajo indoc, Navajo outdoc, HttpServletResponse originalResponse)
-			throws IOException {
-		NavajoResponseWrapper nrw = getResponseWrapper(getInitParameter("outputFilterClass"));
-		if (nrw == null) {
-			nrw = new IdentityResponseWrapper();
+	private String determineInstanceFromRequest(final HttpServletRequest req) {
+		String requestInstance = req.getHeader("X-Navajo-Instance");
+		if(requestInstance!=null) {
+			return requestInstance;
 		}
-		nrw.processResponse(originalRequest, indoc, outdoc, originalResponse);
+		String pathinfo = req.getPathInfo();
+		if(pathinfo==null) {
+			logger.warn("Laszlo call: No instance could be determined");
+			return null;
+		}
+		if(pathinfo.length() > 0 && pathinfo.charAt(0) == '/') {
+			pathinfo = pathinfo.substring(1);
+		}
+		String instance = null;
+		if(pathinfo.indexOf('/')!=-1) {
+			instance = pathinfo.substring(0, pathinfo.indexOf('/'));
+		} else {
+			instance = pathinfo;
+		}
+		return instance;
 	}
+
+
+
+	protected LocalClient getLocalClient(final HttpServletRequest req)
+			throws ServletException {
+		LocalClient tempClient = localClient;
+		if (localClient == null) {
+			tempClient = (LocalClient) req.getServletContext()
+					.getAttribute("localClient");
+		}
+
+		final LocalClient lc = tempClient;
+		if (lc == null) {
+			logger.error("No localclient found");
+//				resp.sendError(500,
+//						"No local client registered in servlet context");
+			throw new ServletException("No local client registered in servlet context");
+		}
+		return lc;
+	}
+
+
+	public LocalClient getLocalClient() {
+		return localClient;
+	}
+
+//	public void setLocalClient(LocalClient localClient) {
+//		this.localClient = localClient;
+//	}
+//
+//	public void clearLocalClient(LocalClient localClient) {
+//		this.localClient = null;
+//	}
 
 	@SuppressWarnings("unchecked")
 	private NavajoRequestWrapper getRequestWrapper(String inFilter) {
+		if(requestWrapper!=null) {
+			return this.requestWrapper;
+		}
 		try {
 			Class<? extends NavajoRequestWrapper> rwrapperClass = (Class<? extends NavajoRequestWrapper>) Class
 					.forName(inFilter);
@@ -136,19 +160,21 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	private NavajoResponseWrapper getResponseWrapper(String outFilter) {
-		try {
-			Class<? extends NavajoResponseWrapper> rwrapperClass = (Class<? extends NavajoResponseWrapper>) Class
-					.forName(outFilter);
-			return rwrapperClass.newInstance();
-		} catch (ClassNotFoundException e) {
-			logger.error("Error: ", e);
-		} catch (InstantiationException e) {
-			logger.error("Error: ", e);
-		} catch (IllegalAccessException e) {
-			logger.error("Error: ", e);
-		}
-		return null;
+	public void setRequestWrapper(NavajoRequestWrapper nrw) {
+		this.requestWrapper = nrw;
 	}
+
+	public void clearRequestWrapper(NavajoRequestWrapper nrw) {
+		this.requestWrapper = null;
+	}
+
+	public void setResponseWrapper(NavajoResponseWrapper nrw) {
+		this.responseWrapper = nrw;
+		
+	}
+
+	public void clearResponseWrapper(NavajoResponseWrapper nrw) {
+		this.responseWrapper = null;		
+	}
+
 }

@@ -243,9 +243,10 @@ public class TipiDialog extends TipiEchoDataComponentImpl{
         super.disposeComponent();
         TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
         final Window win = (Window) s.getTopLevel();
-        ContentPane content = win.getContent();
-
-        content.remove(myWindow);
+        if(win!=null) {
+            ContentPane content = win.getContent();
+            content.remove(myWindow);
+        }
         logger.info("DISPOSED DIALOG!");
         myWindow = null;
    }

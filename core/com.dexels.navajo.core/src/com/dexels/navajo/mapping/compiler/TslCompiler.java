@@ -38,7 +38,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
-import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -636,9 +635,11 @@ public class TslCompiler {
 				Element e = (Element) children.item(i);
 				String entity = e.getAttribute("entity");
 				String service = e.getAttribute("service");
+				String tenant = e.getAttribute("tenant");
 				String validationService = e.getAttribute("validationService");
 				String method = e.getAttribute("method");
-
+				String debug = e.getAttribute("debug");
+				
 				result.append(printIdent(ident) + "if (true) {\n");
 
 				String operationString = "com.dexels.navajo.document.Operation o = "
@@ -702,6 +703,12 @@ public class TslCompiler {
 					result.append(printIdent(ident + 2) + extraNavajoOperation);
 
 				}
+				if (debug != null && !debug.equals("")) {
+				    result.append(printIdent(ident + 2) + "o.setDebug(\"" + debug + "\");\n");
+				}
+				if (tenant != null && !tenant.equals("")) {
+                    result.append(printIdent(ident + 2) + "o.setTenant(\"" + tenant + "\");\n");
+                }
 
 				result.append(printIdent(ident + 2)
 						+ "access.getOutputDoc().addOperation(o);\n");
@@ -1611,6 +1618,8 @@ public class TslCompiler {
 			if (!isSelection) {
 				result.append(printIdent(ident)
 						+ "sValue = new StringLiteral(\"" + value + "\");\n");
+				result.append(printIdent(ident)
+                        + "matchingConditions = true;\n");
 			} else {
 				result.append(printIdent(ident) + "sValue = new String(\""
 						+ value + "\");\n");
@@ -2458,7 +2467,7 @@ public class TslCompiler {
 		while (st.hasMoreTokens()) {
 			String element = st.nextToken();
 			if (!"..".equals(element)) {
-				System.err.println("Huh? : " + element);
+				logger.debug("Huh? : " + element);
 			}
 			count++;
 		}
@@ -2916,8 +2925,8 @@ public class TslCompiler {
 		addDependency(
 				"dependentObjects.add( new IncludeDependency( new Long(\""
 						+ IncludeDependency.getFileTimeStamp(includedFile)
-						+ "\"), \"" + script + "\"));\n", "INCLUDE" + script);
-		deps.add(new IncludeDependency(IncludeDependency.getFileTimeStamp(includedFile), script , fileName));
+						+ "\"), \"" + fileName + "\"));\n", "INCLUDE" + script);
+		deps.add(new IncludeDependency(IncludeDependency.getFileTimeStamp(includedFile), fileName , fileName));
 
 		
 
@@ -3089,14 +3098,16 @@ public class TslCompiler {
 			methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
 			
 			String lock = "Lock l = getLock(" + ( user ? "access.rpcUser" : null) + "," + ( service ? "access.rpcName" : "null" )+ 
-					"," + keyValue + ");\n" + 
-					" try { \n";
+					"," + keyValue + ");\n";
 			
 			String tryLock = null;
+			boolean useTrylock = false;
 			if ( "".equals(timeout)) {
-				tryLock = "l.lock(); if ( true ) {\n";
+				useTrylock = false;
+				tryLock = "l.lock(); try {\n";
 			} else {
-				tryLock = "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n";
+				useTrylock = true;
+				tryLock = "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n" + "try {\n";
 			}
 			
 			methodBuffer.append(printIdent(ident) + lock);
@@ -3109,11 +3120,13 @@ public class TslCompiler {
 				}
 			}
 			
-			methodBuffer.append(printIdent(ident) + "}\n");
 			ident -= 2;
 			methodBuffer.append(printIdent(ident) + "} finally {\n");
-			methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
-			methodBuffer.append(printIdent(ident) +"}\n");
+            methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
+            methodBuffer.append(printIdent(ident) +"}\n");
+			if ( useTrylock ) {
+				methodBuffer.append(printIdent(ident) + "} else { Access.writeToConsole(access, \"No lock was obtained! \"); }\n");
+			}
 			methodBuffer.append(printIdent(ident) +"}\n");
 			methodBuffer.append(printIdent(ident) +"}\n");
 
@@ -3264,31 +3277,14 @@ public class TslCompiler {
 
 	}
 
-	private void dumpRequestMethod(boolean debugInput,
-			StringBuffer generatedCode) {
-
-		if (debugInput) {
-			generatedCode.append("public final void dumpRequest() {\n");
-			generatedCode.append("System.err.println(new Date());");
-			generatedCode.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
-			generatedCode.append("myAccess.getInDoc().write(System.err);\n");
-			generatedCode.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
-			generatedCode.append("}\n\n");
-		}
-	}
-	
-	private void dumpResponseMethod(boolean debugOutput,
-            StringBuffer generatedCode) {
-
-        if (debugOutput) {
-            generatedCode.append("public final void dumpResponse() {\n");
-            generatedCode.append("System.err.println(new Date());");
-            generatedCode.append("System.err.println(\"\\n --------- BEGIN NAVAJO RESPONSE ---------\\n\");\n");
-            generatedCode.append("myAccess.getOutputDoc().write(System.err);\n");
-            generatedCode.append("System.err.println(\"\\n --------- END NAVAJO RESPONSE ---------\\n\");\n");
-            generatedCode.append("}\n\n");
-        }
+    private void generateSetScriptDebug(String value, StringBuffer generatedCode) {
+        generatedCode.append("@Override \n");
+        generatedCode.append("public final String getScriptDebugMode() {\n");
+        generatedCode.append("    return \"" + value + "\";");
+        generatedCode.append("}\n\n");
     }
+	
+
 
 	private final void compileScript(InputStream is, String packagePath,
 			String script, String scriptPath, Writer fo, List<Dependency> deps,
@@ -3343,9 +3339,7 @@ public class TslCompiler {
 						+ scriptPath);
 			}
 			String debugLevel = tslElt.getAttribute("debug");
-			debugInput = (debugLevel.indexOf("request") != -1);
-			debugOutput = (debugLevel.indexOf("response") != -1);
-			debugAll = (debugLevel.indexOf("true") != -1);
+			
 			String description = tslElt.getAttribute("notes");
 			String author = tslElt.getAttribute("author");
 
@@ -3435,10 +3429,7 @@ public class TslCompiler {
 				// includeArray[i]);
 				includeNode(scriptPath, includeArray[i], tslDoc, tenant, deps);
 			}
-
-			// Generate dump request/response Navajo
-			dumpRequestMethod((debugInput || debugAll), result);
-            dumpResponseMethod((debugOutput || debugAll), result);
+			generateSetScriptDebug(debugLevel, result);
 
 			// Generate validation code.
 			generateValidations(tslDoc, result);
@@ -3448,11 +3439,7 @@ public class TslCompiler {
 
 			String methodDef = "public final void execute(Access access) throws Exception { \n\n";
 			result.append(methodDef);
-
-			if (debugAll) {
-				result.append("setDebugAll(true);\n");
-			}
-
+			
 			result.append("try {\n");
 
 			result.append("inDoc = access.getInDoc();\n");
@@ -3474,7 +3461,7 @@ public class TslCompiler {
 
 			if (broadcast) {
 				result.append("try { \n");
-				result.append("   TribeManagerFactory.getInstance().broadcast(inDoc);\n");
+				result.append("   TribeManagerFactory.getInstance().broadcast(inDoc, access.getTenant());\n");
 				result.append("} catch (Exception e) { \n");
 				result.append("   e.printStackTrace(System.err);\n");
 				result.append("}\n");
@@ -3505,14 +3492,16 @@ public class TslCompiler {
 
 			// Add getDescription() and getAuthor()
 			if (author != null) {
+			    String flatAuthor = description.replace("\n", "").replace("\r", "");
 				result.append("public String getAuthor() {\n");
-				result.append("   return \"" + author + "\";\n");
+				result.append("   return \"" + flatAuthor + "\";\n");
 				result.append("}\n\n");
 			}
 
 			if (description != null) {
+			    String flatDescription = description.replace("\n", "").replace("\r", "");
 				result.append("public String getDescription() {\n");
-				result.append("   return \"" + description + "\";\n");
+				result.append("   return \"" + flatDescription + "\";\n");
 				result.append("}\n\n");
 			}
 

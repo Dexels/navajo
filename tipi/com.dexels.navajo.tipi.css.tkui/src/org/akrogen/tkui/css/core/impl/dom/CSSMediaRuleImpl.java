@@ -16,6 +16,7 @@ import java.io.StringReader;
 
 import org.akrogen.tkui.css.core.dom.parsers.CSSParser;
 import org.akrogen.tkui.css.core.exceptions.DOMExceptionImpl;
+import org.akrogen.tkui.css.core.impl.dom.parsers.AbstractCSSParser;
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
 import org.w3c.dom.DOMException;
@@ -87,7 +88,7 @@ public class CSSMediaRuleImpl implements CSSMediaRule, Serializable {
 		try {
 			InputSource is = new InputSource(new StringReader(cssText));
 			// CSSOMParser parser = new CSSOMParser();
-			CSSParser parser = null;
+			CSSParser parser = new AbstractCSSParser();
 			CSSRule r = parser.parseRule(is);
 
 			// The rule must be a media rule
@@ -153,7 +154,7 @@ public class CSSMediaRuleImpl implements CSSMediaRule, Serializable {
 
 		try {
 			InputSource is = new InputSource(new StringReader(rule));
-			CSSParser parser = null;
+			CSSParser parser = new AbstractCSSParser();
 			// parser.setParentStyleSheet(_parentStyleSheet);
 			// parser.setParentRule(_parentRule);
 			CSSRule r = parser.parseRule(is);

@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.article.ArticleClientException;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.DirectOutputThrowable;
 import com.dexels.navajo.article.test.TestContextImpl;
@@ -51,7 +52,7 @@ public class TestRuntime {
 
 	@Test
 	
-	public void testSearchClub() throws IOException, ArticleException, DirectOutputThrowable {
+	public void testSearchClub() throws IOException, ArticleException, DirectOutputThrowable, ArticleClientException {
 		// this test is a bit outdated
 		File art =context.resolveArticle("/searchclub");
 		TestRuntimeImpl tr = new TestRuntimeImpl("searchclub",art,null);
@@ -66,7 +67,7 @@ public class TestRuntime {
 		}
 
 	@Test
-	public void testVerjaardag() throws IOException, ArticleException, DirectOutputThrowable {
+	public void testVerjaardag() throws IOException, ArticleException, DirectOutputThrowable, ArticleClientException {
 		File art =context.resolveArticle("/verjaardagen");
 		TestRuntimeImpl tr = new TestRuntimeImpl("verjaardagen",art,null);
 		context.interpretArticle(art,tr);
@@ -81,7 +82,7 @@ public class TestRuntime {
 	}
 
 	@Test
-	public void testTeams() throws IOException, ArticleException, DirectOutputThrowable {
+	public void testTeams() throws IOException, ArticleException, DirectOutputThrowable, ArticleClientException {
 		File art =context.resolveArticle("/teams");
 		TestRuntimeImpl tr = new TestRuntimeImpl("teams",art,null);
 		context.interpretArticle(art,tr);

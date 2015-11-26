@@ -10,6 +10,7 @@ public interface InputContext {
 	public Navajo getInputNavajo();
 	public String getServiceName();
 	public String getUserName();
+	public String getIpAddress();
 	public String getResourceAvailability();
 	
 	public HttpServletRequest getRequest();

@@ -73,7 +73,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl implements TipiSuppor
 	private Point myOffset;
 	private RootPaneContainer myRootPaneContainer;
 	private boolean forceInternal = false;
-
+	 private int overlayCounter = 0;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiDialog.class);
@@ -869,8 +869,15 @@ public class TipiDialog extends TipiSwingDataComponentImpl implements TipiSuppor
     @Override
     public void addOverlayProgressPanel(String type) {
         if (myRootPaneContainer instanceof TipiSwingDialog) {
-            TipiSwingDialog dia = (TipiSwingDialog) myRootPaneContainer;
-            dia.addGlass(type);
+            synchronized(this){
+                if (overlayCounter == 0) {
+                    TipiSwingDialog dia = (TipiSwingDialog) myRootPaneContainer;
+                    dia.addGlass(type);
+                }
+                overlayCounter++;
+            }
+            
+            
         }
 
     }
@@ -878,8 +885,15 @@ public class TipiDialog extends TipiSwingDataComponentImpl implements TipiSuppor
     @Override
     public void removeOverlayProgressPanel() {
         if (myRootPaneContainer instanceof TipiSwingDialog) {
-            TipiSwingDialog dialog = (TipiSwingDialog) myRootPaneContainer;
-            dialog.hideGlass();
+            synchronized(this){
+                overlayCounter--;
+                if (overlayCounter < 1) {
+                    TipiSwingDialog dialog = (TipiSwingDialog) myRootPaneContainer;
+                    dialog.hideGlass();
+                }
+                overlayCounter = 0;
+            }
+          
         }
 
     }

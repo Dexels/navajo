@@ -177,12 +177,6 @@ public class TestDispatcher implements DispatcherInterface {
 	}
 
 	@Override
-	public Navajo handle(Navajo inMessage, boolean skipAuth,
-			AfterWebServiceEmitter emit) throws FatalException {
-		return null;
-	}
-
-	@Override
 	public void finalizeService(Navajo inMessage, Access access,
 			String rpcName, String rpcUser,
 			Throwable myException, String origThreadName,
@@ -193,14 +187,7 @@ public class TestDispatcher implements DispatcherInterface {
 	}
 
 	@Override
-	public Navajo handle(Navajo inMessage, TmlRunnable initialRunnable,
-			Object userCertificate, ClientInfo clientInfo)
-			throws FatalException {
-		return null;
-	}
-
-	@Override
-	public Navajo handle(Navajo inMessage, boolean skipAuth,
+	public Navajo handle(Navajo inMessage, String instance, boolean skipAuth,
 			AfterWebServiceEmitter emit, ClientInfo clientInfo)
 			throws FatalException {
 		
@@ -208,7 +195,7 @@ public class TestDispatcher implements DispatcherInterface {
 	}
 
 	@Override
-	public Navajo handleCallbackPointers(Navajo inMessage) {
+	public Navajo handleCallbackPointers(Navajo inMessage, String tenant) {
 		return null;
 	}
 

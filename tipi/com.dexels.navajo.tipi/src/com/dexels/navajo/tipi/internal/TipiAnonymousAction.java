@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.internal;
 
 import java.util.List;
+import java.util.Map;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
@@ -105,5 +106,15 @@ public class TipiAnonymousAction implements TipiExecutable {
 			throws TipiBreakException, TipiException, TipiSuspendException {
 		
 	}
+	
+    @Override
+    public void setMDCMap(Map<String, String> mdc) {
+        
+    }
+
+    @Override
+    public void restoreMDC() {
+        
+    }
 
 }

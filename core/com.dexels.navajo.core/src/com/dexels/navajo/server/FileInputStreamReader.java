@@ -37,6 +37,11 @@ public InputStream getResource(String name) {
     		return new FileInputStream(f);
     	}
     	File dir = new File(filePath);
+    	File target = new File(dir,name);
+    	if(!target.exists()) {
+    		logger.debug("Could not load resource...: " + name + " no such file: "+target.getAbsolutePath());
+    		return null;
+    	}
     	URL baseDir = dir.toURI().toURL();
     	URL res = new URL(baseDir,name);
     	logger.debug("Resolved to res url: "+res.toString()+" while resolving name: "+name);

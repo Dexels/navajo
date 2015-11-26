@@ -22,7 +22,6 @@ public class NavajoBasicClassLoader extends NavajoClassSupplier {
 	 */
 	@Override
 	public Class<?> getClass(String className) throws ClassNotFoundException {
-//	    System.err.println("Basic classloader supplying: "+className);
 		return Class.forName(className,true,this);
 	}
 

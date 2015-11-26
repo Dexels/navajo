@@ -47,8 +47,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 
 	private Runnable afterEvent = null;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(TipiEvent.class);
+	private final static Logger logger = LoggerFactory.getLogger(TipiEvent.class);
 	
 	private Map<String, TipiValue> eventParameterMap = new HashMap<String, TipiValue>();
 
@@ -67,7 +66,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 		ti.setAfterEvent(getAfterEvent());
 		ti.setExpression(getExpression());
 		Iterator<String> iter = this.eventParameterMap.keySet().iterator();
-
+		
 		while (iter.hasNext()) {
 			String key = iter.next();
 			TipiValue tv = (TipiValue) this.eventParameterMap.get(key).clone();
@@ -200,10 +199,8 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 		// }
 		try {
 			localEvent.setAfterEvent(afterEventParam);
-			getContext().debugLog("event   ",
-					"enqueueing (in event) async event: " + localEvent);
-			getComponent().getContext().performAction(localEvent,
-					parentExecutable, listener);
+			getContext().debugLog("event   ", "enqueueing (in event) async event: " + localEvent);
+			getComponent().getContext().performAction(localEvent, parentExecutable, listener);
 		} catch (TipiSuspendException e) {
 			// ignore
 		} catch (Throwable ex) {
@@ -235,6 +232,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 	public void performAction(TipiEventListener listener,
 			TipiExecutable executableParent, Map<String, Object> event)
 			throws TipiBreakException {
+		getContext().addTipiEventStatisticsStart(getComponent(), this.getEventName());
 		TipiEvent localInstance = this;
 		if (event != null) {
 			localInstance = (TipiEvent) this.clone();
@@ -308,6 +306,8 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable,
 						+ " in component" + getComponent().getPath());
 		
 		
+
+		getContext().addTipiEventStatisticsFinished(getComponent(), this.getEventName()); 
 		listener.eventFinished(localInstance, event);
 	}
 

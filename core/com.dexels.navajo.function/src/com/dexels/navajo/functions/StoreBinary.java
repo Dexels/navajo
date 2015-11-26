@@ -38,7 +38,7 @@ public class StoreBinary extends FunctionInterface {
 		
 		SharedStoreInterface mss = SharedStoreFactory.getInstance();
 		try {
-			OutputStream os = mss.getOutputStream(GetBinary.PARENT_LOCATION, id, false);
+			OutputStream os = mss.getOutputStream(getAccess().getTenant(), GetBinary.PARENT_LOCATION, id, false);
 			n.write(os);
 			os.close();
 		} catch (Exception e) {

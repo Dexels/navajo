@@ -23,4 +23,8 @@ public interface NavajoEvent extends Serializable {
 	 */
 	public Navajo getEventNavajo();
 	
+	/** Indicates whether instances of this event should be handled synchronous 
+	 */
+	public boolean isSynchronousEvent();
+	
 }

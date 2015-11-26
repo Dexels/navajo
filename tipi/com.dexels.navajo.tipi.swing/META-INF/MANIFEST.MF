@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Swing Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.3.23.qualifier
+Bundle-Version: 1.4.5.qualifier
 Bundle-Activator: tipiswing.TipiSwingExtension
 Export-Package: com.dexels.navajo.tipi.components.swingimpl;version="1
  .0.0",com.dexels.navajo.tipi.components.swingimpl.parsers;version="1.
@@ -64,5 +64,5 @@ Import-Package: com.dexels.navajo.client.stream;version="1.0.0",
  org.slf4j;version="[1.6.1,1.8.0)",
  tipi,
  tipipackage;version="1.1.42"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 DynamicImport-Package: org.pushingpixels.*,org.jdesktop.swingx.plaf.*

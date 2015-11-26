@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1349">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1558">
 <locations>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.3.201305221702"/>
-<repository location="http://repo.dexels.com/eclipse/jetty8"/>
-</location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
 <unit id="org.eclipse.jgit.feature.group" version="3.1.0.201310021548-r"/>
@@ -20,8 +16,16 @@
 <repository location="http://repo.dexels.com/eclipse/equinox_luna_sr1"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.23.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.23"/>
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.2.10.201503131614"/>
+<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.2.10.v20150310/"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.3.201305221702"/>
+<repository location="http://repo.dexels.com/eclipse/jetty8"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.70.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.70"/>
 </location>
 </locations>
 <includeBundles>
@@ -33,6 +37,8 @@
 <plugin id="com.dexels.appstore.server"/>
 <plugin id="com.dexels.hazelcast"/>
 <plugin id="com.dexels.karaf.featuresync"/>
+<plugin id="com.dexels.log4j.httpappender"/>
+<plugin id="com.dexels.log4j.server"/>
 <plugin id="com.dexels.logback.redis"/>
 <plugin id="com.dexels.oauth.api"/>
 <plugin id="com.dexels.oauth.impl"/>
@@ -41,10 +47,11 @@
 <plugin id="com.dexels.repository.api"/>
 <plugin id="com.dexels.repository.file"/>
 <plugin id="com.dexels.repository.git"/>
+<plugin id="com.dexels.sharedconfigstore"/>
 <plugin id="com.google.guava"/>
 <plugin id="com.google.inject"/>
 <plugin id="com.hazelcast"/>
-<plugin id="com.jcraft.jsch" version="0.1.46.v201205102330"/>
+<plugin id="com.jcraft.jsch" version="0.1.53.v201508180515"/>
 <plugin id="com.jcraft.jzlib"/>
 <plugin id="com.jogamp.jogl"/>
 <plugin id="com.mysql.jdbc"/>
@@ -82,7 +89,6 @@
 <plugin id="org.apache.camel.camel-ftp"/>
 <plugin id="org.apache.camel.camel-http"/>
 <plugin id="org.apache.camel.camel-jdbc"/>
-<plugin id="org.apache.camel.camel-jetty"/>
 <plugin id="org.apache.camel.camel-mail"/>
 <plugin id="org.apache.camel.camel-stream"/>
 <plugin id="org.apache.commons.beanutils"/>
@@ -137,8 +143,9 @@
 <plugin id="org.apache.felix.webconsole.plugins.packageadmin"/>
 <plugin id="org.apache.felix.webconsole.plugins.scriptconsole"/>
 <plugin id="org.apache.felix.webconsole.plugins.upnp"/>
-<plugin id="org.apache.httpcomponents.httpclient" version="4.3.5"/>
-<plugin id="org.apache.httpcomponents.httpcore" version="4.3.0"/>
+<plugin id="org.apache.httpcomponents.httpasyncclient"/>
+<plugin id="org.apache.httpcomponents.httpclient" version="4.4.1"/>
+<plugin id="org.apache.httpcomponents.httpcore" version="4.4.3"/>
 <plugin id="org.apache.james.protocols.api"/>
 <plugin id="org.apache.james.protocols.netty"/>
 <plugin id="org.apache.james.protocols.smtp"/>
@@ -172,10 +179,12 @@
 <plugin id="org.apache.servicemix.bundles.jsch"/>
 <plugin id="org.apache.servicemix.bundles.junit"/>
 <plugin id="org.apache.servicemix.bundles.lucene"/>
+<plugin id="org.apache.servicemix.bundles.saaj-impl"/>
 <plugin id="org.apache.servicemix.bundles.xalan"/>
 <plugin id="org.apache.servicemix.bundles.xerces"/>
 <plugin id="org.apache.servicemix.bundles.xmlresolver"/>
 <plugin id="org.apache.servicemix.specs.activation-api-1.1"/>
+<plugin id="org.apache.servicemix.specs.saaj-api-1.3"/>
 <plugin id="org.apache.sshd.core"/>
 <plugin id="org.apache.tika.bundle"/>
 <plugin id="org.apache.tika.core"/>
@@ -205,19 +214,17 @@
 <plugin id="org.eclipse.equinox.simpleconfigurator"/>
 <plugin id="org.eclipse.equinox.supplement"/>
 <plugin id="org.eclipse.equinox.util"/>
-<plugin id="org.eclipse.jetty.ajp"/>
-<plugin id="org.eclipse.jetty.annotations"/>
-<plugin id="org.eclipse.jetty.client"/>
-<plugin id="org.eclipse.jetty.continuation" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.http" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.io" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.nosql"/>
-<plugin id="org.eclipse.jetty.osgi.httpservice"/>
-<plugin id="org.eclipse.jetty.security" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.server" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.servlet" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.servlets"/>
-<plugin id="org.eclipse.jetty.util" version="8.1.11.v20130520"/>
+<plugin id="org.eclipse.jetty.annotations" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.client" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.continuation" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.http" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.io" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.osgi.httpservice" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.proxy"/>
+<plugin id="org.eclipse.jetty.security" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.server" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.servlets" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.util" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jgit" version="3.6.0.201411121045-m1"/>
 <plugin id="org.eclipse.jgit.archive"/>
 <plugin id="org.eclipse.jgit.java7"/>
@@ -234,6 +241,8 @@
 <plugin id="org.jboss.netty"/>
 <plugin id="org.jgroups"/>
 <plugin id="org.jledit.core"/>
+<plugin id="org.jvnet.mimepull"/>
+<plugin id="org.jvnet.staxex.stax-ex"/>
 <plugin id="org.kjkoster.zapcat"/>
 <plugin id="org.mongodb.mongo-java-driver"/>
 <plugin id="org.ops4j.base.io"/>

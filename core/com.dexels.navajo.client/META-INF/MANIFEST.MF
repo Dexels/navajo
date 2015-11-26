@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-Name: Navajo Client
 Bundle-SymbolicName: com.dexels.navajo.client
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.5.9.qualifier
+Bundle-Version: 3.6.5.qualifier
 Bundle-Activator: navajoclient.Version
 Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.client;version="1.0.0";uses:="com.dexels.navajo.document",
@@ -27,5 +27,5 @@ Import-Package: com.dexels.navajo.document;version="[2.2.0,2.3.0)",
  org.junit.runners;resolution:=optional,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Service-Component: OSGI-INF/nqlContextComponent.xml

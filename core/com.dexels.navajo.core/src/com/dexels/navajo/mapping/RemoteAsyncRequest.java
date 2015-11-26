@@ -4,25 +4,22 @@ import com.dexels.navajo.server.enterprise.tribe.Answer;
 import com.dexels.navajo.server.enterprise.tribe.Request;
 
 public class RemoteAsyncRequest extends Request {
+    private static final long serialVersionUID = 10518850435818645L;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 10518850435818645L;
+    private String ref;
 
-	private String ref;
-	
-	public RemoteAsyncRequest(String ref) {
-		this.ref = ref;
-	}
-	
-	@Override
-	public Answer getAnswer() {
-		return new RemoteAsyncAnswer(this);
-	}
+    public RemoteAsyncRequest(String ref) {
+        this.ref = ref;
+    }
 
-	public String getRef() {
-		return ref;
-	}
+    @Override
+    public Answer getAnswer() {
+        Answer a = new RemoteAsyncAnswer(this);
+        return a;
+    }
+
+    public String getRef() {
+        return ref;
+    }
 
 }

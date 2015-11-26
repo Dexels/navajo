@@ -1,7 +1,10 @@
 package com.dexels.navajo.tipi.internal.cache.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -37,15 +40,16 @@ public class LocalDigestCacheValidator implements CacheValidator {
 		String localDigest = (String) localDigestProperties.get(location);
 		String remoteDigest = (String) remoteDigestProperties.get(location);
 		if(remoteDigest==null) {
-			logger.info("No remote found for: "+location+" assuming absent in loader: "+id);
+			logger.info("No remote found for: "+location+" assuming absent in loader: "+id+" # of loaded resources: "+remoteDigestProperties.size());
 			throw new IOException("Resource absent");
 		}
-		if(localDigest==null || remoteDigest == null) {
+		if(localDigest==null) {
+			logger.debug("No digest found for location: {} Keys: {}",location, localDigestProperties.keySet());
 			return false;
 		}
 		final boolean equals = localDigest.equals(remoteDigest);
 		if(!equals) {
-			System.err.println("\n>>\n>>\n>> Changed to : "+location +" in loader: "+id);
+			logger.info("Digest changed for location: {} Local: {} Remote: {}",location,localDigest,remoteDigest);
 		}
 		return equals;
 	}
@@ -77,8 +81,16 @@ public class LocalDigestCacheValidator implements CacheValidator {
 		}
 		
 	}
+	
+	@Override
+	public void invalidate() {
+		localDigestProperties.clear();
+		localStorage.delete(LOCAL_DIGEST_PROPERTIES);
+	}
+	
 	private void loadDigestFile(String location) throws IOException {
 		InputStream in = localStorage.getLocalData(location);
+		logger.debug("Getting location: "+location);
 		if(in !=null) {
 			try {
 				localDigestProperties.load(in);
@@ -102,4 +114,17 @@ public class LocalDigestCacheValidator implements CacheValidator {
 		this.id = id;
 	}
 
+
+	@Override
+	public void update(String location) throws IOException {
+		localDigestProperties.put(location, remoteDigestProperties.get(location));
+//		localStorage.s
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		localDigestProperties.store(baos, "Update at: "+new Date());
+		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+		Map<String, Object> metadata = new HashMap<String, Object>();
+		localStorage.storeData(LOCAL_DIGEST_PROPERTIES, bais, metadata);
+		logger.debug("Saved local digest: {}, and location: ",LOCAL_DIGEST_PROPERTIES,location);
+		bais.close();
+	}
 }

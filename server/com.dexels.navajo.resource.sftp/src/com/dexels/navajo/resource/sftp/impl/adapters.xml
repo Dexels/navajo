@@ -1,0 +1,16 @@
+<adapterdef>
+	<map>
+		<tagname>sftp</tagname>
+		<object>com.dexels.navajo.resource.sftp.SFTPResourceMap</object>
+		<values>
+			<value name="resource" type="string" required="true" direction="in" />
+		</values>
+		<methods>
+			<method name="upload">
+				<param name="path" field="path" type="string" required="true" />
+				<param name="filename" field="filename" type="string" required="true" />
+				<param name="content" field="content" type="binary" required="true" />
+			</method>
+		</methods>
+	</map>
+</adapterdef>

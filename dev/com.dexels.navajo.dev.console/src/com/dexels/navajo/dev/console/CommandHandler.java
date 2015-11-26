@@ -15,8 +15,8 @@ import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.script.api.LocalClient;
 
 public class CommandHandler {
-	private final static Logger logger = LoggerFactory
-			.getLogger(CommandHandler.class);
+	private final static Logger logger = LoggerFactory .getLogger(CommandHandler.class);
+	
 	private BundleCreator bundleCreator = null;
 	protected final Collection<ServiceRegistration<?>> registeredCommands = new ArrayList<ServiceRegistration<?>>();
 	protected BundleContext bundleContext;
@@ -130,6 +130,9 @@ public class CommandHandler {
 		SharedStore_rm rm = new SharedStore_rm();
 		registerCommand(rm, "rm");
 		
+        SharedStore_rmdate rmdate = new SharedStore_rmdate();
+        registerCommand(rmdate, "rmdate");
+		
 		SharedStore_sharedstore sharedstore = new SharedStore_sharedstore();
 		registerCommand(sharedstore, "sharedstore");
 		
@@ -138,6 +141,7 @@ public class CommandHandler {
 		
 		HelpCommand help = new HelpCommand(this);
 		registerCommand(help, "help");
+
 		
 	}
 

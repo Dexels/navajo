@@ -1,7 +1,9 @@
 Bundle-Name: Navajo Core
 Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.2.9.qualifier
+Bundle-Version: 4.0.7.qualifier
+Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
+Navajo-Name: Core
 Eclipse-ExtensibleAPI: true
 Bundle-Activator: navajocore.Version
 Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
@@ -104,6 +106,7 @@ Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  com.dexels.navajo.serviceplugin;uses:="com.dexels.navajo.script.api,com.dexels.navajo.document,com.dexels.navajo.mapping",
  com.dexels.navajo.sharedstore;uses:="org.junit.rules",
  com.dexels.navajo.sharedstore.map;uses:="com.dexels.navajo.server.enterprise.tribe,com.dexels.navajo.script.api",
+ com.dexels.navajo.tenant;version="1.0.0",
  com.dexels.navajo.test;uses:="com.dexels.navajo.document.types",
  com.dexels.navajo.tipilink,
  com.dexels.navajo.util;version="1.0.0";uses:="org.w3c.dom,com.dexels.navajo.script.api,com.dexels.navajo.document",
@@ -120,8 +123,8 @@ Import-Package: com.dexels.navajo.authentication.api,
  com.dexels.navajo.document.nanoimpl;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.persistence;version="2.2.0",
- com.dexels.navajo.repository.api;version="1.0.0",
- com.dexels.navajo.repository.api.diff;version="1.0.0",
+ com.dexels.navajo.repository.api,
+ com.dexels.navajo.repository.api.diff;version="2.0.0",
  com.dexels.navajo.repository.api.util,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.version,
@@ -139,10 +142,6 @@ Import-Package: com.dexels.navajo.authentication.api,
  navajo,
  org.apache.commons.io;version="2.4.0",
  org.apache.commons.io.filefilter;version="2.4.0",
- org.codehaus.jackson.annotate;version="1.9.11",
- org.codehaus.jackson.map;version="1.9.11",
- org.codehaus.jackson.map.type;version="1.9.11",
- org.codehaus.jackson.type;version="1.9.11",
  org.junit;version="[4.0.0,5.0.0)";resolution:=optional,
  org.junit.rules;version="[4.0.0,5.0.0)";resolution:=optional,
  org.junit.runner;version="[4.0.0,5.0.0)";resolution:=optional,
@@ -154,11 +153,12 @@ Import-Package: com.dexels.navajo.authentication.api,
  org.osgi.util.tracker;version="1.5.0",
  org.slf4j,
  org.w3c.dom
-Service-Component: OSGI-INF/simpleRepository.xml, OSGI-INF/repositoryFactory.xml, OSGI-INF/statisticsRunner.xml,
- OSGI-INF/jabberWorkerFactory.xml,
+Service-Component: OSGI-INF/jabberWorkerFactory.xml,OSGI-INF/navajo.env.config.xml,OSGI-INF/navajo.tenantconfig.env.xml,
  OSGI-INF/localClient.xml,OSGI-INF/navajoIOConfig.xml,OSGI-INF/localClientContext.xml,OSGI-INF/navajoConfigEmitter.xml,
  OSGI-INF/navajoConfig.xml,OSGI-INF/dispatcher.xml, OSGI-INF/expressionEvaluator.xml,OSGI-INF/navajoEventRegistry.xml,
- OSGI-INF/sharedFileStore.xml,OSGI-INF/dummyTribeManager.xml,OSGI-INF/dummyJabberWorker.xml,OSGI-INF/asyncStoreRunner.xml,
- OSGI-INF/navajo.server.http.osgi.xml,OSGI-INF/dummyIntegrityWorker.xml,OSGI-INF/sharedMemoryStore.xml,
- OSGI-INF/propertyFileDescriptionProvider.xml,OSGI-INF/navajo.repository.context.xml,
- OSGI-INF/navajoGlobalManager.xml,OSGI-INF/navajo.local.client.xml,OSGI-INF/dependencyanalyzer.xml
+ OSGI-INF/sharedFileStore.xml,OSGI-INF/navajo.server.tribemanager.default.xml,OSGI-INF/dummyJabberWorker.xml,
+ OSGI-INF/asyncStoreRunner.xml,OSGI-INF/navajo.server.http.osgi.xml,OSGI-INF/dummyIntegrityWorker.xml,
+ OSGI-INF/sharedMemoryStore.xml,OSGI-INF/propertyFileDescriptionProvider.xml,OSGI-INF/navajo.repository.context.xml,
+ OSGI-INF/navajoGlobalManager.xml,OSGI-INF/navajo.local.client.xml,OSGI-INF/dependencyanalyzer.xml,
+ OSGI-INF/navajo.wrap.collector.xml
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

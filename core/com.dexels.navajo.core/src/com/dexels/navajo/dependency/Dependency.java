@@ -1,7 +1,7 @@
 package com.dexels.navajo.dependency;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
+import java.io.File;
+import java.util.regex.Pattern;
 
 public class Dependency {
     public static final int UNKNOWN_TYPE = 0;
@@ -11,22 +11,29 @@ public class Dependency {
     public static final int ENTITY_DEPENDENCY = 4;
     public static final int TASK_DEPENDENCY = 5;
     public static final int WORKFLOW_DEPENDENCY = 6;
-    public static final int BROKEN_DEPENDENCY = 7;
-
+    public static final int TIPI_DEPENDENCY = 7;
+    public static final int ARTICLE_DEPENDENCY = 8;
+    
     private int type;
     private String scriptFile;
     private String dependeeFile;
     private int linenr;
+    private boolean isBroken = false;
     
     public Dependency() {
         // JSON serialisation likes to have a constructor...
     }
 
     public Dependency(String scriptFile, String dependeeFile, int type, int linenr) {
+        this(scriptFile, dependeeFile, type, linenr, false);
+    }
+    
+    public Dependency(String scriptFile, String dependeeFile, int type, int linenr, boolean broken) {
         this.scriptFile = scriptFile;
         this.dependeeFile = dependeeFile;
         this.type = type;
         this.linenr = linenr;
+        this.isBroken = broken;
     }
 
     public int getType() {
@@ -52,20 +59,34 @@ public class Dependency {
     public void setDependeeFile(String dependeeFile) {
         this.dependeeFile = dependeeFile;
     }
-    
-    
 
     public int getLinenr() {
         return linenr;
     }
 
+    public boolean isBroken() {
+        return isBroken;
+    }
 
-    @JsonIgnore
+    public void setBroken(boolean isBroken) {
+        this.isBroken = isBroken;
+    }
+
     public String getScript() {
         String scriptFileRel = null;
-        if (scriptFile.indexOf("workflows") > 0) {
+        if (type == WORKFLOW_DEPENDENCY) {
             scriptFileRel = scriptFile.split("workflows")[1];
-            return scriptFileRel.substring(1, scriptFileRel.indexOf('.'));
+        } else if (type == TIPI_DEPENDENCY) {
+            scriptFileRel = scriptFile.split("tipi")[1];
+        } else if (type == ARTICLE_DEPENDENCY) {
+            scriptFileRel = scriptFile.split("article")[1];
+        } else if (type == TASK_DEPENDENCY) {
+            // Tasks file as a bit special, since they don't have their own directory really
+            // Hence we simulate this
+            String pattern = Pattern.quote(File.separator);
+            String[] filenameParts = scriptFile.split(pattern);
+            String tenant = filenameParts[filenameParts.length- 3];
+            scriptFileRel = File.separator +  tenant + File.separator + "tasks.xml";
         } else {
             scriptFileRel = scriptFile.split("scripts")[1];
         }
@@ -76,15 +97,8 @@ public class Dependency {
         return script;
     }
 
-    @JsonIgnore
     public String getDependee() {
-        String scriptFileRel = null;
-        if (dependeeFile.indexOf("workflows") > 0) {
-            scriptFileRel = dependeeFile.split("workflows")[1];
-            
-        } else {
-            scriptFileRel = dependeeFile.split("scripts")[1];
-        }
+        String scriptFileRel =  dependeeFile.split("scripts")[1];
         String script = scriptFileRel.substring(1, scriptFileRel.indexOf('.'));
         
         // Replace win32 slashes to be consistent with Navajo script slashes        
@@ -115,4 +129,13 @@ public class Dependency {
         }
     }
 
+    
+    public static void main(String[] args) {
+        Dependency d = new Dependency("/home/chris/git/sportlink/settings/KNVB/config/tasks.xml", "/home/chris/git/sportlink/scripts/financial/ProcessDistrictDirectMemberContribution.xml", Dependency.TASK_DEPENDENCY, 5);
+        System.out.println(d.getScript());
+        System.out.println(d.getScriptFile());
+        System.out.println(d.getDependee());
+        System.out.println(d.getDependeeFile());
+    }
 }
+

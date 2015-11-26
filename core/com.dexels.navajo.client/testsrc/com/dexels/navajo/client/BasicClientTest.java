@@ -37,20 +37,16 @@ public class BasicClientTest {
 //		myClient.setPassword("aap");
 //		myClient.setAllowCompression(false);
 		myClient = NavajoClientFactory.getClient();
-		myClient.setUsername("ROOT");
-		myClient.setPassword("R20T");
-		myClient.setServerUrl("https://knzb-test.sportlink.com/Postman");
+		myClient.setUsername("demo");
+		myClient.setPassword("demo");
+		myClient.setServerUrl("https://demoserver/navajo");
 		long total = 0;
-		for (int i = 0; i < 500; i++) {
-			long start = System.currentTimeMillis();
-			Navajo reply = myClient.doSimpleSend("club/InitUpdateClub");
-			
-			//			reply.write(System.err);
-			long time = System.currentTimeMillis() - start;
-			total+=time;
-			double avg = total / (i+1);
-			System.err.println("Time: "+(time)+" avg: "+avg);
-		}
+		long start = System.currentTimeMillis();
+		Navajo reply = myClient.doSimpleSend("external/competition/oranje/init");
+//		reply2.write(System.err);
+		long time = System.currentTimeMillis() - start;
+		total += time;
+		System.err.println("Time: " + (time) );
 	}
 
 }

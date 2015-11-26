@@ -116,4 +116,9 @@ public class AuditLogEvent implements NavajoEvent, LevelEvent {
 		}
 		return input;
 	}
+	
+    @Override
+    public boolean isSynchronousEvent() {
+        return false;
+    }
 }

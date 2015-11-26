@@ -21,7 +21,7 @@ public class TribeManagerFactory {
 			.getLogger(TribeManagerFactory.class);
 	
 	public static void useTestVersion() {
-		instance = new DummyTribeManager();
+		instance = new DefaultTribeManager();
 	}
 	
 	public static TribeManagerInterface getInstance() {
@@ -32,7 +32,7 @@ public class TribeManagerFactory {
 				synchronized (semaphore) {
 					if ( instance == null ) {
 						instance = getTribeManagerService();
-						if(instance == null || instance instanceof DummyTribeManager) {
+						if(instance == null || instance instanceof DefaultTribeManager) {
 							tribeManagerFound = false;
 						} else {
 							tribeManagerFound = true;
@@ -55,7 +55,7 @@ public class TribeManagerFactory {
 						Boolean b =  (Boolean)value;
 						if(!b) {
 							logger.warn("Hazelcast is disabled");
-							return new DummyTribeManager();
+							return new DefaultTribeManager();
 						}
 						logger.info("Hazelcast enabled");
 					}
@@ -70,7 +70,7 @@ public class TribeManagerFactory {
 				return dummy;
 			} catch (Throwable e) {
 				logger.error("Could not start Tribe Manager", e);
-				return new DummyTribeManager();
+				return new DefaultTribeManager();
 			}	
 	}
 	

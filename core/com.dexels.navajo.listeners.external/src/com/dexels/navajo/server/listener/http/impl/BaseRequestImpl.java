@@ -7,9 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
@@ -25,12 +25,16 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.ClientInfo;
 
 
 public class BaseRequestImpl implements AsyncRequest {
-
+    private final static Logger logger = LoggerFactory.getLogger(BaseRequestImpl.class);
+    private final static Logger statLogger = LoggerFactory.getLogger("stats");
+    
 	protected final HttpServletRequest request;
 	protected HttpServletResponse response;
 
@@ -41,12 +45,11 @@ public class BaseRequestImpl implements AsyncRequest {
 	private String url;
 	private Navajo inDoc;
 	private final String instance;
-
-	private final static Logger logger = LoggerFactory
-			.getLogger(BaseRequestImpl.class);
+	private String dataPath = null;
+	private String fileName;
+	private String contentType;
 	
-	private final static Logger statLogger = LoggerFactory
-			.getLogger("stats");
+
 
 	
 	public BaseRequestImpl(HttpServletRequest request,
@@ -62,6 +65,9 @@ public class BaseRequestImpl implements AsyncRequest {
 		setUrl(createUrl(this.request));
 		this.inDoc = parseInputNavajo(request.getInputStream());
 		this.instance = instance;
+		this.dataPath = request.getParameter("dataPath");
+		this.fileName = request.getParameter("fileName");
+		this.contentType = request.getParameter("ContentType");
 	}
 
 	public BaseRequestImpl(Navajo in, HttpServletRequest request, HttpServletResponse response, String instance)  {
@@ -75,6 +81,10 @@ public class BaseRequestImpl implements AsyncRequest {
 		setUrl(createUrl(this.request));
 		this.inDoc = in;
 		this.instance = instance;
+		this.dataPath = request.getParameter("dataPath");
+		this.fileName = request.getParameter("fileName");
+		this.contentType = request.getParameter("ContentType");
+		
 	}
 	
 	@Override
@@ -152,8 +162,9 @@ public class BaseRequestImpl implements AsyncRequest {
 	@Override
 	public ClientInfo createClientInfo(long scheduledAt, long startedAt,
 			int queueLength, String queueId) {
+	    String ip = getIpAddress();
 		ClientInfo clientInfo = new ClientInfo(
-				request.getRemoteAddr(),
+				ip,
 				"unknown",
 				contentEncoding,
 				(int) (scheduledAt - connectedAt),
@@ -167,6 +178,15 @@ public class BaseRequestImpl implements AsyncRequest {
 				new java.util.Date(connectedAt));
 		return clientInfo;
 	}
+
+	@Override
+    public String getIpAddress() {
+        String ip = request.getHeader("X-Forwarded-For");
+	    if (ip == null || ip.equals("")) {
+	        ip = request.getRemoteAddr();
+	    }
+        return ip;
+    }
 
 	@Override
 	public Object getCert() {
@@ -202,16 +222,42 @@ public class BaseRequestImpl implements AsyncRequest {
 	public void writeOutput(Navajo inDoc, Navajo outDoc,long scheduledAt, long startedAt, String threadStatus) throws IOException,
 			FileNotFoundException, UnsupportedEncodingException,
 			NavajoException {
-		response.setContentType("text/xml; charset=UTF-8");
-//		response.setHeader("Connection", "close"); 
-
-		OutputStream out = getOutputStream(acceptEncoding, response.getOutputStream());
 
 		long finishedScriptAt = System.currentTimeMillis();
 		// postTime =
 		long postTime = scheduledAt - connectedAt;
 		long queueTime = startedAt - scheduledAt;
 		long serverTime = finishedScriptAt - startedAt;
+		if(dataPath!=null) {
+			Property data = outDoc.getProperty(dataPath);
+			Object dataObject = data.getTypedValue();
+			if(dataObject instanceof Binary) {
+				Binary b = (Binary)dataObject;
+				if(contentType!=null) {
+					response.setContentType(contentType);
+				} else {
+					response.setContentType(b.guessContentType());
+				}
+				if(this.fileName!=null) {
+					response.setHeader("Content-Disposition","attachment; filename="+this.fileName);
+
+				}
+				OutputStream out = getOutputStream(acceptEncoding, response.getOutputStream());
+				b.write(out);
+				out.close();
+				return;
+			} else {
+				response.setContentType("text/plain; charset=UTF-8");
+				OutputStream out = getOutputStream(acceptEncoding, response.getOutputStream());
+				OutputStreamWriter osw = new OutputStreamWriter(out);
+				osw.write(""+dataObject);
+				osw.close();
+			}
+		}
+		OutputStream out = getOutputStream(acceptEncoding, response.getOutputStream());
+		response.setContentType("text/xml; charset=UTF-8");
+//		response.setHeader("Connection", "close"); 
+
 		if(outDoc==null) {
 			logger.warn("Null outDoc. This is going to hurt");
 			response.sendError(500, "No response received, possible scheduling problem.");
@@ -224,53 +270,19 @@ public class BaseRequestImpl implements AsyncRequest {
 		outDoc.getHeader().setHeaderAttribute("postTime", "" + postTime);
 		outDoc.getHeader().setHeaderAttribute("queueTime", "" + queueTime);
 		outDoc.getHeader().setHeaderAttribute("serverTime", "" + serverTime);
-		outDoc.getHeader().setHeaderAttribute("threadName",
-				"" + Thread.currentThread().getName());
+		outDoc.getHeader().setHeaderAttribute("threadName","" + Thread.currentThread().getName());
 
 		outDoc.write(out);
 		
 		out.close();
 		
-		long writeFinishedAt = System.currentTimeMillis();
-		long writeTime = writeFinishedAt - finishedScriptAt;
-
-		// int threadsActive = getActiveCount();
-
 		if (inDoc != null
 				&& inDoc.getHeader() != null
-				&& outDoc.getHeader() != null
-				&& !isSpecialwebservice(inDoc.getHeader()
-						.getRPCName())) {
-			statLogger.info("("
-					+ instance
-					+ "): "
-					+ new java.util.Date(connectedAt)
-					+ ": "
-					+ outDoc.getHeader().getHeaderAttribute("accessId")
-					+ ":"
-					+ inDoc.getHeader().getRPCName()
-					+ "("
-					+ inDoc.getHeader().getRPCUser()
-					+ "):"
-					+ (System.currentTimeMillis() - connectedAt)
-					+ " ms. "
-					+ "(st="
-					+ outDoc.getHeader().getHeaderAttribute("serverTime")
-					+ ",rpt="
-					+ outDoc.getHeader().getHeaderAttribute("requestParseTime")
-					+ ",at="
-					+ outDoc.getHeader()
-							.getHeaderAttribute("authorisationTime") + ",pt="
-					+ outDoc.getHeader().getHeaderAttribute("processingTime")
-					+ ",tc="
-					+ outDoc.getHeader().getHeaderAttribute("threadCount")
-					+ ",cpu="
-					+ outDoc.getHeader().getHeaderAttribute("cpuload")
-					+ ",cpt=" + postTime + ",cqt=" + queueTime + ",qst="
-					+ serverTime + ",cta=" + threadStatus + ",cwt=" + writeTime
-					+ ")" + " (" + acceptEncoding + "/" + contentEncoding +
-
-					")");
+				&& outDoc.getHeader() != null) {
+		    
+            statLogger.info("Finished {} ({}) in {}ms", outDoc.getHeader().getHeaderAttribute("accessId"), inDoc.getHeader().getRPCName(),
+                    (System.currentTimeMillis() - connectedAt));
+			
 		}
 	}
 
@@ -303,7 +315,7 @@ public class BaseRequestImpl implements AsyncRequest {
 	
 	@Override
 	public void fail(Exception e) {
-		logger.error("Error: ", e);
+//		logger.error("Error: ", e);
 		try {
 			response.sendError(500, e.getMessage());
 		} catch (IOException e1) {
@@ -327,18 +339,5 @@ public class BaseRequestImpl implements AsyncRequest {
 		return request;
 	}
 	
-	/**
-	   * Determine if WS is reserved Navajo webservice.
-	   *
-	   * @param name
-	   * @return
-	   */
-	  private static final boolean isSpecialwebservice(String name) {
-		  
-		  if (name == null) {
-			  return false;
-		  }
-		  return name.startsWith("navajo") || name.equals("InitNavajoStatus") || name.equals("navajo_logon");
-	  }
 
 }

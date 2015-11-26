@@ -178,13 +178,13 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		if(localClient!=null) {
 			tipiApplication.setDefaultConnector(new LocalTipiConnector(localClient));
 		}		
-		String referer = request.getHeader("x-forwarded-host");
+		String referer = extractReferer(request);
 		logger.info("Creating application. Referer: "+referer);
 		tipiApplication.setReferer(referer);
 		String logoutURL = null;
 		
 		if(referer!=null) {
-			logoutURL = "http://" + referer + request.getRequestURI();
+			logoutURL = referer + request.getRequestURI();
 		} else {
 			logoutURL = request.getRequestURL().toString();
 		}
@@ -194,6 +194,22 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
      	hs.setAttribute("tipiInstance",tipiApplication);
 		// add request data?
 		return tipiApplication;
+	}
+
+
+
+	private String extractReferer(HttpServletRequest request) {
+		String host = request.getHeader("x-forwarded-host");
+		String proto = request.getHeader("x-forwarded-proto");
+		String url = request.getHeader("x-forwarded-url");
+		if(proto==null) {
+			proto = "http";
+		}
+		logger.info("Extracting referer. Proto: "+proto+" : "+host+" : "+url);
+		if(url !=null && host!=null) {
+			return proto+"://"+host+url;
+		}
+		return host;
 	}
 
 	@Override

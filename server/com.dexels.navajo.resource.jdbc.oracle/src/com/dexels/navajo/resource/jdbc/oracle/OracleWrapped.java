@@ -11,7 +11,6 @@ import javax.sql.DataSource;
 
 import oracle.jdbc.pool.OracleDataSource;
 
-import org.osgi.service.jdbc.DataSourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +46,8 @@ public class OracleWrapped implements DataSource {
 //		logger.info("Activation successful");
 	}
 	
-	private void setup(OracleDataSource ods, Map<String,Object> settings) throws SQLException {
+	@SuppressWarnings("deprecation")
+    private void setup(OracleDataSource ods, Map<String,Object> settings) throws SQLException {
 		
 		Properties props = new Properties();
 		for (Entry<String,Object> element : settings.entrySet()) {

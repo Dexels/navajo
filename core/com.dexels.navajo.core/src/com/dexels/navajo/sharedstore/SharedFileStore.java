@@ -114,7 +114,7 @@ class FileComparator implements Comparator<File>{
  * @author arjen
  *
  */
-public class SharedFileStore implements SharedStoreInterface, HasMetrics {
+public class SharedFileStore extends AbstractSharedStore implements SharedStoreInterface, HasMetrics {
 
 	
 	private final static Logger logger = LoggerFactory
@@ -297,6 +297,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 		File f = new File(sharedStore, parent + "/" + name);
 		return f.exists();
 	}
+	
 
 	/**
 	 * Return inputstream for a file,  given its parent (path) and its name.
@@ -310,6 +311,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 			throw new SharedStoreException(e.getMessage(), e);
 		}
 	}
+
 	
 	/**
 	 * Returns the Object that was serialized in the file identified by its parent (path) and its name.
@@ -560,12 +562,13 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	 */
 	@Override
 	public void remove(String parent, String name) {
-		long start = System.currentTimeMillis();
-		File f = new File(sharedStore, parent + "/" + name);
-		f.delete();
-		deleteCount++;
-		deleteLatency += ( System.currentTimeMillis() - start );
+	    long start = System.currentTimeMillis();
+        File f = new File(sharedStore, parent + "/" + name);
+        f.delete();
+        deleteCount++;
+        deleteLatency += ( System.currentTimeMillis() - start );
 	}
+
 
 	/**
 	 * Create a parent path
@@ -647,6 +650,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 			}
 		}
 	}
+
 
 	/**
 	 * Gets an outputstream for an object given parent and name. If requireLock is set to true, the outputstream is only
@@ -798,4 +802,8 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 			}
 		}
 	}
+
+
+
+ 
 }

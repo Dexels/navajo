@@ -4,7 +4,7 @@ Bundle-Name: Wrapper to deploy an OSGi based Navajo instance a generic java runt
 Bundle-SymbolicName: com.dexels.navajo.runtime.osgi
 Bundle-Version: 1.2.0.qualifier
 Bundle-Vendor: DEXELS
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Main-Class: com.dexels.navajo.osgi.runtime.FrameworkInstance
 Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.osgi.runtime;version="1.2.0"

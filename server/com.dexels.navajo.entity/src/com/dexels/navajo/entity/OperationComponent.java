@@ -10,92 +10,130 @@ import com.dexels.navajo.document.Property;
 
 public class OperationComponent implements Operation {
 
-	private String method;
-	private String service;
-	private String entityName;
-	private Message extraMessage;
-	private String validationService;
-	
-	public void activateComponent(Map<String,Object> parameters) throws Exception {
-		method = (String) parameters.get("operation.method");
-		service = (String) parameters.get("operation.service");
-		validationService = (String) parameters.get("operation.validationService");
-		entityName = (String) parameters.get("operation.entity");
-		// How to fetch Message from this??
-		if ( parameters.get("operation.extramessage") != null ) {
-			extraMessage = (Message) parameters.get("operation.extramessage");
-		}
-	}
-	@Override
-	public void setMethod(String method) {
-		this.method = method;
-	}
+    private String method;
+    private String service;
+    private String entityName;
+    protected String tenant;
+    private Message extraMessage;
+    private String validationService;
+    private boolean debugInput;
+    private boolean debugOutput;
 
-	@Override
-	public String getMethod() {
-		return method;
-	}
+    public void activateComponent(Map<String, Object> parameters) throws Exception {
+        method = (String) parameters.get("operation.method");
+        service = (String) parameters.get("operation.service");
+        validationService = (String) parameters.get("operation.validationService");
+        entityName = (String) parameters.get("operation.entity");
+        // How to fetch Message from this??
+        if (parameters.get("operation.extramessage") != null) {
+            extraMessage = (Message) parameters.get("operation.extramessage");
+        }
+    }
 
-	@Override
-	public void setService(String service) {
-		this.service = service;
-	}
+    @Override
+    public void setMethod(String method) {
+        this.method = method;
+    }
 
-	@Override
-	public String getService() {
-		return service;
-	}
-	
+    @Override
+    public String getMethod() {
+        return method;
+    }
 
-	public void setValidationService(String service) {
-		this.validationService = service;
-		
-	}
+    @Override
+    public void setService(String service) {
+        this.service = service;
+    }
 
-	public String getValidationService() {
-		return validationService;
-	}
+    @Override
+    public String getService() {
+        return service;
+    }
 
-	@Override
-	public void setEntityName(String entity) {
-		this.entityName = entity;
-	}
+    public void setValidationService(String service) {
+        this.validationService = service;
 
-	@Override
-	public String getEntityName() {
-		return entityName;
-	}
+    }
 
-	@Override
-	public void setExtraMessage(Message extra) {
-		this.extraMessage = extra;
-	}
+    public String getValidationService() {
+        return validationService;
+    }
 
-	@Override
-	public Message getExtraMessage() {
-		if ( extraMessage == null ) {
-			Navajo n = NavajoFactory.getInstance().createNavajo();
-			Message m = NavajoFactory.getInstance().createMessage(n, "__OPERATION__");
-			Property p = NavajoFactory.getInstance().createProperty(n, "Method", Property.STRING_PROPERTY, method, 0, "", "");
-			Property p2 = NavajoFactory.getInstance().createProperty(n, "Entity", Property.STRING_PROPERTY, entityName, 0, "", "");
-			m.addProperty(p);
-			m.addProperty(p2);
-			n.addMessage(m);
-			return m;
-			
-		}
-		return extraMessage;
-	}
+    @Override
+    public void setEntityName(String entity) {
+        this.entityName = entity;
+    }
 
-	@Override
-	public Operation copy(Navajo n) {
-		OperationComponent oc = new OperationComponent();
-		oc.setMethod(this.method);
-		oc.setService(this.service);
-		oc.setValidationService(this.validationService);
-		oc.setEntityName(this.entityName);
-		oc.setExtraMessage(this.extraMessage.copy());
-		return oc;
-	}
+    @Override
+    public String getEntityName() {
+        return entityName;
+    }
 
+    @Override
+    public void setExtraMessage(Message extra) {
+        this.extraMessage = extra;
+    }
+
+    @Override
+    public Message getExtraMessage() {
+        if (extraMessage == null) {
+            Navajo n = NavajoFactory.getInstance().createNavajo();
+            Message m = NavajoFactory.getInstance().createMessage(n, "__OPERATION__");
+            Property p = NavajoFactory.getInstance().createProperty(n, "Method", Property.STRING_PROPERTY, method, 0, "", "");
+            Property p2 = NavajoFactory.getInstance()
+                    .createProperty(n, "Entity", Property.STRING_PROPERTY, entityName, 0, "", "");
+            m.addProperty(p);
+            m.addProperty(p2);
+            n.addMessage(m);
+            return m;
+
+        }
+        return extraMessage;
+    }
+
+    @Override
+    public Operation copy(Navajo n) {
+        OperationComponent oc = new OperationComponent();
+        oc.setMethod(this.method);
+        oc.setService(this.service);
+        oc.setValidationService(this.validationService);
+        oc.setEntityName(this.entityName);
+        oc.setExtraMessage(this.extraMessage.copy());
+        return oc;
+    }
+
+    @Override
+    public void setDebug(String debugString) {
+        if (debugString.trim().equals("true")) {
+            debugInput = true;
+            debugOutput = true;
+            return;
+        }
+        if (debugString.contains("request")) {
+            debugInput = true;
+        }
+        if (debugString.contains("response")) {
+            debugOutput = true;
+        }
+    }
+
+    @Override
+    public boolean debugInput() {
+        return debugInput;
+    }
+
+    @Override
+    public boolean debugOutput() {
+        return debugOutput;
+    }
+    
+    @Override
+    public void setTenant(String tenant) {
+        this.tenant = tenant; 
+    }
+
+    @Override
+    public String getTenant() {
+        return tenant;
+    }
 }

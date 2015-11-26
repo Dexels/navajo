@@ -68,7 +68,6 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 	private boolean enabled = true;
 	private boolean showColumnEditDialog = false;
 	final FilterPanel filterPanel = new FilterPanel();
-	private Map<String, ColumnAttribute> columnAttributes;
 	private List<HeaderMenuListener> headerMenuListeners = new ArrayList<HeaderMenuListener>();
 	private boolean copyMenuVisible = false;
 
@@ -1097,12 +1096,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		}
 	}
 
-	@Override
-	public Dimension getPreferredSize() {
-		return checkMaxMin(super.getPreferredSize(), getMaximumSize(),
-				getMinimumSize());
-	}
-
+	
 	private Dimension checkMax(Dimension preferredSize, Dimension maximumSize) {
 		// Dimension maximumSize = getMaximumSize();
 		if (maximumSize == null) {

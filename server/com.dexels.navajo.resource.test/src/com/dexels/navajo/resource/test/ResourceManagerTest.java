@@ -264,7 +264,7 @@ public void testOracle() throws Exception, SQLException {
 
 	public void testSqlMap() throws SQLException, MappableException, UserException {
 		Access a = new Access();
-		a.setInstance("knvb");
+		a.setTenant("knvb");
 		SQLMap sq = new SQLMap();
 		sq.load(a);
 		String regionFetch = "SELECT DISTINCT district_cd, district_name FROM sportlink_user_districts WHERE user_id = 3723 ORDER BY district_name";

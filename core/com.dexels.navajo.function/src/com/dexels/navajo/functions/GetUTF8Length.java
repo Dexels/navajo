@@ -28,7 +28,6 @@ public final class GetUTF8Length extends FunctionInterface {
     public GetUTF8Length() {}
 
     @Override
-	@SuppressWarnings("rawtypes")
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     	if(this.getOperands().size()==0) {
     		return new Integer(0);
@@ -70,7 +69,7 @@ public final class GetUTF8Length extends FunctionInterface {
 
     public static void main(String [] args) throws Exception {
         String simple = "Marte is gek";
-        String diacritic = "Mart� is gek";
+       // String diacritic = "Mart� is gek";
         GetUTF8Length e = new GetUTF8Length();
         e.reset();
         e.insertOperand(simple);

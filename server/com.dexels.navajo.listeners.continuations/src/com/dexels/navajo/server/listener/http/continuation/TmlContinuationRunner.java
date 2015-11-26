@@ -23,11 +23,10 @@ import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
 import com.dexels.navajo.server.listener.http.standard.TmlStandardRunner;
 
 public class TmlContinuationRunner extends TmlStandardRunner {
+    private final static Logger logger = LoggerFactory.getLogger(TmlContinuationRunner.class);
 
 	private final Continuation continuation;
 	private static boolean clearThreadLocal;
-	private final static Logger logger = LoggerFactory
-			.getLogger(TmlContinuationRunner.class);
 
 	public TmlContinuationRunner(AsyncRequest request, LocalClient lc) {
 		super(request,lc);
@@ -39,12 +38,15 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	public void abort(String reason) {
 		super.abort(reason);
 		try {
-			logger.warn("Abort: "+reason+" generating outdoc and resuming");
+			logger.warn("Aborting: {}. Generating outdoc and resuming", reason);
 			setResponseNavajo(getLocalClient().generateAbortMessage(reason));
-			resumeContinuation();
+//			resumeContinuation();
+			
 		} catch (FatalException e) {
 			logger.error("Error: ", e);
 		}
+		getRequest().fail(new ServletException(reason));
+		
 	}
 
 	
@@ -126,10 +128,13 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				  }
 			  }
 			  throw new ServletException(e);
-		  } 
+		  } finally {
+			  MDC.clear();
+		  }
 	  }
 
-	private void resumeContinuation() {
+	@SuppressWarnings("unused")
+    private void resumeContinuation() {
 		if(continuation.isSuspended()) {
 			continuation.resume();
 		}
@@ -150,7 +155,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 			}
 			clearThreadLocal(true);
 			String instance = getRequest().getInstance();
-			logger.info("instance: "+instance);
 			if(instance!=null && globalManagerInstance!=null) {
 
 				GlobalManager gm = globalManagerInstance.getGlobalManager(instance);

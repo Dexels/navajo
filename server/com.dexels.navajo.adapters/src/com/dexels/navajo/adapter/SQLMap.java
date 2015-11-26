@@ -58,6 +58,7 @@ import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.AuditLog;
+import com.dexels.navajo.version.Version;
 
 /**
  * Title:        Navajopa
@@ -149,7 +150,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	protected final static int INFINITE = 10000;
 	protected final String USERPWDDELIMITER = "/";
-	protected final String DEFAULTSRCNAME = "default";
+//	protected final String USERPWDDELIMITER = "/";
+    protected final String DEFAULTSRCNAME = "default";
 
 	public boolean debug = false;
 	public boolean kill = false;
@@ -174,7 +176,6 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	public boolean autoCommit = true;
 	public boolean replaceQueryDoubleQuotes = true;
 
-	private boolean overideAutoCommit = false;
 	public int transactionIsolation = -1;
 	public int rowCount = 0;
 	public int lazyTotal = 0;
@@ -215,6 +216,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	protected static int requestCount = 0;
 
 	private static Navajo configFile = null;
+	@Deprecated
 	protected static final Map<String,Boolean> autoCommitMap = Collections.synchronizedMap(new HashMap());
 
 	private int connectionId = -1;
@@ -229,6 +231,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	protected Access myAccess;
 
 	public int instances;
+	private String instance;
 	private boolean updateOnly;
 	private boolean isLegacyMode;
 	private String dbIdentifier = null;
@@ -258,6 +261,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 	}
 	
+	@Deprecated
 	private void createDataSource(Message body, NavajoConfigInterface config) throws Throwable {
 		String dataSourceName = body.getName();
 
@@ -334,8 +338,13 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * 
 	 * @param reload
 	 */
+	@Deprecated
 	public void setReload(String datasourceName) throws MappableException, UserException {
 
+		if(Version.osgiActive()) {
+			// this method makes no sense in OSGi
+			return;
+		}
 		// synchronized ( semaphore ) {
 		if (debug) {
 			Access.writeToConsole(myAccess, "SQLMAP setReload(" + datasourceName + ") called!\n");
@@ -463,12 +472,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	public void kill() {
 
 		try {
-			if (autoCommitMap.get(this.datasource) == null) {
-				return;
-			}
-			boolean ac = (this.overideAutoCommit) ? autoCommit
-					: supportsAutoCommit(datasource);
-			if (!ac) {
+			if (!autoCommit) {
 				if (con != null) {
 					kill = true;
 					con.rollback();
@@ -490,8 +494,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	@Override
 	public void store() throws MappableException, UserException {
 
-		if ( con == null && gc == null ) {
-			logger.warn("SQLMap.store() called on empty connection.");
+		if ( con == null && gc == null) {
+		    logger.warn("SQLMap closed without executing any queries!");
 			return;
 		}
 		
@@ -524,8 +528,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					}
 					// Determine autocommit value
 					if (myConnectionBroker == null || myConnectionBroker.hasAutoCommit() ) {
-						boolean ac = (this.overideAutoCommit) ? autoCommit : supportsAutoCommit(datasource);
-						if (!ac && !kill) { // Only commit if kill (rollback)
+						if (!autoCommit && !kill) { // Only commit if kill (rollback)
 											// was not called.
 							con.commit();
 						}
@@ -566,20 +569,16 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	}
 
-	private boolean supportsAutoCommit(String datasource) {
-		Boolean ac = autoCommitMap.get(datasource);
-		if(ac==null) {
-			// TODO eh? Need to fix?
-			return false;
-		}
-		return ac;
-	}
-
 	public void setTransactionIsolationLevel(int j) {
 		transactionIsolation = j;
 	}
 
 	public void setAutoCommit(boolean b) throws UserException {
+		
+		if ( transactionContext != -1 ) {
+			logger.warn("Cannot set auto commit flag on existing transaction context.");
+			return;
+		}
 		try {
 			createConnection();
 			if (con != null
@@ -595,7 +594,6 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					(myAccess != null ? myAccess.accessID : "unknown access"));
 			throw new UserException(-1, sqle.getMessage(), sqle);
 		}
-		overideAutoCommit = true;
 	}
 
 	@Override
@@ -915,13 +913,13 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
                     gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
                     this.ownConnection = false;
                 } else {
-                    String instance = null;
+                    String instance = this.instance;
                     if (myAccess != null) {
-                        instance = myAccess.getInstance();
+                        instance = myAccess.getTenant();
                     }
 
                     if (GrusProviderFactory.getInstance().threadContainsConnection(instance, datasource)) {
-                        logger.warn("Opening yet another connection {} for {} in the same thread!", datasource, instance);
+                        logger.debug("Opening yet another connection {} for {} in the same thread!", datasource, instance);
                         // gc = GrusProviderFactory.getInstance().requestExistingConnection(instance, datasource);
                         // this.ownConnection = false;
                         // transactionContext = ((Long) gc.getId()).intValue();
@@ -987,8 +985,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
             }
 
             if (con != null && (myConnectionBroker == null || myConnectionBroker.hasAutoCommit())) {
-                boolean ac = (this.overideAutoCommit) ? autoCommit : supportsAutoCommit(datasource);
-                con.setAutoCommit(ac);
+                con.setAutoCommit(autoCommit);
                 if (!con.getAutoCommit()) {
                     con.commit();
                 }
@@ -998,8 +995,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
                     con.setTransactionIsolation(transactionIsolation);
                 }
                 // Set session identification.
-                SessionIdentification.setSessionId(this.getMetaData() != null ? this.getMetaData().getVendor()
-                        : "Unknown", con, this.myAccess);
+               // SessionIdentification.setSessionId(this.getMetaData() != null ? this.getMetaData().getVendor(): "Unknown", con, this.myAccess);
             }
 
             if (this.con != null) {
@@ -1387,11 +1383,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		if (fixedBroker == null || myConnectionBroker == null) {
 			if(GrusProviderFactory.getInstance()==null) {
 				throw new UserException(-1,
-						"Could not create connection to datasource "
-								+ this.datasource + ", using username "
-								+ this.username);
+						"Could not create connection to datasource " + this.datasource + ", using username " + this.username);
 			} else {
-//				logger.warn("Metadata not yet implemented in multi tenant");
+			    // TODO: Fix this in OSGi
+			    logger.trace("Database Metadata not yet implemented in OSGi");
+			    return null;
 			}
 		}
 		return fixedBroker.getMetaData(this.datasource, null, null);
@@ -1420,7 +1416,13 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	public String getDatabaseSessionId() throws UserException {
 		if (con != null) {
-			return SessionIdentification.getSessionIdentification(getMetaData().getVendor(), this.datasource, this.myAccess);
+			DatabaseInfo dmd = getMetaData();
+
+			if (dmd != null) {
+				return SessionIdentification.getSessionIdentification(dmd.getVendor(), this.datasource, this.myAccess);
+			} else {
+				return SessionIdentification.getSessionIdentification("Not connected", this.datasource, this.myAccess);
+			}
 		} else {
 			return null;
 		}
@@ -1813,4 +1815,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	public Object getParameter() {
 		return parameter;
 	}
+
+    public void setInstance(String instance) {
+        this.instance = instance;
+    }
+
+
+	
 }

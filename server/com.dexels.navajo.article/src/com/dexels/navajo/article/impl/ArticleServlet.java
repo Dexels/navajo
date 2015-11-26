@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.article.ArticleClientException;
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
@@ -74,6 +75,9 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 			try {
 				runtime.execute(context);
 				resp.setContentType("application/json; charset=utf-8");
+			} catch (ArticleClientException e) {
+				resp.sendError(400, e.getMessage());
+				return;
 			} catch (ArticleException e) {
 				throw new ServletException("Problem executing article", e);
 			} catch (DirectOutputThrowable e) {

@@ -75,7 +75,8 @@ public class BinaryTransferHandler extends TransferHandler {
 			Binary b = null;
 			// if(s.isFlavorJavaFileListType()) {
 
-			List<File> data = (List<File>) transferable
+			@SuppressWarnings("unchecked")
+            List<File> data = (List<File>) transferable
 					.getTransferData(DataFlavor.javaFileListFlavor);
 			if (data == null || data.size() == 0) {
 				logger.info("Whoops!");

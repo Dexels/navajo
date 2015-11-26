@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,12 +34,12 @@ public class InsertDocumentServlet extends HttpServlet {
 	public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		PrintWriter pw = new PrintWriter(response.getWriter());
 		
-		String server = this.getServletContext().getInitParameter("NavajoServer");
-		String user = this.getServletContext().getInitParameter("NavajoUser");
-		
+		String server = getApplicationAttribute("NavajoServer");
+		String username = getApplicationAttribute("NavajoUser");
+
 		pw.write("Upload servlet up and running\n");
 		pw.write("Server: " + server + "\n");
-		pw.write("User  : " + user);
+		pw.write("User  : " + username);
 		pw.close();
 	}
 
@@ -91,9 +92,9 @@ public class InsertDocumentServlet extends HttpServlet {
 	
 	private final void processFile(String author, FileItem item, boolean useLucene){
 		try{
-			String server = this.getServletContext().getInitParameter("NavajoServer");
-			String user = this.getServletContext().getInitParameter("NavajoUser");
-			String password = this.getServletContext().getInitParameter("NavajoPassword");
+			String server = getApplicationAttribute("NavajoServer");
+			String user = getApplicationAttribute("NavajoUser");
+			String password = getApplicationAttribute("NavajoPassword");
 			
 			NavajoClientFactory.getClient().setServerUrl(server);
 		    NavajoClientFactory.getClient().setUsername(user);
@@ -128,6 +129,23 @@ public class InsertDocumentServlet extends HttpServlet {
 		}catch(Exception e){
 			logger.error("Error: ", e);
 		}
+	}
+
+	
+	private String getApplicationAttribute(String key) {
+		ServletContext servletContext = this.getServletContext();
+		String value = null;
+		if(servletContext!=null) {
+			value = servletContext.getInitParameter(key);
+		}
+		if(value!=null) {
+			return value;
+		}
+		value = System.getenv(key);
+		if(value!=null) {
+			return value;
+		}
+		return System.getProperty(key);
 	}
 
 }

@@ -32,18 +32,6 @@ public class TipiFlushCache extends TipiAction {
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
-		Operand contextParam = getEvaluatedParameter("context", event);
-		TipiContext context = null;
-		if (contextParam != null) {
-			context = (TipiContext) contextParam.value;
-			if (context == null) {
-				context = myContext;
-			}
-
-		} else {
-			context = myContext;
-		}
-		context.clearLazyDefinitionCache();
-
+		getContext().clearLazyDefinitionCache();
 	}
 }

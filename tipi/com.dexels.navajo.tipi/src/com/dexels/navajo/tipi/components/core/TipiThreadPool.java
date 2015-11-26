@@ -12,6 +12,7 @@ import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
@@ -95,6 +96,7 @@ public class TipiThreadPool implements Serializable {
 			}
 
 			TipiExecutable te = myWaitingQueue.get(0);
+			te.restoreMDC();
 			myWaitingQueue.remove(0);
 			return te;
 		}
@@ -163,6 +165,7 @@ public class TipiThreadPool implements Serializable {
 			} catch (TipiSuspendException e) {
 			}
 		} else {
+		    exe.setMDCMap(MDC.getCopyOfContextMap());
 			synchronized (myWaitingQueue) {
 				myWaitingQueue.add(exe);
 			}

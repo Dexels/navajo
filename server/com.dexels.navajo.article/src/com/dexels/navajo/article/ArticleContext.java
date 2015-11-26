@@ -9,20 +9,21 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 
 import com.dexels.navajo.article.command.ArticleCommand;
-import com.dexels.oauth.api.TokenException;
+import com.dexels.oauth.api.ScopeStoreException;
+import com.dexels.oauth.api.TokenStoreException;
 
 public interface ArticleContext {
 
 	public ArticleCommand getCommand(String name);
 
 	public void interpretArticle(File article, ArticleRuntime ac) throws IOException,
-			ArticleException, DirectOutputThrowable;
+			ArticleException, DirectOutputThrowable, ArticleClientException;
 
 	public File resolveArticle(String pathInfo);
 	
 	public List<String> listArticles();
 	
-	public void writeArticleMeta(String name,ObjectNode rootNode, ObjectMapper mapper) throws ArticleException, IOException;
+	public void writeArticleMeta(String name,ObjectNode rootNode, ObjectMapper mapper, boolean extended) throws ArticleException, IOException;
 
-	public Map<String,Object> getScopes(String token) throws TokenException;
+	public Map<String, Object> getScopes(String token) throws ScopeStoreException, TokenStoreException;
 }

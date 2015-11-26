@@ -22,7 +22,7 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseDescriptionProvider.class);
 	private Message descriptionMessage = null;
-	public abstract void updateProperty(Navajo in, Property element, String locale);
+	public abstract void updateProperty(Navajo in, Property element, String locale, String tenant);
 
 	
 	@Override
@@ -32,7 +32,7 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 
 
 	@Override
-	public void updatePropertyDescriptions(Navajo in, Navajo out) throws NavajoException {
+	public void updatePropertyDescriptions(Navajo in, Navajo out, String tenant) throws NavajoException {
 		String locale = in.getHeader().getHeaderAttribute("locale");
 		if (locale==null) {
 			return;
@@ -50,20 +50,20 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 		List<Message> a = out.getAllMessages();
 		for (Iterator<Message> iter = a.iterator(); iter.hasNext();) {
 			Message element =  iter.next();
-			updateMessage(in,element,locale);
+			updateMessage(in,element,locale,tenant);
 		}
 	}
 
-	private void updateMessage(Navajo in, Message m,String locale) {
+	private void updateMessage(Navajo in, Message m,String locale, String tenant) {
 		List<Message> a = m.getAllMessages();
 		for (Iterator<Message> iter = a.iterator(); iter.hasNext();) {
 			Message element = iter.next();
-			updateMessage(in,element,locale);
+			updateMessage(in,element,locale,tenant);
 		}		
 		List<Property> b = m.getAllProperties();
 		for (Iterator<Property> iter = b.iterator(); iter.hasNext();) {
 			Property element =  iter.next();
-			updateProperty(in,element,locale);
+			updateProperty(in,element,locale,tenant);
 		}				
 	}
 
@@ -98,7 +98,7 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 	
 
 	@Override
-	public void updatePropertyDescription(PropertyDescription pd) {
+	public void updatePropertyDescription(PropertyDescription pd, String rpcUser) {
 		// TODO Auto-generated method stub
 
 	}

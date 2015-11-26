@@ -15,5 +15,14 @@ public interface CacheManager {
 
 	public URL getLocalURL(String location) throws IOException;
 
+	/**
+	 * Deletes the local cache
+	 */
 	public void flushCache();
+
+	/**
+	 * Invalidates the cache using the cache validator
+	 */
+	public void invalidate();
+
 }
