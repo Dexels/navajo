@@ -9,6 +9,7 @@ import java.util.concurrent.locks.Lock;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.Access;
 
+@SuppressWarnings("rawtypes")
 public interface TribeManagerInterface {
 
 	public String getTribalId();
@@ -18,7 +19,7 @@ public interface TribeManagerInterface {
 	 */
 	public TribalTopic getTopic(String name);
 	
-	public Map getDistributedMap(String name);
+    public Map getDistributedMap(String name);
 	
 	public Set getDistributedSet(String name);
 	
