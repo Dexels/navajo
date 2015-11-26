@@ -12,10 +12,10 @@ trait TwitterComponent extends com.dexels.navajo.scala.BaseAdapters with com.dex
 }
 
 class TWITTER(instance: com.dexels.twitter.TwitterAdapter = new com.dexels.twitter.TwitterAdapter) extends Adapter(instance) {
-  def instance(f: com.dexels.twitter.TwitterAdapter => Unit) {
+  def instance(f: com.dexels.twitter.TwitterAdapter => Unit) = {
     f(instance)
   }
-  def login: Unit = {
+  def login(): Unit = {
     ()
   }
   def tweet(text: java.lang.String): Unit = {

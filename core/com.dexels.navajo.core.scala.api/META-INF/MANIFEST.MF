@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: com.dexels.navajo.core.scala.api
+Export-Package: com.dexels.navajo.core.scala.api
+Bundle-Name: Navajo Core Scala Api
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.scala-lang.scala-library
+Bundle-ManifestVersion: 2
+Bundle-Vendor: Dexels
+Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
+ ment
+Fragment-Host: com.dexels.navajo.core;bundle-version="4.0.7.qualifier"
+

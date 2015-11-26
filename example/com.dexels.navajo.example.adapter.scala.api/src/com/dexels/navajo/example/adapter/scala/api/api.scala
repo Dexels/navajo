@@ -12,7 +12,7 @@ trait ExampleAdaptersComponent extends com.dexels.navajo.scala.BaseAdapters with
 }
 
 class MONKEY(instance: com.dexels.navajo.example.adapter.MonkeyAdapter = new com.dexels.navajo.example.adapter.MonkeyAdapter) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.example.adapter.MonkeyAdapter => Unit) {
+  def instance(f: com.dexels.navajo.example.adapter.MonkeyAdapter => Unit) = {
     f(instance)
   }
 }

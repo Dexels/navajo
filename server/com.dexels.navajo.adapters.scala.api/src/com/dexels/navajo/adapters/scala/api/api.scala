@@ -27,7 +27,7 @@ trait AdaptersComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[java.lang.Integer]
   }
-  def GetSequenceValue: java.lang.Integer = {
+  def GetSequenceValue(): java.lang.Integer = {
     val function = this.setupFunction(new com.dexels.navajo.adapter.functions.GetSequenceValue)
     function.evaluate().asInstanceOf[java.lang.Integer]
   }
@@ -43,7 +43,7 @@ trait AdaptersComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     arg1.foreach(x => function.insertOperand(x))
     function.evaluate().asInstanceOf[List[Any]]
   }
-  def MultipleValueQuery: List[Any] = {
+  def MultipleValueQuery(): List[Any] = {
     val function = this.setupFunction(new com.dexels.navajo.adapter.functions.MultipleValueQuery)
     function.evaluate().asInstanceOf[List[Any]]
   }
@@ -59,7 +59,7 @@ trait AdaptersComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     arg1.foreach(x => function.insertOperand(x))
     function.evaluate().asInstanceOf[java.lang.Object]
   }
-  def SingleValueQuery: java.lang.Object = {
+  def SingleValueQuery(): java.lang.Object = {
     val function = this.setupFunction(new com.dexels.navajo.adapter.functions.SingleValueQuery)
     function.evaluate().asInstanceOf[java.lang.Object]
   }
@@ -235,10 +235,6 @@ trait AdaptersComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     val instance = new TAGMAP
     setupMap(message, instance, f)
   }
-  def soap(message: NavajoMessage, f: SOAP => Unit): Unit = {
-    val instance = new SOAP
-    setupMap(message, instance, f)
-  }
   def tml2xml(message: NavajoMessage, f: TML2XML => Unit): Unit = {
     val instance = new TML2XML
     setupMap(message, instance, f)
@@ -266,127 +262,127 @@ trait AdaptersComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
 }
 
 class TESTADAPTER(instance: com.dexels.navajo.adapter.TestAdapter = new com.dexels.navajo.adapter.TestAdapter) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.TestAdapter => Unit) {
+  def instance(f: com.dexels.navajo.adapter.TestAdapter => Unit) = {
     f(instance)
   }
 }
 
 class ASYNCTEST(instance: com.dexels.navajo.mapping.AsyncTest = new com.dexels.navajo.mapping.AsyncTest) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.mapping.AsyncTest => Unit) {
+  def instance(f: com.dexels.navajo.mapping.AsyncTest => Unit) = {
     f(instance)
   }
 }
 
 class ASYNCPROXY(instance: com.dexels.navajo.adapter.AsyncProxy = new com.dexels.navajo.adapter.AsyncProxy) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.AsyncProxy => Unit) {
+  def instance(f: com.dexels.navajo.adapter.AsyncProxy => Unit) = {
     f(instance)
   }
 }
 
 class SQLDATASOURCEMAP(instance: com.dexels.navajo.adapter.sqlmap.SQLMapDatasourceMap = new com.dexels.navajo.adapter.sqlmap.SQLMapDatasourceMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.sqlmap.SQLMapDatasourceMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.sqlmap.SQLMapDatasourceMap => Unit) = {
     f(instance)
   }
 }
 
 class QUERYMAP(instance: com.dexels.navajo.adapter.QueryMap = new com.dexels.navajo.adapter.QueryMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.QueryMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.QueryMap => Unit) = {
     f(instance)
   }
 }
 
 class RUNTIME(instance: com.dexels.navajo.adapter.RuntimeAdapter = new com.dexels.navajo.adapter.RuntimeAdapter) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.RuntimeAdapter => Unit) {
+  def instance(f: com.dexels.navajo.adapter.RuntimeAdapter => Unit) = {
     f(instance)
   }
 }
 
 class FILEMAP(instance: com.dexels.navajo.adapter.FileMap = new com.dexels.navajo.adapter.FileMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.FileMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.FileMap => Unit) = {
     f(instance)
   }
 }
 
 class FILELINEMAP(instance: com.dexels.navajo.adapter.filemap.FileLineMap = new com.dexels.navajo.adapter.filemap.FileLineMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.filemap.FileLineMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.filemap.FileLineMap => Unit) = {
     f(instance)
   }
 }
 
 class FILERECORDMAP(instance: com.dexels.navajo.adapter.filemap.FileRecordMap = new com.dexels.navajo.adapter.filemap.FileRecordMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.filemap.FileRecordMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.filemap.FileRecordMap => Unit) = {
     f(instance)
   }
 }
 
 class ASYNCPROXYMAP(instance: com.dexels.navajo.adapter.AsyncProxyMap = new com.dexels.navajo.adapter.AsyncProxyMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.AsyncProxyMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.AsyncProxyMap => Unit) = {
     f(instance)
   }
 }
 
 class TOKENIZER(instance: com.dexels.navajo.adapter.TokenizerMap = new com.dexels.navajo.adapter.TokenizerMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.TokenizerMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.TokenizerMap => Unit) = {
     f(instance)
   }
 }
 
 class STRINGSPLIT(instance: com.dexels.navajo.adapter.StringSplitMap = new com.dexels.navajo.adapter.StringSplitMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.StringSplitMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.StringSplitMap => Unit) = {
     f(instance)
   }
 }
 
 class DATABASEINFO(instance: com.dexels.navajo.adapter.sqlmap.DatabaseInfo = new com.dexels.navajo.adapter.sqlmap.DatabaseInfo) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.sqlmap.DatabaseInfo => Unit) {
+  def instance(f: com.dexels.navajo.adapter.sqlmap.DatabaseInfo => Unit) = {
     f(instance)
   }
 }
 
 class ORACLEADMINISTRATOR(instance: com.dexels.navajo.adapter.OracleAdministratorMap = new com.dexels.navajo.adapter.OracleAdministratorMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.OracleAdministratorMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.OracleAdministratorMap => Unit) = {
     f(instance)
   }
 }
 
 class ZIPMAP(instance: com.dexels.navajo.adapter.ZipMap = new com.dexels.navajo.adapter.ZipMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.ZipMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.ZipMap => Unit) = {
     f(instance)
   }
 }
 
 class DESCRIPTION(instance: com.dexels.navajo.adapter.DescriptionMap = new com.dexels.navajo.adapter.DescriptionMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.DescriptionMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.DescriptionMap => Unit) = {
     f(instance)
   }
 }
 
 class SAVE(instance: com.dexels.navajo.adapter.NavajoSaveAdapter = new com.dexels.navajo.adapter.NavajoSaveAdapter) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.NavajoSaveAdapter => Unit) {
+  def instance(f: com.dexels.navajo.adapter.NavajoSaveAdapter => Unit) = {
     f(instance)
   }
 }
 
 class LOAD(instance: com.dexels.navajo.adapter.NavajoLoadAdapter = new com.dexels.navajo.adapter.NavajoLoadAdapter) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.NavajoLoadAdapter => Unit) {
+  def instance(f: com.dexels.navajo.adapter.NavajoLoadAdapter => Unit) = {
     f(instance)
   }
 }
 
 class FILELIST(instance: com.dexels.navajo.adapter.NavajoFileListAdapter = new com.dexels.navajo.adapter.NavajoFileListAdapter) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.NavajoFileListAdapter => Unit) {
+  def instance(f: com.dexels.navajo.adapter.NavajoFileListAdapter => Unit) = {
     f(instance)
   }
 }
 
 class OPTION(instance: com.dexels.navajo.adapter.OptionMap = new com.dexels.navajo.adapter.OptionMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.OptionMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.OptionMap => Unit) = {
     f(instance)
   }
 }
 
 class FILEENTRY(instance: com.dexels.navajo.adapter.dirmap.FileEntryMap = new com.dexels.navajo.adapter.dirmap.FileEntryMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.dirmap.FileEntryMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.dirmap.FileEntryMap => Unit) = {
     f(instance)
   }
   def name: java.lang.String = {
@@ -408,13 +404,13 @@ class FILEENTRY(instance: com.dexels.navajo.adapter.dirmap.FileEntryMap = new co
   def fileAge: java.lang.Integer = {
     return instance.getFileAge
   }
-  def delete: Unit = {
+  def delete(): Unit = {
     instance.setDelete(true)
   }
 }
 
 class DIRMAP(instance: com.dexels.navajo.adapter.DirMap = new com.dexels.navajo.adapter.DirMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.DirMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.DirMap => Unit) = {
     f(instance)
   }
   def path(path: java.lang.String): DIRMAP = {
@@ -429,7 +425,7 @@ class DIRMAP(instance: com.dexels.navajo.adapter.DirMap = new com.dexels.navajo.
 }
 
 class ARRAYMESSAGE(instance: com.dexels.navajo.adapter.MultipleEmptyMap = new com.dexels.navajo.adapter.MultipleEmptyMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.MultipleEmptyMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.MultipleEmptyMap => Unit) = {
     f(instance)
   }
   def withEachLoop(f: ARRAYELEMENT => Unit): ARRAYMESSAGE = {
@@ -444,7 +440,7 @@ class ARRAYELEMENT(instance: com.dexels.navajo.adapter.EmptyMap) extends Adapter
 }
 
 class JOINMESSAGE(instance: com.dexels.navajo.adapter.MessageMap = new com.dexels.navajo.adapter.MessageMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.MessageMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.MessageMap => Unit) = {
     f(instance)
   }
   def join(message1: java.lang.String, message2: java.lang.String, joinCondition: java.lang.String, `type`: java.lang.String, ignoreSource: java.lang.Boolean, suppressProperties: java.lang.String, removeDuplicates: java.lang.Boolean, groupBy: java.lang.String): Unit = {
@@ -460,7 +456,7 @@ class JOINMESSAGE(instance: com.dexels.navajo.adapter.MessageMap = new com.dexel
 }
 
 class COPYMESSAGE(instance: com.dexels.navajo.adapter.CopyMessage = new com.dexels.navajo.adapter.CopyMessage) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.CopyMessage => Unit) {
+  def instance(f: com.dexels.navajo.adapter.CopyMessage => Unit) = {
     f(instance)
   }
   def useOutputDoc(useOutputDoc: java.lang.Boolean): COPYMESSAGE = {
@@ -482,7 +478,7 @@ class COPYMESSAGE(instance: com.dexels.navajo.adapter.CopyMessage = new com.dexe
 }
 
 class CSV(instance: com.dexels.navajo.adapter.CSVMap = new com.dexels.navajo.adapter.CSVMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.CSVMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.CSVMap => Unit) = {
     f(instance)
   }
   def maximumImportCount(maximumImportCount: java.lang.Integer): CSV = {
@@ -525,7 +521,7 @@ class CSVLINE(instance: com.dexels.navajo.adapter.csvmap.CSVEntryMap) extends Ad
 }
 
 class HTTP(instance: com.dexels.navajo.adapter.HTTPMap = new com.dexels.navajo.adapter.HTTPMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.HTTPMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.HTTPMap => Unit) = {
     f(instance)
   }
   def url(url: java.lang.String): HTTP = {
@@ -552,13 +548,13 @@ class HTTP(instance: com.dexels.navajo.adapter.HTTPMap = new com.dexels.navajo.a
     instance.setQueuedSend(queuedSend)
     return this
   }
-  def doSend: Unit = {
+  def doSend(): Unit = {
     instance.setDoSend(true)
   }
 }
 
 class MAIL(instance: com.dexels.navajo.adapter.MailMap = new com.dexels.navajo.adapter.MailMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.MailMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.MailMap => Unit) = {
     f(instance)
   }
   def mailServer(mailServer: java.lang.String): MAIL = {
@@ -621,7 +617,7 @@ class MAIL(instance: com.dexels.navajo.adapter.MailMap = new com.dexels.navajo.a
 }
 
 class MAILALTERNATIVE(instance: com.dexels.navajo.adapter.MailMapAlternative = new com.dexels.navajo.adapter.MailMapAlternative) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.MailMapAlternative => Unit) {
+  def instance(f: com.dexels.navajo.adapter.MailMapAlternative => Unit) = {
     f(instance)
   }
   def mailServer(mailServer: java.lang.String): MAILALTERNATIVE = {
@@ -668,7 +664,7 @@ class MAILALTERNATIVE(instance: com.dexels.navajo.adapter.MailMapAlternative = n
 }
 
 class COMMONSMAILMAP(instance: com.dexels.navajo.adapter.CommonsMailMap = new com.dexels.navajo.adapter.CommonsMailMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.CommonsMailMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.CommonsMailMap => Unit) = {
     f(instance)
   }
   def mailServer(mailServer: java.lang.String): COMMONSMAILMAP = {
@@ -720,6 +716,10 @@ class COMMONSMAILMAP(instance: com.dexels.navajo.adapter.CommonsMailMap = new co
     instance.setMailPort(mailPort)
     return this
   }
+  def debug(debug: java.lang.Boolean): COMMONSMAILMAP = {
+    instance.setDebug(debug)
+    return this
+  }
 }
 
 class ATTACHMENT(instance: com.dexels.navajo.adapter.mailmap.AttachementMap) extends Adapter(instance) {
@@ -734,7 +734,7 @@ class ATTACHMENT(instance: com.dexels.navajo.adapter.mailmap.AttachementMap) ext
 }
 
 class MESSAGE(instance: com.dexels.navajo.adapter.CreateMessage = new com.dexels.navajo.adapter.CreateMessage) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.CreateMessage => Unit) {
+  def instance(f: com.dexels.navajo.adapter.CreateMessage => Unit) = {
     f(instance)
   }
   def create(name: java.lang.String): Unit = {
@@ -743,7 +743,7 @@ class MESSAGE(instance: com.dexels.navajo.adapter.CreateMessage = new com.dexels
 }
 
 class NAVAJOGROUP(instance: com.dexels.navajo.adapter.NavajoMapGroupAdapter = new com.dexels.navajo.adapter.NavajoMapGroupAdapter) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.NavajoMapGroupAdapter => Unit) {
+  def instance(f: com.dexels.navajo.adapter.NavajoMapGroupAdapter => Unit) = {
     f(instance)
   }
   def appendResponse(id: java.lang.String, appendTo: java.lang.String, append: java.lang.String): Unit = {
@@ -758,7 +758,7 @@ class NAVAJOGROUP(instance: com.dexels.navajo.adapter.NavajoMapGroupAdapter = ne
 }
 
 class NAVAJOMAP(instance: com.dexels.navajo.adapter.NavajoMap = new com.dexels.navajo.adapter.NavajoMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.NavajoMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.NavajoMap => Unit) = {
     f(instance)
   }
   def trigger(trigger: java.lang.String): NAVAJOMAP = {
@@ -771,6 +771,10 @@ class NAVAJOMAP(instance: com.dexels.navajo.adapter.NavajoMap = new com.dexels.n
   }
   def server(server: java.lang.String): NAVAJOMAP = {
     instance.setServer(server)
+    return this
+  }
+  def serverTimeout(serverTimeout: java.lang.Integer): NAVAJOMAP = {
+    instance.setServerTimeout(serverTimeout)
     return this
   }
   def id(id: java.lang.String): NAVAJOMAP = {
@@ -787,6 +791,10 @@ class NAVAJOMAP(instance: com.dexels.navajo.adapter.NavajoMap = new com.dexels.n
   }
   def password(password: java.lang.String): NAVAJOMAP = {
     instance.setPassword(password)
+    return this
+  }
+  def tenant(tenant: java.lang.String): NAVAJOMAP = {
+    instance.setTenant(tenant)
     return this
   }
   def resource(resource: java.lang.String): NAVAJOMAP = {
@@ -846,12 +854,14 @@ class NAVAJOMAP(instance: com.dexels.navajo.adapter.NavajoMap = new com.dexels.n
     instance.setPropertyId(name)
     instance.setPropertyDirective(direction)
   }
-  def callwebservice(breakOnConditionError: java.lang.Boolean, breakOnException: java.lang.Boolean, server: java.lang.String, username: java.lang.String, password: java.lang.String, showProperties: java.lang.String, suppressProperties: java.lang.String, inputProperties: java.lang.String, outputProperties: java.lang.String, block: java.lang.Boolean, name: java.lang.String, appendTo: java.lang.String, append: java.lang.String): Unit = {
+  def callwebservice(breakOnConditionError: java.lang.Boolean, breakOnException: java.lang.Boolean, server: java.lang.String, serverTimeout: java.lang.Integer, username: java.lang.String, password: java.lang.String, tenant: java.lang.String, showProperties: java.lang.String, suppressProperties: java.lang.String, inputProperties: java.lang.String, outputProperties: java.lang.String, block: java.lang.Boolean, name: java.lang.String, appendTo: java.lang.String, append: java.lang.String): Unit = {
     instance.setBreakOnConditionError(breakOnConditionError)
     instance.setBreakOnException(breakOnException)
     instance.setServer(server)
+    instance.setServerTimeout(serverTimeout)
     instance.setUsername(username)
     instance.setPassword(password)
+    instance.setTenant(tenant)
     instance.setSuppressProperties(showProperties)
     instance.setSuppressProperties(suppressProperties)
     instance.setInputProperties(inputProperties)
@@ -864,21 +874,17 @@ class NAVAJOMAP(instance: com.dexels.navajo.adapter.NavajoMap = new com.dexels.n
 }
 
 class MESSAGEMAP(instance: com.dexels.navajo.adapter.navajomap.MessageMap = new com.dexels.navajo.adapter.navajomap.MessageMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.navajomap.MessageMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.navajomap.MessageMap => Unit) = {
     f(instance)
   }
 }
 
 class REST(instance: com.dexels.navajo.adapter.RESTAdapter = new com.dexels.navajo.adapter.RESTAdapter) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.RESTAdapter => Unit) {
+  def instance(f: com.dexels.navajo.adapter.RESTAdapter => Unit) = {
     f(instance)
   }
   def sendThrough(sendThrough: java.lang.Boolean): REST = {
     instance.setSendThrough(sendThrough)
-    return this
-  }
-  def url(url: java.lang.String): REST = {
-    instance.setUrl(url)
     return this
   }
   def method(method: java.lang.String): REST = {
@@ -922,6 +928,30 @@ class REST(instance: com.dexels.navajo.adapter.RESTAdapter = new com.dexels.nava
     instance.setPassword(password)
     return this
   }
+  def dateformat(dateformat: java.lang.String): REST = {
+    instance.setDateformat(dateformat)
+    return this
+  }
+  def appendTo(appendTo: java.lang.String): REST = {
+    instance.setAppendTo(appendTo)
+    return this
+  }
+  def append(append: java.lang.String): REST = {
+    instance.setAppend(append)
+    return this
+  }
+  def topMessage(topMessage: java.lang.String): REST = {
+    instance.setTopMessage(topMessage)
+    return this
+  }
+  def method(method: java.lang.String): REST = {
+    instance.setMethod(method)
+    return this
+  }
+  def messagesPerRequest(messagesPerRequest: java.lang.Integer): REST = {
+    instance.setMessagesPerRequest(messagesPerRequest)
+    return this
+  }
   def createproperty(name: java.lang.String, `type`: java.lang.String, value: java.lang.Object): Unit = {
     instance.setPropertyName(name)
     instance.setPropertyType(`type`)
@@ -941,22 +971,19 @@ class REST(instance: com.dexels.navajo.adapter.RESTAdapter = new com.dexels.nava
     instance.setHeaderKey(name)
     instance.setHeaderValue(value)
   }
-  def callservice(breakOnException: java.lang.Boolean, url: java.lang.String, method: java.lang.String, topMessage: java.lang.String, removeTopMessage: java.lang.Boolean, appendTo: java.lang.String, append: java.lang.String, username: java.lang.String, password: java.lang.String): Unit = {
+  def callservice(breakOnException: java.lang.Boolean, removeTopMessage: java.lang.Boolean, username: java.lang.String, password: java.lang.String, url: java.lang.String, appendTo: java.lang.String, append: java.lang.String): Unit = {
     instance.setBreakOnException(breakOnException)
-    instance.setUrl(url)
-    instance.setMethod(method)
-    instance.setTopMessage(topMessage)
     instance.setRemoveTopMessage(removeTopMessage)
-    instance.setDoSend("monkey")
-    instance.setAppendTo(appendTo)
-    instance.setAppend(append)
     instance.setUsername(username)
     instance.setPassword(password)
+    instance.setDoSend(url)
+    instance.setAppendTo(appendTo)
+    instance.setAppend(append)
   }
 }
 
 class NAVAJOLISTENER(instance: com.dexels.navajo.adapter.NavajoMap = new com.dexels.navajo.adapter.NavajoMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.NavajoMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.NavajoMap => Unit) = {
     f(instance)
   }
   def taskId(taskId: java.lang.String): NAVAJOLISTENER = {
@@ -966,7 +993,7 @@ class NAVAJOLISTENER(instance: com.dexels.navajo.adapter.NavajoMap = new com.dex
 }
 
 class SQLQUERY(instance: com.dexels.navajo.adapter.SQLMap = new com.dexels.navajo.adapter.SQLMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.SQLMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.SQLMap => Unit) = {
     f(instance)
   }
   def query(query: java.lang.String): SQLQUERY = {
@@ -1016,16 +1043,16 @@ class SQLQUERY(instance: com.dexels.navajo.adapter.SQLMap = new com.dexels.navaj
   def addParameter(value: java.lang.Object): Unit = {
     instance.setParameter(value)
   }
-  def doUpdate: Unit = {
+  def doUpdate(): Unit = {
     instance.setDoUpdate(true)
   }
-  def rollback: Unit = {
+  def rollback(): Unit = {
     instance.setKill(true)
   }
 }
 
 class STOREDPROC(instance: com.dexels.navajo.adapter.SPMap = new com.dexels.navajo.adapter.SPMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.SPMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.SPMap => Unit) = {
     f(instance)
   }
   def query(query: java.lang.String): STOREDPROC = {
@@ -1063,10 +1090,10 @@ class STOREDPROC(instance: com.dexels.navajo.adapter.SPMap = new com.dexels.nava
   def addOutputParameter(`type`: java.lang.String): Unit = {
     instance.setOutputParameterType(`type`)
   }
-  def doUpdate: Unit = {
+  def doUpdate(): Unit = {
     instance.setDoUpdate(true)
   }
-  def rollback: Unit = {
+  def rollback(): Unit = {
     instance.setKill(true)
   }
 }
@@ -1086,19 +1113,19 @@ class RESULTROW(instance: com.dexels.navajo.adapter.sqlmap.ResultSetMap) extends
 }
 
 class AUDITLOG(instance: com.dexels.navajo.util.AuditLog = new com.dexels.navajo.util.AuditLog) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.util.AuditLog => Unit) {
+  def instance(f: com.dexels.navajo.util.AuditLog => Unit) = {
     f(instance)
   }
 }
 
 class ACCESS(instance: com.dexels.navajo.adapter.NavajoAccess = new com.dexels.navajo.adapter.NavajoAccess) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.NavajoAccess => Unit) {
+  def instance(f: com.dexels.navajo.adapter.NavajoAccess => Unit) = {
     f(instance)
   }
 }
 
 class XML(instance: com.dexels.navajo.adapter.XMLStreamMap = new com.dexels.navajo.adapter.XMLStreamMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.XMLStreamMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.XMLStreamMap => Unit) = {
     f(instance)
   }
   def content: com.dexels.navajo.document.types.Binary = {
@@ -1111,10 +1138,10 @@ class XML(instance: com.dexels.navajo.adapter.XMLStreamMap = new com.dexels.nava
   def startElement(name: java.lang.String): Unit = {
     instance.setStartElement(name)
   }
-  def endElement: Unit = {
+  def endElement(): Unit = {
     instance.setEndElement(true)
   }
-  def newline: Unit = {
+  def newline(): Unit = {
     instance.setNewline(true)
   }
   def setAttribute(name: java.lang.String, value: java.lang.String): Unit = {
@@ -1127,7 +1154,7 @@ class XML(instance: com.dexels.navajo.adapter.XMLStreamMap = new com.dexels.nava
 }
 
 class XMLMAP(instance: com.dexels.navajo.adapter.XMLMap = new com.dexels.navajo.adapter.XMLMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.XMLMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.XMLMap => Unit) = {
     f(instance)
   }
   def stringContent(stringContent: java.lang.String): XMLMAP = {
@@ -1162,7 +1189,7 @@ class XMLMAP(instance: com.dexels.navajo.adapter.XMLMap = new com.dexels.navajo.
 }
 
 class TAGMAP(instance: com.dexels.navajo.adapter.xmlmap.TagMap = new com.dexels.navajo.adapter.xmlmap.TagMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.xmlmap.TagMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.xmlmap.TagMap => Unit) = {
     f(instance)
   }
   def withChild(f: TAGMAP => Unit): TAGMAP = {
@@ -1188,35 +1215,8 @@ class TAGMAP(instance: com.dexels.navajo.adapter.xmlmap.TagMap = new com.dexels.
   }
 }
 
-class SOAP(instance: com.dexels.navajo.adapter.SOAPMap = new com.dexels.navajo.adapter.SOAPMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.SOAPMap => Unit) {
-    f(instance)
-  }
-  def soapAction(soapAction: java.lang.String): SOAP = {
-    instance.setSoapAction(soapAction)
-    return this
-  }
-  def url(url: java.lang.String): SOAP = {
-    instance.setUrl(url)
-    return this
-  }
-  def addNamespace(value: java.lang.String): Unit = {
-    instance.setNamespace(value)
-  }
-  def requestBody(value: com.dexels.navajo.document.types.Binary): Unit = {
-    instance.setRequestBody(value)
-  }
-  def request(header: com.dexels.navajo.document.types.Binary, value: com.dexels.navajo.document.types.Binary): Unit = {
-    instance.setRequestHeader(header)
-    instance.setRequestBody(value)
-  }
-  def doSend: Unit = {
-    instance.setDoSend(true)
-  }
-}
-
 class TML2XML(instance: com.dexels.navajo.adapter.TmlToXmlMap = new com.dexels.navajo.adapter.TmlToXmlMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.TmlToXmlMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.TmlToXmlMap => Unit) = {
     f(instance)
   }
   def rootPath(rootPath: java.lang.String): TML2XML = {
@@ -1231,40 +1231,40 @@ class TML2XML(instance: com.dexels.navajo.adapter.TmlToXmlMap = new com.dexels.n
     instance.setAttributeName(name)
     instance.setAttributeValue(value)
   }
-  def dumpObject: Unit = {
+  def dumpObject(): Unit = {
     instance.setDumpObject(true)
   }
-  def buildContent: Unit = {
+  def buildContent(): Unit = {
     instance.setBuildContent(true)
   }
 }
 
 class ADMINMAP(instance: com.dexels.navajo.adapter.AdminMap = new com.dexels.navajo.adapter.AdminMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.AdminMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.AdminMap => Unit) = {
     f(instance)
   }
 }
 
 class ACCESSMAP(instance: com.dexels.navajo.adapter.AccessMap = new com.dexels.navajo.adapter.AccessMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.AccessMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.AccessMap => Unit) = {
     f(instance)
   }
 }
 
 class MULTIPLESQLMAP(instance: com.dexels.navajo.adapter.MultipleSQLMap = new com.dexels.navajo.adapter.MultipleSQLMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.MultipleSQLMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.MultipleSQLMap => Unit) = {
     f(instance)
   }
 }
 
 class SELECTIONMAP(instance: com.dexels.navajo.adapter.SelectionMap = new com.dexels.navajo.adapter.SelectionMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.SelectionMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.SelectionMap => Unit) = {
     f(instance)
   }
 }
 
 class SEQUENCEDINSERTMAP(instance: com.dexels.navajo.adapter.SequencedInsertMap = new com.dexels.navajo.adapter.SequencedInsertMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.SequencedInsertMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.SequencedInsertMap => Unit) = {
     f(instance)
   }
 }

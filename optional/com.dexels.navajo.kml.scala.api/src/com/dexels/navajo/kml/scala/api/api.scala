@@ -12,7 +12,7 @@ trait KmlComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexels.
 }
 
 class KML(instance: com.dexels.navajo.geo.KMLMap = new com.dexels.navajo.geo.KMLMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.geo.KMLMap => Unit) {
+  def instance(f: com.dexels.navajo.geo.KMLMap => Unit) = {
     f(instance)
   }
 }

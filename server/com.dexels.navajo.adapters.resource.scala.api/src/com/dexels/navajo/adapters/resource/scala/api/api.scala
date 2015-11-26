@@ -16,7 +16,7 @@ trait ResourceAdaptersComponent extends com.dexels.navajo.scala.BaseAdapters wit
 }
 
 class JDBCQUERY(instance: com.dexels.navajo.adapter.resource.JDBCMap = new com.dexels.navajo.adapter.resource.JDBCMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.resource.JDBCMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.resource.JDBCMap => Unit) = {
     f(instance)
   }
   def query(query: java.lang.String): JDBCQUERY = {
@@ -59,10 +59,10 @@ class JDBCQUERY(instance: com.dexels.navajo.adapter.resource.JDBCMap = new com.d
   def addParameter(value: java.lang.Object): Unit = {
     instance.setParameter(value)
   }
-  def doUpdate: Unit = {
+  def doUpdate(): Unit = {
     instance.setDoUpdate(true)
   }
-  def rollback: Unit = {
+  def rollback(): Unit = {
     instance.setKill(true)
   }
 }
@@ -82,7 +82,7 @@ class RESULTROW(instance: com.dexels.navajo.adapter.sqlmap.ResultSetMap) extends
 }
 
 class HTTPURL(instance: com.dexels.navajo.adapter.resource.URLMap = new com.dexels.navajo.adapter.resource.URLMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.resource.URLMap => Unit) {
+  def instance(f: com.dexels.navajo.adapter.resource.URLMap => Unit) = {
     f(instance)
   }
   def url(url: java.lang.String): HTTPURL = {
@@ -109,7 +109,7 @@ class HTTPURL(instance: com.dexels.navajo.adapter.resource.URLMap = new com.dexe
     instance.setQueuedSend(queuedSend)
     return this
   }
-  def doSend: Unit = {
+  def doSend(): Unit = {
     instance.setDoSend(true)
   }
 }

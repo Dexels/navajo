@@ -26,19 +26,19 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[java.lang.Integer]
   }
-  def AppendArray: Any = {
+  def AppendArray(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.AppendArray)
     function.evaluate().asInstanceOf[Any]
   }
-  def ArraySelection: Any = {
+  def ArraySelection(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.ArraySelection)
     function.evaluate().asInstanceOf[Any]
   }
-  def Base64Encode: Any = {
+  def Base64Encode(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.Base64Encode)
     function.evaluate().asInstanceOf[Any]
   }
-  def BasicAuthenticationHeader: Any = {
+  def BasicAuthenticationHeader(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.BasicAuthenticationHeader)
     function.evaluate().asInstanceOf[Any]
   }
@@ -46,6 +46,11 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     val function = this.setupFunction(new com.dexels.navajo.functions.CallService)
     function.insertOperand(arg0)
     function.insertOperand(arg1)
+    function.evaluate().asInstanceOf[java.lang.Object]
+  }
+  def CallService(arg0: java.lang.String): java.lang.Object = {
+    val function = this.setupFunction(new com.dexels.navajo.functions.CallService)
+    function.insertOperand(arg0)
     function.evaluate().asInstanceOf[java.lang.Object]
   }
   def CheckDate(arg0: java.lang.Object): java.lang.Boolean = {
@@ -68,15 +73,15 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[java.lang.Boolean]
   }
-  def CheckRange: Any = {
+  def CheckRange(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.CheckRange)
     function.evaluate().asInstanceOf[Any]
   }
-  def CheckUniqueness: Any = {
+  def CheckUniqueness(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.CheckUniqueness)
     function.evaluate().asInstanceOf[Any]
   }
-  def CheckUrl: Any = {
+  def CheckUrl(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.CheckUrl)
     function.evaluate().asInstanceOf[Any]
   }
@@ -86,27 +91,27 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg1)
     function.evaluate().asInstanceOf[java.lang.Boolean]
   }
-  def CreateExpression: Any = {
+  def CreateExpression(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.CreateExpression)
     function.evaluate().asInstanceOf[Any]
   }
-  def CurrentTimeMillis: Any = {
+  def CurrentTimeMillis(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.CurrentTimeMillis)
     function.evaluate().asInstanceOf[Any]
   }
-  def Date: Any = {
+  def Date(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.Date)
     function.evaluate().asInstanceOf[Any]
   }
-  def DateAdd: Any = {
+  def DateAdd(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.DateAdd)
     function.evaluate().asInstanceOf[Any]
   }
-  def DateField: Any = {
+  def DateField(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.DateField)
     function.evaluate().asInstanceOf[Any]
   }
-  def DateSubstract: Any = {
+  def DateSubstract(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.DateSubstract)
     function.evaluate().asInstanceOf[Any]
   }
@@ -116,7 +121,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg1)
     function.evaluate().asInstanceOf[java.util.Date]
   }
-  def DecimalChar: Any = {
+  def DecimalChar(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.DecimalChar)
     function.evaluate().asInstanceOf[Any]
   }
@@ -126,7 +131,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg1)
     function.evaluate().asInstanceOf[java.lang.String]
   }
-  def EmptyBinary: Any = {
+  def EmptyBinary(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.EmptyBinary)
     function.evaluate().asInstanceOf[Any]
   }
@@ -136,19 +141,19 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg1)
     function.evaluate().asInstanceOf[java.lang.String]
   }
-  def EqualsIgnoreCase: Any = {
+  def EqualsIgnoreCase(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.EqualsIgnoreCase)
     function.evaluate().asInstanceOf[Any]
   }
-  def EqualsPattern: Any = {
+  def EqualsPattern(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.EqualsPattern)
     function.evaluate().asInstanceOf[Any]
   }
-  def Euro: Any = {
+  def Euro(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.Euro)
     function.evaluate().asInstanceOf[Any]
   }
-  def EvaluateExpression: Any = {
+  def EvaluateExpression(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.EvaluateExpression)
     function.evaluate().asInstanceOf[Any]
   }
@@ -157,15 +162,11 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[java.lang.String]
   }
-  def ExecuteScript: Any = {
-    val function = this.setupFunction(new com.dexels.navajo.functions.ExecuteScript)
-    function.evaluate().asInstanceOf[Any]
-  }
-  def Exists: Any = {
+  def Exists(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.Exists)
     function.evaluate().asInstanceOf[Any]
   }
-  def ExistsProperty: Any = {
+  def ExistsProperty(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.ExistsProperty)
     function.evaluate().asInstanceOf[Any]
   }
@@ -180,7 +181,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[Any]
   }
-  def FileExists: Any = {
+  def FileExists(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.FileExists)
     function.evaluate().asInstanceOf[Any]
   }
@@ -207,7 +208,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg1)
     function.evaluate().asInstanceOf[com.dexels.navajo.document.Message]
   }
-  def ForAll: Any = {
+  def ForAll(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.ForAll)
     function.evaluate().asInstanceOf[Any]
   }
@@ -270,27 +271,27 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[java.lang.String]
   }
-  def GetCents: Any = {
+  def GetCents(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetCents)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetContextResource: Any = {
+  def GetContextResource(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetContextResource)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetCurrentMessage: Any = {
+  def GetCurrentMessage(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetCurrentMessage)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetDescription: Any = {
+  def GetDescription(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetDescription)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetFileExtension: Any = {
+  def GetFileExtension(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetFileExtension)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetInitials: Any = {
+  def GetInitials(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetInitials)
     function.evaluate().asInstanceOf[Any]
   }
@@ -299,19 +300,19 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[java.lang.String]
   }
-  def GetLogoImage: Any = {
+  def GetLogoImage(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetLogoImage)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetMessage: Any = {
+  def GetMessage(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetMessage)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetMimeType: Any = {
+  def GetMimeType(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetMimeType)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetProperty: Any = {
+  def GetProperty(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetProperty)
     function.evaluate().asInstanceOf[Any]
   }
@@ -321,7 +322,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg1)
     function.evaluate().asInstanceOf[java.lang.String]
   }
-  def GetPropertyDirection: Any = {
+  def GetPropertyDirection(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetPropertyDirection)
     function.evaluate().asInstanceOf[Any]
   }
@@ -337,11 +338,11 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg1)
     function.evaluate().asInstanceOf[java.lang.String]
   }
-  def GetPropertyType: Any = {
+  def GetPropertyType(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetPropertyType)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetPropertyValue: Any = {
+  def GetPropertyValue(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetPropertyValue)
     function.evaluate().asInstanceOf[Any]
   }
@@ -350,31 +351,31 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[com.dexels.navajo.document.types.Binary]
   }
-  def GetRequest: java.lang.String = {
+  def GetRequest(): java.lang.String = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetRequest)
     function.evaluate().asInstanceOf[java.lang.String]
   }
-  def GetSelectedName: Any = {
+  def GetSelectedName(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetSelectedName)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetSelectedValue: Any = {
+  def GetSelectedValue(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetSelectedValue)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetUrlMimeType: Any = {
+  def GetUrlMimeType(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetUrlMimeType)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetUrlModificationTime: Any = {
+  def GetUrlModificationTime(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetUrlModificationTime)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetUrlSize: Any = {
+  def GetUrlSize(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetUrlSize)
     function.evaluate().asInstanceOf[Any]
   }
-  def GetUrlTime: Any = {
+  def GetUrlTime(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetUrlTime)
     function.evaluate().asInstanceOf[Any]
   }
@@ -383,7 +384,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[java.lang.Integer]
   }
-  def GetValue: Any = {
+  def GetValue(): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.GetValue)
     function.evaluate().asInstanceOf[Any]
   }
@@ -645,7 +646,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg1)
     function.evaluate().asInstanceOf[Any]
   }
-  def NavajoRequestToString: java.lang.String = {
+  def NavajoRequestToString(): java.lang.String = {
     val function = this.setupFunction(new com.dexels.navajo.functions.NavajoRequestToString)
     function.evaluate().asInstanceOf[java.lang.String]
   }
@@ -654,7 +655,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[java.util.Date]
   }
-  def Now: java.lang.String = {
+  def Now(): java.lang.String = {
     val function = this.setupFunction(new com.dexels.navajo.functions.Now)
     function.evaluate().asInstanceOf[java.lang.String]
   }
@@ -707,7 +708,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg1)
     function.evaluate().asInstanceOf[List[Any]]
   }
-  def Random: java.lang.Integer = {
+  def Random(): java.lang.Integer = {
     val function = this.setupFunction(new com.dexels.navajo.functions.Random)
     function.evaluate().asInstanceOf[java.lang.Integer]
   }
@@ -716,7 +717,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[java.lang.String]
   }
-  def RandomColor: java.lang.String = {
+  def RandomColor(): java.lang.String = {
     val function = this.setupFunction(new com.dexels.navajo.functions.RandomColor)
     function.evaluate().asInstanceOf[java.lang.String]
   }
@@ -930,7 +931,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     arg4.foreach(x => function.insertOperand(x))
     function.evaluate().asInstanceOf[java.lang.Object]
   }
-  def Sysdate: java.util.Date = {
+  def Sysdate(): java.util.Date = {
     val function = this.setupFunction(new com.dexels.navajo.functions.Sysdate)
     function.evaluate().asInstanceOf[java.util.Date]
   }
@@ -969,7 +970,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[com.dexels.navajo.document.types.ClockTime]
   }
-  def Today: java.util.Date = {
+  def Today(): java.util.Date = {
     val function = this.setupFunction(new com.dexels.navajo.functions.Today)
     function.evaluate().asInstanceOf[java.util.Date]
   }
@@ -1093,6 +1094,16 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[java.lang.String]
   }
+  def ValidatePhoneNumber(arg0: java.lang.String): java.lang.Boolean = {
+    val function = this.setupFunction(new com.dexels.navajo.functions.ValidatePhoneNumber)
+    function.insertOperand(arg0)
+    function.evaluate().asInstanceOf[java.lang.Boolean]
+  }
+  def ValidatePhoneNumber(arg0: java.lang.Long): java.lang.Boolean = {
+    val function = this.setupFunction(new com.dexels.navajo.functions.ValidatePhoneNumber)
+    function.insertOperand(arg0)
+    function.evaluate().asInstanceOf[java.lang.Boolean]
+  }
   def Wait(arg0: java.lang.Integer): Any = {
     val function = this.setupFunction(new com.dexels.navajo.functions.Wait)
     function.insertOperand(arg0)
@@ -1103,7 +1114,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     function.insertOperand(arg0)
     function.evaluate().asInstanceOf[java.lang.String]
   }
-  def WeekDay: java.lang.String = {
+  def WeekDay(): java.lang.String = {
     val function = this.setupFunction(new com.dexels.navajo.functions.WeekDay)
     function.evaluate().asInstanceOf[java.lang.String]
   }

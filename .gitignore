@@ -10,3 +10,4 @@ server/com.dexels.navajo.integration/navajo/logs/
 *.war
 *.jar
 .cache
+.cache-main

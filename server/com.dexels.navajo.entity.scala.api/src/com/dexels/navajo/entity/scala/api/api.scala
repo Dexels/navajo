@@ -1,7 +1,5 @@
 package com.dexels.navajo.entity.scala.api
 
-import com.dexels.navajo.adapters.scala.api._
-
 import com.dexels.navajo.scala.document._
 
 import com.dexels.navajo.scala._
@@ -22,19 +20,19 @@ trait EntityComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexe
 }
 
 class EXAMPLETRANSACTIONALADAPTER(instance: com.dexels.navajo.entity.adapters.ExampleTransactionalAdapter = new com.dexels.navajo.entity.adapters.ExampleTransactionalAdapter) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.entity.adapters.ExampleTransactionalAdapter => Unit) {
+  def instance(f: com.dexels.navajo.entity.adapters.ExampleTransactionalAdapter => Unit) = {
     f(instance)
   }
 }
 
 class TRANSACTION(instance: com.dexels.navajo.entity.adapters.TransactionMap = new com.dexels.navajo.entity.adapters.TransactionMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.entity.adapters.TransactionMap => Unit) {
+  def instance(f: com.dexels.navajo.entity.adapters.TransactionMap => Unit) = {
     f(instance)
   }
 }
 
 class ENTITY(instance: com.dexels.navajo.entity.adapters.EntityMap = new com.dexels.navajo.entity.adapters.EntityMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.entity.adapters.EntityMap => Unit) {
+  def instance(f: com.dexels.navajo.entity.adapters.EntityMap => Unit) = {
     f(instance)
   }
   def entity(entity: java.lang.String): ENTITY = {

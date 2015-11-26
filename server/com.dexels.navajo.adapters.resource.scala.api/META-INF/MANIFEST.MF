@@ -9,5 +9,5 @@ Bundle-Vendor: Dexels
 Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
  ment
 Fragment-Host: com.dexels.navajo.adapters.resource;bundle-version="2.0
- .21.qualifier"
+ .29.qualifier"
 

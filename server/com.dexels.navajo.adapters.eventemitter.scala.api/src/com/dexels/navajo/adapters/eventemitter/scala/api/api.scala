@@ -12,7 +12,7 @@ trait EventEmitterComponent extends com.dexels.navajo.scala.BaseAdapters with co
 }
 
 class SENDEVENT(instance: com.dexels.navajo.adapter.eventemitter.NavajoSendEventAdapter = new com.dexels.navajo.adapter.eventemitter.NavajoSendEventAdapter) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.eventemitter.NavajoSendEventAdapter => Unit) {
+  def instance(f: com.dexels.navajo.adapter.eventemitter.NavajoSendEventAdapter => Unit) = {
     f(instance)
   }
   def addProperty(name: java.lang.String, value: java.lang.Object): Unit = {
