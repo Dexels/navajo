@@ -882,6 +882,11 @@
 		<input>string</input>
 		<result>string</result>
 	</function>
+    <function name="ValidatePhoneNumber" class="com.dexels.navajo.functions.ValidatePhoneNumber">
+        <description>ValidatePhoneNumber(string|long)</description>
+        <input>string|long</input>
+        <result>boolean</result>
+    </function>
 	<function name="Wait" class="com.dexels.navajo.functions.Wait">
 		<description>Wait for specified number of milliseconds</description>
 		<input>integer</input>
