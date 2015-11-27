@@ -4,10 +4,7 @@ Bundle-SymbolicName: com.dexels.navajo.compiler.scala
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Bundle-ClassPath: .,
- lib/org.scala-lang.scala-compiler_2.11.6.jar,
- lib/org.scala-lang.scala-library_2.11.6.jar,
- lib/org.scala-lang.scala-reflect_2.11.6.jar
+Bundle-ClassPath: .
 Service-Component: OSGI-INF/scalacompiler.xml,
  OSGI-INF/scalacompiler.config.xml
 Import-Package: com.dexels.navajo.compiler,
@@ -15,9 +12,14 @@ Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.repository.api;version="5.0.0",
  com.dexels.navajo.scala,
  com.dexels.navajo.scala.document,
+ com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
  org.osgi.framework;version="1.8.0",
  org.osgi.service.cm,
- org.slf4j;version="1.4.3"
+ org.slf4j;version="1.4.3",
+ scala.reflect.internal.util;version="2.11.2.v20140721-095018-73fb460c1c",
+ scala.tools.nsc;version="2.11.2.v20140721-095018-73fb460c1c",
+ scala.tools.nsc.reporters;version="2.11.2.v20140721-095018-73fb460c1c",
+ scala.tools.nsc.settings;version="2.11.2.v20140721-095018-73fb460c1c"
 Require-Bundle: org.scala-lang.scala-library;bundle-version="2.11.2"
 
