@@ -156,7 +156,10 @@ public class BundleCreatorComponent implements BundleCreator {
 
                     List<String> newTenants = new ArrayList<>();
 
-                    depanalyzer.addDependencies(scriptName);
+                    if (scriptExtension.equals(".xml")) {
+                        depanalyzer.addDependencies(scriptName);
+                    }
+                    
                     List<Dependency> dependencies = depanalyzer.getDependencies(scriptName, Dependency.INCLUDE_DEPENDENCY);
 
                     if (!hasTenantSpecificFile && dependencies != null) {
@@ -262,7 +265,9 @@ public class BundleCreatorComponent implements BundleCreator {
         try{
             getScriptCompiler(scriptExtension).compile(script, formatCompilationDate, scriptTenant, hasTenantSpecificFile, forceTenant);
  
-            javaCompiler.compileJava(myScript);
+            if (getScriptCompiler(scriptExtension).scriptNeedsCompilation()){
+                javaCompiler.compileJava(myScript);
+            }
             javaCompiler.compileJava(myScript + "Factory");
             createBundleJar(myScript, scriptTenant, keepIntermediate, hasTenantSpecificFile, scriptExtension);
             success.add(myScript);
@@ -270,6 +275,7 @@ public class BundleCreatorComponent implements BundleCreator {
             logger.debug("Script fragment: {} ignored: {}", script, e);
             skipped.add(script);
         } catch (Exception e) {
+            logger.warn("Exception on compiling ", e);
             failures.add(script);
             throw e;
         }

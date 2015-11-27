@@ -90,7 +90,7 @@ public class ScalaCompiler extends ScriptCompiler {
 //            tenantScript = script + "_" + tenant;
 //        }
         
-        File targetDir = new File(navajoIOConfig.getCompiledScriptPath(),  script +  File.separator + packagePath);
+        File targetDir = new File(navajoIOConfig.getCompiledScriptPath(), packagePath + File.separator + script);
         targetDir.mkdirs();
         
         Settings settings = new Settings();
