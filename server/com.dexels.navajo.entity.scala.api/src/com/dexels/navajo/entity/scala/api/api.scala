@@ -17,6 +17,10 @@ trait EntityComponent extends com.dexels.navajo.scala.BaseAdapters with com.dexe
     val instance = new ENTITY
     setupMap(message, instance, f)
   }
+  def messagemap(message: NavajoMessage, f: MESSAGEMAP => Unit): Unit = {
+    val instance = new MESSAGEMAP
+    setupMap(message, instance, f)
+  }
 }
 
 class EXAMPLETRANSACTIONALADAPTER(instance: com.dexels.navajo.entity.adapters.ExampleTransactionalAdapter = new com.dexels.navajo.entity.adapters.ExampleTransactionalAdapter) extends Adapter(instance) {
@@ -186,5 +190,11 @@ class ENTITY(instance: com.dexels.navajo.entity.adapters.EntityMap = new com.dex
     instance.setBlock(block)
     instance.setAppendTo(appendTo)
     instance.setAppend(append)
+  }
+}
+
+class MESSAGEMAP(instance: com.dexels.navajo.adapter.navajomap.MessageMap = new com.dexels.navajo.adapter.navajomap.MessageMap) extends Adapter(instance) {
+  def instance(f: com.dexels.navajo.adapter.navajomap.MessageMap => Unit): Unit = {
+    f(instance)
   }
 }
