@@ -16,7 +16,7 @@ trait ResourceAdaptersComponent extends com.dexels.navajo.scala.BaseAdapters wit
 }
 
 class JDBCQUERY(instance: com.dexels.navajo.adapter.resource.JDBCMap = new com.dexels.navajo.adapter.resource.JDBCMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.resource.JDBCMap => Unit) = {
+  def instance(f: com.dexels.navajo.adapter.resource.JDBCMap => Unit): Unit = {
     f(instance)
   }
   def query(query: java.lang.String): JDBCQUERY = {
@@ -82,7 +82,7 @@ class RESULTROW(instance: com.dexels.navajo.adapter.sqlmap.ResultSetMap) extends
 }
 
 class HTTPURL(instance: com.dexels.navajo.adapter.resource.URLMap = new com.dexels.navajo.adapter.resource.URLMap) extends Adapter(instance) {
-  def instance(f: com.dexels.navajo.adapter.resource.URLMap => Unit) = {
+  def instance(f: com.dexels.navajo.adapter.resource.URLMap => Unit): Unit = {
     f(instance)
   }
   def url(url: java.lang.String): HTTPURL = {
