@@ -54,7 +54,7 @@ public class BundleCreatorComponent implements BundleCreator {
     private EventAdmin eventAdmin = null;
     private final static Logger logger = LoggerFactory.getLogger(BundleCreatorComponent.class);
 
-    private ScriptCompiler scriptCompiler;
+    private Map<String, ScriptCompiler> compilers = new HashMap<String, ScriptCompiler>();
     private JavaCompiler javaCompiler;
 
     private Map<String, ReentrantLock> lockmap;
@@ -66,22 +66,21 @@ public class BundleCreatorComponent implements BundleCreator {
     private BundleContext bundleContext;
     private DependencyAnalyzer depanalyzer;
 
-    public void setScriptCompiler(ScriptCompiler scriptCompiler) {
-        this.scriptCompiler = scriptCompiler;
+    public void addScriptCompiler(ScriptCompiler sc) {
+        compilers.put(sc.getScriptExtension(), sc);
+    }
+    
+    public void removeScriptCompiler(ScriptCompiler sc) {
+        compilers.remove(sc.getScriptExtension());
     }
 
     public void setJavaCompiler(JavaCompiler javaCompiler) {
         this.javaCompiler = javaCompiler;
     }
-
-    /**
-     * The script compiler to clear
-     * 
-     * @param scriptCompiler
-     */
-    public void clearScriptCompiler(ScriptCompiler scriptCompiler) {
-        this.scriptCompiler = null;
+    public void clearJavaCompiler(JavaCompiler javaCompiler) {
+        this.javaCompiler = null;
     }
+
 
     public void setDependencyAnalyzer(DependencyAnalyzer depa) {
         depanalyzer = depa;
@@ -91,24 +90,11 @@ public class BundleCreatorComponent implements BundleCreator {
         depanalyzer = null;
     }
 
-    /**
-     * The java compiler to clear
-     * 
-     * @param javaCompiler
-     */
-    public void clearJavaCompiler(JavaCompiler javaCompiler) {
-        this.javaCompiler = null;
-    }
-
     public void setEventAdmin(EventAdmin eventAdmin) {
         this.eventAdmin = eventAdmin;
     }
 
-    /**
-     * 
-     * @param eventAdmin
-     *            the eventadmin to clear
-     */
+
     public void clearEventAdmin(EventAdmin eventAdmin) {
         this.eventAdmin = null;
     }
@@ -268,15 +254,14 @@ public class BundleCreatorComponent implements BundleCreator {
             final String scriptTenant, boolean hasTenantSpecificFile, boolean forceTenant, boolean keepIntermediate,
             List<String> success, List<String> skipped, List<String> failures)
                     throws Exception, IOException, CompilationException {
-        List<com.dexels.navajo.script.api.Dependency> dependencies = new ArrayList<com.dexels.navajo.script.api.Dependency>();
         String myScript = script;
         if (forceTenant) {
             myScript = script + "_" + scriptTenant;
         }
 
         try{
-            scriptCompiler.compileTsl(script, formatCompilationDate, dependencies, scriptTenant, hasTenantSpecificFile,
-                    forceTenant);
+            getScriptCompiler(scriptExtension).compile(script, formatCompilationDate, scriptTenant, hasTenantSpecificFile, forceTenant);
+ 
             javaCompiler.compileJava(myScript);
             javaCompiler.compileJava(myScript + "Factory");
             createBundleJar(myScript, scriptTenant, keepIntermediate, hasTenantSpecificFile, scriptExtension);
@@ -290,6 +275,10 @@ public class BundleCreatorComponent implements BundleCreator {
         }
           
         logger.info("Finished compiling and bundling {}", script);
+    }
+    
+    private ScriptCompiler getScriptCompiler(String scriptExtension) throws Exception {
+        return compilers.get(scriptExtension);
     }
 
     private synchronized ReentrantLock getLock(String script, String context) {

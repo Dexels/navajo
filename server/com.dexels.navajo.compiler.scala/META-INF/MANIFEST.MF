@@ -20,6 +20,7 @@ Import-Package: com.dexels.navajo.compiler,
  scala.reflect.internal.util;version="2.11.2.v20140721-095018-73fb460c1c",
  scala.tools.nsc;version="2.11.2.v20140721-095018-73fb460c1c",
  scala.tools.nsc.reporters;version="2.11.2.v20140721-095018-73fb460c1c",
- scala.tools.nsc.settings;version="2.11.2.v20140721-095018-73fb460c1c"
+ scala.tools.nsc.settings;version="2.11.2.v20140721-095018-73fb460c1c",
+ scala.tools.reflect;version="2.11.2.v20140721-095018-73fb460c1c"
 Require-Bundle: org.scala-lang.scala-library;bundle-version="2.11.2"
 

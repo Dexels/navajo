@@ -3652,7 +3652,7 @@ public class TslCompiler {
 			// }
 
 			tslCompiler.compileScript(bareScript, input, output,
-					scriptPackagePath, navajoIOConfig.getOutputWriter(output,
+			        packagePath, navajoIOConfig.getOutputWriter(output,
 							packagePath, tenantScript, ".java"), deps, tenant,
 					hasTenantSpecificScript, forceTenant);
 
