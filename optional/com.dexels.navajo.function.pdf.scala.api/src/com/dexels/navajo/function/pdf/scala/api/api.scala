@@ -1,5 +1,7 @@
 package com.dexels.navajo.function.pdf.scala.api
 
+import com.dexels.navajo.core.scala.api._
+
 import com.dexels.navajo.scala.document._
 
 import com.dexels.navajo.scala._
