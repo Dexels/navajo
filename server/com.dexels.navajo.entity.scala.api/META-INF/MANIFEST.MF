@@ -7,7 +7,7 @@ Require-Bundle: org.scala-lang.scala-library
 Bundle-ManifestVersion: 2
 Bundle-Vendor: Dexels
 Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
- ment
+ ment,com.dexels.navajo.adapters.scala.api
 Fragment-Host: com.dexels.navajo.entity;bundle-version="2.1.1.qualifie
  r"
 

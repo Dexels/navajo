@@ -1,5 +1,7 @@
 package com.dexels.navajo.entity.scala.api
 
+import com.dexels.navajo.adapters.scala.api._
+
 import com.dexels.navajo.scala.document._
 
 import com.dexels.navajo.scala._
