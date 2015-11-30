@@ -11,3 +11,4 @@ server/com.dexels.navajo.integration/navajo/logs/
 *.jar
 .cache
 .cache-main
+.tmpBin
