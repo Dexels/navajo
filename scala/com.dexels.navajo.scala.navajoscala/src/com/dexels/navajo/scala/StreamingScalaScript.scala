@@ -12,12 +12,12 @@ import scala.reflect.ManifestFactory
 import com.dexels.navajo.scala.document.NavajoMessage
 import com.dexels.navajo.scala.document.NavajoFactory
 import com.dexels.navajo.scala.document.streaming.NavajoDocumentStreaming
-import akka.actor.Props
-import akka.actor.ActorSystem
+//import akka.actor.Props
+//import akka.actor.ActorSystem
 import com.dexels.navajo.scala.document.streaming.Channel
-import akka.util.Timeout
-import akka.actor.ActorRef
-import akka.pattern.{ ask, pipe }
+//import akka.util.Timeout
+//import akka.actor.ActorRef
+//import akka.pattern.{ ask, pipe }
 import scala.util.{ Success, Failure }
 import scala.concurrent._
 import ExecutionContext.Implicits.global
@@ -26,6 +26,7 @@ import com.dexels.navajo.scala.document.streaming.GetAllMessages
 import com.dexels.navajo.scala.document.streaming.GetMessage
 
 abstract class StreamingScalaScript extends CompiledScript {
+  /*
     var runtime: NavajoRuntime = null
     implicit val timeout = Timeout(60 seconds)
 
@@ -102,6 +103,8 @@ abstract class StreamingScalaScript extends CompiledScript {
     def callAdapter(adapter: Class[_ <: Mappable], withMap: Mappable => Unit) {
 
     }
+
+*/
 
     def scriptAccess: Access = {
         return myAccess
