@@ -25,7 +25,7 @@
 		<groupId>com.dexels.navajo</groupId>
 		<artifactId>com.dexels.navajo.scala.super</artifactId>
 		<version>1.0.0</version>
-		<relativePath>setup/com.dexels.repository/</relativePath>
+		<relativePath>scala/com.dexels.navajo.scala.super</relativePath>
 	</parent>
 	
 
