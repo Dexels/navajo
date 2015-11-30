@@ -34,11 +34,12 @@ class ApiGenerator {
         val destProject = new File(destination, symbolicName);
         val metainf = new File(destProject, "META-INF");
         metainf.mkdirs();
-        // th
+        
+
         val manifest = new Manifest()
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
         manifest.getMainAttributes().putValue("Bundle-Name", bundleName)
-        manifest.getMainAttributes().putValue("Fragment-Host", sourceSymbolicName + ";bundle-version=\"" + version + "\"")
+        manifest.getMainAttributes().putValue("Fragment-Host", sourceSymbolicName)
         manifest.getMainAttributes().putValue("Bundle-Vendor", "Dexels")
 
         manifest.getMainAttributes().putValue("Require-Bundle", "org.scala-lang.scala-library")
