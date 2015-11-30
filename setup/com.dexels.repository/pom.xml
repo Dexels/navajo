@@ -184,8 +184,8 @@
 						</configuration>
 					</plugin>
                                         <plugin>
-                                                <groupId>com.dexels.navajo.scalacompiler</groupId>
-                                                <artifactId>scalacompiler</artifactId>
+                                                <groupId>com.dexels.navajo.scala</groupId>
+                                                <artifactId>navajoscalacompiler</artifactId>
                                                 <version>1.0.0-SNAPSHOT</version>
                                                 <executions>
                                                         <execution>

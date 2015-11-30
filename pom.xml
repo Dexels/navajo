@@ -10,7 +10,9 @@
 
 	<modules>
 		<module>setup/com.dexels.target/</module>	
+                <module>scala/com.dexels.navajo.scala.navajoscalacompiler/</module>
 		<module>setup/com.dexels.repository/</module>	
+<!--		<module>scala/com.dexels.navajo.scala.super/</module> -->
 		<module>core/com.dexels.navajo.core.feature/allgit/</module>
 		<module>server/com.dexels.navajo.server.feature/allgit/</module>
 		<module>tipi/com.dexels.navajo.tipi.extensions.feature/allgit/</module>
