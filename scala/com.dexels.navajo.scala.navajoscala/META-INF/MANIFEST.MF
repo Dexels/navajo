@@ -1,6 +1,6 @@
-Bundle-Name: Navajo Scala
-Bundle-SymbolicName: com.dexels.navajo.scala
-Bundle-Description: A Hello World bundle
+Bundle-Name: Navajo Scala Connections
+Bundle-SymbolicName: com.dexels.navajo.scala.navajoscala
+Bundle-Description: 
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0.qualifier
 Include-Resource: lib
