@@ -1,0 +1,35 @@
+Bundle-Name: Navajo Scala
+Bundle-SymbolicName: com.dexels.navajo.scala
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.0.qualifier
+Include-Resource: lib
+Export-Package: com.dexels.navajo.scala,
+ com.dexels.navajo.scala.document
+Bundle-Vendor: Dexels
+Bundle-ClassPath: .,
+ lib/akka-actor_2.11-2.3.9.jar,
+ lib/config-1.2.1.jar
+Import-Package: com.dexels.navajo.client;version="1.0.0",
+ com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.types;version="2.2.1",
+ com.dexels.navajo.mapping,
+ com.dexels.navajo.parser,
+ com.dexels.navajo.scala.document,
+ com.dexels.navajo.script.api;version="1.0.0",
+ com.dexels.navajo.server,
+ org.junit;version="4.8.2";resolution:=optional,
+ org.slf4j;version="1.7.5",
+ scala;version="2.11.2",
+ scala.collection;version="2.11.2",
+ scala.collection.concurrent;version="2.11.2",
+ scala.collection.convert;version="2.11.2",
+ scala.collection.generic;version="2.11.2",
+ scala.collection.immutable;version="2.11.2",
+ scala.collection.mutable;version="2.11.2",
+ scala.collection.parallel;version="2.11.2",
+ scala.collection.parallel.immutable;version="2.11.2",
+ scala.collection.parallel.mutable;version="2.11.2",
+ scala.collection.script;version="2.11.2",
+ scala.reflect;version="2.11.7.v20150622-112736-1fbce4612c"
+Service-Component: OSGI-INF/script.xml
