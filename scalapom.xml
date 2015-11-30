@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.dexels</groupId>
+	<artifactId>com.dexels.opensource.scala</artifactId>
+	<version>1.0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>scala/com.dexels.navajo.scala.super/</module> 
+		<module>optional/com.dexels.navajo.function.pdf.scala.api</module>
+		<module>optional/com.dexels.navajo.kml.scala.api</module>
+		<module>optional/com.dexels.navajo.twitter.scala.api</module>
+		<module>example/com.dexels.navajo.example.adapter.scala.api</module>
+		<module>server/com.dexels.navajo.adapters.scala.api</module>
+		<module>server/com.dexels.navajo.adapters.eventemitter.scala.api</module>
+		<module>server/com.dexels.navajo.adapters.resource.scala.api</module>
+		<module>server/com.dexels.navajo.entity.scala.api</module>
+		<module>core/com.dexels.navajo.function.scala.api</module>
+	</modules>
+	<parent>
+		<groupId>com.dexels.navajo</groupId>
+		<artifactId>com.dexels.navajo.scala.super</artifactId>
+		<version>1.0.0</version>
+		<relativePath>setup/com.dexels.repository/</relativePath>
+	</parent>
+	
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4.3</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <!-- here the phase you need -->
+            <phase>install</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
