@@ -7,9 +7,7 @@ Include-Resource: lib
 Export-Package: com.dexels.navajo.scala,
  com.dexels.navajo.scala.document
 Bundle-Vendor: Dexels
-Bundle-ClassPath: .,
- lib/akka-actor_2.11-2.3.9.jar,
- lib/config-1.2.1.jar
+Bundle-ClassPath: .
 Import-Package: com.dexels.navajo.client;version="1.0.0",
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.1",

@@ -14,7 +14,6 @@ import com.dexels.navajo.scala.document.NavajoFactory
 import com.dexels.navajo.scala.document.streaming.NavajoDocumentStreaming
 //import akka.actor.Props
 //import akka.actor.ActorSystem
-import com.dexels.navajo.scala.document.streaming.Channel
 //import akka.util.Timeout
 //import akka.actor.ActorRef
 //import akka.pattern.{ ask, pipe }
