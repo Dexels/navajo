@@ -8,6 +8,5 @@ Bundle-ManifestVersion: 2
 Bundle-Vendor: Dexels
 Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
  ment
-Fragment-Host: com.dexels.navajo.adapters.resource;bundle-version="2.0
- .29.qualifier"
+Fragment-Host: com.dexels.navajo.adapters.resource
 

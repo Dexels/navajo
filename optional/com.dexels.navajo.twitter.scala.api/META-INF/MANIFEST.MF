@@ -8,6 +8,5 @@ Bundle-ManifestVersion: 2
 Bundle-Vendor: Dexels
 Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
  ment
-Fragment-Host: com.dexels.navajo.twitter;bundle-version="1.1.7.qualifi
- er"
+Fragment-Host: com.dexels.navajo.twitter
 

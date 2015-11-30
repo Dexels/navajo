@@ -8,6 +8,5 @@ Bundle-ManifestVersion: 2
 Bundle-Vendor: Dexels
 Import-Package:  com.dexels.navajo.scala, com.dexels.navajo.scala.docu
  ment
-Fragment-Host: com.dexels.navajo.function.pdf;bundle-version="1.0.15.q
- ualifier"
+Fragment-Host: com.dexels.navajo.function.pdf
 
