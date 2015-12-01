@@ -1,5 +1,5 @@
 Bundle-Name: Navajo Scala Api Builder
-Bundle-SymbolicName: com.dexels.navajo.scala.navajoscalacompiler
+Bundle-SymbolicName: com.dexels.navajo.scala.navajom2plugin
 Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0.qualifier
