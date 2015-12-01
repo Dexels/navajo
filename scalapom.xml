@@ -11,6 +11,7 @@
 	<modules>
 		<module>scala/com.dexels.navajo.scala.super</module> 
 		<module>scala/com.dexels.navajo.scala.navajoscala</module>
+                <module>scala/com.dexels.navajo.scala.scriptcompiler</module>
 		<module>optional/com.dexels.navajo.function.pdf.scala.api</module>
 		<module>optional/com.dexels.navajo.kml.scala.api</module>
 		<module>optional/com.dexels.navajo.twitter.scala.api</module>

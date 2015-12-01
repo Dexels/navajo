@@ -10,7 +10,7 @@
 
 	<modules>
 		<module>setup/com.dexels.target/</module>	
-                <module>scala/com.dexels.navajo.scala.navajoscalacompiler/</module>
+                <module>scala/com.dexels.navajo.scala.navajom2plugin</module>
 		<module>setup/com.dexels.repository/</module>	
 <!--		<module>scala/com.dexels.navajo.scala.super/</module> -->
 		<module>core/com.dexels.navajo.core.feature/allgit/</module>
