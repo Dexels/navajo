@@ -25,8 +25,8 @@
 <repository location="http://repo.dexels.com/eclipse/equinox_mars"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.74.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.74"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.76.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.76"/>
 </location>
 </locations>
 <includeBundles>
