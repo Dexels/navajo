@@ -1745,11 +1745,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                 if (!hasUserDefinedErrorHandler) {
                     TipiComponent tc = event == null ? null : event.getComponent();
                     if (eHandler.hasServerErrors(reply)) {
-                        if (systemPropertyMap.get("DTAP") != null && !systemPropertyMap.get("DTAP").equals("DEVELOPMENT")) {
-                            errorMessage = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
-                        } 
-                       
-                        showServerError(errorMessage, tc);
+                        String userErrorMessage = getErrorMessage(reply, errorMessage);
+                        showServerError(userErrorMessage, tc);
                     } else {
                         showWarning(errorMessage, "Invoerfout", tc);
                     }
@@ -1771,6 +1768,19 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         }
 
     }
+
+    private String getErrorMessage(Navajo reply, String errorMessage) {
+        String userError = errorMessage;
+        String dtap = systemPropertyMap.get("DTAP") == null? null: systemPropertyMap.get("DTAP");
+        Boolean isSportlinkUser = (Boolean) getGlobalValue("IsUserNameSportlink");
+        if (! (isSportlinkUser || dtap.equals("DEVELOPMENT") )) {
+            // We don't want to give the end-user an ugly stack trace, hence we replace the message
+            // with an access id.
+            errorMessage = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
+        } 
+        return userError;
+    }
+
 
     public void parseStudio() throws XMLParseException {
         // do nothing
