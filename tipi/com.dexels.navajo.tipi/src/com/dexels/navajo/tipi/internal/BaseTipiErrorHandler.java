@@ -44,6 +44,8 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
     private static final String ERROR_LESS_DETAILS = "LessDetails";
     private static final String ERROR_OK = "Ok";
 	private static final long serialVersionUID = -2568512270962339576L;
+    private static final String INACTIVITY_MSG = "Inactive_msg";
+    private static final String INACTIVITY_TITLE =  "Inactive_title";
 	
 	private String errorMessage;
 	private TipiContext context;
@@ -57,6 +59,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	public Boolean hasServerErrors(Navajo n) {
 	    return n.getMessage("error") != null;
 	}
+	
 
 	@Override
 	public String hasErrors(Navajo n) {
@@ -220,5 +223,23 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	public String getErrorMessage() {
 		return errorMessage;
 	}
+
+    @Override
+    public String getInactivityTitleText() {
+        String s = retrieveFromMessageBundle(INACTIVITY_TITLE);
+        if (s != null) {
+            return s;
+        }
+        return "De applicatie wordt afgesloten ";
+    }
+
+    @Override
+    public String getInactivityMsgText() {
+        String s = retrieveFromMessageBundle(INACTIVITY_MSG);
+        if (s != null) {
+            return s;
+        }
+        return "De applicatie wordt afgesloten vanwege inactiviteit.";
+    }
 
 }

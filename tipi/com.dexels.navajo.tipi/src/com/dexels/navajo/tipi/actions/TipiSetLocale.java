@@ -50,7 +50,7 @@ public class TipiSetLocale extends TipiAction {
 		
 		//if (localeChanged)
 		//{
-			getContext().updateValidationProperties();
+			getContext().resetErrorHandler();
 			// TODO re-enable
 //			myContext.reloadCssDefinitions();
 		//}
