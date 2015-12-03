@@ -36,6 +36,8 @@ public interface TipiErrorHandler {
 	public String getErrorLessDetailsText();
 	public String getErrorCloseText();
 	
+	public String getInactivityTitleText();
+	public String getInactivityMsgText();
 	
 
 

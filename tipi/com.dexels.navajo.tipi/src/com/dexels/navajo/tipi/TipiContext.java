@@ -1595,7 +1595,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             }
         } catch (Throwable ex) {
             logger.error("Sending problem:", ex);
-            if (eHandler != null && Exception.class.isInstance(ex)) {
+            if (getErrorHandler() != null && Exception.class.isInstance(ex)) {
                 debugLog("data", "send error occurred:" + ex.getMessage() + " method: " + service);
                 showInternalError("Probleem:", ex);
                 if (breakOnError) {
@@ -1715,14 +1715,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
     public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError) throws TipiBreakException {
         if (reply != null) {
-            // TODO Put this in a more elegant place
-            // TODO No remove completely. Don't like it.
-            if (eHandler == null) {
-                eHandler = new BaseTipiErrorHandler();
-                updateValidationProperties();
-
-            }
-            String errorMessage = eHandler.hasErrors(reply);
+                       
+            String errorMessage = getErrorHandler().hasErrors(reply);
             if (errorMessage != null) {
                 logger.warn("Errors in reply detected while loading navajo: {}", method);
                 boolean hasUserDefinedErrorHandler = false;
@@ -1744,19 +1738,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                 }
                 if (!hasUserDefinedErrorHandler) {
                     TipiComponent tc = event == null ? null : event.getComponent();
-                    if (eHandler.hasServerErrors(reply)) {
-                        if (systemPropertyMap.get("DTAP") != null && !systemPropertyMap.get("DTAP").equals("DEVELOPMENT")) {
-                            errorMessage = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
-                        } 
-                       
-                        showServerError(errorMessage, tc);
+                    if (getErrorHandler().hasServerErrors(reply)) {
+                        String userErrorMessage = getErrorMessage(reply, errorMessage);
+                        showServerError(userErrorMessage, tc);
                     } else {
                         showWarning(errorMessage, "Invoerfout", tc);
                     }
                 } else {
                     logger.info("Not delivering error since one or more components have their own errorhandler defined");
                 }
-                if (breakOnError || eHandler.hasServerErrors(reply)) {
+                if (breakOnError || getErrorHandler().hasServerErrors(reply)) {
                     throw new TipiBreakException(TipiBreakException.WEBSERVICE_BREAK);
                 }
                 return;
@@ -1771,6 +1762,29 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         }
 
     }
+
+    public TipiErrorHandler getErrorHandler() {
+        // TODO Put this in a more elegant place
+        // TODO No remove completely. Don't like it.
+        if (eHandler == null) {
+            eHandler = new BaseTipiErrorHandler();
+            eHandler.setContext(this);
+        }
+        return eHandler;
+    }
+
+    private String getErrorMessage(Navajo reply, String errorMessage) {
+        String userError = errorMessage;
+        String dtap = systemPropertyMap.get("DTAP") == null? null: systemPropertyMap.get("DTAP");
+        Boolean isSportlinkUser = (Boolean) getGlobalValue("IsUserNameSportlink");
+        if (! (isSportlinkUser || dtap.equals("DEVELOPMENT") )) {
+            // We don't want to give the end-user an ugly stack trace, hence we replace the message
+            // with an access id.
+            errorMessage = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
+        } 
+        return userError;
+    }
+
 
     public void parseStudio() throws XMLParseException {
         // do nothing
@@ -2489,7 +2503,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         setTipiResourceLoader(tipiCodeBase, resourceCacheLocation);
         setGenericResourceLoader(resourceCodeBase, resourceCacheLocation);
 
-        updateValidationProperties();
+        resetErrorHandler();
 
         // try {
         // Class<?> c = Class
@@ -2503,9 +2517,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
     }
 
-    public void updateValidationProperties() {
-        eHandler = new BaseTipiErrorHandler();
-        eHandler.setContext(this);
+    public void resetErrorHandler() {
+        eHandler = null;
     }
 
     public void fireTipiStructureChanged(TipiComponent tc) {

@@ -46,6 +46,7 @@ import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.animation.TipiAnimationManager;
+import com.dexels.navajo.tipi.components.core.LastActivityMonitor;
 import com.dexels.navajo.tipi.components.swingimpl.cookie.impl.JnlpCookieManager;
 import com.dexels.navajo.tipi.components.swingimpl.formatters.PropertyAnimator;
 import com.dexels.navajo.tipi.components.swingimpl.jnlp.WebStartProxy;
@@ -78,19 +79,21 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 public class SwingTipiContext extends TipiContext {
 
-	private static final long serialVersionUID = -538400075423823232L;
+	private static final int INACTIVITY_LIMIT_IN_HOURS = 6;
+    private static final long serialVersionUID = -538400075423823232L;
 //	JFXPanel x;
 	private TipiSwingSplash splash;
 
-	private final Set<Thread> threadSet = Collections
-			.synchronizedSet(new HashSet<Thread>());
-	private final Set<Thread> dialogThreadSet = Collections
-			.synchronizedSet(new HashSet<Thread>());
+	private final Set<Thread> threadSet = Collections.synchronizedSet(new HashSet<Thread>());
+	private final Set<Thread> dialogThreadSet = Collections.synchronizedSet(new HashSet<Thread>());
 	private final Stack<JDialog> dialogStack = new Stack<JDialog>();
 
 	// private JDialog blockingDialog;
 
 	private UserInterface myUserInterface;
+	private Thread activityMonitorThread;
+	private boolean keepActivityMonitorThreadRunning = true;
+	private final LastActivityMonitor lam;
 	private boolean debugMode = false;
 
 	private TipiApplet myAppletRoot;
@@ -111,6 +114,36 @@ public class SwingTipiContext extends TipiContext {
 		}
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JDialog.setDefaultLookAndFeelDecorated(true);
+		
+		
+		lam = new LastActivityMonitorImpl();
+		addThreadStateListener(lam);
+		
+        activityMonitorThread = new Thread(new Runnable() {
+
+            public void run() {
+                while (keepActivityMonitorThreadRunning) {
+                    logger.debug("Checking for inactivity");
+                    try {
+                        if (lam.getLastActivityInHours() > INACTIVITY_LIMIT_IN_HOURS) {
+                            logger.info("LastActivity is {} hours ago - showing dialog and closing application!", lam.getLastActivityInHours());
+                            String inactivityTitle = getErrorHandler().getInactivityTitleText();
+                            String inactivityMsg = getErrorHandler().getInactivityMsgText();
+                            SwingTipiContext.this.showWarning(inactivityMsg, inactivityTitle, null);
+                            SwingTipiContext.this.shutdown();
+                        }
+                        // Check every 5 minutes
+                        Thread.sleep(1 * 60 * 1000);
+                    } catch (InterruptedException e) {
+                        keepActivityMonitorThreadRunning = false;
+                    } catch (Exception e) {
+                        logger.warn("Exception in activityMonitorThread: ", e);
+                    }
+
+                }
+            }
+        });
+		activityMonitorThread.start();
 
 		try {
 
@@ -446,6 +479,13 @@ public class SwingTipiContext extends TipiContext {
         logger.warn("ShowWarning: "+text+" title: "+title);
         showInfo(text, title, JOptionPane.WARNING_MESSAGE, tc);
     }
+	
+	@Override
+	public void shutdown() {
+	    keepActivityMonitorThreadRunning = false;
+	    activityMonitorThread.interrupt();
+	    super.shutdown();
+	}
 	
 
 	@Override
