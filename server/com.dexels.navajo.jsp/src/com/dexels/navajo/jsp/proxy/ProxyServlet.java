@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Enumeration;
-import java.util.StringTokenizer;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -22,10 +20,8 @@ import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Header;
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Property;
 import com.jcraft.jzlib.DeflaterOutputStream;
 import com.jcraft.jzlib.InflaterInputStream;
 
@@ -54,6 +50,7 @@ public class ProxyServlet extends HttpServlet {
 			throws IOException, ServletException {
 
 		MDC.clear();
+		logger.debug("Performing POST");
 //		String service = request.getParameter("service");
 		String acceptEncoding = request.getHeader("Accept-Encoding");
 		String contentEncoding = request.getHeader("Content-Encoding");
@@ -94,6 +91,7 @@ public class ProxyServlet extends HttpServlet {
 			if (header == null) {
 				throw new ServletException("Empty Navajo header.");
 			}
+            logger.debug("Retrieved INDOC");
 
 			Navajo outDoc = doProxy( in);
 
@@ -102,7 +100,7 @@ public class ProxyServlet extends HttpServlet {
 			// Why do we want this?
 			//response.setHeader("Connection", "close");
 			// TODO: support multiple accept encoding
-			
+			logger.debug("Got OUTDOC - going to create BufferedWriter to outputstream");
 			if (acceptEncoding != null && acceptEncoding.equals(COMPRESS_JZLIB)) {
 				response.setHeader("Content-Encoding", COMPRESS_JZLIB);
 				out = new BufferedWriter(new OutputStreamWriter(
@@ -116,12 +114,15 @@ public class ProxyServlet extends HttpServlet {
 			} else {
 				out = new BufferedWriter(response.getWriter());
 			}
+            logger.debug("Going to write to output stream");
 
 			outDoc.write(out);
 			out.flush();
 			out.close();
 
 			out = null;
+            logger.debug("Finished POST request");
+
 
 		} catch (Throwable e) {
 			throw new ServletException(e);
@@ -171,8 +172,8 @@ public class ProxyServlet extends HttpServlet {
 
 	private void setupClient(String server, String username, String password) {
 		NavajoClientFactory.resetClient();
-		 myClient = NavajoClientFactory.getClient();
-		 if (username == null) {
+		myClient = NavajoClientFactory.getClient();
+		if (username == null) {
 			username = "demo";
 		}
 		myClient.setUsername(username);
@@ -188,48 +189,17 @@ public class ProxyServlet extends HttpServlet {
 		myClient.setRetryAttempts(0);
 	}
 	
-	// We do NOT support array messages here. And property types are always String
-	private void addProperty(Navajo in, String path, String value){
-		StringTokenizer tok = new StringTokenizer(path, "/");
-		int count  = tok.countTokens();
-		int current = 1;
-		Message currentMessage = null;
-		
-		while(tok.hasMoreElements()){
-			String name = tok.nextToken();
-			
-			if(current == count){				// Property
-				Property p = NavajoFactory.getInstance().createProperty(in, name, Property.STRING_PROPERTY, null, 128, "", Property.DIR_IN);
-				p.setAnyValue(value);
-				currentMessage.addProperty(p);
-			} else {							// Message
-				if(currentMessage != null){ 	// Look in message
-					Message newMessage = currentMessage.getMessage(name);
-					if(newMessage == null){
-						newMessage = NavajoFactory.getInstance().createMessage(in, name);
-						currentMessage.addMessage(newMessage);
-					}
-					currentMessage = newMessage;
-				} else {						// Look in Navajo
-					currentMessage = in.getMessage(name);
-					if(currentMessage == null){
-						currentMessage = NavajoFactory.getInstance().createMessage(in, name);
-						in.addMessage(currentMessage);
-					} 
-				}
-			}
-			current++;
-		}
-	}
 
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		logger.debug("Starting init");
 		String server = getApplicationAttribute("NavajoServer");
 		String username = getApplicationAttribute("NavajoUser");
 		String password = getApplicationAttribute("NavajoPassword");
 		setupClient(server, username, password);
+		logger.debug("Finished init");
 	}
 
 }
