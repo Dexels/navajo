@@ -875,6 +875,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             // Later use this accessID for the real access object
             access = new Access(1, 1, rpcUser, rpcName, "", "", "", userCertificate, false, null);
             access.setTenant(instance);
+            access.rpcPwd = rpcPassword;
             access.setInDoc(inMessage);
             if (clientInfo != null) {
                 access.ipAddress = clientInfo.getIP();
