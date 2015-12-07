@@ -21,7 +21,7 @@ public class DependencyAnalyzer {
     protected String scriptFolder;
 
     public void activate() {
-        logger.debug("Activating DependencyAnalyzer");
+        logger.info("Activating DependencyAnalyzer");
         precompiler = new TslPreCompiler();
         precompiler.setIOConfig(navajoIOConfig);
         scriptFolder = navajoIOConfig.getScriptPath();
