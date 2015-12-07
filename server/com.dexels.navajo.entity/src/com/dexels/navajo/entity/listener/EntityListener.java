@@ -48,9 +48,8 @@ public class EntityListener extends HttpServlet {
 
     private final static String DEFAULT_OUTPUT_FORMAT = "json";
     private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json", "xml", "tml"));
-   
-    private EntityManager myManager;
 
+    private EntityManager myManager;
 
     private int requestCounter = 0;
     private AAAQuerier authenticator;
@@ -70,7 +69,7 @@ public class EntityListener extends HttpServlet {
     public void clearEntityManager(EntityManager em) {
         myManager = null;
     }
-    
+
     public void addAuthenticator(AAAQuerier aa) {
         authenticator = aa;
     }
@@ -78,7 +77,6 @@ public class EntityListener extends HttpServlet {
     public void removeAuthenticator(AAAQuerier aa) {
         authenticator = null;
     }
-    
 
     /**
      * entity/Match?Match/MatchId=2312321
@@ -91,7 +89,7 @@ public class EntityListener extends HttpServlet {
         String method = request.getMethod();
         String path = request.getPathInfo();
         long requestStart = System.currentTimeMillis();
-       
+
         synchronized (this) {
             requestCounter++;
         }
@@ -114,20 +112,19 @@ public class EntityListener extends HttpServlet {
             }
         }
         String outputFormat = getOutputFormat(request, urlOutput);
-        
+
         // Only end-points are allowed to cache - no servers in between
         response.setHeader("Cache-Control", "private");
         response.setHeader("Content-Type", "application/" + outputFormat);
 
         HttpBasicAuthentication auth = new HttpBasicAuthentication(request);
-        
-        
+
         String entityName = path.substring(1);
         if (entityName.indexOf('.') > 0) {
             // Remove .<format> from entityName
             entityName = entityName.substring(0, entityName.indexOf('.'));
         }
-        
+
         String tenant = determineInstanceFromRequest(request);
         if (tenant == null) {
             logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
@@ -135,20 +132,20 @@ public class EntityListener extends HttpServlet {
 
         Navajo input = null;
         String etag = null;
-        
+
         String ip = request.getHeader("X-Forwarded-For");
         if (ip == null || ip.equals("")) {
             ip = request.getRemoteAddr();
         }
 
-        logger.info("Entity request {} ({}, {}, {})", entityName, method, auth.getUsername(),  ip);
+        logger.info("Entity request {} ({}, {}, {})", entityName, method, auth.getUsername(), ip);
         logger.debug("entity request count: {}", requestCounter);
 
         try {
             if (auth.getUsername() == null || auth.getPassword() == null) {
                 throw new EntityException(EntityException.UNAUTHORIZED);
             }
-            
+
             if (entityName.equals("")) {
                 logger.error("No entity name found in request. Request URI: {}", request.getRequestURI());
                 throw new EntityException(EntityException.BAD_REQUEST);
@@ -176,25 +173,25 @@ public class EntityListener extends HttpServlet {
                     throw new EntityException(EntityException.BAD_REQUEST);
                 }
             }
-            
+
             // Create a header from the input
             Header header = NavajoFactory.getInstance().createHeader(input, "", auth.getUsername(), auth.getPassword(), -1);
             input.addHeader(header);
-            
+
             // Create an access object for logging purposes
-            Long startAuth =  System.currentTimeMillis();
+            Long startAuth = System.currentTimeMillis();
             String scriptName = "entity/" + entityName.replace('.', '/');
             access = authenticateUser(input, tenant, scriptName, auth.getUsername(), auth.getPassword());
             access.created = new Date(requestStart);
             access.ipAddress = ip;
             access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
-            
+
             header.setHeaderAttribute("parentaccessid", access.accessID);
             if (input.getMessage(entityMessage.getName()) == null) {
                 logger.error("Entity name not found in input - format incorrect or bad request");
                 throw new EntityException(EntityException.BAD_REQUEST);
             }
-            
+
             // Merge input.
             input.getMessage(entityMessage.getName()).merge(entityMessage, true);
 
@@ -203,7 +200,6 @@ public class EntityListener extends HttpServlet {
                 etag = request.getHeader("If-None-Match");
             }
 
-            
             input.getMessage(entityMessage.getName()).setEtag(etag);
 
             Operation o = myManager.getOperation(entityName, method);
@@ -216,7 +212,7 @@ public class EntityListener extends HttpServlet {
             ServiceEntityOperation seo = new ServiceEntityOperation(myManager, DispatcherFactory.getInstance(), o);
             result = seo.perform(input);
             access.processingTime = (int) (System.currentTimeMillis() - startTime);
-            
+
             if (access != null) {
                 access.setExitCode(Access.EXIT_OK);
             }
@@ -226,22 +222,18 @@ public class EntityListener extends HttpServlet {
                 access.setException(ex);
                 access.setExitCode(Access.EXIT_EXCEPTION);
             }
-        } 
-        finally {
+        } finally {
             writeOutput(result, response, outputFormat);
             if (access != null) {
                 access.setFinished();
                 access.setOutputDoc(result);
                 NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
-                statLogger.info("Finished {} ({}) in {}ms", access.accessID, access.getRpcName(),
-                        (System.currentTimeMillis() - requestStart));
+                statLogger.info("Finished {} ({}) in {}ms", access.accessID, access.getRpcName(), (System.currentTimeMillis() - requestStart));
             }
-            
+
         }
-        
+
     }
-
-
 
     private void writeOutput(Navajo result, HttpServletResponse response, String output) throws IOException, ServletException {
         if (result == null) {
@@ -276,21 +268,18 @@ public class EntityListener extends HttpServlet {
         }
     }
 
-
     private String determineInstanceFromRequest(final HttpServletRequest req) {
         String requestInstance = req.getHeader("X-Navajo-Instance");
-        if(requestInstance!=null) {
+        if (requestInstance != null) {
             return requestInstance;
         }
         return null;
     }
 
-  
     // In case of an exception, we create a Navajo document with some messages
-    // describing  the error. This allows us to output the exception in the 
+    // describing the error. This allows us to output the exception in the
     // format the user requested(eg.g JSON).
-    private Navajo handleException(Exception ex, HttpServletRequest request, HttpServletResponse response)
-            throws ServletException {
+    private Navajo handleException(Exception ex, HttpServletRequest request, HttpServletResponse response) throws ServletException {
         Navajo result = null;
         logger.warn("Exception in handling entity request: {}. Going to try to handle it nicely.", ex);
 
@@ -301,17 +290,13 @@ public class EntityListener extends HttpServlet {
         if (ex instanceof EntityException) {
             response.setStatus(((EntityException) ex).getCode());
             int code = ((EntityException) ex).getCode();
-            m.addProperty(
-                    NavajoFactory.getInstance().createProperty(result, "Status", "string", String.valueOf(code), 1, null, null));
-            m.addProperty(
-                    NavajoFactory.getInstance().createProperty(result, "Message", "string", ex.getMessage(), 1, null, null));
+            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Status", "string", String.valueOf(code), 1, null, null));
+            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string", ex.getMessage(), 1, null, null));
 
         } else {
             response.setStatus(EntityException.SERVER_ERROR);
-            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Status", "string",
-                    String.valueOf(EntityException.SERVER_ERROR), 1, null, null));
-            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string",
-                    "Server error (" + ex.toString(), 1, null, null));
+            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Status", "string", String.valueOf(EntityException.SERVER_ERROR), 1, null, null));
+            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string", "Server error (" + ex.toString(), 1, null, null));
         }
 
         return result;
@@ -354,29 +339,29 @@ public class EntityListener extends HttpServlet {
         }
         return mimeResult;
     }
-    
-    private Access authenticateUser(Navajo inDoc, String tenant, String entity,
-            String rpcUser, String rpcPassword) throws SystemException, AuthorizationException {
-       Access access = new Access(1, 1, rpcUser, entity, "", "", "", null, false, null);
+
+    private Access authenticateUser(Navajo inDoc, String tenant, String entity, String rpcUser, String rpcPassword)
+            throws SystemException, AuthorizationException {
+        Access access = new Access(1, 1, rpcUser, entity, "", "", "", null, false, null);
         access.setTenant(tenant);
         access.setInDoc(inDoc);
+        access.rpcPwd = rpcPassword;
         appendGlobals(inDoc, tenant);
-        
+
         if (tenant != null) {
             // logger.info("using multitenant: "+instance, new Exception());
 
             if (authenticator != null) {
-                authenticator.process(tenant, rpcUser, rpcPassword, entity,null, access);
+                authenticator.process(tenant, rpcUser, rpcPassword, entity, null, access);
             } else {
                 logger.warn("No authenticator found for instance: {}", tenant);
-            }           
+            }
         } else {
             logger.warn("No tenant defined - unable to authenticate!");
         }
         return access;
     }
 
-    
     private void appendGlobals(Navajo inMessage, String tenant) {
         final GlobalManagerRepository globalManagerInstance = GlobalManagerRepositoryFactory.getGlobalManagerInstance();
         if (globalManagerInstance == null) {
@@ -389,10 +374,10 @@ public class EntityListener extends HttpServlet {
         } else {
             gm = globalManagerInstance.getGlobalManager(tenant);
         }
-        
+
         if (gm != null) {
             gm.initGlobals(inMessage);
         }
     }
-    
+
 }
