@@ -192,7 +192,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 
         }
         for (String depScript : dependentScripts) {
-            logger.debug("Compiling {}; the following script should be recompiled too: {}", script, depScript);
+            logger.info("Going to recompile {} after a change in {}", depScript, script);
             enqueueScript(depScript, ".xml");
         }
     }
