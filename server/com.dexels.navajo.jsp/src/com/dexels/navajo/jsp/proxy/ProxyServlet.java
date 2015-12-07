@@ -50,7 +50,7 @@ public class ProxyServlet extends HttpServlet {
 			throws IOException, ServletException {
 
 		MDC.clear();
-		logger.debug("Performing POST");
+		logger.info("Performing POST");
 //		String service = request.getParameter("service");
 		String acceptEncoding = request.getHeader("Accept-Encoding");
 		String contentEncoding = request.getHeader("Content-Encoding");
@@ -91,7 +91,7 @@ public class ProxyServlet extends HttpServlet {
 			if (header == null) {
 				throw new ServletException("Empty Navajo header.");
 			}
-            logger.debug("Retrieved INDOC");
+            logger.info("Retrieved INDOC");
 
 			Navajo outDoc = doProxy( in);
 
@@ -100,7 +100,7 @@ public class ProxyServlet extends HttpServlet {
 			// Why do we want this?
 			//response.setHeader("Connection", "close");
 			// TODO: support multiple accept encoding
-			logger.debug("Got OUTDOC - going to create BufferedWriter to outputstream");
+			logger.info("Got OUTDOC - going to create BufferedWriter to outputstream");
 			if (acceptEncoding != null && acceptEncoding.equals(COMPRESS_JZLIB)) {
 				response.setHeader("Content-Encoding", COMPRESS_JZLIB);
 				out = new BufferedWriter(new OutputStreamWriter(
@@ -114,14 +114,14 @@ public class ProxyServlet extends HttpServlet {
 			} else {
 				out = new BufferedWriter(response.getWriter());
 			}
-            logger.debug("Going to write to output stream");
+            logger.info("Going to write to output stream");
 
 			outDoc.write(out);
 			out.flush();
 			out.close();
 
 			out = null;
-            logger.debug("Finished POST request");
+            logger.info("Finished POST request");
 
 
 		} catch (Throwable e) {
@@ -194,12 +194,12 @@ public class ProxyServlet extends HttpServlet {
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		logger.debug("Starting init");
+		logger.info("Starting init");
 		String server = getApplicationAttribute("NavajoServer");
 		String username = getApplicationAttribute("NavajoUser");
 		String password = getApplicationAttribute("NavajoPassword");
 		setupClient(server, username, password);
-		logger.debug("Finished init");
+		logger.info("Finished init");
 	}
 
 }
