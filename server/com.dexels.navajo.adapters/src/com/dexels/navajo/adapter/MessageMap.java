@@ -219,6 +219,10 @@ public class MessageMap implements Mappable {
 
 		for (int i = 0; i < children.size(); i++) {
 			msg1pointer = children.get(i);
+			if (msg1pointer.getType().equals(Message.MSG_TYPE_DEFINITION)) {
+			    // Skip definition messages
+			    continue;
+			}
 			Object [] joinValues1 = new Object[joinConditions.size()];
 			for (int p = 0; p < joinConditions.size(); p++ ) {
 				JoinCondition jc = joinConditions.get(p);
@@ -238,6 +242,11 @@ public class MessageMap implements Mappable {
 
 				for (int j = 0; j < children2.size(); j++) {
 					msg2pointer = children2.get(j);
+					
+					if (msg2pointer.getType().equals(Message.MSG_TYPE_DEFINITION)) {
+					    // Skip definition messages
+		                continue;
+		            }
 
 					Object [] joinValues2 = new Object[joinConditions.size()];
 					for (int p = 0; p < joinConditions.size(); p++ ) {
