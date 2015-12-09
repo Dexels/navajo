@@ -350,12 +350,12 @@ public class EntityListener extends HttpServlet {
         appendGlobals(inDoc, tenant);
        
         if (LoginStatisticsProvider.reachedAbortThreshold(rpcUser, access.getIpAddress())) {
-            logger.info("Refusing another authenticate request from {} for {} due to too many failures", access.getIpAddress(), rpcUser);
+            logger.info("Refusing request from {} for {}  due to too many failed auth attempts", access.getIpAddress(), rpcUser);
             throw new AuthorizationException(true, false, rpcUser, "Not authorized");
         }
         
         if (LoginStatisticsProvider.reachedRateLimitThreshold(rpcUser, access.getIpAddress())) {
-            logger.info("Delaying another authenticate request from {} for {} due to repeated failures", access.getIpAddress(), rpcUser);
+            logger.info("Delaying request from {} for {} due to too many failed auth attempts", access.getIpAddress(), rpcUser);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
