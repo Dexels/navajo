@@ -871,8 +871,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 return outMessage;
             }
 
-            // Log request event - create a dummy Access object for it
-            // Later use this accessID for the real access object
             access = new Access(1, 1, rpcUser, rpcName, "", "", "", userCertificate, false, null);
             access.setTenant(instance);
             access.rpcPwd = rpcPassword;
@@ -902,12 +900,16 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
                     AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
                             + ", message=" + ex.getMessage(), Level.WARNING);
+                    myException = ex;
+                    access.setExitCode(Access.EXIT_AUTH_EXECPTION);
                     return outMessage;
                 } catch (SystemException se) {
                     logger.error("SystemException on authenticateUser  {} for {}: ", rpcUser, rpcName, se);
                     outMessage = generateErrorMessage(access, se.getMessage(), SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
                     AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + se.getMessage(),
                             Level.WARNING);
+                    myException = se;
+                    access.setExitCode(Access.EXIT_AUTH_EXECPTION);
                     return outMessage;
                 }
             }
@@ -1055,6 +1057,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             outMessage = generateAuthorizationErrorMessage(access, aee, rpcName);
             AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
                     + ", message=" + aee.getMessage() + ")", Level.WARNING);
+            myException = aee;
+            access.setExitCode(Access.EXIT_AUTH_EXECPTION);
             return outMessage;
         } catch (UserException ue) {
             try {
