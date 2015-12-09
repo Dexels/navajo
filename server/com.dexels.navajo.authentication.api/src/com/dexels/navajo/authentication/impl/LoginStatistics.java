@@ -18,8 +18,8 @@ public class LoginStatistics implements EventHandler {
     private static final Logger logger = LoggerFactory.getLogger(LoginStatistics.class);
     
     private LoadingCache<String, Integer> cache = null;
-    private Integer failedLoginAbortThreshold = 100;
-    private Integer failedLoginSlowpoolThreshold = 5;
+    private Integer failedLoginAbortThreshold = 50;
+    private Integer failedLoginSlowpoolThreshold = 3;
     
     
     public void activate(Map<String, Object> settings) {
@@ -33,7 +33,7 @@ public class LoginStatistics implements EventHandler {
 
         }
 
-        cache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).softValues().build(new CacheLoader<String, Integer>() {
+        cache = CacheBuilder.newBuilder().expireAfterWrite(60, TimeUnit.SECONDS).softValues().build(new CacheLoader<String, Integer>() {
             public Integer load(String key) {
                 return 0;
             }
@@ -55,7 +55,7 @@ public class LoginStatistics implements EventHandler {
             }
 
         } catch (ExecutionException e1) {
-            logger.info("ExecutionException exception on checking failed attemps for {}: ", key, e1);
+            logger.warn("ExecutionException exception on checking failed attemps for {}: ", key, e1);
         }
         return false;
     }
@@ -65,11 +65,10 @@ public class LoginStatistics implements EventHandler {
         try {
             Integer count = cache.get(key);
             if (count > failedLoginSlowpoolThreshold) {
-                logger.info("Too many failed attemps for {} - putting in slow pool", key);
                 return true;
             }
         } catch (ExecutionException e1) {
-            logger.info("ExecutionException exception on checking failed attemps for {}: ", key, e1);
+            logger.warn("ExecutionException exception on checking failed attemps for {}: ", key, e1);
         }
         return false;
     }
@@ -78,7 +77,6 @@ public class LoginStatistics implements EventHandler {
     public void handleEvent(Event e) {
         if (e.getTopic().equals("aaa/failedlogin")) {
             // Failed login
-
             String username = (String) e.getProperty("username");
             String ip = (String) e.getProperty("ipaddress");
 

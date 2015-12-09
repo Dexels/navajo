@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.authentication.api.AAAQuerier;
+import com.dexels.navajo.authentication.api.LoginStatisticsProvider;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -347,6 +348,20 @@ public class EntityListener extends HttpServlet {
         access.setInDoc(inDoc);
         access.rpcPwd = rpcPassword;
         appendGlobals(inDoc, tenant);
+       
+        if (LoginStatisticsProvider.reachedAbortThreshold(rpcUser, access.getIpAddress())) {
+            logger.info("Refusing another authenticate request from {} for {} due to too many failures", access.getIpAddress(), rpcUser);
+            throw new AuthorizationException(true, false, rpcUser, "Not authorized");
+        }
+        
+        if (LoginStatisticsProvider.reachedRateLimitThreshold(rpcUser, access.getIpAddress())) {
+            logger.info("Delaying another authenticate request from {} for {} due to repeated failures", access.getIpAddress(), rpcUser);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+        }
+        
 
         if (tenant != null) {
             // logger.info("using multitenant: "+instance, new Exception());
