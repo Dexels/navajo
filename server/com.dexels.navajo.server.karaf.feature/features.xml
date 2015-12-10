@@ -30,32 +30,25 @@
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.hazelcast/4.0.7</bundle>
 	</feature>
 
-	<feature version="1.0.2" name="dexels.consulosgi" install="auto">
+	<feature version="1.0.5" name="dexels.consulosgi">
 		<feature version="[1.3.2,2)">dexels.repository</feature>
 		<bundle dependency='true'>mvn:commons-codec/commons-codec/1.10</bundle>
 		<bundle dependency='true'>mvn:commons-logging/commons-logging/1.2</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.coProcessGetTuchtzaaknsulosgi.api/4.0.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consulosgi/1.0.2</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.jsonhttp/1.0.1</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.jsonhttp.api/2.0.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/org.apache.httpcomponents.httpasyncclient/4.2.0</bundle>	
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consulosgi.api/4.0.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consulosgi/1.0.5</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.jsonhttp/1.0.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.jsonhttp.api/3.0.1</bundle>
 	</feature>
 
-	<feature version="1.0.0" name="dexels.gitlistener" install="auto">
-		<feature version="[1.3.2,2)">dexels.repository</feature>
-		<feature version="[1.0.1,2)">dexels.consulosgi</feature>
-		<bundle dependency='true'>mvn:com.dexels.servicediscovery/com.dexels.consulosgi.configlistener/1.0.5</bundle>
-	</feature>
-    
-	<feature version="1.0.2" name="dexels.consulconfig">
+	<feature version="1.0.6" name="dexels.consulconfig">
 		<feature version="[1.4.3,2)">dexels.repository</feature>
 		<feature version="[1.0.1,2)">dexels.consulosgi</feature>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consulosgi.configlistener/1.0.3</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consulosgi.configlistener/1.0.9</bundle>
 	</feature>
     
-	<feature version="1.0.7" name="dexels.consul.repositoryloader">
-		<feature version="[1.0.1,2)">dexels.consulconfig</feature>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consul.repositoryloader/1.0.7</bundle>
+	<feature version="1.0.11" name="dexels.consul.repositoryloader">
+		<feature version="[1.0.1,2)">dexels.consulosgi</feature>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consul.repositoryloader/1.0.9</bundle>
     </feature>
  
     <feature version="1.3.5" name="dexels.karaf4.repository" install="auto">
