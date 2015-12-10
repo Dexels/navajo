@@ -2,7 +2,7 @@
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0"
 	name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
-
+navajo.adapter
 	<feature version="1.4.7" name="dexels.repository" install="auto">
 		<feature version="[3.0.0,5)">eventadmin</feature>
 		<feature version="[3.0.0,5)">scr</feature>
@@ -484,14 +484,14 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='sportlink.libraries' version='3.2.14'
+	<feature resolver="(obr)" name='sportlink.libraries' version='3.2.15'
 		start-level='82'>
 		<feature version="[3.0.0,4)">navajo.function</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<feature version="[3.0.0,4)">navajo.article</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.aaa/4.0.10
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.aaa/4.0.24
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.1.4
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.1.6
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.functions/3.0.4
 		</bundle>
