@@ -79,7 +79,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 public class SwingTipiContext extends TipiContext {
 
-	private static final int INACTIVITY_LIMIT_IN_NINUTES = 360; // 6 hours
+	private static final int INACTIVITY_LIMIT_IN_NINUTES = 420; // 7 hours
     private static final long serialVersionUID = -538400075423823232L;
 //	JFXPanel x;
 	private TipiSwingSplash splash;
