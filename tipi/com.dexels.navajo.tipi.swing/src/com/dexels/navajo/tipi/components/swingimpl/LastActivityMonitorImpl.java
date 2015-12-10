@@ -26,8 +26,8 @@ public class LastActivityMonitorImpl implements LastActivityMonitor {
     }
 
     @Override
-    public Integer getLastActivityInHours() {
+    public Integer getInactiveInMinutes() {
         long duration = new Date().getTime() - lastActivity;
-        return new Long(TimeUnit.MILLISECONDS.toHours(duration)).intValue();
+        return new Long(TimeUnit.MILLISECONDS.toMinutes(duration)).intValue();
     }
 }
