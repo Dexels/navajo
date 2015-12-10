@@ -15,8 +15,6 @@ import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -33,9 +31,6 @@ import com.dexels.navajo.document.json.JSONTML;
  */
 public class JSONTMLImpl implements JSONTML {
     
-    private final static Logger logger = LoggerFactory.getLogger(JSONTMLImpl.class);
-
-
 	private JsonFactory jsonFactory = null;
 	private ObjectMapper om = null;
 	private String topLevelMessageName = null;
