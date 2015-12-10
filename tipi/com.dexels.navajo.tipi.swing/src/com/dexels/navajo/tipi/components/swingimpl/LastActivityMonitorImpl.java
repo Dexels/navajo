@@ -30,6 +30,4 @@ public class LastActivityMonitorImpl implements LastActivityMonitor {
         long duration = new Date().getTime() - lastActivity;
         return new Long(TimeUnit.MILLISECONDS.toHours(duration)).intValue();
     }
-    
-
 }

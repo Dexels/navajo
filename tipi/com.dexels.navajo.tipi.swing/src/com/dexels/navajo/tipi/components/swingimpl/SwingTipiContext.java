@@ -130,7 +130,7 @@ public class SwingTipiContext extends TipiContext {
                             String inactivityTitle = getErrorHandler().getInactivityTitleText();
                             String inactivityMsg = getErrorHandler().getInactivityMsgText();
                             SwingTipiContext.this.showWarning(inactivityMsg, inactivityTitle, null);
-                            SwingTipiContext.this.shutdown();
+                            SwingTipiContext.this.exit();
                         }
                         // Check every 5 minutes
                         Thread.sleep(1 * 60 * 1000);
