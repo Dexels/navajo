@@ -2,7 +2,7 @@
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0"
 	name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
-navajo.adapter
+
 	<feature version="1.4.7" name="dexels.repository" install="auto">
 		<feature version="[3.0.0,5)">eventadmin</feature>
 		<feature version="[3.0.0,5)">scr</feature>
