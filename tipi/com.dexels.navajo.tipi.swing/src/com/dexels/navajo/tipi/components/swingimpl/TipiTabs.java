@@ -166,7 +166,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 
 			final boolean visible = ((Boolean) value.value).booleanValue();
 			final TipiComponent t = (TipiComponent) component.value;
-			if (t != null) {
+			if (t != null && isChildVisible(t) != visible) {
 				runSyncInEventThread(new Runnable() {
 					@Override
 					public void run() {
