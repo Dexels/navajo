@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1558">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1562">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
@@ -24,8 +24,8 @@
 <repository location="http://repo.dexels.com/eclipse/jetty8"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.70.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.70"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.76.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.76"/>
 </location>
 </locations>
 <includeBundles>
@@ -48,6 +48,9 @@
 <plugin id="com.dexels.repository.file"/>
 <plugin id="com.dexels.repository.git"/>
 <plugin id="com.dexels.sharedconfigstore"/>
+<plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
+<plugin id="com.fasterxml.jackson.core.jackson-core"/>
+<plugin id="com.fasterxml.jackson.core.jackson-databind"/>
 <plugin id="com.google.guava"/>
 <plugin id="com.google.inject"/>
 <plugin id="com.hazelcast"/>
@@ -162,9 +165,6 @@
 <plugin id="org.apache.karaf.shell.ssh"/>
 <plugin id="org.apache.karaf.shell.table"/>
 <plugin id="org.apache.mina.core"/>
-<plugin id="org.apache.oltu.commons.encodedtoken"/>
-<plugin id="org.apache.oltu.commons.json"/>
-<plugin id="org.apache.oltu.jose.jws"/>
 <plugin id="org.apache.pdfbox"/>
 <plugin id="org.apache.pdfbox.fontbox"/>
 <plugin id="org.apache.pdfbox.jempbox"/>
@@ -225,7 +225,7 @@
 <plugin id="org.eclipse.jetty.server" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.servlets" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.util" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jgit" version="3.6.0.201411121045-m1"/>
+<plugin id="org.eclipse.jgit" version="3.1.0.201310021548-r"/>
 <plugin id="org.eclipse.jgit.archive"/>
 <plugin id="org.eclipse.jgit.java7"/>
 <plugin id="org.eclipse.jgit.pgm"/>
