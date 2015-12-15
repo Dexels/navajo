@@ -484,7 +484,7 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='sportlink.libraries' version='3.2.14'
+	<feature resolver="(obr)" name='sportlink.libraries' version='3.2.16'
 		start-level='82'>
 		<feature version="[3.0.0,4)">navajo.function</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
@@ -495,7 +495,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.functions/3.0.4
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.adapters/3.1.6
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.adapters/3.1.8
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.comp/3.0.8
 		</bundle>
