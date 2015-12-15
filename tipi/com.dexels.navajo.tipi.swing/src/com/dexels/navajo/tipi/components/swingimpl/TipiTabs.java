@@ -177,7 +177,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 						rebuildTabs();
 					}
 				});
-			} else {
+			} else if (t == null){
 				logger.debug("Sorry could not find tab");
 			}
 		}
