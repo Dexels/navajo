@@ -88,41 +88,6 @@ public class CssComponentResponderImpl implements TipiComponentInstantiatedListe
         return tipiCssMap.get(definition);
     }
 
-    @SuppressWarnings("unused")
-    private CSSEngine getCssDefinitionEngine(List<String> definitions) {
-        // CSSEngine cached = engineCache.get(definitions.toString());
-        // if(cached !=null) {
-        // return cached;
-        // }
-        List<String> cssDefList = new ArrayList<String>();
-        for (String definition : definitions) {
-            // perhaps not yet cached? Turn this off for now because it is probably a big performance drain. Do return an empty list though (prevent NPE further
-            // on)
-            if (!tipiCssMap.containsKey(definition)) {
-                try {
-                    loadCssDefinition(definition, resolveInclude(definition));
-                } catch (IOException ioe) {
-                    logger.error("Something going wrong loading CSS definitions for component " + definition);
-                    tipiCssMap.put(definition, new ArrayList<String>());
-                }
-            }
-
-            final List<String> founddefinitions = tipiCssMap.get(definition);
-            cssDefList.addAll(founddefinitions);
-
-        }
-        System.err.println("# of definitions: " + cssDefList.size());
-        for (String string : cssDefList) {
-            System.err.println(">>>>>>>>>>>\n>>>>>>>>>>>>\n" + string);
-        }
-        CSSEngine engine = prepareEngine(cssDefList);
-        engineCache.put(definitions.toString(), engine);
-
-        return engine;
-        // initializeEngine(component, styleString, styleResource, event)
-        // return definitions;
-    }
-
     private String resolveInclude(String definition) {
         return this.context.resolveInclude(definition);
     }
