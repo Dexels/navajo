@@ -130,11 +130,6 @@ public class JnlpLocalStorage implements LocalStorage {
 		FileContents fc = null;
 		try {
 			fc = ps.get(createMuffinUrl(location));
-			// if(fc!=null) {
-			// logger.debug("local entry found: "+fc.getLength()+" at location: "+location);
-			// } else {
-			// logger.debug("No local entry found at: "+location);
-			// }
 		} catch (MalformedURLException e) {
 			// logger.debug("Malformed panic blues!");
 			logger.error("Error detected",e);
