@@ -550,7 +550,7 @@
 
 
 	<feature resolver="(obr)" name='navajo.enterprise.monitor'
-		version='2.1.7'>
+		version='2.1.9'>
 		<feature version="[3.0.16,4)">navajo.enterprise.mongodb</feature>
 		<feature version="[3.0.0,4)">navajo.legacy</feature>
         <bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-core/2.6.3</bundle>
@@ -560,7 +560,7 @@
         </bundle>
         <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.sharedconfigstore/0.9.3
         </bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/5.5.12
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/5.5.16
 		</bundle>
 	</feature>
 
