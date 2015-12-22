@@ -40,10 +40,10 @@
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.jsonhttp.api/3.0.1</bundle>
 	</feature>
 
-	<feature version="1.0.6" name="dexels.consulconfig">
+	<feature version="1.0.11" name="dexels.consulconfig" >
 		<feature version="[1.4.3,2)">dexels.repository</feature>
 		<feature version="[1.0.1,2)">dexels.consulosgi</feature>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consulosgi.configlistener/1.0.9</bundle>
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consulosgi.configlistener/1.0.11</bundle>
 	</feature>
     
 	<feature version="1.0.11" name="dexels.consul.repositoryloader">
