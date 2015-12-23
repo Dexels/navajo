@@ -434,13 +434,13 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.101'>
+		version='3.0.102'>
 		<feature version="[3.0.0,4)">navajo.core</feature>
         <feature version="[3.1.0,4)">navajo.adapter</feature>
        
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.5.14
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.4.16
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.4.18
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.15
 		</bundle>
@@ -514,16 +514,16 @@
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.crystal/1.0.5</bundle> -->
 	</feature>
 
-	<feature resolver="(obr)" name='dexels.appstore' version='1.2.2'>
+	<feature resolver="(obr)" name='dexels.appstore' version='1.2.4'>
 		<feature version="[3.0.0,5)">pax-http</feature>
 		<feature version="[3.0.0,5)">eventadmin</feature>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.ant/1.9.4_1
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.core/3.0.8
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.core/3.0.9
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.ant/1.0.9
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.server/5.0.2
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.server/5.0.3
 		</bundle>
 		<bundle dependency='true'>mvn:commons-codec/commons-codec/1.10
 		</bundle>
