@@ -29,7 +29,7 @@ public class CachedHttpJnlpResourceLoader extends CachedResourceLoader {
     public CachedHttpJnlpResourceLoader(String relativePath, URL baseUrl, CookieManager cm, String id) throws UnavailableServiceException {
         boolean useJnlpLocalStorage = true;
 
-        String useJnlpLocalStorageString = getSystemProperty("jnlpLocalStorage");
+        String useJnlpLocalStorageString = getSystemProperty("jnlp.jnlpLocalStorage");
         if (useJnlpLocalStorageString != null && !useJnlpLocalStorageString.equals("")) {
             useJnlpLocalStorage = Boolean.valueOf(useJnlpLocalStorageString);
         }
