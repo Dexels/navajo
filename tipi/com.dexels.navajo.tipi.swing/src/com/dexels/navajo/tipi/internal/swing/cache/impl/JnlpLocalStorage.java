@@ -90,7 +90,7 @@ public class JnlpLocalStorage implements LocalStorage {
 			URL muffinUrl = createMuffinUrl(location);
 			fc = ps.get(muffinUrl);
 			if (fc == null) {
-				logger.debug("Not found");
+				logger.debug("Not found: {}", location);
 				return null;
 			}
 			return fc.getInputStream();
@@ -126,7 +126,7 @@ public class JnlpLocalStorage implements LocalStorage {
 
 	@Override
 	public boolean hasLocal(String location) {
-		logger.debug("Checking haslocal for location: {}",location);
+
 		FileContents fc = null;
 		try {
 			fc = ps.get(createMuffinUrl(location));
@@ -143,8 +143,6 @@ public class JnlpLocalStorage implements LocalStorage {
 			return false;
 		} else {
 			try {
-				logger.debug("Has local for: {}: length: {}, so {}",location,fc.getLength(),fc.getLength() != 0);
-
 				return fc.getLength() != 0;
 			} catch (IOException e) {
 				logger.error("Error detected",e);
@@ -176,14 +174,13 @@ public class JnlpLocalStorage implements LocalStorage {
 		}
 		if (ff == null) {
 			long grantedSize = ps.create(muffinUrl, length);
-			logger.debug("Created element: "+muffinUrl+" for size: "+ grantedSize);
 		}
 
 		fc = ps.get(muffinUrl);
 		OutputStream os = fc.getOutputStream(true);
 		copyResource(os, data);
 
-		logger.debug("Stored entry into muffinstore. Location: "+location+ " id: "+id+" muffinurl: "+muffinUrl);
+
 		// throw new IOException("JNLP Storage not yet implemeented");
 //		URL url = new URL(getCacheBaseURL(), cacheBase + relativePath);
 //		logger.info("Now retrieving: "+location);
