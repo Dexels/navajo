@@ -1,7 +1,9 @@
 package com.dexels.navajo.tipi.internal.swing.cache.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 
 import javax.jnlp.UnavailableServiceException;
 
@@ -10,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.internal.CachedResourceLoader;
 import com.dexels.navajo.tipi.internal.cache.CacheManager;
+import com.dexels.navajo.tipi.internal.cache.LocalStorage;
+import com.dexels.navajo.tipi.internal.cache.impl.FileLocalStorage;
 import com.dexels.navajo.tipi.internal.cache.impl.GeneralCacheManager;
 import com.dexels.navajo.tipi.internal.cache.impl.HttpRemoteStorage;
 import com.dexels.navajo.tipi.internal.cache.impl.LocalDigestCacheValidator;
@@ -26,9 +30,23 @@ public class CachedHttpJnlpResourceLoader extends CachedResourceLoader {
 
 	public CachedHttpJnlpResourceLoader(String relativePath, URL baseUrl,
 			CookieManager cm, String id) throws UnavailableServiceException {
+	    boolean useJnlpLocalStorage = true;
+	    String useJnlpLocalStorageString = getSystemProperty("jnlpLocalStorage");
+	    if (useJnlpLocalStorageString != null && !useJnlpLocalStorageString.equals("")) {
+	        useJnlpLocalStorage = Boolean.valueOf(useJnlpLocalStorageString);
+	    }
+	     
 		logger.info("Creating JNLP-backed local cache: relativePath: {} and id: {}",relativePath,id);
 		final LocalDigestCacheValidator cacheValidator = new LocalDigestCacheValidator();
-		final JnlpLocalStorage localstore = new JnlpLocalStorage(relativePath, cm,id);
+		final LocalStorage localstore;
+		if (useJnlpLocalStorage) {
+		    localstore = new JnlpLocalStorage(relativePath, cm,id);
+		} else {
+		    File f = new File( getSystemProperty("deployment.user.tmp"), "tipicache");
+		    logger.info("Creating local storage in {}", f.getAbsolutePath());
+		    localstore = new FileLocalStorage(f);
+		}
+
 		final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
 		cache = new GeneralCacheManager(localstore,remoteStore,cacheValidator,id);
 		cacheValidator.setId(id);
@@ -45,5 +63,13 @@ public class CachedHttpJnlpResourceLoader extends CachedResourceLoader {
 	public CacheManager getCacheManager() {
 		return cache;
 	}
+	
+	 private String getSystemProperty(String key) {        
+	        final Map<String, String>  env = System.getenv();
+	        if (env.containsKey(key)) {
+	            return env.get(key);
+	        }
+	        return System.getProperty(key);
+	    }
 
 }
