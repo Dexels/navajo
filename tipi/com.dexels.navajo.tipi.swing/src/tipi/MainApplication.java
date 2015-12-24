@@ -121,8 +121,8 @@ public class MainApplication {
 			final String def, final TipiApplet appletRoot,
 			final RootPaneContainer otherRoot) {
 
-		RepaintManager
-				.setCurrentManager(new CheckThreadViolationRepaintManager());
+//		RepaintManager
+//				.setCurrentManager(new CheckThreadViolationRepaintManager());
 		try {
 			if(SwingUtilities.isEventDispatchThread()) {
 				logger.debug("Already in EDT. This is going to cause problems.");
