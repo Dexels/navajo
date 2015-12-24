@@ -21,55 +21,53 @@ import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 
 public class CachedHttpJnlpResourceLoader extends CachedResourceLoader {
 
-	private static final long serialVersionUID = -7140275852274687914L;
-	protected final CacheManager cache;
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(CachedHttpJnlpResourceLoader.class);
-	
+    private static final long serialVersionUID = -7140275852274687914L;
+    protected final CacheManager cache;
 
-	public CachedHttpJnlpResourceLoader(String relativePath, URL baseUrl,
-			CookieManager cm, String id) throws UnavailableServiceException {
-	    boolean useJnlpLocalStorage = true;
-	    String useJnlpLocalStorageString = getSystemProperty("jnlpLocalStorage");
-	    if (useJnlpLocalStorageString != null && !useJnlpLocalStorageString.equals("")) {
-	        useJnlpLocalStorage = Boolean.valueOf(useJnlpLocalStorageString);
-	    }
-	     
-		logger.info("Creating JNLP-backed local cache: relativePath: {} and id: {}",relativePath,id);
-		final LocalDigestCacheValidator cacheValidator = new LocalDigestCacheValidator();
-		final LocalStorage localstore;
-		if (useJnlpLocalStorage) {
-		    localstore = new JnlpLocalStorage(relativePath, cm,id);
-		} else {
-		    File f = new File( getSystemProperty("deployment.user.tmp"), "tipicache");
-		    logger.info("Creating local storage in {}", f.getAbsolutePath());
-		    localstore = new FileLocalStorage(f);
-		}
+    private final static Logger logger = LoggerFactory.getLogger(CachedHttpJnlpResourceLoader.class);
 
-		final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
-		cache = new GeneralCacheManager(localstore,remoteStore,cacheValidator,id);
-		cacheValidator.setId(id);
-		cacheValidator.setLocalStorage(localstore);
-		cacheValidator.setRemoteStorage(remoteStore);
-		try {
-			cacheValidator.activate();
-		} catch (IOException e) {
-			logger.error("Error: ", e);
-		}
-	}
+    public CachedHttpJnlpResourceLoader(String relativePath, URL baseUrl, CookieManager cm, String id) throws UnavailableServiceException {
+        boolean useJnlpLocalStorage = true;
 
-	@Override
-	public CacheManager getCacheManager() {
-		return cache;
-	}
-	
-	 private String getSystemProperty(String key) {        
-	        final Map<String, String>  env = System.getenv();
-	        if (env.containsKey(key)) {
-	            return env.get(key);
-	        }
-	        return System.getProperty(key);
-	    }
+        String useJnlpLocalStorageString = getSystemProperty("jnlpLocalStorage");
+        if (useJnlpLocalStorageString != null && !useJnlpLocalStorageString.equals("")) {
+            useJnlpLocalStorage = Boolean.valueOf(useJnlpLocalStorageString);
+        }
+
+        logger.info("Creating JNLP-backed local cache: relativePath: {} id: {} useJnlpLocalStorageString: {}", relativePath, id, useJnlpLocalStorageString);
+        final LocalDigestCacheValidator cacheValidator = new LocalDigestCacheValidator();
+        final LocalStorage localstore;
+        if (useJnlpLocalStorage) {
+            localstore = new JnlpLocalStorage(relativePath, cm, id);
+        } else {
+            File f = new File(getSystemProperty("deployment.user.tmp"), "tipicache");
+            logger.info("Creating local storage in {}", f.getAbsolutePath());
+            localstore = new FileLocalStorage(f);
+        }
+
+        final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
+        cache = new GeneralCacheManager(localstore, remoteStore, cacheValidator, id);
+        cacheValidator.setId(id);
+        cacheValidator.setLocalStorage(localstore);
+        cacheValidator.setRemoteStorage(remoteStore);
+        try {
+            cacheValidator.activate();
+        } catch (IOException e) {
+            logger.error("Error: ", e);
+        }
+    }
+
+    @Override
+    public CacheManager getCacheManager() {
+        return cache;
+    }
+
+    private String getSystemProperty(String key) {
+        final Map<String, String> env = System.getenv();
+        if (env.containsKey(key)) {
+            return env.get(key);
+        }
+        return System.getProperty(key);
+    }
 
 }
