@@ -11,6 +11,7 @@
 	<modules>
 	    <module>../../com.dexels.navajo.version</module>
 		<module>../../com.dexels.navajo.document</module>
+		<module>../../com.dexels.navajo.document.stream</module>
 		<module>../../com.dexels.navajo.client</module>
 		<module>../../com.dexels.navajo.client.jabber</module>
 		<module>../../com.dexels.navajo.core</module>
