@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1630">
+<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1634">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
@@ -219,8 +219,8 @@
 <plugin id="org.eclipse.equinox.supplement"/>
 <plugin id="org.eclipse.equinox.util"/>
 <plugin id="org.eclipse.jetty.annotations" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jetty.client" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.client" version="8.1.11.v20130520"/>
+<plugin id="org.eclipse.jetty.client" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.continuation" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.http" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.io" version="8.1.11.v20130520"/>
@@ -230,8 +230,10 @@
 <plugin id="org.eclipse.jetty.security" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.server" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.servlets" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jetty.util" version="8.1.11.v20130520"/>
 <plugin id="org.eclipse.jetty.util" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.util" version="8.1.11.v20130520"/>
+<plugin id="org.eclipse.jetty.websocket"/>
+<plugin id="org.eclipse.jetty.websocket.api"/>
 <plugin id="org.eclipse.jgit" version="4.1.0.201509280440-r"/>
 <plugin id="org.eclipse.jgit.archive"/>
 <plugin id="org.eclipse.jgit.http.server"/>
