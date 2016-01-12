@@ -2,6 +2,7 @@ package com.dexels.navajo.listeners.stream.script;
 
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
+import rx.Observable;
 import rx.Subscriber;
 
 public class ScriptExample extends Subscriber<NavajoStreamEvent> {
@@ -10,6 +11,7 @@ public class ScriptExample extends Subscriber<NavajoStreamEvent> {
 	
 	public ScriptExample(Subscriber<NavajoStreamEvent> outputSubscriber) {
 		this.outputSubscriber = outputSubscriber;
+		Observable<T>.create(s->{});
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jitu.rx.servlet.ObservableServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

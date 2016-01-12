@@ -16,6 +16,8 @@ public class ObservableXmlFeeder {
 	private Subscriber<? super XMLEvent> currentSubscriber;
 
 	public ObservableXmlFeeder() {
+		
+		System.err.println("CREATED!");
 		XmlInputHandler handler = new XmlInputHandler() {
 
 			@Override
@@ -51,6 +53,7 @@ public class ObservableXmlFeeder {
 
 	public Observable<XMLEvent> feed(byte[] bytes) {
 		return Observable.<XMLEvent> create(subscriber -> {
+			System.err.println("SUBSCRIBED: "+subscriber.hashCode());
 			ObservableXmlFeeder.this.currentSubscriber = subscriber;
 			if(bytes.length==0) {
 				subscriber.onCompleted();
