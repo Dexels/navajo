@@ -3,7 +3,7 @@
 		cpuload="-1.0" requestParseTime="0" threadCount="0" processingTime="126"
 		threadName="normalPool_9" queueTime="0" accessId="1451723060685-2728047"
 		afterServiceTime="0" beforeServiceTime="0" postTime="0" serverTime="126">
-		<transaction rpc_pwd="" rpc_name="ClubQuery" rpc_usr="username" />
+		<transaction rpc_pwd="pw" rpc_name="ClubQuery" rpc_usr="username" />
 		<callback />
 		<client />
 	</header>

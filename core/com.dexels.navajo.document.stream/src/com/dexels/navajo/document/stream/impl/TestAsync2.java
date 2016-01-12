@@ -3,13 +3,17 @@ package com.dexels.navajo.document.stream.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 
 import javax.xml.stream.XMLStreamException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.stream.NavajoStreamCollector;;
+import com.dexels.navajo.document.stream.NavajoStreamCollector;
+import com.dexels.navajo.document.stream.ObservableOutputStream;
+import com.dexels.navajo.document.stream.xml.ObservableNavajoParser;
+import com.dexels.navajo.document.stream.xml.ObservableXmlFeeder;;
 
 public class TestAsync2 {
 
@@ -19,7 +23,7 @@ public class TestAsync2 {
 
 		ObservableOutputStream oos = new ObservableOutputStream();
 		ObservableXmlFeeder oxf = new ObservableXmlFeeder();
-		ObservableNavajoParser onp = new ObservableNavajoParser();
+		ObservableNavajoParser onp = new ObservableNavajoParser(Collections.emptyMap());
 		NavajoStreamCollector nsc = new NavajoStreamCollector();
 		oos.getObservable()
 //				 .doOnNext(b->System.err.println("Bytes: "+new String(b)))
@@ -30,10 +34,10 @@ public class TestAsync2 {
 				.flatMap(navajoEvents -> nsc.feed(navajoEvents))
 				// .doOnNext(navajo->navajo.write(System.err))
 				.subscribe(ar -> System.err.println("Print: " + ar));
-		oos.getObservable().connect();
+//		oos.getObservable();
 		streamBytes(TestAsync2.class.getClassLoader().getResourceAsStream("tml.xml"), 1, 0, oos);
 	}
-
+	
 	private static void streamBytes(InputStream resourceAsStream, int bufferSize, int sleep, OutputStream oos) {
 		byte[] buffer = new byte[bufferSize];
 		new Thread() {

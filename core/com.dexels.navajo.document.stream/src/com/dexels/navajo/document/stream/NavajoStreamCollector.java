@@ -5,13 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.stream.events.ArrayElement;
-import com.dexels.navajo.document.stream.events.ArrayStart;
-import com.dexels.navajo.document.stream.events.HeaderEvent;
-import com.dexels.navajo.document.stream.events.MessageEvent;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
 import rx.Observable;
@@ -46,21 +43,18 @@ public class NavajoStreamCollector {
 	public Navajo processNavajoEvent(NavajoStreamEvent n) {
 		switch (n.type()) {
 		case HEADER:
-			assemble.addHeader(((HeaderEvent) (n)).getHeader().copy(assemble));
+			assemble.addHeader(((Header)n.getBody()).copy(assemble));
 			return null;
 		case MESSAGE:
-			MessageEvent m = (MessageEvent)n;
-			deferredMessages.put(m.getPath(), m.getMessage());
-			deferredPaths.add(m.getPath());
+			deferredMessages.put(n.getPath(), (Message) n.getBody());
+			deferredPaths.add(n.getPath());
 			return null;
 		case ARRAY_START:
-			ArrayStart as = (ArrayStart)n;
-			deferredMessages.put(as.getPath(), as.getMessage());
-			deferredPaths.add(as.getPath());
+			deferredMessages.put(n.getPath(), (Message) n.getBody());
+			deferredPaths.add(n.getPath());
 			return null;
 		case ARRAY_ELEMENT:
-			ArrayElement e = (ArrayElement)n;
-			deferredMessages.get(e.getPath()).addElement(e.getMessage());
+			deferredMessages.get(n.getPath()).addElement((Message) n.getBody());
 			return null;
 		case NAVAJO_DONE:
 			return completeNavajo();
@@ -111,14 +105,13 @@ public class NavajoStreamCollector {
 	}
 	
 	public Observable<Navajo> feed(NavajoStreamEvent streamEvents) {
-			Observable<Navajo> currentObservable = Observable.<Navajo>create(subscriber->{
-				NavajoStreamCollector.this.currentSubscriber = subscriber;
-				final Navajo result = processNavajoEvent(streamEvents);
-				if(result!=null) {
-					subscriber.onNext(result);
-				}
-			});
-			return currentObservable;
+		return Observable.<Navajo> create(subscriber -> {
+			NavajoStreamCollector.this.currentSubscriber = subscriber;
+			final Navajo result = processNavajoEvent(streamEvents);
+			if (result != null) {
+				subscriber.onNext(result);
+			}
+		});
 	}
 
 }

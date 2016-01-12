@@ -1,7 +1,8 @@
-package com.dexels.navajo.document.stream.impl;
+package com.dexels.navajo.document.stream.xml;
 
 import java.util.Map;
 
+import com.dexels.navajo.document.stream.impl.SaxXmlFeeder;
 import com.dexels.navajo.document.stream.xml.XMLEvent;
 import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
 import com.dexels.navajo.document.stream.xml.XmlInputHandler;

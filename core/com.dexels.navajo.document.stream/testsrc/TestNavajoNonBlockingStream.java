@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,10 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.stream.NavajoStreamCollector;
-import com.dexels.navajo.document.stream.impl.ObservableNavajoParser;
-import com.dexels.navajo.document.stream.impl.ObservableOutputStream;
-import com.dexels.navajo.document.stream.impl.ObservableXmlFeeder;
+import com.dexels.navajo.document.stream.ObservableOutputStream;
 import com.dexels.navajo.document.stream.impl.TestAsync2;
+import com.dexels.navajo.document.stream.xml.ObservableNavajoParser;
+import com.dexels.navajo.document.stream.xml.ObservableXmlFeeder;
 
 import rx.Observable;
 
@@ -29,10 +30,13 @@ public class TestNavajoNonBlockingStream {
 
 		ObservableOutputStream oos = new ObservableOutputStream();
 		Observable<byte[]> bytecount = oos.getObservable()
-				 .doOnNext(b->System.err.println("Bytes: "+new String(b)));
-//				 .doOnTerminate(()->System.err.println("Terminate!"))
+				 .doOnNext(b->System.err.println("Bytes: "+new String(b))
+				
+		);
+				
+		//				 .doOnTerminate(()->System.err.println("Terminate!"))
 //			.count();
-		oos.getObservable().connect();
+		oos.getObservable();
 
 		streamBytes(getTestInput(), 1,false, 0, oos);
 		
@@ -45,7 +49,7 @@ public class TestNavajoNonBlockingStream {
 
 		ObservableOutputStream oos = new ObservableOutputStream();
 		ObservableXmlFeeder oxf = new ObservableXmlFeeder();
-		ObservableNavajoParser onp = new ObservableNavajoParser();
+		ObservableNavajoParser onp = new ObservableNavajoParser(Collections.emptyMap());
 		NavajoStreamCollector nsc = new NavajoStreamCollector();
 		oos.getObservable()
 				// .doOnNext(b->System.err.println("Bytes: "+new String(b)))
@@ -56,7 +60,7 @@ public class TestNavajoNonBlockingStream {
 				.flatMap(navajoEvents -> nsc.feed(navajoEvents))
 				// .doOnNext(navajo->navajo.write(System.err))
 				.subscribe(ar -> System.err.println("Print: " + ar));
-		oos.getObservable().connect();
+		oos.getObservable();
 		streamBytes(getTestInput(), 100,false, 0, oos);
 	}
 

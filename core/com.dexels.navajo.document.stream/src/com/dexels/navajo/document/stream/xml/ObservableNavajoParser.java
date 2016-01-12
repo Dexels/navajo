@@ -1,19 +1,15 @@
-package com.dexels.navajo.document.stream.impl;
+package com.dexels.navajo.document.stream.xml;
+
+import java.util.Map;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.stream.NavajoStreamHandler;
-import com.dexels.navajo.document.stream.events.ArrayDone;
-import com.dexels.navajo.document.stream.events.ArrayElement;
-import com.dexels.navajo.document.stream.events.ArrayStart;
-import com.dexels.navajo.document.stream.events.HeaderEvent;
-import com.dexels.navajo.document.stream.events.MessageEvent;
-import com.dexels.navajo.document.stream.events.NavajoDone;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.navajo.document.stream.xml.XMLEvent;
+import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
+import com.dexels.navajo.document.stream.impl.StreamSaxHandler;
 
 import rx.Observable;
-import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 
 public class ObservableNavajoParser  {
@@ -21,38 +17,37 @@ public class ObservableNavajoParser  {
 	private Subscriber<? super NavajoStreamEvent> currentSubscriber;
 	private StreamSaxHandler feeder;
 
-	public ObservableNavajoParser() {
-
+	public ObservableNavajoParser(Map<String,Object> attributes) {
 		this.feeder = new StreamSaxHandler(new NavajoStreamHandler(){
 
 			@Override
 			public void messageDone(Message msg, String path) {
-				currentSubscriber.onNext(new MessageEvent(msg, path));
+				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.MESSAGE,msg,attributes));
 			}
 
 			@Override
 			public void arrayStarted(Message msg, String path) {
-				currentSubscriber.onNext(new ArrayStart(msg, path));
+				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_START,msg,attributes));
 			}
 
 			@Override
 			public void arrayElement(Message msg, String path) {
-				currentSubscriber.onNext(new ArrayElement(msg, path));
+				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_ELEMENT, msg,attributes));
 			}
 
 			@Override
 			public void arrayDone(String path) {
-				currentSubscriber.onNext(new ArrayDone(path));
+				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_DONE,null, attributes));
 			}
 
 			@Override
 			public void header(Header h) {
-				currentSubscriber.onNext(new HeaderEvent(h));
+				currentSubscriber.onNext(new NavajoStreamEvent(null,NavajoEventTypes.HEADER,h,attributes));
 			}
 
 			@Override
 			public void navajoDone() {
-				currentSubscriber.onNext(new NavajoDone());
+				currentSubscriber.onNext(new NavajoStreamEvent(null,NavajoEventTypes.NAVAJO_DONE,null, attributes));
 //				currentSubscriber.onCompleted();
 				
 			}});
@@ -60,9 +55,7 @@ public class ObservableNavajoParser  {
 //		this.feeder = new SaxXmlFeeder(handler);
 	}
 	public Observable<NavajoStreamEvent> feed(final XMLEvent xmlEvent) {
-		Observable<NavajoStreamEvent> currentObservable = Observable.<NavajoStreamEvent>create(new OnSubscribe<NavajoStreamEvent>() {
-			@Override
-			public void call(Subscriber<? super NavajoStreamEvent> subscriber) {
+		return Observable.<NavajoStreamEvent>create(subscriber-> {
 				ObservableNavajoParser.this.currentSubscriber = subscriber;
 				switch(xmlEvent.getType()) {
 					case START_DOCUMENT:
@@ -82,9 +75,7 @@ public class ObservableNavajoParser  {
 						ObservableNavajoParser.this.feeder.text(xmlEvent.getText());
 						break;
 				}
-			}
 		});
-	return currentObservable;
 	}
 
 }
