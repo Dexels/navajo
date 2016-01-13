@@ -66,7 +66,6 @@ public class ElementCommand implements ArticleCommand {
 
 		Property p = current.getProperty(propertyName);
 		if(p==null) {
-			current.write(System.err);
 			throw new ArticleException("No property: "+propertyName+" found in current navajo.");
 		}
 		
