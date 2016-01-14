@@ -2001,4 +2001,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         return Collections.unmodifiableMap(result);
     }
 
+	@Override
+	public void printElement(final Writer sw, int indent) throws IOException {
+
+		// Do not serialized message that have mode="ignore" or messages that
+		// start with "__" (reserved for internal messages)
+		if (Message.MSG_MODE_IGNORE.equals(getMode())) {
+			return;
+		}
+		super.printElement(sw, indent);
+	}
 }

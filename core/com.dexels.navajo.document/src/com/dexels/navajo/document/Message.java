@@ -570,6 +570,16 @@ public interface Message
 	 */
 	public Map<String, Object> getValueMap();
 
+	/**
+	 * Write the whole object to a Writer
+	 * @param sw
+	 * @param indent
+	 * @throws IOException
+	 */
+	public void printElement(final Writer sw, int indent) throws IOException;
 
+	public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) throws IOException ;
+	public void printBody(final Writer sw, int indent) throws IOException;
+	public void printCloseTag(final Writer sw, int indent) throws IOException;
 
 }
