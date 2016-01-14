@@ -1,67 +1,64 @@
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.util.Collections;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.stream.NavajoDomStreamer;
 import com.dexels.navajo.document.stream.NavajoStreamCollector;
+import com.dexels.navajo.document.stream.NavajoStreamSerializer;
 import com.dexels.navajo.document.stream.ObservableOutputStream;
 import com.dexels.navajo.document.stream.impl.TestAsync2;
+import com.dexels.navajo.document.stream.impl.TestAsync3;
 import com.dexels.navajo.document.stream.xml.ObservableNavajoParser;
 import com.dexels.navajo.document.stream.xml.ObservableXmlFeeder;
 
 import rx.Observable;
+import rx.Subscriber;
 
 public class TestNavajoNonBlockingStream {
 
 	private final static Logger logger = LoggerFactory.getLogger(TestNavajoNonBlockingStream.class);
+	private Subscriber<? super Navajo> sub;
 	
 	@Before
 	public void setup() {
 		
 	}
 	
-	@Test
-	public void testBytes() throws Exception {
-
-		ObservableOutputStream oos = new ObservableOutputStream();
-		Observable<byte[]> bytecount = oos.getObservable()
-				 .doOnNext(b->System.err.println("Bytes: "+new String(b))
-				
-		);
-				
-		//				 .doOnTerminate(()->System.err.println("Terminate!"))
-//			.count();
-		oos.getObservable();
-
-		streamBytes(getTestInput(), 1,false, 0, oos);
-		
-//		Assert.assertEquals(1595+2,(int)bytecount.toBlocking().first());
-		
-	}
 
 	@Test
-	public void testXml() throws Exception {
+	public void testDomStreamerAndCollector() throws Exception {
 
-		ObservableOutputStream oos = new ObservableOutputStream();
+		Navajo baseTml = NavajoFactory.getInstance().createNavajo(TestAsync3.class.getClassLoader().getResourceAsStream("tml.xml"));
+		
 		ObservableXmlFeeder oxf = new ObservableXmlFeeder();
 		ObservableNavajoParser onp = new ObservableNavajoParser(Collections.emptyMap());
 		NavajoStreamCollector nsc = new NavajoStreamCollector();
-		oos.getObservable()
-				// .doOnNext(b->System.err.println("Bytes: "+new String(b)))
-				// .doOnTerminate(()->System.err.println("Terminate!"))
-				.flatMap(bytes -> oxf.feed(bytes))
-				// .doOnNext(b->System.err.println("XMLElement: "+b))
-				.flatMap(xmlEvents -> onp.feed(xmlEvents)).doOnNext(b -> System.err.println("Navajo events: " + b))
-				.flatMap(navajoEvents -> nsc.feed(navajoEvents))
-				// .doOnNext(navajo->navajo.write(System.err))
-				.subscribe(ar -> System.err.println("Print: " + ar));
-		oos.getObservable();
-		streamBytes(getTestInput(), 100,false, 0, oos);
+		NavajoDomStreamer domStreamer = new NavajoDomStreamer();
+		NavajoStreamSerializer serializer = new NavajoStreamSerializer();
+		Navajo result = Observable.<Navajo>create(subscribe->{
+			sub = subscribe;
+			sub.onNext(baseTml);	
+
+			})
+			.flatMap(navajo -> domStreamer.feed(navajo))
+			.flatMap(navajoEvent-> nsc.feed(navajoEvent)).toBlocking().first();
+		
+		StringWriter sw1 = new StringWriter();
+		baseTml.write(sw1);
+		StringWriter sw2 = new StringWriter();
+		baseTml.write(sw2);
+		Assert.assertEquals(sw1.toString(), sw2.toString());
+
 	}
 
 	

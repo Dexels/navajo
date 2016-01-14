@@ -26,21 +26,33 @@ public class NavajoStreamCollector {
 	public NavajoStreamCollector() {
 	}
 
-	public Navajo completeNavajo() {
+	public Observable<Navajo> feed(final NavajoStreamEvent streamEvents) {
+		return Observable.create(subscribe->{
+			processNavajoEvent(streamEvents,subscribe);
+		});
+	}
+	
+	
+	
+	public Navajo completeNavajo(Subscriber<? super Navajo> subscribe) {
 		try {
 			for (String path : deferredPaths) {
-				addMessage(deferredMessages.get(path), path);
+				System.err.println("ADDING: "+path);
+				Message message = deferredMessages.get(path);
+				message.write(System.err);
+				addMessage(message, path);
 			} 
 			assemble.write(System.err);
-			currentSubscriber.onNext(assemble);
-			currentSubscriber.onCompleted();
+			subscribe.onNext(assemble);
+			subscribe.onCompleted();
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		return assemble;
 	}
 
-	public Navajo processNavajoEvent(NavajoStreamEvent n) {
+	public Navajo processNavajoEvent(NavajoStreamEvent n, Subscriber<? super Navajo> subscribe) {
+		System.err.println("RECEIVED: "+n.type());
 		switch (n.type()) {
 		case HEADER:
 			assemble.addHeader(((Header)n.getBody()).copy(assemble));
@@ -49,7 +61,7 @@ public class NavajoStreamCollector {
 			deferredMessages.put(n.getPath(), (Message) n.getBody());
 			deferredPaths.add(n.getPath());
 			return null;
-		case ARRAY_START:
+		case ARRAY_STARTED:
 			deferredMessages.put(n.getPath(), (Message) n.getBody());
 			deferredPaths.add(n.getPath());
 			return null;
@@ -57,7 +69,7 @@ public class NavajoStreamCollector {
 			deferredMessages.get(n.getPath()).addElement((Message) n.getBody());
 			return null;
 		case NAVAJO_DONE:
-			return completeNavajo();
+			return completeNavajo(subscribe);
 		default:
 			break;
 		}
@@ -103,15 +115,6 @@ public class NavajoStreamCollector {
 		}
 		return result.toString();
 	}
-	
-	public Observable<Navajo> feed(NavajoStreamEvent streamEvents) {
-		return Observable.<Navajo> create(subscriber -> {
-			NavajoStreamCollector.this.currentSubscriber = subscriber;
-			final Navajo result = processNavajoEvent(streamEvents);
-			if (result != null) {
-				subscriber.onNext(result);
-			}
-		});
-	}
+
 
 }

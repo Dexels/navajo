@@ -58,10 +58,16 @@ public final class StreamSaxHandler implements XmlInputHandler {
         // Unescape all the shit.
         if (tag.equals("tml")) {
             currentDocument = NavajoFactory.getInstance().createNavajo();
+        	handler.navajoStart();
+
             return;
         }
         if (tag.equals("message")) {
-            parseMessage(h);
+//        	String path = getPath();
+        	// beware refactoring, parseMessage influences getPath
+        	Message msg = parseMessage(h);
+        	handler.messageStarted(msg, getPath());
+
             return;
         }
         if (tag.equals("property")) {
@@ -355,7 +361,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
       }
     
 
-    private final void parseMessage(Map<String,String> h) throws NavajoException {
+    private final Message parseMessage(Map<String,String> h) throws NavajoException {
         String name = h.get("name");
         String type = h.get("type");
         String orderby = h.get("orderby");
@@ -400,6 +406,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
           if(m.getType().equals(Message.MSG_TYPE_ARRAY)) {
         	  handler.arrayStarted(m,getPath());
           }
+          return m;
 //        logger.info("Stack: "+messageStack);
     }
 
@@ -428,7 +435,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
             if(Message.MSG_TYPE_DEFINITION.equals(m.getType())) {
             	messageStack.peek().setDefinitionMessage(m);
             } else if (Message.MSG_TYPE_ARRAY.equals(m.getType())) {
-            	handler.arrayDone(path);
+            	handler.arrayDone(m,path);
             } else {
             	if(!messageStack.isEmpty() && Message.MSG_TYPE_ARRAY.equals(messageStack.peek().getType())) {
             		Message definitionMessage = messageStack.peek().getDefinitionMessage();

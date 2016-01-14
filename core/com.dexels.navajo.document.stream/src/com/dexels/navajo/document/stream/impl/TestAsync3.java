@@ -9,6 +9,9 @@ import javax.xml.stream.XMLStreamException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.NavajoDomStreamer;
 import com.dexels.navajo.document.stream.NavajoStreamCollector;
 import com.dexels.navajo.document.stream.NavajoStreamSerializer;
@@ -19,35 +22,34 @@ import com.dexels.navajo.document.stream.xml.ObservableXmlFeeder;
 import rx.Observable;
 import rx.Subscriber;;
 
-public class TestAsync2 {
+public class TestAsync3 {
 
-	private final static Logger logger = LoggerFactory.getLogger(TestAsync2.class);
-	private static Subscriber<? super byte[]> sub;
+	private final static Logger logger = LoggerFactory.getLogger(TestAsync3.class);
+	private static Subscriber<? super Navajo> sub;
 	public static void main(String[] args) throws XMLStreamException, IOException, InterruptedException {
 
 //		ObservableOutputStream oos = null;
+		Navajo baseTml = NavajoFactory.getInstance().createNavajo(TestAsync3.class.getClassLoader().getResourceAsStream("tml.xml"));
 		
 		ObservableXmlFeeder oxf = new ObservableXmlFeeder();
 		ObservableNavajoParser onp = new ObservableNavajoParser(Collections.emptyMap());
 		NavajoStreamCollector nsc = new NavajoStreamCollector();
 		NavajoDomStreamer domStreamer = new NavajoDomStreamer();
 		NavajoStreamSerializer serializer = new NavajoStreamSerializer();
-		Observable.<byte[]>create(subscribe->{
+		Observable.<Navajo>create(subscribe->{
 			sub = subscribe;
 		})
-			.flatMap(bytes -> oxf.feed(bytes))
-			// .doOnNext(b->System.err.println("XMLElement: "+b))
-			.flatMap(xmlEvents -> onp.feed(xmlEvents))
-//			.doOnNext(b -> System.err.println("Navajo events: " + b))
-			.flatMap(navajoEvents->nsc.feed(navajoEvents))
-			.flatMap(navajo->domStreamer.feed(navajo))
-			.flatMap(navajoEvents->serializer.feed(navajoEvents))
-//			.doOnNext(b -> System.err.println("Bytes: " + new String(b)))
-				// .doOnNext(navajo->navajo.write(System.err))
-				.subscribe(ar -> new String(ar));
+			.flatMap(navajo -> domStreamer.feed(navajo))
+			.flatMap(navajoEvent-> nsc.feed(navajoEvent))
+			.subscribe(ar -> { System.err.println(ar); ar.write(System.err);
+//				if(ar.getBody()!=null && ar.getBody() instanceof Message) {
+//					Message m = (Message)ar.getBody();
+//					m.write(System.err);
+//				}
+			});
 //		oos.getObservable();
-			streamBytes(TestAsync2.class.getClassLoader().getResourceAsStream("tml.xml"), 10, 0, sub);
-
+//			streamBytes(TestAsync3.class.getClassLoader().getResourceAsStream("tml.xml"), 10, 0, sub);
+		sub.onNext(baseTml);
 	}
 	
 	private static void streamBytes(InputStream resourceAsStream, int bufferSize, int sleep, Subscriber<? super byte[]> sub) {

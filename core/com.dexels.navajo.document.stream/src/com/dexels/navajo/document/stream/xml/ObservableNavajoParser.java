@@ -27,17 +27,22 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void arrayStarted(Message msg, String path) {
-				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_START,msg,attributes));
+				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_STARTED,msg,attributes));
 			}
 
+			@Override
+			public void arrayElementStarted(Message msg, String path) {
+				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_ELEMENT_STARTED, msg,attributes));
+				
+			}
 			@Override
 			public void arrayElement(Message msg, String path) {
 				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_ELEMENT, msg,attributes));
 			}
 
 			@Override
-			public void arrayDone(String path) {
-				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_DONE,null, attributes));
+			public void arrayDone(Message msg, String path) {
+				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_DONE,msg, attributes));
 			}
 
 			@Override
@@ -48,9 +53,21 @@ public class ObservableNavajoParser  {
 			@Override
 			public void navajoDone() {
 				currentSubscriber.onNext(new NavajoStreamEvent(null,NavajoEventTypes.NAVAJO_DONE,null, attributes));
-//				currentSubscriber.onCompleted();
 				
-			}});
+			}
+
+			@Override
+			public void messageStarted(Message element, String path) {
+				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.MESSAGE_STARTED,element, attributes));
+				
+			}
+
+			@Override
+			public void navajoStart() {
+				currentSubscriber.onNext(new NavajoStreamEvent(null,NavajoEventTypes.NAVAJO_STARTED,null, attributes));
+				
+			}
+});
 		
 //		this.feeder = new SaxXmlFeeder(handler);
 	}

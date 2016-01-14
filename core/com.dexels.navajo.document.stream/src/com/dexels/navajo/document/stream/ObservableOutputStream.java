@@ -7,27 +7,19 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import rx.Observable;
 import rx.Subscriber;
 
 public class ObservableOutputStream extends OutputStream {
 
-	private final Observable<byte[]> observable;
 	private Subscriber<? super byte[]> subscriber = null;
 	private int buffersize;
 	
 	private final static Logger logger = LoggerFactory.getLogger(ObservableOutputStream.class);
 
 	
-	public ObservableOutputStream(final int buffersize) {
+	public ObservableOutputStream(Subscriber<? super byte[]> subscriber, int buffersize) {
 		this.buffersize = buffersize;
-		this.observable = Observable.<byte[]>create(s->{
-				subscriber = s;
-			});
-	}
-	
-	public Observable<byte[]> getObservable() {
-		return observable;
+		this.subscriber = subscriber;
 	}
 
 	public Subscriber<? super byte[]> getSubscriber() {

@@ -1,7 +1,9 @@
 package com.dexels.navajo.document.stream.events;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NavajoStreamEvent {
@@ -17,9 +19,12 @@ public class NavajoStreamEvent {
 		this.attributes = Collections.unmodifiableMap(attributes);
 	}
 
+	public String toString() {
+		return "Type: "+type+" path: "+path+" attributes: {"+attributes+"}";
+	}
 	
 	public enum NavajoEventTypes {
-		MESSAGE,HEADER,ARRAY_START,ARRAY_ELEMENT,ARRAY_DONE,NAVAJO_DONE
+		MESSAGE_STARTED,MESSAGE,HEADER,ARRAY_STARTED,ARRAY_ELEMENT,ARRAY_DONE,NAVAJO_DONE, NAVAJO_STARTED, ARRAY_ELEMENT_STARTED
 	}
 
 	public NavajoEventTypes type() {
@@ -54,6 +59,13 @@ public class NavajoStreamEvent {
 		attr.put(key, value);
 		Collections.unmodifiableMap(attr);
 		return new NavajoStreamEvent(this.path,this.type,this.body,attr); 
+	}
+	
+	public List<String> path() {
+		if(path==null) {
+			return Collections.emptyList();
+		}
+		return Arrays.asList(path.split("/"));
 	}
 //	public NavajoStreamEvent with 
 }
