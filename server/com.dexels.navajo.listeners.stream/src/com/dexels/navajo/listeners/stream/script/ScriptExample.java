@@ -11,7 +11,7 @@ public class ScriptExample extends Subscriber<NavajoStreamEvent> {
 	
 	public ScriptExample(Subscriber<NavajoStreamEvent> outputSubscriber) {
 		this.outputSubscriber = outputSubscriber;
-		Observable<T>.create(s->{});
+//		Observable<T>.create(s->{});
 	}
 
 	@Override

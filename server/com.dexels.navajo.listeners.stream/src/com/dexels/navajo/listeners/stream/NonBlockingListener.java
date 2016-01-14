@@ -1,7 +1,6 @@
 package com.dexels.navajo.listeners.stream;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jitu.rx.servlet.ObservableServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,11 +27,11 @@ import com.dexels.navajo.listeners.stream.impl.ObservableAuthenticationHandler;
 import com.dexels.navajo.listeners.stream.script.ScriptExample;
 
 import rx.Observable;
-import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 
 public class NonBlockingListener extends HttpServlet {
 
+	private static final int BUFFER_SIZE = 1024;
 	private static final long serialVersionUID = 8974688302015521319L;
 	private final static Logger logger = LoggerFactory.getLogger(NonBlockingListener.class);
 
@@ -67,8 +65,39 @@ public class NonBlockingListener extends HttpServlet {
 		
 		NavajoOutputStreamSubscriber noss = new NavajoOutputStreamSubscriber(output);		
 		
-		ObservableOutputStream stream = new ObservableOutputStream();
-		stream.getObservable()
+//		ObservableOutputStream stream = new ObservableOutputStream();
+		
+		Observable.<byte[]>create(subscribe->{
+			ObservableOutputStream stream = new ObservableOutputStream(subscribe,BUFFER_SIZE);
+
+			input.setReadListener(new ReadListener() {
+				
+				@Override
+				public void onError(Throwable arg0) {
+					logger.error("Error: ", input);
+					
+				}
+				
+				@Override
+				public void onDataAvailable() throws IOException {
+					int len = -1;
+			        byte b[] = new byte[50];
+			        while (input.isReady() && (len = input.read(b)) != -1) {
+			        	stream.write(b,0,len);
+			        }				
+			        stream.flush();
+				}
+				
+				@Override
+				public void onAllDataRead() throws IOException {
+					input.close();
+					output.write("<tml/>".getBytes());
+					output.close();
+					async.complete();
+				}
+			});
+		})
+//		stream.getObservable()
 			.flatMap(bytes -> xmlParser.feed(bytes))
 //			.doOnNext(x->System.err.println(x))
 			.flatMap(xmlEvents -> navajoParser.feed(xmlEvents))
@@ -76,32 +105,6 @@ public class NonBlockingListener extends HttpServlet {
 			.subscribe(resolveScript(authenticationHandler.getScriptName(),noss) );
 	
 		
-		input.setReadListener(new ReadListener() {
-			
-			@Override
-			public void onError(Throwable arg0) {
-				logger.error("Error: ", input);
-				
-			}
-			
-			@Override
-			public void onDataAvailable() throws IOException {
-				int len = -1;
-		        byte b[] = new byte[50];
-		        while (input.isReady() && (len = input.read(b)) != -1) {
-		        	stream.write(b,0,len);
-		        }				
-		        stream.flush();
-			}
-			
-			@Override
-			public void onAllDataRead() throws IOException {
-				input.close();
-				output.write("<tml/>".getBytes());
-				output.close();
-				async.complete();
-			}
-		});
 		
 
 
@@ -139,38 +142,4 @@ private Map<String, Object> parseHeaders(HttpServletRequest req) {
 //		    }
 //		  });
 //		}
-	
-	
-    private static Observable<byte[]> fromServletStream(final ServletInputStream input) {
-        return Observable.<byte[]>create(new OnSubscribe<byte[]>() {
-
-			@Override
-			public void call(Subscriber<? super byte[]> subscriber) {
-				input.setReadListener(new ReadListener() {
-					
-					@Override
-					public void onError(Throwable ex) {
-						subscriber.onError(ex);
-					}
-					
-					@Override
-					public void onDataAvailable() throws IOException {
-				        int len = -1;
-				        byte b[] = new byte[1024];
-				        while (input.isReady() && (len = input.read(b)) != -1) {
-				        	//subject.onNext(Arrays.copyOfRange(b, 0, len));
-				        	subscriber.onNext(Arrays.copyOfRange(b, 0, len));
-				        }				
-
-					}
-					
-					@Override
-					public void onAllDataRead() throws IOException {
-						subscriber.onCompleted();
-					}
-				});
-				
-			}});
-    }
-
 }

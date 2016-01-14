@@ -56,7 +56,7 @@ public class NavajoOutputStreamSubscriber extends Subscriber<NavajoStreamEvent> 
 				Message element = (Message) event.getBody();
 				element.write(output);
 				break;
-			case ARRAY_START:
+			case ARRAY_STARTED:
 				Message arr = (Message) event.getBody();
 				String path = event.getPath();
 				gotoPath(path);
