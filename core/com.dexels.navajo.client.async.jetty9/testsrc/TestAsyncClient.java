@@ -20,16 +20,7 @@ public class TestAsyncClient {
 	public void test() throws IOException, InterruptedException {
 
 		final ManualAsyncClient ac = new AsyncClientImpl();
-		// final AsyncClient ac = new
-		// AsyncClient("http://10.0.0.100:8080/JsSportlink/Comet", "ROOT",
-		// "ROOT");
-		// final AsyncClient ac = new
-		// AsyncClient("http://localhost:9080/JsSportlink/Comet", "ROOT",
-		// "ROOT");
-		// ac.setServer("http://penelope1.dexels.com:90/sportlink/test/knvb/Postman");
-		ac.setServer("https://source.dexels.com/test/PostmanLegacy");
-		ac.setUsername("test");
-		ac.setPassword("");
+
 //		myClient.setClientCertificate("SunX509","JKS", getClass().getClassLoader().getResourceAsStream("client.jks"), "password".toCharArray());
 		ac.setClientCertificate("SunX509", "JKS", getClass().getClassLoader().getResourceAsStream("client.jks"), "password".toCharArray());
 		final NavajoResponseHandler showOutput = new NavajoResponseHandler() {

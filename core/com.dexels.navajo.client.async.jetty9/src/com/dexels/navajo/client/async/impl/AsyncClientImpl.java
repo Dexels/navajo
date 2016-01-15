@@ -2,6 +2,7 @@ package com.dexels.navajo.client.async.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyManagementException;
@@ -77,11 +78,12 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	}
 
 	public AsyncClientImpl() {
-		client = new HttpClient();
 		// myThreadPool = new NavajoThreadPool();
 		// client.setThreadPool(myThreadPool);
 		// client.setConnectorType(HttpClient.CONNECTOR_SELECT_CHANNEL);
-		
+		final SslContextFactory factory = new SslContextFactory();
+		client = new HttpClient(factory);
+	    
 		 // max 200 concurrent connections to every address
 		client.setMaxConnectionsPerDestination(MAX_CONNECTIONS_PER_ADDRESS);
 
@@ -296,6 +298,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		if (timeout != null) {
 		    requestTimeout = timeout;
 		}
+		url = "http://reporting-test.sportlink.com/navajobirt/Postman";
 
 		client.POST(url).timeout(requestTimeout, TimeUnit.MILLISECONDS).header("Content-Length", byteArray.length + "").header("Content-Type", "text/xml; charset=utf-8")
                 .content(new BytesContentProvider(byteArray)).send(new BufferingResponseListener() {
@@ -314,14 +317,16 @@ public class AsyncClientImpl implements ManualAsyncClient {
 						return;
 					}
 //					res.getResponse()
-					ByteArrayInputStream bais = new ByteArrayInputStream(getContent());
+					byte[] content = getContent();
+					System.err.println(new String(content));
+					ByteArrayInputStream bais = new ByteArrayInputStream(content);
 					try {
 						Navajo response = NavajoFactory.getInstance().createNavajo(bais);
 						if(continuation!=null) {
 							continuation.onResponse(response);
 						}
 					} catch (RuntimeException e) {
-						logger.info("Illegal TML detected:\n"+new String(getContent()),e);
+						logger.info("Illegal TML detected:\n"+new String(content),e);
 					} finally {
 						setActualCalls(getActualCalls()-1);
 					}
@@ -333,6 +338,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	public static void main(String[] args) throws Exception {
 
 		final ManualAsyncClient ac = new AsyncClientImpl();
+		
 		final NavajoResponseHandler showOutput = new NavajoResponseHandler() {
 			@Override
 			public void onResponse(Navajo n) {
