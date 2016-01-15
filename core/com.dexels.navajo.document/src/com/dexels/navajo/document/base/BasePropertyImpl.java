@@ -1900,7 +1900,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			m.put(Property.PROPERTY_BIND, bind);
 		}
 		
-		if ( method != null ) {
+		if ( method != null && !"".equals(method) ) {
 			m.put(Property.PROPERTY_METHOD, method);
 		}
 		
