@@ -45,6 +45,7 @@ public class NavajoStreamCollector {
 			assemble.write(System.err);
 			subscribe.onNext(assemble);
 			subscribe.onCompleted();
+			System.err.println("COMPLETE!!!");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

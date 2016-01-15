@@ -23,7 +23,13 @@ public class TestAsync2 {
 
 	private final static Logger logger = LoggerFactory.getLogger(TestAsync2.class);
 	private static Subscriber<? super byte[]> sub;
+
 	public static void main(String[] args) throws XMLStreamException, IOException, InterruptedException {
+		Observable.<String>just("aap", "noot","mies").doOnEach(a->System.err.println(a.getKind()+" -> "+a.toString()))
+		.map(s->s+"ba").flatMap(f-> Observable.from(f.split("o"))).doOnCompleted(()->System.err.println("complete"))
+			.subscribe(element->System.err.println("result: "+element),e->e.printStackTrace(),()->System.err.println("done!"));
+	}
+	public static void main2(String[] args) throws XMLStreamException, IOException, InterruptedException {
 
 //		ObservableOutputStream oos = null;
 		

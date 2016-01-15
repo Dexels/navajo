@@ -42,6 +42,7 @@ public class ObservableOutputStream extends OutputStream {
 				}
 				return;
 			}
+			// chunking needed:
 			int chunksize = Math.min(len, buffersize);
 //			System.err.println("loop start");
 			while(index<len) {
@@ -66,6 +67,7 @@ public class ObservableOutputStream extends OutputStream {
 		if(subscriber!=null) {
 			subscriber.onNext(new byte[]{});
 			subscriber.onCompleted();
+			System.err.println("closing observable");
 		}
 	}
 

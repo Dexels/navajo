@@ -17,7 +17,6 @@ public class ObservableXmlFeeder {
 
 	public ObservableXmlFeeder() {
 		
-		System.err.println("CREATED!");
 		XmlInputHandler handler = new XmlInputHandler() {
 
 			@Override
@@ -45,6 +44,7 @@ public class ObservableXmlFeeder {
 			@Override
 			public void endDocument() {
 				currentSubscriber.onNext(new XMLEvent(XmlEventTypes.END_DOCUMENT, null, null));
+				currentSubscriber.onCompleted();
 			}
 		};
 
@@ -54,11 +54,11 @@ public class ObservableXmlFeeder {
 	public Observable<XMLEvent> feed(byte[] bytes) {
 		return Observable.<XMLEvent> create(subscriber -> {
 			ObservableXmlFeeder.this.currentSubscriber = subscriber;
+			feeder.feed(bytes);
 			if(bytes.length==0) {
-				subscriber.onCompleted();
-			} else {
-				feeder.feed(bytes);
+				feeder.endOfInput();
 			}
+			subscriber.onCompleted();
 		});
 	}
 

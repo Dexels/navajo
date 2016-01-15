@@ -80,7 +80,7 @@ public class ObservableNavajoParser  {
 						break;
 					case END_DOCUMENT:
 						ObservableNavajoParser.this.feeder.endDocument();
-//						ObservableNavajoParser.this.currentSubscriber.onCompleted();;
+						subscriber.onCompleted();;
 						break;
 					case START_ELEMENT:
 						ObservableNavajoParser.this.feeder.startElement(xmlEvent.getText(),xmlEvent.getAttributes());
@@ -92,6 +92,7 @@ public class ObservableNavajoParser  {
 						ObservableNavajoParser.this.feeder.text(xmlEvent.getText());
 						break;
 				}
+				subscriber.onCompleted();
 		});
 	}
 
