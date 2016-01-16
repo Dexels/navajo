@@ -1,11 +1,12 @@
 package com.dexels.navajo.document.types;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 /**
  * <p>Title: ClockTime class </p>

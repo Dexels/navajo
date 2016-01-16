@@ -1,9 +1,10 @@
 package com.dexels.navajo.document;
 
-import java.beans.*;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>Title: Navajo Product Project</p>

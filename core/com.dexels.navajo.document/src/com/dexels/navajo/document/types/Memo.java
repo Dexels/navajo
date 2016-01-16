@@ -1,6 +1,6 @@
 package com.dexels.navajo.document.types;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 /**
  * <p>

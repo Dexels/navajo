@@ -8,13 +8,16 @@ package com.dexels.navajo.document.filter;
  * @author not attributable
  * @version 1.0
  */
-
-import java.util.*;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 public final class PropertyFilter {
   private String myPropertyName;

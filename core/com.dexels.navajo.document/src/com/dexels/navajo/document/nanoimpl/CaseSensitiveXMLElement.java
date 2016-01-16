@@ -1,5 +1,5 @@
 package com.dexels.navajo.document.nanoimpl;
-import java.util.*;
+import java.util.Hashtable;
 /**
  * 
  * @author Frank Lyaruu

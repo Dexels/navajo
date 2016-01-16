@@ -1,8 +1,9 @@
 package com.dexels.navajo.document;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.dexels.navajo.document.typecheck.*;
+import com.dexels.navajo.document.typecheck.TypeChecker;
 
 /**
  * <p>Title: </p>

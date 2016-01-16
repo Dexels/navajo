@@ -24,7 +24,7 @@
  */
 package com.dexels.navajo.document;
 
-import java.util.*;
+import java.util.Random;
 
 public final class Guid {
 

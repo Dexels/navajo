@@ -1,7 +1,8 @@
 package com.dexels.navajo.document;
 
-import java.io.*;
-import java.util.*;
+import java.io.OutputStream;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>Title: Navajo Product Project</p>
