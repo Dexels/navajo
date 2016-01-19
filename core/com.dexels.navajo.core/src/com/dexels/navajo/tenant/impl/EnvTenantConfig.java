@@ -57,7 +57,7 @@ public class EnvTenantConfig implements TenantConfig {
 			}
 		}
 		String tenantlist = System.getenv("TENANT_MASTER");
-		if(tenantlist==null) {
+		if(tenantlist==null || "".equals(tenantlist)) {
 			logger.info("No setup for task tenants, setting wildcard");
 			this.wildcard = true;
 			return;
