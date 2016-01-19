@@ -384,10 +384,10 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.article' version='3.1.2'>
+	<feature resolver="(obr)" name='navajo.article' version='3.1.3'>
 		<feature version="[3.0.32,4)">navajo.server.osgi</feature>
 		<feature version="[1.0.8,2)">dexels.oauth</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/3.0.4
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/3.0.6
 		</bundle>
 	</feature>
 
@@ -519,7 +519,7 @@
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.crystal/1.0.5</bundle> -->
 	</feature>
 
-	<feature resolver="(obr)" name='dexels.appstore' version='1.2.11'>
+	<feature resolver="(obr)" name='dexels.appstore' version='1.2.12'>
 		<feature version="[3.0.0,5)">pax-http</feature>
 		<feature version="[3.0.0,5)">eventadmin</feature>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.ant/1.9.6_1
@@ -528,7 +528,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.ant/1.0.13
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.server/5.0.6
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.server/5.0.7
 		</bundle>
 		<bundle dependency='true'>mvn:commons-codec/commons-codec/1.10
 		</bundle>
