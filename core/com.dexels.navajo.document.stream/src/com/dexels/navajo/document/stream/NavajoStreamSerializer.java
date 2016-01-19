@@ -1,15 +1,14 @@
 package com.dexels.navajo.document.stream;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
@@ -36,8 +35,7 @@ public class NavajoStreamSerializer {
 				this.outputStreamWriter.flush();
 				this.outputStreamWriter.close();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				subscribe.onError(e);
 			}
 			subscribe.onCompleted();
 		});
@@ -45,37 +43,40 @@ public class NavajoStreamSerializer {
 	
 	public void processNavajoEvent(NavajoStreamEvent event, Subscriber<? super byte[]> subscribe) {
 		try {
-			
 			switch (event.type()) {
 			case MESSAGE_STARTED:
+			case MESSAGE_DEFINITION_STARTED:
 				Message mstart = (Message) event.getBody();
-				startPath(mstart, this.tagStack, outputStreamWriter);
-//				tagStack.add(mstart.getName());
+				mstart.printStartTag(outputStreamWriter, INDENT * (tagStack.size()+1),true);
+				   tagStack.add(mstart.getName());
+//				startPath(mstart, this.tagStack, outputStreamWriter);
 				break;
 			case MESSAGE:
+			case MESSAGE_DEFINITION:
 				Message m = (Message) event.getBody();
-				m.printBody(outputStreamWriter,INDENT * tagStack.size());
+				m.printBody(outputStreamWriter,INDENT * (tagStack.size()));
+				m.printCloseTag(outputStreamWriter, INDENT * tagStack.size());
 				tagStack.remove(tagStack.size()-1);
-					m.printCloseTag(outputStreamWriter, INDENT * tagStack.size());
+				m.write(System.err);
 				break;
 			case ARRAY_ELEMENT:
 				Message element = (Message) event.getBody();
-				element.printBody(outputStreamWriter, INDENT * tagStack.size());
-				element.printCloseTag(outputStreamWriter, INDENT * tagStack.size());
+				element.printBody(outputStreamWriter,  INDENT * tagStack.size());
 				tagStack.remove(tagStack.size()-1);
-
+				element.printCloseTag(outputStreamWriter,  INDENT * (tagStack.size()+1));
 				break;
 			case ARRAY_STARTED:
 //				Message arr = (Message) event.getBody();
 				break;
 			case ARRAY_DONE:
 				Message arrdone = (Message) event.getBody();
-				String donepath = event.getPath();
-				endPath(arrdone, tagStack, outputStreamWriter);
-//				endArray(donepath);
+				arrdone.printCloseTag(outputStreamWriter, INDENT*tagStack.size());
+				tagStack.remove(tagStack.size()-1);
+				
 				break;
 			case HEADER:
-				// TODO
+				Header h = (Header) event.getBody();
+				h.printElement(outputStreamWriter, INDENT);
 				break;
 			case NAVAJO_STARTED:
 				
@@ -92,20 +93,4 @@ public class NavajoStreamSerializer {
 			logger.error("Error: ", e);
 		}
 	}
-//
-//	private void startPath(String element, List<String> current, OutputStream out) throws IOException {
-//		String text = "<message name=\""+element+"\" type=\"simple\"> \n";
-//		out.write(text.getBytes());
-//	}
-//	
-	private void startPath(Message element, List<String> current, Writer out) throws IOException {
-		boolean isOpen = element.printStartTag(out, INDENT*current.size(),true);
-	   tagStack.add(element.getName());
-	}
-	private void endPath(Message m, List<String> currentStack, Writer out) throws IOException {
-		m.printCloseTag(out, INDENT*currentStack.size());
-		currentStack.remove(currentStack.size()-1);
-	}
-
-
 }

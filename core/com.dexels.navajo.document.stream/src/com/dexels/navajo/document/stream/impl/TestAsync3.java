@@ -9,7 +9,6 @@ import javax.xml.stream.XMLStreamException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.NavajoDomStreamer;
@@ -27,15 +26,10 @@ public class TestAsync3 {
 	private final static Logger logger = LoggerFactory.getLogger(TestAsync3.class);
 	private static Subscriber<? super Navajo> sub;
 	public static void main(String[] args) throws XMLStreamException, IOException, InterruptedException {
-
-//		ObservableOutputStream oos = null;
 		Navajo baseTml = NavajoFactory.getInstance().createNavajo(TestAsync3.class.getClassLoader().getResourceAsStream("tml.xml"));
 		
-		ObservableXmlFeeder oxf = new ObservableXmlFeeder();
-		ObservableNavajoParser onp = new ObservableNavajoParser(Collections.emptyMap());
 		NavajoStreamCollector nsc = new NavajoStreamCollector();
 		NavajoDomStreamer domStreamer = new NavajoDomStreamer();
-		NavajoStreamSerializer serializer = new NavajoStreamSerializer();
 		Observable.<Navajo>create(subscribe->{
 			sub = subscribe;
 		})

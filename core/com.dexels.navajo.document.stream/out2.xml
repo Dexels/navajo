@@ -4,19 +4,19 @@
       <callback/>
       <client/>
    </header>
-   <message name="Club" type="simple">
-      <message name="Accommodation" type="simple">
+   <message name="Club">
+      <message name="Accommodation">
          <property name="Name" type="string" value="Some Club" direction="out"/>
-         <property subtype="extension=dat,mime=application/unknown,handle=binary_object7886498682150802066navajo" length="13" name="Photo" type="binary">
-anVzdCBteSBicm9vbQ==
-         </property>
-         <message name="Address" type="simple">
+         <message name="Address">
             <property name="Street" type="string" value="Some Street" direction="out"/>
             <property name="ZipCode" type="string" value="1234AB" direction="out"/>
          </message>
       </message>
    </message>
    <message name="Member" type="array">
+      <message name="Member" type="definition">
+         <property name="MemberType" type="string" value="Normal" direction="out"/>
+      </message>
       <message name="Member" index="0" type="array_element">
          <property name="Name" type="string" value="Joe" direction="out"/>
       </message>
@@ -25,6 +25,7 @@ anVzdCBteSBicm9vbQ==
       </message>
       <message name="Member" index="2" type="array_element">
          <property name="Name" type="string" value="Dmitri" direction="out"/>
+         <message name="Qualifications"/>
       </message>
    </message>
    <methods/>

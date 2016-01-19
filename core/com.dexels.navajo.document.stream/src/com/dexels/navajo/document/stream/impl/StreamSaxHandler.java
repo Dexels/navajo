@@ -6,9 +6,9 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Stack;
 
 import org.dexels.utils.Base64;
@@ -47,6 +47,8 @@ public final class StreamSaxHandler implements XmlInputHandler {
 	private Writer currentBinaryWriter = null;
 	private Binary currentBinary = null; 
 
+	private final Map<String,AtomicInteger> arrayCount = new HashMap<>();
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(StreamSaxHandler.class);
 
@@ -66,8 +68,13 @@ public final class StreamSaxHandler implements XmlInputHandler {
 //        	String path = getPath();
         	// beware refactoring, parseMessage influences getPath
         	Message msg = parseMessage(h);
-        	handler.messageStarted(msg, getPath());
-
+        	
+        	String path = getPath(msg);
+        	if(Message.MSG_TYPE_ARRAY_ELEMENT.equals(msg.getType())) {
+            	handler.arrayElementStarted(msg, path);
+        	} else {
+            	handler.messageStarted(msg, path);
+        	}
             return;
         }
         if (tag.equals("property")) {
@@ -402,26 +409,42 @@ public final class StreamSaxHandler implements XmlInputHandler {
 //        	}
 //        }
           messageStack.push(m);
-          messageNameStack.push(name);
           if(m.getType().equals(Message.MSG_TYPE_ARRAY)) {
-        	  handler.arrayStarted(m,getPath());
+//              messageNameStack.push(name);
+              String path = getPath(m);
+        	  handler.arrayStarted(m,path);
+        	  arrayCount.put(path, new AtomicInteger(0));
+//              messageNameStack.push(name);
+          } else {
+        	  if(m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
+                  String path = getPath(m);
+        		  System.err.println("path: "+path);
+                  int index = arrayCount.get(path).getAndIncrement();
+                  m.setIndex(index);
+                  messageNameStack.push(name+"@"+index);
+        	  } else if (m.getType().equals(Message.MSG_TYPE_DEFINITION)) {
+                  messageNameStack.push(name+"@definition");
+        	  } else {
+                  messageNameStack.push(name);
+        	  }
+              
           }
           return m;
 //        logger.info("Stack: "+messageStack);
     }
 
 
-    private void mergeDefinitionMessage(Message currentMessage, Message def) {
-        List<Property> props = def.getAllProperties();
-        for (int i = 0; i < props.size(); i++) {
-            Property src = props.get(i);
-            Property dest = currentMessage.getProperty(src.getName());
-            if (dest==null) {
-                dest = src.copy(currentDocument);
-                currentMessage.addProperty(dest);
-            }
-        }
-    }
+//    private void mergeDefinitionMessage(Message currentMessage, Message def) {
+//        List<Property> props = def.getAllProperties();
+//        for (int i = 0; i < props.size(); i++) {
+//            Property src = props.get(i);
+//            Property dest = currentMessage.getProperty(src.getName());
+//            if (dest==null) {
+//                dest = src.copy(currentDocument);
+//                currentMessage.addProperty(dest);
+//            }
+//        }
+//    }
 
     @Override
 	public final void endElement(String tag) {
@@ -429,20 +452,22 @@ public final class StreamSaxHandler implements XmlInputHandler {
         	handler.navajoDone();
          }
         if (tag.equals("message")) {
-        	String path = getPath();
             Message m = messageStack.pop();
+        	String path = getPath(m);
             messageNameStack.pop();
             if(Message.MSG_TYPE_DEFINITION.equals(m.getType())) {
             	messageStack.peek().setDefinitionMessage(m);
+                handler.messageDone(m,path);
             } else if (Message.MSG_TYPE_ARRAY.equals(m.getType())) {
             	handler.arrayDone(m,path);
             } else {
             	if(!messageStack.isEmpty() && Message.MSG_TYPE_ARRAY.equals(messageStack.peek().getType())) {
-            		Message definitionMessage = messageStack.peek().getDefinitionMessage();
-					if(definitionMessage!=null) {
-						mergeDefinitionMessage(m, definitionMessage);
-					}
-            		handler.arrayElement(m,getPath());
+//            		Message definitionMessage = messageStack.peek().getDefinitionMessage();
+//					if(definitionMessage!=null) {
+//						mergeDefinitionMessage(m, definitionMessage);
+//					}
+            		int index = arrayCount.get(getPath(m)).get();
+            		handler.arrayElement(m,getPath(m)+"@"+index);
             	} else {
                     handler.messageDone(m,path);
             	}
@@ -496,13 +521,31 @@ public final class StreamSaxHandler implements XmlInputHandler {
         handler.navajoDone();
     }
 
-    private String getPath() {
-    	StringBuffer s = new StringBuffer();
-    	for (String string : messageNameStack) {
-    		s.append(string);
-    		s.append("/");
+    private String getPath(Message message) {
+    	StringBuilder s = new StringBuilder();
+    	for (int i = 0; i< messageNameStack.size();i++) {
+    		s.append(messageNameStack.get(i));
+    		if(i<messageNameStack.size()-1) {
+        		s.append("/");
+    		}
 		}
-    	s.deleteCharAt(s.length()-1);
+		if(message.isArrayMessage()) {
+			if(s.length()>0) {
+				s.append("/");
+			}
+			s.append(message.getName());
+		}
+
+    	System.err.println("PATH: "+s.toString());
+    	if(Message.MSG_TYPE_ARRAY_ELEMENT.equals(message.getType())) {
+    		if(s.length()!=0) {
+    			s.append("/");
+    			s.append(message.getName());
+    			s.append("@");
+    			s.append(message.getIndex());
+    		}
+    	}
+//    	s.deleteCharAt(s.length()-1);
     	return s.toString();
     }
 

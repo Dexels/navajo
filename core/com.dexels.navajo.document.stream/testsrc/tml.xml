@@ -39,7 +39,8 @@
 		<message name="Member" index="2" type="array_element">
 			<property method="" name="Name" type="string" value="Dmitri"
 				direction="out" />
-
+			<message name="Qualifications">
+			</message>
 		</message>
 	</message>
 	<methods />

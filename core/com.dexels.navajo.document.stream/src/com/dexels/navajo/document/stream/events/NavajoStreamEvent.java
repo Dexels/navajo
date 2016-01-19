@@ -24,7 +24,7 @@ public class NavajoStreamEvent {
 	}
 	
 	public enum NavajoEventTypes {
-		MESSAGE_STARTED,MESSAGE,HEADER,ARRAY_STARTED,ARRAY_ELEMENT,ARRAY_DONE,NAVAJO_DONE, NAVAJO_STARTED, ARRAY_ELEMENT_STARTED
+		MESSAGE_STARTED,MESSAGE,HEADER,ARRAY_STARTED,ARRAY_ELEMENT,ARRAY_DONE,NAVAJO_DONE, NAVAJO_STARTED, ARRAY_ELEMENT_STARTED, MESSAGE_DEFINITION_STARTED, MESSAGE_DEFINITION
 	}
 
 	public NavajoEventTypes type() {
@@ -48,10 +48,6 @@ public class NavajoStreamEvent {
 
 	public Object getBody() {
 		return body;
-	}
-	
-	private NavajoStreamEvent copy() {
-		return new NavajoStreamEvent(this.path,this.type,this.body,attributes); 
 	}
 	
 	public NavajoStreamEvent withAttribute(String key, Object value) {

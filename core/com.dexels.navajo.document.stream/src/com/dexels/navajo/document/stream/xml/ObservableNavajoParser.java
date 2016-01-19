@@ -1,6 +1,8 @@
 package com.dexels.navajo.document.stream.xml;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -16,23 +18,32 @@ public class ObservableNavajoParser  {
 	
 	private Subscriber<? super NavajoStreamEvent> currentSubscriber;
 	private StreamSaxHandler feeder;
+	private final Map<String,AtomicInteger> arrayCount = new HashMap<>();
 
 	public ObservableNavajoParser(Map<String,Object> attributes) {
 		this.feeder = new StreamSaxHandler(new NavajoStreamHandler(){
 
 			@Override
 			public void messageDone(Message msg, String path) {
-				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.MESSAGE,msg,attributes));
+				if(Message.MSG_TYPE_DEFINITION.equals(msg.getType())) {
+					currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.MESSAGE_DEFINITION,msg,attributes));
+				} else {
+					currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.MESSAGE,msg,attributes));
+				}
 			}
 
 			@Override
 			public void arrayStarted(Message msg, String path) {
+				arrayCount.put(path,new AtomicInteger(0));
 				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_STARTED,msg,attributes));
 			}
 
 			@Override
 			public void arrayElementStarted(Message msg, String path) {
-				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_ELEMENT_STARTED, msg,attributes));
+				System.err.println("PAAATH:" +path);
+				String arrayPath = path.substring(0,path.lastIndexOf('/')-1);
+				int index = arrayCount.get(arrayPath).getAndIncrement();
+				currentSubscriber.onNext(new NavajoStreamEvent(arrayPath+"@"+index,NavajoEventTypes.ARRAY_ELEMENT_STARTED, msg,attributes));
 				
 			}
 			@Override
@@ -58,7 +69,13 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void messageStarted(Message element, String path) {
-				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.MESSAGE_STARTED,element, attributes));
+				if(Message.MSG_TYPE_DEFINITION.equals(element.getType())) {
+					currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.MESSAGE_DEFINITION_STARTED,element, attributes));
+				} else if (Message.MSG_TYPE_ARRAY_ELEMENT.equals(element.getType())) {
+					currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_ELEMENT_STARTED,element, attributes));
+				} else {
+					currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.MESSAGE_STARTED,element, attributes));
+				}
 				
 			}
 
