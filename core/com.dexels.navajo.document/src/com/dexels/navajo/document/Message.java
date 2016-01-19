@@ -353,6 +353,8 @@ public interface Message
    */
   public Property getPathProperty(String property);
 
+  public String getPath();
+
   /**
    * Return a property with a specific name if it exists. Property name may include references to sub-messages.
    * Example: getProperty("mymessage/sub1/subsub/propy").

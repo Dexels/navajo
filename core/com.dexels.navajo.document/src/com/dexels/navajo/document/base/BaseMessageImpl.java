@@ -1024,6 +1024,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         }
     }
 
+    @Override
     public final String getPath() {
         if (myParent != null) {
             if (myParent.getType().equals(Message.MSG_TYPE_ARRAY)) {
@@ -1273,7 +1274,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (eTag != null) {
             m.put(Message.MSG_ETAG, eTag);
         }
-        if (myType != null) {
+        // don't write type="simple", as it's default
+        if (myType != null && !Message.MSG_TYPE_SIMPLE.equals(myType)) {
             m.put("type", myType);
             if (Message.MSG_TYPE_ARRAY_ELEMENT.equals(myType)) {
                 m.put("index", "" + myIndex);
