@@ -46,6 +46,7 @@ public class NavajoStreamSerializer {
 			switch (event.type()) {
 			case MESSAGE_STARTED:
 			case MESSAGE_DEFINITION_STARTED:
+			case ARRAY_ELEMENT_STARTED:
 				Message mstart = (Message) event.getBody();
 				mstart.printStartTag(outputStreamWriter, INDENT * (tagStack.size()+1),true);
 				   tagStack.add(mstart.getName());
@@ -54,10 +55,10 @@ public class NavajoStreamSerializer {
 			case MESSAGE:
 			case MESSAGE_DEFINITION:
 				Message m = (Message) event.getBody();
+				m.write(System.err);
 				m.printBody(outputStreamWriter,INDENT * (tagStack.size()));
 				m.printCloseTag(outputStreamWriter, INDENT * tagStack.size());
 				tagStack.remove(tagStack.size()-1);
-				m.write(System.err);
 				break;
 			case ARRAY_ELEMENT:
 				Message element = (Message) event.getBody();
@@ -71,7 +72,7 @@ public class NavajoStreamSerializer {
 			case ARRAY_DONE:
 				Message arrdone = (Message) event.getBody();
 				arrdone.printCloseTag(outputStreamWriter, INDENT*tagStack.size());
-				tagStack.remove(tagStack.size()-1);
+//				tagStack.remove(tagStack.size()-1);
 				
 				break;
 			case HEADER:

@@ -37,15 +37,13 @@ public class NavajoStreamCollector {
 	public Navajo completeNavajo(Subscriber<? super Navajo> subscribe) {
 		try {
 			for (String path : deferredPaths) {
-				System.err.println("ADDING: "+path);
 				Message message = deferredMessages.get(path);
+				System.err.println("Adding path: "+path);
 				message.write(System.err);
 				addMessage(message, path);
 			} 
-			assemble.write(System.err);
 			subscribe.onNext(assemble);
 			subscribe.onCompleted();
-			System.err.println("COMPLETE!!!");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -53,26 +51,20 @@ public class NavajoStreamCollector {
 	}
 
 	public Navajo processNavajoEvent(NavajoStreamEvent n, Subscriber<? super Navajo> subscribe) {
-		System.err.println("INCOMING: "+n.type()+" - "+n.getPath());
 		switch (n.type()) {
 		case HEADER:
 			assemble.addHeader(((Header)n.getBody()).copy(assemble));
 			return null;
 		case ARRAY_ELEMENT_STARTED:
-			System.err.println("ARRAY_ELEMENT_STARTED>>>>> "+n.getPath());
 			return null;
 		case MESSAGE_STARTED:
-			System.err.println("MESSAGE_STARTED>>>>> "+n.getPath());
 			deferredPaths.add(n.getPath());
 			return null;
 		case MESSAGE:
-			System.err.println("PUT 1>>>>> "+n.getPath());
 			deferredMessages.put(n.getPath(), (Message) n.getBody());
-			addChildrenToMessage(n.getPath(), (Message) n.getBody());
-			((Message) n.getBody()).write(System.err);
+//			addChildrenToMessage(n.getPath(), (Message) n.getBody());
 			return null;
 		case ARRAY_STARTED:
-			System.err.println("PUT 2>>>>> "+n.getPath());
 			deferredMessages.put(n.getPath(), (Message) n.getBody());
 			deferredPaths.add(n.getPath());
 			return null;
@@ -88,6 +80,7 @@ public class NavajoStreamCollector {
 
 
 		case NAVAJO_DONE:
+			System.err.println("Keys: "+deferredMessages.keySet());
 			return completeNavajo(subscribe);
 		default:
 			break;
@@ -96,20 +89,28 @@ public class NavajoStreamCollector {
 	}
 
 	
-	private void addChildrenToMessage(String path, Message body) {
-		for (String defer : deferredPaths) {
-			if(defer.startsWith(path)) {
-				// a descendant of the current message
-				String subPath = defer.substring(path.length(), defer.length());
-				if(subPath.indexOf("/")==-1) {
-					// a direct descendant
-					Message m = deferredMessages.get(defer);
-					body.addMessage(m);
-				}
-			}
-		}
-		
-	}
+//	private void addChildrenToMessage(String path, Message body) {
+//		for (String defer : deferredPaths) {
+//			if(path.equals(defer)) {
+//				System.err.println("Can not add message: "+defer+" to itself");
+//				return;
+//			}
+//			if(defer.startsWith(path)) {
+//				// a descendant of the current message
+//				String subPath = defer.substring(path.length(), defer.length());
+//				if(subPath.indexOf("/")==-1) {
+//					// a direct descendant
+//					Message m = deferredMessages.get(defer);
+//					if(body==m) {
+//						System.err.println("EEEK! ");
+//						m.write(System.err);
+//					}
+//					body.addMessage(m);
+//				}
+//			}
+//		}
+//		
+//	}
 
 	private String stripIndex(String path) {
 		int index = path.lastIndexOf('@');
@@ -121,7 +122,6 @@ public class NavajoStreamCollector {
 	}
 
 	private void addMessage(Message message, String path) {
-		System.err.println("PATH: "+path);
 		String[] pathElements = path.split("/");
 		if(pathElements.length==1) {
 			assemble.addMessage(message.copy(assemble));
@@ -132,17 +132,18 @@ public class NavajoStreamCollector {
 			if(i==0) {
 				current = assemble.getMessage(pathElements[0]);
 				if(current==null) {
-					System.err.println("GET 4>>>>> "+pathElements[0]);
-					System.err.println("GET 4b>>>>> "+stripIndex(pathElements[0]));
 					current = deferredMessages.get(stripIndex(pathElements[0]));
 					assemble.addMessage(current);
 				}
 			} else {
 				Message element = current.getMessage(pathElements[i]);
 				if(element==null) {
-//					System.err.println(">>>>> Getting: "+assemblePath(pathElements,i));
-					System.err.println("GET 5>>>>> "+assemblePath(pathElements,i));
 					element = deferredMessages.get(assemblePath(pathElements,i));
+					if(current==element) {
+						System.err.println("oh dear");
+						current.write(System.err);
+
+					}
 					current.addMessage(element);
 				}
 				current = element;
