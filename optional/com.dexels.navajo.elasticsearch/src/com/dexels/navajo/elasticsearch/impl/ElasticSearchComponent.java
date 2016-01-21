@@ -69,6 +69,7 @@ public class ElasticSearchComponent implements ElasticSearchService {
 		}
 
 	}
+	
 	@Override
 	public void insert(Message m) throws IOException {
 		ObjectNode mm = (ObjectNode) messageToJSON(m);
@@ -78,7 +79,16 @@ public class ElasticSearchComponent implements ElasticSearchService {
 			throw new IOException("Error putting to URI",e);
 		}
 	}
-	
+	@Override
+    public void insertJson(String jsonString) throws IOException {
+        ObjectNode mm =  (ObjectNode)  objectMapper.readTree(jsonString);
+	    mm.put("@timestamp", df.format(new Date()));
+        try {
+            putJSON(mm);
+        } catch (URISyntaxException e) {
+            throw new IOException("Error putting to URI",e);
+        }
+    }
 
 
 	public JsonNode messageToJSON(Message message) {
