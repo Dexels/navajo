@@ -2,6 +2,7 @@ package com.dexels.navajo.document.stream;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class NavajoStreamSerializer {
 
 //	private ObservableOutputStream observableOutputStream;
 	private List<String> tagStack = new ArrayList<>();
-	private OutputStreamWriter outputStreamWriter;
+//	private OutputStreamWriter outputStreamWriter;
 	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamSerializer.class);
 	private static final int INDENT = 3;
 
@@ -29,11 +30,11 @@ public class NavajoStreamSerializer {
 	public Observable<byte[]> feed(final NavajoStreamEvent streamEvents) {
 		return Observable.create(subscribe->{
 			ObservableOutputStream observableOutputStream = new ObservableOutputStream(subscribe,10);
-			this.outputStreamWriter = new OutputStreamWriter(observableOutputStream);
-			processNavajoEvent(streamEvents,subscribe);
+			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(observableOutputStream);
+			processNavajoEvent(streamEvents,outputStreamWriter,subscribe);
 			try {
-				this.outputStreamWriter.flush();
-				this.outputStreamWriter.close();
+				outputStreamWriter.flush();
+				outputStreamWriter.close();
 			} catch (Exception e) {
 				subscribe.onError(e);
 			}
@@ -41,13 +42,14 @@ public class NavajoStreamSerializer {
 		});
 	}
 	
-	public void processNavajoEvent(NavajoStreamEvent event, Subscriber<? super byte[]> subscribe) {
+	private void processNavajoEvent(NavajoStreamEvent event,Writer outputStreamWriter, Subscriber<? super byte[]> subscribe) {
 		try {
 			switch (event.type()) {
 			case MESSAGE_STARTED:
 			case MESSAGE_DEFINITION_STARTED:
 			case ARRAY_ELEMENT_STARTED:
 				Message mstart = (Message) event.getBody();
+				// TODO: Message should not be necessary in the body, get message name from path
 				mstart.printStartTag(outputStreamWriter, INDENT * (tagStack.size()+1),true);
 				   tagStack.add(mstart.getName());
 //				startPath(mstart, this.tagStack, outputStreamWriter);
