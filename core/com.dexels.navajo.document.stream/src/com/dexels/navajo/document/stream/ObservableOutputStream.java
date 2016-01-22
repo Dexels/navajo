@@ -67,7 +67,6 @@ public class ObservableOutputStream extends OutputStream {
 		if(subscriber!=null) {
 			subscriber.onNext(new byte[]{});
 			subscriber.onCompleted();
-			System.err.println("closing observable");
 		}
 	}
 

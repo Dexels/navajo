@@ -37,7 +37,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
     private Navajo currentDocument=null;
     private final Stack<Message> messageStack = new Stack<>();
     private final Stack<String> messageNameStack = new Stack<>();
-    private Message currentMessage = null;
+//    private Message currentMessage = null;
 
     private BasePropertyImpl currentProperty = null;
     private BaseHeaderImpl currentHeader;
@@ -296,8 +296,11 @@ public final class StreamSaxHandler implements XmlInputHandler {
     	
     }
 
+    private final Message getCurrentMessage() {
+    	return messageStack.peek();
+    }
     private final void parseProperty(Map<String,String> h) throws NavajoException {
-//        logger.info("NAME: "+(String)h.get("name"));
+        logger.info("NAME: "+(String)h.get("name"));
         String sLength = null;
         String myName = h.get(Property.PROPERTY_NAME);
         String myValue = h.get(Property.PROPERTY_VALUE);
@@ -338,8 +341,8 @@ public final class StreamSaxHandler implements XmlInputHandler {
         } else {
             currentProperty = (BasePropertyImpl) NavajoFactory.getInstance().createProperty(currentDocument, myName, type, myValue, length, description, direction, subtype);
         }
-          currentMessage.addProperty(currentProperty);
-
+          getCurrentMessage().addProperty(currentProperty);
+//          currentMessage.write(System.err);
 
           if (subType == null &&
               NavajoFactory.getInstance().getDefaultSubtypeForType(type) != null) {
@@ -349,7 +352,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
         	  currentProperty.setSubType(subType);
           }
 
-          if (type == null &&  currentMessage.isArrayMessage() ) {
+          if (type == null &&  getCurrentMessage().isArrayMessage() ) {
             logger.info("Found undefined property: " + currentProperty.getName());
           }
 
@@ -382,7 +385,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
         } else {
             m = NavajoFactory.getInstance().createMessage(currentDocument, name);
         }
-        currentMessage = m;
+//        currentMessage = m;
         if(orderby != null && !"".equals(orderby)){
           m.setOrderBy(orderby);
         }
@@ -417,11 +420,19 @@ public final class StreamSaxHandler implements XmlInputHandler {
 //              messageNameStack.push(name);
           } else {
         	  if(m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
-                  String path = getPath(m);
-        		  System.err.println("path: "+path);
-                  int index = arrayCount.get(path).getAndIncrement();
-                  m.setIndex(index);
-                  messageNameStack.push(name+"@"+index);
+                  String parentpath = getPath(m);
+                  StringBuilder sb = new StringBuilder(parentpath);
+                  if(!parentpath.equals("")) {
+                	  sb.append("/");
+                  }
+                  sb.append(name);
+                  AtomicInteger count = arrayCount.get(sb.toString());
+                  sb.append("@");
+                  
+				int index = count.getAndIncrement();
+				sb.append(""+index);
+				m.setIndex(index);
+                  messageNameStack.push(sb.toString());
         	  } else if (m.getType().equals(Message.MSG_TYPE_DEFINITION)) {
                   messageNameStack.push(name+"@definition");
         	  } else {
@@ -453,9 +464,10 @@ public final class StreamSaxHandler implements XmlInputHandler {
          }
         if (tag.equals("message")) {
             Message m = messageStack.pop();
+            m.write(System.err);
         	String path = getPath(m);
-            messageNameStack.pop();
             if(Message.MSG_TYPE_DEFINITION.equals(m.getType())) {
+                messageNameStack.pop();
             	messageStack.peek().setDefinitionMessage(m);
                 handler.messageDone(m,path);
             } else if (Message.MSG_TYPE_ARRAY.equals(m.getType())) {
@@ -466,9 +478,12 @@ public final class StreamSaxHandler implements XmlInputHandler {
 //					if(definitionMessage!=null) {
 //						mergeDefinitionMessage(m, definitionMessage);
 //					}
-            		int index = arrayCount.get(getPath(m)).get();
-            		handler.arrayElement(m,getPath(m)+"@"+index);
+                    messageNameStack.pop();
+
+            		handler.arrayElement(m,path);
             	} else {
+                    messageNameStack.pop();
+
                     handler.messageDone(m,path);
             	}
             	
@@ -492,6 +507,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
 					}
         		currentBinary = null;
         	}
+        	
         	currentProperty = null;
         }
         if (tag.equals("option")) {
@@ -518,7 +534,8 @@ public final class StreamSaxHandler implements XmlInputHandler {
 
     @Override
 	public final void endDocument() {
-        handler.navajoDone();
+    	// the navajoDone event is emitted by the tml end tag
+//        handler.navajoDone();
     }
 
     private String getPath(Message message) {
@@ -536,15 +553,14 @@ public final class StreamSaxHandler implements XmlInputHandler {
 			s.append(message.getName());
 		}
 
-    	System.err.println("PATH: "+s.toString());
-    	if(Message.MSG_TYPE_ARRAY_ELEMENT.equals(message.getType())) {
-    		if(s.length()!=0) {
-    			s.append("/");
-    			s.append(message.getName());
-    			s.append("@");
-    			s.append(message.getIndex());
-    		}
-    	}
+//    	if(Message.MSG_TYPE_ARRAY_ELEMENT.equals(message.getType())) {
+//    		if(s.length()!=0) {
+//    			s.append("/");
+//    			s.append(message.getName());
+//    			s.append("@");
+//    			s.append(message.getIndex());
+//    		}
+//    	}
 //    	s.deleteCharAt(s.length()-1);
     	return s.toString();
     }

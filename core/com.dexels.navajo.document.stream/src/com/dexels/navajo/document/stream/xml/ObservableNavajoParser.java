@@ -40,10 +40,7 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void arrayElementStarted(Message msg, String path) {
-				System.err.println("PAAATH:" +path);
-				String arrayPath = path.substring(0,path.lastIndexOf('/')-1);
-				int index = arrayCount.get(arrayPath).getAndIncrement();
-				currentSubscriber.onNext(new NavajoStreamEvent(arrayPath+"@"+index,NavajoEventTypes.ARRAY_ELEMENT_STARTED, msg,attributes));
+				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_ELEMENT_STARTED, msg,attributes));
 				
 			}
 			@Override

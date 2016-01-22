@@ -17,7 +17,6 @@
       <message name="Member" type="definition">
          <property name="MemberType" type="string" value="Normal" direction="out"/>
       </message>
-
       <message name="Member" index="0" type="array_element">
          <property name="Name" type="string" value="Joe" direction="out"/>
       </message>
@@ -30,6 +29,4 @@
          <property name="Name" type="string" value="Dmitri" direction="out"/>
       </message>
    </message>
-   <methods/>
-   <operations/>
 </tml>
