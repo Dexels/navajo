@@ -14,7 +14,7 @@ public class ObservableAuthenticationHandler implements Operator<NavajoStreamEve
 
 	private NavajoStreamEvent authorize(NavajoStreamEvent streamEvent) {
 		if(streamEvent.type()==NavajoStreamEvent.NavajoEventTypes.HEADER) {
-			Header header = (Header) streamEvent.getBody();
+			Header header = (Header) streamEvent.body();
 			this.authorizationObject  = header.getRPCUser()+"|"+header.getRPCPassword();
 			this.scriptName = header.getRPCName();
 		}

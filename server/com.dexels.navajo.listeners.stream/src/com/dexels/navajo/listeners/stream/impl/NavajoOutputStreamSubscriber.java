@@ -47,23 +47,23 @@ public class NavajoOutputStreamSubscriber extends Subscriber<NavajoStreamEvent> 
 		try {
 			switch (event.type()) {
 			case MESSAGE:
-				Message m = (Message) event.getBody();
-				String msgPath = event.getPath();
+				Message m = (Message) event.body();
+				String msgPath = event.path();
 				gotoPath(msgPath);
 				m.write(output);
 				break;
 			case ARRAY_ELEMENT:
-				Message element = (Message) event.getBody();
+				Message element = (Message) event.body();
 				element.write(output);
 				break;
 			case ARRAY_STARTED:
-				Message arr = (Message) event.getBody();
-				String path = event.getPath();
+				Message arr = (Message) event.body();
+				String path = event.path();
 				gotoPath(path);
 				arr.write(output);
 				break;
 			case ARRAY_DONE:
-				String donepath = event.getPath();
+				String donepath = event.path();
 				endPath(donepath);
 				break;
 			case HEADER:
