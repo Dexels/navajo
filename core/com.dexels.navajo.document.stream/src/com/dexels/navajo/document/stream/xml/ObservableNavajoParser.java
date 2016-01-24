@@ -1,5 +1,8 @@
 package com.dexels.navajo.document.stream.xml;
 
+import static com.dexels.navajo.document.stream.events.EventFactory.message;
+import static com.dexels.navajo.document.stream.events.EventFactory.messageDefinition;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -7,8 +10,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.stream.NavajoStreamHandler;
+import com.dexels.navajo.document.stream.events.EventFactory;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 import com.dexels.navajo.document.stream.impl.StreamSaxHandler;
 
 import rx.Observable;
@@ -26,59 +29,59 @@ public class ObservableNavajoParser  {
 			@Override
 			public void messageDone(Message msg, String path) {
 				if(Message.MSG_TYPE_DEFINITION.equals(msg.getType())) {
-					currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.MESSAGE_DEFINITION,msg,attributes));
+					currentSubscriber.onNext(messageDefinition(msg, path).withAttributes(attributes));
 				} else {
-					currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.MESSAGE,msg,attributes));
+					currentSubscriber.onNext(message(msg, path).withAttributes(attributes));
 				}
 			}
 
 			@Override
 			public void arrayStarted(Message msg, String path) {
 				arrayCount.put(path,new AtomicInteger(0));
-				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_STARTED,msg,attributes));
+				currentSubscriber.onNext(EventFactory.arrayStarted(msg, path).withAttributes(attributes));
 			}
 
 			@Override
 			public void arrayElementStarted(Message msg, String path) {
-				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_ELEMENT_STARTED, msg,attributes));
+				currentSubscriber.onNext(EventFactory.arrayElementStarted(msg, path).withAttributes(attributes));
 				
 			}
 			@Override
 			public void arrayElement(Message msg, String path) {
-				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_ELEMENT, msg,attributes));
+				currentSubscriber.onNext(EventFactory.arrayElement(msg, path).withAttributes(attributes));
 			}
 
 			@Override
 			public void arrayDone(Message msg, String path) {
-				currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_DONE,msg, attributes));
+				currentSubscriber.onNext(EventFactory.arrayDone(msg, path).withAttributes(attributes));
 			}
 
 			@Override
 			public void header(Header h) {
-				currentSubscriber.onNext(new NavajoStreamEvent(null,NavajoEventTypes.HEADER,h,attributes));
+				currentSubscriber.onNext(EventFactory.header(h).withAttributes(attributes));
 			}
 
 			@Override
 			public void navajoDone() {
-				currentSubscriber.onNext(new NavajoStreamEvent(null,NavajoEventTypes.NAVAJO_DONE,null, attributes));
+				currentSubscriber.onNext(EventFactory.navajoDone().withAttributes(attributes));
 				
 			}
 
 			@Override
 			public void messageStarted(Message element, String path) {
 				if(Message.MSG_TYPE_DEFINITION.equals(element.getType())) {
-					currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.MESSAGE_DEFINITION_STARTED,element, attributes));
+					currentSubscriber.onNext(EventFactory.messageDefinitionStarted(element, path).withAttributes(attributes));
 				} else if (Message.MSG_TYPE_ARRAY_ELEMENT.equals(element.getType())) {
-					currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.ARRAY_ELEMENT_STARTED,element, attributes));
+					currentSubscriber.onNext(EventFactory.arrayElementStarted(element, path).withAttributes(attributes));
 				} else {
-					currentSubscriber.onNext(new NavajoStreamEvent(path,NavajoEventTypes.MESSAGE_STARTED,element, attributes));
+					currentSubscriber.onNext(EventFactory.messageStarted(element, path).withAttributes(attributes));
 				}
 				
 			}
 
 			@Override
 			public void navajoStart() {
-				currentSubscriber.onNext(new NavajoStreamEvent(null,NavajoEventTypes.NAVAJO_STARTED,null, attributes));
+				currentSubscriber.onNext(EventFactory.navajoStarted().withAttributes(attributes));
 				
 			}
 });

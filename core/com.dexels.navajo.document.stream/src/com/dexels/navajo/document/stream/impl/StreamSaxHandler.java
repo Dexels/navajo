@@ -300,7 +300,6 @@ public final class StreamSaxHandler implements XmlInputHandler {
     	return messageStack.peek();
     }
     private final void parseProperty(Map<String,String> h) throws NavajoException {
-        logger.info("NAME: "+(String)h.get("name"));
         String sLength = null;
         String myName = h.get(Property.PROPERTY_NAME);
         String myValue = h.get(Property.PROPERTY_VALUE);
