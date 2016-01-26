@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1664">
+<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1669">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
@@ -25,8 +25,8 @@
 <repository location="http://repo.dexels.com/eclipse/equinox_mars"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.81.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.81"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.83.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.83"/>
 </location>
 </locations>
 <includeBundles>
@@ -68,6 +68,8 @@
 <plugin id="com.springsource.org.json"/>
 <plugin id="com.vaadin"/>
 <plugin id="io.reactivex.rxjava"/>
+<plugin id="io.reactivex.rxjava-joins"/>
+<plugin id="io.reactivex.rxjava-string"/>
 <plugin id="jackson-core-lgpl"/>
 <plugin id="jackson-mapper-lgpl"/>
 <plugin id="javaewah" version="0.7.9.v201401101600"/>

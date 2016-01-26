@@ -73,7 +73,7 @@ public class TestNavajoNonBlockingStream {
 		).flatMap(n->domStreamer
 		 .feed(n))
 		 .toBlocking()
-		 .forEach(e->System.err.println(e.type()+" with path: "+ e.getPath()));
+		 .forEach(e->System.err.println(e.type()+" with path: "+ e.path()));
 	}
 	
 	public void testSomething() throws Exception {

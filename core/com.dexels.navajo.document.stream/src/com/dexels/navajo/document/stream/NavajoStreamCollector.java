@@ -53,26 +53,26 @@ public class NavajoStreamCollector {
 	public Navajo processNavajoEvent(NavajoStreamEvent n, Subscriber<? super Navajo> subscribe) {
 		switch (n.type()) {
 		case HEADER:
-			assemble.addHeader(((Header)n.getBody()).copy(assemble));
+			assemble.addHeader(((Header)n.body()).copy(assemble));
 			return null;
 		case ARRAY_ELEMENT_STARTED:
 			return null;
 		case MESSAGE_STARTED:
-			deferredPaths.add(n.getPath());
+			deferredPaths.add(n.path());
 			return null;
 		case MESSAGE:
-			deferredMessages.put(n.getPath(), (Message) n.getBody());
+			deferredMessages.put(n.path(), (Message) n.body());
 //			addChildrenToMessage(n.getPath(), (Message) n.getBody());
 			return null;
 		case ARRAY_STARTED:
-			deferredMessages.put(n.getPath(), (Message) n.getBody());
-			deferredPaths.add(n.getPath());
+			deferredMessages.put(n.path(), (Message) n.body());
+			deferredPaths.add(n.path());
 			return null;
 		case ARRAY_ELEMENT:
-			deferredMessages.get(stripIndex(n.getPath())).addElement((Message) n.getBody());
+			deferredMessages.get(stripIndex(n.path())).addElement((Message) n.body());
 			return null;
 		case MESSAGE_DEFINITION:
-			deferredMessages.get(stripIndex(n.getPath())).setDefinitionMessage((Message) n.getBody());
+			deferredMessages.get(stripIndex(n.path())).setDefinitionMessage((Message) n.body());
 			return null;
 		case MESSAGE_DEFINITION_STARTED:
 //			deferredPaths.add(n.getPath());

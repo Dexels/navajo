@@ -7,6 +7,7 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import static com.dexels.navajo.document.stream.events.EventFactory.*;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
 import rx.Observable;
@@ -26,44 +27,45 @@ public class NavajoDomStreamer {
 	public void processNavajo(Navajo navajo, Subscriber<? super NavajoStreamEvent> subscribe) {
 		Navajo output = NavajoFactory.getInstance().createNavajo();
 		List<Message> all = navajo.getAllMessages();
-		subscribe.onNext(new NavajoStreamEvent(null, NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED , null,Collections.emptyMap() ));
+		subscribe.onNext( navajoStarted());
 		Header h = navajo.getHeader();
 		if(h!=null) {
-			subscribe.onNext(new NavajoStreamEvent(null, NavajoStreamEvent.NavajoEventTypes.HEADER , h,Collections.emptyMap() ));
+			subscribe.onNext(header(h));
 		}
 		for (Message message : all) {
 			emitMessage(message,subscribe,output);
 		}
-		subscribe.onNext(new NavajoStreamEvent(null, NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE , null,Collections.emptyMap() ));
+		subscribe.onNext(navajoDone());
 		subscribe.onCompleted();
 	}
 	private void emitMessage(Message message, Subscriber<? super NavajoStreamEvent> subscribe, Navajo outputNavajo) {
 		String path = getPath(message);
 		if(message.isArrayMessage()) {
 			Message dummyArray = NavajoFactory.getInstance().createMessage(outputNavajo, message.getName(),message.getType());
-			subscribe.onNext(new NavajoStreamEvent(path, NavajoStreamEvent.NavajoEventTypes.ARRAY_STARTED , dummyArray,Collections.emptyMap()));
+			subscribe.onNext(arrayStarted(dummyArray, path));
 			Message definition = message.getDefinitionMessage();
 			if(definition!=null) {
 				String definitionpath =getPath(message)+"@definition";
-				subscribe.onNext(new NavajoStreamEvent(definitionpath, NavajoStreamEvent.NavajoEventTypes.MESSAGE_DEFINITION_STARTED , definition,Collections.emptyMap()));
-				subscribe.onNext(new NavajoStreamEvent(definitionpath, NavajoStreamEvent.NavajoEventTypes.MESSAGE_DEFINITION , definition,Collections.emptyMap()));
+				subscribe.onNext(messageDefinitionStarted(definition,definitionpath));
+				// submessages not allowed in definition messages?
+				subscribe.onNext(messageDefinition(definition, definitionpath));
 				
 			}
 			for (Message m : message.getElements()) {
 				String elementPath = getPath(m);
-				subscribe.onNext(new NavajoStreamEvent(elementPath, NavajoStreamEvent.NavajoEventTypes.ARRAY_ELEMENT_STARTED , m,Collections.emptyMap()));
+				subscribe.onNext(arrayElementStarted(m, elementPath));
 				for (Message sm : m.getAllMessages()) {
 					emitMessage(sm, subscribe,outputNavajo);
 				}				
-				subscribe.onNext(new NavajoStreamEvent(elementPath, NavajoStreamEvent.NavajoEventTypes.ARRAY_ELEMENT , m,Collections.emptyMap()));
+				subscribe.onNext(arrayElement(m, elementPath));
 			}
-			subscribe.onNext(new NavajoStreamEvent(path, NavajoStreamEvent.NavajoEventTypes.ARRAY_DONE , dummyArray,Collections.emptyMap()));
+			subscribe.onNext(arrayDone(dummyArray, path));
 		} else {
-			subscribe.onNext(new NavajoStreamEvent(path, NavajoStreamEvent.NavajoEventTypes.MESSAGE_STARTED , message,Collections.emptyMap()));
+			subscribe.onNext(messageStarted(message, path));
 			for (Message m : message.getAllMessages()) {
 				emitMessage(m, subscribe,outputNavajo);
 			}
-			subscribe.onNext(new NavajoStreamEvent(path, NavajoStreamEvent.NavajoEventTypes.MESSAGE , message,Collections.emptyMap()));
+			subscribe.onNext(message(message, path));
 		}
 
 	}

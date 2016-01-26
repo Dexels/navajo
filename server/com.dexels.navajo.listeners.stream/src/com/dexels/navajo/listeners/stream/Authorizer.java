@@ -1,10 +1,11 @@
+package com.dexels.navajo.listeners.stream;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
+import com.dexels.navajo.listeners.stream.core.BaseScriptInstance;
 
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
-import rx.observables.ConnectableObservable;
 
 public class Authorizer implements Observer<NavajoStreamEvent> {
 
@@ -25,15 +26,14 @@ public class Authorizer implements Observer<NavajoStreamEvent> {
 
 	@Override
 	public void onError(Throwable arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onNext(NavajoStreamEvent headerEvent) {
-		Header h = (Header)headerEvent.getBody();
+		Header h = (Header)headerEvent.body();
 		System.err.println("Script: "+h.getRPCName());
-		BaseScriptInstance bsi = new BaseScriptInstance(h.getRPCName(), input,output);
+//		BaseScriptInstance bsi = new BaseScriptInstance(h.getRPCName(), input,output);
 		subscription.unsubscribe();
 		
 

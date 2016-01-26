@@ -1,9 +1,7 @@
 package com.dexels.navajo.document.stream.events;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class NavajoStreamEvent {
@@ -12,7 +10,7 @@ public class NavajoStreamEvent {
 	private final String path;
 	private final Object body;
 	
-	public NavajoStreamEvent(String path, NavajoEventTypes type, Object body, Map<String,Object> attributes) {
+	NavajoStreamEvent(String path, NavajoEventTypes type, Object body, Map<String,Object> attributes) {
 		this.type = type;
 		this.path = path;
 		this.body = body;
@@ -42,11 +40,11 @@ public class NavajoStreamEvent {
 		return attributes;
 	}
 	
-	public String getPath() {
+	public String path() {
 		return path;
 	}
 
-	public Object getBody() {
+	public Object body() {
 		return body;
 	}
 	
@@ -57,11 +55,23 @@ public class NavajoStreamEvent {
 		return new NavajoStreamEvent(this.path,this.type,this.body,attr); 
 	}
 	
-	public List<String> path() {
-		if(path==null) {
-			return Collections.emptyList();
+	public NavajoStreamEvent withAttributes(Map<String,Object> attributes) {
+		if(attributes.isEmpty()) {
+			return this;
 		}
-		return Arrays.asList(path.split("/"));
+		if(this.attributes.isEmpty()) {
+			return new NavajoStreamEvent(this.path,this.type,this.body,attributes ); 
+		}
+		Map<String,Object> join = new HashMap<>(this.attributes);
+		join.putAll(attributes);
+		return new NavajoStreamEvent(this.path,this.type,this.body,Collections.unmodifiableMap(join) ); 
 	}
+	
+//	public List<String> path() {
+//		if(path==null) {
+//			return Collections.emptyList();
+//		}
+//		return Arrays.asList(path.split("/"));
+//	}
 //	public NavajoStreamEvent with 
 }

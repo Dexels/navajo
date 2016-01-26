@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Set of Stream Adapters
+Bundle-SymbolicName: com.dexels.navajo.adapters.stream
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Dexels
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: com.dexels.navajo.document,
+ com.dexels.navajo.document.stream;version="1.0.0",
+ com.dexels.navajo.document.stream.events;version="1.0.0",
+ com.dexels.navajo.document.stream.xml;version="1.0.0",
+ com.dexels.navajo.listeners.stream;version="1.0.0",
+ com.dexels.navajo.listeners.stream.core,
+ org.junit;version="4.0.0";resolution:=optional,
+ org.slf4j;version="1.7.0",
+ rx;version="1.1.0",
+ rx.functions;version="1.1.0",
+ rx.observables;version="1.1.0",
+ rx.subjects;version="1.1.0"
+Export-Package: com.dexels.navajo.adapters.stream.example,
+ com.dexels.navajo.adapters.stream.sqlmap.example

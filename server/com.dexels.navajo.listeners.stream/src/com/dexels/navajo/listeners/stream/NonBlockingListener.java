@@ -1,6 +1,10 @@
 package com.dexels.navajo.listeners.stream;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.stream.NavajoStreamSerializer;
 import com.dexels.navajo.document.stream.ObservableOutputStream;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
+import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 import com.dexels.navajo.document.stream.xml.ObservableNavajoParser;
 import com.dexels.navajo.document.stream.xml.ObservableXmlFeeder;
 import com.dexels.navajo.listeners.stream.impl.NavajoOutputStreamSubscriber;
@@ -27,7 +33,11 @@ import com.dexels.navajo.listeners.stream.impl.ObservableAuthenticationHandler;
 import com.dexels.navajo.listeners.stream.script.ScriptExample;
 
 import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
+import rx.Subscription;
+import rx.observables.ConnectableObservable;
+import rx.subjects.PublishSubject;
 
 public class NonBlockingListener extends HttpServlet {
 
@@ -47,7 +57,7 @@ public class NonBlockingListener extends HttpServlet {
 
 		ObservableXmlFeeder xmlParser = new ObservableXmlFeeder();
 		ObservableNavajoParser navajoParser = new ObservableNavajoParser(parseHeaders(req));
-		ObservableAuthenticationHandler authenticationHandler = new ObservableAuthenticationHandler();
+//		ObservableAuthenticationHandler authenticationHandler = new ObservableAuthenticationHandler();
 
 		// Not really using the write listener yet, don't quite 'get' it
 		output.setWriteListener(new WriteListener() {
@@ -63,19 +73,18 @@ public class NonBlockingListener extends HttpServlet {
 			}
 		});
 		
-		NavajoOutputStreamSubscriber noss = new NavajoOutputStreamSubscriber(output);		
+//		NavajoOutputStreamSubscriber noss = new NavajoOutputStreamSubscriber(output);		
 		
 //		ObservableOutputStream stream = new ObservableOutputStream();
 		
-		Observable.<byte[]>create(subscribe->{
-			ObservableOutputStream stream = new ObservableOutputStream(subscribe,BUFFER_SIZE);
+		ConnectableObservable<NavajoStreamEvent> published = Observable.<byte[]>create(subscribe->{
 
 			input.setReadListener(new ReadListener() {
 				
 				@Override
-				public void onError(Throwable arg0) {
-					logger.error("Error: ", input);
-					
+				public void onError(Throwable t) {
+					logger.error("Error: ", t);
+					subscribe.onError(t);
 				}
 				
 				@Override
@@ -83,33 +92,34 @@ public class NonBlockingListener extends HttpServlet {
 					int len = -1;
 			        byte b[] = new byte[50];
 			        while (input.isReady() && (len = input.read(b)) != -1) {
-			        	stream.write(b,0,len);
+			        	subscribe.onNext(Arrays.copyOf(b, len));
 			        }				
-			        stream.flush();
 				}
 				
 				@Override
 				public void onAllDataRead() throws IOException {
 					input.close();
-					output.write("<tml/>".getBytes());
-					output.close();
-					async.complete();
+					subscribe.onCompleted();
+//					output.write("<tml/>".getBytes());
+//					output.close();
+//					async.complete();
 				}
 			});
 		})
-//		stream.getObservable()
 			.flatMap(bytes -> xmlParser.feed(bytes))
-//			.doOnNext(x->System.err.println(x))
 			.flatMap(xmlEvents -> navajoParser.feed(xmlEvents))
-			.lift(authenticationHandler)
-			.subscribe(resolveScript(authenticationHandler.getScriptName(),noss) );
-	
+			.publish();
+			authorize(published.filter(e->e.type()==NavajoEventTypes.HEADER),published,createOutput(output));
+			Subscription p = published.connect();
 		
 		
-
-
 	}
 
+	private void authorize(Observable<NavajoStreamEvent> headerEvent, Observable<NavajoStreamEvent> publishedStream,Observer<NavajoStreamEvent> output) {
+		new Authorizer(headerEvent,publishedStream,output);
+	}
+
+	
 	private Subscriber<NavajoStreamEvent> resolveScript(String name, Subscriber<NavajoStreamEvent> outputSubscriber) {
 		return new ScriptExample(outputSubscriber);
 	}
@@ -125,21 +135,29 @@ private Map<String, Object> parseHeaders(HttpServletRequest req) {
 }
 
 
-//	<T> Observable<T> fromIterable(final Iterable<T> iterable) {
-//		  return Observable.create(new OnSubscribe<T>() {
-//		    @Override
-//		    public void call(Subscriber<? super T> subscriber) {
-//		      try {
-//		        Iterator<T> iterator = iterable.iterator(); // (1)
-//		        while (iterator.hasNext()) { // (2)
-//		          subscriber.onNext(iterator.next());
-//		        }
-//		        subscriber.onCompleted(); // (3)
-//		      }
-//		      catch (Exception e) {
-//		        subscriber.onError(e); // (4)
-//		      }
-//		    }
-//		  });
-//		}
+private PublishSubject<NavajoStreamEvent> createOutput(OutputStream out) {
+	PublishSubject<NavajoStreamEvent> subject = PublishSubject.<NavajoStreamEvent>create();
+	NavajoStreamSerializer nss = new NavajoStreamSerializer();
+	subject.flatMap(nsevent->nss.feed(nsevent)).subscribe(
+	b->{
+		try {
+			out.write(b);
+		} catch (Exception e) {
+			logger.error("Error: ", e);
+		}
+	}
+		,t->logger.error("Error: ", t)
+		,()->{
+			try {
+				out.flush(); 
+				out.close();
+			} catch (Exception e) {
+				logger.error("Error: ", e);
+			}
+		}
+	);
+	
+	return subject;
+	
+}
 }

@@ -31,8 +31,6 @@ public class TipiWebSocket {
 
 	private final TipiContext context;
 	
-    private Session session;
-
 	private final String sessionString;
 
 	private final URI uri;
@@ -60,7 +58,6 @@ public class TipiWebSocket {
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
         System.err.printf("Connection closed: %d - %s%n", statusCode, reason);
-        this.session = null;
         try {
 			int waitTime = 1000+rand.nextInt(2000);
 			System.err.println("waiting for: "+waitTime);
@@ -77,7 +74,6 @@ public class TipiWebSocket {
     @OnWebSocketConnect
     public void onConnect(Session session) {
         System.err.println("Got connect: "+ session);
-        this.session = session;
         try {
         	long idle = session.getIdleTimeout();
         	System.err.println(">>> "+idle);
