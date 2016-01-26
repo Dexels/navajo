@@ -133,7 +133,7 @@ public class SwingTipiContext extends TipiContext {
                             SwingTipiContext.this.doExit();
                         }
                         // Check every 5 minutes
-                        Thread.sleep(1 * 60 * 1000);
+                        Thread.sleep(5 * 60 * 1000);
                     } catch (InterruptedException e) {
                         keepActivityMonitorThreadRunning = false;
                     } catch (Exception e) {
