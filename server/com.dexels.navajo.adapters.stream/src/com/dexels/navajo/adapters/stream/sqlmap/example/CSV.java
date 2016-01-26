@@ -34,12 +34,19 @@ public class CSV {
 				try(BufferedReader br = loadFromClassPath(resource)) {
 					List<String> columnNames = columnNames(br.readLine());
 					br.lines().map(line->parseLine(columnNames,line)).forEach(
-						row->subscriber.onNext(row)
+							row->{
+								if(!subscriber.isUnsubscribed()) {
+									subscriber.onNext(row);
+								}
+								
+							}
 					);
 					subscriber.onCompleted();
 				}
 			} catch (Exception e) {
 				subscriber.onError(e);
+			} finally {
+				
 			}
 			
 		});
@@ -54,7 +61,12 @@ public class CSV {
 	}
 	
 	private static BufferedReader loadFromClassPath(String resource) throws UnsupportedEncodingException {
-		return new BufferedReader(new InputStreamReader(CSV.class.getResourceAsStream(resource), "UTF-8"));
+		return new BufferedReader(
+				new InputStreamReader(
+						resource.startsWith("/")?
+								CSV.class.getClassLoader().getResourceAsStream(resource.substring(1)) : 
+								CSV.class.getResourceAsStream(resource), "UTF-8"
+				));
 	}
 	
 	public static void main(String[] args) throws UnsupportedEncodingException, IOException {

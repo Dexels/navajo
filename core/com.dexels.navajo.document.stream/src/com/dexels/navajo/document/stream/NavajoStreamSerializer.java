@@ -58,7 +58,6 @@ public class NavajoStreamSerializer {
 				System.err.println("Array started: "+event.path());
 				arrayCounter.put(event.path(), 0);
 			}
-			Integer index = arrayCounter.get(event.path());
 			if(event.type()==NavajoEventTypes.ARRAY_ELEMENT) {
 				System.err.println("Array element: "+event.path()+" count: "+arrayCounter.get(event.path()));
 			}
@@ -66,16 +65,27 @@ public class NavajoStreamSerializer {
 			switch (event.type()) {
 			case MESSAGE_STARTED:
 			case MESSAGE_DEFINITION_STARTED:
-			case ARRAY_ELEMENT_STARTED:
 				Message mstart = (Message) event.body();
-				if(event.type()==NavajoEventTypes.ARRAY_ELEMENT_STARTED) {
-					mstart.setIndex(index);
+				mstart.printStartTag(w, INDENT * (tagStack.size()+1),true);
+				tagStack.add(mstart.getName());
+				
+				break;
+			case ARRAY_ELEMENT_STARTED:
+				Message elementstart = (Message) event.body();
+				String pth = arrayPath(event.path());
+				Integer index = arrayCounter.get(pth);
+
+				if(index==null) {
+					System.err.println("no current index for path: "+pth);
 				}
-				arrayCounter.put(event.path(), ++index);
+				if(event.type()==NavajoEventTypes.ARRAY_ELEMENT_STARTED) {
+					elementstart.setIndex(index);
+				}
+				arrayCounter.put(pth, ++index);
 
 				// TODO: Message should not be necessary in the body, get message name from path
-				mstart.printStartTag(w, INDENT * (tagStack.size()+1),true);
-				   tagStack.add(mstart.getName());
+				elementstart.printStartTag(w, INDENT * (tagStack.size()+1),true);
+				   tagStack.add(elementstart.getName());
 //				startPath(mstart, this.tagStack, outputStreamWriter);
 				break;
 			case MESSAGE:
@@ -118,5 +128,14 @@ public class NavajoStreamSerializer {
 		} catch (IOException e) {
 			logger.error("Error: ", e);
 		}
+	}
+
+	private String arrayPath(String path) {
+		int atIndex = path.lastIndexOf('@');
+		if(atIndex<0) {
+			logger.warn("Array element path without '@': "+path);
+			return path;
+		}
+		return path.substring(0, atIndex);
 	}
 }

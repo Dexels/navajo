@@ -36,14 +36,12 @@ public class TestNavajoNonBlockingStream {
 	public void testDomStreamerAndCollector() throws Exception {
 
 		Navajo baseTml = NavajoFactory.getInstance()
-				.createNavajo(getClass().getClassLoader().getResourceAsStream("tml_without_binary.xml"));
+				.createNavajo(getClass().getClassLoader().getResourceAsStream("tiny_tml.xml"));
 
 		NavajoStreamCollector nsc = new NavajoStreamCollector();
 		NavajoDomStreamer domStreamer = new NavajoDomStreamer();
-		Navajo result = Observable.<Navajo> create(subscribe -> {
-			subscribe.onNext(baseTml);
-
-		}).flatMap(navajo -> domStreamer.feed(navajo))
+		Navajo result = Observable.<Navajo>just(baseTml)		
+		.flatMap(navajo -> domStreamer.feed(navajo))
 		  .flatMap(navajoEvent -> nsc.feed(navajoEvent))
 		  .toBlocking()
 		  .first();
@@ -65,40 +63,15 @@ public class TestNavajoNonBlockingStream {
 	public void testDomStream() throws Exception {
 		final Navajo baseTml = NavajoFactory.getInstance()
 				.createNavajo(getClass().getClassLoader().getResourceAsStream("tml.xml"));
-		NavajoDomStreamer domStreamer = new NavajoDomStreamer();
 		Observable.<Navajo>create(subscribe-> {
 			subscribe.onNext(baseTml);
 			subscribe.onCompleted();
 		}
-		).flatMap(n->domStreamer
-		 .feed(n))
+		).flatMap(NavajoDomStreamer::feed)
 		 .toBlocking()
 		 .forEach(e->System.err.println(e.type()+" with path: "+ e.path()));
 	}
 	
-	public void testSomething() throws Exception {
-
-		Navajo baseTml = NavajoFactory.getInstance()
-				.createNavajo(getClass().getClassLoader().getResourceAsStream("tml.xml"));
-
-		ObservableXmlFeeder oxf = new ObservableXmlFeeder();
-		ObservableNavajoParser onp = new ObservableNavajoParser(Collections.emptyMap());
-		NavajoStreamCollector nsc = new NavajoStreamCollector();
-		NavajoDomStreamer domStreamer = new NavajoDomStreamer();
-		NavajoStreamSerializer serializer = new NavajoStreamSerializer();
-		Navajo result = Observable.<Navajo> create(subscribe -> {
-			subscribe.onNext(baseTml);
-
-		}).flatMap(navajo -> domStreamer.feed(navajo)).flatMap(navajoEvent -> nsc.feed(navajoEvent)).toBlocking()
-				.first();
-
-		StringWriter sw1 = new StringWriter();
-		baseTml.write(sw1);
-		StringWriter sw2 = new StringWriter();
-		baseTml.write(sw2);
-		Assert.assertEquals(sw1.toString(), sw2.toString());
-	}
-
 	@Test
 	public void testStreamParser() throws Exception {
 		ObservableXmlFeeder oxf = new ObservableXmlFeeder();

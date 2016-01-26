@@ -1,3 +1,4 @@
+package com.dexels.navajo.adapters.stream.example;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.listeners.stream.core.BaseScriptInstance;
 import com.dexels.navajo.listeners.stream.core.ScriptRunner;

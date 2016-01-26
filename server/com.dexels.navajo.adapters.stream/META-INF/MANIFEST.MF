@@ -17,5 +17,5 @@ Import-Package: com.dexels.navajo.document,
  rx.functions;version="1.1.0",
  rx.observables;version="1.1.0",
  rx.subjects;version="1.1.0"
-Export-Package: com.dexels.navajo.adapters.stream.example,
- com.dexels.navajo.adapters.stream.sqlmap.example
+Export-Package: com.dexels.navajo.adapters.stream.sqlmap.example
+Require-Bundle: io.reactivex.rxjava-string;bundle-version="1.0.1"

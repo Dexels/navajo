@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dexels.navajo.document.Header;
+
 public class NavajoStreamEvent {
 	protected final NavajoEventTypes type;
 	private final Map<String, Object> attributes;
@@ -18,6 +20,10 @@ public class NavajoStreamEvent {
 	}
 
 	public String toString() {
+		if(type==NavajoEventTypes.HEADER) {
+			Header h = (Header)body;
+			return "Type: "+type+" path: "+path+" attributes: {"+attributes+" - RPCNAME: "+h.getRPCName();
+		}
 		return "Type: "+type+" path: "+path+" attributes: {"+attributes+"}";
 	}
 	
@@ -65,6 +71,12 @@ public class NavajoStreamEvent {
 		Map<String,Object> join = new HashMap<>(this.attributes);
 		join.putAll(attributes);
 		return new NavajoStreamEvent(this.path,this.type,this.body,Collections.unmodifiableMap(join) ); 
+	}
+
+	public NavajoStreamEvent removeAttribute(String attribute) {
+		Map<String,Object> res = new HashMap<>(this.attributes);
+		res.remove(attribute);
+		return new NavajoStreamEvent(this.path,this.type,this.body,Collections.unmodifiableMap(res) ); 
 	}
 	
 //	public List<String> path() {

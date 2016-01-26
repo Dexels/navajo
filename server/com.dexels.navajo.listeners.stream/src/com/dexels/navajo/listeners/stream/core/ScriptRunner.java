@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.stream.events.EventFactory;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 
@@ -20,8 +23,24 @@ public abstract class ScriptRunner {
 	
 	private final static Logger logger = LoggerFactory.getLogger(ScriptRunner.class);
 	
+	public Observable<NavajoStreamEvent> to(final NavajoStreamEvent event, String name, String username, String password) {
+
+		if(event.type() == NavajoEventTypes.NAVAJO_STARTED) {
+			Header h = NavajoFactory.getInstance().createHeader(null, name, username, password, -1);
+			return Observable.<NavajoStreamEvent>just(event,EventFactory.header(h));
+		}
+		if(event.type() == NavajoEventTypes.HEADER) {
+			// ignore 'old' headers;
+			return Observable.empty();
+		}
+		// .removeAttribute("authorized") ?
+		return Observable.<NavajoStreamEvent>just(event);
+	}
+	
 	public Observable<NavajoStreamEvent> call(final NavajoStreamEvent event) {
-			if(event.type() == NavajoEventTypes.HEADER) {
+		
+		switch(event.type()) {
+			case HEADER:
 				Header h = (Header)event.body();
 				this.authorization = authorize(h);
 				try {
@@ -29,28 +48,40 @@ public abstract class ScriptRunner {
 				} catch (Exception e) {
 					return Observable.<NavajoStreamEvent>error(new Exception("script resolution error"));
 				}
-
+				
 				if(authorization==null) {
 					System.err.println("Authorization failed!");
 					return Observable.<NavajoStreamEvent>error(new Exception("authorization error"));
 				}
 				// TODO: Should I pass the header to the resolved script?
-				return Observable.<NavajoStreamEvent>empty();
-			} else if(instance==null) {
-				if(event.type()!=NavajoEventTypes.NAVAJO_STARTED) {
-					logger.warn("Non-authorized script running");
+				return Observable.<NavajoStreamEvent>just(event.withAttributes(authorization));
+			case NAVAJO_STARTED:
+				return Observable.<NavajoStreamEvent>just(event);
+			default:
+				if(instance==null) {
+					logger.warn("Non-resolved script running: "+event);
+					return Observable.<NavajoStreamEvent>error(new Exception("Not authorized"));
+				} else {
+					return instance.run(event.withAttributes(this.authorization));
 				}
-				return Observable.<NavajoStreamEvent>empty();
-			}  
-			return instance.run(event.withAttributes(this.authorization));
+		}
 	}
 	
 	protected abstract BaseScriptInstance resolveScript(Header h) throws Exception;
 	
+	
+	public Observable<Navajo> runInitScript(String name, String username, String password) {
+		Navajo init = NavajoFactory.getInstance().createNavajo();
+		Header h = NavajoFactory.getInstance().createHeader(init, name, username, password, -1);
+		init.addHeader(h);
+		return Observable.<Navajo>just(init);
+	}
+
 	private Map<String,Object> authorize(Header header) {
 		Map<String,Object> auth = new HashMap<>();
 		auth.put("username", header.getRPCUser());
 		auth.put("name", header.getRPCName());
+		auth.put("authorized", true);
 		if(header.getHeaderAttributes()!=null) {
 			auth.putAll(header.getHeaderAttributes());
 		}

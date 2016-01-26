@@ -10,7 +10,7 @@ public class Simple extends BaseScriptInstance {
 	}
 
 	@Override
-	public void init() {
+	public void init(OutputSubscriber output) {
 		// TODO Auto-generated method stub
 		
 	}

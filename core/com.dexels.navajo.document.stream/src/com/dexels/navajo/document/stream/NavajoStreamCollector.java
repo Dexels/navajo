@@ -27,65 +27,55 @@ public class NavajoStreamCollector {
 	}
 
 	public Observable<Navajo> feed(final NavajoStreamEvent streamEvents) {
-		return Observable.create(subscribe->{
-			processNavajoEvent(streamEvents,subscribe);
-		});
+		return processNavajoEvent(streamEvents);
 	}
 	
 	
 	
-	public Navajo completeNavajo(Subscriber<? super Navajo> subscribe) {
+	private Observable<Navajo> completeNavajo() {
 		try {
 			for (String path : deferredPaths) {
 				Message message = deferredMessages.get(path);
-				System.err.println("Adding path: "+path);
-				message.write(System.err);
+//				System.err.println("Adding path: "+path);
+//				message.write(System.err);
 				addMessage(message, path);
 			} 
-			subscribe.onNext(assemble);
-			subscribe.onCompleted();
+			System.err.println("COMPLETE!");
+			return Observable.<Navajo>just(assemble);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			return Observable.<Navajo>error(e);
 		}
-		return assemble;
 	}
 
-	public Navajo processNavajoEvent(NavajoStreamEvent n, Subscriber<? super Navajo> subscribe) {
+	private Observable<Navajo> processNavajoEvent(NavajoStreamEvent n) {
 		switch (n.type()) {
 		case HEADER:
 			assemble.addHeader(((Header)n.body()).copy(assemble));
-			return null;
+			return Observable.<Navajo>empty();
 		case ARRAY_ELEMENT_STARTED:
-			return null;
+			return Observable.<Navajo>empty();
 		case MESSAGE_STARTED:
 			deferredPaths.add(n.path());
-			return null;
+			return Observable.<Navajo>empty();
 		case MESSAGE:
 			deferredMessages.put(n.path(), (Message) n.body());
-//			addChildrenToMessage(n.getPath(), (Message) n.getBody());
-			return null;
+			return Observable.<Navajo>empty();
 		case ARRAY_STARTED:
 			deferredMessages.put(n.path(), (Message) n.body());
 			deferredPaths.add(n.path());
-			return null;
+			return Observable.<Navajo>empty();
 		case ARRAY_ELEMENT:
 			deferredMessages.get(stripIndex(n.path())).addElement((Message) n.body());
-			return null;
+			return Observable.<Navajo>empty();
 		case MESSAGE_DEFINITION:
 			deferredMessages.get(stripIndex(n.path())).setDefinitionMessage((Message) n.body());
-			return null;
-		case MESSAGE_DEFINITION_STARTED:
-//			deferredPaths.add(n.getPath());
-			return null;
-
-
+			return Observable.<Navajo>empty();
 		case NAVAJO_DONE:
 			System.err.println("Keys: "+deferredMessages.keySet());
-			return completeNavajo(subscribe);
+			return completeNavajo();
 		default:
-			break;
+			return Observable.<Navajo>empty();
 		}
-		return null;
 	}
 
 	

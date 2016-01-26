@@ -1,8 +1,6 @@
 package com.dexels.navajo.listeners.stream;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -23,13 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.stream.NavajoStreamSerializer;
-import com.dexels.navajo.document.stream.ObservableOutputStream;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 import com.dexels.navajo.document.stream.xml.ObservableNavajoParser;
 import com.dexels.navajo.document.stream.xml.ObservableXmlFeeder;
-import com.dexels.navajo.listeners.stream.impl.NavajoOutputStreamSubscriber;
-import com.dexels.navajo.listeners.stream.impl.ObservableAuthenticationHandler;
 import com.dexels.navajo.listeners.stream.script.ScriptExample;
 
 import rx.Observable;
