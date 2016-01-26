@@ -1,8 +1,8 @@
 package com.dexels.navajo.document.types;
 
-import java.text.*;
+import java.text.NumberFormat;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 /**
  * <p>Title: Percentage objects</p>

@@ -42,7 +42,6 @@ public class DumpUserCommand implements ArticleCommand {
 	@Override
 	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException, DirectOutputThrowable {
 		String token = runtime.getPassword();
-		System.err.println("Token: "+token);
 		ObjectNode on = runtime.getRootNode();
 		ArrayNode requiredScopesObject = on.putArray("requiredScopes");
 		for (String e : runtime.getRequiredScopes()) {

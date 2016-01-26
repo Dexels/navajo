@@ -8,8 +8,7 @@ package com.dexels.navajo.document;
  * @author Arjen Schoneveld
  * @version 1.0
  */
-
-import java.util.*;
+import java.util.List;
 
 public interface Method
     extends java.io.Serializable {

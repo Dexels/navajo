@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 
@@ -64,17 +63,50 @@ protected Navajo myDocRoot;
   }
  
 
- public final void printElement(final Writer sw, int indent) throws IOException {
-	 String tagName = getTagName();
-
-	 if ( this instanceof Message ) {
-		 Message msg = (Message) this;
-		 // Do not serialized message that have mode="ignore" or messages that start with "__" (reserved for internal messages)
-		 if ( Message.MSG_MODE_IGNORE.equals(msg.getMode()) ){
-			 return;
+ public void printElement(final Writer sw, int indent) throws IOException {
+	 final boolean isOpen = printStartTag(sw, indent,false);
+	 if(!isOpen) {
+		 return;
+	 }
+	 printBody(sw, indent);
+	 printCloseTag(sw, indent);
+ }
+ 
+public void printCloseTag(final Writer sw, int indent) throws IOException {
+	String tagName = getTagName();
+	 for (int a = 0; a < indent; a++) {
+		 sw.write(" ");
+	 }
+	 writeElement( sw, "</");
+	 writeElement( sw,tagName);
+	 writeElement( sw,">\n");
+}
+public void printBody(final Writer sw, int indent) throws IOException {
+	 List<? extends BaseNode> list = getChildren();
+	 boolean hasText = hasTextNode();
+	 boolean hasChildren = (list!=null) && list.size()>0;
+	 if (hasChildren && hasText) {
+		 throw new IllegalStateException("Can not have both children AND text");
+	 }
+//	 if (!hasChildren && !hasText) {
+//		 writeElement( sw, "/>\n");
+//		 return;
+//	 }
+//	 writeElement( sw, ">\n");
+//	 // list should not be null, but to appease the warnings
+	 if(list!=null) {
+		 for (int i = 0; i < list.size(); i++) {
+			 BaseNode child = list.get(i);
+			 child.printElement(sw,indent+INDENT);
 		 }
 	 }
-	 
+	 if (hasText) {
+		 writeText(sw);
+	 }
+}
+public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) throws IOException {
+	String tagName = getTagName();
+
 	 for (int a = 0; a < indent; a++) {
 		 sw.write(" ");
 	 }
@@ -118,31 +150,13 @@ protected Navajo myDocRoot;
 	 if (hasChildren && hasText) {
 		 throw new IllegalStateException("Can not have both children AND text");
 	 }
-	 if (!hasChildren && !hasText) {
+	 if (!hasChildren && !hasText && !forceDualTags) {
 		 writeElement( sw, "/>\n");
-		 return;
+		 return false;
 	 }
 	 writeElement( sw, ">\n");
-	 // list should not be null, but to appease the warnings
-	 if(list!=null) {
-		 for (int i = 0; i < list.size(); i++) {
-			 BaseNode child = list.get(i);
-			 child.printElement(sw,indent+INDENT);
-		 }
-	 }
-	 if (hasText) {
-		 writeText(sw);
-	 }
-	 if (hasText || hasChildren) {
-		 for (int a = 0; a < indent; a++) {
-			 sw.write(" ");
-		 }
-		 writeElement( sw, "</");
-		 writeElement( sw,tagName);
-		 writeElement( sw,">\n");
-	 }
-
- }
+	return true;
+}
  
  // {tml : {documentImplementation :  SAXP, methods : {}}
  

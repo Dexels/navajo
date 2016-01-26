@@ -1,7 +1,8 @@
 package com.dexels.navajo.document.saximpl.qdxml;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Hashtable;
 
 public interface DocHandler {
   public void startElement(String tag,Hashtable<String,String> h) throws Exception;

@@ -80,7 +80,7 @@ public class GeneralCacheManager implements CacheManager {
 
 	@Override
 	public URL getLocalURL(String location) throws IOException {
-		logger.debug("Getting local URL location: {}. I am: {}",location,id);
+		//logger.debug("Getting local URL location: {}. I am: {}",location,id);
 		if (!isUpToDate(location)) {
 			logger.debug("Not up to date, downloading {}",location);
 			downloadLocation(location);

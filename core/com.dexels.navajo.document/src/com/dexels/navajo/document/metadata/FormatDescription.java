@@ -1,7 +1,10 @@
 package com.dexels.navajo.document.metadata;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Data class to store information on a file format.

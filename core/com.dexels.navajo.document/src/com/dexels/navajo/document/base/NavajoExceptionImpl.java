@@ -1,6 +1,6 @@
 package com.dexels.navajo.document.base;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.NavajoException;
 
 
 /**

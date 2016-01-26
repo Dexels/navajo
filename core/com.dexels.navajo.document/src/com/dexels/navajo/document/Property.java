@@ -1,6 +1,8 @@
 package com.dexels.navajo.document;
 
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
@@ -636,4 +638,10 @@ public void forcePropertyChange();
 
 // for evaluating expressions
 public Object peekEvaluatedValue();
+
+public void printElement(final Writer sw, int indent) throws IOException;
+
+public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) throws IOException ;
+public void printBody(final Writer sw, int indent) throws IOException;
+public void printCloseTag(final Writer sw, int indent) throws IOException;
 }

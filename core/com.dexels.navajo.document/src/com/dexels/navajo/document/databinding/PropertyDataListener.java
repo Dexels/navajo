@@ -1,6 +1,6 @@
 package com.dexels.navajo.document.databinding;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 @Deprecated
 

@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.typecheck;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.PropertyTypeException;
 
 /**
  * <p>Title: </p>

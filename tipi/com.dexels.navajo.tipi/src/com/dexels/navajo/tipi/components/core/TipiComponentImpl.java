@@ -366,11 +366,8 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 		Object propval = getAttributeProperty(name).getTypedValue();
 		Object oo = getComponentValue(name);
-		if (oo == null) {
-		} else {
-			if (!oo.equals(propval)) {
-				getAttributeProperty(name).setAnyValue(oo);
-			}
+		if (oo != null && !oo.equals(propval)) {
+			getAttributeProperty(name).setAnyValue(oo);
 		}
 		/**
 		 * I should do an extra typecheck here, to check the supplied type

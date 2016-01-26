@@ -133,7 +133,6 @@ public class ServiceCommand implements ArticleCommand {
 
 	private void handleError(Navajo result) throws UserException,
 			AuthorizationException, ConditionErrorException {
-		result.write(System.err);
 		Message error = result.getMessage("error");
 		  if (error != null  ) {
 		      String errMsg = error.getProperty("message").getValue();
