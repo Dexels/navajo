@@ -38,7 +38,6 @@ public abstract class ScriptRunner {
 	}
 	
 	public Observable<NavajoStreamEvent> call(final NavajoStreamEvent event) {
-		
 		switch(event.type()) {
 			case HEADER:
 				Header h = (Header)event.body();
