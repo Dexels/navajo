@@ -16,7 +16,6 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
@@ -32,8 +31,7 @@ import com.dexels.navajo.elasticsearch.ElasticSearchService;
 
 public class ElasticSearchComponent implements ElasticSearchService {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(ElasticSearchComponent.class);
+	private final static Logger logger = LoggerFactory.getLogger(ElasticSearchComponent.class);
 	
 	private CloseableHttpClient httpclient;
 
@@ -142,13 +140,11 @@ public class ElasticSearchComponent implements ElasticSearchService {
 		String id = node.get(this.id_property).asText();
 		HttpPut httpPut = new HttpPut(assembleURI(id));
 		byte[] requestBytes = objectMapper.writer().withDefaultPrettyPrinter().writeValueAsBytes(node);
-		System.err.println("Request: \n"+new String(requestBytes));
 		HttpEntity he = new ByteArrayEntity(requestBytes);
 		httpPut.setEntity(he);
 		CloseableHttpResponse response1 = httpclient.execute(httpPut);
-		HttpEntity respe = response1.getEntity();
-		String result = EntityUtils.toString(respe);
-		System.err.println("Response: " + result);
+		//HttpEntity respe = response1.getEntity();
+		//EntityUtils.toString(respe);
 		// response1.getEntity().getContent()
 		response1.close();
 	}
@@ -167,7 +163,6 @@ public class ElasticSearchComponent implements ElasticSearchService {
 			sb.append("/");
 		}
 		sb.append(id);
-		System.err.println("URI: "+sb.toString());
 		return new URI(sb.toString());
 	}
 
