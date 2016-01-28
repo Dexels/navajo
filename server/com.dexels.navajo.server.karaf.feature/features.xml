@@ -626,4 +626,9 @@
         <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tester.js/1.0.20
         </bundle>
     </feature>
+    
+     <feature name='navajo.logstore' version='1.0.0'>
+        <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.logstore/1.0.1
+        </bundle>
+    </feature>
 </features>
