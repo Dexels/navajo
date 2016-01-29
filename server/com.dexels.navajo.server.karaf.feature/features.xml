@@ -627,10 +627,10 @@
         </bundle>
     </feature>
     
-     <feature resolver="(obr)" name='navajo.logstore' version='1.0.2'>
+     <feature resolver="(obr)" name='navajo.logstore' version='1.0.3'>
     	<bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/3.0.3
         </bundle>
-        <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.logstore/1.0.3
+        <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.logstore/1.0.5
         </bundle>
     </feature>
 </features>
