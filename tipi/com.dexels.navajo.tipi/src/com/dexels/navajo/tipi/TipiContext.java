@@ -109,6 +109,9 @@ import com.dexels.navajo.tipi.validation.TipiValidationDecorator;
  */
 public abstract class TipiContext implements ITipiExtensionContainer, Serializable {
 
+    private static final String PERF_COMPONENT_INSTANTIATE_JSON = "{\"action\": \"instantiate\", \"unhide\": \"{}\", \"component\": \"{}\", \"duration\": \"{}\"}";
+    private static final String PERF_EVENT_COMPLETED_JSON = "{\"action\": \"event\", \"name\": \"{}\", \"compid\": \"{}\", \"parentid\": \"{}\", \"duration\": \"{}\"}";
+
     private static final Logger logger = LoggerFactory.getLogger(TipiContext.class);
     private static final Logger perflogger = LoggerFactory.getLogger("perf");
     
@@ -2946,9 +2949,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         return scriptManager.getEngineByName(engine);
     }
 
-    // public void setBundleContext(BundleContext context) {
-    // this.bundleContext = context;
-    // }
+ 
     public void setClassManager(IClassManager classManager) {
         this.classManager = classManager;
 
@@ -2977,7 +2978,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if (start == null) {
             return;
         }
-        perflogger.info("Component: {} finished in: {} unhide: {}", id, (end - start), unhide);
+       
+        perflogger.info(PERF_COMPONENT_INSTANTIATE_JSON, unhide, id, (end - start));
         tipiInstantiateStatistics.remove(id);
     }
     
@@ -2998,7 +3000,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if ( parent != null) {
             parentId = parent.getId();
         }
-        perflogger.info("Tipi Event {} on : {}-{} finished in: {}", eventname, component.getId(), parentId,  (end - start));
+        
+        perflogger.info(PERF_EVENT_COMPLETED_JSON , eventname, component.getId(), parentId,  (end - start));
 
         tipiEventStatistics.remove(component.getId()+eventname);
     }
