@@ -256,7 +256,7 @@ public class EntityListener extends HttpServlet {
             try {
                 json.format(result, w, true);
             } catch (Exception e) {
-                logger.error("Error in writing entity output in JSON!");
+                logger.error("Error in writing entity output in JSON!", e);
                 throw new ServletException("Error producing output");
             }
             w.close();
