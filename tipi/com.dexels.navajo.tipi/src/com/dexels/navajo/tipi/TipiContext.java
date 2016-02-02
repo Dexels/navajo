@@ -109,8 +109,8 @@ import com.dexels.navajo.tipi.validation.TipiValidationDecorator;
  */
 public abstract class TipiContext implements ITipiExtensionContainer, Serializable {
 
-    private static final String PERF_COMPONENT_INSTANTIATE_JSON = "{\"action\": \"instantiate\", \"unhide\": \"{}\", \"component\": \"{}\", \"duration\": \"{}\"}";
-    private static final String PERF_EVENT_COMPLETED_JSON = "{\"action\": \"event\", \"name\": \"{}\", \"compid\": \"{}\", \"parentid\": \"{}\", \"duration\": \"{}\"}";
+    private static final String PERF_COMPONENT_INSTANTIATE_JSON = "{\"action\": \"instantiate\", \"unhide\": \"{}\", \"component\": \"{}\", \"duration\": {}}";
+    private static final String PERF_EVENT_COMPLETED_JSON = "{\"action\": \"event\", \"name\": \"{}\", \"compid\": \"{}\", \"parentid\": \"{}\", \"duration\": {}}";
 
     private static final Logger logger = LoggerFactory.getLogger(TipiContext.class);
     private static final Logger perflogger = LoggerFactory.getLogger("perf");
