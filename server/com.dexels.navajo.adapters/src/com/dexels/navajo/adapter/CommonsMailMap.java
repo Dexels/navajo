@@ -160,7 +160,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 					}
 					File fl = new File(fileName);
 					URL url = fl.toURI().toURL();
-					logger.info("Using url: "+url);
+					logger.debug("Using url: "+url);
 					if (contentDisposition != null && contentDisposition.equalsIgnoreCase("Inline")) {
 					    // embed the image and get the content id
 					    inlineImages.add(email.embed(url, userFileName));
