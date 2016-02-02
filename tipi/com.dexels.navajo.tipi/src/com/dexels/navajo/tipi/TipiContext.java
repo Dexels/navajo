@@ -298,7 +298,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             hasDebugger = false;
         }
         MDC.put("sessionToken", SessionTokenFactory.getSessionTokenProvider().getSessionToken());
-        logger.info("SESSION");
+        logger.debug("sessionToken: {}", SessionTokenFactory.getSessionTokenProvider().getSessionToken());
     }
 
     public TipiApplicationInstance getApplicationInstance() {
