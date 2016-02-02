@@ -50,7 +50,7 @@ public class HttpRemoteStorage implements RemoteStorage {
 				metadata.put("Content-Encoding", enc);
 			}
 			bandwidth += uc.getContentLengthLong();
-			logger.info("Total bandwidth: "+bandwidth);
+			logger.debug("Total bandwidth: "+bandwidth);
 			if("gzip".equals(enc)) {
 				GZIPInputStream gzi = new GZIPInputStream(is);
 				return gzi;
@@ -68,7 +68,7 @@ public class HttpRemoteStorage implements RemoteStorage {
 		if(true) {
 			return 0;
 		}
-		logger.info("Checking modification date of location: "+location);
+		logger.debug("Checking modification date of location: "+location);
 		URL u = new URL(baseUrl, location);
 		URLConnection connection = u.openConnection();
 		if (connection instanceof HttpURLConnection) {
