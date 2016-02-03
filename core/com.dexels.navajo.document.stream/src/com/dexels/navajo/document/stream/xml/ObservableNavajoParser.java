@@ -1,19 +1,17 @@
 package com.dexels.navajo.document.stream.xml;
 
-import static com.dexels.navajo.document.stream.events.EventFactory.message;
-import static com.dexels.navajo.document.stream.events.EventFactory.messageDefinition;
-
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import com.dexels.navajo.document.Header;
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.stream.NavajoStreamHandler;
-import com.dexels.navajo.document.stream.events.EventFactory;
+import com.dexels.navajo.document.stream.api.NavajoHead;
+import com.dexels.navajo.document.stream.api.Prop;
+import com.dexels.navajo.document.stream.events.Events;
+//import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.impl.StreamSaxHandler;
 
+//import static com.dexels.navajo.document.stream.events.Events.*;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -21,73 +19,77 @@ public class ObservableNavajoParser  {
 	
 	private Subscriber<? super NavajoStreamEvent> currentSubscriber;
 	private StreamSaxHandler feeder;
-	private final Map<String,AtomicInteger> arrayCount = new HashMap<>();
+//	private final Map<String,AtomicInteger> arrayCount = new HashMap<>();
 
 	public ObservableNavajoParser(Map<String,Object> attributes) {
 		this.feeder = new StreamSaxHandler(new NavajoStreamHandler(){
 
 			@Override
-			public void messageDone(Message msg, String path) {
-				if(Message.MSG_TYPE_DEFINITION.equals(msg.getType())) {
-					currentSubscriber.onNext(messageDefinition(msg, path).withAttributes(attributes));
-				} else {
-					currentSubscriber.onNext(message(msg, path).withAttributes(attributes));
-				}
-			}
-
-			@Override
-			public void arrayStarted(Message msg, String path) {
-				arrayCount.put(path,new AtomicInteger(0));
-				currentSubscriber.onNext(EventFactory.arrayStarted(msg, path).withAttributes(attributes));
-			}
-
-			@Override
-			public void arrayElementStarted(Message msg, String path) {
-				currentSubscriber.onNext(EventFactory.arrayElementStarted(msg, path).withAttributes(attributes));
+			public void messageDone(Map<String, String> attributes, List<Prop> properties) {
+					currentSubscriber.onNext(Events.message(properties, attributes.get("name")));
 				
 			}
+
 			@Override
-			public void arrayElement(Message msg, String path) {
-				currentSubscriber.onNext(EventFactory.arrayElement(msg, path).withAttributes(attributes));
+			public void messageStarted(Map<String, String> attributes) {
+				currentSubscriber.onNext(Events.messageStarted(attributes.get("name")));
+				
 			}
 
 			@Override
-			public void arrayDone(Message msg, String path) {
-				currentSubscriber.onNext(EventFactory.arrayDone(msg, path).withAttributes(attributes));
+			public void messageDefinitionStarted(Map<String, String> attributes) {
+				currentSubscriber.onNext(Events.messageDefinitionStarted(attributes.get("name")));
+				
 			}
 
 			@Override
-			public void header(Header h) {
-				currentSubscriber.onNext(EventFactory.header(h).withAttributes(attributes));
+			public void messageDefinition(Map<String, String> attributes, List<Prop> properties) {
+				currentSubscriber.onNext(Events.messageDefinition(properties, attributes.get("name")));				
+			}
+
+			@Override
+			public void arrayStarted(Map<String, String> attributes) {
+				currentSubscriber.onNext(Events.arrayStarted(attributes.get("name")));
+			}
+
+			@Override
+			public void arrayElementStarted(Map<String, String> attributes) {
+				currentSubscriber.onNext(Events.arrayElementStarted(attributes.get("name")));
+			}
+
+			@Override
+			public void arrayElement(Map<String, String> attributes, List<Prop> properties) {
+				currentSubscriber.onNext(Events.arrayElement(properties, attributes.get("name")));				
+				
+			}
+
+			@Override
+			public void arrayDone(String name) {
+				currentSubscriber.onNext(Events.arrayDone(name));				
+			}
+
+			@Override
+			public void navajoStart(NavajoHead head) {
+				currentSubscriber.onNext(Events.started(head));
+				
 			}
 
 			@Override
 			public void navajoDone() {
-				currentSubscriber.onNext(EventFactory.navajoDone().withAttributes(attributes));
+				currentSubscriber.onNext(Events.done());				
 				
 			}
 
-			@Override
-			public void messageStarted(Message element, String path) {
-				if(Message.MSG_TYPE_DEFINITION.equals(element.getType())) {
-					currentSubscriber.onNext(EventFactory.messageDefinitionStarted(element, path).withAttributes(attributes));
-				} else if (Message.MSG_TYPE_ARRAY_ELEMENT.equals(element.getType())) {
-					currentSubscriber.onNext(EventFactory.arrayElementStarted(element, path).withAttributes(attributes));
-				} else {
-					currentSubscriber.onNext(EventFactory.messageStarted(element, path).withAttributes(attributes));
-				}
-				
-			}
-
-			@Override
-			public void navajoStart() {
-				currentSubscriber.onNext(EventFactory.navajoStarted().withAttributes(attributes));
-				
-			}
-});
 		
-//		this.feeder = new SaxXmlFeeder(handler);
+		
+		
+		});
 	}
+	
+	
+//	private static NavajoStreamEvent createHeader(Header h) {
+//		return Events.started(new NavajoHead(h.getRPCName(), h.getRPCUser(), h.getRPCPassword(), h.getHeaderAttributes()));
+//	}
 	public Observable<NavajoStreamEvent> feed(final XMLEvent xmlEvent) {
 		return Observable.<NavajoStreamEvent>create(subscriber-> {
 				ObservableNavajoParser.this.currentSubscriber = subscriber;

@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.stream;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -8,20 +9,21 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.Header;
-import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.stream.api.NavajoHead;
+import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 
 import rx.Observable;
 
 public class NavajoStreamSerializer {
 
 	private List<String> tagStack = new ArrayList<>();
+	private Stack<String> messageNameStack = new Stack<>();
 	private final Map<String,Integer> arrayCounter = new HashMap<>();
 	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamSerializer.class);
 	private static final int INDENT = 3;
@@ -52,90 +54,126 @@ public class NavajoStreamSerializer {
 		});
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void processNavajoEvent(NavajoStreamEvent event,Writer w) {
 		try {
-			if(event.type()==NavajoEventTypes.ARRAY_STARTED) {
-				System.err.println("Array started: "+event.path());
-				arrayCounter.put(event.path(), 0);
-			}
-			if(event.type()==NavajoEventTypes.ARRAY_ELEMENT) {
-				System.err.println("Array element: "+event.path()+" count: "+arrayCounter.get(event.path()));
-			}
-
+			String name = event.path();
 			switch (event.type()) {
-			case MESSAGE_STARTED:
-			case MESSAGE_DEFINITION_STARTED:
-				Message mstart = (Message) event.body();
-				mstart.printStartTag(w, INDENT * (tagStack.size()+1),true);
-				tagStack.add(mstart.getName());
-				
-				break;
-			case ARRAY_ELEMENT_STARTED:
-				Message elementstart = (Message) event.body();
-				String pth = arrayPath(event.path());
-				Integer index = arrayCounter.get(pth);
+				case MESSAGE_STARTED:
+					printStartTag(w, INDENT * (tagStack.size()+1),true,"message",new String[]{"name=\""+name,"\""});
+					tagStack.add(event.path());
+					messageNameStack.push(name);
+					break;
+				case MESSAGE_DEFINITION_STARTED:
+//					Message mstart = (Message) event.body();
+					printStartTag(w, INDENT * (tagStack.size()+1),true,"message",new String[]{"name=\""+name,"\" type=\"definition\""});
+					tagStack.add(event.path());
+					messageNameStack.push(name+"@definition");
+					break;
+				case ARRAY_ELEMENT_STARTED:
+//					Message elementstart = (Message) event.body();
+					String pth = currentPath();
+					Integer index = arrayCounter.get(pth);
+	
+					if(index==null) {
+						System.err.println("no current index for path: "+pth);
+					}
+//					if(event.type()==NavajoEventTypes.ARRAY_ELEMENT_STARTED) {
+//						elementstart.setIndex(index);
+//					}
+	
+					// TODO: Message should not be necessary in the body, get message name from path
+					printStartTag(w, INDENT * (tagStack.size()+1),true,"message",new String[]{"name=\""+name+"\""," index=\""+index+"\""," type=\"array_element\""});
+					arrayCounter.put(pth, ++index);
 
-				if(index==null) {
-					System.err.println("no current index for path: "+pth);
-				}
-				if(event.type()==NavajoEventTypes.ARRAY_ELEMENT_STARTED) {
-					elementstart.setIndex(index);
-				}
-				arrayCounter.put(pth, ++index);
+					tagStack.add(name);
+					messageNameStack.push(name+"@"+index);
+	//				startPath(mstart, this.tagStack, outputStreamWriter);
+					break;
+				case MESSAGE:
+				case MESSAGE_DEFINITION:
+				case ARRAY_ELEMENT:
+//					Message m = (Message) event.body();
+					messageNameStack.pop();
+					List<Prop> properties = (List<Prop>)event.body();
+					for (Prop prop : properties) {
+						prop.write(w,INDENT * (tagStack.size()+1));
+					}
+					//					printStartTag(w, INDENT * (tagStack.size()+1),true,"message",new String[]{"name="+name,"type=\"definition\""});
 
-				// TODO: Message should not be necessary in the body, get message name from path
-				elementstart.printStartTag(w, INDENT * (tagStack.size()+1),true);
-				   tagStack.add(elementstart.getName());
-//				startPath(mstart, this.tagStack, outputStreamWriter);
-				break;
-			case MESSAGE:
-			case MESSAGE_DEFINITION:
-				Message m = (Message) event.body();
-				m.printBody(w,INDENT * (tagStack.size()));
-				m.printCloseTag(w, INDENT * tagStack.size());
-				tagStack.remove(tagStack.size()-1);
-				break;
-			case ARRAY_ELEMENT:
-				Message element = (Message) event.body();
-				element.printBody(w,  INDENT * tagStack.size());
-				tagStack.remove(tagStack.size()-1);
-				element.printCloseTag(w,  INDENT * (tagStack.size()+1));
-				break;
-			case ARRAY_STARTED:
-//				Message arr = (Message) event.getBody();
-				break;
-			case ARRAY_DONE:
-				Message arrdone = (Message) event.body();
-				arrdone.printCloseTag(w, INDENT*tagStack.size());
-//				tagStack.remove(tagStack.size()-1);
-				
-				break;
-			case HEADER:
-				Header h = (Header) event.body();
-				h.printElement(w, INDENT);
-				break;
-			case NAVAJO_STARTED:
-				
-				w.write("<tml>\n");
-				break;				
-			case NAVAJO_DONE:
-				w.write("</tml>\n");
-				break;
+//					m.printBody(w,INDENT * (tagStack.size()));
+//					m.printCloseTag(w, INDENT * tagStack.size());
+					printEndTag(w, INDENT * tagStack.size(), "message");
+					tagStack.remove(tagStack.size()-1);
+					break;
+				case ARRAY_STARTED:
+	//				Message arr = (Message) event.getBody();
+					printStartTag(w, INDENT * (tagStack.size()+1),true,"message",new String[]{"name=\""+name,"\" type=\"array\""});
+					messageNameStack.push(name);
+					tagStack.add(event.path());
 
-			default:
-				break;
+					arrayCounter.put(currentPath(), 0);
+					break;
+				case ARRAY_DONE:
+					printEndTag(w, INDENT*tagStack.size(), "message");
+//					printCloseTag(w, INDENT*tagStack.size());
+					arrayCounter.remove(currentPath());
+					tagStack.remove(tagStack.size()-1);
+
+					messageNameStack.pop();
+					break;
+				case NAVAJO_STARTED:
+					w.write("<tml>\n");
+					NavajoHead head = (NavajoHead) event.body();
+//					head.printElement(w,INDENT);
+					head.print(w, INDENT);
+//					Header h = NavajoFactory.getInstance().createHeader(null, head.name(), head.username(), head.password(), -1);
+//					h.printElement(w, INDENT);
+					break;				
+				case NAVAJO_DONE:
+					w.write("</tml>\n");
+					break;
+	
+				default:
+					break;
 			}
 		} catch (IOException e) {
 			logger.error("Error: ", e);
 		}
 	}
 
-	private String arrayPath(String path) {
-		int atIndex = path.lastIndexOf('@');
-		if(atIndex<0) {
-			logger.warn("Array element path without '@': "+path);
-			return path;
+	private String currentPath() {
+		int i = 0;
+		StringWriter sw = new StringWriter();
+		for (String element : messageNameStack) {
+			sw.write(element);
+			if(i!=messageNameStack.size()-1) {
+				sw.write("/");
+			}
+			i++;
 		}
-		return path.substring(0, atIndex);
+		return sw.toString();
+	}
+	
+	public void printStartTag(final Writer sw, int indent,boolean forceDualTags,String tag,  String[] attributes) throws IOException {
+		 for (int a = 0; a < indent; a++) {
+			 sw.write(" ");
+		 }
+		 sw.write("<");
+		 sw.write(tag);
+		 sw.write(" ");
+		 for (String attribute : attributes) {
+			sw.write(attribute);
+		}
+		sw.write(">\n");
+	}
+	
+	public void printEndTag(final Writer sw, int indent,String tag) throws IOException {
+		 for (int a = 0; a < indent; a++) {
+			 sw.write(" ");
+		 }
+		 sw.write("</");
+		 sw.write(tag);
+		 sw.write(">\n");
 	}
 }
