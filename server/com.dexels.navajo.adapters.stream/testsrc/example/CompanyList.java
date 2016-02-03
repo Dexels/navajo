@@ -7,6 +7,7 @@ import com.dexels.navajo.listeners.stream.core.BaseScriptInstance;
 import com.dexels.navajo.listeners.stream.core.OutputSubscriber;
 
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 public class CompanyList extends BaseScriptInstance {
 
@@ -15,10 +16,12 @@ public class CompanyList extends BaseScriptInstance {
 			return array("Company",()->{
 				return CSV.fromClassPath("example.csv")
 					.take(10)
+					.subscribeOn(Schedulers.io())
 					.map(e->e.get("company"))
 					.cast(String.class)
 					.map(String::toUpperCase)
-					.concatMap(name->{
+//					.observeOn(Schedulers.io())
+					.flatMap(name->{
 						Message elt = createElement();
 						elt.addProperty(createProperty("CompanyName", name));
 						return emitElement(elt, "Company");

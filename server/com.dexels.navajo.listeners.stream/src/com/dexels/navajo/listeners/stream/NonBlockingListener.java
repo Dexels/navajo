@@ -104,7 +104,7 @@ public class NonBlockingListener extends HttpServlet {
 			.flatMap(bytes -> xmlParser.feed(bytes))
 			.flatMap(xmlEvents -> navajoParser.feed(xmlEvents))
 			.publish();
-			authorize(published.filter(e->e.type()==NavajoEventTypes.HEADER),published,createOutput(output));
+			authorize(published.filter(e->e.type()==NavajoEventTypes.NAVAJO_STARTED),published,createOutput(output));
 			Subscription p = published.connect();
 		
 		

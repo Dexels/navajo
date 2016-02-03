@@ -5,6 +5,8 @@ import com.dexels.navajo.adapters.stream.sqlmap.example.HTTP;
 import com.dexels.navajo.document.stream.xml.ObservableXmlFeeder;
 import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
 
+import rx.schedulers.Schedulers;
+
 public class TestHttp {
 
 	@Test
@@ -19,6 +21,6 @@ public class TestHttp {
 	
 		System.err.println("Weather: "+weather);
 		// Not really a good unit test (... or is it?)
-		Assert.assertEquals("light rain", weather);
+		Assert.assertEquals("few clouds", weather);
 	}
 }

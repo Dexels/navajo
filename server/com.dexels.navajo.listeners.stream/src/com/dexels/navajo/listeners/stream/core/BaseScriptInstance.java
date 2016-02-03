@@ -8,11 +8,10 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.stream.events.EventFactory;
+import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
 import rx.Observable;
-import rx.Observer;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func0;
@@ -41,9 +40,6 @@ public abstract class BaseScriptInstance {
 	
 	public Observable<NavajoStreamEvent> runInternal(NavajoStreamEvent streamEvent) {
 		switch (streamEvent.type()) {
-		case HEADER:
-//			init(output);
-			break;
 		case MESSAGE:
 			Set<Action1<Message>> regs = messageRegistrations.get(streamEvent.path());
 			if(regs!=null) {
@@ -57,7 +53,7 @@ public abstract class BaseScriptInstance {
 			}
 			break;
 		case NAVAJO_DONE:
-			return complete().mergeWith(Observable.<NavajoStreamEvent>just(streamEvent));
+			return complete().concatWith(Observable.<NavajoStreamEvent>just(streamEvent));
 //			output.onNext(streamEvent);
 		default:
 			break;
@@ -97,21 +93,21 @@ public abstract class BaseScriptInstance {
 	}
 	
 
-	protected Observable<NavajoStreamEvent> array(String name, Func0<Observable<NavajoStreamEvent>> func) {
-		NavajoStreamEvent startEvent = EventFactory.arrayStarted(NavajoFactory.getInstance().createMessage(NavajoFactory.getInstance().createNavajo(),name,Message.MSG_TYPE_ARRAY),name );
-		NavajoStreamEvent arrayDone = EventFactory.arrayDone(NavajoFactory.getInstance().createMessage(NavajoFactory.getInstance().createNavajo(),name,Message.MSG_TYPE_ARRAY),name );
-		return func.call().startWith(Observable.just(startEvent)).mergeWith(Observable.just(arrayDone));
-	}
-	
-	protected Observable<NavajoStreamEvent> element(String name,Func1<Message,Observable<NavajoStreamEvent>> action) {
-		Navajo nav = NavajoFactory.getInstance().createNavajo();
-		Message element = NavajoFactory.getInstance().createMessage(nav,name,Message.MSG_TYPE_ARRAY_ELEMENT);
-		Observable<NavajoStreamEvent> elements = action.call(element);
-//		return Observable.<NavajoStreamEvent>just(EventFactory.arrayElementStarted(element, name), EventFactory.arrayElement(element, name));
-		return elements.startWith(EventFactory.arrayElementStarted(element, name)).mergeWith(Observable.just( EventFactory.arrayElement(element, name)));
-//		return  Observable.just(EventFactory.arrayElementStarted(element, name), EventFactory.arrayElement(element, name)); //EventFactory.arrayElement(element, "Company");
-
-	}
+//	protected Observable<NavajoStreamEvent> array(String name, Func0<Observable<NavajoStreamEvent>> func) {
+//		NavajoStreamEvent startEvent = Events..arrayStarted(NavajoFactory.getInstance().createMessage(NavajoFactory.getInstance().createNavajo(),name,Message.MSG_TYPE_ARRAY),name );
+//		NavajoStreamEvent arrayDone = EventFactory.arrayDone(NavajoFactory.getInstance().createMessage(NavajoFactory.getInstance().createNavajo(),name,Message.MSG_TYPE_ARRAY),name );
+//		return func.call().startWith(Observable.just(startEvent)).concatWith(Observable.just(arrayDone));
+//	}
+//	
+//	protected Observable<NavajoStreamEvent> element(String name,Func1<Message,Observable<NavajoStreamEvent>> action) {
+//		Navajo nav = NavajoFactory.getInstance().createNavajo();
+//		Message element = NavajoFactory.getInstance().createMessage(nav,name,Message.MSG_TYPE_ARRAY_ELEMENT);
+//		Observable<NavajoStreamEvent> elements = action.call(element);
+////		return Observable.<NavajoStreamEvent>just(EventFactory.arrayElementStarted(element, name), EventFactory.arrayElement(element, name));
+//		return elements.startWith(EventFactory.arrayElementStarted(element, name)).concatWith(Observable.just( EventFactory.arrayElement(element, name)));
+////		return  Observable.just(EventFactory.arrayElementStarted(element, name), EventFactory.arrayElement(element, name)); //EventFactory.arrayElement(element, "Company");
+//
+//	}
 
 	protected Observable<NavajoStreamEvent> callInit(String name) {
 		return Observable.<NavajoStreamEvent>create(subscriber-> {
@@ -130,8 +126,10 @@ public abstract class BaseScriptInstance {
 	}
 	// TODO Name should be removed at some point
 	protected Observable<NavajoStreamEvent> emitElement(Message element, String name) {
-		return Observable.<NavajoStreamEvent>just(EventFactory.arrayElementStarted(null,name ), EventFactory.arrayElement(element,name ));
+		return Observable.<NavajoStreamEvent>just(Events.arrayElementStarted(name ), Events.arrayElement(element,name ));
 	}
+	
+	
 	protected Message createElement() {
 		return NavajoFactory.getInstance().createMessage(null, "DefaultName", Message.MSG_TYPE_ARRAY_ELEMENT);
 	}

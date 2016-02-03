@@ -12,7 +12,7 @@ import rx.Observable;
 public class HTTP {
 	private static final int BUFFERSIZE = 8192;
 
-	private static Executor httpPool = Executors.newFixedThreadPool(5);
+	private static Executor httpPool = Executors.newFixedThreadPool(20);
 	
 	public static Observable<byte[]> get(String getUrl) {
 		return Observable.create(subscriber->{
@@ -21,6 +21,7 @@ public class HTTP {
 				@Override
 				public void run() {
 					try {
+						System.err.println("GET THREAD: "+Thread.currentThread().getName());
 						URL url = new URL(getUrl);
 						URLConnection conn = url.openConnection();
 						InputStream is = conn.getInputStream();
@@ -28,7 +29,7 @@ public class HTTP {
 						byte[] data = new byte[BUFFERSIZE];
 
 						while ((nRead = is.read(data, 0, data.length)) != -1) {
-						  subscriber.onNext(Arrays.copyOfRange(data,0,nRead));
+							subscriber.onNext(Arrays.copyOfRange(data,0,nRead));
 						}
 						subscriber.onCompleted();
 					} catch (Throwable e) {
@@ -36,8 +37,8 @@ public class HTTP {
 					}
 				}
 			};
-//			httpPool.execute(r);
-			r.run();
+			httpPool.execute(r);
+//			r.run();
 		});
 		
 	}

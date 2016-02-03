@@ -1,6 +1,7 @@
 package com.dexels.navajo.listeners.stream.impl;
 
 import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
 import rx.Observable.Operator;
@@ -13,10 +14,11 @@ public class ObservableAuthenticationHandler implements Operator<NavajoStreamEve
 	private String scriptName;
 
 	private NavajoStreamEvent authorize(NavajoStreamEvent streamEvent) {
-		if(streamEvent.type()==NavajoStreamEvent.NavajoEventTypes.HEADER) {
-			Header header = (Header) streamEvent.body();
-			this.authorizationObject  = header.getRPCUser()+"|"+header.getRPCPassword();
-			this.scriptName = header.getRPCName();
+		if(streamEvent.type()==NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED) {
+			
+			NavajoHead header = (NavajoHead) streamEvent.body();
+			this.authorizationObject  = header.username()+"|"+header.password();
+			this.scriptName = header.name();
 		}
 		return streamEvent.withAttribute("Auth",authorizationObject).withAttribute("Script", scriptName);
 //		subscriber.onNext(streamEvent);	
