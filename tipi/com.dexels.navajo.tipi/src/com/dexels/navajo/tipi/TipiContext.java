@@ -297,6 +297,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         } catch (Throwable e) {
             hasDebugger = false;
         }
+        String dtap = systemPropertyMap.get("DTAP") == null ? null: systemPropertyMap.get("DTAP");
+        MDC.put("dtap", dtap);
         MDC.put("sessionToken", SessionTokenFactory.getSessionTokenProvider().getSessionToken());
         logger.debug("sessionToken: {}", SessionTokenFactory.getSessionTokenProvider().getSessionToken());
     }

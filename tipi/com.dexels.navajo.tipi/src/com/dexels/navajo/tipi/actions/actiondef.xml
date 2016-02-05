@@ -119,6 +119,10 @@
       <param name="from" type="string" required="true" />
       <param name="internal" type="boolean" required="false" default="false"/>
    </tipiaction>
+   <tipiaction name="setMDC" class="TipiSetMDC" package="com.dexels.navajo.tipi.actions">
+      <param name="key" type="reference" required="true" />
+      <param name="to" type="string" required="true" />
+   </tipiaction>
 
    <tipiaction name="set" class="TipiSet" package="com.dexels.navajo.tipi.actions">
       <param name="element" type="reference" required="true" />
