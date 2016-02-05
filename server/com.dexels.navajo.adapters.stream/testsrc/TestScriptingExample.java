@@ -58,7 +58,7 @@ public class TestScriptingExample {
 		NavajoDomStreamer nds = new NavajoDomStreamer();
 		NavajoStreamCollector nsc = new NavajoStreamCollector();
 		Navajo nn = runner.runInitScript("example.CompanyList", "Pam", "Pet")
-			.flatMap(s->nds.feed(s))
+			.flatMap(NavajoDomStreamer::feed)
 			.flatMap(n->runner2.call(n))
 			.doOnNext(n->System.err.println(":: "+n))
 			.flatMap(n->nsc.feed(n)).toBlocking().first();
@@ -66,24 +66,41 @@ public class TestScriptingExample {
 	}
 
 
-	@Test 
-	public void testEachCompany() {
+	@Test @Ignore
+	public void testListCompany() {
 		TestScriptRunner runner = new TestScriptRunner();
-		TestScriptRunner runner2 = new TestScriptRunner();
-		NavajoDomStreamer nds = new NavajoDomStreamer();
 		NavajoStreamCollector nsc = new NavajoStreamCollector();
 		Navajo nn = Observable.just(NavajoFactory.getInstance().createNavajo())
-			.flatMap(s->nds.feed(s))
+			.flatMap(NavajoDomStreamer::feed)
 			.flatMap(n->runner.to(n,"example.CompanyList","User","Pw"))
 			.doOnNext(a->System.err.println("Found event: "+a))
 			.flatMap(n->runner.call(n))
-			.flatMap(n->runner2.to(n,"example.EachCompany","User","Pw"))
-			.flatMap(n->runner2.call(n))
-			.flatMap(n->nsc.feed(n)).toBlocking().first();
-			
+			.doOnNext(e->System.err.println("|||>> "+e))
+			.flatMap(n->nsc.feed(n))
+			.toBlocking().first();
+		
+		nn.write(System.err);
+		Assert.assertEquals(10,nn.getMessage("Company").getArraySize());
 		nn.write(System.err);
 	}
 
+	@Test 
+	public void testEachCompany() throws InterruptedException {
+		long time =  System.currentTimeMillis();
+		TestScriptRunner runner = new TestScriptRunner();
+		NavajoStreamCollector nsc = new NavajoStreamCollector();
+		Navajo nn = Observable.just(NavajoFactory.getInstance().createNavajo())
+			.flatMap(NavajoDomStreamer::feed)
+			.flatMap(n->runner.to(n,"example.EachCompany","User","Pw"))
+			.flatMap(n->runner.call(n))
+			.flatMap(n->nsc.feed(n)).toBlocking().first();
+		System.err.println("Elapsed: "+(System.currentTimeMillis()-time));
+		nn.write(System.err);
+		Thread.sleep(10000);
+		nn.write(System.err);
+		Assert.assertEquals(20,nn.getMessage("Company").getArraySize());
+	}
+	
 	static void streamBytes(InputStream resourceAsStream, int bufferSize, ObservableOutputStream oos) {
 		byte[] buffer = new byte[bufferSize];
 		int read = -1;

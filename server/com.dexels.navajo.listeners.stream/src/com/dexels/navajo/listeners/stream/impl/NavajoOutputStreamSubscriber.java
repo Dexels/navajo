@@ -66,9 +66,6 @@ public class NavajoOutputStreamSubscriber extends Subscriber<NavajoStreamEvent> 
 				String donepath = event.path();
 				endPath(donepath);
 				break;
-			case HEADER:
-				// TODO
-				break;
 			case NAVAJO_DONE:
 				endPath("/");
 				break;

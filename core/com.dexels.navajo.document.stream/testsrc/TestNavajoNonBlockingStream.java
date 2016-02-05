@@ -8,7 +8,6 @@ import java.util.Collections;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +38,8 @@ public class TestNavajoNonBlockingStream {
 				.createNavajo(getClass().getClassLoader().getResourceAsStream("tiny_tml.xml"));
 
 		NavajoStreamCollector nsc = new NavajoStreamCollector();
-		NavajoDomStreamer domStreamer = new NavajoDomStreamer();
 		Navajo result = Observable.<Navajo>just(baseTml)		
-		.flatMap(navajo -> domStreamer.feed(navajo))
+		.flatMap(navajo -> NavajoDomStreamer.feed(navajo))
 		  .flatMap(navajoEvent -> nsc.feed(navajoEvent))
 		  .toBlocking()
 		  .first();
@@ -83,10 +81,10 @@ public class TestNavajoNonBlockingStream {
 				logger.error("Error: ", e);
 			}
 		}).flatMap(s -> oxf.feed(s))
-//				.doOnNext(x->System.err.println(x.toString()))
 				.flatMap(xml -> onp.feed(xml))
+				.doOnNext(x->System.err.println(x.toString()))
 				.count().toBlocking().first();
-		Assert.assertEquals(22, count);
+		Assert.assertEquals(20, count);
 	}
 
 	
@@ -112,9 +110,7 @@ public class TestNavajoNonBlockingStream {
 					} catch (Exception e) {
 					}
 				});
-		// .flatMap(navajoEvent-> nsc.feed(navajoEvent)).toBlocking().first();
 		byte[] original = getNavajoData("tml_without_binary.xml");
-//		System.err.println(new String(baos.toByteArray()));
 		FileOutputStream fw = new FileOutputStream("original.xml");
 		fw.write(original);
 		fw.close();

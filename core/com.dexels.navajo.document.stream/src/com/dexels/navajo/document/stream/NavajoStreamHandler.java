@@ -1,16 +1,20 @@
 package com.dexels.navajo.document.stream;
 
-import com.dexels.navajo.document.Header;
-import com.dexels.navajo.document.Message;
+import java.util.List;
+import java.util.Map;
+
+import com.dexels.navajo.document.stream.api.NavajoHead;
+import com.dexels.navajo.document.stream.api.Prop;
 
 public interface NavajoStreamHandler {
-	public void messageDone(Message msg, String path);
-	public void messageStarted(Message msg, String path);
-	public void arrayStarted(Message msg, String path);
-	public void arrayElementStarted(Message msg, String path);
-	public void arrayElement(Message msg, String path);
-	public void arrayDone(Message msg, String path);
-	public void header(Header h);
-	public void navajoStart();
+	public void messageDone(Map<String,String> attributes, List<Prop> properties);
+	public void messageStarted(Map<String,String> attributes);
+	public void messageDefinitionStarted(Map<String,String> attributes);
+	public void messageDefinition(Map<String,String> attributes, List<Prop> properties);
+	public void arrayStarted(Map<String,String> attributes);
+	public void arrayElementStarted(Map<String,String> attributes);
+	public void arrayElement(Map<String,String> attributes, List<Prop> properties);
+	public void arrayDone(String name);
+	public void navajoStart(NavajoHead head);
 	public void navajoDone();
 }

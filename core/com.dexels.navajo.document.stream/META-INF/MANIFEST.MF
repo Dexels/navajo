@@ -21,5 +21,6 @@ Import-Package: com.dexels.navajo.document;version="2.2.1",
  rx.subjects;version="1.1.0",
  rx.subscriptions;version="1.1.0"
 Export-Package: com.dexels.navajo.document.stream;version="1.0.0",
+ com.dexels.navajo.document.stream.api,
  com.dexels.navajo.document.stream.events;version="1.0.0",
  com.dexels.navajo.document.stream.xml;version="1.0.0"

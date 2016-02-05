@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.stream.api.NavajoHead;
 
 public class NavajoStreamEvent {
 	protected final NavajoEventTypes type;
@@ -20,15 +20,15 @@ public class NavajoStreamEvent {
 	}
 
 	public String toString() {
-		if(type==NavajoEventTypes.HEADER) {
-			Header h = (Header)body;
-			return "Type: "+type+" path: "+path+" attributes: {"+attributes+" - RPCNAME: "+h.getRPCName();
+		if(type==NavajoEventTypes.NAVAJO_STARTED) {
+			NavajoHead h = (NavajoHead)body;
+			return "Type: "+type+" path: "+path+" attributes: {"+attributes+" - RPCNAME: "+h.name();
 		}
 		return "Type: "+type+" path: "+path+" attributes: {"+attributes+"}";
 	}
 	
 	public enum NavajoEventTypes {
-		MESSAGE_STARTED,MESSAGE,HEADER,ARRAY_STARTED,ARRAY_ELEMENT,ARRAY_DONE,NAVAJO_DONE, NAVAJO_STARTED, ARRAY_ELEMENT_STARTED, MESSAGE_DEFINITION_STARTED, MESSAGE_DEFINITION
+		MESSAGE_STARTED,MESSAGE,ARRAY_STARTED,ARRAY_ELEMENT,ARRAY_DONE,NAVAJO_DONE, NAVAJO_STARTED, ARRAY_ELEMENT_STARTED, MESSAGE_DEFINITION_STARTED, MESSAGE_DEFINITION
 	}
 
 	public NavajoEventTypes type() {

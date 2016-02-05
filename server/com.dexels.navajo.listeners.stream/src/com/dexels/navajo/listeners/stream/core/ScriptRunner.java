@@ -29,18 +29,17 @@ public abstract class ScriptRunner {
 			Header h = NavajoFactory.getInstance().createHeader(null, name, username, password, -1);
 			return Observable.<NavajoStreamEvent>just(event,EventFactory.header(h));
 		}
-		if(event.type() == NavajoEventTypes.HEADER) {
-			// ignore 'old' headers;
-			return Observable.empty();
-		}
+//		if(event.type() == NavajoEventTypes.HEADER) {
+//			// ignore 'old' headers;
+//			return Observable.empty();
+//		}
 		// .removeAttribute("authorized") ?
 		return Observable.<NavajoStreamEvent>just(event);
 	}
 	
 	public Observable<NavajoStreamEvent> call(final NavajoStreamEvent event) {
-		
 		switch(event.type()) {
-			case HEADER:
+			case NAVAJO_STARTED:
 				Header h = (Header)event.body();
 				this.authorization = authorize(h);
 				try {
@@ -55,8 +54,6 @@ public abstract class ScriptRunner {
 				}
 				// TODO: Should I pass the header to the resolved script?
 				return Observable.<NavajoStreamEvent>just(event.withAttributes(authorization));
-			case NAVAJO_STARTED:
-				return Observable.<NavajoStreamEvent>just(event);
 			default:
 				if(instance==null) {
 					logger.warn("Non-resolved script running: "+event);

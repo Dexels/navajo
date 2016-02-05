@@ -1,5 +1,6 @@
 package com.dexels.navajo.document.stream.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,7 +65,7 @@ public class SaxXmlFeeder implements AsyncByteArrayFeeder {
 						attributes.put(parser.getAttributeLocalName(i), parser.getAttributeValue(i));
 					}
 
-					handler.startElement(parser.getLocalName(), attributes);
+					handler.startElement(parser.getLocalName(), Collections.unmodifiableMap(attributes));
 					break;
 				case XMLStreamConstants.END_ELEMENT:
 					handler.endElement(parser.getLocalName());
