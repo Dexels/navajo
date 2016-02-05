@@ -55,7 +55,7 @@ public final class TipiSetMDC extends TipiAction {
                 return;
             }
             MDC.put((String) evaluated.value, (String) evaluatedValue.value);
-
+            logger.debug("MDC key '{}' set to '{}'", evaluated.value, evaluatedValue.value);
         }
     }
 }
