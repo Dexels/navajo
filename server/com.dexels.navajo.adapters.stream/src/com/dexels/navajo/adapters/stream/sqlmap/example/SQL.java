@@ -7,24 +7,23 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.stream.events.EventFactory;
+import com.dexels.navajo.document.stream.NavajoDomStreamer;
+import com.dexels.navajo.document.stream.NavajoStreamCollector;
+import com.dexels.navajo.document.stream.api.Msg;
+import com.dexels.navajo.document.stream.api.NavajoHead;
+import com.dexels.navajo.document.stream.api.Prop;
+import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.script.api.UserException;
 import com.github.davidmoten.rx.jdbc.Database;
 import com.mysql.jdbc.service.MySqlDataSourceComponent;
 
 import rx.Observable;
-import rx.functions.Action2;
-import rx.functions.Func1;
-import rx.functions.Func2;
+import rx.functions.Func0;
 
 public class SQL {
-	public static void main(String[] args) throws SQLException, InterruptedException {
+	public static void main(String[] args) throws SQLException, InterruptedException, UserException {
 //        <property name="type" value="mysql"/>
 //        <property name="url" value="jdbc:mysql://10.0.0.1/authentication"/>
 //        <property name="username" value="authentication"/>
@@ -45,14 +44,24 @@ public class SQL {
 
 //        System.err.println(">> "+ss);
 
-        UserException e;
-        SQL.query("authentication", "select * from SPORT", "ResultMessage", (r,m)->{
-        	try {
-        	} catch (Exception x) {
-				x.printStackTrace();
-			}
-        	return true;
-        });
+        NavajoStreamCollector collector = new NavajoStreamCollector();
+        
+        SQL.query("authentication", "select * from SPORT", "ResultMessage")
+        	.flatMap(row->Msg.createElement("Sport", msg->{
+        		try {
+            		msg.add(Prop.create("SportType").withValue(row.getColumnValue("SPORTTYPE")));
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+        	} , m->Observable.empty()))
+        	.startWith(Observable.just(Events.arrayStarted("Sport")))
+        	.concatWith(Observable.just(Events.arrayDone("Sport")))
+        	.startWith(Observable.just(Events.started(NavajoHead.createDummy())))
+        	.concatWith(Observable.just(Events.done()))
+        	.flatMap(collector::feed)
+        	.toBlocking().forEach(oa->{
+        		oa.write(System.err);
+        	});
         
         Thread.sleep(2000);
 	}
@@ -69,16 +78,30 @@ public class SQL {
         return dsc; 
 	}
 	
-	public static Observable<ResultSetMap> query(String datasource, String query,String name,  Func2<ResultSetMap,Message,Boolean> action) {
+	public static Observable<ResultSetMap> query(String datasource, String query,String name) throws SQLException, UserException {
 		return Database
 			.fromDataSource(dummyResolveDataSource(datasource))
 			.select(query)
-			.get(res->new ResultSetMap(res));
+			.get(SQL::resultSet);
 
 	}
 	
-	protected Observable<NavajoStreamEvent> emitElement(Message element, String name) {
-		return Observable.<NavajoStreamEvent>just(EventFactory.arrayElementStarted(null,name ), EventFactory.arrayElement(element,name ));
+	// TODO move this
+	public static Observable<NavajoStreamEvent> array(String name, Func0<Observable<NavajoStreamEvent>> func) {
+		NavajoStreamEvent startEvent = Events.arrayStarted(name );
+		NavajoStreamEvent arrayDone = Events.arrayDone(name );
+		return func.call().startWith(Observable.just(startEvent)).concatWith(Observable.just(arrayDone));
 	}
+	
+	public static ResultSetMap resultSet(ResultSet rs) throws SQLException {
+		try {
+			return new ResultSetMap(rs);
+		} catch (UserException e) {
+			throw new SQLException(e);
+		}
+	}
+//	protected Observable<NavajoStreamEvent> emitElement(Message element, String name) {
+//		return Observable.<NavajoStreamEvent>just(Events.arrayElementStarted(name ), Events.arrayElement(element,name ));
+//	}
 
 }

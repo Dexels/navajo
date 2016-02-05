@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.stream.events.EventFactory;
+import com.dexels.navajo.document.stream.api.NavajoHead;
+import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 
@@ -26,8 +27,7 @@ public abstract class ScriptRunner {
 	public Observable<NavajoStreamEvent> to(final NavajoStreamEvent event, String name, String username, String password) {
 
 		if(event.type() == NavajoEventTypes.NAVAJO_STARTED) {
-			Header h = NavajoFactory.getInstance().createHeader(null, name, username, password, -1);
-			return Observable.<NavajoStreamEvent>just(event,EventFactory.header(h));
+			return Observable.<NavajoStreamEvent>just(event,Events.started((NavajoHead) event.body()));
 		}
 //		if(event.type() == NavajoEventTypes.HEADER) {
 //			// ignore 'old' headers;

@@ -144,9 +144,9 @@ public class NavajoStreamCollector {
 		case ARRAY_ELEMENT:
 			tagStack.pop();
 			Message elementParent = messageStack.pop();
-			Map<String,Prop> properties = (Map<String, Prop>) n.body();
-			for (Map.Entry<String,Prop> entry : properties.entrySet()) {
-				elementParent.addProperty(createTmlProperty(entry.getValue()));
+			List<Prop> properties = (List<Prop>) n.body();
+			for (Prop entry : properties) {
+				elementParent.addProperty(createTmlProperty(entry));
 			}
 
 			return Observable.<Navajo>empty();

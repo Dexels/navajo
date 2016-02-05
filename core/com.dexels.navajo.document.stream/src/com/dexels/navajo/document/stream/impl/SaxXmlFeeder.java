@@ -1,7 +1,9 @@
 package com.dexels.navajo.document.stream.impl;
 
+import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.stream.XMLStreamConstants;
@@ -10,29 +12,24 @@ import javax.xml.stream.XMLStreamException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.stream.xml.XmlInputHandler;
-import com.fasterxml.aalto.AsyncByteArrayFeeder;
+import com.dexels.navajo.document.stream.xml.XMLEvent;
+import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
+import com.fasterxml.aalto.AsyncByteBufferFeeder;
 import com.fasterxml.aalto.AsyncXMLInputFactory;
 import com.fasterxml.aalto.AsyncXMLStreamReader;
 import com.fasterxml.aalto.stax.InputFactoryImpl;
 
-public class SaxXmlFeeder implements AsyncByteArrayFeeder {
+public class SaxXmlFeeder implements AsyncByteBufferFeeder {
 
-	private final XmlInputHandler handler;
-	private final AsyncByteArrayFeeder wrappedFeeder;
-	private final AsyncXMLStreamReader<AsyncByteArrayFeeder> parser;
+	private final AsyncByteBufferFeeder wrappedFeeder;
+	private final AsyncXMLStreamReader<AsyncByteBufferFeeder> parser;
 
 	private final static Logger logger = LoggerFactory.getLogger(SaxXmlFeeder.class);
 	private Throwable failedWith = null;
 	
-	public SaxXmlFeeder(XmlInputHandler handler) {
-		this.handler = handler;
+	public SaxXmlFeeder() {
 		AsyncXMLInputFactory f = new InputFactoryImpl();
-		try {
-			this.parser = f.createAsyncFor(new byte[] {});
-		} catch (XMLStreamException e) {
-			throw new RuntimeException("Unexpected initialization problem for XML streams: ",e);
-		}
+		this.parser = f.createAsyncForByteBuffer();
 		this.wrappedFeeder = parser.getInputFeeder();
 
 	}
@@ -40,44 +37,93 @@ public class SaxXmlFeeder implements AsyncByteArrayFeeder {
 	@Override
 	public void endOfInput() {
 		wrappedFeeder.endOfInput();
-		updateSax();
 	}
 	
 	public Throwable getException() {
 		return this.failedWith;
 	}
 
-	private void updateSax() {
-		int e = -1;
+	public Iterable<XMLEvent> parse(ByteBuffer buffer) {
 		try {
-			while (parser.hasNext() && e != AsyncXMLStreamReader.EVENT_INCOMPLETE) {
-				e = parser.next();
-				switch (e) {
-				case XMLStreamConstants.START_DOCUMENT:
-					handler.startDocument();
-					break;
-				case XMLStreamConstants.END_DOCUMENT:
-					handler.endDocument();
-					break;
-				case XMLStreamConstants.START_ELEMENT:
-					Map<String, String> attributes = new HashMap<>();
-					for (int i = 0; i < parser.getAttributeCount(); i++) {
-						attributes.put(parser.getAttributeLocalName(i), parser.getAttributeValue(i));
+			// Support feeding empty buffer to signal end of file
+			if(buffer.remaining()>0) {
+//				System.err.println("Buffer. pos: "+buffer.position()+" remaining: "+buffer.remaining()+" limit: "+buffer.limit()+" cap: "+buffer.capacity());
+				byte[] content = new byte[buffer.remaining()];
+				buffer.get(content);
+//				String str = new String(new String(content));
+//				System.err.println("FEEDING: |"+str+"|");
+				wrappedFeeder.feedInput(ByteBuffer.wrap(content));
+			}
+		} catch (XMLStreamException e) {
+			logger.error("XML problem in SaxXML");
+			failedWith = e;
+		}
+//		updateSax();
+
+		return new Iterable<XMLEvent>(){
+			
+			@Override
+			public Iterator<XMLEvent> iterator() {
+				return new Iterator<XMLEvent>(){
+					private int currentToken  = -1;
+					
+					@Override
+					public boolean hasNext() {
+						try {
+							if(currentToken!=-1) {
+								return true;
+							}
+							currentToken = parser.next();
+							boolean hasNext = parser.hasNext() && currentToken!=AsyncXMLStreamReader.EVENT_INCOMPLETE;
+							
+							return hasNext;
+						} catch (XMLStreamException e) {
+							logger.error("Error: ", e);
+							return false;
+						}
 					}
 
-					handler.startElement(parser.getLocalName(), Collections.unmodifiableMap(attributes));
-					break;
-				case XMLStreamConstants.END_ELEMENT:
-					handler.endElement(parser.getLocalName());
-					break;
+					@Override
+					public XMLEvent next() {
+						if(currentToken == -1) {
+							try {
+								currentToken = parser.next();
+							} catch (Throwable e) {
+								logger.error("Error: ", e);
+								failedWith = e;
+								return null;
+							}
+						}
 
-				case XMLStreamConstants.CHARACTERS:
-					handler.text(parser.getText());
-				}
-			}
-		} catch (XMLStreamException ex) {
-			logger.error("Xml parsing problem: ", ex);
-		}
+						try{
+						switch (currentToken) {
+						case XMLStreamConstants.START_DOCUMENT:
+							return new XMLEvent(XmlEventTypes.START_DOCUMENT, null, null);
+						case XMLStreamConstants.END_DOCUMENT:
+							return new XMLEvent(XmlEventTypes.END_DOCUMENT, null, null);
+						case XMLStreamConstants.START_ELEMENT:
+							Map<String, String> attributes = new HashMap<>();
+							for (int i = 0; i < parser.getAttributeCount(); i++) {
+								attributes.put(parser.getAttributeLocalName(i), parser.getAttributeValue(i));
+							}
+							return new XMLEvent(XmlEventTypes.START_ELEMENT, parser.getLocalName(), Collections.unmodifiableMap(attributes));
+						case XMLStreamConstants.END_ELEMENT:
+							return new XMLEvent(XmlEventTypes.END_ELEMENT, parser.getLocalName(), null);
+						case XMLStreamConstants.CHARACTERS:
+							return new XMLEvent(XmlEventTypes.TEXT, parser.getText(), null);
+//							if(!r.trim().equals("")) {
+//								currentSubscriber.onNext(new XMLEvent(XmlEventTypes.TEXT, r, null));
+//							}
+//
+						}
+						return null;
+					} finally {
+						currentToken = -1;
+					}
+					}
+					
+				};
+			}};
 	}
 
 	@Override
@@ -85,19 +131,10 @@ public class SaxXmlFeeder implements AsyncByteArrayFeeder {
 		return wrappedFeeder.needMoreInput();
 	}
 
+
 	@Override
-	public void feedInput(byte[] bytes, int pos, int len)  {
-		try {
-			wrappedFeeder.feedInput(bytes, pos, len);
-		} catch (XMLStreamException e) {
-			logger.error("XML problem in SaxXML");
-			failedWith = e;
-		}
-		updateSax();
-	}
-	
-	public void feed(byte[] bytes) {
-		feedInput(bytes, 0, bytes.length);
+	public void feedInput(ByteBuffer bb) throws XMLStreamException {
+		wrappedFeeder.feedInput(bb);
 	}
 
 }

@@ -5,6 +5,8 @@ import java.net.URLEncoder;
 import com.dexels.navajo.adapters.stream.sqlmap.example.CSV;
 import com.dexels.navajo.adapters.stream.sqlmap.example.HTTP;
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.stream.api.Msg;
+import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.xml.ObservableXmlFeeder;
 import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
@@ -35,12 +37,12 @@ public class EachCompany extends BaseScriptInstance {
 								.filter(e->e.getText().equals("temperature"))
 								.first()
 								.map(xml->Double.parseDouble(xml.getAttributes().get("value"))-273)
-								.flatMap(temperature->{
-									Message elt = createElement();
-									elt.addProperty(createProperty("CompanyName", city));
-									elt.addProperty(createProperty("Temperature", temperature));
-									return emitElement(elt, "Company");
-								}
+								.flatMap(temperature->
+									Msg.createElement("Elt",elt->{
+										elt.add(Prop.create("City").withValue(city));
+										elt.add(Prop.create("Temperature").withValue(temperature));
+										
+									},children->Observable.empty())
 							);
 					}
 			);

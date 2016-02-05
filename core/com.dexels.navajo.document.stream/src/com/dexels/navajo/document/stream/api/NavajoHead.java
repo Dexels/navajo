@@ -30,7 +30,9 @@ public class NavajoHead {
 		}
 
 	}
-	
+	public static NavajoHead createDummy() {
+		return new NavajoHead("dummy","dummy","dummy",Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap());
+	}	
 	public static NavajoHead create(Map<String, String> headerAttributes, Map<String, String> transactionAttributes,
 			Map<String, String> piggybackAttriutes, Map<String, String> asyncAttributes) {
 		// TODO deal with other header content, like piggyback or async

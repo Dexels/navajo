@@ -5,12 +5,8 @@ import java.sql.SQLException;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.stream.events.EventFactory;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.github.davidmoten.rx.jdbc.ResultSetMapper;
 
-import rx.Observable;
-import rx.functions.Action2;
 import rx.functions.Func2;
 
 public class Result implements ResultSetMapper<Message> {

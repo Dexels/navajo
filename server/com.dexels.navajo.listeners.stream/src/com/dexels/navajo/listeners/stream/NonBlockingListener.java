@@ -36,13 +36,11 @@ import rx.subjects.PublishSubject;
 
 public class NonBlockingListener extends HttpServlet {
 
-	private static final int BUFFER_SIZE = 1024;
 	private static final long serialVersionUID = 8974688302015521319L;
 	private final static Logger logger = LoggerFactory.getLogger(NonBlockingListener.class);
 
 //	private Map<HttpServletRequest,Subscriber<byte[]>> subscriber;
 
-	@SuppressWarnings("resource")
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		final AsyncContext async = req.startAsync();
@@ -72,42 +70,42 @@ public class NonBlockingListener extends HttpServlet {
 		
 //		ObservableOutputStream stream = new ObservableOutputStream();
 		
-		ConnectableObservable<NavajoStreamEvent> published = Observable.<byte[]>create(subscribe->{
-
-			input.setReadListener(new ReadListener() {
-				
-				@Override
-				public void onError(Throwable t) {
-					logger.error("Error: ", t);
-					subscribe.onError(t);
-				}
-				
-				@Override
-				public void onDataAvailable() throws IOException {
-					int len = -1;
-			        byte b[] = new byte[50];
-			        while (input.isReady() && (len = input.read(b)) != -1) {
-			        	subscribe.onNext(Arrays.copyOf(b, len));
-			        }				
-				}
-				
-				@Override
-				public void onAllDataRead() throws IOException {
-					input.close();
-					subscribe.onCompleted();
-//					output.write("<tml/>".getBytes());
-//					output.close();
-//					async.complete();
-				}
-			});
-		})
-			.flatMap(bytes -> xmlParser.feed(bytes))
-			.flatMap(xmlEvents -> navajoParser.feed(xmlEvents))
-			.publish();
-			authorize(published.filter(e->e.type()==NavajoEventTypes.NAVAJO_STARTED),published,createOutput(output));
-			Subscription p = published.connect();
-		
-		
+//		ConnectableObservable<NavajoStreamEvent> published = Observable.<byte[]>create(subscribe->{
+//
+//			input.setReadListener(new ReadListener() {
+//				
+//				@Override
+//				public void onError(Throwable t) {
+//					logger.error("Error: ", t);
+//					subscribe.onError(t);
+//				}
+//				
+//				@Override
+//				public void onDataAvailable() throws IOException {
+//					int len = -1;
+//			        byte b[] = new byte[50];
+//			        while (input.isReady() && (len = input.read(b)) != -1) {
+//			        	subscribe.onNext(Arrays.copyOf(b, len));
+//			        }				
+//				}
+//				
+//				@Override
+//				public void onAllDataRead() throws IOException {
+//					input.close();
+//					subscribe.onCompleted();
+////					output.write("<tml/>".getBytes());
+////					output.close();
+////					async.complete();
+//				}
+//			});
+//		})
+//			.flatMap(bytes -> xmlParser.feed(bytes))
+//			.flatMap(xmlEvents -> navajoParser.feed(xmlEvents))
+//			.publish();
+//			authorize(published.filter(e->e.type()==NavajoEventTypes.NAVAJO_STARTED),published,createOutput(output));
+//			Subscription p = published.connect();
+//		
+//		
 	}
 
 	private void authorize(Observable<NavajoStreamEvent> headerEvent, Observable<NavajoStreamEvent> publishedStream,Observer<NavajoStreamEvent> output) {

@@ -16,4 +16,10 @@ public class SQLRowImpl implements Row {
 		return null;
 	}
 
+	@Override
+	public Row withValue(String name, Object value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -33,57 +33,59 @@ public class NavajoDomStreamer {
 //		this.observableOutputStream.getObservable().subscribe(this);
 	}
 	public static Observable<NavajoStreamEvent> feed(final Navajo navajo) {
-		return Observable.create(subscribe->{
-			processNavajo(navajo,subscribe);
-		});
+		return Observable.from(processNavajo(navajo));
 	}
 	
-	private static void processNavajo(Navajo navajo, Subscriber<? super NavajoStreamEvent> subscribe) {
+	private static List<NavajoStreamEvent> processNavajo(Navajo navajo) {
+		List<NavajoStreamEvent> result = new ArrayList<>();
 		Navajo output = NavajoFactory.getInstance().createNavajo();
 		List<Message> all = navajo.getAllMessages();
 //		subscribe.onNext( started());
 		Header h = navajo.getHeader();
 		if(h!=null) {
-			subscribe.onNext(header(h));
+			result.add(header(h));
 		} else {
 			System.err.println("Unexpected case: Deal with tml without header?");
 		}
 		for (Message message : all) {
-			emitMessage(message,subscribe,output);
+			emitMessage(message,result,output);
 		}
-		subscribe.onNext(done());
-		subscribe.onCompleted();
+		result.add(done());
+//		subscribe.onNext(done());
+//		subscribe.onCompleted();
+		return result;
 	}
 	
 	
+	// TODO extract async and piggyback attributes
 	private static NavajoStreamEvent header(Header h) {
 		return Events.started(new NavajoHead(h.getRPCName(), h.getRPCUser(), h.getRPCPassword(), h.getHeaderAttributes(),Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap()));
 	}
-	private static void emitMessage(Message message, Subscriber<? super NavajoStreamEvent> subscribe, Navajo outputNavajo) {
+	private static void emitMessage(Message message,List<NavajoStreamEvent> list, Navajo outputNavajo) {
 //		String path = getPath(message);
 		String name = message.getName();
 		if(message.isArrayMessage()) {
-			subscribe.onNext(arrayStarted(name));
+			list.add(arrayStarted(name));
 			Message definition = message.getDefinitionMessage();
 			if(definition!=null) {
 				String definitionname =name+"@definition";
-				subscribe.onNext(messageDefinitionStarted(definitionname));
-				subscribe.onNext(messageDefinition(messageProperties(definition), definitionname));
+				list.add(messageDefinitionStarted(definitionname));
+				list.add(messageDefinition(messageProperties(definition), definitionname));
 			}
 			for (Message m : message.getElements()) {
-				subscribe.onNext(arrayElementStarted(name));
+				list.add(arrayElementStarted(name));
 				for (Message sm : m.getAllMessages()) {
-					emitMessage(sm, subscribe,outputNavajo);
+					emitMessage(sm, list,outputNavajo);
 				}				
-				subscribe.onNext(arrayElement(messageProperties(m), name));
+				list.add(arrayElement(messageProperties(m), name));
 			}
-			subscribe.onNext(arrayDone(name));
+			list.add(arrayDone(name));
 		} else {
-			subscribe.onNext(messageStarted(name));
+			list.add(messageStarted(name));
 			for (Message m : message.getAllMessages()) {
-				emitMessage(m, subscribe,outputNavajo);
+				emitMessage(m, list,outputNavajo);
 			}
-			subscribe.onNext(message( messageProperties(message), name));
+			list.add(message( messageProperties(message), name));
 		}
 
 	}

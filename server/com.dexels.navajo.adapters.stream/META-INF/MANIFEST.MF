@@ -24,7 +24,6 @@ Import-Package: com.dexels.navajo.adapter.sqlmap,
  rx.schedulers;version="1.1.0",
  rx.subjects;version="1.1.0"
 Export-Package: com.dexels.navajo.adapters.stream.sqlmap.example
-Require-Bundle: io.reactivex.rxjava-string;bundle-version="1.0.1"
 Bundle-ClassPath: lib/rxjava-jdbc-0.7.jar,
  lib/rxjava-extras-0.7.jar,
  .

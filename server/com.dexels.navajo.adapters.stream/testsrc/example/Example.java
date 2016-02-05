@@ -4,6 +4,8 @@ import static com.dexels.navajo.document.stream.api.ArrayMessage.createArray;
 import static com.dexels.navajo.document.stream.api.Msg.create;
 import static com.dexels.navajo.document.stream.api.Msg.createElement;
 
+import java.util.Collections;
+
 import com.dexels.navajo.adapters.stream.sqlmap.example.CSV;
 import com.dexels.navajo.adapters.stream.sqlmap.example.HTTP;
 import com.dexels.navajo.adapters.stream.sqlmap.example.Row;
@@ -24,7 +26,7 @@ public class Example {
 	public static void main(String[] args) {
 		NavajoStreamCollector nsc = new NavajoStreamCollector();
 		Navajo nn = doSomething()
-			.startWith(Events.started(new NavajoHead("Script", "Blib", "Blob", null)))
+			.startWith(Events.started(new NavajoHead("Script", "Blib", "Blob", Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap())))
 			.concatWith(Observable.just(Events.done()))
 			.flatMap(nsc::feed)
 			.first()
