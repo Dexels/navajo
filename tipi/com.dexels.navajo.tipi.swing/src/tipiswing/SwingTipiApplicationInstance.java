@@ -124,8 +124,10 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 		context.systemPropertyMap.putAll(systemProperties);
 		context.processProperties(properties);
 		
-		String dtap = systemProperties.get("DTAP") == null ? null: systemProperties.get("DTAP");
-		MDC.put("dtap", dtap);
+		if (systemProperties.get("DTAP") != null) {
+		    MDC.put("dtap", systemProperties.get("DTAP"));
+		}
+		
 
 		if(tipiInstallationFolder!=null) {
 			logger.debug("Using install: "+tipiInstallationFolder.getAbsolutePath());
