@@ -343,16 +343,10 @@ public class GenericPropertyComponent extends JPanel {
 	}
 
 	public final void setPropertyComponent(JComponent c, boolean verticalWeight) {
-		// if (currentComponent == c) {
-		// return;
-		// }
 		if (currentComponent != null) {
 			remove(currentComponent);
-			// logger.info("Removing component: " +
-			// currentComponent.getClass());
 		}
 		currentComponent = c;
-		// add(currentComponent, BorderLayout.CENTER);
 		if (verticalWeight) {
 			add(currentComponent, new GridBagConstraints(1, 0, 1, 1, 1, 1.0,
 					GridBagConstraints.WEST, GridBagConstraints.BOTH,
@@ -369,11 +363,6 @@ public class GenericPropertyComponent extends JPanel {
 			// Not exactly beautiful. Don't know why the strut is not enough,
 			// why do I need to pad too?
 			setComponentWidth();
-			// if(currentComponent!=null) {
-			// currentComponent.setPreferredSize(new Dimension(propertyWidth,
-			// ComponentConstants.PREFERRED_HEIGHT));
-			// }
-			// currentComponent.setMaximumSize(new Dimension())
 		}
 
 		revalidate();
@@ -634,7 +623,6 @@ public class GenericPropertyComponent extends JPanel {
 			return;
 		}
 		if (type.equals(Property.LONG_PROPERTY)) {
-			logger.info("Creating long field! ");
 			createLongField(p);
 			return;
 		}
@@ -2102,7 +2090,6 @@ public class GenericPropertyComponent extends JPanel {
 	}
 
 	public void setPropertyWidth(int propertyWidth) {
-		logger.info("SETTING setPropertyWidth: " + propertyWidth);
 		this.propertyWidth = propertyWidth;
 
 		// if(currentComponent!=null) {
@@ -2124,7 +2111,6 @@ public class GenericPropertyComponent extends JPanel {
 	}
 
 	private void setComponentWidth() {
-		logger.info("MONKEEEY: " + propertyWidth);
 		valueStrut = Box.createHorizontalStrut(propertyWidth);
 		add(valueStrut, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
