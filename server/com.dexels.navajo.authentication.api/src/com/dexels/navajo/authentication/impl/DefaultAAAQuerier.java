@@ -71,4 +71,10 @@ public class DefaultAAAQuerier implements AAAQuerier {
 		return 0;
 	}
 
+    @Override
+    public String getPersonId(String tenant, String username) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

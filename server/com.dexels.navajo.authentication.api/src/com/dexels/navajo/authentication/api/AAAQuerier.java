@@ -63,6 +63,8 @@ public interface AAAQuerier {
     public void resetCachedUserCredential(String tenant, String username);
     
     public Integer getUserId(String tenant, String username);
+    public String getPersonId(String tenant, String username);
+    
     
     public String getUserAuthMethod(String tenant, String username);
     
