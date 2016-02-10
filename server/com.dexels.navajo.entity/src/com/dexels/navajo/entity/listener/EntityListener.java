@@ -116,7 +116,6 @@ public class EntityListener extends HttpServlet {
 
         // Only end-points are allowed to cache - no servers in between
         response.setHeader("Cache-Control", "private");
-        response.setHeader("Content-Type", "application/" + outputFormat);
 
         HttpBasicAuthentication auth = new HttpBasicAuthentication(request);
 
@@ -132,7 +131,8 @@ public class EntityListener extends HttpServlet {
         }
 
         Navajo input = null;
-        String etag = null;
+        String inputEtag = null;
+        String outputEtag = null;
 
         String ip = request.getHeader("X-Forwarded-For");
         if (ip == null || ip.equals("")) {
@@ -196,12 +196,12 @@ public class EntityListener extends HttpServlet {
             // Merge input.
             input.getMessage(entityMessage.getName()).merge(entityMessage, true);
 
-            etag = request.getHeader("If-Match");
-            if (etag == null) {
-                etag = request.getHeader("If-None-Match");
+            inputEtag = request.getHeader("If-Match");
+            if (inputEtag == null) {
+                inputEtag = request.getHeader("If-None-Match");
             }
 
-            input.getMessage(entityMessage.getName()).setEtag(etag);
+            input.getMessage(entityMessage.getName()).setEtag(inputEtag);
 
             Operation o = myManager.getOperation(entityName, method);
             o.setTenant(tenant);
@@ -212,6 +212,10 @@ public class EntityListener extends HttpServlet {
             long startTime = System.currentTimeMillis();
             ServiceEntityOperation seo = new ServiceEntityOperation(myManager, DispatcherFactory.getInstance(), o);
             result = seo.perform(input);
+            
+            if (method.equals("GET") && result.getMessage(entityMessage.getName()) != null) {
+                outputEtag = result.getMessage(entityMessage.getName()).generateEtag();
+            }
             access.processingTime = (int) (System.currentTimeMillis() - startTime);
 
             if (access != null) {
@@ -224,7 +228,7 @@ public class EntityListener extends HttpServlet {
                 access.setExitCode(Access.EXIT_EXCEPTION);
             }
         } finally {
-            writeOutput(result, response, outputFormat);
+            writeOutput(result, response, outputFormat, outputEtag);
             if (access != null) {
                 access.setFinished();
                 access.setOutputDoc(result);
@@ -236,7 +240,7 @@ public class EntityListener extends HttpServlet {
 
     }
 
-    private void writeOutput(Navajo result, HttpServletResponse response, String output) throws IOException, ServletException {
+    private void writeOutput(Navajo result, HttpServletResponse response, String output, String etag) throws IOException, ServletException {
         if (result == null) {
             throw new ServletException("No output found");
         }
@@ -247,6 +251,9 @@ public class EntityListener extends HttpServlet {
                 logger.debug("Returning HTTP code 304 - not modified");
                 return;
             }
+        }
+        if (etag != null) {
+            response.setHeader("etag", etag);
         }
         if (output.equals("json")) {
             response.setHeader("content-type", "application/json");

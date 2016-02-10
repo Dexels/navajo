@@ -447,7 +447,6 @@ public class ServiceEntityOperation implements EntityOperation {
 						.getProperty("Id").toString());
 			}
 		}
-		
 		if( myOperation.getMethod().equals(Operation.GET) ) {
 			if ((postedEtag = inputEntity.getEtag()) != null) {
 				Navajo entity = getCurrentEntity(input);
