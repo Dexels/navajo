@@ -622,8 +622,8 @@
         </bundle>
     </feature>
     
-    <feature name='navajo.tester.js' version='1.0.8'>
-        <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tester.js/1.0.20
+    <feature name='navajo.tester.js' version='1.0.9'>
+        <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tester.js/1.0.22
         </bundle>
     </feature>
     
