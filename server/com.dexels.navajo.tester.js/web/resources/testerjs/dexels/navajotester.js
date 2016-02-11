@@ -5,6 +5,10 @@ var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rp
 var serializer = new XMLSerializer();
 var editor ;
 
+var pretty_max_source_length = 80000;
+var pretty_max_response_length = 80000;
+
+
 var hooverdiv = '<div class="customRunOptionContainer">';
 hooverdiv += '  <div class="customRunOption scriptcompile">Compile</div> |';
 hooverdiv += '  <div class="customRunOption scriptsource">Source</div> | ';
@@ -214,7 +218,13 @@ function runScript(script) {
     $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
         $('#scriptsourcecontent').removeClass('prettyprinted');
         $('#scriptsourcecontent').text(data)
-        prettyPrint();
+        if (data.length < pretty_max_source_length) {
+        	 prettyPrint();
+        } else {
+        	// add class to prevent it from being pretty-printed by script response prettyprint
+        	$('#scriptsourcecontent').addClass('prettyprinted');
+        }
+       
     });
 }
 
@@ -224,7 +234,15 @@ function replaceXml(script, xmlObj) {
         $('#scriptcontent').removeClass('prettyprinted');
         var xmltext = serializer.serializeToString(xmlObj)
         $('#scriptcontent').text(xmltext)
-        prettyPrint();
+        console.log('length ' + xmltext.length);
+        if (xmltext.length < pretty_max_response_length) {
+        	prettyPrint();
+        } else {
+        	// add class to prevent it from being pretty-printed by script source prettyprint
+        	$('#scriptcontent').addClass('prettyprinted');
+        }
+        
+        
         parseTmlToHtml(script, $('#HTMLview'), $('#methods'));
         
         
@@ -442,7 +460,12 @@ $(document).on('click', '.scriptsource', function() {
     $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
         $('#scriptsourcecontent').removeClass('prettyprinted');
         $('#scriptsourcecontent').text(data)
-        prettyPrint();
+        if (data.length < pretty_max_source_length) {
+        	 prettyPrint();
+        } else {
+        	// add class to prevent it from being pretty-printed by script response prettyprint
+        	$('#scriptsourcecontent').addClass('prettyprinted');
+        }
         $('#scriptheader').text(script);
         $('#scriptMainView').show();
         $('#TMLSourceviewLink').click();
