@@ -3,7 +3,7 @@
 	name="navajo.repo-[[VERSION]]">
 	<!-- http, webconsole -->
 
-    <feature version="1.4.10" name="dexels.repository" install="auto">
+    <feature version="1.4.11" name="dexels.repository" install="auto">
             <feature version="[3.0.0,5)">eventadmin</feature>
             <feature version="[3.0.0,5)">pax-http</feature>
             <feature version="[3.0.0,5)">pax-http-whiteboard</feature>
@@ -27,7 +27,7 @@
             <bundle>mvn:org.apache.httpcomponents/httpclient-osgi/4.4.1</bundle>
             <bundle>mvn:com.dexels.repository/org.apache.httpcomponents.httpasyncclient/4.2.0</bundle>
             <bundle>mvn:com.hazelcast/hazelcast/3.5.1</bundle>
-            <bundle>mvn:com.dexels.repository/com.dexels.hazelcast/4.0.10</bundle>
+            <bundle>mvn:com.dexels.repository/com.dexels.hazelcast/4.0.11</bundle>
     </feature>
     
 	<feature version="1.0.5" name="dexels.consulosgi">
