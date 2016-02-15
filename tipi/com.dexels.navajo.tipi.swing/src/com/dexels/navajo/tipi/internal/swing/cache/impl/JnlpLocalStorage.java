@@ -41,8 +41,6 @@ public class JnlpLocalStorage implements LocalStorage {
     private final String id;
 
     public JnlpLocalStorage(String relativePath, CookieManager cm, String id) throws UnavailableServiceException {
-        logger.info("creating  JnlpLocalStorage", new Exception());
-
         this.id = id;
         ps = (PersistenceService) ServiceManager.lookup("javax.jnlp.PersistenceService");
         bs = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
@@ -56,14 +54,18 @@ public class JnlpLocalStorage implements LocalStorage {
             for (int i = 0; i < cacheMuffins.length; i++) {
                 try {
                     String muffinlocation = cacheMuffins[i];
-                    logger.info("muffinLoc  {}", muffinlocation);
-                    String[] splitted = muffinlocation.split(cacheBase + this.relativePath);
-                    logger.info("splitted part2: {}", splitted[1]);
-                    String location = splitted[1].replaceAll("_", "/");
+                    String[] splitted = muffinlocation.split(cacheBase);
+                    String muffinRelativePath = splitted[1].substring(0, splitted[1].indexOf("_"));
+                    if (! muffinRelativePath.equals(this.relativePath)) {
+                        //ignore
+                        continue;
+                    }
+                    String path = splitted[1].substring(splitted[1].indexOf("_") + 1);
+                    String location = path.replaceAll("_", "/");
 
                     localData.put(location, new URL(getCacheBaseURL(), cacheMuffins[i]));
                 } catch (Exception e) {
-                    logger.error("Error on filling muffin", e);
+                    logger.error("Error on filling muffin {}", cacheMuffins[i],  e);
                 }
 
             }
@@ -160,30 +162,7 @@ public class JnlpLocalStorage implements LocalStorage {
         if (localData.containsKey(location)) {
             return true;
         } else {
-
-            FileContents fc = null;
-            try {
-                fc = ps.get(createMuffinUrl(location));
-            } catch (MalformedURLException e) {
-                // logger.debug("Malformed panic blues!");
-                logger.error("Error detected", e);
-            } catch (FileNotFoundException e) {
-                // logger.debug("Local file: "+location+" not found!");
-            } catch (IOException e) {
-                logger.error("Error detected", e);
-            }
-            if (fc == null) {
-                logger.debug("Has local for: {}: no", location);
-                return false;
-            } else {
-                try {
-                    return fc.getLength() != 0;
-                } catch (IOException e) {
-                    logger.error("Error detected", e);
-                }
-                logger.debug("Has local for {} failed", location);
-                return false;
-            }
+            return false;
         }
     }
 
@@ -249,4 +228,12 @@ public class JnlpLocalStorage implements LocalStorage {
 
     }
 
+    public static void main(String[] args) {
+        String muffinlocation = "tipicache_tipi_digest.properties";
+        String[] splitted = muffinlocation.split("tipicache_");
+        String muffinRelativePath = splitted[1].substring(0, splitted[1].indexOf("_"));
+        String path = splitted[1].substring(splitted[1].indexOf("_") + 1);
+        String location = path.replaceAll("_", "/");
+        System.out.println(muffinRelativePath);
+    }
 }
