@@ -62,9 +62,9 @@ public class JnlpLocalStorage implements LocalStorage {
                         continue;
                     }
                     String path = splitted[1].substring(splitted[1].indexOf("_") + 1);
-                    String location = path.replaceAll("_", "/");
-                    logger.info("Adding new location: {}", location);
-                    localData.put(location, new URL(getCacheBaseURL(), cacheMuffins[i]));
+
+                    logger.info("Adding new location: {}", path);
+                    localData.put(path, new URL(getCacheBaseURL(), cacheMuffins[i]));
                 } catch (Exception e) {
                     logger.error("Error on filling muffin {}", cacheMuffins[i],  e);
                 }
@@ -96,7 +96,7 @@ public class JnlpLocalStorage implements LocalStorage {
     @Override
     public void flush(String location) throws IOException {
         delete(location);
-        localData.remove(location);
+        localData.remove(location.replaceAll("/", "_"));
     }
 
     @Override
@@ -113,8 +113,8 @@ public class JnlpLocalStorage implements LocalStorage {
         FileContents fc;
         try {
             URL muffinUrl = null;
-            if (localData.containsKey(location)) {
-                muffinUrl = localData.get(location);
+            if (localData.containsKey(location.replaceAll("/", "_"))) {
+                muffinUrl = localData.get(location.replaceAll("/", "_"));
             } else {
                 muffinUrl = createMuffinUrl(location);
             }
@@ -160,10 +160,10 @@ public class JnlpLocalStorage implements LocalStorage {
 
     @Override
     public boolean hasLocal(String location) {
-        if (localData.containsKey(location)) {
+        if (localData.containsKey(location.replaceAll("/", "_"))) {
             return true;
         } else {
-            logger.info("hasLocal false for {}", location);
+            logger.info("hasLocal false for {}", location.replaceAll("/", "_"));
             return false;
         }
     }
@@ -172,7 +172,7 @@ public class JnlpLocalStorage implements LocalStorage {
     public void storeData(String location, InputStream data, Map<String, Object> metadata) throws IOException {
         FileContents fc = null;
         URL muffinUrl = createMuffinUrl(location);
-        localData.put(location, muffinUrl);
+        localData.put(location.replaceAll("/", "_"), muffinUrl);
         FileContents ff = null;
         // Object l = (Object) metadata.get("length");
         // if(l )
@@ -223,7 +223,7 @@ public class JnlpLocalStorage implements LocalStorage {
     public void delete(String location) {
         try {
             ps.delete(createMuffinUrl(location));
-            localData.remove(location);
+            localData.remove(location.replaceAll("/", "_"));
         } catch (IOException e) {
             logger.error("Error: ", e);
         }
