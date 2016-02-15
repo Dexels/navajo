@@ -55,7 +55,7 @@ public class JnlpLocalStorage implements LocalStorage {
                 try {
                     String muffinlocation = cacheMuffins[i];
                     String[] splitted = muffinlocation.split(cacheBase);
-                    String muffinRelativePath = splitted[1].substring(0, splitted[1].indexOf("_"));
+                    String muffinRelativePath = splitted[1].substring(0, splitted[1].indexOf("_") + 1);
                     if (! muffinRelativePath.equals(this.relativePath)) {
                         //ignore
                         continue;
@@ -231,7 +231,7 @@ public class JnlpLocalStorage implements LocalStorage {
     public static void main(String[] args) {
         String muffinlocation = "tipicache_tipi_digest.properties";
         String[] splitted = muffinlocation.split("tipicache_");
-        String muffinRelativePath = splitted[1].substring(0, splitted[1].indexOf("_"));
+        String muffinRelativePath = splitted[1].substring(0, splitted[1].indexOf("_") +1 );
         String path = splitted[1].substring(splitted[1].indexOf("_") + 1);
         String location = path.replaceAll("_", "/");
         System.out.println(muffinRelativePath);
