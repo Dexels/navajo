@@ -9,8 +9,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.FileContents;
@@ -35,12 +35,14 @@ public class JnlpLocalStorage implements LocalStorage {
 
     private final static Logger logger = LoggerFactory.getLogger(JnlpLocalStorage.class);
 
-    private final Map<String, URL> localData = new HashMap<>();
+    private final Map<String, URL> localData = new ConcurrentHashMap<>();
 
     // private final Map<String, Long> localModificationMap = new HashMap<String, Long>();
     private final String id;
 
     public JnlpLocalStorage(String relativePath, CookieManager cm, String id) throws UnavailableServiceException {
+        logger.info("creating  JnlpLocalStorage", new Exception());
+
         this.id = id;
         ps = (PersistenceService) ServiceManager.lookup("javax.jnlp.PersistenceService");
         bs = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
@@ -141,9 +143,7 @@ public class JnlpLocalStorage implements LocalStorage {
 
     @Override
     public URL getURL(String location) throws IOException {
-        if (localData.containsKey(location)) {
-            return localData.get(location);
-        }
+     
 
         File f = File.createTempFile("tipiCache", "");
         InputStream is = getLocalData(location);
