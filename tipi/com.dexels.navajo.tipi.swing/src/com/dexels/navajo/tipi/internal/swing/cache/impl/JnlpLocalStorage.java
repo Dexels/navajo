@@ -62,21 +62,14 @@ public class JnlpLocalStorage implements LocalStorage {
                     localData.put(location, new URL(getCacheBaseURL(), cacheMuffins[i]));
                 } catch (Exception e) {
                     logger.error("Error on filling muffin", e);
-
                 }
 
             }
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             logger.error("Error on filling muffins: ", e);
         }
 
-        // try {
-        // parseModMap();
-        // } catch (IOException e) {
-        // logger.error("Error detected",e);
-        // }
     }
 
     private URL getCacheBaseURL() {
@@ -122,8 +115,9 @@ public class JnlpLocalStorage implements LocalStorage {
             }
 
             fc = ps.get(muffinUrl);
-            if (fc == null) {
-                logger.debug("Not found: {}", location);
+            if (fc == null ||  fc.getLength() < 1) {
+                logger.warn("Not found: {}", location);
+                delete(location);
                 return null;
             }
             return fc.getInputStream();
