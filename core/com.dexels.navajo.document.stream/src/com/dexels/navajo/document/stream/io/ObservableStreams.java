@@ -27,28 +27,41 @@ public class ObservableStreams {
 
 	public static Observable<ByteBuffer> streamChannelWithByteBuffer(ReadableByteChannel channel,
 			final ByteBuffer bytes) {
-		return Observable.<ByteBuffer>from(new Iterable<ByteBuffer>(){
+		return Observable.<ByteBuffer>defer(()-> Observable.from(new Iterable<ByteBuffer>(){
 			@Override
 			public Iterator<ByteBuffer> iterator() {
 				return new Iterator<ByteBuffer>() {
 					private ByteBuffer nextBuffer = null;
+					private IOException failedWith;
 
 					@Override
 					public boolean hasNext() {
-						int read;
+						int read=0;
 						try {
 							if(nextBuffer!=null) {
 								return true;
 							}
+							if(!channel.isOpen()) {
+								channel.close();
+								return false;
+							}
 							read = channel.read(bytes);
 							if(read<0) {
+								channel.close();
 								return false;
 							}
 							loadBuffer(bytes, read);
 							return true;
 						} catch (IOException e) {
 							logger.error("Error: ", e);
+							failedWith = e;
 							return false;
+						} finally {
+//							try {
+//								channel.close();
+//							} catch (IOException e) {
+//								logger.error("Error: ", e);
+//							}
 						}
 					}
 
@@ -67,7 +80,6 @@ public class ObservableStreams {
 					@Override
 					public ByteBuffer next() {
 						ByteBuffer result = nextBuffer;
-//						System.err.println("Get buffer: "+result.position()+" >> "+result.remaining()+" rr: "+result.hashCode()+" I am: "+hashCode());
 						setNext(null);
 						return result;
 					}
@@ -88,7 +100,7 @@ public class ObservableStreams {
 					}
 				};
 
-			}});
+			}}));
 	}
 
 	public static Iterator<ByteBuffer> streamToIterator(InputStream in) {

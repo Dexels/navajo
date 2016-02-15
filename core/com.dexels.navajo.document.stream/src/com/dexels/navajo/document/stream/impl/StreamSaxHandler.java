@@ -60,7 +60,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
         if (tag.equals("message")) {
         	String type = h.get("type");
         	if(Message.MSG_TYPE_ARRAY_ELEMENT.equals(type)) {
-            	handler.arrayElementStarted(h);
+            	handler.arrayElementStarted();
         	} else if(Message.MSG_TYPE_ARRAY.equals(type)) {
             	handler.arrayStarted(h);
         	} else if(Message.MSG_TYPE_DEFINITION.equals(type)) {
@@ -229,7 +229,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
             	handler.arrayDone(name);
             } else {
             	if(Message.MSG_TYPE_ARRAY_ELEMENT.equals(type)) {
-            		handler.arrayElement(attributes,currentProperties);
+            		handler.arrayElement(currentProperties);
             	} else {
                     handler.messageDone(attributes,currentProperties);
             	}

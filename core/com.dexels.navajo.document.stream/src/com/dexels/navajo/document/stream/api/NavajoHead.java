@@ -31,7 +31,12 @@ public class NavajoHead {
 
 	}
 	public static NavajoHead createDummy() {
-		return new NavajoHead("dummy","dummy","dummy",Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap());
+		return createSimple("dummy", "dummy", "dummy");
+//		return new NavajoHead("dummy","dummy","dummy",Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap());
+	}	
+	
+	public static NavajoHead createSimple(String name, String username, String password) {
+		return new NavajoHead(name,username,password,Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap());
 	}	
 	public static NavajoHead create(Map<String, String> headerAttributes, Map<String, String> transactionAttributes,
 			Map<String, String> piggybackAttriutes, Map<String, String> asyncAttributes) {
@@ -83,50 +88,11 @@ public class NavajoHead {
 		}
 		
 		 w.write(closed?"/>\n":">\n");
-		 //		   <header>
-//		      <transaction rpc_pwd="pw" rpc_name="example.ClubQuery" rpc_usr="username"/>
-//		      <callback/>
-//		      <client/>
-//		   </header>		
-		
 	}
-	
-//	public void write(Writer sw, int indent) throws IOException {
-//		 for (int a = 0; a < indent; a++) {
-//			 sw.write(" ");
-//		 }
-//		 sw.write("<property");
-//		 if(name!=null) {
-//			 sw.write(" name=\""+name+"\"");
-//		 }
-//		 if(type!=null) {
-//			 sw.write(" type=\""+type+"\"");
-//		 }
-//		 if(value!=null) {
-//			 sw.write(" value=\""+value+"\"");
-//		 }
-//		 if(direction!=null) {
-//			 sw.write(" direction=\""+direction()+"\"");
-//		 }
-//		 if(description!=null && !"".equals(description)) {
-//			 sw.write(" description=\""+description+"\"");
-//		 }
-//		 if(length>0) {
-//			 sw.write(" length=\""+length+"\"");
-//		 }
-//		 if(selections==null || selections.isEmpty()) {
-//				sw.write("/>\n");
-//		 } else {
-//			 for (Select select : selections) {
-//				sw.write("<option name=\""+select.name()+"\" value=\""+select.value()+"\" selected=\""+(select.selected()?"1":"0")+"\"/>");
-//			}
-//			sw.write("</property>\n");
-//
-//		 }
-//	}
-//	
-//
-//
-
-	
+	public Map<String, String> getPiggybackAttributes() {
+		return piggybackAttributes;
+	}
+	public Map<String, String> getAsyncAttributes() {
+		return asyncAttributes;
+	}
 }

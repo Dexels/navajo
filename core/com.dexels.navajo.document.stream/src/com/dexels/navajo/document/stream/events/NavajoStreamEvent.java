@@ -2,9 +2,11 @@ package com.dexels.navajo.document.stream.events;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.dexels.navajo.document.stream.api.NavajoHead;
+import com.dexels.navajo.document.stream.api.Prop;
 
 public class NavajoStreamEvent {
 	protected final NavajoEventTypes type;
@@ -23,6 +25,14 @@ public class NavajoStreamEvent {
 		if(type==NavajoEventTypes.NAVAJO_STARTED) {
 			NavajoHead h = (NavajoHead)body;
 			return "Type: "+type+" path: "+path+" attributes: {"+attributes+" - RPCNAME: "+h.name();
+		}
+		if(type==NavajoEventTypes.MESSAGE) {
+			List<Prop> contents = (List<Prop>) body;
+			StringBuilder sb = new StringBuilder("Message detected. Name: "+path+"\n");
+			for (Prop prop : contents) {
+				sb.append("Prop: "+prop.name()+" = "+prop.value()+"\n");
+			}
+			return sb.toString();
 		}
 		return "Type: "+type+" path: "+path+" attributes: {"+attributes+"}";
 	}

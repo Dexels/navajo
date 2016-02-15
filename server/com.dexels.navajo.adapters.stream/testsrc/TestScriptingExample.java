@@ -55,7 +55,6 @@ public class TestScriptingExample {
 	public void testInit() {
 		TestScriptRunner runner = new TestScriptRunner();
 		TestScriptRunner runner2 = new TestScriptRunner();
-		NavajoDomStreamer nds = new NavajoDomStreamer();
 		NavajoStreamCollector nsc = new NavajoStreamCollector();
 		Navajo nn = runner.runInitScript("example.CompanyList", "Pam", "Pet")
 			.flatMap(NavajoDomStreamer::feed)

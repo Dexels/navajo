@@ -15,15 +15,16 @@
  */
 package org.jitu.rx.servlet;
 
-import rx.Observer;
-import rx.Subscriber;
-
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
+
+import rx.Observer;
+import rx.Subscriber;
 
 /**
  * A servlet {@link ReadListener} that pushes HTTP request data to an {@link Observer}

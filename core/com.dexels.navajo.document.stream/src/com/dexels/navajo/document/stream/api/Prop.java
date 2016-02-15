@@ -54,6 +54,10 @@ public class Prop {
 		return create(attributes.get("name"),attributes.get("value"),attributes.get("type"),selections,attributes.get("direction").equals("dir_in")?Direction.IN:Direction.OUT,attributes.get("description"),len,attributes.get("subtype"));
 	}
 
+	public static Prop create(String name, Object value) {
+		return new Prop(name,value,null);
+	}
+	
 	public static Prop create(String name, Object value, String type) {
 		return new Prop(name,value,type);
 	}
@@ -88,6 +92,10 @@ public class Prop {
 
 	public int length() {
 		return this.length;
+	}
+	
+	public String toString() {
+		return name+":"+value;
 	}
 
 	public String description() {

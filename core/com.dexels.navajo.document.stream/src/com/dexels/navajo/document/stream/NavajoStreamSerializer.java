@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +21,7 @@ import rx.Observable;
 
 public class NavajoStreamSerializer {
 
-	private List<String> tagStack = new ArrayList<>();
+	private int tagDepth = 0;
 	private Stack<String> messageNameStack = new Stack<>();
 	private final Map<String,Integer> arrayCounter = new HashMap<>();
 	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamSerializer.class);
@@ -60,18 +59,19 @@ public class NavajoStreamSerializer {
 			String name = event.path();
 			switch (event.type()) {
 				case MESSAGE_STARTED:
-					printStartTag(w, INDENT * (tagStack.size()+1),true,"message",new String[]{"name=\""+name,"\""});
-					tagStack.add(event.path());
+					printStartTag(w, INDENT * (tagDepth+1),true,"message",new String[]{"name=\""+name,"\""});
+					tagDepth++;
 					messageNameStack.push(name);
 					break;
 				case MESSAGE_DEFINITION_STARTED:
 //					Message mstart = (Message) event.body();
-					printStartTag(w, INDENT * (tagStack.size()+1),true,"message",new String[]{"name=\""+name,"\" type=\"definition\""});
-					tagStack.add(event.path());
+					printStartTag(w, INDENT * (tagDepth+1),true,"message",new String[]{"name=\""+name,"\" type=\"definition\""});
+					tagDepth++;
 					messageNameStack.push(name+"@definition");
 					break;
 				case ARRAY_ELEMENT_STARTED:
 //					Message elementstart = (Message) event.body();
+					String arrayName = messageNameStack.peek();
 					String pth = currentPath();
 					Integer index = arrayCounter.get(pth);
 	
@@ -83,11 +83,11 @@ public class NavajoStreamSerializer {
 //					}
 	
 					// TODO: Message should not be necessary in the body, get message name from path
-					printStartTag(w, INDENT * (tagStack.size()+1),true,"message",new String[]{"name=\""+name+"\""," index=\""+index+"\""," type=\"array_element\""});
+					printStartTag(w, INDENT * (tagDepth+1),true,"message",new String[]{"name=\""+arrayName+"\""," index=\""+index+"\""," type=\"array_element\""});
 					arrayCounter.put(pth, ++index);
 
-					tagStack.add(name);
-					messageNameStack.push(name+"@"+index);
+					tagDepth++;
+					messageNameStack.push("@"+index);
 	//				startPath(mstart, this.tagStack, outputStreamWriter);
 					break;
 				case MESSAGE:
@@ -97,28 +97,28 @@ public class NavajoStreamSerializer {
 					messageNameStack.pop();
 					List<Prop> properties = (List<Prop>)event.body();
 					for (Prop prop : properties) {
-						prop.write(w,INDENT * (tagStack.size()+1));
+						prop.write(w,INDENT * (tagDepth+1));
 					}
 					//					printStartTag(w, INDENT * (tagStack.size()+1),true,"message",new String[]{"name="+name,"type=\"definition\""});
 
 //					m.printBody(w,INDENT * (tagStack.size()));
 //					m.printCloseTag(w, INDENT * tagStack.size());
-					printEndTag(w, INDENT * tagStack.size(), "message");
-					tagStack.remove(tagStack.size()-1);
+					printEndTag(w, INDENT * tagDepth, "message");
+					tagDepth--;
 					break;
 				case ARRAY_STARTED:
 	//				Message arr = (Message) event.getBody();
-					printStartTag(w, INDENT * (tagStack.size()+1),true,"message",new String[]{"name=\""+name,"\" type=\"array\""});
+					printStartTag(w, INDENT * (tagDepth+1),true,"message",new String[]{"name=\""+name,"\" type=\"array\""});
 					messageNameStack.push(name);
-					tagStack.add(event.path());
+					tagDepth++;
 
 					arrayCounter.put(currentPath(), 0);
 					break;
 				case ARRAY_DONE:
-					printEndTag(w, INDENT*tagStack.size(), "message");
+					printEndTag(w, INDENT*tagDepth, "message");
 //					printCloseTag(w, INDENT*tagStack.size());
 					arrayCounter.remove(currentPath());
-					tagStack.remove(tagStack.size()-1);
+					tagDepth--;
 
 					messageNameStack.pop();
 					break;

@@ -5,8 +5,6 @@ import com.dexels.navajo.adapters.stream.sqlmap.example.HTTP;
 import com.dexels.navajo.document.stream.xml.ObservableXmlFeeder;
 import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
 
-import rx.schedulers.Schedulers;
-
 public class TestHttp {
 
 	@Test

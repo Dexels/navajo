@@ -30,12 +30,12 @@ public class Events {
 		return new NavajoStreamEvent(name,NavajoEventTypes.ARRAY_STARTED,null,Collections.emptyMap());
 	}
 
-	public static NavajoStreamEvent arrayElementStarted(String name) {
-		return new NavajoStreamEvent(name,NavajoEventTypes.ARRAY_ELEMENT_STARTED,null,Collections.emptyMap());
+	public static NavajoStreamEvent arrayElementStarted() {
+		return new NavajoStreamEvent("UnnamedArrayElement",NavajoEventTypes.ARRAY_ELEMENT_STARTED,null,Collections.emptyMap());
 	}
 
-	public static NavajoStreamEvent arrayElement(List<Prop> properties, String name) {
-		return new NavajoStreamEvent(name,NavajoEventTypes.ARRAY_ELEMENT,properties,Collections.emptyMap());
+	public static NavajoStreamEvent arrayElement(List<Prop> properties) {
+		return new NavajoStreamEvent("UnnamedArrayElement",NavajoEventTypes.ARRAY_ELEMENT,properties,Collections.emptyMap());
 	}
 
 	public static NavajoStreamEvent arrayDone(String name) {
