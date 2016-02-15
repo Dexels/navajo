@@ -166,31 +166,31 @@ public class JnlpLocalStorage implements LocalStorage {
         if (localData.containsKey(location)) {
             return true;
         } else {
-            return false;
+
+            FileContents fc = null;
+            try {
+                fc = ps.get(createMuffinUrl(location));
+            } catch (MalformedURLException e) {
+                // logger.debug("Malformed panic blues!");
+                logger.error("Error detected", e);
+            } catch (FileNotFoundException e) {
+                // logger.debug("Local file: "+location+" not found!");
+            } catch (IOException e) {
+                logger.error("Error detected", e);
+            }
+            if (fc == null) {
+                logger.debug("Has local for: {}: no", location);
+                return false;
+            } else {
+                try {
+                    return fc.getLength() != 0;
+                } catch (IOException e) {
+                    logger.error("Error detected", e);
+                }
+                logger.debug("Has local for {} failed", location);
+                return false;
+            }
         }
-        // FileContents fc = null;
-        // try {
-        // fc = ps.get(createMuffinUrl(location));
-        // } catch (MalformedURLException e) {
-        // // logger.debug("Malformed panic blues!");
-        // logger.error("Error detected",e);
-        // } catch (FileNotFoundException e) {
-        // // logger.debug("Local file: "+location+" not found!");
-        // } catch (IOException e) {
-        // logger.error("Error detected",e);
-        // }
-        // if (fc == null) {
-        // logger.debug("Has local for: {}: no",location);
-        // return false;
-        // } else {
-        // try {
-        // return fc.getLength() != 0;
-        // } catch (IOException e) {
-        // logger.error("Error detected",e);
-        // }
-        // logger.debug("Has local for {} failed",location);
-        // return false;
-        // }
     }
 
     @Override
