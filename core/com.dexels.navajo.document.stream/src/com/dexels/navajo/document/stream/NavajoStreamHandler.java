@@ -12,8 +12,8 @@ public interface NavajoStreamHandler {
 	public void messageDefinitionStarted(Map<String,String> attributes);
 	public void messageDefinition(Map<String,String> attributes, List<Prop> properties);
 	public void arrayStarted(Map<String,String> attributes);
-	public void arrayElementStarted(Map<String,String> attributes);
-	public void arrayElement(Map<String,String> attributes, List<Prop> properties);
+	public void arrayElementStarted();
+	public void arrayElement(List<Prop> properties);
 	public void arrayDone(String name);
 	public void navajoStart(NavajoHead head);
 	public void navajoDone();

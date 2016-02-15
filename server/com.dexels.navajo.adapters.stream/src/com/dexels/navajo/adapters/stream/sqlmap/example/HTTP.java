@@ -3,6 +3,7 @@ package com.dexels.navajo.adapters.stream.sqlmap.example;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -14,6 +15,7 @@ public class HTTP {
 
 	private static Executor httpPool = Executors.newFixedThreadPool(20);
 	
+	// TODO Rewrite using non blocking HTTP Client
 	public static Observable<byte[]> get(String getUrl) {
 		return Observable.create(subscriber->{
 			Runnable r = new Runnable(){
@@ -37,9 +39,15 @@ public class HTTP {
 					}
 				}
 			};
-			httpPool.execute(r);
-//			r.run();
+//			httpPool.execute(r);
+			r.run();
 		});
-		
 	}
+	
+	
+	public static Observable<ByteBuffer> getToByteBuffer(String getUrl) {
+		return get(getUrl).map(b->ByteBuffer.wrap(b));
+	}
+
+	
 }

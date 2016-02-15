@@ -10,6 +10,7 @@ public class ObservableXmlFeeder {
 
 	private final SaxXmlFeeder feeder = new SaxXmlFeeder();
 
+	@Deprecated
 	public Observable<XMLEvent> feed(ByteBuffer bytes) {
 		System.err.println("bytes: "+bytes.position()+" remaining: "+bytes.remaining());
 		if(bytes.limit()==bytes.position()) {
@@ -26,7 +27,9 @@ public class ObservableXmlFeeder {
 		return Observable.from(event);
 	}	
 	
+	@Deprecated
 	public Observable<XMLEvent> feed(byte[] bytes) {
 		return feed(ByteBuffer.wrap(bytes));
 	}
+	
 }

@@ -16,6 +16,7 @@ import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
 import rx.Observable;
+import rx.Subscriber;
 
 public class NavajoStreamCollector {
 
@@ -32,28 +33,20 @@ public class NavajoStreamCollector {
 	public NavajoStreamCollector() {
 	}
 
+	// TODO use just the operators
+	
 	public Observable<Navajo> feed(final NavajoStreamEvent streamEvents) {
-		Observable<Navajo> processNavajoEvent = processNavajoEvent(streamEvents);
+		Observable<Navajo> processNavajoEvent = processNavajoEvent(streamEvents,null);
 		return processNavajoEvent;
 		
 		
 	}
-	
-	private Observable<Navajo> completeNavajo() {
-//		try {
-//			for (String path : deferredPaths) {
-//				Msg message = deferredMessages.get(path);
-//				addMessage(message, path);
-//			} 
-//			System.err.println("COMPLETE!");
-//			return Observable.<Navajo>just(assemble);
-//		} catch (Throwable e) {
-//			return Observable.<Navajo>error(e);
-//		}
-		return Observable.<Navajo>just(assemble);
 
+	public void feed(final NavajoStreamEvent streamEvents, Subscriber<? super Navajo> subscriber) {
+		processNavajoEvent(streamEvents,subscriber);
 	}
 
+	
 	private String currentPath() {
 		StringBuilder sb = new StringBuilder();
 		for (String path : tagStack) {
@@ -73,7 +66,7 @@ public class NavajoStreamCollector {
 		nsc.tagStack.push("Inner");
 	}
 	@SuppressWarnings("unchecked")
-	private Observable<Navajo> processNavajoEvent(NavajoStreamEvent n) {
+	private Observable<Navajo> processNavajoEvent(NavajoStreamEvent n, Subscriber<? super Navajo> subscriber) {
 		switch (n.type()) {
 		case NAVAJO_STARTED:
 			createHeader((NavajoHead)n.body());
@@ -133,6 +126,7 @@ public class NavajoStreamCollector {
 			String arrayElementName = tagStack.peek();
 			String  arrayPath = currentPath();
 			AtomicInteger currentCount = arrayCounts.get(arrayPath);
+			System.err.println("Current path: "+arrayPath);
 			String ind = "@"+currentCount.getAndIncrement();
 			tagStack.push(ind);
 			arrayPath = currentPath();
@@ -160,7 +154,11 @@ public class NavajoStreamCollector {
 			//			deferredMessages.get(stripIndex(n.path())).setDefinitionMessage((Message) n.body());
 			return Observable.<Navajo>empty();
 		case NAVAJO_DONE:
-			return completeNavajo();
+			if(subscriber!=null) {
+				subscriber.onNext(assemble);
+			}
+			return Observable.<Navajo>just(assemble);
+
 		default:
 			return Observable.<Navajo>empty();
 		}

@@ -15,12 +15,13 @@
  */
 package org.jitu.rx.servlet;
 
-import rx.Subscriber;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import rx.Subscriber;
 
 /**
  * A servlet {@link WriteListener} that pushes Observable events that indicate

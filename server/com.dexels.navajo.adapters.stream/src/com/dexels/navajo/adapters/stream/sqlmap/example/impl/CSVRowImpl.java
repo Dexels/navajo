@@ -7,14 +7,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.dexels.navajo.adapters.stream.sqlmap.example.Row;
+import com.dexels.navajo.document.stream.api.Msg;
+import com.dexels.navajo.document.stream.api.Prop;
 
 public class CSVRowImpl implements Row {
 
 	private final Map<String,String> columns = new HashMap<>();
 	private final List<String> columnIndexes = new ArrayList<>();
-	
+	private final List<String> columnNames;
 	public CSVRowImpl(List<String> columnNames, String[] data) {
 		int i = 0;
+		this.columnNames = columnNames;
 		for (String element : data) {
 			columnIndexes.add(element);
 			columns.put(columnNames.get(i), element);
@@ -23,11 +26,10 @@ public class CSVRowImpl implements Row {
 	}
 
 	public CSVRowImpl(CSVRowImpl parent, String name, String value) {
-		int i = 0;
+		this.columnNames = parent.columnNames;
 		this.columnIndexes.addAll(parent.columnIndexes);
 		for (String element : parent.columnIndexes) {
 			columns.put(element,(String)parent.get(element));
-			i++;
 		}
 		columnIndexes.add(name);
 		columns.put(name, value);
@@ -61,4 +63,12 @@ public class CSVRowImpl implements Row {
 		return new CSVRowImpl(this,name,(String)value);
 	}
 
+	public Msg toElement() {
+		List<Prop> properties = new ArrayList<>();
+		int index = 0;
+		for (String name : columnNames) {
+			properties.add(Prop.create(name, get(index++)));
+		}
+ 		return Msg.createElement(properties);
+	}
 }

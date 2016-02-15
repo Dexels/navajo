@@ -1,6 +1,5 @@
 package com.dexels.navajo.listeners.stream.impl;
 
-import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 

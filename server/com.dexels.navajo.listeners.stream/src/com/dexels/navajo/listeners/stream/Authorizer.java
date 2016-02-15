@@ -1,7 +1,6 @@
 package com.dexels.navajo.listeners.stream;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.navajo.listeners.stream.core.BaseScriptInstance;
 
 import rx.Observable;
 import rx.Observer;

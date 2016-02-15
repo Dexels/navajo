@@ -15,17 +15,19 @@
  */
 package org.jitu.rx.servlet;
 
-import rx.Observable;
-import rx.Observable.*;
-import rx.Observer;
-import rx.Subscriber;
-import rx.functions.Func2;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.*;
+
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletOutputStream;
+
+import rx.Observable;
+import rx.Observable.OnSubscribe;
+import rx.Observer;
+import rx.Subscriber;
+import rx.functions.Func2;
 
 /**
  * An {@link Observable} interface to Servlet API

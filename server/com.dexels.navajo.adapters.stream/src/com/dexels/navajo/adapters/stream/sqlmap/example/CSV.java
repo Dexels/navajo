@@ -1,104 +1,79 @@
 package com.dexels.navajo.adapters.stream.sqlmap.example;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.adapters.stream.sqlmap.example.impl.CSVRowImpl;
+import com.dexels.navajo.document.stream.api.Msg;
 
 import rx.Observable;
+import rx.Observable.Operator;
+import rx.Subscriber;
+import rx.functions.Func1;
 
 public class CSV {
 
-	
-	private final static Logger logger = LoggerFactory.getLogger(CSV.class);
+    public static Operator<Row, String> rows(final String columnSeparator) {
+		return new Operator<Row,String>(){
 
-	
-	public static Observable<Row> fromClassPath(String resource) {
-		return Observable.<Row> defer(() -> Observable.from(new Iterable<Row>() {
-
-			
 			@Override
-			public Iterator<Row> iterator() {
+			public Subscriber<? super String> call(Subscriber<? super Row> in) {
 				
-				try {
-					final BufferedReader br = loadFromClassPath(resource);
-					final List<String> columns = CSV.columnNames(br.readLine());
+				final AtomicInteger counter = new AtomicInteger();
+				final List<String> columns = new ArrayList<>();
 
-				return new Iterator<Row>() {
-//					private static List<String> columnNames(String line) {
-//						return Stream.of(line.split(",")).collect(Collectors.toList());
-//					}
-					private String next;
+				return new Subscriber<String>() {
+
 					@Override
-					public boolean hasNext() {
-						try {
-							next = br.readLine();
-							return next!=null;
-						} catch (IOException e) {
-							logger.error("Error: ", e);
-							return false;
+					public void onCompleted() {
+						if(!in.isUnsubscribed()) {
+							in.onCompleted();
 						}
 					}
 
 					@Override
-					public Row next() {
-						return CSV.parseLine(columns, this.next);
+					public void onError(Throwable e) {
+						if(!in.isUnsubscribed()) {
+							in.onError(e);
+							
+						}
+					}
+
+					@Override
+					public void onNext(String line) {
+						
+						int current = counter.getAndIncrement();
+						if (current == 0) {
+							columns.addAll(CSV.columnNames(columnSeparator,line));
+						} else {
+							Row r = CSV.parseLine(columnSeparator,columns, line);
+							in.onNext(r);
+						}
 					}
 				};
-				} catch (IOException e) {
-					logger.error("Error: ", e);
-				}
-				return null;
-
-			}
-		})
-
-		);
-	}
-//	public static Observable<Row> fromClassPath(String resource)  {
-//		return Observable.<Row>create(subscriber->{
-//			try {
-//				try(BufferedReader br = loadFromClassPath(resource)) {
-//					List<String> columnNames = columnNames(br.readLine());
-//					br.lines().map(line->parseLine(columnNames,line)).forEach(
-//						row->{
-//							if(!subscriber.isUnsubscribed()) {
-//								subscriber.onNext(row);
-//							}
-//							
-//						}
-//					);
-//					subscriber.onCompleted();
-//				}
-//			} catch (Exception e) {
-//				subscriber.onError(e);
-//			}
-//		});
-//	}
+			}};
+    }
 	
-	private static Row parseLine(List<String> columnNames,String line) {
-		return new CSVRowImpl(columnNames, line.split(","));
+    public static Observable<Row> fromClassPathWithRow(String resource, Charset charset, String lineSeparator, String columnSeparator) {
+    	return  Bytes.fromAbsoluteClassPath(resource)
+            	.lift(StringObservable.decode(charset))
+            	.lift(StringObservable.split(lineSeparator))
+            	.lift(CSV.rows(columnSeparator));
+    }
+    
+    
+    public static Observable<Msg> fromClassPath(String resource, Charset charset, String lineSeparator, String columnSeparator) {
+    	return fromClassPathWithRow(resource, charset, lineSeparator, columnSeparator).map(r->r.toElement());
+    }
+	private static Row parseLine(String columnSeparator,List<String> columnNames,String line) {
+		return new CSVRowImpl(columnNames, line.split(columnSeparator));
 	}
 	
-	private static List<String> columnNames(String line) {
-		return Stream.of(line.split(",")).collect(Collectors.toList());
-	}
-	
-	private static BufferedReader loadFromClassPath(String resource) throws UnsupportedEncodingException {
-		return new BufferedReader(
-				new InputStreamReader(
-						resource.startsWith("/")?
-								CSV.class.getClassLoader().getResourceAsStream(resource.substring(1)) : 
-								CSV.class.getResourceAsStream(resource), "UTF-8"
-				));
+	private static List<String> columnNames(String columnSeparator, String line) {
+		return Stream.of(line.split(columnSeparator)).collect(Collectors.toList());
 	}
 }

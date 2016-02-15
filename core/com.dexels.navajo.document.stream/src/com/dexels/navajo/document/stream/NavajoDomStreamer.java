@@ -25,7 +25,6 @@ import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
 import rx.Observable;
-import rx.Subscriber;
 
 public class NavajoDomStreamer {
 
@@ -73,11 +72,11 @@ public class NavajoDomStreamer {
 				list.add(messageDefinition(messageProperties(definition), definitionname));
 			}
 			for (Message m : message.getElements()) {
-				list.add(arrayElementStarted(name));
+				list.add(arrayElementStarted());
 				for (Message sm : m.getAllMessages()) {
 					emitMessage(sm, list,outputNavajo);
 				}				
-				list.add(arrayElement(messageProperties(m), name));
+				list.add(arrayElement(messageProperties(m)));
 			}
 			list.add(arrayDone(name));
 		} else {
