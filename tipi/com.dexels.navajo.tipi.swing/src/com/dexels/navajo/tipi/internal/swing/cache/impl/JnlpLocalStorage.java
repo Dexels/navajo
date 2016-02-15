@@ -56,7 +56,7 @@ public class JnlpLocalStorage implements LocalStorage {
             for (int i = 0; i < cacheMuffins.length; i++) {
                 String muffinlocation = cacheMuffins[i];
                 logger.info("muffinLoc  {}", muffinlocation);
-                String[] splitted = muffinlocation.split(cacheBase + relativePath );
+                String[] splitted = muffinlocation.split(cacheBase + this.relativePath );
                 logger.info("splitted part2: {}", splitted[1]);
                 String location =  splitted[1].replaceAll("_", "/");
                 
@@ -65,7 +65,7 @@ public class JnlpLocalStorage implements LocalStorage {
             
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            logger.error("Error on filling muffins: {}", e);
+            logger.error("Error on filling muffins: ", e);
         }
        
         
