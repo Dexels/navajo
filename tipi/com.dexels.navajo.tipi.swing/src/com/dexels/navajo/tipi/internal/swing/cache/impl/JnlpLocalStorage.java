@@ -58,11 +58,12 @@ public class JnlpLocalStorage implements LocalStorage {
                     String muffinRelativePath = splitted[1].substring(0, splitted[1].indexOf("_") + 1);
                     if (! muffinRelativePath.equals(this.relativePath)) {
                         //ignore
+                        logger.info("skipping {} due to non-maching relative location: {} vs {}", muffinlocation, muffinRelativePath,   this.relativePath);
                         continue;
                     }
                     String path = splitted[1].substring(splitted[1].indexOf("_") + 1);
                     String location = path.replaceAll("_", "/");
-
+                    logger.info("Adding new location: {}", location);
                     localData.put(location, new URL(getCacheBaseURL(), cacheMuffins[i]));
                 } catch (Exception e) {
                     logger.error("Error on filling muffin {}", cacheMuffins[i],  e);
@@ -162,6 +163,7 @@ public class JnlpLocalStorage implements LocalStorage {
         if (localData.containsKey(location)) {
             return true;
         } else {
+            logger.info("hasLocal false for {}", location);
             return false;
         }
     }
