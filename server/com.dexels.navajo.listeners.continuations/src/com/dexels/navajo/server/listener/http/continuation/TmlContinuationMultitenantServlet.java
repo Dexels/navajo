@@ -64,7 +64,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 	protected void service(final HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
-			String instance = determineInstanceFromRequest(req);
+			String instance = determineTenantFromRequest(req);
 			LocalClient localClient = getLocalClient();
 			if ( localClient == null ) {
 				localClient = getLocalClient(req);
@@ -81,7 +81,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 		}
 	}
 
-	private String determineInstanceFromRequest(final HttpServletRequest req) {
+	private String determineTenantFromRequest(final HttpServletRequest req) {
 		String requestInstance = req.getHeader("X-Navajo-Instance");
 		if(requestInstance!=null) {
 			return requestInstance;
