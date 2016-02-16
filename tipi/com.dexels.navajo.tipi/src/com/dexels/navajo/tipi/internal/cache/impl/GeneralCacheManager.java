@@ -1,6 +1,9 @@
 package com.dexels.navajo.tipi.internal.cache.impl;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,20 +45,29 @@ public class GeneralCacheManager implements CacheManager {
 			return local.getLocalData(location);
 		}
 		InputStream res = downloadLocation(location);
+		
 		return res;
 	}
 
 	private InputStream downloadLocation(String location) throws IOException {
 		Map<String, Object> metadata = new HashMap<String, Object>();
 		InputStream is = remote.getContents(location, metadata);
+		
 		if (is == null) {
-			logger.warn("Error while downloading location {} : No such item.");
-			return null;
-		}
-		local.storeData(location, is, metadata);
+            logger.warn("Error while downloading location {} : No such item.");
+            return null;
+        }
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        copyResource(baos, is);
+		
+		
+		local.storeData(location, new ByteArrayInputStream(baos.toByteArray()) , metadata);
 		cacheValidator.update(location);
-		return is;
+		return new ByteArrayInputStream(baos.toByteArray());
 	}
+	
+	   
 
 	@Override
 	public boolean hasLocal(String location) throws IOException {
