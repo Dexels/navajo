@@ -26,7 +26,6 @@ import com.dexels.navajo.tipi.internal.cache.LocalStorage;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 
 public class JnlpLocalStorage implements LocalStorage {
-    private final ExecutorService executorService = Executors.newFixedThreadPool(1); 
 
     private static final long DEFAULT_SIZE = 1000000;
     private final PersistenceService ps;
@@ -151,37 +150,27 @@ public class JnlpLocalStorage implements LocalStorage {
     }
 
     @Override
-    public void storeData(final String location, final InputStream data,  final Map<String, Object> metadata) throws IOException {
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    FileContents fc = null;
-                    URL muffinUrl = createMuffinUrl(location);
-                    FileContents ff = null;
-                  
-                    long length = DEFAULT_SIZE;
+    public void storeData(final String location, final InputStream data, final Map<String, Object> metadata) throws IOException {
 
-                    try {
-                        ff = ps.get(muffinUrl);
-                    } catch (FileNotFoundException e) {
-                        // logger.debug("Not found. fine.");
-                    }
-                    if (ff == null) {
-                        ps.create(muffinUrl, length);
-                    }
+        FileContents fc = null;
+        URL muffinUrl = createMuffinUrl(location);
+        FileContents ff = null;
 
-                    fc = ps.get(muffinUrl);
-                    OutputStream os = fc.getOutputStream(true);
-                    copyResource(os, data);
-                } catch (IOException e) {
-                    logger.error("Error on storing data for {}", location, e);
-                }
-               
-                
-            }
-        });
-       
+        long length = DEFAULT_SIZE;
+
+        try {
+            ff = ps.get(muffinUrl);
+        } catch (FileNotFoundException e) {
+            // logger.debug("Not found. fine.");
+        }
+        if (ff == null) {
+            ps.create(muffinUrl, length);
+        }
+
+        fc = ps.get(muffinUrl);
+        OutputStream os = fc.getOutputStream(true);
+        copyResource(os, data);
+
     }
 
     private final void copyResource(OutputStream out, InputStream in) throws IOException {

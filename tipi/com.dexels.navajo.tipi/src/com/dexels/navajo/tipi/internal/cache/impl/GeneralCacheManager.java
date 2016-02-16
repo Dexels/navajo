@@ -11,6 +11,8 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,7 @@ import com.dexels.navajo.tipi.internal.cache.LocalStorage;
 import com.dexels.navajo.tipi.internal.cache.RemoteStorage;
 
 public class GeneralCacheManager implements CacheManager {
+    private final ExecutorService executorService = Executors.newFixedThreadPool(1); 
 
 	private final LocalStorage local;
 	private final RemoteStorage remote;
@@ -46,8 +49,8 @@ public class GeneralCacheManager implements CacheManager {
 		return downloadLocation(location);
 	}
 
-	private InputStream downloadLocation(String location) throws IOException {
-		Map<String, Object> metadata = new HashMap<String, Object>();
+	private InputStream downloadLocation(final String location) throws IOException {
+		final Map<String, Object> metadata = new HashMap<String, Object>();
 		InputStream is = remote.getContents(location, metadata);
 		
 		if (is == null) {
@@ -55,12 +58,22 @@ public class GeneralCacheManager implements CacheManager {
             return null;
         }
 		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         copyResource(baos, is);
-		
-		
-		local.storeData(location, new ByteArrayInputStream(baos.toByteArray()) , metadata);
-		cacheValidator.update(location);
+        is.close();
+        
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    local.storeData(location, new ByteArrayInputStream(baos.toByteArray()) , metadata);
+                    cacheValidator.update(location);
+                } catch (IOException e) {
+                    logger.error("IOException on updating local cache for {}", location, e);
+                }
+            }
+        });
+        
 		return new ByteArrayInputStream(baos.toByteArray());
 	}
 	
