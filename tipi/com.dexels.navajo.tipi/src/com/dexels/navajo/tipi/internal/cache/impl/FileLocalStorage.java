@@ -170,7 +170,7 @@ public class FileLocalStorage implements LocalStorage {
 	}
 
 	@Override
-	public URL getURL(String location) throws IOException {
+	public URL getURL(String location, InputStream is) throws IOException {
 		File f = new File(baseFile, convertPath(location));
 		return f.toURI().toURL();
 	}

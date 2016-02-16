@@ -115,11 +115,8 @@ public class JnlpLocalStorage implements LocalStorage {
     }
 
     @Override
-    public URL getURL(String location) throws IOException {
-     
-
+    public URL getURL(String location, InputStream is) throws IOException {
         File f = File.createTempFile("tipiCache", "");
-        InputStream is = getLocalData(location);
         OutputStream os = new FileOutputStream(f);
         copyResource(os, is);
         f.deleteOnExit();
