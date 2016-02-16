@@ -19,9 +19,10 @@ public class XML {
 
 					@Override
 					public void onCompleted() {
-						if(!in.isUnsubscribed()) {
-							feeder.endOfInput();
-						}
+						feeder.endOfInput();
+						parse(in, ByteBuffer.wrap(new byte[]{}));
+						in.onCompleted();
+
 					}
 
 					@Override
@@ -36,6 +37,10 @@ public class XML {
 						if(in.isUnsubscribed()) {
 							return;
 						}
+						parse(in, bytes);
+					}
+
+					private void parse(Subscriber<? super XMLEvent> in, ByteBuffer bytes) {
 						Iterable<XMLEvent> event = feeder.parse(bytes);
 						bytes.flip();
 						bytes.clear();

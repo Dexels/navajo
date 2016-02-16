@@ -16,6 +16,7 @@
 
 package com.dexels.navajo.listeners.stream;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -124,10 +125,28 @@ public class NonBlockingListener extends HttpServlet {
         
         Navajo inputNavajo = inStream.lift(NAVADOC.collect(attributes)).toBlocking().first();
         
+        System.err.println("Gathered:");
+        inputNavajo.write(System.err);
+
         String tenant = determineTenantFromRequest(req);
         
 		Navajo outDoc = execute(tenant, inputNavajo); // getLocalClient().handleInternal(getNavajoInstance(), in, getRequest().getCert(), clientInfo);
 		
+        System.err.println("Out:");
+        outDoc.write(System.err);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
+			Observable.just(outDoc)
+			.lift(NAVADOC.stream())
+			.lift(NAVADOC.serialize())
+			.subscribe(a->{try {baos.write(a);} catch (Exception e2) {e2.printStackTrace();};
+			
+			},e->{},()->System.err.println("Restreamed: \n"+new String(baos.toByteArray()))
+		);
+		
+        
+        
 		String encoding = decideEncoding((String) attributes.get("Accept-Encoding"));
 		if(encoding!=null) {
 			resp.addHeader("Content-Encoding", encoding);
@@ -136,7 +155,7 @@ public class NonBlockingListener extends HttpServlet {
 		Observable.just(outDoc)
 			.lift(NAVADOC.stream())
 			.lift(NAVADOC.serialize())
-			.lift(NavajoStreamOperators.compress(encoding))
+//			.lift(NavajoStreamOperators.compress(encoding))
 			.subscribe(
 					bytes->{
 //						System.err.println("Writing output: "+bytes.length);

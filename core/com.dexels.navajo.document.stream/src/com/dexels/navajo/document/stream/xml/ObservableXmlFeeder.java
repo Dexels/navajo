@@ -17,7 +17,7 @@ public class ObservableXmlFeeder {
 			System.err.println("Ending input");
 			feeder.endOfInput();
 		}
-		System.err.println("Feeding bytes: "+bytes.remaining());
+//		System.err.println("Feeding bytes: "+bytes.remaining());
 		Iterable<XMLEvent> event = feeder.parse(bytes);
 		bytes.flip();
 		bytes.clear();

@@ -170,8 +170,12 @@ public class NavajoStreamCollector {
 	}
 
 	private Property createTmlProperty(Prop p) {
+		System.err.println("PROPERTY TYPE: "+p.type());
 		Property result = NavajoFactory.getInstance().createProperty(assemble, p.name(), p.type()==null?Property.STRING_PROPERTY:p.type(), null, p.length(), p.description(), p.direction());
 		result.setAnyValue(p.value());
+		if(p.type()!=null) {
+			result.setType(p.type());
+		}
 		return result;
 	}
 }
