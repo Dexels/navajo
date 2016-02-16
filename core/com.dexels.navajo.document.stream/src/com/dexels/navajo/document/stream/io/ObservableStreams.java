@@ -66,13 +66,10 @@ public class ObservableStreams {
 					}
 
 					private void loadBuffer(final ByteBuffer bytes, int read) {
-//						System.err.println("Loading buffer with bytes: "+read);
 						byte[] result = new byte[read];
 						bytes.flip();
 						bytes.get(result);
 						setNext(ByteBuffer.wrap(result));
-//						this.nextBuffer.flip();
-//						System.err.println("Loading buffer with >>: "+nextBuffer.remaining()+" - "+nextBuffer.position()+" - "+nextBuffer.arrayOffset()+" rr: "+nextBuffer.hashCode()+" I am: "+hashCode());
 						bytes.flip();
 						bytes.clear();
 					}
@@ -85,18 +82,7 @@ public class ObservableStreams {
 					}
 					
 					private void setNext(ByteBuffer buffer) {
-//						if(nextBuffer!=null) {
-//							System.err.println("Setting from: "+nextBuffer);
-//						} else {
-//							System.err.println("Setting from null!");
-//						}
 						this.nextBuffer = buffer;
-//						if(nextBuffer!=null) {
-//							System.err.println("Setting to: "+nextBuffer);
-//						} else {
-//							System.err.println("Setting to null!");
-//						}
-	
 					}
 				};
 

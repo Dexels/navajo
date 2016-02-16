@@ -1,15 +1,12 @@
 package com.dexels.navajo.document.stream.impl;
 
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.dexels.utils.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +14,6 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.document.stream.NavajoStreamHandler;
 import com.dexels.navajo.document.stream.api.NavajoHead;
@@ -25,6 +21,10 @@ import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.Select;
 import com.dexels.navajo.document.stream.xml.XmlInputHandler;
 import com.dexels.navajo.document.types.Binary;
+
+import rx.Observable;
+import rx.Observable.OnSubscribe;
+import rx.Subscriber;
 
 public final class StreamSaxHandler implements XmlInputHandler {
 
@@ -34,7 +34,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
     private Stack<Map<String,String>> attributeStack = new Stack<>();
     
 //    private Message currentMessage = null;
-    private Prop currentProperty = null;
+//    private Prop currentProperty = null;
     private Method currentMethod = null;
 	private final NavajoStreamHandler handler;
     
@@ -47,11 +47,13 @@ public final class StreamSaxHandler implements XmlInputHandler {
 	private Map<String, String> asyncAttributes;
 	private final List<Select> currentSelections = new ArrayList<>();
 	private Binary currentBinary;
-	private Writer currentBinaryWriter;
-	private boolean binaryStarted;
+//	private Writer currentBinaryWriter;
+//	private boolean binaryStarted;
 	private final static Logger logger = LoggerFactory
 			.getLogger(StreamSaxHandler.class);
 
+	private Subscriber<? super String> binarySink;
+	
 	public StreamSaxHandler(NavajoStreamHandler handler) {
 		this.handler = handler;
 	}
@@ -81,7 +83,16 @@ public final class StreamSaxHandler implements XmlInputHandler {
         if (tag.equals("property")) {
         	String propType = h.get("type");
         	if("binary".equals(propType)) {
-        		binaryStarted = true;
+        		Observable.<String>create(new OnSubscribe<String>() {
+
+					@Override
+					public void call(Subscriber<? super String> s) {
+						binarySink = s;
+					}
+				}).lift(BinaryObserver.collect()).subscribe(binary->{
+//					currentProperty = currentProperty.withValue(binary);
+	               currentBinary = binary;
+				});
         	}
 //            String val = h.get("value");
 //            if (val!=null) {
@@ -252,33 +263,27 @@ public final class StreamSaxHandler implements XmlInputHandler {
 //            messageNameStack.pop();
         }
         if (tag.equals("property")) {
-            String val = attributes.get("value");
-            if (val!=null) {
-
+        	Prop currentProperty;
+        	String val = attributes.get("value");
+        	if("selection".equals(attributes.get("type"))) {
+                currentProperty = Prop.create(attributes,currentSelections);
+        	} else if (val!=null) {
             	Hashtable<String,String> h2 = new Hashtable<String,String>(attributes);
     			val = BaseNode.XMLUnescape(val);
     			h2.put("value", val);
                 currentProperty = Prop.create(h2,currentSelections);
+            } else if(binarySink!=null) {
+            	binarySink.onCompleted();
+            	if(currentBinary!=null) {
+                    currentProperty = Prop.create(attributes,currentBinary);
+            		currentBinary = null;
+            	} else {
+            		logger.error("Null currentBinary where not expected");
+            		throw new RuntimeException("Null currentBinary where not expected");
+            	}
             } else {
                 currentProperty = Prop.create(attributes,currentSelections);
-			} if(currentBinaryWriter!=null) {
-        		try {
-					currentBinaryWriter.flush();
-					currentBinaryWriter.close();
-				} catch (IOException e) {
-					logger.error("Error closing binarywriter: ",e);
-				}
-				currentBinaryWriter = null;
-        	}  
-        	if(currentBinary!=null) {
-        		try {
-					currentBinary.getOutputStream().close();
-				} catch (IOException e) {
-					logger.error("Error closing binary: ",e);
-					}
-                currentProperty = Prop.create(attributes,currentBinary);
-        		currentBinary = null;
-        	}
+			}
 //            String sub = currentProperty.subtype();
 //            currentProperty.withValue(currentBinary); //.value(currentBinary);
 //            // Preserve the subtype. This will cause the handle to refer to the server
@@ -289,14 +294,18 @@ public final class StreamSaxHandler implements XmlInputHandler {
 //            	currentBinary.setMimeType(currentProperty.subtypes("mime"));
 //            }        	
         	
-        	currentProperties.add(Prop.create(attributes,this.currentSelections));
+        	currentProperties.add(currentProperty);
         	currentProperty = null;
         	currentSelections.clear();
-        	binaryStarted = false;
+        	binarySink = null;
         }
         if (tag.equals("option")) {
+//        	parseSelection(attributes);
+//        	currentProperty.addSelect(s);
+        	
         }
         if (tag.equals("method")) {
+        	
         }
         if (tag.equals("header")) {
             parseHeader(attributes);
@@ -328,18 +337,8 @@ public final class StreamSaxHandler implements XmlInputHandler {
 //            throw new IllegalArgumentException("Huh?");
 //        }
 
-        if (this.binaryStarted) {
-            logger.warn("Warning: Ignoring binaries for now");
-            if(this.currentBinary==null) {
-        		currentBinary = new Binary();
-        		currentBinaryWriter = Base64.newDecoder(currentBinary.getOutputStream());
-            }
-
-            try {
-				currentBinaryWriter.write(r);
-			} catch (IOException e) {
-				logger.error("Error writing to binary: ",e);
-			}
+        if (this.binarySink!=null) {
+        	this.binarySink.onNext(r);
          //  currentProperty.setInitialized();
         } else {
         	if(!"".equals(r.trim())) {

@@ -1,0 +1,13 @@
+<tml>
+   <header>
+      <transaction/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="Message">
+      <property name="Property" type="selection" direction="out" cardinality="1">
+         <option name="notselected" value="1" selected="0"/>
+         <option name="selected" value="2" selected="1"/>
+      </property>
+   </message>
+</tml>

@@ -12,9 +12,9 @@ public class ObservableXmlFeeder {
 
 	@Deprecated
 	public Observable<XMLEvent> feed(ByteBuffer bytes) {
-		System.err.println("bytes: "+bytes.position()+" remaining: "+bytes.remaining());
+//		System.err.println("bytes: "+bytes.position()+" remaining: "+bytes.remaining());
 		if(bytes.limit()==bytes.position()) {
-			System.err.println("Ending input");
+//			System.err.println("Ending input");
 			feeder.endOfInput();
 		}
 //		System.err.println("Feeding bytes: "+bytes.remaining());

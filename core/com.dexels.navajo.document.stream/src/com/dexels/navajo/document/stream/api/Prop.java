@@ -2,48 +2,52 @@ package com.dexels.navajo.document.stream.api;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.dexels.navajo.document.stream.NavajoStreamSerializer;
 import com.dexels.navajo.document.types.Binary;
 
 public class Prop {
 	private final String name;
 	private final Object value;
 	private final String type;
-	private final List<Select> selections;
+	private final List<Select> selections = new ArrayList<>();
 	private final int length;
 	private final String description;
 	private final Direction direction;
 	private final String subtype;
+	private final String cardinality;
 	
 	public enum Direction {
 		IN,OUT
 	}
 	
-	Prop(String name, Object value, String type, List<Select> selections) {
-		this(name,value,type,selections,Direction.OUT,"",-1,"");
+	Prop(String name, Object value, String type, List<Select> selections, String cardinality) {
+		this(name,value,type,selections,Direction.OUT,"",-1,"",cardinality);
 	}
 	
 	public Prop copy() {
-		return new Prop(name, value, type,selections,direction,description,length,subtype);
+		return new Prop(name, value, type,selections,direction,description,length,subtype,cardinality);
 	}
 
 	public Prop(String name, Object value, String type) {
-		this(name, value, type, Collections.emptyList());
+		this(name, value, type, Collections.emptyList(),"1");
 	}
 
 	public Prop(String name, Object value, String type, List<Select> selections, Prop.Direction direction,
-			String description, int length, String subtype) {
+			String description, int length, String subtype,String cardinality) {
 		this.name = name;
 		this.type = type;
 		this.value = value;
-		this.selections = selections;
-		this.direction = Direction.OUT;
+		this.selections.addAll(selections);
+		this.direction = direction;
 		this.description = description;
 		this.length = length;
 		this.subtype = subtype;
+		this.cardinality = cardinality;
 	}
 
 	public static Prop create(String name) {
@@ -52,14 +56,14 @@ public class Prop {
 	
 	public static Prop create(Map<String,String> attributes, List<Select> selections) {
 		String lngth = attributes.get("length");
+		String cardinality = attributes.get("cardinality");
 		int len = lngth==null || "".equals(lngth)?-1:Integer.parseInt(lngth);
-		return create(attributes.get("name"),attributes.get("value"),attributes.get("type"),selections,attributes.get("direction").equals("dir_in")?Direction.IN:Direction.OUT,attributes.get("description"),len,attributes.get("subtype"));
+		return create(attributes.get("name"),attributes.get("value"),attributes.get("type"),selections,attributes.get("direction").equals("in")?Direction.IN:Direction.OUT,attributes.get("description"),len,attributes.get("subtype"),cardinality);
 	}
 
 	public static Prop create(Map<String, String> attributes, Binary currentBinary) {
 		int len =  (int) currentBinary.getLength(); // lngth==null || "".equals(lngth)?-1:Integer.parseInt(lngth);
-		System.err.println("Creating property with binary: "+currentBinary.getLength());
-		return create(attributes.get("name"),currentBinary,attributes.get("type"),Collections.emptyList(),attributes.get("direction").equals("dir_in")?Direction.IN:Direction.OUT,attributes.get("description"),len,attributes.get("subtype"));
+		return create(attributes.get("name"),currentBinary,attributes.get("type"),Collections.emptyList(),attributes.get("direction").equals("in")?Direction.IN:Direction.OUT,attributes.get("description"),len,attributes.get("subtype"),null);
 	}
 
 	public static Prop create(String name, Object value) {
@@ -70,22 +74,22 @@ public class Prop {
 		return new Prop(name,value,type);
 	}
 	
-	public static Prop create(String name, Object value, String type,List<Select> selections) {
-		return new Prop(name,value,type,selections,Prop.Direction.OUT,"",-1,"");
+	public static Prop create(String name, Object value, String type,List<Select> selections, String cardinality) {
+		return new Prop(name,value,type,selections,Prop.Direction.OUT,"",-1,"",cardinality);
 	}
 	
-	private static Prop create(String name, Object value, String type,List<Select> selections, Prop.Direction direction, String description, int length, String subtype ) {
-		return new Prop(name,value,type,selections,direction,description,length,subtype);
+	public static Prop create(String name, Object value, String type,List<Select> selections, Prop.Direction direction, String description, int length, String subtype, String cardinality ) {
+		return new Prop(name,value,type,selections,direction,description,length,subtype,cardinality);
 	}
 	
 
 	
 	public Prop withSelections(List<Select> currentSelections) {
-		return new Prop(name, value, type,currentSelections);
+		return new Prop(name, value, type,currentSelections,cardinality);
 	}
 
 	public Prop withValue(Object val) {
-		return new Prop(name, val, type,selections,direction,description,length,subtype);
+		return new Prop(name, val, type,selections,direction,description,length,subtype,cardinality);
 	}
 	
 	public Prop emptyWithType(String type) {
@@ -137,7 +141,7 @@ public class Prop {
 		 if(type!=null) {
 			 sw.write(" type=\""+type+"\"");
 		 }
-		 if(value!=null) {
+		 if(value!=null && !isBinary()) {
 			 sw.write(" value=\""+value+"\"");
 		 }
 		 if(direction!=null) {
@@ -146,24 +150,37 @@ public class Prop {
 		 if(description!=null && !"".equals(description)) {
 			 sw.write(" description=\""+description+"\"");
 		 }
+		 if(cardinality!=null && !"".equals(cardinality)) {
+			 sw.write(" cardinality=\""+cardinality+"\"");
+		 }		 
 		 if(length>0) {
 			 sw.write(" length=\""+length+"\"");
 		 }
-		 if(!isBinary() && selections==null || selections.isEmpty()) {
+		 if(!isBinary() && (selections==null || selections.isEmpty())) {
 				sw.write("/>\n");
 		 } else {
+			 sw.write(">\n");
 			 if (isBinary()) {
 				Binary b = (Binary)value;
 				b.writeBase64(sw);
 			} else {
-				 for (Select select : selections) {
-						sw.write("<option name=\""+select.name()+"\" value=\""+select.value()+"\" selected=\""+(select.selected()?"1":"0")+"\"/>");
-					}
-
+				for (Select select : selections) {
+					writeSelection(sw, select,indent+NavajoStreamSerializer.INDENT);
+				}
 			}
+			 for (int a = 0; a < indent; a++) {
+				 sw.write(" ");
+			 }
 			sw.write("</property>\n");
 
 		 }
+	}
+
+	private void writeSelection(Writer sw, Select select,int indent) throws IOException {
+		 for (int a = 0; a < indent; a++) {
+			 sw.write(" ");
+		 }
+		sw.write("<option name=\""+select.name()+"\" value=\""+select.value()+"\" selected=\""+(select.selected()?"1":"0")+"\"/>\n");
 	}
 	
 	private boolean isBinary() {
@@ -197,6 +214,19 @@ public class Prop {
 	public String subtypes(String subTypeKey) {
 		Map<String,String> subtypes = Collections.emptyMap();
 		return subtypes.get(subTypeKey);
+	}
+
+	public void addSelect(Select s) {
+		selections.add(s);
+		
+	}
+
+	public String cardinality() {
+		return cardinality;
+	}
+
+	public List<Select> selections() {
+		return selections;
 	}
 
 

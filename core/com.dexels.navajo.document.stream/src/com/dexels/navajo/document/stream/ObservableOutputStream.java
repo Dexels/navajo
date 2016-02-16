@@ -39,8 +39,6 @@ public class ObservableOutputStream extends OutputStream {
 					subscriber.onNext(b);
 				} else {
 					byte[] chu = Arrays.copyOfRange(b, off, len);
-					System.err.println("Chunking: "+"§"+new String(chu)+"±"+" len: "+len+" index: "+index+" chunksize: "+chu.length);
-
 					subscriber.onNext(chu);
 				}
 				return;
@@ -51,7 +49,6 @@ public class ObservableOutputStream extends OutputStream {
 			while(index<len) {
 				int csize = Math.min(chunksize, len-index);
 				byte[] chunk = Arrays.copyOfRange(b, index, index+csize);
-				System.err.println("Chunking: "+"§"+new String(chunk)+"±"+" len: "+len+" index: "+index+" chunksize: "+chunksize+" csize: "+csize);
 				subscriber.onNext(chunk);
 				index+=chunksize;
 			}

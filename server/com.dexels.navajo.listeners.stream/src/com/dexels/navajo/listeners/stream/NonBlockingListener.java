@@ -108,12 +108,9 @@ public class NonBlockingListener extends HttpServlet {
         
         Observable<NavajoStreamEvent> inStream = input
 //        		.subscribeOn(Schedulers.io())
-        		.doOnNext((bytearray)->System.err.println("Data: "+new String(bytearray.array())))
         		.doOnCompleted(()->System.err.println("done!"))
         		.lift(XML.parse())
-        		.doOnCompleted(()->System.err.println("XML complete"))
-        		.lift(NAVADOC.parse(attributes))
-    			.doOnNext(event->System.err.println("Event: "+event));
+        		.lift(NAVADOC.parse(attributes));
 
 
         // detect if this is a streaming script, if so, pass the inStream
@@ -125,26 +122,26 @@ public class NonBlockingListener extends HttpServlet {
         
         Navajo inputNavajo = inStream.lift(NAVADOC.collect(attributes)).toBlocking().first();
         
-        System.err.println("Gathered:");
-        inputNavajo.write(System.err);
+//        System.err.println("Gathered:");
+//        inputNavajo.write(System.err);
 
         String tenant = determineTenantFromRequest(req);
         
 		Navajo outDoc = execute(tenant, inputNavajo); // getLocalClient().handleInternal(getNavajoInstance(), in, getRequest().getCert(), clientInfo);
 		
-        System.err.println("Out:");
-        outDoc.write(System.err);
+//        System.err.println("Out:");
+//        outDoc.write(System.err);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		
-			Observable.just(outDoc)
-			.lift(NAVADOC.stream())
-			.lift(NAVADOC.serialize())
-			.subscribe(a->{try {baos.write(a);} catch (Exception e2) {e2.printStackTrace();};
-			
-			},e->{},()->System.err.println("Restreamed: \n"+new String(baos.toByteArray()))
-		);
-		
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		
+//			Observable.just(outDoc)
+//			.lift(NAVADOC.stream())
+//			.lift(NAVADOC.serialize())
+//			.subscribe(a->{try {baos.write(a);} catch (Exception e2) {e2.printStackTrace();};
+//			
+//			},e->{},()->System.err.println("Restreamed: \n"+new String(baos.toByteArray()))
+//		);
+//		
         
         
 		String encoding = decideEncoding((String) attributes.get("Accept-Encoding"));
