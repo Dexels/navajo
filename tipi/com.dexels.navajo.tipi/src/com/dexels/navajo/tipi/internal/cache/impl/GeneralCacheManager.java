@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.internal.cache.impl;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -44,9 +43,7 @@ public class GeneralCacheManager implements CacheManager {
 		if (isUpToDate) {
 			return local.getLocalData(location);
 		}
-		InputStream res = downloadLocation(location);
-		
-		return res;
+		return downloadLocation(location);
 	}
 
 	private InputStream downloadLocation(String location) throws IOException {
@@ -94,11 +91,14 @@ public class GeneralCacheManager implements CacheManager {
 	@Override
 	public URL getLocalURL(String location) throws IOException {
 		//logger.debug("Getting local URL location: {}. I am: {}",location,id);
+	    InputStream is = null;
 		if (!isUpToDate(location)) {
 			logger.debug("Not up to date, downloading {}",location);
-			downloadLocation(location);
+			is = downloadLocation(location);
+		} else {
+		    is =  local.getLocalData(location);
 		}
-		URL localURL = local.getURL(location);
+		URL localURL = local.getURL(location, is);
 		if(localURL==null) {
 			// localstorage does not support 'direct' url's, create temp one:
 			return createTempURL(local.getLocalData(location));
