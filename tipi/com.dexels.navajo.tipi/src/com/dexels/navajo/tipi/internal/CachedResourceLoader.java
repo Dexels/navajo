@@ -21,6 +21,7 @@ public abstract class CachedResourceLoader extends ClassPathResourceLoader {
 	@Override
 	public InputStream getResourceStream(String location) throws IOException {
 		InputStream contents = getCacheManager().getContents(location);
+		
 		if (contents != null) {
 		    logger.debug("Returning locally CACHED version of {}", location);
 			return contents;
@@ -31,7 +32,6 @@ public abstract class CachedResourceLoader extends ClassPathResourceLoader {
 	@Override
 	public URL getResourceURL(String location) throws IOException {
 		URL u = getCacheManager().getLocalURL(location);
-		// URL u = getCacheManager().getRemoteURL(location);
 		if (u != null) {
 			return u;
 		}
