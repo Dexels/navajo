@@ -1783,12 +1783,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     private String getErrorMessage(Navajo reply, String errorMessage) {
         String userError = errorMessage;
         String dtap = systemPropertyMap.get("DTAP") == null? null: systemPropertyMap.get("DTAP");
-        Boolean isSportlinkUser = (Boolean) getGlobalValue("IsUserNameSportlink");
-        if (isSportlinkUser == null) isSportlinkUser = false;
+        Boolean showFullErrorMessage = (Boolean) getGlobalValue("showFullErrorMessage");
+        if (showFullErrorMessage == null) showFullErrorMessage = false;
         
         // In everything besides DEVELOPMENT we replace the error message. 
         // If the user is sportlink, we never replace it
-        if (!dtap.equals("DEVELOPMENT") && !isSportlinkUser)  {
+        if (!"DEVELOPMENT".equals(dtap) && !showFullErrorMessage)  {
             // We don't want to give the end-user an ugly stack trace, hence we replace the message
             // with an access id.
             errorMessage = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
