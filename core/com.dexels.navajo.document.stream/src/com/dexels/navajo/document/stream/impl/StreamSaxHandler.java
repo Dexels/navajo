@@ -1,12 +1,15 @@
 package com.dexels.navajo.document.stream.impl;
 
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.dexels.utils.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,12 +17,14 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.document.stream.NavajoStreamHandler;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.Select;
 import com.dexels.navajo.document.stream.xml.XmlInputHandler;
+import com.dexels.navajo.document.types.Binary;
 
 public final class StreamSaxHandler implements XmlInputHandler {
 
@@ -41,6 +46,9 @@ public final class StreamSaxHandler implements XmlInputHandler {
 	private Map<String, String> piggybackAttriutes;
 	private Map<String, String> asyncAttributes;
 	private final List<Select> currentSelections = new ArrayList<>();
+	private Binary currentBinary;
+	private Writer currentBinaryWriter;
+	private boolean binaryStarted;
 	private final static Logger logger = LoggerFactory
 			.getLogger(StreamSaxHandler.class);
 
@@ -71,6 +79,10 @@ public final class StreamSaxHandler implements XmlInputHandler {
             return;
         }
         if (tag.equals("property")) {
+        	String propType = h.get("type");
+        	if("binary".equals(propType)) {
+        		binaryStarted = true;
+        	}
 //            String val = h.get("value");
 //            if (val!=null) {
 //
@@ -83,7 +95,8 @@ public final class StreamSaxHandler implements XmlInputHandler {
 //			}
 //            currentProperties.add(currentProperty);
 //            currentSelections.clear();
-            return;
+
+        	return;
         }
         if (tag.equals("option")) {
             String val = h.get("value");
@@ -248,27 +261,38 @@ public final class StreamSaxHandler implements XmlInputHandler {
                 currentProperty = Prop.create(h2,currentSelections);
             } else {
                 currentProperty = Prop.create(attributes,currentSelections);
-			}
-        	//        	if(currentBinaryWriter!=null) {
-//        		try {
-//					currentBinaryWriter.flush();
-//					currentBinaryWriter.close();
-//				} catch (IOException e) {
-//					logger.error("Error closing binarywriter: ",e);
-//				}
-//				currentBinaryWriter = null;
-//        	}
-//        	if(currentBinary!=null) {
-//        		try {
-//					currentBinary.getOutputStream().close();
-//				} catch (IOException e) {
-//					logger.error("Error closing binary: ",e);
-//					}
-//        		currentBinary = null;
-//        	}
+			} if(currentBinaryWriter!=null) {
+        		try {
+					currentBinaryWriter.flush();
+					currentBinaryWriter.close();
+				} catch (IOException e) {
+					logger.error("Error closing binarywriter: ",e);
+				}
+				currentBinaryWriter = null;
+        	}  
+        	if(currentBinary!=null) {
+        		try {
+					currentBinary.getOutputStream().close();
+				} catch (IOException e) {
+					logger.error("Error closing binary: ",e);
+					}
+                currentProperty = Prop.create(attributes,currentBinary);
+        		currentBinary = null;
+        	}
+//            String sub = currentProperty.subtype();
+//            currentProperty.withValue(currentBinary); //.value(currentBinary);
+//            // Preserve the subtype. This will cause the handle to refer to the server
+//            // handle, not the client side
+//            currentProperty.subtype(sub);
+//            // Set mime type if specified as subtype.
+//            if ( currentProperty.subtypes("mime") != null ) {
+//            	currentBinary.setMimeType(currentProperty.subtypes("mime"));
+//            }        	
+        	
         	currentProperties.add(Prop.create(attributes,this.currentSelections));
         	currentProperty = null;
         	currentSelections.clear();
+        	binaryStarted = false;
         }
         if (tag.equals("option")) {
         }
@@ -299,35 +323,29 @@ public final class StreamSaxHandler implements XmlInputHandler {
 
     @Override
 	public final void text(String r)  {
-        if (currentProperty==null) {
-            return;
+//        if (currentProperty==null) {
+//            return;
 //            throw new IllegalArgumentException("Huh?");
-        }
+//        }
 
-        logger.warn("Warning: Ignoring binaries for now");
-//        if (Property.BINARY_PROPERTY.equals(currentProperty.getType())) {
-//            if(currentBinary==null) {
-//        		currentBinary = new Binary();
-//        		currentBinaryWriter = Base64.newDecoder(currentBinary.getOutputStream());
-//            }
-//            String sub = currentProperty.getSubType();
-//            currentProperty.setValue(currentBinary,false);
-//            // Preserve the subtype. This will cause the handle to refer to the server
-//            // handle, not the client side
-//            currentProperty.setSubType(sub);
-//            // Set mime type if specified as subtype.
-//            if ( currentProperty.getSubType("mime") != null ) {
-//            	currentBinary.setMimeType(currentProperty.getSubType("mime"));
-//            }
-//            try {
-//				currentBinaryWriter.write(r);
-//			} catch (IOException e) {
-//				logger.error("Error writing to binary: ",e);
-//			}
-//         //  currentProperty.setInitialized();
-//        } else {
-//            throw new IllegalArgumentException("uuuh: "+r);
-//       }
+        if (this.binaryStarted) {
+            logger.warn("Warning: Ignoring binaries for now");
+            if(this.currentBinary==null) {
+        		currentBinary = new Binary();
+        		currentBinaryWriter = Base64.newDecoder(currentBinary.getOutputStream());
+            }
+
+            try {
+				currentBinaryWriter.write(r);
+			} catch (IOException e) {
+				logger.error("Error writing to binary: ",e);
+			}
+         //  currentProperty.setInitialized();
+        } else {
+        	if(!"".equals(r.trim())) {
+                throw new IllegalArgumentException("uuuh: "+r);
+        	}
+       }
     }
 
 }
