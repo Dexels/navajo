@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,8 @@ public class LocalDigestCacheValidator implements CacheValidator {
 	private static final String REMOTE_DIGEST_PROPERTIES = "remotedigest.properties";
 	private Properties localDigestProperties = new Properties();
 	private Properties remoteDigestProperties = new Properties();
+	
+	private final ExecutorService executorService = Executors.newFixedThreadPool(1); 
 
 	
 	private final static Logger logger = LoggerFactory
@@ -116,15 +120,27 @@ public class LocalDigestCacheValidator implements CacheValidator {
 
 
 	@Override
-	public void update(String location) throws IOException {
-		localDigestProperties.put(location, remoteDigestProperties.get(location));
-//		localStorage.s
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		localDigestProperties.store(baos, "Update at: "+new Date());
-		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-		Map<String, Object> metadata = new HashMap<String, Object>();
-		localStorage.storeData(LOCAL_DIGEST_PROPERTIES, bais, metadata);
-		logger.debug("Saved local digest: {}, and location: ",LOCAL_DIGEST_PROPERTIES,location);
-		bais.close();
-	}
+    public void update(final String location) throws IOException {
+        executorService.submit(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    localDigestProperties.put(location, remoteDigestProperties.get(location));
+                    // localStorage.s
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    localDigestProperties.store(baos, "Update at: " + new Date());
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    Map<String, Object> metadata = new HashMap<String, Object>();
+                    localStorage.storeData(LOCAL_DIGEST_PROPERTIES, bais, metadata);
+                    logger.debug("Saved local digest: {}, and location: ", LOCAL_DIGEST_PROPERTIES, location);
+                    bais.close();
+                } catch (IOException e) {
+                    logger.error("Error updating local digest for {}", location, e);
+                }
+
+            }
+        });
+
+    }
 }

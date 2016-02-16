@@ -10,7 +10,8 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.FileContents;
@@ -25,6 +26,7 @@ import com.dexels.navajo.tipi.internal.cache.LocalStorage;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 
 public class JnlpLocalStorage implements LocalStorage {
+    private final ExecutorService executorService = Executors.newFixedThreadPool(1); 
 
     private static final long DEFAULT_SIZE = 1000000;
     private final PersistenceService ps;
@@ -35,9 +37,6 @@ public class JnlpLocalStorage implements LocalStorage {
 
     private final static Logger logger = LoggerFactory.getLogger(JnlpLocalStorage.class);
 
-    private final Map<String, URL> localData = new ConcurrentHashMap<>();
-
-    // private final Map<String, Long> localModificationMap = new HashMap<String, Long>();
     private final String id;
 
     public JnlpLocalStorage(String relativePath, CookieManager cm, String id) throws UnavailableServiceException {
@@ -50,24 +49,6 @@ public class JnlpLocalStorage implements LocalStorage {
         try {
             cacheMuffins = ps.getNames(getCacheBaseURL());
             logger.info("local muffins size: {}", cacheMuffins.length);
-
-            for (int i = 0; i < cacheMuffins.length; i++) {
-                try {
-                    String muffinlocation = cacheMuffins[i];
-                    String[] splitted = muffinlocation.split(cacheBase);
-                    String muffinRelativePath = splitted[1].substring(0, splitted[1].indexOf("_") + 1);
-                    if (! muffinRelativePath.equals(this.relativePath)) {
-                        //ignore
-                        continue;
-                    }
-                    String path = splitted[1].substring(splitted[1].indexOf("_") + 1);
-                    localData.put(path, new URL(getCacheBaseURL(), cacheMuffins[i]));
-                } catch (Exception e) {
-                    logger.error("Error on filling muffin {}", cacheMuffins[i],  e);
-                }
-
-            }
-
         } catch (Exception e) {
             logger.error("Error on filling muffins: ", e);
         }
@@ -75,7 +56,6 @@ public class JnlpLocalStorage implements LocalStorage {
     }
 
     private URL getCacheBaseURL() {
-        // return new URL(new URL(bs.getCodeBase(),cacheBase),relativePath);
         return bs.getCodeBase();
     }
 
@@ -93,7 +73,6 @@ public class JnlpLocalStorage implements LocalStorage {
     @Override
     public void flush(String location) throws IOException {
         delete(location);
-        localData.remove(location.replaceAll("/", "_"));
     }
 
     @Override
@@ -102,20 +81,14 @@ public class JnlpLocalStorage implements LocalStorage {
         for (int i = 0; i < cacheMuffins.length; i++) {
             ps.delete(new URL(getCacheBaseURL(), cacheMuffins[i]));
         }
-        localData.clear();
     }
 
     @Override
     public InputStream getLocalData(String location) {
         FileContents fc;
         try {
-            URL muffinUrl = null;
-            if (localData.containsKey(location.replaceAll("/", "_"))) {
-                muffinUrl = localData.get(location.replaceAll("/", "_"));
-            } else {
-                muffinUrl = createMuffinUrl(location);
-            }
-
+            URL muffinUrl = createMuffinUrl(location);
+            
             fc = ps.get(muffinUrl);
             if (fc == null ||  fc.getLength() < 1) {
                 logger.warn("Not found: {}", location);
@@ -151,64 +124,74 @@ public class JnlpLocalStorage implements LocalStorage {
         copyResource(os, is);
         f.deleteOnExit();
         return f.toURI().toURL();
-        // throw new
-        // IOException("URL GETTING NOT SUPPORTED IN JNLPLOCALSTORAGE!");
     }
 
     @Override
     public boolean hasLocal(String location) {
-        if (localData.containsKey(location.replaceAll("/", "_"))) {
-            return true;
+        FileContents fc = null;
+        try {
+            fc = ps.get(createMuffinUrl(location));
+        } catch (MalformedURLException e) {
+            // logger.debug("Malformed panic blues!");
+            logger.error("Error detected",e);
+        } catch (FileNotFoundException e) {
+            // logger.debug("Local file: "+location+" not found!");
+        } catch (IOException e) {
+            logger.error("Error detected",e);
+        }
+        if (fc == null) {
+            logger.debug("Has local for: {}: no",location);
+            return false;
         } else {
-            logger.debug("hasLocal false for {}", location.replaceAll("/", "_"));
+            try {
+                return fc.getLength() != 0;
+            } catch (IOException e) {
+                logger.error("Error detected",e);
+            }
+            logger.debug("Has local for {} failed",location);
             return false;
         }
     }
 
     @Override
-    public void storeData(String location, InputStream data, Map<String, Object> metadata) throws IOException {
-        FileContents fc = null;
-        URL muffinUrl = createMuffinUrl(location);
-        localData.put(location.replaceAll("/", "_"), muffinUrl);
-        FileContents ff = null;
-        // Object l = (Object) metadata.get("length");
-        // if(l )
-        // long length = l==null?DEFAULT_SIZE:l;
-        long length = DEFAULT_SIZE;
-        // logger.debug("JNLP storage. Storing: "+length+" bytes.");
+    public void storeData(final String location, final InputStream data,  final Map<String, Object> metadata) throws IOException {
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FileContents fc = null;
+                    URL muffinUrl = createMuffinUrl(location);
+                    FileContents ff = null;
+                  
+                    long length = DEFAULT_SIZE;
 
-        try {
-            ff = ps.get(muffinUrl);
-            // ps.
-            // ff.setMaxLength(length);
+                    try {
+                        ff = ps.get(muffinUrl);
+                    } catch (FileNotFoundException e) {
+                        // logger.debug("Not found. fine.");
+                    }
+                    if (ff == null) {
+                        ps.create(muffinUrl, length);
+                    }
 
-        } catch (FileNotFoundException e) {
-            // logger.debug("Not found. fine.");
-        }
-        if (ff == null) {
-            long grantedSize = ps.create(muffinUrl, length);
-        }
-
-        fc = ps.get(muffinUrl);
-        OutputStream os = fc.getOutputStream(true);
-        copyResource(os, data);
-
-        // throw new IOException("JNLP Storage not yet implemeented");
-        // URL url = new URL(getCacheBaseURL(), cacheBase + relativePath);
-        // logger.info("Now retrieving: "+location);
-        // InputStream is = getLocalData(location);
-        // ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        // copyResource(baos, is);
-        // logger.info("Result: "+baos.toByteArray().length+" bytes retrieved");
+                    fc = ps.get(muffinUrl);
+                    OutputStream os = fc.getOutputStream(true);
+                    copyResource(os, data);
+                } catch (IOException e) {
+                    logger.error("Error on storing data for {}", location, e);
+                }
+               
+                
+            }
+        });
+       
     }
 
     private final void copyResource(OutputStream out, InputStream in) throws IOException {
-        // BufferedInputStream bin = new BufferedInputStream(in);
         BufferedOutputStream bout = new BufferedOutputStream(out);
         byte[] buffer = new byte[1024];
         int read;
         while ((read = in.read(buffer)) > -1) {
-            // logger.debug("Read: "+read+" bytes from class: "+in);
             bout.write(buffer, 0, read);
         }
         in.close();
@@ -220,7 +203,6 @@ public class JnlpLocalStorage implements LocalStorage {
     public void delete(String location) {
         try {
             ps.delete(createMuffinUrl(location));
-            localData.remove(location.replaceAll("/", "_"));
         } catch (IOException e) {
             logger.error("Error: ", e);
         }

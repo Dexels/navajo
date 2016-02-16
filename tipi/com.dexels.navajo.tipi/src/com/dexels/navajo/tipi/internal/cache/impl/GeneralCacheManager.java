@@ -25,8 +25,8 @@ public class GeneralCacheManager implements CacheManager {
 	private final CacheValidator cacheValidator;
 	private final String id;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(GeneralCacheManager.class);
+	private final static Logger logger = LoggerFactory.getLogger(GeneralCacheManager.class);
+	
 	public GeneralCacheManager(LocalStorage l, RemoteStorage r, CacheValidator vc, String id) {
 		this.local = l;
 		this.remote = r;
@@ -41,19 +41,20 @@ public class GeneralCacheManager implements CacheManager {
 		if (isUpToDate) {
 			return local.getLocalData(location);
 		}
-		downloadLocation(location);
-		return local.getLocalData(location);
+		InputStream res = downloadLocation(location);
+		return res;
 	}
 
-	private void downloadLocation(String location) throws IOException {
+	private InputStream downloadLocation(String location) throws IOException {
 		Map<String, Object> metadata = new HashMap<String, Object>();
 		InputStream is = remote.getContents(location, metadata);
 		if (is == null) {
 			logger.warn("Error while downloading location {} : No such item.");
-			return;
+			return null;
 		}
 		local.storeData(location, is, metadata);
 		cacheValidator.update(location);
+		return is;
 	}
 
 	@Override
