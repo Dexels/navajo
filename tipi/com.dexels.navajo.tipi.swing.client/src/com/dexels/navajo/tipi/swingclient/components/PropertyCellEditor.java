@@ -51,27 +51,21 @@ public class PropertyCellEditor implements TableCellEditor,
 
 	private JComponent lastComponent = null;
 	private MessageTable myTable;
-	//
-	// private int lastRow = -1;
-	// private int lastColumn = -1;
-	// private boolean wasSelected = false;
-	// private Property copy;
 	private JButton rowButton = new JButton();
-	private boolean isChangingSelection = false;
 	private int lastSelectedRow = 0;
 
-	MultiSelectPropertyBox myMultiSelectPropertyBox = null;
-	String myPropertyType = null;
-	PropertyBox myPropertyBox = null;
-	PropertyField myPropertyField = null;
-	PropertyCheckBox myPropertyCheckBox = null;
-	DatePropertyField myDatePropertyField = null;
-	IntegerPropertyField myIntegerPropertyField = null;
-	FloatPropertyField myFloatPropertyField = null;
-	MoneyField myMoneyPropertyField = null;
-	PercentageField myPercentagePropertyField = null;
-	ClockTimeField myClockTimeField = null;
-	StopwatchTimeField myStopwatchTimeField = null;
+	private MultiSelectPropertyBox myMultiSelectPropertyBox = null;
+	private String myPropertyType = null;
+	private PropertyBox myPropertyBox = null;
+	private PropertyField myPropertyField = null;
+	private PropertyCheckBox myPropertyCheckBox = null;
+	private DatePropertyField myDatePropertyField = null;
+	private IntegerPropertyField myIntegerPropertyField = null;
+	private FloatPropertyField myFloatPropertyField = null;
+	private MoneyField myMoneyPropertyField = null;
+	private PercentageField myPercentagePropertyField = null;
+	private ClockTimeField myClockTimeField = null;
+	private StopwatchTimeField myStopwatchTimeField = null;
 
 	private Object myOldValue;
 
@@ -111,7 +105,6 @@ public class PropertyCellEditor implements TableCellEditor,
 
 	private Component doGetEditor(Object value, boolean isSelected, int row,
 			int column) {
-		// logger.info("Starting edit: "+row+" col: "+column+" value: "+value+" selected: "+isSelected);
 		lastSelectedRow = row;
 		if (myProperty != null) {
 			myProperty.removePropertyChangeListener(this);
@@ -122,14 +115,7 @@ public class PropertyCellEditor implements TableCellEditor,
 		}
 
 		Border b = new LineBorder(Color.black, 2);
-		// logger.info(">>>>>>>>>>>>>>>>>>>>>>>>> Editor: " + isSelected
-		// + ", " + row + ", " + column);
-		// myTable = (MessageTable) table;
-		// lastRow = row;
-		// lastColumn = column;
-		// wasSelected = isSelected;
-		// myTable.setEditingColumn(column);
-		// myTable.setEditingRow(row);
+
 		if (Property.class.isInstance(value)) {
 			myProperty = (Property) value;
 			myOldValue = myProperty.getTypedValue();
@@ -144,23 +130,10 @@ public class PropertyCellEditor implements TableCellEditor,
 								.addItemListener(new ItemListener() {
 									@Override
 									public void itemStateChanged(ItemEvent e) {
-										logger.info(">>> "
-												+ e.getStateChange());
-										if (ItemEvent.SELECTED == e
-												.getStateChange()) {
-											// ( (PropertyControlled)
-											// e.getSource()).update();
-											if (!isChangingSelection) {
-												System.err
-														.println("COMBOBOX FIRED TOWARDS EDITOR");
-												// stopCellEditing();
-											}
-
-										}
+										logger.debug(">>> "+ e.getStateChange());
 									}
 								});
 					}
-					isChangingSelection = true;
 
 					myMultiSelectPropertyBox.setProperty(myProperty);
 					myMultiSelectPropertyBox.setEditable(myProperty.isDirIn());
@@ -169,7 +142,6 @@ public class PropertyCellEditor implements TableCellEditor,
 							row, column);
 					myMultiSelectPropertyBox.setBorder(b);
 					myMultiSelectPropertyBox.requestFocus();
-					isChangingSelection = false;
 					return myMultiSelectPropertyBox;
 
 				} else {
@@ -187,31 +159,21 @@ public class PropertyCellEditor implements TableCellEditor,
 						myPropertyBox.addItemListener(new ItemListener() {
 							@Override
 							public void itemStateChanged(ItemEvent e) {
-								logger.info(">>> " + e.getStateChange());
+								logger.debug(">>> " + e.getStateChange());
 								if (ItemEvent.SELECTED == e.getStateChange()) {
-									// ( (PropertyControlled)
-									// e.getSource()).update();
-									// if (!isChangingSelection) {
-									// logger.info("COMBOBOX FIRED TOWARDS EDITOR");
-									// updateProperty();
 									try {
 										myTable.fireChangeEvents(
 												myPropertyBox.getProperty(),
 												null,
 												myProperty.getTypedValue());
-										// checkPropertyUpdate(myProperty,
-										// myPropertyBox.getLastSelection());
 									} catch (NavajoException e1) {
 										logger.error("Error: ", e1);
 									}
 									stopCellEditing();
-									// }
-									//
 								}
 							}
 						});
 					}
-					isChangingSelection = true;
 					myPropertyBox.setProperty(myProperty);
 					myPropertyBox.setEditable(myProperty.isDirIn());
 					lastComponent = myPropertyBox;
@@ -228,7 +190,6 @@ public class PropertyCellEditor implements TableCellEditor,
 						}
 					});
 
-					isChangingSelection = false;
 					return myPropertyBox;
 				}
 				/** @todo etc */
@@ -239,9 +200,6 @@ public class PropertyCellEditor implements TableCellEditor,
 					myPropertyCheckBox.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							// stopCellEditing();
-							// logger.info("CHECKBOX FIRED TOWARDS EDITOR");
-
 							try {
 								myTable.fireChangeEvents(getProperty(),
 										!myPropertyCheckBox.isSelected(),
@@ -281,7 +239,6 @@ public class PropertyCellEditor implements TableCellEditor,
 				myDatePropertyField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
-//						((PropertyControlled) e.getSource()).update();
 						if (e.getOppositeComponent() != myTable) {
 							stopCellEditing();
 						}
@@ -305,9 +262,6 @@ public class PropertyCellEditor implements TableCellEditor,
 				myIntegerPropertyField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
-						// ((PropertyControlled)e.getSource()).update();
-						// logger.info("Forcing stopppp: "+e.getOppositeComponent());
-
 						if (e.getOppositeComponent() != myTable) {
 							stopCellEditing();
 						}
@@ -315,25 +269,15 @@ public class PropertyCellEditor implements TableCellEditor,
 
 					@Override
 					public void focusGained(FocusEvent e) {
-						// ((PropertyControlled)e.getSource()).update();
-						// logger.info("Gettin FocusEvent: "+e.getOppositeComponent());
-
-						// stopCellEditing();
+						
 					}
 				});
-				// myIntegerPropertyField.addKeyListener(new KeyAdapter() {
-				// public void keyPressed(KeyEvent e) {
-				// logger.info("Pressed a key in integerpropfield");
-				// ( (PropertyControlled) lastComponent).update();
-				// }
-				// });
-				// logger.info("returning integer propertyfield");
+				
 				myIntegerPropertyField.selectAll();
 				myIntegerPropertyField.setBorder(b);
 				myIntegerPropertyField.setRequestFocusEnabled(true);
 				myIntegerPropertyField.requestFocusInWindow();
 				try {
-					// myIntegerPropertyField.update();
 					myIntegerPropertyField.getProperty().setValue(
 							myIntegerPropertyField.getText());
 				} catch (PropertyTypeException ex) {
@@ -356,9 +300,6 @@ public class PropertyCellEditor implements TableCellEditor,
 				myFloatPropertyField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
-						// logger.info("Floatfield focus lost!");
-						// logger.info(">>>>"+((FloatPropertyField)e.getSource()).getText());
-						// ((FloatPropertyField)e.getSource()).update();
 						if (e.getOppositeComponent() != myTable) {
 							stopCellEditing();
 						}
@@ -435,9 +376,6 @@ public class PropertyCellEditor implements TableCellEditor,
 				myStopwatchTimeField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
-						// logger.info("Floatfield focus lost!");
-						// logger.info(">>>>"+((FloatPropertyField)e.getSource()).getText());
-						// ((FloatPropertyField)e.getSource()).update();
 						if (e.getOppositeComponent() != myTable) {
 							stopCellEditing();
 						}
@@ -448,22 +386,6 @@ public class PropertyCellEditor implements TableCellEditor,
 				myStopwatchTimeField.setBorder(b);
 				myStopwatchTimeField.requestFocusInWindow();
 
-				// Dit werkt niet... raar is dat
-
-				// myClockTimeField.addKeyListener(new KeyAdapter() {
-				// public void keyPressed(KeyEvent e) {
-				// logger.info("Key: " + e.getKeyText(e.getKeyCode()));
-				// if ("Left".equals(e.getKeyText(e.getKeyCode())) ||
-				// "Right".equals(e.getKeyText(e.getKeyCode())) ||
-				// "Tab".equals(e.getKeyText(e.getKeyCode()))) {
-				// if (myTable.isCellEditable(myTable.getSelectedRow(),
-				// myTable.getSelectedColumn())) {
-				// myTable.editCellAt(myTable.getSelectedRow(),
-				// myTable.getSelectedColumn());
-				// }
-				// }
-				// }
-				// });
 
 				return myStopwatchTimeField;
 			}
@@ -481,9 +403,6 @@ public class PropertyCellEditor implements TableCellEditor,
 				myClockTimeField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
-						// logger.info("Floatfield focus lost!");
-						// logger.info(">>>>"+((FloatPropertyField)e.getSource()).getText());
-						// ((FloatPropertyField)e.getSource()).update();
 						if (e.getOppositeComponent() != myTable) {
 							stopCellEditing();
 						}
@@ -494,23 +413,6 @@ public class PropertyCellEditor implements TableCellEditor,
 				myClockTimeField.setBorder(b);
 				myClockTimeField.requestFocusInWindow();
 
-				// Dit werkt niet... raar is dat
-
-				// myClockTimeField.addKeyListener(new KeyAdapter() {
-				// public void keyPressed(KeyEvent e) {
-				// logger.info("Key: " + e.getKeyText(e.getKeyCode()));
-				// if ("Left".equals(e.getKeyText(e.getKeyCode())) ||
-				// "Right".equals(e.getKeyText(e.getKeyCode())) ||
-				// "Tab".equals(e.getKeyText(e.getKeyCode()))) {
-				// if (myTable.isCellEditable(myTable.getSelectedRow(),
-				// myTable.getSelectedColumn())) {
-				// myTable.editCellAt(myTable.getSelectedRow(),
-				// myTable.getSelectedColumn());
-				// }
-				// }
-				// }
-				// });
-
 				return myClockTimeField;
 			}
 
@@ -519,11 +421,9 @@ public class PropertyCellEditor implements TableCellEditor,
 				myPropertyField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
-						// ((PropertyControlled)e.getSource()).update();
 						if (e.getOppositeComponent() != myTable) {
 							stopCellEditing();
 						}
-						// logger.info("PROPERTYFIELD FIRED TOWARDS EDITOR");
 					}
 				});
 			}
@@ -567,20 +467,12 @@ public class PropertyCellEditor implements TableCellEditor,
 
 	@Override
 	public boolean stopCellEditing() {
-		// logger.info("--------------------------------------------------------------->> Entering stopCellEditor!!!");
-		// if (lastComponent != null) {
-		// logger.info("Editing!");
 		if (lastComponent != null
 				&& ((PropertyControlled) lastComponent).getProperty() != null) {
 			updateProperty();
 			((PropertyControlled) lastComponent).setProperty(null);
 
 		}
-		// FocusListener[] fl = lastComponent.getFocusListeners();
-		// for (int i = 0; i < fl.length; i++) {
-		// lastComponent.removeFocusListener(fl[i]);
-		// }
-
 		myTable.removeEditor();
 
 		/** @todo Occasional null pointer here. Fix */
@@ -595,13 +487,6 @@ public class PropertyCellEditor implements TableCellEditor,
 
 		}
 
-		// if(lastRow > -1){
-		// for (int i = 0; i < myListeners.size(); i++) {
-		// CellEditorListener ce = (CellEditorListener) myListeners.get(i);
-		// ce.editingStopped(new MessageTableChangeEvent(myTable, lastRow,
-		// lastColumn));
-		// }
-		// }
 		return true;
 	}
 
@@ -625,12 +510,7 @@ public class PropertyCellEditor implements TableCellEditor,
 
 	private void checkPropertyUpdate(Property p, Object old)
 			throws NavajoException {
-		// logger.info("VALU: "+((PropertyControlled)
-		// lastComponent).getProperty().getTypedValue());
 		((PropertyControlled) lastComponent).update();
-		// logger.info("VALU2: "+((PropertyControlled)
-		// lastComponent).getProperty().getTypedValue());
-		// Thread.dumpStack();
 		Object newValue = p.getTypedValue();
 		if (old == null) {
 			if (newValue != null) {
@@ -658,10 +538,6 @@ public class PropertyCellEditor implements TableCellEditor,
 		}
 		return false;
 	}
-
-	// public Property getInitialProperty() {
-	// return copy;
-	// }
 
 	public Object getOldValue() {
 		return myOldValue;
