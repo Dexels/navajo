@@ -7,7 +7,7 @@
    <message name="Club">
       <message name="Accommodation">
          <message name="Address">
-            <property name="Street" type="string" value="Some Street" direction="out"/>
+            <property name="Street" type="string" value="Some Street" direction="in"/>
             <property name="ZipCode" type="string" value="1234AB" direction="out"/>
          </message>
          <property name="Name" type="string" value="Some Club" direction="out"/>

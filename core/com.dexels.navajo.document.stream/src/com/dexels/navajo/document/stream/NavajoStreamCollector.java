@@ -11,8 +11,10 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
+import com.dexels.navajo.document.stream.api.Select;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
 import rx.Observable;
@@ -126,7 +128,6 @@ public class NavajoStreamCollector {
 			String arrayElementName = tagStack.peek();
 			String  arrayPath = currentPath();
 			AtomicInteger currentCount = arrayCounts.get(arrayPath);
-			System.err.println("Current path: "+arrayPath);
 			String ind = "@"+currentCount.getAndIncrement();
 			tagStack.push(ind);
 			arrayPath = currentPath();
@@ -170,11 +171,19 @@ public class NavajoStreamCollector {
 	}
 
 	private Property createTmlProperty(Prop p) {
-		System.err.println("PROPERTY TYPE: "+p.type());
-		Property result = NavajoFactory.getInstance().createProperty(assemble, p.name(), p.type()==null?Property.STRING_PROPERTY:p.type(), null, p.length(), p.description(), p.direction());
-		result.setAnyValue(p.value());
-		if(p.type()!=null) {
-			result.setType(p.type());
+		Property result;
+		if(Property.SELECTION_PROPERTY.equals(p.type())) {
+			result = NavajoFactory.getInstance().createProperty(assemble, p.name(), p.cardinality(), p.description(), p.direction());
+			for (Select s : p.selections()) {
+				Selection sel = NavajoFactory.getInstance().createSelection(assemble, s.name(), s.value(), s.selected());
+				result.addSelection(sel);
+			}
+		} else {
+			result = NavajoFactory.getInstance().createProperty(assemble, p.name(), p.type()==null?Property.STRING_PROPERTY:p.type(), null, p.length(), p.description(), p.direction());
+			result.setAnyValue(p.value());
+			if(p.type()!=null) {
+				result.setType(p.type());
+			}
 		}
 		return result;
 	}

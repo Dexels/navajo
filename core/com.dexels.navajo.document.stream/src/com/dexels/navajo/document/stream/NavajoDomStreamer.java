@@ -19,8 +19,11 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
+import com.dexels.navajo.document.stream.api.Prop.Direction;
+import com.dexels.navajo.document.stream.api.Select;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
@@ -99,8 +102,41 @@ private static List<Prop> messageProperties(Message msg) {
 	}
 
 	private static Prop create(Property tmlProperty) {
-		return Prop.create(tmlProperty.getName(),tmlProperty.getTypedValue(),tmlProperty.getType());
+		String type = tmlProperty.getType();
+//		Map<String,String> attributes = new HashMap<>();
+//		attributes.put("name",tmlProperty.getName());
+//		attributes.put("type",tmlProperty.getType());
+//		attributes.put("direction",tmlProperty.getDirection());
+		
+//		private static Prop create(String name, Object value, String type,List<Select> selections, Prop.Direction direction, String description, int length, String subtype ) {
+
+		
+		List<Select> selections = selectFromTml(tmlProperty.getAllSelections());
+		Object value = "selection".equals(tmlProperty.getType())?null: tmlProperty.getTypedValue();
+		return Prop.create(tmlProperty.getName(),value,tmlProperty.getType(),selections,"in".equals(tmlProperty.getDirection())?Direction.IN:Direction.OUT, tmlProperty.getDescription(),tmlProperty.getLength(),tmlProperty.getSubType(),tmlProperty.getCardinality());
+		
+//		switch (type) {
+//		case Property.BINARY_PROPERTY:
+//			return Prop.create(attributes, (Binary)tmlProperty.getTypedValue());
+//			break;
+//
+//		default:
+//			attributes.put("value", tmlProperty.getTypedValue());
+//			break;
+//		}
+//		return Prop.create(tmlProperty.getName(),tmlProperty.getTypedValue(),tmlProperty.getType());
 	}
+	
+	 private static List<Select> selectFromTml(List<Selection> in) {
+		 if(in==null) {
+			 return Collections.emptyList();
+		 }
+		 List<Select> result = new ArrayList<>();
+		 for (Selection selection : in) {
+			result.add(Select.create(selection.getName(), selection.getValue(), selection.isSelected()));
+		}
+		 return result;
+	 }
 
 //	public static Msg create(Message)
 	

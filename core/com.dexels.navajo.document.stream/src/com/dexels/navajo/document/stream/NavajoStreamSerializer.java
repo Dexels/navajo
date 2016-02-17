@@ -25,7 +25,7 @@ public class NavajoStreamSerializer {
 	private Stack<String> messageNameStack = new Stack<>();
 	private final Map<String,Integer> arrayCounter = new HashMap<>();
 	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamSerializer.class);
-	private static final int INDENT = 3;
+	public static final int INDENT = 3;
 
 	public NavajoStreamSerializer() {
 	}

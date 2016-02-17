@@ -403,7 +403,6 @@ public class StringObservable {
         return new Operator<String, String>() {
             @Override
             public Subscriber<? super String> call(final Subscriber<? super String> o) {
-            	System.err.println("Calling... I am : "+hashCode());
                 return new Subscriber<String>(o) {
                     private String leftOver = null;
 

@@ -30,7 +30,7 @@ public class NavajoStreamEvent {
 			List<Prop> contents = (List<Prop>) body;
 			StringBuilder sb = new StringBuilder("Message detected. Name: "+path+"\n");
 			for (Prop prop : contents) {
-				sb.append("Prop: "+prop.name()+" = "+prop.value()+"\n");
+				sb.append("Prop: "+prop.name()+" = "+prop.value()+ "with direction: "+ prop.direction() + "\n");
 			}
 			return sb.toString();
 		}
