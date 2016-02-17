@@ -59,10 +59,6 @@ public final class PropertyRadioSelection extends JPanel implements
 	private final ArrayList<ActionListener> myActionListeners = new ArrayList<ActionListener>();
 	private final FocusAdapter myFocusListener;
 
-	// private static final int VERTICAL = 1;
-	// private static final int HORIZONTAL = 2;
-
-	// private int direction = VERTICAL;
 	private boolean columnMode;
 	private int checkboxGroupColumnCount;
 
@@ -77,16 +73,11 @@ public final class PropertyRadioSelection extends JPanel implements
 	}
 
 	public final void setVertical() {
-		// setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-		// direction = VERTICAL;
 		setLayout(new GridBagLayout());
-		// doLayout();
 	}
 
 	public final void setHorizontal() {
-		// direction = HORIZONTAL;
 		setLayout(new GridBagLayout());
-		// setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
 		doLayout();
 	}
 
@@ -180,14 +171,6 @@ public final class PropertyRadioSelection extends JPanel implements
 		
 		
 		lastButtonOfGroup = jr;
-		// jr.addItemListener(new ItemListener() {
-		// public void itemStateChanged(ItemEvent ce) {
-		// if (ce.getStateChange()==ItemEvent.SELECTED) {
-		// logger.info("ce: "+ce.getSource());
-		// updateProperty((JRadioButton)ce.getSource());
-		// }w
-		// }
-		// });
 		return jr;
 	}
 
@@ -207,7 +190,7 @@ public final class PropertyRadioSelection extends JPanel implements
 
 	@Override
 	public final void actionPerformed(ActionEvent e) {
-		logger.info("Radio action performed");
+		logger.debug("Radio action performed");
 	}
 
 	private final void updateProperty(JRadioButton source) {
@@ -215,7 +198,7 @@ public final class PropertyRadioSelection extends JPanel implements
 			return;
 		}
 		if (source == null) {
-			logger.info("Tsja, updateprop with null source");
+			logger.debug("Tsja, updateprop with null source");
 		}
 		try {
 			Selection s = selectionMap.get(source);
@@ -247,7 +230,7 @@ public final class PropertyRadioSelection extends JPanel implements
    
     @Override
     public void itemStateChanged(ItemEvent e) {
-       logger.info("RadioButton Item Changed");
+       logger.debug("RadioButton Item Changed");
        if (!selectionMap.containsKey(e.getSource())) {
            // Not for me
            return;
