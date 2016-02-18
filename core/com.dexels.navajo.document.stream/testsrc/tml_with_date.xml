@@ -1,0 +1,10 @@
+<tml>
+   <header>
+      <transaction/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="Message">
+      <property name="DateProperty" type="date" value="2001-10-08" direction="out"/>
+   </message>
+</tml>

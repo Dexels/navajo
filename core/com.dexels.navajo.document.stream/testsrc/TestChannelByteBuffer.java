@@ -6,7 +6,7 @@ import java.util.Iterator;
 import org.junit.Test;
 
 import com.dexels.navajo.document.stream.io.ObservableStreams;
-import com.dexels.navajo.document.stream.xml.ObservableXmlFeeder;
+import com.dexels.navajo.document.stream.xml.XML;
 
 public class TestChannelByteBuffer {
 
@@ -25,9 +25,8 @@ public class TestChannelByteBuffer {
 	@Test 
 	public void testStreamTml() throws InterruptedException, IOException {
 		InputStream in = getClass().getClassLoader().getResourceAsStream("tiny_tml.xml");
-		ObservableXmlFeeder oxf = new ObservableXmlFeeder();
 		ObservableStreams.streamInputStreamWithBufferSize(in, 15)
-		.flatMap(oxf::feed)
+		.lift(XML.parse())
 		.toBlocking()
 		.forEach(a->{
 			System.err.println("Event: "+a+" null? "+(a==null));

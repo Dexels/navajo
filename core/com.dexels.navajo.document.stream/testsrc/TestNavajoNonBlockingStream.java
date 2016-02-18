@@ -8,17 +8,16 @@ import java.nio.ByteBuffer;
 import java.util.Collections;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.NavajoDomStreamer;
 import com.dexels.navajo.document.stream.NavajoStreamCollector;
 import com.dexels.navajo.document.stream.api.NAVADOC;
-import com.dexels.navajo.document.stream.io.ObservableStreams;
 import com.dexels.navajo.document.stream.xml.Bytes;
 import com.dexels.navajo.document.stream.xml.XML;
 
@@ -27,10 +26,6 @@ import rx.Observable;
 public class TestNavajoNonBlockingStream {
 
 	private final static Logger logger = LoggerFactory.getLogger(TestNavajoNonBlockingStream.class);
-
-	@Before
-	public void setup() {
-	}
 
 	@Test 
 	public void testDomStreamerAndCollector() throws Exception {
@@ -60,14 +55,12 @@ public class TestNavajoNonBlockingStream {
 
 	@Test
 	public void testDomStream() throws Exception {
-		final Navajo baseTml = NavajoFactory.getInstance()
-				.createNavajo(getClass().getClassLoader().getResourceAsStream("tml.xml"));
+		final Navajo baseTml = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("tml.xml"));
 		int count = Observable.just(baseTml)
-		.flatMap(NavajoDomStreamer::feed)
-		.count()
-		.toBlocking()
-		 .first();
-		
+				.flatMap(NavajoDomStreamer::feed)
+				.count()
+				.toBlocking()
+				.first();
 		Assert.assertEquals(20, count);
 	}
 	
@@ -75,13 +68,11 @@ public class TestNavajoNonBlockingStream {
 	public void testStreamParser() throws Exception {
 
 		int count = Bytes.fromAbsoluteClassPathBuffer("tml_without_binary.xml")
-				.doOnCompleted(()->System.err.println("COMP<<<<<<<<<<<"))
 				.lift(XML.parse())
-				.doOnCompleted(()->System.err.println("COMP"))
 				.lift(NAVADOC.parse(Collections.emptyMap()))
-				.doOnNext(x->System.err.println("||> "+x.toString()))
-				.doOnCompleted(()->System.err.println("COMPLETE!"))
-				.count().toBlocking().first();
+				.count()
+				.toBlocking()
+				.first();
 			Assert.assertEquals(20, count);
 	}
 
@@ -91,20 +82,15 @@ public class TestNavajoNonBlockingStream {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Bytes.fromAbsoluteClassPath("tml_without_binary.xml")
 			.map(b->ByteBuffer.wrap(b))
-//		ObservableStreams.streamInputStreamWithBufferSize(getClass().getClassLoader().getResourceAsStream("tml_without_binary.xml"), 10)
-			.doOnCompleted(()->System.err.println("DOOOOOONE!!!!!!"))
 			.lift(XML.parse())
-			.doOnCompleted(()->System.err.println("DONE!!!!!!"))
 			.lift(NAVADOC.parse(Collections.emptyMap()))
-			.doOnNext(
-					a->System.err.println("Next: "+a))
 			.lift(NAVADOC.serialize())
-				.toBlocking().forEach(b -> {
-					try {
-						baos.write(b);
-					} catch (Exception e) {
-					}
-				});
+			.toBlocking().forEach(b -> {
+				try {
+					baos.write(b);
+				} catch (Exception e) {
+			}
+		});
 		byte[] original = getNavajoData("tml_without_binary.xml");
 		FileOutputStream fw = new FileOutputStream("original.xml");
 		fw.write(original);
@@ -120,7 +106,8 @@ public class TestNavajoNonBlockingStream {
 	@Test 
 	public void testStreamParserAndSerializerWithBinary() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObservableStreams.streamInputStreamWithBufferSize(getClass().getClassLoader().getResourceAsStream("tml_with_binary.xml"), 10)
+		Bytes.fromAbsoluteClassPath("tml_with_binary.xml")
+			.map(ByteBuffer::wrap)
 			.lift(XML.parse())
 			.lift(NAVADOC.parse(Collections.emptyMap()))
 			.lift(NAVADOC.serialize())
@@ -140,14 +127,14 @@ public class TestNavajoNonBlockingStream {
 		Assert.assertTrue(baos.toByteArray().length>5000);
 		
 		// TODO Seems ok, but make test to compare Navajo o
-//				Assert.assertArrayEquals(original, baos.toByteArray());
-		// Assert.assertEquals(sw1.toString(), sw2.toString());
+//		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
 	
 	@Test 
 	public void testStreamParserAndSerializerWithSelection() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObservableStreams.streamInputStreamWithBufferSize(getClass().getClassLoader().getResourceAsStream("tml_with_selection.xml"), 10)
+		Bytes.fromAbsoluteClassPath("tml_with_selection.xml")
+			.map(ByteBuffer::wrap)
 			.lift(XML.parse())
 			.lift(NAVADOC.parse(Collections.emptyMap()))
 			.lift(NAVADOC.collect(Collections.emptyMap()))
@@ -168,33 +155,56 @@ public class TestNavajoNonBlockingStream {
 		fw2.write(baos.toByteArray());
 		fw2.close();
 		// TODO Seems ok, but make test to compare Navajo o
-				Assert.assertArrayEquals(original, baos.toByteArray());
-		// Assert.assertEquals(sw1.toString(), sw2.toString());
+		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
 	
 	
-//	static void streamBytes(InputStream resourceAsStream, int bufferSize, ObservableOutputStream oos) {
-//		byte[] buffer = new byte[bufferSize];
-//		int read = -1;
-//		do {
-//			try {
-//				read = resourceAsStream.read(buffer, 0, buffer.length);
-//				if (read != -1) {
-//					// System.err.println("Input: "+new
-//					// String(Arrays.copyOfRange(buffer, 0, read)));
-//					oos.write(buffer, 0, read);
-//				}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		} while (read != -1);
-//		try {
-//			oos.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//	
+	@Test 
+	public void testStreamParserAndSerializerWithDate() throws Exception {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		Bytes.fromAbsoluteClassPath("tml_with_date.xml")
+			.map(ByteBuffer::wrap)
+			.lift(XML.parse())
+			.lift(NAVADOC.parse(Collections.emptyMap()))
+			.doOnNext(n->System.err.println("><>>>1 "+n))
+			.lift(NAVADOC.collect(Collections.emptyMap()))
+			.doOnNext(n->System.err.println("><>>>2 "+n))
+			.lift(NAVADOC.stream())
+			.doOnNext(n->System.err.println("><>>>3 "+n))
+			.lift(NAVADOC.serialize())
+				.toBlocking().forEach(b -> {
+					try {
+						baos.write(b);
+					} catch (Exception e) {
+					}
+				});
+		byte[] original = getNavajoData("tml_with_date.xml");
+		FileOutputStream fw = new FileOutputStream("originaldate.xml");
+		fw.write(original);
+		fw.close();
+		FileOutputStream fw2 = new FileOutputStream("parseddate.xml");
+		fw2.write(baos.toByteArray());
+		fw2.close();
+		// TODO Seems ok, but make test to compare Navajo o
+		Assert.assertArrayEquals(original, baos.toByteArray());
+	}
+
+	@Test 
+	public void testStreamParserAndSerializerWithIgnoreMessage() throws Exception {
+		Navajo navajo =
+		Bytes.fromAbsoluteClassPath("tiny_tml_with_ignore.xml")
+			.map(ByteBuffer::wrap)
+			.lift(XML.parse())
+			.lift(NAVADOC.parse(Collections.emptyMap()))
+			.doOnNext(n->System.err.println("><>>>1 "+n))
+			.lift(NAVADOC.filterMessageIgnore())
+			.doOnNext(n->System.err.println("><>>>q "+n))
+			.lift(NAVADOC.collect(Collections.emptyMap()))
+			.toBlocking().first();
+
+		Message ignored = navajo.getMessage("Message");
+		Assert.assertNull(ignored);
+	}
 
 	public byte[] getNavajoData(String name) {
 
@@ -208,10 +218,7 @@ public class TestNavajoNonBlockingStream {
 		} catch (IOException e) {
 			logger.error("Error: ", e);
 		}
-
 		byte[] result = out.toByteArray();
 		return result;
-		
-		
 	}
 }

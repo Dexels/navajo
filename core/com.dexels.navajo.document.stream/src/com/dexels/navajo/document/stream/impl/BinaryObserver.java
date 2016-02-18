@@ -19,7 +19,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.Binary;
 
 import rx.Observable.Operator;
-import rx.Observer;
 import rx.Subscriber;
 
 public class BinaryObserver implements Operator<Binary,String>{

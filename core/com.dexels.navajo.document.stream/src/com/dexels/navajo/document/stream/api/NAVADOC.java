@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.stream.api;
 
 import java.util.Map;
+import java.util.Stack;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.stream.NavajoDomStreamer;
@@ -81,6 +82,81 @@ public class NAVADOC {
 			}};
 	}
 	
+	public static Operator<NavajoStreamEvent,NavajoStreamEvent> filterMessageIgnore() {
+		return new Operator<NavajoStreamEvent,NavajoStreamEvent>(){
+			private final Stack<Boolean> ignoreLevel = new Stack<Boolean>();
+//			private final Stack<String> level = new Stack<String>();
+			
+			@Override
+			public Subscriber<? super NavajoStreamEvent> call(Subscriber<? super NavajoStreamEvent> n) {
+
+				
+				return new Subscriber<NavajoStreamEvent>() {
+
+					@Override
+					public void onCompleted() {
+						if(!n.isUnsubscribed()) {
+	 						n.onCompleted();
+						}
+					}
+
+					@Override
+					public void onError(Throwable e) {
+						if(!n.isUnsubscribed()) {
+						n.onError(e);
+						}
+					}
+
+					@Override
+					public void onNext(NavajoStreamEvent event) {
+						if(!n.isUnsubscribed()) {
+							switch(event.type()) {
+								case ARRAY_ELEMENT_STARTED:
+								case ARRAY_STARTED:
+								case MESSAGE_STARTED:
+								case MESSAGE_DEFINITION_STARTED:
+									String mode = (String) event.attribute("mode");
+									boolean isIgnore = "ignore".equals(mode);
+									ignoreLevel.push(isIgnore);
+									System.err.println("push: "+"ignore".equals(mode)+" == "+ignoreLevel);
+//									level.push(event.path());
+									if(!ignoreLevel.contains(true)) {
+										n.onNext(event);
+									} else {
+										System.err.println("Ignoring message");
+									}
+									break;
+									
+								case ARRAY_DONE:
+								case ARRAY_ELEMENT:
+								case MESSAGE_DEFINITION:
+								case MESSAGE:
+									if(!ignoreLevel.contains(true)) {
+										n.onNext(event);
+									} else {
+										System.err.println("Ignoring close message");
+										
+									}
+//									level.pop();
+									
+									boolean b = ignoreLevel.pop();
+									System.err.println("popping: "+b);
+									break;
+									
+								case NAVAJO_DONE:
+								case NAVAJO_STARTED:
+									n.onNext(event);
+									break;
+								default:
+									throw new UnsupportedOperationException("Unknown event found in NAVADOC");
+							}
+						}
+					}
+				};
+			}};
+	}
+	
+
 	// TODO test
 	public static Operator<NavajoStreamEvent,Navajo> stream() {
 		return new Operator<NavajoStreamEvent,Navajo>(){

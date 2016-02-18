@@ -13,7 +13,6 @@ import com.dexels.navajo.document.stream.api.Msg;
 import rx.Observable;
 import rx.Observable.Operator;
 import rx.Subscriber;
-import rx.functions.Func1;
 
 public class CSV {
 

@@ -1,6 +1,8 @@
 <tml>
    <header>
-      <transaction rpc_pwd="pw" rpc_name="Tiny" rpc_usr="username"/>
+      <transaction rpc_name="Tiny" rpc_pwd="pw" rpc_usr="username"/>
+      <callback/>
+      <client/>
    </header>
    <message name="Message" mode="ignore">
       <property name="Property" type="string" value="A value" direction="out"/>

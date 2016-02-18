@@ -32,7 +32,7 @@ public class ObservableStreams {
 			public Iterator<ByteBuffer> iterator() {
 				return new Iterator<ByteBuffer>() {
 					private ByteBuffer nextBuffer = null;
-					private IOException failedWith;
+//					private IOException failedWith;
 
 					@Override
 					public boolean hasNext() {
@@ -54,8 +54,7 @@ public class ObservableStreams {
 							return true;
 						} catch (IOException e) {
 							logger.error("Error: ", e);
-							failedWith = e;
-							return false;
+							throw new RuntimeException("Error iterating",e);
 						} finally {
 //							try {
 //								channel.close();
