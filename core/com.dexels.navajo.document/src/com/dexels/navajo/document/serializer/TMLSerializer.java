@@ -136,6 +136,25 @@ public class TMLSerializer  {
 		}
 
 	}
+	
+	private void fixPropertyNames(Message am) {
+		// fix array elements.
+		List<Property> definition = new ArrayList<Property>();
+		int index = 0;
+		for ( Message sub : am.getElements() ) {
+			if ( index == 0 ) {
+				definition.addAll(sub.getAllProperties());
+			} else {
+				int c = 0;
+				for ( Property cp : sub.getAllProperties() ) {
+					cp.setName(definition.get(c).getName());
+					c++;
+				}
+			}
+			index++;
+		}
+	}
+	
 	private void serializeMessage(Message m, byte type, boolean hidePropertyName, OutputStream os) throws Exception {
 		os.write(serializeMessageTag(m.getName(), type));
 		for ( Property p : m.getAllProperties() ) {
@@ -216,21 +235,7 @@ public class TMLSerializer  {
 			} else if ( tagType == ARRAY_MESSAGE_CODE ) {
 				arrayEltIndex = 0;
 				Message am = parseMessage(is, m, Message.MSG_TYPE_ARRAY); // an array message.
-				// fix array elements.
-				List<Property> definition = new ArrayList<Property>();
-				int index = 0;
-				for ( Message sub : am.getAllMessages() ) {
-					if ( index == 0 ) {
-						definition.addAll(sub.getAllProperties());
-					} else {
-						int c = 0;
-						for ( Property cp : sub.getAllProperties() ) {
-							cp.setName(definition.get(c).getName());
-							c++;
-						}
-					}
-					index++;
-				}
+				fixPropertyNames(am);
 			} else if ( tagType == ARRAY_MESSAGE_ELT_CODE ) {
 				parseMessage(is, m, Message.MSG_TYPE_ARRAY_ELEMENT); // an array message element.
 				arrayEltIndex++;
@@ -280,7 +285,8 @@ public class TMLSerializer  {
 		myNavajo = NavajoFactory.getInstance().createNavajo();
 		byte tagType;
 		while ( ( tagType = (byte) is.read() ) != -1 ) {
-			Message m = parseMessage(is, null, ( tagType == 0x01 ? Message.MSG_TYPE_SIMPLE : Message.MSG_TYPE_ARRAY ));		
+			Message m = parseMessage(is, null, ( tagType == 0x01 ? Message.MSG_TYPE_SIMPLE : Message.MSG_TYPE_ARRAY ));	
+			fixPropertyNames(m);
 		}
 	}
 	
