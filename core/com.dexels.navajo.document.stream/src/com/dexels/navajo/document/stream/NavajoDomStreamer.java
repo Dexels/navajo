@@ -83,11 +83,11 @@ public class NavajoDomStreamer {
 			}
 			list.add(arrayDone(name));
 		} else {
-			list.add(messageStarted(name));
+			list.add(messageStarted(name,message.getMode()));
 			for (Message m : message.getAllMessages()) {
 				emitMessage(m, list,outputNavajo);
 			}
-			list.add(message( messageProperties(message), name));
+			list.add(message( messageProperties(message), name,message.getMode()));
 		}
 
 	}
@@ -102,17 +102,10 @@ private static List<Prop> messageProperties(Message msg) {
 	}
 
 	private static Prop create(Property tmlProperty) {
-		String type = tmlProperty.getType();
-//		Map<String,String> attributes = new HashMap<>();
-//		attributes.put("name",tmlProperty.getName());
-//		attributes.put("type",tmlProperty.getType());
-//		attributes.put("direction",tmlProperty.getDirection());
-		
-//		private static Prop create(String name, Object value, String type,List<Select> selections, Prop.Direction direction, String description, int length, String subtype ) {
-
+//		String type = tmlProperty.getType();
 		
 		List<Select> selections = selectFromTml(tmlProperty.getAllSelections());
-		Object value = "selection".equals(tmlProperty.getType())?null: tmlProperty.getTypedValue();
+		String value = "selection".equals(tmlProperty.getType())?null: tmlProperty.getValue();
 		return Prop.create(tmlProperty.getName(),value,tmlProperty.getType(),selections,"in".equals(tmlProperty.getDirection())?Direction.IN:Direction.OUT, tmlProperty.getDescription(),tmlProperty.getLength(),tmlProperty.getSubType(),tmlProperty.getCardinality());
 		
 //		switch (type) {

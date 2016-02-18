@@ -59,7 +59,13 @@ public class NavajoStreamSerializer {
 			String name = event.path();
 			switch (event.type()) {
 				case MESSAGE_STARTED:
-					printStartTag(w, INDENT * (tagDepth+1),true,"message",new String[]{"name=\""+name,"\""});
+					String mode = (String) event.attribute("mode");
+					if(mode!=null && !mode.equals("")) {
+						printStartTag(w, INDENT * (tagDepth+1),true,"message",new String[]{"name=\""+name,"\""," mode=\""+mode,"\""});
+					} else {
+						printStartTag(w, INDENT * (tagDepth+1),true,"message",new String[]{"name=\""+name,"\""});
+
+					}
 					tagDepth++;
 					messageNameStack.push(name);
 					break;

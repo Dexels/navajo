@@ -13,9 +13,9 @@ public class TestCompression {
 	
 	@Test
 	public void testDeflate() throws FileNotFoundException {
-		byte[] original = Bytes.fromAbsoluteClassPath("rxjava-jdbc-0.7.jar	").lift(NavajoStreamOperators.collect()).toBlocking().first();
+		byte[] original = Bytes.fromAbsoluteClassPath("TestCompression.class").lift(NavajoStreamOperators.collect()).toBlocking().first();
 		System.err.println("original: "+original.length);
-		byte[] compressed = Bytes.fromAbsoluteClassPath("rxjava-jdbc-0.7.jar").lift(NavajoStreamOperators.deflate()).lift(NavajoStreamOperators.collect()).toBlocking().first();
+		byte[] compressed = Bytes.fromAbsoluteClassPath("TestCompression.class").lift(NavajoStreamOperators.deflate()).lift(NavajoStreamOperators.collect()).toBlocking().first();
 		System.err.println("Compressed: "+compressed.length);
 		byte[] reflated = Observable.<byte[]>just(compressed).map(b->ByteBuffer.wrap(b)).lift(NavajoStreamOperators.inflate()).map(b->b.array()).lift(NavajoStreamOperators.collect()).toBlocking().first();
 		System.err.println("reinflated: "+reflated.length);

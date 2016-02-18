@@ -19,20 +19,18 @@ public class ObservableNavajoParser  {
 	
 	private Subscriber<? super NavajoStreamEvent> currentSubscriber;
 	private StreamSaxHandler feeder;
-//	private final Map<String,AtomicInteger> arrayCount = new HashMap<>();
-//	Subscriber<? super NavajoStreamEvent>
 	
 	public ObservableNavajoParser(final Map<String,Object> attributes, final Subscriber<? super NavajoStreamEvent> subscriber) {
 		this.feeder = new StreamSaxHandler(new NavajoStreamHandler(){
 
 			@Override
 			public void messageDone(Map<String, String> attributes, List<Prop> properties) {
-				subscriber.onNext(Events.message(properties, attributes.get("name")));
+				subscriber.onNext(Events.message(properties, attributes.get("name"),attributes.get("mode")));
 			}
 
 			@Override
 			public void messageStarted(Map<String, String> attributes) {
-				subscriber.onNext(Events.messageStarted(attributes.get("name")));
+				subscriber.onNext(Events.messageStarted(attributes.get("name"),attributes.get("mode")));
 			}
 
 			@Override
@@ -82,12 +80,12 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void messageDone(Map<String, String> attributes, List<Prop> properties) {
-					currentSubscriber.onNext(Events.message(properties, attributes.get("name")));
+					currentSubscriber.onNext(Events.message(properties, attributes.get("name"), attributes.get("mode")));
 			}
 
 			@Override
 			public void messageStarted(Map<String, String> attributes) {
-				currentSubscriber.onNext(Events.messageStarted(attributes.get("name")));
+				currentSubscriber.onNext(Events.messageStarted(attributes.get("name"),attributes.get("mode")));
 			}
 
 			@Override
