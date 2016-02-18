@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.zip.InflaterInputStream;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
@@ -42,7 +41,6 @@ import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.stream.NavajoDomStreamer;
-import com.dexels.navajo.document.stream.NavajoStreamCollector;
 import com.dexels.navajo.document.stream.NavajoStreamSerializer;
 import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
@@ -55,7 +53,6 @@ import com.dexels.navajo.script.api.LocalClient;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
-import rx.schedulers.Schedulers;
 
 
 public class NonBlockingListener extends HttpServlet {
@@ -129,19 +126,20 @@ public class NonBlockingListener extends HttpServlet {
         
 		Navajo outDoc = execute(tenant, inputNavajo); // getLocalClient().handleInternal(getNavajoInstance(), in, getRequest().getCert(), clientInfo);
 		
-//        System.err.println("Out:");
-//        outDoc.write(System.err);
+        System.err.println("Out:");
+        outDoc.write(System.err);
 
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//		
-//			Observable.just(outDoc)
-//			.lift(NAVADOC.stream())
-//			.lift(NAVADOC.serialize())
-//			.subscribe(a->{try {baos.write(a);} catch (Exception e2) {e2.printStackTrace();};
-//			
-//			},e->{},()->System.err.println("Restreamed: \n"+new String(baos.toByteArray()))
-//		);
-//		
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
+			Observable.just(outDoc)
+			.lift(NAVADOC.stream())
+//			.doOnNext(System.err::println)
+			.lift(NAVADOC.serialize())
+			.subscribe(a->{try {baos.write(a);} catch (Exception e2) {e2.printStackTrace();};
+			
+			},e->{},()->System.err.println("Restreamed: \n"+new String(baos.toByteArray()))
+		);
+		
         
         
 		String encoding = decideEncoding((String) attributes.get("Accept-Encoding"));

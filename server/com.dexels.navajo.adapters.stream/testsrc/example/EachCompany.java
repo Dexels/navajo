@@ -17,7 +17,6 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.api.Prop;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.io.NavajoStreamOperators;
 import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
@@ -73,6 +72,7 @@ public class EachCompany  {
     	});
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void manual() throws NumberFormatException, UnsupportedEncodingException, NavajoException {
 		final long current = System.currentTimeMillis();
         Bytes.fromAbsoluteClassPath("com/dexels/navajo/adapters/stream/sqlmap/example/example.csv")
