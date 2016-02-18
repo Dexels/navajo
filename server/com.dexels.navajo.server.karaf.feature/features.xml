@@ -51,13 +51,7 @@
 		<feature version="[1.0.1,2)">dexels.consulosgi</feature>
 		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.consul.repositoryloader/1.0.9</bundle>
     </feature>
- 
- 	<feature version="1.0.0" name="equinox.ds">
- 		<bundle dependency='true'>com.dexels.repository/org.eclipse.equinox.ds/1.4.300</bundle>
- 		<bundle dependency='true'>com.dexels.repository/org.eclipse.equinox.util/1.0.500</bundle>
- 		<bundle dependency='true'>com.dexels.repository/org.eclipse.osgi.services/3.5.0</bundle>
- 	</feature>
- 
+    
     <feature version="1.3.6" name="dexels.karaf4.repository" install="auto">
         <feature version="[3.0.0,5)">eventadmin</feature>
         <feature version="[3.0.0,5)">pax-http</feature>
@@ -152,6 +146,19 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.2.0
 		</bundle>
 	</feature>
+	
+	<feature resolver="(obr)" name='navajo.rx' version='1.0.0'
+		start-level='80'>
+		<feature version="[3.6.94,4)">navajo.core</feature>
+		<bundle dependency='true'>com.fasterxml/aalto-xml/1.0.0
+		</bundle>		
+		<bundle dependency='true'>org.codehaus.woodstox/stax2-api/1.0.0
+		</bundle>		
+		<bundle dependency='true'>io.reactivex/io.reactivex:rxjava/1.1.0
+		</bundle>		
+		
+	</feature>
+	
 	
 	<feature resolver="(obr)" name='navajo.client.jetty8' version='2.0.1'
 		start-level='80'>
