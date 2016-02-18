@@ -130,7 +130,6 @@ public class TMLSerializer  {
 		if ( p.getType().equals(Property.BINARY_PROPERTY) ) {
 			os.write(shortToBytes((short) lengthOfPropertyValue));
 			((Binary) p.getTypedValue()).write(os);
-			//os.write(((Binary) p.getTypedValue()).getData());
 		} else {
 			os.write(shortToBytes((short) lengthOfPropertyValue));
 			os.write(p.getValue().getBytes());
@@ -159,7 +158,7 @@ public class TMLSerializer  {
 			os.write(shortToBytes((short) webservice.getBytes().length));
 			os.write(webservice.getBytes());
 			for ( Message m : myNavajo.getAllMessages() ) {
-				serializeMessage(m, MESSAGE_CODE, false, os);
+				serializeMessage(m, ( m.isArrayMessage() ? ARRAY_MESSAGE_CODE : MESSAGE_CODE ), false, os);
 			}
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
@@ -281,7 +280,7 @@ public class TMLSerializer  {
 		myNavajo = NavajoFactory.getInstance().createNavajo();
 		byte tagType;
 		while ( ( tagType = (byte) is.read() ) != -1 ) {
-			Message m = parseMessage(is, null, Message.MSG_TYPE_SIMPLE);
+			Message m = parseMessage(is, null, ( tagType == 0x01 ? Message.MSG_TYPE_SIMPLE : Message.MSG_TYPE_ARRAY ));		
 		}
 	}
 	
