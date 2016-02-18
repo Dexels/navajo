@@ -156,6 +156,12 @@
 		</bundle>		
 		<bundle dependency='true'>io.reactivex/io.reactivex:rxjava/1.1.0
 		</bundle>		
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document.stream/1.0.1
+		</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.stream/1.0.1
+		</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.stream/1.0.1
+		</bundle>
 		
 	</feature>
 	
