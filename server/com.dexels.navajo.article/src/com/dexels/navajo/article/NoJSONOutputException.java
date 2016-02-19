@@ -2,13 +2,18 @@ package com.dexels.navajo.article;
 
 import java.io.InputStream;
 
-public class DirectOutputThrowable extends Exception {
+/**
+ * This exception should be thrown when the output cannot be returned
+ * in JSON format. It should be caught and result in a different type
+ * of output according to its mimetype.
+ */
+public class NoJSONOutputException extends Exception {
 
 	private static final long serialVersionUID = 476969437269688913L;
 	private final InputStream stream;
 	private final String mimeType;
 
-	public DirectOutputThrowable(String mimetype, InputStream is) {
+	public NoJSONOutputException(String mimetype, InputStream is) {
 		this.stream = is;
 		this.mimeType = mimetype;
 	}
@@ -20,6 +25,4 @@ public class DirectOutputThrowable extends Exception {
 	public String getMimeType() {
 		return mimeType;
 	}
-	
-	
 }

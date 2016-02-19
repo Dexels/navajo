@@ -11,9 +11,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.article.ArticleClientException;
-import com.dexels.navajo.article.ArticleException;
-import com.dexels.navajo.article.DirectOutputThrowable;
+import com.dexels.navajo.article.APIException;
+import com.dexels.navajo.article.NoJSONOutputException;
 import com.dexels.navajo.article.test.TestContextImpl;
 import com.dexels.navajo.article.test.TestRuntimeImpl;
 import com.dexels.navajo.document.Navajo;
@@ -52,7 +51,7 @@ public class TestRuntime {
 
 	@Test
 	
-	public void testSearchClub() throws IOException, ArticleException, DirectOutputThrowable, ArticleClientException {
+	public void testSearchClub() throws IOException, NoJSONOutputException, APIException {
 		// this test is a bit outdated
 		File art =context.resolveArticle("/searchclub");
 		TestRuntimeImpl tr = new TestRuntimeImpl("searchclub",art,null);
@@ -67,7 +66,7 @@ public class TestRuntime {
 		}
 
 	@Test
-	public void testVerjaardag() throws IOException, ArticleException, DirectOutputThrowable, ArticleClientException {
+	public void testVerjaardag() throws IOException, NoJSONOutputException, APIException {
 		File art =context.resolveArticle("/verjaardagen");
 		TestRuntimeImpl tr = new TestRuntimeImpl("verjaardagen",art,null);
 		context.interpretArticle(art,tr);
@@ -82,7 +81,7 @@ public class TestRuntime {
 	}
 
 	@Test
-	public void testTeams() throws IOException, ArticleException, DirectOutputThrowable, ArticleClientException {
+	public void testTeams() throws IOException, NoJSONOutputException, APIException  {
 		File art =context.resolveArticle("/teams");
 		TestRuntimeImpl tr = new TestRuntimeImpl("teams",art,null);
 		context.interpretArticle(art,tr);

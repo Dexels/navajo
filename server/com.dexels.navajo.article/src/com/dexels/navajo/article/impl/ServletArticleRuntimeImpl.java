@@ -17,8 +17,8 @@ import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.article.ArticleClientException;
-import com.dexels.navajo.article.ArticleException;
+import com.dexels.navajo.article.APIErrorCode;
+import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.oauth.api.OAuthToken;
@@ -47,7 +47,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 
 	
 	@Override
-	public String resolveArgument(String name) throws ArticleException, ArticleClientException {
+	public String resolveArgument(String name) throws APIException {
 		final String trimmedName = name.substring(1);
 		String res = request.getParameter(trimmedName);
 		if(res!=null) {
@@ -55,21 +55,20 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 		}
 		XMLElement args = article.getElementByTagName("_arguments");
 		if(args==null) {
-			throw new ArticleException("Unspecified parameter reference: "+name+". No argument data found.");
+			throw new APIException("Unspecified parameter reference: "+name+". No argument data found.", null, APIErrorCode.InternalError);
 		}
 		List<XMLElement> lts = args.getChildren();
 		for (XMLElement xmlElement : lts) {
 			if(trimmedName.equals(xmlElement.getStringAttribute("name"))) {
-				logger.debug("Found arg: "+xmlElement);
 				boolean optional = xmlElement.getBooleanAttribute("optional", "true", "false", false);
 				if(!optional) {
 					// not optional + no value = fail
-					throw new ArticleClientException("Missing parameter not optional: " + trimmedName);
+					throw new APIException("Missing parameter not optional: " + trimmedName, null, APIErrorCode.MissingRequiredArgument);
 				}
 				return xmlElement.getStringAttribute("default");
 			}
 		}
-		throw new ArticleException("Unspecified parameter reference: "+name);
+		throw new APIException("Unspecified parameter reference: "+name+". No argument data found.", null, APIErrorCode.InternalError);
 	}
 
 	@Override

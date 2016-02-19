@@ -8,7 +8,8 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.article.ArticleException;
+import com.dexels.navajo.article.APIErrorCode;
+import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.command.impl.ServiceCommand;
 import com.dexels.navajo.document.Navajo;
@@ -26,7 +27,7 @@ public class TestServiceCommand extends ServiceCommand {
 	
 	@Override
 	protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n, String instance)
-			throws ArticleException {
+			throws APIException {
 		
 		File tmlFolder = new File("testresources/tml");
 		File scriptFile = new File(tmlFolder,name+".xml");
@@ -36,7 +37,7 @@ public class TestServiceCommand extends ServiceCommand {
 				fr = new FileReader(scriptFile);
 				return NavajoFactory.getInstance().createNavajo(fr);
 			} catch (FileNotFoundException e) {
-				throw new ArticleException("Error reading tml stub at: "+scriptFile.getAbsolutePath(),e);
+				throw new APIException("Error reading tml stub at: "+scriptFile.getAbsolutePath(),e, APIErrorCode.ArticleNotFound);
 			} finally {
 				if(fr!=null) {
 					try {
@@ -48,7 +49,7 @@ public class TestServiceCommand extends ServiceCommand {
 			}
 			
 		} else {
-			throw new ArticleException("No tml stub present for service: "+name+" at: "+scriptFile.getAbsolutePath());
+			throw new APIException("Error reading tml stub at: "+scriptFile.getAbsolutePath(), null, APIErrorCode.ArticleNotFound);
 		}
 	}
 }

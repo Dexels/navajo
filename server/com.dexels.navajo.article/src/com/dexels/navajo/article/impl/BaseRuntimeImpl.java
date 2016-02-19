@@ -21,11 +21,11 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.article.ArticleClientException;
+import com.dexels.navajo.article.APIErrorCode;
+import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleContext;
-import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
-import com.dexels.navajo.article.DirectOutputThrowable;
+import com.dexels.navajo.article.NoJSONOutputException;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
@@ -98,7 +98,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 		}
 	}
 	
-	protected void verifyScopes() throws ArticleException {
+	protected void verifyScopes() throws APIException {
 		Set<String> missing = null;
 		for (String scope : getRequiredScopes()) {
 			if(!suppliedScopes.contains(scope)) {
@@ -109,7 +109,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 			}
 		}
 		if(missing!=null && !missing.isEmpty()) {
-			throw new ArticleException("Required scopes: "+missing+" missing");
+			throw new APIException("Required scopes: " + missing + " missing", null, APIErrorCode.MissingRequiredScopes);
 		}
 	}
 	
@@ -127,13 +127,13 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	}
 	
 	@Override
-	public Object resolveScope(String name) throws ArticleException {
+	public Object resolveScope(String name) throws APIException {
 		if(!name.startsWith("$")) {
-			throw new ArticleException("scope references should start with $");
+			throw new APIException("scope references should start with $", null, APIErrorCode.InternalError);
 		}
 		String stripped = name.substring(1);
 		if (!userAttributes.containsKey(stripped)) {
-			throw new ArticleException("Article problem in " + articleName + ". setvalue refers to scope: " + name + " which is not supplied");
+			throw new APIException("Article problem in " + articleName + ". setvalue refers to scope: " + name + " which is not supplied", null, APIErrorCode.InternalError);
 		}
 		return userAttributes.get(stripped);
 	}
@@ -143,13 +143,13 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 		return suppliedScopes;
 	}
 	
-	public ObjectNode getGroupNode(ObjectNode parent, String name) throws ArticleException {
+	public ObjectNode getGroupNode(ObjectNode parent, String name) throws APIException {
 		JsonNode existing = parent.get(name);
 		if(existing!=null) {
 			if(existing instanceof ObjectNode) {
 				return (ObjectNode) existing;
 			} else {
-				throw new ArticleException("Error getting group node: "+name+" there is an existing node, but it is not an ObjectNode");
+				throw new APIException("Error getting group node: "+name+" there is an existing node, but it is not an ObjectNode", null, APIErrorCode.InternalError);
 			}
 		}
 		ObjectNode result = mapper.createObjectNode();
@@ -163,10 +163,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	}
 	
 	@Override
-	public ObjectNode getGroupNode( String name) throws ArticleException {
-//		if("".equals(name) || "/".equals(name)) {
-//			return rootNode;
-//		}
+	public ObjectNode getGroupNode( String name) throws APIException {
 		String[] split = name.split("/");
 		int i = 0;
 		ObjectNode current = null;
@@ -197,7 +194,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
     }
 	
 	@Override
-	public void execute(ArticleContext context) throws ArticleException, ArticleClientException, DirectOutputThrowable {
+	public void execute(ArticleContext context) throws APIException, NoJSONOutputException {
 		verifyScopes();
 		List<XMLElement> children = article.getChildren();
 		try {
@@ -211,7 +208,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 				}
 				ArticleCommand ac = context.getCommand(name);
 				if (ac == null) {
-					throw new ArticleException("Unknown command: " + name);
+					throw new APIException("Unknown command: " + name, null, APIErrorCode.InternalError);
 				}
 				Map<String, String> parameters = new HashMap<String, String>();
 

@@ -8,13 +8,15 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import com.dexels.navajo.article.APIErrorCode;
+import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleContext;
-import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
-import com.dexels.navajo.article.DirectOutputThrowable;
+import com.dexels.navajo.article.NoJSONOutputException;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.types.Binary;
 
@@ -39,12 +41,9 @@ public class ElementCommand implements ArticleCommand {
 	public String getName() {
 		return name;
 	}
-
-//    <element service="clubsites/nl/adresboek" name="parameters/achternaam" showlabel="true"/>
-
 	
 	@Override
-	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException, DirectOutputThrowable {
+	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws APIException, NoJSONOutputException {
 		String service = parameters.get("service");
 		Navajo current = null;
 		if(service==null) {
@@ -53,11 +52,11 @@ public class ElementCommand implements ArticleCommand {
 			current = runtime.getNavajo(service);
 		}
 		if(current==null) {
-			throw new ArticleException("No current navajo found.");
+			throw new APIException("No current navajo found for service " + service, null, APIErrorCode.InternalError);
 		}
 		String name = parameters.get("name");
 		if(name==null) {
-			throw new ArticleException("No 'name' parameter found in element. This is required.");
+			throw new APIException("No 'name' parameter found in element for service " + service + " we've got parameters " + parameters, null, APIErrorCode.InternalError);
 		}
 		String propertyName = parameters.get("propertyName");
 		if(propertyName==null) {
@@ -66,7 +65,7 @@ public class ElementCommand implements ArticleCommand {
 
 		Property p = current.getProperty(propertyName);
 		if(p==null) {
-			throw new ArticleException("No property: "+propertyName+" found in current navajo.");
+			throw new APIException("No property: "+propertyName+" found in current navajo for service " + service, null, APIErrorCode.InternalError);
 		}
 		
 		if(parameters.get("direct")!=null) {
@@ -77,11 +76,11 @@ public class ElementCommand implements ArticleCommand {
 				if(mime==null) {
 					mime = b.guessContentType();
 				}
-				throw new DirectOutputThrowable(mime,b.getDataAsStream());
+				throw new NoJSONOutputException(mime,b.getDataAsStream());
 			} else {
 				String string = ""+value;
 				ByteArrayInputStream bais = new ByteArrayInputStream(string.getBytes());
-				throw new DirectOutputThrowable("text/plain",bais);
+				throw new NoJSONOutputException("text/plain",bais);
 			}
 		}
 		
@@ -89,20 +88,42 @@ public class ElementCommand implements ArticleCommand {
 			String msgpath = name.substring(0, name.lastIndexOf('/'));
 			String propname = name.substring(name.lastIndexOf('/')+1,name.length());
 			ObjectNode msgNode = runtime.getGroupNode(msgpath);
-			msgNode.put( propname, getValue( p ) );
-			
+			setValue(runtime, msgNode, propname, p, parameters);
+					
 			return null;
 		} else {
 			ObjectNode on = runtime.getRootNode();
-			on.put(name, getValue( p ));
+			setValue(runtime, on, name, p, parameters);
 			return on;
 		}
 	}
 	
-	public String getValue( Property property ) {
-		if( property.getType().equals( Property.SELECTION_PROPERTY ) ) 
-			return property.getSelected().getName();
-		return property.getValue();
+	private void setValue(ArticleRuntime runtime, ObjectNode container, String name, Property property, Map<String,String> parameters) {
+		if ("selection".equals(parameters.get("type"))) {
+			ArrayNode options = runtime.getObjectMapper().createArrayNode();
+			
+			if (property.getAllSelections() != null && property.getAllSelections().size() > 0) {
+				for (Selection s : property.getAllSelections()) {
+					ObjectNode node = runtime.getObjectMapper().createObjectNode();
+					
+					node.put("selected", s.isSelected());
+					node.put("value", s.getValue());
+					node.put("name", s.getName());
+					
+					options.add(node);	
+				}
+			}
+			
+			container.put(name,	 options);
+		} else if (property.getType().equals(Property.SELECTION_PROPERTY)) {
+			if (property.getSelected() == null || property.getSelected().getName() == Selection.DUMMY_SELECTION) {
+				container.put(name, "");
+			} else {
+				container.put(name, property.getSelected().getName());
+			}
+		} else {
+			container.put(name, property.getValue());
+		}
 	}
 
 	@Override
