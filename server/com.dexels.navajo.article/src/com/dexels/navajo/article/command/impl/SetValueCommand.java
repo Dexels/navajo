@@ -6,9 +6,9 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 
-import com.dexels.navajo.article.ArticleClientException;
+import com.dexels.navajo.article.APIErrorCode;
+import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleContext;
-import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
@@ -38,32 +38,30 @@ public class SetValueCommand implements ArticleCommand {
 	}
 
 	@Override
-	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement xmlElement) throws ArticleException, ArticleClientException {
-//	    <setvalue service="clubsites/nl/init" element="parameters/poulecode" value="@poulecode"/>
+	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement xmlElement) throws APIException {
 		String service = parameters.get("service");
 		if(service==null) {
-			throw new ArticleException("Article problem in "+runtime.getArticleName()+". setvalue requires a service, which is not supplied.");
+			throw new APIException("Article problem in "+runtime.getArticleName()+". setvalue requires a service, which is not supplied.", null, APIErrorCode.InternalError);
 		}
 		String element = parameters.get("element");
 		if(element==null) {
-			throw new ArticleException("Article problem in "+runtime.getArticleName()+". setvalue requires a element, which is not supplied.");
+			throw new APIException("Article problem in "+runtime.getArticleName()+". setvalue requires a element, which is not supplied.", null, APIErrorCode.InternalError);
 		}
 		Navajo n = runtime.getNavajo(service);
 		if(n==null) {
-			throw new ArticleException("Article problem in "+runtime.getArticleName()+". Requested service: "+service+" is not loaded.");
+			throw new APIException("Article problem in "+runtime.getArticleName()+". Requested service: "+service+" is not loaded.", null, APIErrorCode.InternalError);
 		}
 		Property p = n.getProperty(element);
 		if(p==null) {
-			throw new ArticleException("Article problem in "+runtime.getArticleName()+". Requested element: "+element+" in service "+service+" is not found.");
+			throw new APIException("Article problem in "+runtime.getArticleName()+". Requested element: "+element+" in service "+service+" is not found.", null, APIErrorCode.InternalError);
 		}
 		String value = parameters.get("value");
 		if(value==null) {
-			throw new ArticleException("Article problem in "+runtime.getArticleName()+". setvalue requires a value, which is not supplied.");
+			throw new APIException("Article problem in "+runtime.getArticleName()+". setvalue requires a value, which is not supplied.", null, APIErrorCode.InternalError);
 		}
 		if(value.startsWith("@")) {
 			String resolved = runtime.resolveArgument(value);
 			if(resolved!=null) {
-//				throw new ArticleException("Article problem in "+runtime.getArticleName()+". setvalue refers to argument: "+value+" which is not supplied");
 				p.setValue(resolved);
 			}
 		} else if(value.startsWith("$")) {
@@ -78,5 +76,4 @@ public class SetValueCommand implements ArticleCommand {
 	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,ObjectMapper mapper) {
 		return false;
 	}
-
 }
