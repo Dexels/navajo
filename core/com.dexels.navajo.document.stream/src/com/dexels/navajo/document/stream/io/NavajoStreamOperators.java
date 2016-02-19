@@ -15,7 +15,6 @@ import java.util.zip.Inflater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
@@ -24,8 +23,6 @@ import rx.Observable;
 import rx.Observable.Operator;
 import rx.Observable.Transformer;
 import rx.Subscriber;
-import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class NavajoStreamOperators {
@@ -55,8 +52,8 @@ public class NavajoStreamOperators {
 
 			@Override
 			public Observable<NavajoStreamEvent> call(Observable<NavajoStreamEvent> in) {
-	        	return in.startWith(Observable.just(Events.messageStarted(name)))
-	        	.concatWith(Observable.just(Events.message(Collections.emptyList(), name)));
+	        	return in.startWith(Observable.just(Events.messageStarted(name,null)))
+	        	.concatWith(Observable.just(Events.message(Collections.emptyList(), name,null)));
 			}
 		};
 	}
@@ -374,40 +371,6 @@ public class NavajoStreamOperators {
   			}
   		};
       }
-    
-    
-    public static Operator<NavajoStreamEvent, NavajoStreamEvent> mergeToObservable(String messageName,Func1<NavajoStreamEvent,Observable<Double>> observableSource, Func2<NavajoStreamEvent,Observable<Double>,Observable<NavajoStreamEvent>> call) {
-		return new Operator<NavajoStreamEvent,NavajoStreamEvent>(){
 
-			@Override
-			public Subscriber<? super NavajoStreamEvent> call(Subscriber<? super NavajoStreamEvent> in) {
-				return new Subscriber<NavajoStreamEvent>() {
-
-					@Override
-					public void onCompleted() {
-						in.onCompleted();
-					}
-
-					@Override
-					public void onError(Throwable e) {
-
-						in.onError(e);
-					}
-
-					@Override
-					public void onNext(NavajoStreamEvent event) {
-						if(event.body()!=null && event.body() instanceof Msg) {
-							Msg m = (Msg)event.body();
-							if(messageName.equals(event.path())) {
-//								in.onNext(call.call(event, observableSource.call(event)));
-								return;
-							}
-						}
-						in.onNext(event);
-					}
-				};
-			}
-		};
-    }
 
 }

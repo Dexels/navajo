@@ -79,8 +79,9 @@ public class NavajoStreamCollector {
 			if(!messageStack.isEmpty()) {
 				prMessage = messageStack.peek();
 			}
-
-			Message msg = NavajoFactory.getInstance().createMessage(assemble, n.path());
+			String mode = (String) n.attribute("mode");
+			
+			Message msg = NavajoFactory.getInstance().createMessage(assemble, n.path(),mode);
 			if (prMessage == null) {
 				assemble.addMessage(msg);
 			} else {

@@ -92,6 +92,11 @@ public class Prop {
 		return new Prop(name, val, type,selections,direction,description,length,subtype,cardinality);
 	}
 	
+
+	public Prop withName(String newName) {
+		return new Prop(newName, value, type,selections,direction,description,length,subtype,cardinality);
+	}
+	
 	public Prop emptyWithType(String type) {
 		return new Prop(name,null,type);
 	}
@@ -228,6 +233,7 @@ public class Prop {
 	public List<Select> selections() {
 		return selections;
 	}
+
 
 
 

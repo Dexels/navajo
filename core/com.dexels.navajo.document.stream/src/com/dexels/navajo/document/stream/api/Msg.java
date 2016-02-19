@@ -15,35 +15,48 @@ import rx.functions.Func1;
 
 public class Msg {
 	private final String name;
+	private final String mode;
+	private final MessageType type;
 	private final List<Prop> properties = new ArrayList<>();
 	private final Map<String,Prop> propertiesByName = new HashMap<>();
-	private final MessageType type;
 	private final Func1<Msg,Observable<NavajoStreamEvent>> subMessages;
 	private final Action1<Msg> msgAction;
 	private enum MessageType {
 		SIMPLE,DEFINITION,ARRAY_ELEMENT
 	};
 	
-	private Msg(String name, MessageType type,Action1<Msg> msgAction, Func1<Msg,Observable<NavajoStreamEvent>> body) {
+	public Msg copy() {
+		return new Msg(this);
+	}
+	
+	private Msg(String name, MessageType type, String mode, Action1<Msg> msgAction, Func1<Msg,Observable<NavajoStreamEvent>> body) {
 		this.name = name;
 		this.type = type;
 		this.subMessages = body;
 		this.msgAction = msgAction;
+		this.mode = mode;
 	}
 
-	public Msg(List<Prop> properties) {
+	private Msg(List<Prop> properties) {
 		this.name = "Unnamed";
 		this.type = Msg.MessageType.ARRAY_ELEMENT;
+		this.mode = null;
 		this.subMessages = f->Observable.empty();
 		this.msgAction = m->{};
 		this.properties.addAll(properties);
 		properties.stream().forEach(a->propertiesByName.put(a.name(), a));
 	}
-
-	@Deprecated
-	public static Observable<NavajoStreamEvent> create(String name, Action1<Msg> msgAction, Func1<Msg,Observable<NavajoStreamEvent>> body) {
-		return new Msg(name,MessageType.SIMPLE,msgAction,body).stream();
+	
+	private Msg(Msg source) {
+		this.name = source.name;
+		this.type = source.type;
+		this.mode = source.mode;
+		this.subMessages = f->Observable.empty();
+		this.msgAction = m->{};		
+		this.properties.addAll(source.properties);
+		this.propertiesByName.putAll(source.propertiesByName);
 	}
+
 	public static Msg createElement() {
 		return new Msg(Collections.emptyList());
 	}
@@ -51,23 +64,6 @@ public class Msg {
 		return new Msg(properties);
 	}
 
-
-	@Deprecated
-	public static Observable<NavajoStreamEvent> createElement(String name, Action1<Msg> msgAction, Func1<Msg,Observable<NavajoStreamEvent>> body) {
-		return new Msg(name,MessageType.ARRAY_ELEMENT,msgAction,body).stream();
-	}
-
-	@Deprecated
-	public static Observable<NavajoStreamEvent> createElement(String name, Func1<Msg,Observable<NavajoStreamEvent>> body) {
-		return new Msg(name,MessageType.ARRAY_ELEMENT,m->{},body).stream();
-	}
-
-	@Deprecated
-	public static Observable<NavajoStreamEvent> createElement(String name, Action1<Msg> msgAction) {
-		return new Msg(name,MessageType.ARRAY_ELEMENT,msgAction,f->Observable.empty()).stream();
-	}
-
-	
 	public Prop add(Prop property) {
 		with(property);
 		return property;
@@ -79,6 +75,17 @@ public class Msg {
 		return this;
 	}
 
+	public Msg renameProperty(String from, String to) {
+		Msg mm = new Msg(this);
+		Prop prev = propertiesByName.get(from);
+		Prop renamed = prev.withName(to);
+		int index = properties.indexOf(prev);
+		mm.properties.set(index, renamed);
+		mm.propertiesByName.remove(from);
+		mm.propertiesByName.put(to, renamed);
+		return mm;
+	}
+	
 	public Msg without(String name) {
 		Prop toBeRemoved = propertiesByName.get(name);
 		if(toBeRemoved!=null) {
@@ -114,7 +121,7 @@ public class Msg {
 		case ARRAY_ELEMENT:
 			return Observable.<NavajoStreamEvent>just(Events.arrayElementStarted());
 		case SIMPLE:
-			return Observable.<NavajoStreamEvent>just(Events.messageStarted(name));
+			return Observable.<NavajoStreamEvent>just(Events.messageStarted(name,mode));
 		case DEFINITION:
 			return Observable.<NavajoStreamEvent>just(Events.messageDefinitionStarted(name));
 		default:
@@ -128,7 +135,7 @@ public class Msg {
 		case ARRAY_ELEMENT:
 			return Observable.<NavajoStreamEvent>just(Events.arrayElement(properties));
 		case SIMPLE:
-			return Observable.<NavajoStreamEvent>just(Events.message(properties,name));
+			return Observable.<NavajoStreamEvent>just(Events.message(properties,name,null));
 		case DEFINITION:
 			return Observable.<NavajoStreamEvent>just(Events.messageDefinition(properties,name));
 		default:

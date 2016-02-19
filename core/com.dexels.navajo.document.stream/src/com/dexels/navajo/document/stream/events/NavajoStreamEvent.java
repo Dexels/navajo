@@ -21,16 +21,20 @@ public class NavajoStreamEvent {
 		this.attributes = Collections.unmodifiableMap(attributes);
 	}
 
+	@SuppressWarnings("unchecked")
 	public String toString() {
 		if(type==NavajoEventTypes.NAVAJO_STARTED) {
 			NavajoHead h = (NavajoHead)body;
-			return "Type: "+type+" path: "+path+" attributes: {"+attributes+" - RPCNAME: "+h.name();
+			return "Type: "+type+" path: "+path+" attributes: {"+attributes+"} - RPCNAME: "+h.name()+" user: "+h.username();
 		}
 		if(type==NavajoEventTypes.MESSAGE) {
 			List<Prop> contents = (List<Prop>) body;
-			StringBuilder sb = new StringBuilder("Message detected. Name: "+path+"\n");
+			StringBuilder sb = new StringBuilder("Message detected. Name: "+path+" with mode: "+this.attributes.get("mode")+"\n");
 			for (Prop prop : contents) {
-				sb.append("Prop: "+prop.name()+" = "+prop.value()+ "with direction: "+ prop.direction() + "\n");
+				sb.append("Prop: "+prop.name()+" = "+prop.value()+ " value type: "+ prop.type() +"with direction: "+ prop.direction() + "\n");
+				if(prop.value()!=null) {
+					sb.append("   -> value class: "+prop.value().getClass()+"\n");
+				}
 			}
 			return sb.toString();
 		}

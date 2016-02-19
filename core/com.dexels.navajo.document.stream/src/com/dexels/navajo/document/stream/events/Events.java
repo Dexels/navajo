@@ -1,7 +1,9 @@
 package com.dexels.navajo.document.stream.events;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.dexels.navajo.document.stream.api.NavajoHead;
 //import com.dexels.navajo.document.Message;
@@ -18,12 +20,18 @@ public class Events {
 		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE_DEFINITION,properties,Collections.emptyMap());
 	}
 
-	public static NavajoStreamEvent message(List<Prop> properties, String name) {
+	public static NavajoStreamEvent message(List<Prop> properties, String name, String mode) {
 		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE,properties,Collections.emptyMap());
 	}
 
-	public static NavajoStreamEvent messageStarted(String name) {
-		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE_STARTED,null,Collections.emptyMap());
+	public static NavajoStreamEvent messageStarted(String name, String mode) {
+		if (mode==null || "".equals(mode)) {
+			return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE_STARTED,null,Collections.emptyMap());
+		} else {
+			Map<String,Object> attributes = new HashMap<>();
+			attributes.put("mode", mode);
+			return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE_STARTED,null,attributes);
+		}
 	}
 	
 	public static NavajoStreamEvent arrayStarted(String name) {
