@@ -1,21 +1,17 @@
 package com.dexels.navajo.article.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.article.ArticleClientException;
-import com.dexels.navajo.article.ArticleException;
+import com.dexels.navajo.article.APIErrorCode;
+import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleRuntime;
-import com.dexels.navajo.article.DirectOutputThrowable;
+import com.dexels.navajo.article.NoJSONOutputException;
 import com.dexels.oauth.api.Client;
 import com.dexels.oauth.api.ClientStore;
 import com.dexels.oauth.api.ClientStoreException;
@@ -23,124 +19,124 @@ import com.dexels.oauth.api.OAuthToken;
 import com.dexels.oauth.api.TokenStore;
 import com.dexels.oauth.api.TokenStoreException;
 
-public class OAuthArticleServlet extends ArticleServlet {
+public class OAuthArticleServlet extends ArticleBaseServlet {
 	
 	private static final long serialVersionUID = 1199676363102046960L;
 	private TokenStore tokenStore;
 	private ClientStore clientStore;
-	private final static Logger logger = LoggerFactory
-			.getLogger(OAuthArticleServlet.class);
 	
 	@Override
-	protected void service(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doServiceImpl(HttpServletRequest req, HttpServletResponse resp) throws APIException {
 		String token = req.getParameter("token");
-		resp.addHeader("Access-Control-Allow-Origin", "*");		
-
-		OAuthToken t = null;
-		Client cr = null;
-		
-		
-		String errorMessage = "No token or invalid token supplied";
-		int statuscode = 500;
-		if(token==null) {
-			// fallback:
-			String clientId = req.getParameter("client_id");
-			if(clientId==null) {
-				clientId = req.getParameter("clientId");
-				if(clientId!=null) {
-					logger.warn("Warning, using the wrong clientId parameter name: 'clientId'. Use: 'client_id'");
-				}
-			}
-			if(clientId==null) {
-				resp.sendError(400, "Invalid clientId");
-				return;
-			}
-			try {
-				cr = clientStore.getClient(clientId);
-			} catch (ClientStoreException e) {
-				throw new ServletException("Error acquiring client id:",e);
-			}
-			if(cr==null) {
-				resp.sendError(400, "Invalid clientId");
-				return;
-			}
-			final String username = cr.getUsername();
-			if(clientId== null || username == null ) {
-				resp.sendError(400, "Invalid clientId");
-				return;
-			}
-		} else {
-			try {
-				t = tokenStore.getToken(token);
 				
-				if (t != null && t.isExpired()) {
-					try {
-						tokenStore.delete(t.getCode());
-						logger.info("Token is expired remove it!");
-					} catch (TokenStoreException e) {
-						logger.error(e.getMessage());
-					} finally {
-						t = null;
-					}
-				}
-			} catch (TokenStoreException e) {
-				throw new ServletException("Token problem", e);
-			}
-			if(t!=null) {
-				try {
-					cr = clientStore.getClient(t.getClientId());
-					
-					if (cr == null) {
-						errorMessage = "Invalid clientId";
-						statuscode = 400;
-					}
-				} catch (ClientStoreException e) {
-					throw new ServletException("Client Store problem",e);
-				}
-			}	
+		OAuthToken oauthToken = null;
+		Client client = null;
+		
+		if (token != null) {
+			oauthToken = getOAuthToken(token);
+			client = getClient(oauthToken);
+		} else {
+			client = getClient(req);
+		}
+
+		String username = client.getUsername();
+		String pathInfo = req.getPathInfo();
+		String instance = client.getInstance();
+		String url = client.getRedirectURLPrefix();
+				
+		if(pathInfo==null) {
+			throw new APIException("Pathinfo is null, we cannot find an article then", null, APIErrorCode.ArticleNotFound);
 		}
 		
-		if(cr==null) {
-			resp.sendError(statuscode, errorMessage);
-			return;
+		File article = getContext().resolveArticle(determineArticleFromRequest(req));
+		if (!article.exists()) {
+			throw new APIException("Article does not exist", null, APIErrorCode.ArticleNotFound);
 		}
-		String username = cr.getUsername();
-		String pathInfo = req.getPathInfo();
-		String instance = cr.getInstance();
-		String url = cr.getRedirectURLPrefix();
-		logger.info("clientInstance: "+instance);
-		if(instance==null) {
-			instance = determineInstanceFromRequest(req);
-		}
-		logger.info("Instance determined: "+instance); 
-		if(pathInfo==null) {
-			throw new ServletException("No article found, please specify");
-		}
-		File article = context.resolveArticle(determineArticleFromRequest(req));
-		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, cr.getPassword(),username, article,pathInfo,req.getParameterMap(),instance,t);
+		
+		try {
+			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, client.getPassword(), username, article, pathInfo, req.getParameterMap(), instance, oauthToken);
+			runtime.setUsername(client.getUsername());
+			runtime.setPassword(client.getPassword());
+			runtime.setURL(url);
+			runtime.execute(getContext());
+			resp.setContentType("application/json; charset=utf-8");
+		}  catch (NoJSONOutputException e) {
+			resp.setContentType(e.getMimeType());
 			try {
-				runtime.setUsername(cr.getUsername());
-				runtime.setPassword(cr.getPassword());
-				runtime.setURL(url);
-				runtime.execute(context);
-				resp.setContentType("application/json; charset=utf-8");
-			} catch (ArticleClientException e) {
-				resp.sendError(400, e.getMessage());
-				return;
-			} catch (ArticleException e) {
-				throw new ServletException("Problem executing article", e);
-			} catch (DirectOutputThrowable e) {
-				resp.setContentType(e.getMimeType());
 				IOUtils.copy(e.getStream(), resp.getOutputStream());
-				return;
+			} catch (IOException e1) {
+				throw new APIException(e1.getMessage(), e1, APIErrorCode.InternalError);
 			}
-
-		} else {
-			resp.sendError(404, "No such article");
-			throw new FileNotFoundException("Unknown article: "+article.getAbsolutePath());
+			return;
+		} catch (IOException e) {
+			throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
+		} 
+	}
+	
+	private OAuthToken getOAuthToken(String token) throws APIException {
+		try {
+			OAuthToken oauthToken = tokenStore.getToken(token);
+			
+			if (oauthToken == null) {
+				throw new APIException("Invalid token " + token, null, APIErrorCode.TokenUnauthorized);
+			}
+			return oauthToken;
+		} catch (TokenStoreException e) {
+			throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
 		}
+	}
+	
+	private Client getClient(OAuthToken oauthToken) throws APIException {
+		try {
+			Client client = clientStore.getClient(oauthToken.getClientId());
+			
+			if (client == null) {
+				throw new APIException("Invalid client id " + oauthToken.getClientId(), null, APIErrorCode.ClientIdUnauthorized);
+			}
+			return client;
+		} catch (ClientStoreException e) {
+			throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
+		}
+	}
+	
+	private Client getClient(HttpServletRequest request) throws APIException {
+		//Because we want to be backwards compatible we support both client_id
+		//and clientId as parameter input
+		String clientId = request.getParameter("client_id");
+		if (clientId == null) {
+			clientId = request.getParameter("clientId");
+		}
+			
+		//ClientId is null, no point in asking Mongo.
+		if (clientId == null) {
+			throw new APIException("Missing client id", null, APIErrorCode.ClientIdUnauthorized);
+		}
+			
+		try {
+			Client client = clientStore.getClient(clientId);
+			
+			if (client == null) {
+				throw new APIException("Invalid client id " + clientId, null, APIErrorCode.ClientIdUnauthorized);
+			}
+			return client;
+		} catch (ClientStoreException e) {
+			throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
+		}
+	}
+	
+	protected String determineArticleFromRequest(final HttpServletRequest req) {
+		String pathinfo = req.getPathInfo();
+		if(pathinfo.startsWith("/")) {
+			pathinfo = pathinfo.substring(1);
+		}
+		String article = null;
+		final int indexOf = pathinfo.indexOf('/');
+		if(indexOf!=-1) {
+			article = pathinfo.substring(indexOf+1, pathinfo.length());
+		} else {
+			article = pathinfo;
+		}
+		return article;
 	}
 	
 	public void setTokenStore(TokenStore tokenStore) {
@@ -159,6 +155,4 @@ public class OAuthArticleServlet extends ArticleServlet {
 	public void clearClientStore(ClientStore clientStore) {
 		this.clientStore = null;
 	}
-
-	
 }

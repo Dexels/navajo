@@ -6,16 +6,14 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 
-import com.dexels.navajo.article.ArticleClientException;
+import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleContext;
-import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
-import com.dexels.navajo.article.DirectOutputThrowable;
+import com.dexels.navajo.article.NoJSONOutputException;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public interface ArticleCommand {
-
 	public String getName();
-	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException, DirectOutputThrowable, ArticleClientException;
+	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws APIException, NoJSONOutputException;
 	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,ObjectMapper mapper);
 }

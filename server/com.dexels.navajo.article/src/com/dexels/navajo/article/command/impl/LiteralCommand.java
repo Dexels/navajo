@@ -7,10 +7,10 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleContext;
-import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
-import com.dexels.navajo.article.DirectOutputThrowable;
+import com.dexels.navajo.article.NoJSONOutputException;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
@@ -37,7 +37,7 @@ public class LiteralCommand implements ArticleCommand {
 	}
 	
 	@Override
-	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException, DirectOutputThrowable {
+	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws APIException, NoJSONOutputException {
 		ObjectNode root = runtime.getRootNode();
 		String name = element.getAttribute("name", "name").toString();
 		String value = element.getAttribute("target", "").toString();

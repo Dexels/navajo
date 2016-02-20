@@ -37,7 +37,7 @@ public class CachedHttpJnlpResourceLoader extends CachedResourceLoader {
         logger.info("Creating JNLP-backed local cache: relativePath: {} id: {} useJnlpLocalStorageString: {}", relativePath, id, useJnlpLocalStorageString);
         final LocalDigestCacheValidator cacheValidator = new LocalDigestCacheValidator();
         final LocalStorage localstore;
-        if (useJnlpLocalStorage) {
+        if (false) {
             localstore = new JnlpLocalStorage(relativePath, cm, id);
         } else {
             File f = new File(getSystemProperty("deployment.user.tmp"), "tipicache");

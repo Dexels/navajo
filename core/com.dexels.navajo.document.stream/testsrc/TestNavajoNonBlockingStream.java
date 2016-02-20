@@ -44,12 +44,12 @@ public class TestNavajoNonBlockingStream {
 		baseTml.write(sw1);
 		StringWriter sw2 = new StringWriter();
 		result.write(sw2);
-		FileWriter fw = new FileWriter("out1.xml");
-		fw.write(sw1.toString());
-		fw.close();
-		FileWriter fw2 = new FileWriter("out2.xml");
-		fw2.write(sw2.toString());
-		fw2.close();
+//		FileWriter fw = new FileWriter("out1.xml");
+//		fw.write(sw1.toString());
+//		fw.close();
+//		FileWriter fw2 = new FileWriter("out2.xml");
+//		fw2.write(sw2.toString());
+//		fw2.close();
 		Assert.assertEquals(sw1.toString(), sw2.toString());
 	}
 
@@ -92,12 +92,12 @@ public class TestNavajoNonBlockingStream {
 			}
 		});
 		byte[] original = getNavajoData("tml_without_binary.xml");
-		FileOutputStream fw = new FileOutputStream("original.xml");
-		fw.write(original);
-		fw.close();
-		FileOutputStream fw2 = new FileOutputStream("parsed.xml");
-		fw2.write(baos.toByteArray());
-		fw2.close();
+//		FileOutputStream fw = new FileOutputStream("original.xml");
+//		fw.write(original);
+//		fw.close();
+//		FileOutputStream fw2 = new FileOutputStream("parsed.xml");
+//		fw2.write(baos.toByteArray());
+//		fw2.close();
 		// TODO Seems ok, but make test to compare Navajo o
 				Assert.assertArrayEquals(original, baos.toByteArray());
 		// Assert.assertEquals(sw1.toString(), sw2.toString());
@@ -118,12 +118,12 @@ public class TestNavajoNonBlockingStream {
 					}
 				});
 		byte[] original = getNavajoData("tml_with_binary.xml");
-		FileOutputStream fw = new FileOutputStream("originalbinary.xml");
-		fw.write(original);
-		fw.close();
-		FileOutputStream fw2 = new FileOutputStream("parsedbinary.xml");
-		fw2.write(baos.toByteArray());
-		fw2.close();
+//		FileOutputStream fw = new FileOutputStream("originalbinary.xml");
+//		fw.write(original);
+//		fw.close();
+//		FileOutputStream fw2 = new FileOutputStream("parsedbinary.xml");
+//		fw2.write(baos.toByteArray());
+//		fw2.close();
 		Assert.assertTrue(baos.toByteArray().length>5000);
 		
 		// TODO Seems ok, but make test to compare Navajo o
@@ -148,12 +148,12 @@ public class TestNavajoNonBlockingStream {
 					}
 				});
 		byte[] original = getNavajoData("tml_with_selection.xml");
-		FileOutputStream fw = new FileOutputStream("originalselection.xml");
-		fw.write(original);
-		fw.close();
-		FileOutputStream fw2 = new FileOutputStream("parsedselection.xml");
-		fw2.write(baos.toByteArray());
-		fw2.close();
+//		FileOutputStream fw = new FileOutputStream("originalselection.xml");
+//		fw.write(original);
+//		fw.close();
+//		FileOutputStream fw2 = new FileOutputStream("parsedselection.xml");
+//		fw2.write(baos.toByteArray());
+//		fw2.close();
 		// TODO Seems ok, but make test to compare Navajo o
 		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
@@ -179,12 +179,12 @@ public class TestNavajoNonBlockingStream {
 					}
 				});
 		byte[] original = getNavajoData("tml_with_date.xml");
-		FileOutputStream fw = new FileOutputStream("originaldate.xml");
-		fw.write(original);
-		fw.close();
-		FileOutputStream fw2 = new FileOutputStream("parseddate.xml");
-		fw2.write(baos.toByteArray());
-		fw2.close();
+//		FileOutputStream fw = new FileOutputStream("originaldate.xml");
+//		fw.write(original);
+//		fw.close();
+//		FileOutputStream fw2 = new FileOutputStream("parseddate.xml");
+//		fw2.write(baos.toByteArray());
+//		fw2.close();
 		// TODO Seems ok, but make test to compare Navajo o
 		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
