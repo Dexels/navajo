@@ -121,7 +121,7 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.6.9'
+	<feature resolver="(obr)" name='navajo.core' version='3.6.10'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,5)">pax-http</feature>
@@ -141,7 +141,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/3.1.0
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/4.0.10
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/4.0.12
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.2.0
 		</bundle>
@@ -181,10 +181,10 @@
 		</bundle>		
 	</feature>	
 		
-	<feature resolver="(obr)" name='navajo.function' version='3.0.13'
+	<feature resolver="(obr)" name='navajo.function' version='3.0.14'
 		start-level='80'>
 		<feature version="[3.0.34,4)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.3.12
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.3.14
 		</bundle>
 	</feature>
 
@@ -490,10 +490,10 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.cluster'
-		version='3.1.21'>
+		version='3.1.23'>
 		<feature version="[3.0.0,4)">navajo.enterprise.core</feature>
 		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/3.5.1</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.3.20
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.4.2
 		</bundle>
 	</feature>
 
