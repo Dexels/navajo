@@ -1,4 +1,4 @@
-package com.mysql.jdbc.service;
+package com.dexels.navajo.resource.jdbc.mysql;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
