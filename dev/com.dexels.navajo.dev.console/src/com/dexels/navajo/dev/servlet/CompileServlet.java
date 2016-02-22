@@ -73,6 +73,7 @@ public class CompileServlet extends HttpServlet {
 		if(req.getParameter("redirect")!=null) {
 			resp.sendRedirect("/index.jsp");
 		} else {
+		    resp.setContentType("text/plain");
 			resp.getWriter().write("Compiling java complete. took: "+compileDuration+" millis.");
 			resp.getWriter().write(" Succeeded: "+success.size()+" failed: "+failures.size()+" skipped: "+skipped.size());
 			resp.getWriter().write(" Avg: "+(1000 * (float)success.size() / compileDuration)+" scripts / sec");
