@@ -16,9 +16,9 @@ import javax.sql.DataSource;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.api.Prop;
+import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
 import com.dexels.navajo.script.api.UserException;
 import com.github.davidmoten.rx.jdbc.Database;
-import com.mysql.jdbc.service.MySqlDataSourceComponent;
 
 import rx.Observable;
 
