@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,9 +19,14 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.NavajoDomStreamer;
 import com.dexels.navajo.document.stream.NavajoStreamCollector;
+import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NAVADOC;
+import com.dexels.navajo.document.stream.api.Prop;
+import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
+import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 import com.dexels.navajo.document.stream.xml.Bytes;
 import com.dexels.navajo.document.stream.xml.XML;
+import com.dexels.navajo.document.types.Binary;
 
 import rx.Observable;
 
@@ -130,6 +137,45 @@ public class TestNavajoNonBlockingStream {
 //		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
 	
+	@Test 
+	public void testStreamParserAndSerializerWithBinaryUsingTml() throws Exception {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		final Navajo baseTml = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("tml_with_binary.xml"));
+		ArrayList<Prop> ne = (ArrayList<Prop>) Observable.just(baseTml)
+			.lift(NAVADOC.stream())
+			.lift(NAVADOC.serialize())
+			.doOnNext(b -> {
+				try {
+					baos.write(b);
+				} catch (Exception e) {
+				}
+			})
+			.map(b->ByteBuffer.wrap(b))
+			.lift(XML.parse())
+			.lift(NAVADOC.parse(Collections.emptyMap()))
+			.filter(event->NavajoEventTypes.MESSAGE==event.type())
+			.filter(event->"SecureImage".equals(event.path()))
+			.doOnNext(event->System.err.println(event.path()))
+			.map(event->event.body())
+			.toBlocking()
+			.first()
+			;
+		
+		System.err.println("Ne: "+ne);
+		
+//		byte[] original = getNavajoData("tml_with_binary.xml");
+		
+		//		FileOutputStream fw = new FileOutputStream("originalbinary.xml");
+//		fw.write(original);
+//		fw.close();
+		FileOutputStream fw2 = new FileOutputStream("parsedbinary.xml");
+		fw2.write(baos.toByteArray());
+		fw2.close();
+		Assert.assertTrue(baos.toByteArray().length>5000);
+		
+		// TODO Seems ok, but make test to compare Navajo o
+//		Assert.assertArrayEquals(original, baos.toByteArray());
+	}
 	@Test 
 	public void testStreamParserAndSerializerWithSelection() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Set of Stream Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters.stream
-Bundle-Version: 1.0.2.qualifier
+Bundle-Version: 1.0.6.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.navajo.adapter.sqlmap,
@@ -14,9 +14,10 @@ Import-Package: com.dexels.navajo.adapter.sqlmap,
  com.dexels.navajo.document.stream.xml;version="1.0.0",
  com.dexels.navajo.listeners.stream;version="1.0.0",
  com.dexels.navajo.listeners.stream.core,
+ com.dexels.navajo.resource.jdbc.mysql,
  com.dexels.navajo.script.api;version="1.0.0",
  com.mysql.jdbc;version="5.1.34",
- com.mysql.jdbc.service,
+ javax.sql,
  org.junit;version="4.0.0";resolution:=optional,
  org.slf4j;version="1.7.0",
  rx;version="1.1.0",

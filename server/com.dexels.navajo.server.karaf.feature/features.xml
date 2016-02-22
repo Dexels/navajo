@@ -129,7 +129,7 @@
 		<feature version="[3.0.0,5)">eventadmin</feature>
 		<feature version="[3.0.3,4)">navajo.core.dependencies</feature>
 
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/3.0.26
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/3.0.28
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.14
 		</bundle>
@@ -147,7 +147,7 @@
 		</bundle>
 	</feature>
 	
-	<feature resolver="(obr)" name='navajo.rx' version='1.0.4'
+	<feature resolver="(obr)" name='navajo.rx' version='1.0.7'
 		start-level='80'>
 		<feature version="[3.6.9,4)">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.fasterxml/aalto-xml/1.0.0
@@ -156,9 +156,9 @@
 		</bundle>		
 		<bundle dependency='true'>mvn:io.reactivex/rxjava/1.1.0
 		</bundle>		
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document.stream/1.0.1
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document.stream/1.0.5
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.stream/1.0.1
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.stream/1.0.5
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.stream/1.0.1
 		</bundle>
@@ -258,7 +258,7 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.66'>
+	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.67'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/2.0.4
@@ -277,7 +277,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.oracle/2.0.14
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.mysql/2.0.10
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.mysql/2.0.12
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.h2/1.1.0
 		</bundle>
