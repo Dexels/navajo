@@ -24,6 +24,23 @@ function createEditor() {
     editor.setHighlightActiveLine(true);
 }
 
+function updateTenants() {
+	$.ajax({
+		dataType: "json",
+        url: "/testerapi?query=gettenants",
+	    type : "GET",
+	    async : true,
+	    success : function(response) {
+	        $.each(response, function(key, value) {
+	           $('#handlers').append($('<option>').text(value));
+	            
+	        });
+	        $("#handlers").trigger("chosen:updated");
+	    }
+	});
+	
+}
+
 
 function getScripts() {
     $("#scripts").html("");
@@ -46,26 +63,20 @@ function getScripts() {
                     over: function() {
                         // Only add if we don't have it yet
                         if ( $(this).find('.customRunOptionContainer').length === 0) {
-                            $(this).append(hooverdiv);
+                           $(this).append(hooverdiv);
                         }
                      },
                      out: function() {
                          var activeScript = $('#loadedScript').text();
                          var myScript = $(this).find('.script').attr('id');
-                         console.log(this)
-                         if ( myScript !== activeScript && $(this).find('.customRunOptionContainer').length > 0) {
-                             // Only remove if we are NOT the active script
-                             $(this).find('.customRunOptionContainer').remove();       
-                         } else {
-                        	 console.log(activeScript);
-                        	 console.log(myScript);
-                        	 console.log($(this).parent().find('.customRunOptionContainer').length)
-                        	
+                         var isRecentScript = $(this).hasClass('recentScript');
+
+                         if (myScript !== activeScript || !isRecentScript ) {
+                        	 $(this).find('.customRunOptionContainer').remove();
                          }
                      }, 
                      interval: 300
                 });
-
             },
             error: function () {
                 $("#scripts").html("Error getting scripts - retrying in a few seconds...");
@@ -130,7 +141,6 @@ function loginTableVisible() {
 }
 
 function updateInstanceHandlers() {
-
     if (!sessionStorage.instance) {
         var match = false;
         // See if the current url matches one of the handlers. If so, we use
@@ -166,6 +176,7 @@ function hideLoginTable() {
 function runScript(script) {
     $('#scriptCustomInputView').hide();
     $('#loadedScript').text(script);
+    sessionStorage.script = script;
     $('html, body').animate({
         scrollTop : 0
     }, 50);
@@ -234,7 +245,7 @@ function replaceXml(script, xmlObj) {
         $('#scriptcontent').removeClass('prettyprinted');
         var xmltext = serializer.serializeToString(xmlObj)
         $('#scriptcontent').text(xmltext)
-        console.log('length ' + xmltext.length);
+
         if (xmltext.length < pretty_max_response_length) {
         	prettyPrint();
         } else {
@@ -244,9 +255,7 @@ function replaceXml(script, xmlObj) {
         
         
         parseTmlToHtml(script, $('#HTMLview'), $('#methods'));
-        
-        
-       
+
         $('.overlay').hide(200);
         $('#scriptMainView').show();
         $('#scriptheader').text(script);
@@ -349,16 +358,26 @@ function getMyEntries(data, element) {
 
 
 $(document).on('click', '.script', function() {
-    var script =  $('#loadedScript').text();
-    var stateObj = {script: script,  xml:  serializer.serializeToString(xml) };
-    history.replaceState(stateObj, script, "tester.html?script=" + script);
+    var oldScript =  $('#loadedScript').text();
+    var stateObj = {script: oldScript,  xml:  serializer.serializeToString(xml) };
+    history.replaceState(stateObj, oldScript, "tester.html?script=" + oldScript);
     
+    var newScript = $(this).attr("id");
     // Remove all hoover divs and append the one to the current script
     $('.customRunOptionContainer').remove();
-    $(this).parent().append(hooverdiv);
     
-
-    runScript($(this).attr("id"));
+    var isRecent = $('li.recentScript>[id=\''+newScript+'\']').length > 0
+    if (!$(this).parent().hasClass('recentScript') && !isRecent) {
+    	var clonedDiv = $(this).parent().clone(true);
+        clonedDiv.addClass('recentScript')
+        clonedDiv.find('.script').text(newScript)
+        $('#recentscriptslist').prepend(clonedDiv);
+        $('#recentscriptslist').find(".scriptli").slice(5, 10).remove();
+    }
+    $('li.recentScript>[id=\''+newScript+'\']').parent().append(hooverdiv);
+    
+   
+    runScript(newScript);
 });
 
 $(document).on('click', '.folder', function() {
@@ -367,7 +386,8 @@ $(document).on('click', '.folder', function() {
 
 
 $(document).on('click', '.scriptcompile', function() {
-    var script = $(this).parent().parent().children('.script').attr('id');
+	var parentLi = $(this).parent().parent();
+    var script = parentLi.children('.script').attr('id');
     hourglassOn();
     
     $.ajax({
@@ -375,10 +395,11 @@ $(document).on('click', '.scriptcompile', function() {
         url: "/compile?script=" + script,
         dataType: "text",
         success: function() {
-            $('.customRunOption').html('<p>OK</p>');
+            $('.scriptcompile').html('OK');
             hourglassOff();
             setTimeout( function(){
-                        $('.customRunOption').remove();
+            			$('.customRunOptionContainer').remove();
+            			parentLi.append(hooverdiv);
                         }, 1000  
                     );  
         }
