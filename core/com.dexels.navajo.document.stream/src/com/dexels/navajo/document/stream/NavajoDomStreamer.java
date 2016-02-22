@@ -102,10 +102,19 @@ private static List<Prop> messageProperties(Message msg) {
 	}
 
 	private static Prop create(Property tmlProperty) {
-//		String type = tmlProperty.getType();
+		String type = tmlProperty.getType();
 		
 		List<Select> selections = selectFromTml(tmlProperty.getAllSelections());
-		String value = "selection".equals(tmlProperty.getType())?null: tmlProperty.getValue();
+		Object value = null;
+		if(Property.BINARY_PROPERTY.equals(type)) {
+			value = tmlProperty.getTypedValue();
+		} else if (Property.SELECTION_PROPERTY.equals(type)) {
+			value = null;
+		} else {
+			value = tmlProperty.getValue();
+		}
+//		Object value = "selection".equals(tmlProperty.getType())?null: tmlProperty.getValue();
+		
 		return Prop.create(tmlProperty.getName(),value,tmlProperty.getType(),selections,"in".equals(tmlProperty.getDirection())?Direction.IN:Direction.OUT, tmlProperty.getDescription(),tmlProperty.getLength(),tmlProperty.getSubType(),tmlProperty.getCardinality());
 		
 //		switch (type) {
