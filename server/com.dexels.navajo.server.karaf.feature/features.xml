@@ -83,9 +83,9 @@
 
 
 	<feature version="1.2.1" name="dexels.oauth" resolver="(obr)">
-        <bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-core/2.6.3</bundle>
-        <bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-annotations/2.6.3</bundle>
-        <bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-databind/2.6.3</bundle>
+		<bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-core/2.6.3</bundle>
+		<bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-annotations/2.6.3</bundle>
+		<bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-databind/2.6.3</bundle>
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.api/12.0.0
 		</bundle>
 		<bundle dependency="true">mvn:com.dexels.repository/com.dexels.oauth.impl/1.0.30
@@ -147,14 +147,14 @@
 		</bundle>
 	</feature>
 	
-	<feature resolver="(obr)" name='navajo.rx' version='1.0.0'
+	<feature resolver="(obr)" name='navajo.rx' version='1.0.4'
 		start-level='80'>
-		<feature version="[3.6.94,4)">navajo.core</feature>
-		<bundle dependency='true'>com.fasterxml/aalto-xml/1.0.0
+		<feature version="[3.6.9,4)">navajo.core</feature>
+		<bundle dependency='true'>mvn:com.fasterxml/aalto-xml/1.0.0
 		</bundle>		
-		<bundle dependency='true'>org.codehaus.woodstox/stax2-api/1.0.0
+		<bundle dependency='true'>mvn:org.codehaus.woodstox/stax2-api/4.0.0
 		</bundle>		
-		<bundle dependency='true'>io.reactivex/io.reactivex:rxjava/1.1.0
+		<bundle dependency='true'>mvn:io.reactivex/rxjava/1.1.0
 		</bundle>		
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document.stream/1.0.1
 		</bundle>

@@ -9,6 +9,8 @@ import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -27,6 +29,7 @@ public class TMLSerializer  {
 	private static final byte BOOLEAN_PROPERTY_CODE = 7;
 	private static final byte BINARY_PROPERTY_CODE = 8;
 	private static final byte FLOAT_PROPERTY_CODE = 9;
+	private static final byte LONG_STRING_PROPERTY_CODE = 10;
 	private static final byte MESSAGE_CLOSE_CODE = 99;
 
 	final protected static char[] hexArray = { '0', '1', '2', '3', '4', '5',
@@ -78,6 +81,10 @@ public class TMLSerializer  {
 		this.webservice = webservice;
 	}
 
+	public int getPayloadType() {
+		return 32;
+	}
+
 	private final byte [] serializeMessageTag(String name, byte type) {
 		if ( type != ARRAY_MESSAGE_ELT_CODE) { // For array elements do NOT serialize name (not needed)
 			ByteBuffer bBuffer = ByteBuffer.allocate(1 + 2 + name.length());
@@ -105,11 +112,29 @@ public class TMLSerializer  {
 		return bb.getShort();
 	}
 	
-	private void serializeProperty(Property p, byte type, boolean hidePropertyName, OutputStream os) throws Exception {
+	private final byte [] intToBytes(int x) {
+		ByteBuffer bb = ByteBuffer.allocate(4);
+		bb.putInt(x);
+		bb.compact();
+		return bb.array();
+	}
+	
+	private final int bytesToInt(InputStream is) throws Exception {
+		byte [] r = new byte[4];
+		is.read(r, 0, 4);
+		ByteBuffer bb = ByteBuffer.wrap(r);
+		return bb.getInt();
+	}
+	
+	private final void serializeProperty(Property p, byte type, boolean hidePropertyName, OutputStream os) throws Exception {
 		
 		boolean isPartOfArrayElt = ( type == ARRAY_MESSAGE_ELT_CODE && hidePropertyName );
-		int lengthOfPropertyValue = ( p.getType().equals(Property.BINARY_PROPERTY) ? ((Binary) p.getTypedValue()).getData().length : p.getValue().length() ) ;
-		
+		int lengthOfPropertyValue = 0;
+		if ( p.getType().equals(Property.BINARY_PROPERTY )) {
+			lengthOfPropertyValue = (int) ((Binary) p.getTypedValue()).getLength();
+		} else if ( p.getTypedValue() != null ) {
+			lengthOfPropertyValue = p.getValue().length();
+		} 
 		if ( p.getType().equals(Property.BOOLEAN_PROPERTY )) {
 			os.write(BOOLEAN_PROPERTY_CODE);
 		} else if ( p.getType().equals(Property.DATE_PROPERTY)) {
@@ -121,23 +146,100 @@ public class TMLSerializer  {
 		} else if ( p.getType().equals(Property.BINARY_PROPERTY)) {
 			os.write(BINARY_PROPERTY_CODE);
 		} else {
-			os.write(STRING_PROPERTY_CODE);
+			if ( lengthOfPropertyValue > Short.MAX_VALUE ) {
+				os.write(LONG_STRING_PROPERTY_CODE);
+			} else {
+				os.write(STRING_PROPERTY_CODE);
+			}
 		}
 		if ( !isPartOfArrayElt ) {
 			os.write(shortToBytes(((short) p.getName().length())));
 			os.write(p.getName().getBytes());
 		}
 		if ( p.getType().equals(Property.BINARY_PROPERTY) ) {
-			os.write(shortToBytes((short) lengthOfPropertyValue));
-			((Binary) p.getTypedValue()).write(os);
+			os.write(intToBytes(lengthOfPropertyValue));
+			if ( lengthOfPropertyValue > 0 ) {
+				((Binary) p.getTypedValue()).write(os);
+			}
 		} else {
-			os.write(shortToBytes((short) lengthOfPropertyValue));
-			os.write(p.getValue().getBytes());
+			if ( lengthOfPropertyValue > Short.MAX_VALUE ) {
+				os.write(intToBytes(lengthOfPropertyValue));
+			} else {
+				os.write(shortToBytes((short) lengthOfPropertyValue));
+			}
+			if ( lengthOfPropertyValue > 0 ) {
+				os.write(p.getValue().getBytes());
+			} 
 		}
 
 	}
 	
-	private void fixPropertyNames(Message am) {
+	private final void serializeMessage(Message m, byte type, boolean hidePropertyName, OutputStream os) throws Exception {
+		os.write(serializeMessageTag(m.getName(), type));
+		for ( Property p : m.getAllProperties() ) {
+			serializeProperty(p, type, hidePropertyName, os);
+		}
+		int index = 0;
+		for ( Message cm : m.getAllMessages() ) {
+			byte childType = ( cm.isArrayMessage() ? ARRAY_MESSAGE_CODE : m.isArrayMessage() ? ARRAY_MESSAGE_ELT_CODE : MESSAGE_CODE );
+			serializeMessage(cm, childType, ( index > 0 && childType == ARRAY_MESSAGE_ELT_CODE), os);
+			index++;
+		}
+		os.write(MESSAGE_CLOSE_CODE);
+	}
+
+	public final void writeBytes(OutputStream os) {
+		try {
+			// First add payload type (not compressed!)
+			os.write((byte) (getPayloadType() & 0xFF));
+			// Use compressed outputstream for remainder.
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			// Serialize webservice name
+			baos.write(shortToBytes((short) webservice.getBytes().length));
+			baos.write(webservice.getBytes());
+			for ( Message m : myNavajo.getAllMessages() ) {
+				serializeMessage(m, ( m.isArrayMessage() ? ARRAY_MESSAGE_CODE : MESSAGE_CODE ), false, baos);
+			}
+			baos.close();
+			GZIPOutputStream gzipOut = new GZIPOutputStream(os);
+			gzipOut.write(baos.toByteArray());
+			gzipOut.close();
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+		}
+	}
+	
+	public final byte[] getBytes()  {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		writeBytes(baos);
+		return baos.toByteArray();
+	}
+
+	private final Property parseProperty(String type, boolean partOfArrayElement, int propertyIndex, int arrayEltIndex, InputStream is, boolean longLength) throws Exception {
+
+		String name = propertyIndex + "";
+		byte [] array = null;
+
+		if ( arrayEltIndex == 0 || !partOfArrayElement ) {
+			array = new byte[bytesToShort(is)];
+			is.read(array, 0, array.length);
+			name = new String(array);
+		}
+		int size = ( longLength ? bytesToInt(is) : bytesToShort(is) );
+		array = new byte[size];
+		is.read(array, 0, array.length);
+		if ( type.equals(Property.BINARY_PROPERTY )) {
+			Property p = NavajoFactory.getInstance().createProperty(myNavajo, name,type, null, 0, "", "");
+			p.setAnyValue(new Binary(array));
+			return p;
+		} else {
+			String value = new String(array);
+			Property p = NavajoFactory.getInstance().createProperty(myNavajo, name,type, value, 0, "", "");
+			return p;
+		}
+	}
+
+	private final void fixPropertyNames(Message am) {
 		// fix array elements.
 		List<Property> definition = new ArrayList<Property>();
 		int index = 0;
@@ -155,65 +257,7 @@ public class TMLSerializer  {
 		}
 	}
 	
-	private void serializeMessage(Message m, byte type, boolean hidePropertyName, OutputStream os) throws Exception {
-		os.write(serializeMessageTag(m.getName(), type));
-		for ( Property p : m.getAllProperties() ) {
-			serializeProperty(p, type, hidePropertyName, os);
-		}
-		int index = 0;
-		for ( Message cm : m.getAllMessages() ) {
-			byte childType = ( cm.isArrayMessage() ? ARRAY_MESSAGE_CODE : m.isArrayMessage() ? ARRAY_MESSAGE_ELT_CODE : MESSAGE_CODE );
-			serializeMessage(cm, childType, ( index > 0 && childType == ARRAY_MESSAGE_ELT_CODE), os);
-			index++;
-		}
-		os.write(MESSAGE_CLOSE_CODE);
-	}
-
-	public void writeBytes(OutputStream os) {
-		try {
-			// First add payload type.
-			//os.write((byte) ( 32 & 0xFF));
-			// Serialize webservice name
-			os.write(shortToBytes((short) webservice.getBytes().length));
-			os.write(webservice.getBytes());
-			for ( Message m : myNavajo.getAllMessages() ) {
-				serializeMessage(m, ( m.isArrayMessage() ? ARRAY_MESSAGE_CODE : MESSAGE_CODE ), false, os);
-			}
-		} catch (Exception e) {
-			e.printStackTrace(System.err);
-		}
-	}
-	
-	public byte[] getBytes()  {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		writeBytes(baos);
-		return baos.toByteArray();
-	}
-
-	private Property parseProperty(String type, boolean partOfArrayElement, int propertyIndex, int arrayEltIndex, InputStream is) throws Exception {
-
-		String name = propertyIndex + "";
-		byte [] array = null;
-
-		if ( arrayEltIndex == 0 || !partOfArrayElement ) {
-			array = new byte[bytesToShort(is)];
-			is.read(array, 0, array.length);
-			name = new String(array);
-		}
-		array = new byte[bytesToShort(is)];
-		is.read(array, 0, array.length);
-		if ( type.equals(Property.BINARY_PROPERTY )) {
-			Property p = NavajoFactory.getInstance().createProperty(myNavajo, name,type, null, 0, "", "");
-			p.setAnyValue(new Binary(array));
-			return p;
-		} else {
-			String value = new String(array);
-			Property p = NavajoFactory.getInstance().createProperty(myNavajo, name,type, value, 0, "", "");
-			return p;
-		}
-	}
-
-	private Message parseMessage(InputStream is, Message parent, String msgType) throws Exception {
+	private final Message parseMessage(InputStream is, Message parent, String msgType) throws Exception {
 		String name = "-";
 		if ( !msgType.equals(Message.MSG_TYPE_ARRAY_ELEMENT)) { // array message elements do not have a message name.
 			byte [] array = new byte[bytesToShort(is)];
@@ -242,28 +286,28 @@ public class TMLSerializer  {
 			} else if ( tagType == MESSAGE_CLOSE_CODE ) {
 				propertyIndex = 0;
 				endOfMessage = true;
-			} else if ( tagType == STRING_PROPERTY_CODE ) {
-				Property p = parseProperty(Property.STRING_PROPERTY, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT), propertyIndex, arrayEltIndex, is);
+			} else if ( tagType == STRING_PROPERTY_CODE || tagType == LONG_STRING_PROPERTY_CODE ) {
+				Property p = parseProperty(Property.STRING_PROPERTY, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT), propertyIndex, arrayEltIndex, is, (tagType == LONG_STRING_PROPERTY_CODE ));
 				m.addProperty(p);
 				propertyIndex++;
 			} else if ( tagType == DATE_PROPERTY_CODE ) {
-				Property p = parseProperty(Property.DATE_PROPERTY, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT), propertyIndex, arrayEltIndex, is);
+				Property p = parseProperty(Property.DATE_PROPERTY, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT), propertyIndex, arrayEltIndex, is, false);
 				m.addProperty(p);
 				propertyIndex++;
 			} else if ( tagType == BOOLEAN_PROPERTY_CODE ) {
-				Property p = parseProperty(Property.BOOLEAN_PROPERTY, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT), propertyIndex, arrayEltIndex, is);
+				Property p = parseProperty(Property.BOOLEAN_PROPERTY, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT), propertyIndex, arrayEltIndex, is, false);
 				m.addProperty(p);
 				propertyIndex++;
 			} else if ( tagType == INTEGER_PROPERTY_CODE ) {
-				Property p = parseProperty(Property.INTEGER_PROPERTY, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT), propertyIndex, arrayEltIndex, is);
+				Property p = parseProperty(Property.INTEGER_PROPERTY, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT), propertyIndex, arrayEltIndex, is, false);
 				m.addProperty(p);
 				propertyIndex++;
 			}  else if ( tagType == FLOAT_PROPERTY_CODE ) {
-				Property p = parseProperty(Property.FLOAT_PROPERTY, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT), propertyIndex, arrayEltIndex, is);
+				Property p = parseProperty(Property.FLOAT_PROPERTY, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT), propertyIndex, arrayEltIndex, is, false);
 				m.addProperty(p);
 				propertyIndex++;
 			} else if ( tagType == BINARY_PROPERTY_CODE ) {
-				Property p = parseProperty(Property.BINARY_PROPERTY, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT), propertyIndex, arrayEltIndex, is);
+				Property p = parseProperty(Property.BINARY_PROPERTY, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT), propertyIndex, arrayEltIndex, is, true);
 				m.addProperty(p);
 				propertyIndex++;
 			} else {
@@ -273,26 +317,30 @@ public class TMLSerializer  {
 		return m;
 	}
 
-	public void constructFromBytes(InputStream is, int length) throws Exception {
+	public final void constructFromBytes(InputStream is, int length) throws Exception {
 		byte [] wsLengthArray = new byte[2];
 		is.read(wsLengthArray, 0, 2);
 		ByteBuffer bb = ByteBuffer.wrap(wsLengthArray);
 		short wsLength = bb.getShort();
 		byte [] wsName = new byte[wsLength];
 		is.read(wsName, 0, wsName.length);
-		//allBytes.get(wsName);
 		webservice = new String(wsName);
 		myNavajo = NavajoFactory.getInstance().createNavajo();
 		byte tagType;
 		while ( ( tagType = (byte) is.read() ) != -1 ) {
-			Message m = parseMessage(is, null, ( tagType == 0x01 ? Message.MSG_TYPE_SIMPLE : Message.MSG_TYPE_ARRAY ));	
-			fixPropertyNames(m);
+			Message m = parseMessage(is, null, ( tagType == 0x01 ? Message.MSG_TYPE_SIMPLE : Message.MSG_TYPE_ARRAY ));
+			if ( m.isArrayMessage() ) {
+				fixPropertyNames(m);
+			}
 		}
 	}
 	
-	public void constructFromBytes(byte[] b) throws Exception {
-		ByteArrayInputStream bais = new ByteArrayInputStream(b);
-		constructFromBytes(bais, b.length);
+	public final void constructFromBytes(byte[] b) throws Exception {
+		// Strip off first byte, it contains the type. Remainder is compressed.
+		byte [] result = new byte[b.length -1];
+		System.arraycopy(b, 1, result, 0, result.length);
+		GZIPInputStream bais = new GZIPInputStream(new ByteArrayInputStream(result));
+		constructFromBytes(bais, -1);
 		bais.close();	
 	}
 
@@ -312,11 +360,13 @@ public class TMLSerializer  {
 	public static void main(String [] args) throws Exception {
 
 		
-		Binary b = new Binary(new File("/Users/arjenschoneveld/sendrato_logo.jpg"));
+		Binary b = new Binary(new File("/Users/arjenschoneveld/module_sum3.jpg"));
 		
-		System.err.println("Binary: " + b.getData().length);
+		//System.err.println("Binary: " + b.getData().length);
 		
 		Navajo n = NavajoFactory.getInstance().createNavajo();
+		
+		
 		Message m = NavajoFactory.getInstance().createMessage(n, "Visitor");
 		n.addMessage(m);
 		Property p1 = NavajoFactory.getInstance().createProperty(n, "RFID", Property.STRING_PROPERTY, "aap", 0, "", "");
@@ -346,26 +396,36 @@ public class TMLSerializer  {
 			m3.addProperty(p3);
 			Property p4 = NavajoFactory.getInstance().createProperty(n, "ProductId", Property.STRING_PROPERTY, "FOOD", 0, "", "");
 			m3.addProperty(p4);
+			Message m8 =  NavajoFactory.getInstance().createMessage(n, "NogMeer", Message.MSG_TYPE_ARRAY);
+			m3.addMessage(m8);
+			for ( int j = 0; j < 2; j++ ) {
+				Message m4 = NavajoFactory.getInstance().createMessage(n, "NogMeer");
+				m8.addElement(m4);
+				Property p31 = NavajoFactory.getInstance().createProperty(n, "Kibbeling", Property.INTEGER_PROPERTY, 3*i+"", 0, "", "");
+				m4.addProperty(p31);
+				Property p41 = NavajoFactory.getInstance().createProperty(n, "Fluitketel", Property.STRING_PROPERTY, "FOOD", 0, "", "");
+				m4.addProperty(p41);
+			}
 		}
 
-		Message m3 =  NavajoFactory.getInstance().createMessage(n, "NogMeer", Message.MSG_TYPE_ARRAY);
-		m.addMessage(m3);
-		for ( int i = 0; i < 4; i++ ) {
-			Message m4 = NavajoFactory.getInstance().createMessage(n, "NogMeer");
-			m3.addElement(m4);
-			Property p3 = NavajoFactory.getInstance().createProperty(n, "Kibbeling", Property.INTEGER_PROPERTY, 3*i+"", 0, "", "");
-			m4.addProperty(p3);
-			Property p4 = NavajoFactory.getInstance().createProperty(n, "Fluitketel", Property.STRING_PROPERTY, "FOOD", 0, "", "");
-			m4.addProperty(p4);
-		}
-				
+		
+		//n.write(System.err);
+		
 		TMLSerializer pl1 = new TMLSerializer(n, "everywear/entity/visitor/ProcessQueryVisitor");
 		byte [] data = pl1.getBytes();
-		System.err.println(bytesToHex(data));
+		
+		//System.err.println(data.length + ":" + bytesToHex(data));
 
 		TMLSerializer pl2 = new TMLSerializer();
+		System.err.println("Constructing from bytes...");
 		pl2.constructFromBytes(data);
 		
+//		PayloadFactory.registerPayload(new TMLPayload().getPayloadType(), TMLPayload.class);
+//		
+//		ByteArrayInputStream bais = new ByteArrayInputStream(data);
+//		bais.close();
+//		TMLPayload pl2 = (TMLPayload) PayloadFactory.getPayload(bais, data.length);
+
 		StringWriter sw = new StringWriter();
 		pl2.getNavajo().write(sw);
 //		
@@ -375,7 +435,7 @@ public class TMLSerializer  {
 		System.err.println("webservice: " + pl2.webservice);
 		System.err.println("binary size: " + size1 + ", xml size: " + size2);
 		System.err.println((double) size2 / (double) size1);
-
+//
 //		FileOutputStream fos = new FileOutputStream(new File("/Users/arjenschoneveld/aap.jpg"));
 //		Binary b2 = (Binary) pl2.getNavajo().getProperty("/Visitor/Picture").getTypedValue();
 //		b2.write(fos);
