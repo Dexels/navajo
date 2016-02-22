@@ -46,7 +46,13 @@ public final class DateAdd extends FunctionInterface {
 				cal.add(Calendar.DAY_OF_MONTH, arg.intValue());
 			} else if (field.equals("WEEK")) {
 				cal.add(Calendar.WEEK_OF_YEAR, arg.intValue());
-			}
+			} else if (field.equals("HOUR")) {
+                cal.add(Calendar.HOUR_OF_DAY, arg.intValue());
+			} else if (field.equals("MINUTE")) {
+                cal.add(Calendar.MINUTE, arg.intValue());
+            } else if (field.equals("SECOND")) {
+                cal.add(Calendar.SECOND, arg.intValue());
+            }
 			return cal.getTime();
 		}
 		java.util.Date datum = (java.util.Date) this.getOperands().get(0);
