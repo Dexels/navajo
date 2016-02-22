@@ -11,6 +11,8 @@ import com.dexels.navajo.script.api.Access;
 
 @SuppressWarnings("rawtypes")
 public interface TribeManagerInterface {
+    public final static String MEMORY_MAP_KEY = "navajo_memory_map";
+    public final static String MEMORY_MAP_EXP_KEY = "navajo_memory_map_exp";
 
 	public String getTribalId();
 	
