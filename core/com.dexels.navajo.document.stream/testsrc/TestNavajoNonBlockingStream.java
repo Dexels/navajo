@@ -217,12 +217,12 @@ public class TestNavajoNonBlockingStream {
 					}
 				});
 		byte[] original = getNavajoData("tml_with_date.xml");
-		FileOutputStream fw = new FileOutputStream("originaldate.xml");
-		fw.write(original);
-		fw.close();
-		FileOutputStream fw2 = new FileOutputStream("parseddate.xml");
-		fw2.write(baos.toByteArray());
-		fw2.close();
+//		FileOutputStream fw = new FileOutputStream("originaldate.xml");
+//		fw.write(original);
+//		fw.close();
+//		FileOutputStream fw2 = new FileOutputStream("parseddate.xml");
+//		fw2.write(baos.toByteArray());
+//		fw2.close();
 		// TODO Seems ok, but make test to compare Navajo o
 		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
