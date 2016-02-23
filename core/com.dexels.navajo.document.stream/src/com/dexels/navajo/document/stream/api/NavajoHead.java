@@ -64,9 +64,9 @@ public class NavajoHead {
 
 	public void print(Writer w, int indentsize) throws IOException {
 		Map<String, String> augmentedTransaction = new HashMap<>(transactionAttributes);
-//		augmentedTransaction.put("rpc_name",name);
-//		augmentedTransaction.put("rpc_usr",username);
-//		augmentedTransaction.put("rpc_pwd",password);
+		augmentedTransaction.put("rpc_name",name);
+		augmentedTransaction.put("rpc_usr",username);
+		augmentedTransaction.put("rpc_pwd",password);
 		startElement(w, "header", indentsize, 1,this.attributes,false);
 		startElement(w, "transaction", indentsize, 2, augmentedTransaction,true);
 		startElement(w, "callback", indentsize, 2, Collections.emptyMap(),true);

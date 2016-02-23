@@ -16,7 +16,6 @@
 
 package com.dexels.navajo.listeners.stream;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -43,7 +42,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.stream.NavajoDomStreamer;
 import com.dexels.navajo.document.stream.NavajoStreamSerializer;
 import com.dexels.navajo.document.stream.api.NAVADOC;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.io.NavajoStreamOperators;
 import com.dexels.navajo.document.stream.io.ObservableStreams;
 import com.dexels.navajo.document.stream.xml.XML;
@@ -54,15 +52,11 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 
-
 public class NonBlockingListener extends HttpServlet {
 	private static final long serialVersionUID = -4381216748627396838L;
 	private LocalClient localClient;
-	
-	
-	private final static Logger logger = LoggerFactory.getLogger(NonBlockingListener.class);
 
-	
+	private final static Logger logger = LoggerFactory.getLogger(NonBlockingListener.class);
 
 	public LocalClient getLocalClient() {
 		return localClient;
@@ -75,111 +69,124 @@ public class NonBlockingListener extends HttpServlet {
 	public void clearLocalClient(LocalClient localClient) {
 		this.localClient = null;
 	}
-	
-    @Override
-    protected void doGet(HttpServletRequest req, final HttpServletResponse resp)
-            throws ServletException, IOException {
 
-    }
-    
 	@Override
-    protected void doPost(HttpServletRequest req, final HttpServletResponse resp)
-            throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 
-        AsyncContext ac = req.startAsync();
-		
-		Map<String,Object> attributes = new HashMap<>();
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+
+		AsyncContext ac = req.startAsync();
+
+		Map<String, Object> attributes = new HashMap<>();
 		Enumeration<String> en = req.getHeaderNames();
 		while (en.hasMoreElements()) {
 			String headerName = en.nextElement();
 			String headerValue = req.getHeader(headerName);
-			System.err.println("Detected header: "+headerName+" name: "+headerValue);
-			attributes.put(headerName,headerValue);
+			System.err.println("Detected header: " + headerName + " name: " + headerValue);
+			attributes.put(headerName, headerValue);
 		}
-        ServletInputStream in = req.getInputStream();
+		ServletInputStream in = req.getInputStream();
+		// input = decompress(input,attributes);
+		// ByteArrayOutputStream baosin = new ByteArrayOutputStream();
+		// ObservableStreams.streamInputStreamWithBufferSize(in, 10);
+		Navajo inputNavajo = ObservableStreams.streamInputStreamWithBufferSize(in, 1024)
+				.lift(XML.parse())
+				.lift(NAVADOC.parse(attributes))
+				.lift(NAVADOC.collect(attributes))
+				.toBlocking()
+				.first();
 
-//		ObservableStreams.streamInputStreamWithBufferSize(in, 10);
-       Observable<ByteBuffer> input = ObservableStreams.streamInputStreamWithBufferSize(in, 20);
-//        ObservableServlet.create(in)      
-       input = decompress(input,attributes);
-        
-        Observable<NavajoStreamEvent> inStream = input
-//        		.subscribeOn(Schedulers.io())
-        		.doOnCompleted(()->System.err.println("done!"))
-        		.lift(XML.parse())
-        		.lift(NAVADOC.parse(attributes));
+		// String bareInput = new String(baosin.toByteArray());
+		// System.err.println(">> Bare Input Navajo <<\n"+bareInput);
+		// System.err.println(">> End of Bare Input Navajo <<");
+		//
+		// detect if this is a streaming script, if so, pass the inStream
+		// ..... TODO
 
+		// in.isReady();
+		// System.err.println(">> Input Navajo <<");
+		// inputNavajo.write(System.err);
+		// System.err.println(">> End of Input Navajo <<");
+		// if not, gather the stream to a single Navajo and schedule to the
+		// regular channels.
 
-        // detect if this is a streaming script, if so, pass the inStream
-        // ..... TODO
-        
-        in.isReady();
-        
-        // if not, gather the stream to a single Navajo and schedule to the regular channels.
-        
-        Navajo inputNavajo = inStream.lift(NAVADOC.collect(attributes)).toBlocking().first();
-        
-//        System.err.println("Gathered:");
-//        inputNavajo.write(System.err);
+		// Navajo inputNavajo =
+		// inStream.lift(NAVADOC.collect(attributes)).toBlocking().first();
 
-        String tenant = determineTenantFromRequest(req);
-        
-		Navajo outDoc = execute(tenant, inputNavajo); // getLocalClient().handleInternal(getNavajoInstance(), in, getRequest().getCert(), clientInfo);
+		// System.err.println("Gathered:");
+		// inputNavajo.write(System.err);
+
+		String tenant = determineTenantFromRequest(req);
+//		System.err.println("Tenant: " + tenant);
+		Navajo outDoc = execute(tenant, inputNavajo); // getLocalClient().handleInternal(getNavajoInstance(),
+														// in,
+														// getRequest().getCert(),
+														// clientInfo);
+
+//		System.err.println("Out:");
+//		outDoc.write(System.err);
+
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		Observable.just(outDoc).lift(NAVADOC.stream())
+//				// .doOnNext(System.err::println)
+//				.lift(NAVADOC.serialize()).subscribe(a -> {
+//					try {
+//						baos.write(a);
+//					} catch (Exception e2) {
+//						e2.printStackTrace();
+//					}
+//					;
+//
+//				} , e -> {
+//				} , () -> System.err.println("Restreamed: \n" + new String(baos.toByteArray())));
+
+//		String rpcName = inputNavajo.getHeader().getRPCName();
+//		File dumpold = new File("/Users/frank/dump/" + rpcName + ".xml");
+//		File dumpstream = new File("/Users/frank/dump/" + rpcName + "_streamed.xml");
+//		dumpold.getParentFile().mkdirs();
+//		dumpstream.getParentFile().mkdirs();
+//		FileWriter fwold = new FileWriter(dumpold);
+//		outDoc.write(fwold);
+//		FileWriter fwstream = new FileWriter(dumpstream);
+//		fwstream.write(new String(baos.toByteArray()));
+//		fwold.close();
+//		fwstream.close();
 		
-        System.err.println("Out:");
-        outDoc.write(System.err);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		
-			Observable.just(outDoc)
-			.lift(NAVADOC.stream())
-//			.doOnNext(System.err::println)
-			.lift(NAVADOC.serialize())
-			.subscribe(a->{try {baos.write(a);} catch (Exception e2) {e2.printStackTrace();};
-			
-			},e->{},()->System.err.println("Restreamed: \n"+new String(baos.toByteArray()))
-		);
-		
-        
-        
 		String encoding = decideEncoding((String) attributes.get("Accept-Encoding"));
-		if(encoding!=null) {
+		if (encoding != null) {
 			resp.addHeader("Content-Encoding", encoding);
 		}
-//		System.err.println("Starting output");
-		Observable.just(outDoc)
-			.lift(NAVADOC.stream())
-			.lift(NAVADOC.serialize())
-//			.lift(NavajoStreamOperators.compress(encoding))
-			.subscribe(
-					bytes->{
-//						System.err.println("Writing output: "+bytes.length);
-						writeResponse(resp, bytes);
-					},
-					err->{
-						try {
-							resp.sendError(501);
-						} catch (Exception e1) {
-							logger.error("Error: ", e1);
-						}
-					},
-					()->{
-						ac.complete(); 
-						try {
-							resp.getOutputStream().close();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+		// System.err.println("Starting output");
+		Observable.just(outDoc).lift(NAVADOC.stream()).lift(NAVADOC.serialize())
+				// .lift(NavajoStreamOperators.compress(encoding))
+				.subscribe(bytes -> {
+					// System.err.println("Writing output: "+bytes.length);
+					writeResponse(resp, bytes);
+				} , err -> {
+					try {
+						resp.sendError(501);
+					} catch (Exception e1) {
+						logger.error("Error: ", e1);
 					}
-					);
-    }
+				} , () -> {
+					ac.complete();
+					try {
+						resp.getOutputStream().close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				});
+	}
 
 	private Observable<ByteBuffer> decompress(Observable<ByteBuffer> input, Map<String, Object> attributes) {
 		String encoding = (String) attributes.get("Content-Encoding");
-		if(encoding==null) {
+		if (encoding == null) {
 			return input;
 		}
-		if(encoding.equals("jzlib")) {
+		if (encoding.equals("jzlib")) {
 			return input.lift(NavajoStreamOperators.inflate());
 		}
 		// TODO gzip
@@ -198,10 +205,9 @@ public class NonBlockingListener extends HttpServlet {
 			}
 		}
 	}
-    
 
 	public String decideEncoding(String accept) {
-		if(accept==null) {
+		if (accept == null) {
 			return null;
 		}
 		String[] encodings = accept.split(",");
@@ -209,24 +215,25 @@ public class NonBlockingListener extends HttpServlet {
 		for (String encoding : encodings) {
 			acceptedEncodings.add(encoding);
 		}
-		if(acceptedEncodings.contains("deflate")) {
+		if (acceptedEncodings.contains("deflate")) {
 			return "deflate";
 		}
-		if(acceptedEncodings.contains("jzlib")) {
+		if (acceptedEncodings.contains("jzlib")) {
 			return "jzlib";
 		}
 		// TODO gzip
 		return null;
 	}
-    
+
 	private final Navajo execute(String tenant, Navajo in) throws IOException, ServletException {
 
 		// BufferedReader r = null;
-		if(tenant!=null) {
-			MDC.put("instance",tenant);
-//			myRequest.getInputDocument().getHeader().setHeaderAttribute("instance", tenant);
+		if (tenant != null) {
+			MDC.put("instance", tenant);
+			// myRequest.getInputDocument().getHeader().setHeaderAttribute("instance",
+			// tenant);
 		}
-	
+
 		try {
 			in.getHeader().setHeaderAttribute("useComet", "true");
 			if (in.getHeader().getHeaderAttribute("callback") != null) {
@@ -237,12 +244,12 @@ public class NonBlockingListener extends HttpServlet {
 				return callbackNavajo;
 
 			} else {
-//					String queueId = myQueue.getId();
-//					int queueLength = myQueue.getQueueSize();
+				// String queueId = myQueue.getId();
+				// int queueLength = myQueue.getQueueSize();
 
-//					ClientInfo clientInfo = getRequest().createClientInfo(
-//							scheduledAt, startedAt, queueLength, queueId);
-				Navajo outDoc = getLocalClient().handleInternal(tenant, in,null, null);
+				// ClientInfo clientInfo = getRequest().createClientInfo(
+				// scheduledAt, startedAt, queueLength, queueId);
+				Navajo outDoc = getLocalClient().handleInternal(tenant, in, null, null);
 				return outDoc;
 			}
 		} catch (Throwable e) {
@@ -259,19 +266,18 @@ public class NonBlockingListener extends HttpServlet {
 		}
 	}
 
-    
-    // warn: Duplicated code
+	// warn: Duplicated code
 	private String determineTenantFromRequest(final HttpServletRequest req) {
 		String requestInstance = req.getHeader("X-Navajo-Instance");
-		if(requestInstance!=null) {
+		if (requestInstance != null) {
 			return requestInstance;
 		}
 		String pathinfo = req.getPathInfo();
-		if(pathinfo.length() > 0 && pathinfo.charAt(0) == '/') {
+		if (pathinfo.length() > 0 && pathinfo.charAt(0) == '/') {
 			pathinfo = pathinfo.substring(1);
 		}
 		String instance = null;
-		if(pathinfo.indexOf('/')!=-1) {
+		if (pathinfo.indexOf('/') != -1) {
 			instance = pathinfo.substring(0, pathinfo.indexOf('/'));
 		} else {
 			instance = pathinfo;
@@ -279,94 +285,91 @@ public class NonBlockingListener extends HttpServlet {
 		return instance;
 	}
 
-	
-    private Subscription sendNavajo(Navajo n,OutputStream out) {
-    	NavajoStreamSerializer nss = new NavajoStreamSerializer();
-    	return Observable.<Navajo>just(n)
-    			.flatMap(NavajoDomStreamer::feed)
-    			.flatMap(nss::feed)
-    			.subscribe(b->write(out,b));
-    }
+	private Subscription sendNavajo(Navajo n, OutputStream out) {
+		NavajoStreamSerializer nss = new NavajoStreamSerializer();
+		return Observable.<Navajo> just(n).flatMap(NavajoDomStreamer::feed).flatMap(nss::feed)
+				.subscribe(b -> write(out, b));
+	}
 
-    private void write(OutputStream out, byte[] b) {
-    	try {
+	private void write(OutputStream out, byte[] b) {
+		try {
 			out.write(b);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    }
-    
-    static class ReadObserver implements Observer<ByteBuffer> {
-        private final HttpServletResponse resp;
-        private final AsyncContext ac;
+	}
 
-        ReadObserver(HttpServletResponse resp, AsyncContext ac) {
-            this.resp = resp;
-            this.ac = ac;
-        }
+	static class ReadObserver implements Observer<ByteBuffer> {
+		private final HttpServletResponse resp;
+		private final AsyncContext ac;
 
-        @Override
-        public void onCompleted() {
-            System.out.println("Read onCompleted=" + Thread.currentThread());
-            resp.setStatus(HttpServletResponse.SC_OK);
+		ReadObserver(HttpServletResponse resp, AsyncContext ac) {
+			this.resp = resp;
+			this.ac = ac;
+		}
 
-            Observable<ByteBuffer> data = data();
-            ServletOutputStream out = null;
-            try {
-                out = resp.getOutputStream();
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
+		@Override
+		public void onCompleted() {
+			System.out.println("Read onCompleted=" + Thread.currentThread());
+			resp.setStatus(HttpServletResponse.SC_OK);
 
-            Observable<Void> writeStatus = ObservableServlet.write(data, out);
-            writeStatus.subscribe(new WriteObserver(ac));
-        }
+			Observable<ByteBuffer> data = data();
+			ServletOutputStream out = null;
+			try {
+				out = resp.getOutputStream();
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
 
-        @Override
-        public void onError(Throwable e) {
-            System.out.println("read onError=" + Thread.currentThread());
-            e.printStackTrace();
-        }
+			Observable<Void> writeStatus = ObservableServlet.write(data, out);
+			writeStatus.subscribe(new WriteObserver(ac));
+		}
 
-        @Override
-        public void onNext(ByteBuffer buf) {
-            //Thread.dumpStack();
-            //System.out.println("read onNext=" + Thread.currentThread());
-        }
+		@Override
+		public void onError(Throwable e) {
+			System.out.println("read onError=" + Thread.currentThread());
+			e.printStackTrace();
+		}
 
-        Observable<ByteBuffer> data() {
-            ByteBuffer[] data = new ByteBuffer[1000000];
-            for(int i=0; i < data.length; i++) {
-                data[i] = ByteBuffer.wrap((i+"0000000000000\n").getBytes());
-            }
-            return Observable.from(data);
-        }
-    }
+		@Override
+		public void onNext(ByteBuffer buf) {
+			// Thread.dumpStack();
+			// System.out.println("read onNext=" + Thread.currentThread());
+		}
 
-    static class WriteObserver implements Observer<Void> {
-        private final AsyncContext ac;
+		Observable<ByteBuffer> data() {
+			ByteBuffer[] data = new ByteBuffer[1000000];
+			for (int i = 0; i < data.length; i++) {
+				data[i] = ByteBuffer.wrap((i + "0000000000000\n").getBytes());
+			}
+			return Observable.from(data);
+		}
+	}
 
-        public WriteObserver(AsyncContext ac) {
-            this.ac = ac;
-        }
+	static class WriteObserver implements Observer<Void> {
+		private final AsyncContext ac;
 
-        @Override
-        public void onCompleted() {
-            System.out.println("Composite Write onCompleted");
-            ac.complete();
-        }
+		public WriteObserver(AsyncContext ac) {
+			this.ac = ac;
+		}
 
-        @Override
-        public void onError(Throwable e) {
-            System.out.println("write onError=" + Thread.currentThread());
-            e.printStackTrace();
-        }
+		@Override
+		public void onCompleted() {
+			System.out.println("Composite Write onCompleted");
+			ac.complete();
+		}
 
-        @Override
-        public void onNext(Void args) {
-            //System.out.println("Composite Write onNext");
-            // no-op
-        }
-    }
+		@Override
+		public void onError(Throwable e) {
+			System.out.println("write onError=" + Thread.currentThread());
+			e.printStackTrace();
+		}
+
+		@Override
+		public void onNext(Void args) {
+			// System.out.println("Composite Write onNext");
+			// no-op
+		}
+	}
 
 }

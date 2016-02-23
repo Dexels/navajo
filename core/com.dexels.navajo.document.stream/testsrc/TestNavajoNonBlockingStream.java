@@ -1,13 +1,11 @@
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,14 +17,11 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.NavajoDomStreamer;
 import com.dexels.navajo.document.stream.NavajoStreamCollector;
-import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.api.Prop;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 import com.dexels.navajo.document.stream.xml.Bytes;
 import com.dexels.navajo.document.stream.xml.XML;
-import com.dexels.navajo.document.types.Binary;
 
 import rx.Observable;
 
@@ -160,17 +155,14 @@ public class TestNavajoNonBlockingStream {
 			.toBlocking()
 			.first()
 			;
-		
-		System.err.println("Ne: "+ne);
-		
 //		byte[] original = getNavajoData("tml_with_binary.xml");
 		
 		//		FileOutputStream fw = new FileOutputStream("originalbinary.xml");
 //		fw.write(original);
 //		fw.close();
-		FileOutputStream fw2 = new FileOutputStream("parsedbinary.xml");
-		fw2.write(baos.toByteArray());
-		fw2.close();
+//		FileOutputStream fw2 = new FileOutputStream("parsedbinary.xml");
+//		fw2.write(baos.toByteArray());
+//		fw2.close();
 		Assert.assertTrue(baos.toByteArray().length>5000);
 		
 		// TODO Seems ok, but make test to compare Navajo o
@@ -235,6 +227,44 @@ public class TestNavajoNonBlockingStream {
 		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
 
+	@Test
+	public void testHeader() {
+		Navajo navajo = Bytes.fromAbsoluteClassPath("tiny_tml.xml")
+		.map(ByteBuffer::wrap)
+		.lift(XML.parse())
+		.lift(NAVADOC.parse(Collections.emptyMap()))
+		.doOnNext(n->System.err.println("><>>>1 "+n))
+		.lift(NAVADOC.collect(Collections.emptyMap()))
+		.doOnNext(n->System.err.println("><>>>2 "+n))
+		.toBlocking()
+		.first();
+		
+		String rpc = navajo.getHeader().getRPCName();
+		System.err.println("RPC: "+rpc);
+		Assert.assertEquals("Tiny", rpc);
+	}
+
+	@Test
+	public void testDomStreamerWithHeader() {
+		final Navajo navajo = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("tiny_tml.xml"));
+		
+		Observable.just(navajo)
+		.lift(NAVADOC.stream())
+		.lift(NAVADOC.serialize())
+		.map(ByteBuffer::wrap)
+		.lift(XML.parse())
+		.lift(NAVADOC.parse(Collections.emptyMap()))
+		.doOnNext(n->System.err.println("><>>>1 "+n))
+		.lift(NAVADOC.collect(Collections.emptyMap()))
+		.toBlocking()
+		.first();
+		
+		String rpc = navajo.getHeader().getRPCName();
+		System.err.println("RPC: "+rpc);
+		Assert.assertEquals("Tiny", rpc);
+	}
+
+	
 	@Test 
 	public void testStreamParserAndSerializerWithIgnoreMessage() throws Exception {
 		Navajo navajo =

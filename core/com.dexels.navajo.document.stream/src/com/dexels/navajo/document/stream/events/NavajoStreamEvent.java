@@ -14,7 +14,7 @@ public class NavajoStreamEvent {
 	private final String path;
 	private final Object body;
 	
-	NavajoStreamEvent(String path, NavajoEventTypes type, Object body, Map<String,Object> attributes) {
+	NavajoStreamEvent(String path, NavajoEventTypes type, Object body, Map<String,? extends Object> attributes) {
 		this.type = type;
 		this.path = path;
 		this.body = body;

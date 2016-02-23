@@ -1,4 +1,5 @@
 package com.dexels.navajo.listeners.stream.core;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -87,7 +88,7 @@ public abstract class BaseScriptInstance {
 
 
 	protected Observable<NavajoStreamEvent> array(String name, Func0<Observable<NavajoStreamEvent>> func) {
-		NavajoStreamEvent startEvent = Events.arrayStarted(name );
+		NavajoStreamEvent startEvent = Events.arrayStarted(name,Collections.emptyMap());
 		NavajoStreamEvent arrayDone = Events.arrayDone(name );
 		return func.call().startWith(Observable.just(startEvent)).concatWith(Observable.just(arrayDone));
 	}
