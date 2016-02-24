@@ -10,4 +10,5 @@ public interface CacheValidator {
 
 	public void setRemoteStorage(RemoteStorage remoteStorage);
 	public void invalidate();
+	boolean isClassLoaderValid(String location) throws IOException;
 }

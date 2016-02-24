@@ -4,12 +4,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +19,10 @@ import com.dexels.navajo.tipi.internal.cache.RemoteStorage;
 
 public class LocalDigestCacheValidator implements CacheValidator {
 
+	private static final String CLASSLOADER_DIGEST_PROPERTIES = "digest.properties";
 	private static final String LOCAL_DIGEST_PROPERTIES = "digest.properties";
 	private static final String REMOTE_DIGEST_PROPERTIES = "remotedigest.properties";
+	private Properties classLoaderDigestProperties = new Properties();
 	private Properties localDigestProperties = new Properties();
 	private Properties remoteDigestProperties = new Properties();
 	
@@ -35,31 +36,43 @@ public class LocalDigestCacheValidator implements CacheValidator {
 	public LocalDigestCacheValidator()  {
 
 	}
-
-	@Override
-	public boolean isLocalValid(String location) throws IOException {
-		String localDigest = (String) localDigestProperties.get(location);
-		String remoteDigest = (String) remoteDigestProperties.get(location);
-		if(remoteDigest==null) {
-			logger.debug("No remote found for: "+location+" assuming absent in loader: "+id+" # of loaded resources: "+remoteDigestProperties.size());
-			throw new IOException("Resource absent");
-		}
-		if(localDigest==null) {
-			logger.debug("No digest found for location: {} Keys: {}",location, localDigestProperties.keySet());
-			return false;
-		}
-		final boolean equals = localDigest.equals(remoteDigest);
-		if(!equals) {
-			logger.info("Digest changed for location: {} Local: {} Remote: {}",location,localDigest,remoteDigest);
-		}
-		return equals;
-	}
-
+	
 	public void activate() throws IOException {
+		loadClassLoaderDigestFile(CLASSLOADER_DIGEST_PROPERTIES);
 		loadDigestFile(LOCAL_DIGEST_PROPERTIES);
 		loadRemoteDigestFile(REMOTE_DIGEST_PROPERTIES);
 		
 	}
+
+	@Override
+	public boolean isClassLoaderValid(String location) throws IOException {
+		String localDigest = (String) classLoaderDigestProperties.get(location);
+		return validateDigest(location, localDigest);
+	}
+
+	
+	@Override
+	public boolean isLocalValid(String location) throws IOException {
+		String localDigest = (String) localDigestProperties.get(location);
+		return validateDigest(location, localDigest);
+	}
+	
+
+	private boolean validateDigest(String location, String localDigest) throws IOException {
+		String remoteDigest = (String) remoteDigestProperties.get(location);
+		if(remoteDigest==null) {
+			logger.debug("No remote found for: {}", location);
+			throw new IOException("Resource absent");
+		}
+		if(localDigest==null) {
+			logger.debug("No digest found for location: {}",location);
+			return false;
+		}
+		final boolean equals = localDigest.equals(remoteDigest);
+		return equals;
+	}
+
+
 
 	@Override
 	public void setLocalStorage(LocalStorage localStorage) {
@@ -110,6 +123,25 @@ public class LocalDigestCacheValidator implements CacheValidator {
 			}
 		}
 	}
+	
+	private void loadClassLoaderDigestFile(String location) throws IOException {
+		InputStream in = getClassResourceStream(location);
+		logger.debug("Getting classloader location: " + location);
+		if (in != null) {
+			try {
+				classLoaderDigestProperties.load(in);
+			} catch (IOException e) {
+				logger.warn("Error opening classloader digest file. Corrupt?");
+			} finally {
+				if (in != null) {
+					try {
+						in.close();
+					} catch (IOException e) {
+					}
+				}
+			}
+		}
+	}
 
 	public void setId(String id) {
 		this.id = id;
@@ -130,4 +162,22 @@ public class LocalDigestCacheValidator implements CacheValidator {
         bais.close();
 
     }
+	
+	private InputStream getClassResourceStream(String location) throws IOException {
+		URL u = getClassResourceURL(location);
+		if (u == null) {
+			return null;
+		}
+		return u.openStream();
+	}
+	
+	private URL getClassResourceURL(String location) {
+		ClassLoader classLoader = getClass().getClassLoader();
+		// this is nuts... right?
+		if (classLoader == null) {
+			classLoader = ClassLoader.getSystemClassLoader();
+			
+		}
+		return classLoader.getResource(id + "/" + location);
+	}
 }

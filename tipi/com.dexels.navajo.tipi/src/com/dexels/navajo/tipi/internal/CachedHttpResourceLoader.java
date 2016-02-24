@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.internal.cache.CacheManager;
+import com.dexels.navajo.tipi.internal.cache.impl.ClassLoaderStorageImpl;
 import com.dexels.navajo.tipi.internal.cache.impl.FileLocalStorage;
 import com.dexels.navajo.tipi.internal.cache.impl.GeneralCacheManager;
 import com.dexels.navajo.tipi.internal.cache.impl.HttpRemoteStorage;
@@ -23,9 +24,10 @@ public class CachedHttpResourceLoader extends CachedResourceLoader {
 	public CachedHttpResourceLoader(String id, File baseDir, URL baseUrl) throws IOException {
 	    
 		final LocalDigestCacheValidator cacheValidator = new LocalDigestCacheValidator();
+		final ClassLoaderStorageImpl classLoaderStorage = new ClassLoaderStorageImpl(id);
 		final FileLocalStorage localStore = new FileLocalStorage(baseDir);
 		final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
-		cache = new GeneralCacheManager(localStore,
+		cache = new GeneralCacheManager(classLoaderStorage, localStore,
 				remoteStore, cacheValidator,id);
 		cacheValidator.setLocalStorage(localStore);
 		cacheValidator.setRemoteStorage(remoteStore);

@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.internal;
 import java.io.File;
 
 import com.dexels.navajo.tipi.internal.cache.CacheManager;
+import com.dexels.navajo.tipi.internal.cache.impl.ClassLoaderStorageImpl;
 import com.dexels.navajo.tipi.internal.cache.impl.FileLocalStorage;
 import com.dexels.navajo.tipi.internal.cache.impl.FileRemoteStorage;
 import com.dexels.navajo.tipi.internal.cache.impl.GeneralCacheManager;
@@ -17,7 +18,7 @@ public class CachedFileResourceLoader extends CachedResourceLoader {
 	protected final CacheManager cache;
 
 	public CachedFileResourceLoader(File baseDir, File baseRemoteFile, String id) {
-		cache = new GeneralCacheManager(new FileLocalStorage(baseDir),
+		cache = new GeneralCacheManager(new ClassLoaderStorageImpl(id), new FileLocalStorage(baseDir),
 				new FileRemoteStorage(baseRemoteFile), new LocalDigestCacheValidator(),id);
 	}
 

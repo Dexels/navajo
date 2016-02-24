@@ -2422,10 +2422,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
     public void setGenericResourceLoader(String resourceCodeBase, String resourceCacheLocation) throws MalformedURLException {
         if (resourceCodeBase != null) {
-            setGenericResourceLoader(createResourceLoader(resourceCodeBase, resourceCacheLocation, "generic"));
+            setGenericResourceLoader(createResourceLoader(resourceCodeBase, resourceCacheLocation, "resource"));
         } else {
             // BEWARE: The trailing slash is important!
-            setGenericResourceLoader(createDefaultResourceLoader("resource/", useCache(),"generic"));
+            setGenericResourceLoader(createDefaultResourceLoader("resource/", useCache(),"resource"));
         }
     }
 
