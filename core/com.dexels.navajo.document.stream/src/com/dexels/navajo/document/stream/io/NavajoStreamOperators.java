@@ -41,7 +41,7 @@ public class NavajoStreamOperators {
 
 			@Override
 			public Observable<NavajoStreamEvent> call(Observable<NavajoStreamEvent> in) {
-	        	return in.startWith(Observable.just(Events.arrayStarted(name)))
+	        	return in.startWith(Observable.just(Events.arrayStarted(name,Collections.emptyMap())))
 	        	.concatWith(Observable.just(Events.arrayDone(name)));
 			}
 		};
@@ -127,7 +127,7 @@ public class NavajoStreamOperators {
 	
 	
 	public static Operator<byte[], byte[]> deflate() throws FileNotFoundException {
-		final FileOutputStream fos = new FileOutputStream("/Users/frank/uncompressed.xml");
+//		final FileOutputStream fos = new FileOutputStream("/Users/frank/uncompressed.xml");
 
 		return new Operator<byte[], byte[]>(){
 
@@ -144,12 +144,12 @@ public class NavajoStreamOperators {
 						// TODO check for remaining?
 						onNext(new byte[]{});
 						System.err.println("Deflate completed. Total: "+deflater.getTotalIn()+" out: "+deflater.getTotalOut() + " -> "+out);
-						try {
-							fos.flush();
-							fos.close();
-						} catch (IOException e) {
-							logger.error("Error: ", e);
-						}
+//						try {
+//							fos.flush();
+//							fos.close();
+//						} catch (IOException e) {
+//							logger.error("Error: ", e);
+//						}
 						sub.onCompleted();
 					}
 
@@ -171,19 +171,19 @@ public class NavajoStreamOperators {
 							if(read>0) {
 								if(read == buffer.length) {
 									sub.onNext(buffer);
-									try {
-										fos.write(buffer);
-									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
+//									try {
+//										fos.write(buffer);
+//									} catch (IOException e) {
+//										// TODO Auto-generated catch block
+//										e.printStackTrace();
+//									}
 								} else {
 									byte[] copied = Arrays.copyOfRange(buffer, 0, read);
-									try {
-										fos.write(copied);
-									} catch (IOException e) {
-										logger.error("Error: ", e);
-									}
+//									try {
+//										fos.write(copied);
+//									} catch (IOException e) {
+//										logger.error("Error: ", e);
+//									}
 									sub.onNext(copied);
 								}
 							}

@@ -1,5 +1,6 @@
 package com.dexels.navajo.document.stream.xml;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -25,12 +26,12 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void messageDone(Map<String, String> attributes, List<Prop> properties) {
-				subscriber.onNext(Events.message(properties, attributes.get("name"),attributes.get("mode")));
+				subscriber.onNext(Events.message(properties, attributes.get("name"),attributes));
 			}
 
 			@Override
 			public void messageStarted(Map<String, String> attributes) {
-				subscriber.onNext(Events.messageStarted(attributes.get("name"),attributes.get("mode")));
+				subscriber.onNext(Events.messageStarted(attributes.get("name"),attributes));
 			}
 
 			@Override
@@ -46,17 +47,17 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void arrayStarted(Map<String, String> attributes) {
-				subscriber.onNext(Events.arrayStarted(attributes.get("name")));
+				subscriber.onNext(Events.arrayStarted(attributes.get("name"),attributes));
 			}
 
 			@Override
 			public void arrayElementStarted() {
-				subscriber.onNext(Events.arrayElementStarted());
+				subscriber.onNext(Events.arrayElementStarted(Collections.emptyMap()));
 			}
 
 			@Override
 			public void arrayElement(List<Prop> properties) {
-				subscriber.onNext(Events.arrayElement(properties));				
+				subscriber.onNext(Events.arrayElement(properties, Collections.emptyMap()));				
 			}
 
 			@Override
@@ -80,12 +81,12 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void messageDone(Map<String, String> attributes, List<Prop> properties) {
-					currentSubscriber.onNext(Events.message(properties, attributes.get("name"), attributes.get("mode")));
+					currentSubscriber.onNext(Events.message(properties, attributes.get("name"), attributes));
 			}
 
 			@Override
 			public void messageStarted(Map<String, String> attributes) {
-				currentSubscriber.onNext(Events.messageStarted(attributes.get("name"),attributes.get("mode")));
+				currentSubscriber.onNext(Events.messageStarted(attributes.get("name"),attributes));
 			}
 
 			@Override
@@ -101,17 +102,17 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void arrayStarted(Map<String, String> attributes) {
-				currentSubscriber.onNext(Events.arrayStarted(attributes.get("name")));
+				currentSubscriber.onNext(Events.arrayStarted(attributes.get("name"),attributes));
 			}
 
 			@Override
 			public void arrayElementStarted() {
-				currentSubscriber.onNext(Events.arrayElementStarted());
+				currentSubscriber.onNext(Events.arrayElementStarted( Collections.emptyMap()));
 			}
 
 			@Override
 			public void arrayElement(List<Prop> properties) {
-				currentSubscriber.onNext(Events.arrayElement(properties));				
+				currentSubscriber.onNext(Events.arrayElement(properties, Collections.emptyMap()));				
 			}
 
 			@Override

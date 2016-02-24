@@ -1,5 +1,7 @@
 package com.dexels.navajo.document.stream.api;
 
+import java.util.Collections;
+
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
@@ -24,7 +26,7 @@ public class ArrayMessage {
 	}
 	
 	private Observable<NavajoStreamEvent> before() {
-		return Observable.<NavajoStreamEvent>just(Events.arrayStarted(name));
+		return Observable.<NavajoStreamEvent>just(Events.arrayStarted(name,Collections.emptyMap()));
 	}
 	
 	private Observable<NavajoStreamEvent> after() {

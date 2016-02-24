@@ -28,14 +28,6 @@ public class Msg {
 	public Msg copy() {
 		return new Msg(this);
 	}
-	
-	private Msg(String name, MessageType type, String mode, Action1<Msg> msgAction, Func1<Msg,Observable<NavajoStreamEvent>> body) {
-		this.name = name;
-		this.type = type;
-		this.subMessages = body;
-		this.msgAction = msgAction;
-		this.mode = mode;
-	}
 
 	private Msg(List<Prop> properties) {
 		this.name = "Unnamed";
@@ -119,9 +111,9 @@ public class Msg {
 	private Observable<NavajoStreamEvent> before() {
 		switch (type) {
 		case ARRAY_ELEMENT:
-			return Observable.<NavajoStreamEvent>just(Events.arrayElementStarted());
+			return Observable.<NavajoStreamEvent>just(Events.arrayElementStarted(Collections.emptyMap()));
 		case SIMPLE:
-			return Observable.<NavajoStreamEvent>just(Events.messageStarted(name,mode));
+			return Observable.<NavajoStreamEvent>just(Events.messageStarted(name,Collections.emptyMap()));
 		case DEFINITION:
 			return Observable.<NavajoStreamEvent>just(Events.messageDefinitionStarted(name));
 		default:
@@ -133,7 +125,7 @@ public class Msg {
 	private Observable<NavajoStreamEvent> after() {
 		switch (type) {
 		case ARRAY_ELEMENT:
-			return Observable.<NavajoStreamEvent>just(Events.arrayElement(properties));
+			return Observable.<NavajoStreamEvent>just(Events.arrayElement(properties,Collections.emptyMap()));
 		case SIMPLE:
 			return Observable.<NavajoStreamEvent>just(Events.message(properties,name,null));
 		case DEFINITION:

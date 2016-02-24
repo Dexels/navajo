@@ -81,7 +81,8 @@ public class NavajoStreamCollector {
 			}
 			String mode = (String) n.attribute("mode");
 			
-			Message msg = NavajoFactory.getInstance().createMessage(assemble, n.path(),mode);
+			Message msg = NavajoFactory.getInstance().createMessage(assemble, n.path(),Message.MSG_TYPE_SIMPLE);
+			msg.setMode(mode);
 			if (prMessage == null) {
 				assemble.addMessage(msg);
 			} else {

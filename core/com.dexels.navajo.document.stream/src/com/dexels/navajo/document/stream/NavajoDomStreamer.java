@@ -12,7 +12,9 @@ import static com.dexels.navajo.document.stream.events.Events.messageStarted;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -66,8 +68,9 @@ public class NavajoDomStreamer {
 	private static void emitMessage(Message message,List<NavajoStreamEvent> list, Navajo outputNavajo) {
 //		String path = getPath(message);
 		String name = message.getName();
+		Map<String,Object> messageAttributes = getMessageAttributes(message);
 		if(message.isArrayMessage()) {
-			list.add(arrayStarted(name));
+			list.add(arrayStarted(name,messageAttributes));
 			Message definition = message.getDefinitionMessage();
 			if(definition!=null) {
 				String definitionname =name+"@definition";
@@ -75,23 +78,52 @@ public class NavajoDomStreamer {
 				list.add(messageDefinition(messageProperties(definition), definitionname));
 			}
 			for (Message m : message.getElements()) {
-				list.add(arrayElementStarted());
+				Map<String,Object> elementAttributes = getMessageAttributes(message);
+				list.add(arrayElementStarted(elementAttributes));
 				for (Message sm : m.getAllMessages()) {
 					emitMessage(sm, list,outputNavajo);
 				}				
-				list.add(arrayElement(messageProperties(m)));
+				list.add(arrayElement(messageProperties(m),elementAttributes));
 			}
 			list.add(arrayDone(name));
 		} else {
-			list.add(messageStarted(name,message.getMode()));
+			list.add(messageStarted(name,messageAttributes));
 			for (Message m : message.getAllMessages()) {
 				emitMessage(m, list,outputNavajo);
 			}
-			list.add(message( messageProperties(message), name,message.getMode()));
+			if(message.getMode()!=null && !"".equals(message.getMode())) {
+				System.err.println("MESSAGE name: "+message.getName() + " with mode: "+message.getMode());
+			}
+			list.add(message( messageProperties(message), name,messageAttributes));
 		}
 
 	}
 
+//	  public static final String MSG_CONDITION = "condition";
+
+private static Map<String, Object> getMessageAttributes(Message message) {
+	Map<String,Object> attr = new HashMap<>();
+	if(message.getMode()!=null && !"".equals(message.getMode())) {
+		attr.put(Message.MSG_MODE, message.getMode());
+	}
+//	if(message.getExtends()!=null && !"".equals(message.getExtends())) {
+//		attr.put(Message.MSG_EXTENDS, message.getExtends());
+//	}
+	if(message.getEtag()!=null && !"".equals(message.getEtag())) {
+		attr.put(Message.MSG_ETAG, message.getEtag());
+	}
+//	if(message.getOrderBy()!=null && !"".equals(message.getOrderBy())) {
+//		attr.put(Message.MSG_ORDERBY, message.getOrderBy());
+//	}
+//	if(message.getScope()!=null && !"".equals(message.getScope())) {
+//		attr.put(Message.MSG_SCOPE, message.getScope());
+//	}
+//	if(message.getMethod()!=null && !"".equals(message.getMethod())) {
+//		attr.put(Message.MSG_METHOD, message.getMethod());
+//	}
+	return attr;
+
+}
 private static List<Prop> messageProperties(Message msg) {
 	List<Property> all = msg.getAllProperties();
 	final List<Prop> result = new ArrayList<>();

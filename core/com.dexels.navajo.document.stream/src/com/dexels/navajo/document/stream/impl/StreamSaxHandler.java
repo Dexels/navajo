@@ -257,7 +257,6 @@ public final class StreamSaxHandler implements XmlInputHandler {
             	} else {
                     handler.messageDone(attributes,currentProperties);
             	}
-            	
             }
             currentProperties.clear();
 //            messageNameStack.pop();

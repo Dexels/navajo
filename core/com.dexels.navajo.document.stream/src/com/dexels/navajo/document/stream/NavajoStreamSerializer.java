@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Stack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
@@ -23,6 +25,7 @@ public class NavajoStreamSerializer {
 
 	private int tagDepth = 0;
 	private Stack<String> messageNameStack = new Stack<>();
+	private Stack<Boolean> messageIgnoreStack = new Stack<>();
 	private final Map<String,Integer> arrayCounter = new HashMap<>();
 	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamSerializer.class);
 	public static final int INDENT = 3;
@@ -59,24 +62,23 @@ public class NavajoStreamSerializer {
 			String name = event.path();
 			switch (event.type()) {
 				case MESSAGE_STARTED:
-					String mode = (String) event.attribute("mode");
-					if(mode!=null && !mode.equals("")) {
-						printStartTag(w, INDENT * (tagDepth+1),true,"message",new String[]{"name=\""+name,"\""," mode=\""+mode,"\""});
-					} else {
-						printStartTag(w, INDENT * (tagDepth+1),true,"message",new String[]{"name=\""+name,"\""});
-
+					messageIgnoreStack.push("ignore".equals(event.attribute("mode")));
+					if(!messageIgnoreStack.contains(true)) {
+						printStartTag(w, INDENT * (tagDepth+1),true,"message",createMessageAttributes("name=\""+name+"\"",event.attributes()));
 					}
 					tagDepth++;
 					messageNameStack.push(name);
 					break;
 				case MESSAGE_DEFINITION_STARTED:
-//					Message mstart = (Message) event.body();
-					printStartTag(w, INDENT * (tagDepth+1),true,"message",new String[]{"name=\""+name,"\" type=\"definition\""});
+					messageIgnoreStack.push("ignore".equals(event.attribute("mode")));
+					if(!messageIgnoreStack.contains(true)) {
+						printStartTag(w, INDENT * (tagDepth+1),true,"message",createMessageAttributes("name=\""+name+"\" type=\"definition\"",event.attributes()));
+					}
 					tagDepth++;
 					messageNameStack.push(name+"@definition");
 					break;
 				case ARRAY_ELEMENT_STARTED:
-//					Message elementstart = (Message) event.body();
+					messageIgnoreStack.push("ignore".equals(event.attribute("mode")));
 					String arrayName = messageNameStack.peek();
 					String pth = currentPath();
 					Integer index = arrayCounter.get(pth);
@@ -84,15 +86,11 @@ public class NavajoStreamSerializer {
 					if(index==null) {
 						System.err.println("no current index for path: "+pth);
 					}
-//					if(event.type()==NavajoEventTypes.ARRAY_ELEMENT_STARTED) {
-//						elementstart.setIndex(index);
-//					}
-	
-					// TODO: Message should not be necessary in the body, get message name from path
-					printStartTag(w, INDENT * (tagDepth+1),true,"message",new String[]{"name=\""+arrayName+"\""," index=\""+index+"\""," type=\"array_element\""});
+					if(!"ignore".equals(event.attribute("mode"))) {
+						printStartTag(w, INDENT * (tagDepth+1),true,"message",createMessageAttributes("name=\""+arrayName+"\" index=\""+index+"\" type=\"array_element\"",event.attributes()));
+						tagDepth++;
+					}
 					arrayCounter.put(pth, ++index);
-
-					tagDepth++;
 					messageNameStack.push("@"+index);
 	//				startPath(mstart, this.tagStack, outputStreamWriter);
 					break;
@@ -101,31 +99,43 @@ public class NavajoStreamSerializer {
 				case ARRAY_ELEMENT:
 //					Message m = (Message) event.body();
 					messageNameStack.pop();
+
 					List<Prop> properties = (List<Prop>)event.body();
-					for (Prop prop : properties) {
-						prop.write(w,INDENT * (tagDepth+1));
+					if(!messageIgnoreStack.contains(true)) {
+						for (Prop prop : properties) {
+							prop.write(w,INDENT * (tagDepth+1));
+						}
+						printEndTag(w, INDENT * tagDepth, "message");
 					}
+					
 					//					printStartTag(w, INDENT * (tagStack.size()+1),true,"message",new String[]{"name="+name,"type=\"definition\""});
 
 //					m.printBody(w,INDENT * (tagStack.size()));
 //					m.printCloseTag(w, INDENT * tagStack.size());
-					printEndTag(w, INDENT * tagDepth, "message");
+					messageIgnoreStack.pop();
+
 					tagDepth--;
 					break;
 				case ARRAY_STARTED:
+					messageIgnoreStack.push("ignore".equals(event.attribute("mode")));
+
 	//				Message arr = (Message) event.getBody();
-					printStartTag(w, INDENT * (tagDepth+1),true,"message",new String[]{"name=\""+name,"\" type=\"array\""});
+					if(!messageIgnoreStack.contains(true)) {
+						printStartTag(w, INDENT * (tagDepth+1),true,"message","name=\""+name+"\" type=\"array\"");
+					}
 					messageNameStack.push(name);
 					tagDepth++;
 
 					arrayCounter.put(currentPath(), 0);
 					break;
 				case ARRAY_DONE:
-					printEndTag(w, INDENT*tagDepth, "message");
+					if(!messageIgnoreStack.contains(true)) {
+						printEndTag(w, INDENT*tagDepth, "message");
+					}
 //					printCloseTag(w, INDENT*tagStack.size());
 					arrayCounter.remove(currentPath());
 					tagDepth--;
-
+					messageIgnoreStack.pop();
 					messageNameStack.pop();
 					break;
 				case NAVAJO_STARTED:
@@ -148,6 +158,19 @@ public class NavajoStreamSerializer {
 		}
 	}
 
+	private String createMessageAttributes(String initial, Map<String, Object> attributes) {
+		StringBuilder sb = new StringBuilder(initial);
+		String mode = (String) attributes.get(Message.MSG_MODE);
+		String etag = (String) attributes.get(Message.MSG_ETAG);
+		if(mode!=null) {
+			sb.append(" mode=\""+mode+"\"");
+		}
+		if(etag!=null) {
+			sb.append(" etag=\""+etag+"\"");
+		}
+		return sb.toString();
+	}
+
 	private String currentPath() {
 		int i = 0;
 		StringWriter sw = new StringWriter();
@@ -161,20 +184,20 @@ public class NavajoStreamSerializer {
 		return sw.toString();
 	}
 	
-	public void printStartTag(final Writer sw, int indent,boolean forceDualTags,String tag,  String[] attributes) throws IOException {
+	private void printStartTag(final Writer sw, int indent,boolean forceDualTags,String tag,  String attributes) throws IOException {
 		 for (int a = 0; a < indent; a++) {
 			 sw.write(" ");
 		 }
 		 sw.write("<");
 		 sw.write(tag);
 		 sw.write(" ");
-		 for (String attribute : attributes) {
-			sw.write(attribute);
-		}
+//		 for (String attribute : attributes) {
+			sw.write(attributes);
+//		}
 		sw.write(">\n");
 	}
 	
-	public void printEndTag(final Writer sw, int indent,String tag) throws IOException {
+	private void printEndTag(final Writer sw, int indent,String tag) throws IOException {
 		 for (int a = 0; a < indent; a++) {
 			 sw.write(" ");
 		 }

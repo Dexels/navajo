@@ -1,7 +1,6 @@
 package com.dexels.navajo.document.stream.events;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,30 +19,25 @@ public class Events {
 		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE_DEFINITION,properties,Collections.emptyMap());
 	}
 
-	public static NavajoStreamEvent message(List<Prop> properties, String name, String mode) {
-		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE,properties,Collections.emptyMap());
+	public static NavajoStreamEvent message(List<Prop> properties, String name, Map<String,? extends Object> messageAttributes) {
+		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE,properties,messageAttributes);
 	}
 
-	public static NavajoStreamEvent messageStarted(String name, String mode) {
-		if (mode==null || "".equals(mode)) {
-			return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE_STARTED,null,Collections.emptyMap());
-		} else {
-			Map<String,Object> attributes = new HashMap<>();
-			attributes.put("mode", mode);
-			return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE_STARTED,null,attributes);
-		}
+	public static NavajoStreamEvent messageStarted(String name, Map<String,? extends Object> messageAttributes) {
+
+		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE_STARTED,null,messageAttributes);
 	}
 	
-	public static NavajoStreamEvent arrayStarted(String name) {
-		return new NavajoStreamEvent(name,NavajoEventTypes.ARRAY_STARTED,null,Collections.emptyMap());
+	public static NavajoStreamEvent arrayStarted(String name,Map<String,? extends Object> attributes) {
+		return new NavajoStreamEvent(name,NavajoEventTypes.ARRAY_STARTED,null,attributes);
 	}
 
-	public static NavajoStreamEvent arrayElementStarted() {
-		return new NavajoStreamEvent("UnnamedArrayElement",NavajoEventTypes.ARRAY_ELEMENT_STARTED,null,Collections.emptyMap());
+	public static NavajoStreamEvent arrayElementStarted(Map<String,? extends Object> attributes) {
+		return new NavajoStreamEvent("UnnamedArrayElement",NavajoEventTypes.ARRAY_ELEMENT_STARTED,null,attributes);
 	}
 
-	public static NavajoStreamEvent arrayElement(List<Prop> properties) {
-		return new NavajoStreamEvent("UnnamedArrayElement",NavajoEventTypes.ARRAY_ELEMENT,properties,Collections.emptyMap());
+	public static NavajoStreamEvent arrayElement(List<Prop> properties,Map<String,? extends Object> attributes) {
+		return new NavajoStreamEvent("UnnamedArrayElement",NavajoEventTypes.ARRAY_ELEMENT,properties,attributes);
 	}
 
 	public static NavajoStreamEvent arrayDone(String name) {
