@@ -76,8 +76,17 @@ public class DependencyAnalyzer {
         String script = scriptPath;
 
         if (scriptPath.indexOf('_') > 0) {
-            // Remove tenant-specific part
-            script = scriptPath.substring(0, scriptPath.indexOf('_'));
+            int slashIndex = scriptPath.lastIndexOf("/");
+            
+            if (slashIndex != -1) {
+                // Check if the last '_' is after the / part, since a _ might occur in a directory name
+                String bareScript = scriptPath.substring(slashIndex + 1);
+                if (bareScript.indexOf('_') != -1) {
+                    script = scriptPath.substring(0, scriptPath.lastIndexOf('_'));
+                }
+            } else {
+                script = scriptPath.substring(0, scriptPath.lastIndexOf('_'));
+            }
         }
         if (reverseDependencies.containsKey(script)) {
             return reverseDependencies.get(script);
@@ -87,13 +96,20 @@ public class DependencyAnalyzer {
     }
 
     private String tenantFromScriptPath(String scriptPath) {
-        int scoreIndex = scriptPath.lastIndexOf("_");
+        int scoreIndex = scriptPath.lastIndexOf('_');
         int slashIndex = scriptPath.lastIndexOf("/");
-        if (scoreIndex >= 0 && slashIndex < scoreIndex) {
-            return scriptPath.substring(scoreIndex + 1, scriptPath.length());
-        } else {
-            return null;
+        
+        if (slashIndex != -1) {
+            String bareScript = scriptPath.substring(slashIndex + 1);
+            scoreIndex = bareScript.lastIndexOf('_');
+            if (scoreIndex != -1) {
+                return bareScript.substring(scoreIndex+1, bareScript.length());
+            } 
+        } else if (scoreIndex > -1)  {
+            return scriptPath.substring(scoreIndex+1, scriptPath.length());
         }
+        return null;
+        
     }
 
 
