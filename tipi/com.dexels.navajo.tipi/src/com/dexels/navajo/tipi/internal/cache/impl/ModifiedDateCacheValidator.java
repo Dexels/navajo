@@ -12,6 +12,12 @@ public class ModifiedDateCacheValidator implements CacheValidator {
 	private RemoteStorage remoteStorage;
 	
 	@Override
+	public boolean isClassLoaderValid(String location) throws IOException {
+		// No support for classloader
+		return false;
+	}
+	
+	@Override
 	public boolean isLocalValid(String location) throws IOException {
 		// TODO Auto-generated method stub
 		long remote = remoteStorage.getRemoteModificationDate(location);
@@ -38,6 +44,8 @@ public class ModifiedDateCacheValidator implements CacheValidator {
 	public void invalidate() {
 		// nothing to do
 	}
+
+	
 	
 
 }

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.tipi.internal.CachedResourceLoader;
 import com.dexels.navajo.tipi.internal.cache.CacheManager;
 import com.dexels.navajo.tipi.internal.cache.LocalStorage;
+import com.dexels.navajo.tipi.internal.cache.impl.ClassLoaderStorageImpl;
 import com.dexels.navajo.tipi.internal.cache.impl.FileLocalStorage;
 import com.dexels.navajo.tipi.internal.cache.impl.GeneralCacheManager;
 import com.dexels.navajo.tipi.internal.cache.impl.HttpRemoteStorage;
@@ -37,7 +38,7 @@ public class CachedHttpJnlpResourceLoader extends CachedResourceLoader {
         logger.info("Creating JNLP-backed local cache: relativePath: {} id: {} useJnlpLocalStorageString: {}", relativePath, id, useJnlpLocalStorageString);
         final LocalDigestCacheValidator cacheValidator = new LocalDigestCacheValidator();
         final LocalStorage localstore;
-        if (false) {
+        if (useJnlpLocalStorage) {
             localstore = new JnlpLocalStorage(relativePath, cm, id);
         } else {
             File f = new File(getSystemProperty("deployment.user.tmp"), "tipicache");
@@ -46,7 +47,8 @@ public class CachedHttpJnlpResourceLoader extends CachedResourceLoader {
         }
 
         final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
-        cache = new GeneralCacheManager(localstore, remoteStore, cacheValidator, id);
+        final ClassLoaderStorageImpl classLoaderStorage = new ClassLoaderStorageImpl(id);
+        cache = new GeneralCacheManager(classLoaderStorage, localstore, remoteStore, cacheValidator, id);
         cacheValidator.setId(id);
         cacheValidator.setLocalStorage(localstore);
         cacheValidator.setRemoteStorage(remoteStore);
