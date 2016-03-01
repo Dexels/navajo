@@ -1,5 +1,7 @@
 package com.dexels.navajo.functions;
 
+import java.util.Calendar;
+
 import com.dexels.navajo.parser.FunctionInterface;
 
 /**
@@ -46,6 +48,18 @@ public final class CheckDate extends FunctionInterface {
         Object o = this.getOperand(0);
         
         if (o instanceof java.util.Date) {
+            // Year can't be greater than 9999 by default
+            boolean limitYear = true;
+            if (this.getOperand(1) != null) {
+                limitYear = (Boolean) this.getOperand(1);
+            }
+            
+            if (limitYear) {
+                Calendar c = Calendar.getInstance();
+                c.setTime((java.util.Date) o);
+                return c.get(Calendar.YEAR) <= 9999;
+            } 
+            
             return Boolean.TRUE;
         } else {
             return Boolean.FALSE;
