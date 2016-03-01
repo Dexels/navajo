@@ -82,8 +82,6 @@ $(document).ready(function() {
         sessionStorage.instance = $("#handlers :selected").text();
     });
     
-    updateInstanceHandlers();
-    
     Handlebars.registerHelper('equals', function(v1, v2, options) {
         if(v1 === v2) {
             return options.fn(this);

@@ -36,6 +36,7 @@ function updateTenants() {
 	            
 	        });
 	        $("#handlers").trigger("chosen:updated");
+	        updateInstanceHandlers();
 	    }
 	});
 	
