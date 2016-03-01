@@ -50,7 +50,7 @@ public final class CheckDate extends FunctionInterface {
         if (o instanceof java.util.Date) {
             // Year can't be greater than 9999 by default
             boolean limitYear = true;
-            if (this.getOperand(1) != null) {
+            if (this.getOperands().size() > 1) {
                 limitYear = (Boolean) this.getOperand(1);
             }
             

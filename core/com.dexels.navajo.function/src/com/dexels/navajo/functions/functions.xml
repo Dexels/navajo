@@ -52,7 +52,7 @@
 		<description>Checks whether the input param is a date, returns true if
 			this is the case. If year is greater than 9999, return false by default
 		</description>
-		<input>any, boolean|empty</input>
+		<input>any,boolean|empty</input>
 		<result>boolean</result>
 	</function>
 	<function name="CheckEmail" class="com.dexels.navajo.functions.CheckEmail">
