@@ -1,0 +1,7 @@
+<functiondef>
+    <function name="CheckTwitterToken" class="com.dexels.twitter.functions.CheckTwitterToken">
+        <description>Returns a boolean indicating whether the supplied token is a valid and active Twitter token</description>
+        <input>string, string</input>
+        <result>boolean</result>
+    </function>
+</functiondef>
