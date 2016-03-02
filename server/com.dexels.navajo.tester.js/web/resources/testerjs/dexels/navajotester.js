@@ -33,10 +33,19 @@ function updateTenants() {
 	    success : function(response) {
 	        $.each(response, function(key, value) {
 	           $('#handlers').append($('<option>').text(value));
-	            
+	           
+	           // If we don't have a instance in our session storage, check if a part of
+	           // the url matches this instance
+	           if (!sessionStorage.instance) {
+	        	   if (window.location.href.toLowerCase().indexOf(value.toLowerCase()) > -1) {
+	                    sessionStorage.instance = value;
+	               }
+	           }
 	        });
+	        if (sessionStorage.instance) {
+	        	 $('#handlers').val(sessionStorage.instance);
+	        }
 	        $("#handlers").trigger("chosen:updated");
-	        updateInstanceHandlers();
 	    }
 	});
 	
@@ -139,27 +148,6 @@ function processLoginForm(){
 function loginTableVisible() {
     var instance =  $( "#handlers option:selected" ).text();
     return (instance === "" || !sessionStorage.user) 
-}
-
-function updateInstanceHandlers() {
-    if (!sessionStorage.instance) {
-        var match = false;
-        // See if the current url matches one of the handlers. If so, we use
-        // that as default handler
-        $('#handlers option').each(function(index, option) {
-            var optionValue = $(option).attr('value');
-            if (window.location.href.toLowerCase().indexOf(optionValue.toLowerCase()) > -1) {
-                sessionStorage.instance = optionValue;
-                match = true;
-            }
-        });
-        if (!match) {
-            return;
-        }
-    }
-    $('#handlers').val(sessionStorage.instance);
-    $('#handlers').trigger("chosen:updated")
-
 }
 
 function showLoginTable() {
