@@ -32,7 +32,7 @@ public class AutoCompiler {
 	private final int DEFAULT_WARMUP_WAIT = 20000;
 	// default to 15m
 	private final int DEFAULT_SCHEDULE_WAIT = 900000;
-	private final boolean DEFAULT_ENABLED = true;
+	private final boolean DEFAULT_ENABLED = false;
 
 	private long warmupWait = DEFAULT_WARMUP_WAIT;
 	private long scheduleWait = DEFAULT_SCHEDULE_WAIT;
