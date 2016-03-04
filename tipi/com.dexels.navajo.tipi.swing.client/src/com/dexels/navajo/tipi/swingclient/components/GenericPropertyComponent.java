@@ -1445,10 +1445,7 @@ public class GenericPropertyComponent extends JPanel {
 		memoFieldScrollPane = new JScrollPane() {
 			private static final long serialVersionUID = 1L;
 
-			@Override
-			public Dimension getMinimumSize() {
-				return getPreferredSize();
-			}
+			
 		};
 		memoFieldScrollPane.getViewport().add(myMemoField);
 		memoFieldScrollPane
