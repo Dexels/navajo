@@ -19,7 +19,7 @@ import com.dexels.navajo.tipi.internal.cache.RemoteStorage;
 
 public class LocalDigestCacheValidator implements CacheValidator {
 
-	private static final String CLASSLOADER_DIGEST_PROPERTIES = "digest.properties";
+	private static final String CLASSLOADER_DIGEST_PROPERTIES = "remotedigest.properties";
 	private static final String LOCAL_DIGEST_PROPERTIES = "digest.properties";
 	private static final String REMOTE_DIGEST_PROPERTIES = "remotedigest.properties";
 	private Properties classLoaderDigestProperties = new Properties();
