@@ -452,13 +452,13 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.104'>
+		version='3.0.105'>
 		<feature version="[3.0.0,4)">navajo.core</feature>
         <feature version="[3.1.0,4)">navajo.adapter</feature>
        
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.5.14
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.5.0
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.5.2
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.15
 		</bundle>
@@ -640,11 +640,11 @@
         </bundle>
     </feature>
     
-     <feature resolver="(obr)" name='navajo.logstore' version='1.0.20'>
+     <feature resolver="(obr)" name='navajo.logstore' version='1.0.21'>
          <feature version="[3.0.3,4)">navajo.core.dependencies</feature>
     	 <bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/3.0.3
          </bundle>
-         <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.logstore/1.2.4
+         <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.logstore/1.2.6
          </bundle>
     </feature>
 </features>
