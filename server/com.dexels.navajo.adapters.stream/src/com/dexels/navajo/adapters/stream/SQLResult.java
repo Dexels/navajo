@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapters.stream.sqlmap.example;
+package com.dexels.navajo.adapters.stream;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

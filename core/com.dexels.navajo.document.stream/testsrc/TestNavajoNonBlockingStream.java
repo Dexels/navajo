@@ -86,6 +86,7 @@ public class TestNavajoNonBlockingStream {
 			.map(b->ByteBuffer.wrap(b))
 			.lift(XML.parse())
 			.lift(NAVADOC.parse(Collections.emptyMap()))
+			.doOnNext(System.err::println)
 			.lift(NAVADOC.serialize())
 			.toBlocking().forEach(b -> {
 				try {

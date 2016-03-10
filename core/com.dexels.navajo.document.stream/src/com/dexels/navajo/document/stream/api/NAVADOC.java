@@ -49,7 +49,6 @@ public class NAVADOC {
 	}
 	
 	
-	// TODO test
 	public static Operator<byte[],NavajoStreamEvent> serialize() {
 		return new Operator<byte[],NavajoStreamEvent>(){
 			private final NavajoStreamSerializer serializer = new NavajoStreamSerializer();

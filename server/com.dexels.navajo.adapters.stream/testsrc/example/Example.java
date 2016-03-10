@@ -5,8 +5,8 @@ import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 
-import com.dexels.navajo.adapters.stream.sqlmap.example.Bytes;
-import com.dexels.navajo.adapters.stream.sqlmap.example.HTTP;
+import com.dexels.navajo.adapters.stream.Bytes;
+import com.dexels.navajo.adapters.stream.HTTP;
 import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;

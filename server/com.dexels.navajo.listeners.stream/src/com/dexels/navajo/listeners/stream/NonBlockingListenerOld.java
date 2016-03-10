@@ -22,7 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.stream.NavajoStreamSerializer;
+import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
+import com.dexels.navajo.document.stream.io.NavajoStreamOperators;
 import com.dexels.navajo.document.stream.io.ObservableStreams;
 import com.dexels.navajo.document.stream.xml.ObservableNavajoParser;
 import com.dexels.navajo.document.stream.xml.ObservableXmlFeeder;
@@ -121,7 +123,7 @@ public class NonBlockingListenerOld extends HttpServlet {
 	}
 
 	private void authorize(Observable<NavajoStreamEvent> headerEvent, Observable<NavajoStreamEvent> publishedStream,Observer<NavajoStreamEvent> output) {
-		new Authorizer(headerEvent,publishedStream,output);
+//		new Authorizer(headerEvent,publishedStream,output);
 	}
 
 	
@@ -140,10 +142,10 @@ private Map<String, Object> parseHeaders(HttpServletRequest req) {
 }
 
 
-private PublishSubject<NavajoStreamEvent> createOutput(OutputStream out) {
+private Observer<NavajoStreamEvent> createOutput(OutputStream out) {
 	PublishSubject<NavajoStreamEvent> subject = PublishSubject.<NavajoStreamEvent>create();
 	NavajoStreamSerializer nss = new NavajoStreamSerializer();
-	subject.flatMap(nsevent->nss.feed(nsevent)).subscribe(
+	subject.lift(NAVADOC.serialize()).subscribe(
 	b->{
 		try {
 			out.write(b);
@@ -163,6 +165,5 @@ private PublishSubject<NavajoStreamEvent> createOutput(OutputStream out) {
 	);
 	
 	return subject;
-	
 }
 }

@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapters.stream.sqlmap.example;
+package com.dexels.navajo.adapters.stream;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -7,7 +7,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.dexels.navajo.adapters.stream.sqlmap.example.impl.CSVRowImpl;
+import com.dexels.navajo.adapters.stream.impl.CSVRowImpl;
+import com.dexels.navajo.adapters.stream.impl.StringObservable;
 import com.dexels.navajo.document.stream.api.Msg;
 
 import rx.Observable;

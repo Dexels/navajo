@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.dexels.navajo.adapters.stream.sqlmap.example.Bytes;
-import com.dexels.navajo.adapters.stream.sqlmap.example.CSV;
-import com.dexels.navajo.adapters.stream.sqlmap.example.HTTP;
-import com.dexels.navajo.adapters.stream.sqlmap.example.StringObservable;
+import com.dexels.navajo.adapters.stream.Bytes;
+import com.dexels.navajo.adapters.stream.CSV;
+import com.dexels.navajo.adapters.stream.HTTP;
+import com.dexels.navajo.adapters.stream.impl.StringObservable;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NAVADOC;

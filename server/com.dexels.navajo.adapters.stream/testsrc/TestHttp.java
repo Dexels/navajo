@@ -3,7 +3,7 @@ import java.nio.ByteBuffer;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dexels.navajo.adapters.stream.sqlmap.example.HTTP;
+import com.dexels.navajo.adapters.stream.HTTP;
 import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
 
