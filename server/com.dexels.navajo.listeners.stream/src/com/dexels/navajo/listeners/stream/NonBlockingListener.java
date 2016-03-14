@@ -97,7 +97,7 @@ public class NonBlockingListener extends HttpServlet {
 
 		String navajoService = (String) attributes.get("X-Navajo-Service");
 		if(navajoService!=null) {
-			processStreamingScript(navajoService,attributes,ac);
+			processStreamingScript(tenant,navajoService,attributes,ac);
 			return;
 		}
 
@@ -112,7 +112,7 @@ public class NonBlockingListener extends HttpServlet {
 
 		String navajoService = (String) attributes.get("X-Navajo-Service");
 		if(navajoService!=null) {
-			processStreamingScript(navajoService,attributes,ac);
+			processStreamingScript(tenant,navajoService,attributes,ac);
 			return;
 		}
 		
@@ -161,7 +161,7 @@ public class NonBlockingListener extends HttpServlet {
 		return attributes;
 	}
 
-	private void processStreamingScript(String navajoService, Map<String, Object> attributes, AsyncContext asyncContext) throws IOException {
+	private void processStreamingScript(String tenant,String navajoService, Map<String, Object> attributes, AsyncContext asyncContext) throws IOException {
 		ServletInputStream in = asyncContext.getRequest().getInputStream();
 		Observer<byte[]> output = createOutput(asyncContext.getResponse(),asyncContext);
 		SimpleScript simple = simpleScripts.get(navajoService);
@@ -193,16 +193,16 @@ public class NonBlockingListener extends HttpServlet {
 	}
 
 
-	private Observable<ByteBuffer> decompress(Observable<ByteBuffer> input, Map<String, Object> attributes) {
-		String encoding = (String) attributes.get("Content-Encoding");
-		if (encoding == null) {
-			return input;
-		}
-		if (encoding.equals("jzlib")) {
-			return input.lift(NavajoStreamOperators.inflate());
-		}
-		return input;
-	}
+//	private Observable<ByteBuffer> decompress(Observable<ByteBuffer> input, Map<String, Object> attributes) {
+//		String encoding = (String) attributes.get("Content-Encoding");
+//		if (encoding == null) {
+//			return input;
+//		}
+//		if (encoding.equals("jzlib")) {
+//			return input.lift(NavajoStreamOperators.inflate());
+//		}
+//		return input;
+//	}
 
 	private void writeResponse(final HttpServletResponse resp, byte[] bytes) {
 		try {
@@ -294,20 +294,6 @@ public class NonBlockingListener extends HttpServlet {
 		}
 		return instance;
 	}
-//
-//	private Subscription sendNavajo(Navajo n, OutputStream out) {
-//		NavajoStreamSerializer nss = new NavajoStreamSerializer();
-//		return Observable.<Navajo> just(n).flatMap(NavajoDomStreamer::feed).flatMap(nss::feed)
-//				.subscribe(b -> write(out, b));
-//	}
-
-//	private void write(OutputStream out, byte[] b) {
-//		try {
-//			out.write(b);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 	static class ReadObserver implements Observer<ByteBuffer> {
 		private final HttpServletResponse resp;
@@ -384,16 +370,12 @@ public class NonBlockingListener extends HttpServlet {
 	private Subscriber<byte[]> createOutput(ServletResponse response, AsyncContext context) throws IOException {
 		OutputStream out = response.getOutputStream();
 		return new Subscriber<byte[]>(){
-//			File outfile = new File("/Users/frank/outputxx.xml");
-//			OutputStream outputStream = new FileOutputStream(outfile);
 			@Override
 			public void onCompleted() {
 				try {
 					out.flush(); 
 					context.complete();
 					out.close();
-//					outputStream.flush();
-//					outputStream.close();
 				} catch (Exception e) {
 					logger.error("Error: ", e);
 				}
@@ -409,8 +391,6 @@ public class NonBlockingListener extends HttpServlet {
 			public void onNext(byte[] b) {
 				try {
 					out.write(b);
-//					out.flush();
-//					outputStream.write(b);
 				} catch (Exception e) {
 					logger.error("Error: ", e);
 					onError(e);

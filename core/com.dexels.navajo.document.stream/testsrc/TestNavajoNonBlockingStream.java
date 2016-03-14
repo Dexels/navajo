@@ -2,7 +2,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Collections;
 
 import org.junit.Assert;
@@ -16,7 +15,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.NavajoDomStreamer;
 import com.dexels.navajo.document.stream.NavajoStreamCollector;
 import com.dexels.navajo.document.stream.api.NAVADOC;
-import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 import com.dexels.navajo.document.stream.xml.Bytes;
 import com.dexels.navajo.document.stream.xml.XML;
@@ -116,7 +114,7 @@ public class TestNavajoNonBlockingStream {
 					} catch (Exception e) {
 					}
 				});
-		byte[] original = getNavajoData("tml_with_binary.xml");
+//		byte[] original = getNavajoData("tml_with_binary.xml");
 //		FileOutputStream fw = new FileOutputStream("originalbinary.xml");
 //		fw.write(original);
 //		fw.close();
@@ -129,12 +127,11 @@ public class TestNavajoNonBlockingStream {
 //		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test 
 	public void testStreamParserAndSerializerWithBinaryUsingTml() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		final Navajo baseTml = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("tml_with_binary.xml"));
-		ArrayList<Prop> ne = (ArrayList<Prop>) Observable.just(baseTml)
+		Observable.just(baseTml)
 			.lift(NAVADOC.stream())
 			.lift(NAVADOC.serialize())
 			.doOnNext(b -> {

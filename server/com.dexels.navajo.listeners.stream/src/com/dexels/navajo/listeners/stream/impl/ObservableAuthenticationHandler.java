@@ -20,8 +20,6 @@ public class ObservableAuthenticationHandler implements Operator<NavajoStreamEve
 			this.scriptName = header.name();
 		}
 		return streamEvent.withAttribute("Auth",authorizationObject).withAttribute("Script", scriptName);
-//		subscriber.onNext(streamEvent);	
-		
 	}
 
 	@Override
@@ -42,7 +40,6 @@ public class ObservableAuthenticationHandler implements Operator<NavajoStreamEve
 			public void onNext(NavajoStreamEvent streamEvent) {
 				NavajoStreamEvent authorize = authorize(streamEvent);
 				Object authAttribute = authorize.attribute("Auth");
-				System.err.println("auth: "+authAttribute+" authorize: "+authorize);
 				if("username|pw".equals( authAttribute)) {
 					subscriber.onNext(authorize);
 				} else {
