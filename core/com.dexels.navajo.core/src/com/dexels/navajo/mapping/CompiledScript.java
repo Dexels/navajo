@@ -620,11 +620,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
         return f;
     }
 
-    @Override
-    protected void finalize() {
-        functions.clear();
-    }
-
+ 
     protected Map<String, Object> getEvaluationParams() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(Expression.ACCESS, myAccess);
