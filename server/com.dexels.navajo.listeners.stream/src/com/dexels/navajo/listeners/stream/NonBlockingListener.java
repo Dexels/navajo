@@ -13,6 +13,7 @@ import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,13 +24,9 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.stream.NavajoDomStreamer;
-import com.dexels.navajo.document.stream.NavajoStreamSerializer;
-import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NAVADOC;
-import com.dexels.navajo.document.stream.api.ReactiveScript;
 import com.dexels.navajo.document.stream.api.Script;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
+import com.dexels.navajo.document.stream.api.SimpleScript;
 import com.dexels.navajo.document.stream.io.NavajoStreamOperators;
 import com.dexels.navajo.document.stream.io.ObservableStreams;
 import com.dexels.navajo.document.stream.xml.XML;
@@ -39,18 +36,16 @@ import com.dexels.navajo.script.api.LocalClient;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.functions.Action2;
-import rx.subjects.PublishSubject;
 
 public class NonBlockingListener extends HttpServlet {
 	private static final long serialVersionUID = -4381216748627396838L;
 	private LocalClient localClient;
 //	private Script script;
 	private final Map<String,Script> scripts = new HashMap<>();
-			
+	private final Map<String,SimpleScript> simpleScripts = new HashMap<>();
+				
 	private final static Logger logger = LoggerFactory.getLogger(NonBlockingListener.class);
+	private static final int INPUT_BUFFER_SIZE = 1024;
 
 	public LocalClient getLocalClient() {
 		return localClient;
@@ -69,42 +64,58 @@ public class NonBlockingListener extends HttpServlet {
 		if(name!=null) {
 			scripts.put(name, script);
 		}
-//		this.script = script;
 	}
 	
 	public void removeScript(Script script,Map<String,Object> settings) {
-//		this.script = null;
 		String name = (String) settings.get("navajo.scriptName");
 		if(name!=null) {
 			scripts.remove(name);
 		}
 	}
 	
+	public void addSimpleScript(SimpleScript script,Map<String,Object> settings) {
+		String name = (String) settings.get("navajo.scriptName");
+		if(name!=null) {
+			simpleScripts.put(name, script);
+		}
+	}
+	
+	public void removeSimpleScript(SimpleScript script,Map<String,Object> settings) {
+		String name = (String) settings.get("navajo.scriptName");
+		if(name!=null) {
+			simpleScripts.remove(name);
+		}
+	}
+	
+	
+	
 	@Override
 	protected void doGet(HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+		AsyncContext ac = req.startAsync();
+		Map<String, Object> attributes = extractHeaders(req);
+		String tenant = determineTenantFromRequest(req);
+
+		String navajoService = (String) attributes.get("X-Navajo-Service");
+		if(navajoService!=null) {
+			processStreamingScript(navajoService,attributes,ac);
+			return;
+		}
 
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-
 		AsyncContext ac = req.startAsync();
-		Map<String, Object> attributes = new HashMap<>();
-		Enumeration<String> en = req.getHeaderNames();
-		while (en.hasMoreElements()) {
-			String headerName = en.nextElement();
-			String headerValue = req.getHeader(headerName);
-			attributes.put(headerName, headerValue);
-		}
+		Map<String, Object> attributes = extractHeaders(req);
 		String tenant = determineTenantFromRequest(req);
+		ServletInputStream in = req.getInputStream();
 
 		String navajoService = (String) attributes.get("X-Navajo-Service");
 		if(navajoService!=null) {
-			processStreamingScript(navajoService,attributes,req,resp,ac);
+			processStreamingScript(navajoService,attributes,ac);
 			return;
 		}
 		
-		ServletInputStream in = req.getInputStream();
 		Navajo inputNavajo = ObservableStreams.streamInputStreamWithBufferSize(in, 1024)
 				.lift(XML.parse())
 				.lift(NAVADOC.parse(attributes))
@@ -139,19 +150,44 @@ public class NonBlockingListener extends HttpServlet {
 				});
 	}
 
-	private void processStreamingScript(String navajoService, Map<String, Object> attributes, HttpServletRequest req,
-			HttpServletResponse resp, AsyncContext asyncContext) throws IOException {
-		ServletInputStream in = req.getInputStream();
-		Observer<byte[]> output = createOutput(resp,asyncContext);
-		ReactiveRuntime runtime = new ReactiveRuntime();
-		Script s = scripts.get(navajoService);
-		s.create(runtime);
-		ObservableStreams.streamInputStreamWithBufferSize(in, 1024)
+	private Map<String, Object> extractHeaders(HttpServletRequest req) {
+		Map<String, Object> attributes = new HashMap<>();
+		Enumeration<String> en = req.getHeaderNames();
+		while (en.hasMoreElements()) {
+			String headerName = en.nextElement();
+			String headerValue = req.getHeader(headerName);
+			attributes.put(headerName, headerValue);
+		}
+		return attributes;
+	}
+
+	private void processStreamingScript(String navajoService, Map<String, Object> attributes, AsyncContext asyncContext) throws IOException {
+		ServletInputStream in = asyncContext.getRequest().getInputStream();
+		Observer<byte[]> output = createOutput(asyncContext.getResponse(),asyncContext);
+		SimpleScript simple = simpleScripts.get(navajoService);
+		if(simple!=null) {
+			Navajo input = ObservableStreams.streamInputStreamWithBufferSize(in, INPUT_BUFFER_SIZE)
 			.lift(XML.parse())
 			.lift(NAVADOC.parse(attributes))
-			.lift(runtime)
+			.lift(NAVADOC.collect(attributes))
+			.toBlocking()
+			.first();
+			simple.call(input)
 			.compose(NavajoStreamOperators.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_usr")))
-			.doOnNext(e->System.err.println("Event: "+e))
+			.lift(NAVADOC.serialize())
+			.subscribe(output);
+			return;
+		}
+		Script s = scripts.get(navajoService);
+		if(s==null) {
+			logger.info("Script unresolved. TODO: Write pretty erroro message");
+		}
+//		s.create(runtime);
+		ObservableStreams.streamInputStreamWithBufferSize(in, INPUT_BUFFER_SIZE)
+			.lift(XML.parse())
+			.lift(NAVADOC.parse(attributes))
+			.compose(s)
+			.compose(NavajoStreamOperators.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_usr")))
 			.lift(NAVADOC.serialize())
 			.subscribe(output);
 	}
@@ -165,7 +201,6 @@ public class NonBlockingListener extends HttpServlet {
 		if (encoding.equals("jzlib")) {
 			return input.lift(NavajoStreamOperators.inflate());
 		}
-		// TODO gzip
 		return input;
 	}
 
@@ -197,7 +232,6 @@ public class NonBlockingListener extends HttpServlet {
 		if (acceptedEncodings.contains("jzlib")) {
 			return "jzlib";
 		}
-		// TODO gzip
 		return null;
 	}
 
@@ -260,20 +294,20 @@ public class NonBlockingListener extends HttpServlet {
 		}
 		return instance;
 	}
+//
+//	private Subscription sendNavajo(Navajo n, OutputStream out) {
+//		NavajoStreamSerializer nss = new NavajoStreamSerializer();
+//		return Observable.<Navajo> just(n).flatMap(NavajoDomStreamer::feed).flatMap(nss::feed)
+//				.subscribe(b -> write(out, b));
+//	}
 
-	private Subscription sendNavajo(Navajo n, OutputStream out) {
-		NavajoStreamSerializer nss = new NavajoStreamSerializer();
-		return Observable.<Navajo> just(n).flatMap(NavajoDomStreamer::feed).flatMap(nss::feed)
-				.subscribe(b -> write(out, b));
-	}
-
-	private void write(OutputStream out, byte[] b) {
-		try {
-			out.write(b);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	private void write(OutputStream out, byte[] b) {
+//		try {
+//			out.write(b);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	static class ReadObserver implements Observer<ByteBuffer> {
 		private final HttpServletResponse resp;
@@ -323,53 +357,68 @@ public class NonBlockingListener extends HttpServlet {
 	}
 
 	// Rewrite to passing HttpResponse to create the outputstream on demand?
-	private Observer<NavajoStreamEvent> createOutput(OutputStream out) {
-		PublishSubject<NavajoStreamEvent> subject = PublishSubject.<NavajoStreamEvent>create();
-		subject.lift(NAVADOC.serialize()).subscribe(
-		b->{
-			try {
-				out.write(b);
-			} catch (Exception e) {
-				logger.error("Error: ", e);
-			}
-		}
-			,t->logger.error("Error: ", t)
-			,()->{
-				try {
-					out.flush(); 
-					out.close();
-				} catch (Exception e) {
-					logger.error("Error: ", e);
-				}
-			}
-		);
-		
-		return subject;
-	}
-	
-	private Observer<byte[]> createOutput(HttpServletResponse response, AsyncContext context) throws IOException {
-		PublishSubject<byte[]> subject = PublishSubject.<byte[]>create();
+//	private Observer<NavajoStreamEvent> createOutput(OutputStream out) {
+//		PublishSubject<NavajoStreamEvent> subject = PublishSubject.<NavajoStreamEvent>create();
+//		subject.lift(NAVADOC.serialize()).subscribe(
+//		b->{
+//			try {
+//				out.write(b);
+//			} catch (Exception e) {
+//				logger.error("Error: ", e);
+//			}
+//		}
+//			,t->logger.error("Error: ", t)
+//			,()->{
+//				try {
+//					out.flush(); 
+//					out.close();
+//				} catch (Exception e) {
+//					logger.error("Error: ", e);
+//				}
+//			}
+//		);
+//		
+//		return subject;
+//	}
+//	
+	private Subscriber<byte[]> createOutput(ServletResponse response, AsyncContext context) throws IOException {
 		OutputStream out = response.getOutputStream();
-		subject.subscribe(b->{
-			try {
-				out.write(b);
-//				out.flush();
-			} catch (Exception e) {
-				logger.error("Error: ", e);
-			}
-		}
-			,t->logger.error("Error: ", t)
-			,()->{
+		return new Subscriber<byte[]>(){
+//			File outfile = new File("/Users/frank/outputxx.xml");
+//			OutputStream outputStream = new FileOutputStream(outfile);
+			@Override
+			public void onCompleted() {
 				try {
 					out.flush(); 
 					context.complete();
 					out.close();
+//					outputStream.flush();
+//					outputStream.close();
 				} catch (Exception e) {
 					logger.error("Error: ", e);
 				}
 			}
-		);
-		return subject;
+
+			@Override
+			public void onError(Throwable ex) {
+					logger.error("Error!",ex);
+					
+			}
+
+			@Override
+			public void onNext(byte[] b) {
+				try {
+					out.write(b);
+//					out.flush();
+//					outputStream.write(b);
+				} catch (Exception e) {
+					logger.error("Error: ", e);
+					onError(e);
+					unsubscribe();
+				}
+				
+			}};
+
 	}
 	static class WriteObserver implements Observer<Void> {
 		private final AsyncContext ac;

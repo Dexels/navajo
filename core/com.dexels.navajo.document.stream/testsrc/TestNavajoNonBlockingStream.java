@@ -1,9 +1,7 @@
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -83,7 +81,6 @@ public class TestNavajoNonBlockingStream {
 	public void testStreamParserAndSerializer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Bytes.fromAbsoluteClassPath("tml_without_binary.xml")
-			.map(b->ByteBuffer.wrap(b))
 			.lift(XML.parse())
 			.lift(NAVADOC.parse(Collections.emptyMap()))
 			.doOnNext(System.err::println)
@@ -110,7 +107,6 @@ public class TestNavajoNonBlockingStream {
 	public void testStreamParserAndSerializerWithBinary() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Bytes.fromAbsoluteClassPath("tml_with_binary.xml")
-			.map(ByteBuffer::wrap)
 			.lift(XML.parse())
 			.lift(NAVADOC.parse(Collections.emptyMap()))
 			.lift(NAVADOC.serialize())
@@ -133,6 +129,7 @@ public class TestNavajoNonBlockingStream {
 //		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test 
 	public void testStreamParserAndSerializerWithBinaryUsingTml() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -146,7 +143,6 @@ public class TestNavajoNonBlockingStream {
 				} catch (Exception e) {
 				}
 			})
-			.map(b->ByteBuffer.wrap(b))
 			.lift(XML.parse())
 			.lift(NAVADOC.parse(Collections.emptyMap()))
 			.filter(event->NavajoEventTypes.MESSAGE==event.type())
@@ -173,7 +169,6 @@ public class TestNavajoNonBlockingStream {
 	public void testStreamParserAndSerializerWithSelection() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Bytes.fromAbsoluteClassPath("tml_with_selection.xml")
-			.map(ByteBuffer::wrap)
 			.lift(XML.parse())
 			.lift(NAVADOC.parse(Collections.emptyMap()))
 			.lift(NAVADOC.collect(Collections.emptyMap()))
@@ -202,7 +197,6 @@ public class TestNavajoNonBlockingStream {
 	public void testStreamParserAndSerializerWithDate() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Bytes.fromAbsoluteClassPath("tml_with_date.xml")
-			.map(ByteBuffer::wrap)
 			.lift(XML.parse())
 			.lift(NAVADOC.parse(Collections.emptyMap()))
 			.doOnNext(n->System.err.println("><>>>1 "+n))
@@ -231,7 +225,6 @@ public class TestNavajoNonBlockingStream {
 	@Test
 	public void testHeader() {
 		Navajo navajo = Bytes.fromAbsoluteClassPath("tiny_tml.xml")
-		.map(ByteBuffer::wrap)
 		.lift(XML.parse())
 		.lift(NAVADOC.parse(Collections.emptyMap()))
 		.doOnNext(n->System.err.println("><>>>1 "+n))
@@ -252,7 +245,6 @@ public class TestNavajoNonBlockingStream {
 		Observable.just(navajo)
 		.lift(NAVADOC.stream())
 		.lift(NAVADOC.serialize())
-		.map(ByteBuffer::wrap)
 		.lift(XML.parse())
 		.lift(NAVADOC.parse(Collections.emptyMap()))
 		.doOnNext(n->System.err.println("><>>>1 "+n))
@@ -270,7 +262,6 @@ public class TestNavajoNonBlockingStream {
 	public void testStreamParserAndSerializerWithIgnoreMessage() throws Exception {
 		Navajo navajo =
 		Bytes.fromAbsoluteClassPath("tiny_tml_with_ignore.xml")
-			.map(ByteBuffer::wrap)
 			.lift(XML.parse())
 			.lift(NAVADOC.parse(Collections.emptyMap()))
 			.doOnNext(n->System.err.println("><>>>1 "+n))

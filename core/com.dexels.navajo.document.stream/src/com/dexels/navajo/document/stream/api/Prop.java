@@ -1,11 +1,18 @@
 package com.dexels.navajo.document.stream.api;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.stream.NavajoStreamSerializer;
 import com.dexels.navajo.document.types.Binary;
@@ -20,6 +27,10 @@ public class Prop {
 	private final Direction direction;
 	private final String subtype;
 	private final String cardinality;
+	
+	
+	private final static Logger logger = LoggerFactory.getLogger(Prop.class);
+
 	
 	public enum Direction {
 		IN,OUT
@@ -99,6 +110,20 @@ public class Prop {
 		return new Prop(name, val, type,selections,direction,description,length,subtype,cardinality);
 	}
 	
+	public Prop withBinaryFromFile(String path) {
+		File fpath = new File(path);
+		if(fpath.exists()) {
+			Binary b;
+			try {
+				b = new Binary(fpath);
+			} catch (IOException e) {
+				logger.error("Error loading binary: ", e);
+				b = new Binary();
+			}
+			return new Prop(name, b, type,selections,direction,description,length,subtype,cardinality);
+		}
+		return new Prop(name, new Binary(), type,selections,direction,description,length,subtype,cardinality);
+	}
 
 	public Prop withName(String newName) {
 		return new Prop(newName, value, type,selections,direction,description,length,subtype,cardinality);
@@ -141,6 +166,22 @@ public class Prop {
 	public Object value() {
 		return value;
 	}
+	
+	public String valueAsString() {
+		if(value==null) {
+			return null;
+		}
+		if(value instanceof String) {
+			return (String)value;
+		}
+		if(value instanceof Date) {
+			Date d = (Date)value;
+			String formatted = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS")
+					.format(d);
+			return formatted;
+		}
+		return value.toString();
+	}
 
 	public void write(Writer sw, int indent) throws IOException {
 		 for (int a = 0; a < indent; a++) {
@@ -154,7 +195,7 @@ public class Prop {
 			 sw.write(" type=\""+type+"\"");
 		 }
 		 if(value!=null && !isBinary()) {
-			 sw.write(" value=\""+value+"\"");
+			 sw.write(" value=\""+StringEscapeUtils.escapeXml(valueAsString())+"\"");
 		 }
 		 if(direction!=null) {
 			 sw.write(" direction=\""+direction()+"\"");

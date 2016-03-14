@@ -1,5 +1,6 @@
 package com.dexels.navajo.document.stream.api;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +25,17 @@ public class Msg {
 	private enum MessageType {
 		SIMPLE,DEFINITION,ARRAY_ELEMENT
 	};
+	
+	@Override
+	public String toString() {
+		StringWriter sw = new StringWriter();
+		sw.write("Name: "+name+" mode: "+mode+" type: "+type+"\n");
+		for (Prop prop : properties) {
+			sw.write("  "+prop+"\n");
+		}
+		sw.write("-----\n");
+		return sw.toString();
+	}
 	
 	public Msg copy() {
 		return new Msg(this);

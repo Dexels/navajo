@@ -1,6 +1,5 @@
 package com.dexels.navajo.document.stream.impl;
 
-import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,22 +13,22 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.stream.xml.XMLEvent;
 import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
-import com.fasterxml.aalto.AsyncByteBufferFeeder;
+import com.fasterxml.aalto.AsyncByteArrayFeeder;
 import com.fasterxml.aalto.AsyncXMLInputFactory;
 import com.fasterxml.aalto.AsyncXMLStreamReader;
 import com.fasterxml.aalto.stax.InputFactoryImpl;
 
-public class SaxXmlFeeder implements AsyncByteBufferFeeder {
+public class SaxXmlFeeder implements AsyncByteArrayFeeder {
 
-	private final AsyncByteBufferFeeder wrappedFeeder;
-	private final AsyncXMLStreamReader<AsyncByteBufferFeeder> parser;
+	private final AsyncByteArrayFeeder wrappedFeeder;
+	private final AsyncXMLStreamReader<AsyncByteArrayFeeder> parser;
 
 	private final static Logger logger = LoggerFactory.getLogger(SaxXmlFeeder.class);
 	private Throwable failedWith = null;
 	
 	public SaxXmlFeeder() {
 		AsyncXMLInputFactory f = new InputFactoryImpl();
-		this.parser = f.createAsyncForByteBuffer();
+		this.parser = f.createAsyncForByteArray();
 		this.wrappedFeeder = parser.getInputFeeder();
 
 	}
@@ -43,17 +42,9 @@ public class SaxXmlFeeder implements AsyncByteBufferFeeder {
 		return this.failedWith;
 	}
 
-	public Iterable<XMLEvent> parse(ByteBuffer buffer) {
+	public Iterable<XMLEvent> parse(byte[] buffer) {
 		try {
-			// Support feeding empty buffer to signal end of file
-			if(buffer.remaining()>0) {
-//				System.err.println("Buffer. pos: "+buffer.position()+" remaining: "+buffer.remaining()+" limit: "+buffer.limit()+" cap: "+buffer.capacity());
-				byte[] content = new byte[buffer.remaining()];
-				buffer.get(content);
-//				String str = new String(new String(content));
-//				System.err.println("FEEDING: |"+str+"|");
-				wrappedFeeder.feedInput(ByteBuffer.wrap(content));
-			}
+			wrappedFeeder.feedInput(buffer,0,buffer.length);
 		} catch (XMLStreamException e) {
 			logger.error("XML problem in SaxXML");
 			failedWith = e;
@@ -133,8 +124,7 @@ public class SaxXmlFeeder implements AsyncByteBufferFeeder {
 
 
 	@Override
-	public void feedInput(ByteBuffer bb) throws XMLStreamException {
-		wrappedFeeder.feedInput(bb);
+	public void feedInput(byte[] bb,int start, int length) throws XMLStreamException {
+		wrappedFeeder.feedInput(bb,start,length);
 	}
-
 }

@@ -2,7 +2,6 @@ import java.io.FileNotFoundException;
 import java.nio.ByteBuffer;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.navajo.document.stream.io.NavajoStreamOperators;

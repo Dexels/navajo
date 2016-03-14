@@ -2,7 +2,6 @@ package example;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.ByteBuffer;
 import java.util.Collections;
 
 import com.dexels.navajo.adapters.stream.Bytes;
@@ -31,7 +30,7 @@ public class Example {
 
 	
 	private static void doSomething() {
-		Bytes.fromAbsoluteClassPathBuffer("tml_without_binary.xml")
+		Bytes.fromAbsoluteClassPath("tml_without_binary.xml")
 			.lift(XML.parse())
 			.lift(NAVADOC.parse(Collections.emptyMap()))
 			.lift(NAVADOC.collect(Collections.emptyMap()))
@@ -75,7 +74,6 @@ public class Example {
 	private static Observable<String> getWeatherForCity(String city) {
 		try {
 			return HTTP.get("http://api.openweathermap.org/data/2.5/weather?q="+URLEncoder.encode(city,"UTF-8")+"&APPID=c9a22840a45f9da6f235c718475c4f08&mode=xml")
-			.map(bytearray->ByteBuffer.wrap(bytearray))
 			.lift(XML.parse())
 			.filter(e->e.getType()==XmlEventTypes.START_ELEMENT)
 			.filter(e->e.getText().equals("weather"))

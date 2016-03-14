@@ -2,7 +2,6 @@ package example;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -31,7 +30,6 @@ public class EachCompany  {
 			return HTTP.get("http://api.openweathermap.org/data/2.5/weather?q="+URLEncoder.encode(city,"UTF-8")+"&APPID=c9a22840a45f9da6f235c718475c4f08&mode=xml")
 					.subscribeOn(Schedulers.io())
 					.doOnNext(b->System.err.println(new String(b)+" - "+Thread.currentThread().getName()))
-					.map(b->ByteBuffer.wrap(b))
 					.lift(XML.parse())
 					.filter(e->e.getType()==XmlEventTypes.START_ELEMENT)
 					.filter(e->e.getText().equals("temperature"))
@@ -85,7 +83,6 @@ public class EachCompany  {
 			.concatMapEager(r->
 				HTTP.get("http://api.openweathermap.org/data/2.5/weather?q="+URLEncoder.encode((String)r.get("city"))+"&APPID=c9a22840a45f9da6f235c718475c4f08&mode=xml")
 				.subscribeOn(Schedulers.io())
-				.map(b->ByteBuffer.wrap(b))
 				.lift(XML.parse())
 				.filter(e->e.getType()==XmlEventTypes.START_ELEMENT)
 				.filter(e->e.getText().equals("temperature"))

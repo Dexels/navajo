@@ -1,0 +1,16 @@
+<tml>
+   <header>
+      <transaction rpc_name="example.DatabaseList"/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="Organizations" type="array">
+      <message name="Organizations" index="0" type="array_element">
+         <property name="ORGANIZATIONID" value="BBKV29N" direction="out" cardinality="1"/>
+         <property name="Name" value="HSC &apos;21" direction="out" cardinality="1"/>
+         <property name="SHORTNAME" value="HSC &apos;21" direction="out" cardinality="1"/>
+         <property name="TYPEOFORGANIZATION" value="CLUB" direction="out" cardinality="1"/>
+         <property name="ACTIVEENTITY" value="1" direction="out" cardinality="1"/>
+      </message>
+   </message>
+</tml>

@@ -1,5 +1,3 @@
-import java.nio.ByteBuffer;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,7 +10,6 @@ public class TestHttp {
 	@Test
 	public void testHttpGet() {
 		String weather = HTTP.get("http://api.openweathermap.org/data/2.5/weather?q=Amsterdam&APPID=c9a22840a45f9da6f235c718475c4f08&mode=xml")
-		.map(b->ByteBuffer.wrap(b))
 		.lift(XML.parse())
 		.filter(e->e.getType()==XmlEventTypes.START_ELEMENT)
 		.filter(e->e.getText().equals("weather"))
