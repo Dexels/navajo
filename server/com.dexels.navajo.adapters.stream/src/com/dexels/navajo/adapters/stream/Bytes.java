@@ -1,8 +1,9 @@
-package com.dexels.navajo.adapters.stream.sqlmap.example;
+package com.dexels.navajo.adapters.stream;
 
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
+import com.dexels.navajo.adapters.stream.impl.StringObservable;
 import com.dexels.navajo.document.stream.io.ObservableStreams;
 
 import rx.Observable;

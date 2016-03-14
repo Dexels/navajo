@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapters.stream.sqlmap.example;
+package com.dexels.navajo.adapters.stream;
 
 import com.dexels.navajo.document.stream.api.Msg;
 

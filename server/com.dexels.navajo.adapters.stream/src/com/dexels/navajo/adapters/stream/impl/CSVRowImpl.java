@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapters.stream.sqlmap.example.impl;
+package com.dexels.navajo.adapters.stream.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.dexels.navajo.adapters.stream.sqlmap.example.Row;
+import com.dexels.navajo.adapters.stream.Row;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.Prop;
 

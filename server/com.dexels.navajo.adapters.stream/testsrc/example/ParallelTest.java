@@ -1,8 +1,8 @@
 	package example;
 	
 	import rx.Observable;
-	import rx.Subscriber;
-	import rx.schedulers.Schedulers;
+import rx.Subscriber;
+import rx.schedulers.Schedulers;
 	
 	public class ParallelTest {
 	

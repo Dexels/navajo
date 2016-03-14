@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapters.stream.sqlmap.example;
+package com.dexels.navajo.adapters.stream;
 
 import java.io.InputStream;
 import java.net.URL;

@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapters.stream.sqlmap.example;
+package com.dexels.navajo.adapters.stream;
 
 import static com.dexels.navajo.document.stream.io.NavajoStreamOperators.inArray;
 import static com.dexels.navajo.document.stream.io.NavajoStreamOperators.inNavajo;
@@ -24,23 +24,14 @@ import rx.Observable;
 
 public class SQL {
 	public static void main(String[] args) throws SQLException, InterruptedException, UserException {
-//        SQL.query("authentication", "select * from SPORT", "ResultMessage")
-//        	.concatMap(row->Msg.createElement("Sport", msg->{
-//            		msg.add(Prop.create("SportType").withValue(row.getColumnValue("SPORTTYPE")));
-//        	} ))
-//        	
-//        	.compose(inArray("Sport"))
-//        	.compose(inNavajo("SportList","dummy","dummy"))
-//			.lift(NAVADOC.collect(Collections.emptyMap()))
-//        	.toBlocking().forEach(oa->{
-//        		oa.write(System.err);
-//        	});
-//        Thread.sleep(2000);
+
         int count = SQL.query("authentication", "select * from SPORT").count().toBlocking().first();
         System.err.println("Count: "+count);
         
         SQL.queryToMessage("authentication", "select * from SPORT")
-        	.map(m->m.renameProperty("SPORTID", "Id").without(new String[]{"UPDATEBY","LASTUPDATE"}))
+        	.map(m->m.renameProperty("SPORTID", "Id")
+        	.without(new String[]{"UPDATEBY","LASTUPDATE"}))
+        	.take(10)
         	.flatMap(m->m.stream())
 	    	.compose(inArray("Sport"))
 	    	.compose(inNavajo("SportList","dummy","dummy"))
@@ -66,15 +57,15 @@ public class SQL {
         return dsc; 
 	}
 	
-	public static Observable<SQLResult> query(String datasource, String query) throws SQLException, UserException {
+	public static Observable<SQLResult> query(String datasource, String query) {
 		return Database
 			.fromDataSource(dummyResolveDataSource(datasource))
 			.select(query)
 			.get(SQL::resultSet);
 	}
 
-	public static Observable<Msg> queryToMessage(String datasource, String query) throws SQLException, UserException {
-		return query(datasource,query)
+	public static Observable<Msg> queryToMessage(String datasource, String query)  {
+		return query(datasource,query).doOnNext(a->System.err.println("Row!"))
 				.map(SQL::defaultSqlResultToMsg);
 	}
 

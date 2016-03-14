@@ -10,4 +10,5 @@
    <property name="alias" type="String" value="/stream"/>
    <property name="servletName" type="String" value="stream-postman"/>
    <property name="servlet-name" type="String" value="stream-postman"/>
+   <reference bind="addScript" cardinality="1..1" interface="com.dexels.navajo.document.stream.api.Script" name="Script" policy="dynamic" unbind="removeScript"/>
 </scr:component>

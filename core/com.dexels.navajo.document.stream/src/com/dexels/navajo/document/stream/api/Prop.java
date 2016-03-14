@@ -63,7 +63,14 @@ public class Prop {
 
 	public static Prop create(Map<String, String> attributes, Binary currentBinary) {
 		int len =  (int) currentBinary.getLength(); // lngth==null || "".equals(lngth)?-1:Integer.parseInt(lngth);
-		return create(attributes.get("name"),currentBinary,attributes.get("type"),Collections.emptyList(),attributes.get("direction").equals("in")?Direction.IN:Direction.OUT,attributes.get("description"),len,attributes.get("subtype"),null);
+		return create(attributes.get("name"),currentBinary,attributes.get("type"),Collections.emptyList(),parseDirection(attributes.get("direction")),attributes.get("description"),len,attributes.get("subtype"),null);
+	}
+	
+	private static Direction parseDirection(String direction) {
+		if(direction==null) {
+			return Direction.OUT;
+		}
+		return direction.equals("in")?Direction.IN:Direction.OUT;
 	}
 
 	public static Prop create(String name, Object value) {
