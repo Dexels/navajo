@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1669">
+<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1684">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
@@ -25,8 +25,8 @@
 <repository location="http://repo.dexels.com/eclipse/equinox_mars"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.84.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.84"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.88.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.88"/>
 </location>
 </locations>
 <includeBundles>
@@ -67,9 +67,18 @@
 <plugin id="com.springsource.javax.transaction"/>
 <plugin id="com.springsource.org.json"/>
 <plugin id="com.vaadin"/>
+<plugin id="io.netty.buffer"/>
+<plugin id="io.netty.codec"/>
+<plugin id="io.netty.codec-http"/>
+<plugin id="io.netty.common"/>
+<plugin id="io.netty.handler"/>
+<plugin id="io.netty.resolver"/>
+<plugin id="io.netty.transport"/>
+<plugin id="io.netty.transport-native-epoll"/>
 <plugin id="io.reactivex.rxjava"/>
 <plugin id="io.reactivex.rxjava-joins"/>
 <plugin id="io.reactivex.rxjava-string"/>
+<plugin id="io.reactivex.rxnetty"/>
 <plugin id="jackson-core-lgpl"/>
 <plugin id="jackson-mapper-lgpl"/>
 <plugin id="javaewah" version="0.7.9.v201401101600"/>
@@ -226,16 +235,16 @@
 <plugin id="org.eclipse.jetty.client" version="8.1.11.v20130520"/>
 <plugin id="org.eclipse.jetty.continuation" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.http" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jetty.io" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.io" version="8.1.11.v20130520"/>
+<plugin id="org.eclipse.jetty.io" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.osgi.httpservice" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.proxy"/>
 <plugin id="org.eclipse.jetty.security" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.server" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.servlet" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.servlets" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jetty.util" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.util" version="8.1.11.v20130520"/>
+<plugin id="org.eclipse.jetty.util" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.websocket"/>
 <plugin id="org.eclipse.jetty.websocket.api"/>
 <plugin id="org.eclipse.jetty.websocket.client"/>
