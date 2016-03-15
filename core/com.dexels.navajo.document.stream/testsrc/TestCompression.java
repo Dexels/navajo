@@ -1,32 +1,74 @@
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.nio.ByteBuffer;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.io.NavajoStreamOperators;
+import com.dexels.navajo.document.stream.io.ObservableStreams;
 import com.dexels.navajo.document.stream.xml.Bytes;
+import com.dexels.navajo.document.stream.xml.XML;
 
 import rx.Observable;
 
 public class TestCompression {
 	
-	@Test 
+	@Test
+	public void testInflateFile() {
+		Bytes.fromPath("/Users/frank/bigorganizations.xml")
+			.lift(NavajoStreamOperators.decompress("inflate"))
+			.map(d->new String(d))
+			.first()
+			.doOnNext(s->System.err.println(s))
+			.subscribe();
+	}
+	
+	@Test
+	public void repro() {
+		
+		Bytes.fromPath("/Users/frank/bigorganizations.xml")
+		.doOnNext(a->System.err.println(">> Data: "+new String(a)))
+		.lift(NavajoStreamOperators.decompress("inflate"))
+		.doOnNext(a->System.err.println(">> Decompressed Data: "+new String(a)))
+		.subscribe(NavajoStreamOperators.dumpToFile("/Users/frank/duump.xml"));
+		
+	}
+	@Test
 	public void testDeflate() throws FileNotFoundException {
-		byte[] original = Bytes.fromAbsoluteClassPath("TestCompression.class")
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] original = 
+				Bytes.fromAbsoluteClassPath("TestCompression.class")
+				.reduce(baos, (byteout,bytes)->{try {
+					System.err.println("Bytes collected: "+bytes.length);
+					byteout.write(bytes);
+					} catch (Exception e) {
+					} return byteout;})
 				.toBlocking()
-				.first(); 
+				.first()
+				.toByteArray();
+		ByteArrayOutputStream baos_compressed = new ByteArrayOutputStream();
 		byte[] compressed = Bytes.fromAbsoluteClassPath("TestCompression.class")
 				.lift(NavajoStreamOperators.deflate())
-				.toBlocking()
-				.first(); 
+				.reduce(baos_compressed, (byteout,bytes)->{try {
+					System.err.println("Bytes compressed: "+bytes.length);
+					byteout.write(bytes);
+				} catch (Exception e) {
+				} return byteout;})
+			.toBlocking()
+			.first()
+			.toByteArray();
+		ByteArrayOutputStream baos_reinflate = new ByteArrayOutputStream();
 		byte[] reflated = Observable.<byte[]>just(compressed)
-				.map(b->ByteBuffer.wrap(b))
 				.lift(NavajoStreamOperators.inflate())
-				.map(b->b.array())
-				.lift(NavajoStreamOperators.collect())
-				.toBlocking()
-				.first();
+				.reduce(baos_reinflate, (byteout,bytes)->{try {
+					System.err.println("Bytes decompressed: "+bytes.length);
+					byteout.write(bytes);
+				} catch (Exception e) {
+				} return byteout;})
+			.toBlocking()
+			.first()
+			.toByteArray();
 		System.err.println("original: "+original.length);
 		System.err.println("deflated: "+compressed.length);
 

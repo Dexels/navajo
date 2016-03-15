@@ -41,9 +41,9 @@ public class Msg {
 		return new Msg(this);
 	}
 
-	private Msg(List<Prop> properties) {
+	private Msg(List<Prop> properties,Msg.MessageType type) {
 		this.name = "Unnamed";
-		this.type = Msg.MessageType.ARRAY_ELEMENT;
+		this.type = type;
 		this.mode = null;
 		this.subMessages = f->Observable.empty();
 		this.msgAction = m->{};
@@ -62,10 +62,15 @@ public class Msg {
 	}
 
 	public static Msg createElement() {
-		return new Msg(Collections.emptyList());
+		return new Msg(Collections.emptyList(),Msg.MessageType.ARRAY_ELEMENT);
 	}
+	
+	public static Msg create() {
+		return new Msg(Collections.emptyList(),Msg.MessageType.SIMPLE);
+	}
+	
 	public static Msg createElement(List<Prop> properties) {
-		return new Msg(properties);
+		return new Msg(properties,Msg.MessageType.ARRAY_ELEMENT);
 	}
 
 	public Prop add(Prop property) {
@@ -139,7 +144,7 @@ public class Msg {
 		case ARRAY_ELEMENT:
 			return Observable.<NavajoStreamEvent>just(Events.arrayElement(properties,Collections.emptyMap()));
 		case SIMPLE:
-			return Observable.<NavajoStreamEvent>just(Events.message(properties,name,null));
+			return Observable.<NavajoStreamEvent>just(Events.message(properties,name,Collections.emptyMap()));
 		case DEFINITION:
 			return Observable.<NavajoStreamEvent>just(Events.messageDefinition(properties,name));
 		default:

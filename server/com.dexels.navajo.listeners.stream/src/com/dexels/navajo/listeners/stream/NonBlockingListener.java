@@ -13,7 +13,6 @@ import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,9 +23,12 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NAVADOC;
+import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.Script;
 import com.dexels.navajo.document.stream.api.SimpleScript;
+import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.io.NavajoStreamOperators;
 import com.dexels.navajo.document.stream.io.ObservableStreams;
 import com.dexels.navajo.document.stream.xml.XML;
@@ -97,7 +99,7 @@ public class NonBlockingListener extends HttpServlet {
 
 		String navajoService = (String) attributes.get("X-Navajo-Service");
 		if(navajoService!=null) {
-			processStreamingScript(tenant,navajoService,attributes,ac);
+			processStreamingScript(tenant,navajoService,attributes,ac,null);
 			return;
 		}
 
@@ -111,43 +113,24 @@ public class NonBlockingListener extends HttpServlet {
 		ServletInputStream in = req.getInputStream();
 
 		String navajoService = (String) attributes.get("X-Navajo-Service");
+		String responseEncoding = decideEncoding((String) attributes.get("Accept-Encoding"));
+		if (responseEncoding != null) {
+			resp.addHeader("Content-Encoding", responseEncoding);
+		}
 		if(navajoService!=null) {
-			processStreamingScript(tenant,navajoService,attributes,ac);
+			processStreamingScript(tenant,navajoService,attributes,ac,responseEncoding);
 			return;
 		}
-		
-		Navajo inputNavajo = ObservableStreams.streamInputStreamWithBufferSize(in, 1024)
+		String contentEncoding = (String) attributes.get("Content-Encoding");
+		ObservableStreams.streamInputStreamWithBufferSize(in,INPUT_BUFFER_SIZE)
+				.lift(NavajoStreamOperators.decompress(contentEncoding))
 				.lift(XML.parse())
 				.lift(NAVADOC.parse(attributes))
 				.lift(NAVADOC.collect(attributes))
-				.toBlocking()
-				.first();
-
-		Navajo outDoc = execute(tenant, inputNavajo); 
-		String encoding = decideEncoding((String) attributes.get("Accept-Encoding"));
-		if (encoding != null) {
-			resp.addHeader("Content-Encoding", encoding);
-		}
-		// System.err.println("Starting output");
-		Observable.just(outDoc).lift(NAVADOC.stream()).lift(NAVADOC.serialize())
-				// .lift(NavajoStreamOperators.compress(encoding))
-				.subscribe(bytes -> {
-					// System.err.println("Writing output: "+bytes.length);
-					writeResponse(resp, bytes);
-				} , err -> {
-					try {
-						resp.sendError(501);
-					} catch (Exception e1) {
-						logger.error("Error: ", e1);
-					}
-				} , () -> {
-					ac.complete();
-					try {
-						resp.getOutputStream().close();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				});
+				.flatMap(inputNav->executeLegacy(navajoService, tenant, inputNav))
+				.lift(NAVADOC.serialize())
+				.lift(NavajoStreamOperators.compress(responseEncoding))
+				.subscribe(createOutput(ac));
 	}
 
 	private Map<String, Object> extractHeaders(HttpServletRequest req) {
@@ -161,61 +144,49 @@ public class NonBlockingListener extends HttpServlet {
 		return attributes;
 	}
 
-	private void processStreamingScript(String tenant,String navajoService, Map<String, Object> attributes, AsyncContext asyncContext) throws IOException {
+	private void processStreamingScript(String tenant,String navajoService, Map<String, Object> attributes, AsyncContext asyncContext, String responseEncoding) throws IOException {
 		ServletInputStream in = asyncContext.getRequest().getInputStream();
-		Observer<byte[]> output = createOutput(asyncContext.getResponse(),asyncContext);
+		String contentEncoding = (String) attributes.get("Content-Encoding");
+		Observer<byte[]> output = createOutput(asyncContext);
 		SimpleScript simple = simpleScripts.get(navajoService);
 		if(simple!=null) {
-			Navajo input = ObservableStreams.streamInputStreamWithBufferSize(in, INPUT_BUFFER_SIZE)
+			ObservableStreams.streamInputStreamWithBufferSize(in, INPUT_BUFFER_SIZE)
+			.lift(NavajoStreamOperators.decompress(contentEncoding))
 			.lift(XML.parse())
 			.lift(NAVADOC.parse(attributes))
 			.lift(NAVADOC.collect(attributes))
-			.toBlocking()
-			.first();
-			simple.call(input)
-			.compose(NavajoStreamOperators.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_usr")))
+			.flatMap(simple::call)
+			.compose(NavajoStreamOperators.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")))
 			.lift(NAVADOC.serialize())
+			.lift(NavajoStreamOperators.compress(responseEncoding))
 			.subscribe(output);
 			return;
 		}
 		Script s = scripts.get(navajoService);
 		if(s==null) {
-			logger.info("Script unresolved. TODO: Write pretty erroro message");
+			logger.info("Script unresolved.");
+
+			return;
 		}
-//		s.create(runtime);
 		ObservableStreams.streamInputStreamWithBufferSize(in, INPUT_BUFFER_SIZE)
+			.lift(NavajoStreamOperators.decompress(contentEncoding))
 			.lift(XML.parse())
 			.lift(NAVADOC.parse(attributes))
 			.compose(s)
-			.compose(NavajoStreamOperators.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_usr")))
+			.compose(NavajoStreamOperators.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")))
 			.lift(NAVADOC.serialize())
+			.lift(NavajoStreamOperators.compress(responseEncoding))
 			.subscribe(output);
 	}
 
-
-//	private Observable<ByteBuffer> decompress(Observable<ByteBuffer> input, Map<String, Object> attributes) {
-//		String encoding = (String) attributes.get("Content-Encoding");
-//		if (encoding == null) {
-//			return input;
-//		}
-//		if (encoding.equals("jzlib")) {
-//			return input.lift(NavajoStreamOperators.inflate());
-//		}
-//		return input;
-//	}
-
-	private void writeResponse(final HttpServletResponse resp, byte[] bytes) {
-		try {
-			resp.getOutputStream().write(bytes);
-		} catch (IOException e) {
-			logger.error("Error: ", e);
-			try {
-				resp.sendError(502);
-			} catch (IOException e1) {
-				logger.error("Error: ", e1);
-			}
-		}
+	private Observable<NavajoStreamEvent> errorMessage(Navajo in) {
+		return Msg.create()
+				.with(Prop.create("code",101))
+				.with(Prop.create("description", "Could not resolve script: "+in.getHeader().getRPCName()))
+				.stream()
+				.compose(NavajoStreamOperators.inNavajo(in.getHeader().getRPCName(), in.getHeader().getRPCUser(), ""));
 	}
+
 
 	public String decideEncoding(String accept) {
 		if (accept == null) {
@@ -235,6 +206,18 @@ public class NonBlockingListener extends HttpServlet {
 		return null;
 	}
 
+	private final Observable<NavajoStreamEvent> executeLegacy(String navajoService, String tenant,Navajo in) {
+		Navajo result;
+		try {
+			result = execute(tenant, in);
+		} catch (Throwable e) {
+			// TODO Embed throwable in message?
+			logger.error("Error: ", e);
+			return errorMessage(in);
+		}
+		return Observable.just(result)
+				.lift(NAVADOC.stream());
+	}
 	private final Navajo execute(String tenant, Navajo in) throws IOException, ServletException {
 
 		// BufferedReader r = null;
@@ -243,7 +226,6 @@ public class NonBlockingListener extends HttpServlet {
 			// myRequest.getInputDocument().getHeader().setHeaderAttribute("instance",
 			// tenant);
 		}
-
 		try {
 			in.getHeader().setHeaderAttribute("useComet", "true");
 			if (in.getHeader().getHeaderAttribute("callback") != null) {
@@ -367,8 +349,8 @@ public class NonBlockingListener extends HttpServlet {
 //		return subject;
 //	}
 //	
-	private Subscriber<byte[]> createOutput(ServletResponse response, AsyncContext context) throws IOException {
-		OutputStream out = response.getOutputStream();
+	private Subscriber<byte[]> createOutput(AsyncContext context) throws IOException {
+		OutputStream out = context.getResponse().getOutputStream();
 		return new Subscriber<byte[]>(){
 			@Override
 			public void onCompleted() {
@@ -384,6 +366,13 @@ public class NonBlockingListener extends HttpServlet {
 			@Override
 			public void onError(Throwable ex) {
 					logger.error("Error!",ex);
+					HttpServletResponse r = (HttpServletResponse) context.getResponse();
+					try {
+						r.sendError(500,"Trouble");
+						context.complete();
+					} catch (IOException e) {
+
+					}
 					
 			}
 
