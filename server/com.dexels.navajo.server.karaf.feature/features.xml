@@ -10,7 +10,7 @@
             <bundle>mvn:com.dexels.repository/com.dexels.karaf4.featuresync/2.0.9</bundle>
             <bundle>mvn:com.dexels.repository/com.dexels.repository.api/7.0.5</bundle>
             <bundle>mvn:com.dexels.repository/com.dexels.repository.git/4.0.13</bundle>
-            <bundle>mvn:com.dexels.repository/com.dexels.repository.git.api/1.2.0</bundle>
+            <bundle>mvn:com.dexels.repository/coms.dexels.repository.git.api/1.2.0</bundle>
             <bundle>mvn:com.dexels.repository/com.dexels.repository.file/1.0.31</bundle>
             <bundle>mvn:com.dexels.thirdparty/javaewah/0.7.9</bundle>
             <bundle>mvn:com.jcraft/jsch-bundle/0.1.50</bundle>
@@ -452,13 +452,13 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.105'>
+		version='3.0.106'>
 		<feature version="[3.0.0,4)">navajo.core</feature>
         <feature version="[3.1.0,4)">navajo.adapter</feature>
        
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.5.14
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.5.2
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.5.4
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.15
 		</bundle>
@@ -506,14 +506,14 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='sportlink.libraries' version='3.2.17'
+	<feature resolver="(obr)" name='sportlink.libraries' version='3.2.18'
 		start-level='82'>
 		<feature version="[3.0.0,4)">navajo.function</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<feature version="[3.0.0,4)">navajo.article</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.aaa/4.1.0
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.1.8
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.1.10
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.functions/3.0.4
 		</bundle>
