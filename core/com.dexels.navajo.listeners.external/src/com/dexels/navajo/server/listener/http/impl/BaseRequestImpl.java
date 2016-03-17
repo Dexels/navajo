@@ -11,7 +11,6 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 

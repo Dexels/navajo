@@ -2,11 +2,10 @@ package com.dexels.navajo.document.stream.io;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Map;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -14,6 +13,7 @@ import java.util.zip.Inflater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
@@ -27,6 +27,8 @@ import rx.schedulers.Schedulers;
 public class NavajoStreamOperators {
 	
 	
+//	private static final int COMPRESSION_BUFFER_SIZE = 16384;
+	private static final int COMPRESSION_BUFFER_SIZE = 1024;
 	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamOperators.class);
 
 	
@@ -52,7 +54,7 @@ public class NavajoStreamOperators {
 			@Override
 			public Observable<NavajoStreamEvent> call(Observable<NavajoStreamEvent> in) {
 	        	return in.startWith(Observable.just(Events.messageStarted(name,null)))
-	        	.concatWith(Observable.just(Events.message(Collections.emptyList(), name,null)));
+	        	.concatWith(Observable.just(Events.message(Msg.create(), name,null)));
 			}
 		};
 	}
@@ -69,9 +71,36 @@ public class NavajoStreamOperators {
 	}
 
 	
-	public static Operator<ByteBuffer, ByteBuffer> decompress(Map<String, Object> attributes) {
-		String encoding = (String) attributes.get("Content-Encoding");
-		if("jzlib".equals(encoding) || "deflate".equals(encoding)) {
+	public static Operator<NavajoStreamEvent, NavajoStreamEvent> elementsInPath(String path) {
+		return new Operator<NavajoStreamEvent, NavajoStreamEvent>(){
+
+			@Override
+			public Subscriber<? super NavajoStreamEvent> call(Subscriber<? super NavajoStreamEvent> out) {
+				return new Subscriber<NavajoStreamEvent>() {
+
+					@Override
+					public void onCompleted() {
+						out.onCompleted();
+					}
+
+					@Override
+					public void onError(Throwable e) {
+						out.onError(e);
+						
+					}
+
+					@Override
+					public void onNext(NavajoStreamEvent event) {
+						out.onNext(event);
+						
+					}
+				};
+			}};
+		
+	}
+	public static Operator<byte[], byte[]> decompress(String encoding) {
+		logger.info("Starting decompress with encoding: {}",encoding);
+		if("jzlib".equals(encoding) || "deflate".equals(encoding) || "inflate".equals(encoding)) {
 			return inflate();
 		}
 		// TODO gzip
@@ -138,11 +167,12 @@ public class NavajoStreamOperators {
 
 					@Override
 					public void onCompleted() {
-						deflater.finish();
-//						deflater.end();
 						// TODO check for remaining?
+						deflater.finish();
 						onNext(new byte[]{});
-						System.err.println("Deflate completed. Total: "+deflater.getTotalIn()+" out: "+deflater.getTotalOut() + " -> "+out);
+//						deflater.
+//						deflater.end();
+						System.err.println("Deflate completed. Total: "+deflater.getTotalIn()+" out: "+deflater.getTotalOut() + " -> "+out+" ratio: "+deflater.getTotalIn()/deflater.getTotalOut());
 //						try {
 //							fos.flush();
 //							fos.close();
@@ -160,31 +190,18 @@ public class NavajoStreamOperators {
 					@Override
 					public void onNext(byte[] in) {
 						deflater.setInput(in);
-						byte[] buffer = new byte[1024];
+						byte[] buffer = new byte[COMPRESSION_BUFFER_SIZE];
 						int read;
 //						System.err.println("Deflating : "+new String(in));
-						while(!deflater.needsInput()) {
-							read = deflater.deflate(buffer,0,buffer.length,Deflater.SYNC_FLUSH);
-//							System.err.println("Deflated size: "+read);
-							out += read;
+						while(true) {
+							read = deflater.deflate(buffer,0,buffer.length,Deflater.NO_FLUSH);
 							if(read>0) {
-								if(read == buffer.length) {
-									sub.onNext(buffer);
-//									try {
-//										fos.write(buffer);
-//									} catch (IOException e) {
-//										// TODO Auto-generated catch block
-//										e.printStackTrace();
-//									}
-								} else {
+//								System.err.println("Deflated size: "+read);
+								out += read;
 									byte[] copied = Arrays.copyOfRange(buffer, 0, read);
-//									try {
-//										fos.write(copied);
-//									} catch (IOException e) {
-//										logger.error("Error: ", e);
-//									}
 									sub.onNext(copied);
-								}
+							} else {
+								break;
 							}
 						}
 						
@@ -194,136 +211,146 @@ public class NavajoStreamOperators {
 		};
     }
 	
+	public static Subscriber<byte[]> dumpToFile(final String path) {
+		return new Subscriber<byte[]>() {
+			
+			FileOutputStream out = null;
+			
+			@Override
+			public void onCompleted() {
+				if(out!=null) {
+					try {
+						out.flush();
+						out.close();
+						unsubscribe();
+					} catch (IOException e) {
+						logger.error("Error: ", e);
+					}
+				}
+			}
 
-	
-//
-//	public static Operator<byte[], byte[]> deflate_jzlib() throws FileNotFoundException {
-//		final FileOutputStream fos = new FileOutputStream("/Users/frank/uncompressed.xml");
-//
-//		return new Operator<byte[], byte[]>(){
-//
-//			com.jcraft.jzlib.Deflater deflater = new com.jcraft.jzlib.Deflater();
-//			int out = 0;
-//			@Override
-//			public Subscriber<? super byte[]> call(Subscriber<? super byte[]> sub) {
-//				return new Subscriber<byte[]>() {
-//
-//					@Override
-//					public void onCompleted() {
-//						deflater.finish();
-////						deflater.
-////						deflater.end();
-//						// TODO check for remaining?
-//						onNext(new byte[]{});
-//						System.err.println("Deflate completed. Total: "+deflater.getTotalIn()+" out: "+deflater.getTotalOut() + " -> "+out);
-//						try {
-//							fos.flush();
-//							fos.close();
-//						} catch (IOException e) {
-//							logger.error("Error: ", e);
-//						}
-//						sub.onCompleted();
-//					}
-//
-//					@Override
-//					public void onError(Throwable e) {
-//						sub.onError(e);
-//					}
-//
-//					@Override
-//					public void onNext(byte[] in) {
-//						deflater.setInput(in);
-//						byte[] buffer = new byte[1024];
-//						int read;
-//						while(!deflater.needsInput()) {
-//							read = deflater.deflate(buffer,0,buffer.length,Deflater.SYNC_FLUSH);
-//							out += read;
-//							if(read>0) {
-//								if(read == buffer.length) {
-//									sub.onNext(buffer);
-//									try {
-//										fos.write(buffer);
-//									} catch (IOException e) {
-//										// TODO Auto-generated catch block
-//										e.printStackTrace();
-//									}
-//								} else {
-//									byte[] copied = Arrays.copyOfRange(buffer, 0, read);
-//									try {
-//										fos.write(copied);
-//									} catch (IOException e) {
-//										logger.error("Error: ", e);
-//									}
-//									sub.onNext(copied);
-//								}
-//							}
-//						}
-//						
-//					}
-//				};
-//			}
-//		};
-//    }
-	
-    public static Operator<ByteBuffer, ByteBuffer> inflate() {
-		return new Operator<ByteBuffer,ByteBuffer>(){
+			@Override
+			public void onError(Throwable ex) {
+				logger.error("Error: ", ex);
+				if(out!=null) {
+					try {
+						out.flush();
+						out.close();
+						unsubscribe();
+					} catch (IOException e) {
+						logger.error("Error: ", e);
+					}
+				}
+			}
 
+			@Override
+			public void onNext(byte[] b) {
+				try {
+					if(out==null) {
+						out =  new FileOutputStream(path);
+					}
+					out.write(b);
+				} catch (IOException e) {
+					logger.error("Error: ", e);
+					unsubscribe();
+				}
+				
+			}
+		};
+	}
+    public static Operator<byte[], byte[]> inflate() {
+    	System.err.println("Starting to inflate");
+//    	FileOutputStream fos = null;
+    	try {
+
+		return new Operator<byte[],byte[]>(){
+
+    		final FileOutputStream fos = new FileOutputStream("/Users/frank/dump_"+System.currentTimeMillis()+".xml");
 			Inflater inflater = new Inflater();
 			@Override
-			public Subscriber<? super ByteBuffer> call(Subscriber<? super ByteBuffer> sub) {
-				return new Subscriber<ByteBuffer>() {
+			public Subscriber<? super byte[]> call(Subscriber<? super byte[]> sub) {
+				return new Subscriber<byte[]>() {
 
 					@Override
 					public void onCompleted() {
-//						inflater.getRemaining()
-						inflater.end();
+//						inflater.end();
 						int remaining = inflater.getRemaining();
 						if(remaining>0) {
 							byte[] rm = new byte[remaining];
-							sub.onNext(ByteBuffer.wrap(rm));
+//							inflated = inflater.inflate(rm, 0, remaining);
+							sub.onNext(rm);
+							try {
+								fos.write(rm);
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 						sub.onCompleted();
+						try {
+							fos.flush();
+							fos.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 
 					@Override
 					public void onError(Throwable e) {
 						sub.onError(e);
+						sub.unsubscribe();
 					}
 
 					@Override
-					public void onNext(ByteBuffer in) {
-						inflater.setInput(in.array());
-						byte[] buffer = new byte[1024];
+					public void onNext(byte[] in) {
+						inflater.setInput(in);
+						byte[] buffer = new byte[COMPRESSION_BUFFER_SIZE];
 						int read;
 						try {
 							while(!inflater.needsInput()) {
 								read = inflater.inflate(buffer);
 								if(read>0) {
 									if(read == buffer.length) {
-										sub.onNext(ByteBuffer.wrap(buffer));
+										sub.onNext(buffer);
+										try {
+											fos.write(buffer);
+										} catch (IOException e) {
+											e.printStackTrace();
+										}
 									} else {
-										sub.onNext(ByteBuffer.wrap(Arrays.copyOfRange(buffer, 0, read)));
+										sub.onNext(Arrays.copyOfRange(buffer, 0, read));
+										try {
+											fos.write(Arrays.copyOfRange(buffer, 0, read));
+										} catch (IOException e) {
+											e.printStackTrace();
+										}
 									}
 								}
 							}
 						} catch (DataFormatException e) {
-							logger.error("Error: ", e);
 							sub.onError(e);
+							sub.unsubscribe();
 						}
 						
 					}
 				};
 			}
 		};
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+    	
     }
 	
     
-    public static Operator<ByteBuffer, ByteBuffer> identityEncodingByteBuffer() {
-  		return new Operator<ByteBuffer,ByteBuffer>(){
+    public static Operator<byte[], byte[]> identityEncodingByteBuffer() {
+  		return new Operator<byte[],byte[]>(){
 
   			@Override
-  			public Subscriber<? super ByteBuffer> call(Subscriber<? super ByteBuffer> sub) {
-  				return new Subscriber<ByteBuffer>() {
+  			public Subscriber<? super byte[]> call(Subscriber<? super byte[]> sub) {
+  				return new Subscriber<byte[]>() {
 
   					@Override
   					public void onCompleted() {
@@ -336,7 +363,7 @@ public class NavajoStreamOperators {
   					}
 
   					@Override
-  					public void onNext(ByteBuffer in) {
+  					public void onNext(byte[] in) {
   						sub.onNext(in);
   					}
   				};

@@ -7,6 +7,8 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Iterator;
 
+import javax.servlet.ServletInputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,21 +20,20 @@ public class ObservableStreams {
 	private final static Logger logger = LoggerFactory.getLogger(ObservableStreams.class);
 
 	
-	public static Observable<ByteBuffer> streamInputStreamWithBufferSize(InputStream in, int size) {
+	public static Observable<byte[]> streamInputStreamWithBufferSize(InputStream in, int size) {
 		ReadableByteChannel channel = Channels.newChannel(in);
 		final ByteBuffer bytes = ByteBuffer.allocate(size);
 
 		return streamChannelWithByteBuffer(channel, bytes);
 	}
 
-	public static Observable<ByteBuffer> streamChannelWithByteBuffer(ReadableByteChannel channel,
+	public static Observable<byte[]> streamChannelWithByteBuffer(ReadableByteChannel channel,
 			final ByteBuffer bytes) {
-		return Observable.<ByteBuffer>defer(()-> Observable.from(new Iterable<ByteBuffer>(){
+		return Observable.<byte[]>defer(()-> Observable.from(new Iterable<byte[]>(){
 			@Override
-			public Iterator<ByteBuffer> iterator() {
-				return new Iterator<ByteBuffer>() {
-					private ByteBuffer nextBuffer = null;
-//					private IOException failedWith;
+			public Iterator<byte[]> iterator() {
+				return new Iterator<byte[]>() {
+					private byte[] nextBuffer = null;
 
 					@Override
 					public boolean hasNext() {
@@ -56,11 +57,7 @@ public class ObservableStreams {
 							logger.error("Error: ", e);
 							throw new RuntimeException("Error iterating",e);
 						} finally {
-//							try {
-//								channel.close();
-//							} catch (IOException e) {
-//								logger.error("Error: ", e);
-//							}
+
 						}
 					}
 
@@ -68,19 +65,20 @@ public class ObservableStreams {
 						byte[] result = new byte[read];
 						bytes.flip();
 						bytes.get(result);
-						setNext(ByteBuffer.wrap(result));
+						setNext(result);
 						bytes.flip();
 						bytes.clear();
 					}
 
 					@Override
-					public ByteBuffer next() {
-						ByteBuffer result = nextBuffer;
+					public byte[] next() {
+//						nextBuffer.
+						byte[] result = nextBuffer;
 						setNext(null);
 						return result;
 					}
 					
-					private void setNext(ByteBuffer buffer) {
+					private void setNext(byte[] buffer) {
 						this.nextBuffer = buffer;
 					}
 				};

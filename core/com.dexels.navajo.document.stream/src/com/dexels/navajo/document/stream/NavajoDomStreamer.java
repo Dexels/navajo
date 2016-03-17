@@ -1,12 +1,9 @@
 package com.dexels.navajo.document.stream;
 
 import static com.dexels.navajo.document.stream.events.Events.arrayDone;
-import static com.dexels.navajo.document.stream.events.Events.arrayElement;
 import static com.dexels.navajo.document.stream.events.Events.arrayElementStarted;
 import static com.dexels.navajo.document.stream.events.Events.arrayStarted;
 import static com.dexels.navajo.document.stream.events.Events.done;
-import static com.dexels.navajo.document.stream.events.Events.message;
-import static com.dexels.navajo.document.stream.events.Events.messageDefinition;
 import static com.dexels.navajo.document.stream.events.Events.messageDefinitionStarted;
 import static com.dexels.navajo.document.stream.events.Events.messageStarted;
 
@@ -22,6 +19,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.Prop.Direction;
@@ -75,7 +73,7 @@ public class NavajoDomStreamer {
 			if(definition!=null) {
 				String definitionname =name+"@definition";
 				list.add(messageDefinitionStarted(definitionname));
-				list.add(messageDefinition(messageProperties(definition), definitionname));
+				list.add(Events.messageDefinition(messageDefinition(definition), definitionname));
 			}
 			for (Message m : message.getElements()) {
 				Map<String,Object> elementAttributes = getMessageAttributes(message);
@@ -83,7 +81,7 @@ public class NavajoDomStreamer {
 				for (Message sm : m.getAllMessages()) {
 					emitMessage(sm, list,outputNavajo);
 				}				
-				list.add(arrayElement(messageProperties(m),elementAttributes));
+				list.add(Events.arrayElement(messageElement(m),elementAttributes));
 			}
 			list.add(arrayDone(name));
 		} else {
@@ -94,43 +92,41 @@ public class NavajoDomStreamer {
 			if(message.getMode()!=null && !"".equals(message.getMode())) {
 				System.err.println("MESSAGE name: "+message.getName() + " with mode: "+message.getMode());
 			}
-			list.add(message( messageProperties(message), name,messageAttributes));
+			list.add(Events.message( message(message), name,messageAttributes));
 		}
 
 	}
 
-//	  public static final String MSG_CONDITION = "condition";
+	private static Map<String, Object> getMessageAttributes(Message message) {
+		Map<String,Object> attr = new HashMap<>();
+		if(message.getMode()!=null && !"".equals(message.getMode())) {
+			attr.put(Message.MSG_MODE, message.getMode());
+		}
+		if(message.getEtag()!=null && !"".equals(message.getEtag())) {
+			attr.put(Message.MSG_ETAG, message.getEtag());
+		}
+		return attr;
+	}
 
-private static Map<String, Object> getMessageAttributes(Message message) {
-	Map<String,Object> attr = new HashMap<>();
-	if(message.getMode()!=null && !"".equals(message.getMode())) {
-		attr.put(Message.MSG_MODE, message.getMode());
+	private static List<Prop> messageProperties(Message msg) {
+		List<Property> all = msg.getAllProperties();
+		final List<Prop> result = new ArrayList<>();
+		for (Property property : all) {
+			result.add(create(property));
+		}
+		return  Collections.unmodifiableList(result);
 	}
-//	if(message.getExtends()!=null && !"".equals(message.getExtends())) {
-//		attr.put(Message.MSG_EXTENDS, message.getExtends());
-//	}
-	if(message.getEtag()!=null && !"".equals(message.getEtag())) {
-		attr.put(Message.MSG_ETAG, message.getEtag());
-	}
-//	if(message.getOrderBy()!=null && !"".equals(message.getOrderBy())) {
-//		attr.put(Message.MSG_ORDERBY, message.getOrderBy());
-//	}
-//	if(message.getScope()!=null && !"".equals(message.getScope())) {
-//		attr.put(Message.MSG_SCOPE, message.getScope());
-//	}
-//	if(message.getMethod()!=null && !"".equals(message.getMethod())) {
-//		attr.put(Message.MSG_METHOD, message.getMethod());
-//	}
-	return attr;
 
-}
-private static List<Prop> messageProperties(Message msg) {
-	List<Property> all = msg.getAllProperties();
-	final List<Prop> result = new ArrayList<>();
-	for (Property property : all) {
-		result.add(create(property));
+	private static Msg message(Message tmlMessage) {
+		return Msg.create(messageProperties(tmlMessage));
 	}
-	return Collections.unmodifiableList(result);
+
+	private static Msg messageDefinition(Message tmlMessage) {
+		return Msg.createDefinition(messageProperties(tmlMessage));
+	}
+
+	private static Msg messageElement(Message tmlMessage) {
+		return Msg.createElement(messageProperties(tmlMessage));
 	}
 
 	private static Prop create(Property tmlProperty) {
@@ -145,20 +141,7 @@ private static List<Prop> messageProperties(Message msg) {
 		} else {
 			value = tmlProperty.getValue();
 		}
-//		Object value = "selection".equals(tmlProperty.getType())?null: tmlProperty.getValue();
-		
 		return Prop.create(tmlProperty.getName(),value,tmlProperty.getType(),selections,"in".equals(tmlProperty.getDirection())?Direction.IN:Direction.OUT, tmlProperty.getDescription(),tmlProperty.getLength(),tmlProperty.getSubType(),tmlProperty.getCardinality());
-		
-//		switch (type) {
-//		case Property.BINARY_PROPERTY:
-//			return Prop.create(attributes, (Binary)tmlProperty.getTypedValue());
-//			break;
-//
-//		default:
-//			attributes.put("value", tmlProperty.getTypedValue());
-//			break;
-//		}
-//		return Prop.create(tmlProperty.getName(),tmlProperty.getTypedValue(),tmlProperty.getType());
 	}
 	
 	 private static List<Select> selectFromTml(List<Selection> in) {

@@ -55,10 +55,10 @@ public class ObservableServlet {
      * @param in servlet input stream
      * @return Observable of HTTP request data
      */
-    public static Observable<ByteBuffer> create(final ServletInputStream in) {
-        return Observable.create(new OnSubscribe<ByteBuffer>() {
+    public static Observable<byte[]> create(final ServletInputStream in) {
+        return Observable.create(new OnSubscribe<byte[]>() {
             @Override
-            public void call(Subscriber<? super ByteBuffer> subscriber) {
+            public void call(Subscriber<? super byte[]> subscriber) {
                 final ServletReadListener listener = new ServletReadListener(in, subscriber);
                 in.setReadListener(listener);
             }

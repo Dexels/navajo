@@ -6,5 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="testsrc"/>
+	<classpathentry kind="lib" path="lib/rxjava-debug-1.0.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

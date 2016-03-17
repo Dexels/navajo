@@ -1,12 +1,10 @@
 package com.dexels.navajo.document.stream.events;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
+import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
-//import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 
 public class Events {
@@ -15,12 +13,12 @@ public class Events {
 		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE_DEFINITION_STARTED,null,Collections.emptyMap());
 	}
 	
-	public static NavajoStreamEvent messageDefinition(List<Prop> properties, String name) {
-		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE_DEFINITION,properties,Collections.emptyMap());
+	public static NavajoStreamEvent messageDefinition(Msg message, String name) {
+		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE_DEFINITION,message,Collections.emptyMap());
 	}
 
-	public static NavajoStreamEvent message(List<Prop> properties, String name, Map<String,? extends Object> messageAttributes) {
-		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE,properties,messageAttributes);
+	public static NavajoStreamEvent message(Msg message, String name, Map<String,? extends Object> messageAttributes) {
+		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE,message,messageAttributes);
 	}
 
 	public static NavajoStreamEvent messageStarted(String name, Map<String,? extends Object> messageAttributes) {
@@ -36,8 +34,8 @@ public class Events {
 		return new NavajoStreamEvent("UnnamedArrayElement",NavajoEventTypes.ARRAY_ELEMENT_STARTED,null,attributes);
 	}
 
-	public static NavajoStreamEvent arrayElement(List<Prop> properties,Map<String,? extends Object> attributes) {
-		return new NavajoStreamEvent("UnnamedArrayElement",NavajoEventTypes.ARRAY_ELEMENT,properties,attributes);
+	public static NavajoStreamEvent arrayElement(Msg m,Map<String,? extends Object> attributes) {
+		return new NavajoStreamEvent("UnnamedArrayElement",NavajoEventTypes.ARRAY_ELEMENT,m,attributes);
 	}
 
 	public static NavajoStreamEvent arrayDone(String name) {

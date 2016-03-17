@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 
@@ -21,14 +22,14 @@ public class NavajoStreamEvent {
 		this.attributes = Collections.unmodifiableMap(attributes);
 	}
 
-	@SuppressWarnings("unchecked")
 	public String toString() {
 		if(type==NavajoEventTypes.NAVAJO_STARTED) {
 			NavajoHead h = (NavajoHead)body;
 			return "Type: "+type+" path: "+path+" attributes: {"+attributes+"} - RPCNAME: "+h.name()+" user: "+h.username();
 		}
 		if(type==NavajoEventTypes.MESSAGE) {
-			List<Prop> contents = (List<Prop>) body;
+			Msg msgBody = (Msg)body;
+			List<Prop> contents = msgBody.properties();
 			StringBuilder sb = new StringBuilder("Message detected. Name: "+path+" with mode: "+this.attributes.get("mode")+"\n");
 			for (Prop prop : contents) {
 				sb.append("Prop: "+prop.name()+" = "+prop.value()+ " value type: "+ prop.type() +"with direction: "+ prop.direction() + "\n");
@@ -68,6 +69,10 @@ public class NavajoStreamEvent {
 		return body;
 	}
 	
+	public Msg message() {
+		return (Msg)body;
+	}
+	
 	public NavajoStreamEvent withAttribute(String key, Object value) {
 		Map<String,Object> attr = new HashMap<>(this.attributes);
 		attr.put(key, value);
@@ -92,12 +97,4 @@ public class NavajoStreamEvent {
 		res.remove(attribute);
 		return new NavajoStreamEvent(this.path,this.type,this.body,Collections.unmodifiableMap(res) ); 
 	}
-	
-//	public List<String> path() {
-//		if(path==null) {
-//			return Collections.emptyList();
-//		}
-//		return Arrays.asList(path.split("/"));
-//	}
-//	public NavajoStreamEvent with 
 }
