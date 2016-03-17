@@ -69,6 +69,17 @@ public class Msg {
 		return new Msg(Collections.emptyList(),Msg.MessageType.SIMPLE);
 	}
 	
+	public static Msg createDefinition() {
+		return new Msg(Collections.emptyList(),Msg.MessageType.DEFINITION);
+	}
+	public static Msg create(List<Prop> properties) {
+		return new Msg(properties,Msg.MessageType.SIMPLE);
+	}
+	
+	public static Msg createDefinition(List<Prop> properties) {
+		return new Msg(properties,Msg.MessageType.DEFINITION);
+	}
+	
 	public static Msg createElement(List<Prop> properties) {
 		return new Msg(properties,Msg.MessageType.ARRAY_ELEMENT);
 	}
@@ -78,6 +89,9 @@ public class Msg {
 		return property;
 	}
 
+	public List<Prop> properties() {
+		return Collections.unmodifiableList(properties);
+	}
 	public Msg with(Prop property) {
 		properties.add(property);
 		propertiesByName.put(property.name(), property);
@@ -119,7 +133,20 @@ public class Msg {
 		}
 		return p.value();
 	}
-
+	public String stringValue(String name) {
+		Prop p = propertiesByName.get(name);
+		if(p==null) {
+			return null;
+		}
+		Object value = p.value();
+		if(value==null) {
+			return null;
+		}
+		if(value instanceof String) {
+			return (String)value;
+		}
+		return value.toString();
+	}
 	public Observable<NavajoStreamEvent> stream() {
 		msgAction.call(this);
 		return subMessages.call(this).startWith(before()).concatWith(after());
@@ -142,11 +169,11 @@ public class Msg {
 	private Observable<NavajoStreamEvent> after() {
 		switch (type) {
 		case ARRAY_ELEMENT:
-			return Observable.<NavajoStreamEvent>just(Events.arrayElement(properties,Collections.emptyMap()));
+			return Observable.<NavajoStreamEvent>just(Events.arrayElement(this,Collections.emptyMap()));
 		case SIMPLE:
-			return Observable.<NavajoStreamEvent>just(Events.message(properties,name,Collections.emptyMap()));
+			return Observable.<NavajoStreamEvent>just(Events.message(this,name,Collections.emptyMap()));
 		case DEFINITION:
-			return Observable.<NavajoStreamEvent>just(Events.messageDefinition(properties,name));
+			return Observable.<NavajoStreamEvent>just(Events.messageDefinition(this,name));
 		default:
 			break;
 		}

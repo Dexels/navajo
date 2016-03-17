@@ -1,7 +1,6 @@
 package com.dexels.navajo.document.stream.io;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,6 +13,7 @@ import java.util.zip.Inflater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
@@ -54,7 +54,7 @@ public class NavajoStreamOperators {
 			@Override
 			public Observable<NavajoStreamEvent> call(Observable<NavajoStreamEvent> in) {
 	        	return in.startWith(Observable.just(Events.messageStarted(name,null)))
-	        	.concatWith(Observable.just(Events.message(Collections.emptyList(), name,null)));
+	        	.concatWith(Observable.just(Events.message(Msg.create(), name,null)));
 			}
 		};
 	}

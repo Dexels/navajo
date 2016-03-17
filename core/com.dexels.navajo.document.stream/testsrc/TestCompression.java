@@ -4,25 +4,13 @@ import java.io.FileNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.io.NavajoStreamOperators;
-import com.dexels.navajo.document.stream.io.ObservableStreams;
 import com.dexels.navajo.document.stream.xml.Bytes;
-import com.dexels.navajo.document.stream.xml.XML;
 
 import rx.Observable;
 
 public class TestCompression {
 	
-	@Test
-	public void testInflateFile() {
-		Bytes.fromPath("/Users/frank/bigorganizations.xml")
-			.lift(NavajoStreamOperators.decompress("inflate"))
-			.map(d->new String(d))
-			.first()
-			.doOnNext(s->System.err.println(s))
-			.subscribe();
-	}
 	
 	@Test
 	public void repro() {

@@ -7,6 +7,8 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Iterator;
 
+import javax.servlet.ServletInputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +48,6 @@ public class ObservableStreams {
 							}
 							read = channel.read(bytes);
 							if(read<0) {
-								
 								channel.close();
 								return false;
 							}

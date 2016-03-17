@@ -17,6 +17,7 @@ package org.jitu.rx.servlet;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,10 +35,10 @@ import rx.Subscriber;
 class ServletReadListener implements ReadListener {
     private static final Logger LOGGER = Logger.getLogger(ServletReadListener.class.getName());
 
-    private final Subscriber<? super ByteBuffer> subscriber;
+    private final Subscriber<? super byte[]> subscriber;
     private final ServletInputStream in;
 
-    ServletReadListener(ServletInputStream in, Subscriber<? super ByteBuffer> subscriber) {
+    ServletReadListener(ServletInputStream in, Subscriber<? super byte[]> subscriber) {
         this.in = in;
         this.subscriber = subscriber;
     }
@@ -48,8 +49,9 @@ class ServletReadListener implements ReadListener {
             byte[] buf = new byte[4096];
             int len = in.read(buf);
             if (len != -1) {
-                subscriber.onNext(ByteBuffer.wrap(buf, 0, len));
+                subscriber.onNext(Arrays.copyOf(buf, len));
             }
+            System.err.println("Input ready? "+in.isReady());
         // loop until isReady() false, otherwise container will not call onDataAvailable()
         } while(!subscriber.isUnsubscribed() && !in.isFinished() && in.isReady());
         // If isReady() false, container will call onDataAvailable()
@@ -64,6 +66,7 @@ class ServletReadListener implements ReadListener {
         if (LOGGER.isLoggable(Level.FINE)) {
             LOGGER.fine("Read all the data from ServletInputStream");
         }
+        System.err.println("Input done");
         if (!subscriber.isUnsubscribed()) {
             subscriber.onCompleted();
         }

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
@@ -55,7 +56,6 @@ public class NavajoStreamSerializer {
 		});
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void processNavajoEvent(NavajoStreamEvent event,Writer w) {
 		try {
 			String name = event.path();
@@ -98,8 +98,8 @@ public class NavajoStreamSerializer {
 				case ARRAY_ELEMENT:
 //					Message m = (Message) event.body();
 					messageNameStack.pop();
-
-					List<Prop> properties = (List<Prop>)event.body();
+					Msg msgBody = event.message();
+					List<Prop> properties = msgBody.properties();
 					if(!messageIgnoreStack.contains(true)) {
 						for (Prop prop : properties) {
 							prop.write(w,INDENT * (tagDepth+1));

@@ -1,10 +1,7 @@
-
-
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -12,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapters.stream.Bytes;
 import com.dexels.navajo.adapters.stream.SQL;
-import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 import com.dexels.navajo.document.stream.io.NavajoStreamOperators;
@@ -44,11 +40,9 @@ public class TestStreamingInput  {
 				@Override
 				public void onCompleted() {
 					try {
-						System.err.println("Done");
 						out.flush();
 						out.close();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -64,7 +58,6 @@ public class TestStreamingInput  {
 						System.err.println("Item: "+new String(b));
 						out.write(b);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}				
 				}
@@ -93,7 +86,6 @@ public class TestStreamingInput  {
 						out.flush();
 						out.close();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -109,7 +101,6 @@ public class TestStreamingInput  {
 						System.err.println("Item: "+new String(b));
 						out.write(b);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}				
 				}
@@ -123,7 +114,7 @@ public class TestStreamingInput  {
 		.lift(XML.parse())
 		.lift(NAVADOC.parse(Collections.emptyMap()))
 		.filter(e->e.type()==NavajoEventTypes.ARRAY_ELEMENT)
-		.map(e->Msg.createElement((List)e.body()))
+		.map(e->e.message())
 		.map(m->m.value("ORGANIZATIONID"))
 		.cast(String.class)
 		.flatMap(clubId->SQL.queryToMessage("","dummy", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = ?",clubId))
@@ -143,7 +134,6 @@ public class TestStreamingInput  {
 					out.flush();
 					out.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

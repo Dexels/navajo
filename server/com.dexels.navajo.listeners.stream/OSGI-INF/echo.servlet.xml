@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="echo.servlet">
+   <implementation class="com.dexels.navajo.listeners.stream.EchoServlet"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="asyncSupported" value="true"/>
+   <property name="alias" type="String" value="/echo"/>
+   <property name="servletName" type="String" value="echo-postman"/>
+   <property name="servlet-name" type="String" value="echo-postman"/>
+</scr:component>
