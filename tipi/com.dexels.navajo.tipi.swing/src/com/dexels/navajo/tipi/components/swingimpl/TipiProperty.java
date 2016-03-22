@@ -112,6 +112,12 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 
 			@Override
 			public void keyReleased(KeyEvent e) {
+			    // If OS X for whatever reason suddently does send the release event, ignore it 
+			    // since we already processed this in the keyPressed
+			    if (System.getProperty("os.name").equals("Mac OS X")) { 
+			        return;
+			    
+			    }
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "released");
 				
