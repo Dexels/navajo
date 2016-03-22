@@ -846,7 +846,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                 try {
                     ManualAsyncClient ac = AsyncClientFactory.getManualInstance();
                     if (ac == null ){
-                        logger.warn("unable to find async client - cannot perform navajomap call!")
+                        logger.warn("unable to find async client - cannot perform navajomap call!");
                         throw new UserException(-1, "AsyncClient null");
                     }
                     String server = this.server.startsWith("http") ? this.server : "http://" + this.server;
