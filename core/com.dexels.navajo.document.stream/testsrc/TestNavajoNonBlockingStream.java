@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -244,7 +245,7 @@ public class TestNavajoNonBlockingStream {
 		return result;
 	}
 
-	@Test
+	@Test @Ignore
 	public void testXmlFeeder() throws IOException {
 		File f = new File("/Users/frank/output3.xml");
 		SaxXmlFeeder sxf = new SaxXmlFeeder();
