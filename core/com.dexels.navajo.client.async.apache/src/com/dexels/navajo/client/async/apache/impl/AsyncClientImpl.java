@@ -70,6 +70,10 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		this.actualCalls = actualCalls;
 		logger.debug("Calls now: " + this.actualCalls);
 	}
+	
+	static {
+        AsyncClientFactory.setInstance(AsyncClientImpl.class);
+    }
 
 	public AsyncClientImpl() {
 		// myThreadPool = new NavajoThreadPool();
@@ -100,8 +104,6 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		setUsername((String) settings.get("username"));
 		setPassword((String) settings.get("password"));
 		setName((String) settings.get("name"));
-		
-		AsyncClientFactory.setInstance(this);
 	}
 
 	public void deactivate() {
@@ -291,8 +293,6 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		n.write(baos);
 		final byte[] byteArray = baos.toByteArray();
-		url = "http://reporting-test.sportlink.com/navajobirt/Postman";
-
 		
 		HttpPost httppost = new HttpPost(url);
 		httppost.addHeader("Content-Type", "text/xml; charset=utf-8");
