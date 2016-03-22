@@ -57,13 +57,17 @@ public class EnvTenantConfig implements TenantConfig {
 			}
 		}
 		String tenantlist = System.getenv("TENANT_MASTER");
-		if(tenantlist==null || "".equals(tenantlist)) {
-			logger.info("No setup for task tenants, setting wildcard");
+		if (tenantlist == null) {
+		    logger.warn("Master of no tenant!");
+		    return;
+		}
+		if("wildcard".equals(tenantlist)) {
+			logger.warn("No setup for task tenants, setting wildcard");
 			this.wildcard = true;
 			return;
 		}
-		if(tenantlist.equals("-")) {
-			logger.info("Tenant master operations blocked. No tasks/workflows will be activated");
+		if(tenantlist.equals("-") || tenantlist.equals("")) {
+			logger.warn("Tenant master operations blocked. No tasks/workflows will be activated");
 			return;
 		}
 		String parts[] = tenantlist.split(",");
