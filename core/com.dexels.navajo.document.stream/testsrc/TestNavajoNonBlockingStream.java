@@ -1,7 +1,10 @@
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Assert;
@@ -16,8 +19,11 @@ import com.dexels.navajo.document.stream.NavajoDomStreamer;
 import com.dexels.navajo.document.stream.NavajoStreamCollector;
 import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
+import com.dexels.navajo.document.stream.impl.SaxXmlFeeder;
 import com.dexels.navajo.document.stream.xml.Bytes;
 import com.dexels.navajo.document.stream.xml.XML;
+import com.dexels.navajo.document.stream.xml.XMLEvent;
+import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
 
 import rx.Observable;
 
@@ -237,4 +243,36 @@ public class TestNavajoNonBlockingStream {
 		byte[] result = out.toByteArray();
 		return result;
 	}
+
+	@Test
+	public void testXmlFeeder() throws IOException {
+		File f = new File("/Users/frank/output3.xml");
+		SaxXmlFeeder sxf = new SaxXmlFeeder();
+		try(FileInputStream fis = new FileInputStream(f)) {
+			byte[] buffer = new byte[1024];
+			int read = -1;
+			boolean ready = false;
+			while (!ready) {
+				try {
+					read = fis.read(buffer);
+					if ( read > -1 ) {
+						Iterable<XMLEvent> ee = sxf.parse(Arrays.copyOfRange(buffer, 0, read));
+						for (XMLEvent xmlEvent : ee) {
+							if(xmlEvent.getType()!=XmlEventTypes.TEXT) {
+								System.err.println("Event "+xmlEvent);
+							}
+						}
+					}
+				} catch (IOException e) {
+				}
+				if ( read <= -1) {
+					ready = true;
+				}
+			}
+			sxf.endOfInput();
+		}
+				
+		
+	}
+
 }

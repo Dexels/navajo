@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.stream.echo.script">
+   <implementation class="com.dexels.navajo.document.stream.example.Echo"/>
+   <service>
+      <provide interface="com.dexels.navajo.document.stream.api.Script"/>
+   </service>
+   <property name="navajo.scriptName" type="String" value="Echo"/>
+   <property name="service.ranking" type="Integer" value="0"/>
+   <property name="navajo.tenant" type="String" value="default"/>
+</scr:component>

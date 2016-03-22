@@ -69,8 +69,7 @@ public class SaxXmlFeeder implements AsyncByteArrayFeeder {
 							
 							return hasNext;
 						} catch (XMLStreamException e) {
-							logger.error("Error: ", e);
-							return false;
+							throw new RuntimeException("XML Error", e);
 						}
 					}
 
