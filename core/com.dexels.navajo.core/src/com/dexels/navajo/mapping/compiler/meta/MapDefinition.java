@@ -162,7 +162,7 @@ public class MapDefinition {
 				if ( setterValue == null ) {
 					setterValue = child.getContent();
 					if ( setterValue == null || "".equals(setterValue) ) {
-						throw new MetaCompileException(filename, child, "Did not find any value that could be set for setter <" + child.getName() + "/>");
+						throw new MetaCompileException(filename, child, "Did not find any value that could be set for setter <" + child.getName() + "/>" + " in " + this.objectName);
 					}
 					setterValue = setterValue.trim();
 					isTextNode = true;
@@ -170,7 +170,7 @@ public class MapDefinition {
 
 				ValueDefinition vd = getValueDefinition(field);
 				if ( vd == null ) {
-					throw new MetaCompileException(filename, child, "Could not find definition for setter: " + field);
+					throw new MetaCompileException(filename, child, "Could not find definition for setter: " + field + " in " + this.objectName);
 				}
 				vd.generateCode(child, setterValue, isTextNode, condition, mout, true, filename );
 
