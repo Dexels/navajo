@@ -23,7 +23,7 @@ public class StreamingTransform implements Script {
 			.map(name->Msg.createElement()
 					.with(Prop.create("Name").withValue(name.toUpperCase()))
 					.with(Prop.create(name).withBinaryFromFile("/Users/frank/Downloads/sharknado1.jpg")))
-			.flatMap(m->m.stream())
+			.concatMap(m->m.stream())
 			.compose(NavajoStreamOperators.inArray("Organizations"));
 	}
 }

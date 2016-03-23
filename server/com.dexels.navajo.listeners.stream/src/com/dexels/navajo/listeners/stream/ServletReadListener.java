@@ -13,27 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jitu.rx.servlet;
+package com.dexels.navajo.listeners.stream;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 
-import rx.Observer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import rx.Subscriber;
 
-/**
- * A servlet {@link ReadListener} that pushes HTTP request data to an {@link Observer}
- *
- * @author Jitendra Kotamraju
- */
 class ServletReadListener implements ReadListener {
-    private static final Logger LOGGER = Logger.getLogger(ServletReadListener.class.getName());
+	private static final int BUFFER_SIZE = 4096;
+
+	private final static Logger logger = LoggerFactory.getLogger(ServletReadListener.class);
 
     private final Subscriber<? super byte[]> subscriber;
     private final ServletInputStream in;
@@ -45,38 +41,55 @@ class ServletReadListener implements ReadListener {
 
     @Override
     public void onDataAvailable() throws IOException {
-        do {
-            byte[] buf = new byte[4096];
+//    	System.err.println("Read Data available!");
+    	if(subscriber.isUnsubscribed()) {
+    		in.close();
+    		return;
+    	}
+
+    	while(true) {
+            boolean ready = checkReady();
+//            System.err.println("READ Ready: "+ready);
+            if(!ready) {
+            	break;
+            }
+            if(in.isFinished()) {
+//            	System.err.println("READ Finished data!");
+            	break;
+            }
+            byte[] buf = new byte[BUFFER_SIZE];
             int len = in.read(buf);
             if (len != -1) {
+//            	logger.debug("Read data: {}",len);
                 subscriber.onNext(Arrays.copyOf(buf, len));
             }
-            System.err.println("Input ready? "+in.isReady());
-        // loop until isReady() false, otherwise container will not call onDataAvailable()
-        } while(!subscriber.isUnsubscribed() && !in.isFinished() && in.isReady());
-        // If isReady() false, container will call onDataAvailable()
-        // when data is available.
-        if (LOGGER.isLoggable(Level.FINE) && !subscriber.isUnsubscribed()) {
-            LOGGER.fine("Waiting for container to notify when there is HTTP request data");
+
         }
     }
 
+	private boolean checkReady() {
+//		System.err.println("READ Ready called");
+		return in.isReady();
+	}
+
     @Override
     public void onAllDataRead() {
-        if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.fine("Read all the data from ServletInputStream");
-        }
-        System.err.println("Input done");
+        logger.debug("Read all the data from ServletInputStream");
+        logger.debug("Doing one last read:");
+        try {
+			onDataAvailable();
+		} catch (IOException e) {
+			logger.error("Error: ", e);
+		}
         if (!subscriber.isUnsubscribed()) {
+        	System.err.println("Completed");
             subscriber.onCompleted();
         }
     }
 
     @Override
     public void onError(Throwable t) {
-        if (LOGGER.isLoggable(Level.WARNING)) {
-            LOGGER.log(Level.WARNING, "Error while reading the data from ServletInputStream", t);
-        }
+        logger.error("Error: ", t);
         if (!subscriber.isUnsubscribed()) {
             subscriber.onError(t);
         }

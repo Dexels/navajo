@@ -147,7 +147,7 @@
 		</bundle>
 	</feature>
 	
-	<feature resolver="(obr)" name='navajo.rx' version='1.0.8'
+	<feature resolver="(obr)" name='navajo.rx' version='1.1.0'
 		start-level='80'>
 		<feature version="[3.6.9,4)">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.fasterxml/aalto-xml/1.0.0

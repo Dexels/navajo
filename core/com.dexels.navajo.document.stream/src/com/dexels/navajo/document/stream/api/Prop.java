@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.NavajoStreamSerializer;
 import com.dexels.navajo.document.types.Binary;
 
@@ -120,7 +121,7 @@ public class Prop {
 				logger.error("Error loading binary: ", e);
 				b = new Binary();
 			}
-			return new Prop(name, b, type,selections,direction,description,length,subtype,cardinality);
+			return new Prop(name, b, Property.BINARY_PROPERTY,selections,direction,description,length,subtype,cardinality);
 		}
 		return new Prop(name, new Binary(), type,selections,direction,description,length,subtype,cardinality);
 	}
@@ -189,13 +190,15 @@ public class Prop {
 		 }
 		 sw.write("<property");
 		 if(name!=null) {
-			 sw.write(" name=\""+name+"\"");
+			 sw.write(" name=\""+ StringEscapeUtils.escapeXml(name)+"\"");
 		 }
 		 if(type!=null) {
 			 sw.write(" type=\""+type+"\"");
 		 }
 		 if(value!=null && !isBinary()) {
-			 sw.write(" value=\""+StringEscapeUtils.escapeXml(valueAsString())+"\"");
+			 String value = valueAsString();
+			 String escapedValue = StringEscapeUtils.escapeXml(value);
+			sw.write(" value=\""+escapedValue+"\"");
 		 }
 		 if(direction!=null) {
 			 sw.write(" direction=\""+direction()+"\"");
@@ -233,7 +236,7 @@ public class Prop {
 		 for (int a = 0; a < indent; a++) {
 			 sw.write(" ");
 		 }
-		sw.write("<option name=\""+select.name()+"\" value=\""+select.value()+"\" selected=\""+(select.selected()?"1":"0")+"\"/>\n");
+		sw.write("<option name=\""+ StringEscapeUtils.escapeXml(select.name())+"\" value=\""+ StringEscapeUtils.escapeXml(select.value())+"\" selected=\""+(select.selected()?"1":"0")+"\"/>\n");
 	}
 	
 	private boolean isBinary() {
