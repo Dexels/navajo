@@ -1,5 +1,6 @@
 package com.dexels.navajo.resource.swift.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +43,6 @@ public class OpenstackStoreImpl implements OpenstackStore {
 		List<? extends SwiftObject> objects = os.objectStorage().objects().list("test");
 		for (SwiftObject swiftObject : objects) {
 			System.err.println("Object: "+swiftObject);
-//			swiftObject.download().
 		}
 		
 		SwiftObject g = os.objectStorage().objects().get("test","sharknado1.jpg");
@@ -65,12 +65,18 @@ public class OpenstackStoreImpl implements OpenstackStore {
 	}
 
 	@Override
-	public Map<String,String> metadata(String name) {
+	public Map<String,Object> metadata(String name) {
 		SwiftObject object = storage.objects().get(this.container, name);
 		if(object==null) {
 			return null;
 		}
-		return object.getMetadata();
+		Map<String,Object> result = new HashMap<>(object.getMetadata());
+		result.put("etag", object.getETag());
+		result.put("mime", object.getMimeType());
+		result.put("size", object.getSizeInBytes());
+		result.put("lastModified", object.getLastModified());
+
+		return result;
 
 	}
 

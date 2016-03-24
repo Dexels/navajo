@@ -28,14 +28,17 @@ public class TestSwift {
 		Binary result = osi.get("sharknado1.jpg");
 		System.err.println("Result: "+result.getLength());
 
+		Map<String,Object> metadata = osi.metadata("sharknado1.jpg");
+		System.err.println("Meta: "+metadata);
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
 		Binary b = new Binary(u,true,true);		
 		osi.set("dexlogo.png", b);
 
-		for (int i = 0; i < 10; i++) {
-			osi.set("dexlogo_"+i+".png", b);
-			
-		}
+//		
+//		for (int i = 0; i < 10; i++) {
+//			osi.set("dexlogo_"+i+".png", b);
+//			
+//		}
 	}
 
 }

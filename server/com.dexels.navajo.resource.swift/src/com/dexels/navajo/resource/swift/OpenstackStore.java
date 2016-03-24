@@ -8,7 +8,7 @@ public interface OpenstackStore {
 	public void set(String name, Binary contents);
 	public Binary get(String name);
 	public void delete(String name);
-	public Map<String, String> metadata(String name);
+	public Map<String, Object> metadata(String name);
 
 }
 
