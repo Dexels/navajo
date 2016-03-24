@@ -36,13 +36,6 @@ public class TestSwift {
 			osi.set("dexlogo_"+i+".png", b);
 			
 		}
-		//		OSClient os = OSFactory.builder()
-//                .endpoint("https://identity.api.rackspacecloud.com/v2.0")
-//                .raxApiKey(true)
-//                .credentials("sportlinkinfrauk","a34a148f90594ce4946306bf1b821373")
-//                .tenantId("10044839")
-//                .authenticate();
-
 	}
 
 }
