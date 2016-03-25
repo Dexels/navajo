@@ -188,7 +188,7 @@ public class TestBinary {
 		Binary b = new Binary(u,true,true);		
 		Assert.assertFalse(b.isResolved());
 		Assert.assertTrue("",b.getData().length>2000);
-		Assert.assertFalse(b.isResolved());
+		Assert.assertTrue(b.isResolved());
 		
 	}
 }

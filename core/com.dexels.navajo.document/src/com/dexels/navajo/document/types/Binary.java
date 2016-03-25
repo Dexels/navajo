@@ -615,14 +615,14 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
      * @return byte[]
      */
     public final byte[] getData() {
-
+		if(!isResolved()) {
+			resolveData();
+		}
 		if (inMemory != null) {
 			return inMemory;
 		}
 
-		if(!isResolved()) {
-			resolveData();
-		}
+
 		File file = null;
 		if (lazySourceFile != null) {
 			file = lazySourceFile;
