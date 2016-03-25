@@ -89,9 +89,9 @@ public class NavajoDomStreamer {
 			for (Message m : message.getAllMessages()) {
 				emitMessage(m, list,outputNavajo);
 			}
-			if(message.getMode()!=null && !"".equals(message.getMode())) {
-				System.err.println("MESSAGE name: "+message.getName() + " with mode: "+message.getMode());
-			}
+//			if(message.getMode()!=null && !"".equals(message.getMode())) {
+//				System.err.println("MESSAGE name: "+message.getName() + " with mode: "+message.getMode());
+//			}
 			list.add(Events.message( message(message), name,messageAttributes));
 		}
 

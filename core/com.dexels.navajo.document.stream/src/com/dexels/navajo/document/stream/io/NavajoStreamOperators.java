@@ -249,13 +249,8 @@ public class NavajoStreamOperators {
 		};
 	}
     public static Operator<byte[], byte[]> inflate() {
-    	System.err.println("Starting to inflate");
-//    	FileOutputStream fos = null;
-    	try {
-
 		return new Operator<byte[],byte[]>(){
 
-    		final FileOutputStream fos = new FileOutputStream("/Users/frank/dump_"+System.currentTimeMillis()+".xml");
 			Inflater inflater = new Inflater();
 			@Override
 			public Subscriber<? super byte[]> call(Subscriber<? super byte[]> sub) {
@@ -269,21 +264,9 @@ public class NavajoStreamOperators {
 							byte[] rm = new byte[remaining];
 //							inflated = inflater.inflate(rm, 0, remaining);
 							sub.onNext(rm);
-							try {
-								fos.write(rm);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+
 						}
 						sub.onCompleted();
-						try {
-							fos.flush();
-							fos.close();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
 					}
 
 					@Override
@@ -303,18 +286,8 @@ public class NavajoStreamOperators {
 								if(read>0) {
 									if(read == buffer.length) {
 										sub.onNext(buffer);
-										try {
-											fos.write(buffer);
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
 									} else {
 										sub.onNext(Arrays.copyOfRange(buffer, 0, read));
-										try {
-											fos.write(Arrays.copyOfRange(buffer, 0, read));
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
 									}
 								}
 							}
@@ -327,11 +300,6 @@ public class NavajoStreamOperators {
 				};
 			}
 		};
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-			return null;
-		}
-    	
     }
 	
     

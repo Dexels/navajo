@@ -147,20 +147,22 @@
 		</bundle>
 	</feature>
 	
-	<feature resolver="(obr)" name='navajo.rx' version='1.1.0'
+	<feature resolver="(obr)" name='navajo.rx' version='1.1.1'
 		start-level='80'>
 		<feature version="[3.6.9,4)">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.fasterxml/aalto-xml/1.0.0
 		</bundle>		
 		<bundle dependency='true'>mvn:org.codehaus.woodstox/stax2-api/4.0.0
 		</bundle>		
-		<bundle dependency='true'>mvn:io.reactivex/rxjava/1.1.0
+		<bundle dependency='true'>mvn:io.reactivex/rxjava/1.1.1
 		</bundle>		
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document.stream/1.0.9
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document.stream/1.0.13
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.stream/1.0.5
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.stream/1.0.7
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.stream/1.0.3
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.stream/1.0.5
+		</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.stream.example/1.0.1
 		</bundle>
 		
 	</feature>

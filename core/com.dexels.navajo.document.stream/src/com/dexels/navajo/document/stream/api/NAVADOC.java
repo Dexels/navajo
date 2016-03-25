@@ -121,8 +121,6 @@ public class NAVADOC {
 //									level.push(event.path());
 									if(!ignoreLevel.contains(true)) {
 										n.onNext(event);
-									} else {
-										System.err.println("Ignoring message");
 									}
 									break;
 									
@@ -132,9 +130,6 @@ public class NAVADOC {
 								case MESSAGE:
 									if(!ignoreLevel.contains(true)) {
 										n.onNext(event);
-									} else {
-										System.err.println("Ignoring close message");
-										
 									}
 //									level.pop();
 									

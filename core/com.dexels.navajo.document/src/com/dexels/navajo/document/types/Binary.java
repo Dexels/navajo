@@ -17,13 +17,17 @@ import java.io.Reader;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.dexels.utils.Base64;
 import org.dexels.utils.Base64DecodingFinishedException;
@@ -88,8 +92,12 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 	private transient MessageDigest messageDigest;
 
 	private byte[] digest;
+
+	private final URL lazyURL;
     
     private final static HashMap<String,Binary> persistedBinaries = new HashMap<String,Binary>();
+    
+    private Map<String,List<String>> urlMetaData = null;
     
     private static final Logger logger = LoggerFactory.getLogger(Binary.class);
     /**
@@ -123,6 +131,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 
     public Binary() {
         super(Property.BINARY_PROPERTY);
+        this.lazyURL = null;
         MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("MD5");
@@ -133,6 +142,15 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         setMimeType(guessContentType());
      }    
     
+    public boolean isResolved() {
+    	if(inMemory!=null) {
+    		return true;
+    	}
+    	if(dataFile!=null) {
+    		return true;
+    	}
+    	return false;
+    }
     
     public String getHandle() {
         if (dataFile!=null) {
@@ -160,6 +178,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     /**
      * Some components like a URL to point to their data.
      * Don't forget that this is a local (file) url, and is only valid on this machine 
+     * When using with a lazy url, return URL to local data if it is available
+     * Alternatively, we could also resolve the lazy URL
      * @return
      * @throws MalformedURLException 
      */
@@ -170,7 +190,10 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
             if (dataFile != null && dataFile.exists()) {
                 return dataFile.toURI().toURL();
             } else {
-                return null;
+            	if( lazyURL!=null) {
+            		return lazyURL;
+            	}
+            	return null;
             }
         }
     }
@@ -345,7 +368,35 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	parseFromReader(reader);
     }
 
-    private void parseFromReader(Reader reader) throws IOException {
+    public Binary(URL u, boolean lazyMetaData, boolean lazyData) throws IOException {
+        super(Property.BINARY_PROPERTY);
+    	this.lazyURL = u;
+    	if(lazyMetaData && lazyData) {
+    		// nothing to do now
+    		return;
+    	}
+    	URLConnection uc = lazyURL.openConnection();
+    	if(!(uc instanceof HttpURLConnection)) {
+    		// not http, metadata is unavailable.
+    		this.urlMetaData = Collections.emptyMap();
+    		if(!lazyData) {
+    			loadBinaryFromStream(uc.getInputStream());
+    		} else {
+    			return;
+    		}
+    	}
+    	HttpURLConnection huc = (HttpURLConnection)uc;
+    	if(lazyData) {
+    		huc.setRequestMethod("HEAD");
+        	this.urlMetaData = Collections.unmodifiableMap(huc.getHeaderFields());
+    	} else {
+    		// so a get
+    		this.urlMetaData = Collections.unmodifiableMap(huc.getHeaderFields());
+        	loadBinaryFromStream(huc.getInputStream());
+    	}
+    }
+
+	private void parseFromReader(Reader reader) throws IOException {
         OutputStream fos = null;
         try {
             fos = createTempFileOutputStream();
@@ -427,8 +478,24 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         return -1;
     }
     
+//    private Map<String,List<String>> getURLMetaData() {
+//    	if(urlMetaData==null) {
+//    		
+//    	}
+//    }
     
     public long getLength() {
+    	if(urlMetaData!=null) {
+    		System.err.println("URLMETA: "+urlMetaData);
+    		List<String> lengthHeaders = urlMetaData.get("Content-Length");
+    		if(lengthHeaders!=null && !lengthHeaders.isEmpty()) {
+    			return Long.parseLong(lengthHeaders.get(0));
+    		}
+        	resolveData();
+    	}
+    	if(!isResolved()) {
+    		return -1;
+    	}
     	if (NavajoFactory.getInstance().isSandboxMode()) {
     		if(inMemory!=null) {
     			return inMemory.length;
@@ -461,7 +528,27 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 		}
     }
 
-    /**
+    private void resolveData() {
+    	try {
+			URLConnection uc = lazyURL.openConnection();
+			this.urlMetaData = uc.getHeaderFields();
+			loadBinaryFromStream(uc.getInputStream());
+		} catch (IOException e) {
+			throw new RuntimeException("Error resolving binary", e);
+		}
+    }
+    
+    private InputStream resolveDirectly() {
+    	try {
+			URLConnection uc = lazyURL.openConnection();
+			this.urlMetaData = uc.getHeaderFields();
+			return uc.getInputStream();
+    	} catch (IOException e) {
+			throw new RuntimeException("Error resolving binary", e);
+		}
+    }
+
+	/**
      * Guess the internal data's mimetype
      * 
      * @return String
@@ -533,6 +620,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 			return inMemory;
 		}
 
+		if(!isResolved()) {
+			resolveData();
+		}
 		File file = null;
 		if (lazySourceFile != null) {
 			file = lazySourceFile;
@@ -630,6 +720,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 	            	return null;
 	            }
 	        } else {
+	        	if(this.lazyURL!=null) {
+	        		return resolveDirectly();
+	        	}
 	            return null;
 	        }
 //		}

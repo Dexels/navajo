@@ -1,5 +1,7 @@
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,14 +15,27 @@ public class TestCompression {
 	
 	
 	@Test
-	public void repro() {
+	public void repro() throws IOException {
 		
-		Bytes.fromPath("/Users/frank/bigorganizations.xml")
-		.doOnNext(a->System.err.println(">> Data: "+new String(a)))
-		.lift(NavajoStreamOperators.decompress("inflate"))
-		.doOnNext(a->System.err.println(">> Decompressed Data: "+new String(a)))
-		.subscribe(NavajoStreamOperators.dumpToFile("/Users/frank/duump.xml"));
+		File compressed = File.createTempFile("dump", ".xml.deflated");
+		File uncompressed = File.createTempFile("dump", ".xml");
 		
+		Bytes.fromAbsoluteClassPath("tml_with_binary.xml")
+			.subscribe(NavajoStreamOperators.dumpToFile(uncompressed.getAbsolutePath()));
+		
+		Bytes.fromAbsoluteClassPath("tml_with_binary.xml")
+			.lift(NavajoStreamOperators.decompress("deflate"))
+			.subscribe(NavajoStreamOperators.dumpToFile(compressed.getAbsolutePath()));
+		
+
+		Assert.assertTrue(uncompressed.exists());
+		Assert.assertTrue(uncompressed.length()>5000);
+		System.err.println("Compressed: "+compressed.length());
+		System.err.println("Uncompressed: "+uncompressed.length());
+		Assert.assertTrue(compressed.length()<uncompressed.length());
+		
+		compressed.delete();
+		uncompressed.delete();
 	}
 	@Test
 	public void testDeflate() throws FileNotFoundException {
@@ -28,7 +43,6 @@ public class TestCompression {
 		byte[] original = 
 				Bytes.fromAbsoluteClassPath("TestCompression.class")
 				.reduce(baos, (byteout,bytes)->{try {
-					System.err.println("Bytes collected: "+bytes.length);
 					byteout.write(bytes);
 					} catch (Exception e) {
 					} return byteout;})
@@ -39,7 +53,6 @@ public class TestCompression {
 		byte[] compressed = Bytes.fromAbsoluteClassPath("TestCompression.class")
 				.lift(NavajoStreamOperators.deflate())
 				.reduce(baos_compressed, (byteout,bytes)->{try {
-					System.err.println("Bytes compressed: "+bytes.length);
 					byteout.write(bytes);
 				} catch (Exception e) {
 				} return byteout;})

@@ -196,6 +196,10 @@ public class NonBlockingListener extends HttpServlet {
 //		}
 		String tenant = determineTenantFromRequest(request);
 
+		if(tenant==null) {
+			// generate error eent
+			
+		}
 		if(navajoService ==null) {
 			return eventStream
 					.lift(NAVADOC.collect(attributes))
@@ -336,6 +340,9 @@ public class NonBlockingListener extends HttpServlet {
 			return requestInstance;
 		}
 		String pathinfo = req.getPathInfo();
+		if(pathinfo==null) {
+			return null;
+		}
 		if (pathinfo.length() > 0 && pathinfo.charAt(0) == '/') {
 			pathinfo = pathinfo.substring(1);
 		}

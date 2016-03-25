@@ -82,7 +82,6 @@ class ServletReadListener implements ReadListener {
 			logger.error("Error: ", e);
 		}
         if (!subscriber.isUnsubscribed()) {
-        	System.err.println("Completed");
             subscriber.onCompleted();
         }
     }
