@@ -70,7 +70,8 @@ public class OpenstackStoreImpl implements OpenstackStore {
 		if(object==null) {
 			return null;
 		}
-		Map<String,Object> result = new HashMap<>(object.getMetadata());
+		Map<String,Object> result = new HashMap<>();
+		result.putAll(object.getMetadata());
 		result.put("etag", object.getETag());
 		result.put("mime", object.getMimeType());
 		result.put("size", object.getSizeInBytes());
