@@ -529,6 +529,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
 
     private void resolveData() {
+    	if(lazyURL==null) {
+    		return;
+    	}
     	try {
 			URLConnection uc = lazyURL.openConnection();
 			this.urlMetaData = uc.getHeaderFields();
