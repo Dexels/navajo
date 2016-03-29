@@ -1194,6 +1194,7 @@
          <value direction="inout" name="selected" type="component" />
          <value direction="inout" name="selectedindex" type="integer" />
          <value direction="out" name="lastselectedindex" type="integer" />
+         <value direction="out" name="selectedorder" type="integer" />
          <value direction="out" name="selectedMessage" type="message" />
          <value direction="in" name="placement" type="selection">
             <option description="Top" value="top" />
@@ -1210,6 +1211,9 @@
          <method name="showTab">
             <param name="component" type="component" />
             <param name="value" type="boolean" />
+         </method>
+         <method name="selectByOrder">
+            <param name="order" type="integer" />
          </method>
 
       </methods>
