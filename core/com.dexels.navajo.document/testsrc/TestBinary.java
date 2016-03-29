@@ -191,4 +191,17 @@ public class TestBinary {
 		Assert.assertTrue(b.isResolved());
 		
 	}
+	
+	@Test
+	public void testNonLazyBinary() {
+		Binary b1 = new Binary(getClass().getResourceAsStream("binary1.txt"));
+		Assert.assertEquals(7,b1.getData().length);
+	}
+
+	@Test
+	public void testEmptyBinary() {
+		Binary b1 = new Binary();
+		Assert.assertNull(b1.getData());
+	}
+
 }
