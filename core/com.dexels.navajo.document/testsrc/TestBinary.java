@@ -171,4 +171,37 @@ public class TestBinary {
 		Binary binary_x = new Binary(new File(url.getFile()));
 		Assert.assertEquals("application/vnd.openxmlformats-officedocument.wordprocessingml.document", binary_x.guessContentType());
 	}
+	
+	@Test
+	public void testBinaryFromURL() throws IOException {
+		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
+		Binary b = new Binary(u,false,false);
+		System.err.println("B: "+b.getLength());
+		Assert.assertTrue("",b.getLength()>2000);
+		byte[] data = b.getData();
+		System.err.println("DATA: "+new String(data));
+	}
+	
+	@Test
+	public void testUnresolvedBinary() throws IOException {
+		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
+		Binary b = new Binary(u,true,true);		
+		Assert.assertFalse(b.isResolved());
+		Assert.assertTrue("",b.getData().length>2000);
+		Assert.assertTrue(b.isResolved());
+		
+	}
+	
+	@Test
+	public void testNonLazyBinary() {
+		Binary b1 = new Binary(getClass().getResourceAsStream("binary1.txt"));
+		Assert.assertEquals(7,b1.getData().length);
+	}
+
+	@Test
+	public void testEmptyBinary() {
+		Binary b1 = new Binary();
+		Assert.assertNull(b1.getData());
+	}
+
 }

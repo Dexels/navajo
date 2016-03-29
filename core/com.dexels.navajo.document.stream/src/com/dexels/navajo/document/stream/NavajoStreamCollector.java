@@ -12,6 +12,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.Select;
@@ -67,7 +68,7 @@ public class NavajoStreamCollector {
 		nsc.tagStack.push("Outer");
 		nsc.tagStack.push("Inner");
 	}
-	@SuppressWarnings("unchecked")
+
 	private Observable<Navajo> processNavajoEvent(NavajoStreamEvent n, Subscriber<? super Navajo> subscriber) {
 		switch (n.type()) {
 		case NAVAJO_STARTED:
@@ -94,8 +95,9 @@ public class NavajoStreamCollector {
 		case MESSAGE:
 			Message msgParent = messageStack.pop();
 			tagStack.pop();
-//			List<Prop> msgProps = ;
-			for (Prop e : (List<Prop>)n.body()) {
+			Msg mm = (Msg)n.body();
+			List<Prop> msgProps = mm.properties();
+			for (Prop e : msgProps) {
 				msgParent.addProperty(createTmlProperty(e));
 			}
 			return Observable.<Navajo>empty();
@@ -141,11 +143,11 @@ public class NavajoStreamCollector {
 		case ARRAY_ELEMENT:
 			tagStack.pop();
 			Message elementParent = messageStack.pop();
-			List<Prop> properties = (List<Prop>) n.body();
-			for (Prop entry : properties) {
-				elementParent.addProperty(createTmlProperty(entry));
+			Msg msgElement= (Msg)n.body();
+			List<Prop> elementProps = msgElement.properties();
+			for (Prop e : elementProps) {
+				elementParent.addProperty(createTmlProperty(e));
 			}
-
 			return Observable.<Navajo>empty();
 			
 		case MESSAGE_DEFINITION_STARTED:

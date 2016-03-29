@@ -1,10 +1,14 @@
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +20,11 @@ import com.dexels.navajo.document.stream.NavajoDomStreamer;
 import com.dexels.navajo.document.stream.NavajoStreamCollector;
 import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
+import com.dexels.navajo.document.stream.impl.SaxXmlFeeder;
 import com.dexels.navajo.document.stream.xml.Bytes;
 import com.dexels.navajo.document.stream.xml.XML;
+import com.dexels.navajo.document.stream.xml.XMLEvent;
+import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
 
 import rx.Observable;
 
@@ -42,12 +49,6 @@ public class TestNavajoNonBlockingStream {
 		baseTml.write(sw1);
 		StringWriter sw2 = new StringWriter();
 		result.write(sw2);
-//		FileWriter fw = new FileWriter("out1.xml");
-//		fw.write(sw1.toString());
-//		fw.close();
-//		FileWriter fw2 = new FileWriter("out2.xml");
-//		fw2.write(sw2.toString());
-//		fw2.close();
 		Assert.assertEquals(sw1.toString(), sw2.toString());
 	}
 
@@ -90,15 +91,8 @@ public class TestNavajoNonBlockingStream {
 			}
 		});
 		byte[] original = getNavajoData("tml_without_binary.xml");
-//		FileOutputStream fw = new FileOutputStream("original.xml");
-//		fw.write(original);
-//		fw.close();
-//		FileOutputStream fw2 = new FileOutputStream("parsed.xml");
-//		fw2.write(baos.toByteArray());
-//		fw2.close();
 		// TODO Seems ok, but make test to compare Navajo o
-				Assert.assertArrayEquals(original, baos.toByteArray());
-		// Assert.assertEquals(sw1.toString(), sw2.toString());
+		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
 
 	@Test 
@@ -114,17 +108,7 @@ public class TestNavajoNonBlockingStream {
 					} catch (Exception e) {
 					}
 				});
-//		byte[] original = getNavajoData("tml_with_binary.xml");
-//		FileOutputStream fw = new FileOutputStream("originalbinary.xml");
-//		fw.write(original);
-//		fw.close();
-//		FileOutputStream fw2 = new FileOutputStream("parsedbinary.xml");
-//		fw2.write(baos.toByteArray());
-//		fw2.close();
 		Assert.assertTrue(baos.toByteArray().length>5000);
-		
-		// TODO Seems ok, but make test to compare Navajo o
-//		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
 	
 	@Test 
@@ -149,18 +133,7 @@ public class TestNavajoNonBlockingStream {
 			.toBlocking()
 			.first()
 			;
-//		byte[] original = getNavajoData("tml_with_binary.xml");
-		
-		//		FileOutputStream fw = new FileOutputStream("originalbinary.xml");
-//		fw.write(original);
-//		fw.close();
-//		FileOutputStream fw2 = new FileOutputStream("parsedbinary.xml");
-//		fw2.write(baos.toByteArray());
-//		fw2.close();
 		Assert.assertTrue(baos.toByteArray().length>5000);
-		
-		// TODO Seems ok, but make test to compare Navajo o
-//		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
 	@Test 
 	public void testStreamParserAndSerializerWithSelection() throws Exception {
@@ -179,13 +152,6 @@ public class TestNavajoNonBlockingStream {
 					}
 				});
 		byte[] original = getNavajoData("tml_with_selection.xml");
-//		FileOutputStream fw = new FileOutputStream("originalselection.xml");
-//		fw.write(original);
-//		fw.close();
-//		FileOutputStream fw2 = new FileOutputStream("parsedselection.xml");
-//		fw2.write(baos.toByteArray());
-//		fw2.close();
-		// TODO Seems ok, but make test to compare Navajo o
 		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
 	
@@ -209,13 +175,6 @@ public class TestNavajoNonBlockingStream {
 					}
 				});
 		byte[] original = getNavajoData("tml_with_date.xml");
-//		FileOutputStream fw = new FileOutputStream("originaldate.xml");
-//		fw.write(original);
-//		fw.close();
-//		FileOutputStream fw2 = new FileOutputStream("parseddate.xml");
-//		fw2.write(baos.toByteArray());
-//		fw2.close();
-		// TODO Seems ok, but make test to compare Navajo o
 		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
 
@@ -229,7 +188,6 @@ public class TestNavajoNonBlockingStream {
 		.doOnNext(n->System.err.println("><>>>2 "+n))
 		.toBlocking()
 		.first();
-		
 		String rpc = navajo.getHeader().getRPCName();
 		System.err.println("RPC: "+rpc);
 		Assert.assertEquals("Tiny", rpc);
@@ -286,4 +244,36 @@ public class TestNavajoNonBlockingStream {
 		byte[] result = out.toByteArray();
 		return result;
 	}
+
+	@Test @Ignore
+	public void testXmlFeeder() throws IOException {
+		File f = new File("/Users/frank/output3.xml");
+		SaxXmlFeeder sxf = new SaxXmlFeeder();
+		try(FileInputStream fis = new FileInputStream(f)) {
+			byte[] buffer = new byte[1024];
+			int read = -1;
+			boolean ready = false;
+			while (!ready) {
+				try {
+					read = fis.read(buffer);
+					if ( read > -1 ) {
+						Iterable<XMLEvent> ee = sxf.parse(Arrays.copyOfRange(buffer, 0, read));
+						for (XMLEvent xmlEvent : ee) {
+							if(xmlEvent.getType()!=XmlEventTypes.TEXT) {
+								System.err.println("Event "+xmlEvent);
+							}
+						}
+					}
+				} catch (IOException e) {
+				}
+				if ( read <= -1) {
+					ready = true;
+				}
+			}
+			sxf.endOfInput();
+		}
+				
+		
+	}
+
 }

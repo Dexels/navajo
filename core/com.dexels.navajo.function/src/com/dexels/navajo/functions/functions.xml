@@ -515,6 +515,11 @@
 		<input>string,string</input>
 		<result>boolean</result>
 	</function>
+    <function name="IsValidXMLFile" class="com.dexels.navajo.functions.IsValidXMLFile">
+        <description>This function checks whether a given binary argmument represents a valid xml format</description>
+        <input>binary</input>
+        <result>boolean</result>        
+    </function>
 	<function name="KeyValueMap" class="com.dexels.navajo.functions.KeyValueMap">
 		<description>KeyValueMap(string,string,string)</description>
 		<input>string,string,string</input>

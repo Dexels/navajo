@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dexels.navajo.document.stream.NavajoStreamHandler;
+import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.events.Events;
@@ -26,7 +27,7 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void messageDone(Map<String, String> attributes, List<Prop> properties) {
-				subscriber.onNext(Events.message(properties, attributes.get("name"),attributes));
+				subscriber.onNext(Events.message(Msg.create(properties), attributes.get("name"),attributes));
 			}
 
 			@Override
@@ -42,7 +43,7 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void messageDefinition(Map<String, String> attributes, List<Prop> properties) {
-				subscriber.onNext(Events.messageDefinition(properties, attributes.get("name")));				
+				subscriber.onNext(Events.messageDefinition(Msg.createDefinition(properties), attributes.get("name")));				
 			}
 
 			@Override
@@ -57,7 +58,7 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void arrayElement(List<Prop> properties) {
-				subscriber.onNext(Events.arrayElement(properties, Collections.emptyMap()));				
+				subscriber.onNext(Events.arrayElement(Msg.createElement(properties), Collections.emptyMap()));				
 			}
 
 			@Override
@@ -81,7 +82,7 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void messageDone(Map<String, String> attributes, List<Prop> properties) {
-					currentSubscriber.onNext(Events.message(properties, attributes.get("name"), attributes));
+					currentSubscriber.onNext(Events.message(Msg.create(properties), attributes.get("name"), attributes));
 			}
 
 			@Override
@@ -97,7 +98,7 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void messageDefinition(Map<String, String> attributes, List<Prop> properties) {
-				currentSubscriber.onNext(Events.messageDefinition(properties, attributes.get("name")));				
+				currentSubscriber.onNext(Events.messageDefinition(Msg.createDefinition(properties), attributes.get("name")));				
 			}
 
 			@Override
@@ -112,7 +113,7 @@ public class ObservableNavajoParser  {
 
 			@Override
 			public void arrayElement(List<Prop> properties) {
-				currentSubscriber.onNext(Events.arrayElement(properties, Collections.emptyMap()));				
+				currentSubscriber.onNext(Events.arrayElement(Msg.createElement(properties), Collections.emptyMap()));				
 			}
 
 			@Override

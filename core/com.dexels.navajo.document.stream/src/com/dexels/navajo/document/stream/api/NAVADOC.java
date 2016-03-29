@@ -117,12 +117,10 @@ public class NAVADOC {
 									String mode = (String) event.attribute("mode");
 									boolean isIgnore = "ignore".equals(mode);
 									ignoreLevel.push(isIgnore);
-									System.err.println("push: "+"ignore".equals(mode)+" == "+ignoreLevel);
+//									System.err.println("push: "+"ignore".equals(mode)+" == "+ignoreLevel);
 //									level.push(event.path());
 									if(!ignoreLevel.contains(true)) {
 										n.onNext(event);
-									} else {
-										System.err.println("Ignoring message");
 									}
 									break;
 									
@@ -132,14 +130,10 @@ public class NAVADOC {
 								case MESSAGE:
 									if(!ignoreLevel.contains(true)) {
 										n.onNext(event);
-									} else {
-										System.err.println("Ignoring close message");
-										
 									}
 //									level.pop();
 									
-									boolean b = ignoreLevel.pop();
-									System.err.println("popping: "+b);
+									ignoreLevel.pop();
 									break;
 									
 								case NAVAJO_DONE:
@@ -156,7 +150,6 @@ public class NAVADOC {
 	}
 	
 
-	// TODO test
 	public static Operator<NavajoStreamEvent,Navajo> stream() {
 		return new Operator<NavajoStreamEvent,Navajo>(){
 			@Override

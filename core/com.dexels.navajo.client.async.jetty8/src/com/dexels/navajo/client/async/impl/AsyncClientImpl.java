@@ -69,6 +69,10 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		this.actualCalls = actualCalls;
 		logger.debug("Calls now: "+this.actualCalls);
 	}
+	
+	static {
+	    AsyncClientFactory.setInstance(AsyncClientImpl.class);
+	}
 
 	public AsyncClientImpl() {
 		client = new HttpClient();
@@ -99,7 +103,6 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		setPassword((String) settings.get("password"));
 		setName((String) settings.get("name"));
 		
-		AsyncClientFactory.setInstance(this);
 	}
 
 	public void deactivate() {

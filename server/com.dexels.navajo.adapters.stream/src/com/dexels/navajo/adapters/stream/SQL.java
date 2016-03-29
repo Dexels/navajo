@@ -80,14 +80,12 @@ public class SQL {
 
 	}
 
-	public static Observable<SQLResult> query(String tenant, String datasource, String query, String... params) {
-//		System.err.println("Query: "+query +" on thread: "+Thread.currentThread().getName());
+	private static Observable<SQLResult> query(String tenant, String datasource, String query, String... params) {
 		return Database
 			.fromDataSource(resolveDataSource(datasource,tenant))
 			.select(query)
-			.parameters(params)
+			.parameters((Object[])params)
 			.get(SQL::resultSet)
-//			.doOnCompleted(()->System.err.println("Done query method"))
 			;
 	}
 
@@ -115,7 +113,6 @@ public class SQL {
 			try {
 				return new SQLResult(rs);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return null;

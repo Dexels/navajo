@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Async Stream Push Parser
 Bundle-SymbolicName: com.dexels.navajo.document.stream
-Bundle-Version: 1.0.10.qualifier
+Bundle-Version: 1.0.14.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.navajo.document;version="2.2.1",
@@ -11,6 +11,7 @@ Import-Package: com.dexels.navajo.document;version="2.2.1",
  com.fasterxml.aalto;version="1.0.0",
  com.fasterxml.aalto.async;version="1.0.0",
  com.fasterxml.aalto.stax;version="1.0.0",
+ javax.servlet;version="3.1.0",
  javax.xml,
  javax.xml.stream,
  org.apache.commons.lang;version="2.6.0",
@@ -24,11 +25,11 @@ Import-Package: com.dexels.navajo.document;version="2.2.1",
  rx.schedulers;version="1.1.0",
  rx.subjects;version="1.1.0",
  rx.subscriptions;version="1.1.0"
-Export-Package: com.dexels.navajo.document.stream;version="1.0.10",
+Export-Package: com.dexels.navajo.document.stream;version="1.0.14",
  com.dexels.navajo.document.stream.api,
- com.dexels.navajo.document.stream.events;version="1.0.10",
+ com.dexels.navajo.document.stream.events;version="1.0.14",
  com.dexels.navajo.document.stream.io,
- com.dexels.navajo.document.stream.xml;version="1.0.10"
+ com.dexels.navajo.document.stream.xml;version="1.0.14"
 Bundle-ClassPath: lib/rxjava-extras-0.7.jar,
  lib/rxjava-jdbc-0.7.jar,
  .

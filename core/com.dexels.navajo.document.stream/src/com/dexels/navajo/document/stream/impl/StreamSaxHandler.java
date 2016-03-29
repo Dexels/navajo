@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -263,12 +264,12 @@ public final class StreamSaxHandler implements XmlInputHandler {
         }
         if (tag.equals("property")) {
         	Prop currentProperty;
-        	String val = attributes.get("value");
+        	String val =  attributes.get("value");
         	if("selection".equals(attributes.get("type"))) {
                 currentProperty = Prop.create(attributes,currentSelections);
         	} else if (val!=null) {
             	Hashtable<String,String> h2 = new Hashtable<String,String>(attributes);
-    			val = BaseNode.XMLUnescape(val);
+    			val = StringEscapeUtils.unescapeXml(val); // BaseNode.XMLUnescape(val);
     			h2.put("value", val);
                 currentProperty = Prop.create(h2,currentSelections);
             } else if(binarySink!=null) {

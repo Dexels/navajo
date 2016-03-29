@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.NavajoResponseHandler;
+import com.dexels.navajo.client.async.AsyncClientFactory;
 import com.dexels.navajo.client.async.ManualAsyncClient;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
@@ -69,6 +70,10 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		this.actualCalls = actualCalls;
 		logger.debug("Calls now: " + this.actualCalls);
 	}
+	
+	static {
+        AsyncClientFactory.setInstance(AsyncClientImpl.class);
+    }
 
 	public AsyncClientImpl() {
 		// myThreadPool = new NavajoThreadPool();
@@ -288,8 +293,6 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		n.write(baos);
 		final byte[] byteArray = baos.toByteArray();
-		url = "http://reporting-test.sportlink.com/navajobirt/Postman";
-
 		
 		HttpPost httppost = new HttpPost(url);
 		httppost.addHeader("Content-Type", "text/xml; charset=utf-8");
