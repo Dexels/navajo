@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dexels Swift Adapter
+Bundle-SymbolicName: com.dexels.navajo.adapters.swift
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: DEXELS
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: com.dexels.navajo.resource.swift;version="1.0.0",
+ com.dexels.navajo.script.api;version="1.0.0"
