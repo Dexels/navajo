@@ -58,7 +58,7 @@ public class TestSwift {
 	public void testCreateContainer() throws IOException {
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
 		Binary b = new Binary(u,true,true);		
-		osi.set("tic/tac/toe/dexlogo.png", b,Collections.emptyMap());
+		osi.set("tic/tac/toe/dexlogo.png", b,new HashMap<String,String>());
 		Assert.assertNotNull(osi.getContainer());
 	}
 
