@@ -139,13 +139,14 @@ public class NonBlockingListener extends HttpServlet {
 		AsyncContext ac = req.startAsync();
 		Map<String, Object> attributes = extractHeaders(req);
 		String navajoService = determineService(req);
+		String requestEncoding = (String) attributes.get("Content-Encoding");
 		String responseEncoding = decideEncoding((String) attributes.get("Accept-Encoding"));
 		if (responseEncoding != null) {
 			resp.addHeader("Content-Encoding", responseEncoding);
 		}
 		
 		Observable<NavajoStreamEvent> eventStream = createReadListener(ac.getRequest().getInputStream())
-				.lift(NavajoStreamOperators.decompress(responseEncoding))
+				.lift(NavajoStreamOperators.decompress(requestEncoding))
 				.lift(XML.parse())
 				.lift(NAVADOC.parse(attributes));	
 
