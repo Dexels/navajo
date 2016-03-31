@@ -298,11 +298,18 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
 	
 	public byte[] getDigest() {
+		if(!isResolved()) {
+			try {
+				resolveData();
+			} catch (IOException e) {
+				logger.error("Error: ", e);
+			}
+		}
 		return this.digest;
 	}
 
     public Binary(File f) throws IOException {
-        this(f, true);
+        this(f, false);
     }
 
     public Binary(File f, boolean lazy) throws IOException {
@@ -491,7 +498,12 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     		if(lengthHeaders!=null && !lengthHeaders.isEmpty()) {
     			return Long.parseLong(lengthHeaders.get(0));
     		}
-        	resolveData();
+        	try {
+				resolveData();
+			} catch (IOException e) {
+				logger.error("Error: ", e);
+				return -1;
+			}
     	}
     	if(!isResolved()) {
     		return -1;
@@ -528,17 +540,24 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 		}
     }
 
-    private void resolveData() {
-    	if(lazyURL==null) {
-    		return;
+    private void resolveData() throws IOException {
+    	if(lazyURL!=null) {
+	    	try {
+				URLConnection uc = lazyURL.openConnection();
+				this.urlMetaData = uc.getHeaderFields();
+				loadBinaryFromStream(uc.getInputStream());
+			} catch (IOException e) {
+				throw new RuntimeException("Error resolving binary from URL", e);
+			}
     	}
-    	try {
-			URLConnection uc = lazyURL.openConnection();
-			this.urlMetaData = uc.getHeaderFields();
-			loadBinaryFromStream(uc.getInputStream());
-		} catch (IOException e) {
-			throw new RuntimeException("Error resolving binary", e);
-		}
+    	if(lazySourceFile!=null) {
+    		
+    		try(FileInputStream fis = new FileInputStream(lazySourceFile)) {
+    			copyResource(createTempFileOutputStream(), fis, true);
+			}
+    		
+    		
+    	}
     }
     
     private InputStream resolveDirectly() {
@@ -619,7 +638,11 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
      */
     public final byte[] getData() {
 		if(!isResolved()) {
-			resolveData();
+			try {
+				resolveData();
+			} catch (IOException e) {
+				logger.error("Error: ", e);
+			}
 		}
 		if (inMemory != null) {
 			return inMemory;
@@ -722,10 +745,16 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 	            	logger.error("Error: ", e);
 	            	return null;
 	            }
-	        } else {
-	        	if(this.lazyURL!=null) {
-	        		return resolveDirectly();
-	        	}
+	        } else if (lazySourceFile!=null) {
+	            try {
+	                return new FileInputStream(lazySourceFile);
+	            } catch (FileNotFoundException e) {
+	            	logger.error("Error: ", e);
+	            	return null;
+	            }	        	
+	        }else if(this.lazyURL!=null) {
+        		return resolveDirectly();
+	        } else {        
 	            return null;
 	        }
 //		}
@@ -876,6 +905,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
      */
     public final void writeBase64(Writer sw) throws IOException {
         final OutputStream os = Base64.newEncoder(sw);
+        if(!isResolved()) {
+        	resolveData();
+        }
         InputStream dataInStream = getDataAsStream();
         if (dataInStream!=null) {
         	copyResource(os, dataInStream,true);

@@ -20,3 +20,4 @@ Import-Package: com.dexels.navajo.document.types;version="2.2.1",
  org.codehaus.jackson.map;version="1.9.11",
  org.junit;version="4.0.0";resolution:=optional,
  org.slf4j;version="1.7.7"
+Export-Package: com.dexels.navajo.resource.swift;version="1.0.0"
