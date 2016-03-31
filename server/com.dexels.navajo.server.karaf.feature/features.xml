@@ -595,10 +595,10 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.entity' version='2.0.3'>
+	<feature resolver="(obr)" name='navajo.entity' version='2.0.4'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
 		<feature version="[3.0.59,4)">navajo.server.osgi</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.entity/2.1.2
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.entity/2.2.0
 		</bundle>
 	</feature>
 
