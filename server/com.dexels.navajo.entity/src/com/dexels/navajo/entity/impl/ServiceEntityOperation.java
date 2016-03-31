@@ -493,9 +493,9 @@ public class ServiceEntityOperation implements EntityOperation {
         // If the entity has a mongo backend, we added the _id property.
         // Remove this now to ensure a proper mask operation can take place.
         if (hasExtraMessageMongo()) {
-            Property id = inputEntity.getProperty(inputEntity.getName() + "/_id");
+            Property id = myEntity.getMessage().getProperty("_id");
             if (id != null) {
-                inputEntity.removeProperty(id);
+                myEntity.getMessage().removeProperty(id);
             }
         }
 
