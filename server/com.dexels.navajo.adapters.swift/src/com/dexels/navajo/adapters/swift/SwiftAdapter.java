@@ -33,7 +33,7 @@ public class SwiftAdapter implements Mappable {
 	public void store() throws MappableException, UserException {
 		if(value!=null) {
 			OpenstackStore os = OpenstackStorageFactory.getInstance().getOpenstackStore(resource, tenant);
-			os.set(name, this.value, new HashMap<>());
+			os.set(name, this.value, new HashMap<String,String>());
 		}
 
 	}
