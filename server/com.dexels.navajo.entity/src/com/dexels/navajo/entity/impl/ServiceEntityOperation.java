@@ -520,7 +520,7 @@ public class ServiceEntityOperation implements EntityOperation {
         if (hasExtraMessageMongo()) {
             if (currentEntity == null || currentEntity.getMessage(myEntity.getMessageName()) == null) {
                 // TODO: Monogo backend does not support PUT for inserts. Thus we give an exception
-                throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Entity not found - use POST for inserts");
+                throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Entity not found - use POST for insert");
             } else {
                 Property id = currentEntity.getProperty(inputEntity.getName() + "/_id");
                 if (id != null) {
