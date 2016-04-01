@@ -183,10 +183,10 @@
 		</bundle>		
 	</feature>	
 		
-	<feature resolver="(obr)" name='navajo.function' version='3.0.17'
+	<feature resolver="(obr)" name='navajo.function' version='3.0.18'
 		start-level='80'>
 		<feature version="[3.0.34,4)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.3.20
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.3.22
 		</bundle>
 	</feature>
 
@@ -620,7 +620,7 @@
 	</feature>
 
 
-	<feature name='rackermon' version='1.4.0'>
+	<feature name='rackermon' version='1.5.1'>
 		<feature version="[1.1.0,2)">dexels.repository</feature>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.javax.mail/1.4.1_5
 		</bundle>
@@ -628,7 +628,7 @@
         </bundle>
 		<bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/3.0.3
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.monitor.rackermon/1.4.0
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.monitor.rackermon/1.5.2
 		</bundle>
 	</feature>
     
