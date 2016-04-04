@@ -408,10 +408,10 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.article' version='3.1.4'>
+	<feature resolver="(obr)" name='navajo.article' version='3.1.5'>
 		<feature version="[3.0.32,4)">navajo.server.osgi</feature>
 		<feature version="[1.0.8,2)">dexels.oauth</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/3.1.0
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/3.2.0
 		</bundle>
 	</feature>
 
