@@ -33,6 +33,10 @@ public class SwiftAdapter implements Mappable {
 	public void store() throws MappableException, UserException {
 		if(value!=null) {
 			OpenstackStore os = OpenstackStorageFactory.getInstance().getOpenstackStore(resource, tenant);
+			if(os==null) {
+				logger.warn("Can not find swift resource: {} for tenant: {}",resource,tenant);
+				throw new UserException(-1, "Can not find swift resource");
+			}
 			os.set(name, this.value, new HashMap<String,String>());
 		}
 
