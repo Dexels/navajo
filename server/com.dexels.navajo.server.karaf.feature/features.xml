@@ -235,9 +235,9 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.swift' version='1.0.4'>
+	<feature resolver="(obr)" name='navajo.swift' version='1.0.5'>
 		<feature version="[3.2.5,4)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.swift/1.0.6
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.swift/1.0.8
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.swift/1.0.1
 		</bundle>
