@@ -1,7 +1,5 @@
 package com.dexels.navajo.article.command.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,6 +13,7 @@ import org.codehaus.jackson.node.ObjectNode;
 
 import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
+import com.dexels.navajo.article.APIValue;
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.command.ArticleCommand;
@@ -46,78 +45,54 @@ public class TableCommand implements ArticleCommand {
 	}
 
 	@Override
-	public JsonNode execute(ArticleRuntime runtime, ArticleContext context,
-			Map<String, String> parameters, XMLElement element)
-			throws APIException {
+	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String, String> parameters, XMLElement element) throws APIException {
 		String service = parameters.get("service");
 		if (service == null) {
-			throw new APIException("No service parameter supplied for table.", null, APIErrorCode.InternalError);
+			throw new APIException("No service parameter supplied for table. We need to know which navajo you want to use.", null, APIErrorCode.InternalError);
 		}
+		
+		Navajo navajo = runtime.getNavajo(service);
+		if (navajo == null) {
+			throw new APIException("Navajo: " + service + " was not found in the current runtime.", null, APIErrorCode.InternalError);
+		}
+		
 		String path = parameters.get("path");
-		Navajo n = runtime.getNavajo(service);
-		if (n == null) {
-			throw new APIException("Navajo: " + service + " was not found in table command", null, APIErrorCode.InternalError);
-		}
-		Message m = null;
-		if (path != null) {
-			m = n.getMessage(path);
+		if (path == null) {
+			throw new APIException("No path parameter supplied. Which message do you want to listen to.", null, APIErrorCode.InternalError);
+		} 
+
+		Message message = navajo.getMessage(path);
+		if (message == null) {
+			throw new APIException("Message: " + path + " not found", null, APIErrorCode.InternalError);
 		}
 		
 		runtime.setMimeType("application/json; charset=utf-8");
-		String tableName = parameters.get("name");
-		if (tableName == null) {
-			tableName = "data";
-		}
-		List<XMLElement> columnList = element.getChildren();
-		List<String> columnIds = new ArrayList<String>();
-		final Map<String, String> targetMap = new HashMap<String, String>();
-		final Map<String, String> propertyMap = new HashMap<String, String>();
-		for (XMLElement xmlElement : columnList) {
-			final String id = xmlElement.getStringAttribute("id");
-			final String propertyName = xmlElement.getStringAttribute("propertyName");
-			if(propertyName!=null) {
-				propertyMap.put(id, propertyName);
-			}
-			columnIds.add(id);
+
+		ArrayNode nodes = runtime.getObjectMapper().createArrayNode();
+		
+		for (Message data : message.getElements()) {
+			ObjectNode node = runtime.getObjectMapper().createObjectNode();
 			
-			String target = xmlElement.getStringAttribute("target");
-			if (target != null) {
-				targetMap.put(id, target);
+			for (XMLElement XMLElement : element.getChildren()) {
+				final String id = XMLElement.getStringAttribute("id");
+				final String type = XMLElement.getStringAttribute("type");
+				final String target = XMLElement.getStringAttribute("target");
+				
+				if (target != null) {
+					//A target is a link, they do not have navajo value.
+					node.put(id, resolveTarget(target, runtime, data));
+				} else {
+					//We default back to the id for the propertyName if not explicit set.
+					final String propertyName = XMLElement.getStringAttribute("propertyName",  id);
+					Property property = data.getProperty(propertyName);
+					APIValue.setValueOnNodeForType(node, id, type, property, runtime);
+				}
 			}
+			
+			nodes.add(node);
 		}
 		
-		if (m == null) {
-			throw new APIException("Message: " + path + " not found", null, APIErrorCode.InternalError);
-		} 
-			
-		return writeJSON(m, tableName, runtime, columnIds, targetMap,propertyMap);
-	}
-
-	private JsonNode writeJSON(Message m, String name, ArticleRuntime runtime,
-			List<String> columns, Map<String, String> targetMap, Map<String, String> propertyMap) throws APIException {
-		List<Message> output = m.getElements();
-		ArrayNode an = runtime.getObjectMapper().createArrayNode();
-		for (Message elt : output) {
-			ObjectNode on = runtime.getObjectMapper().createObjectNode();
-			for (String id : columns) {
-				String propertyName = propertyMap.get(id);
-				if(propertyName==null) {
-					propertyName = id;
-				}
-				String target = targetMap.get(id);
-				if (target != null) {
-					String resolvedTarget = resolveTarget(target, runtime, elt);
-					on.put(id, resolvedTarget);
-				} else {
-					Property p = elt.getProperty(propertyName);
-					if (p != null) {
-						on.put(id, p.getValue());
-					}
-				}
-			}
-			an.add(on);
-		}
-		return an;
+		return nodes;	
 	}
 
 	private String resolveTarget(String target, ArticleRuntime runtime,
@@ -181,8 +156,7 @@ public class TableCommand implements ArticleCommand {
 	}
 
 	@Override
-	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,
-			ObjectMapper mapper) {
+	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs, ObjectMapper mapper) {
 		ObjectNode on = mapper.createObjectNode();
 		outputArgs.add(on);
 		final String key = e.getStringAttribute("key");
