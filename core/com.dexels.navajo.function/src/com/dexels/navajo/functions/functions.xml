@@ -606,7 +606,7 @@
 	<function name="RandomColor" class="com.dexels.navajo.functions.RandomColor">
 		<description>Generates a random hex color given an integer seed
 		</description>
-		<input>integer|empty</input>
+		<input>integer|empty,boolean|empty</input>
 		<result>string</result>
 	</function>
 	<function name="RandomInt" class="com.dexels.navajo.functions.RandomInt">
