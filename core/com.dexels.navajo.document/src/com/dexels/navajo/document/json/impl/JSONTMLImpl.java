@@ -163,7 +163,9 @@ public class JSONTMLImpl implements JSONTML {
 				Object value = p.getTypedValue();
 				if (p.getType().equals(Property.BINARY_PROPERTY)) {
 					value = p.getValue();
-				} 
+				} else if (p.getType().equals(Property.CLOCKTIME_PROPERTY)) {
+				    value = p.getTypedValue().toString();
+				}
 				om.writeValue(jg, value );
 
 			}
@@ -344,7 +346,9 @@ public class JSONTMLImpl implements JSONTML {
                     parseArrayMessage(name, n, parent, jp);
                 } else {
                     String value = jp.getText();
-
+                    if (value.equals("null")) {
+                        value = null;
+                    }
                     parseProperty(name, value, parent, jp);
                 }
 
