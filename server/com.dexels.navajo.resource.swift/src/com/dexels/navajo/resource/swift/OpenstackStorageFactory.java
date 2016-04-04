@@ -3,12 +3,17 @@ package com.dexels.navajo.resource.swift;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class OpenstackStorageFactory {
 	
 	private static OpenstackStorageFactory instance = null;
 	
 	private final Map<String,OpenstackStore> defaultStores = new HashMap<>();
 	private final Map<String,Map<String,OpenstackStore>> tenantStores = new HashMap<>();
+	
+	private final static Logger logger = LoggerFactory.getLogger(OpenstackStorageFactory.class);
 	
 	public void activate() {
 		instance = this;
@@ -25,6 +30,8 @@ public class OpenstackStorageFactory {
 	public void addOpenstackStore(OpenstackStore store, Map<String,Object> settings) {
 		String name = (String) settings.get("name");
 		String tenant = (String) settings.get("tenant");
+		logger.info("Adding Openstack store name: {} for tenant {}",name,tenant);
+		logger.info("");
 		if(tenant==null) {
 			defaultStores.put(name, store);
 			return;
