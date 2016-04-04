@@ -29,7 +29,7 @@ public class OpenstackStorageFactory {
 
 	public void addOpenstackStore(OpenstackStore store, Map<String,Object> settings) {
 		String name = (String) settings.get("name");
-		String tenant = (String) settings.get("tenant");
+		String tenant = (String) settings.get("instance");
 		logger.info("Adding Openstack store name: {} for tenant {}",name,tenant);
 		logger.info("");
 		if(tenant==null) {
