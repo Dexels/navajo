@@ -70,37 +70,57 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 		p.addPropertyKeyListener(new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				Map<String, Object> m = getEventMap(e);
-				m.put("mode", "typed");
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					try {
-						performTipiEvent("onEnter", m, false);
-					} catch (TipiException e1) {
-						logger.error("Error detected",e1);
-					}
-				}
-				try {
-					performTipiEvent("onKey", m, false);
-				} catch (TipiException e1) {
-					logger.error("Error detected",e1);
-				}
+				
 			}
 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "typed");
+				
+				
 				try {
 					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {
 					logger.error("Error detected",e1);
 				}
+				
+
+				// OS X seems to have problems with keyReleased, and at keyTyped
+				// the keycode is lost. For OS X we thus handle simulate the 
+				// 'released' event here
+				if (System.getProperty("os.name").equals("Mac OS X")) {
+					Map<String, Object> mosx = getEventMap(e);
+					mosx.put("mode", "released");
+					if (e.getKeyCode() == KeyEvent.VK_ENTER){ 
+						// Os x gives a newline char as key for the enter key
+						mosx.put("key", "Enter");
+						
+						try {
+							performTipiEvent("onEnter", mosx, false);
+						} catch (TipiException e1) {
+							logger.error("Error detected",e1);
+						}
+					}
+					try {
+						performTipiEvent("onKey", mosx, false);
+					} catch (TipiException e1) {
+						logger.error("Error detected",e1);
+					}
+				}
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
+			    // If OS X for whatever reason suddently does send the release event, ignore it 
+			    // since we already processed this in the keyPressed
+			    if (System.getProperty("os.name").equals("Mac OS X")) { 
+			        return;
+			    
+			    }
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "released");
+				
 				try {
 					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {

@@ -1,5 +1,6 @@
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ public class TestAsyncClient {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TestAsyncClient.class);
 
-	@Test
+	@Test @Ignore
 	public void test() throws IOException, InterruptedException {
 
 		final ManualAsyncClient ac = new AsyncClientImpl();

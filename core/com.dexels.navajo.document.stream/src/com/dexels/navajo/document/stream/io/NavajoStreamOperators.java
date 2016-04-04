@@ -27,8 +27,8 @@ import rx.schedulers.Schedulers;
 public class NavajoStreamOperators {
 	
 	
-//	private static final int COMPRESSION_BUFFER_SIZE = 16384;
-	private static final int COMPRESSION_BUFFER_SIZE = 1024;
+	private static final int COMPRESSION_BUFFER_SIZE = 16384;
+//	private static final int COMPRESSION_BUFFER_SIZE = 1024;
 	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamOperators.class);
 
 	
@@ -99,7 +99,7 @@ public class NavajoStreamOperators {
 		
 	}
 	public static Operator<byte[], byte[]> decompress(String encoding) {
-		logger.info("Starting decompress with encoding: {}",encoding);
+//		logger.info("Starting decompress with encoding: {}",encoding);
 		if("jzlib".equals(encoding) || "deflate".equals(encoding) || "inflate".equals(encoding)) {
 			return inflate();
 		}
@@ -160,25 +160,15 @@ public class NavajoStreamOperators {
 		return new Operator<byte[], byte[]>(){
 
 			Deflater deflater = new Deflater();
-			int out = 0;
+//			int out = 0;
 			@Override
 			public Subscriber<? super byte[]> call(Subscriber<? super byte[]> sub) {
 				return new Subscriber<byte[]>() {
 
 					@Override
 					public void onCompleted() {
-						// TODO check for remaining?
 						deflater.finish();
 						onNext(new byte[]{});
-//						deflater.
-//						deflater.end();
-						System.err.println("Deflate completed. Total: "+deflater.getTotalIn()+" out: "+deflater.getTotalOut() + " -> "+out+" ratio: "+deflater.getTotalIn()/deflater.getTotalOut());
-//						try {
-//							fos.flush();
-//							fos.close();
-//						} catch (IOException e) {
-//							logger.error("Error: ", e);
-//						}
 						sub.onCompleted();
 					}
 
@@ -197,7 +187,7 @@ public class NavajoStreamOperators {
 							read = deflater.deflate(buffer,0,buffer.length,Deflater.NO_FLUSH);
 							if(read>0) {
 //								System.err.println("Deflated size: "+read);
-								out += read;
+//								out += read;
 									byte[] copied = Arrays.copyOfRange(buffer, 0, read);
 									sub.onNext(copied);
 							} else {
@@ -259,13 +249,8 @@ public class NavajoStreamOperators {
 		};
 	}
     public static Operator<byte[], byte[]> inflate() {
-    	System.err.println("Starting to inflate");
-//    	FileOutputStream fos = null;
-    	try {
-
 		return new Operator<byte[],byte[]>(){
 
-    		final FileOutputStream fos = new FileOutputStream("/Users/frank/dump_"+System.currentTimeMillis()+".xml");
 			Inflater inflater = new Inflater();
 			@Override
 			public Subscriber<? super byte[]> call(Subscriber<? super byte[]> sub) {
@@ -279,21 +264,9 @@ public class NavajoStreamOperators {
 							byte[] rm = new byte[remaining];
 //							inflated = inflater.inflate(rm, 0, remaining);
 							sub.onNext(rm);
-							try {
-								fos.write(rm);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+
 						}
 						sub.onCompleted();
-						try {
-							fos.flush();
-							fos.close();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
 					}
 
 					@Override
@@ -313,18 +286,8 @@ public class NavajoStreamOperators {
 								if(read>0) {
 									if(read == buffer.length) {
 										sub.onNext(buffer);
-										try {
-											fos.write(buffer);
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
 									} else {
 										sub.onNext(Arrays.copyOfRange(buffer, 0, read));
-										try {
-											fos.write(Arrays.copyOfRange(buffer, 0, read));
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
 									}
 								}
 							}
@@ -337,11 +300,6 @@ public class NavajoStreamOperators {
 				};
 			}
 		};
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-			return null;
-		}
-    	
     }
 	
     
@@ -377,23 +335,7 @@ public class NavajoStreamOperators {
 
   			@Override
   			public Subscriber<? super byte[]> call(Subscriber<? super byte[]> sub) {
-  				return new Subscriber<byte[]>() {
-
-  					@Override
-  					public void onCompleted() {
-  						sub.onCompleted();
-  					}
-
-  					@Override
-  					public void onError(Throwable e) {
-  						sub.onError(e);
-  					}
-
-  					@Override
-  					public void onNext(byte[] in) {
-  						sub.onNext(in);
-  					}
-  				};
+  				return sub;
   			}
   		};
       }

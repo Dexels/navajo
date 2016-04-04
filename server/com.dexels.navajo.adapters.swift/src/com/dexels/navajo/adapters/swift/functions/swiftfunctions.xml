@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<functiondef>
+    <function name="SwiftValue" class="com.dexels.navajo.adapters.swift.functions.SwiftValue">
+        <description>Gets the value from an objectstore</description>
+        <input>string,string</input>
+        <result>binary</result>
+    </function>
+</functiondef>

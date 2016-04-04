@@ -7,8 +7,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Iterator;
 
-import javax.servlet.ServletInputStream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

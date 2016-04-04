@@ -29,6 +29,7 @@ public class BinaryObserver implements Operator<Binary,String>{
 	private File dataFile;
 	private byte[] digest;
 	protected byte[] inMemory;
+	int count = 0;
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(BinaryObserver.class);
@@ -81,6 +82,7 @@ public class BinaryObserver implements Operator<Binary,String>{
 
 			@Override
 			public void onNext(String line) {
+				count++;
 				try {
 					w.write(line);
 				} catch (IOException e) {

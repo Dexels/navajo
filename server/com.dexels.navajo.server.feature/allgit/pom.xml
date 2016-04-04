@@ -12,6 +12,7 @@
 		<module>../../com.dexels.navajo.listeners</module>
 		<module>../../com.dexels.navajo.listeners.continuations</module>
 		<module>../../com.dexels.navajo.adapters.stream</module>
+		<module>../../com.dexels.navajo.stream.example</module>
 		<module>../../com.dexels.navajo.listeners.stream</module>
 		<module>../../com.dexels.navajo.jsp</module>
 		<module>../../com.dexels.navajo.jsp.server</module>
@@ -21,6 +22,7 @@
 		<module>../../com.dexels.navajo.adapters</module>
 		<module>../../com.dexels.navajo.adapters.resource</module>
 		<module>../../com.dexels.navajo.adapters.eventemitter</module>
+		<module>../../com.dexels.navajo.adapters.swift</module>
 		<module>../../com.dexels.navajo.resource</module>
 		<module>../../com.dexels.navajo.resource.manager</module>
 		<module>../../com.dexels.navajo.resource.jdbc.h2</module>
@@ -29,6 +31,7 @@
 		<module>../../com.dexels.navajo.resource.http</module>
 		<module>../../com.dexels.navajo.resource.mail</module>
 		<module>../../com.dexels.navajo.resource.sftp</module>
+		<module>../../com.dexels.navajo.resource.swift</module>
 		<module>../../com.dexels.navajo.resource.test</module>
 		<module>../../com.dexels.navajo.server.logback</module>
 		<module>../../com.dexels.navajo.server.deploy</module>
