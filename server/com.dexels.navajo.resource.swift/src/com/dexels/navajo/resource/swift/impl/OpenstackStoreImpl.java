@@ -9,6 +9,7 @@ import org.openstack4j.api.OSClient;
 import org.openstack4j.api.storage.ObjectStorageService;
 import org.openstack4j.model.common.Payload;
 import org.openstack4j.model.common.Payloads;
+import org.openstack4j.model.identity.Access;
 import org.openstack4j.model.storage.object.SwiftContainer;
 import org.openstack4j.model.storage.object.SwiftObject;
 import org.openstack4j.model.storage.object.options.ObjectLocation;
@@ -29,9 +30,15 @@ public class OpenstackStoreImpl implements OpenstackStore {
 	private ObjectStorageService storage;
 	private String containerName = null;
 	private SwiftContainer container = null;
+	private Access osAccess = null;
+	
 	public void activate(Map<String,Object> settings) {
 		String endpoint = (String) settings.get("endpoint");
 		String username = (String) settings.get("username");
+		if(username==null) {
+			// workaround for tenant bug
+			username = (String) settings.get("user");
+		}
 		String apiKey = (String) settings.get("apiKey");
 		String tenantId = (String) settings.get("tenantId");
 		containerName  = (String) settings.get("container");
@@ -42,7 +49,7 @@ public class OpenstackStoreImpl implements OpenstackStore {
                 .credentials(username,apiKey)
                 .tenantId(tenantId)
                 .authenticate();
-		
+		this.osAccess = os.getAccess();
 		this.storage = os.objectStorage();
 		container = findContainer(containerName);
 		if(container==null) {
@@ -77,30 +84,40 @@ public class OpenstackStoreImpl implements OpenstackStore {
 
 	@Override
 	public void set(String name, Binary contents,Map<String,String> metadata) {
+		if(name==null) {
+			logger.warn("Ignoring put without name");
+			return;
+		}
+		if(contents==null) {
+			logger.warn("Ignoring put without value. Name: {}",name);
+			return;
+		}
 		Map<String,String> meta = new HashMap<>(metadata);
 		meta.put("digest", new String(contents.getDigest()));
 		Payload<InputStream> payload = Payloads.create(contents.getDataAsStream());
+		
 		ObjectPutOptions options = ObjectPutOptions
 				.create()
 				.contentType(contents.guessContentType())
 				.metadata(metadata);
 
-		storage.objects().put(this.containerName, name,payload,options);
+		OSFactory.clientFromAccess(osAccess).objectStorage().objects().put(this.containerName, name,payload,options);
 	}
 
 	@Override
 	public Binary get(String name) {
 		ObjectLocation location = ObjectLocation.create(this.containerName, name);
 		
-		SwiftObject object = storage.objects().get(location);
+		SwiftObject object = OSFactory.clientFromAccess(osAccess).objectStorage().objects().get(location);
 		if(object==null) {
-			return null;
+			return new Binary();
 		}
 		Binary result = new Binary(object.download().getInputStream());
 		return result;
 
 	}
 
+	
 	@Override
 	public Map<String,Object> metadata(String name) {
 		SwiftObject object = storage.objects().get(this.containerName, name);

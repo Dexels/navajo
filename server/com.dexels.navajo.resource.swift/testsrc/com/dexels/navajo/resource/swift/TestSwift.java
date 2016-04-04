@@ -2,7 +2,6 @@ package com.dexels.navajo.resource.swift;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +27,14 @@ public class TestSwift {
 		settings.put("apiKey", System.getenv("apiKey"));
 		settings.put("tenantId", System.getenv("tenantId"));
 		settings.put("container", "test");
+		settings.put("name", "testresource");
+		settings.put("tenant", "Generic");
 		osi.activate(settings);	
+		
+		OpenstackStorageFactory factory = new OpenstackStorageFactory();
+		factory.activate();
+		OpenstackStorageFactory instance = OpenstackStorageFactory.getInstance();
+		instance.addOpenstackStore(osi, settings);
 	}
 	
 	@Test
@@ -58,8 +64,22 @@ public class TestSwift {
 	public void testCreateContainer() throws IOException {
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
 		Binary b = new Binary(u,true,true);		
-		osi.set("tic/tac/toe/dexlogo.png", b,Collections.emptyMap());
+		osi.set("tic/tac/toe/dexlogo.png", b,new HashMap<String,String>());
 		Assert.assertNotNull(osi.getContainer());
 	}
+	
+	@Test
+	public void testFactory() throws IOException {
+		OpenstackStore os = OpenstackStorageFactory.getInstance().getOpenstackStore("testresource", "Generic");
+		Map<String,String> meta = new HashMap<String,String>();
+		meta.put("aap", "noot");
+		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
+		Binary b = new Binary(u,true,true);		
+		os.set("test/factory", b, meta);
+	}
+	
+	
+	
+	
 
 }

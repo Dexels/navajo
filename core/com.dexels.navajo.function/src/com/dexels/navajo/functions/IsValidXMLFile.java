@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -14,6 +16,7 @@ import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 public class IsValidXMLFile extends FunctionInterface {
+    private final static Logger logger = LoggerFactory.getLogger(IsValidXMLFile.class);
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
@@ -42,6 +45,7 @@ public class IsValidXMLFile extends FunctionInterface {
 
 			return Boolean.TRUE;
 		} catch (Throwable e) {
+		    logger.info("Invalid XML file", e);
 			return Boolean.FALSE;
 		}
 	}
@@ -54,7 +58,7 @@ public class IsValidXMLFile extends FunctionInterface {
 	public static void main(String [] args) throws Exception {
 	
 //		FileInputStream fs = new FileInputStream((new File("c:/users/erik/appdata/local/temp/_aaacamt.xml")));
-		FileInputStream fs = new FileInputStream((new File("c:/users/erik/desktop/Camt_DHS235U.txt")));
+		FileInputStream fs = new FileInputStream((new File("/home/chris/camt.xml")));
 		Binary b = new Binary(fs);
 		fs.close();
 		

@@ -155,7 +155,7 @@ public class EntityListener extends HttpServlet {
             Entity e = myManager.getEntity(entityName);
             if (e == null) {
                 // Requested entity not found
-                logger.error("Requested entity not registred with entityManager!");
+                logger.warn("Requested entity not registred with entityManager!");
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND);
             }
 
@@ -213,6 +213,10 @@ public class EntityListener extends HttpServlet {
             ServiceEntityOperation seo = new ServiceEntityOperation(myManager, DispatcherFactory.getInstance(), o);
             result = seo.perform(input);
             
+            if (result.getMessage(entityMessage.getName()) == null) {
+                throw new EntityException(EntityException.ENTITY_NOT_FOUND);
+            }
+            
             if (method.equals("GET") && result.getMessage(entityMessage.getName()) != null) {
                 outputEtag = result.getMessage(entityMessage.getName()).generateEtag();
             }
@@ -244,6 +248,7 @@ public class EntityListener extends HttpServlet {
         if (result == null) {
             throw new ServletException("No output found");
         }
+       
         if (result.getMessage("errors") != null) {
             String status = result.getMessage("errors").getProperty("Status").toString();
             if (status.equals("304")) {
@@ -289,7 +294,12 @@ public class EntityListener extends HttpServlet {
     // format the user requested(eg.g JSON).
     private Navajo handleException(Exception ex, HttpServletRequest request, HttpServletResponse response) throws ServletException {
         Navajo result = null;
-        logger.warn("Exception in handling entity request: {}. Going to try to handle it nicely.", ex);
+        if (ex instanceof EntityException) {
+            logger.warn("EntityException in handling entity request: {}. Going to try to handle it nicely.", ex.getMessage());
+        } else {
+            logger.error("Exception in handling entity request. Going to try to handle it nicely.", ex);
+
+        }
 
         result = NavajoFactory.getInstance().createNavajo();
         Message m = NavajoFactory.getInstance().createMessage(result, "errors");
