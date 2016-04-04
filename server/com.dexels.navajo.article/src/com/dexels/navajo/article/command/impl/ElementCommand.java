@@ -10,13 +10,13 @@ import org.codehaus.jackson.node.ObjectNode;
 
 import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
+import com.dexels.navajo.article.APIValue;
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.NoJSONOutputException;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.types.Binary;
 
@@ -88,41 +88,12 @@ public class ElementCommand implements ArticleCommand {
 			String msgpath = name.substring(0, name.lastIndexOf('/'));
 			String propname = name.substring(name.lastIndexOf('/')+1,name.length());
 			ObjectNode msgNode = runtime.getGroupNode(msgpath);
-			setValue(runtime, msgNode, propname, p, parameters);
-					
+			APIValue.setValueOnNodeForType(msgNode, propname, parameters.get("type"), p, runtime);
 			return null;
 		} else {
-			ObjectNode on = runtime.getRootNode();
-			setValue(runtime, on, name, p, parameters);
+			ObjectNode on = runtime.getRootNode();			
+			APIValue.setValueOnNodeForType(on, name, parameters.get("type"), p, runtime);
 			return on;
-		}
-	}
-	
-	private void setValue(ArticleRuntime runtime, ObjectNode container, String name, Property property, Map<String,String> parameters) {
-		if ("selection".equals(parameters.get("type"))) {
-			ArrayNode options = runtime.getObjectMapper().createArrayNode();
-			
-			if (property.getAllSelections() != null && property.getAllSelections().size() > 0) {
-				for (Selection s : property.getAllSelections()) {
-					ObjectNode node = runtime.getObjectMapper().createObjectNode();
-					
-					node.put("selected", s.isSelected());
-					node.put("value", s.getValue());
-					node.put("name", s.getName());
-					
-					options.add(node);	
-				}
-			}
-			
-			container.put(name,	 options);
-		} else if (property.getType().equals(Property.SELECTION_PROPERTY)) {
-			if (property.getSelected() == null || property.getSelected().getName() == Selection.DUMMY_SELECTION) {
-				container.put(name, "");
-			} else {
-				container.put(name, property.getSelected().getName());
-			}
-		} else {
-			container.put(name, property.getValue());
 		}
 	}
 
@@ -152,7 +123,7 @@ public class ElementCommand implements ArticleCommand {
 					if (objects[0].equals(string)) { //First
 						fieldName = string;
 						
-						//If the fieldName is allready defined we take that node
+						//If the fieldName is already defined we take that node
 						JsonNode node = getNodeByFieldName(outputArgs, fieldName);
 						if (node != null) {
 							previous = (ObjectNode)node;
