@@ -22,6 +22,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.json.JSONTML;
+import com.dexels.navajo.document.types.NavajoType;
 
 /**
  * TODO: Create option to pass Navajo template for setting correct types.
@@ -163,8 +164,9 @@ public class JSONTMLImpl implements JSONTML {
 				Object value = p.getTypedValue();
 				if (p.getType().equals(Property.BINARY_PROPERTY)) {
 					value = p.getValue();
-				} else if (p.getType().equals(Property.CLOCKTIME_PROPERTY)) {
-				    value = p.getTypedValue().toString();
+				} else if (value instanceof NavajoType) {
+				    // Use toString for NavajoTypes
+				    value = value.toString();
 				}
 				om.writeValue(jg, value );
 
