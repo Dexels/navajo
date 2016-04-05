@@ -33,6 +33,9 @@ public class OpenstackStoreImpl implements OpenstackStore {
 	private Access osAccess = null;
 	
 	public void activate(Map<String,Object> settings) {
+		String name = (String) settings.get("name");
+		String tenant = (String) settings.get("instance");
+		logger.info("Creating swift store for tenant: {} with name: {}",tenant,name);
 		String endpoint = (String) settings.get("endpoint");
 		String username = (String) settings.get("username");
 		if(username==null) {
@@ -42,7 +45,8 @@ public class OpenstackStoreImpl implements OpenstackStore {
 		String apiKey = (String) settings.get("apiKey");
 		String tenantId = (String) settings.get("tenantId");
 		containerName  = (String) settings.get("container");
-		
+
+
 		OSClient os = OSFactory.builder()
                 .endpoint(endpoint)
                 .raxApiKey(true)
