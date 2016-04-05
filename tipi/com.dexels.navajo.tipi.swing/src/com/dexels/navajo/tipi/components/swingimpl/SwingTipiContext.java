@@ -496,7 +496,7 @@ public class SwingTipiContext extends TipiContext {
 	    Object topFrame = getTopDialog();
 	    if (topFrame instanceof JFrame) {
 	        parentFrame = (JFrame) topFrame;
-	    } else if (topFrame instanceof JDialog) {
+	    } else if (topFrame instanceof JDialog && ((JDialog) topFrame).getParent() instanceof JFrame ) {
 	        parentFrame = (JFrame) ((JDialog) topFrame).getParent();
 	    } else {
 	        parentFrame = null;
