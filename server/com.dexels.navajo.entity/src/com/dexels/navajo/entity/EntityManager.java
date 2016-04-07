@@ -21,6 +21,7 @@ import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
 /**
@@ -39,6 +40,8 @@ public class EntityManager {
     private BundleQueue bundleQueue;
 
     private NavajoConfigInterface navajoConfig;
+
+	private DispatcherInterface dispatcher;
 
     public EntityManager() {
     }
@@ -196,13 +199,20 @@ public class EntityManager {
         this.bundleQueue = null;
     }
 
+    public void setDispatcher(DispatcherInterface di) {
+    	this.dispatcher = di;
+    }
+    
+    public void clearDispatcher(DispatcherInterface di) {
+    	this.dispatcher = null;
+    }
     public Navajo getEntityNavajo(String serviceName) throws InterruptedException, FatalException {
         Navajo in = NavajoFactory.getInstance().createNavajo();
         Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
         in.addHeader(h);
 
         try {
-            return DispatcherFactory.getInstance().handle(in, true);
+            return dispatcher.handle(in, true);
         } catch (Exception e) {
             logger.error("Exception on getting the Entity Navajo. - cannot activate {}! {} ", serviceName, e);
             throw new FatalException("Exception on getting the Entity Navajo.");
