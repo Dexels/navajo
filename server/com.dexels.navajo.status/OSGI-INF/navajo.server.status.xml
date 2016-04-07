@@ -4,9 +4,8 @@
    <service>
       <provide interface="javax.servlet.Servlet"/>
       <provide interface="com.dexels.navajo.repository.api.ServerStatusChecker"/>
-		<provide interface="org.osgi.service.event.EventHandler" />
+      <provide interface="org.osgi.service.event.EventHandler" />
    </service>
-   
    <property name="alias" type="String" value="/status"/>
    <property name="servlet-name" type="String" value="status"/>
    <reference bind="setDispatcherInterface" cardinality="0..1" interface="com.dexels.navajo.server.DispatcherInterface" name="DispatcherInterface" policy="dynamic" unbind="clearDispatcherInterface"/>

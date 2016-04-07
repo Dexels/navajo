@@ -23,18 +23,17 @@ public class DispatcherComponent extends Dispatcher implements
 //	private ServiceRegistration<AuditLog> auditLogSr;
 	
 	public void activate(BundleContext context) {
-		logger.info("Activate dispatcher!");
-		new DispatcherFactory(this);
-		myContext = context;
-	    if ("true".equals(System.getenv("SIMULATION_MODE"))) {
-	        simulationMode = true;
-	    }
-		
-		// Register AuditLog.
-//		AuditLog al = new AuditLog(getNavajoConfig().getInstanceName(), myRegistry);
-//		auditLog = al;
-//		auditLogSr = myContext.registerService(AuditLog.class, al, null);
-		
+		try {
+			logger.info("Activate dispatcher!");
+			new DispatcherFactory(this);
+			myContext = context;
+			if ("true".equals(System.getenv("SIMULATION_MODE"))) {
+			    simulationMode = true;
+			}
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public void deactivate() {
 		logger.debug("Deactivate dispatcher!");
