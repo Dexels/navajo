@@ -50,6 +50,13 @@ public class DependencyAnalyzer {
         dependencies.put(script, myDependencies);
 
         updateReverseDependencies(myDependencies);
+        
+        // Also ensure any includes I depend on, have their dependencies set correct
+        for (Dependency dep : myDependencies) {
+            if (dep.getType() == Dependency.INCLUDE_DEPENDENCY) {
+                addDependencies(dep.getDependee());
+            }
+        }
     }
 
     public List<Dependency> getDependencies(String scriptName) {
@@ -120,7 +127,10 @@ public class DependencyAnalyzer {
             if (!reverseDependencies.containsKey(dep.getDependee())) {
                 reverseDependencies.put(dep.getDependee(), new ArrayList<Dependency>());
             }
-            reverseDependencies.get(dep.getDependee()).add(dep);
+            List<Dependency> reverse = reverseDependencies.get(dep.getDependee());
+            if (!reverse.contains(dep)) {
+                reverseDependencies.get(dep.getDependee()).add(dep);
+            }
         }
     }
 

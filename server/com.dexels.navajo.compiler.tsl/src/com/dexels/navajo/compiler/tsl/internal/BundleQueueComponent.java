@@ -169,7 +169,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
                         continue;
                     }
                     enqueueScript(scriptName, extension);
-                    enqueueDependentScripts(scriptName);
+                    enqueueDependentScripts(scriptName, new HashSet<String>());
                 }
             } catch (IllegalArgumentException e1) {
                 logger.warn("Error in handling changed script {}: {}", changedScript, e1);
@@ -177,12 +177,19 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
         }
     }
 
-    private void enqueueDependentScripts(String script) {
+
+    private void enqueueDependentScripts(String script, Set<String> history) {
         String rpcName = script;
+        history.add(script);
         if (script.indexOf("_") > 0) {
             rpcName = script.substring(0, script.lastIndexOf("_"));
         }
         List<Dependency> dependencies = depanalyzer.getReverseDependencies(rpcName);
+        
+        // Going to pretend all the scripts that include us, also changed. This triggers their
+        // re-compile, so that they have the correct version. This goes recursive, to allow
+        // handling includes within includes within includes etc. Use a History set to prevent
+        // a loop somewhere.
         // Use a set to prevent duplicates due to tenent-specific dependencies
         Set<String> dependentScripts = new HashSet<String>();
         for (Dependency dep : dependencies) {
@@ -192,8 +199,13 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 
         }
         for (String depScript : dependentScripts) {
+            if (history.contains(depScript)) {
+                logger.warn("Circular include dependency found! history: {} new: {}", history, depScript);
+                return;
+            }
             logger.info("Going to recompile {} after a change in {}", depScript, script);
-            enqueueScript(depScript, ".xml");
+            enqueueScript(depScript, null);
+            enqueueDependentScripts(depScript, history);
         }
     }
 
