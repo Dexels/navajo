@@ -116,7 +116,6 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
 
     private HashSet<Lock> acquiredLocks = new HashSet<Lock>();
 
-    @SuppressWarnings("unused")
     private final static Logger logger = LoggerFactory.getLogger(CompiledScript.class);
 
     /**
