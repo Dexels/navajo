@@ -3,7 +3,7 @@ Built-By: flyaruu
 Bundle-Name: Navajo Branding Fragment
 Bundle-Vendor: Dexels
 Fragment-Host: org.apache.felix.webconsole
-Bundle-Version: 1.0.8.qualifier
+Bundle-Version: 1.0.9
 Bundle-ManifestVersion: 2
 Bundle-Description: Dexels Branding for Webconsole
 Bundle-DocURL: https://github.com/Dexels/navajo/
