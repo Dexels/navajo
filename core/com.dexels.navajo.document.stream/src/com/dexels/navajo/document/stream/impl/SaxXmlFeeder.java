@@ -30,7 +30,6 @@ public class SaxXmlFeeder implements AsyncByteArrayFeeder {
 		AsyncXMLInputFactory f = new InputFactoryImpl();
 		this.parser = f.createAsyncForByteArray();
 		this.wrappedFeeder = parser.getInputFeeder();
-
 	}
 
 	@Override

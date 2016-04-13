@@ -39,7 +39,6 @@ public class XML {
 
 					private void parse(Subscriber<? super XMLEvent> in, byte[] bytes) {
 						Iterable<XMLEvent> event = feeder.parse(bytes);
-//						System.err.println("Parsing: "+new String(bytes));
 						if(feeder.getException()!=null) {
 							in.onError(feeder.getException());
 						} else {

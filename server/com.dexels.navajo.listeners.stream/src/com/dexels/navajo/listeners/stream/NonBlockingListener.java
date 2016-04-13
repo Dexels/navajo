@@ -108,7 +108,7 @@ public class NonBlockingListener extends HttpServlet {
 			.lift(NAVADOC.filterMessageIgnore())
 			.lift(NAVADOC.serialize())
 			.lift(NavajoStreamOperators.compress(responseEncoding))
-			.subscribe(createOutput(ac));
+			.subscribe(createOutput(ac,"text/xml"));
 		return;
 	}
 
@@ -154,7 +154,7 @@ public class NonBlockingListener extends HttpServlet {
 				.lift(NAVADOC.filterMessageIgnore())
 				.lift(NAVADOC.serialize())
 				.lift(NavajoStreamOperators.compress(responseEncoding))
-				.subscribe(createOutput(ac));
+				.subscribe(createOutput(ac,"text/xml"));
 			return;
 //		parsePost(ac, attributes)
 //		eventStream
@@ -224,42 +224,6 @@ public class NonBlockingListener extends HttpServlet {
 		return null;
 
 	}
-	
-	
-//	public Operator<NavajoStreamEvent, NavajoStreamEvent> resolveScript(String navajoService) {
-//		return new Operator<NavajoStreamEvent, NavajoStreamEvent>(){
-//
-//			@Override
-//			public Subscriber<? super NavajoStreamEvent> call(Subscriber<? super NavajoStreamEvent> out) {
-//				if("echo".equals(navajoService)) {
-//					return out;
-//				}
-//				SimpleScript simple = simpleScripts.get(navajoService);
-//				if(simple!=null) {
-//					simple.c
-//					return new Subscriber<NavajoStreamEvent>() {
-//
-//						@Override
-//						public void onCompleted() {
-//							out.onCompleted();
-//						}
-//
-//						@Override
-//						public void onError(Throwable ex) {
-//							out.onError(ex);
-//						}
-//
-//						@Override
-//						public void onNext(NavajoStreamEvent event) {
-//							simple
-//						}
-//					};
-//				}
-//				return out;
-//
-//			}
-//		};
-//	}
 
 	private static Observable<NavajoStreamEvent> errorMessage(Navajo in) {
 		return Msg.create()
@@ -356,7 +320,8 @@ public class NonBlockingListener extends HttpServlet {
 		return instance;
 	}
 
-	private static Subscriber<byte[]> createOutput(AsyncContext context) throws IOException {
+	private static Subscriber<byte[]> createOutput(AsyncContext context, String contentType) throws IOException {
+		context.getResponse().setContentType(contentType);
 		final ServletOutputStream out = context.getResponse().getOutputStream();
 		final AtomicBoolean done = new AtomicBoolean(false);
 		final AtomicBoolean completed = new AtomicBoolean(false);
