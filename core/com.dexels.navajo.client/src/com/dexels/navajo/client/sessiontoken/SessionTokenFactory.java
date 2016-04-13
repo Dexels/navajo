@@ -17,10 +17,8 @@ public class SessionTokenFactory  {
 	
 	
 	public synchronized static SessionTokenProvider getSessionTokenProvider() {
-
 		if ( instance == null ) {
 				instance = new DefaultSessionTokenProvider();
-		
 		}
 		return instance;
 	}
