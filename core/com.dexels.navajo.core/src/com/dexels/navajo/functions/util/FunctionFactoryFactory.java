@@ -24,6 +24,7 @@ public class FunctionFactoryFactory {
 	
 
 		
+	@SuppressWarnings("unchecked")
 	public static FunctionFactoryInterface getInstance() {
 //		FunctionFactoryInterface fii;
 		

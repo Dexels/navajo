@@ -6,6 +6,7 @@ import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.parser.FunctionInterface;
 
 
@@ -21,6 +22,9 @@ public class OSGiFunctionFactoryFactory  {
 	public static FunctionInterface getFunctionInterface(final String functionName)  {
 		FunctionDefinition fd = (FunctionDefinition) getComponent(functionName,
 				"functionName", FunctionDefinition.class);
+		if(fd==null) {
+			throw NavajoFactory.getInstance().createNavajoException("No such function: "+functionName);
+		}
 		FunctionInterface instance = fd.getFunctionInstance();
 		return instance;
 	}

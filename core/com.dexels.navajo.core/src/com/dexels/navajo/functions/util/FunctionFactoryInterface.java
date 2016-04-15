@@ -193,6 +193,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		adapterConfig.clear();
 	}
 
+	@SuppressWarnings("unchecked")
 	public FunctionInterface getInstance(final ClassLoader cl, final String functionName)  {
 		try {
 			FunctionDefinition fd = getDef(functionName);
@@ -252,6 +253,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 	public void setInitializing(boolean initializing) {
 		this.initializing = initializing;
 	}
+	@SuppressWarnings("unchecked")
 	public FunctionInterface instantiateFunctionClass(FunctionDefinition fd, ClassLoader classLoader) {
 		try {
 //			logger.debug("Instantiating function: {}",fd.getObject());

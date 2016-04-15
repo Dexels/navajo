@@ -41,36 +41,27 @@ class ServletReadListener implements ReadListener {
 
     @Override
     public void onDataAvailable() throws IOException {
-//    	System.err.println("Read Data available!");
     	if(subscriber.isUnsubscribed()) {
     		in.close();
     		return;
     	}
 
     	while(true) {
-            boolean ready = checkReady();
-//            System.err.println("READ Ready: "+ready);
+            boolean ready = in.isReady();
             if(!ready) {
             	break;
             }
             if(in.isFinished()) {
-//            	System.err.println("READ Finished data!");
             	break;
             }
             byte[] buf = new byte[BUFFER_SIZE];
             int len = in.read(buf);
             if (len != -1) {
-//            	logger.debug("Read data: {}",len);
                 subscriber.onNext(Arrays.copyOf(buf, len));
             }
 
         }
     }
-
-	private boolean checkReady() {
-//		System.err.println("READ Ready called");
-		return in.isReady();
-	}
 
     @Override
     public void onAllDataRead() {
