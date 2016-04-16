@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Tipi WebSocket extension
 Bundle-SymbolicName: com.dexels.navajo.tipi.websocket
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.17
+Bundle-Version: 1.0.18.qualifier
 Bundle-Vendor: Dexels
 Bundle-Activator: tipiwebsocket.TipiWebsocketExtension
 Import-Package: com.dexels.navajo.client.sessiontoken,
