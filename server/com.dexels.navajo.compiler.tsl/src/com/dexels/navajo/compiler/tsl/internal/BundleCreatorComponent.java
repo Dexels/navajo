@@ -155,7 +155,7 @@ public class BundleCreatorComponent implements BundleCreator {
                     removeOldCompiledScriptFiles(rpcName);
 
                     // Look for other tenant-specific files
-                    AbstractFileFilter fileFilter = new WildcardFileFilter(rpcName + "_*.xml");
+                    AbstractFileFilter fileFilter = new WildcardFileFilter(bareScript + "_*.xml");
                     File dir = new File(navajoIOConfig.getScriptPath(), FilenameUtils.getPath(scriptName)); 
                     Collection<File> files = FileUtils.listFiles(dir, fileFilter, null);
                     
