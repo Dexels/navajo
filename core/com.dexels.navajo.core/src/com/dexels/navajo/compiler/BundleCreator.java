@@ -57,7 +57,7 @@ public interface BundleCreator {
 	 * @return Null if not found
 	 * @throws ClassNotFoundException if something weird happened
 	 */
-	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant,boolean tenantQualified) throws ClassNotFoundException;
+	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant) throws ClassNotFoundException;
 
 	/**
 	 * Same as getCompiledScript, only will try to install (and compile if needed) bundle if it isn't there.
@@ -65,7 +65,7 @@ public interface BundleCreator {
 	 * @return
 	 * @throws Exception
 	 */
-	public CompiledScriptInterface getOnDemandScriptService(String scriptName, String rpcName, String tenant, boolean tenantQualified,boolean force,String extension);
+	public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant, boolean force,String extension);
 
 	/**
 	 * Uninstall the bundle belonging to <code>scriptName</code>. If <code>scriptName</code> is tenant-specific, only that 

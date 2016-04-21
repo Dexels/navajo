@@ -518,12 +518,7 @@ public class GenericHandler extends ServiceHandler {
 			tenant = access.getTenant();
 		}
 		
-        String extension = tenantConfig.determineScriptExtension(rpcName, tenant);
-
-		boolean hasTenantScriptFile = tenantConfig.hasTenantScriptFile(rpcName,tenant, extension);
-		String scriptName = hasTenantScriptFile ? rpcName + "_" + tenant : rpcName;
-        CompiledScriptInterface sc = BundleCreatorFactory.getInstance().getOnDemandScriptService(scriptName, rpcName, tenant,
-                hasTenantScriptFile, force, extension);
+        CompiledScriptInterface sc = BundleCreatorFactory.getInstance().getOnDemandScriptService(rpcName, tenant, force, null);
 		return sc;
 	}
 
