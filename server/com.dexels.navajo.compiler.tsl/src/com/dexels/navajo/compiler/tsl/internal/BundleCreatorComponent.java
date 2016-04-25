@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Pattern;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
@@ -165,7 +166,8 @@ public class BundleCreatorComponent implements BundleCreator {
                     }
                     
                     for (File ascript : files) {
-                        String tenantScriptPath = ascript.getAbsolutePath().split(navajoIOConfig.getScriptPath() + File.separator)[1];
+                        String pattern = Pattern.quote( File.separator);
+                        String tenantScriptPath = ascript.getAbsolutePath().split(navajoIOConfig.getScriptPath() + pattern)[1];
                         String[] splitted = tenantScriptPath.split("\\.");
                         createBundleForScript(splitted[0], rpcName, failures, success, skipped, keepIntermediate, "." + splitted[1], formatCompilationDate);
                     }
