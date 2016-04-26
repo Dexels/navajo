@@ -129,9 +129,11 @@ public class BundleCreatorComponent implements BundleCreator {
             List<String> skipped, boolean force, boolean keepIntermediate, String scriptExtension) throws Exception {
 
         String bareScript = scriptName.substring(scriptName.lastIndexOf("/") + 1);
+        String bareRpcName = bareScript;
         String rpcName = scriptName;
 
         if (bareScript.indexOf("_") > 0) {
+            bareRpcName = bareScript.substring(0, bareScript.lastIndexOf("_"));;
             rpcName = scriptName.substring(0, rpcName.lastIndexOf("_"));
         }
         if (scriptExtension == null) {
@@ -157,7 +159,7 @@ public class BundleCreatorComponent implements BundleCreator {
                     removeOldCompiledScriptFiles(rpcName);
 
                     // Look for other tenant-specific files
-                    AbstractFileFilter fileFilter = new WildcardFileFilter(bareScript + "_*.xml");
+                    AbstractFileFilter fileFilter = new WildcardFileFilter(bareRpcName + "_*.xml");
                     File dir = new File(navajoIOConfig.getScriptPath(), FilenameUtils.getPath(scriptName)); 
                     Collection<File> files = FileUtils.listFiles(dir, fileFilter, null);
                     
