@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.regex.Pattern;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
@@ -151,7 +152,7 @@ public class BundleCreatorComponent implements BundleCreator {
                 if (isDirectory(script, scriptFolder, f)) {
                     compileAllIn(f, compilationDate, failures, success, skipped, force, keepIntermediate, scriptExtension);
                 } else {   
-                    
+                    Path pathBase = Paths.get(navajoIOConfig.getScriptPath());
                    
                     removeOldCompiledScriptFiles(rpcName);
 
@@ -166,9 +167,8 @@ public class BundleCreatorComponent implements BundleCreator {
                     }
                     
                     for (File ascript : files) {
-                        String pattern = Pattern.quote( File.separator);
-                        String tenantScriptPath = ascript.getAbsolutePath().split(navajoIOConfig.getScriptPath() + pattern)[1];
-                        String[] splitted = tenantScriptPath.split("\\.");
+                        Path pathRelative = pathBase.relativize(Paths.get(ascript.toURI()));
+                        String[] splitted = pathRelative.toString().split("\\.");
                         createBundleForScript(splitted[0], rpcName, failures, success, skipped, keepIntermediate, "." + splitted[1], formatCompilationDate);
                     }
                     
