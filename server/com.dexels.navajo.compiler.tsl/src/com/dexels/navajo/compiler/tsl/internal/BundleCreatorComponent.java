@@ -169,7 +169,9 @@ public class BundleCreatorComponent implements BundleCreator {
                     for (File ascript : files) {
                         Path pathRelative = pathBase.relativize(Paths.get(ascript.toURI()));
                         String[] splitted = pathRelative.toString().split("\\.");
-                        createBundleForScript(splitted[0], rpcName, failures, success, skipped, keepIntermediate, "." + splitted[1], formatCompilationDate);
+                        String tenantScriptName = splitted[0].replace('\\', '/');
+                        String extension = "." + splitted[1];
+                        createBundleForScript(tenantScriptName, rpcName, failures, success, skipped, keepIntermediate, extension, formatCompilationDate);
                     }
                     
                     
