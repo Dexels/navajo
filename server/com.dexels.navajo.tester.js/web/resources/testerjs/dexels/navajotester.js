@@ -11,8 +11,9 @@ var pretty_max_response_length = 80000;
 
 var hooverdiv = '<div class="customRunOptionContainer">';
 hooverdiv += '  <div class="customRunOption scriptcompile">Compile</div> |';
-hooverdiv += '  <div class="customRunOption scriptsource">Source</div> | ';
-hooverdiv += '  <div class="customRunOption scriptinput">Custom Input</div>';
+hooverdiv += '  <div class="customRunOption scriptsource">Src</div> | ';
+hooverdiv += '  <div class="customRunOption compiledsource">Compiled src</div> | ';
+hooverdiv += '  <div class="customRunOption scriptinput">Input</div>';
 hooverdiv += '</div>';
 
 
@@ -216,7 +217,7 @@ function runScript(script) {
     }
     
     $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
-        $('#scriptsourcecontent').removeClass('prettyprinted');
+    	$('#scriptsourcecontent').attr('class', 'prettyprint lang-xml linenums');
         $('#scriptsourcecontent').text(data)
         if (data.length < pretty_max_source_length) {
         	 prettyPrint();
@@ -468,7 +469,7 @@ $(document).on('click', '.scriptsource', function() {
     }, 50);
     
     $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
-        $('#scriptsourcecontent').removeClass('prettyprinted');
+    	$('#scriptsourcecontent').attr('class', 'prettyprint lang-xml linenums');
         $('#scriptsourcecontent').text(data)
         if (data.length < pretty_max_source_length) {
         	 prettyPrint();
@@ -482,6 +483,30 @@ $(document).on('click', '.scriptsource', function() {
         hourglassOff();
     });
 });
+
+$(document).on('click', '.compiledsource', function() {
+    var script = $(this).parent().parent().children('.script').attr('id');
+    hourglassOn();
+    $('html, body').animate({
+        scrollTop : 0
+    }, 50);
+    
+    $.get("/testerapi?query=getcompiledcontent&file=" + script, function(data) {
+        $('#scriptsourcecontent').attr('class', 'prettyprint lang-java linenums');
+        $('#scriptsourcecontent').text(data)
+//        if (data.length < pretty_max_source_length) {
+        	 prettyPrint();
+//        } else {
+//        	// add class to prevent it from being pretty-printed by script response prettyprint
+//        	$('#scriptsourcecontent').addClass('prettyprinted');
+//        }
+        $('#scriptheader').text(script);
+        $('#scriptMainView').show();
+        $('#TMLSourceviewLink').click();
+        hourglassOff();
+    });
+});
+
 
 
 $(document).on('click', '#showMoreArrow', function() {

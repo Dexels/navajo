@@ -38,6 +38,9 @@ public class CompileServlet extends HttpServlet {
 		}
 		boolean force = true;
 		boolean keepIntermediateFiles = false;
+		if ("true".equals(System.getenv("DEVELOP_MODE"))) {
+            keepIntermediateFiles = true;
+        }
 		List<String> success = new ArrayList<String>();
 		List<String> failures = new ArrayList<String>();
 		List<String> skipped = new ArrayList<String>();

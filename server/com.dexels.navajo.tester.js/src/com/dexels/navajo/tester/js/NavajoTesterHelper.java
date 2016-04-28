@@ -94,7 +94,20 @@ public class NavajoTesterHelper {
             }
         }
         return "";
-       
+    }
+    
+    public String getCompiledScriptContent(String path) {
+        File scriptsPath = new File(navajoConfig.getCompiledScriptPath());
+        File f = new File(scriptsPath, path + ".java");
+        if (f.exists()) {
+            try {
+               byte[] bytes =  Files.readAllBytes(f.toPath());
+               return new String(bytes, "UTF-8");
+            } catch (IOException e) {
+                logger.error("Exception on getting file contents: ", e);
+            }
+        }
+        return "";
     }
 
    
