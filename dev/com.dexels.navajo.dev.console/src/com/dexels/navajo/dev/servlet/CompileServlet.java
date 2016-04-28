@@ -37,10 +37,13 @@ public class CompileServlet extends HttpServlet {
 			tenant = "default";
 		}
 		boolean force = true;
-		boolean keepIntermediateFiles = false;
-		if ("true".equals(System.getenv("DEVELOP_MODE"))) {
+		Boolean keepIntermediateFiles = false;
+		if (req.getParameter("keepIntermediateFiles") != null) {
+		    keepIntermediateFiles = Boolean.valueOf(req.getParameter("keepIntermediateFiles"));
+		} else if ("true".equals(System.getenv("DEVELOP_MODE"))) {
             keepIntermediateFiles = true;
         }
+		
 		List<String> success = new ArrayList<String>();
 		List<String> failures = new ArrayList<String>();
 		List<String> skipped = new ArrayList<String>();

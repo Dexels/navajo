@@ -393,8 +393,7 @@ $(document).on('click', '.scriptcompile', function() {
                         }, 1000  
                     );  
         }
-    }); 
-    
+    });
 });
 
 $(document).on('click', '.scriptinput', function() {
@@ -491,19 +490,21 @@ $(document).on('click', '.compiledsource', function() {
         scrollTop : 0
     }, 50);
     
-    $.get("/testerapi?query=getcompiledcontent&file=" + script, function(data) {
-        $('#scriptsourcecontent').attr('class', 'prettyprint lang-java linenums');
-        $('#scriptsourcecontent').text(data)
-//        if (data.length < pretty_max_source_length) {
-        	 prettyPrint();
-//        } else {
-//        	// add class to prevent it from being pretty-printed by script response prettyprint
-//        	$('#scriptsourcecontent').addClass('prettyprinted');
-//        }
-        $('#scriptheader').text(script);
-        $('#scriptMainView').show();
-        $('#TMLSourceviewLink').click();
-        hourglassOff();
+    $.ajax({
+        type: "GET",
+        url: "/compile?script=" + script + '&keepIntermediateFiles=true',
+        dataType: "text",
+        success: function() {
+        	$.get("/testerapi?query=getcompiledcontent&file=" + script, function(data) {
+                $('#scriptsourcecontent').attr('class', 'prettyprint lang-java linenums');
+                $('#scriptsourcecontent').text(data)
+                prettyPrint();
+                $('#scriptheader').text(script);
+                $('#scriptMainView').show();
+                $('#TMLSourceviewLink').click();
+                hourglassOff();
+            });
+        }
     });
 });
 
