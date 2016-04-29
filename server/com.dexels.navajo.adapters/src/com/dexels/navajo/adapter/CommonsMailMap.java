@@ -1,7 +1,6 @@
 package com.dexels.navajo.adapter;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,8 +68,8 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	public AttachementMap attachment = null;
 	private Integer port = null;
 	private boolean debug;
-
-	
+	private String failure = "";
+	public boolean ignoreFailures = false;
 
 
 	public CommonsMailMap() {}
@@ -186,13 +185,16 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 
 		  // send the email
 		  email.send();
-		} catch (MalformedURLException e) {
-			AuditLog.log("CommonsMailMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
-			throw new UserException(-1, e.getMessage(), e);
-		} catch (EmailException e) {
-			AuditLog.log("CommonsMailMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
-			throw new UserException(-1, e.getMessage(), e);
-		}
+    		
+    	} catch (Exception e) {
+            if (ignoreFailures) {
+                AuditLog.log("CommonsMailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
+                failure = e.getMessage();
+            } else {
+                AuditLog.log("CommonsMailMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
+                throw new UserException(-1, e.getMessage(), e);
+            }
+    	}
 	}
 	
 	/**
@@ -602,4 +604,16 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	public boolean getDebug() {
 		return this.debug;
 	}
+	
+	public String getFailure() {
+        return failure;
+    }
+
+	public boolean getIgnoreFailures() {
+        return ignoreFailures;
+    }
+	
+	public void setIgnoreFailures(boolean b) {
+        ignoreFailures = b;
+    }
 }
