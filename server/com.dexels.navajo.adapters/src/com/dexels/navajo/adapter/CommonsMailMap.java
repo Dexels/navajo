@@ -118,6 +118,11 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 		return email;
 	}
 	
+	// Use from navascript
+	public void setDoSend(boolean ignore) throws UserException {
+	    sendMail();
+	}
+	
 	/**
 	 * This is where the actual mail is constructed and send
 	 * Inline images can be used through attachments
@@ -170,7 +175,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 			} else {
 				logger.info("No attachments");
 			}
-		logger.info("Setting body, before replace: "+bodyText);
+		  logger.info("Setting body, before replace: "+bodyText);
 		  
 		  // Replace any inline image tags with the created ones
 		  bodyText = replaceInlineImageTags(bodyText, inlineImages);
@@ -185,7 +190,6 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 
 		  // send the email
 		  email.send();
-    		
     	} catch (Exception e) {
             if (ignoreFailures) {
                 AuditLog.log("CommonsMailMap", e.getMessage(), Level.WARNING, myAccess.accessID);

@@ -252,6 +252,11 @@
 			<value name="debug" type="boolean" required="false" direction="in" />
             <value name="ignoreFailures" type="boolean" required="false" direction="in" />
 		</values>
+        <methods>
+            <method name="doSend">
+                <param name="value" field="doSend" type="boolean" required="automatic" value="true" />
+            </method>
+        </methods>
 	</map>
 	<map abstract="true">
 		<tagname>attachment</tagname>
