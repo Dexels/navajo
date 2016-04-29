@@ -156,14 +156,7 @@ public class NonBlockingListener extends HttpServlet {
 				.lift(NavajoStreamOperators.compress(responseEncoding))
 				.subscribe(createOutput(ac,"text/xml"));
 			return;
-//		parsePost(ac, attributes)
-//		eventStream
-//			.lift(NAVADOC.collect(attributes))
-//			.flatMap(inputNav->executeLegacy(navajoService, tenant, inputNav))
-//			.lift(NAVADOC.serialize())
-//			.lift(NavajoStreamOperators.compress(responseEncoding))
-//			.onBackpressureBuffer(BACKPRESSURE_LIMIT, ()->System.err.println("Overflow!!!!"))
-//			.subscribe(createOutput(ac));
+
 	}
 
 
