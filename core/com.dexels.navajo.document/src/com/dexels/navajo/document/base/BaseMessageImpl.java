@@ -1426,6 +1426,37 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         }
         return 0;
     }
+    
+    public boolean equals(Object obj) {
+        if (! (obj instanceof Message)) {
+            return false;
+        }
+        Message otherMessage = (Message) obj;
+        if (!otherMessage.getName().equals(getName())) {
+            return false;
+        }
+        if (!otherMessage.getType().equals(getType())) {
+            return false;
+        }
+        List<Property> myProps = getAllProperties();
+        List<Property> otherProps = otherMessage.getAllProperties();
+        if (myProps.size() != otherProps.size()) {
+            return false;
+        }
+        
+        if (getType().equals(Message.MSG_TYPE_ARRAY)) {
+            if (this.getElements().size() != otherMessage.getElements().size()) {
+                return false;
+            }
+            
+        } else {
+            
+        }
+        
+        return false;
+        
+        
+    }
 
     @Override
     public void firePropertyDataChanged(Property p, Object oldValue, Object newValue) {
