@@ -1,0 +1,10 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo Kafka driver" name="Navajo HTTP driver" id="navajo.resource.http">
+    <AD name="url"   id="url"   required="true"  type="String" default="localhost"/>   
+    <AD name="name"  id="name" required="true" type="String" default="http://localhost:8080"/>
+    <AD name="instance"  id="instance" required="false" type="String" default="*"/>
+  </OCD>
+  <Designate factoryPid="navajo.resource.kafka">
+     <Object ocdref="navajo.resource.kafka"/>
+  </Designate>
+</metatype:MetaData>

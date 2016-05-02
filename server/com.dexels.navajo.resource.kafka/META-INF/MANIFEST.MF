@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Navajo Kafka connector
+Bundle-SymbolicName: com.dexels.navajo.resource.kafka
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: DEXELS
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Service-Component: OSGI-INF/navajo.resource.kafka.factory.xml
+Export-Package: com.dexels.navajo.resource.kafka
+Import-Package: com.dexels.kafka.api;version="1.0.0",
+ com.dexels.kafka.factory;version="1.0.0",
+ com.dexels.navajo.script.api;version="1.0.0",
+ org.apache.kafka.clients;version="0.9.0.1",
+ org.junit;version="4.0.0";resolution:=optional,
+ org.slf4j;version="[1.6.1,1.8.0)"

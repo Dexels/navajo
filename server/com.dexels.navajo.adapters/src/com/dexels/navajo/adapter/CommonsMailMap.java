@@ -70,7 +70,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	private boolean debug;
 	private String failure = "";
 	public boolean ignoreFailures = false;
-
+	private boolean sent = false;
 
 	public CommonsMailMap() {}
 	
@@ -120,7 +120,11 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	
 	// Use from navascript
 	public void setDoSend(boolean ignore) throws UserException {
+	    if (sent) {
+	        logger.warn("Do no reuse mailmap for multiple separate e-mails!");
+	    }
 	    sendMail();
+	    sent = true;
 	}
 	
 	/**
@@ -346,6 +350,9 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 
 	@Override
 	public void store() throws MappableException, UserException {
+	    if (sent) {
+	        return;
+	    }
 		if (!queuedSend) {
 			sendMail();
 		} else {

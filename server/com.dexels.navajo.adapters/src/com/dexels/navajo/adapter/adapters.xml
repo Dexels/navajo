@@ -243,6 +243,8 @@
 			<value name="subject" type="string" required="false" direction="in" />
 			<value name="bodyText" type="string" required="false" direction="in" />
 			<value name="to" type="string" required="false" direction="in" />
+            <value name="cc" type="string" required="false" direction="in" />
+            <value name="bcc" type="string" required="false" direction="in" />
 			<value name="attachment" map="attachment" required="false" direction="in" />
 			<value name="multipleAttachments" map="attachment []" required="false" direction="in" />
 			<value name="smtpUser" type="string" required="false" direction="in" />
