@@ -543,16 +543,16 @@
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.crystal/1.0.5</bundle> -->
 	</feature>
 
-	<feature resolver="(obr)" name='dexels.appstore' version='1.3.6'>
+	<feature resolver="(obr)" name='dexels.appstore' version='1.3.7'>
 		<feature version="[3.0.0,5)">pax-http</feature>
 		<feature version="[3.0.0,5)">eventadmin</feature>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.ant/1.9.6_1
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.core/4.0.7
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.core/4.0.11
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.ant/1.0.19
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.ant/1.0.21
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.server/6.0.7
+		<bundle dependency='true'>mvn:com.dexels.repository/com.dexels.appstore.server/6.0.10
 		</bundle>
 		<bundle dependency='true'>mvn:commons-codec/commons-codec/1.10
 		</bundle>
