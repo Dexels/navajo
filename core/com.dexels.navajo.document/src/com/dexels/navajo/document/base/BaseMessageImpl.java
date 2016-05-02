@@ -1427,7 +1427,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         return 0;
     }
     
-    public boolean equals(Object obj) {
+    public boolean messageEquals(Object obj) {
         if (! (obj instanceof Message)) {
             return false;
         }
