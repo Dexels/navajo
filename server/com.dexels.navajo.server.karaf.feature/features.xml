@@ -3,15 +3,15 @@
 	name="navajo.repo-[[VERSION]]">
 	<!-- http, webconsole -->
 
-    <feature version="1.4.12" name="dexels.repository" install="auto">
+    <feature version="1.4.13" name="dexels.repository" install="auto">
             <feature version="[3.0.0,5)">eventadmin</feature>
             <feature version="[3.0.0,5)">pax-http</feature>
             <feature version="[3.0.0,5)">pax-http-whiteboard</feature>
             <bundle>mvn:com.dexels.repository/com.dexels.karaf4.featuresync/2.0.9</bundle>
-            <bundle>mvn:com.dexels.repository/com.dexels.repository.api/7.0.5</bundle>
-            <bundle>mvn:com.dexels.repository/com.dexels.repository.git/4.0.13</bundle>
-            <bundle>mvn:com.dexels.repository/coms.dexels.repository.git.api/1.2.0</bundle>
-            <bundle>mvn:com.dexels.repository/com.dexels.repository.file/1.0.31</bundle>
+            <bundle>mvn:com.dexels.repository/com.dexels.repository.api/8.0.1</bundle>
+            <bundle>mvn:com.dexels.repository/com.dexels.repository.git/4.0.15</bundle>
+            <bundle>mvn:com.dexels.repository/coms.dexels.repository.git.api/1.2.2</bundle>
+            <bundle>mvn:com.dexels.repository/com.dexels.repository.file/1.0.32</bundle>
             <bundle>mvn:com.dexels.thirdparty/javaewah/0.7.9</bundle>
             <bundle>mvn:com.jcraft/jsch-bundle/0.1.50</bundle>
             <bundle>mvn:org.eclipse.jgit/org.eclipse.jgit/4.1.1.201511131810-r</bundle>
