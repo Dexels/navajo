@@ -13,6 +13,7 @@
 		<module>../../com.dexels.navajo.tipi.swing.client</module>
 		<module>../../com.dexels.navajo.tipi.swing.deps</module>
 		<module>../../com.dexels.navajo.tipi.swing.application</module>
+		<module>../../com.dexels.navajo.tipi.swing.colorpicker</module>
 		<module>../</module>
 	</modules>
 	
