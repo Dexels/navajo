@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.GradientPaint;
 import java.awt.Rectangle;
+import java.awt.Window;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -43,7 +44,7 @@ public class TipiChooseColor extends TipiAction {
             public void run() {
                 // JColorChooser c = new JColorChooser();
                 Component container = (Component) getComponent().getContainer();
-                JFrame top = (JFrame) SwingUtilities.getWindowAncestor(container);
+                Window top = (Window) SwingUtilities.getWindowAncestor(container);
 
                 // bgp panel should contain paint
                 TipiPanel bpgpanel = (TipiPanel) getComponent().findTipiComponentById("bgp");
