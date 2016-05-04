@@ -196,6 +196,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 			Navajo input, String service,
 			final NavajoResponseHandler continuation, Integer timeout) throws IOException,
 			NavajoException {
+		logger.info("Calling remote navajo async for url: {} ",url);
 		if (input == null) {
 			input = NavajoFactory.getInstance().createNavajo();
 		} else {
