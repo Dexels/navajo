@@ -1,9 +1,16 @@
 package com.dexels.navajo.client.async;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class AsyncClientFactory {
 
     private static Class<ManualAsyncClient> asyncClientClass = null;
 
+    
+	private final static Logger logger = LoggerFactory.getLogger(AsyncClientFactory.class);
+
+	
     private AsyncClientFactory() {
         // no instantiation
     }
@@ -11,9 +18,12 @@ public class AsyncClientFactory {
     public static ManualAsyncClient getManualInstance() {
         synchronized (AsyncClientFactory.class) {
             try {
-                return asyncClientClass.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-
+            	logger.info("Instantiation manual client instance to class: "+asyncClientClass);
+                ManualAsyncClient newInstance = asyncClientClass.newInstance();
+                logger.info("Instance complete: "+newInstance);
+				return newInstance;
+            } catch (Throwable e) {
+            	logger.error("Error: ", e);
             }
             return null;
         }
@@ -21,6 +31,7 @@ public class AsyncClientFactory {
 
     @SuppressWarnings("unchecked")
     public static void setInstance(Class<?> aClazz) {
+    	logger.info("Setting manual client instance to class: "+aClazz);
         asyncClientClass = (Class<ManualAsyncClient>) aClazz;
     }
 

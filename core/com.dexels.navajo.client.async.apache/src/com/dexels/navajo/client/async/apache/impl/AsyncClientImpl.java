@@ -81,7 +81,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		// client.setConnectorType(HttpClient.CONNECTOR_SELECT_CHANNEL);
 //		final SslContextFactory factory = new SslContextFactory();
 //		client = new HttpClient();
-		client = HttpAsyncClients.createDefault();
+		client = HttpAsyncClients.createSystem();
 
 		 // max 200 concurrent connections to every address
 //		client.setMaxConnectionsPerDestination(MAX_CONNECTIONS_PER_ADDRESS);
