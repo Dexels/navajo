@@ -2,17 +2,23 @@ package com.dexels.navajo.tipi.components.swingimpl.actions;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.util.Locale;
+import java.awt.GradientPaint;
+import java.awt.Rectangle;
 
-import javax.swing.JColorChooser;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiSuspendException;
+import com.dexels.navajo.tipi.components.swingimpl.TipiPanel;
+import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiReference;
+import com.dexels.navajo.tipi.swing.colorpicker.ColorPicker;
 
 public class TipiChooseColor extends TipiAction {
     String DIALOG_TITLE_NL = "Selecteer kleur";
@@ -23,7 +29,6 @@ public class TipiChooseColor extends TipiAction {
     @Override
     protected void execute(final TipiEvent event) throws TipiBreakException, TipiException, TipiSuspendException {
         final Color initialColor;
-        
         final Operand evaluated = getEvaluatedParameter("setTo", event); 
         final Operand initialValue =  getEvaluatedParameter("initialValue", event);
         if (initialValue == null) {
@@ -31,12 +36,27 @@ public class TipiChooseColor extends TipiAction {
         } else {
             initialColor = getColorFromHex((String) initialValue.value);
         }
+        event.
         
         getComponent().runSyncInEventThread(new Runnable() {
             @Override
             public void run() {
                 // JColorChooser c = new JColorChooser();
-                Color c = JColorChooser.showDialog((Component) getComponent().getContainer(), getDialogTitle(), initialColor);
+                Component container = (Component) getComponent().getContainer();
+                JFrame top = (JFrame) SwingUtilities.getWindowAncestor(container);
+
+                // bgp panel should contain paint
+                TipiPanel bpgpanel = (TipiPanel) getComponent().findTipiComponentById("bgp");
+                GradientPaint paint = null;
+                if (bpgpanel != null) {
+                    TipiGradientPaint bpgpaint = (TipiGradientPaint) bpgpanel.getValue("paint");
+                    bpgpaint.setBounds(new Rectangle(0, 0, 450, 350));
+                    paint = bpgpaint.getPaint();
+                }
+               
+              
+                Color c = ColorPicker.showDialog(top, initialColor, paint);
+
                 if (c == null) {
                     return;
                 }
@@ -79,16 +99,6 @@ public class TipiChooseColor extends TipiAction {
                 Integer.valueOf( colorStr.substring( 5, 7 ), 16 ) );
     }
 
-    private String getDialogTitle() {
-        Locale locale = null;
-        if (locale == null) {
-            locale = new Locale(System.getProperty("user.language"), System.getProperty("user.country"));
-        }
+  
 
-        if (locale.getDisplayLanguage().toUpperCase() == "EN") {
-            return DIALOG_TITLE_EN;
-        } else {
-            return DIALOG_TITLE_NL;
-        }
-    }
 }
