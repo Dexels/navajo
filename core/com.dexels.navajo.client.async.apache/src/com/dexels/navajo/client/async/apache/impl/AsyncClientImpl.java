@@ -288,7 +288,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		callService(currentAccess.getRequestUrl(), input, nrh, null);
 	}
 
-	private void callService(String url, Navajo n, final NavajoResponseHandler continuation, Integer timeout) throws IOException, NavajoException {
+	private void callService(final String url, Navajo n, final NavajoResponseHandler continuation, Integer timeout) throws IOException, NavajoException {
 
 		logger.info("Calling service: {} at {} ", n.getHeader().getRPCName(), url);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -326,7 +326,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 
 			@Override
 			public void failed(Exception e) {
-				logger.error("HTTP call failed: {}", e);
+				logger.error("HTTP call to: "+url+" failed: {}", e);
 				if(continuation!=null) {
 					try {
 						continuation.onFail(e);
