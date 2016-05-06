@@ -7,17 +7,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
-//import org.eclipse.jetty.client.HttpClient;
-//import org.eclipse.jetty.client.api.Result;
-//import org.eclipse.jetty.client.util.BufferingResponseListener;
-//import org.eclipse.jetty.client.util.BytesContentProvider;
-//import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,8 +79,8 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		// client.setConnectorType(HttpClient.CONNECTOR_SELECT_CHANNEL);
 //		final SslContextFactory factory = new SslContextFactory();
 //		client = new HttpClient();
-		client = HttpAsyncClients.createSystem();
-
+//		client = HttpAsyncClients.createSystem();
+		client = HttpAsyncClients.createDefault();
 		 // max 200 concurrent connections to every address
 //		client.setMaxConnectionsPerDestination(MAX_CONNECTIONS_PER_ADDRESS);
 
@@ -296,6 +294,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		final byte[] byteArray = baos.toByteArray();
 		
 		HttpPost httppost = new HttpPost(url);
+		configureProxy(httppost);
 		httppost.addHeader("Content-Type", "text/xml; charset=utf-8");
 		httppost.setEntity(new ByteArrayEntity(byteArray));
 
@@ -337,6 +336,19 @@ public class AsyncClientImpl implements ManualAsyncClient {
 
 			}
 		});
+	}
+
+	private void configureProxy(HttpPost request) {
+		String host = System.getenv("httpProxyHost");
+		String port = System.getenv("httpProxyPort");
+		if(host==null || port == null) {
+			return;
+		}
+		HttpHost proxy = new HttpHost(host, Integer.parseInt(port));
+        RequestConfig config = RequestConfig.custom()
+                .setProxy(proxy)
+                .build();		
+        request.setConfig(config);
 	}
 
 	public static void main(String[] args) throws Exception {
