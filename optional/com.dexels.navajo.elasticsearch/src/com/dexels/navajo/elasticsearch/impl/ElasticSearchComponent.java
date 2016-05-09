@@ -6,8 +6,12 @@ import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -137,6 +141,7 @@ public class ElasticSearchComponent implements ElasticSearchService {
 
 	
 	private void putJSON(ObjectNode node) throws ClientProtocolException, IOException, URISyntaxException {
+	    replaceDots(node);
 		String id = node.get(this.id_property).asText();
 		HttpPut httpPut = new HttpPut(assembleURI(id));
 		byte[] requestBytes = objectMapper.writer().withDefaultPrettyPrinter().writeValueAsBytes(node);
@@ -148,6 +153,31 @@ public class ElasticSearchComponent implements ElasticSearchService {
 		// response1.getEntity().getContent()
 		response1.close();
 	}
+	
+	 private void replaceDots(ObjectNode mm) {
+	        Iterator<Entry<String, JsonNode>> it = mm.getFields();
+	        Set<String> fieldsWithDots = new HashSet<>();
+	        Set<String> nestedFields = new HashSet<>();
+	        
+	        while (it.hasNext()) {
+	            Entry<String, JsonNode> entry = it.next();
+	            if (entry.getValue().size() > 0)  {
+	                nestedFields.add(entry.getKey());
+	            }
+	            if (entry.getKey().contains(".")) {
+	                fieldsWithDots.add(entry.getKey());
+	            }
+	        }
+	        for (String key : nestedFields) {
+	            replaceDots((ObjectNode) mm.get(key));
+	        }
+	        for (String key : fieldsWithDots) {
+	            String newKey = key.replace(".", "_");
+	            JsonNode value = mm.get(key);
+	            mm.put(newKey, value);
+	            mm.remove(key);
+	        }
+	    }
 
 	private URI assembleURI(String id) throws URISyntaxException {
 		StringBuilder sb = new StringBuilder(url);
