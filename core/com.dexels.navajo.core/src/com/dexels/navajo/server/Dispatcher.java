@@ -893,7 +893,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                         throw new SystemException(-1, "No tenant set -cannot authenticate!");
                     }
 
-                    authenticator.process(instance, rpcUser, rpcPassword, rpcName, userCertificate, access);
+                    authenticator.process(access);
                     
                     
                 } catch (AuthorizationException ex) {

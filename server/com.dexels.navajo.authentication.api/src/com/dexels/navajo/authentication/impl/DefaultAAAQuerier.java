@@ -17,8 +17,7 @@ public class DefaultAAAQuerier implements AAAQuerier {
 	}
 
 	@Override
-	public void process(String tenant, String username, String password, String service, Object certificate,
-			Access access) throws SystemException, AuthorizationException {
+	public void process(Access access) throws SystemException, AuthorizationException {
 		// TODO Auto-generated method stub
 
 	}

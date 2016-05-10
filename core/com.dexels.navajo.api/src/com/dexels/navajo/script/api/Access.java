@@ -90,6 +90,7 @@ public final class Access implements java.io.Serializable, Mappable {
     public String userAgent;
     public String ipAddress;
     public String hostName;
+    public String application;
     public boolean betaUser = false;
     public transient CompiledScriptInterface myScript = null;
     public int queueSize;
@@ -158,9 +159,8 @@ public final class Access implements java.io.Serializable, Mappable {
     // commit the data and finalise the network connection.
     private transient TmlRunnable originalRunnable;
   
-    public Access(int userID, int serviceID, String rpcUser, String rpcName, String userAgent, String ipAddress,
- String hostName,
-            Object certificate, boolean betaUser, String accessID) {
+    public Access(int userID, int serviceID, String rpcUser, String rpcName, String userAgent, String ipAddress, String hostName, Object certificate,
+            boolean betaUser, String accessID) {
 
         this();
 
@@ -655,6 +655,17 @@ public final class Access implements java.io.Serializable, Mappable {
     public void setCpuload(double cpuload) {
         this.cpuload = cpuload;
     }
+    
+
+    public String getApplication() {
+        return application;
+    }
+
+
+    public void setApplication(String application) {
+        this.application = application;
+    }
+
 
     public Binary getRequestNavajo() throws UserException {
         Binary b = new Binary();

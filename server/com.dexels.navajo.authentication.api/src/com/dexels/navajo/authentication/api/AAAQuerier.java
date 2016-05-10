@@ -45,10 +45,9 @@ public interface AAAQuerier {
     
     
     /**
-     * Perform the full authentication and authorisation stack
+     * Perform the full authentication and authorization stack
      */
-    public void process(String tenant, String username, String password, String service,
-            Object certificate, Access access) throws SystemException, AuthorizationException;
+    public void process(Access access) throws SystemException, AuthorizationException;
 
     public List<String> getUserDistricts(String tenant, String username) throws AAAException;
     
