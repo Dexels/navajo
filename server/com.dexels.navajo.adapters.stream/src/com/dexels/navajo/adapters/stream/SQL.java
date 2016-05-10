@@ -15,6 +15,8 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.dexels.grus.GrusProviderFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NAVADOC;
@@ -26,6 +28,11 @@ import com.github.davidmoten.rx.jdbc.Database;
 import rx.Observable;
 
 public class SQL {
+	
+	
+	private final static Logger logger = LoggerFactory.getLogger(SQL.class);
+
+	
 	public static void main(String[] args) throws SQLException, InterruptedException, UserException {
 //
 //        int count = SQL.query("authentication", "select * from SPORT").count().toBlocking().first();
@@ -68,6 +75,7 @@ public class SQL {
 			} 
 	        return null;
 		}
+		logger.info("Resolving datasource {} for tenant {}",dataSourceName,tenant);
 		DataSource source = GrusProviderFactory.getInstance().getInstanceDataSource(tenant, dataSourceName);
 		return source;
 	}
