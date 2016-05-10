@@ -91,6 +91,7 @@ public final class Access implements java.io.Serializable, Mappable {
     public String ipAddress;
     public String hostName;
     public String application;
+    public String region;
     public boolean betaUser = false;
     public transient CompiledScriptInterface myScript = null;
     public int queueSize;
@@ -429,6 +430,8 @@ public final class Access implements java.io.Serializable, Mappable {
         a.requestNavajoSize = this.requestNavajoSize;
         a.responseNavajoSize = this.responseNavajoSize;
         a.tenant = this.tenant;
+        a.application = this.application;
+        a.region = this.region;
         return a;
     }
 
@@ -664,6 +667,18 @@ public final class Access implements java.io.Serializable, Mappable {
 
     public void setApplication(String application) {
         this.application = application;
+    }
+    
+    
+
+
+    public String getRegion() {
+        return region;
+    }
+
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 
 

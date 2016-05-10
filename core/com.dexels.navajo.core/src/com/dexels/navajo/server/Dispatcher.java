@@ -892,7 +892,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     if (instance == null) {
                         throw new SystemException(-1, "No tenant set -cannot authenticate!");
                     }
-
+                    access.setApplication("slc");
                     authenticator.process(access);
                     
                     
