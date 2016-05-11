@@ -223,8 +223,8 @@ public void load(Access access) throws UserException, MappableException {
       }
     }
     catch (SQLException sqle) {
-      AuditLog.log( sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), "SPMap",Level.SEVERE, myAccess.accessID);
-      throw new UserException( -1,  sqle.getLocalizedMessage() + "/" + sqle.getSQLState());
+      AuditLog.log( sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), "SPMap",sqle,Level.SEVERE, myAccess.accessID);
+      throw new UserException( -1,  sqle.getLocalizedMessage() + "/" + sqle.getSQLState(),sqle);
     }
     finally {
     	 if (rs != null) {
@@ -386,8 +386,8 @@ public void setParameter(Object param) {
         }
       }
       catch (SQLException sqle) {
-    	  AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE, myAccess.accessID);
-        throw new UserException( -1, sqle.getMessage());
+    	  AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(),sqle, Level.SEVERE, myAccess.accessID);
+        throw new UserException( -1, sqle.getMessage(),sqle);
       }
       return value;
     }
