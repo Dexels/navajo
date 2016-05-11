@@ -181,6 +181,11 @@ public final String getRPCName() {
 public final String getRPCPassword() {
       return myTransaction.getRpc_pwd();
   }
+  
+  @Override
+  public String getApplication() {
+      return myTransaction.getApplication();
+  }
 
   @Override
 public final void setRPCUser(String s) {
@@ -446,6 +451,8 @@ public boolean hasCallBackPointers() {
 public String getCallBackSignature() {
 	return getRPCUser() + "@" + getRPCName() + "-" + getCallback().getSignature();
 }
+
+
 
 
 }

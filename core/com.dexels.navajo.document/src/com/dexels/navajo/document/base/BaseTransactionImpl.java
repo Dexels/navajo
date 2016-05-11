@@ -17,6 +17,7 @@ private String rpc_usr;
 private String rpc_pwd;
 private String rpc_schedule;
 protected String myRequestId;
+private String application = "noapp";
 
   public BaseTransactionImpl(Navajo n) {
     super(n);
@@ -68,6 +69,16 @@ public final void setRpc_pwd(String rpc_pwd) {
 public final String getRpc_usr() {
     return rpc_usr;
 }
+public String getApplication() {
+    return application ;
+}
+public void setApplication(String application) {
+    if (application != null && !application.trim().equals("")) {
+        this.application = application;
+    }
+    
+}
+
 public final void setRpc_usr(String rpc_usr) {
     this.rpc_usr = rpc_usr;
 }
@@ -85,4 +96,10 @@ public String getRequestId() {
 public void setRequestId(String id) {
     myRequestId = id;
 }
+
+
+
+
+
+
   }

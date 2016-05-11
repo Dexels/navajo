@@ -70,6 +70,9 @@ public interface Header extends java.io.Serializable {
      */
     public String getRPCPassword();
 
+    public String getApplication();
+
+    
     /**
      * Get the internal representation of the Header object.
      *
@@ -214,5 +217,6 @@ public interface Header extends java.io.Serializable {
 	 * @throws IOException
 	 */
 	public void printElement(final Writer sw, int indent) throws IOException;
+
 
 }
