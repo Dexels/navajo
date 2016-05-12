@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.4.9.qualifier
+Bundle-Version: 2.4.13.qualifier
 DynamicImport-Package: *
 Bundle-Activator: navajoadapters.Version
 Navajo-Name: Adapters
@@ -65,6 +65,7 @@ Import-Package: com.dexels.navajo.adapter.navajomap.manager,
  navajo,
  navajoextension,
  org.apache.commons.mail;version="[1.3.0,1.4.0)",
+ com.sun.mail.util,
  org.dexels.utils;version="2.2.0",
  org.junit;version="4.8.2";resolution:=optional,
  org.junit.runner;version="4.8.2";resolution:=optional,
