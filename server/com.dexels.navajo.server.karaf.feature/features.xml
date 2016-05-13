@@ -463,13 +463,13 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.112'>
+		version='3.0.113'>
 		<feature version="[3.0.0,4)">navajo.core</feature>
         <feature version="[3.1.0,4)">navajo.adapter</feature>
        
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.5.16
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.5.14
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.5.16
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.15
 		</bundle>
