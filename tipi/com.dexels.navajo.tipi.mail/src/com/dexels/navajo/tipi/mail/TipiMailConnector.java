@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.mail;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -105,6 +106,9 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		if (service.equals("DeleteMessage")) {
 			setMessageFlag(n, Flag.DELETED, true);
 		}
+		if (service.equals("DeleteMessages")) {
+			setMessagesFlag(n, Flag.DELETED, true);
+		}
 		if (service.equals("SeenMessage")) {
 			setMessageFlag(n, Flag.SEEN, true);
 		}
@@ -119,11 +123,12 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		if (service.equals("SendMessage")) {
 			sendMessage(n);
 		}
-		return null;
+		
+		return NavajoFactory.getInstance().createNavajo();
 	}
 
 	private void activity() {
-		// something happened. Reset disconnect imeout
+		// something happened. Reset disconnect timeout
 		if(disconnectTimer==null) {
 			return;
 		}
@@ -243,6 +248,23 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		} catch (MessagingException e) {
 			logger.error("Error: ",e);
 			throw new TipiException("Error deleting message# " + messageNumber + " from folder: " + name, e);
+		}
+		return true;
+	}
+
+	private boolean setMessagesFlag(Navajo n, Flag flag, boolean value) throws TipiException {
+		// Loop over the incoming messages
+		List<Message> msgs = n.getAllMessages();
+		for ( Message m : msgs )  {
+			if ( m.isArrayMessage() && m.getArraySize() != 0 && m.getName().equals("Folder") ) {
+				List<Message> mmsgs = m.getAllMessages();
+				for ( Message mm : mmsgs )  {
+					Navajo myNavajo = NavajoFactory.getInstance().createNavajo();
+					mm.setType("Simple");
+					myNavajo.addMessage(mm);
+					setMessageFlag(myNavajo, flag, value);
+				}				
+			}
 		}
 		return true;
 	}
