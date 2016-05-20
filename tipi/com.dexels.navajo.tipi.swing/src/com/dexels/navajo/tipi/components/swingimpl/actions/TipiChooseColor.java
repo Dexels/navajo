@@ -51,11 +51,12 @@ public class TipiChooseColor extends TipiAction {
                 GradientPaint paint = null;
                 if (bpgpanel != null) {
                     TipiGradientPaint bpgpaint = (TipiGradientPaint) bpgpanel.getValue("paint");
-                    bpgpaint.setBounds(new Rectangle(0, 0, 450, 350));
-                    paint = bpgpaint.getPaint();
+                    if (bpgpaint != null) {
+                    	bpgpaint.setBounds(new Rectangle(0, 0, 450, 350));
+                        paint = bpgpaint.getPaint();
+                    }
                 }
                
-              
                 Color c = ColorPicker.showDialog(top, initialColor, paint);
 
                 if (c == null) {

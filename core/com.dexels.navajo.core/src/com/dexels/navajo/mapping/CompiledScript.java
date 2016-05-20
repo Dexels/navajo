@@ -543,7 +543,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
                 msg.addProperty(prop0);
                 msg.addProperty(prop1);
                 
-                if (System.getenv("DEBUG_SCRIPTS").equals("true")) {
+                if (System.getenv("DEBUG_SCRIPTS") != null && System.getenv("DEBUG_SCRIPTS").equals("true")) {
                     Property prop2 = NavajoFactory.getInstance().createProperty(outMessage, "FailedExpression",
                             Property.STRING_PROPERTY, condition.condition, 0, "", Property.DIR_OUT);
                     Property prop3 = NavajoFactory.getInstance().createProperty(outMessage, "EvaluatedExpression",

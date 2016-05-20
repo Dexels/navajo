@@ -15,7 +15,7 @@ function getCsvContent(divelement) {
             $(this).children('property').each(function() {
                 row.push($(this).attr('name'));
             });
-            csvData += row.join(",") + "\n"
+            csvData += row.join(";") + "\n"
         });
            
         // Loop over the array_elements
@@ -42,7 +42,7 @@ function getCsvContent(divelement) {
                
                
             })
-            csvData += row.join(",") + "\n"
+            csvData += row.join(";") + "\n"
         }); 
     }
 

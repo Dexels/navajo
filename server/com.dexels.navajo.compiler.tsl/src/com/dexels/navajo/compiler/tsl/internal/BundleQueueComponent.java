@@ -179,9 +179,11 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 
 
     private void enqueueDependentScripts(String script, Set<String> history) {
-        String rpcName = script;
         history.add(script);
-        if (script.indexOf("_") > 0) {
+        
+        String rpcName = script;
+        String bareScript = script.substring(script.lastIndexOf("/") + 1);
+        if (bareScript.indexOf("_") > 0) {
             rpcName = script.substring(0, script.lastIndexOf("_"));
         }
         List<Dependency> dependencies = depanalyzer.getReverseDependencies(rpcName);
