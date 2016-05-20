@@ -82,8 +82,8 @@ public final class MappingUtils {
             return Property.FLOAT_PROPERTY;
         else if (o instanceof Float)
             return Property.FLOAT_PROPERTY;
-        else if (o instanceof ArrayList)
-            return Property.SELECTION_PROPERTY;
+        else if (o instanceof List)
+            return Property.LIST_PROPERTY;
         else if (o instanceof Boolean)
             return Property.BOOLEAN_PROPERTY;
         else if (o.getClass().getName().startsWith("[Ljava.util.Vector"))

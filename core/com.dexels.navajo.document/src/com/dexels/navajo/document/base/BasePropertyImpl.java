@@ -12,6 +12,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -426,8 +427,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			setValue((Boolean) o, internal);
 			return;
 		}
-		if (o instanceof ArrayList) {
-			setValue((ArrayList<?>) o);
+		if (o instanceof List) {
+			setValue((List<?>) o);
 			return;
 		}		
 		if (o instanceof String) {
@@ -469,6 +470,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	private void setListProperty(List<?> list) {
 		tipiProperty = list;
+		myValue = list.toString();
 		setType(Property.LIST_PROPERTY);
 	}
 
@@ -757,8 +759,24 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else if (getType().equals(Property.SELECTION_PROPERTY)) {
 			List<Selection> all = getAllSelectedSelections();
 			return all;
-		} else if (getType().equals(Property.TIPI_PROPERTY) || getType().equals(Property.LIST_PROPERTY) ) {
-			return tipiProperty;
+		} else if (getType().equals(Property.TIPI_PROPERTY)) {
+		    return tipiProperty;
+		} else if (getType().equals(Property.LIST_PROPERTY) ) {
+			if (tipiProperty != null || myValue == null) {
+			    return tipiProperty;
+			}
+			try {
+			    if (myValue.indexOf('[') == 0) {
+	                // Parse back into a list
+	                String stripped = myValue.substring(1,  myValue.length() -1);
+	                tipiProperty = Arrays.asList(stripped.split(", "));
+	                return tipiProperty;
+	            }
+			} catch (Exception e ) {
+			    logger.warn("Exception on parsing {} as a list!", myValue, e);
+			}
+			logger.info("Failed to parse {} as a list!", myValue);
+			return null;
 		}
 
 		return getValue();
@@ -1254,7 +1272,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	@Override
 	public final void setType(String t) {
-		String old = type;
+	    String old = type;
 		type = t;
 		firePropertyChanged(PROPERTY_TYPE, old, type);
 	}
