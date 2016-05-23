@@ -97,10 +97,4 @@ public String getRequestId() {
 public void setRequestId(String id) {
     myRequestId = id;
 }
-
-
-
-
-
-
   }
