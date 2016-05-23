@@ -1113,7 +1113,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             // set its ID
             inst.setId(id);
             
-            String overlayType = "transparent";
+            String overlayType = "opaque";
             TipiSupportOverlayPane overlayComponent = null;
             if (inst instanceof TipiSupportOverlayPane) {
                 if (inst.getValue("overlay") != null) {
