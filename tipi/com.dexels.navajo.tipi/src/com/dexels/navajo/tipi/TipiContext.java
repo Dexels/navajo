@@ -1112,7 +1112,27 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             inst = instantiateComponent(xe, event, t, parent);
             // set its ID
             inst.setId(id);
-            parent.addComponent(inst, this, constraints);
+            
+            String overlayType = "transparent";
+            TipiSupportOverlayPane overlayComponent = null;
+            if (inst instanceof TipiSupportOverlayPane) {
+                if (inst.getValue("overlay") != null) {
+                    overlayType = (String) inst.getValue("overlay");
+                }
+                if (!overlayType.equals("none")) {
+                    overlayComponent = (TipiSupportOverlayPane) inst;
+                    overlayComponent.addOverlayProgressPanel(overlayType);
+                }
+            }
+            
+            try {
+                parent.addComponent(inst, this, constraints);
+            } finally {
+                if (overlayComponent != null) {
+                    overlayComponent.removeOverlayProgressPanel();
+                }
+            }
+            
             // OnInstantiate event is called sync, so by this time we are actually finished 
             addInitiateStatisticsFinished(id, false); 
             fireTipiStructureChanged(inst);

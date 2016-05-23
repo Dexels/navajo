@@ -1174,6 +1174,8 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 			cparent.registerPropertyChild(c);
 		}
 		getStateMessage().addMessage(c.getStateMessage());
+		
+		
 		if (getContainer() != null && c.isVisibleElement()) {
 			addToContainer(c.getContainer(), td);
 			addedToParent();
@@ -1208,7 +1210,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		} catch (TipiException ex) {
 			logger.error("Error: ",ex);
 		} catch (TipiBreakException e) {
-		    
+		    logger.warn("TipiBreakException: ",e);
 		}
 	}
 

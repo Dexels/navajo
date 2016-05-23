@@ -155,7 +155,7 @@ public class EntityListener extends HttpServlet {
             Entity e = myManager.getEntity(entityName);
             if (e == null) {
                 // Requested entity not found
-                logger.warn("Requested entity not registred with entityManager!");
+                logger.warn("Requested entity not registred with entityManager! {}", entityName);
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND);
             }
 

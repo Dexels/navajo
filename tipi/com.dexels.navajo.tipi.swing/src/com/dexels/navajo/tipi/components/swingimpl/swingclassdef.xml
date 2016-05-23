@@ -1057,6 +1057,7 @@
          <value direction="inout" name="enabled" type="boolean" value="true" property="enabled" />
          <value direction="inout" name="selected" type="boolean" value="false" property="selected" />
          <value direction="inout" name="hideOnClose" type="boolean" value="true" property="hideOnClose" />
+         <value direction="in" name="overlay" type="string" value="transparent" property="overlay" />
       </values>
       <methods>
          <method name="iconify" />
@@ -1327,6 +1328,7 @@
          <value direction="in" name="layout" type="string" />
          <value direction="in" name="opacity" type="float" />
          <value direction="in" name="icon" type="resource" property="iconUrl"/>
+         <value direction="in" name="overlay" type="string" value="transparent" property="overlay" />
       </values>
       <methods>
          <method name="show" />
