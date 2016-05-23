@@ -771,11 +771,12 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	                String stripped = myValue.substring(1,  myValue.length() -1);
 	                tipiProperty = Arrays.asList(stripped.split(", "));
 	                return tipiProperty;
+	            } else if (myValue.length() > 0) {
+	                logger.info("Failed to parse {} as a list!", myValue);
 	            }
 			} catch (Exception e ) {
 			    logger.warn("Exception on parsing {} as a list!", myValue, e);
 			}
-			logger.info("Failed to parse {} as a list!", myValue);
 			return null;
 		}
 
