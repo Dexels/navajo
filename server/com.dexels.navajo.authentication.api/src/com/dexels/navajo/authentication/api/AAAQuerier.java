@@ -41,6 +41,8 @@ public interface AAAQuerier {
 
     public static final String FAILED_LOGIN_TOPIC = "aaa/failedlogin";
     
+    public static final String REGION_WILDCARD = "%";
+    
     public int authenticateUsernamePassword(Access access, String username, String password);
     
     
