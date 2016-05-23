@@ -17,7 +17,8 @@ private String rpc_usr;
 private String rpc_pwd;
 private String rpc_schedule;
 protected String myRequestId;
-private String application = "noapp";
+private String application = null;
+
 
   public BaseTransactionImpl(Navajo n) {
     super(n);
