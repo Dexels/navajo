@@ -425,8 +425,9 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
             overlayCounter--;
             if (overlayCounter < 1) {
                 ((TipiSwingWindow) myWindow).hideGlass();
+                overlayCounter = 0;
             }
-            overlayCounter = 0;
+           
         }
     }
     
