@@ -115,7 +115,6 @@ public class SQLMapHelper {
 			statement.setCharacterStream(idx + 1, new StringReader(memoString), memoString.length());
 		} else if (param instanceof Binary) {
 			Binary b = (Binary) param;
-//			System.out.println("*************************** Adding a BLOB     = " + b.getMimeType());
 			setBlob(statement, idx, b, callback);
 			if (debug) {
 				Access.writeToConsole(access, "ADDED BLOB\n");

@@ -89,7 +89,7 @@ public void load(Access access) throws UserException, MappableException {
 @Override
   protected ResultSetMap[] getResultSet(boolean updateOnly) throws UserException {
     if (debug) {
-      System.out.print("TIMING SPMAP, start query... : " + update);
+     logger.info("TIMING SPMAP, start query... : " + update);
 
     }
     long start = System.currentTimeMillis();
@@ -239,7 +239,9 @@ public void load(Access access) throws UserException, MappableException {
     double total = (end - start) / 1000.0;
 
     totaltiming += total;
-    // logger.info("finished " + total + " seconds. Average query time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
+    if (debug) {
+        logger.info("finished " + total + " seconds. Average query time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
+    }
     return resultSet;
   }
 
