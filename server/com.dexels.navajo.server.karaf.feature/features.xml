@@ -121,7 +121,7 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.6.12'
+	<feature resolver="(obr)" name='navajo.core' version='3.6.13'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,5)">pax-http</feature>
@@ -133,7 +133,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.14
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/2.3.2
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/2.4.0
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.6.4
 		</bundle>
@@ -183,10 +183,10 @@
 		</bundle>		
 	</feature>	
 		
-	<feature resolver="(obr)" name='navajo.function' version='3.0.20'
+	<feature resolver="(obr)" name='navajo.function' version='3.0.21'
 		start-level='80'>
 		<feature version="[3.0.34,4)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.3.26
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.3.28
 		</bundle>
 	</feature>
 
@@ -229,9 +229,9 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.adapter' version='3.1.5'>
+	<feature resolver="(obr)" name='navajo.adapter' version='3.1.7'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.4.14
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.4.18
 		</bundle>
 	</feature>
 
@@ -463,13 +463,13 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.core'
-		version='3.0.113'>
+		version='3.0.114'>
 		<feature version="[3.0.0,4)">navajo.core</feature>
         <feature version="[3.1.0,4)">navajo.adapter</feature>
        
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.5.16
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.5.16
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.5.20
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.15
 		</bundle>
@@ -517,14 +517,14 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='sportlink.libraries' version='3.2.24'
+	<feature resolver="(obr)" name='sportlink.libraries' version='3.2.25'
 		start-level='82'>
 		<feature version="[3.0.0,4)">navajo.function</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<feature version="[3.0.0,4)">navajo.article</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.aaa/4.1.4
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.1.18
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.1.22
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.functions/3.0.4
 		</bundle>
