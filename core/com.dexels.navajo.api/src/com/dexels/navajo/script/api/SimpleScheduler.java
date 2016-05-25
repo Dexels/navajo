@@ -8,15 +8,19 @@ public class SimpleScheduler implements Scheduler {
 
 	private final RequestQueue normalPool;
 	
-	public SimpleScheduler() {
-		normalPool = ThreadPoolRequestQueue.create(this, "default", Thread.NORM_PRIORITY, 50);
+	public SimpleScheduler(boolean lowprio) {
+	    if (lowprio) {
+            normalPool = ThreadPoolRequestQueue.create(this, "async", Thread.NORM_PRIORITY, 50);
+        } else {
+            normalPool = ThreadPoolRequestQueue.create(this, "async", Thread.MIN_PRIORITY, 5);
+        }
 	}
-	
-//	public void cancel(TmlRunnable myRunner) {
-//		
-//	}
 
-	public boolean checkNavajo(Navajo input) {
+	// public void cancel(TmlRunnable myRunner) {
+//  
+//}
+
+    public boolean checkNavajo(Navajo input) {
 		return true;
 	}
 

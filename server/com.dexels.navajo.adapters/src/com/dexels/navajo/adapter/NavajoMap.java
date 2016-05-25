@@ -869,7 +869,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                     if (block) {
                         this.run();
                     } else {
-                        SchedulerRegistry.getScheduler().submit(this, true);
+                        SchedulerRegistry.getLowPrioScheduler().submit(this, true);
                     }
                     serviceCalled = true;
                     if (getException() != null) {
