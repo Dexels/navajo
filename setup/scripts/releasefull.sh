@@ -26,7 +26,7 @@ then
         echo "Dirty files - Please commit before releasing!"
         exit 1
 fi
-if [ evil_git_num_untracked_files -gt 0 ]
+if [ evil_git_num_untracked_files != "0" ]
 then
         echo "Untracked files - Please commit before releasing!"
         exit 1
