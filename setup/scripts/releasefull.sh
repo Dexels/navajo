@@ -24,14 +24,6 @@ then
         exit 1
 fi
 
-mvn install
-if [ $? -ne 0 ]
-then
-	echo "Building failed - stopping release!"
-	exit 1
-fi
-
-
 VERSION=`cat META-INF/MANIFEST.MF | grep Bundle-Version | awk '{ print $2 }'`
 VERSION=${VERSION%.qualifier}
 BASEVERSION=`echo "$VERSION" | cut -f1-2 -d '.'`
@@ -47,4 +39,13 @@ NEWMINOR2=$BASEVERSION.$((`echo "$NEWMINOR1"| cut -f3 -d '.'` + 1))
 echo "Going to release $NEWMINOR1 and $NEWMINOR2 - press ctrl+c to cancel within 5 seconds"
 prettysleep 5
 
-`release.sh $NEWMINOR1 $NEWMINOR2`
+
+
+mvn install
+if [ $? -ne 0 ]
+then
+	echo "Building failed - stopping release!"
+	exit 1
+fi
+
+release.sh $NEWMINOR1 $NEWMINOR2
