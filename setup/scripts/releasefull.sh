@@ -1,11 +1,7 @@
 #!/bin/bash
 
-function evil_git_dirty {
-  [[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]] && echo "*"
-}
-
-function evil_git_num_untracked_files {
-  expr `git status --porcelain 2>/dev/null| grep "^??" | wc -l`
+function git_num_files {
+  expr `git status --porcelain 2>/dev/null| wc -l`
 }
 
 function prettysleep {
@@ -21,14 +17,10 @@ function prettysleep {
     echo -ne '\n'
 }
 
-if [ evil_git_dirty == "*" ]
+dirty=$(git_num_files)
+if [ $dirty -gt 0 ]
 then
-        echo "Dirty files - Please commit before releasing!"
-        exit 1
-fi
-if [ evil_git_num_untracked_files != "0" ]
-then
-        echo "Untracked files - Please commit before releasing!"
+        echo "$dirty dirty files - Please commit before releasing!"
         exit 1
 fi
 
