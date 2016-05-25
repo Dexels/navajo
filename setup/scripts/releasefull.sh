@@ -21,22 +21,6 @@ function prettysleep {
     echo -ne '\n'
 }
 
-
-VERSION=`cat META-INF/MANIFEST.MF | grep Bundle-Version | awk '{ print $2 }'`
-VERSION=${VERSION%.qualifier}
-BASEVERSION=`echo "$VERSION" | cut -f1-2 -d '.'`
-MINORVERSION=`echo "$VERSION" | cut -f3 -d '.'`
-NEWMINOR1=`expr $MINORVERSION + 1`
-NEWMINOR1=$BASEVERSION.$NEWMINOR1
-
-echo "Current version: $VERSION"
-read -p "Enter release version [$NEWMINOR1]: " TMPNEWMINOR1
-NEWMINOR1=${TMPNEWMINOR1:-$NEWMINOR1}
-BASEVERSION=`echo "$NEWMINOR1" | cut -f1-2 -d '.'`
-NEWMINOR2=$BASEVERSION.$((`echo "$NEWMINOR1"| cut -f3 -d '.'` + 1))
-echo "Going to release $NEWMINOR1 - $NEWMINOR2"
-prettysleep 5
-
 if [ evil_git_dirty == "*" ]
 then
         echo "Dirty files - Please commit before releasing!"
@@ -68,7 +52,7 @@ read -p "Enter release version [$NEWMINOR1]: " TMPNEWMINOR1
 NEWMINOR1=${TMPNEWMINOR1:-$NEWMINOR1}
 BASEVERSION=`echo "$NEWMINOR1" | cut -f1-2 -d '.'`
 NEWMINOR2=$BASEVERSION.$((`echo "$NEWMINOR1"| cut -f3 -d '.'` + 1))
-echo "Going to release $NEWMINOR1 and $NEWMINOR2"
+echo "Going to release $NEWMINOR1 and $NEWMINOR2 - press ctrl+c to cancel within 5 seconds"
 prettysleep 5
 
 `release.sh $NEWMINOR1 $NEWMINOR2`
