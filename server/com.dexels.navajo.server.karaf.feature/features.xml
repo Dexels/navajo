@@ -121,7 +121,7 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.6.13'
+	<feature resolver="(obr)" name='navajo.core' version='3.6.14'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,5)">pax-http</feature>
@@ -141,7 +141,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/3.1.0
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/4.0.18
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/4.0.20
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.2.0
 		</bundle>
