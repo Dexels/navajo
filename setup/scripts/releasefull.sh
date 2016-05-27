@@ -56,6 +56,7 @@ then
         echo "Something went wrong!"
         exit 1
 fi
-
-echo "Successfully released $BUNDLENAME $NEWMINOR1"
+echo ""
+echo ""
+echo "Released $BUNDLENAME $NEWMINOR1"
 
