@@ -2,6 +2,7 @@ package com.dexels.navajo.article.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +13,9 @@ import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.NoJSONOutputException;
+import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.types.NavajoResponseEvent;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.oauth.api.Client;
 import com.dexels.oauth.api.ClientStore;
 import com.dexels.oauth.api.ClientStoreException;
@@ -47,12 +51,23 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
 		if(pathInfo==null) {
 			throw new APIException("Pathinfo is null, we cannot find an article then", null, APIErrorCode.ArticleNotFound);
 		}
-		
-		File article = getContext().resolveArticle(determineArticleFromRequest(req));
+		String articleName = determineArticleFromRequest(req);
+		File article = getContext().resolveArticle(articleName);
 		if (!article.exists()) {
 			throw new APIException("Article does not exist", null, APIErrorCode.ArticleNotFound);
 		}
 		
+		String ip = req.getHeader("X-Forwarded-For");
+        if (ip == null || ip.equals("")) {
+            ip = req.getRemoteAddr();
+        }
+        
+        Access a = new Access(-1, -1, username, "article/" + articleName, "", "", "", null, false, null);
+        a.setTenant(instance);
+        a.rpcPwd = token;
+        a.created = new Date();
+        a.ipAddress = ip;
+        
 		try {
 			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, client.getPassword(), username, article, pathInfo, req.getParameterMap(), instance, oauthToken);
 			runtime.setUsername(client.getUsername());
@@ -60,7 +75,10 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
 			runtime.setURL(url);
 			runtime.execute(getContext());
 			resp.setContentType("application/json; charset=utf-8");
+			a.setExitCode(Access.EXIT_OK);
 		}  catch (NoJSONOutputException e) {
+		    a.setException(e);
+		    a.setExitCode(Access.EXIT_EXCEPTION);
 			resp.setContentType(e.getMimeType());
 			try {
 				IOUtils.copy(e.getStream(), resp.getOutputStream());
@@ -68,9 +86,14 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
 				throw new APIException(e1.getMessage(), e1, APIErrorCode.InternalError);
 			}
 			return;
-		} catch (IOException e) {
+		} catch (Throwable e) {
+		    a.setException(e);
+            a.setExitCode(Access.EXIT_EXCEPTION);
 			throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
-		} 
+		} finally {
+		    a.setFinished();
+		    NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(a));
+		}
 	}
 	
 	private OAuthToken getOAuthToken(String token) throws APIException {
