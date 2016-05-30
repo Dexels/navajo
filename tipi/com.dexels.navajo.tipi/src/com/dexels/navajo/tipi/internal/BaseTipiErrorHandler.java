@@ -215,6 +215,11 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
         final String url = context.getSystemProperty("tipi.resourceurl");
         final String union = context.getSystemProperty("tipi.profile");
         
+        if (url == null) {
+            logger.warn("Empty url for tipi.resourceurl - cannot load validation.properties");
+            return;
+        }
+        
         RemoveValidationPropertiesHandler remoteHandler = new RemoveValidationPropertiesHandler(url, union, lcode);
         InputStream tipiResourceStream = remoteHandler.getContents() ;
         
