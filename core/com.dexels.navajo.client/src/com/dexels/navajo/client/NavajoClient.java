@@ -663,6 +663,10 @@ public class NavajoClient implements ClientInterface, Serializable {
 						n = NavajoFactory.getInstance().createNavajo();
 						generateConnectionError(n, 55555, "No route to host: "
 								+ uhe.getMessage());
+					} catch (java.net.ConnectException uhe) {
+                        n = NavajoFactory.getInstance().createNavajo();
+                        generateConnectionError(n, 55555, "No route to host: "
+                                + uhe.getMessage());
 					} catch (java.net.SocketException uhe) {
 						if (retryAttempts <= 0) {
 							throw uhe;
