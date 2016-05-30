@@ -1121,9 +1121,14 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             String overlayType = "opaque";
             TipiSupportOverlayPane overlayComponent = null;
             if (inst instanceof TipiSupportOverlayPane) {
-                if (inst.getValue("overlay") != null) {
-                    overlayType = (String) inst.getValue("overlay");
+                try {
+                    if (inst.getValue("overlay") != null) {
+                        overlayType = (String) inst.getValue("overlay");
+                    }
+                } catch (Exception e) {
+                    // Something went wrong, let's just use default overlay...
                 }
+               
                 if (!overlayType.equals("none")) {
                     overlayComponent = (TipiSupportOverlayPane) inst;
                     overlayComponent.addOverlayProgressPanel(overlayType);
