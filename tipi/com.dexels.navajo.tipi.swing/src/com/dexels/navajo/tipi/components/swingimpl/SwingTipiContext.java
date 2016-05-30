@@ -53,6 +53,7 @@ import com.dexels.navajo.tipi.components.swingimpl.jnlp.WebStartProxy;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDesktop;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDialog;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSplash;
+import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiResourceLoader;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
@@ -144,6 +145,9 @@ public class SwingTipiContext extends TipiContext {
             }
         });
 		activityMonitorThread.start();
+		
+		eHandler = new BaseTipiErrorHandler();
+	    eHandler.setContext(this);
 
 		try {
 

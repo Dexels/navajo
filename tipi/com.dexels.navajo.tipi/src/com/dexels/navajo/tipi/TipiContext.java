@@ -285,6 +285,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if (myThreadPool == null) {
             myThreadPool = new TipiThreadPool(this, getPoolSize());
         }
+        
         NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
         tipiResourceLoader = new ClassPathResourceLoader();
         setStorageManager(new TipiNullStorageManager());
@@ -297,6 +298,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         } catch (Throwable e) {
             hasDebugger = false;
         }
+        eHandler = new BaseTipiErrorHandler();
+        eHandler.setContext(this);
+        
         
         MDC.put("sessionToken", SessionTokenFactory.getSessionTokenProvider().getSessionToken());
         if (systemPropertyMap.get("DTAP") != null) {
@@ -1791,12 +1795,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     }
 
     public TipiErrorHandler getErrorHandler() {
-        // TODO Put this in a more elegant place
-        // TODO No remove completely. Don't like it.
-        if (eHandler == null) {
-            eHandler = new BaseTipiErrorHandler();
-            eHandler.setContext(this);
-        }
         return eHandler;
     }
 
@@ -2549,7 +2547,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     }
 
     public void resetErrorHandler() {
-        eHandler = null;
+        eHandler = new BaseTipiErrorHandler();
+        eHandler.setContext(this);
     }
 
     public void fireTipiStructureChanged(TipiComponent tc) {
