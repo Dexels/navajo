@@ -1804,9 +1804,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         return eHandler;
     }
 
-    private String getErrorMessage(Navajo reply, String errorMessage) {
+    private String getErrorMessage(Navajo reply, final String errorMessage) {
         String userError = errorMessage;
-        String dtap = systemPropertyMap.get("DTAP") == null? null: systemPropertyMap.get("DTAP");
+        String dtap = systemPropertyMap.get("DTAP") == null ? null: systemPropertyMap.get("DTAP");
         Boolean showFullErrorMessage = (Boolean) getGlobalValue("showFullErrorMessage");
         if (showFullErrorMessage == null) showFullErrorMessage = false;
         
@@ -1815,7 +1815,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if (!"DEVELOPMENT".equals(dtap) && !showFullErrorMessage)  {
             // We don't want to give the end-user an ugly stack trace, hence we replace the message
             // with an access id.
-            errorMessage = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
+            userError = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
         } 
         return userError;
     }
