@@ -111,6 +111,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 	private int globalRetryCounter = 0;
 	private String localeCode = null;
 	private String subLocale;
+	private String application;
 	private boolean allowCompression = true;
 	private boolean forceGzip = false;
 	private SystemInfoProvider systemInfoProvider;
@@ -631,8 +632,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 					// set the locale
 					// ==============================================
 					if (localeCode != null) {
-						out.getHeader()
-								.setHeaderAttribute("locale", localeCode);
+						out.getHeader().setHeaderAttribute("locale", localeCode);
 					}
 					// ==================================================================
 					// set the sublocale
@@ -641,6 +641,10 @@ public class NavajoClient implements ClientInterface, Serializable {
 						out.getHeader().setHeaderAttribute("sublocale",
 								subLocale);
 					}
+					
+					if (application != null) {
+                        out.getHeader().setHeaderAttribute("application", application);
+                    }
 
 					Navajo n = null;
 
@@ -1011,8 +1015,18 @@ public class NavajoClient implements ClientInterface, Serializable {
 	public String getSubLocaleCode() {
 		return this.subLocale;
 	}
+	
+	
 
-	/**
+	public String getApplication() {
+        return application;
+    }
+
+    public void setApplication(String application) {
+        this.application = application;
+    }
+
+    /**
 	 * Schedule a webservice @ a certain time. Note that this method does NOT
 	 * return the response of the scheduled webservice. It contains a Navajo
 	 * with the status of the scheduling.
