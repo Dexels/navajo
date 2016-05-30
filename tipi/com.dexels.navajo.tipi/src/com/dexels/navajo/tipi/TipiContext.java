@@ -524,7 +524,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         // getClassManager().clearClassMap();
         clearTopScreen();
 
-        eHandler = null;
+
         errorHandler = null;
         // rootPaneList.clear();
         Runtime runtimeObject = Runtime.getRuntime();
@@ -544,7 +544,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         navajoCacheMap = new HashMap<String, CachedNavajo>();
         
         // Will be updated on the next error, which should re-read validation.properties
-        eHandler = null;
+        eHandler = new BaseTipiErrorHandler();
+        eHandler.setContext(this);
     }
 
     public abstract void clearTopScreen();
