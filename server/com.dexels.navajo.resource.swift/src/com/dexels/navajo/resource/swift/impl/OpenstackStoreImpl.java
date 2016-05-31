@@ -77,7 +77,8 @@ public class OpenstackStoreImpl implements OpenstackStore {
 		if(host==null || port == null) {
 			return Config.newConfig();
 		}
-		return Config.newConfig().withProxy(ProxyHost.of(host, Integer.parseInt(port)));
+		String hostURL = host.startsWith("http://")?host:"http://"+host;
+		return Config.newConfig().withProxy(ProxyHost.of(hostURL, Integer.parseInt(port)));
 	}
 	private SwiftContainer findContainer(String name) {
 		for (SwiftContainer swiftContainer : storage.containers().list()) {
