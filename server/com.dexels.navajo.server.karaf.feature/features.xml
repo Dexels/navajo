@@ -651,6 +651,13 @@
         </bundle>
     </feature>
     
+    <feature name='dexels.resourcebundle' version='1.0.1'>
+        <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.resourcebundle/1.0.3
+        </bundle>
+    </feature>
+    
+    
+    
      <feature resolver="(obr)" name='navajo.logstore' version='1.0.24'>
          <feature version="[3.0.3,4)">navajo.core.dependencies</feature>
     	 <bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/3.0.3
