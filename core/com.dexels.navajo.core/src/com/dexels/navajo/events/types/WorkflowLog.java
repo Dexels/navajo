@@ -12,8 +12,11 @@ public class WorkflowLog {
     private String state;
     private String history;
     private Throwable myException;
-    private Navajo inDoc;
-    private Navajo outputDoc;
+    private Navajo currentStateInDoc;
+    private Navajo currentStateOutputDoc;
+    private Navajo initiatingInDoc;
+    private Navajo initiatingOutputDoc;
+
     private boolean debug = false;
     private String location;
     private int exitCode = -1;
@@ -69,15 +72,21 @@ public class WorkflowLog {
 
     }
 
-    public void setInDoc(Navajo inDoc) {
-       this.inDoc = inDoc;
-        
+    public void setCurrentStateInDoc(Navajo inDoc) {
+       this.currentStateInDoc = inDoc;
     }
 
-    public void setOutputDoc(Navajo outputDoc) {
-        this.outputDoc = outputDoc;
-        
+    public void setCurrentStateOutputDoc(Navajo outputDoc) {
+        this.currentStateOutputDoc = outputDoc;
     }
+    
+    public void setInitiatingInDoc(Navajo inDoc) {
+        this.initiatingInDoc = inDoc;
+     }
+
+     public void setInitiatingOutputDoc(Navajo outputDoc) {
+         this.initiatingOutputDoc = outputDoc;
+     }
  
 
     public Throwable getException() {
@@ -88,12 +97,22 @@ public class WorkflowLog {
         this.myException = myException;
     }
 
-    public Navajo getInDoc() {
-        return inDoc;
+    public Navajo getCurrentStateInDoc() {
+        return currentStateInDoc;
     }
 
-    public Navajo getOutputDoc() {
-        return outputDoc;
+    public Navajo getCurrentStateOutputDoc() {
+        return currentStateOutputDoc;
+    }
+    
+    
+
+    public Navajo getInitiatingInDoc() {
+        return initiatingInDoc;
+    }
+
+    public Navajo getInitiatingOutputDoc() {
+        return initiatingOutputDoc;
     }
 
     public boolean isDebug() {
