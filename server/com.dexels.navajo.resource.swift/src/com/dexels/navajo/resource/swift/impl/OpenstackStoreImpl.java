@@ -75,7 +75,7 @@ public class OpenstackStoreImpl implements OpenstackStore {
 		String host = System.getenv("httpProxyHost");
 		String port = System.getenv("httpProxyPort");
 		if(host==null || port == null) {
-			Config.newConfig();
+			return Config.newConfig();
 		}
 		return Config.newConfig().withProxy(ProxyHost.of(host, Integer.parseInt(port)));
 	}
