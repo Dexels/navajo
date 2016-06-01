@@ -21,9 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.resource.swift.OpenstackStore;
+import com.dexels.navajo.resource.binarystorage.BinaryStore;
 
-public class OpenstackStoreImpl implements OpenstackStore {
+public class OpenstackStoreImpl implements BinaryStore {
 	
 	
 	private final static Logger logger = LoggerFactory.getLogger(OpenstackStoreImpl.class);

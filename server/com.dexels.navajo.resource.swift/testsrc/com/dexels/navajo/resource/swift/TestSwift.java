@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.resource.binarystorage.BinaryStore;
+import com.dexels.navajo.resource.binarystorage.BinaryStoreFactory;
 import com.dexels.navajo.resource.swift.impl.OpenstackStoreImpl;
 
 
@@ -31,9 +33,9 @@ public class TestSwift {
 		settings.put("tenant", "Generic");
 		osi.activate(settings);	
 		
-		OpenstackStorageFactory factory = new OpenstackStorageFactory();
+		BinaryStoreFactory factory = new BinaryStoreFactory();
 		factory.activate();
-		OpenstackStorageFactory instance = OpenstackStorageFactory.getInstance();
+		BinaryStoreFactory instance = BinaryStoreFactory.getInstance();
 		instance.addOpenstackStore(osi, settings);
 	}
 	
@@ -70,7 +72,7 @@ public class TestSwift {
 	
 	@Test
 	public void testFactory() throws IOException {
-		OpenstackStore os = OpenstackStorageFactory.getInstance().getOpenstackStore("testresource", "Generic");
+		BinaryStore os = BinaryStoreFactory.getInstance().getOpenstackStore("testresource", "Generic");
 		Map<String,String> meta = new HashMap<String,String>();
 		meta.put("aap", "noot");
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");

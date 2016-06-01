@@ -10,6 +10,7 @@ Bundle-ClassPath: lib/openstack4j-2.0.9.jar,
  lib/openstack4j-httpclient-2.0.9.jar,
  .
 Import-Package: com.dexels.navajo.document.types;version="2.2.1",
+ com.dexels.navajo.resource.binarystorage;version="1.0.0",
  com.fasterxml.jackson.annotation;version="2.6.3",
  com.fasterxml.jackson.core;version="2.6.3",
  com.fasterxml.jackson.databind;version="2.6.3",
