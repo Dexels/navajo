@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<<<<<<< ff60e310a223f308aa40f824b245aa630466413d
+<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1707">
+=======
 <?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1704">
+>>>>>>> update target platform
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
@@ -25,8 +29,13 @@
 <repository location="http://repo.dexels.com/eclipse/equinox_mars"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<<<<<<< ff60e310a223f308aa40f824b245aa630466413d
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.92.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.92"/>
+=======
 <unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.95.RELEASE"/>
 <repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.95"/>
+>>>>>>> update target platform
 </location>
 </locations>
 <includeBundles>
@@ -38,6 +47,10 @@
 <plugin id="com.dexels.hazelcast"/>
 <plugin id="com.dexels.kafka.api"/>
 <plugin id="com.dexels.kafka.impl"/>
+<<<<<<< ff60e310a223f308aa40f824b245aa630466413d
+<plugin id="com.dexels.karaf.featuresync"/>
+=======
+>>>>>>> update target platform
 <plugin id="com.dexels.log4j.httpappender"/>
 <plugin id="com.dexels.log4j.server"/>
 <plugin id="com.dexels.logback.redis"/>
@@ -50,6 +63,7 @@
 <plugin id="com.dexels.repository.file"/>
 <plugin id="com.dexels.repository.git"/>
 <plugin id="com.dexels.repository.git.api"/>
+<plugin id="com.dexels.resourcebundle"/>
 <plugin id="com.dexels.sharedconfigstore"/>
 <plugin id="com.fasterxml.aalto-xml"/>
 <plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
@@ -191,8 +205,8 @@
 <plugin id="org.eclipse.jetty.client" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.continuation" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.http" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jetty.io" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.io" version="8.1.11.v20130520"/>
+<plugin id="org.eclipse.jetty.io" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.osgi.httpservice" version="9.2.10.v20150310"/>
 <plugin id="org.eclipse.jetty.proxy"/>
 <plugin id="org.eclipse.jetty.security" version="9.2.10.v20150310"/>
