@@ -327,25 +327,25 @@
 	</feature>
 
 
-	<feature resolver="(obr)" name='tipi.core' version='3.2.4'>
+	<feature resolver="(obr)" name='tipi.core' version='3.3.0'>
 		<feature version="[3.0.34,4)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/2.2.18
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/2.9.6
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='tipi.css' version='3.0.3'>
+	<feature resolver="(obr)" name='tipi.css' version='3.0.4'>
 		<feature version="[3.0.0,4)">tipi.core</feature>
 		<bundle dependency='true'>mvn:org.apache.directory.studio/org.apache.commons.logging/1.1.3
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css/1.0.43
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css/1.0.45
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css.tkui/1.0.27
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css.tkui/1.0.29
 		</bundle>
 	</feature>
-	<feature resolver="(obr)" name='tipi.vaadin' version='3.2.6'>
+	<feature resolver="(obr)" name='tipi.vaadin' version='3.2.7'>
 		<feature version="[3.2.0,4)">tipi.core</feature>
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.14</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.4.12
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.4.14
 		</bundle>
 	</feature>
 	<feature resolver="(obr)" name='tipi.vaadin.touch' version='3.0.0'>
@@ -354,9 +354,9 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='tipi.mail' version='3.0.4'>
+	<feature resolver="(obr)" name='tipi.mail' version='3.0.5'>
 		<feature version="[3.2.0,4)">tipi.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.mail/1.1.5
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.mail/1.1.7
 		</bundle>
 	</feature>
 
