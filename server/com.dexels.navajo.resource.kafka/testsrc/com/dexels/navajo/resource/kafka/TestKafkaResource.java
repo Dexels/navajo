@@ -25,7 +25,7 @@ public class TestKafkaResource {
 	@Test
 	public void testSimple() throws MappableException, UserException, InterruptedException {
 		KafkaPublisher kp = KafkaClientFactory.createPublisher("cerberus1.sportlink-infra.net:9092,cerberus2.sportlink-infra.net:9094");
-		kp.publish("my-topic2", "key", "blubblub".getBytes());
+		kp.publish("key", "blubblub".getBytes());
 		Thread.currentThread().sleep(1000);
 	}
 }
