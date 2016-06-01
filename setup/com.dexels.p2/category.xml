@@ -69,9 +69,6 @@
    <feature url="features/com.dexels.navajo.dev.feature_2.0.7.qualifier.jar" id="com.dexels.navajo.dev.feature" version="2.0.7.qualifier">
       <category name="Navajo SDK"/>
    </feature>
-   <feature url="features/com.dexels.navajo.runtime.feature_1.0.2.qualifier.jar" id="com.dexels.navajo.runtime.feature" version="1.0.2.qualifier">
-      <category name="Navajo Core"/>
-   </feature>
    <feature url="features/com.dexels.navajo.geo.feature_1.0.3.qualifier.jar" id="com.dexels.navajo.geo.feature" version="1.0.3.qualifier">
       <category name="Navajo Optional Packages"/>
    </feature>
