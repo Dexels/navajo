@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapters.swift;
+package com.dexels.navajo.adapters.binarystore.functions;
 
 import java.io.InputStream;
 import java.util.List;
@@ -13,15 +13,13 @@ import navajo.ExtensionDefinition;
  * @author arjen
  *
  */
-public class SwiftAdapterLibrary implements ExtensionDefinition {
-
-	
-	private static final long serialVersionUID = 5195100848450458590L;
+public class BinaryStoreFunctionLibrary implements ExtensionDefinition {
+	private static final long serialVersionUID = -2167328743333229662L;
 	private transient ClassLoader extensionClassLoader = null;
 	
 	@Override
 	public InputStream getDefinitionAsStream() {
-		return getClass().getResourceAsStream("adapters.xml");
+		return getClass().getResourceAsStream("binarystorefunctions.xml");
 	}
 
 	@Override
@@ -40,12 +38,12 @@ public class SwiftAdapterLibrary implements ExtensionDefinition {
 
 	@Override
 	public String getDescription() {
-		return "Openstack Swift Adapter Library";
+		return "The Swift Object Store Function Library";
 	}
 
 	@Override
 	public String getId() {
-		return "OpenstackSwiftAdapter";
+		return "NavajoSwift";
 	}
 
 	@Override
@@ -80,7 +78,6 @@ public class SwiftAdapterLibrary implements ExtensionDefinition {
 	public String requiresMainImplementation() {
 		return null;
 	}
-
 	@Override
 	public ClassLoader getExtensionClassloader() {
 		return extensionClassLoader;

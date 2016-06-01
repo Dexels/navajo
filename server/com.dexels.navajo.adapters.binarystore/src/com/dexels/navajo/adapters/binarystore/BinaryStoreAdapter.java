@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapters.swift;
+package com.dexels.navajo.adapters.binarystore;
 
 import java.util.HashMap;
 
@@ -6,14 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.resource.swift.OpenstackStorageFactory;
-import com.dexels.navajo.resource.swift.OpenstackStore;
+import com.dexels.navajo.resource.binarystorage.BinaryStore;
+import com.dexels.navajo.resource.binarystorage.BinaryStoreFactory;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;
 
-public class SwiftAdapter implements Mappable {
+public class BinaryStoreAdapter implements Mappable {
 
 	private String name = null;
 	private String tenant = null;
@@ -21,7 +21,7 @@ public class SwiftAdapter implements Mappable {
 	private String resource = null;
 	
 	
-	private final static Logger logger = LoggerFactory.getLogger(SwiftAdapter.class);
+	private final static Logger logger = LoggerFactory.getLogger(BinaryStoreAdapter.class);
 
 	
 	@Override
@@ -32,7 +32,7 @@ public class SwiftAdapter implements Mappable {
 	@Override
 	public void store() throws MappableException, UserException {
 		if(value!=null) {
-			OpenstackStore os = OpenstackStorageFactory.getInstance().getOpenstackStore(resource, tenant);
+			BinaryStore os = BinaryStoreFactory.getInstance().getOpenstackStore(resource, tenant);
 			if(os==null) {
 				logger.warn("Can not find swift resource: {} for tenant: {}",resource,tenant);
 				throw new UserException(-1, "Can not find swift resource");
@@ -56,7 +56,7 @@ public class SwiftAdapter implements Mappable {
 	
 	public Binary getGet(String name) {
 		logger.info("Getting: {} from resource: {} with tenant: {}",name,resource,tenant);
-		OpenstackStore os = OpenstackStorageFactory.getInstance().getOpenstackStore(resource, tenant);
+		BinaryStore os = BinaryStoreFactory.getInstance().getOpenstackStore(resource, tenant);
 		return os.get(name);
 	}
 	

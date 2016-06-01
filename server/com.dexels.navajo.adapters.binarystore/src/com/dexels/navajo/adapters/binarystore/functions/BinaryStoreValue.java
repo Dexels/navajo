@@ -1,13 +1,13 @@
-package com.dexels.navajo.adapters.swift.functions;
+package com.dexels.navajo.adapters.binarystore.functions;
 
 import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.resource.swift.OpenstackStorageFactory;
-import com.dexels.navajo.resource.swift.OpenstackStore;
+import com.dexels.navajo.resource.binarystorage.BinaryStore;
+import com.dexels.navajo.resource.binarystorage.BinaryStoreFactory;
 
 /**
  */
 
-public class SwiftValue extends FunctionInterface {
+public class BinaryStoreValue extends FunctionInterface {
 
   public static final String DATASOURCEDELIMITER = ":";
   public static final String USERDELIMITER = "@";
@@ -18,7 +18,7 @@ public class SwiftValue extends FunctionInterface {
       this.dbIdentifier = dbIdentifier;
   }
 
-  public SwiftValue() {
+  public BinaryStoreValue() {
 	  super();
   }
 
@@ -28,7 +28,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 	  String tenant = super.getInstance();
 	  String resourceName = (String) super.getOperand(0);
 	  String objectName = (String) super.getOperand(1);
-		OpenstackStore os = OpenstackStorageFactory.getInstance().getOpenstackStore(resourceName, tenant);
+		BinaryStore os = BinaryStoreFactory.getInstance().getOpenstackStore(resourceName, tenant);
 		return os.get(objectName);
   }
   

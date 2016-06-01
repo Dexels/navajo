@@ -1,11 +1,11 @@
-package navajoswift;
+package navajobinarystore;
 
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.adapters.swift.SwiftAdapterLibrary;
-import com.dexels.navajo.adapters.swift.functions.SwiftAdapterFunctionLibrary;
+import com.dexels.navajo.adapters.binarystore.BinaryStoreAdapterLibrary;
+import com.dexels.navajo.adapters.binarystore.functions.BinaryStoreFunctionLibrary;
 
 import navajoextension.AbstractCoreExtension;
 
@@ -26,8 +26,8 @@ public class Version extends AbstractCoreExtension {
 		super.start(bc);
 		bundleContext = bc;
 		try {
-			SwiftAdapterLibrary library = new SwiftAdapterLibrary();
-			SwiftAdapterFunctionLibrary funcLib = new SwiftAdapterFunctionLibrary();
+			BinaryStoreAdapterLibrary library = new BinaryStoreAdapterLibrary();
+			BinaryStoreFunctionLibrary funcLib = new BinaryStoreFunctionLibrary();
 			registerAll(library);
 			registerAll(funcLib);
 		} catch (Throwable e) {
