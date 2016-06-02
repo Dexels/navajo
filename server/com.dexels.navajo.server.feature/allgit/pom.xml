@@ -16,6 +16,7 @@
 		<module>../../com.dexels.navajo.listeners.stream</module>
 		<module>../../com.dexels.navajo.jsp</module>
 		<module>../../com.dexels.navajo.jsp.server</module>
+		<module>../../com.dexels.navajo.proxy</module>
 		<!--<module>../../com.dexels.navajo.jsp.osgi</module>-->
 		<module>../../com.dexels.navajo.queuemanager</module>
 		<module>../../com.dexels.navajo.rhino</module>
