@@ -6,8 +6,8 @@ import java.net.URLConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RemoveValidationPropertiesHandler {
-    private final static Logger logger = LoggerFactory.getLogger(RemoveValidationPropertiesHandler.class);
+public class RemoteValidationPropertiesHandler {
+    private final static Logger logger = LoggerFactory.getLogger(RemoteValidationPropertiesHandler.class);
 
     
     private final String url;
@@ -15,7 +15,7 @@ public class RemoveValidationPropertiesHandler {
     private final String subunion;
     private final String locale;
     
-    public RemoveValidationPropertiesHandler(String url, String union, String locale) {
+    public RemoteValidationPropertiesHandler(String url, String union, String locale) {
         this.url = url;
         this.union = union.toLowerCase();
         if (union.toLowerCase().equals("knvb")) {

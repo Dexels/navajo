@@ -220,7 +220,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
             return;
         }
         
-        RemoveValidationPropertiesHandler remoteHandler = new RemoveValidationPropertiesHandler(url, union, lcode);
+        RemoteValidationPropertiesHandler remoteHandler = new RemoteValidationPropertiesHandler(url, union, lcode);
         InputStream tipiResourceStream = remoteHandler.getContents() ;
         
 		if (errorMessageBundle == null) {
