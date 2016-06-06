@@ -1,7 +1,6 @@
 package com.dexels.navajo.resource.kafka;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.dexels.kafka.api.KafkaPublisher;
@@ -11,11 +10,6 @@ import com.dexels.navajo.script.api.UserException;
 
 public class TestKafkaResource {
 
-	@Before
-	public void setUp() throws Exception {
-		KafkaResourceFactory factory = new KafkaResourceFactory();
-		
-	}
 
 	@After
 	public void tearDown() throws Exception {
@@ -24,8 +18,8 @@ public class TestKafkaResource {
 
 	@Test
 	public void testSimple() throws MappableException, UserException, InterruptedException {
-		KafkaPublisher kp = KafkaClientFactory.createPublisher("cerberus1.sportlink-infra.net:9092,cerberus2.sportlink-infra.net:9094");
+		KafkaPublisher kp = KafkaClientFactory.createPublisher("cerberus1.sportlink-infra.net:9092,cerberus2.sportlink-infra.net:9094","topic");
 		kp.publish("key", "blubblub".getBytes());
-		Thread.currentThread().sleep(1000);
+		Thread.sleep(1000);
 	}
 }

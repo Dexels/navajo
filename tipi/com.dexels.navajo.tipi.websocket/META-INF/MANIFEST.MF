@@ -17,6 +17,8 @@ Import-Package: com.dexels.navajo.client.sessiontoken,
  org.eclipse.jetty.websocket.api;version="9.2.14.v20151106",
  org.eclipse.jetty.websocket.api.annotations;version="9.2.14.v20151106",
  org.eclipse.jetty.websocket.client;version="9.2.10",
+ org.eclipse.jetty.websocket.common;version="9.3.9",
+ org.eclipse.jetty.websocket.common.scopes;version="9.3.9",
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)",
  tipi;version="1.1.42"

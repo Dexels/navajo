@@ -1,5 +1,6 @@
 package com.dexels.navajo.jsp.proxy;
 
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -8,6 +9,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.dexels.utils.Base64;
 import org.eclipse.jetty.client.HttpClient;
@@ -59,8 +61,8 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 	}
 	
 	@Override
-	protected void customizeProxyRequest(Request proxyRequest,
-			HttpServletRequest request) {
+	protected void sendProxyRequest(HttpServletRequest request, HttpServletResponse response, Request proxyRequest
+			) {
 		proxyRequest.getHeaders().remove("Host");
 		
 		if (username != null && password != null) {
@@ -74,7 +76,7 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 	}
 
 	@Override
-	protected URI rewriteURI(HttpServletRequest request) {
+	protected String rewriteTarget(HttpServletRequest request) {
 //		String proto = request.getProtocol();
 		String query = request.getQueryString();
 		String pathInfo = request.getPathInfo();
@@ -86,9 +88,9 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 			construct = construct+"?"+query;
 		}
 
-		URI finalURI = URI.create(construct);
+//		URI finalURI = URI.create(construct);
 		
-		return finalURI;
+		return construct;
 	}
 	
 	private String getEntityFromServer() {

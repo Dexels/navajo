@@ -37,10 +37,23 @@ read -p "Enter release version [$NEWMINOR1]: " TMPNEWMINOR1
 NEWMINOR1=${TMPNEWMINOR1:-$NEWMINOR1}
 BASEVERSION=`echo "$NEWMINOR1" | cut -f1-2 -d '.'`
 NEWMINOR2=$BASEVERSION.$((`echo "$NEWMINOR1"| cut -f3 -d '.'` + 1))
+
+#Check if this new version already exists
+GROUPURL=''
+GROUPID=`grep groupId pom.xml  | cut -f2 -d">"|cut -f1 -d"<"`
+GROUPARR=(${GROUPID//\./ })
+for i in ${GROUPARR[@]}; do
+    GROUPURL="$GROUPURL/$i"
+done
+STATUS=`curl  -s -w "%{http_code}" "https://repo.dexels.com/nexus/service/local/repositories/navajo/content$GROUPURL/$BUNDLENAME/$NEWMINOR1/$BUNDLENAME-$NEWMINOR1.jar" -o /dev/null`
+if [ $STATUS -eq "200" ]
+then
+    echo "$BUNDLENAME version $NEWMINOR1 already exists - exiting!"
+    exit 1
+fi
+
 echo "Going to release $BUNDLENAME $NEWMINOR1 and $NEWMINOR2 - press ctrl+c to cancel within 5 seconds"
 prettysleep 5
-
-
 
 mvn install
 if [ $? -ne 0 ]
