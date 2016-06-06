@@ -1,8 +1,8 @@
 package com.dexels.navajo.adapters.binarystore.functions;
 
 import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.resource.binarystorage.BinaryStore;
-import com.dexels.navajo.resource.binarystorage.BinaryStoreFactory;
+import com.dexels.navajo.resource.binarystore.BinaryStore;
+import com.dexels.navajo.resource.binarystore.BinaryStoreFactory;
 
 /**
  */

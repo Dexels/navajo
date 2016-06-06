@@ -10,8 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.resource.binarystorage.BinaryStore;
-import com.dexels.navajo.resource.binarystorage.BinaryStoreFactory;
+import com.dexels.navajo.resource.binarystore.BinaryStore;
+import com.dexels.navajo.resource.binarystore.BinaryStoreFactory;
 import com.dexels.navajo.resource.swift.impl.OpenstackStoreImpl;
 
 

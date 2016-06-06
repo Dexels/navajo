@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.resource.binarystorage.BinaryStore;
+import com.dexels.navajo.resource.binarystore.BinaryStore;
 
 public class OpenstackStoreImpl implements BinaryStore {
 	

@@ -1,4 +1,4 @@
-package com.dexels.navajo.resource.binarystorage;
+package com.dexels.navajo.resource.binarystore;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -3,7 +3,7 @@ package com.dexels.navajo.resource.swift;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.resource.binarystorage.BinaryStoreFactory;
+import com.dexels.navajo.resource.binarystore.BinaryStoreFactory;
 
 public class TestActivator implements BundleActivator {
 
