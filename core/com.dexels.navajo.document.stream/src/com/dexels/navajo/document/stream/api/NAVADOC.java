@@ -78,9 +78,42 @@ public class NAVADOC {
 						}
 					}
 				};
-			}};
+			}
+		};
 	}
 	
+	public static Operator<Observable<byte[]>,NavajoStreamEvent> serializeStream() {
+		return new Operator<Observable<byte[]>,NavajoStreamEvent>(){
+			private final NavajoStreamSerializer serializer = new NavajoStreamSerializer();
+			@Override
+			public Subscriber<? super NavajoStreamEvent> call(Subscriber<? super Observable<byte[]>> n) {
+				return new Subscriber<NavajoStreamEvent>() {
+
+					@Override
+					public void onCompleted() {
+						if(!n.isUnsubscribed()) {
+	 						n.onCompleted();
+						}
+					}
+
+					@Override
+					public void onError(Throwable e) {
+						if(!n.isUnsubscribed()) {
+						n.onError(e);
+						}
+					}
+
+					@Override
+					public void onNext(NavajoStreamEvent event) {
+						if(!n.isUnsubscribed()) {
+							Observable<byte[]> res = serializer.feed(event);
+							n.onNext(res);
+						}
+					}
+				};
+			}
+		};
+	}
 	public static Operator<NavajoStreamEvent,NavajoStreamEvent> filterMessageIgnore() {
 		return new Operator<NavajoStreamEvent,NavajoStreamEvent>(){
 			private final Stack<Boolean> ignoreLevel = new Stack<Boolean>();
@@ -174,6 +207,37 @@ public class NAVADOC {
 					public void onNext(Navajo event) {
 						if(!n.isUnsubscribed()) {
 							NavajoDomStreamer.feed(event).subscribe(ee->n.onNext(ee));
+//						collector.feed(event,n);
+						}
+					}
+				};
+			}};
+	}
+	
+	public static Operator<Observable<NavajoStreamEvent>,Navajo> streamObservable() {
+		return new Operator<Observable<NavajoStreamEvent>,Navajo>(){
+			@Override
+			public Subscriber<? super Navajo> call(Subscriber<? super Observable<NavajoStreamEvent>> n) {
+				return new Subscriber<Navajo>() {
+
+					@Override
+					public void onCompleted() {
+						if(!n.isUnsubscribed()) {
+	 						n.onCompleted();
+						}
+					}
+
+					@Override
+					public void onError(Throwable e) {
+						if(!n.isUnsubscribed()) {
+						n.onError(e);
+						}
+					}
+
+					@Override
+					public void onNext(Navajo event) {
+						if(!n.isUnsubscribed()) {
+							n.onNext(NavajoDomStreamer.feed(event));
 //						collector.feed(event,n);
 						}
 					}
