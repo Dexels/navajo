@@ -432,25 +432,33 @@ public class GenericHandler extends ServiceHandler {
      * @throws AuthorizationException
      */
 	@Override
-	public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
+    public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
 
-    	// Check whether break-was-set for access from 'the-outside'. If so, do NOT perform service and return
-    	// current value of outputdoc.
-    	
-    	if ( access.isBreakWasSet() ) {
-    		if ( access.getOutputDoc() == null ) {
-    			Navajo outDoc = NavajoFactory.getInstance().createNavajo();
-    			access.setOutputDoc(outDoc);
-    		}
-    		return access.getOutputDoc();
-    	}
-    	
+        // Check whether break-was-set for access from 'the-outside'. If so, do NOT perform service and return
+        // current value of outputdoc.
+
+        if (access.isBreakWasSet()) {
+            if (access.getOutputDoc() == null) {
+                Navajo outDoc = NavajoFactory.getInstance().createNavajo();
+                access.setOutputDoc(outDoc);
+            }
+            return access.getOutputDoc();
+        }
+
         Navajo outDoc = null;
-    	StringBuffer compilerErrors = new StringBuffer();
+        StringBuffer compilerErrors = new StringBuffer();
         outDoc = NavajoFactory.getInstance().createNavajo();
-        
+        CompiledScriptInterface cso = null;
         try {
-            CompiledScriptInterface cso = loadOnDemand(access.rpcName, false);
+            cso = loadOnDemand(access.rpcName, false);
+        } catch (Throwable e) {
+            logger.error("Exception on getting compiledscript", e);
+            if (e instanceof FileNotFoundException) {
+                access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
+            }
+            throw new SystemException(-1, e.getMessage(), e);
+        }
+        try {
 
             // (access.rpcName);
             if (cso == null) {
@@ -478,34 +486,21 @@ public class GenericHandler extends ServiceHandler {
 
             return access.getOutputDoc();
         } catch (Throwable e) {
-           
+
             if (e instanceof com.dexels.navajo.mapping.BreakEvent) {
-              // Create dummy header to set breakwasset attribute.
-              Header h = NavajoFactory.getInstance().createHeader(outDoc, "", "", "", -1);
-              outDoc.addHeader(h);
-              outDoc.getHeader().setHeaderAttribute("breakwasset", "true");
-              return outDoc;
+                // Create dummy header to set breakwasset attribute.
+                Header h = NavajoFactory.getInstance().createHeader(outDoc, "", "", "", -1);
+                outDoc.addHeader(h);
+                outDoc.getHeader().setHeaderAttribute("breakwasset", "true");
+                return outDoc;
+            } else if (e instanceof com.dexels.navajo.server.ConditionErrorException) {
+                return ((com.dexels.navajo.server.ConditionErrorException) e).getNavajo();
+            } else if (e instanceof UserException) {
+                throw (UserException) e;
             }
-            else if (e instanceof com.dexels.navajo.server.ConditionErrorException) {
-              return ( (com.dexels.navajo.server.ConditionErrorException) e).getNavajo();
-            }
-            else if ( e instanceof UserException ) {
-            	throw (UserException) e;
-            }
-            else if (e instanceof AuthorizationException) {
-              System.err.println("CAUGHT AUTHORIZATION ERROR IN GENERICHANDLER!");
-              throw (AuthorizationException) e;
-            }
-            else {
-                if ( e instanceof FileNotFoundException ) {
-                    access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
-                }
-                
-            	AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, e.getMessage() + (!compilerErrors.toString().trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), Level.SEVERE, access.accessID);
-            	throw new SystemException( -1, e.getMessage(), e);
-            }
-          }
+            throw new SystemException(-1, e.getMessage(), e);
         }
+    }
 
 	// THIS rpcName seems to have a tenant suffix
 	private CompiledScriptInterface loadOnDemand(String rpcName, boolean force) throws Exception {

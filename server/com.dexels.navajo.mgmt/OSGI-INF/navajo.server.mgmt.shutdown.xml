@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.server.mgmt.shutdown">
+   <implementation class="com.dexels.navajo.mgmt.shutdown.NavajoShutdownCheck"/>
+   
+   <reference bind="setDispatcherInterface" cardinality="0..1" interface="com.dexels.navajo.server.DispatcherInterface" name="DispatcherInterface" policy="dynamic" unbind="clearDispatcherInterface"/>
+   <service>
+      <provide interface="com.dexels.server.mgmt.api.ServerShutdownCheck"/>
+   </service>
+</scr:component>

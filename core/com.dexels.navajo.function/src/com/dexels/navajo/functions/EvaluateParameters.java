@@ -2,6 +2,9 @@ package com.dexels.navajo.functions;
 
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -11,10 +14,10 @@ import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 public class EvaluateParameters extends FunctionInterface {
+    private final static Logger logger = LoggerFactory.getLogger(EvaluateParameters.class);
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		System.err.println("Noot");
 		if (getOperands().size() != 1) {
 			throw new TMLExpressionException("Wrong number of arguments");
 		}
@@ -22,16 +25,16 @@ public class EvaluateParameters extends FunctionInterface {
 		Message currentMessage = this.getCurrentMessage();
 		String expression = (String) getOperand(0);
 
-		System.err.println("input: " + expression);
+		logger.debug("input: {} ", expression);
 		String result = "";
 		StringTokenizer tok = new StringTokenizer(expression, "[");
 		while (tok.hasMoreTokens()) {
 			String token = tok.nextToken();
-			System.err.println("token: " + token);
+			logger.debug("token: {}", token);
 			if (token.indexOf("]") > 0) {
 				String property = token.substring(0, token.indexOf("]"));
 				String value = property;
-				System.err.println("Property: " + property);
+				logger.debug("Property: {}", property);
 				if (currentMessage != null) {
 					if(currentMessage.getProperty(property) != null){
 						value = currentMessage.getProperty(property).getValue();

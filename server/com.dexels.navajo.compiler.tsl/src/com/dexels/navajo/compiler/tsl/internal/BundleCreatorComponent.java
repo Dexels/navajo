@@ -764,48 +764,43 @@ public class BundleCreatorComponent implements BundleCreator {
 
     /**
      * rpcName does not include tenant suffix
+     * @throws Exception 
      */
     @Override 
-    public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant, boolean force, String extension) {
-        try {
-            if (rpcName.indexOf("/") == -1) {
-                if (rpcName.indexOf('_') != -1) {
-                    throw new IllegalArgumentException(
-                            "rpcName should not have a tenant suffix: " + rpcName + " scriptName: " + rpcName);
-                }
+    public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant, boolean force, String extension) throws Exception {
+
+        if (rpcName.indexOf("/") == -1) {
+            if (rpcName.indexOf('_') != -1) {
+                throw new IllegalArgumentException("rpcName should not have a tenant suffix: " + rpcName + " scriptName: " + rpcName);
             }
-            CompiledScriptInterface sc = getCompiledScript(rpcName, tenant);
-
-
-            if (sc != null && !force) {
-                return sc;
-            } else {
-                if (extension == null) {
-                    extension = navajoIOConfig.determineScriptExtension(rpcName, tenant);
-                    logger.info("No known extension for {} - determined {} as script extension!", rpcName, extension);
-                }
-
-                List<String> failures = new ArrayList<String>();
-                List<String> success = new ArrayList<String>();
-                List<String> skipped = new ArrayList<String>();
-                
-                boolean keepIntermediateFiles = false;
-                if ("true".equals(System.getenv("DEVELOP_MODE"))) {
-                    keepIntermediateFiles = true;
-                }
-                
-                createBundle(rpcName, new Date(), failures, success, skipped, force, keepIntermediateFiles, extension);
-                installBundle(rpcName, failures, success, skipped, force, extension);
-            }
-
-            logger.debug("Finished on demand compiling of: {}", rpcName);
-            return getCompiledScript(rpcName, tenant);
-        } catch (Exception e) {
-            throw new RuntimeException("Error on getting script "  + rpcName, e);
         }
+        CompiledScriptInterface sc = getCompiledScript(rpcName, tenant);
+
+        if (sc != null && !force) {
+            return sc;
+        } else {
+            if (extension == null) {
+                extension = navajoIOConfig.determineScriptExtension(rpcName, tenant);
+                logger.info("No known extension for {} - determined {} as script extension!", rpcName, extension);
+            }
+
+            List<String> failures = new ArrayList<String>();
+            List<String> success = new ArrayList<String>();
+            List<String> skipped = new ArrayList<String>();
+
+            boolean keepIntermediateFiles = false;
+            if ("true".equals(System.getenv("DEVELOP_MODE"))) {
+                keepIntermediateFiles = true;
+            }
+
+            createBundle(rpcName, new Date(), failures, success, skipped, force, keepIntermediateFiles, extension);
+            installBundle(rpcName, failures, success, skipped, force, extension);
+        }
+
+        logger.debug("Finished on demand compiling of: {}", rpcName);
+        return getCompiledScript(rpcName, tenant);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public CompiledScriptInterface getCompiledScript(String rpcName, String tenant)
             throws ClassNotFoundException {

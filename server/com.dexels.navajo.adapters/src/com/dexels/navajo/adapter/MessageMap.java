@@ -499,8 +499,6 @@ public class MessageMap implements Mappable {
 		}
 		a.setCurrentOutMessage(null);
 		mm.store();
-
-		out.write(System.err);
 	}
 
 	public void setSuppressProperties(String suppressProperties) {

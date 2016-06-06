@@ -190,8 +190,8 @@ public class Base2LdapAdapter implements Mappable {
 				String uid = current.getProperty("PersonId").getValue();
 				addGroupMember("uid", uid, "member", clubMemberContext);
 			} catch (Exception e) {
-				logger.debug("Adding member failed, continuing",e);
-				current.write(System.err);
+				logger.debug("Adding member failed, continuing. Input: {}",current.getRootDoc(), e);
+
 			}
 		}
 	}
@@ -259,7 +259,7 @@ public class Base2LdapAdapter implements Mappable {
 		Map<String,String> memberMap = new HashMap<String, String>();
 		memberMap.put("member", "cn=dummy");
 		
-		entity.write(System.err);
+
 		String clubId = entity.getProperty("ClubIdentifier").getValue();
 		String clubName = entity.getProperty("ClubName").getValue();
 		logger.debug("Owner: "+clubId);

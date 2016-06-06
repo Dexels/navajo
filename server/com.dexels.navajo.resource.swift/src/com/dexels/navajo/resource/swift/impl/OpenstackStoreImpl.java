@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.openstack4j.api.OSClient;
 import org.openstack4j.api.storage.ObjectStorageService;
+import org.openstack4j.core.transport.Config;
+import org.openstack4j.core.transport.ProxyHost;
 import org.openstack4j.model.common.Payload;
 import org.openstack4j.model.common.Payloads;
 import org.openstack4j.model.identity.Access;
@@ -19,9 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.resource.swift.OpenstackStore;
+import com.dexels.navajo.resource.binarystorage.BinaryStore;
 
-public class OpenstackStoreImpl implements OpenstackStore {
+public class OpenstackStoreImpl implements BinaryStore {
 	
 	
 	private final static Logger logger = LoggerFactory.getLogger(OpenstackStoreImpl.class);
@@ -46,8 +48,8 @@ public class OpenstackStoreImpl implements OpenstackStore {
 		String tenantId = (String) settings.get("tenantId");
 		containerName  = (String) settings.get("container");
 
-
 		OSClient os = OSFactory.builder()
+				.withConfig(configureProxy())
                 .endpoint(endpoint)
                 .raxApiKey(true)
                 .credentials(username,apiKey)
@@ -69,6 +71,15 @@ public class OpenstackStoreImpl implements OpenstackStore {
 		
 	}
 
+	private Config configureProxy() {
+		String host = System.getenv("httpProxyHost");
+		String port = System.getenv("httpProxyPort");
+		if(host==null || port == null) {
+			return Config.newConfig();
+		}
+		String hostURL = host.startsWith("http://")?host:"http://"+host;
+		return Config.newConfig().withProxy(ProxyHost.of(hostURL, Integer.parseInt(port)));
+	}
 	private SwiftContainer findContainer(String name) {
 		for (SwiftContainer swiftContainer : storage.containers().list()) {
 			System.err.println("Container: "+swiftContainer);

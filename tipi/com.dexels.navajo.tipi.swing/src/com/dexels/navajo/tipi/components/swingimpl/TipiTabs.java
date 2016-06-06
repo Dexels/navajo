@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
@@ -83,6 +86,14 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 			public Dimension getPreferredSize() {
 				return checkMaxMin(super.getPreferredSize());
 			}
+			
+			 @Override
+	            public void paintComponent(Graphics g) {
+	                Graphics2D graphics2d = (Graphics2D) g;
+	                graphics2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+	                        RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HBGR);
+	                super.paintComponent(g);
+	            }
 		};
 		// jt.setBackground(new Color(0.0f,0.8f,0.0f,0.2f));
 		TipiHelper th = new TipiSwingHelper();
@@ -352,7 +363,9 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		
 		if (name.equals("opaque")) {
 		    UIManager.put("TabbedPane.contentOpaque", (Boolean) object);
-            tabbedpane.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI());
+		    javax.swing.plaf.basic.BasicTabbedPaneUI ui = new javax.swing.plaf.basic.BasicTabbedPaneUI();
+		    
+            tabbedpane.setUI(ui);
         }
 	}
 

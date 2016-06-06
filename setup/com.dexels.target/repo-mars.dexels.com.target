@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1699">
+<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1744">
 <locations>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.equinox.server.core.feature.group" version="1.3.100.v20150529-1857"/>
+<unit id="org.eclipse.equinox.server.jetty.feature.group" version="1.2.0.v20150519-1816"/>
+<unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
+<unit id="org.eclipse.equinox.sdk.feature.group" version="3.11.0.v20150602-1417"/>
+<repository location="http://repo.dexels.com/eclipse/equinox_mars"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.3.201305221702"/>
+<repository location="http://repo.dexels.com/eclipse/jetty8"/>
+</location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
 <unit id="org.eclipse.jgit.feature.group" version="3.1.0.201310021548-r"/>
@@ -10,27 +21,19 @@
 <repository location="http://repo.dexels.com/eclipse/egit"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.2.10.201503131614"/>
-<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.2.10.v20150310/"/>
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.3.9.201605312009"/>
+<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.9.v20160517"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.3.201305221702"/>
-<repository location="http://repo.dexels.com/eclipse/jetty8"/>
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.18.201510140934"/>
+<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-8.x/8.1.18.v20150929"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.equinox.server.core.feature.group" version="1.3.100.v20150529-1857"/>
-<unit id="org.eclipse.equinox.server.jetty.feature.group" version="1.2.0.v20150519-1816"/>
-<unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
-<unit id="org.eclipse.equinox.sdk.feature.group" version="3.11.0.v20150602-1417"/>
-<repository location="http://repo.dexels.com/eclipse/equinox_mars"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.91.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.91"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.98.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.98"/>
 </location>
 </locations>
 <includeBundles>
-<plugin id="aQute.xray.plugin"/>
 <plugin id="ch.qos.logback.classic"/>
 <plugin id="ch.qos.logback.core"/>
 <plugin id="com.dexels.appstore.ant"/>
@@ -39,8 +42,6 @@
 <plugin id="com.dexels.hazelcast"/>
 <plugin id="com.dexels.kafka.api"/>
 <plugin id="com.dexels.kafka.impl"/>
-<plugin id="com.dexels.kafka.test"/>
-<plugin id="com.dexels.karaf.featuresync"/>
 <plugin id="com.dexels.log4j.httpappender"/>
 <plugin id="com.dexels.log4j.server"/>
 <plugin id="com.dexels.logback.redis"/>
@@ -53,6 +54,9 @@
 <plugin id="com.dexels.repository.file"/>
 <plugin id="com.dexels.repository.git"/>
 <plugin id="com.dexels.repository.git.api"/>
+<plugin id="com.dexels.resourcebundle"/>
+<plugin id="com.dexels.server.mgmt.api"/>
+<plugin id="com.dexels.server.mgmt.impl"/>
 <plugin id="com.dexels.sharedconfigstore"/>
 <plugin id="com.fasterxml.aalto-xml"/>
 <plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
@@ -64,7 +68,6 @@
 <plugin id="com.hazelcast"/>
 <plugin id="com.jcraft.jsch" version="0.1.50.v201403120620"/>
 <plugin id="com.jcraft.jzlib"/>
-<plugin id="com.jogamp.jogl"/>
 <plugin id="com.mysql.jdbc"/>
 <plugin id="com.oracle.jdbc.driver"/>
 <plugin id="com.springsource.javax.transaction"/>
@@ -86,10 +89,6 @@
 <plugin id="jackson-mapper-lgpl"/>
 <plugin id="javaewah" version="0.7.9.v201401101600"/>
 <plugin id="javax.inject"/>
-<plugin id="jline"/>
-<plugin id="org.apache.aries.blueprint.api"/>
-<plugin id="org.apache.aries.blueprint.cm"/>
-<plugin id="org.apache.aries.blueprint.core"/>
 <plugin id="org.apache.aries.jmx.api"/>
 <plugin id="org.apache.aries.jmx.blueprint.api"/>
 <plugin id="org.apache.aries.jmx.blueprint.core"/>
@@ -99,20 +98,6 @@
 <plugin id="org.apache.aries.proxy.impl"/>
 <plugin id="org.apache.aries.quiesce.api"/>
 <plugin id="org.apache.aries.util"/>
-<plugin id="org.apache.camel.camel-ahc"/>
-<plugin id="org.apache.camel.camel-blueprint"/>
-<plugin id="org.apache.camel.camel-context"/>
-<plugin id="org.apache.camel.camel-core"/>
-<plugin id="org.apache.camel.camel-core-osgi"/>
-<plugin id="org.apache.camel.camel-crypto"/>
-<plugin id="org.apache.camel.camel-csv"/>
-<plugin id="org.apache.camel.camel-eclipse"/>
-<plugin id="org.apache.camel.camel-eventadmin"/>
-<plugin id="org.apache.camel.camel-ftp"/>
-<plugin id="org.apache.camel.camel-http"/>
-<plugin id="org.apache.camel.camel-jdbc"/>
-<plugin id="org.apache.camel.camel-mail"/>
-<plugin id="org.apache.camel.camel-stream"/>
 <plugin id="org.apache.commons.beanutils"/>
 <plugin id="org.apache.commons.codec"/>
 <plugin id="org.apache.commons.compress" version="1.9.0"/>
@@ -127,26 +112,12 @@
 <plugin id="org.apache.commons.pool"/>
 <plugin id="org.apache.felix.bundlerepository"/>
 <plugin id="org.apache.felix.configadmin"/>
-<plugin id="org.apache.felix.dependencymanager"/>
-<plugin id="org.apache.felix.dependencymanager.compat"/>
-<plugin id="org.apache.felix.dependencymanager.runtime"/>
-<plugin id="org.apache.felix.dependencymanager.shell"/>
-<plugin id="org.apache.felix.deployment.rp.autoconf"/>
-<plugin id="org.apache.felix.deploymentadmin"/>
 <plugin id="org.apache.felix.eventadmin"/>
 <plugin id="org.apache.felix.fileinstall"/>
 <plugin id="org.apache.felix.framework"/>
 <plugin id="org.apache.felix.framework.security"/>
-<plugin id="org.apache.felix.gogo.command" version="0.12.0"/>
 <plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
 <plugin id="org.apache.felix.gogo.shell" version="0.10.0.v201212101605"/>
-<plugin id="org.apache.felix.http.api"/>
-<plugin id="org.apache.felix.http.base"/>
-<plugin id="org.apache.felix.http.bridge"/>
-<plugin id="org.apache.felix.http.bundle"/>
-<plugin id="org.apache.felix.http.jetty"/>
-<plugin id="org.apache.felix.http.proxy"/>
-<plugin id="org.apache.felix.http.whiteboard"/>
 <plugin id="org.apache.felix.inventory"/>
 <plugin id="org.apache.felix.log"/>
 <plugin id="org.apache.felix.metatype"/>
@@ -171,18 +142,6 @@
 <plugin id="org.apache.james.protocols.api"/>
 <plugin id="org.apache.james.protocols.netty"/>
 <plugin id="org.apache.james.protocols.smtp"/>
-<plugin id="org.apache.karaf.deployer.blueprint"/>
-<plugin id="org.apache.karaf.features.core"/>
-<plugin id="org.apache.karaf.jaas.boot"/>
-<plugin id="org.apache.karaf.jaas.command"/>
-<plugin id="org.apache.karaf.jaas.config"/>
-<plugin id="org.apache.karaf.jaas.modules"/>
-<plugin id="org.apache.karaf.region.core"/>
-<plugin id="org.apache.karaf.region.persist"/>
-<plugin id="org.apache.karaf.shell.commands"/>
-<plugin id="org.apache.karaf.shell.console"/>
-<plugin id="org.apache.karaf.shell.ssh"/>
-<plugin id="org.apache.karaf.shell.table"/>
 <plugin id="org.apache.mina.core"/>
 <plugin id="org.apache.pdfbox"/>
 <plugin id="org.apache.pdfbox.fontbox"/>
@@ -234,28 +193,27 @@
 <plugin id="org.eclipse.equinox.simpleconfigurator"/>
 <plugin id="org.eclipse.equinox.supplement"/>
 <plugin id="org.eclipse.equinox.util"/>
-<plugin id="org.eclipse.jetty.annotations" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.annotations" version="9.3.9.v20160517"/>
 <plugin id="org.eclipse.jetty.client" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.client" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jetty.continuation" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jetty.http" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jetty.io" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.client" version="9.3.9.v20160517"/>
+<plugin id="org.eclipse.jetty.continuation" version="9.3.9.v20160517"/>
+<plugin id="org.eclipse.jetty.http" version="9.3.9.v20160517"/>
 <plugin id="org.eclipse.jetty.io" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.osgi.httpservice" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.io" version="9.3.9.v20160517"/>
 <plugin id="org.eclipse.jetty.proxy"/>
-<plugin id="org.eclipse.jetty.security" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jetty.server" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jetty.servlet" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jetty.servlets" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jetty.util" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jetty.util" version="9.2.10.v20150310"/>
-<plugin id="org.eclipse.jetty.websocket"/>
+<plugin id="org.eclipse.jetty.security" version="9.3.9.v20160517"/>
+<plugin id="org.eclipse.jetty.server" version="9.3.9.v20160517"/>
+<plugin id="org.eclipse.jetty.servlet" version="9.3.9.v20160517"/>
+<plugin id="org.eclipse.jetty.servlets" version="9.3.9.v20160517"/>
+<plugin id="org.eclipse.jetty.util" version="9.3.9.v20160517"/>
+<plugin id="org.eclipse.jetty.util" version="8.1.18.v20150929"/>
+<plugin id="org.eclipse.jetty.websocket" version="8.1.18.v20150929"/>
 <plugin id="org.eclipse.jetty.websocket.api"/>
 <plugin id="org.eclipse.jetty.websocket.client"/>
 <plugin id="org.eclipse.jetty.websocket.common"/>
 <plugin id="org.eclipse.jetty.websocket.javax.websocket"/>
 <plugin id="org.eclipse.jetty.websocket.server"/>
-<plugin id="org.eclipse.jetty.xml" version="9.2.10.v20150310"/>
+<plugin id="org.eclipse.jetty.xml" version="9.3.9.v20160517"/>
 <plugin id="org.eclipse.jgit" version="4.1.0.201509280440-r"/>
 <plugin id="org.eclipse.jgit.archive"/>
 <plugin id="org.eclipse.jgit.http.server"/>
@@ -265,14 +223,10 @@
 <plugin id="org.eclipse.osgi.services"/>
 <plugin id="org.eclipse.osgi.util"/>
 <plugin id="org.freemarker.freemarker"/>
-<plugin id="org.fusesource.jansi"/>
 <plugin id="org.h2"/>
-<plugin id="org.h2.jdbc.service"/>
 <plugin id="org.igniterealtime.smack"/>
 <plugin id="org.igniterealtime.smackx"/>
 <plugin id="org.jboss.netty"/>
-<plugin id="org.jgroups"/>
-<plugin id="org.jledit.core"/>
 <plugin id="org.jvnet.mimepull"/>
 <plugin id="org.jvnet.staxex.stax-ex"/>
 <plugin id="org.kjkoster.zapcat"/>
@@ -320,7 +274,6 @@
 <plugin id="org.ops4j.pax.web.pax-web-jsp"/>
 <plugin id="org.ops4j.pax.web.pax-web-runtime"/>
 <plugin id="org.ops4j.pax.web.pax-web-spi"/>
-<plugin id="org.osgi.service.obr"/>
 <plugin id="org.postgresql.jdbc4"/>
 <plugin id="org.scala-lang.modules.scala-xml"/>
 <plugin id="org.scala-lang.scala-compiler"/>

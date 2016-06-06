@@ -285,6 +285,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if (myThreadPool == null) {
             myThreadPool = new TipiThreadPool(this, getPoolSize());
         }
+        
         NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
         tipiResourceLoader = new ClassPathResourceLoader();
         setStorageManager(new TipiNullStorageManager());
@@ -297,6 +298,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         } catch (Throwable e) {
             hasDebugger = false;
         }
+        eHandler = new BaseTipiErrorHandler();
+        eHandler.setContext(this);
+        
         
         MDC.put("sessionToken", SessionTokenFactory.getSessionTokenProvider().getSessionToken());
         if (systemPropertyMap.get("DTAP") != null) {
@@ -520,7 +524,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         // getClassManager().clearClassMap();
         clearTopScreen();
 
-        eHandler = null;
+
         errorHandler = null;
         // rootPaneList.clear();
         Runtime runtimeObject = Runtime.getRuntime();
@@ -540,7 +544,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         navajoCacheMap = new HashMap<String, CachedNavajo>();
         
         // Will be updated on the next error, which should re-read validation.properties
-        eHandler = null;
+        eHandler = new BaseTipiErrorHandler();
+        eHandler.setContext(this);
     }
 
     public abstract void clearTopScreen();
@@ -1116,9 +1121,14 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             String overlayType = "opaque";
             TipiSupportOverlayPane overlayComponent = null;
             if (inst instanceof TipiSupportOverlayPane) {
-                if (inst.getValue("overlay") != null) {
-                    overlayType = (String) inst.getValue("overlay");
+                try {
+                    if (inst.getValue("overlay") != null) {
+                        overlayType = (String) inst.getValue("overlay");
+                    }
+                } catch (Exception e) {
+                    // Something went wrong, let's just use default overlay...
                 }
+               
                 if (!overlayType.equals("none")) {
                     overlayComponent = (TipiSupportOverlayPane) inst;
                     overlayComponent.addOverlayProgressPanel(overlayType);
@@ -1791,18 +1801,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     }
 
     public TipiErrorHandler getErrorHandler() {
-        // TODO Put this in a more elegant place
-        // TODO No remove completely. Don't like it.
-        if (eHandler == null) {
-            eHandler = new BaseTipiErrorHandler();
-            eHandler.setContext(this);
-        }
         return eHandler;
     }
 
-    private String getErrorMessage(Navajo reply, String errorMessage) {
+    private String getErrorMessage(Navajo reply, final String errorMessage) {
         String userError = errorMessage;
-        String dtap = systemPropertyMap.get("DTAP") == null? null: systemPropertyMap.get("DTAP");
+        String dtap = systemPropertyMap.get("DTAP") == null ? null: systemPropertyMap.get("DTAP");
         Boolean showFullErrorMessage = (Boolean) getGlobalValue("showFullErrorMessage");
         if (showFullErrorMessage == null) showFullErrorMessage = false;
         
@@ -1811,7 +1815,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if (!"DEVELOPMENT".equals(dtap) && !showFullErrorMessage)  {
             // We don't want to give the end-user an ugly stack trace, hence we replace the message
             // with an access id.
-            errorMessage = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
+            userError = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
         } 
         return userError;
     }
@@ -2549,7 +2553,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     }
 
     public void resetErrorHandler() {
-        eHandler = null;
+        eHandler = new BaseTipiErrorHandler();
+        eHandler.setContext(this);
     }
 
     public void fireTipiStructureChanged(TipiComponent tc) {

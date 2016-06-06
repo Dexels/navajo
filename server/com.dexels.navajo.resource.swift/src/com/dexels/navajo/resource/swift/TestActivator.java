@@ -3,12 +3,14 @@ package com.dexels.navajo.resource.swift;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+import com.dexels.navajo.resource.binarystorage.BinaryStoreFactory;
+
 public class TestActivator implements BundleActivator {
 
 	@Override
 	public void start(BundleContext context) throws Exception {
 		System.err.println("Starting bundle");
-		OpenstackStorageFactory osf = new OpenstackStorageFactory();
+		BinaryStoreFactory osf = new BinaryStoreFactory();
 		System.err.println("done!");
 	}
 

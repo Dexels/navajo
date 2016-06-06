@@ -37,13 +37,15 @@ import com.dexels.navajo.tipi.TipiErrorHandler;
  * @version 1.0
  */
 public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
+    private static final int VALIDATIONPROPERTIES_RETRY_INTERVAL = 30000;
+    private static final long serialVersionUID = -2568512270962339576L;
     private final static Logger logger = LoggerFactory.getLogger(BaseTipiErrorHandler.class);
+    
     private static final String ERROR_MESSAGE = "Error_click_details";
     private static final String ERROR_TITLE = "Error_click_details_title";
     private static final String ERROR_MORE_DETAILS = "Details";
     private static final String ERROR_LESS_DETAILS = "LessDetails";
     private static final String ERROR_OK = "Ok";
-	private static final long serialVersionUID = -2568512270962339576L;
     private static final String INACTIVITY_MSG = "Inactive_msg";
     private static final String INACTIVITY_TITLE =  "Inactive_title";
 	
@@ -53,6 +55,8 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	
 	public BaseTipiErrorHandler() {
 		// initResource();
+	   
+	   
 	}
 
 	@Override
@@ -183,36 +187,54 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	@Override
 	public void setContext(TipiContext c) {
 		context = c;
-		String lcode = c.getApplicationInstance().getLocaleCode();
-		if(!getValidationsForLocale(c, null)) {
-			getValidationsForLocale(c, lcode);
-		}
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Get validation.properties from the remote server.
+                // If this fails for whatever reason, keep trying to see if we can
+                // retrieve it at a later moment.
+                getRemoteValidationProperties();
+                
+                while (errorMessageBundle == null) {
+                    logger.info("Retrying retrieval of remote validation.properties...");
+                    getRemoteValidationProperties();
+                    try {
+                        Thread.sleep(VALIDATIONPROPERTIES_RETRY_INTERVAL);
+                    } catch (InterruptedException e) {
+
+                    }
+                }
+               
+            }
+        }).start();
 	}
 
 
-	private boolean getValidationsForLocale(TipiContext c, String lcode) {
-		String lcSpecificValidations = lcode ==null? "validation.properties" : "validation_" + lcode + ".properties";
+	private void getRemoteValidationProperties() {
+	    final String lcode = context.getApplicationInstance().getLocaleCode();
+        final String url = context.getSystemProperty("tipi.resourceurl");
+        final String union = context.getSystemProperty("tipi.profile");
+        
+        if (url == null) {
+            logger.warn("Empty url for tipi.resourceurl - cannot load validation.properties");
+            return;
+        }
+        
+        RemoteValidationPropertiesHandler remoteHandler = new RemoteValidationPropertiesHandler(url, union, lcode);
+        InputStream tipiResourceStream = remoteHandler.getContents() ;
+        
 		if (errorMessageBundle == null) {
-			// attempt remote propertyresource bundle;
-			try {
-				InputStream tipiResourceStream = null;
-				tipiResourceStream = c.getTipiResourceStream(lcSpecificValidations);
-				if ( tipiResourceStream == null ) {
-					tipiResourceStream = c.getTipiResourceStream("validation.properties");
-				}
-				if (tipiResourceStream != null) {
-					errorMessageBundle = new PropertyResourceBundle(
-							tipiResourceStream);
+			try {				
+				if (tipiResourceStream!= null) {
+					errorMessageBundle = new PropertyResourceBundle(tipiResourceStream);
+					logger.info("Retrieved validation.properties from server");
 				} else {
-					logger.error("Getting validation.properties from server failed. Is validation.properties in *resources*, not *tipi*?");
+					logger.warn("Empty inputstream - cannot retrieve validation.properties");
 				}
-				return true;
 			} catch (IOException e) {
-				logger.error("Getting validation.properties from server failed. Is validation.properties in *resources*, not *tipi*?",e);
-				return false;
+				logger.error("IOException creating PropertyResourceBundle from remote validation.properties",e);
 			}
 		}
-		return true;
 	}
 
 	@Override
@@ -242,4 +264,5 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
         return "De applicatie wordt afgesloten vanwege inactiviteit.";
     }
 
+   
 }

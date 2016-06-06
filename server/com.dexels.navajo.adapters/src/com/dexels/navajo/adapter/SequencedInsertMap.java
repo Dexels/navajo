@@ -17,10 +17,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.script.api.UserException;
 
 public class SequencedInsertMap extends SQLMap {
+    private final static Logger logger = LoggerFactory.getLogger(SequencedInsertMap.class);
 
+    
   public final static String ORACLEPRODUCTNAME = "Oracle";
   public final static String HSQLPRODUCTNAME = "HSQL Database Engine";
   public final static String SELSEQUENCESQL = "SELECT {0}.nextval FROM DUAL";
@@ -92,7 +97,7 @@ public class SequencedInsertMap extends SQLMap {
       }
 
       if (this.getDebug() && (this.identity != null)) {
-        System.out.println(this.getClass() +
+        logger.debug(this.getClass() +
                            ": " + this.databaseProduct +
                            ": generated new identifier '" + this.identity +
                            "' from sequence '" + this.sequenceName + "'");
@@ -133,7 +138,7 @@ public class SequencedInsertMap extends SQLMap {
       }
 
       if (this.getDebug() && (this.identity != null)) {
-        System.out.println(this.getClass() +
+          logger.debug(this.getClass() +
                            ": " + this.databaseProduct +
                            ": has generated new identifier '" + this.identity +
                            "'");
