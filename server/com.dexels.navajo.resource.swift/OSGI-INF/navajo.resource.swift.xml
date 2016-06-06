@@ -2,6 +2,6 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" deactivate="deactivate" immediate="true" name="navajo.resource.swift">
    <implementation class="com.dexels.navajo.resource.swift.impl.OpenstackStoreImpl"/>
    <service>
-      <provide interface="com.dexels.navajo.resource.swift.OpenstackStore"/>
+      <provide interface="com.dexels.navajo.resource.binarystorage.BinaryStore"/>
    </service>
 </scr:component>

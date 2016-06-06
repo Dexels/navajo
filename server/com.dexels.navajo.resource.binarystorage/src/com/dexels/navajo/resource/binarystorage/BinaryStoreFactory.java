@@ -27,7 +27,7 @@ public class BinaryStoreFactory {
 		return instance;
 	}
 
-	public void addOpenstackStore(BinaryStore store, Map<String,Object> settings) {
+	public void addBinaryStore(BinaryStore store, Map<String,Object> settings) {
 		String name = (String) settings.get("name");
 		String tenant = (String) settings.get("instance");
 		logger.info("Adding Openstack store name: {} for tenant {}",name,tenant);
@@ -44,7 +44,7 @@ public class BinaryStoreFactory {
 		myTenantStore.put(name, store);
 	}
 	
-	public void removeOpenstackStore(BinaryStore store, Map<String,Object> settings) {
+	public void removeBinaryStore(BinaryStore store, Map<String,Object> settings) {
 		String name = (String) settings.get("name");
 		String tenant = (String) settings.get("tenant");
 		if(tenant==null) {
@@ -59,7 +59,7 @@ public class BinaryStoreFactory {
 		myTenantStore.remove(name);
 	}
 
-	public BinaryStore getOpenstackStore(String name, String tenant) {
+	public BinaryStore getBinaryStore(String name, String tenant) {
 		Map<String,BinaryStore> myTenantStore = tenantStores.get(tenant);
 		if(myTenantStore!=null) {
 			BinaryStore os = myTenantStore.get(name);

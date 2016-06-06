@@ -36,7 +36,7 @@ public class TestSwift {
 		BinaryStoreFactory factory = new BinaryStoreFactory();
 		factory.activate();
 		BinaryStoreFactory instance = BinaryStoreFactory.getInstance();
-		instance.addOpenstackStore(osi, settings);
+		instance.addBinaryStore(osi, settings);
 	}
 	
 	@Test
@@ -72,7 +72,7 @@ public class TestSwift {
 	
 	@Test
 	public void testFactory() throws IOException {
-		BinaryStore os = BinaryStoreFactory.getInstance().getOpenstackStore("testresource", "Generic");
+		BinaryStore os = BinaryStoreFactory.getInstance().getBinaryStore("testresource", "Generic");
 		Map<String,String> meta = new HashMap<String,String>();
 		meta.put("aap", "noot");
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");

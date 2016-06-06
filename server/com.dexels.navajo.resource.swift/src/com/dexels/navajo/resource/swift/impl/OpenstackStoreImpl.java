@@ -2,7 +2,6 @@ package com.dexels.navajo.resource.swift.impl;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.openstack4j.api.OSClient;
@@ -64,10 +63,10 @@ public class OpenstackStoreImpl implements BinaryStore {
 			container = findContainer(containerName);
 		}
 		
-		List<? extends SwiftObject> objects = this.storage.objects().list(containerName);
-		for (SwiftObject swiftObject : objects) {
-			System.err.println("Object: "+swiftObject);
-		}
+//		List<? extends SwiftObject> objects = this.storage.objects().list(containerName);
+//		for (SwiftObject swiftObject : objects) {
+//			System.err.println("Object: "+swiftObject);
+//		}
 		
 	}
 
