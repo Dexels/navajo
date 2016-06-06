@@ -30,7 +30,7 @@
 		<module>../../com.dexels.navajo.resource.jdbc.oracle</module>
 		<module>../../com.dexels.navajo.resource.jdbc.mysql</module>
 		<module>../../com.dexels.navajo.resource.http</module>
-		<module>../../com.dexels.navajo.resource.binarystorage</module>
+		<module>../../com.dexels.navajo.resource.binarystore</module>
 		<module>../../com.dexels.navajo.resource.swift</module>
 		<module>../../com.dexels.navajo.resource.kafka</module>
 		<module>../../com.dexels.navajo.resource.mail</module>
