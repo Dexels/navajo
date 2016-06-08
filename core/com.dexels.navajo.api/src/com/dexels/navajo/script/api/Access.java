@@ -668,10 +668,10 @@ public final class Access implements java.io.Serializable, Mappable {
 
 
     public void setApplication(String application) {
-        if (application == null) {
+        this.application = application;
+        if (this.application == null) {
             this.application = MISSING_APPLICATION;
         }
-        this.application = application;
     }
     
     
