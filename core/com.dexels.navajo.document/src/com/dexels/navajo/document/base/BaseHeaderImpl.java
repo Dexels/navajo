@@ -186,6 +186,11 @@ public final String getRPCPassword() {
   public String getApplication() {
       return myTransaction.getApplication();
   }
+  
+  public String getOrganization() {
+      return myTransaction.getOrganization();
+  }
+
 
   @Override
 public final void setRPCUser(String s) {
