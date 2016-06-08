@@ -17,8 +17,6 @@ private String rpc_usr;
 private String rpc_pwd;
 private String rpc_schedule;
 protected String myRequestId;
-private String application = null;
-private String organization = null;
 
 
   public BaseTransactionImpl(Navajo n) {
@@ -71,28 +69,7 @@ public final void setRpc_pwd(String rpc_pwd) {
 public final String getRpc_usr() {
     return rpc_usr;
 }
-public String getApplication() {
-    return application ;
-}
 
-public String getOrganization() {
-    return organization;
-    
-}
-
-public void setApplication(String application) {
-    if (application != null && !application.trim().equals("")) {
-        this.application = application;
-    }
-    
-}
-
-public void setOrganization(String organization) {
-    if (organization != null && !organization.trim().equals("")) {
-        this.organization = organization;
-    }
-    
-}
 
 public final void setRpc_usr(String rpc_usr) {
     this.rpc_usr = rpc_usr;

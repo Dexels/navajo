@@ -181,15 +181,6 @@ public final String getRPCName() {
 public final String getRPCPassword() {
       return myTransaction.getRpc_pwd();
   }
-  
-  @Override
-  public String getApplication() {
-      return myTransaction.getApplication();
-  }
-  
-  public String getOrganization() {
-      return myTransaction.getOrganization();
-  }
 
 
   @Override
