@@ -40,7 +40,7 @@ NEWMINOR2=$BASEVERSION.$((`echo "$NEWMINOR1"| cut -f3 -d '.'` + 1))
 
 #Check if this new version already exists
 GROUPURL=''
-GROUPID=`grep groupId pom.xml  | cut -f2 -d">"|cut -f1 -d"<"`
+GROUPID=`grep -m 1 groupId pom.xml  | cut -f2 -d">"|cut -f1 -d"<"`
 GROUPARR=(${GROUPID//\./ })
 for i in ${GROUPARR[@]}; do
     GROUPURL="$GROUPURL/$i"
