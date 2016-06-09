@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.BundleCreatorFactory;
-import com.dexels.navajo.compiler.CompilationException;
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.compiler.ScriptCompiler;
 import com.dexels.navajo.dependency.Dependency;
@@ -129,11 +128,9 @@ public class BundleCreatorComponent implements BundleCreator {
             List<String> skipped, boolean force, boolean keepIntermediate, String scriptExtension) throws Exception {
 
         String bareScript = scriptName.substring(scriptName.lastIndexOf("/") + 1);
-        String bareRpcName = bareScript;
         String rpcName = scriptName;
 
         if (bareScript.indexOf("_") > 0) {
-            bareRpcName = bareScript.substring(0, bareScript.lastIndexOf("_"));;
             rpcName = scriptName.substring(0, rpcName.lastIndexOf("_"));
         }
         if (scriptExtension == null) {
@@ -145,39 +142,8 @@ public class BundleCreatorComponent implements BundleCreator {
         ReentrantLock lockObject = getLock(rpcName, "compile");
         try {
             if (lockObject.tryLock()) {
-                String script = scriptName.replaceAll("\\.", "/");
-
-                File scriptFolder = new File(navajoIOConfig.getScriptPath());
-                File f = new File(scriptFolder, script);
-
-                final String formatCompilationDate = formatCompilationDate(compilationDate);
-                if (isDirectory(script, scriptFolder, f)) {
-                    compileAllIn(f, compilationDate, failures, success, skipped, force, keepIntermediate, scriptExtension);
-                } else {   
-                    Path pathBase = Paths.get(navajoIOConfig.getScriptPath());
-                   
-                    removeOldCompiledScriptFiles(rpcName);
-
-                    // Look for other tenant-specific files
-                    AbstractFileFilter fileFilter = new WildcardFileFilter(bareRpcName + "_*.xml");
-                    File dir = new File(navajoIOConfig.getScriptPath(), FilenameUtils.getPath(scriptName)); 
-                    Collection<File> files = FileUtils.listFiles(dir, fileFilter, null);
-                    
-                    // Compile non-tenant specific file
-                    if (new File(scriptFolder, rpcName + scriptExtension).exists()) {
-                        createBundleForScript(rpcName,  rpcName, failures, success, skipped, keepIntermediate, scriptExtension, formatCompilationDate);
-                    }
-                    
-                    for (File ascript : files) {
-                        Path pathRelative = pathBase.relativize(Paths.get(ascript.toURI()));
-                        String[] splitted = pathRelative.toString().split("\\.");
-                        String tenantScriptName = splitted[0].replace('\\', '/');
-                        String extension = "." + splitted[1];
-                        createBundleForScript(tenantScriptName, rpcName, failures, success, skipped, keepIntermediate, extension, formatCompilationDate);
-                    }
-                    
-                    
-                }
+                createBundleNoLocking(rpcName, compilationDate, failures, success,
+                        skipped, force, keepIntermediate, scriptExtension);
             } else {
                 // Someone else is already compiling this script. Wait for it to release the lock,
                 // and then we can return immediately since they compiled the script for us
@@ -193,9 +159,45 @@ public class BundleCreatorComponent implements BundleCreator {
 
     }
 
+    private void createBundleNoLocking(String rpcName, Date compilationDate, List<String> failures, List<String> success,
+            List<String> skipped, boolean force, boolean keepIntermediate, String scriptExtension) throws Exception {
+
+        File scriptFolder = new File(navajoIOConfig.getScriptPath());
+        File f = new File(scriptFolder, rpcName);
+
+        final String formatCompilationDate = formatCompilationDate(compilationDate);
+        if (isDirectory(rpcName, scriptFolder, f)) {
+            compileAllIn(f, compilationDate, failures, success, skipped, force, keepIntermediate, scriptExtension);
+        } else {   
+            Path pathBase = Paths.get(navajoIOConfig.getScriptPath());
+           
+            removeOldCompiledScriptFiles(rpcName);
+
+            // Look for other tenant-specific files
+            AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getBaseName(rpcName) + "_*.xml");
+            File dir = new File(navajoIOConfig.getScriptPath(), FilenameUtils.getPath(rpcName)); 
+            Collection<File> files = FileUtils.listFiles(dir, fileFilter, null);
+            
+            // Compile non-tenant specific file
+            if (new File(scriptFolder, rpcName + scriptExtension).exists()) {
+                createBundleForScript(rpcName,  rpcName, failures, success, skipped, keepIntermediate, scriptExtension, formatCompilationDate);
+            }
+            
+            for (File ascript : files) {
+                Path pathRelative = pathBase.relativize(Paths.get(ascript.toURI()));
+                String[] splitted = pathRelative.toString().split("\\.");
+                String tenantScriptName = splitted[0].replace('\\', '/');
+                String extension = "." + splitted[1];
+                createBundleForScript(tenantScriptName, rpcName, failures, success, skipped, keepIntermediate, extension, formatCompilationDate);
+            }
+            
+            
+        }
+    }
+
     private void createBundleForScript(String script, String rpcName, List<String> failures, List<String> success, List<String> skipped, boolean keepIntermediate,
             String scriptExtension,  final String formatCompilationDate)
-            throws FileNotFoundException, IllegalAccessError, Exception, IOException, CompilationException {
+            throws Exception {
        
         if (scriptExtension.length() == 0 || scriptExtension.charAt(0) != '.') {
             throw new IllegalAccessError("Script extension did not start with a dot!");
@@ -293,8 +295,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
     private void compileAndCreateBundle(String script, final String formatCompilationDate, String scriptExtension,
             final String scriptTenant, boolean hasTenantSpecificFile, boolean forceTenant, boolean keepIntermediate,
-            List<String> success, List<String> skipped, List<String> failures)
-                    throws Exception, IOException, CompilationException {
+            List<String> success, List<String> skipped, List<String> failures) throws Exception {
         List<com.dexels.navajo.script.api.Dependency> dependencies = new ArrayList<com.dexels.navajo.script.api.Dependency>();
         String myScript = script;
         if (forceTenant) {
@@ -465,24 +466,7 @@ public class BundleCreatorComponent implements BundleCreator {
         ReentrantLock lockObject = getLock(scriptPath, "install");
         try {
             if (lockObject.tryLock()) {
-                
-                try {
-                    Bundle b = doInstall(scriptPath, force, extension);
-                    if (b == null) {
-                        skipped.add(scriptPath);
-                    } else {
-                        success.add(b.getSymbolicName());
-                    }
-                } catch (BundleException e) {
-                    failures.add(e.getLocalizedMessage());
-                    reportInstallationError(scriptPath, e);
-                } catch (FileNotFoundException e1) {
-                    failures.add(e1.getLocalizedMessage());
-                    reportInstallationError(scriptPath, e1);
-                } catch (MalformedURLException e) {
-                    failures.add(e.getLocalizedMessage());
-                    reportInstallationError(scriptPath, e);
-                }
+                installBundleNoLocking(scriptPath, failures, success, skipped, force, extension);
             } else {
                 // Someone else is already compiling this script. Wait for it to release the lock,
                 // and then we can return immediately since they compiled the script for us
@@ -492,6 +476,26 @@ public class BundleCreatorComponent implements BundleCreator {
             }
         } finally {
             releaseLock(scriptPath, "install", lockObject);
+        }
+    }
+
+    private void installBundleNoLocking(String scriptPath, List<String> failures, List<String> success, List<String> skipped, boolean force, String extension) {
+        try {
+            Bundle b = doInstall(scriptPath, force, extension);
+            if (b == null) {
+                skipped.add(scriptPath);
+            } else {
+                success.add(b.getSymbolicName());
+            }
+        } catch (BundleException e) {
+            failures.add(e.getLocalizedMessage());
+            reportInstallationError(scriptPath, e);
+        } catch (FileNotFoundException e1) {
+            failures.add(e1.getLocalizedMessage());
+            reportInstallationError(scriptPath, e1);
+        } catch (MalformedURLException e) {
+            failures.add(e.getLocalizedMessage());
+            reportInstallationError(scriptPath, e);
         }
     }
 
@@ -779,28 +783,42 @@ public class BundleCreatorComponent implements BundleCreator {
         if (sc != null && !force) {
             return sc;
         } else {
-            if (extension == null) {
-                extension = navajoIOConfig.determineScriptExtension(rpcName, tenant);
-                logger.info("No known extension for {} - determined {} as script extension!", rpcName, extension);
+            ReentrantLock lockObject = getLock(rpcName, "compileinstall");
+            try {
+                if (lockObject.tryLock()) {
+                    if (extension == null) {
+                        extension = navajoIOConfig.determineScriptExtension(rpcName, tenant);
+                        logger.info("No known extension for {} - determined {} as script extension!", rpcName, extension);
+                    }
+    
+                    List<String> failures = new ArrayList<String>();
+                    List<String> success = new ArrayList<String>();
+                    List<String> skipped = new ArrayList<String>();
+    
+                    boolean keepIntermediateFiles = false;
+                    if ("true".equals(System.getenv("DEVELOP_MODE"))) {
+                        keepIntermediateFiles = true;
+                    }
+
+                    createBundleNoLocking(rpcName, new Date(), failures, success, skipped, force, keepIntermediateFiles, extension);
+                    installBundleNoLocking(rpcName, failures, success, skipped, force, extension);
+                } else {
+                    // Someone else is already compiling this script. Wait for it to release the lock,
+                    // and then we can return immediately since they compiled the script for us
+                    logger.info("Simultaneous compiling and installing of {} - going to wait it out...", rpcName);
+                    lockObject.lock();
+
+                }
+            } finally {
+                releaseLock(rpcName, "compileinstall", lockObject);
             }
-
-            List<String> failures = new ArrayList<String>();
-            List<String> success = new ArrayList<String>();
-            List<String> skipped = new ArrayList<String>();
-
-            boolean keepIntermediateFiles = false;
-            if ("true".equals(System.getenv("DEVELOP_MODE"))) {
-                keepIntermediateFiles = true;
-            }
-
-            createBundle(rpcName, new Date(), failures, success, skipped, force, keepIntermediateFiles, extension);
-            installBundle(rpcName, failures, success, skipped, force, extension);
         }
 
         logger.debug("Finished on demand compiling of: {}", rpcName);
         return getCompiledScript(rpcName, tenant);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public CompiledScriptInterface getCompiledScript(String rpcName, String tenant)
             throws ClassNotFoundException {
@@ -827,7 +845,6 @@ public class BundleCreatorComponent implements BundleCreator {
 
        String filter = "(&(navajo.scriptName=" + scriptName + ") (|(navajo.tenant=" + tenant + ") (navajo.tenant=default)))";
         
-
         ServiceReference<CompiledScriptFactory>[] servicereferences;
         try {
             servicereferences = (ServiceReference<CompiledScriptFactory>[]) bundleContext
