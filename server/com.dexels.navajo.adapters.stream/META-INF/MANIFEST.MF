@@ -26,7 +26,12 @@ Import-Package: com.dexels.navajo.adapter.sqlmap,
  rx.schedulers;version="1.1.0",
  rx.subjects;version="1.1.0",
  rx.subscriptions;version="1.1.0"
-Export-Package: com.dexels.navajo.adapters.stream
-Bundle-ClassPath: lib/rxjava-jdbc-0.7.jar,
- lib/rxjava-extras-0.7.jar,
- .
+Export-Package: com.dexels.navajo.adapters.stream,
+ com.github.davidmoten.rx;version="0.7.2",
+ com.github.davidmoten.rx.jdbc;version="0.7.2",
+ com.github.davidmoten.rx.jdbc.annotations;version="0.7.2",
+ com.github.davidmoten.rx.jdbc.exceptions;version="0.7.2",
+ com.github.davidmoten.rx.jdbc.tuple;version="0.7.2"
+Bundle-ClassPath: .,
+ lib/rxjava-extras-0.7.9.4.jar,
+ lib/rxjava-jdbc-0.7.2.jar

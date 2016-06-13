@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="com.dexels.navajo.resource.kafka">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="navajo.resource.kafka">
    <implementation class="com.dexels.navajo.resource.kafka.KafkaResourceFactory"/>
    <reference bind="addKafkaPublisher" cardinality="0..n" interface="com.dexels.kafka.api.KafkaPublisher" name="KafkaPublisher" policy="dynamic" unbind="removeKafkaPublisher"/>
    <reference bind="addKafkaSubscriber" cardinality="0..n" interface="com.dexels.kafka.api.KafkaSubscriber" name="KafkaSubscriber" policy="dynamic" unbind="removeKafkaSubscriber"/>
