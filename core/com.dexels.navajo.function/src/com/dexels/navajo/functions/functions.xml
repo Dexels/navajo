@@ -624,6 +624,11 @@
 		<input>integer,string|empty</input>
 		<result>string</result>
 	</function>
+    <function name="ReplaceDiacriticCharacters" class="com.dexels.navajo.functions.ReplaceDiacriticCharacters">
+        <description>Does what it says, replace diacritic chars with non diacritic chars</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
 	<function name="Round" class="com.dexels.navajo.functions.Round">
 		<description>With this function a floating point value can be rounded
 			to a given number of digits. Round(2.372, 2) = 2.37
