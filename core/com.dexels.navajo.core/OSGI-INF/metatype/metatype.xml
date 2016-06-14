@@ -40,16 +40,14 @@
     <AD name="servletContextPath"  id="servletContextPath" required="false" type="String" />
     <AD name="installationPath"  id="installationPath" required="true" type="String" default="/mypath"/>
   </OCD>
- <OCD description="Dummy Tribemanager" name="Dummy Tribemanager" id="navajo.server.tribemanager.dummy" >
+  <OCD description="Dummy Tribemanager" name="Dummy Tribemanager" id="navajo.server.tribemanager.dummy" >
     <AD name="Enable"  id="enable" required="true" type="Boolean" default="true"/>
   </OCD>
- <OCD description="Navajo Local Context" name="Navajo Local Context" id="com.dexels.navajo.local.context" >
- </OCD>
-   <OCD description="Navajo Local Client" name="Navajo Local Client" id="navajo.local.client">
+  <OCD description="Navajo Local Client" name="Navajo Local Client" id="navajo.local.client">
     <AD name="Username"  id="user" required="true" type="String" default=""/>
     <AD name="Password"  id="password" required="true" type="String" default=""/>
     <AD name="Instance"  id="instance" required="true" type="String" />
-    </OCD>
+  </OCD>
 
   <Designate factoryPid="navajo.local.client" >
      <Object ocdref="navajo.local.client"/>

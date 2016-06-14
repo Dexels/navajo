@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.resource.binarystorage.BinaryStore;
-import com.dexels.navajo.resource.binarystorage.BinaryStoreFactory;
+import com.dexels.navajo.resource.binarystore.BinaryStore;
+import com.dexels.navajo.resource.binarystore.BinaryStoreFactory;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
@@ -32,7 +32,7 @@ public class BinaryStoreAdapter implements Mappable {
 	@Override
 	public void store() throws MappableException, UserException {
 		if(value!=null) {
-			BinaryStore os = BinaryStoreFactory.getInstance().getOpenstackStore(resource, tenant);
+			BinaryStore os = BinaryStoreFactory.getInstance().getBinaryStore(resource, tenant);
 			if(os==null) {
 				logger.warn("Can not find swift resource: {} for tenant: {}",resource,tenant);
 				throw new UserException(-1, "Can not find swift resource");
@@ -56,7 +56,7 @@ public class BinaryStoreAdapter implements Mappable {
 	
 	public Binary getGet(String name) {
 		logger.info("Getting: {} from resource: {} with tenant: {}",name,resource,tenant);
-		BinaryStore os = BinaryStoreFactory.getInstance().getOpenstackStore(resource, tenant);
+		BinaryStore os = BinaryStoreFactory.getInstance().getBinaryStore(resource, tenant);
 		return os.get(name);
 	}
 	

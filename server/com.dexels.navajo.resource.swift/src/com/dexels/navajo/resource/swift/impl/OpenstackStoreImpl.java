@@ -1,8 +1,10 @@
 package com.dexels.navajo.resource.swift.impl;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.openstack4j.api.OSClient;
@@ -21,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.resource.binarystorage.BinaryStore;
+import com.dexels.navajo.resource.binarystore.BinaryStore;
 
 public class OpenstackStoreImpl implements BinaryStore {
 	
@@ -64,10 +66,10 @@ public class OpenstackStoreImpl implements BinaryStore {
 			container = findContainer(containerName);
 		}
 		
-		List<? extends SwiftObject> objects = this.storage.objects().list(containerName);
-		for (SwiftObject swiftObject : objects) {
-			System.err.println("Object: "+swiftObject);
-		}
+//		List<? extends SwiftObject> objects = this.storage.objects().list(containerName);
+//		for (SwiftObject swiftObject : objects) {
+//			System.err.println("Object: "+swiftObject);
+//		}
 		
 	}
 
@@ -98,7 +100,7 @@ public class OpenstackStoreImpl implements BinaryStore {
 	}
 
 	@Override
-	public void set(String name, Binary contents,Map<String,String> metadata) {
+	public void set(final String name, final Binary contents,Map<String,String> metadata) {
 		if(name==null) {
 			logger.warn("Ignoring put without name");
 			return;
@@ -109,14 +111,38 @@ public class OpenstackStoreImpl implements BinaryStore {
 		}
 		Map<String,String> meta = new HashMap<>(metadata);
 		meta.put("digest", new String(contents.getDigest()));
-		Payload<InputStream> payload = Payloads.create(contents.getDataAsStream());
-		
+//		Payload<InputStream> payload = Payloads.create(contents.getDataAsStream());
 		ObjectPutOptions options = ObjectPutOptions
 				.create()
 				.contentType(contents.guessContentType())
 				.metadata(metadata);
+		// fail occasionally. Retry?
+		Payload<URL> p = new Payload<URL>(){
 
-		OSFactory.clientFromAccess(osAccess).objectStorage().objects().put(this.containerName, name,payload,options);
+			@Override
+			public void close() throws IOException {
+			}
+
+			@Override
+			public void closeQuietly() {
+			}
+
+			@Override
+			public InputStream open() {
+				return contents.getDataAsStream();
+			}
+
+			@Override
+			public URL getRaw() {
+				try {
+					return contents.getURL();
+				} catch (MalformedURLException e) {
+					logger.error("Error: ", e);
+				}
+				return null;
+			}};
+			
+		OSFactory.clientFromAccess(osAccess).objectStorage().objects().put(this.containerName, name,p,options);
 	}
 
 	@Override

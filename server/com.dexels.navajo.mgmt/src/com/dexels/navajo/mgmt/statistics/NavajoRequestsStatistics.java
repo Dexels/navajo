@@ -24,7 +24,7 @@ public class NavajoRequestsStatistics implements ServerStatisticsProvider, Event
     private Object sync = new Object();
     private Map<String, LoadingCache<Integer, Integer>> cache = null;
 
-    public void Activate() {
+    public void activate() {
         cache = new HashMap<>();
         LoadingCache<Integer, Integer> navajoCache = CacheBuilder.newBuilder().expireAfterWrite(15, TimeUnit.MINUTES).softValues()
                 .build(new CacheLoader<Integer, Integer>() {

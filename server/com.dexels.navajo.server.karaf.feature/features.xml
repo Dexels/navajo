@@ -408,10 +408,10 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.article' version='3.1.5'>
+	<feature resolver="(obr)" name='navajo.article' version='3.1.6'>
 		<feature version="[3.0.32,4)">navajo.server.osgi</feature>
 		<feature version="[1.0.8,2)">dexels.oauth</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/3.2.0
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/3.3.0
 		</bundle>
 	</feature>
 
@@ -583,7 +583,7 @@
 
 
 	<feature resolver="(obr)" name='navajo.enterprise.monitor'
-		version='2.1.23'>
+		version='2.1.24'>
 		<feature version="[3.0.16,4)">navajo.enterprise.mongodb</feature>
 		<feature version="[3.0.0,4)">navajo.legacy</feature>
         <bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-core/2.6.3</bundle>
@@ -593,7 +593,7 @@
         </bundle>
         <bundle dependency='true'>mvn:com.dexels.repository/com.dexels.sharedconfigstore/0.9.3
         </bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/5.8.0
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.monitor/5.8.2
 		</bundle>
 	</feature>
 
