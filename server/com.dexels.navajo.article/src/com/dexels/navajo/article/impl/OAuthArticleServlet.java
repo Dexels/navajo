@@ -95,15 +95,7 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
             a.setException(e);
 
             // Create a navajo of the input
-            Navajo navajo = NavajoFactory.getInstance().createNavajo();
-            Message properties = NavajoFactory.getInstance().createMessage(navajo, "Input");
-            navajo.addMessage(properties);
-            for (Entry<String, String[]> entry : req.getParameterMap().entrySet()) {
-                Property property = NavajoFactory.getInstance().createProperty(navajo, entry.getKey(), null, null, null);
-                property.setValue(entry.getValue().toString());
-                properties.addProperty(property);
-            }
-
+            Navajo navajo = createNavajoFromRequest(req);
             a.setInDoc(navajo);
             a.setExitCode(Access.EXIT_EXCEPTION);
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
@@ -111,6 +103,18 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
             a.setFinished();
             NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(a));
         }
+    }
+
+    private Navajo createNavajoFromRequest(HttpServletRequest req) {
+        Navajo navajo = NavajoFactory.getInstance().createNavajo();
+        Message properties = NavajoFactory.getInstance().createMessage(navajo, "Input");
+        navajo.addMessage(properties);
+        for (Entry<String, String[]> entry : req.getParameterMap().entrySet()) {
+            Property property = NavajoFactory.getInstance().createProperty(navajo, entry.getKey(), null, null, null);
+            property.setValue(entry.getValue().toString());
+            properties.addProperty(property);
+        }
+        return navajo;
     }
 
     private OAuthToken getOAuthToken(String token) throws APIException {
