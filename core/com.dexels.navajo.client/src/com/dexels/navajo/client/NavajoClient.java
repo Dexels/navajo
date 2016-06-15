@@ -118,6 +118,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 	private SessionTokenProvider sessionTokenProvider;
 	private SSLSocketFactory socketFactory;
 	private KeyStore keyStore;
+    private String organization;
 
 	private static final long serverDisableTimeout = 60000;
 
@@ -645,6 +646,9 @@ public class NavajoClient implements ClientInterface, Serializable {
 					if (application != null) {
                         out.getHeader().setHeaderAttribute("application", application);
                     }
+					if (organization != null) {
+                        out.getHeader().setHeaderAttribute("organization", organization);
+                    }
 
 					Navajo n = null;
 
@@ -1022,8 +1026,18 @@ public class NavajoClient implements ClientInterface, Serializable {
         return application;
     }
 
+	@Override
     public void setApplication(String application) {
         this.application = application;
+    }
+	
+    @Override
+    public void setOrganization(String organization) {
+        this.organization = organization;
+        
+    }
+    public String getOrganization() {
+        return organization;
     }
 
     /**
@@ -1273,5 +1287,6 @@ public class NavajoClient implements ClientInterface, Serializable {
 			throw new IOException("Error loading certificate: ", e);
 		}
 	}
+
 
 }

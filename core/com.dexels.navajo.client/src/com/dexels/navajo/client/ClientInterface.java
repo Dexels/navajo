@@ -43,6 +43,9 @@ public interface ClientInterface {
   public void setServerUrl(String url);
   public void setRetryAttempts(int noOfAttempts);
   public void setServers(String[] servers);
+  public void setApplication(String string);
+  public void setOrganization(String string);
+  
   public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format, String orientation, int[] margins) throws NavajoException;
 
 public SystemInfoProvider getSystemInfoProvider();
@@ -84,5 +87,6 @@ public void setClientCertificate(String algorithm, String type, InputStream is, 
  * @param forceGzip
  */
 public void setForceGzip(boolean forceGzip);
+
 
 }

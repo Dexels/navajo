@@ -96,5 +96,16 @@ public class ExpressionTest {
 		Operand o = ee.evaluate("'aap\nnoot'", null);
 		assertEquals("aap\nnoot", o.value);
 	}
+	
+	@Test
+	public void testNonAscii() throws Exception {
+		NavajoFactory.getInstance().setExpressionEvaluator(
+				new DefaultExpressionEvaluator());
+		ExpressionEvaluator ee = NavajoFactory.getInstance()
+				.getExpressionEvaluator();
+
+		Operand o = ee.evaluate("'àáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżž'+'àáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżž'", null);
+		assertEquals("àáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżžàáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżž", o.value);
+	}
 
 }

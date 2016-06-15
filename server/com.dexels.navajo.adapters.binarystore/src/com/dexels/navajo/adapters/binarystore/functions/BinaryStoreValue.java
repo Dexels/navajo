@@ -1,8 +1,8 @@
 package com.dexels.navajo.adapters.binarystore.functions;
 
 import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.resource.binarystorage.BinaryStore;
-import com.dexels.navajo.resource.binarystorage.BinaryStoreFactory;
+import com.dexels.navajo.resource.binarystore.BinaryStore;
+import com.dexels.navajo.resource.binarystore.BinaryStoreFactory;
 
 /**
  */
@@ -28,7 +28,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 	  String tenant = super.getInstance();
 	  String resourceName = (String) super.getOperand(0);
 	  String objectName = (String) super.getOperand(1);
-		BinaryStore os = BinaryStoreFactory.getInstance().getOpenstackStore(resourceName, tenant);
+		BinaryStore os = BinaryStoreFactory.getInstance().getBinaryStore(resourceName, tenant);
 		return os.get(objectName);
   }
   

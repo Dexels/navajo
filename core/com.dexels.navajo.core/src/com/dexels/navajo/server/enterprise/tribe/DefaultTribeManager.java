@@ -12,7 +12,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.Access;
-import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.enterprise.tribe.impl.SimpleTribalTopic;
 import com.dexels.navajo.server.enterprise.tribe.impl.SimpleTribeMember;
 
@@ -25,6 +26,7 @@ public class DefaultTribeManager implements TribeManagerInterface {
 	private Map<String,TribalNumber> counters = new ConcurrentHashMap<String,TribalNumber>();
 	private Map<String,Map> distributedMaps = new ConcurrentHashMap<String,Map>();
 	private Map<String,Set> distributedSets = new ConcurrentHashMap<String,Set>();
+	private NavajoConfigInterface navajoConfig = null;
 	
 	@Override
 	public void terminate() {
@@ -44,6 +46,14 @@ public class DefaultTribeManager implements TribeManagerInterface {
 		TribeManagerFactory.setInstance(null);
 	}
 	
+	public void setNavajoConfig(NavajoConfigInterface navajoConfig) {
+		this.navajoConfig  = navajoConfig;
+	}
+
+	public void clearNavajoConfig(NavajoConfigInterface navajoConfig) {
+		this.navajoConfig = null;
+	}
+
 	@Override
 	public Navajo forward(Navajo in,String tenant) throws Exception {
 		return null;
@@ -199,7 +209,7 @@ public class DefaultTribeManager implements TribeManagerInterface {
 
 	@Override
 	public String getTribalId() {
-		return DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup();
+		return navajoConfig.getInstanceGroup();
 	}
 
 	@Override
