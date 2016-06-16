@@ -88,7 +88,7 @@ public class Key {
 				// Find property in input.
 				boolean foundProp = false;
 				for ( Property ip : input ) {
-					if ( propertyMatch(p, ip) && ! ip.getValue().equals("")) {
+					if ( propertyMatch(p, ip) && ! (ip.getValue() == null || ip.getValue().equals(""))) {
 						foundProp = true;
 						break;
 					}
