@@ -72,12 +72,13 @@ public class Key {
 	}
 	
 	private boolean propertyMatch(Property p1, Property p2) {
-	
-		if ( p1.getName().equals(p2.getName()) ) {
-			if ( p1.getType().equals(p2.getType() ) ) {
-				return true;
-			}
-		}
+	    if (p1.getName().equals(p2.getName())) {
+	        boolean matchType = p1.getType().equals(p2.getType());
+	        boolean matchParent = p1.getParentMessage().getName().equals(p2.getParentMessage().getName());
+	        if (matchType && matchParent) {
+	            return true;
+	        }
+	    }
 		return false;
 	}
 	
@@ -88,7 +89,7 @@ public class Key {
 				// Find property in input.
 				boolean foundProp = false;
 				for ( Property ip : input ) {
-					if ( propertyMatch(p, ip) && ! ip.getValue().equals("")) {
+					if ( propertyMatch(p, ip) && ! (ip.getValue() == null || ip.getValue().equals(""))) {
 						foundProp = true;
 						break;
 					}
