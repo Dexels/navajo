@@ -38,6 +38,7 @@ public interface TipiErrorHandler {
 	
 	public String getInactivityTitleText();
 	public String getInactivityMsgText();
+    public void removeContext(TipiContext c);
 	
 
 

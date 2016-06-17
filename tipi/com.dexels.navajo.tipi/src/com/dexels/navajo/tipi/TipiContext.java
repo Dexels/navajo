@@ -543,9 +543,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         }
         navajoCacheMap = new HashMap<String, CachedNavajo>();
         
-        // Will be updated on the next error, which should re-read validation.properties
-        eHandler = new BaseTipiErrorHandler();
-        eHandler.setContext(this);
+        resetErrorHandler();
     }
 
     public abstract void clearTopScreen();
@@ -2540,19 +2538,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
         resetErrorHandler();
 
-        // try {
-        // Class<?> c = Class
-        // .forName("com.dexels.navajo.tipi.tools.TipiXSDBuilder");
-        // TipiContextAdapter tca = (TipiContextAdapter) c.newInstance();
-        // tca.execute(this);
-        // logger.info("xsd builder loaded");
-        // } catch (Throwable e) {
-        // logger.error("Error loading XSD?",e);
-        // }
 
     }
 
     public void resetErrorHandler() {
+        eHandler.removeContext(this);
         eHandler = new BaseTipiErrorHandler();
         eHandler.setContext(this);
     }
