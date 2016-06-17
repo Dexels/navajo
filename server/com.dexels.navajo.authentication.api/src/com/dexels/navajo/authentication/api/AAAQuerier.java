@@ -64,7 +64,7 @@ public interface AAAQuerier {
     public void resetCachedUserCredential(String tenant, String username);
     
     public Integer getUserId(String tenant, String username);
-    public String getPersonId(String tenant, String username);
+    public String getPersonId(Access a);
     
     
     public String getUserAuthMethod(String tenant, String username);
@@ -73,5 +73,4 @@ public interface AAAQuerier {
     
     public int getDaysUntilExpiration(String tenant, String username);
 
-    
 }
