@@ -213,8 +213,20 @@ public class Entity  {
 		registerSuperEntity(superEntity);
 	}
     
-    protected Entity getSuperEntity(String extendedEntity) {
-        return superEntitiesMap.get(extendedEntity);
+	/** Follows the hierarchy to find your entity **/
+    protected Entity getSuperEntity( String extendedEntity) {
+        Entity superEntity = superEntitiesMap.get(extendedEntity);
+        if (superEntity != null) {
+            return superEntity;
+        }
+        
+        for (Entity aSuper : superEntitiesMap.values()) {
+            superEntity = aSuper.getSuperEntity(extendedEntity);
+            if (superEntity != null) {
+                return superEntity;
+            }
+        }
+        return null;
     }
 
 	private void findSuperEntities(Message m) throws EntityException {

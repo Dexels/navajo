@@ -137,11 +137,12 @@ function processLoginForm(){
     sessionStorage.user =     $('#navajousername').val();
     sessionStorage.password = $('#navajopassword').val();
     
-    $('#navajopassword').val('');
+    $('#navajopassword').val('***********');
     
-    if (sessionStorage.script && !loginTableVisible()) {
+    if ($('.LoginButton').attr('value') === 'Run script' && sessionStorage.script && !loginTableVisible()) {
         runScript(sessionStorage.script);
     }
+    $('.LoginButton').attr('value', 'Login');
     
     return true;
 }
