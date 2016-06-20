@@ -52,6 +52,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	private String errorMessage;
 	private TipiContext context;
 	private transient ResourceBundle errorMessageBundle;
+    private Thread retrieveValidationThread;
 	
 	public BaseTipiErrorHandler() {
 		// initResource();
@@ -187,7 +188,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	@Override
 	public void setContext(TipiContext c) {
 		context = c;
-        new Thread(new Runnable() {
+        retrieveValidationThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 // Get validation.properties from the remote server.
@@ -201,12 +202,19 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
                     try {
                         Thread.sleep(VALIDATIONPROPERTIES_RETRY_INTERVAL);
                     } catch (InterruptedException e) {
-
+                        break;
                     }
                 }
                
             }
-        }).start();
+        });
+        retrieveValidationThread.start();
+	}
+	
+	@Override
+    public void removeContext(TipiContext c) {
+	    retrieveValidationThread.interrupt();
+	    context = null;
 	}
 
 

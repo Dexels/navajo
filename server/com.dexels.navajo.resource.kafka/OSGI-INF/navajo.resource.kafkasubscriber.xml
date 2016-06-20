@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" name="navajo.resource.kafkasubscriber" configuration-policy="require" immediate="true" activate="activate" deactivate="deactivate">
-  <implementation class="com.dexels.kafka.impl.KafkaSubscriberImpl"/>
-  <service>
-    <provide interface="com.dexels.kafka.api.KafkaSubscriber"/>
-  </service>
-</scr:component>
