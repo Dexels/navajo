@@ -42,7 +42,7 @@ public class GrusProviderImpl implements GrusProvider {
 		 String tenant = (String) settings.get("instance");
 		String name = (String) settings.get("name");
 		List<String> aliases = (List<String>) settings.get("aliases");
-		logger.warn(">|>| Name: " + name + " instances: " + instances
+		logger.debug(">|>| Name: " + name + " instances: " + instances
 				+ " Inst: " + tenant);
 		if (tenant == null) {
 			defaultSettingsMap.put(name, settings);
@@ -57,7 +57,7 @@ public class GrusProviderImpl implements GrusProvider {
 			}
 
 		} else {
-			logger.info("!!! Adding source with name: "+name+" with instances: "+instances);
+			logger.debug("Adding source with name: "+name+" with instances: "+instances);
 			for (String currentInstance : instances) {
 				addDataSource(source, name, currentInstance);
 				if (aliases != null) {
