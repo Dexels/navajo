@@ -60,6 +60,7 @@ public class Entity  {
 			return;
 		}
 		logger.info("Deactivating entity: {}", this.getName());
+		entityManager.removeEntity(this);
 		activated = false;
 		// Clear all superentities since extends may have changed.
 		superEntities.clear();

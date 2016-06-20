@@ -126,6 +126,7 @@ public class EntityManager {
 
     public void removeEntity(Entity e) {
         entityMap.remove(e.getName());
+        operationsMap.remove(e.getName());
     }
 
     public Operation getOperation(String entity, String method) throws EntityException {
