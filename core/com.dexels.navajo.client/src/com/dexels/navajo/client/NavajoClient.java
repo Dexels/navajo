@@ -639,8 +639,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 					// set the sublocale
 					// ==============================================
 					if (subLocale != null) {
-						out.getHeader().setHeaderAttribute("sublocale",
-								subLocale);
+						out.getHeader().setHeaderAttribute("sublocale", subLocale);
 					}
 					
 					if (application != null) {
