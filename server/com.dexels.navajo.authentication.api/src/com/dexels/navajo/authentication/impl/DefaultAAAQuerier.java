@@ -53,7 +53,7 @@ public class DefaultAAAQuerier implements AAAQuerier {
 	}
 
 	@Override
-	public String getUserAuthMethod(String tenant, String username) {
+	public String getUserAuthMethod(Access a) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -71,7 +71,7 @@ public class DefaultAAAQuerier implements AAAQuerier {
 	}
 
     @Override
-    public String getPersonId(String tenant, String username) {
+    public String getPersonId(Access a) {
         // TODO Auto-generated method stub
         return null;
     }

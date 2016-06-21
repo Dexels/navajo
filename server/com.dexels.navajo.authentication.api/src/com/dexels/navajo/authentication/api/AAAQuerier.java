@@ -67,10 +67,12 @@ public interface AAAQuerier {
     public String getPersonId(Access a);
     
     
-    public String getUserAuthMethod(String tenant, String username);
+    public String getUserAuthMethod(Access a);
     
     public boolean isFirstUseAccount(String tenant, String username);
     
     public int getDaysUntilExpiration(String tenant, String username);
+
+
 
 }
