@@ -82,24 +82,26 @@ public class Key {
 		return false;
 	}
 	
-	public boolean keyMatch(Set<Property> input) {
-		
-		for ( Property p : myKey ) {
-			// Find property in input.
-			boolean foundProp = false;
-			for ( Property ip : input ) {
-				if ( propertyMatch(p, ip) && ! (ip.getValue() == null || ip.getValue().equals(""))) {
-					foundProp = true;
-					break;
-				}
-			}
-			if (!foundProp) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
+    public boolean keyMatch(Set<Property> input) {
+        for (Property p : myKey) {
+            if (p.getKey().indexOf("optional") == -1) {
+
+                // Find property in input.
+                boolean foundProp = false;
+                for (Property ip : input) {
+                    if (propertyMatch(p, ip) && !(ip.getValue() == null || ip.getValue().equals(""))) {
+                        foundProp = true;
+                        break;
+                    }
+                }
+                if (!foundProp) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 	
 	public Set<Property> getKeyProperties() {
 		return myKey;
