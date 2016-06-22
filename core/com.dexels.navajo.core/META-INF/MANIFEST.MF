@@ -59,7 +59,6 @@ Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
    com.dexels.navajo.mapping",
  com.dexels.navajo.server.enterprise.tribe;uses:="com.dexels.navajo.server,com.dexels.navajo.script.api,com.dexels.navajo.document",
  com.dexels.navajo.server.enterprise.workflow;uses:="com.dexels.navajo.document",
- com.dexels.navajo.server.enterprise.xmpp,
  com.dexels.navajo.server.global;uses:="com.dexels.navajo.document",
  com.dexels.navajo.server.impl;
   uses:="com.dexels.navajo.server.enterprise.integrity,

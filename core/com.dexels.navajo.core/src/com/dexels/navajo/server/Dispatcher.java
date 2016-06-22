@@ -84,7 +84,6 @@ import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
-import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 import com.dexels.navajo.server.global.GlobalManager;
 import com.dexels.navajo.server.global.GlobalManagerRepository;
 import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
@@ -211,9 +210,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
         // Startup tribal status collector.
         TribeManagerFactory.startStatusCollector();
-
-        // Startup Jabber
-        JabberWorkerFactory.getJabberWorkerInstance();
 
     }
 
