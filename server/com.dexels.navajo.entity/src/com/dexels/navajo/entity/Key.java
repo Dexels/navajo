@@ -85,18 +85,16 @@ public class Key {
 	public boolean keyMatch(Set<Property> input) {
 		
 		for ( Property p : myKey ) {
-			if ( p.getKey().indexOf("optional") == -1 ) {
-				// Find property in input.
-				boolean foundProp = false;
-				for ( Property ip : input ) {
-					if ( propertyMatch(p, ip) && ! (ip.getValue() == null || ip.getValue().equals(""))) {
-						foundProp = true;
-						break;
-					}
+			// Find property in input.
+			boolean foundProp = false;
+			for ( Property ip : input ) {
+				if ( propertyMatch(p, ip) && ! (ip.getValue() == null || ip.getValue().equals(""))) {
+					foundProp = true;
+					break;
 				}
-				if (!foundProp) {
-					return false;
-				}
+			}
+			if (!foundProp) {
+				return false;
 			}
 		}
 		

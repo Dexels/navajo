@@ -426,12 +426,15 @@ public class ServiceEntityOperation implements EntityOperation {
 		if(myKey==null) {
 			// Check for _id property. If _id is present it is good as a key.  
 			// It's also possible our entity has no keys defined. In that case accept input
-			if ( inputEntity.getProperty("_id") == null && myEntity.getKeys().size() > 0 ) {
+			if ( inputEntity.getProperty("_id") == null && myEntity.getRequiredKeys().size() > 0 ) {
 				throw new EntityException(EntityException.MISSING_ID, "Input is invalid: no valid entity key found.");
 			} else {
 				myKey = new Key("", myEntity);
 			}
 		}
+		  // Merge input.
+		inputEntity.merge(myEntity.getMessage(), true);
+
 		clean(input, validMessages, "request", false);
 		
 		// Perform validation method if defined
@@ -679,10 +682,10 @@ public class ServiceEntityOperation implements EntityOperation {
 		getop.setTenant(myOperation.getTenant());
 		ServiceEntityOperation get = this.cloneServiceEntityOperation(getop);
 		Navajo request = myKey.generateRequestMessage(input);
-		if ( getop.getExtraMessage() != null ) {
-			request.addMessage(getop.getExtraMessage().copy(request));
-		}
-		prepareServiceRequestHeader(input.copy(), request, getop);
+		if ( myOperation.getExtraMessage() != null ) {
+		    request.addMessage(myOperation.getExtraMessage().copy(request));
+        }
+        prepareServiceRequestHeader(request,request, myOperation);
 
 
 		Navajo result = get.commitOperation(request, getop);

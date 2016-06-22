@@ -335,4 +335,17 @@ public class Entity  {
 	public Set<Key> getKeys() {
 		return myKeys;
 	}
+	public Set<Key> getRequiredKeys() {
+	    Set<Key> required = new HashSet<>();
+	    for ( Key key: myKeys ) {
+	        Set<Property> properties = key.getKeyProperties();
+	        for (Property p : properties) {
+	            if ( Key.isOptionalKey(p.getKey())) {
+	                required.add(key);
+	            }
+	        }
+            
+        }
+	    return required;
+    }
 }

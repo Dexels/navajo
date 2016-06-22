@@ -192,10 +192,7 @@ public class EntityListener extends HttpServlet {
                 logger.error("Entity name not found in input - format incorrect or bad request");
                 throw new EntityException(EntityException.BAD_REQUEST);
             }
-
-            // Merge input.
-            input.getMessage(entityMessage.getName()).merge(entityMessage, true);
-
+          
             inputEtag = request.getHeader("If-Match");
             if (inputEtag == null) {
                 inputEtag = request.getHeader("If-None-Match");
