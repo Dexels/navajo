@@ -163,3 +163,48 @@ li.operation pre {
 	text-decoration: none;
 	color: #606060;
 }
+
+.optional {
+	font-size: 0.8em;
+	text-weight: bold;
+	margin-left: 10px;
+	display: inline;	
+
+}
+
+.errorcodeheader {
+	margin-top: 50px;
+}
+
+.errorcodediv {
+    padding-left: 40px;
+    width: 984px;
+}
+
+
+.errorcodetable {
+    border-collapse: collapse;
+    font-size: smaller;
+    width: 100%;
+}
+
+.errorcodetable thead tr {
+	text-align: left;
+	color: #666666;
+	border-bottom:1pt solid black;
+}
+.errorcodetable thead th {
+    text-align: inherit; /* NEEDED FOR IE*/
+}
+.errorcodetable tr {
+	border-bottom:1pt solid #dddddd;
+	
+}
+.errorcodetable tr > td {
+	padding-top: 3px;
+	
+}
+
+.errorcodetable td:nth-child(1) {  
+	font-family: monospace;
+}
