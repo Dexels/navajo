@@ -32,7 +32,8 @@ import com.dexels.navajo.parser.TMLExpressionException;
  */
 
 public class CheckEmail extends FunctionInterface {
-	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	private static final String EMAIL_PATTERN = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+	
 	
   @Override
 public String remarks() {
@@ -67,7 +68,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 	Boolean b = null;
 	CheckEmail ce = new CheckEmail();
     ce.reset();
-    ce.insertOperand("erik.versteeg@dexels.com");
+    ce.insertOperand("ivangelder01@student.roc-nijmegen.nl");
     b = (Boolean) ce.evaluate();
     System.err.println("result = " + b);
     ce.reset();
@@ -75,7 +76,15 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
     b = (Boolean) ce.evaluate();
     System.err.println("result = " + b);
     ce.reset();
+    ce.insertOperand("erik.versteeg@dexels.com");
+    b = (Boolean) ce.evaluate();
+    System.err.println("result = " + b);
+    ce.reset();
     ce.insertOperand("erik@dexels.com");
+    b = (Boolean) ce.evaluate();
+    System.err.println("result = " + b);
+    ce.reset();
+    ce.insertOperand("erik_dexels.com");
     b = (Boolean) ce.evaluate();
     System.err.println("result = " + b);
   }
