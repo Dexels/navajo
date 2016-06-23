@@ -65,15 +65,21 @@ public class CopyDependencies extends Task {
 				throw new IllegalArgumentException("Only mvn url are supported, not: "+proto[0]);
 			}
 			String[] parts = proto[1].split("/");
-			String classifier = parts.length>3? parts[3] : null;
-			copyDependency(parts[0],parts[1],parts[2],classifier);
+//			String classifier = parts.length>3? parts[3] : null;
+			String type = parts.length>3? parts[3] : "jar";
+			if("".equals(type)) {
+				type = "jar";
+			}
+			String classifier = parts.length>4? parts[4] : null;
+
+			copyDependency(parts[0],parts[1],parts[2],type,classifier);
 //			System.err.println("PRO: "+proto[1]);
 		}
 
 	}
 
 	
-	private void copyDependency(String group, String artifact, String version, String classifier) throws IOException {
+	private void copyDependency(String group, String artifact, String version, String type, String classifier) throws IOException {
 		Path repo = Paths.get(System.getProperty("user.home"), ".m2","repository");
 		String[] groupParts = group.split("\\.");
 		Path resolved = repo;
@@ -83,11 +89,11 @@ public class CopyDependencies extends Task {
 		resolved = resolved.resolve(artifact);
 		resolved = resolved.resolve(version);
 		if (classifier==null) {
-			resolved = resolved.resolve(artifact+"-"+version+".jar");
+			resolved = resolved.resolve(artifact+"-"+version+"."+type);
 		} else {
-			resolved = resolved.resolve(artifact+"-"+version+"-"+classifier+".jar");
+			resolved = resolved.resolve(artifact+"-"+version+"-"+classifier+"."+type);
 		}
-		Path dest = Paths.get(destination).resolve(artifact+"-"+version+".jar");
+		Path dest = Paths.get(destination).resolve(artifact+"-"+version+"."+type);
 		
 		System.err.println("Copying from: "+resolved.toString()+" to "+dest);
 		Files.copy(resolved, dest);

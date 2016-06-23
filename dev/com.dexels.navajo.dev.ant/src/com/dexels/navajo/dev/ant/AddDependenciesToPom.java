@@ -80,14 +80,15 @@ public class AddDependenciesToPom extends Task {
 				throw new IllegalArgumentException("Only mvn url are supported, not: "+proto[0]);
 			}
 			String[] parts = proto[1].split("/");
-			String classifier = parts.length>3? parts[3] : null;
-			deps.addChild(appendDependency(parts[0],parts[1],parts[2],classifier));
+			String type = parts.length>3? parts[3] : "jar";
+			String classifier = parts.length>4? parts[4] : null;
+			deps.addChild(appendDependency(parts[0],parts[1],parts[2],type,classifier));
 //			System.err.println("PRO: "+proto[1]);
 		}
 
 	}
 
-	private XMLElement appendDependency(String groupId, String artifactId, String version, String classifier) {
+	private XMLElement appendDependency(String groupId, String artifactId, String version,String type, String classifier) {
 		XMLElement dep = new CaseSensitiveXMLElement("dependency");
 
 		dep.addTagKeyValue("groupId", groupId);
@@ -96,6 +97,10 @@ public class AddDependenciesToPom extends Task {
 		if(classifier!=null) {
 			dep.addTagKeyValue("classifier", classifier);
 		}
+		if(type!=null && !"jar".equals(type) && !"".equals(type)) {
+			dep.addTagKeyValue("type", type);
+		}
+
 		return dep;
 	}
 	
