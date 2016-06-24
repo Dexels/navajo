@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.navajomap.MessageMap;
-import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
 import com.dexels.navajo.client.NavajoResponseHandler;
 import com.dexels.navajo.client.async.AsyncClient;
 import com.dexels.navajo.client.async.AsyncClientFactory;
@@ -54,7 +53,6 @@ import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -1576,13 +1574,6 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     public DependentResource[] getDependentResourceFields() {
         return new DependentResource[] { new GenericDependentResource(GenericDependentResource.SERVICE_DEPENDENCY, "doSend", AdapterFieldDependency.class),
                 new GenericDependentResource("navajoserver", "server", AdapterFieldDependency.class) };
-    }
-
-    public static ResourceManager getResourceManager(String resourceType) {
-        if (resourceType.equals("navajoserver")) {
-            return NavajoMapManager.getInstance();
-        }
-        return null;
     }
 
     public String getOutputProperties() {

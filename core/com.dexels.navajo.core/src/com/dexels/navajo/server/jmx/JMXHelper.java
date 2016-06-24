@@ -179,7 +179,7 @@ public final class JMXHelper  {
 		return myThread;
 	}
 
-	public final static ObjectName getObjectName(String domain, String type) {
+	private final static ObjectName getObjectName(String domain, String type) {
 		if ( applicationPrefix == null ) {
 			synchronized ( semaphore ) {
 				DispatcherInterface instance = DispatcherFactory.getInstance();
@@ -187,7 +187,7 @@ public final class JMXHelper  {
 					// lower to debug. This will happen all the time in OSGi, and is reasonable.
 					// TODO Fix https://github.com/Dexels/navajo/issues/153. Use some kind of whiteboard
 					// pattern, or check the OSGi / JMX stuff that's out there.
-					logger.debug("Navajo instance not started. Is navajo context listener valid? Check web.xml");
+//					logger.debug("Navajo instance not started. Is navajo context listener valid? Check web.xml");
 					return null;
 				}
 				NavajoConfigInterface navajoConfig = instance.getNavajoConfig();
