@@ -49,6 +49,8 @@ public class TestBinary {
 	private Binary binary3;
 	private Binary binary4;
 	private Binary binary5;
+	private Binary binary6;
+	private Binary binary7;
 
 	
 	private final static Logger logger = LoggerFactory
@@ -62,6 +64,10 @@ public class TestBinary {
 		binary2 = new Binary(getClass().getResourceAsStream("binary2.txt"));
 		binary3 = new Binary(getClass().getResourceAsStream("binary3.txt"));
 		binary4 = new Binary(getClass().getResourceAsStream("binary4.txt"));
+		
+		binary6 = new Binary(getClass().getResourceAsStream("logo.gif"));
+		binary7 = new Binary(getClass().getResourceAsStream("logo.gif"));
+		
 		logger.info("Created first");
 		StringWriter sw = new StringWriter();
 		binary1.writeBase64(sw);
@@ -86,7 +92,7 @@ public class TestBinary {
 //
 	@Test
 	public void testEqual1() {
-		Assert.assertEquals(binary1,binary2);
+		Assert.assertEquals(new String(binary1.getDigest()),new String(binary2.getDigest()));
 	}
 
 	@Test
@@ -115,6 +121,11 @@ public class TestBinary {
 		Assert.assertEquals(binary1,binary5);
 		Assert.assertEquals(binary5,binary1);
 	}
+	
+	@Test
+    public void testEqual6() {
+        Assert.assertFalse(binary6.equals(binary7));
+    }
 
 	@Test
 	@Ignore // Ignore until we find a proper fix for this problem...
