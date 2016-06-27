@@ -206,7 +206,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
         // Start NavajoMapManager to register health of foreign (non-tribal)
         // Navajo Server instances.
-        NavajoMapManager.getInstance();
 
         // Startup tribal status collector.
         TribeManagerFactory.startStatusCollector();
