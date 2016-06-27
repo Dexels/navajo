@@ -6,7 +6,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -15,16 +19,20 @@ import org.apache.tools.ant.Task;
 
 public class CopyDependencies extends Task {
 
-	private String input;
+	private List<String> input;
 	private String destination;
 	private final Set<String> groups = new HashSet<>();
 	@Override
 	public void execute() throws BuildException {
+		Map<Object,Object> p = new HashMap<>();
 		try {
-			File bundleFile = new File(input);
-			Properties p = new Properties();
-			try(FileInputStream fis = new FileInputStream(bundleFile)) {
-				p.load(fis);
+			for (String inputFile : input) {
+				File bundleFile = new File(inputFile);
+				Properties prop = new Properties();
+				try(FileInputStream fis = new FileInputStream(bundleFile)) {
+					prop.load(fis);
+				}
+				p.putAll(prop);
 			}
 			
 			for (java.util.Map.Entry<Object, Object> e : p.entrySet()) {
@@ -44,9 +52,6 @@ public class CopyDependencies extends Task {
 				}
 
 			}
-//			String bootrepo = p.getProperty("bootrepo");
-//			log("pom:\n"+xe);
-
 		} catch (Throwable e) {
 			log("Error creating pom",e,4);
 			throw new BuildException("Error creating pom",e);
@@ -71,9 +76,7 @@ public class CopyDependencies extends Task {
 				type = "jar";
 			}
 			String classifier = parts.length>4? parts[4] : null;
-
 			copyDependency(parts[0],parts[1],parts[2],type,classifier);
-//			System.err.println("PRO: "+proto[1]);
 		}
 
 	}
@@ -95,7 +98,7 @@ public class CopyDependencies extends Task {
 		}
 		Path dest = Paths.get(destination).resolve(artifact+"-"+version+"."+type);
 		
-		System.err.println("Copying from: "+resolved.toString()+" to "+dest);
+//		System.err.println("Copying from: "+resolved.toString()+" to "+dest);
 		Files.copy(resolved, dest);
 		
 	}
@@ -105,7 +108,7 @@ public class CopyDependencies extends Task {
 	}
 	
 	public void setBundles(String input) {
-		this.input = input;
+		this.input = Arrays.asList(input.split(","));
 	}
 
 

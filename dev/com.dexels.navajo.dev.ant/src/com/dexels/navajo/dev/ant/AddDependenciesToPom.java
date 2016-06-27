@@ -6,7 +6,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -18,7 +22,7 @@ import com.dexels.navajo.dev.ant.feature.XMLElement;
 
 public class AddDependenciesToPom extends Task {
 
-	private String input;
+	private List<String> input;
 	private String template;
 	private XMLElement xe;
 	private String destination;
@@ -27,14 +31,19 @@ public class AddDependenciesToPom extends Task {
 	public void execute() throws BuildException {
 		File templateFile = new File(template);
 		xe = new CaseSensitiveXMLElement(false);
+		Map<Object,Object> p = new HashMap<>();
+
 		try {
 			try(Reader r = new FileReader(templateFile)) {
 				xe.parseFromReader(r);
 			}
-			File bundleFile = new File(input);
-			Properties p = new Properties();
-			try(FileInputStream fis = new FileInputStream(bundleFile)) {
-				p.load(fis);
+			for (String inputFile : input) {
+				File bundleFile = new File(inputFile);
+				Properties prop = new Properties();
+				try(FileInputStream fis = new FileInputStream(bundleFile)) {
+					prop.load(fis);
+				}
+				p.putAll(prop);
 			}
 			
 			for (java.util.Map.Entry<Object, Object> e : p.entrySet()) {
@@ -54,8 +63,6 @@ public class AddDependenciesToPom extends Task {
 				}
 
 			}
-//			String bootrepo = p.getProperty("bootrepo");
-//			log("pom:\n"+xe);
 			File output = new File(destination);
 			try(Writer w = new FileWriter(output)) {
 				xe.write(w);
@@ -107,9 +114,9 @@ public class AddDependenciesToPom extends Task {
 	public void setDestination(String destination) {
 		this.destination = destination;
 	}
-
+	
 	public void setBundles(String input) {
-		this.input = input;
+		this.input = Arrays.asList(input.split(","));
 	}
 
 	public void setTemplate(String template) {
