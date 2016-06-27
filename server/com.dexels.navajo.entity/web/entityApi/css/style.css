@@ -208,3 +208,31 @@ li.operation pre {
 .errorcodetable td:nth-child(1) {  
 	font-family: monospace;
 }
+
+
+
+.commentsTable {
+    border-collapse: collapse;
+    font-size: smaller;
+    width: 90%;
+    margin: 10px;
+}
+
+.commentsTable thead tr {
+	text-align: left;
+	color: #666666;
+	border-bottom:1pt solid black;
+}
+.commentsTable thead th {
+    text-align: inherit; /* NEEDED FOR IE*/
+}
+.commentsTable tr {
+	border-bottom:1pt solid #dddddd;
+	
+}
+.commentsTable tr > td {
+	padding-top: 3px;
+}
+.commentsTable td:nth-child(1) {  
+	font-family: monospace;
+}

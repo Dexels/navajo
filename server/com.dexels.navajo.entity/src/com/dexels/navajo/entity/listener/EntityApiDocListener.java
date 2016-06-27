@@ -169,15 +169,30 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
     }
 
     private String printPropertiesDescription(Entity e) {
-        String result = "<h2> Description </h2>";
+        String result = "<h2> Comments </h2>";
         boolean hasDescriptions = false;
+        
+        result += "<table class=\"commentsTable\">";
+        result += "<thead>";
+        result += "  <tr>";
+        result += "     <th style=\"width: 300px;\">Property</th>";
+        result += "    <th>Comments</th>";
+        result += "  </tr>";
+        result += " </thead>";
+        result += "<tbody>";
 
         // Check entity message
         for (Property p : e.getMessage().getAllProperties()) {
             if (p.getDescription() != null && !p.getDescription().equals("")) {
                 hasDescriptions = true;
-                result += "<b>" + p.getName() + "</b>: " + p.getDescription();
-                result += "<br>";
+                result += "<tr>";
+                result += "<td>";
+                result +=  p.getName();
+                result += "</td>";
+                result += "<td>";
+                result +=  p.getDescription();
+                result += "</td>";
+                result += "</tr>";     
             }
         }
 
@@ -186,14 +201,22 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
             for (Property p : m.getAllProperties()) {
                 if (p.getDescription() != null && !p.getDescription().equals("")) {
                     hasDescriptions = true;
-                    result += "<b>" + p.getName() + "</b>: " + p.getDescription();
-                    result += "<br>";
+                    result += "<tr>";
+                    result += "<td>";
+                    result +=  p.getName();
+                    result += "</td>";
+                    result += "<td>";
+                    result +=  p.getDescription();
+                    result += "</td>";
+                    result += "</tr>";    
                 }
             }
 
         }
 
         if (hasDescriptions) {
+            result += " </tbody>";
+            result += "</table>";
             return result;
         }
         return "";
