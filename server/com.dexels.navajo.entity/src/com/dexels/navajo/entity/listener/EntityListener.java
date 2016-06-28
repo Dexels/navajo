@@ -313,7 +313,7 @@ public class EntityListener extends HttpServlet {
             m.addProperty(NavajoFactory.getInstance().createProperty(result, "Status", "string", String.valueOf(EntityException.SERVER_ERROR), 1, null, null));
             m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string", "Server error (" + ex.toString(), 1, null, null));
         }
-
+        response.addHeader("Connection", "close");
         return result;
     }
 
