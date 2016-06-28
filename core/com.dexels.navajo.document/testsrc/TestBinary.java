@@ -9,6 +9,9 @@ import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -49,8 +52,6 @@ public class TestBinary {
 	private Binary binary3;
 	private Binary binary4;
 	private Binary binary5;
-	private Binary binary6;
-	private Binary binary7;
 
 	
 	private final static Logger logger = LoggerFactory
@@ -64,10 +65,7 @@ public class TestBinary {
 		binary2 = new Binary(getClass().getResourceAsStream("binary2.txt"));
 		binary3 = new Binary(getClass().getResourceAsStream("binary3.txt"));
 		binary4 = new Binary(getClass().getResourceAsStream("binary4.txt"));
-		
-		binary6 = new Binary(getClass().getResourceAsStream("logo.gif"));
-		binary7 = new Binary(getClass().getResourceAsStream("logo.gif"));
-		
+
 		logger.info("Created first");
 		StringWriter sw = new StringWriter();
 		binary1.writeBase64(sw);
@@ -123,8 +121,13 @@ public class TestBinary {
 	}
 	
 	@Test
-    public void testEqual6() {
-        Assert.assertEquals(binary6, binary7);
+    public void testEqual6() throws IOException {
+	    Binary binaryStreamed = new Binary(getClass().getResourceAsStream("logo.gif"));
+	    Path path = Paths.get(getClass().getResource("logo.gif").getPath());
+	    byte[] data = Files.readAllBytes(path);
+	    Binary binaryByteArray = new Binary(data);
+
+        Assert.assertEquals(binaryStreamed, binaryByteArray);
     }
 
 	@Test
