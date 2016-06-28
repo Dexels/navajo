@@ -124,7 +124,7 @@ public class TestBinary {
 	
 	@Test
     public void testEqual6() {
-        Assert.assertFalse(binary6.equals(binary7));
+        Assert.assertEquals(binary6, binary7);
     }
 
 	@Test
