@@ -164,13 +164,6 @@ li.operation pre {
 	color: #606060;
 }
 
-.optional {
-	font-size: 0.8em;
-	text-weight: bold;
-	margin-left: 10px;
-	display: inline;	
-
-}
 
 .errorcodeheader {
 	margin-top: 50px;

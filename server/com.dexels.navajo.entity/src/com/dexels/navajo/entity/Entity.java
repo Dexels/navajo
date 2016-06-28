@@ -258,7 +258,6 @@ public class Entity {
     }
 
     private void findKeys() {
-
         myKeys.clear();
         HashMap<String, Key> foundKeys = new HashMap<String, Key>();
 
@@ -270,7 +269,7 @@ public class Entity {
         int keySequence = 0;
 
         for (Property p : allProps) {
-            if (p.getKey() != null && p.getKey().indexOf("true") != -1) {
+            if (Key.isKey(p.getKey())) {
                 String id = Key.getKeyId(p.getKey());
                 if (id == null) {
                     id = "" + (keySequence++);
@@ -282,7 +281,7 @@ public class Entity {
                     myKeys.add(key);
                 }
                 key.addProperty(p);
-            }
+            } 
         }
 
     }

@@ -159,7 +159,11 @@ public class JSONTMLImpl implements JSONTML {
 			}
 		} else {
 			if (this.typeIsValue) {
-				om.writeValue(jg, p.getType());
+			    String value = p.getType();
+			    if (isOptionalKey(p.getKey())) {
+			        value += ", optional";
+			    }
+				om.writeValue(jg, value);
 			} else {
 				Object value = p.getTypedValue();
 				if (p.getType().equals(Property.BINARY_PROPERTY)) {
@@ -174,6 +178,10 @@ public class JSONTMLImpl implements JSONTML {
 		}
 
 	}
+	
+	private boolean isOptionalKey(String key) {
+        return ( key != null && key.indexOf("optional") != -1 );
+    }
 
 	private void format(JsonGenerator jg, Message m, boolean arrayElement) throws Exception {
 

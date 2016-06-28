@@ -224,12 +224,16 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
 
     private String printRequestKeysDefinition(Entity e) throws ServletException {
         String result = "";
-
+        Set<Property> unboundRequestProperties = new HashSet<>();
         result += "<h2> Request </h2>";
+        for (Property p : e.getMessage().getAllProperties()) {
+            if (!Key.isKey(p.getKey()) && p.getMethod().equals("request")) {
+                unboundRequestProperties.add(p);
+            }
+        }
         for (Key key : e.getKeys()) {
             // Get all properties for this key, put them in a temp Navajo and use the JSONTML to print it
             Set<Property> properties = key.getKeyProperties();
-            Set<Property> optionalProps = new HashSet<Property>();
 
             Navajo nkey = NavajoFactory.getInstance().createNavajo();
             Message mkey = NavajoFactory.getInstance().createMessage(nkey, "keys");
@@ -239,24 +243,15 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
                 if (!Key.isAutoKey(prop.getKey())) {
                     mkey.addProperty(prop.copy(nkey));
                 }
-                if (Key.isOptionalKey(prop.getKey())) {
-                    optionalProps.add(prop);
-                }
+            }
+            for (Property p : unboundRequestProperties) {
+                mkey.addProperty(p.copy(nkey));
             }
 
             // Printing result.
             result += "<pre class=\"prettyprint\">";
             result += writeEntityJson(nkey, "request");
             result += "</pre>";
-
-            if (optionalProps.size() > 0) {
-                result += "<div class=\"optional\">Optional: </div> ";
-            }
-            result += "<code> ";
-            for (Property optProp : optionalProps) {
-                result += optProp.getName() + "; ";
-            }
-            result += "</code>";
         }
         return result;
     }
