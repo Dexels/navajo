@@ -6,8 +6,12 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
+
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 import javax.servlet.ServletException;
@@ -29,6 +33,7 @@ import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.entity.Entity;
+import com.dexels.navajo.entity.EntityAuthenticator;
 import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
@@ -51,12 +56,15 @@ public class EntityListener extends HttpServlet {
     private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json", "xml", "tml"));
 
     private EntityManager myManager;
+    
+    private Map<String, EntityAuthenticator> authenticators = new HashMap<>();
 
     private int requestCounter = 0;
     private AAAQuerier authenticator;
 
     public void activate() {
         logger.info("Entity servlet component activated");
+        
     }
 
     public void deactivate() {
@@ -71,12 +79,20 @@ public class EntityListener extends HttpServlet {
         myManager = null;
     }
 
-    public void addAuthenticator(AAAQuerier aa) {
+    public void setAAAQuerier(AAAQuerier aa) {
         authenticator = aa;
     }
 
-    public void removeAuthenticator(AAAQuerier aa) {
+    public void clearAAAQuerier(AAAQuerier aa) {
         authenticator = null;
+    }
+    
+    public void addEntityAuthenticator(EntityAuthenticator a) {
+        authenticators.put(a.getIdentifier(),  a);
+    }
+    
+    public void removeEntityAuthenticator(EntityAuthenticator a) {
+        authenticators.remove(a.getIdentifier());
     }
 
     /**
@@ -116,8 +132,9 @@ public class EntityListener extends HttpServlet {
 
         // Only end-points are allowed to cache - no servers in between
         response.setHeader("Cache-Control", "private");
+        
 
-        HttpBasicAuthentication auth = new HttpBasicAuthentication(request);
+        EntityAuthenticator auth = getAuthenticator(request);
 
         String entityName = path.substring(1);
         if (entityName.indexOf('.') > 0) {
@@ -239,6 +256,25 @@ public class EntityListener extends HttpServlet {
 
         }
 
+    }
+
+    private EntityAuthenticator getAuthenticator(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || authHeader.equals("")) {
+            return null;
+        }
+
+        StringTokenizer st = new StringTokenizer(authHeader);
+        if (st.hasMoreTokens()) {
+             String id = st.nextToken();
+             EntityAuthenticator a =  authenticators.get(id);
+             if (a != null) {
+                 return a.getInstance(request);
+             } else {
+                 logger.warn("Unsupported authorization scheme: {}", id);
+             }
+        }
+        return null;
     }
 
     private void writeOutput(Navajo result, HttpServletResponse response, String output, String etag) throws IOException, ServletException {

@@ -1,4 +1,4 @@
-package com.dexels.navajo.entity.listener;
+package com.dexels.navajo.entity.impl;
 
 import java.util.StringTokenizer;
 
@@ -8,16 +8,27 @@ import org.apache.commons.net.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HttpBasicAuthentication {
+import com.dexels.navajo.entity.EntityAuthenticator;
+
+public class HttpBasicAuthentication implements EntityAuthenticator {
     private final static Logger logger = LoggerFactory.getLogger(HttpBasicAuthentication.class);
     Base64 base64 = new Base64();
 
     private String username;
     private String password;
-
-    public HttpBasicAuthentication(HttpServletRequest req) {
-        performBasicAuthentication(req);
+    
+    public HttpBasicAuthentication getInstance(HttpServletRequest req) {
+        HttpBasicAuthentication newInstance = new HttpBasicAuthentication();
+        newInstance.performBasicAuthentication(req);
+        return newInstance;
     }
+
+    @Override
+    public String getIdentifier() {
+        return "Basic";
+    }
+
+    
 
     public String getUsername() {
         return username;

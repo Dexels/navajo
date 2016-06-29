@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.entity.authenticator.token">
+   <implementation class="com.dexels.navajo.entity.impl.TokenAuthentication"/>
+   <service>
+      <provide interface="com.dexels.navajo.entity.EntityAuthenticator"/>
+   </service>
+   <reference bind="setTokenStore" cardinality="1..1" interface="com.dexels.oauth.api.TokenStore" name="TokenStore" policy="dynamic" unbind="clearTokenStore"/>
+   
+</scr:component>
