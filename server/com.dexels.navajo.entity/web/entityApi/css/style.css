@@ -1,7 +1,7 @@
 .bodycenter {
 	margin-left: auto;
 	margin-right: auto;
-	width: 1024px;
+	width: 90%;
 	font-family: "Droid Sans",sans-serif;
 
 }
@@ -171,7 +171,7 @@ li.operation pre {
 
 .errorcodediv {
     padding-left: 40px;
-    width: 984px;
+    width: 95%;
 }
 
 
@@ -207,8 +207,8 @@ li.operation pre {
 .commentsTable {
     border-collapse: collapse;
     font-size: smaller;
-    width: 90%;
-    margin: 10px;
+    width: 75%;
+    margin: 20px;
 }
 
 .commentsTable thead tr {
