@@ -178,8 +178,9 @@ public class OpenstackStoreImpl implements BinaryStore {
 		Token token = osAccess.getToken();
 		long expires = token.getExpires().getTime();
 		long expIn = expires - System.currentTimeMillis();
-		logger.info("TOKEN will expire in: "+((expIn-(3600000*23+3400000))/1000)+" sec");
-		return expIn < 3600000*23+3400000;
+		logger.info("TOKEN will expire in: "+((expIn-3600000)/1000)+" sec");
+		// if TTL < 1 hour
+		return expIn < 3600000;
 	}
 	@Override
 	public Binary get(String name) {

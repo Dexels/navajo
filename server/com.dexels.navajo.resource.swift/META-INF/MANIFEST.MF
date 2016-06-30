@@ -5,10 +5,12 @@ Bundle-SymbolicName: com.dexels.navajo.resource.swift
 Bundle-Version: 1.0.22.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Service-Component: OSGI-INF/*
+Service-Component: OSGI-INF/*.xml
 Bundle-ClassPath: .,
  lib/openstack4j-2.20-withdeps.jar
 Import-Package: com.dexels.navajo.document.types;version="2.2.1",
  com.dexels.navajo.resource.binarystore;version="1.1.0",
+ javax.xml,
+ javax.xml.parsers,
  org.junit;version="4.0.0";resolution:=optional,
  org.slf4j;version="1.7.5"
