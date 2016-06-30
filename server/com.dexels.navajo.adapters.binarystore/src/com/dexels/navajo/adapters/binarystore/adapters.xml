@@ -1,12 +1,16 @@
 <adapterdef>
 	<map>
-		<tagname>swift</tagname>
+		<tagname>binarystore</tagname>
 		<object>com.dexels.navajo.adapters.binarystore.BinaryStoreAdapter</object>
 		<values>
 			<value name="resource" type="string" required="true" direction="in" />
 			<value name="get" type="binary" required="false" direction="out" />
 		</values>
 		<methods>
+			<method name="metadata">
+				<param name="name" field="metaName" type="string" required="true" />
+				<param name="value" field="metaValue" type="string" required="true" />
+			</method>
 			<method name="put">
 				<param name="name" field="name" type="string" required="true" />
 				<param name="value" field="value" type="binary" required="true" />

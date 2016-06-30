@@ -53,6 +53,9 @@ public class TestSwift {
 		met.put("aap", "noot");
 		met.put("mies", "wim");
 		osi.set("kip/some.png", b, met);
+		
+		metadata = osi.metadata("kip/some.png");
+		System.err.println("Meta2: "+metadata);
 
 //		osi.set(name, contents);
 //		
@@ -77,6 +80,7 @@ public class TestSwift {
 		meta.put("aap", "noot");
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
 		Binary b = new Binary(u,true,true);		
+		os.set("test/factory", b, meta);
 		os.set("test/factory", b, meta);
 	}
 	

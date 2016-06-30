@@ -31,7 +31,7 @@ public class Version extends AbstractCoreExtension {
 			registerAll(library);
 			registerAll(funcLib);
 		} catch (Throwable e) {
-			logger.error("Trouble starting Swift bundle",e);
+			logger.error("Trouble starting Binary Store bundle",e);
 		}
 	}
 	

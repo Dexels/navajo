@@ -12,8 +12,8 @@ import org.openstack4j.api.storage.ObjectStorageService;
 import org.openstack4j.core.transport.Config;
 import org.openstack4j.core.transport.ProxyHost;
 import org.openstack4j.model.common.Payload;
-import org.openstack4j.model.common.Payloads;
 import org.openstack4j.model.identity.Access;
+import org.openstack4j.model.identity.Token;
 import org.openstack4j.model.storage.object.SwiftContainer;
 import org.openstack4j.model.storage.object.SwiftObject;
 import org.openstack4j.model.storage.object.options.ObjectLocation;
@@ -35,34 +35,37 @@ public class OpenstackStoreImpl implements BinaryStore {
 	private String containerName = null;
 	private SwiftContainer container = null;
 	private Access osAccess = null;
+
+
+	private String endpoint;
+	private String username;
+	private String apiKey;
+	private String tenantId;
+
+	private OSClient client;
 	
 	public void activate(Map<String,Object> settings) {
 		String name = (String) settings.get("name");
 		String tenant = (String) settings.get("instance");
 		logger.info("Creating swift store for tenant: {} with name: {}",tenant,name);
-		String endpoint = (String) settings.get("endpoint");
-		String username = (String) settings.get("username");
+		endpoint = (String) settings.get("endpoint");
+		username = (String) settings.get("username");
 		if(username==null) {
 			// workaround for tenant bug
 			username = (String) settings.get("user");
 		}
-		String apiKey = (String) settings.get("apiKey");
-		String tenantId = (String) settings.get("tenantId");
+		apiKey = (String) settings.get("apiKey");
+		tenantId = (String) settings.get("tenantId");
 		containerName  = (String) settings.get("container");
 
-		OSClient os = OSFactory.builder()
-				.withConfig(configureProxy())
-                .endpoint(endpoint)
-                .raxApiKey(true)
-                .credentials(username,apiKey)
-                .tenantId(tenantId)
-                .authenticate();
-		this.osAccess = os.getAccess();
-		this.storage = os.objectStorage();
+		client = createClient();
+		
+		this.osAccess = getAccess();
+		this.storage = client.objectStorage();
 		container = findContainer(containerName);
 		if(container==null) {
 			logger.info("Container missing, creating container: {}",containerName);
-			os.objectStorage().containers().create(containerName);
+			client.objectStorage().containers().create(containerName);
 			container = findContainer(containerName);
 		}
 		
@@ -71,6 +74,18 @@ public class OpenstackStoreImpl implements BinaryStore {
 //			System.err.println("Object: "+swiftObject);
 //		}
 		
+	}
+
+	private OSClient createClient() {
+		OSFactory.enableHttpLoggingFilter(false);
+		OSClient os = OSFactory.builder()
+			.withConfig(configureProxy())
+			.endpoint(endpoint)
+			.raxApiKey(true)
+			.credentials(username,apiKey)
+			.tenantId(tenantId)
+			.authenticate();
+		return os;
 	}
 
 	private Config configureProxy() {
@@ -142,14 +157,31 @@ public class OpenstackStoreImpl implements BinaryStore {
 				return null;
 			}};
 			
-		OSFactory.clientFromAccess(osAccess).objectStorage().objects().put(this.containerName, name,p,options);
+		OSFactory.clientFromAccess(getAccess()).objectStorage().objects().put(this.containerName, name,p,options);
 	}
 
+	private Access getAccess() {
+		if(osAccess==null || hasExpired(osAccess)) {
+			logger.info("Creating new access");
+			osAccess = client.getAccess();
+			return osAccess;
+		}
+		
+		return osAccess;
+	}
+
+	private boolean hasExpired(Access osAccess) {
+		Token token = osAccess.getToken();
+		long expires = token.getExpires().getTime();
+		long expIn = expires - System.currentTimeMillis();
+		logger.info("TOKEN will expire in: "+(expIn/1000)+" sec");
+		return expIn < 3600000;
+	}
 	@Override
 	public Binary get(String name) {
 		ObjectLocation location = ObjectLocation.create(this.containerName, name);
 		
-		SwiftObject object = OSFactory.clientFromAccess(osAccess).objectStorage().objects().get(location);
+		SwiftObject object = OSFactory.clientFromAccess(getAccess()).objectStorage().objects().get(location);
 		if(object==null) {
 			return new Binary();
 		}
@@ -158,6 +190,13 @@ public class OpenstackStoreImpl implements BinaryStore {
 
 	}
 
+
+	@Override
+	public boolean exits(String name) {
+		ObjectLocation location = ObjectLocation.create(this.containerName, name);
+		SwiftObject object = OSFactory.clientFromAccess(getAccess()).objectStorage().objects().get(location);
+		return object!=null;
+	}
 	
 	@Override
 	public Map<String,Object> metadata(String name) {
@@ -180,4 +219,5 @@ public class OpenstackStoreImpl implements BinaryStore {
 	public void delete(String name) {
 		storage.objects().delete(this.containerName, name);
 	}
+
 }
