@@ -115,7 +115,7 @@ public class OpenstackStoreImpl implements BinaryStore {
 	}
 
 	@Override
-	public void set(final String name, final Binary contents,Map<String,String> metadata) {
+	public void set(final String name, String contentType, final Binary contents,Map<String,String> metadata) {
 		if(name==null) {
 			logger.warn("Ignoring put without name");
 			return;
@@ -127,9 +127,12 @@ public class OpenstackStoreImpl implements BinaryStore {
 		Map<String,String> meta = new HashMap<>(metadata);
 		meta.put("digest", new String(contents.getDigest()));
 //		Payload<InputStream> payload = Payloads.create(contents.getDataAsStream());
+		if(contentType==null) {
+			contentType = contents.guessContentType();
+		}
 		ObjectPutOptions options = ObjectPutOptions
 				.create()
-				.contentType(contents.guessContentType())
+				.contentType(contentType)
 				.metadata(metadata);
 		// fail occasionally. Retry?
 		Payload<URL> p = new Payload<URL>(){
@@ -163,6 +166,7 @@ public class OpenstackStoreImpl implements BinaryStore {
 	private Access getAccess() {
 		if(osAccess==null || hasExpired(osAccess)) {
 			logger.info("Creating new access");
+			client = createClient();
 			osAccess = client.getAccess();
 			return osAccess;
 		}
@@ -174,8 +178,8 @@ public class OpenstackStoreImpl implements BinaryStore {
 		Token token = osAccess.getToken();
 		long expires = token.getExpires().getTime();
 		long expIn = expires - System.currentTimeMillis();
-		logger.info("TOKEN will expire in: "+(expIn/1000)+" sec");
-		return expIn < 3600000;
+		logger.info("TOKEN will expire in: "+((expIn-(3600000*23+3400000))/1000)+" sec");
+		return expIn < 3600000*23+3400000;
 	}
 	@Override
 	public Binary get(String name) {
@@ -192,7 +196,7 @@ public class OpenstackStoreImpl implements BinaryStore {
 
 
 	@Override
-	public boolean exits(String name) {
+	public boolean exists(String name) {
 		ObjectLocation location = ObjectLocation.create(this.containerName, name);
 		SwiftObject object = OSFactory.clientFromAccess(getAccess()).objectStorage().objects().get(location);
 		return object!=null;

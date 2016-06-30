@@ -13,6 +13,7 @@
 			</method>
 			<method name="put">
 				<param name="name" field="name" type="string" required="true" />
+				<param name="contentType" field="contentType" type="string" required="false" />
 				<param name="value" field="value" type="binary" required="true" />
 			</method>
 		</methods>

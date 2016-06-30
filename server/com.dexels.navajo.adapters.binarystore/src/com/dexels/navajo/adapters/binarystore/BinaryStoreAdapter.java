@@ -22,6 +22,7 @@ public class BinaryStoreAdapter implements Mappable {
 	private String resource = null;
 	private final Map<String,String> metadata = new HashMap<>();
 	private String metaname;
+	private String contentType;
 	
 	private final static Logger logger = LoggerFactory.getLogger(BinaryStoreAdapter.class);
 
@@ -38,9 +39,9 @@ public class BinaryStoreAdapter implements Mappable {
 			BinaryStore os = BinaryStoreFactory.getInstance().getBinaryStore(resource, tenant);
 			if(os==null) {
 				logger.warn("Can not find swift resource: {} for tenant: {}",resource,tenant);
-				throw new UserException(-1, "Can not find swift resource");
+				throw new UserException(-1, "Can not find binary store resource");
 			}
-			os.set(name, this.value, metadata);
+			os.set(name, this.contentType, this.value, metadata);
 		}
 
 	}
@@ -61,11 +62,20 @@ public class BinaryStoreAdapter implements Mappable {
 		this.metaname = name;
 	}
 	
+	public void setContentType(String type) {
+		this.contentType = type;
+	}
+	
 	public void setMetaValue(String value) {
 		if(metaname==null) {
 			throw new NullPointerException("Set MetaName before setting MetaValue");
 		}
-		metadata.put(metaname, value);
+		if(value==null) {
+			logger.info("Ignoring null metadata value for name: {}",metaname);
+		} else {
+			metadata.put(metaname, value);
+
+		}
 		metaname = null;
 	}
 	public Binary getGet(String name) {

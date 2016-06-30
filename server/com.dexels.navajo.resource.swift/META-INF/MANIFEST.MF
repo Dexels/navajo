@@ -6,36 +6,9 @@ Bundle-Version: 1.0.20.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Service-Component: OSGI-INF/*
-Bundle-ClassPath: lib/openstack4j-2.0.9.jar,
- lib/openstack4j-httpclient-2.0.9.jar,
- .
+Bundle-ClassPath: .,
+ lib/openstack4j-2.20-withdeps.jar
 Import-Package: com.dexels.navajo.document.types;version="2.2.1",
  com.dexels.navajo.resource.binarystore;version="1.1.0",
- com.fasterxml.jackson.annotation;version="2.6.3",
- com.fasterxml.jackson.core;version="2.6.3",
- com.fasterxml.jackson.databind;version="2.6.3",
- com.google.common.base;version="18.0.0",
- com.google.common.collect;version="18.0.0",
- com.google.common.net;version="18.0.0",
- org.apache.commons.logging;version="1.2.0",
- org.apache.http;version="4.4.1",
- org.apache.http.client;version="4.4.1",
- org.apache.http.client.config;version="4.4.1",
- org.apache.http.client.entity;version="4.4.1",
- org.apache.http.client.methods;version="4.4.1",
- org.apache.http.client.params;version="4.4.1",
- org.apache.http.client.protocol;version="4.4.1",
- org.apache.http.client.utils;version="4.4.1",
- org.apache.http.conn;version="4.4.1",
- org.apache.http.conn.scheme;version="4.4.1",
- org.apache.http.conn.ssl;version="4.4.1",
- org.apache.http.conn.util;version="4.4.1",
- org.apache.http.entity;version="4.4.3",
- org.apache.http.impl.client;version="4.4.1",
- org.apache.http.pool;version="4.4.3",
- org.codehaus.jackson;version="1.9.11",
- org.codehaus.jackson.map;version="1.9.11",
  org.junit;version="4.0.0";resolution:=optional,
- org.osgi.framework,
  org.slf4j;version="1.7.5"
-Bundle-Activator: com.dexels.navajo.resource.swift.TestActivator
