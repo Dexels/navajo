@@ -25,8 +25,6 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.types.NavajoType;
 
-import sun.util.locale.StringTokenIterator;
-
 /**
  * TODO: Create option to pass Navajo template for setting correct types.
  * 
