@@ -52,7 +52,7 @@ public class TestSwift {
 		Map<String,String> met = new HashMap<>();
 		met.put("aap", "noot");
 		met.put("mies", "wim");
-		osi.set("kip/some.png", b, met);
+		osi.set("kip/some.png","image/png", b, met);
 		
 		metadata = osi.metadata("kip/some.png");
 		System.err.println("Meta2: "+metadata);
@@ -69,7 +69,7 @@ public class TestSwift {
 	public void testCreateContainer() throws IOException {
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
 		Binary b = new Binary(u,true,true);		
-		osi.set("tic/tac/toe/dexlogo.png", b,new HashMap<String,String>());
+		osi.set("tic/tac/toe/dexlogo.png","image/png", b,new HashMap<String,String>());
 		Assert.assertNotNull(osi.getContainer());
 	}
 	
@@ -80,8 +80,10 @@ public class TestSwift {
 		meta.put("aap", "noot");
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
 		Binary b = new Binary(u,true,true);		
-		os.set("test/factory", b, meta);
-		os.set("test/factory", b, meta);
+		os.set("test/factory","image/png", b, meta);
+		os.set("test/factory","image/png", b, meta);
+		
+		os.get("test/factory");
 	}
 	
 	
