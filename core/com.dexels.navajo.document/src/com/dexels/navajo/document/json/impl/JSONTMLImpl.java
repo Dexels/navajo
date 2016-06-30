@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
@@ -23,6 +24,8 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.types.NavajoType;
+
+import sun.util.locale.StringTokenIterator;
 
 /**
  * TODO: Create option to pass Navajo template for setting correct types.
@@ -283,7 +286,7 @@ public class JSONTMLImpl implements JSONTML {
 		Property prop = NavajoFactory.getInstance().createProperty(p.getRootDoc(), name, Property.STRING_PROPERTY, value, 0, "", "out");
 		p.addProperty(prop);
 		if ( entityTemplate != null ) {
-			Property ep = entityTemplate.getProperty(prop.getFullPropertyName());
+			Property ep = getEntityTemplateProperty(prop);
  			if ( ep != null ) {
 				if ( ep.getType().equals(Property.SELECTION_PROPERTY)) {
 					Selection s = NavajoFactory.getInstance().createSelection(p.getRootDoc(), value, value, true);
@@ -297,6 +300,36 @@ public class JSONTMLImpl implements JSONTML {
 		}
 
 	}
+
+    private Property getEntityTemplateProperty(Property prop) {
+        // getFullPropertyName doesn't always work, since sometimes we need to get the definition message
+        // Thus we go through the hierarchy. If any message is an array message, we look for the definition
+        // message in the entity template
+        if (entityTemplate == null) {
+            return null;
+        }
+        String fullPath = prop.getFullPropertyName();
+        if (!fullPath.contains("@")) {
+            return entityTemplate.getProperty(prop.getFullPropertyName());
+        }
+        // We have an array message somewhere. Lets try to get the correct property from the entity template
+        StringTokenizer st = new StringTokenizer(prop.getParentMessage().getPath(),  "/");
+        Message next = entityTemplate.getMessage(st.nextToken());
+        while (next != null && st.hasMoreTokens()) {
+            String subpath = st.nextToken();
+            if (subpath.contains("@")) {
+                // Strip the @ part
+                subpath = subpath.substring(0, subpath.indexOf("@"));
+                next = next.getMessage(subpath).getDefinitionMessage();
+            } else {
+                next = next.getMessage(subpath);
+            }
+        }
+        if (next != null) {
+            return next.getProperty(prop.getName());
+        }
+        return null;
+    }
 
 	private void parseArrayMessageElement(Message arrayMessage, JsonParser jp) throws Exception {
 		Message m = NavajoFactory.getInstance().createMessage(arrayMessage.getRootDoc(), arrayMessage.getName());
