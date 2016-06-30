@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -121,9 +122,9 @@ public class TestBinary {
 	}
 	
 	@Test
-    public void testEqual6() throws IOException {
+    public void testEqual6() throws IOException, URISyntaxException {
 	    Binary binaryStreamed = new Binary(getClass().getResourceAsStream("logo.gif"));
-	    Path path = Paths.get(getClass().getResource("logo.gif").getPath());
+	    Path path = Paths.get(getClass().getResource("logo.gif").toURI());
 	    byte[] data = Files.readAllBytes(path);
 	    Binary binaryByteArray = new Binary(data);
 
