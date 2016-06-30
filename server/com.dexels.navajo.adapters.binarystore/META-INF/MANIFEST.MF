@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Dexels Binary Store Adapter
 Bundle-SymbolicName: com.dexels.navajo.adapters.binarystore
-Bundle-Version: 1.0.13.qualifier
+Bundle-Version: 1.0.14
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.navajo.document.types;version="2.2.1",
