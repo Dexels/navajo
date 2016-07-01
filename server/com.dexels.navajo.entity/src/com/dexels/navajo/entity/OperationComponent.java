@@ -18,6 +18,7 @@ public class OperationComponent implements Operation {
     private String validationService;
     private boolean debugInput;
     private boolean debugOutput;
+    private String scopes;
 
     public void activateComponent(Map<String, Object> parameters) throws Exception {
         method = (String) parameters.get("operation.method");
@@ -115,6 +116,16 @@ public class OperationComponent implements Operation {
         if (debugString.contains("response")) {
             debugOutput = true;
         }
+    }
+    
+    @Override
+    public void setScopes(String scopes) {
+        this.scopes = scopes;
+    }
+    
+    @Override
+    public String getScopes() {
+        return scopes;
     }
 
     @Override

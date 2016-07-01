@@ -49,6 +49,9 @@ public interface Operation {
 
 	public Operation copy(Navajo n);
 	
+	public void setScopes(String scopes);
+	public String getScopes();
+	
 	public void setDebug(String debugString);
 
     public boolean debugInput();

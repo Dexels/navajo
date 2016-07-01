@@ -23,6 +23,8 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 	protected boolean debugInput;
 	protected boolean debugOutput;
 
+    private String scopes;
+
 	public BaseOperationImpl(Navajo n) {
 		super(n);
 	}
@@ -124,6 +126,16 @@ public class BaseOperationImpl extends BaseNode implements Operation {
             debugOutput = true;
         }
     }
+	
+	@Override
+    public void setScopes(String scopes) {
+	    this.scopes = scopes;
+	}
+	
+	@Override
+	public String getScopes() {
+	    return scopes;
+	}
 	
 
     @Override

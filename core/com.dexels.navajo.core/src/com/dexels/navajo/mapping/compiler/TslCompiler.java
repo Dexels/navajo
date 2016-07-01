@@ -639,7 +639,8 @@ public class TslCompiler {
                 String validationService = e.getAttribute("validationService");
                 String method = e.getAttribute("method");
                 String debug = e.getAttribute("debug");
-
+                String scopes = e.getAttribute("scopes");
+                
                 result.append(printIdent(ident) + "if (true) {\n");
 
                 String operationString = "com.dexels.navajo.document.Operation o = " + "NavajoFactory.getInstance().createOperation(access.getOutputDoc(), "
@@ -689,6 +690,9 @@ public class TslCompiler {
                 }
                 if (tenant != null && !tenant.equals("")) {
                     result.append(printIdent(ident + 2) + "o.setTenant(\"" + tenant + "\");\n");
+                }
+                if (scopes != null && !scopes.equals("")) {
+                    result.append(printIdent(ident + 2) + "o.setScopes(\"" + scopes + "\");\n");
                 }
 
                 result.append(printIdent(ident + 2) + "access.getOutputDoc().addOperation(o);\n");
