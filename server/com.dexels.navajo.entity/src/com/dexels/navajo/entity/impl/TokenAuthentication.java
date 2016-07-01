@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.EntityAuthenticator;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.oauth.api.ClientStore;
 import com.dexels.oauth.api.StoreException;
 import com.dexels.oauth.api.TokenStore;
@@ -39,6 +41,14 @@ public class TokenAuthentication implements EntityAuthenticator {
     public String getIdentifier() {
         return "Bearer";
     }
+    
+    @Override
+    public boolean isAuthenticated(Access a, Entity e) {
+        // If the found the token in our store, that means the token is valid
+        
+        // TODO: check scope
+        return this.username != null && this.password != null;
+    }
 
     @Override
     public EntityAuthenticator getInstance(HttpServletRequest req) {
@@ -46,15 +56,14 @@ public class TokenAuthentication implements EntityAuthenticator {
         newInstance.setTokenStore(this.tokenStore);
         newInstance.setClientStore(this.clientStore);
         try {
-            newInstance.authenticate(req);
+            newInstance.getAuthenticationFromHeader(req);
         } catch (StoreException e) {
             logger.error("StoreException on authentication!", e);
         }
         return newInstance;
     }
     
-    private void authenticate(HttpServletRequest request) throws StoreException {
-
+    private void getAuthenticationFromHeader(HttpServletRequest request) throws StoreException {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || authHeader.equals("")) {
             return;
@@ -62,7 +71,7 @@ public class TokenAuthentication implements EntityAuthenticator {
 
         StringTokenizer st = new StringTokenizer(authHeader);
         if (st.hasMoreTokens()) {
-            if (st.nextToken().equalsIgnoreCase("Bearer")) {
+            if (st.nextToken().equalsIgnoreCase(getIdentifier())) {
                 String token = st.nextToken();
                 String clientid = tokenStore.getToken(token).getClientId();
                 this.username = clientStore.getClient(clientid).getUsername();
@@ -80,5 +89,6 @@ public class TokenAuthentication implements EntityAuthenticator {
     public String getPassword() {
         return this.password;
     }
+
 
 }

@@ -4,5 +4,5 @@
    <service>
       <provide interface="com.dexels.navajo.entity.EntityAuthenticator"/>
    </service>
-   
+   <reference bind="setAAAQuerier" cardinality="1..1" interface="com.dexels.navajo.authentication.api.AAAQuerier" name="AAAQuerier" policy="dynamic" unbind="clearAAAQuerier"/>
 </scr:component>

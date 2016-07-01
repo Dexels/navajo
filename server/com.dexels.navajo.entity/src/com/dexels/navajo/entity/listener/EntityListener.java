@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.authentication.api.AAAQuerier;
 import com.dexels.navajo.authentication.api.LoginStatisticsProvider;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -41,7 +40,6 @@ import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
-import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.global.GlobalManager;
 import com.dexels.navajo.server.global.GlobalManagerRepository;
@@ -56,15 +54,12 @@ public class EntityListener extends HttpServlet {
     private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json", "xml", "tml"));
 
     private EntityManager myManager;
-    
     private Map<String, EntityAuthenticator> authenticators = new HashMap<>();
-
     private int requestCounter = 0;
-    private AAAQuerier authenticator;
+
 
     public void activate() {
         logger.info("Entity servlet component activated");
-        
     }
 
     public void deactivate() {
@@ -79,13 +74,7 @@ public class EntityListener extends HttpServlet {
         myManager = null;
     }
 
-    public void setAAAQuerier(AAAQuerier aa) {
-        authenticator = aa;
-    }
-
-    public void clearAAAQuerier(AAAQuerier aa) {
-        authenticator = null;
-    }
+  
     
     public void addEntityAuthenticator(EntityAuthenticator a) {
         authenticators.put(a.getIdentifier(),  a);
@@ -100,16 +89,11 @@ public class EntityListener extends HttpServlet {
      */
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         Navajo result = null;
         Access access = null;
         String method = request.getMethod();
         String path = request.getPathInfo();
         long requestStart = System.currentTimeMillis();
-
-        synchronized (this) {
-            requestCounter++;
-        }
 
         // Check for a .<format> in the URL - can be in RequestURI or QueryString
         String dotString = null;
@@ -132,16 +116,13 @@ public class EntityListener extends HttpServlet {
 
         // Only end-points are allowed to cache - no servers in between
         response.setHeader("Cache-Control", "private");
-        
-
-        EntityAuthenticator auth = getAuthenticator(request);
-
+     
         String entityName = path.substring(1);
         if (entityName.indexOf('.') > 0) {
             // Remove .<format> from entityName
             entityName = entityName.substring(0, entityName.indexOf('.'));
         }
-
+       
         String tenant = determineInstanceFromRequest(request);
         if (tenant == null) {
             logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
@@ -155,19 +136,25 @@ public class EntityListener extends HttpServlet {
         if (ip == null || ip.equals("")) {
             ip = request.getRemoteAddr();
         }
-
-        logger.info("Entity request {} ({}, {}, {})", entityName, method, auth.getUsername(), ip);
-        logger.debug("entity request count: {}", requestCounter);
-
+        
         try {
-            if (auth.getUsername() == null || auth.getPassword() == null) {
-                throw new EntityException(EntityException.UNAUTHORIZED);
-            }
-
             if (entityName.equals("")) {
                 logger.error("No entity name found in request. Request URI: {}", request.getRequestURI());
                 throw new EntityException(EntityException.BAD_REQUEST);
             }
+            
+            EntityAuthenticator auth = getAuthenticator(request);
+            if (auth.getUsername() == null || auth.getPassword() == null) {
+                throw new EntityException(EntityException.UNAUTHORIZED);
+            }
+
+            synchronized (this) {
+                requestCounter++;
+            }
+            logger.info("Entity request {} ({}, {}, {})", entityName, method, auth.getUsername(), ip);
+            logger.debug("entity request count: {}", requestCounter);
+
+            
             entityName = entityName.replace("/", ".");
             Entity e = myManager.getEntity(entityName);
             if (e == null) {
@@ -177,6 +164,7 @@ public class EntityListener extends HttpServlet {
             }
 
             Message entityMessage = e.getMessage();
+            
 
             // Get the input document
             if (method.equals("GET") || method.equals("DELETE")) {
@@ -191,6 +179,12 @@ public class EntityListener extends HttpServlet {
                     throw new EntityException(EntityException.BAD_REQUEST);
                 }
             }
+            
+            // Check if input contains the entityMessage
+            if (input.getMessage(entityMessage.getName()) == null) {
+                logger.error("Entity name not found in input - format incorrect or bad request");
+                throw new EntityException(EntityException.BAD_REQUEST);
+            }
 
             // Create a header from the input
             Header header = NavajoFactory.getInstance().createHeader(input, "", auth.getUsername(), auth.getPassword(), -1);
@@ -199,16 +193,11 @@ public class EntityListener extends HttpServlet {
             // Create an access object for logging purposes
             Long startAuth = System.currentTimeMillis();
             String scriptName = "entity/" + entityName.replace('.', '/');
-            access = authenticateUser(input, tenant, scriptName, auth.getUsername(), auth.getPassword());
+            access = authenticateUser(auth, input, tenant, e, scriptName,  ip);
             access.created = new Date(requestStart);
-            access.ipAddress = ip;
             access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
-
             header.setHeaderAttribute("parentaccessid", access.accessID);
-            if (input.getMessage(entityMessage.getName()) == null) {
-                logger.error("Entity name not found in input - format incorrect or bad request");
-                throw new EntityException(EntityException.BAD_REQUEST);
-            }
+          
           
             inputEtag = request.getHeader("If-Match");
             if (inputEtag == null) {
@@ -223,7 +212,7 @@ public class EntityListener extends HttpServlet {
                 access.setDebugAll(true);
             }
 
-            long startTime = System.currentTimeMillis();
+            long opStartTime = System.currentTimeMillis();
             ServiceEntityOperation seo = new ServiceEntityOperation(myManager, DispatcherFactory.getInstance(), o);
             result = seo.perform(input);
             
@@ -234,7 +223,7 @@ public class EntityListener extends HttpServlet {
             if (method.equals("GET") && result.getMessage(entityMessage.getName()) != null) {
                 outputEtag = result.getMessage(entityMessage.getName()).generateEtag();
             }
-            access.processingTime = (int) (System.currentTimeMillis() - startTime);
+            access.processingTime = (int) (System.currentTimeMillis() - opStartTime);
 
             if (access != null) {
                 access.setExitCode(Access.EXIT_OK);
@@ -258,7 +247,7 @@ public class EntityListener extends HttpServlet {
 
     }
 
-    private EntityAuthenticator getAuthenticator(HttpServletRequest request) {
+    private EntityAuthenticator getAuthenticator(HttpServletRequest request) throws EntityException {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || authHeader.equals("")) {
             return null;
@@ -272,6 +261,7 @@ public class EntityListener extends HttpServlet {
                  return a.getInstance(request);
              } else {
                  logger.warn("Unsupported authorization scheme: {}", id);
+                 throw new EntityException(EntityException.UNAUTHORIZED);
              }
         }
         return null;
@@ -391,39 +381,33 @@ public class EntityListener extends HttpServlet {
         return mimeResult;
     }
 
-    private Access authenticateUser(Navajo inDoc, String tenant, String entity, String rpcUser, String rpcPassword)
-            throws SystemException, AuthorizationException {
-        Access access = new Access(1, 1, rpcUser, entity, "", "", "", null, false, null);
+    private Access authenticateUser(EntityAuthenticator auth, Navajo inDoc, String tenant, Entity entity, String scriptname, String ip)
+            throws AuthorizationException {
+        Access access = new Access(1, 1, auth.getUsername(), scriptname, "", "", "", null, false, null);
         access.setTenant(tenant);
+        access.ipAddress = ip;
         access.setInDoc(inDoc);
-        access.rpcPwd = rpcPassword;
+        access.rpcPwd = auth.getPassword();
         appendGlobals(inDoc, tenant);
-       
-        if (LoginStatisticsProvider.reachedAbortThreshold(rpcUser, access.getIpAddress())) {
-            logger.info("Refusing request from {} for {}  due to too many failed auth attempts", access.getIpAddress(), rpcUser);
-            throw new AuthorizationException(true, false, rpcUser, "Not authorized");
+        
+        if (LoginStatisticsProvider.reachedAbortThreshold(auth.getUsername(), access.getIpAddress())) {
+            logger.info("Refusing request from {} for {}  due to too many failed auth attempts", access.getIpAddress(), auth.getUsername());
+            throw new AuthorizationException(true, false, auth.getUsername(), "Not authorized");
         }
         
-        if (LoginStatisticsProvider.reachedRateLimitThreshold(rpcUser, access.getIpAddress())) {
-            logger.info("Delaying request from {} for {} due to too many failed auth attempts", access.getIpAddress(), rpcUser);
+        if (LoginStatisticsProvider.reachedRateLimitThreshold(auth.getUsername(), access.getIpAddress())) {
+            logger.info("Delaying request from {} for {} due to too many failed auth attempts", access.getIpAddress(), auth.getUsername());
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
+                return null;
             }
         }
         
-
-        if (tenant != null) {
-            // logger.info("using multitenant: "+instance, new Exception());
-
-            if (authenticator != null) {
-                authenticator.process(tenant, rpcUser, rpcPassword, entity, null, access);
-            } else {
-                logger.warn("No authenticator found for instance: {}", tenant);
-            }
-        } else {
-            logger.warn("No tenant defined - unable to authenticate!");
+        if (!auth.isAuthenticated(access, entity)) {
+            throw new AuthorizationException(true, false, auth.getUsername(), "Not authenticated");
         }
+
         return access;
     }
 

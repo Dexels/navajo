@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="navajo.entity.listener">
-   <service>
-      <provide interface="javax.servlet.Servlet"/>
-   </service>
-   <reference bind="setEntityManager" cardinality="1..1" interface="com.dexels.navajo.entity.EntityManager" name="EntityManager" policy="dynamic"/>
-   <reference bind="setAAAQuerier" cardinality="0..1" interface="com.dexels.navajo.authentication.api.AAAQuerier" name="AAAQuerier" policy="dynamic" unbind="clearAAAQuerier"/>
-   
    <implementation class="com.dexels.navajo.entity.listener.EntityListener"/>
    <property name="alias" type="String" value="/entity"/>
    <property name="servletName" type="String" value="entity"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <reference bind="setEntityManager" cardinality="1..1" interface="com.dexels.navajo.entity.EntityManager" name="EntityManager" policy="dynamic"/>   
    <reference cardinality="1..1" interface="com.dexels.navajo.server.DispatcherInterface" name="DispatcherInterface" policy="dynamic"/>
    <reference bind="addEntityAuthenticator" cardinality="0..n" interface="com.dexels.navajo.entity.EntityAuthenticator" name="EntityAuthenticator" policy="dynamic" unbind="removeEntityAuthenticator"/>
 </scr:component>

@@ -8,7 +8,12 @@ import org.apache.commons.net.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.authentication.api.AAAQuerier;
+import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.EntityAuthenticator;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.AuthorizationException;
+import com.dexels.navajo.script.api.SystemException;
 
 public class HttpBasicAuthentication implements EntityAuthenticator {
     private final static Logger logger = LoggerFactory.getLogger(HttpBasicAuthentication.class);
@@ -16,16 +21,25 @@ public class HttpBasicAuthentication implements EntityAuthenticator {
 
     private String username;
     private String password;
+    private AAAQuerier authenticator;
     
     public HttpBasicAuthentication getInstance(HttpServletRequest req) {
         HttpBasicAuthentication newInstance = new HttpBasicAuthentication();
-        newInstance.performBasicAuthentication(req);
+        newInstance.getAuthenticationFromHeader(req);
         return newInstance;
     }
 
     @Override
     public String getIdentifier() {
         return "Basic";
+    }
+    
+    public void setAAAQuerier(AAAQuerier aa) {
+        authenticator = aa;
+    }
+
+    public void clearAAAQuerier(AAAQuerier aa) {
+        authenticator = null;
     }
 
     
@@ -37,16 +51,15 @@ public class HttpBasicAuthentication implements EntityAuthenticator {
     public String getPassword() {
         return password;
     }
+    
+    
 
-    private void performBasicAuthentication(HttpServletRequest req) {
-        String authHeader = req.getHeader("Authorization");
-        if (authHeader == null || authHeader.equals("")) {
-            return;
-        }
+    private void getAuthenticationFromHeader(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
 
         StringTokenizer st = new StringTokenizer(authHeader);
         if (st.hasMoreTokens()) {
-            if (st.nextToken().equalsIgnoreCase("Basic")) {
+            if (st.nextToken().equalsIgnoreCase(getIdentifier())) {
                 String credentials;
 
                 credentials = new String(base64.decode(st.nextToken()));
@@ -63,6 +76,17 @@ public class HttpBasicAuthentication implements EntityAuthenticator {
             }
         }
 
+    }
+
+    @Override
+    public boolean isAuthenticated(Access a, Entity entity) {
+        try {
+            authenticator.process(a.getTenant(), a.getRpcUser(), a.rpcPwd, a.rpcName, null, a);
+        } catch (SystemException | AuthorizationException e) {
+            logger.warn("Auth exception", e);
+            return false;
+        }
+        return true;
     }
 
 }
