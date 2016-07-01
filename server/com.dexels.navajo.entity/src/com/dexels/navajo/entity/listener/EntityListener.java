@@ -55,7 +55,6 @@ public class EntityListener extends HttpServlet {
 
     private EntityManager myManager;
     private Map<String, EntityAuthenticator> authenticators = new HashMap<>();
-    private int requestCounter = 0;
 
 
     public void activate() {
@@ -144,16 +143,11 @@ public class EntityListener extends HttpServlet {
             }
             
             EntityAuthenticator auth = getAuthenticator(request);
-            if (auth.getUsername() == null || auth.getPassword() == null) {
+            if (auth.getUsername() == null ) {
                 throw new EntityException(EntityException.UNAUTHORIZED);
             }
 
-            synchronized (this) {
-                requestCounter++;
-            }
             logger.info("Entity request {} ({}, {}, {})", entityName, method, auth.getUsername(), ip);
-            logger.debug("entity request count: {}", requestCounter);
-
             
             entityName = entityName.replace("/", ".");
             Entity e = myManager.getEntity(entityName);

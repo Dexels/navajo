@@ -26,6 +26,7 @@ public class HttpBasicAuthentication implements EntityAuthenticator {
     public HttpBasicAuthentication getInstance(HttpServletRequest req) {
         HttpBasicAuthentication newInstance = new HttpBasicAuthentication();
         newInstance.getAuthenticationFromHeader(req);
+        newInstance.setAAAQuerier(this.authenticator);
         return newInstance;
     }
 
