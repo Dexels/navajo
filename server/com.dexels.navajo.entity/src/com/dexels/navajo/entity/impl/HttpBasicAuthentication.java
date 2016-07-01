@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.authentication.api.AAAQuerier;
-import com.dexels.navajo.entity.Entity;
+import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.entity.EntityAuthenticator;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
@@ -79,7 +79,7 @@ public class HttpBasicAuthentication implements EntityAuthenticator {
     }
 
     @Override
-    public boolean isAuthenticated(Access a, Entity entity) {
+    public boolean isAuthenticated(Access a) {
         try {
             authenticator.process(a.getTenant(), a.getRpcUser(), a.rpcPwd, a.rpcName, null, a);
         } catch (SystemException | AuthorizationException e) {
@@ -88,5 +88,10 @@ public class HttpBasicAuthentication implements EntityAuthenticator {
         }
         return true;
     }
-
+    
+    @Override
+    public boolean checkAuthenticationFor(Operation op) {
+        // Not supported for Basic authentication
+        return true;
+    }
 }

@@ -2,8 +2,10 @@ package com.dexels.navajo.document.base;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -23,7 +25,7 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 	protected boolean debugInput;
 	protected boolean debugOutput;
 
-    private String scopes;
+    private Set<String> scopes= new HashSet<>();
 
 	public BaseOperationImpl(Navajo n) {
 		super(n);
@@ -128,12 +130,24 @@ public class BaseOperationImpl extends BaseNode implements Operation {
     }
 	
 	@Override
-    public void setScopes(String scopes) {
-	    this.scopes = scopes;
-	}
+    public void setScopes(String scopesString) {
+        if (scopesString != null) {
+            String[] arr = scopesString.split(",");
+            for (String element : arr) {
+                this.scopes.add(element);
+            }
+        }
+    }
+
+	@Override
+    public void setScopes( Set<String> newScopes) {
+        if (newScopes != null) {
+            this.scopes = newScopes;
+        }
+    }
 	
 	@Override
-	public String getScopes() {
+	public  Set<String> getScopes() {
 	    return scopes;
 	}
 	

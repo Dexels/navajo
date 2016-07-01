@@ -211,6 +211,7 @@ public class EntityListener extends HttpServlet {
             if (o.debugInput() || o.debugOutput()) {
                 access.setDebugAll(true);
             }
+            auth.checkAuthenticationFor(o);
 
             long opStartTime = System.currentTimeMillis();
             ServiceEntityOperation seo = new ServiceEntityOperation(myManager, DispatcherFactory.getInstance(), o);
@@ -404,7 +405,7 @@ public class EntityListener extends HttpServlet {
             }
         }
         
-        if (!auth.isAuthenticated(access, entity)) {
+        if (!auth.isAuthenticated(access)) {
             throw new AuthorizationException(true, false, auth.getUsername(), "Not authenticated");
         }
 
