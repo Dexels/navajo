@@ -32,6 +32,7 @@ public class TokenAuthentication implements EntityAuthenticator {
 
     private HashSet<String> suppliedScopes;
 
+    @SuppressWarnings("unused")
     private Map<String, Object> userAttributes;
 
     public void setTokenStore(TokenStore ts) {
