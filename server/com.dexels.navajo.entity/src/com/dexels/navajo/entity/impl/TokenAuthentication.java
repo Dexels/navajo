@@ -72,7 +72,6 @@ public class TokenAuthentication implements EntityAuthenticator {
         if(!missing.isEmpty()) {
             throw new EntityException(EntityException.UNAUTHORIZED, "Missin required scopes: " + missing);
         }
-        
         return true;
     }
 
