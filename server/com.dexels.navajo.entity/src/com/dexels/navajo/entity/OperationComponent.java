@@ -1,6 +1,7 @@
 package com.dexels.navajo.entity;
 
 import java.util.Map;
+import java.util.Set;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -18,6 +19,7 @@ public class OperationComponent implements Operation {
     private String validationService;
     private boolean debugInput;
     private boolean debugOutput;
+    private Set<String> scopes;
 
     public void activateComponent(Map<String, Object> parameters) throws Exception {
         method = (String) parameters.get("operation.method");
@@ -101,6 +103,29 @@ public class OperationComponent implements Operation {
         oc.setExtraMessage(this.extraMessage.copy());
         return oc;
     }
+    
+    @Override
+    public void setScopes(String scopesString) {
+        if (scopesString != null) {
+            String[] arr = scopesString.split(",");
+            for (String element : arr) {
+                this.scopes.add(element);
+            }
+        }
+    }
+
+    @Override
+    public void setScopes( Set<String> newScopes) {
+        if (newScopes != null) {
+            this.scopes = newScopes;
+        }
+    }
+    
+    @Override
+    public  Set<String> getScopes() {
+        return scopes;
+    }
+    
 
     @Override
     public void setDebug(String debugString) {
@@ -116,6 +141,8 @@ public class OperationComponent implements Operation {
             debugOutput = true;
         }
     }
+    
+    
 
     @Override
     public boolean debugInput() {

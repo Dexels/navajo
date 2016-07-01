@@ -121,7 +121,6 @@ public class Entity {
         for (Operation o : allOps) {
             o.setEntityName(getName());
             entityManager.addOperation(o);
-
         }
     }
 
@@ -134,11 +133,12 @@ public class Entity {
     }
 
     public void printKeys() {
-        System.err.println(this + ": In PRINTKEYS: " + myKeys.size());
+        String output = "";
         for (Key k : myKeys) {
-            System.err.println("==================");
-            k.generateRequestMessage().write(System.err);
+            output += ("==================\n");
+            output += k.generateRequestMessage() + "\n";
         }
+        logger.info("{}: PRINTKEYS ({}): {}", this, myKeys.size(), output);
     }
 
     /**
