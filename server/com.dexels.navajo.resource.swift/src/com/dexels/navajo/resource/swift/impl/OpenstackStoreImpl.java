@@ -130,6 +130,7 @@ public class OpenstackStoreImpl implements BinaryStore {
 		if(contentType==null) {
 			contentType = contents.guessContentType();
 		}
+		contentType = validateContentType(contentType);
 		ObjectPutOptions options = ObjectPutOptions
 				.create()
 				.contentType(contentType)
@@ -161,6 +162,17 @@ public class OpenstackStoreImpl implements BinaryStore {
 			}};
 			
 		OSFactory.clientFromAccess(getAccess()).objectStorage().objects().put(this.containerName, name,p,options);
+	}
+
+	private String validateContentType(String contentType) {
+		if(contentType==null) {
+			return null;
+		}
+		String[] parts = contentType.split("/");
+		if(parts.length==2) {
+			return contentType;
+		}
+		return null;
 	}
 
 	private Access getAccess() {
