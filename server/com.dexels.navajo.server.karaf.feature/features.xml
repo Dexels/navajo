@@ -121,7 +121,7 @@
 
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.core' version='3.6.17'
+	<feature resolver="(obr)" name='navajo.core' version='3.6.18'
 		start-level='80'>
 		<details>Navajo Core Components</details>
 		<feature version="[3.0.0,5)">pax-http</feature>
@@ -129,7 +129,7 @@
 		<feature version="[3.0.0,5)">eventadmin</feature>
 		<feature version="[3.0.3,4)">navajo.core.dependencies</feature>
 
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/3.0.30
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/3.1.0
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.14
 		</bundle>
@@ -141,7 +141,7 @@
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/3.1.0
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/4.2.2
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/4.2.4
 		</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/2.2.0
 		</bundle>
@@ -305,11 +305,18 @@
 			<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.1.0</bundle> -->
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.status' version='1.0.16'>
-		<bundle dependency='true'>mvn:com.google.guava/guava/18.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.status/1.1.16
-		</bundle>
-	</feature>
+<!-- Not used anymore -->
+<!-- 	<feature resolver="(obr)" name='navajo.status' version='1.0.16'> -->
+<!-- 		<bundle dependency='true'>mvn:com.google.guava/guava/18.0</bundle> -->
+<!-- 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.status/1.1.16 -->
+<!-- 		</bundle> -->
+<!-- 	</feature> -->
+    
+    <feature resolver="(obr)" name='navajo.mgmt' version='1.0.0'>
+        <bundle dependency='true'>mvn:com.google.guava/guava/18.0</bundle>
+        <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mgmt/1.0.0
+        </bundle>
+    </feature>
 
 	<feature resolver="(obr)" name='navajo.sftp' version='1.0.0'>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.sftp/1.0.3</bundle>
@@ -593,10 +600,10 @@
 		</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.entity' version='2.0.4'>
+	<feature resolver="(obr)" name='navajo.entity' version='2.1.0'>
 		<feature version="[3.0.8,4)">navajo.server</feature>
 		<feature version="[3.0.59,4)">navajo.server.osgi</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.entity/2.2.0
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.entity/3.0.0
 		</bundle>
 	</feature>
 
