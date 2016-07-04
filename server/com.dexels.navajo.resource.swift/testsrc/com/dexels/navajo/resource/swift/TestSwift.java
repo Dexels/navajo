@@ -86,8 +86,23 @@ public class TestSwift {
 		os.get("test/factory");
 	}
 	
+	@Test
+	public void testNullMime() throws IOException {
+		Map<String,String> meta = new HashMap<String,String>();
+		meta.put("aap", "noot");
+		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
+		Binary b = new Binary(u,true,true);		
+		osi.set("test/factory",null, b, meta);
+	}	
 	
-	
+	@Test
+	public void testBrokenMime() throws IOException {
+		Map<String,String> meta = new HashMap<String,String>();
+		meta.put("aap", "noot");
+		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
+		Binary b = new Binary(u,true,true);		
+		osi.set("test/factory","blablalba", b, meta);
+	}	
 	
 
 }
