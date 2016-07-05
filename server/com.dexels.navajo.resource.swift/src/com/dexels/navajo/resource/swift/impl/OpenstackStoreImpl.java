@@ -177,7 +177,7 @@ public class OpenstackStoreImpl implements BinaryStore {
 
 	private Access getAccess() {
 		if(osAccess==null || hasExpired(osAccess)) {
-			logger.info("Creating new access");
+			logger.info("Creating new swift token");
 			client = createClient();
 			osAccess = client.getAccess();
 			return osAccess;
@@ -190,7 +190,7 @@ public class OpenstackStoreImpl implements BinaryStore {
 		Token token = osAccess.getToken();
 		long expires = token.getExpires().getTime();
 		long expIn = expires - System.currentTimeMillis();
-		logger.info("TOKEN will expire in: "+((expIn-3600000)/1000)+" sec");
+//		logger.info("TOKEN will expire in: "+((expIn-3600000)/1000)+" sec");
 		// if TTL < 1 hour
 		return expIn < 3600000;
 	}
