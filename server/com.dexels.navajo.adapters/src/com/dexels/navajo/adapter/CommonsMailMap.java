@@ -8,8 +8,6 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
-import javax.activation.CommandMap;
-import javax.activation.DataContentHandler;
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -144,11 +142,12 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 		final ClassLoader current = Thread.currentThread().getContextClassLoader();
 //		CommandMap.getDefaultCommandMap();
 		try {
-			Thread.currentThread().setContextClassLoader( CommandMap.class.getClassLoader() );
+//			Thread.currentThread().setContextClassLoader( CommandMap.class.getClassLoader() );
+			 Thread.currentThread().setContextClassLoader(javax.mail.Session.class.getClassLoader());
+
+//			DataContentHandler dch=CommandMap.getDefaultCommandMap().createDataContentHandler("text/multipart");
 			
-			DataContentHandler dch=CommandMap.getDefaultCommandMap().createDataContentHandler("text/multipart");
-			
-			logger.info("Sending mail to: "+to+" subject: "+subject+ " with handler: "+dch);
+//			logger.info("Sending mail to: "+to+" subject: "+subject+ " with handler: "+dch);
 			// Create the email message and fill the basics
 			HtmlEmail email = getNewHtmlEmail();
 			if(debug) {
