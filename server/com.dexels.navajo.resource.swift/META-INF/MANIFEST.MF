@@ -10,6 +10,7 @@ Bundle-ClassPath: .,
  lib/openstack4j-2.20-withdeps.jar
 Import-Package: com.dexels.navajo.document.types;version="2.2.1",
  com.dexels.navajo.resource.binarystore;version="1.1.0",
+ javax.activation;version="1.1.0",
  javax.net,
  javax.net.ssl,
  javax.xml,
