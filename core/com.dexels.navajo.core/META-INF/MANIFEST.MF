@@ -56,7 +56,7 @@ Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
    com.dexels.navajo.events,
    com.dexels.navajo.script.api,
    com.dexels.navajo.mapping",
- com.dexels.navajo.server.enterprise.tribe;uses:="com.dexels.navajo.server,com.dexels.navajo.script.api,com.dexels.navajo.document",
+ com.dexels.navajo.server.enterprise.tribe;version="1.0.0";uses:="com.dexels.navajo.server,com.dexels.navajo.script.api,com.dexels.navajo.document",
  com.dexels.navajo.server.enterprise.workflow;uses:="com.dexels.navajo.document",
  com.dexels.navajo.server.global;uses:="com.dexels.navajo.document",
  com.dexels.navajo.server.impl;
