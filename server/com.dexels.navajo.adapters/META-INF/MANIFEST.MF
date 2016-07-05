@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.4.21.qualifier
+Bundle-Version: 2.4.22
 DynamicImport-Package: *
 Bundle-Activator: navajoadapters.Version
 Navajo-Name: Adapters
