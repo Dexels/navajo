@@ -473,16 +473,16 @@
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.enterprise.mongodb'
-		version='3.0.42'>
+		version='3.1.0'>
 		<feature version="[3.0.32,4)">navajo.server.osgi</feature>
 		<feature version="[3.0.98,4)">navajo.enterprise.core</feature>
 		<feature version="[1.0.8,2)">dexels.oauth</feature>
 
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo/3.1.18
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo/4.0.0
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo.accessstore/3.3.2
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.mongo.accessstore/3.4.0
 		</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.oauth.mongodb/1.0.27
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.oauth.mongodb/1.0.29
 		</bundle>
 	</feature>
 
