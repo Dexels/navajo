@@ -1,0 +1,18 @@
+<ul class="operations">
+	<li class="operation {{OP}}">
+		<a href="#"> 
+			<div class="operationHeader {{OP}}">
+				<div class="method http{{OP}}">{{OP}}</div>
+				<div class="url">{{URL}}</div>
+				
+				<div class="descrption {{OP}}"> {{DESCRIPTION}}</div>
+			</div>
+		</a>
+		<div style="display: none " class="entityDescription">
+		    {{OPREQUEST}}
+		    {{OPREQUESTCOMMENT}}
+		    {{OPRESPONSE}}
+		    {{OPRESPONSECOMMENT}}
+        </div>
+	</li>
+</ul>

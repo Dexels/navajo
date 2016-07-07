@@ -1,7 +1,7 @@
 .bodycenter {
 	margin-left: auto;
 	margin-right: auto;
-	width: 1024px;
+	width: 90%;
 	font-family: "Droid Sans",sans-serif;
 
 }
@@ -162,4 +162,70 @@ li.operation pre {
 	font-size: 0.8em;
 	text-decoration: none;
 	color: #606060;
+}
+
+
+.errorcodeheader {
+	margin-top: 50px;
+}
+
+.errorcodediv {
+    padding-left: 40px;
+    width: 95%;
+}
+
+
+.errorcodetable {
+    border-collapse: collapse;
+    font-size: smaller;
+    width: 100%;
+}
+
+.errorcodetable thead tr {
+	text-align: left;
+	color: #666666;
+	border-bottom:1pt solid black;
+}
+.errorcodetable thead th {
+    text-align: inherit; /* NEEDED FOR IE*/
+}
+.errorcodetable tr {
+	border-bottom:1pt solid #dddddd;
+	
+}
+.errorcodetable tr > td {
+	padding-top: 3px;
+	
+}
+
+.errorcodetable td:nth-child(1) {  
+	font-family: monospace;
+}
+
+
+
+.commentsTable {
+    border-collapse: collapse;
+    font-size: smaller;
+    width: 75%;
+    margin: 20px;
+}
+
+.commentsTable thead tr {
+	text-align: left;
+	color: #666666;
+	border-bottom:1pt solid black;
+}
+.commentsTable thead th {
+    text-align: inherit; /* NEEDED FOR IE*/
+}
+.commentsTable tr {
+	border-bottom:1pt solid #dddddd;
+	
+}
+.commentsTable tr > td {
+	padding-top: 3px;
+}
+.commentsTable td:nth-child(1) {  
+	font-family: monospace;
 }

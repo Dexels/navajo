@@ -6,9 +6,10 @@ import com.dexels.navajo.document.types.Binary;
 
 public interface BinaryStore {
 	public Binary get(String name);
+	public boolean exists(String name);
 	public void delete(String name);
 	public Map<String, Object> metadata(String name);
-	public void set(String name, Binary contents, Map<String, String> metadata);
+	public void set(String name, String contentType, Binary contents, Map<String, String> metadata);
 	
 }
 

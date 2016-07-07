@@ -70,12 +70,12 @@ public class EntityMap extends NavajoMap {
 		super.waitForResult();
 	}
 	
-	public String getEntity() {
+	public String getName() {
 		return entityName;
 	}
 
-	public void setEntity(String entity) throws UserException{
-		this.entityName = entity.replace("/", ".");;
+	public void setName(String entityname) throws UserException{
+		this.entityName = entityname.replace("/", ".");;
 		this.myEntity = myManager.getEntity(this.entityName);
 		if (this.myEntity == null) {
 		    throw new UserException(-1, "Entity " + entityName + " not found!");

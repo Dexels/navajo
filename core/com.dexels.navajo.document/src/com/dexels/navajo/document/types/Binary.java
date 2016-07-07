@@ -348,7 +348,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
             try {
                 fos = createTempFileOutputStream();
                 fos.write(data);
-                fos.close();
             } catch (IOException e) {
             	logger.error("Error: ", e);
             } finally {

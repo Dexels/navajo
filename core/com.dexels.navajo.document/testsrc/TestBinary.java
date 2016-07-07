@@ -8,7 +8,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -62,6 +66,7 @@ public class TestBinary {
 		binary2 = new Binary(getClass().getResourceAsStream("binary2.txt"));
 		binary3 = new Binary(getClass().getResourceAsStream("binary3.txt"));
 		binary4 = new Binary(getClass().getResourceAsStream("binary4.txt"));
+
 		logger.info("Created first");
 		StringWriter sw = new StringWriter();
 		binary1.writeBase64(sw);
@@ -86,7 +91,7 @@ public class TestBinary {
 //
 	@Test
 	public void testEqual1() {
-		Assert.assertEquals(binary1,binary2);
+		Assert.assertEquals(new String(binary1.getDigest()),new String(binary2.getDigest()));
 	}
 
 	@Test
@@ -115,6 +120,16 @@ public class TestBinary {
 		Assert.assertEquals(binary1,binary5);
 		Assert.assertEquals(binary5,binary1);
 	}
+	
+	@Test
+    public void testEqual6() throws IOException, URISyntaxException {
+	    Binary binaryStreamed = new Binary(getClass().getResourceAsStream("logo.gif"));
+	    Path path = Paths.get(getClass().getResource("logo.gif").toURI());
+	    byte[] data = Files.readAllBytes(path);
+	    Binary binaryByteArray = new Binary(data);
+
+        Assert.assertEquals(binaryStreamed, binaryByteArray);
+    }
 
 	@Test
 	@Ignore // Ignore until we find a proper fix for this problem...

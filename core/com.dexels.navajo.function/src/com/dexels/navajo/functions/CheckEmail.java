@@ -23,7 +23,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
@@ -32,7 +32,8 @@ import com.dexels.navajo.parser.TMLExpressionException;
  */
 
 public class CheckEmail extends FunctionInterface {
-	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	private static final String EMAIL_PATTERN = "^[\\w!#$%&�*+/=?`{|}~^-]+(?:\\.[\\w!#$%&�*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+	
 	
   @Override
 public String remarks() {
@@ -67,15 +68,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 	Boolean b = null;
 	CheckEmail ce = new CheckEmail();
     ce.reset();
-    ce.insertOperand("erik.versteeg@dexels.com");
-    b = (Boolean) ce.evaluate();
-    System.err.println("result = " + b);
-    ce.reset();
-    ce.insertOperand("erik.versteeg.@dexels.com");
-    b = (Boolean) ce.evaluate();
-    System.err.println("result = " + b);
-    ce.reset();
-    ce.insertOperand("erik@dexels.com");
+    ce.insertOperand("person@example.com");
     b = (Boolean) ce.evaluate();
     System.err.println("result = " + b);
   }

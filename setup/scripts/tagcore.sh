@@ -7,7 +7,6 @@ cd ../core
 tosnap.sh com.dexels.navajo.api 1.0.2
 tosnap.sh com.dexels.navajo.client 3.4.2
 tosnap.sh com.dexels.navajo.client.async 1.1.2
-tosnap.sh com.dexels.navajo.client.jabber 1.0.2
 tosnap.sh com.dexels.navajo.core 2.9.9
 
 tosnap.sh com.dexels.navajo.core.feature 1.0.9
@@ -105,7 +104,6 @@ tosnap.sh com.dexels.navajo.tipi.feature 1.1.16
 
 tosnap.sh com.dexels.navajo.tipi.flickr 1.0.20
 tosnap.sh com.dexels.navajo.tipi.flickr.feature 1.0.20
-tosnap.sh com.dexels.navajo.tipi.jabber 1.0.13
 tosnap.sh com.dexels.navajo.tipi.jabber.feature 1.0.13
 tosnap.sh com.dexels.navajo.tipi.jcr 1.0.2
 tosnap.sh com.dexels.navajo.tipi.jcr.feature 1.0.2

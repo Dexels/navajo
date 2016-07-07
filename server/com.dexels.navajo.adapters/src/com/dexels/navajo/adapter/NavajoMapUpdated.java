@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.navajomap.MessageMap;
-import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Header;
@@ -51,7 +50,6 @@ import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -1241,13 +1239,7 @@ public DependentResource[] getDependentResourceFields() {
 			                         new GenericDependentResource("navajoserver", "server", AdapterFieldDependency.class)};
   }
 
-  public static ResourceManager getResourceManager(String resourceType) {
-	  if ( resourceType.equals("navajoserver") ) {
-		  return NavajoMapManager.getInstance();
-	  }
-	  return null;
-  }
-  
+
   public String getOutputProperties() {
 	  return outputProperties;
   }

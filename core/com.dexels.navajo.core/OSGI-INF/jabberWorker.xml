@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.enterprise.worker.jabber">
-   <implementation class="com.dexels.navajo.server.enterprise.xmpp.DummyJabberWorker"/>
-   <service>
-      <provide interface="com.dexels.navajo.server.enterprise.xmpp.JabberWorkerInterface"/>
-   </service>
-</scr:component>

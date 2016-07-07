@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.4.19.qualifier
+Bundle-Version: 2.4.29.qualifier
 DynamicImport-Package: *
 Bundle-Activator: navajoadapters.Version
 Navajo-Name: Adapters
@@ -34,8 +34,7 @@ Export-Package: com.dexels.navajo.adapter,com.dexels.navajo.adapter.cl
  com.dexels.navajo.document",navajoadapters;uses:="org.osgi.framework,
  navajoextension",org.dexels.grus;version="1.0.0"
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.navajo.adapter.navajomap.manager,
- com.dexels.navajo.client,
+Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.async,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
@@ -53,12 +52,13 @@ Import-Package: com.dexels.navajo.adapter.navajomap.manager,
  com.dexels.navajo.server,
  com.dexels.navajo.server.descriptionprovider,
  com.dexels.navajo.server.enterprise.queue,
- com.dexels.navajo.server.enterprise.xmpp,
  com.dexels.navajo.server.jmx,
  com.dexels.navajo.server.resource,
  com.dexels.navajo.serviceplugin,
  com.dexels.navajo.util;version="1.0.0",
  com.dexels.navajo.version,
+ com.sun.mail.handlers,
+ com.sun.mail.smtp,
  com.sun.mail.util,
  javax.activation,
  javax.mail,

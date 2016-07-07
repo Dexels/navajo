@@ -1,8 +1,9 @@
 package com.dexels.navajo.entity.listener;
 
-
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.ops4j.pax.web.extender.whiteboard.ResourceMapping;
 import org.ops4j.pax.web.extender.whiteboard.runtime.DefaultResourceMapping;
@@ -30,255 +32,241 @@ import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.Key;
 
+public class EntityApiDocListener extends HttpServlet implements ResourceMapping {
+    private static final long serialVersionUID = -2642151786192206338L;
 
-public class EntityApiDocListener extends HttpServlet  implements ResourceMapping {
+    private final static Logger logger = LoggerFactory.getLogger(EntityApiDocListener.class);
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2642151786192206338L;
+    private EntityManager myManager;
+    private final DefaultResourceMapping resourceMapping = new DefaultResourceMapping();
 
-	private final static Logger logger = LoggerFactory.getLogger(EntityApiDocListener.class);
+    public void activate() {
+        resourceMapping.setAlias("/entityApi");
+        resourceMapping.setPath("entityApi");
+    }
 
-	private EntityManager myManager;
+    @Override
+    public String getAlias() {
+        return resourceMapping.getAlias();
+    }
 
-	private final DefaultResourceMapping resourceMapping = new DefaultResourceMapping();
+    @Override
+    public String getHttpContextId() {
+        return resourceMapping.getHttpContextId();
+    }
 
-	
-	
-	public void activate() {
-		resourceMapping.setAlias("/entityApi");
-		resourceMapping.setPath("entityApi");
-	}
+    @Override
+    public String getPath() {
+        return resourceMapping.getPath();
+    }
 
-	@Override
-	public String getAlias() {
-		return resourceMapping.getAlias();
-	}
+    public void setEntityManager(EntityManager em) {
+        myManager = em;
+    }
 
-	@Override
-	public String getHttpContextId() {
-		return resourceMapping.getHttpContextId();
-	}
+    public void clearEntityManager(EntityManager em) {
+        myManager = null;
+    }
 
-	@Override
-	public String getPath() {
-		return resourceMapping.getPath();
-	}
-	
-	
-	
-	public void setEntityManager(EntityManager em) {
-		myManager = em;
-	}
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-	public void clearEntityManager(EntityManager em) {
-		myManager = null;
-	}
+        String path = request.getPathInfo();
+        String basePath = "";
 
+        if (path != null && !path.equals("/")) {
+            for (String subPath : path.split("/")) {
+                basePath += subPath + ".";
+            }
+            basePath = basePath.substring(1);
+        }
+        String sourcetemplate = getTemplate("source.template");
+        String operationtemplate = getTemplate("operation.template");
 
-	@Override
-	protected void service(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		String path = request.getPathInfo();
-		String basePath = "";
+        String result = sourcetemplate.replace("{{ENTITY_PATH}}", path.substring(1));
 
-		if (path != null && !path.equals("/")) {
-			for (String subPath : path.split("/")) {
-				basePath += subPath + ".";
-			}
-			basePath = basePath.substring(1);
-		}
-		
-		
-		String out = "";
-		out += "<!DOCTYPE html>";
-		out += "<html>";
-		out += "<head>";
-		out += " <title>Navajo Entity API documentation</title>";
-		out += " <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /> ";
-		out += " <link rel=\"stylesheet\" href=\"/entityApi/css/style.css\"> ";
-		out += "<script type=\"text/javascript\" src=\"/entityApi/jquery-1.9.1.min.js\" ></script>";
-		out += "<script type=\"text/javascript\" src=\"/entityApi/run_prettify.js\" ></script>";
-		out += "<script type=\"text/javascript\" src=\"/entityApi/entity.js\" ></script>";
-		out +=  "</head>";
+        List<String> entityNames = myManager.getRegisteredEntities(basePath);
 
-		out += "<body class=\"bodycenter\">";	
-		out += "<h1>Entity API Documentation</h1>";
-		
-		List<String> entityNames = myManager.getRegisteredEntities(basePath);
-		for (String entityName : entityNames) {
-			Entity e = myManager.getEntity(entityName);
-			
-			Map<String, Operation> ops = myManager.getOperations(entityName);
-			String entityNameUrl = entityName.replace(".", "/");
+        String operations = "";
+        for (String entityName : entityNames) {
+            Map<String, Operation> ops = myManager.getOperations(entityName);
+            for (String op : ops.keySet()) {
+                operations += writeEntityOperation(operationtemplate, entityName, op);
+            }
+        }
 
-			Navajo n = NavajoFactory.getInstance().createNavajo();
-			n.addMessage(e.getMessage());
-			
-			for (String op : ops.keySet()) {
-				out += "<ul class=\"operations\">";
-				out += "<li class=\"operation " + op + "\" >";
-				out += "<a href=\"#\" > ";
-				out += "<div class=\"operationHeader " + op + "\">";
-				out += "<div class=\"method http" + op + "\">" + op + "</div>";
-				out += "<div class=\"url\" > /" + entityNameUrl + "</div>";
-				out += "<div class=\"descrption " + op + "\" > " + operationDescription(op)
-						+ entityNameUrl + "</div>";
-				out += "</div>"; // operationHeader
-				out += "</a>";
-				out += "<div class=\"entityDescription\" style=\"display: none \">  ";
-				if ((op.equals(Operation.GET) || op.equals(Operation.DELETE))
-						&& e.getKeys().size() > 0) {
-					out += printRequestKeysDefinition(e);
-				} else {
-					// Writing entire object
-					out += "<h2> Request </h2>";
-					out += "<pre class=\"prettyprint\">";
-					out += writeEntityJson(n, "request");
-					out += "</pre>";
-				}
+        result = result.replace("{{OPERATIONS}}", operations);
 
-				out += "<h2> Response </h2>";
-				out += "<small> <a href=\"#\" class=\"outputFormatJSON\">JSON</a></small> ";
-				out += "<small> |  <a href=\"#\" class=\"outputFormatXML\">XML</a> </small>";
-				
-				
-				out += "<div class=\"JSON\">";
-				out += "<pre class=\"prettyprint\">";
-				out += writeEntityJson(n, "response");
-				out += "</pre>";
-				out += "</div>"; //; JSON div
-				
-				out += "<div class=\"XML\" style=\"display: none; \" \">";
-				out += "<pre class=\"prettyprint lang-xml\">";
-				out +=  StringEscapeUtils.escapeHtml(writeEntityXml(n));
-				out += "</pre>";
-				out += "</div>"; //; XML div
-								
-				out += printPropertiesDescription(e);
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getOutputStream().write(result.getBytes());
 
-				out += "</div>";// description div
-				out += "</li></ul>"; 
-			}			
-		}
-		
-		out += "</body>";
-		out += "</html>";
-		
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.getOutputStream().write(out.getBytes());
-		
-	}
+    }
 
-	private String printPropertiesDescription(Entity e) {
-		String result = "<h2> Description </h2>";
-		boolean hasDescriptions = false;
-		
-		// Check entity message
-		for (Property p : e.getMessage().getAllProperties()) {
-			if (p.getDescription() != null && ! p.getDescription().equals("")) {
-				hasDescriptions = true;
-				result += "<b>" + p.getName() + "</b>: " + p.getDescription();
-				result += "<br>";
-			}
-		}
-		
-		// And other submessages
-		for (Message m : e.getMessage().getAllMessages()) {
-			for (Property p : m.getAllProperties()) {
-				if (p.getDescription() != null && ! p.getDescription().equals("")) {
-					hasDescriptions = true;
-					result += "<b>" + p.getName() + "</b>: " + p.getDescription();
-					result += "<br>";
-				}
-			}
-			
-		}
-		
-		if (hasDescriptions) {
-			return result;
-		}
-		return "";
-	}
+    private String writeEntityOperation(String template, String entityName, String op) throws ServletException {
+        String result = "";
 
-	private String printRequestKeysDefinition(Entity e) throws ServletException {
-		String result = "";
-		
-		result += "<h2> Request </h2>";
-		for (Key key : e.getKeys()) {
-			// Get all properties for this key, put them in a temp Navajo and use the JSONTML to print it
-			Set<Property> properties = key.getKeyProperties();
-			Set<Property> optionalProps = new HashSet<Property>();
-			
-			Navajo nkey = NavajoFactory.getInstance().createNavajo();
-			Message mkey = NavajoFactory.getInstance().createMessage(nkey,"keys");
-			nkey.addMessage(mkey);
-			
-			for (Property prop : properties) {
-				if (! Key.isAutoKey(prop.getKey())) {
-					mkey.addProperty(prop.copy(nkey));
-				}
-				if (Key.isOptionalKey(prop.getKey())) {
-					optionalProps.add(prop);
-				}
-			}
-			
-			// Printing result.
-			result += "<pre class=\"prettyprint\">";
-			result += writeEntityJson(nkey, "request");
-			result += "</pre>";
-			
-			if (optionalProps.size() > 0 ){
-				result+= "<b>Optional: </b> ";
-			}
-			result += "<code> ";
-			for (Property optProp : optionalProps) {
-				result += optProp.getName() +"; ";
-			}
-			result += "</code> ";
-		}
-		return result;
-	}
+        Entity e = myManager.getEntity(entityName);
+        Navajo n = NavajoFactory.getInstance().createNavajo();
+        n.addMessage(e.getMessage());
+        String entityNameUrl = entityName.replace(".", "/");
 
-	private String writeEntityJson(Navajo n, String method) throws ServletException {
-		StringWriter writer = new StringWriter();
-		JSONTML json = JSONTMLFactory.getInstance();
-		Navajo masked = n.copy().mask(n, method);
-		try {
-			json.formatDefinition(masked, writer, true);
-		} catch (Exception ex) {
-			logger.error("Error in writing entity output in JSON!",ex);
-			throw new ServletException("Error producing output");
-		}
-		return StringEscapeUtils.escapeHtml(writer.toString());
-	}
-		
-	private String writeEntityXml(Navajo n) throws ServletException {
-		StringWriter writer = new StringWriter();
-		n.write(writer);
-		return writer.toString();
-	}
-	
-	
-	
-	
-	private String operationDescription(String op) {
-		if (op.equals(Operation.GET)) {
-			return "Get ";
-		}
-		if (op.equals(Operation.POST)) {
-			return "Create ";
-		}
-		if (op.equals(Operation.PUT)) {
-			return "Update ";
-		}
-		if (op.equals(Operation.DELETE)) {
-			return "Delete ";
-		}
-		return "";
-	}
+        result = template.replace("{{OP}}", op);
+        result = result.replace("{{URL}}", entityNameUrl);
+        result = result.replace("{{DESCRIPTION}}", operationDescription(op) + entityNameUrl);
+
+        String oprequesttemplate = getTemplate("operationrequest.template");
+        String opresponsetemplate = getTemplate("operationresponse.template");
+
+        String requestBody = null;
+        if ((op.equals(Operation.GET) || op.equals(Operation.DELETE)) && e.getKeys().size() > 0) {
+            requestBody = printRequestKeysDefinition(e);
+        } else {
+            String requestbodyTemplate = getTemplate("operationrequestbody.template");
+            requestBody = requestbodyTemplate.replace("{{REQUEST_BODY}}", writeEntityJson(n, "request"));
+        }
+        String request = oprequesttemplate.replace("{{ENTITY_REQUEST_BODY}}", requestBody);
+        result = result.replace("{{OPREQUEST}}", request);
+        
+        String commentBody =  printPropertiesDescription(e.getMessage(), op, "request");
+        result = result.replace("{{OPREQUESTCOMMENT}}", commentBody);
+        
+        String responseBody = opresponsetemplate.replace("{{RESPONSE_JSON}}", writeEntityJson(n, "response"));
+        responseBody = responseBody.replace("{{RESPONSE_XML}}", StringEscapeUtils.escapeHtml(writeEntityXml(n)));
+        result = result.replace("{{OPRESPONSE}}", responseBody);
+        
+        commentBody =  printPropertiesDescription(e.getMessage(), op, "response");
+        result = result.replace("{{OPRESPONSECOMMENT}}", commentBody);
+        return result;
+    }
+    
+    private String printRequestKeysDefinition(Entity e) throws ServletException {
+        String result = "";
+        Set<Property> unboundRequestProperties = new HashSet<>();
+        for (Property p : e.getMessage().getAllProperties()) {
+            if (!Key.isKey(p.getKey()) && p.getMethod().equals("request")) {
+                unboundRequestProperties.add(p);
+            }
+        }
+        for (Key key : e.getKeys()) {
+            String requestbody = getTemplate("operationrequestbody.template");
+            // Get all properties for this key, put them in a temp Navajo and use the JSONTML to print it
+            Set<Property> properties = key.getKeyProperties();
+
+            Navajo nkey = NavajoFactory.getInstance().createNavajo();
+            Message mkey = NavajoFactory.getInstance().createMessage(nkey, "keys");
+            nkey.addMessage(mkey);
+
+            for (Property prop : properties) {
+                if (!Key.isAutoKey(prop.getKey())) {
+                    mkey.addProperty(prop.copy(nkey));
+                }
+            }
+            for (Property p : unboundRequestProperties) {
+                mkey.addProperty(p.copy(nkey));
+            }
+
+            // Printing result.
+            requestbody = requestbody.replace("{{REQUEST_BODY}}", writeEntityJson(nkey, "request"));
+            result += requestbody;
+        }
+        return result;
+    }
+    
+    private String writeEntityJson(Navajo n, String method) throws ServletException {
+        StringWriter writer = new StringWriter();
+        JSONTML json = JSONTMLFactory.getInstance();
+        Navajo masked = n.copy().mask(n, method);
+        try {
+            json.formatDefinition(masked, writer, true);
+        } catch (Exception ex) {
+            logger.error("Error in writing entity output in JSON!", ex);
+            throw new ServletException("Error producing output");
+        }
+        return StringEscapeUtils.escapeHtml(writer.toString());
+    }
+    
+    private String writeEntityXml(Navajo n) throws ServletException {
+        StringWriter writer = new StringWriter();
+        n.write(writer);
+        return writer.toString();
+    }
+
+    
+    private String printPropertiesDescription(Message m, String op, String method) {
+        String rows = "";
+        String opcommenttemplate = getTemplate("operationcomment.template");
 
 
+        String propertiesResult = printPropertiesForMessage(m, op, method);
+        if (!propertiesResult.equals("")){
+            rows += propertiesResult;
+        }
+
+        // And other submessages
+        for (Message submessage : m.getAllMessages()) {
+            propertiesResult = printPropertiesForMessage(submessage, op, method);
+            if (!propertiesResult.equals("")){
+                rows += propertiesResult;
+            }
+        }
+
+        if (!rows.equals("")) {
+            String commentTable = opcommenttemplate.replace("{{COMMENT_TABLE_ROWS}}", rows);
+            return commentTable;
+        }
+        return "";
+    }
+    
+    private String printPropertiesForMessage(Message m, String op, String method) {
+        // Check entity message
+        String rows = "";
+        for (Property p : m.getAllProperties()) {
+            if (p.getDescription() == null ||  p.getDescription().equals("")) {
+                continue;
+            }
+            // Property has a description. Print if the property matches the method, OR if we are a request,
+            // if we are a key and this is a GET or DELETE operation.
+            String propertyMethod = p.getMethod();
+            if (method == null) {
+                propertyMethod =  p.getParentMessage().getMethod();
+            }
+            if (propertyMethod.equals(method)
+                    || (method.equals("request") && (op.equals(Operation.GET) || op.equals(Operation.DELETE)) && Key.isKey(p.getKey()))) {
+                String commentRow = getTemplate("operationcommentrow.template");
+                commentRow = commentRow.replace("{{COMMENT_KEY}}", p.getName());
+                commentRow = commentRow.replace("{{COMMENT_VALUE}}", p.getDescription());
+                rows += commentRow;
+            }
+        }
+
+        return rows;
+    }
+
+    private String operationDescription(String op) {
+        if (op.equals(Operation.GET)) {
+            return "Get ";
+        }
+        if (op.equals(Operation.POST)) {
+            return "Create ";
+        }
+        if (op.equals(Operation.PUT)) {
+            return "Update ";
+        }
+        if (op.equals(Operation.DELETE)) {
+            return "Delete ";
+        }
+        return "";
+    }
+
+    private String getTemplate(String name) {
+        try {
+            URL url = getClass().getResource("/web" + File.separator + "entityApi" + File.separator + name);
+            String content = IOUtils.toString(url.openStream(), "utf-8");
+            return content;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+
+    }
 }

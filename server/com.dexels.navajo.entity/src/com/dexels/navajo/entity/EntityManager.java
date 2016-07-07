@@ -20,7 +20,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.script.api.FatalException;
-import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
@@ -172,8 +171,7 @@ public class EntityManager {
         buildAndLoadScript(entityDir);
     }
 
-    // Can be called on file or directory. If on directory, call recursively on
-    // each file
+    // Can be called on file or directory. If on directory, call recursively on each file
     private void buildAndLoadScript(File file) throws Exception {
         if (file.isFile()) {
             String filename = file.toString();
@@ -181,7 +179,7 @@ public class EntityManager {
                 return;
             }
             String script = filename.substring(filename.indexOf("scripts" + File.separator + "entity"), filename.indexOf(".xml"));
-            String stripped = script.substring("scripts/".length());
+            String stripped = script.substring("scripts".length() + 1);
             stripped = stripped.replace("\\", "/");
             bundleQueue.enqueueScript(stripped, ".xml");
         } else if (file.isDirectory()) {

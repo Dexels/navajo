@@ -1,13 +1,12 @@
 Bundle-Name: Navajo Core
 Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-ManifestVersion: 2
-Bundle-Version: 4.2.3.qualifier
+Bundle-Version: 4.2.9.qualifier
 Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
 Navajo-Name: Core
 Eclipse-ExtensibleAPI: true
 Bundle-Activator: navajocore.Version
 Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
- com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.navajo.server.resource",
  com.dexels.navajo.compiler;uses:="com.dexels.navajo.script.api",
  com.dexels.navajo.compiler.internal;uses:="com.dexels.navajo.server",
  com.dexels.navajo.dependency;uses:="org.w3c.dom,com.dexels.navajo.server",
@@ -57,9 +56,8 @@ Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
    com.dexels.navajo.events,
    com.dexels.navajo.script.api,
    com.dexels.navajo.mapping",
- com.dexels.navajo.server.enterprise.tribe;uses:="com.dexels.navajo.server,com.dexels.navajo.script.api,com.dexels.navajo.document",
+ com.dexels.navajo.server.enterprise.tribe;version="1.0.0";uses:="com.dexels.navajo.server,com.dexels.navajo.script.api,com.dexels.navajo.document",
  com.dexels.navajo.server.enterprise.workflow;uses:="com.dexels.navajo.document",
- com.dexels.navajo.server.enterprise.xmpp,
  com.dexels.navajo.server.global;uses:="com.dexels.navajo.document",
  com.dexels.navajo.server.impl;
   uses:="com.dexels.navajo.server.enterprise.integrity,

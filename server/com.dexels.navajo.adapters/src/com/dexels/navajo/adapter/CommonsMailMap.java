@@ -139,8 +139,15 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	 * @throws UserException
 	 */
 	public void sendMail() throws UserException {
+		final ClassLoader current = Thread.currentThread().getContextClassLoader();
+//		CommandMap.getDefaultCommandMap();
 		try {
-			logger.info("Sending mail to: "+to+" subject: "+subject);
+//			Thread.currentThread().setContextClassLoader( CommandMap.class.getClassLoader() );
+			 Thread.currentThread().setContextClassLoader(javax.mail.Session.class.getClassLoader());
+
+//			DataContentHandler dch=CommandMap.getDefaultCommandMap().createDataContentHandler("text/multipart");
+			
+//			logger.info("Sending mail to: "+to+" subject: "+subject+ " with handler: "+dch);
 			// Create the email message and fill the basics
 			HtmlEmail email = getNewHtmlEmail();
 			if(debug) {
@@ -202,6 +209,8 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
                 AuditLog.log("CommonsMailMap", e.getMessage(),e, Level.SEVERE, myAccess.accessID);
                 throw new UserException(-1, e.getMessage(), e);
             }
+    	} finally {
+    		Thread.currentThread().setContextClassLoader( current );
     	}
 	}
 	

@@ -128,6 +128,8 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
     private void checkForRemovedScripts(Event e) {
         List<String> deletedScripts = RepositoryEventParser.filterDeleted(e, SCRIPTS_FOLDER);
         for (String deletedScript : deletedScripts) {
+            // Replace windows backslashes with normal ones
+            deletedScript = deletedScript.replace("\\", "/");
             // Uninstall bundle
             String stripped = deletedScript.substring(SCRIPTS_FOLDER.length());
             int dotIndex = stripped.lastIndexOf(".");
