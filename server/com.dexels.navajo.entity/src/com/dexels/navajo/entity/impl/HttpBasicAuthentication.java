@@ -82,7 +82,7 @@ public class HttpBasicAuthentication implements EntityAuthenticator {
     @Override
     public boolean isAuthenticated(Access a) {
         try {
-            authenticator.process(a.getTenant(), a.getRpcUser(), a.rpcPwd, a.rpcName, null, a);
+            authenticator.process(a);
         } catch (SystemException | AuthorizationException e) {
             logger.warn("Auth exception", e);
             return false;
