@@ -634,7 +634,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 
 		  return (mappable.isAssignableFrom(c) );
 		  
-	  } catch (Exception e) {
+	  } catch (Throwable e) {
 		  throw new UserException(-1, "Could not handle class as either mappable or POJO bean: " + className + ", cause: " + e.getMessage(),e);
 	  }
   }
