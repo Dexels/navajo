@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SharedStoreSession {
 
@@ -70,7 +71,7 @@ public class SharedStoreSession {
 	
 	public List<SharedStoreSessionEntry> ls(String filter) {
 
-		HashSet<String> unique = new HashSet<String>();
+		Set<String> unique = new HashSet<String>();
 		List<SharedStoreSessionEntry> objects = new ArrayList<SharedStoreSessionEntry>();
 		String [] all = mySharedStore.getParentObjects(null);
 
