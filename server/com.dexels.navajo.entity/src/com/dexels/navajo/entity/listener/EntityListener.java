@@ -395,7 +395,7 @@ public class EntityListener extends HttpServlet {
             }
         }
         
-        if (!auth.isAuthenticated(access)) {
+        if (!auth.isAuthenticated(access, inDoc)) {
             throw new AuthorizationException(true, false, auth.getUsername(), "Not authenticated");
         }
 

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.authentication.api.AAAQuerier;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.entity.EntityAuthenticator;
 import com.dexels.navajo.script.api.Access;
@@ -80,7 +81,7 @@ public class HttpBasicAuthentication implements EntityAuthenticator {
     }
 
     @Override
-    public boolean isAuthenticated(Access a) {
+    public boolean isAuthenticated(Access a, Navajo in) {
         try {
             authenticator.process(a);
         } catch (SystemException | AuthorizationException e) {

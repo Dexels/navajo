@@ -10,7 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.entity.EntityAuthenticator;
 import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.script.api.Access;
@@ -27,9 +31,7 @@ public class TokenAuthentication implements EntityAuthenticator {
     private TokenStore tokenStore;
     private ClientStore clientStore;
     private OAuthToken token;
-
     private Client client;
-
     private HashSet<String> suppliedScopes;
 
     @SuppressWarnings("unused")
@@ -56,9 +58,26 @@ public class TokenAuthentication implements EntityAuthenticator {
     }
     
     @Override
-    public boolean isAuthenticated(Access a) {
+    public boolean isAuthenticated(Access a, Navajo in) {
         // If the found the token in our store, the token is valid
-        return token != null;
+        if (token == null) {
+            return false;
+        }
+        if (in.getMessage("__parms__") == null) {
+            Message paramMsg = NavajoFactory.getInstance().createMessage(in, "__parms__");
+            in.addMessage(paramMsg);
+        }
+        Message paramMsg = in.getMessage("__parms__");
+        
+        
+        // Add attributes
+        for (String key: token.getAttributes().keySet()) {
+            Object value = token.getAttributes().get(key);
+            Property p2 = NavajoFactory.getInstance().createProperty(in, key, "", "", Property.DIR_OUT);
+            p2.setAnyValue(value);
+            paramMsg.addProperty(p2);
+        }
+        return true;
     }
     
     @Override
