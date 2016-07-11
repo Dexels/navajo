@@ -17,9 +17,9 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleContext;
-import com.dexels.navajo.article.ValidationStore;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.server.ConditionErrorException;
+import com.dexels.resourcebundle.ValidationStore;
 
 public abstract class ArticleBaseServlet extends HttpServlet implements Servlet {
 	private final static long serialVersionUID = -6895324256139435015L;
@@ -101,7 +101,7 @@ public abstract class ArticleBaseServlet extends HttpServlet implements Servlet 
 				conditionError.put("id", id);
 				
 				//Try to find the localized description.
-				String description = validationStore.getDescriptionById(id);
+				String description = validationStore.getValidationDescription(id, null, "nl");
 				if (description != null) {
 					conditionError.put("description", description);	
 				} else {
