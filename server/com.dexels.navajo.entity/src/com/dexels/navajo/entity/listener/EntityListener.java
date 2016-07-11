@@ -158,7 +158,6 @@ public class EntityListener extends HttpServlet {
             }
 
             Message entityMessage = e.getMessage();
-            
 
             // Get the input document
             if (method.equals("GET") || method.equals("DELETE")) {
@@ -191,7 +190,6 @@ public class EntityListener extends HttpServlet {
             access.created = new Date(requestStart);
             access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
             header.setHeaderAttribute("parentaccessid", access.accessID);
-          
           
             inputEtag = request.getHeader("If-Match");
             if (inputEtag == null) {
@@ -237,9 +235,7 @@ public class EntityListener extends HttpServlet {
                 NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
                 statLogger.info("Finished {} ({}) in {}ms", access.accessID, access.getRpcName(), (System.currentTimeMillis() - requestStart));
             }
-
         }
-
     }
 
     private EntityAuthenticator getAuthenticator(HttpServletRequest request) throws EntityException {
