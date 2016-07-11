@@ -162,9 +162,13 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	private final void sendMail() throws UserException {
+	    final ClassLoader current = Thread.currentThread().getContextClassLoader();
+
 		retries++;
 
 		try {
+	        Thread.currentThread().setContextClassLoader(javax.mail.Session.class.getClassLoader());
+
 			String result = "";
 
 			result = text;
@@ -287,7 +291,9 @@ public class MailMap implements MailMapInterface, Mappable,
 						myAccess.accessID);
 				throw new UserException(-1, e.getMessage(), e);
 			}
-		}
+		} finally {
+            Thread.currentThread().setContextClassLoader( current );
+        }
 	}
 
 	private Session createSession() {
