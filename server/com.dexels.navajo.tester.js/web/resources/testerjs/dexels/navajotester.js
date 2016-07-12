@@ -660,14 +660,9 @@ $(document).on('input propertychange', '#scriptsFilter', function(evt) {
     window.clearTimeout($(this).data("timeout"));
     $(this).data("timeout", setTimeout(function() {
         var filter = $("#scriptsFilter").val();
-        if (filter.length == 0) {
-        	console.time('hide')
-        	
+        if (filter.length == 0) {       	
         	$(".scripts").find("li").filter(":visible").hide();
-        	console.timeEnd('hide')
-        	console.time('show')
-        	 $(".scripts").children("li").show();
-        	 console.timeEnd('show')
+        	$(".scripts").children("li").show();
             return;
         }
         
@@ -727,9 +722,7 @@ $(document).on('input change', '.tmlinputselect', function(evt) {
 
 
 window.onpopstate = function(event) {
-    if (!event.state) {
-        console.log('clear page')
-    } else {
+    if (event.state) {
         replaceXml(event.state.script, $.parseXML(event.state.xml));
     }
 };
