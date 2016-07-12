@@ -143,7 +143,7 @@ public class EntityListener extends HttpServlet {
             }
             
             EntityAuthenticator auth = getAuthenticator(request);
-            if (auth.getUsername() == null ) {
+            if (auth == null || auth.getUsername() == null ) {
                 throw new EntityException(EntityException.UNAUTHORIZED);
             }
 

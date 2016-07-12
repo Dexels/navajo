@@ -685,9 +685,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		if ( myOperation.getExtraMessage() != null ) {
 		    request.addMessage(myOperation.getExtraMessage().copy(request));
         }
-        prepareServiceRequestHeader(request,request, myOperation);
-
-
+        prepareServiceRequestHeader(request,request, getop);
 		Navajo result = get.commitOperation(request, getop);
 		if (result.getMessage("error") != null) {
 			throw new EntityException(EntityException.SERVER_ERROR);
