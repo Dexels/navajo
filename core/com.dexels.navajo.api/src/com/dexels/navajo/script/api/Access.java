@@ -731,6 +731,7 @@ public final class Access implements java.io.Serializable, Mappable {
      */
     private final void writeToConsole(String s) {
         consoleOutput.write(s);
+        consoleOutput.write("\n");
     }
 
     /**
@@ -742,7 +743,7 @@ public final class Access implements java.io.Serializable, Mappable {
             a.writeToConsole(s);
         }
         if (s != null) {
-            logger.info(s.trim());
+            logger.debug(s.trim());
         }
     }
 
