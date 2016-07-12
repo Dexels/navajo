@@ -594,8 +594,7 @@ $(document).on('click', '#CustomInputRunButton', function() {
     localStorage.setItem("scriptinput" + script, inputString);
     editor.setValue("");
     var idEscpated = script.replace(/\//g, "\\/");
-    console.log(idEscpated);
-    $('#' + idEscpated +'.script').click();
+    $('#' + idEscpated +'.script').first().click();
 });
 
 function convertJsonToTml(jsonString) {
