@@ -682,6 +682,9 @@ public class ServiceEntityOperation implements EntityOperation {
 		getop.setTenant(myOperation.getTenant());
 		ServiceEntityOperation get = this.cloneServiceEntityOperation(getop);
 		Navajo request = myKey.generateRequestMessage(input);
+		if (input.getMessage("__parms__") != null) {
+		    request.addMessage(input.getMessage("__parms__").copy(request));
+		}
 		if ( myOperation.getExtraMessage() != null ) {
 		    request.addMessage(myOperation.getExtraMessage().copy(request));
         }
