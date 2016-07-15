@@ -177,8 +177,7 @@ public class MailMap implements MailMapInterface, Mappable,
 			javax.mail.Message msg = new MimeMessage(session);
 
 			if (sender == null || "".equals(sender)) {
-				throw new UserException(-1,
-						"Error: Required sender address not set!");
+				throw new UserException(-1, "Error: Required sender address not set!");
 			}
 			msg.setFrom(new InternetAddress(sender));
 
@@ -282,13 +281,12 @@ public class MailMap implements MailMapInterface, Mappable,
 			Transport.send(msg);
 
 		} catch (Exception e) {
+		    logger.error("Exception on sending mail!", e);
 			if (ignoreFailures) {
-				AuditLog.log("MailMap", e.getMessage(), e,Level.WARNING,
-						myAccess.accessID);
+				AuditLog.log("MailMap", e.getMessage(), e,Level.WARNING, myAccess.accessID);
 				failure = e.getMessage();
 			} else {
-				AuditLog.log("MailMap", e.getMessage(),e, Level.SEVERE,
-						myAccess.accessID);
+				AuditLog.log("MailMap", e.getMessage(),e, Level.SEVERE, myAccess.accessID);
 				throw new UserException(-1, e.getMessage(), e);
 			}
 		} finally {
