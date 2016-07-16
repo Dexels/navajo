@@ -41,14 +41,15 @@ public interface AAAQuerier {
 
     public static final String FAILED_LOGIN_TOPIC = "aaa/failedlogin";
     
+    public static final String REGION_WILDCARD = "%";
+    
     public int authenticateUsernamePassword(Access access, String username, String password);
     
     
     /**
-     * Perform the full authentication and authorisation stack
+     * Perform the full authentication and authorization stack
      */
-    public void process(String tenant, String username, String password, String service,
-            Object certificate, Access access) throws SystemException, AuthorizationException;
+    public void process(Access access) throws SystemException, AuthorizationException;
 
     public List<String> getUserDistricts(String tenant, String username) throws AAAException;
     
@@ -63,14 +64,15 @@ public interface AAAQuerier {
     public void resetCachedUserCredential(String tenant, String username);
     
     public Integer getUserId(String tenant, String username);
-    public String getPersonId(String tenant, String username);
+    public String getPersonId(Access a);
     
     
-    public String getUserAuthMethod(String tenant, String username);
+    public String getUserAuthMethod(Access a);
     
     public boolean isFirstUseAccount(String tenant, String username);
     
     public int getDaysUntilExpiration(String tenant, String username);
 
-    
+
+
 }

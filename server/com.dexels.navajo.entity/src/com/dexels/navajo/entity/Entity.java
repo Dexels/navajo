@@ -329,7 +329,7 @@ public class Entity {
         for (Key key : myKeys) {
             Set<Property> properties = key.getKeyProperties();
             for (Property p : properties) {
-                if (Key.isOptionalKey(p.getKey())) {
+                if (!Key.isOptionalKey(p.getKey())) {
                     required.add(key);
                 }
             }

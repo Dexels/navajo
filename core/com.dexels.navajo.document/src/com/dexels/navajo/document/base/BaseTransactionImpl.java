@@ -18,6 +18,7 @@ private String rpc_pwd;
 private String rpc_schedule;
 protected String myRequestId;
 
+
   public BaseTransactionImpl(Navajo n) {
     super(n);
   }
@@ -68,6 +69,8 @@ public final void setRpc_pwd(String rpc_pwd) {
 public final String getRpc_usr() {
     return rpc_usr;
 }
+
+
 public final void setRpc_usr(String rpc_usr) {
     this.rpc_usr = rpc_usr;
 }
@@ -85,4 +88,6 @@ public String getRequestId() {
 public void setRequestId(String id) {
     myRequestId = id;
 }
+
+
   }

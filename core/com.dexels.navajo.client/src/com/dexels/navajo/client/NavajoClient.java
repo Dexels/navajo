@@ -8,17 +8,12 @@
  */
 package com.dexels.navajo.client;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -36,22 +31,20 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManagerFactory;
-
+import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
-import com.dexels.navajo.client.stream.ClientTransferListener;
-import com.dexels.navajo.client.stream.MeasuredInputStream;
 import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
 import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
 import com.dexels.navajo.document.Guid;
@@ -62,29 +55,27 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
-import com.jcraft.jzlib.DeflaterOutputStream;
-import com.jcraft.jzlib.InflaterInputStream;
+
+
 
 public class NavajoClient implements ClientInterface, Serializable {
 
 	private static final long serialVersionUID = -7848349362973607161L;
 	public static final int DIRECT_PROTOCOL = 0;
 	public static final int HTTP_PROTOCOL = 1;
-	public static final int CONNECT_TIMEOUT = 5000;
-
+	public static final int CONNECT_TIMEOUT = 10000;
+	public static final int SOCKET_TIMEOUT = 60000;
 	// private String host = null;
 	private int loadBalancingMode = LBMODE_MANUAL;
 	private String username = null;
 	private String password = null;
-	private boolean condensed = true;
 
 	private String[] serverUrls;
 	private double[] serverLoads;
 
 	private final Random randomize = new Random(System.currentTimeMillis());
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(NavajoClient.class);
+	private final static Logger logger = LoggerFactory.getLogger(NavajoClient.class);
 	// private NavajoPushSession pushSession = null;
 
 	private int protocol = HTTP_PROTOCOL;
@@ -113,16 +104,23 @@ public class NavajoClient implements ClientInterface, Serializable {
 	private String subLocale;
 	private String application;
 	private boolean allowCompression = true;
-	private boolean forceGzip = false;
+	private boolean forceGzip = true;
 	private SystemInfoProvider systemInfoProvider;
 	private SessionTokenProvider sessionTokenProvider;
 	private SSLSocketFactory socketFactory;
 	private KeyStore keyStore;
     private String organization;
+    
+    
+    private CloseableHttpClient httpclient;
+
 
 	private static final long serverDisableTimeout = 60000;
 
 	NavajoClient() {
+	    RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(SOCKET_TIMEOUT).build();
+	    
+        httpclient = HttpClients.custom().setDefaultRequestConfig(config).build();
 	}
 
 	/**
@@ -154,6 +152,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 	public final void setServerUrl(String url) {
 		serverUrls = new String[] { url };
 		setServers(serverUrls);
+		
 	}
 
 	/**
@@ -251,55 +250,6 @@ public class NavajoClient implements ClientInterface, Serializable {
 				expirationInterval, allowCompression, false);
 	}
 
-	private final void copyResource(OutputStream out, InputStream in) {
-		BufferedInputStream bin = new BufferedInputStream(in);
-		BufferedOutputStream bout = new BufferedOutputStream(out);
-		byte[] buffer = new byte[1024];
-		int read = -1;
-		boolean ready = false;
-		while (!ready) {
-			try {
-				read = bin.read(buffer);
-				if (read > -1) {
-					bout.write(buffer, 0, read);
-				}
-			} catch (IOException e) {
-			}
-			if (read <= -1) {
-				ready = true;
-			}
-		}
-		try {
-			bin.close();
-			bout.flush();
-			bout.close();
-		} catch (IOException e) {
-
-		}
-	}
-
-	private final String readErrorStream(final HttpURLConnection myCon) {
-		try {
-			if (myCon != null) {
-				int respCode = myCon.getResponseCode();
-				InputStream es = myCon.getErrorStream();
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				copyResource(bos, es);
-				bos.close();
-				// String error = new String(bos.toByteArray());
-				logger.info("Responsecode: " + respCode);
-				// logger.info("Responsemessage: " +
-				// myCon.getResponseMessage());
-				// logger.info("Got error from server: " + error);
-				// close the errorstream
-				es.close();
-				return "HTTP Status error " + respCode;
-			}
-		} catch (IOException ioe) {
-			logger.error("Error: " + ioe);
-		}
-		return null;
-	}
 
 	/**
 	 * Do a transation with the Navajo Server (name) using a Navajo Message
@@ -311,169 +261,202 @@ public class NavajoClient implements ClientInterface, Serializable {
 	 *            Navajo
 	 * @param useCompression
 	 *            boolean
+	 * @throws URISyntaxException 
 	 */
 
 	private Navajo doTransaction(String name, Navajo d, boolean useCompression,
-			boolean forcePreparseProxy) throws IOException, NavajoException {
-		URL url;
-		// useCompression = false;
+			boolean forcePreparseProxy) throws IOException, NavajoException, URISyntaxException {
+//		URL url;
+//		// useCompression = false;
+//
+//		if (useHttps) {
+//			url = new URL("https://" + name);
+//		} else {
+//			url = new URL("http://" + name);
+//		}
+//		HttpURLConnection con = null;
+//		con = (HttpURLConnection) url.openConnection();
+//		if (useHttps) {
+//			HttpsURLConnection httpsCon = (HttpsURLConnection) con;
+//			if (socketFactory != null) {
+//				httpsCon.setSSLSocketFactory(socketFactory);
+//			}
+//			if (keyStore != null) {
+//				try {
+//					String tmfAlgorithm = TrustManagerFactory
+//							.getDefaultAlgorithm();
+//					TrustManagerFactory tmf = TrustManagerFactory
+//							.getInstance(tmfAlgorithm);
+//					tmf.init(keyStore);
+//					SSLContext context = SSLContext.getInstance("TLS");
+//					context.init(null, tmf.getTrustManagers(), null);
+//					httpsCon.setSSLSocketFactory(context.getSocketFactory());
+//				} catch (NoSuchAlgorithmException e) {
+//					logger.error("Error: ", e);
+//				} catch (KeyStoreException e) {
+//					logger.error("Error: ", e);
+//				} catch (KeyManagementException e) {
+//					logger.error("Error: ", e);
+//				}
+//			}
+//		}
+//		con.setRequestMethod("POST");
+//		con.setConnectTimeout(CONNECT_TIMEOUT);
+//
+//		// Omit fancy http stuff for now
+//		con.setDoOutput(true);
+//
+//		con.setDoInput(true);
+//		con.setUseCaches(false);
+//		con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
+//		appendHeaderToHttp(con, d.getHeader());
+//
+//		//con.setRequestProperty("Connection", "Keep-Alive");
+//
+//		con.setRequestProperty("Host", "localhost");
+//		if (forcePreparseProxy) {
+//			con.setRequestProperty("Navajo-Preparse", "true");
+//		}
+//	
+//
+//		if (useCompression) {
+//			if (forceGzip) {
+//				con.setRequestProperty("Content-Encoding", "gzip");
+//				con.setRequestProperty("Accept-Encoding", "gzip");
+//			} else {
+//				con.setRequestProperty("Content-Encoding", "jzlib");
+//				con.setRequestProperty("Accept-Encoding", "jzlib");
+//			}
+//			 con.setChunkedStreamingMode(2048);
+//			// con.connect();
+//
+//			BufferedWriter out = null;
+//			try {
+//				if (forceGzip) {
+//				    
+//					out = new BufferedWriter(new OutputStreamWriter(
+//							new GZIPOutputStream(con.getOutputStream()),
+//							"UTF-8"));
+//				} else {
+//					out = new BufferedWriter(new OutputStreamWriter(
+//							new DeflaterOutputStream(con.getOutputStream()),
+//							"UTF-8"));
+//				}
+//				d.write(out, condensed, d.getHeader().getRPCName());
+//			} finally {
+//				if (out != null) {
+//					try {
+//						// out.flush();
+//						out.close();
+//					} catch (IOException e) {
+//						logger.error("Error: ", e);
+//					}
+//				}
+//			}
+//		} else {
+//			// con.connect();
+//			con.setRequestProperty("noCompression", "true");
+//			 con.setChunkedStreamingMode(1024);
+//			BufferedWriter os = null;
+//			try {
+//				// logger.info("Using no compression!");
+//
+//				os = new BufferedWriter(new OutputStreamWriter(
+//						con.getOutputStream(), "UTF-8"));
+//				// os.write("apenootjes");
+//
+//				d.write(os, condensed, d.getHeader().getRPCName());
+//			} finally {
+//				if (os != null) {
+//					try {
+//						os.flush();
+//						os.close();
+//					} catch (IOException e) {
+//						logger.error("Error: ", e);
+//					}
+//				}
+//			}
+//		}
+//
+//		// String contentEncoding = con.getContentEncoding();
+//		// logger.info("Content encoding: "+contentEncoding);
+//
+//		// Check for errors.
+//		InputStream in = null;
+//		Navajo n = null;
+//		try {
+//		    System.err.println("Got back a " + con.getResponseCode());
+//			in = new MeasuredInputStream(ClientTransferListener.getInstance(),
+//					name, con.getInputStream());
+//			InputStream inraw = null;
+//			if (con.getResponseCode() >= 400) {
+//				throw new IOException(readErrorStream(con));
+//			} else {
+//				if (useCompression) {
+//					if (forceGzip) {
+//						inraw = new GZIPInputStream(in);
+//					} else {
+//						inraw = new InflaterInputStream(in);
+//					}
+//
+//				} else {
+//					inraw = in;
+//				}
+//			}
+//			if (inraw != null) {
+//				n = NavajoFactory.getInstance().createNavajo(inraw);
+//			}
+//		}catch (Throwable t) {
+//		    logger.error("Error on reading reply! ", t);
+//		    throw t;
+//	    } finally {
+//			if (in != null) {
+//				in.close();
+//				in = null;
+//			}
+////			 con.disconnect();
+//		}
+//		return n;
+//	    
+	    URI uri ;
+	    if (useHttps) {
+	        uri = new URI("https://" + name);
+          } else {
+              uri = new URI("http://" + name);
+          }
+	    Navajo n = null;
+	    try {
+    	    HttpPost httppost = new HttpPost(uri);
+    	    NavajoRequestEntity reqEntity = new NavajoRequestEntity(d, useCompression, forceGzip);
+    	    appendHeaderToHttp(httppost, d.getHeader());
 
-		if (useHttps) {
-			url = new URL("https://" + name);
-		} else {
-			url = new URL("http://" + name);
-		}
-		HttpURLConnection con = null;
-		con = (HttpURLConnection) url.openConnection();
-		if (useHttps) {
-			HttpsURLConnection httpsCon = (HttpsURLConnection) con;
-			if (socketFactory != null) {
-				httpsCon.setSSLSocketFactory(socketFactory);
-			}
-			if (keyStore != null) {
-				try {
-					String tmfAlgorithm = TrustManagerFactory
-							.getDefaultAlgorithm();
-					TrustManagerFactory tmf = TrustManagerFactory
-							.getInstance(tmfAlgorithm);
-					tmf.init(keyStore);
-					SSLContext context = SSLContext.getInstance("TLS");
-					context.init(null, tmf.getTrustManagers(), null);
-					httpsCon.setSSLSocketFactory(context.getSocketFactory());
-				} catch (NoSuchAlgorithmException e) {
-					logger.error("Error: ", e);
-				} catch (KeyStoreException e) {
-					logger.error("Error: ", e);
-				} catch (KeyManagementException e) {
-					logger.error("Error: ", e);
-				}
-			}
-		}
-		con.setRequestMethod("POST");
-		con.setConnectTimeout(CONNECT_TIMEOUT);
+          if (forcePreparseProxy) {
+              httppost.setHeader("Navajo-Preparse", "true");
+          }
+    	    
+    	    
+            httppost.setEntity(reqEntity);
+            CloseableHttpResponse response = httpclient.execute(httppost);
+           
+            try {
+                if (response.getStatusLine().getStatusCode() >= 400) {
+                  throw new IOException(response.getStatusLine().getReasonPhrase());
+                }
+                HttpEntity responseEntity = response.getEntity();
+                n = NavajoFactory.getInstance().createNavajo(responseEntity.getContent());
+            } finally {
+                response.close();
+            }
 
-		// Omit fancy http stuff for now
-		con.setDoOutput(true);
-
-		con.setDoInput(true);
-		con.setUseCaches(false);
-		con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
-		appendHeaderToHttp(con, d.getHeader());
-
-		con.setRequestProperty("Connection", "Keep-Alive");
-
-		con.setRequestProperty("Host", "localhost");
-		if (forcePreparseProxy) {
-			con.setRequestProperty("Navajo-Preparse", "true");
-		}
-		try {
-			java.lang.reflect.Method chunked = con.getClass().getMethod(
-					"setChunkedStreamingMode", new Class[] { int.class });
-			// skip it for GAE
-			if (!forceGzip) {
-				chunked.invoke(con, new Object[] { new Integer(1024) });
-				con.setRequestProperty("Transfer-Encoding", "chunked");
-			}
-		} catch (SecurityException e) {
-		} catch (Throwable e) {
-			logger.error("Error: ", e);
-			logger.warn("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
-		}
-		if (useCompression) {
-			if (forceGzip) {
-				con.setRequestProperty("Content-Encoding", "gzip");
-				con.setRequestProperty("Accept-Encoding", "gzip");
-			} else {
-				con.setRequestProperty("Content-Encoding", "jzlib");
-				con.setRequestProperty("Accept-Encoding", "jzlib");
-			}
-			// con.connect();
-
-			BufferedWriter out = null;
-			try {
-				if (forceGzip) {
-					out = new BufferedWriter(new OutputStreamWriter(
-							new GZIPOutputStream(con.getOutputStream()),
-							"UTF-8"));
-				} else {
-					out = new BufferedWriter(new OutputStreamWriter(
-							new DeflaterOutputStream(con.getOutputStream()),
-							"UTF-8"));
-				}
-				d.write(out, condensed, d.getHeader().getRPCName());
-			} finally {
-				if (out != null) {
-					try {
-						// out.flush();
-						out.close();
-					} catch (IOException e) {
-						logger.error("Error: ", e);
-					}
-				}
-			}
-		} else {
-			// con.connect();
-			con.setRequestProperty("noCompression", "true");
-			BufferedWriter os = null;
-			try {
-				// logger.info("Using no compression!");
-
-				os = new BufferedWriter(new OutputStreamWriter(
-						con.getOutputStream(), "UTF-8"));
-				// os.write("apenootjes");
-
-				d.write(os, condensed, d.getHeader().getRPCName());
-			} finally {
-				if (os != null) {
-					try {
-						os.flush();
-						os.close();
-					} catch (IOException e) {
-						logger.error("Error: ", e);
-					}
-				}
-			}
-		}
-
-		// String contentEncoding = con.getContentEncoding();
-		// logger.info("Content encoding: "+contentEncoding);
-
-		// Check for errors.
-		InputStream in = null;
-		Navajo n = null;
-		try {
-			in = new MeasuredInputStream(ClientTransferListener.getInstance(),
-					name, con.getInputStream());
-			InputStream inraw = null;
-			if (con.getResponseCode() >= 400) {
-				throw new IOException(readErrorStream(con));
-			} else {
-				if (useCompression) {
-					if (forceGzip) {
-						inraw = new GZIPInputStream(in);
-					} else {
-						inraw = new InflaterInputStream(in);
-					}
-
-				} else {
-					inraw = in;
-				}
-			}
-			if (inraw != null) {
-				n = NavajoFactory.getInstance().createNavajo(inraw);
-			}
-		} finally {
-			if (in != null) {
-				in.close();
-				in = null;
-			}
-			// con.disconnect();
-		}
-
+	    } finally {
+	        // Don't close to allow connection reuse
+	        //httpclient.close();
+	    }
 		return n;
 	}
 
-	@Override
+
+    @Override
 	public boolean useHttps() {
 		return useHttps;
 	}
@@ -483,7 +466,8 @@ public class NavajoClient implements ClientInterface, Serializable {
 		this.useHttps = useHttps;
 	}
 
-	private void appendHeaderToHttp(HttpURLConnection con, Header header) {
+	@SuppressWarnings("unused")
+    private void appendHeaderToHttp(HttpURLConnection con, Header header) {
 		con.setRequestProperty("rpcName", header.getRPCName());
 		con.setRequestProperty("rpcUser", header.getRPCUser());
 		Map<String, String> attrs = header.getHeaderAttributes();
@@ -494,6 +478,18 @@ public class NavajoClient implements ClientInterface, Serializable {
 		}
 	}
 
+    private void appendHeaderToHttp(HttpPost httppost, Header header) {
+        httppost.setHeader("rpcName", header.getRPCName());
+        httppost.setHeader("rpcUser", header.getRPCUser());
+        Map<String, String> attrs = header.getHeaderAttributes();
+        for (Entry<String, String> element : attrs.entrySet()) {
+            if (element.getValue() != null) {
+                httppost.setHeader(element.getKey(), element.getValue());
+            }
+        }
+        
+    }
+    
 	/**
 	 * Perform a synchronous webservice call
 	 * 
@@ -639,8 +635,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 					// set the sublocale
 					// ==============================================
 					if (subLocale != null) {
-						out.getHeader().setHeaderAttribute("sublocale",
-								subLocale);
+						out.getHeader().setHeaderAttribute("sublocale", subLocale);
 					}
 					
 					if (application != null) {

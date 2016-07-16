@@ -870,6 +870,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             access.setTenant(instance);
             access.rpcPwd = rpcPassword;
             access.setInDoc(inMessage);
+           
+            access.setApplication( header.getHeaderAttribute("application"));
+            access.setOrganization( header.getHeaderAttribute("organization"));
             if (clientInfo != null) {
                 access.ipAddress = clientInfo.getIP();
                 access.hostName = clientInfo.getHost();
@@ -887,10 +890,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     if (instance == null) {
                         throw new SystemException(-1, "No tenant set -cannot authenticate!");
                     }
+                    authenticator.process(access);
 
-                    authenticator.process(instance, rpcUser, rpcPassword, rpcName, userCertificate, access);
-                    
-                    
                 } catch (AuthorizationException ex) {
                     outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
                     AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser

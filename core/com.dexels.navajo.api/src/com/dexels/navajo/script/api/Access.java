@@ -76,6 +76,8 @@ public final class Access implements java.io.Serializable, Mappable {
     @SuppressWarnings("unused")
     private static final String VERSION = "$Id$";
 
+    public static final String MISSING_APPLICATION = "noapp";
+
     public java.util.Date created = new java.util.Date();
     private static int AccessCount = 0;
     public int threadCount = 0;
@@ -90,6 +92,8 @@ public final class Access implements java.io.Serializable, Mappable {
     public String userAgent;
     public String ipAddress;
     public String hostName;
+    public String application;
+    public String organization;
     public boolean betaUser = false;
     public transient CompiledScriptInterface myScript = null;
     public int queueSize;
@@ -158,9 +162,8 @@ public final class Access implements java.io.Serializable, Mappable {
     // commit the data and finalise the network connection.
     private transient TmlRunnable originalRunnable;
   
-    public Access(int userID, int serviceID, String rpcUser, String rpcName, String userAgent, String ipAddress,
- String hostName,
-            Object certificate, boolean betaUser, String accessID) {
+    public Access(int userID, int serviceID, String rpcUser, String rpcName, String userAgent, String ipAddress, String hostName, Object certificate,
+            boolean betaUser, String accessID) {
 
         this();
 
@@ -429,6 +432,8 @@ public final class Access implements java.io.Serializable, Mappable {
         a.requestNavajoSize = this.requestNavajoSize;
         a.responseNavajoSize = this.responseNavajoSize;
         a.tenant = this.tenant;
+        a.application = this.application;
+        a.organization = this.organization;
         return a;
     }
 
@@ -655,6 +660,32 @@ public final class Access implements java.io.Serializable, Mappable {
     public void setCpuload(double cpuload) {
         this.cpuload = cpuload;
     }
+    
+
+    public String getApplication() {
+        return application;
+    }
+
+
+    public void setApplication(String application) {
+        this.application = application;
+        if (this.application == null) {
+            this.application = MISSING_APPLICATION;
+        }
+    }
+    
+    
+
+
+    public String getOrganization() {
+        return organization;
+    }
+
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+
 
     public Binary getRequestNavajo() throws UserException {
         Binary b = new Binary();
@@ -700,6 +731,7 @@ public final class Access implements java.io.Serializable, Mappable {
      */
     private final void writeToConsole(String s) {
         consoleOutput.write(s);
+        consoleOutput.write("\n");
     }
 
     /**
@@ -711,7 +743,7 @@ public final class Access implements java.io.Serializable, Mappable {
             a.writeToConsole(s);
         }
         if (s != null) {
-            logger.info(s.trim());
+            logger.debug(s.trim());
         }
     }
 

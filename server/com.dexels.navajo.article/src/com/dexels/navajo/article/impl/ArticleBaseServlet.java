@@ -17,14 +17,15 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleContext;
-import com.dexels.navajo.article.ValidationStore;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.server.ConditionErrorException;
+import com.dexels.resourcebundle.ResourceBundleStore;
 
 public abstract class ArticleBaseServlet extends HttpServlet implements Servlet {
-	private final static long serialVersionUID = -6895324256139435015L;
+	private static final String VALIDATION_DESCRIPTION_LANG = "nl";
+    private final static long serialVersionUID = -6895324256139435015L;
 	private final static Logger logger = LoggerFactory.getLogger(ArticleBaseServlet.class);
-	private ValidationStore validationStore;
+	private ResourceBundleStore resourceBundle;
 	
 	private ArticleContext context;
 	
@@ -44,12 +45,12 @@ public abstract class ArticleBaseServlet extends HttpServlet implements Servlet 
 		this.context = null;
 	}
 	
-	public void setValidationStore(ValidationStore validationStore) {
-		this.validationStore = validationStore;
+	public void setResourceBundle(ResourceBundleStore rb) {
+		this.resourceBundle = rb;
 	}
 	
-	public void clearValidationStore() {
-		this.validationStore = null;
+	public void clearResourceBundle() {
+		this.resourceBundle = null;
 	}
 
 	@Override
@@ -101,7 +102,7 @@ public abstract class ArticleBaseServlet extends HttpServlet implements Servlet 
 				conditionError.put("id", id);
 				
 				//Try to find the localized description.
-				String description = validationStore.getDescriptionById(id);
+				String description = resourceBundle.getValidationDescription(id, null, VALIDATION_DESCRIPTION_LANG);
 				if (description != null) {
 					conditionError.put("description", description);	
 				} else {

@@ -2,6 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.server.article.list.servlet">
    <implementation class="com.dexels.navajo.article.impl.ArticleListServlet"/>
    <reference bind="setArticleContext" cardinality="1..1" interface="com.dexels.navajo.article.ArticleContext" name="ArticleContext" policy="dynamic" unbind="clearArticleContext"/>
+   <reference bind="setResourceBundle" cardinality="1..1" interface="com.dexels.resourcebundle.ResourceBundleStore" name="ResourceBundle" policy="dynamic" unbind="clearResourceBundle"/>
    <property name="alias" type="String" value="/article/list"/>
    <property name="servlet-name" type="String" value="article.list"/>
    <service>
