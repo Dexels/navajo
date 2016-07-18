@@ -14,9 +14,7 @@ import com.dexels.navajo.article.command.impl.SetValueCommand;
 import com.dexels.navajo.article.command.impl.TableCommand;
 import com.dexels.navajo.article.impl.BaseContextImpl;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
-import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public abstract class TestContextImpl extends BaseContextImpl {
@@ -155,45 +153,7 @@ public abstract class TestContextImpl extends BaseContextImpl {
 		final TableCommand table = new TableCommand("table");
 		addCommand(table);
 		ServiceCommand service = new TestServiceCommand();
-		service.addLocalClient(new LocalClient() {
-			
-			@Override
-			public boolean isSpecialWebservice(String name) {
-				return false;
-			}
-			
-			@Override
-			public Navajo handleInternal(String instance, Navajo in, Object cert, ClientInfo clientInfo)
-					throws FatalException {
-				return null;
-			}
-			
-			@Override
-			public Navajo handleCallback(String instance, Navajo n, String callback) {
-				return null;
-			}
-			
-			@Override
-			public String getApplicationId() {
-				return null;
-			}
-			
-			@Override
-			public Navajo generateAbortMessage(String reason) throws FatalException {
-				return null;
-			}
-			
-			@Override
-			public Navajo call(Navajo n) throws FatalException {
-				return TestContextImpl.this.call(n);
-			}
-		
-			@Override
-			public Navajo call(String instance,Navajo n) throws FatalException {
-				return TestContextImpl.this.call(instance, n);
-			}
-
-		}, null);
+		//TODO: add dispatcher?
 		addCommand(service);
 	}
 	

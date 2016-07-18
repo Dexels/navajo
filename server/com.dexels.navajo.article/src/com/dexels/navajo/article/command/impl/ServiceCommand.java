@@ -1,6 +1,5 @@
 package com.dexels.navajo.article.command.impl;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
@@ -14,9 +13,6 @@ import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.command.ArticleCommand;
-import com.dexels.navajo.client.ClientException;
-import com.dexels.navajo.client.ClientInterface;
-import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -24,18 +20,25 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.FatalException;
-import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionErrorException;
+import com.dexels.navajo.server.DispatcherInterface;
 
 public class ServiceCommand implements ArticleCommand {
     private final static Logger statLogger = LoggerFactory.getLogger("stats");
     private final static Logger logger = LoggerFactory.getLogger(ServiceCommand.class);
     
 	private String name;
-	private LocalClient localClient;
-	private final Map<String, LocalClient> instanceClients = new HashMap<String, LocalClient>();
+    private DispatcherInterface dispatcher;
 	
+    public void setDispatcher(DispatcherInterface di) {
+        this.dispatcher = di;
+    }
+    
+    public void clearDispatcher(DispatcherInterface di) {
+        this.dispatcher = null;
+    }
+    
 	public ServiceCommand() {
 		// default constructor
 	}
@@ -89,8 +92,7 @@ public class ServiceCommand implements ArticleCommand {
 			n = NavajoFactory.getInstance().createNavajo();
 		}
 		final String username = runtime.getUsername();
-		Header h = NavajoFactory.getInstance().createHeader(n, name, username,
-				runtime.getPassword(), -1);
+		Header h = NavajoFactory.getInstance().createHeader(n, name, username, "", -1);
 		n.addHeader(h);
 		final Navajo result = performCall(runtime, name, n, runtime.getInstance());
 		statLogger.info("Finished {} ({}) in {}ms", h.getHeaderAttribute("accessId"), name,
@@ -100,43 +102,16 @@ public class ServiceCommand implements ArticleCommand {
 	}
 
 	protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n, String instance) throws APIException {
-        Navajo result = null;
-        if (runtime.getURL() != null && !runtime.getURL().equals("")) {
-            ClientInterface client = NavajoClientFactory.getClient();
-            client.setServerUrl(runtime.getURL());
-            client.setUsername(n.getHeader().getRPCUser());
-            client.setPassword(n.getHeader().getRPCPassword());
-            client.setRetryAttempts(0);
-             
-            try {
-				result = client.doSimpleSend(n, name);
-			} catch (ClientException e) {
-				throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
-			}
-
-        } else {
-            if (localClient == null) {
-                throw new APIException("Navajo server not (yet?) initialized", null, APIErrorCode.InternalError);
-            }
-            
-            try {
-				result = localClient.call(instance, n);
-			} catch (FatalException e) {
-				throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
-			}
-        }
-
+     
         try {
+            Navajo result =  dispatcher.handle(n, instance, true);
             handleError(result);
-        } catch (UserException e) {
-            throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
-        } catch (AuthorizationException e) {
+            return result;
+        } catch (UserException | AuthorizationException | FatalException e) {
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
         } catch (ConditionErrorException e) {
             throw new APIException(e.getMessage(), e, APIErrorCode.ConditionError);
-        }
-        return result;
-        
+        }       
     }
 
 	private void handleError(Navajo result) throws UserException,
@@ -172,33 +147,7 @@ public class ServiceCommand implements ArticleCommand {
 		  }
 	}
 
-	public void removeLocalClient(LocalClient localClient, Map<String, String> setting) {
-		if (setting != null) {
-			String instance = setting.get("instance");
-			if (instance == null) {
-				this.localClient = null;
-			} else {
-				instanceClients.remove(instance);
-			}
-		} else {
-			this.localClient = localClient;
-		}
 
-	}
-
-	public void addLocalClient(LocalClient localClient,
-			Map<String, String> setting) {
-		if (setting != null) {
-			String instance = setting.get("instance");
-			if (instance == null) {
-				this.localClient = localClient;
-			} else {
-				instanceClients.put(instance, localClient);
-			}
-		} else {
-			this.localClient = localClient;
-		}
-	}
 
 	@Override
 	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,

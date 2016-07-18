@@ -5,5 +5,5 @@
       <provide interface="com.dexels.navajo.article.command.ArticleCommand"/>
    </service>
    <property name="command.name" type="String" value="service"/>
-   <reference bind="addLocalClient" cardinality="0..n" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="dynamic" unbind="removeLocalClient"/>
+   <reference bind="setDispatcher" cardinality="1..1" interface="com.dexels.navajo.server.DispatcherInterface" name="Dispatcher" policy="dynamic" unbind="clearDispatcher"/>
 </scr:component>

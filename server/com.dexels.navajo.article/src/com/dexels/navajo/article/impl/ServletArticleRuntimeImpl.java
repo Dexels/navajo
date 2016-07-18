@@ -28,7 +28,6 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	
 	private final HttpServletRequest request;
 	private final HttpServletResponse response;
-	private String password;
 	private String username;
 	private final StringWriter writer = new StringWriter();
 	private final Map<String, String[]> parameterMap;
@@ -41,7 +40,6 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 		this.request = req;
 		this.parameterMap = parameterMap;
 		this.response = resp;
-		this.password = password;
 		this.username = username;
 	}
 
@@ -86,18 +84,10 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	}
 
 	
-	@Override
-	public String getPassword() {
-		return password;
-	}
-	
+
 	@Override
 	public String getUsername() {
 		return username;
-	}
-	@Override
-	public void setPassword(String password) {
-		this.password = password;
 	}
 	
 	@Override
