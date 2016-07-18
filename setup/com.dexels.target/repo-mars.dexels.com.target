@@ -26,8 +26,8 @@
 <repository location="http://download.eclipse.org/egit/updates/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.121.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.121"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.122.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.122"/>
 </location>
 </locations>
 <includeBundles>
