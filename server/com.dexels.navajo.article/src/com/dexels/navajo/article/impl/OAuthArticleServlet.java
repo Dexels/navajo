@@ -75,10 +75,9 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
         a.setClientToken("Client id: " + client.getId());
 
         try {
-            ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, client.getPassword(), username, article, pathInfo, req.getParameterMap(),
-                    instance, oauthToken);
+            ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, "", username, article, pathInfo, req.getParameterMap(), instance, oauthToken);
             runtime.setUsername(client.getUsername());
-            runtime.setPassword(client.getPassword());
+            runtime.setPassword("");
             runtime.setURL(url);
             runtime.execute(getContext());
             resp.setContentType("application/json; charset=utf-8");
