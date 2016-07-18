@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1854">
+<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1904">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.server.core.feature.group" version="1.3.100.v20150529-1857"/>
@@ -13,18 +13,21 @@
 <repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.9.v20160517"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jgit.feature.group" version="4.4.0.201606070830-r"/>
-<unit id="org.eclipse.jgit.http.apache.feature.group" version="4.4.0.201606070830-r"/>
-<unit id="org.eclipse.jgit.lfs.feature.group" version="4.4.0.201606070830-r"/>
-<repository location="http://download.eclipse.org/egit/updates/"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.18.201510140934"/>
 <repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-8.x/8.1.18.v20150929"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.114.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.114"/>
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.3.10.201607130511"/>
+<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.10.v20160621/"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jgit.feature.group" version="4.4.1.201607150455-r"/>
+<unit id="org.eclipse.jgit.http.apache.feature.group" version="4.4.1.201607150455-r"/>
+<repository location="http://download.eclipse.org/egit/updates/"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.120.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.120"/>
 </location>
 </locations>
 <includeBundles>
@@ -187,23 +190,21 @@
 <plugin id="org.eclipse.jetty.continuation" version="9.3.9.v20160517"/>
 <plugin id="org.eclipse.jetty.http" version="9.3.9.v20160517"/>
 <plugin id="org.eclipse.jetty.io" version="9.3.9.v20160517"/>
-<plugin id="org.eclipse.jetty.proxy"/>
+<plugin id="org.eclipse.jetty.proxy" version="9.3.10.v20160621"/>
 <plugin id="org.eclipse.jetty.security" version="9.3.9.v20160517"/>
 <plugin id="org.eclipse.jetty.server" version="9.3.9.v20160517"/>
 <plugin id="org.eclipse.jetty.servlet" version="9.3.9.v20160517"/>
 <plugin id="org.eclipse.jetty.servlets" version="9.3.9.v20160517"/>
 <plugin id="org.eclipse.jetty.util" version="9.3.9.v20160517"/>
-<plugin id="org.eclipse.jetty.websocket.api"/>
-<plugin id="org.eclipse.jetty.websocket.client"/>
-<plugin id="org.eclipse.jetty.websocket.common"/>
-<plugin id="org.eclipse.jetty.websocket.javax.websocket"/>
-<plugin id="org.eclipse.jetty.websocket.server"/>
+<plugin id="org.eclipse.jetty.websocket.api" version="9.3.10.v20160621"/>
+<plugin id="org.eclipse.jetty.websocket.client" version="9.3.10.v20160621"/>
+<plugin id="org.eclipse.jetty.websocket.common" version="9.3.10.v20160621"/>
+<plugin id="org.eclipse.jetty.websocket.javax.websocket" version="9.3.10.v20160621"/>
+<plugin id="org.eclipse.jetty.websocket.server" version="9.3.10.v20160621"/>
 <plugin id="org.eclipse.jetty.xml" version="9.3.9.v20160517"/>
 <plugin id="org.eclipse.jgit"/>
 <plugin id="org.eclipse.jgit.archive"/>
 <plugin id="org.eclipse.jgit.http.apache"/>
-<plugin id="org.eclipse.jgit.lfs"/>
-<plugin id="org.eclipse.jgit.lfs.server"/>
 <plugin id="org.eclipse.osgi"/>
 <plugin id="org.eclipse.osgi.services"/>
 <plugin id="org.eclipse.osgi.util"/>

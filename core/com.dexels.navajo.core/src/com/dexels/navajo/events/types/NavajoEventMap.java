@@ -43,7 +43,7 @@ public class NavajoEventMap {
 		navajoEvents.put(AUDITLOG_EVENT, AuditLogEvent.class);
 		navajoEvents.put(QUEUABLE_FINISHED_EVENT, QueuableFinishedEvent.class);
 		navajoEvents.put(QUEUABLE_FAILURE_EVENT, QueuableFailureEvent.class);
-		navajoEvents.put(FULL_ACCESS_LOG_STATISTICS, AccessLogEvent.class);
+//		navajoEvents.put(FULL_ACCESS_LOG_STATISTICS, AccessLogEvent.class);
 		navajoEvents.put(CACHEEXPIRY_EVENT, CacheExpiryEvent.class);
 		navajoEvents.put(SERVERREADY_EVENT, ServerReadyEvent.class);
 		

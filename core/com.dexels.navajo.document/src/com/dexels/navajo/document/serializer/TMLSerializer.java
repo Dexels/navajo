@@ -2,7 +2,6 @@ package com.dexels.navajo.document.serializer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -35,17 +34,6 @@ public class TMLSerializer  {
 	final protected static char[] hexArray = { '0', '1', '2', '3', '4', '5',
 		'6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
-	private static String bytesToHex(byte[] bytes) {
-		char[] hexChars = new char[bytes.length * 3];
-		int v;
-		for (int j = 0; j < bytes.length; j++) {
-			v = bytes[j] & 0xFF;
-			hexChars[j * 3] = hexArray[v >>> 4];
-			hexChars[j * 3 + 1] = hexArray[v & 0x0F];
-			hexChars[j * 3 + 2] = ' ';
-		}
-		return new String(hexChars);
-	}
 	/**
 	 * types:
 	 * message: 1
@@ -68,7 +56,6 @@ public class TMLSerializer  {
 	 */
 	private volatile Navajo myNavajo;
 	private volatile String webservice;
-	private volatile String backboneSource;
 	
 	int arrayEltIndex = 0;
 
@@ -360,7 +347,7 @@ public class TMLSerializer  {
 	public static void main(String [] args) throws Exception {
 
 		
-		Binary b = new Binary(new File("/Users/arjenschoneveld/module_sum3.jpg"));
+//		Binary b = new Binary(new File("/Users/arjenschoneveld/module_sum3.jpg"));
 		
 		//System.err.println("Binary: " + b.getData().length);
 		
