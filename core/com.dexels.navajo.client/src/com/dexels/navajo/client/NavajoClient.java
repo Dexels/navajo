@@ -660,44 +660,42 @@ public class NavajoClient implements ClientInterface, Serializable {
 						if (n == null) {
 							throw new Exception("Empty Navajo received");
 						}
-					} catch (java.net.UnknownHostException uhe) {
+					} catch (java.net.UnknownHostException | org.apache.http.conn.HttpHostConnectException uhe) {
 	                    logger.warn("Connection problem: UnknownHostException exception!");
 						n = NavajoFactory.getInstance().createNavajo();
-						generateConnectionError(n, 7777777, "Unknown host: "
-								+ uhe.getMessage());
+						generateConnectionError(n, 7777777, "Unknown host: " + uhe.getMessage());
 					} catch (java.net.NoRouteToHostException uhe) {
 	                    logger.warn("Connection problem: NoRouteToHostException exception!");
 						n = NavajoFactory.getInstance().createNavajo();
-						generateConnectionError(n, 55555, "No route to host: "
-								+ uhe.getMessage());
+						generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
 					} catch (org.apache.http.NoHttpResponseException uhe) {
 	                    logger.warn("Connection problem: NoHttpResponseException exception!");
                         n = NavajoFactory.getInstance().createNavajo();
-                        generateConnectionError(n, 55555, "Error on getting response data: "
-                                + uhe.getMessage());
+                        generateConnectionError(n, 55555, "Error on getting response data: " + uhe.getMessage());
 				    } catch (org.apache.http.conn.ConnectTimeoutException uhe) {
 				        logger.warn("Connection problem: ConnectTimeoutException exception!");
                         n = NavajoFactory.getInstance().createNavajo();
-                        generateConnectionError(n, 55555, "Connect time-out: "
-                                + uhe.getMessage());
+                        generateConnectionError(n, 55555, "Connect time-out: "+ uhe.getMessage());
 					} catch (java.net.SocketException uhe) {
-						if (retryAttempts <= 0) {
-							throw uhe;
-						}
-						Navajo n2 = NavajoFactory.getInstance().createNavajo();
-						n = retryTransaction(server, out, useCompression,
-								allowPreparseProxy, retryAttempts,
-								retryInterval, n2); // lees uit resource
-						if (n != null) {
-
-							// logger.info("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
-							if (callingService != null) {
-								n.getHeader().setHeaderAttribute(
-										"sourceScript", callingService);
-							}
+	                    logger.warn("Connection problem: SocketException {} exception! ", uhe.getMessage());
+						if (retryAttempts > 0) {
+						    Navajo n2 = NavajoFactory.getInstance().createNavajo();
+	                        n = retryTransaction(server, out, useCompression,
+	                                allowPreparseProxy, retryAttempts,
+	                                retryInterval, n2); // lees uit resource
+	                        if (n != null) {
+	                            // logger.info("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+	                            if (callingService != null) {
+	                                n.getHeader().setHeaderAttribute("sourceScript", callingService);
+	                            }
+	                        } else {
+	                            n = n2;
+	                        }
 						} else {
-							n = n2;
+						    n = NavajoFactory.getInstance().createNavajo();
+	                        generateConnectionError(n, 55555, "SocketException: " + uhe.getMessage());
 						}
+						
 					} catch (IOException uhe) {
 						if (retryAttempts <= 0) {
 							throw uhe;
