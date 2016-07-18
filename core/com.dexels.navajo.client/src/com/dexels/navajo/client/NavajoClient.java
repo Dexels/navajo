@@ -649,6 +649,8 @@ public class NavajoClient implements ClientInterface, Serializable {
 
 					long timeStamp = System.currentTimeMillis();
 
+					// org.apache.http.NoHttpResponseException
+					// org.apache.http.conn.ConnectTimeoutException
 					try {
 						n = doTransaction(server, out, useCompression,
 								allowPreparseProxy);
@@ -659,16 +661,24 @@ public class NavajoClient implements ClientInterface, Serializable {
 							throw new Exception("Empty Navajo received");
 						}
 					} catch (java.net.UnknownHostException uhe) {
+	                    logger.warn("Connection problem: UnknownHostException exception!");
 						n = NavajoFactory.getInstance().createNavajo();
 						generateConnectionError(n, 7777777, "Unknown host: "
 								+ uhe.getMessage());
 					} catch (java.net.NoRouteToHostException uhe) {
+	                    logger.warn("Connection problem: NoRouteToHostException exception!");
 						n = NavajoFactory.getInstance().createNavajo();
 						generateConnectionError(n, 55555, "No route to host: "
 								+ uhe.getMessage());
-					} catch (java.net.ConnectException uhe) {
+					} catch (org.apache.http.NoHttpResponseException uhe) {
+	                    logger.warn("Connection problem: NoHttpResponseException exception!");
                         n = NavajoFactory.getInstance().createNavajo();
-                        generateConnectionError(n, 55555, "No route to host: "
+                        generateConnectionError(n, 55555, "Error on getting response data: "
+                                + uhe.getMessage());
+				    } catch (org.apache.http.conn.ConnectTimeoutException uhe) {
+				        logger.warn("Connection problem: ConnectTimeoutException exception!");
+                        n = NavajoFactory.getInstance().createNavajo();
+                        generateConnectionError(n, 55555, "Connect time-out: "
                                 + uhe.getMessage());
 					} catch (java.net.SocketException uhe) {
 						if (retryAttempts <= 0) {
