@@ -48,7 +48,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
 import com.dexels.navajo.authentication.api.AAAQuerier;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -82,6 +81,7 @@ import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
+import com.dexels.navajo.server.enterprise.scheduler.TriggerException;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.global.GlobalManager;
@@ -1007,9 +1007,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                             }
                             trf.addTask(ti);
                             outMessage = generateScheduledMessage(inMessage.getHeader(), ti.getId(), false);
-                        } catch (UserException e) {
-                            logger.info("WARNING: Invalid trigger specified for task {}: {}", ti.getId(), inMessage
-                                    .getHeader().getSchedule());
+                        } catch (TriggerException e) {
+                            logger.info("WARNING: Invalid trigger specified for task {}: {}", ti.getId(), inMessage.getHeader().getSchedule());
                             trf.removeTask(ti);
                             outMessage = generateErrorMessage(access, "Could not schedule task:" + e.getMessage(), -1,
                                     -1, e);
@@ -1205,6 +1204,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
 
     private void generateNavajoRequestEvent(boolean hadException) {
+        if (eventAdmin == null) {
+            // non-OSGi?
+            return;
+        }
         Map<String, Object> properties = new HashMap<String, Object>();
         if (hadException) {
             properties.put("type", "navajoexception");
