@@ -24,9 +24,6 @@
    <feature url="features/com.dexels.navajo.tipi.flickr.feature_1.0.20.qualifier.jar" id="com.dexels.navajo.tipi.flickr.feature" version="1.0.20.qualifier">
       <category name="TipiOptional"/>
    </feature>
-   <feature url="features/com.dexels.navajo.tipi.jabber.feature_1.0.13.qualifier.jar" id="com.dexels.navajo.tipi.jabber.feature" version="1.0.13.qualifier">
-      <category name="TipiOptional"/>
-   </feature>
    <feature url="features/com.dexels.navajo.tipi.mail.feature_1.0.25.qualifier.jar" id="com.dexels.navajo.tipi.mail.feature" version="1.0.25.qualifier">
       <category name="TipiOptional"/>
    </feature>
