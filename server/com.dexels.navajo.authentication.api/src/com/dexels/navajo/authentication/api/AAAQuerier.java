@@ -51,7 +51,7 @@ public interface AAAQuerier {
      */
     public void process(Access access) throws SystemException, AuthorizationException;
 
-    public List<String> getUserDistricts(String tenant, String username) throws AAAException;
+    public List<String> getUserDistricts(Access access, String tenant, String username) throws AAAException;
     
     public String getRegion(String tenant, String username);
 

@@ -23,7 +23,7 @@ public class DefaultAAAQuerier implements AAAQuerier {
 	}
 
 	@Override
-	public List<String> getUserDistricts(String tenant, String username) throws AAAException {
+	public List<String> getUserDistricts(Access a, String tenant, String username) throws AAAException {
 		// TODO Auto-generated method stub
 		return null;
 	}
