@@ -32,7 +32,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
  */
 
 public class CheckEmail extends FunctionInterface {
-	private static final String EMAIL_PATTERN = "^[\\w!#$%&�*+/=?`{|}~^-]+(?:\\.[\\w!#$%&�*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+	private static final String EMAIL_PATTERN = "^[\\w!#$%&�*+/=?`{|}~^-]+(?:\\.[\\w!#$%&�*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,9}$";
 	
 	
   @Override
@@ -68,7 +68,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 	Boolean b = null;
 	CheckEmail ce = new CheckEmail();
     ce.reset();
-    ce.insertOperand("person@example.com");
+    ce.insertOperand("stefan@awesomo.amsterdam");
     b = (Boolean) ce.evaluate();
     System.err.println("result = " + b);
   }

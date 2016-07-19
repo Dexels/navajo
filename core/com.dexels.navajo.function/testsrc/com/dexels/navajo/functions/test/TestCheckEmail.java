@@ -22,6 +22,7 @@ public class TestCheckEmail {
         Object isValid = checker.evaluate();
         assertEquals(true, isValid);
     }
+    
     @Test
     public void testValidEmail2() throws Exception {
         checker.insertOperand("test123@example.com");
@@ -50,6 +51,12 @@ public class TestCheckEmail {
         assertEquals(true, isValid);
     }
     
+    @Test
+    public void testValidEmail6() throws Exception {
+        checker.insertOperand("stefan@awesomo.amsterdam");
+        Object isValid = checker.evaluate();
+        assertEquals(true, isValid);
+    }
     
     @Test
     public void testInvalidEmail1() throws Exception {
@@ -64,7 +71,4 @@ public class TestCheckEmail {
         Object isValid = checker.evaluate();
         assertEquals(false, isValid);
     }
-    
-
-
 }
