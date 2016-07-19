@@ -29,9 +29,9 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>repo-mars.dexels.com.target</file>
+									<file>repo.dexels.com.target</file>
 									<type>target</type>
-									<classifier>repo-mars.dexels.com</classifier>
+									<classifier>repo.dexels.com</classifier>
 								</artifact>
 							</artifacts>
 						</configuration>
