@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1904">
+<?pde version="3.8"?><target name="Navajo Mars Repo" sequenceNumber="1924">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.server.core.feature.group" version="1.3.100.v20150529-1857"/>
@@ -26,8 +26,8 @@
 <repository location="http://download.eclipse.org/egit/updates/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.122.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.122"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.125.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.125"/>
 </location>
 </locations>
 <includeBundles>
@@ -214,7 +214,6 @@
 <plugin id="org.jboss.netty"/>
 <plugin id="org.jvnet.mimepull"/>
 <plugin id="org.jvnet.staxex.stax-ex"/>
-<plugin id="org.kjkoster.zapcat"/>
 <plugin id="org.mongodb.mongo-java-driver"/>
 <plugin id="org.objectweb.asm"/>
 <plugin id="org.objectweb.asm.commons"/>
