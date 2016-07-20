@@ -140,8 +140,11 @@ public class TokenAuthentication implements EntityAuthenticator {
 
     @Override
     public String getUsername() {
-        if (client == null) {
+        if (client == null || token == null) {
             return null;
+        }
+        if (token.getUsername() != null) {
+            return token.getUsername();
         }
         return client.getUsername();
     }
