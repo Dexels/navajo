@@ -40,19 +40,16 @@ public class TipiNewCallService extends TipiAction {
     private static final long serialVersionUID = -6767560777929847564L;
 
     private final static Logger logger = LoggerFactory.getLogger(TipiNewCallService.class);
-    
-    
-    @Override
-    public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException,
-            com.dexels.navajo.tipi.TipiBreakException {
 
-       
+    @Override
+    public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+
         getContext().getClient().setLocaleCode(getContext().getApplicationInstance().getLocaleCode());
         getContext().getClient().setSubLocaleCode(getContext().getApplicationInstance().getSubLocaleCode());
 
         String service = (String) getEvaluatedParameterValue("service", event);
         Navajo input = (Navajo) getEvaluatedParameterValue("input", event);
-        
+
         String destination = (String) getEvaluatedParameterValue("destination", event);
         String connector = (String) getEvaluatedParameterValue("connector", event);
         Object cachedObj = getEvaluatedParameterValue("cached", event);
@@ -65,7 +62,6 @@ public class TipiNewCallService extends TipiAction {
             breakOnError = false;
         }
 
-     
         final TipiConnector defaultConnector = getContext().getDefaultConnector();
 
         if (connector == null && defaultConnector == null) {
@@ -87,7 +83,7 @@ public class TipiNewCallService extends TipiAction {
 
         }
 
-       // input = enrichInput(input, true);
+        // input = enrichInput(input, true);
 
         setThreadState("waiting");
         if (connector == null) {
@@ -111,12 +107,10 @@ public class TipiNewCallService extends TipiAction {
             }
         }
         setThreadState("busy");
-       
 
     }
 
-    public void oldExecute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException,
-            com.dexels.navajo.tipi.TipiBreakException {
+    public void oldExecute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
         TipiValue parameter = getParameter("input");
         String unevaluated = null;
         if (getContext().getClient() == null) {
@@ -146,8 +140,7 @@ public class TipiNewCallService extends TipiAction {
         }
 
         if (unevaluated != null && input == null) {
-            throw new TipiException("Input navajo not found when calling service: " + service + " supplied input: "
-                    + unevaluated);
+            throw new TipiException("Input navajo not found when calling service: " + service + " supplied input: " + unevaluated);
         }
         if (input == null) {
             input = NavajoFactory.getInstance().createNavajo();
@@ -161,7 +154,7 @@ public class TipiNewCallService extends TipiAction {
             myContext.getClient().doSimpleSend(nn, service);
             processResult(breakOnError, destination, service, nn, false);
         } catch (ClientException e) {
-        	logger.error("Error: ", e);
+            logger.error("Error: ", e);
         }
 
     }
@@ -176,52 +169,44 @@ public class TipiNewCallService extends TipiAction {
 
             // the userName of the sportlink user firing this action
             Object value = this.getContext().getGlobalValue("UserName");
-            Property p = NavajoFactory.getInstance().createProperty(input, "UserName", "string", String.valueOf(value),
-                    0, "", Property.DIR_OUT);
+            Property p = NavajoFactory.getInstance().createProperty(input, "UserName", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
             m.addProperty(p);
 
             // the Java object id of the input navajo. Note that oldstyle does a
             // clone just before this call
             value = Integer.toHexString(System.identityHashCode(input));
-            p = NavajoFactory.getInstance().createProperty(input, "NavajoInputJavaId", "string", String.valueOf(value),
-                    0, "", Property.DIR_OUT);
+            p = NavajoFactory.getInstance().createProperty(input, "NavajoInputJavaId", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
             m.addProperty(p);
 
             // which mode this action worked in
             value = newStyle;
-            p = NavajoFactory.getInstance().createProperty(input, "NewStyle", "string", String.valueOf(value), 0, "",
-                    Property.DIR_OUT);
+            p = NavajoFactory.getInstance().createProperty(input, "NewStyle", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
             m.addProperty(p);
 
             // the Java object id of this action
             value = Integer.toHexString(System.identityHashCode(this));
-            p = NavajoFactory.getInstance().createProperty(input, "ActionJavaId", "string", String.valueOf(value), 0,
-                    "", Property.DIR_OUT);
+            p = NavajoFactory.getInstance().createProperty(input, "ActionJavaId", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
             m.addProperty(p);
 
             // the Java object id of the event this action belongs to
             value = Integer.toHexString(System.identityHashCode(this.getEvent()));
-            p = NavajoFactory.getInstance().createProperty(input, "EventJavaId", "string", String.valueOf(value), 0,
-                    "", Property.DIR_OUT);
+            p = NavajoFactory.getInstance().createProperty(input, "EventJavaId", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
             m.addProperty(p);
 
             // the id of the event this action belongs to
             value = this.getEvent().toString();
-            p = NavajoFactory.getInstance().createProperty(input, "EventString", "string", String.valueOf(value), 0,
-                    "", Property.DIR_OUT);
+            p = NavajoFactory.getInstance().createProperty(input, "EventString", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
             m.addProperty(p);
 
             // the Java object id of the component the event of this action
             // belongs to
             value = Integer.toHexString(System.identityHashCode(this.getComponent()));
-            p = NavajoFactory.getInstance().createProperty(input, "ComponentJavaId", "string", String.valueOf(value),
-                    0, "", Property.DIR_OUT);
+            p = NavajoFactory.getInstance().createProperty(input, "ComponentJavaId", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
             m.addProperty(p);
 
             // the path of the component the event of this action belongs to
             value = this.getComponent().getPath();
-            p = NavajoFactory.getInstance().createProperty(input, "ComponentPath", "string", String.valueOf(value), 0,
-                    "", Property.DIR_OUT);
+            p = NavajoFactory.getInstance().createProperty(input, "ComponentPath", "string", String.valueOf(value), 0, "", Property.DIR_OUT);
             m.addProperty(p);
 
             if (input == null) {
@@ -236,8 +221,7 @@ public class TipiNewCallService extends TipiAction {
         return input;
     }
 
-    private void processResult(boolean breakOnError, String destination, String service, Navajo result, boolean cache)
-            throws TipiException {
+    private void processResult(boolean breakOnError, String destination, String service, Navajo result, boolean cache) throws TipiException {
 
         myContext.addNavajo(service, result);
         if (cache) {
@@ -250,16 +234,16 @@ public class TipiNewCallService extends TipiAction {
         if (destination != null) {
             service = destination;
         }
-        myContext.loadNavajo(result, service);
-        if (myContext.hasErrors(result)) {
-            dumpStack("Server error detected: " + service);
-            performTipiEvent("onError", Collections.singletonMap("error", (Object) result), true);
+        try {
+            myContext.loadNavajo(result, service, breakOnError);
+
+        } catch (TipiBreakException e) {
+            if (e.getType() == TipiBreakException.WEBSERVICE_BREAK) {
+                dumpStack("Server error detected: " + service);
+                performTipiEvent("onError", Collections.singletonMap("error", (Object) result), true);
+            }
+            throw e;
         }
 
-        if (breakOnError) {
-            if (myContext.hasErrors(result)) {
-                throw new TipiBreakException(TipiBreakException.USER_BREAK);
-            }
-        }
     }
 }

@@ -1716,15 +1716,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         }
         navajoMap.put(method, navajo);
     }
+    
+    public void loadNavajo(Navajo reply, String method, boolean breakOnException) throws TipiBreakException {
 
-    public void loadNavajo(Navajo reply, String method) throws TipiBreakException {
         Header h = reply.getHeader();
         if (h == null) {
             h = NavajoFactory.getInstance().createHeader(reply, method, "unknown", "unknown", -1);
             reply.addHeader(h);
         }
         
-        loadNavajo(reply, method, "*", null, false);
+        loadNavajo(reply, method, "*", null, breakOnException);
         Navajo compNavajo = null;
         if (hasDebugger && !"NavajoListNavajo".equals(method)) {
             try {
@@ -1743,6 +1744,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
         assert (reply.getHeader() != null);
         
+    
+    }
+
+    public void loadNavajo(Navajo reply, String method) throws TipiBreakException {
+        loadNavajo(reply, method, false);
     }
     
 
