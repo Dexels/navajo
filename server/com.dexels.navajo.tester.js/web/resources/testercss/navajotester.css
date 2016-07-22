@@ -519,7 +519,6 @@ h3 {
 	content: url('/testerimg/export.png');
 	cursor: pointer;
 	margin-left: 4px;
-	position: absolute;
 	overflow: visible
 }
 
