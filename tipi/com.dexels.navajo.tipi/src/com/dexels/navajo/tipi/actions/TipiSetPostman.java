@@ -46,10 +46,10 @@ public class TipiSetPostman extends TipiAction {
 		myContext.getClient().setServerUrl("" + serv.value);
 		myContext.getClient().setUsername("" + user.value);
 		myContext.getClient().setPassword("" + pass.value);
-		if (app.value != null) {
+		if (app != null && app.value != null) {
 		    myContext.getClient().setApplication("" + app.value);
 		}
-		if (org.value != null) {
+		if (org != null && org.value != null) {
 		    myContext.getClient().setOrganization("" + org.value);
         }
 		
