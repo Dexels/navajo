@@ -31,12 +31,13 @@ import com.dexels.oauth.api.TokenStoreException;
 public class OAuthArticleServlet extends ArticleBaseServlet {
 
     private static final long serialVersionUID = 1199676363102046960L;
+    private static final String AUTHORIZATION_BEARER_PREFIX = "Bearer";
     private TokenStore tokenStore;
     private ClientStore clientStore;
 
     @Override
     protected void doServiceImpl(HttpServletRequest req, HttpServletResponse resp) throws APIException {
-        String token = req.getParameter("token");
+    	String token = getToken(req);
 
         OAuthToken oauthToken = null;
         Client client = null;
@@ -106,6 +107,15 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
             a.setFinished();
             NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(a));
         }
+    }
+    
+    private String getToken(HttpServletRequest request) {
+    	String authorizationHeaderValue = request.getHeader("Authorization");
+   
+    	if (authorizationHeaderValue != null && authorizationHeaderValue.startsWith(AUTHORIZATION_BEARER_PREFIX) &&  authorizationHeaderValue.length() > AUTHORIZATION_BEARER_PREFIX.length() + 1) {
+    		return authorizationHeaderValue.substring(AUTHORIZATION_BEARER_PREFIX.length() + 1);
+    	}
+    	return request.getParameter("token");
     }
 
     private Navajo createNavajoFromRequest(HttpServletRequest req) {
