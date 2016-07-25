@@ -116,7 +116,7 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
             result = result.replace("{{DESCRIPTION}}", op.getDescription());
 
         } else {
-            result = result.replace("{{DESCRIPTION}}", operationDescription(op.getMethod()) + entityNameUrl);
+            result = result.replace("{{DESCRIPTION}}", operationDescription(op.getMethod()) + e.getMessage().getName());
         }
 
         String oprequesttemplate = getTemplate("operationrequest.template");
