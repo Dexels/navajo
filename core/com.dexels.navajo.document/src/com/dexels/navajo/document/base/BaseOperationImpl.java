@@ -21,6 +21,7 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 	protected String tenant;
 	protected String validationService;
 	protected String entityName;
+	protected String description;
 	protected Message extraMessage;
 	protected boolean debugInput;
 	protected boolean debugOutput;
@@ -170,5 +171,16 @@ public class BaseOperationImpl extends BaseNode implements Operation {
     @Override
     public String getTenant() {
         return tenant;
+    }
+
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+        
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 }

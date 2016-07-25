@@ -14,9 +14,10 @@ public class OperationComponent implements Operation {
     private String method;
     private String service;
     private String entityName;
+    private String description;
+    private String validationService;
     protected String tenant;
     private Message extraMessage;
-    private String validationService;
     private boolean debugInput;
     private boolean debugOutput;
     private Set<String> scopes;
@@ -162,5 +163,16 @@ public class OperationComponent implements Operation {
     @Override
     public String getTenant() {
         return tenant;
+    }
+    
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+        
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 }

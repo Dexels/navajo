@@ -637,6 +637,7 @@ public class TslCompiler {
                 String method = e.getAttribute("method");
                 String debug = e.getAttribute("debug");
                 String scopes = e.getAttribute("scopes");
+                String description = e.getAttribute("description");
                 
                 result.append(printIdent(ident) + "if (true) {\n");
 
@@ -691,7 +692,10 @@ public class TslCompiler {
                 if (scopes != null && !scopes.equals("")) {
                     result.append(printIdent(ident + 2) + "o.setScopes(\"" + scopes + "\");\n");
                 }
-
+                if (description != null && !description.equals("")) {
+                    result.append(printIdent(ident + 2) + "o.setDescription(\"" + description + "\");\n");
+                }
+                
                 result.append(printIdent(ident + 2) + "access.getOutputDoc().addOperation(o);\n");
                 result.append(printIdent(ident) + "}\n");
             }

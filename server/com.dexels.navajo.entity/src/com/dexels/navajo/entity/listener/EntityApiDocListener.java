@@ -91,7 +91,7 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         for (String entityName : entityNames) {
             Map<String, Operation> ops = myManager.getOperations(entityName);
             for (String op : ops.keySet()) {
-                operations += writeEntityOperation(operationtemplate, entityName, op);
+                operations += writeEntityOperation(operationtemplate, entityName, ops.get(op));
             }
         }
 
@@ -102,7 +102,7 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
 
     }
 
-    private String writeEntityOperation(String template, String entityName, String op) throws ServletException {
+    private String writeEntityOperation(String template, String entityName, Operation op) throws ServletException {
         String result = "";
 
         Entity e = myManager.getEntity(entityName);
@@ -110,9 +110,14 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         n.addMessage(e.getMessage());
         String entityNameUrl = entityName.replace(".", "/");
 
-        result = template.replace("{{OP}}", op);
+        result = template.replace("{{OP}}", op.getMethod());
         result = result.replace("{{URL}}", entityNameUrl);
-        result = result.replace("{{DESCRIPTION}}", operationDescription(op) + entityNameUrl);
+        if (op.getDescription() != null) {
+            result = result.replace("{{DESCRIPTION}}", op.getDescription());
+
+        } else {
+            result = result.replace("{{DESCRIPTION}}", operationDescription(op.getMethod()) + entityNameUrl);
+        }
 
         String oprequesttemplate = getTemplate("operationrequest.template");
         String opresponsetemplate = getTemplate("operationresponse.template");
@@ -125,16 +130,18 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
             requestBody = requestbodyTemplate.replace("{{REQUEST_BODY}}", writeEntityJson(n, "request"));
         }
         String request = oprequesttemplate.replace("{{ENTITY_REQUEST_BODY}}", requestBody);
+        request = request.replace("{{OP}}", op.getMethod());
         result = result.replace("{{OPREQUEST}}", request);
         
-        String commentBody =  printPropertiesDescription(e.getMessage(), op, "request");
+        String commentBody =  printPropertiesDescription(e.getMessage(), op.getMethod(), "request");
         result = result.replace("{{OPREQUESTCOMMENT}}", commentBody);
         
         String responseBody = opresponsetemplate.replace("{{RESPONSE_JSON}}", writeEntityJson(n, "response"));
+        responseBody = responseBody.replace("{{OP}}", op.getMethod());
         responseBody = responseBody.replace("{{RESPONSE_XML}}", StringEscapeUtils.escapeHtml(writeEntityXml(n)));
         result = result.replace("{{OPRESPONSE}}", responseBody);
         
-        commentBody =  printPropertiesDescription(e.getMessage(), op, "response");
+        commentBody =  printPropertiesDescription(e.getMessage(), op.getMethod(), "response");
         result = result.replace("{{OPRESPONSECOMMENT}}", commentBody);
         return result;
     }

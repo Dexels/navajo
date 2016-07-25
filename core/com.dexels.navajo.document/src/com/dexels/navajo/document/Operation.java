@@ -55,6 +55,9 @@ public interface Operation {
 	public void setScopes(Set<String> scopes);
 	public Set<String> getScopes();
 	
+	public void setDescription(String description);
+	public String getDescription();
+	
 	public void setDebug(String debugString);
 
     public boolean debugInput();

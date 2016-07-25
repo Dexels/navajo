@@ -91,28 +91,46 @@ li.operation .url {
 
 
 
-li.operation .descrption {
-	display: inline-block;
+li.operation .description {
+	padding-top: 19px;
 	padding-left: 10px;
-	float: right;
+/* 	float: left; */
 	font-family: "Droid Sans",sans-serif;
 	font-size: 0.8em;
 	text-decoration: none;
 }
 
-li.operation .descrption.GET {
+li.operation .description.GET {
 	color: #0F6AB4;
 }
 
-li.operation .descrption.POST {
+li.operation .description.POST {
 	color: #10A54A;
 }
 
-li.operation .descrption.PUT {
+li.operation .description.PUT {
 	color: #C5862B;
 }
 
-li.operation .descrption.DELETE {
+li.operation .description.DELETE {
+	color: #a41e22;
+}
+
+h2 {
+	font-weight: normal;
+	font-size: 1.2em;
+}
+
+h2.GET{
+	color: #0F6AB4;
+}
+h2.POST{
+	color: #10A54A;
+}
+h2.PUT{
+	color: #C5862B;
+}
+h2.DELETE{
 	color: #a41e22;
 }
 

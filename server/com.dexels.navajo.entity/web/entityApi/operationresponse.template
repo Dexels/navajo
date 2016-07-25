@@ -1,4 +1,4 @@
-<h2> Response </h2>
+<h2 class="{{OP}}"> Response </h2>
 <small> <a href="#" class="outputFormatJSON">JSON</a></small> <small> |  <a href="#" class="outputFormatXML">XML</a> </small>
 
 <div class="JSON">
