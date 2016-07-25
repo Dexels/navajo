@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1941">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1951">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.server.core.feature.group" version="1.3.100.v20150529-1857"/>
@@ -17,13 +17,13 @@
 <repository location="http://eclipse.mirror.triple-it.nl/jetty/updates/jetty-bundles-8.x/8.1.18.v20150929"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.3.10.201607070555"/>
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.3.10.201607130511"/>
 <repository location="http://eclipse.mirror.triple-it.nl/jetty/updates/jetty-bundles-9.x/9.3.10.v20160621/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.egit.feature.group" version="4.4.0.201606070830-r"/>
-<unit id="org.eclipse.jgit.feature.group" version="4.4.0.201606070830-r"/>
-<unit id="org.eclipse.jgit.http.apache.feature.group" version="4.4.0.201606070830-r"/>
+<unit id="org.eclipse.jgit.feature.group" version="4.4.1.201607150455-r"/>
+<unit id="org.eclipse.egit.feature.group" version="4.4.1.201607150455-r"/>
+<unit id="org.eclipse.jgit.http.apache.feature.group" version="4.4.1.201607150455-r"/>
 <repository location="http://eclipse.mirror.triple-it.nl/egit/updates/"/>
 </location>
 </locations>
