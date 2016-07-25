@@ -118,7 +118,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 	private static final long serverDisableTimeout = 60000;
 
 	NavajoClient() {
-	    RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).build();
+	    RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(0).build();
 	    
         httpclient = HttpClients.custom().setDefaultRequestConfig(config).build();
 	}
