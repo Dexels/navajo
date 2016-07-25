@@ -64,7 +64,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 	public static final int DIRECT_PROTOCOL = 0;
 	public static final int HTTP_PROTOCOL = 1;
 	public static final int CONNECT_TIMEOUT = 10000;
-	public static final int SOCKET_TIMEOUT = 60000;
+
 	// private String host = null;
 	private int loadBalancingMode = LBMODE_MANUAL;
 	private String username = null;
@@ -118,7 +118,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 	private static final long serverDisableTimeout = 60000;
 
 	NavajoClient() {
-	    RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(SOCKET_TIMEOUT).build();
+	    RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).build();
 	    
         httpclient = HttpClients.custom().setDefaultRequestConfig(config).build();
 	}
