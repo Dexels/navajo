@@ -608,7 +608,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			store.removeFolderListener(myFolderListener);
 			store.removeStoreListener(myStoreListener);
 			// Close connection
-			if(fff!=null) {
+			if(fff!=null && fff.isOpen()) {
 				fff.close(true);
 			}
 			store.close();
