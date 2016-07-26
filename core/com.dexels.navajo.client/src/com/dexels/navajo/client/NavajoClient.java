@@ -59,47 +59,22 @@ import com.dexels.navajo.document.types.Binary;
 
 
 public class NavajoClient implements ClientInterface, Serializable {
+    private final static Logger logger = LoggerFactory.getLogger(NavajoClient.class);
 
 	private static final long serialVersionUID = -7848349362973607161L;
-	public static final int DIRECT_PROTOCOL = 0;
-	public static final int HTTP_PROTOCOL = 1;
 	public static final int CONNECT_TIMEOUT = 10000;
 
-	// private String host = null;
-	private int loadBalancingMode = LBMODE_MANUAL;
 	private String username = null;
 	private String password = null;
-
 	private String[] serverUrls;
 	private double[] serverLoads;
+    private boolean useHttps = false;
+    private int currentServerIndex;
 
 	private final Random randomize = new Random(System.currentTimeMillis());
-
-	private final static Logger logger = LoggerFactory.getLogger(NavajoClient.class);
-	// private NavajoPushSession pushSession = null;
-
-	private int protocol = HTTP_PROTOCOL;
-	private boolean useHttps = false;
-	// private SSLSocketFactory sslFactory = null;
-	// private String keystore, passphrase;
-	private long retryInterval = 1000; // default retry interval is 500
-										// milliseconds
-	private int retryAttempts = 4; // default four retry attempts
-	private int switchServerAfterRetries = 10;
-	/**
-	 * If same as retry attempts, never switch between servers, while in retry
-	 * attempt. FOR NOW THIS IS A SAFE VALUE CAUSE INTEGRITY WORKER DOES NOT YET
-	 * WORKER OVER MULTIPLE SERVER INSTANCES!!!
-	 */
-
-	private int currentServerIndex;
-	// private static int instances = 0;
-
 	// Warning: Not thread safe!
 	private final Set<Map<String, String>> piggyBackData = new HashSet<Map<String, String>>();
-	private final Map<String, Long> disabledServers = new HashMap<String, Long>();
 
-	private int globalRetryCounter = 0;
 	private String localeCode = null;
 	private String subLocale;
 	private String application;
@@ -111,24 +86,14 @@ public class NavajoClient implements ClientInterface, Serializable {
 	private KeyStore keyStore;
     private String organization;
     
-    
     private CloseableHttpClient httpclient;
 
-
-	private static final long serverDisableTimeout = 60000;
-
-	NavajoClient() {
+	public NavajoClient() {
 	    RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(0).build();
-	    
         httpclient = HttpClients.custom().setDefaultRequestConfig(config).build();
 	}
 
-	/**
-	 * Set the username
-	 * 
-	 * @param s
-	 *            String
-	 */
+	
 	@Override
 	public final void setUsername(String s) {
 		username = s;
@@ -136,8 +101,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 
 	public void setKeyStore(KeyStore keyStore) {
 		if (socketFactory != null) {
-			throw new RuntimeException(
-					"Not yet implemented: combination of custom keystore and client certificates is not yet implemented");
+			throw new RuntimeException("Not yet implemented: combination of custom keystore and client certificates is not yet implemented");
 		}
 		this.keyStore = keyStore;
 	}
@@ -155,28 +119,41 @@ public class NavajoClient implements ClientInterface, Serializable {
 		
 	}
 
-	/**
-	 * Set the password
-	 * 
-	 * @param pw
-	 *            String
-	 */
 	@Override
 	public final void setPassword(String pw) {
 		password = pw;
 	}
 
-	/**
-	 * Sets the number of retries the NavajoClient should perform before giving
-	 * up
-	 * 
-	 * @param attempts
-	 *            int
-	 */
+
 	@Override
 	public final void setRetryAttempts(int attempts) {
-		retryAttempts = attempts;
+		// unsupported
 	}
+	
+
+    @Override
+    public final Navajo doSimpleSend(String method) throws ClientException {
+        return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method, 0);
+    }
+    
+    @Override
+    public final Navajo doSimpleSend(Navajo out, String method) throws ClientException {
+        return doSimpleSend(out, method, 0);
+    }
+    @Override
+    public final Navajo doSimpleSend(Navajo out, String method, Integer retries) throws ClientException {
+        if (username == null) {
+                                   throw new ClientException(1, 1, "No username set!");
+                           }
+                           if (password == null) {
+                                   throw new ClientException(1, 1, "No password set!");
+                           }
+                           if (getCurrentHost() == null) {
+                                   throw new ClientException(1, 1, "No host set!");
+                           }
+                           return doSimpleSend(out, method, -1, retries, false);
+
+    }
 
 	/**
 	 * Perform a synchronous webservice call
@@ -200,55 +177,25 @@ public class NavajoClient implements ClientInterface, Serializable {
 			v.clearConditionErrors();
 		}
 
-		Navajo result = doSimpleSend(n, method, expirationInterval);
+		if (username == null) {
+            throw new ClientException(1, 1, "No username set!");
+        }
+        if (password == null) {
+            throw new ClientException(1, 1, "No password set!");
+        }
+        if (getCurrentHost() == null) {
+            throw new ClientException(1, 1, "No host set!");
+        }
+        Navajo result =  doSimpleSend(n,  method, expirationInterval, 0, false);
+        
 		if (v != null) {
 			checkValidation(result, v);
 		}
 		return result;
 	}
 
-	/**
-	 * Perform a synchronous webservice call
-	 * 
-	 * @param out
-	 *            Navajo
-	 * @param method
-	 *            String
-	 * @throws ClientException
-	 * @return Navajo
-	 */
-	@Override
-	public final Navajo doSimpleSend(Navajo out, String method)
-			throws ClientException {
-		return doSimpleSend(out, method, -1);
-	}
 
-	/**
-	 * Perform a synchronous webservice call
-	 * 
-	 * @param out
-	 *            Navajo
-	 * @param method
-	 *            String
-	 * @param expirationInterval
-	 *            long
-	 * @throws ClientException
-	 * @return Navajo
-	 */
-	private final Navajo doSimpleSend(Navajo out, String method,
-			long expirationInterval) throws ClientException {
-		if (username == null) {
-			throw new ClientException(1, 1, "No username set!");
-		}
-		if (password == null) {
-			throw new ClientException(1, 1, "No password set!");
-		}
-		if (getCurrentHost() == null) {
-			throw new ClientException(1, 1, "No host set!");
-		}
-		return doSimpleSend(out, getCurrentHost(), method, username, password,
-				expirationInterval, allowCompression, false);
-	}
+
 
 
 	/**
@@ -265,159 +212,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 	 */
 
 	private Navajo doTransaction(String name, Navajo d, boolean useCompression,
-			boolean forcePreparseProxy) throws IOException, NavajoException, URISyntaxException {
-//		URL url;
-//		// useCompression = false;
-//
-//		if (useHttps) {
-//			url = new URL("https://" + name);
-//		} else {
-//			url = new URL("http://" + name);
-//		}
-//		HttpURLConnection con = null;
-//		con = (HttpURLConnection) url.openConnection();
-//		if (useHttps) {
-//			HttpsURLConnection httpsCon = (HttpsURLConnection) con;
-//			if (socketFactory != null) {
-//				httpsCon.setSSLSocketFactory(socketFactory);
-//			}
-//			if (keyStore != null) {
-//				try {
-//					String tmfAlgorithm = TrustManagerFactory
-//							.getDefaultAlgorithm();
-//					TrustManagerFactory tmf = TrustManagerFactory
-//							.getInstance(tmfAlgorithm);
-//					tmf.init(keyStore);
-//					SSLContext context = SSLContext.getInstance("TLS");
-//					context.init(null, tmf.getTrustManagers(), null);
-//					httpsCon.setSSLSocketFactory(context.getSocketFactory());
-//				} catch (NoSuchAlgorithmException e) {
-//					logger.error("Error: ", e);
-//				} catch (KeyStoreException e) {
-//					logger.error("Error: ", e);
-//				} catch (KeyManagementException e) {
-//					logger.error("Error: ", e);
-//				}
-//			}
-//		}
-//		con.setRequestMethod("POST");
-//		con.setConnectTimeout(CONNECT_TIMEOUT);
-//
-//		// Omit fancy http stuff for now
-//		con.setDoOutput(true);
-//
-//		con.setDoInput(true);
-//		con.setUseCaches(false);
-//		con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
-//		appendHeaderToHttp(con, d.getHeader());
-//
-//		//con.setRequestProperty("Connection", "Keep-Alive");
-//
-//		con.setRequestProperty("Host", "localhost");
-//		if (forcePreparseProxy) {
-//			con.setRequestProperty("Navajo-Preparse", "true");
-//		}
-//	
-//
-//		if (useCompression) {
-//			if (forceGzip) {
-//				con.setRequestProperty("Content-Encoding", "gzip");
-//				con.setRequestProperty("Accept-Encoding", "gzip");
-//			} else {
-//				con.setRequestProperty("Content-Encoding", "jzlib");
-//				con.setRequestProperty("Accept-Encoding", "jzlib");
-//			}
-//			 con.setChunkedStreamingMode(2048);
-//			// con.connect();
-//
-//			BufferedWriter out = null;
-//			try {
-//				if (forceGzip) {
-//				    
-//					out = new BufferedWriter(new OutputStreamWriter(
-//							new GZIPOutputStream(con.getOutputStream()),
-//							"UTF-8"));
-//				} else {
-//					out = new BufferedWriter(new OutputStreamWriter(
-//							new DeflaterOutputStream(con.getOutputStream()),
-//							"UTF-8"));
-//				}
-//				d.write(out, condensed, d.getHeader().getRPCName());
-//			} finally {
-//				if (out != null) {
-//					try {
-//						// out.flush();
-//						out.close();
-//					} catch (IOException e) {
-//						logger.error("Error: ", e);
-//					}
-//				}
-//			}
-//		} else {
-//			// con.connect();
-//			con.setRequestProperty("noCompression", "true");
-//			 con.setChunkedStreamingMode(1024);
-//			BufferedWriter os = null;
-//			try {
-//				// logger.info("Using no compression!");
-//
-//				os = new BufferedWriter(new OutputStreamWriter(
-//						con.getOutputStream(), "UTF-8"));
-//				// os.write("apenootjes");
-//
-//				d.write(os, condensed, d.getHeader().getRPCName());
-//			} finally {
-//				if (os != null) {
-//					try {
-//						os.flush();
-//						os.close();
-//					} catch (IOException e) {
-//						logger.error("Error: ", e);
-//					}
-//				}
-//			}
-//		}
-//
-//		// String contentEncoding = con.getContentEncoding();
-//		// logger.info("Content encoding: "+contentEncoding);
-//
-//		// Check for errors.
-//		InputStream in = null;
-//		Navajo n = null;
-//		try {
-//		    System.err.println("Got back a " + con.getResponseCode());
-//			in = new MeasuredInputStream(ClientTransferListener.getInstance(),
-//					name, con.getInputStream());
-//			InputStream inraw = null;
-//			if (con.getResponseCode() >= 400) {
-//				throw new IOException(readErrorStream(con));
-//			} else {
-//				if (useCompression) {
-//					if (forceGzip) {
-//						inraw = new GZIPInputStream(in);
-//					} else {
-//						inraw = new InflaterInputStream(in);
-//					}
-//
-//				} else {
-//					inraw = in;
-//				}
-//			}
-//			if (inraw != null) {
-//				n = NavajoFactory.getInstance().createNavajo(inraw);
-//			}
-//		}catch (Throwable t) {
-//		    logger.error("Error on reading reply! ", t);
-//		    throw t;
-//	    } finally {
-//			if (in != null) {
-//				in.close();
-//				in = null;
-//			}
-////			 con.disconnect();
-//		}
-//		return n;
-//	    
+			boolean forcePreparseProxy) throws IOException, NavajoException, URISyntaxException {    
 	    URI uri ;
 	    if (useHttps) {
 	        uri = new URI("https://" + name);
@@ -489,33 +284,6 @@ public class NavajoClient implements ClientInterface, Serializable {
         }
         
     }
-    
-	/**
-	 * Perform a synchronous webservice call
-	 * 
-	 * @param out
-	 *            Navajo
-	 * @param server
-	 *            String
-	 * @param method
-	 *            String
-	 * @param user
-	 *            String
-	 * @param password
-	 *            String
-	 * @param expirationInterval
-	 *            long
-	 * @throws ClientException
-	 * @return Navajo
-	 */
-	@Override
-	public final Navajo doSimpleSend(Navajo out, String server, String method,
-			String user, String password, long expirationInterval)
-			throws ClientException {
-		return doSimpleSend(out, server, method, user, password,
-				expirationInterval, allowCompression, false);
-	}
-
 	// navajo://frank:aap@192.0.0.1/InitUpdateMember
 
 	// public final Navajo doUrlSend(Navajo out, String url) {
@@ -553,30 +321,8 @@ public class NavajoClient implements ClientInterface, Serializable {
 		}
 	}
 
-	/**
-	 * Perform a synchronous webservice call
-	 * 
-	 * @param out
-	 *            Navajo
-	 * @param server
-	 *            String
-	 * @param method
-	 *            String
-	 * @param user
-	 *            String
-	 * @param password
-	 *            String
-	 * @param expirationInterval
-	 *            long
-	 * @param useCompression
-	 *            boolean
-	 * @throws ClientException
-	 * @return Navajo
-	 */
-	@Override
-	public final Navajo doSimpleSend(Navajo out, String server, String method,
-			String user, String password, long expirationInterval,
-			boolean useCompression, boolean allowPreparseProxy)
+
+	private final Navajo doSimpleSend(Navajo out, String method, long expirationInterval, Integer retries, boolean allowPreparseProxy)
 			throws ClientException {
 		// NOTE: prefix persistence key with method, because same Navajo object
 		// could be used as a request
@@ -595,12 +341,12 @@ public class NavajoClient implements ClientInterface, Serializable {
 			String callingService = null;
 			if (header == null) {
 				header = NavajoFactory.getInstance().createHeader(out, method,
-						user, password, expirationInterval);
+						username, password, expirationInterval);
 				out.addHeader(header);
 			} else {
 				callingService = header.getRPCName();
 				header.setRPCName(method);
-				header.setRPCUser(user);
+				header.setRPCUser(username);
 				header.setRPCPassword(password);
 				header.setExpirationInterval(expirationInterval);
 			}
@@ -619,157 +365,118 @@ public class NavajoClient implements ClientInterface, Serializable {
 
 			long clientTime = 0;
 			try {
-
-				if (protocol == HTTP_PROTOCOL) {
-					if (out.getHeader() != null) {
-						processPiggybackData(out.getHeader());
-					}
-
-					// ==================================================================
-					// set the locale
-					// ==============================================
-					if (localeCode != null) {
-						out.getHeader().setHeaderAttribute("locale", localeCode);
-					}
-					// ==================================================================
-					// set the sublocale
-					// ==============================================
-					if (subLocale != null) {
-						out.getHeader().setHeaderAttribute("sublocale", subLocale);
-					}
-					
-					if (application != null) {
-                        out.getHeader().setHeaderAttribute("application", application);
-                    }
-					if (organization != null) {
-                        out.getHeader().setHeaderAttribute("organization", organization);
-                    }
-
-					Navajo n = null;
-
-					long timeStamp = System.currentTimeMillis();
-
-					// org.apache.http.NoHttpResponseException
-					// org.apache.http.conn.ConnectTimeoutException
-					try {
-						n = doTransaction(server, out, useCompression,
-								allowPreparseProxy);
-						// logger.info("SENT TO SERVER: ");
-						// out.write(System.err);
-
-						if (n == null) {
-							throw new Exception("Empty Navajo received");
-						}
-					} catch (java.net.UnknownHostException | org.apache.http.conn.HttpHostConnectException uhe) {
-	                    logger.warn("Connection problem: UnknownHostException exception!");
-						n = NavajoFactory.getInstance().createNavajo();
-						generateConnectionError(n, 7777777, "Unknown host: " + uhe.getMessage());
-					} catch (java.net.NoRouteToHostException uhe) {
-	                    logger.warn("Connection problem: NoRouteToHostException exception!");
-						n = NavajoFactory.getInstance().createNavajo();
-						generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
-					} catch (org.apache.http.NoHttpResponseException uhe) {
-	                    logger.warn("Connection problem: NoHttpResponseException exception!");
-                        n = NavajoFactory.getInstance().createNavajo();
-                        generateConnectionError(n, 55555, "Error on getting response data: " + uhe.getMessage());
-				    } catch (org.apache.http.conn.ConnectTimeoutException uhe) {
-				        logger.warn("Connection problem: ConnectTimeoutException exception!");
-                        n = NavajoFactory.getInstance().createNavajo();
-                        generateConnectionError(n, 55555, "Connect time-out: "+ uhe.getMessage());
-					} catch (java.net.SocketException uhe) {
-	                    logger.warn("Connection problem: SocketException {} exception! ", uhe.getMessage());
-						if (retryAttempts > 0) {
-						    Navajo n2 = NavajoFactory.getInstance().createNavajo();
-	                        n = retryTransaction(server, out, useCompression,
-	                                allowPreparseProxy, retryAttempts,
-	                                retryInterval, n2); // lees uit resource
-	                        if (n != null) {
-	                            // logger.info("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
-	                            if (callingService != null) {
-	                                n.getHeader().setHeaderAttribute("sourceScript", callingService);
-	                            }
-	                        } else {
-	                            n = n2;
-	                        }
-						} else {
-						    n = NavajoFactory.getInstance().createNavajo();
-	                        generateConnectionError(n, 55555, "SocketException: " + uhe.getMessage());
-						}
-						
-					} catch (IOException uhe) {
-						if (retryAttempts <= 0) {
-							throw uhe;
-						}
-						logger.info("Generic IOException: " + uhe.getMessage()
-								+ ". Retrying without compression...");
-						Navajo n2 = NavajoFactory.getInstance().createNavajo();
-						n = retryTransaction(server, out, false,
-								allowPreparseProxy, retryAttempts,
-								retryInterval, n2); // lees uit resourc
-						if (n != null) {
-							// logger.info("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
-							if (callingService != null) {
-								n.getHeader().setHeaderAttribute(
-										"sourceScript", callingService);
-							}
-						} else {
-							n = n2;
-						}
-					} catch (Throwable r) {
-						logger.error("Error: ", r);
-					} finally {
-						if (n != null && n.getHeader() != null) {
-							n.getHeader().setHeaderAttribute("sourceScript",
-									callingService);
-							clientTime = (System.currentTimeMillis() - timeStamp);
-							n.getHeader().setHeaderAttribute("clientTime",
-									"" + clientTime);
-							String tot = n.getHeader().getHeaderAttribute(
-									"serverTime");
-							String loadStr = n.getHeader().getHeaderAttribute(
-									"cpuload");
-							double load = -1.0;
-							if (loadStr != null) {
-								try {
-									load = Double.parseDouble(loadStr);
-									for (int x = 0; x < serverUrls.length; x++) {
-										if (serverUrls[x].equals(server)) {
-											serverLoads[x] = load;
-											x = serverUrls.length + 1;
-										}
-									}
-								} catch (Throwable t) {
-								}
-							}
-							long totalTime = -1;
-							if (tot != null && !"".equals(tot)) {
-								totalTime = Long.parseLong(tot);
-								n.getHeader().setHeaderAttribute(
-										"transferTime",
-										"" + (clientTime - totalTime));
-							}
-							Map<String, String> headerAttributes = n
-									.getHeader().getHeaderAttributes();
-							Map<String, String> pbd = new HashMap<String, String>(
-									headerAttributes);
-							pbd.put("type", "performanceStats");
-							pbd.put("service", method);
-							synchronized (piggyBackData) {
-								piggyBackData.add(pbd);
-							}
-							// logger.info(method+": totaltime = " + (
-							// clientTime / 1000.0 )+ ", servertime = " + (
-							// totalTime / 1000.0
-							// )+" transfertime = "+((clientTime-totalTime)/1000)+" piggybackdata: "+piggyBackData.size());
-						} else {
-							logger.info("Null header in input message");
-						}
-					}
-					return n;
-				} else {
-					throw new ClientException(-1, -1, "Unknown protocol: "
-							+ protocol);
+		        if (out.getHeader() != null) {
+					processPiggybackData(out.getHeader());
 				}
+
+				// ==================================================================
+				// set the locale
+				// ==============================================
+				if (localeCode != null) {
+					out.getHeader().setHeaderAttribute("locale", localeCode);
+				}
+				// ==================================================================
+				// set the sublocale
+				// ==============================================
+				if (subLocale != null) {
+					out.getHeader().setHeaderAttribute("sublocale", subLocale);
+				}
+				
+				if (application != null) {
+                    out.getHeader().setHeaderAttribute("application", application);
+                }
+				if (organization != null) {
+                    out.getHeader().setHeaderAttribute("organization", organization);
+                }
+
+				Navajo n = null;
+
+				long timeStamp = System.currentTimeMillis();
+
+				// org.apache.http.NoHttpResponseException
+				// org.apache.http.conn.ConnectTimeoutException
+				try {
+					n = doTransaction(getCurrentHost(), out, allowCompression,
+							allowPreparseProxy);
+					// logger.info("SENT TO SERVER: ");
+					// out.write(System.err);
+
+					if (n == null) {
+						throw new Exception("Empty Navajo received");
+					}
+				} catch (java.net.UnknownHostException | org.apache.http.conn.HttpHostConnectException uhe) {
+                    logger.warn("Connection problem: UnknownHostException exception!");
+					n = NavajoFactory.getInstance().createNavajo();
+					generateConnectionError(n, 7777777, "Unknown host: " + uhe.getMessage());
+				} catch (java.net.NoRouteToHostException uhe) {
+                    logger.warn("Connection problem: NoRouteToHostException exception!");
+					n = NavajoFactory.getInstance().createNavajo();
+					generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
+				} catch (org.apache.http.NoHttpResponseException uhe) {
+                    logger.warn("Connection problem: NoHttpResponseException exception!");
+                    n = NavajoFactory.getInstance().createNavajo();
+                    generateConnectionError(n, 55555, "Error on getting response data: " + uhe.getMessage());
+			    } catch (org.apache.http.conn.ConnectTimeoutException uhe) {
+			        logger.warn("Connection problem: ConnectTimeoutException exception!");
+                    n = NavajoFactory.getInstance().createNavajo();
+                    generateConnectionError(n, 55555, "Connect time-out: "+ uhe.getMessage());
+				} catch (java.net.SocketException uhe) {
+                    logger.warn("Connection problem: SocketException {} exception! ", uhe.getMessage());
+				    n = NavajoFactory.getInstance().createNavajo();
+                    generateConnectionError(n, 55555, "SocketException: " + uhe.getMessage());
+				} catch (IOException uhe) {
+					throw uhe;
+				} catch (Throwable r) {
+					logger.error("Error: ", r);
+				} finally {
+					if (n != null && n.getHeader() != null) {
+						n.getHeader().setHeaderAttribute("sourceScript",
+								callingService);
+						clientTime = (System.currentTimeMillis() - timeStamp);
+						n.getHeader().setHeaderAttribute("clientTime",
+								"" + clientTime);
+						String tot = n.getHeader().getHeaderAttribute(
+								"serverTime");
+						String loadStr = n.getHeader().getHeaderAttribute(
+								"cpuload");
+						double load = -1.0;
+						if (loadStr != null) {
+							try {
+								load = Double.parseDouble(loadStr);
+								for (int x = 0; x < serverUrls.length; x++) {
+									if (serverUrls[x].equals( getCurrentHost())) {
+										serverLoads[x] = load;
+										x = serverUrls.length + 1;
+									}
+								}
+							} catch (Throwable t) {
+							}
+						}
+						long totalTime = -1;
+						if (tot != null && !"".equals(tot)) {
+							totalTime = Long.parseLong(tot);
+							n.getHeader().setHeaderAttribute(
+									"transferTime",
+									"" + (clientTime - totalTime));
+						}
+						Map<String, String> headerAttributes = n
+								.getHeader().getHeaderAttributes();
+						Map<String, String> pbd = new HashMap<String, String>(
+								headerAttributes);
+						pbd.put("type", "performanceStats");
+						pbd.put("service", method);
+						synchronized (piggyBackData) {
+							piggyBackData.add(pbd);
+						}
+						// logger.info(method+": totaltime = " + (
+						// clientTime / 1000.0 )+ ", servertime = " + (
+						// totalTime / 1000.0
+						// )+" transfertime = "+((clientTime-totalTime)/1000)+" piggybackdata: "+piggyBackData.size());
+					} else {
+						logger.info("Null header in input message");
+					}
+				}
+				return n;
 			} catch (Exception e) {
 				logger.error("Error: ", e);
 				throw new ClientException(-1, -1, e.getMessage(),e);
@@ -798,84 +505,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 
 	}
 
-	private final Navajo retryTransaction(String server, Navajo out,
-			boolean useCompression, boolean allowPreparseProxy,
-			int attemptsLeft, long interval, Navajo n) throws Exception {
-		InputStream in = null;
 
-		globalRetryCounter++;
-		logger.info("------------> retrying transaction: " + server
-				+ ", attempts left: " + attemptsLeft + " total retries: "
-				+ globalRetryCounter);
-
-		int pastAttempts = retryAttempts - attemptsLeft;
-		logger.info("Past retries: " + pastAttempts);
-		// only switch if there is more than one server
-		if (pastAttempts >= (switchServerAfterRetries - 1)
-				&& serverUrls.length > 1) {
-			logger.info("Did: " + pastAttempts + " retries. Switching server");
-			disabledServers.put(getCurrentHost(),
-					new Long(System.currentTimeMillis()));
-			logger.info("Disabled server: " + getCurrentHost() + " for "
-					+ serverDisableTimeout + " millis.");
-			switchServer(true);
-			server = getCurrentHost();
-		}
-
-		try {
-			try {
-				Thread.sleep(interval);
-			} catch (InterruptedException e) {
-				logger.error("Error: ", e);
-			}
-			Navajo doc = doTransaction(server, out, useCompression,
-					allowPreparseProxy);
-			logger.info("It worked!  the inputstream is: " + in);
-			return doc;
-		} catch (java.net.UnknownHostException uhe) {
-			generateConnectionError(n, 7777777,
-					"Unknown host: " + uhe.getMessage());
-		} catch (java.net.NoRouteToHostException uhe) {
-			generateConnectionError(n, 55555,
-					"No route to host: " + uhe.getMessage());
-		} catch (java.net.SocketException uhe) {
-			attemptsLeft--;
-			if (attemptsLeft <= 0) {
-				disabledServers.put(getCurrentHost(),
-						new Long(System.currentTimeMillis()));
-				logger.info("Disabled server: " + getCurrentHost() + " for "
-						+ serverDisableTimeout + " millis.");
-				switchServer(true);
-				generateConnectionError(
-						n,
-						4444,
-						"Could not connect to server (network problem?) "
-								+ uhe.getMessage());
-			} else {
-				return retryTransaction(server, out, useCompression,
-						allowPreparseProxy, attemptsLeft, interval, n);
-			}
-		} catch (IOException uhe) {
-			logger.info(uhe.getMessage());
-			if (attemptsLeft <= 0) {
-				disabledServers.put(getCurrentHost(),
-						new Long(System.currentTimeMillis()));
-				logger.info("Disabled server: " + getCurrentHost() + " for "
-						+ serverDisableTimeout + " millis.");
-				switchServer(true);
-				generateConnectionError(
-						n,
-						4444,
-						"Could not connect to server (network problem?) "
-								+ uhe.getMessage());
-			} else {
-				attemptsLeft--;
-				return retryTransaction(server, out, false, allowPreparseProxy,
-						attemptsLeft, interval, n);
-			}
-		}
-		return null;
-	}
 
 	private final void checkValidation(Navajo result, ConditionErrorHandler v) {
 		Message conditionErrors = result.getMessage("ConditionErrors");
@@ -884,18 +514,6 @@ public class NavajoClient implements ClientInterface, Serializable {
 		}
 	}
 
-	/**
-	 * Perform a synchronous webservice call
-	 * 
-	 * @param method
-	 *            String
-	 * @throws ClientException
-	 * @return Navajo
-	 */
-	@Override
-	public final Navajo doSimpleSend(String method) throws ClientException {
-		return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method);
-	}
 
 	@Override
 	public void setServers(String[] servers) {
@@ -904,12 +522,6 @@ public class NavajoClient implements ClientInterface, Serializable {
 		if (servers.length > 0) {
 			currentServerIndex = randomize.nextInt(servers.length);
 		}
-		// logger.info("servers = " + servers[0] + ", loadBalancingMode = " +
-		// loadBalancingMode);
-		// if ( loadBalancingMode != LBMODE_MANUAL ) {
-		// determineServerLoadsAndSetCurrentServer(true);
-		// ping();
-		// }
 	}
 
 	@Override
@@ -944,64 +556,7 @@ public class NavajoClient implements ClientInterface, Serializable {
 		}
 	}
 
-	/**
-	 * Switch the current server. If force flag is set. The server with the
-	 * minimum load is ALWAYS set as the current server. For LBMODE_MANUAL and
-	 * LBMODE_STATIC_MINLOAD the server is ONLY switched if force flag is set.
-	 * For LBMODE_DYNAMIC_MINLOAD the server is ALWAYS switched.
-	 * 
-	 * @param force
-	 */
-	private final void switchServer(boolean force) {
-
-		if (loadBalancingMode == LBMODE_MANUAL) {
-			return;
-		}
-
-		if (!force && loadBalancingMode == LBMODE_STATIC_MINLOAD) {
-			return;
-		}
-
-		if (serverUrls == null || serverUrls.length == 0
-				|| serverUrls.length == 1) {
-			return;
-		}
-
-		double minload = 1000000.0;
-		int candidate = -1;
-
-		for (int i = 0; i < serverUrls.length; i++) {
-			if (serverLoads[i] < minload && serverLoads[i] != -1.0
-					&& !disabledServers.containsKey(serverUrls[i])) { // If
-																		// there
-																		// is
-																		// really
-																		// a
-																		// server
-																		// with
-																		// a
-																		// lower
-																		// load,
-																		// use
-																		// this
-																		// server
-																		// as
-																		// candidate.
-				minload = serverLoads[i];
-				candidate = i;
-			}
-		}
-
-		if (candidate == -1) {
-			throw new RuntimeException("No enabled servers left!");
-		} else {
-			currentServerIndex = candidate;
-		}
-
-		logger.info("currentServer = " + serverUrls[currentServerIndex]
-				+ " with load: " + serverLoads[currentServerIndex]);
-
-	}
+	
 
 	@Override
 	public void setLocaleCode(String locale) {

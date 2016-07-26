@@ -557,7 +557,11 @@ public void store() throws MappableException, UserException {
 //				  nc.setSecure(keyStore, keyPassword, true);
 //			  }
 			  if ( trigger == null ) {
-				  inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true, false);
+			      nc.setUsername(username);
+			      nc.setPassword(password);
+			      nc.setAllowCompression(true);
+			      nc.setServerUrl(server);
+				  inDoc = nc.doSimpleSend(outDoc, method);
 			  } else {
 				  inDoc = nc.doScheduledSend(outDoc, method, "now", "", "");
 			  }
