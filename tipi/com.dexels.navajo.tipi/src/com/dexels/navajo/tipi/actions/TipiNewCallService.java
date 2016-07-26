@@ -236,13 +236,13 @@ public class TipiNewCallService extends TipiAction {
         }
         try {
             myContext.loadNavajo(result, service, breakOnError);
-
         } catch (TipiBreakException e) {
-            if (e.getType() == TipiBreakException.WEBSERVICE_BREAK) {
-                dumpStack("Server error detected: " + service);
-                performTipiEvent("onError", Collections.singletonMap("error", (Object) result), true);
-            }
+            performTipiEvent("onError", Collections.singletonMap("error", (Object) result), true);
             throw e;
+        }
+        // If breakOnError=false, we might still have errors. In that case, perform an onError event
+        if (myContext.hasErrors(result)) {
+            performTipiEvent("onError", Collections.singletonMap("error", (Object) result), true);
         }
 
     }
