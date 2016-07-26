@@ -69,7 +69,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	private transient Timer disconnectTimer = new Timer("DisconnectTimer",true);
 	
 
-@Override
+	@Override
 	public Navajo doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		try {
 			ensureOpenConnection();
@@ -656,12 +656,12 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		mailMode = "pop3";
 		connect();
 		Navajo init = createInitGetMessages();
-		Navajo n = doTransaction(init,"GetInboxMessages");
+		Navajo n = doTransaction(init,"GetInboxMessages", 0);
 		injectNavajo("GetInboxMessages", n);
 
 		init.getProperty("Folder/MessageNumber").setAnyValue(3);
 
-		n = doTransaction(getNavajo(), "InitGetMessages");
+		n = doTransaction(getNavajo(), "InitGetMessages", 0);
 		injectNavajo("InitGetMessages", n);
 				
 		logger.info("Sleeping....");		
@@ -672,7 +672,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		}
 		logger.info("End of sleep...");
 				
-		n = doTransaction(init, "GetMessage");
+		n = doTransaction(init, "GetMessage", 0);
 		injectNavajo("GetMessage", n);
 		disconnect();
 		
@@ -814,7 +814,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		s.add("InitMail");
 		return s;
 	}
-	
 
 
 }

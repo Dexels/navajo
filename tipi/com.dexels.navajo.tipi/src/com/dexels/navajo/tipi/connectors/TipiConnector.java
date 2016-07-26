@@ -27,17 +27,18 @@ public interface TipiConnector {
 	public Navajo doTransaction(Navajo n, String service, String destination)
 			throws TipiBreakException, TipiException;
 
-	/**
-	 * Calls the service with input navajo n, and without a destination. It may
-	 * be refused by connectors that require a destination
-	 * 
-	 * @param n
-	 * @param service
-	 * @throws TipiBreakException
-	 * @throws TipiException
-	 */
-	public Navajo doTransaction(Navajo n, String service)
-			throws TipiBreakException, TipiException;
+
+	   /**
+     * Calls the service with input navajo n, and without a destination. It may
+     * be refused by connectors that require a destination
+     * 
+     * @param n
+     * @param service
+     * @throws TipiBreakException
+     * @throws TipiException
+     */
+    public Navajo doTransaction(Navajo n, String service, Integer retries) throws TipiBreakException, TipiException;
+    
 
 	/**
 	 * Calls the service without destination or input navajo, it may be refused

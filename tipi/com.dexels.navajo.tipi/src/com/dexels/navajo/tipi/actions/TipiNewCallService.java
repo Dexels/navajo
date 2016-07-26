@@ -61,7 +61,11 @@ public class TipiNewCallService extends TipiAction {
         if (breakOnError == null) {
             breakOnError = false;
         }
-
+        Integer retries = (Integer) getEvaluatedParameterValue("retries", event);
+        if (retries == null) {
+            retries = 0;
+        }
+        
         final TipiConnector defaultConnector = getContext().getDefaultConnector();
 
         if (connector == null && defaultConnector == null) {
@@ -92,7 +96,7 @@ public class TipiNewCallService extends TipiAction {
             if (defaultConnector == null) {
                 throw new IllegalStateException("No default tipi connector found!");
             }
-            Navajo result = defaultConnector.doTransaction(input, service);
+            Navajo result = defaultConnector.doTransaction(input, service, retries);
             processResult(breakOnError, destination, service, result, cached);
         } else {
             TipiConnector ttt = myContext.getConnector(connector);
@@ -129,6 +133,7 @@ public class TipiNewCallService extends TipiAction {
         if (breakOnError == null) {
             breakOnError = false;
         }
+        Integer retries = (Integer) getEvaluatedParameterValue("retries", event);
 
         if (serviceOperand == null || serviceOperand.value == null) {
             throw new TipiException("Error in callService action: service parameter missing!");
