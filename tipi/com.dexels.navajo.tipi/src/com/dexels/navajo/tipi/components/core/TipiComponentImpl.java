@@ -1207,10 +1207,10 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		
 		try {
 			c.performTipiEvent("onInstantiate", null, true);
-		} catch (TipiException ex) {
-			logger.error("Error: ",ex);
-		} catch (TipiBreakException e) {
-		    logger.warn("TipiBreakException: ",e);
+		} catch (Throwable ex) {
+			logger.error("Error on OnInstantiate. Going to dispose component... ",ex);
+			myContext.disposeTipiComponent(c);
+			throw new TipiBreakException(TipiBreakException.COMPONENT_DISPOSED);
 		}
 	}
 

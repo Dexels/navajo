@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -896,6 +897,14 @@ public class TipiDialog extends TipiSwingDataComponentImpl implements TipiSuppor
           
         }
 
+    }
+    
+    @Override
+    public Container getContainer(){
+        if (myRootPaneContainer instanceof TipiSwingDialog) {
+            return (Container) myRootPaneContainer;
+        }
+        return null;
     }
 
 	// public boolean showQuestionDialog(String s) {
