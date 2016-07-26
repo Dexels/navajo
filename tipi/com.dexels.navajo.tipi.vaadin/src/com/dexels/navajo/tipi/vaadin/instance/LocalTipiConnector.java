@@ -68,9 +68,9 @@ public class LocalTipiConnector implements TipiConnector {
 	}
 
 	@Override
-	public Navajo doTransaction(Navajo n, String service)
+	public Navajo doTransaction(Navajo n, String service, Integer retries)
 			throws TipiBreakException, TipiException {
-			return doTransaction(n, service,null);
+			return doTransaction(n, service, (String) null);
 
 	}
 
@@ -78,7 +78,7 @@ public class LocalTipiConnector implements TipiConnector {
 	public Navajo doTransaction(String service) throws TipiBreakException,
 			TipiException {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
-		return doTransaction(n, service,null);
+		return doTransaction(n, service, 0);
 	}
 
 	@Override
