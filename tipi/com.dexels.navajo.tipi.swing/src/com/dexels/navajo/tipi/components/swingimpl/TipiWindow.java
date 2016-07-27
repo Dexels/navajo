@@ -433,7 +433,7 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
     }
     
     @Override
-    public Container getContainer(){
+    public Container getOverlayContainer(){
         return myWindow;
     }
     

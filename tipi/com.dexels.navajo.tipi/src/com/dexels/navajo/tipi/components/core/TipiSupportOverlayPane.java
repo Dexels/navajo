@@ -3,7 +3,7 @@ package com.dexels.navajo.tipi.components.core;
 import java.awt.Container;
 
 public interface TipiSupportOverlayPane {
-    public Container getContainer();
+    public Container getOverlayContainer();
     
     public void addOverlayProgressPanel(String type);
 

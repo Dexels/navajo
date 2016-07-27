@@ -900,7 +900,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl implements TipiSuppor
     }
     
     @Override
-    public Container getContainer(){
+    public Container getOverlayContainer(){
         if (myRootPaneContainer instanceof TipiSwingDialog) {
             return (Container) myRootPaneContainer;
         }
