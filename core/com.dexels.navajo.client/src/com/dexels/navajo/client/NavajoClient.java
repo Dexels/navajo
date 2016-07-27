@@ -57,10 +57,12 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 
 public class NavajoClient implements ClientInterface, Serializable {
+
     private final static Logger logger = LoggerFactory.getLogger(NavajoClient.class);
 
     private static final long serialVersionUID = -7848349362973607161L;
     public static final int CONNECT_TIMEOUT = 10000;
+    private static final int SLEEPTIME_PER_EXCEPTION = 1500;
 
     private String username = null;
     private String password = null;
@@ -183,36 +185,24 @@ public class NavajoClient implements ClientInterface, Serializable {
         return result;
     }
 
-    /**
-     * Do a transation with the Navajo Server (name) using a Navajo Message Structure (TMS) compliant XML document.
-     * 
-     * @param name String
-     * @param d Navajo
-     * @param useCompression boolean
-     * @throws URISyntaxException
-     */
-
-    private Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy)
-            throws IOException, NavajoException, URISyntaxException {
-        URI uri;
-        if (useHttps) {
-            uri = new URI("https://" + name);
-        } else {
-            uri = new URI("http://" + name);
-        }
+    
+    private Navajo doTransaction(Navajo d, boolean useCompression, boolean forcePreparseProxy, int retries, int exceptionCount)  throws Throwable {
+        URI uri = new URI(getCurrentHost());
+       
         Navajo n = null;
         try {
             HttpPost httppost = new HttpPost(uri);
-            NavajoRequestEntity reqEntity = new NavajoRequestEntity(d, useCompression, forceGzip);
+           
             appendHeaderToHttp(httppost, d.getHeader());
 
             if (forcePreparseProxy) {
                 httppost.setHeader("Navajo-Preparse", "true");
             }
 
+            NavajoRequestEntity reqEntity = new NavajoRequestEntity(d, useCompression, forceGzip);
             httppost.setEntity(reqEntity);
             CloseableHttpResponse response = httpclient.execute(httppost);
-
+            
             try {
                 if (response.getStatusLine().getStatusCode() >= 400) {
                     throw new IOException(response.getStatusLine().getReasonPhrase());
@@ -222,12 +212,34 @@ public class NavajoClient implements ClientInterface, Serializable {
             } finally {
                 response.close();
             }
-
+        } catch (Throwable t) {
+            // Check if we should attempt a retry. 
+            if (NavajoHttpRequestRetryHandler.retryRequest(t, retries)) {
+                Thread.sleep((exceptionCount+1) * SLEEPTIME_PER_EXCEPTION);
+                n = doTransaction(d, useCompression, forcePreparseProxy, --retries, ++exceptionCount);
+            } else {
+                throw t;
+            }
         } finally {
             // Don't close to allow connection reuse
             // httpclient.close();
         }
         return n;
+    
+        
+    }
+    /**
+     * Do a transation with the Navajo Server (name) using a Navajo Message Structure (TMS) compliant XML document.
+     * 
+     * @param name String
+     * @param d Navajo
+     * @param useCompression boolean
+     * @throws URISyntaxException
+     */
+
+    private Navajo doTransaction(Navajo d, boolean useCompression, boolean forcePreparseProxy, int retries)
+            throws Throwable {
+        return doTransaction(d,  useCompression,  forcePreparseProxy, retries, 0);
     }
 
     @Override
@@ -292,7 +304,7 @@ public class NavajoClient implements ClientInterface, Serializable {
         }
     }
 
-    private final Navajo doSimpleSend(Navajo out, String method, long expirationInterval, Integer retries, boolean allowPreparseProxy) throws ClientException {
+    private final Navajo doSimpleSend(Navajo out, String method, long expirationInterval, int retries, boolean allowPreparseProxy) throws ClientException {
         // NOTE: prefix persistence key with method, because same Navajo object
         // could be used as a request
         // for multiple methods!
@@ -362,10 +374,7 @@ public class NavajoClient implements ClientInterface, Serializable {
                 // org.apache.http.NoHttpResponseException
                 // org.apache.http.conn.ConnectTimeoutException
                 try {
-                    n = doTransaction(getCurrentHost(), out, allowCompression, allowPreparseProxy);
-                    // logger.info("SENT TO SERVER: ");
-                    // out.write(System.err);
-
+                    n = doTransaction(out, allowCompression, allowPreparseProxy, retries);
                     if (n == null) {
                         throw new Exception("Empty Navajo received");
                     }
@@ -393,6 +402,8 @@ public class NavajoClient implements ClientInterface, Serializable {
                     throw uhe;
                 } catch (Throwable r) {
                     logger.error("Error: ", r);
+                    
+                    
                 } finally {
                     if (n != null && n.getHeader() != null) {
                         n.getHeader().setHeaderAttribute("sourceScript", callingService);
@@ -425,10 +436,7 @@ public class NavajoClient implements ClientInterface, Serializable {
                         synchronized (piggyBackData) {
                             piggyBackData.add(pbd);
                         }
-                        // logger.info(method+": totaltime = " + (
-                        // clientTime / 1000.0 )+ ", servertime = " + (
-                        // totalTime / 1000.0
-                        // )+" transfertime = "+((clientTime-totalTime)/1000)+" piggybackdata: "+piggyBackData.size());
+                       
                     } else {
                         logger.info("Null header in input message");
                     }
@@ -481,13 +489,13 @@ public class NavajoClient implements ClientInterface, Serializable {
     public String getCurrentHost() {
         if (serverUrls != null && serverUrls.length > 0) {
             String currentServer = serverUrls[currentServerIndex];
-            if (currentServer.startsWith("http://")) {
-                setHttps(false);
-                return currentServer.substring(7);
-            }
-            if (currentServer.startsWith("https://")) {
-                setHttps(true);
-                return currentServer.substring(8);
+            
+            if (!currentServer.startsWith("http") && currentServer.length() > 0) {
+                if (useHttps) {
+                    return "https://" + currentServer;
+                } else {
+                    return "http://" + currentServer;
+                }
             }
             return currentServer;
         }

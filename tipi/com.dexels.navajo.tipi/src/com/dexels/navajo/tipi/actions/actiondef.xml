@@ -272,6 +272,7 @@
       <param name="service" type="string" required="true" />
       <param name="cached" type="boolean" required="false" />
       <param name="connector" type="string" required="false" />
+      <param name="retries" type="integer" required="false" />
       <param name="destination" type="string" required="false" />
       <param name="input" type="navajo" />
       <param name="breakOnError" type="boolean" default="false" />
