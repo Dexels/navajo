@@ -1136,7 +1136,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             try {
                 parent.addComponent(inst, this, constraints);
             } finally {
-                if (overlayComponent != null && overlayComponent.getContainer() != null) {
+                if (overlayComponent != null && overlayComponent.getOverlayContainer() != null) {
                     overlayComponent.removeOverlayProgressPanel();
                 }
             }
