@@ -758,6 +758,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 		}
 		if ((resultSet == null) || (resultSet.length == 0)) {
+		    logger.debug("Column {} not found! Rowcount: {} query: {}", columnName, getRowCount(), getQuery() );
 			throw new UserException(-1, "No records found");
 		}
 
