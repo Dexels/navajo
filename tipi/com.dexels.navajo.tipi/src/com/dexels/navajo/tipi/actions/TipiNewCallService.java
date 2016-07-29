@@ -59,7 +59,7 @@ public class TipiNewCallService extends TipiAction {
         }
         Boolean breakOnError = (Boolean) getEvaluatedParameterValue("breakOnError", event);
         if (breakOnError == null) {
-            breakOnError = false;
+            breakOnError = true; // Changed default to true - cbrouwer 07/28/2016
         }
         Integer retries = (Integer) getEvaluatedParameterValue("retries", event);
         if (retries == null) {
