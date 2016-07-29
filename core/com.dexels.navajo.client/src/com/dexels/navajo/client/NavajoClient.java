@@ -33,6 +33,7 @@ import java.util.Random;
 import java.util.Set;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSocketFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
@@ -661,23 +662,31 @@ public class NavajoClient implements ClientInterface, Serializable {
 							throw new Exception("Empty Navajo received");
 						}
 					} catch (java.net.UnknownHostException | org.apache.http.conn.HttpHostConnectException uhe) {
-	                    logger.warn("Connection problem: UnknownHostException exception!");
+	                    logger.warn("Connection problem: UnknownHostException exception to {}!", getCurrentHost(), uhe);
 						n = NavajoFactory.getInstance().createNavajo();
 						generateConnectionError(n, 7777777, "Unknown host: " + uhe.getMessage());
 					} catch (java.net.NoRouteToHostException uhe) {
-	                    logger.warn("Connection problem: NoRouteToHostException exception!");
+	                    logger.warn("Connection problem: NoRouteToHostException exception to {}!", getCurrentHost(), uhe);
 						n = NavajoFactory.getInstance().createNavajo();
 						generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
 					} catch (org.apache.http.NoHttpResponseException uhe) {
-	                    logger.warn("Connection problem: NoHttpResponseException exception!");
+	                    logger.warn("Connection problem: NoHttpResponseException exception to {}!  after {}ms", getCurrentHost(),  (System.currentTimeMillis()-timeStamp), uhe);
+                        n = NavajoFactory.getInstance().createNavajo();
+                        generateConnectionError(n, 55555, "Error on getting response data: " + uhe.getMessage());
+					} catch (java.net.SocketTimeoutException uhe) {
+                        logger.warn("Connection problem: SocketTimeoutException exception to {}! after {}ms", getCurrentHost(),  (System.currentTimeMillis()-timeStamp), uhe);
                         n = NavajoFactory.getInstance().createNavajo();
                         generateConnectionError(n, 55555, "Error on getting response data: " + uhe.getMessage());
 				    } catch (org.apache.http.conn.ConnectTimeoutException uhe) {
-				        logger.warn("Connection problem: ConnectTimeoutException exception!");
+				        logger.warn("Connection problem: ConnectTimeoutException exception to {}! after {}ms",getCurrentHost(),  (System.currentTimeMillis()-timeStamp), uhe);
                         n = NavajoFactory.getInstance().createNavajo();
                         generateConnectionError(n, 55555, "Connect time-out: "+ uhe.getMessage());
+				    } catch (javax.net.ssl.SSLHandshakeException uhe) {
+                        logger.warn("Connection problem: SSLHandshakeException exception to {}!", getCurrentHost(), uhe);
+                        n = NavajoFactory.getInstance().createNavajo();
+                        generateConnectionError(n, 666666, "SSL fout " + uhe.getMessage());
 					} catch (java.net.SocketException uhe) {
-	                    logger.warn("Connection problem: SocketException {} exception! ", uhe.getMessage());
+	                    logger.warn("Connection problem: SocketException {} exception to {}! ", uhe.getMessage(),getCurrentHost(),  uhe);
 						if (retryAttempts > 0) {
 						    Navajo n2 = NavajoFactory.getInstance().createNavajo();
 	                        n = retryTransaction(server, out, useCompression,
@@ -697,6 +706,8 @@ public class NavajoClient implements ClientInterface, Serializable {
 						}
 						
 					} catch (IOException uhe) {
+	                    logger.warn("Connection problem: IOException {} exception to {}! ", uhe.getMessage(), getCurrentHost(), uhe);
+	                    
 						if (retryAttempts <= 0) {
 							throw uhe;
 						}
