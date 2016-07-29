@@ -156,7 +156,7 @@ public class TipiNewCallService extends TipiAction {
         // things up.
         myContext.fireNavajoSent(input, service);
         try {
-            myContext.getClient().doSimpleSend(nn, service);
+            myContext.getClient().doSimpleSend(nn, service, retries);
             processResult(breakOnError, destination, service, nn, false);
         } catch (ClientException e) {
             logger.error("Error: ", e);
