@@ -188,7 +188,6 @@ public class NavajoClient implements ClientInterface, Serializable {
     
     private Navajo doTransaction(Navajo d, boolean useCompression, boolean forcePreparseProxy, int retries, int exceptionCount)  throws Throwable {
         URI uri = new URI(getCurrentHost());
-       
         Navajo n = null;
         try {
             HttpPost httppost = new HttpPost(uri);
@@ -379,26 +378,35 @@ public class NavajoClient implements ClientInterface, Serializable {
                         throw new Exception("Empty Navajo received");
                     }
                 } catch (java.net.UnknownHostException | org.apache.http.conn.HttpHostConnectException uhe) {
-                    logger.warn("Connection problem: UnknownHostException exception!");
+                    logger.warn("Connection problem: UnknownHostException exception to {}!", getCurrentHost(), uhe);
                     n = NavajoFactory.getInstance().createNavajo();
                     generateConnectionError(n, 7777777, "Unknown host: " + uhe.getMessage());
                 } catch (java.net.NoRouteToHostException uhe) {
-                    logger.warn("Connection problem: NoRouteToHostException exception!");
+                    logger.warn("Connection problem: NoRouteToHostException exception to {}!", getCurrentHost(), uhe);
                     n = NavajoFactory.getInstance().createNavajo();
                     generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
                 } catch (org.apache.http.NoHttpResponseException uhe) {
-                    logger.warn("Connection problem: NoHttpResponseException exception!");
+                    logger.warn("Connection problem: NoHttpResponseException exception to {}!  after {}ms", getCurrentHost(),  (System.currentTimeMillis()-timeStamp), uhe);
+                    n = NavajoFactory.getInstance().createNavajo();
+                    generateConnectionError(n, 55555, "Error on getting response data: " + uhe.getMessage());
+                } catch (java.net.SocketTimeoutException uhe) {
+                    logger.warn("Connection problem: SocketTimeoutException exception to {}! after {}ms", getCurrentHost(),  (System.currentTimeMillis()-timeStamp), uhe);
                     n = NavajoFactory.getInstance().createNavajo();
                     generateConnectionError(n, 55555, "Error on getting response data: " + uhe.getMessage());
                 } catch (org.apache.http.conn.ConnectTimeoutException uhe) {
-                    logger.warn("Connection problem: ConnectTimeoutException exception!");
+                    logger.warn("Connection problem: ConnectTimeoutException exception to {}! after {}ms",getCurrentHost(),  (System.currentTimeMillis()-timeStamp), uhe);
                     n = NavajoFactory.getInstance().createNavajo();
-                    generateConnectionError(n, 55555, "Connect time-out: " + uhe.getMessage());
+                    generateConnectionError(n, 55555, "Connect time-out: "+ uhe.getMessage());
+                } catch (javax.net.ssl.SSLHandshakeException uhe) {
+                    logger.warn("Connection problem: SSLHandshakeException exception to {}!", getCurrentHost(), uhe);
+                    n = NavajoFactory.getInstance().createNavajo();
+                    generateConnectionError(n, 666666, "SSL fout " + uhe.getMessage());
                 } catch (java.net.SocketException uhe) {
-                    logger.warn("Connection problem: SocketException {} exception! ", uhe.getMessage());
+                    logger.warn("Connection problem: SocketException {} exception to {}! ", uhe.getMessage(),getCurrentHost(),  uhe);
                     n = NavajoFactory.getInstance().createNavajo();
                     generateConnectionError(n, 55555, "SocketException: " + uhe.getMessage());
                 } catch (IOException uhe) {
+                    logger.warn("Connection problem: IOException {} exception to {}! ", uhe.getMessage(), getCurrentHost(), uhe); 
                     throw uhe;
                 } catch (Throwable r) {
                     logger.error("Error: ", r);
