@@ -48,7 +48,6 @@ import java.util.zip.InflaterInputStream;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -297,9 +296,7 @@ public class NavajoClient implements ClientInterface, Serializable {
               uri = new URI("http://" + name);
           }
 	    Navajo n = null;
-	    if (true) {
-	        throw new SSLHandshakeException("aaa");
-	    }
+
 	    try {
     	    HttpPost httppost = new HttpPost(uri);
     	    NavajoRequestEntity reqEntity = new NavajoRequestEntity(d, useCompression, forceGzip);
@@ -583,7 +580,6 @@ private Navajo doTransactionOld(String name, Navajo d, boolean useCompression,
 		this.useHttps = useHttps;
 	}
 
-	@SuppressWarnings("unused")
     private void appendHeaderToHttp(HttpURLConnection con, Header header) {
 		con.setRequestProperty("rpcName", header.getRPCName());
 		con.setRequestProperty("rpcUser", header.getRPCUser());
