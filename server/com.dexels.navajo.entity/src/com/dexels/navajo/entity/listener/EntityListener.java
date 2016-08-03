@@ -94,12 +94,10 @@ public class EntityListener extends HttpServlet {
         String path = request.getPathInfo();
         long requestStart = System.currentTimeMillis();
 
-        // Check for a .<format> in the URL - can be in RequestURI or QueryString
+        // Check for a .<format> in the URL - can be in RequestURI
         String dotString = null;
         if (request.getRequestURI().contains(".")) {
             dotString = request.getRequestURI();
-        } else if (request.getQueryString() != null && request.getQueryString().contains(".")) {
-            dotString = request.getQueryString();
         }
         String urlOutput = null;
         if (dotString != null) {
