@@ -44,14 +44,19 @@ public class APIValue {
 				String ISO8601Date = df.format(((Date) property.getTypedValue()));
 				node.put(id, ISO8601Date);
 			} else if (TYPE_INTEGER.equals(type)) {
-				Integer value = -1;
-				try {
-					value = Integer.parseInt(property.getValue());
-				} catch (NumberFormatException e) {
-					throw new APIException("Id " + id + " says it is an integer but cannot be parsed to an int", null, APIErrorCode.InternalError);
+				//Null number are sometimes represented as empty strings.				
+				if (property.getTypedValue() instanceof String && ((String)property.getTypedValue()).trim().length() == 0) {
+					node.putNull(id);
+				} else {	
+					Integer value = -1;
+					try {
+						value = Integer.parseInt(property.getValue());
+					} catch (NumberFormatException e) {
+						throw new APIException("Id " + id + " says it is an integer but cannot be parsed to an int", null, APIErrorCode.InternalError);
+					}
+					
+					node.put(id, value);
 				}
-				
-				node.put(id, value);
 			} else {
 				if (property.getType().equals(Property.SELECTION_PROPERTY)) {
 					if (property.getSelected() == null || property.getSelected().getName() == Selection.DUMMY_SELECTION) {
