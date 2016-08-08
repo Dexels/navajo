@@ -84,7 +84,6 @@ public interface DispatcherInterface extends ResourceManager {
 	public String getApplicationId();
 	public String getApplicationGroup();
 
-	public String getServerId();
 	public String getThreadName(Access a);
 	
 	/*
