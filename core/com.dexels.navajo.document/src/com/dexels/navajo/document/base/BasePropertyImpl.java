@@ -451,6 +451,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		if(list.isEmpty()) {
 			// tricky. Will assume it is a selection property, for backward compatibility.
 			setSelectionList(list);
+			setListProperty(list);
 			return;
 		}
 		
