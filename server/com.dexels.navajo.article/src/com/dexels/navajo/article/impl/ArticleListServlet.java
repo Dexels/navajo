@@ -19,7 +19,6 @@ public class ArticleListServlet extends ArticleBaseServlet implements Servlet {
 	private static final long serialVersionUID = -6895324256139435015L;
 	
 	private static String ARGUMENT_ARTICLE = "article";
-	private static String ARGUMENT_PRETTY = "pretty";
 	private static String ARGUMENT_EXTENDED = "extended";
 
 	public ArticleListServlet() {
