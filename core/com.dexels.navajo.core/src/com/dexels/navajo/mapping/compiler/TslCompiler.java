@@ -45,8 +45,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import navajocore.Version;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -62,7 +60,6 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
-import com.dexels.navajo.legacy.compiler.EclipseCompiler;
 import com.dexels.navajo.legacy.compiler.JavaCompiler;
 import com.dexels.navajo.legacy.compiler.SunJavaCompiler;
 import com.dexels.navajo.loader.NavajoClassLoader;
@@ -84,6 +81,8 @@ import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.navajo.server.internal.LegacyNavajoIOConfig;
+
+import navajocore.Version;
 
 public class TslCompiler {
 
@@ -109,7 +108,7 @@ public class TslCompiler {
 	 * Use this as a placeholder for instantiated adapters (for meta data
 	 * usage).
 	 */
-	private HashMap<Class, DependentResource[]> instantiatedAdapters = new HashMap<Class, DependentResource[]>();
+	private HashMap<Class<?>, DependentResource[]> instantiatedAdapters = new HashMap<Class<? extends Object>, DependentResource[]>();
 
 	private Stack<Class> contextClassStack = new Stack<Class>();
 	private Class contextClass = null;
@@ -3940,93 +3939,6 @@ public class TslCompiler {
 
 		return hostname;
 
-	}
-
-	public static void main(String[] args) throws Exception {
-		NavajoIOConfig config = new LegacyNavajoIOConfig();
-		System.err.println("today = " + new java.util.Date());
-		final String configPath = config.getConfigPath();
-
-		if (args.length == 0) {
-			System.out
-					.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler <scriptDir> <compiledDir> [-all | scriptName]");
-			System.err
-					.println("NOTE: Startupswitch for extra class path (eg for adding an adaper jar) has not been implemented yet");
-			System.exit(1);
-		}
-
-		boolean all = args[2].equals("-all");
-		if (all) {
-			System.err.println("SCRIPT DIR = " + args[0]);
-		} else {
-			System.err.println("SERVICE = " + args[2]);
-		}
-
-		String input = args[0];
-		String output = args[1];
-		// String service = args[2];
-
-		if (all) {
-			File scriptDir = new File(input);
-			File outDir = new File(output);
-			compileDirectory(scriptDir, outDir, "", null, configPath, "knvb");
-		}
-	}
-
-	public void initJavaCompiler(String outputPath, ArrayList classpath,
-			Class javaCompilerClass) {
-		StringBuffer cpbuffer = new StringBuffer();
-		if (classpath != null) {
-			for (int i = 0; i < classpath.size(); i++) {
-				cpbuffer.append(classpath.get(i));
-				if (i < classpath.size() - 1) {
-					cpbuffer.append(System.getProperty("path.separator"));
-				}
-			}
-		}
-		compiler = new EclipseCompiler();
-		compiler.setClasspath(cpbuffer.toString());
-		compiler.setOutputDir(outputPath);
-		compiler.setClassDebugInfo(true);
-		compiler.setEncoding("UTF8");
-		compiler.setMsgOutput(System.out);
-		compiler.setCompilerClass(javaCompilerClass);
-
-	}
-
-	public void compileAllTslToJava(ArrayList elements) throws Exception {
-		removeDuplicates(elements);
-
-		compiler.compile(elements);
-	}
-
-	public void compileAllTslToJava(ArrayList elements, Class compilerClass)
-			throws Exception {
-		removeDuplicates(elements);
-
-		compiler.compile(elements);
-	}
-
-	public void setCompileClassLoader(ClassLoader cl) {
-		if (compiler != null) {
-			compiler.setCompileClassLoader(cl);
-		} else {
-			System.err.println("Warning: No java compiler present!");
-		}
-	}
-
-	private void removeDuplicates(ArrayList elements) {
-		for (int i = elements.size() - 1; i >= 0; i--) {
-			String element = (String) elements.get(i);
-			File f = new File(element);
-			if (!f.exists()) {
-				elements.remove(i);
-				continue;
-			}
-			if (f.length() == 0) {
-				elements.remove(i);
-			}
-		}
 	}
 
 }

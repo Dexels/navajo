@@ -19,7 +19,6 @@ public class ArticleListServlet extends ArticleBaseServlet implements Servlet {
 	private static final long serialVersionUID = -6895324256139435015L;
 	
 	private static String ARGUMENT_ARTICLE = "article";
-	private static String ARGUMENT_PRETTY = "pretty";
 	private static String ARGUMENT_EXTENDED = "extended";
 
 	public ArticleListServlet() {
@@ -31,8 +30,7 @@ public class ArticleListServlet extends ArticleBaseServlet implements Servlet {
 		ObjectNode rootNode = mapper.createObjectNode();
 		boolean extended = request.getParameter(ARGUMENT_EXTENDED) != null ? true : false;
 		String requestedArticle = request.getParameter(ARGUMENT_ARTICLE);
-		ObjectWriter writer = (request.getParameter(ARGUMENT_PRETTY) == null) 
-				? mapper.writer() : mapper.writer().withDefaultPrettyPrinter();
+		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 
 		if (requestedArticle != null) {
 			getContext().writeArticleMeta(requestedArticle, rootNode, mapper, extended);

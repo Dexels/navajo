@@ -7,12 +7,6 @@ import com.dexels.navajo.server.resource.ResourceManager;
 public interface DispatcherMXBean extends ResourceManager {
 
 	/**
-	 * Gets the server hostname. 
-	 * @return
-	 */
-	public String getServerId();
-	
-	/**
 	 * Gets the instance_name as specified in the server.xml configuration file.
 	 * @return
 	 */

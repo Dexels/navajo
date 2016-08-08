@@ -37,9 +37,6 @@ public abstract class BaseContextImpl implements ArticleContext {
 	private final Map<String, ArticleCommand> commands = new HashMap<String, ArticleCommand>();
 	private NavajoIOConfig config;
 	private TokenStore tokenStore;
-	
-	private static String ARTICLE_TYPE = "type";
-	private static String ARTICLE_TYPE_DISPLAY = "display";
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseContextImpl.class);
@@ -227,8 +224,6 @@ public abstract class BaseContextImpl implements ArticleContext {
 			articleNode.put("description", description);
 		}
 		
-		articleNode.put(ARTICLE_TYPE, article.getStringAttribute(ARTICLE_TYPE, ARTICLE_TYPE_DISPLAY));
-
 		XMLElement argTag = article.getChildByTagName("_arguments");
 		ArrayNode inputArgs = mapper.createArrayNode();
 		articleNode.put("input", inputArgs);

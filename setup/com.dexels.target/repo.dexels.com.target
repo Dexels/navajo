@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1951">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="1971">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.server.core.feature.group" version="1.3.100.v20150529-1857"/>
@@ -7,10 +7,6 @@
 <unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.11.0.v20150602-1417"/>
 <repository location="http://repo.dexels.com/eclipse/equinox_mars"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.127.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.127"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.18.201510140934"/>
@@ -25,6 +21,10 @@
 <unit id="org.eclipse.egit.feature.group" version="4.4.1.201607150455-r"/>
 <unit id="org.eclipse.jgit.http.apache.feature.group" version="4.4.1.201607150455-r"/>
 <repository location="http://eclipse.mirror.triple-it.nl/egit/updates/"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.133.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.133"/>
 </location>
 </locations>
 <includeBundles>
@@ -44,6 +44,9 @@
 <plugin id="com.dexels.oauth.web"/>
 <plugin id="com.dexels.osgi.bundlesync"/>
 <plugin id="com.dexels.pubsub.api"/>
+<plugin id="com.dexels.replication.api"/>
+<plugin id="com.dexels.replication.impl"/>
+<plugin id="com.dexels.replication.mongo"/>
 <plugin id="com.dexels.repository.api"/>
 <plugin id="com.dexels.repository.file"/>
 <plugin id="com.dexels.repository.git"/>
@@ -60,7 +63,7 @@
 <plugin id="com.google.guava"/>
 <plugin id="com.google.inject"/>
 <plugin id="com.hazelcast"/>
-<plugin id="com.jcraft.jsch"/>
+<plugin id="com.jcraft.jsch" version="0.1.53.v201508180515"/>
 <plugin id="com.mysql.jdbc"/>
 <plugin id="com.oracle.jdbc.driver"/>
 <plugin id="com.springsource.javax.transaction"/>
@@ -68,18 +71,17 @@
 <plugin id="io.netty.buffer"/>
 <plugin id="io.netty.codec"/>
 <plugin id="io.netty.codec-http"/>
+<plugin id="io.netty.codec-http2"/>
 <plugin id="io.netty.common"/>
 <plugin id="io.netty.handler"/>
 <plugin id="io.netty.resolver"/>
 <plugin id="io.netty.transport"/>
-<plugin id="io.netty.transport-native-epoll"/>
 <plugin id="io.reactivex.rxjava"/>
 <plugin id="io.reactivex.rxjava-joins"/>
 <plugin id="io.reactivex.rxjava-string"/>
-<plugin id="io.reactivex.rxnetty"/>
 <plugin id="jackson-core-lgpl"/>
 <plugin id="jackson-mapper-lgpl"/>
-<plugin id="javaewah"/>
+<plugin id="javaewah" version="0.7.9.v201605172130"/>
 <plugin id="javax.el.source"/>
 <plugin id="javax.inject"/>
 <plugin id="javax.servlet.jsp-api"/>
@@ -92,7 +94,7 @@
 <plugin id="org.apache.aries.util"/>
 <plugin id="org.apache.commons.beanutils"/>
 <plugin id="org.apache.commons.codec"/>
-<plugin id="org.apache.commons.compress"/>
+<plugin id="org.apache.commons.compress" version="1.9.0"/>
 <plugin id="org.apache.commons.dbcp"/>
 <plugin id="org.apache.commons.email"/>
 <plugin id="org.apache.commons.fileupload"/>

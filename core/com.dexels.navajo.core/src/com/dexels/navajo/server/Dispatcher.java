@@ -63,7 +63,6 @@ import com.dexels.navajo.events.types.ServerReadyEvent;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.mapping.RemoteAsyncAnswer;
 import com.dexels.navajo.mapping.RemoteAsyncRequest;
-import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.ClientInfo;
@@ -1248,11 +1247,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     @Override
     protected void finalize() {
         instances--;
-    }
-
-    @Override
-    public String getServerId() {
-        return TslCompiler.getHostName();
     }
 
     @Override

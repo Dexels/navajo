@@ -939,7 +939,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
                 if (myConnectionBroker == null) {
                     throw new UserException(-1, "Could not create connection to datasource " + this.datasource
-                            + ", using username " + this.username + ", fixedBroker = " + fixedBroker);
+                            + ", using username " + this.username + ", fixedBroker = " + fixedBroker+ " for tenant: "+instance);
                 }
 
                 gc = myConnectionBroker.getGrusConnection();
