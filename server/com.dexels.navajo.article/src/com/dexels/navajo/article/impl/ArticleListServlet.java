@@ -31,8 +31,7 @@ public class ArticleListServlet extends ArticleBaseServlet implements Servlet {
 		ObjectNode rootNode = mapper.createObjectNode();
 		boolean extended = request.getParameter(ARGUMENT_EXTENDED) != null ? true : false;
 		String requestedArticle = request.getParameter(ARGUMENT_ARTICLE);
-		ObjectWriter writer = (request.getParameter(ARGUMENT_PRETTY) == null) 
-				? mapper.writer() : mapper.writer().withDefaultPrettyPrinter();
+		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 
 		if (requestedArticle != null) {
 			getContext().writeArticleMeta(requestedArticle, rootNode, mapper, extended);
