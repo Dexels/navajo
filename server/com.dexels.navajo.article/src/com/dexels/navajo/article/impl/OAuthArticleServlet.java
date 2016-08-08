@@ -124,7 +124,11 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
         navajo.addMessage(properties);
         for (Entry<String, String[]> entry : req.getParameterMap().entrySet()) {
             Property property = NavajoFactory.getInstance().createProperty(navajo, entry.getKey(), null, null, null);
-            property.setValue(entry.getValue().toString());
+            property.setType("string");
+         
+            if (entry.getValue() != null && entry.getValue().length > 0) {
+            	property.setValue(String.join("|", entry.getValue()));
+            }
             properties.addProperty(property);
         }
         return navajo;
