@@ -20,6 +20,7 @@ public class AsyncClientFactory {
             try {
             	logger.info("Instantiation manual client instance to class: "+asyncClientClass);
                 ManualAsyncClient newInstance = asyncClientClass.newInstance();
+                newInstance.setCloseAfterUse(true);
                 logger.info("Instance complete: "+newInstance);
 				return newInstance;
             } catch (Throwable e) {

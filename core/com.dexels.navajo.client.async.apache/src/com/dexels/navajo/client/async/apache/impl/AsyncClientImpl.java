@@ -38,6 +38,8 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	private String server;
 	private String username;
 	private String password;
+	
+	private boolean closeAfterUse = false;
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(AsyncClientImpl.class);
@@ -90,9 +92,13 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		} catch (Exception e) {
 			logger.error("Error: ", e);
 		}
+		
 	}
+	
+	
 
 	public void activate(Map<String, Object> settings) {
+	    closeAfterUse = false;
 		String serverString = (String) settings.get("server");
 		if (serverString == null) {
 			serverString = (String) settings.get("url");
@@ -304,6 +310,9 @@ public class AsyncClientImpl implements ManualAsyncClient {
 			@Override
 			public void cancelled() {
 				logger.info("Request cancelled");
+				if (closeAfterUse) {
+				    close();
+				}
 			}
 
 			@Override
@@ -317,6 +326,9 @@ public class AsyncClientImpl implements ManualAsyncClient {
 				} catch (Throwable e) {
 					logger.info("Illegal TML detected.",e);
 				} finally {
+				    if (closeAfterUse) {
+	                    close();
+	                }
 					setActualCalls(getActualCalls()-1);
 				}
 				
@@ -332,6 +344,9 @@ public class AsyncClientImpl implements ManualAsyncClient {
 						logger.error("Error: ", e1);
 					}
 				}
+				if (closeAfterUse) {
+                    close();
+                }
 
 			}
 		});
@@ -537,5 +552,11 @@ public class AsyncClientImpl implements ManualAsyncClient {
 //			throw new IOException("Error loading certificate: ", e);
 //		}
 	}
+
+    @Override
+    public void setCloseAfterUse(boolean closeAfterUse) {
+        this.closeAfterUse = closeAfterUse;
+        
+    }
 
 }
