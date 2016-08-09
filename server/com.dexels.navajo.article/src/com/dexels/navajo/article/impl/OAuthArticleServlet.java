@@ -99,6 +99,11 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
             a.setInDoc(navajo);
             a.setExitCode(Access.EXIT_EXCEPTION);
             if (e instanceof APIException) {
+                APIException apiException = (APIException) e;
+                if (apiException.getErrorCode() == APIErrorCode.ConditionError) { 
+                    a.setExitCode(Access.EXIT_VALIDATION_ERR);
+                    a.setInDoc(null);
+                }
                 throw (APIException) e;
             }
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
