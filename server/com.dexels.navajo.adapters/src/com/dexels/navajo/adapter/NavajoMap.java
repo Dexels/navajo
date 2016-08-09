@@ -853,6 +853,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                         timeout = serverTimeout;
                     }
                     ac.callService(server, username, password, outDoc, method, this, timeout);
+                    ac.close();
                 } catch (Exception e) {
                     throw new UserException(-1, e.getMessage(), e);
                 }

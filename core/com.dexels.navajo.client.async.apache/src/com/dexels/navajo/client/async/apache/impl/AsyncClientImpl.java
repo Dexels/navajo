@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
@@ -105,7 +104,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	}
 
 	public void deactivate() {
-
+	    close();
 	}
 
 	/*
