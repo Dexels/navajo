@@ -35,7 +35,7 @@
 							<groupId>com.dexels.navajo</groupId>
 							<artifactId>targetplatform</artifactId>
 							<version>1.8.2</version>
-							<classifier>repo-mars.dexels.com</classifier>
+							<classifier>repo.dexels.com</classifier>
 						</artifact>
 					</target>
 					<ignoreTychoRepositories>false</ignoreTychoRepositories>
