@@ -92,9 +92,9 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
             return;
             
         } catch (APIException apiException) {
-            if (apiException.getErrorCode() != APIErrorCode.ConditionError) { 
+            if (apiException.getErrorCode() == APIErrorCode.InternalError) {
                 logExceptionToAccess(a, apiException, createNavajoFromRequest(req));
-            } else {
+            } else if (apiException.getErrorCode() == APIErrorCode.ConditionError) {
                 a.setExitCode(Access.EXIT_VALIDATION_ERR);
             }
           
