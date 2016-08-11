@@ -91,27 +91,30 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
             }
             return;
             
-        } catch (Throwable  e) {
-            a.setException(e);
-
-            // Create a navajo of the input
-            Navajo navajo = createNavajoFromRequest(req);
-            a.setInDoc(navajo);
-            a.setExitCode(Access.EXIT_EXCEPTION);
-            if (e instanceof APIException) {
-                APIException apiException = (APIException) e;
-                if (apiException.getErrorCode() == APIErrorCode.ConditionError) { 
-                    a.setExitCode(Access.EXIT_VALIDATION_ERR);
-                    a.setInDoc(null);
-                }
-                throw (APIException) e;
+        } catch (APIException apiException) {
+            if (apiException.getErrorCode() != APIErrorCode.ConditionError) { 
+                logExceptionToAccess(a, apiException, createNavajoFromRequest(req));
+            } else {
+                a.setExitCode(Access.EXIT_VALIDATION_ERR);
             }
+          
+            throw apiException;
+        } catch (Throwable  e) {
+          
+            logExceptionToAccess(a, e, createNavajoFromRequest(req));
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
             
         } finally {
             a.setFinished();
             NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(a));
         }
+    }
+
+    private void logExceptionToAccess(Access a, Throwable e, Navajo navajo) {
+        a.setExitCode(Access.EXIT_EXCEPTION);
+        // Create a navajo of the input
+        a.setInDoc(navajo);
+        a.setException(e);
     }
     
     private String getToken(HttpServletRequest request) {
