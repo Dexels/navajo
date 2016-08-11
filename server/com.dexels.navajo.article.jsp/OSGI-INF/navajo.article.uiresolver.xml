@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" enabled="true" immediate="true" name="navajo.article.uiresolver">
-   <implementation class="com.dexels.navajo.article.ui.UIResolver"/>
-   <service>
-      <provide interface="org.ops4j.pax.web.extender.whiteboard.ResourceMapping"/>
-   </service>
-</scr:component>
