@@ -100,10 +100,8 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
           
             throw apiException;
         } catch (Throwable  e) {
-          
             logExceptionToAccess(a, e, createNavajoFromRequest(req));
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
-            
         } finally {
             a.setFinished();
             NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(a));
