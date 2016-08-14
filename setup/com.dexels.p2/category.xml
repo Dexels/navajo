@@ -60,7 +60,7 @@
    <feature url="features/com.dexels.navajo.core.feature_1.0.9.qualifier.jar" id="com.dexels.navajo.core.feature" version="1.0.9.qualifier">
       <category name="Navajo Core"/>
    </feature>
-   <feature url="features/com.dexels.navajo.server.feature_1.0.6.qualifier.jar" id="com.dexels.navajo.server.feature" version="1.0.6.qualifier">
+   <feature url="features/com.dexels.navajo.server.feature_1.0.6.qualifier.jar" id="com.dexels.navajo.server.feature" version="1.0.7.qualifier">
       <category name="Navajo Core"/>
    </feature>
    <feature url="features/com.dexels.navajo.dev.feature_2.0.7.qualifier.jar" id="com.dexels.navajo.dev.feature" version="2.0.7.qualifier">
