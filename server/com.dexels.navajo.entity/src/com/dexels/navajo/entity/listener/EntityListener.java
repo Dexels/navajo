@@ -94,47 +94,51 @@ public class EntityListener extends HttpServlet {
         String path = request.getPathInfo();
         long requestStart = System.currentTimeMillis();
 
-        // Check for a .<format> in the URL - can be in RequestURI
-        String dotString = null;
-        if (request.getRequestURI().contains(".")) {
-            dotString = request.getRequestURI();
-        }
-        String urlOutput = null;
-        if (dotString != null) {
-            // The output format can be set by adding a trailing .<format> to
-            // the URL. This overrules accept-encoding
-            urlOutput = dotString.substring(dotString.lastIndexOf('.') + 1);
-            if (!SUPPORTED_OUTPUT.contains(urlOutput)) {
-                // unsupported format
-                urlOutput = null;
-            }
-        }
-        String outputFormat = getOutputFormat(request, urlOutput);
-
-        // Only end-points are allowed to cache - no servers in between
-        response.setHeader("Cache-Control", "private");
-     
-        String entityName = path.substring(1);
-        if (entityName.indexOf('.') > 0) {
-            // Remove .<format> from entityName
-            entityName = entityName.substring(0, entityName.indexOf('.'));
-        }
-       
-        String tenant = determineInstanceFromRequest(request);
-        if (tenant == null) {
-            logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
-        }
-
         Navajo input = null;
         String inputEtag = null;
         String outputEtag = null;
-
-        String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null || ip.equals("")) {
-            ip = request.getRemoteAddr();
-        }
+        String outputFormat = DEFAULT_OUTPUT_FORMAT;
         
         try {
+
+            // Check for a .<format> in the URL - can be in RequestURI
+            String dotString = null;
+            if (request.getRequestURI().contains(".")) {
+                dotString = request.getRequestURI();
+            }
+            String urlOutput = null;
+            if (dotString != null) {
+                // The output format can be set by adding a trailing .<format> to
+                // the URL. This overrules accept-encoding
+                urlOutput = dotString.substring(dotString.lastIndexOf('.') + 1);
+                if (!SUPPORTED_OUTPUT.contains(urlOutput)) {
+                    // unsupported format
+                    urlOutput = null;
+                }
+            }
+            outputFormat = getOutputFormat(request, urlOutput);
+    
+            // Only end-points are allowed to cache - no servers in between
+            response.setHeader("Cache-Control", "private");
+         
+            String entityName = path.substring(1);
+            if (entityName.indexOf('.') > 0) {
+                // Remove .<format> from entityName
+                entityName = entityName.substring(0, entityName.indexOf('.'));
+            }
+           
+            String tenant = determineInstanceFromRequest(request);
+            if (tenant == null) {
+                logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
+            }
+    
+           
+    
+            String ip = request.getHeader("X-Forwarded-For");
+            if (ip == null || ip.equals("")) {
+                ip = request.getRemoteAddr();
+            }
+        
             if (entityName.equals("")) {
                 logger.error("No entity name found in request. Request URI: {}", request.getRequestURI());
                 throw new EntityException(EntityException.BAD_REQUEST);
@@ -151,7 +155,7 @@ public class EntityListener extends HttpServlet {
             Entity e = myManager.getEntity(entityName);
             if (e == null) {
                 // Requested entity not found
-                logger.warn("Requested entity not registred with entityManager! {}", entityName);
+                logger.warn("Requested entity not registred! {}", entityName);
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND);
             }
 
@@ -219,12 +223,19 @@ public class EntityListener extends HttpServlet {
             if (access != null) {
                 access.setExitCode(Access.EXIT_OK);
             }
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             result = handleException(ex, request, response);
-            if (access != null) {
+            access.setExitCode(Access.EXIT_EXCEPTION);
+            // Check whether to log this exception to the access object. If it's an EntityException
+            // then we don't log a NOT_FOUND exception
+            if (ex instanceof EntityException) {
+                if (((EntityException) ex).getCode() != EntityException.ENTITY_NOT_FOUND) {
+                    access.setException(ex);
+                }
+            } else if (access != null ) {
                 access.setException(ex);
-                access.setExitCode(Access.EXIT_EXCEPTION);
             }
+            
         } finally {
             writeOutput(result, response, outputFormat, outputEtag);
             if (access != null) {
@@ -304,7 +315,7 @@ public class EntityListener extends HttpServlet {
     // In case of an exception, we create a Navajo document with some messages
     // describing the error. This allows us to output the exception in the
     // format the user requested(eg.g JSON).
-    private Navajo handleException(Exception ex, HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    private Navajo handleException(Throwable ex, HttpServletRequest request, HttpServletResponse response) throws ServletException {
         Navajo result = null;
         if (ex instanceof EntityException) {
             logger.warn("EntityException in handling entity request: {}. Going to try to handle it nicely.", ex.getMessage());
