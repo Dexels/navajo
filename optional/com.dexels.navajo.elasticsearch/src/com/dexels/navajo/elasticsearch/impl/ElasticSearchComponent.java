@@ -10,8 +10,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -50,6 +50,8 @@ public class ElasticSearchComponent implements ElasticSearchService {
 	public void activate(Map<String,Object> settings) {
 	     df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	    
+	     
+	     
 		logger.info("Activating elasticsearch");
 		httpclient = HttpClients.createDefault();
 		this.url = (String)settings.get("url");
@@ -75,8 +77,9 @@ public class ElasticSearchComponent implements ElasticSearchService {
 	@Override
 	public void insert(Message m) throws IOException {
 		ObjectNode mm = (ObjectNode) messageToJSON(m);
+		String id = m.getProperty(this.id_property).getValue();
 		try {
-			putJSON(mm);
+			putJSON(id,mm);
 		} catch (URISyntaxException e) {
 			throw new IOException("Error putting to URI",e);
 		}
@@ -84,9 +87,11 @@ public class ElasticSearchComponent implements ElasticSearchService {
 	@Override
     public void insertJson(String jsonString) throws IOException {
         ObjectNode mm =  (ObjectNode)  objectMapper.readTree(jsonString);
-	    mm.put("@timestamp", df.format(new Date()));
+		String id = mm.get(this.id_property).asText();
+
+        mm.put("@timestamp", df.format(new Date()));
         try {
-            putJSON(mm);
+            putJSON(id,mm);
         } catch (URISyntaxException e) {
             throw new IOException("Error putting to URI",e);
         }
@@ -109,7 +114,9 @@ public class ElasticSearchComponent implements ElasticSearchService {
 			}
 			List<Property> properties = message.getAllProperties();
 			for (Property property : properties) {
-				setPropertyValue(an,property,objectMapper);
+				if(!property.getName().equals(id_property)) {
+					setPropertyValue(an,property,objectMapper);
+				}
 			}
 			
 			an.put("@timestamp", df.format(new Date()));
@@ -140,12 +147,13 @@ public class ElasticSearchComponent implements ElasticSearchService {
 	}
 
 	
-	private void putJSON(ObjectNode node) throws ClientProtocolException, IOException, URISyntaxException {
+	private void putJSON(String id, ObjectNode node) throws ClientProtocolException, IOException, URISyntaxException {
 	    replaceDots(node);
-		String id = node.get(this.id_property).asText();
-		HttpPut httpPut = new HttpPut(assembleURI(id));
 		byte[] requestBytes = objectMapper.writer().withDefaultPrettyPrinter().writeValueAsBytes(node);
+//		String id = node.get(this.id_property).asText();
+		HttpPut httpPut = new HttpPut(assembleURI(id));
 		HttpEntity he = new ByteArrayEntity(requestBytes);
+		System.err.println("Request:\n"+new String(requestBytes));
 		httpPut.setEntity(he);
 		CloseableHttpResponse response1 = httpclient.execute(httpPut);
 		//HttpEntity respe = response1.getEntity();
