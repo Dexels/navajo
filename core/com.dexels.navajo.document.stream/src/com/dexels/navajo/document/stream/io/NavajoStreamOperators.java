@@ -65,8 +65,8 @@ public class NavajoStreamOperators {
 			@Override
 			public Observable<NavajoStreamEvent> call(Observable<NavajoStreamEvent> in) {
 	        	return in
-//	        			.filter(e->e.type()!=NavajoEventTypes.NAVAJO_STARTED)
-//	        			.filter(e->e.type()!=NavajoEventTypes.NAVAJO_DONE)
+	        			.filter(e->e.type()!=NavajoEventTypes.NAVAJO_STARTED)
+	        			.filter(e->e.type()!=NavajoEventTypes.NAVAJO_DONE)
 	        			.startWith(Observable.just(Events.started(NavajoHead.createSimple(name, username, password))))
 	        			.concatWith(Observable.just(Events.done()))
 	        			.doOnNext(re->System.err.println("<>>>< "+re))
