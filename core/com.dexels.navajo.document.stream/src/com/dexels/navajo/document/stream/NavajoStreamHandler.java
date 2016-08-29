@@ -17,4 +17,7 @@ public interface NavajoStreamHandler {
 	public void arrayDone(String name);
 	public void navajoStart(NavajoHead head);
 	public void navajoDone();
+	public void binaryStarted(String name);
+	public void binaryContent(String name);
+	public void binaryDone();
 }

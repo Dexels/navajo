@@ -98,6 +98,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     private final static HashMap<String,Binary> persistedBinaries = new HashMap<String,Binary>();
     
     private Map<String,List<String>> urlMetaData = null;
+
+	private Writer pushWriter;
     
     private static final Logger logger = LoggerFactory.getLogger(Binary.class);
     /**
@@ -402,7 +404,26 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	}
     }
 
-	private void parseFromReader(Reader reader) throws IOException {
+    public void startPushRead() throws FileNotFoundException, IOException {
+        OutputStream fos = null;
+        fos = createTempFileOutputStream();
+        this.pushWriter = Base64.newDecoder(fos);
+    }
+
+    public void pushContent(String content) throws IOException {
+    	if(this.pushWriter==null) {
+    		logger.error("Huh?");
+    		throw new NullPointerException("No pushwriter found");
+    	}
+    	this.pushWriter.write(content);
+    }
+    
+    public void finishPushContent() throws IOException {
+    	this.pushWriter.flush();
+    	this.pushWriter.close();
+    }
+    
+    private void parseFromReader(Reader reader) throws IOException {
         OutputStream fos = null;
         try {
             fos = createTempFileOutputStream();

@@ -7,11 +7,16 @@ import static com.dexels.navajo.document.stream.events.Events.done;
 import static com.dexels.navajo.document.stream.events.Events.messageDefinitionStarted;
 import static com.dexels.navajo.document.stream.events.Events.messageStarted;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -26,10 +31,14 @@ import com.dexels.navajo.document.stream.api.Prop.Direction;
 import com.dexels.navajo.document.stream.api.Select;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
+import com.dexels.navajo.document.types.Binary;
 
 import rx.Observable;
 
 public class NavajoDomStreamer {
+
+	
+	private final static Logger logger = LoggerFactory.getLogger(NavajoDomStreamer.class);
 
 	public NavajoDomStreamer() {
 //		this.observableOutputStream.getObservable().subscribe(this);
@@ -80,7 +89,8 @@ public class NavajoDomStreamer {
 				list.add(arrayElementStarted(elementAttributes));
 				for (Message sm : m.getAllMessages()) {
 					emitMessage(sm, list,outputNavajo);
-				}				
+				}
+				emitBinaryProperties(m,list);
 				list.add(Events.arrayElement(messageElement(m),elementAttributes));
 			}
 			list.add(arrayDone(name));
@@ -89,6 +99,7 @@ public class NavajoDomStreamer {
 			for (Message m : message.getAllMessages()) {
 				emitMessage(m, list,outputNavajo);
 			}
+			emitBinaryProperties(message,list);
 //			if(message.getMode()!=null && !"".equals(message.getMode())) {
 //				System.err.println("MESSAGE name: "+message.getName() + " with mode: "+message.getMode());
 //			}
@@ -97,6 +108,37 @@ public class NavajoDomStreamer {
 
 	}
 
+	private static void emitBinaryProperties(Message m, List<NavajoStreamEvent> list) {
+		// TODO Auto-generated method stub
+		for(Property p: m.getAllProperties()) {
+			if(Property.BINARY_PROPERTY.equals(p.getType())) {
+				list.add(Events.binaryStarted(p.getName()));
+				Binary b = (Binary) p.getTypedValue();
+				if(b!=null) {
+					try {
+						b.writeBase64(new Writer(){
+
+							@Override
+							public void write(char[] cbuf, int off, int len) throws IOException {
+								list.add(Events.binaryContent( new String(cbuf,off,len)));
+							}
+
+							@Override
+							public void flush() throws IOException {
+							}
+
+							@Override
+							public void close() throws IOException {
+							}});
+					} catch (IOException e) {
+						logger.error("Error: ", e);
+					}
+				}
+				list.add(Events.binaryDone());
+			}
+		}
+		
+	}
 	private static Map<String, Object> getMessageAttributes(Message message) {
 		Map<String,Object> attr = new HashMap<>();
 		if(message.getMode()!=null && !"".equals(message.getMode())) {

@@ -17,7 +17,7 @@ import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-
+import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 import rx.Observable;
 import rx.Observable.Operator;
 import rx.Observable.Transformer;
@@ -64,8 +64,13 @@ public class NavajoStreamOperators {
 
 			@Override
 			public Observable<NavajoStreamEvent> call(Observable<NavajoStreamEvent> in) {
-	        	return in.startWith(Observable.just(Events.started(NavajoHead.createSimple(name, username, password))))
-	        	.concatWith(Observable.just(Events.done()));
+	        	return in
+	        			.filter(e->e.type()!=NavajoEventTypes.NAVAJO_STARTED)
+	        			.filter(e->e.type()!=NavajoEventTypes.NAVAJO_DONE)
+	        			.startWith(Observable.just(Events.started(NavajoHead.createSimple(name, username, password))))
+	        			.concatWith(Observable.just(Events.done()))
+	        			.doOnNext(re->System.err.println("<>>>< "+re))
+	        			.doOnCompleted(()->System.err.println("Done!"));
 			}
 		};
 	}

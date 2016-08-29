@@ -72,6 +72,7 @@ public class NAVADOC {
 
 					@Override
 					public void onNext(NavajoStreamEvent event) {
+						System.err.println("EEvent: "+event);
 						if(!n.isUnsubscribed()) {
 							Observable<byte[]> res = serializer.feed(event);
 							res.subscribe(a->n.onNext(a));
