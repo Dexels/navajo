@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Method;
@@ -21,11 +19,6 @@ import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.Select;
 import com.dexels.navajo.document.stream.xml.XmlInputHandler;
-import com.dexels.navajo.document.types.Binary;
-
-import rx.Observable;
-import rx.Observable.OnSubscribe;
-import rx.Subscriber;
 
 public final class StreamSaxHandler implements XmlInputHandler {
 
@@ -47,13 +40,13 @@ public final class StreamSaxHandler implements XmlInputHandler {
 	private Map<String, String> piggybackAttriutes;
 	private Map<String, String> asyncAttributes;
 	private final List<Select> currentSelections = new ArrayList<>();
-	private Binary currentBinary;
+//	private Binary currentBinary;
 //	private Writer currentBinaryWriter;
 //	private boolean binaryStarted;
-	private final static Logger logger = LoggerFactory
-			.getLogger(StreamSaxHandler.class);
+//	private final static Logger logger = LoggerFactory
+//			.getLogger(StreamSaxHandler.class);
 
-	private Subscriber<? super String> binarySink;
+//	private Subscriber<? super String> binarySink;
 	
 	public StreamSaxHandler(NavajoStreamHandler handler) {
 		this.handler = handler;
@@ -84,16 +77,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
         if (tag.equals("property")) {
         	String propType = h.get("type");
         	if("binary".equals(propType)) {
-        		Observable.<String>create(new OnSubscribe<String>() {
-
-					@Override
-					public void call(Subscriber<? super String> s) {
-						binarySink = s;
-					}
-				}).lift(BinaryObserver.collect()).subscribe(binary->{
-//					currentProperty = currentProperty.withValue(binary);
-	               currentBinary = binary;
-				});
+        		handler.binaryStarted(h.get("name"));
         	}
 //            String val = h.get("value");
 //            if (val!=null) {
@@ -272,32 +256,15 @@ public final class StreamSaxHandler implements XmlInputHandler {
     			val = StringEscapeUtils.unescapeXml(val); // BaseNode.XMLUnescape(val);
     			h2.put("value", val);
                 currentProperty = Prop.create(h2,currentSelections);
-            } else if(binarySink!=null) {
-            	binarySink.onCompleted();
-            	if(currentBinary!=null) {
-                    currentProperty = Prop.create(attributes,currentBinary);
-            		currentBinary = null;
-            	} else {
-            		logger.error("Null currentBinary where not expected");
-            		throw new RuntimeException("Null currentBinary where not expected");
-            	}
+            } else if("binary".equals(attributes.get("type"))) {
+            	handler.binaryDone();
+            	return;
             } else {
                 currentProperty = Prop.create(attributes,currentSelections);
 			}
-//            String sub = currentProperty.subtype();
-//            currentProperty.withValue(currentBinary); //.value(currentBinary);
-//            // Preserve the subtype. This will cause the handle to refer to the server
-//            // handle, not the client side
-//            currentProperty.subtype(sub);
-//            // Set mime type if specified as subtype.
-//            if ( currentProperty.subtypes("mime") != null ) {
-//            	currentBinary.setMimeType(currentProperty.subtypes("mime"));
-//            }        	
-        	
         	currentProperties.add(currentProperty);
         	currentProperty = null;
         	currentSelections.clear();
-        	binarySink = null;
         }
         if (tag.equals("option")) {
 //        	parseSelection(attributes);
@@ -332,19 +299,9 @@ public final class StreamSaxHandler implements XmlInputHandler {
 
     @Override
 	public final void text(String r)  {
-//        if (currentProperty==null) {
-//            return;
-//            throw new IllegalArgumentException("Huh?");
-//        }
-
-        if (this.binarySink!=null) {
-        	this.binarySink.onNext(r);
-         //  currentProperty.setInitialized();
-        } else {
-        	if(!"".equals(r.trim())) {
-                throw new IllegalArgumentException("uuuh: "+r);
-        	}
-       }
+    	if(!"".equals(r.trim())) {
+        	handler.binaryContent(r);
+    	}
     }
 
 }

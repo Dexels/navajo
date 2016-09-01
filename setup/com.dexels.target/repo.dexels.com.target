@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2002">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2033">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.server.core.feature.group" version="1.3.100.v20150529-1857"/>
@@ -15,8 +15,12 @@
 <repository location="http://eclipse.mirror.triple-it.nl/egit/updates/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.140.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.140"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.147.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.147"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.3.10.201607130511"/>
+<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.10.v20160621/"/>
 </location>
 </locations>
 <includeBundles>
@@ -26,6 +30,7 @@
 <plugin id="com.dexels.appstore.core"/>
 <plugin id="com.dexels.appstore.server"/>
 <plugin id="com.dexels.hazelcast"/>
+<plugin id="com.dexels.index.api"/>
 <plugin id="com.dexels.kafka.impl"/>
 <plugin id="com.dexels.log4j.httpappender"/>
 <plugin id="com.dexels.log4j.server"/>
@@ -68,9 +73,13 @@
 <plugin id="io.netty.handler"/>
 <plugin id="io.netty.resolver"/>
 <plugin id="io.netty.transport"/>
+<plugin id="io.netty.transport-native-epoll"/>
 <plugin id="io.reactivex.rxjava"/>
 <plugin id="io.reactivex.rxjava-joins"/>
 <plugin id="io.reactivex.rxjava-string"/>
+<plugin id="io.reactivex.rxnetty-common"/>
+<plugin id="io.reactivex.rxnetty-http"/>
+<plugin id="io.reactivex.rxnetty-tcp"/>
 <plugin id="jackson-core-lgpl"/>
 <plugin id="jackson-mapper-lgpl"/>
 <plugin id="javaewah" version="0.7.9.v201605172130"/>
@@ -95,6 +104,7 @@
 <plugin id="org.apache.commons.logging"/>
 <plugin id="org.apache.commons.net"/>
 <plugin id="org.apache.commons.pool"/>
+<plugin id="org.apache.commons.pool2"/>
 <plugin id="org.apache.felix.bundlerepository"/>
 <plugin id="org.apache.felix.configadmin"/>
 <plugin id="org.apache.felix.eventadmin"/>
@@ -175,6 +185,8 @@
 <plugin id="org.eclipse.equinox.simpleconfigurator"/>
 <plugin id="org.eclipse.equinox.supplement"/>
 <plugin id="org.eclipse.equinox.util"/>
+<plugin id="org.eclipse.jetty.proxy"/>
+<plugin id="org.eclipse.jetty.proxy.source"/>
 <plugin id="org.eclipse.jgit"/>
 <plugin id="org.eclipse.jgit.archive"/>
 <plugin id="org.eclipse.jgit.http.apache"/>
@@ -229,6 +241,7 @@
 <plugin id="org.scala-lang.scala-compiler"/>
 <plugin id="org.scala-lang.scala-library"/>
 <plugin id="org.scala-lang.scala-reflect"/>
+<plugin id="redis.clients.jedis"/>
 <plugin id="slf4j.api"/>
 <plugin id="slf4j.simple"/>
 <plugin id="stax2-api"/>

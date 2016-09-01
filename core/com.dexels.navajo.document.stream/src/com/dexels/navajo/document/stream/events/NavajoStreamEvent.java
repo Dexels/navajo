@@ -39,11 +39,23 @@ public class NavajoStreamEvent {
 			}
 			return sb.toString();
 		}
-		return "Type: "+type+" path: "+path+" attributes: {"+attributes+"}";
+		return "Type: "+type+" path: "+path+" attributes: {"+attributes+"} "+body;
 	}
 	
 	public enum NavajoEventTypes {
-		MESSAGE_STARTED,MESSAGE,ARRAY_STARTED,ARRAY_ELEMENT,ARRAY_DONE,NAVAJO_DONE, NAVAJO_STARTED, ARRAY_ELEMENT_STARTED, MESSAGE_DEFINITION_STARTED, MESSAGE_DEFINITION
+		MESSAGE_STARTED,
+		MESSAGE,
+		ARRAY_STARTED,
+		ARRAY_ELEMENT,
+		ARRAY_DONE,
+		NAVAJO_DONE,
+		NAVAJO_STARTED,
+		ARRAY_ELEMENT_STARTED,
+		MESSAGE_DEFINITION_STARTED,
+		MESSAGE_DEFINITION,
+		BINARY_STARTED,
+		BINARY_CONTENT,
+		BINARY_DONE
 	}
 
 	public NavajoEventTypes type() {

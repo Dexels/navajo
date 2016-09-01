@@ -100,10 +100,6 @@ public class SaxXmlFeeder implements AsyncByteArrayFeeder {
 							return new XMLEvent(XmlEventTypes.END_ELEMENT, parser.getLocalName(), null);
 						case XMLStreamConstants.CHARACTERS:
 							return new XMLEvent(XmlEventTypes.TEXT, parser.getText(), null);
-//							if(!r.trim().equals("")) {
-//								currentSubscriber.onNext(new XMLEvent(XmlEventTypes.TEXT, r, null));
-//							}
-//
 						}
 						return null;
 					} finally {

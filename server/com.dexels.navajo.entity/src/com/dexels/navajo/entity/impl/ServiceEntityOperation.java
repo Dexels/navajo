@@ -495,12 +495,12 @@ public class ServiceEntityOperation implements EntityOperation {
 
         // If the entity has a mongo backend, we added the _id property.
         // Remove this now to ensure a proper mask operation can take place.
-        if (hasExtraMessageMongo()) {
-            Property id = myEntity.getMessage().getProperty("_id");
-            if (id != null) {
-                myEntity.getMessage().removeProperty(id);
-            }
-        }
+//        if (hasExtraMessageMongo()) {
+//            Property id = myEntity.getMessage().getProperty("_id");
+//            if (id != null) {
+//                myEntity.getMessage().removeProperty(id);
+//            }
+//        }
 
         // After a POST or PUT, return the full new object resulting from the previous operation
         // effectively this is a GET. However, if this fails (e.g. no GET operation is defined

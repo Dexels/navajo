@@ -1,8 +1,10 @@
 package com.dexels.navajo.document.stream;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -17,6 +19,7 @@ import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.Select;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
+import com.dexels.navajo.document.types.Binary;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -32,6 +35,10 @@ public class NavajoStreamCollector {
 	private final Stack<Message> messageStack = new Stack<Message>();
 	
 	private Stack<String> tagStack = new Stack<>();
+	
+	private final Map<String,Binary> pushBinaries = new HashMap<>();
+
+	private Binary currentBinary;
 	
 	public NavajoStreamCollector() {
 	}
@@ -61,12 +68,6 @@ public class NavajoStreamCollector {
 			sb.deleteCharAt(len-1);
 		}
 		return sb.toString();
-	}
-	
-	public static void main(String[] args) {
-		NavajoStreamCollector nsc = new NavajoStreamCollector();
-		nsc.tagStack.push("Outer");
-		nsc.tagStack.push("Inner");
 	}
 
 	private Observable<Navajo> processNavajoEvent(NavajoStreamEvent n, Subscriber<? super Navajo> subscriber) {
@@ -100,6 +101,10 @@ public class NavajoStreamCollector {
 			for (Prop e : msgProps) {
 				msgParent.addProperty(createTmlProperty(e));
 			}
+			for(Entry<String,Binary> e : pushBinaries.entrySet()) {
+				msgParent.addProperty(createBinaryProperty(e.getKey(),e.getValue()));
+			}
+			pushBinaries.clear();
 			return Observable.<Navajo>empty();
 		case ARRAY_STARTED:
 			tagStack.push(n.path());
@@ -148,6 +153,11 @@ public class NavajoStreamCollector {
 			for (Prop e : elementProps) {
 				elementParent.addProperty(createTmlProperty(e));
 			}
+			for(Entry<String,Binary> e : pushBinaries.entrySet()) {
+				elementParent.addProperty(createBinaryProperty(e.getKey(),e.getValue()));
+			}
+			pushBinaries.clear();
+
 			return Observable.<Navajo>empty();
 			
 		case MESSAGE_DEFINITION_STARTED:
@@ -163,12 +173,47 @@ public class NavajoStreamCollector {
 				subscriber.onNext(assemble);
 			}
 			return Observable.<Navajo>just(assemble);
-
+		
+		case BINARY_STARTED:
+			try {
+				String name = n.path();
+				this.currentBinary = new Binary();
+				this.currentBinary.startPushRead();
+				this.pushBinaries.put(name, currentBinary);
+				return Observable.<Navajo>empty();
+			} catch (IOException e1) {
+				return Observable.error(e1);
+			}
+			
+		case BINARY_CONTENT:
+			try {
+				if(this.currentBinary==null) {
+					// whoops;
+				}
+				this.currentBinary.pushContent((String) n.body());
+				return Observable.<Navajo>empty();
+			} catch (IOException e1) {
+				return Observable.error(e1);
+			}
+			
+		case BINARY_DONE:
+			try {
+				this.currentBinary.finishPushContent();
+				return Observable.<Navajo>empty();
+			} catch (IOException e1) {
+				return Observable.error(e1);
+			}
 		default:
 			return Observable.<Navajo>empty();
 		}
 	}
 	
+	private Property createBinaryProperty(String name, Binary value) {
+		Property result = NavajoFactory.getInstance().createProperty(assemble, name, Property.BINARY_PROPERTY, null,0,"", Property.DIR_IN);
+		result.setAnyValue(value);
+		return result;
+	}
+
 	private void createHeader(NavajoHead head) {
 		Header h = NavajoFactory.getInstance().createHeader(assemble, head.name(), head.username(), head.password(), -1);
 		assemble.addHeader(h);

@@ -148,7 +148,19 @@ public class NavajoStreamSerializer {
 				case NAVAJO_DONE:
 					w.write("</tml>\n");
 					break;
-	
+				case BINARY_STARTED:
+					printStartTag(w, INDENT * (tagDepth+1),true,"property","name=\""+event.path()+"\" type=\"binary\"");
+					tagDepth++;
+					break;
+				case BINARY_CONTENT:
+					w.write((String)event.body());
+					tagDepth++;
+					break;
+				case BINARY_DONE:
+					tagDepth--;
+					printEndTag(w, INDENT*tagDepth, "property");
+					break;
+
 				default:
 					break;
 			}

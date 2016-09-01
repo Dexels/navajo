@@ -49,6 +49,18 @@ public class Events {
 		return new NavajoStreamEvent(null,NavajoEventTypes.NAVAJO_STARTED,head,Collections.emptyMap());
 	}
 
+	public static NavajoStreamEvent binaryStarted(String name) {
+		return new NavajoStreamEvent(name, NavajoEventTypes.BINARY_STARTED, null, Collections.emptyMap());
+	}
+
+	public static NavajoStreamEvent binaryContent(String data) {
+		return new NavajoStreamEvent(null, NavajoEventTypes.BINARY_CONTENT, data, Collections.emptyMap());
+	}
+
+	public static NavajoStreamEvent binaryDone() {
+		return new NavajoStreamEvent(null, NavajoEventTypes.BINARY_DONE, null, Collections.emptyMap());
+	}
+
 //	public static Map<String,Prop> propMap(List<Prop> list) {
 //		Map<String,Prop> result = new HashMap<>();
 //		for (Prop prop : list) {
