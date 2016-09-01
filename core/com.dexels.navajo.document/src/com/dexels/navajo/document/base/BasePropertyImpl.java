@@ -811,7 +811,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		myValue = null;
 		setType(BINARY_PROPERTY);
 		if (b != null) {
-			addSubType("handle=" + b.getHandle());
+//			addSubType("handle=" + b.getHandle());     // Disabled to allow generating a hash over the output
 			addSubType("mime=" + b.getMimeType());
 			addSubType("extension=" + b.getExtension());
 		}
