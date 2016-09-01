@@ -24,6 +24,10 @@ ul.operations {
     padding: 0px;
 }
 
+.operation.HEAD {
+	background-color: #eeeeec;
+}
+
 .operation.GET {
 	background-color: #E7F0F7;
 }
@@ -40,6 +44,9 @@ ul.operations {
 	background-color: #f5e8e8;
 }
 
+.operationHeader.HEAD {
+	border: 1px solid #888a85;
+}
 
 .operationHeader.GET {
 	border: 1px solid #C3D9EC;
@@ -100,6 +107,10 @@ li.operation .description {
 	text-decoration: none;
 }
 
+li.operation .description.HEAD {
+	color: #555753;
+}
+
 li.operation .description.GET {
 	color: #0F6AB4;
 }
@@ -121,6 +132,10 @@ h2 {
 	font-size: 1.2em;
 }
 
+h2.HEAD{
+	color: #555753;
+}
+
 h2.GET{
 	color: #0F6AB4;
 }
@@ -134,10 +149,12 @@ h2.DELETE{
 	color: #a41e22;
 }
 
+li.operation .httpHEAD {
+	background-color: #555753;
+}
 
 li.operation .httpGET {
 	background-color: #0F6AB4;
-	
 }
 
 li.operation .httpPOST {

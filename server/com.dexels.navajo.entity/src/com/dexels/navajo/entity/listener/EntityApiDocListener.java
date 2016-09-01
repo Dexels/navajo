@@ -72,6 +72,7 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String path = request.getPathInfo();
+        boolean debug = Boolean.valueOf(request.getParameter("developer"));
         String basePath = "";
 
         if (path != null && !path.equals("/")) {
@@ -92,6 +93,9 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
             Map<String, Operation> ops = myManager.getOperations(entityName);
             for (String op : ops.keySet()) {
                 operations += writeEntityOperation(operationtemplate, entityName, ops.get(op));
+            }
+            if (debug) {
+                operations += writeHeadEntityOperation(operationtemplate, entityName);
             }
         }
 
@@ -143,6 +147,35 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         result = result.replace("{{OPRESPONSE}}", responseBody);
         
         commentBody =  printPropertiesDescription(e.getMessage(), method, "response");
+        result = result.replace("{{OPRESPONSECOMMENT}}", commentBody);
+        return result;
+    }
+    
+    private String writeHeadEntityOperation(String template, String entityName) throws ServletException {
+        String result = "";
+        String method = "HEAD";
+        
+        Entity e = myManager.getEntity(entityName);
+        Navajo n = NavajoFactory.getInstance().createNavajo();
+        n.addMessage(e.getMessage());
+        String entityNameUrl = entityName.replace(".", "/");
+
+        result = template.replace("{{OP}}", method);
+        result = result.replace("{{URL}}", entityNameUrl);
+        result = result.replace("{{DESCRIPTION}}", e.getMessage().getName());
+        
+        String opresponsetemplate = getTemplate("operationresponse.template");
+        
+        result = result.replace("{{OPREQUEST}}", "");
+        result = result.replace("{{OPREQUESTCOMMENT}}", "");
+        
+        String responseBody = opresponsetemplate.replace("{{RESPONSE_JSON}}", writeEntityJson(n, ""));
+        responseBody = responseBody.replace("{{OP}}", method);
+        responseBody = responseBody.replace("{{RESPONSE_XML}}", StringEscapeUtils.escapeHtml(writeEntityXml(n)));
+        result = result.replace("{{OPRESPONSE}}", responseBody);
+        
+        String commentBody = printPropertiesDescription(e.getMessage(), method, "request");
+        commentBody += printPropertiesDescription(e.getMessage(), method, "response");
         result = result.replace("{{OPRESPONSECOMMENT}}", commentBody);
         return result;
     }

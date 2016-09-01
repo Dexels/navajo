@@ -673,8 +673,8 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
             for (int j = 0; j < subMessages.size(); j++) {
                 Message subMsg = subMessages.get(j);
                 if (superMsg.getName().equals(subMsg.getName())) {
-                    boolean matchMethod = superMsg.getMethod().equals("") || subMsg.getMethod().equals("")
-                            || superMsg.getMethod().equals(method);
+                    boolean matchMethod = method.equals("") || superMsg.getMethod().equals("")
+                            || subMsg.getMethod().equals("") || superMsg.getMethod().equals(method);
 
                     if (!matchMethod) {
                         this.removeMessage(superMsg);
