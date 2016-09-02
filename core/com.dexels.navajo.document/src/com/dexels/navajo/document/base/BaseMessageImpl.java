@@ -1782,7 +1782,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
             Message m = allMessages.next();
             
-            boolean matchMethod = m.getMethod().equals("") || (mask.getMessage(m.getName()) != null && mask.getMessage(m.getName()).getMethod().equals(""))
+            boolean matchMethod = m.getMethod().equals("") || method.equals("") || (mask.getMessage(m.getName()) != null && mask.getMessage(m.getName()).getMethod().equals(""))
                     || m.getMethod().equals(method);
 
             if (!matchMethod) {
