@@ -644,8 +644,8 @@ public class ServiceEntityOperation implements EntityOperation {
 		if (input.getMessage("__parms__") != null) {
 		    request.addMessage(input.getMessage("__parms__").copy(request));
 		}
-		if ( myOperation.getExtraMessage() != null ) {
-		    request.addMessage(myOperation.getExtraMessage().copy(request));
+		if ( getop.getExtraMessage() != null ) {
+		    request.addMessage(getop.getExtraMessage().copy(request));
         }
         prepareServiceRequestHeader(request,request, getop);
 		Navajo result = get.commitOperation(request, getop);
