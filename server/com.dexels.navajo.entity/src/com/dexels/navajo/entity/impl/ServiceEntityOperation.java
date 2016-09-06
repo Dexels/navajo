@@ -467,13 +467,14 @@ public class ServiceEntityOperation implements EntityOperation {
         Navajo result = callEntityService(input);
 
         // Update referenced entities as well...
-        updateReferencedEntities(input);
+        //updateReferencedEntities(input);
 
         // If the entity has a mongo backend, we added the _id property.
         // Remove this now to ensure a proper mask operation can take place.
         if (hasExtraMessageMongo()) {
             Property id = myEntity.getMessage().getProperty("_id");
-            if (id != null) {
+            // Only remove if it's not a key
+            if (id != null && id.getKey() == null) {
                 myEntity.getMessage().removeProperty(id);
             }
         }
