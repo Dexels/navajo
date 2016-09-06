@@ -323,6 +323,17 @@ public class Entity {
     public Set<Key> getKeys() {
         return myKeys;
     }
+    
+    public Key getAutoKey() {
+        for (Key key : myKeys) {
+            for (Property p : key.getKeyProperties()) {
+                if (Key.isAutoKey(p.getKey())) {
+                   return key;
+                }
+            }
+        }
+        return null;
+    }
 
     public Set<Key> getRequiredKeys() {
         Set<Key> required = new HashSet<>();
