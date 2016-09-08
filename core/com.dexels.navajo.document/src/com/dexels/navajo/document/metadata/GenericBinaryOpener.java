@@ -1,9 +1,12 @@
 package com.dexels.navajo.document.metadata;
 
 import java.awt.Desktop;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -99,9 +102,9 @@ public class GenericBinaryOpener implements BinaryOpener {
 	{
 		try {
 			File f = new File(fileName);
-			FileWriter fw = new FileWriter(f);
-			m.writeAsCSV(fw, delimiter);
-			fw.close();
+			Writer out = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(f), "UTF-8"));
+		    m.writeAsCSV(out, delimiter);
+		    out.close();
 			return open(f);
 		} catch (Exception e) {
 			logger.error("Error: ",e);
