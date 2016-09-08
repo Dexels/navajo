@@ -130,6 +130,7 @@ public class EntityListener extends HttpServlet {
             String tenant = determineInstanceFromRequest(request);
             if (tenant == null) {
                 logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
+                throw new EntityException(EntityException.UNAUTHORIZED);
             }
     
            
@@ -225,17 +226,19 @@ public class EntityListener extends HttpServlet {
             }
         } catch (Throwable ex) {
             result = handleException(ex, request, response);
-            access.setExitCode(Access.EXIT_EXCEPTION);
-            // Check whether to log this exception to the access object. If it's an EntityException
-            // then we don't log a NOT_FOUND exception
-            if (ex instanceof EntityException) {
-                if (((EntityException) ex).getCode() != EntityException.ENTITY_NOT_FOUND) {
+            if (access != null) {
+                access.setExitCode(Access.EXIT_EXCEPTION);
+                // Check whether to log this exception to the access object. If it's an EntityException
+                // then we don't log a NOT_FOUND exception
+                if (ex instanceof EntityException) {
+                    if (((EntityException) ex).getCode() != EntityException.ENTITY_NOT_FOUND) {
+                        access.setException(ex);
+                    }
+                } else {
                     access.setException(ex);
                 }
-            } else if (access != null ) {
-                access.setException(ex);
             }
-            
+
         } finally {
             writeOutput(result, response, outputFormat, outputEtag);
             if (access != null) {

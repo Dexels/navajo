@@ -248,7 +248,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		for ( Property p : allProps ) {
 			// Fetch property from entity definition
 			Property e_p = myEntity.getMessage().getProperty(p.getName());
-			if ( e_p.getBind() != null ) {
+			if (e_p != null && e_p.getBind() != null ) {
 				String entityName = getEntityFromReference(e_p.getBind());
 				String propertyName = getPropertyFromReference(e_p.getBind());
 				Navajo entityObj = referenced.get(entityName);
@@ -290,9 +290,8 @@ public class ServiceEntityOperation implements EntityOperation {
 		if ( n.getMessage(myEntity.getMessageName()) != null )  {
 			n.getMessage(myEntity.getMessageName()).merge(myEntity.getMessage(), true );
 			n.getMessage(myEntity.getMessageName()).maskMessage(myEntity.getMessage(), method);
-
+			
 			if ( resolveLinks ) {
-
 				//myEntity.getMessage().write(System.err);
 				
 				// Add properties that refer to other entities.
@@ -357,29 +356,6 @@ public class ServiceEntityOperation implements EntityOperation {
 	}
 	
 	
-	/**
-	 * Check for missing _id/__id properties
-	 * 
-	 * @param m
-	 */
-	private void addIdToArrayMessageDefinitions(Message m) {
-		if ( !m.isArrayMessage() ) {
-			if ( m.getProperty("_id") == null ) {
-				// NOT use direction="in" for _id, since direction="in" is also default in Mongo/Navajo driver.
-				Property p = NavajoFactory.getInstance().createProperty(m.getRootDoc(), "_id", Property.STRING_PROPERTY, "", 0, "", Property.DIR_IN);
-				m.addProperty(p);
-			}
-		} else {
-			if ( m.isArrayMessage() && m.getDefinitionMessage() != null && m.getDefinitionMessage().getProperty("__id") == null ) {
-				Property p = NavajoFactory.getInstance().createProperty(m.getRootDoc(), "__id", Property.STRING_PROPERTY, "", 0, "", Property.DIR_IN);
-				m.getDefinitionMessage().addProperty(p);
-			}
-			List<Message> children = m.getAllMessages();
-			for ( int i = 0; i < children.size(); i++ ) {
-				addIdToArrayMessageDefinitions(children.get(i));
-			}
-		}
-	}
 	
 	private String listToString(List<String> l) {
 		StringBuffer sb = new StringBuffer();
@@ -479,7 +455,7 @@ public class ServiceEntityOperation implements EntityOperation {
         } else {
             performPostValidation(input, inputEntity);
         }
-
+                
         // Check property types.
         List<String> invalidProperties = new ArrayList<String>();
         checkTypes(inputEntity, myEntity.getMessage(), myOperation.getMethod(), invalidProperties);
@@ -491,16 +467,17 @@ public class ServiceEntityOperation implements EntityOperation {
         Navajo result = callEntityService(input);
 
         // Update referenced entities as well...
-        updateReferencedEntities(input);
+        //updateReferencedEntities(input);
 
         // If the entity has a mongo backend, we added the _id property.
         // Remove this now to ensure a proper mask operation can take place.
-//        if (hasExtraMessageMongo()) {
-//            Property id = myEntity.getMessage().getProperty("_id");
-//            if (id != null) {
-//                myEntity.getMessage().removeProperty(id);
-//            }
-//        }
+        if (hasExtraMessageMongo()) {
+            Property id = myEntity.getMessage().getProperty("_id");
+            // Only remove if it's not a key
+            if (id != null && id.getKey() == null) {
+                myEntity.getMessage().removeProperty(id);
+            }
+        }
 
         // After a POST or PUT, return the full new object resulting from the previous operation
         // effectively this is a GET. However, if this fails (e.g. no GET operation is defined
@@ -513,10 +490,7 @@ public class ServiceEntityOperation implements EntityOperation {
     }
 
     private void performPutValidation(Navajo input, Message inputEntity) throws EntityException {
-        if (hasExtraMessageMongo()) {
-            addIdToArrayMessageDefinitions(myEntity.getMessage());
-        }
-
+     
         Navajo currentEntity = getCurrentEntity(input);
         validateEtag(input, inputEntity, currentEntity);
 
@@ -524,11 +498,6 @@ public class ServiceEntityOperation implements EntityOperation {
             if (currentEntity == null || currentEntity.getMessage(myEntity.getMessageName()) == null) {
                 // TODO: Monogo backend does not support PUT for inserts. Thus we give an exception
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Entity not found - use POST for insert");
-            } else {
-                Property id = currentEntity.getProperty(inputEntity.getName() + "/_id");
-                if (id != null) {
-                    inputEntity.addProperty(id.copy(inputEntity.getRootDoc()));
-                }
             }
         }
     }
@@ -545,18 +514,17 @@ public class ServiceEntityOperation implements EntityOperation {
 
 
     private Navajo handleGet(Navajo input, Message inputEntity) throws EntityException {
-        String postedEtag;
-        if ((postedEtag = inputEntity.getEtag()) != null) {
-        	Navajo entity = getCurrentEntity(input);
-        	if (entity != null && entity.getMessage(myEntity.getMessageName()) != null) {
-        		if (postedEtag.equals(entity.getMessage(myEntity.getMessageName()).generateEtag())) {
+        String postedEtag = inputEntity.getEtag();
+        Navajo result = callEntityService(input);
+        if (postedEtag != null) {
+        	if (result != null && result.getMessage(myEntity.getMessageName()) != null) {
+        		if (postedEtag.equals(result.getMessage(myEntity.getMessageName()).generateEtag())) {
         			throw new EntityException(EntityException.NOT_MODIFIED);
         		}
         	}
-        	
         }
         
-        return callEntityService(input);
+        return result;
     }
 
     private Navajo handleDelete(Navajo input, Message inputEntity) throws EntityException {
@@ -565,17 +533,9 @@ public class ServiceEntityOperation implements EntityOperation {
         
         Navajo currentEntity = getCurrentEntity(input);
         if (currentEntity == null || currentEntity.getMessage(myEntity.getMessageName()) == null) {
-            throw new EntityException(EntityException.ENTITY_NOT_FOUND,
-                    "Could not peform delete, entity not found");
+            throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not peform delete, entity not found");
         }
         
-        if (hasExtraMessageMongo()) {
-             Property id = currentEntity.getProperty(inputEntity.getName() + "/_id");
-             if (id != null) {
-                 inputEntity.addProperty(id.copy(inputEntity.getRootDoc()));
-             }
-         }
-         
         return callEntityService(input);
     }
 
@@ -685,8 +645,8 @@ public class ServiceEntityOperation implements EntityOperation {
 		if (input.getMessage("__parms__") != null) {
 		    request.addMessage(input.getMessage("__parms__").copy(request));
 		}
-		if ( myOperation.getExtraMessage() != null ) {
-		    request.addMessage(myOperation.getExtraMessage().copy(request));
+		if ( getop.getExtraMessage() != null ) {
+		    request.addMessage(getop.getExtraMessage().copy(request));
         }
         prepareServiceRequestHeader(request,request, getop);
 		Navajo result = get.commitOperation(request, getop);
@@ -700,8 +660,23 @@ public class ServiceEntityOperation implements EntityOperation {
 		if ( result.getMessage(myEntity.getMessageName()) == null ) {
 			return null;
 		}
+		Property id = null;
+		if (hasExtraMessageMongo()) {
+            id = result.getProperty(myEntity.getMessageName() + "/_id");
+        }
+		
 		clean(result, new String[]{myEntity.getMessageName()}, "response", true);
 		
+		if (id != null && id.getValue() != null) {
+		    input.getMessage(myEntity.getMessageName()).addProperty(id.copy(input));
+		    input.getRootMessage().addProperty(id.copy(input));
+		    
+		    if (myEntity.getAutoKey() != null) {
+		        for (Property p : myEntity.getAutoKey().getKeyProperties()) {
+		            p.setAnyValue(id.getValue());
+		        }
+		    }
+        }
 		return result;
 	}
 	
@@ -755,29 +730,27 @@ public class ServiceEntityOperation implements EntityOperation {
 			}
 			
 		}
+		// Check for auto key and bind _id value to it
+        Property id = null;
+        if (hasExtraMessageMongo()) {
+            id = result.getProperty(myEntity.getMessageName() + "/_id");
+        }
+        
 		clean(result, new String[]{myEntity.getMessageName()}, "response", true);	
+		      
+        if (id != null && id.getValue() != null) {
+            Key autoKey = myEntity.getAutoKey();
+            if (autoKey != null) {
+                for (Property p : autoKey.getKeyProperties()) {
+                    result.getProperty(p.getFullPropertyName()).setAnyValue(id.getValue());
+                }
+            }
+        }
+        
+        
 		return result;
 		
-		// Check for transaction.
-//		try {
-//			NavajoTransaction nt = (NavajoTransaction) NavajoTransactionManager.getInstance().getTransaction();
-//			if ( nt != null && !myOperation.getMethod().equals(Operation.GET) ) {
-//				Navajo original = null;
-//				// fetch original Navajo (before PUT or DELETE).
-//				if ( myOperation.getMethod().equals(Operation.PUT) || myOperation.getMethod().equals(Operation.DELETE)) {
-//					original = getCurrentEntity(input);
-//				}
-//				// Perform operation (blocking!)
-//				Navajo result = commitOperation(input, myOperation, true);
-//				// Log when successful.
-//				nt.addNonTransactionalEntityResource(input, original, this);
-//				return result;
-//			} else {
-//				return commitOperation(input, myOperation, false);
-//			}
-//		} catch (Exception se) {
-//			throw new EntityException(EntityException.SERVER_ERROR, se.getMessage(), se);
-//		}
+		
 
 	}
 
@@ -793,7 +766,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		for ( Property p : list ) {
 			// Check if this is a bind property.
 			Property e_p = myEntity.getMessage().getProperty(p.getName());
-			if ( e_p.getBind() != null && !e_p.getBind().equals("") ) {
+			if (e_p != null &&  e_p.getBind() != null && !e_p.getBind().equals("") ) {
 				result.getMessage(myEntity.getMessageName()).removeProperty(p);
 			}
 		}
