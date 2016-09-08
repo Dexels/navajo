@@ -36,13 +36,9 @@ public class GenericBinaryOpener implements BinaryOpener {
 			Desktop.getDesktop().mail(new URI("mailto", url, null));
 			return true;
 		} catch (IOException e) {
-			logger.info("Could not open mail, uri= " + url);
-			logger.info("Caught: " + e);
-			logger.error("Error: ", e);
+			logger.error("Could not open mail, uri= {}", url, e);
 		} catch (URISyntaxException e) {
-			logger.info("Could not open mail, uri= " + url);
-			logger.info("Caught: " + e);
-			logger.error("Error: ", e);
+		    logger.error("Could not open mail, uri= {}", url, e);
 		}
 		return false;
 	}
@@ -63,8 +59,8 @@ public class GenericBinaryOpener implements BinaryOpener {
 		try {
 			Desktop.getDesktop().open(f);
 			return true;
-		} catch (IOException e) {
-			logger.error("Error: ", e);
+		} catch (Throwable e) {
+			logger.error("Error opening file: {}",f.getAbsolutePath(), e);
 			return false;
 		}
 	}
@@ -87,27 +83,31 @@ public class GenericBinaryOpener implements BinaryOpener {
 		try {
 			Desktop.getDesktop().browse(new URI (scheme, url, null));
 			return true;
-		} catch (IOException e) {
-			logger.info("Could not open browser, uri= " + url);
-			logger.error("Error: ", e);
-		} catch (URISyntaxException e) {
-			logger.info("Could not open browser, uri= " + url);
-			logger.error("Error: ", e);
-		}
+		} catch (Throwable e) {
+	         logger.error("Could not open browser, scheme={} uri={}", scheme, url, e);
+		} 
 		return false;
 	}
 	
 	@Override
 	public boolean exportCsv(String fileName, Message m, String delimiter)
 	{
+	    Writer out = null;
 		try {
 			File f = new File(fileName);
-			Writer out = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(f), "UTF-8"));
+			out = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(f), "UTF-8"));
 		    m.writeAsCSV(out, delimiter);
-		    out.close();
 			return open(f);
-		} catch (Exception e) {
-			logger.error("Error: ",e);
+		} catch (Throwable e) {
+			logger.error("Error exporting {} to CSV ", fileName, e);
+		} finally {
+		    if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    // whatever
+                }
+            }
 		}
 		return false;
 	}
