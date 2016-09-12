@@ -205,7 +205,7 @@ public class RESTAdapter extends NavajoMap {
             }
         } else {
             try {
-                w.write(textContent);
+                bContent.getOutputStream().write(textContent.toString().getBytes("UTF-8"));
             } catch (IOException e) {
                 logger.error("IOException on writing textcontent! Not performing REST call!");
                 throw new UserException(e.getMessage(), e);
