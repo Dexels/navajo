@@ -81,10 +81,6 @@ public class NavajoStreamEvent {
 		return body;
 	}
 	
-	public Msg message() {
-		return (Msg)body;
-	}
-	
 	public NavajoStreamEvent withAttribute(String key, Object value) {
 		Map<String,Object> attr = new HashMap<>(this.attributes);
 		attr.put(key, value);
@@ -108,5 +104,12 @@ public class NavajoStreamEvent {
 		Map<String,Object> res = new HashMap<>(this.attributes);
 		res.remove(attribute);
 		return new NavajoStreamEvent(this.path,this.type,this.body,Collections.unmodifiableMap(res) ); 
+	}
+	
+	public Msg message() throws NavajoStreamEventException {
+		if(type!=NavajoEventTypes.MESSAGE && type!=NavajoEventTypes.ARRAY_ELEMENT && type!=NavajoEventTypes.MESSAGE_DEFINITION) {
+			throw new NavajoStreamEventException("Wrong kind of event to query message: "+type);
+		}
+		return (Msg)body;
 	}
 }
