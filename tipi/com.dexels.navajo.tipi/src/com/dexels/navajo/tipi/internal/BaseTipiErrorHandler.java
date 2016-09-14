@@ -188,6 +188,10 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	@Override
 	public void setContext(TipiContext c) {
 		context = c;
+		if (c == null) {
+		    logger.warn("Null tipi context!", new Exception());
+		    return;
+		}
         retrieveValidationThread = new Thread(new Runnable() {
             @Override
             public void run() {
