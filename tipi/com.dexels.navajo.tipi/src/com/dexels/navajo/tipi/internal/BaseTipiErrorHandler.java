@@ -219,7 +219,13 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 
 
 	private void getRemoteValidationProperties() {
-	    final String lcode = context.getApplicationInstance().getLocaleCode();
+	    String lcode;
+	    try {
+	        lcode = context.getApplicationInstance().getLocaleCode();
+	    } catch (Throwable t) {
+	        // Revert to default lcode
+	        lcode = "nl";
+	    }
         final String url = context.getSystemProperty("tipi.resourceurl");
         final String union = context.getSystemProperty("tipi.profile");
         
