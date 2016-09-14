@@ -223,15 +223,23 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 
 
 	private void getRemoteValidationProperties() {
-	    String lcode;
+	    if (context == null) {
+	        // This is weird
+	        logger.warn("Null context in retrieving remote validation - stopping");
+	        return;
+	    }
+	    final String lcode;
+	    final String url;
+	    final String union;
 	    try {
 	        lcode = context.getApplicationInstance().getLocaleCode();
+	        url = context.getSystemProperty("tipi.resourceurl");
+	        union = context.getSystemProperty("tipi.profile");
 	    } catch (Throwable t) {
-	        // Revert to default lcode
-	        lcode = "nl";
+	        logger.error("Exception in getting critical properties! stopping", t);
+	        return;
 	    }
-        final String url = context.getSystemProperty("tipi.resourceurl");
-        final String union = context.getSystemProperty("tipi.profile");
+       
         
         if (url == null) {
             logger.warn("Empty url for tipi.resourceurl - cannot load validation.properties");
