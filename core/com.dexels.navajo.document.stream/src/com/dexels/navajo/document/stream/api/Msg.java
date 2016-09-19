@@ -89,10 +89,21 @@ public class Msg {
 		return property;
 	}
 
+	public Msg withValue(String propertyName, Object value) {
+		return copy().with(property(propertyName).withValue(value));
+	}
+	
+	private Prop property(String name) {
+		return propertiesByName.get(name);
+	}
 	public List<Prop> properties() {
 		return Collections.unmodifiableList(properties);
 	}
 	public Msg with(Prop property) {
+		Prop old = propertiesByName.get(property.name());
+		if(old!=null) {
+			properties.remove(old);
+		}
 		properties.add(property);
 		propertiesByName.put(property.name(), property);
 		return this;

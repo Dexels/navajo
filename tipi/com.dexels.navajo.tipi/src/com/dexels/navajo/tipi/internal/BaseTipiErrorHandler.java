@@ -188,6 +188,10 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	@Override
 	public void setContext(TipiContext c) {
 		context = c;
+		if (c == null) {
+		    logger.warn("Null tipi context!", new Exception());
+		    return;
+		}
         retrieveValidationThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -219,9 +223,23 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 
 
 	private void getRemoteValidationProperties() {
-	    final String lcode = context.getApplicationInstance().getLocaleCode();
-        final String url = context.getSystemProperty("tipi.resourceurl");
-        final String union = context.getSystemProperty("tipi.profile");
+	    if (context == null) {
+	        // This is weird
+	        logger.warn("Null context in retrieving remote validation - stopping");
+	        return;
+	    }
+	    final String lcode;
+	    final String url;
+	    final String union;
+	    try {
+	        lcode = context.getApplicationInstance().getLocaleCode();
+	        url = context.getSystemProperty("tipi.resourceurl");
+	        union = context.getSystemProperty("tipi.profile");
+	    } catch (Throwable t) {
+	        logger.error("Exception in getting critical properties! stopping", t);
+	        return;
+	    }
+       
         
         if (url == null) {
             logger.warn("Empty url for tipi.resourceurl - cannot load validation.properties");

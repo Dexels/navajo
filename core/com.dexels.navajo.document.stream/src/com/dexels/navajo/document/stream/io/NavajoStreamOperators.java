@@ -68,9 +68,7 @@ public class NavajoStreamOperators {
 	        			.filter(e->e.type()!=NavajoEventTypes.NAVAJO_STARTED)
 	        			.filter(e->e.type()!=NavajoEventTypes.NAVAJO_DONE)
 	        			.startWith(Observable.just(Events.started(NavajoHead.createSimple(name, username, password))))
-	        			.concatWith(Observable.just(Events.done()))
-	        			.doOnNext(re->System.err.println("<>>>< "+re))
-	        			.doOnCompleted(()->System.err.println("Done!"));
+	        			.concatWith(Observable.just(Events.done()));
 			}
 		};
 	}
@@ -282,6 +280,7 @@ public class NavajoStreamOperators {
 
 					@Override
 					public void onNext(byte[] in) {
+						System.err.println("NewSR: "+new String(in));
 						inflater.setInput(in);
 						byte[] buffer = new byte[COMPRESSION_BUFFER_SIZE];
 						int read;
