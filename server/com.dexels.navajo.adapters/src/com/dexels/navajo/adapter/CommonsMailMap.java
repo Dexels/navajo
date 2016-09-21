@@ -186,18 +186,18 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 			} else {
 				logger.info("No attachments");
 			}
-		  logger.info("Setting body, before replace: "+bodyText);
+		  logger.debug("Setting body, before replace: "+bodyText);
 		  
 		  // Replace any inline image tags with the created ones
 		  bodyText = replaceInlineImageTags(bodyText, inlineImages);
 		  // Finally set the complete html
-		  logger.info("Setting body: "+bodyText);
+		  logger.debug("Setting body: "+bodyText);
 		  email.setHtmlMsg(bodyText);
 		  
 
 		  // set the alternative message
 		  email.setTextMsg(this.getNonHtmlText());
-			logger.info("Sending mail to "+to+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
+			logger.debug("Sending mail to "+to+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
 
 		  // send the email
 		  email.send();
