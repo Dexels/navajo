@@ -192,7 +192,7 @@ public class EntityListener extends HttpServlet {
             access = authenticateUser(auth, input, tenant, e, scriptName,  ip);
             access.created = new Date(requestStart);
             access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
-            access.setApplication("entity");
+            access.setClientDescription("entity");
             header.setHeaderAttribute("parentaccessid", access.accessID);
           
             inputEtag = request.getHeader("If-Match");

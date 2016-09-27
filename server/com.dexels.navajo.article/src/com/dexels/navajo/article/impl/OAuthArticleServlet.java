@@ -73,7 +73,7 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
         a.rpcPwd = token;
         a.created = new Date();
         a.ipAddress = ip;
-        a.setApplication("article");
+        a.setClientDescription("article");
         a.setClientToken("Client id: " + client.getId());
 
         try {

@@ -870,6 +870,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             access.rpcPwd = rpcPassword;
             access.setInDoc(inMessage);
            
+            access.setClientDescription( header.getHeaderAttribute("clientdescription"));
             access.setApplication( header.getHeaderAttribute("application"));
             access.setOrganization( header.getHeaderAttribute("organization"));
             if (clientInfo != null) {
