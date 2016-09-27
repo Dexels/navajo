@@ -88,7 +88,7 @@ public class SingleValueQuery extends FunctionInterface {
 		              sql.setDatasource(datasource);
 			      }
 			  }
-			  if ( user != null) { 
+			  if ( user != null && !user.trim().equals("")) { 
 			     sql.setUsername(user);
 			  }
 
