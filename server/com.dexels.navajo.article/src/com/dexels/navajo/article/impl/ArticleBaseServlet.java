@@ -71,7 +71,7 @@ public abstract class ArticleBaseServlet extends HttpServlet implements Servlet 
 			try {
 				writeJSONErrorResponse(exception, response);
 			} catch (Throwable t2) {
-				logger.error("Failed to error in JSON {}", t2);
+				logger.error("Failed to write JSON error response", t2);
 				
 				try {
 					APIErrorCode internal = APIErrorCode.InternalError;
