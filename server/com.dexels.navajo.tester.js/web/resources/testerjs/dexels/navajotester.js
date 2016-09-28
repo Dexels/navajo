@@ -198,6 +198,7 @@ function runScript(script) {
             type: "POST",
             url: "/navajo/" + instance,
             data: navajoinput,
+            headers: {"X-Navajo-Priority": "true"},
             success: function(xmlObj) {
                 replaceXml(script, xmlObj);
                 var stateObj = { script: script, xml:  serializer.serializeToString(xml) };
