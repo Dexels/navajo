@@ -3053,6 +3053,7 @@ public class TslCompiler {
 
 			String context = elt.getAttribute("context");
 			String key = elt.getAttribute("key");
+			String breakOnNoLock = elt.getAttribute("breakOnNoLock");
 			String keyValue = "null";
 			if ( key != null && !key.equals("") ) {
 			  keyValue=	"(\"\" + Expression.evaluate(\"" 
@@ -3074,28 +3075,29 @@ public class TslCompiler {
 			String methodName = "execute_sub" + (methodCounter++);
 			result.append(printIdent(ident) + "if (!kill) { " + methodName
 					+ "(access); }\n");
-
 			
 			methodBuffer.append(printIdent(ident) + "private final void "
 					+ methodName + "(Access access) throws Exception {\n\n");
 			ident += 2;
 			methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
-			
+	        ident += 2;
+
 			String lock = "Lock l = getLock(" + ( user ? "access.rpcUser" : null) + "," + ( service ? "access.rpcName" : "null" )+ 
 					"," + keyValue + ");\n";
+			methodBuffer.append(printIdent(ident) + lock);
 			
-			String tryLock = null;
 			boolean useTrylock = false;
 			if ( "".equals(timeout)) {
 				useTrylock = false;
-				tryLock = "l.lock(); try {\n";
+				methodBuffer.append(printIdent(ident) + "l.lock();\n");
+				methodBuffer.append(printIdent(ident) + "try {\n");
 			} else {
 				useTrylock = true;
-				tryLock = "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n" + "try {\n";
+				methodBuffer.append(printIdent(ident) + "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n");
+				ident += 2;
+				methodBuffer.append(printIdent(ident) + "try {\n");
+				
 			}
-			
-			methodBuffer.append(printIdent(ident) + lock);
-			methodBuffer.append(printIdent(ident) + tryLock);
 			
 			NodeList children = n.getChildNodes();
 			for (int i = 0; i < children.getLength(); i++) {
@@ -3104,14 +3106,25 @@ public class TslCompiler {
 				}
 			}
 			
-			ident -= 2;
 			methodBuffer.append(printIdent(ident) + "} finally {\n");
-            methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
+            methodBuffer.append(printIdent(ident + 2) +"releaseLock(l);\n");
             methodBuffer.append(printIdent(ident) +"}\n");
+            
 			if ( useTrylock ) {
-				methodBuffer.append(printIdent(ident) + "} else { Access.writeToConsole(access, \"No lock was obtained! \"); }\n");
+			    ident -= 2;
+				methodBuffer.append(printIdent(ident) + "} else {");
+				if ("true".equals(breakOnNoLock)) {
+				    methodBuffer.append(printIdent(ident + 2) + "throw new UserException(-1, \"Failed to aquire lock\");\n");
+				    methodBuffer.append(printIdent(ident) + "}\n");
+				} else {
+				    methodBuffer.append(printIdent(ident) + "Access.writeToConsole(access, \"No lock was obtained! \");\n");
+				    methodBuffer.append(printIdent(ident) + "}\n");
+				}
+				
 			}
+			ident -= 2;
 			methodBuffer.append(printIdent(ident) +"}\n");
+			ident -= 2;
 			methodBuffer.append(printIdent(ident) +"}\n");
 
 			methodClipboard.add(methodBuffer);
