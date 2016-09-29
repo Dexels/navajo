@@ -80,6 +80,7 @@ public final class Access implements java.io.Serializable, Mappable {
 
     public java.util.Date created = new java.util.Date();
     private static int AccessCount = 0;
+    
     public int threadCount = 0;
     public double cpuload = -1.0;
     public String accessID = "";
@@ -94,6 +95,7 @@ public final class Access implements java.io.Serializable, Mappable {
     public String hostName;
     public String application;
     public String organization;
+    public String clientDescription;
     public boolean betaUser = false;
     public transient CompiledScriptInterface myScript = null;
     public int queueSize;
@@ -120,14 +122,11 @@ public final class Access implements java.io.Serializable, Mappable {
     public transient Binary responseNavajo;
     public boolean debugAll;
 
-    // Flag to indicate that during the execution of the webservice, break was
-    // called.
+    // Flag to indicate that during the execution of the webservice, break was called.
     private boolean breakWasSet = false;
 
     private transient Object scriptEnvironment = null;
     private String requestUrl;
-    private int requestNavajoSize; // in bytes
-    private int responseNavajoSize; // in bytes
     private int exitCode;
     private transient Throwable myException;
     private Navajo outputDoc;
@@ -429,11 +428,10 @@ public final class Access implements java.io.Serializable, Mappable {
         a.parentAccessId = this.parentAccessId;
         a.debugAll = this.debugAll;
         a.exitCode = this.exitCode;
-        a.requestNavajoSize = this.requestNavajoSize;
-        a.responseNavajoSize = this.responseNavajoSize;
         a.tenant = this.tenant;
         a.application = this.application;
         a.organization = this.organization;
+        a.clientDescription = this.clientDescription;
         return a;
     }
 
@@ -674,16 +672,20 @@ public final class Access implements java.io.Serializable, Mappable {
         }
     }
     
-    
-
-
     public String getOrganization() {
         return organization;
     }
 
-
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+    
+    public String getClientDescription() {
+        return clientDescription;
+    }
+
+    public void setClientDescription(String clientDescription) {
+        this.clientDescription = clientDescription;
     }
 
 
@@ -849,21 +851,7 @@ public final class Access implements java.io.Serializable, Mappable {
         return this.tenant;
     }
 
-    public int getRequestNavajoSize() {
-        return requestNavajoSize;
-    }
-
-    public void setRequestNavajoSize(int requestNavajoSize) {
-        this.requestNavajoSize = requestNavajoSize;
-    }
-
-    public int getResponseNavajoSize() {
-        return responseNavajoSize;
-    }
-
-    public void setResponseNavajoSize(int responseNavajoSize) {
-        this.responseNavajoSize = responseNavajoSize;
-    }
+ 
 
     public int getExitCode() {
         return exitCode;

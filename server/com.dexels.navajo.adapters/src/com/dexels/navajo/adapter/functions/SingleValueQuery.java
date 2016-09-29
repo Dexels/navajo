@@ -88,12 +88,8 @@ public class SingleValueQuery extends FunctionInterface {
 		              sql.setDatasource(datasource);
 			      }
 			  }
-			  if ( user != null) { 
-			      if (user.trim().equals("")) {
-                      logger.warn("Ignoring empty user - using default!");
-                  } else {
-                      sql.setUsername(user);
-                  }
+			  if ( user != null && !user.trim().equals("")) { 
+			     sql.setUsername(user);
 			  }
 
 		  }

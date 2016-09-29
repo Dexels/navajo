@@ -33,6 +33,7 @@ public class NavajoStreamSerializer {
 	public NavajoStreamSerializer() {
 	}
 	
+	// TODO Does this break backpressure?
 	public Observable<byte[]> feed(final NavajoStreamEvent streamEvents) {
 		return Observable.create(subscribe->{
 			Writer w = new Writer(){

@@ -853,7 +853,6 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                         timeout = serverTimeout;
                     }
                     ac.callService(server, username, password, outDoc, method, this, timeout);
-                    ac.close();
                 } catch (Exception e) {
                     throw new UserException(-1, e.getMessage(), e);
                 }
@@ -1416,6 +1415,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             // Clear request id.
             h.setRequestId(null);
             h.setHeaderAttribute("parentaccessid", access.accessID);
+            h.setHeaderAttribute("application", access.getApplication());
             String tenant = access.getTenant();
             boolean skipAuth = true;
             if (this.tenant != null && !this.tenant.equals("")) {
