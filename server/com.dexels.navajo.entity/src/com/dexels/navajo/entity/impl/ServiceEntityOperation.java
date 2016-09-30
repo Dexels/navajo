@@ -3,7 +3,6 @@ package com.dexels.navajo.entity.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -239,39 +238,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 		return referencedEntities;
 	}
-	
-	private void updateReferencedEntities(Navajo n) {
-		HashMap<String,Navajo> referenced = getInputNavajosForReferencedEntities(n);
-		List<Property> allProps = n.getMessage(myEntity.getMessageName()).getAllProperties();
-		HashSet<String> updateableEntities = new HashSet<String>();
 		
-		for ( Property p : allProps ) {
-			// Fetch property from entity definition
-			Property e_p = myEntity.getMessage().getProperty(p.getName());
-			if (e_p != null && e_p.getBind() != null ) {
-				String entityName = getEntityFromReference(e_p.getBind());
-				String propertyName = getPropertyFromReference(e_p.getBind());
-				Navajo entityObj = referenced.get(entityName);
-				Property r_p = NavajoFactory.getInstance().createProperty(entityObj, propertyName, "", null, 0, "", "in");
-				//System.err.println("Creating property " + r_p.getName() + " with value " + p.getTypedValue());
-				r_p.setAnyValue(p.getTypedValue());
-				entityObj.getMessage(entityName).addProperty(r_p);
-				updateableEntities.add(entityName);
-			}
-		}
-
-		for ( String r_s : updateableEntities ) {
-			try {
-				Navajo r_n = referenced.get(r_s);
-				Operation o = EntityManager.getInstance().getOperation(r_n.getAllMessages().get(0).getName(), myOperation.getMethod());
-				ServiceEntityOperation seo = new ServiceEntityOperation(EntityManager.getInstance(), DispatcherFactory.getInstance(), o);
-				seo.perform(r_n);
-			} catch (Exception e) {
-				logger.error("Error: ", e);
-			}
-		}
-	}
-	
 	/**
 	 * Clean a Navajo document: only valid messages are kept, missing properties 
 	 * and messages are added, and filter properties on the right direction
