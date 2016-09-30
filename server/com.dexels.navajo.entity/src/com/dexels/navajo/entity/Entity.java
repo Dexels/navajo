@@ -46,14 +46,18 @@ public class Entity {
         entityManager = m;
     }
 
-    public void activate(Map<String, Object> properties) throws Exception {
-
-        entityName = (String) properties.get("entity.name");
-        messageName = (String) properties.get("entity.message");
-
-        Navajo entityNavajo = entityManager.getEntityNavajo((String) properties.get("service.name"));
-        activateMessage(entityNavajo);
-        entityManager.registerEntity(this);
+    public void activate(Map<String, Object> properties) throws Throwable {
+        try {
+            entityName = (String) properties.get("entity.name");
+            messageName = (String) properties.get("entity.message");
+            
+            Navajo entityNavajo = entityManager.getEntityNavajo((String) properties.get("service.name"));
+            activateMessage(entityNavajo);
+            entityManager.registerEntity(this);
+        } catch (Throwable t) {
+            logger.error("Exception in activating entity {}!", entityName, t);
+            throw t;
+        }
     }
 
     /**
@@ -224,6 +228,11 @@ public class Entity {
     private void findSuperEntities(Message m) throws EntityException {
 
         if (m.isArrayMessage()) {
+            if (m.getDefinitionMessage() == null) {
+                logger.warn("Array message {} in entity without definition!", m.getName());
+                throw new EntityException(EntityException.PARSE_ERROR, "Definition message is mandatory in array message");
+
+            }
             m = m.getDefinitionMessage();
         }
         if (m.getExtends() != null && !"".equals(m.getExtends())) {
