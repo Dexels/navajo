@@ -814,6 +814,10 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
         }
         return null;
     }
+    
+    protected void writeToLog(String msg) {
+        logger.info(myAccess.getRpcName() + " (" + myAccess.getAccessID() + "): " +  msg);
+    }
 
     /**
      * Get a lock for the synchronized block.
