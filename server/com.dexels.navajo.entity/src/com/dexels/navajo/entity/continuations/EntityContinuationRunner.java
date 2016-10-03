@@ -149,8 +149,6 @@ public class EntityContinuationRunner implements TmlRunnable {
 
     @Override
     public void endTransaction() throws IOException {
-        // Write response navajo
-
         // Only end-points are allowed to cache - no servers in between
         response.setHeader("Cache-Control", "private");
 
@@ -176,6 +174,7 @@ public class EntityContinuationRunner implements TmlRunnable {
                 logger.debug("Returning HTTP code 304 - not modified");
                 return;
             }
+            response.setHeader("Connection", "close");
         }
         if (outputEtag != null) {
             response.setHeader("etag", outputEtag);

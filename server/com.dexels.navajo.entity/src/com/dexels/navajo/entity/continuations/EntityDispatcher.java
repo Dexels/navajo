@@ -177,27 +177,32 @@ public class EntityDispatcher {
                 runner.setOutputEtag(result.getMessage(entityMessage.getName()).generateEtag());
             }
             access.processingTime = (int) (System.currentTimeMillis() - opStartTime);
-            runner.setResponseNavajo(result);
             if (access != null) {
                 access.setExitCode(Access.EXIT_OK);
             }
         } catch (Throwable ex) {
             result = handleException(ex, runner.getHttpResponse());
-            runner.setResponseNavajo(result);
+            
             if (access != null) {
-                access.setExitCode(Access.EXIT_EXCEPTION);
-                // Check whether to log this exception to the access object. If it's an EntityException
-                // then we don't log a NOT_FOUND exception
+                boolean skipLogging = false;
                 if (ex instanceof EntityException) {
-                    if (((EntityException) ex).getCode() != EntityException.ENTITY_NOT_FOUND) {
-                        access.setException(ex);
+                    EntityException e = (EntityException) ex;
+                    if (e.getCode() ==  EntityException.NOT_MODIFIED) {
+                        skipLogging = true;
+                    } else if (e.getCode() == EntityException.ENTITY_NOT_FOUND) {
+                        skipLogging = true;
+                        access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
                     }
-                } else {
+                }
+                
+                if (!skipLogging) {
+                    access.setExitCode(Access.EXIT_EXCEPTION);
                     access.setException(ex);
                 }
             }
 
         } finally {
+            runner.setResponseNavajo(result);
             if (access != null) {
                 runner.getDispatcher().getAccessSet().remove(access);
 
