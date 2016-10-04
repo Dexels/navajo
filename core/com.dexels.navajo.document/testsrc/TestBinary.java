@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 
 /**
@@ -91,7 +92,7 @@ public class TestBinary {
 //
 	@Test
 	public void testEqual1() {
-		Assert.assertEquals(new String(binary1.getDigest()),new String(binary2.getDigest()));
+		Assert.assertEquals(new String(binary1.getDigest().hex()),new String(binary2.getDigest().hex()));
 	}
 
 	@Test
@@ -244,6 +245,18 @@ public class TestBinary {
 		
 		Binary b2 = new Binary(temp,true);
 		Assert.assertEquals(7,b2.getData().length);
+	}
+	
+	@Test
+	public void testBinaryDigest() {
+		Binary b1 = new Binary(getClass().getResourceAsStream("binary1.txt"));
+		Property p1 = NavajoFactory.getInstance().createProperty(null, "Binary", Property.BINARY_PROPERTY, "", 0, "", Property.DIR_IN);
+		Property p2 = NavajoFactory.getInstance().createProperty(null, "Binary2", Property.BINARY_PROPERTY, "", 0, "", Property.DIR_IN);
+		p1.setAnyValue(b1);
+		Assert.assertEquals(Property.BINARY_PROPERTY,p1.getType());
+		p2.setAnyValue(b1.getDigest());
+		Assert.assertEquals(Property.BINARY_DIGEST_PROPERTY,p2.getType());
+		
 	}
 
 }

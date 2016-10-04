@@ -38,6 +38,7 @@ import com.dexels.navajo.document.PropertyTypeChecker;
 import com.dexels.navajo.document.PropertyTypeException;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.BinaryDigest;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.NavajoExpression;
@@ -431,6 +432,12 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			setValue((List<?>) o);
 			return;
 		}		
+		if (o instanceof BinaryDigest) {
+			setValue(((BinaryDigest) o).hex());
+			setType(Property.BINARY_DIGEST_PROPERTY);
+			return;
+		}		
+
 		if (o instanceof String) {
 			if(!isStringType(getType())) {
 				setType(Property.STRING_PROPERTY);
@@ -779,6 +786,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			    logger.warn("Exception on parsing {} as a list!", myValue, e);
 			}
 			return null;
+		} else if (getType().equals(Property.BINARY_DIGEST_PROPERTY) ) {
+			return new BinaryDigest(getValue());
 		}
 
 		return getValue();

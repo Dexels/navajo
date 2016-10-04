@@ -71,6 +71,11 @@ public class TmlSchedulerHealthMonitor {
 
                 } catch (Throwable t) {
                     logger.error("Exception in SchedulerHealthCheckThread", t);
+                    // Avoid tight loops in error state
+                    try {
+						Thread.sleep(THREAD_SLEEP_TIME_LONG);
+					} catch (InterruptedException e) {
+					}
                 }
 
             }

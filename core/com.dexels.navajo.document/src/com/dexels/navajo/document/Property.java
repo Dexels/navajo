@@ -63,6 +63,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String PASSWORD_PROPERTY = "password";
   public static final String TIPI_PROPERTY = "tipi";
   public static final String BINARY_PROPERTY = "binary";
+  public static final String BINARY_DIGEST_PROPERTY = "binary_digest";
   public static final String STOPWATCHTIME_PROPERTY = "stopwatchtime";
 
   public static final String SUBTYPE_REQUIRED = "required";
