@@ -74,8 +74,9 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         String path = request.getPathInfo();
         boolean debug = Boolean.valueOf(request.getParameter("developer"));
         String basePath = "";
-
-        if (path != null && !path.equals("/")) {
+        if (path == null) {
+            path = "/";
+        } else if (path != null && !path.equals("/")) {
             for (String subPath : path.split("/")) {
                 basePath += subPath + ".";
             }
@@ -198,12 +199,14 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
             nkey.addMessage(mkey);
 
             for (Property prop : properties) {
-                if (!Key.isAutoKey(prop.getKey())) {
-                    mkey.addProperty(prop.copy(nkey));
-                }
+                Property copied = prop.copy(nkey);
+                copied.setKey("");
+                mkey.addProperty(copied);
             }
             for (Property p : unboundRequestProperties) {
-                mkey.addProperty(p.copy(nkey));
+                Property copied = p.copy(nkey);
+                copied.setKey("");
+                mkey.addProperty(copied);
             }
 
             // Printing result.
@@ -217,6 +220,16 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         StringWriter writer = new StringWriter();
         JSONTML json = JSONTMLFactory.getInstance();
         Navajo masked = n.copy().mask(n, method);
+        if (method.equals("request")) {
+            // Remove all auto keys since they are not 
+            for (Message m : masked.getAllMessages()) {
+                for (Property p : m.getAllProperties()) {
+                    if (p.getKey() != null && p.getKey().contains("auto")) {
+                        m.removeProperty(p);
+                    }
+                }
+            }
+        }
         try {
             json.formatDefinition(masked, writer, true);
         } catch (Exception ex) {

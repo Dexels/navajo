@@ -47,9 +47,13 @@ public class Key {
 		// Copy properties.
 		for ( Property p : myKey ) {
 			Property copy = p.copy(n);
-			m.addProperty(copy);
+		
+			
 			if ( input != null ) {
 				Property ip = input.getProperty(p.getFullPropertyName());
+				if (ip == null || ip.getValue() == null) {
+				    continue;
+				}
 				if ( ip != null && ip.getType().equals(Property.SELECTION_PROPERTY) && ip.getCardinality().equals("1")) {
 					copy.setSelected(ip.getSelected().getValue());
 				} else
@@ -64,9 +68,10 @@ public class Key {
 					copy.setUnCheckedStringAsValue(ip.getValue());
 				}
 			}
+			m.addProperty(copy);
 		}
-		if ( input != null && input.getProperty("_id") != null ) {
-			m.addProperty(input.getProperty("_id").copy(n));
+		if ( input != null && input.getProperty("/" + myEntity.getMessageName() + "/_id") != null ) {
+			m.addProperty(input.getProperty("/" + myEntity.getMessageName() + "/_id").copy(n));
 		}
 		return n;
 	}
