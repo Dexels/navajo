@@ -54,21 +54,25 @@ public class TmlSchedulerHealthMonitor {
         @Override
         public void run() {
             while (keepRunning) {
+                int sleepTime = THREAD_SLEEP_TIME_NORMAL;
                 try {
                     if (tmlScheduler.getDefaultQueue().getQueueSize() > 0) {
                         logPoolInfo();
                         
                         // The server is not very happy, and to prevent flooding logs we can wait a bit longer 
                         // before logging again
-                        Thread.sleep(THREAD_SLEEP_TIME_LONG);
-                        
-                    } else {
-                        Thread.sleep(THREAD_SLEEP_TIME_NORMAL);
+                        sleepTime = THREAD_SLEEP_TIME_LONG;
                     }
+                } catch (Throwable t) {
+                    logger.error("Exception in SchedulerHealthCheckThread", t);
+                    sleepTime = THREAD_SLEEP_TIME_LONG;
+                }
+                
+                try {
+                    Thread.sleep(sleepTime);
                 } catch (InterruptedException e) {
                     logger.warn("Thread interrupted!");
                     keepRunning = false;
-
                 } catch (Throwable t) {
                     logger.error("Exception in SchedulerHealthCheckThread", t);
                     // Avoid tight loops in error state
@@ -77,7 +81,6 @@ public class TmlSchedulerHealthMonitor {
 					} catch (InterruptedException e) {
 					}
                 }
-
             }
         }
 

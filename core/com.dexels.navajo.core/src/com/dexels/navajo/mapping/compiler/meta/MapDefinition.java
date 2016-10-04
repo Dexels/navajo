@@ -299,6 +299,7 @@ public class MapDefinition {
 					    child.getName().equals("field") ||
 					    child.getName().equals("comment") ||
 					    child.getName().equals("debug") ||
+					    child.getName().equals("log") ||
 					    child.getName().equals("param") || 
 					    child.getName().equals("include") ||
 					    child.getName().equals("inject") ||

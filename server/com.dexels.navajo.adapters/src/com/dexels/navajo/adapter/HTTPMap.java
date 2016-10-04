@@ -289,7 +289,9 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 			responseMessage = con.getResponseMessage();
 			
 			InputStream is = ( responseCode < 400 ? con.getInputStream() : con.getErrorStream() ) ;
-			
+			if (responseCode > 299) {
+			    logger.warn("Got a {} response code back on call to {}: {}", responseCode, url, responseMessage );
+			}
 			try {
 				result = new Binary(is);
 			} finally {

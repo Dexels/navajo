@@ -118,6 +118,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 //        super(Property.BINARY_PROPERTY);
 //        createDigest();
         this();
+        if (is == null) {
+            return;
+        }
         if (lazy) {
         	throw new UnsupportedOperationException("Constructing lazy binary based on a stream. This is not working.");
 //            lazyInputStream = is;
@@ -707,8 +710,12 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 			}
 		} finally {
 			if(closeInput) {
-				in.close();
-				out.close();
+			    if (in != null) {
+			        in.close();
+			    }
+			    if (out != null) {
+			        out.close();
+			    }
 			}
 		}
     }

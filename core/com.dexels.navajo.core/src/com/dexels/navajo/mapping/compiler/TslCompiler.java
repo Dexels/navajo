@@ -2509,6 +2509,17 @@ public class TslCompiler {
 				+ "Access.writeToConsole(access, \"DEBUG: \" + op.value );\n");
 		return result.toString();
 	}
+	
+	public String logNode(int ident, Element n) throws Exception {
+        StringBuffer result = new StringBuffer();
+        String value = n.getAttribute("value");
+        result.append(printIdent(ident)
+                + "op = Expression.evaluate("
+                + replaceQuotes(value)
+                + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
+        result.append(printIdent(ident) + "writeToLog( op.value + \"\");\n");
+        return result.toString();
+    }
 
 	public String requestNode(int ident, Element n) throws Exception {
 		StringBuffer result = new StringBuffer();
@@ -3045,6 +3056,8 @@ public class TslCompiler {
 			result.append(operationsNode(ident, (Element) n));
 		} else if (n.getNodeName().equals("debug")) {
 			result.append(debugNode(ident, (Element) n));
+		 } else if (n.getNodeName().equals("log")) {
+	            result.append(logNode(ident, (Element) n));
 		} else if (n.getNodeName().equals("break")) {
 			result.append(breakNode(ident, (Element) n));
 		} else if ( n.getNodeName().equals("synchronized")) {
