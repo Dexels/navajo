@@ -3111,7 +3111,7 @@ public class TslCompiler {
 				methodBuffer.append(printIdent(ident) + "try {\n");
 				
 			}
-			
+			methodBuffer.append(printIdent(ident + 4) + "acquiredLock(l);\n");
 			NodeList children = n.getChildNodes();
 			for (int i = 0; i < children.getLength(); i++) {
 				if (children.item(i) instanceof Element) {

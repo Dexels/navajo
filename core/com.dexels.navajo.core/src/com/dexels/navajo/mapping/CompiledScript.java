@@ -830,9 +830,12 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
         String lockName = user + "-" + service + "-" + key;
         logger.debug("lockname: " + lockName);
         Lock l = TribeManagerFactory.getInstance().getLock(lockName);
-        acquiredLocks.add(l);
-
+ 
         return l;
+    }
+    
+    public void acquiredLock(Lock l ) {
+        acquiredLocks.add(l);
     }
 
     public void releaseLock(Lock l) {
