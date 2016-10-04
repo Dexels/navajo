@@ -182,11 +182,11 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     
     /**
      * Some components like a URL to point to their data.
-     * Don't forget that this is a local (file) url, and is only valid on this machine 
+     * Don't forget that this is a local (file) url, and is only valid on this machine
      * When using with a lazy url, return URL to local data if it is available
      * Alternatively, we could also resolve the lazy URL
      * @return
-     * @throws MalformedURLException 
+     * @throws MalformedURLException
      */
     public URL getURL() throws MalformedURLException {
         if (lazySourceFile != null && lazySourceFile.exists()) {
@@ -232,24 +232,24 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
     
     public String getHexDigest() {
-    	return bytesToHex(getDigest());
+		return getDigest().hex();
     }
 
     public void setDigest(byte[] digest) {
     	this.digest = digest;
 	}
 
-    public static String bytesToHex(byte[] bytes) {
-        final char[] hexArray = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-        char[] hexChars = new char[bytes.length * 2];
-        int v;
-        for ( int j = 0; j < bytes.length; j++ ) {
-            v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
+//    public static String bytesToHex(byte[] bytes) {
+//        final char[] hexArray = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+//        char[] hexChars = new char[bytes.length * 2];
+//        int v;
+//        for ( int j = 0; j < bytes.length; j++ ) {
+//            v = bytes[j] & 0xFF;
+//            hexChars[j * 2] = hexArray[v >>> 4];
+//            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+//        }
+//        return new String(hexChars);
+//    }
     
 	private OutputStream createTempFileOutputStream() throws IOException, FileNotFoundException {
 		if(messageDigest==null) {
@@ -302,7 +302,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	}
     }
 	
-	public byte[] getDigest() {
+	public BinaryDigest getDigest() {
 		if(!isResolved()) {
 			try {
 				resolveData();
@@ -310,7 +310,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 				logger.error("Error: ", e);
 			}
 		}
-		return this.digest;
+		return new BinaryDigest(this.digest);
 	}
 
     public Binary(File f) throws IOException {
@@ -866,7 +866,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     @Override
 	public String toString() {
     	if(digest!=null) {
-    		return bytesToHex(digest);
+    		return getDigest().hex();
     	}
     	return super.toString();
     }
