@@ -125,7 +125,7 @@ public class OpenstackStoreImpl implements BinaryStore {
 			return;
 		}
 		Map<String,String> meta = new HashMap<>(metadata);
-		meta.put("digest", new String(contents.getDigest()));
+		meta.put("digest", new String(contents.getDigest().hex()));
 //		Payload<InputStream> payload = Payloads.create(contents.getDataAsStream());
 		if(contentType==null) {
 			contentType = contents.guessContentType();
