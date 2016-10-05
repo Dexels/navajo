@@ -1164,15 +1164,16 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 }
 
                 // Call after web service event...
+                access.setAfterServiceTime(0);
                 if (access.getExitCode() != Access.EXIT_AUTH_EXECPTION) {
                     long a_start = System.currentTimeMillis();
                     afterWebServiceActivated = ( WebserviceListenerFactory.getInstance() != null ? 
                             WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access) : false);
                     access.setAfterServiceTime((int) (System.currentTimeMillis() - a_start));
-
-                    // Set access to finished state.
-                    access.setFinished();
                 }
+                // Set access to finished state.
+                access.setFinished();
+                
             
 
                 // Translate property descriptions.
