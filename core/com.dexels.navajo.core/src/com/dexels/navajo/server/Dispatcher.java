@@ -1173,8 +1173,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 }
                 // Set access to finished state.
                 access.setFinished();
-                
-            
 
                 // Translate property descriptions.
                 updatePropertyDescriptions(inMessage, outMessage, access.getTenant());
