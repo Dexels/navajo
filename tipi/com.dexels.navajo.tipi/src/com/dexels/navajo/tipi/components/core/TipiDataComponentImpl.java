@@ -174,7 +174,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		if (myNavajo == null) {
 			myNavajo = NavajoFactory.getInstance().createNavajo();
 			myNavajo.addHeader(NavajoFactory.getInstance().createHeader(
-					myNavajo, service, "", "", -1));
+					myNavajo, service, "_internal_", "", -1));
 
 		}
 		context.performTipiMethod(this, myNavajo, tipiPath, service,

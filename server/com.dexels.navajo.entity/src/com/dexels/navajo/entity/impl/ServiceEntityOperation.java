@@ -793,7 +793,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	protected void prepareRequestHeader(Navajo input, Navajo request, Operation o, String service) {
 		Header h = request.getHeader();
 		if(h==null) {
-			h = NavajoFactory.getInstance().createHeader(request, service, "", "", -1);
+			h = NavajoFactory.getInstance().createHeader(request, service, "_internal_", "", -1);
 			request.addHeader(h);
 		} else {
 			h.setRPCName(service);

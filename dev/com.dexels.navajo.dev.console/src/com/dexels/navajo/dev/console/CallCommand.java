@@ -35,7 +35,7 @@ public class CallCommand extends ConsoleCommand {
 	public void call(CommandSession session, @Descriptor(value = "The script to call") String scr) {
 		String script = scr.replaceAll("/", ".");
 		Navajo n = NavajoFactory.getInstance().createNavajo();
-		n.addHeader(NavajoFactory.getInstance().createHeader(n, script, "", "", -1));
+		n.addHeader(NavajoFactory.getInstance().createHeader(n, script, "_internal_", "", -1));
 				
 		try {
 			Navajo out = localClient.call(n);

@@ -182,7 +182,6 @@ public class EntityManager {
                 buildAndLoadScript(f);
             }
         }
-
     }
 
     public void setBundleQueue(BundleQueue queue) throws Exception {
@@ -202,7 +201,7 @@ public class EntityManager {
     }
     public Navajo getEntityNavajo(String serviceName) throws InterruptedException, FatalException {
         Navajo in = NavajoFactory.getInstance().createNavajo();
-        Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
+        Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "_internal_", "", -1);
         in.addHeader(h);
 
         try {
