@@ -296,11 +296,7 @@ public final class DatePropertyField extends PropertyField implements
 					}
 					cpd.getMainPanel()
 							.setPreferredSize(new Dimension(255, 198));
-					logger.info("Entering: checkMouseClick: "
-							+ isEditable() + " -- " + showCalendarPickerButton
-							+ " >>> " + getHeight());
-					logger.info("ThreaD: "
-							+ Thread.currentThread().getName());
+					logger.debug("Entering: checkMouseClick: {}  --  {}  >>> ", isEditable(), showCalendarPickerButton, getHeight());
 					Property pp = getProperty();
 					if (pp != null
 							&& pp.getType().equals(Property.DATE_PROPERTY)) {
