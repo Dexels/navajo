@@ -1433,9 +1433,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             return false;
         }
         Message otherMessage = (Message) obj;
-        if (!otherMessage.getName().equals(getName())) {
-            return false;
-        }
+//        if (!otherMessage.getName().equals(getName())) {
+//            return false;
+//        }
         if (!otherMessage.getType().equals(getType())) {
             return false;
         }
@@ -1457,7 +1457,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             
         } else {
             for (Property p : getAllProperties()) {
-                Property otherProperty = otherMessage.getProperty(p.getFullPropertyName());
+                Property otherProperty = otherMessage.getProperty(p.getName());
                 if (otherProperty == null) {
                     return false;
                 }
@@ -1466,7 +1466,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                 }
             }
             for (Message m : myMessages) {
-                Message otherMsg = otherMessage.getMessage(m.getFullMessageName());
+                Message otherMsg = otherMessage.getMessage(m.getName());
                 if (otherMsg == null) {
                     return false;
                 }

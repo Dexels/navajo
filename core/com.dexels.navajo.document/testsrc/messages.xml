@@ -1,8 +1,189 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tml>
-	<message name="SimpleMessage">
-		<property name="pString" type="string" value="s1"/>
-		<property name="pInteger" type="string" value="12"/>
-		<property name="pBoolean" type="boolean" value="true"/>
+
+	<!-- The following messages (in pairs) are all equal -->
+	<message name="TestMessage1">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+	</message>
+
+	<message name="TestMessage2">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+	</message>
+
+	<message name="TestMessage3">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+		<message name="NestedMessage1">
+			<property name="pString" type="string" value="s1" />
+			<property name="pInteger" type="string" value="12" />
+			<property name="pBoolean" type="boolean" value="true" />
+		</message>
+	</message>
+
+	<message name="TestMessage4">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+
+		<message name="NestedMessage1">
+			<property name="pString" type="string" value="s1" />
+			<property name="pInteger" type="string" value="12" />
+			<property name="pBoolean" type="boolean" value="true" />
+		</message>
+	</message>
+
+	<message name="TestMessage5">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+		<message name="NestedMessage1">
+			<property name="pString" type="string" value="s1" />
+			<property name="pInteger" type="string" value="12" />
+			<property name="pBoolean" type="boolean" value="true" />
+			<message name="NestedMessage2">
+				<property name="pString" type="string" value="s1" />
+				<property name="pInteger" type="string" value="12" />
+				<property name="pBoolean" type="boolean" value="true" />
+			</message>
+
+		</message>
+	</message>
+
+	<message name="TestMessage6">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+
+		<message name="NestedMessage1">
+			<property name="pString" type="string" value="s1" />
+			<property name="pInteger" type="string" value="12" />
+			<property name="pBoolean" type="boolean" value="true" />
+			<message name="NestedMessage2">
+				<property name="pString" type="string" value="s1" />
+				<property name="pInteger" type="string" value="12" />
+				<property name="pBoolean" type="boolean" value="true" />
+			</message>
+		</message>
+	</message>
+
+
+
+	<!-- The following paired messages are not equal -->
+	<message name="NTestMessage1">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+	</message>
+
+	<message name="NTestMessage2">
+		<property name="pString" type="string" value="s1" />
+		<property name="pBoolean" type="boolean" value="true" />
+	</message>
+
+	<message name="NTestMessage3">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+		<message name="NestedMessage1">
+			<property name="pString" type="string" value="s1" />
+			<property name="pInteger" type="string" value="12" />
+			<property name="pBoolean" type="boolean" value="true" />
+		</message>
+	</message>
+
+	<message name="NTestMessage4">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+
+		<message name="NestedMessage1">
+			<property name="pString" type="string" value="s1" />
+			<property name="pInteger" type="string" value="12" />
+		</message>
+	</message>
+	
+	
+	<message name="NTestMessage5">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+		<message name="NestedMessage1">
+			<property name="pString" type="string" value="s1" />
+			<property name="pInteger" type="string" value="12" />
+			<property name="pBoolean" type="boolean" value="true" />
+		</message>
+	</message>
+
+	<message name="NTestMessage6">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+	</message>
+
+	<message name="NTestMessage7">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+		<message name="NestedMessage1">
+			<property name="pString" type="string" value="s1" />
+			<property name="pInteger" type="string" value="12" />
+			<property name="pBoolean" type="boolean" value="true" />
+			<message name="NestedMessage2">
+				<property name="pString" type="string" value="s1" />
+				<property name="pInteger" type="string" value="12" />
+			</message>
+
+		</message>
+	</message>
+
+	<message name="NTestMessage8">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+
+		<message name="NestedMessage1">
+			<property name="pString" type="string" value="s1" />
+			<property name="pInteger" type="string" value="12" />
+			<property name="pBoolean" type="boolean" value="true" />
+			<message name="NestedMessage2">
+				<property name="pString" type="string" value="s1" />
+				<property name="pInteger" type="string" value="12" />
+				<property name="pBoolean" type="boolean" value="true" />
+			</message>
+		</message>
+	</message>
+	
+	<message name="NTestMessage9">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+		<message name="NestedMessage1">
+			<property name="pString" type="string" value="s1" />
+			<property name="pInteger" type="string" value="12" />
+			<property name="pBoolean" type="boolean" value="true" />
+			<message name="NestedMessage2">
+				<property name="pString" type="string" value="s1" />
+				<property name="pInteger" type="string" value="12" />
+			</message>
+
+		</message>
+	</message>
+
+	<message name="NTestMessage10">
+		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="12" />
+		<property name="pBoolean" type="boolean" value="true" />
+
+		<message name="NestedMessage1">
+			<property name="pString" type="string" value="s1" />
+			<property name="pInteger" type="string" value="12" />
+			<property name="pBoolean" type="boolean" value="true" />
+			
+		</message>
 	</message>
 </tml>
