@@ -1427,6 +1427,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         return 0;
     }
     
+    @Override
     public boolean messageEquals(Object obj) {
         if (! (obj instanceof Message)) {
             return false;
@@ -1443,6 +1444,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (myProps.size() != otherProps.size()) {
             return false;
         }
+        List<Message> myMessages = getAllMessages();
+        List<Message> otherMessages = otherMessage.getAllMessages();
+        if (myMessages.size() != otherMessages.size()) {
+            return false;
+        }
         
         if (getType().equals(Message.MSG_TYPE_ARRAY)) {
             if (this.getElements().size() != otherMessage.getElements().size()) {
@@ -1450,10 +1456,27 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             }
             
         } else {
-            
+            for (Property p : getAllProperties()) {
+                Property otherProperty = otherMessage.getProperty(p.getFullPropertyName());
+                if (otherProperty == null) {
+                    return false;
+                }
+                if (!p.propertyEquals(obj)) {
+                    return false;
+                }
+            }
+            for (Message m : myMessages) {
+                Message otherMsg = otherMessage.getMessage(m.getFullMessageName());
+                if (otherMsg == null) {
+                    return false;
+                }
+                if (!m.messageEquals(otherMsg)) {
+                    return false;
+                }
+            }
         }
         
-        return false;
+        return true;
         
         
     }

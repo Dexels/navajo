@@ -645,4 +645,6 @@ public void printElement(final Writer sw, int indent) throws IOException;
 public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) throws IOException ;
 public void printBody(final Writer sw, int indent) throws IOException;
 public void printCloseTag(final Writer sw, int indent) throws IOException;
+
+boolean propertyEquals(Object p);
 }

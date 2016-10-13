@@ -475,6 +475,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		setListProperty(list);
 		
 	}
+	
+	@Override
+	public boolean propertyEquals(Object p) {
+	    return true;
+	}
 
 	private void setListProperty(List<?> list) {
 		tipiProperty = list;
