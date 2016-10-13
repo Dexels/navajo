@@ -26,6 +26,7 @@ package navajofunctions;
 
 import navajoextension.AbstractCoreExtension;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.functions.StandardFunctionDefinitions;
@@ -51,5 +52,13 @@ public class Version extends AbstractCoreExtension {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 	}
+	
+	public static BundleContext getDefaultBundleContext() {
+        Bundle b = org.osgi.framework.FrameworkUtil.getBundle(Version.class);
+        if(b!=null) {
+            return b.getBundleContext();
+        }
+        return null;
+    }
 
 }

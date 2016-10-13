@@ -442,6 +442,13 @@
         <input>string</input>
         <result>integer</result>
     </function>
+    
+      
+	<function name="GetValidationDescription" class="com.dexels.navajo.functions.GetValidationDescription">
+		<description>Gets a description from ResourceBundle</description>
+		<input>string|integer,String|empty, String|empty</input>
+        <result>integer</result>
+	</function>
 	<function name="GetValue" class="com.dexels.navajo.functions.GetValue">
 		<description>Gets a typed value from a property object</description>
 		<input />
