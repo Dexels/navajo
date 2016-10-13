@@ -32,6 +32,7 @@ public class TestMessageComparison {
 
         assertFalse(n.getMessage("TestMessage1").messageEquals(n.getMessage("NTestMessage1")));
         assertFalse(n.getMessage("TestMessage1").messageEquals(n.getMessage("NTestMessage2")));
+        assertFalse(n.getMessage("TestMessage3").messageEquals(n.getMessage("NTestMessage3")));
 
 
 
