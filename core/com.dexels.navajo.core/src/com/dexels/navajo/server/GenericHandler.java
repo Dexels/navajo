@@ -488,7 +488,9 @@ public class GenericHandler extends ServiceHandler {
         } catch (Throwable e) {
 
             if (e instanceof com.dexels.navajo.mapping.BreakEvent) {
+                outDoc = access.getOutputDoc(); // Outdoc might have been changed by running script
                 // Create dummy header to set breakwasset attribute.
+
                 Header h = NavajoFactory.getInstance().createHeader(outDoc, "", "", "", -1);
                 outDoc.addHeader(h);
                 outDoc.getHeader().setHeaderAttribute("breakwasset", "true");
