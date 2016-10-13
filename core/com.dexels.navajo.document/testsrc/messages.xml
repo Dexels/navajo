@@ -4,13 +4,13 @@
 	<!-- The following messages (in pairs) are all equal -->
 	<message name="TestMessage1">
 		<property name="pString" type="string" value="s1" />
-		<property name="pInteger" type="string" value="12" />
+		<property name="pInteger" type="integer" value="12" />
 		<property name="pBoolean" type="boolean" value="true" />
 	</message>
 
 	<message name="TestMessage2">
 		<property name="pString" type="string" value="s1" />
-		<property name="pInteger" type="string" value="12" />
+		<property name="pInteger" type="integer" value="12" />
 		<property name="pBoolean" type="boolean" value="true" />
 	</message>
 

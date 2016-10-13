@@ -1461,7 +1461,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                 if (otherProperty == null) {
                     return false;
                 }
-                if (!p.propertyEquals(obj)) {
+                if (!p.propertyEquals(otherProperty)) {
                     return false;
                 }
             }
