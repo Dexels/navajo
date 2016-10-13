@@ -77,11 +77,12 @@
 	<message name="NTestMessage1">
 		<property name="pString" type="string" value="s1" />
 		<property name="pInteger" type="string" value="12" />
-		<property name="pBoolean" type="boolean" value="true" />
+		<property name="pBoolean" type="boolean" value="false" />
 	</message>
 
 	<message name="NTestMessage2">
 		<property name="pString" type="string" value="s1" />
+		<property name="pInteger" type="string" value="13" />
 		<property name="pBoolean" type="boolean" value="true" />
 	</message>
 

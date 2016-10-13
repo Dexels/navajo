@@ -30,6 +30,10 @@ public class TestMessageComparison {
         assertFalse(n.getMessage("TestMessage3").messageEquals(n.getMessage("TestMessage2")));
         assertFalse(n.getMessage("TestMessage5").messageEquals(n.getMessage("TestMessage3")));
 
+        assertFalse(n.getMessage("TestMessage1").messageEquals(n.getMessage("NTestMessage1")));
+        assertFalse(n.getMessage("TestMessage1").messageEquals(n.getMessage("NTestMessage2")));
+
+
 
     }
    

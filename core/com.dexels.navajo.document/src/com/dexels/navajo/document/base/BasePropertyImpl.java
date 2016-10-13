@@ -478,6 +478,19 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	
 	@Override
 	public boolean propertyEquals(Object p) {
+	    if (p == null) {
+	        return false;
+	    }
+	    if (!(p instanceof Property)) {
+	        return false;
+	    }
+	    Property otherProperty = (Property) p;
+	    if (!getType().equals(otherProperty.getType())) {
+	        return false;
+	    }
+	    if (!getValue().equals(otherProperty.getValue())) {
+            return false;
+        }
 	    return true;
 	}
 
