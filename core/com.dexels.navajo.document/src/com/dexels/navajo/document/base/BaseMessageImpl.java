@@ -1433,9 +1433,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             return false;
         }
         Message otherMessage = (Message) obj;
-//        if (!otherMessage.getName().equals(getName())) {
-//            return false;
-//        }
+        if (!otherMessage.getName().equals(getName())) {
+            return false;
+        }
         if (!otherMessage.getType().equals(getType())) {
             return false;
         }

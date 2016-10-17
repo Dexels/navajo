@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tml>
-
-	<!-- The following messages (in pairs) are all equal -->
 	<message name="TestMessage1">
 		<property name="pString" type="string" value="s1" />
 		<property name="pInteger" type="integer" value="12" />
@@ -9,8 +7,8 @@
 	</message>
 
 	<message name="TestMessage2">
-		<property name="pString" type="string" value="s1" />
-		<property name="pInteger" type="integer" value="12" />
+		<property name="pString" type="string" value="s15" /> 
+		<property name="pInteger" type="integer" value="11" />
 		<property name="pBoolean" type="boolean" value="true" />
 	</message>
 
@@ -33,7 +31,7 @@
 		<message name="NestedMessage1">
 			<property name="pString" type="string" value="s1" />
 			<property name="pInteger" type="string" value="12" />
-			<property name="pBoolean" type="boolean" value="true" />
+			<property name="pBoolean" type="boolean" value="false" />
 		</message>
 	</message>
 
@@ -64,7 +62,7 @@
 			<property name="pInteger" type="string" value="12" />
 			<property name="pBoolean" type="boolean" value="true" />
 			<message name="NestedMessage2">
-				<property name="pString" type="string" value="s1" />
+				<property name="pString" type="string" value="s2" />
 				<property name="pInteger" type="string" value="12" />
 				<property name="pBoolean" type="boolean" value="true" />
 			</message>
@@ -73,27 +71,4 @@
 
 
 
-	<message name="NTestMessage1">
-		<property name="pString" type="string" value="s1" />
-		<property name="pInteger" type="string" value="12" />	<!--  DIFFERENT -->
-		<property name="pBoolean" type="boolean" value="false" />
-	</message>
-
-	<message name="NTestMessage2">
-		<property name="pString" type="string" value="s1" />
-		<property name="pInteger" type="string" value="13" />
-		<property name="pBoolean" type="boolean" value="true" />	<!--  DIFFERENT -->
-	</message>
-
-	<message name="NTestMessage3">
-		<property name="pString" type="string" value="s1" />
-		<property name="pInteger" type="string" value="12" />
-		<property name="pBoolean" type="boolean" value="true" />
-		<message name="NestedMessage1">
-			<property name="pString" type="string" value="s1" />
-			<property name="pInteger" type="string" value="11" /> <!--  DIFFERENT -->
-			<property name="pBoolean" type="boolean" value="true" />
-		</message>
-	</message>
-	
 </tml>

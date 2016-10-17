@@ -8,32 +8,29 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 
 public class TestMessageComparison {
-    Navajo n;
+    Navajo n1;
+    Navajo n2;
     
     @Before
     public void setup() {
-        n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("messages.xml"));
+        n1 = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("messages1.xml"));
+        n2 = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("messages2.xml"));
 
     }
     
     @Test
     public void testEquals() {
-        assertTrue(n.getMessage("TestMessage1").messageEquals(n.getMessage("TestMessage2")));
-        assertTrue(n.getMessage("TestMessage3").messageEquals(n.getMessage("TestMessage4")));
-        assertTrue(n.getMessage("TestMessage5").messageEquals(n.getMessage("TestMessage6")));
+        assertTrue(n1.getMessage("TestMessage1").messageEquals(n2.getMessage("TestMessage1")));
+        assertTrue(n1.getMessage("TestMessage3").messageEquals(n2.getMessage("TestMessage3")));
+        assertTrue(n1.getMessage("TestMessage5").messageEquals(n2.getMessage("TestMessage5")));
 
     }
     
     @Test
     public void testNotEquals() {
-        assertFalse(n.getMessage("TestMessage1").messageEquals(n.getMessage("TestMessage3")));
-        assertFalse(n.getMessage("TestMessage3").messageEquals(n.getMessage("TestMessage2")));
-        assertFalse(n.getMessage("TestMessage5").messageEquals(n.getMessage("TestMessage3")));
-
-        assertFalse(n.getMessage("TestMessage1").messageEquals(n.getMessage("NTestMessage1")));
-        assertFalse(n.getMessage("TestMessage1").messageEquals(n.getMessage("NTestMessage2")));
-        assertFalse(n.getMessage("TestMessage3").messageEquals(n.getMessage("NTestMessage3")));
-
+        assertFalse(n1.getMessage("TestMessage2").messageEquals(n2.getMessage("TestMessage2")));
+        assertFalse(n1.getMessage("TestMessage4").messageEquals(n2.getMessage("TestMessage4")));
+        assertFalse(n1.getMessage("TestMessage6").messageEquals(n2.getMessage("TestMessage6")));
 
 
     }
