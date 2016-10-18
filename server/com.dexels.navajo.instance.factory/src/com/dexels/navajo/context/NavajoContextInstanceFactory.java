@@ -1,7 +1,6 @@
 package com.dexels.navajo.context;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -73,6 +72,9 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 
 	private void startInstanceFactory(File rootPath, String deployment) throws FileNotFoundException {
+	    if (deployment == null) {
+	        logger.warn("=================== NO DEPLOYMENT DEFINED! ===================");
+	    }
 		File settings = new File(rootPath, "settings");
 		File config = new File(rootPath, "config");
 		if(!rootPath.exists()) {
