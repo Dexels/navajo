@@ -23,10 +23,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -1454,6 +1456,26 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             if (this.getElements().size() != otherMessage.getElements().size()) {
                 return false;
             }
+            Set<Integer> coveredIndexes = new HashSet<>();
+            for (int i=0; i<this.getElements().size(); i++) {
+                Message arrayelem = this.getElements().get(i);
+                boolean foundMatch = false;
+                for (int j=0; j<otherMessage.getElements().size(); j++) {
+                    if (coveredIndexes.contains(j)) {
+                        continue;
+                    }
+                    Message otherArrayelem = otherMessage.getElements().get(j);
+                    if (arrayelem.messageEquals(otherArrayelem)) {
+                        foundMatch = true;
+                        coveredIndexes.add(j);
+                        break;
+                    }
+                }
+                if (!foundMatch) {
+                    return false;
+                }
+            }
+            
             
         } else {
             for (Property p : getAllProperties()) {
