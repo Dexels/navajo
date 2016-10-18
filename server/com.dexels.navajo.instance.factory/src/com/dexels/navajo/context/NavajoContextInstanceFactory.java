@@ -694,7 +694,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 
     @Override
-    public String getDeplyoment() {
+    public String getDeployment() {
         return repositoryInstance.getDeployment();
     }
 

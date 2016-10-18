@@ -91,7 +91,7 @@ public class NavajoIOConfigComponent extends FileNavajoConfig implements NavajoI
 
     @Override
     public String getDeployment() {
-        return context.getDeplyoment();
+        return context.getDeployment();
     }
 
 

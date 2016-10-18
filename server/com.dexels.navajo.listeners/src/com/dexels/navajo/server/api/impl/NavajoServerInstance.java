@@ -78,8 +78,8 @@ public class NavajoServerInstance implements NavajoServerContext {
 
 
     @Override
-    public String getDeplyoment() {
-        logger.warn("getDeplyoment not implemented in OSGi implementation");
+    public String getDeployment() {
+        logger.warn("getDeployment not implemented in OSGi implementation");
         return null;
     }
 
