@@ -165,8 +165,8 @@
 		<input />
 		<result />
 	</function>
-	<function name="DateSubstract" class="com.dexels.navajo.functions.DateSubstract">
-		<description>Substracts two date object</description>
+	<function name="DateSubtract" class="com.dexels.navajo.functions.DateSubtract">
+		<description>Subtracts two date object</description>
 		<input />
 		<result />
 	</function>
