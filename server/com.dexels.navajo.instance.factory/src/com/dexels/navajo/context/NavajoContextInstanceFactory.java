@@ -68,8 +68,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 
 	public void activate(BundleContext context) throws FileNotFoundException {
 			String deployment = repositoryInstance.getDeployment();
-			startInstanceFactory(repositoryInstance.getRepositoryFolder(),
-					deployment);
+			startInstanceFactory(repositoryInstance.getRepositoryFolder(), deployment);
 
 	}
 
@@ -693,5 +692,10 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		}
 		return getInstallationPath();
 	}
+
+    @Override
+    public String getDeplyoment() {
+        return repositoryInstance.getDeployment();
+    }
 
 }

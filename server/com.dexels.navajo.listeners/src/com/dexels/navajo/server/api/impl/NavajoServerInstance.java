@@ -8,10 +8,14 @@ import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.api.NavajoServerContext;
 
 public class NavajoServerInstance implements NavajoServerContext {
+    private static final Logger logger = LoggerFactory.getLogger(NavajoServerInstance.class);
 
 	private final String installationPath;
 //	private final DispatcherInterface dispatcher;
@@ -71,5 +75,12 @@ public class NavajoServerInstance implements NavajoServerContext {
 	public String getTempPath() {
 		return installationPath;
 	}
+
+
+    @Override
+    public String getDeplyoment() {
+        logger.warn("getDeplyoment not implemented in OSGi implementation");
+        return null;
+    }
 
 }
