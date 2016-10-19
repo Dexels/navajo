@@ -26,7 +26,34 @@ public class GlobalManagerImpl implements GlobalManager {
 			"service.pid");
 	
 	private final static Logger logger = LoggerFactory.getLogger(GlobalManagerImpl.class);
-	
+
+    public void activate(Map<String,Object> settings) {
+        for (Entry<String,Object> e : settings.entrySet()) {
+            if (!osgiSettings.contains(e.getKey())) {
+                this.settings.put(e.getKey(), ""+e.getValue());
+            }
+        }
+    }
+
+    public void deactivate() {
+        this.settings.clear();
+    }
+    
+
+
+    @Override
+    public void initGlobals(Navajo inMessage) throws NavajoException {
+        Header h = inMessage.getHeader();
+        if(h==null) {
+            logger.warn("Can not append globals to input message: No header found.");
+            return;
+        }
+        String rpcName = h.getRPCName();
+        String username = h.getRPCUser();
+        initGlobals(rpcName, username, inMessage, settings);
+        
+        
+    }
 	
 	@Override
 	public void initGlobals(String method, String username, Navajo inMessage,
@@ -46,9 +73,12 @@ public class GlobalManagerImpl implements GlobalManager {
         paramMsg.addProperty(nu);
         Property nm = NavajoFactory.getInstance().createProperty(inMessage, "NavajoMethod", Property.STRING_PROPERTY, method, 50, "", Property.DIR_OUT);
         paramMsg.addProperty(nm);
-        
+        if (paramMsg.getProperty("UserIdentifier") == null) {
+            // ensure it exists
+            Property ui = NavajoFactory.getInstance().createProperty(inMessage, "UserIdentifier", Property.STRING_PROPERTY, username, 50, "", Property.DIR_OUT);   
+            paramMsg.addProperty(ui);
+        }
         appendMapToInput(inMessage, extraParams);
-        
 	}
 	
 	public static void appendMapToInput(Navajo inMessage, Map<String, String> extraParams) {
@@ -77,30 +107,6 @@ public class GlobalManagerImpl implements GlobalManager {
         }
     }
 
-	public void activate(Map<String,Object> settings) {
-		for (Entry<String,Object> e : settings.entrySet()) {
-			if (!osgiSettings.contains(e.getKey())) {
-				this.settings.put(e.getKey(), ""+e.getValue());
-			}
-		}
-	}
-
-	public void deactivate() {
-		this.settings.clear();
-	}
-
-	@Override
-	public void initGlobals(Navajo inMessage) throws NavajoException {
-		Header h = inMessage.getHeader();
-		if(h==null) {
-			logger.warn("Can not append globals to input message: No header found.");
-			return;
-		}
-		String rpcName = h.getRPCName();
-		String username = h.getRPCUser();
-		initGlobals(rpcName, username, inMessage, settings);
-		
-	}
 
 
 }
