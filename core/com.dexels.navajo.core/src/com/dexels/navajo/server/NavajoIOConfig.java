@@ -26,6 +26,7 @@ public interface NavajoIOConfig {
 	public String getCompiledScriptPath();
 	public String getAdapterPath();
 	public String getResourcePath();
+	public String getDeployment();
 
 	public Navajo readConfig(String s) throws IOException;
 	public void writeConfig(String name, Navajo conf) throws IOException;

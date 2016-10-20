@@ -470,5 +470,11 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
         }
         return true;
     }
+
+
+    @Override
+    public String getDeployment() {
+        return navajoIOConfig.getDeployment();
+    }
 	
 }

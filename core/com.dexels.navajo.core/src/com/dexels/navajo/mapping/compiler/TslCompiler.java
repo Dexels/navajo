@@ -2501,23 +2501,44 @@ public class TslCompiler {
 	public String debugNode(int ident, Element n) throws Exception {
 		StringBuffer result = new StringBuffer();
 		String value = n.getAttribute("value");
-		result.append(printIdent(ident)
+		String condition = n.getAttribute("condition");
+        if (condition.equals("")) {
+            result.append(printIdent(ident) + "if (true) {");
+        } else {
+            result.append(printIdent(ident)
+                    + "if (Condition.evaluate("
+                    + replaceQuotes(condition)
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
+        }
+        
+		result.append(printIdent(ident + 2)
 				+ "op = Expression.evaluate("
 				+ replaceQuotes(value)
 				+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
-		result.append(printIdent(ident)
-				+ "Access.writeToConsole(access, \"DEBUG: \" + op.value );\n");
+		result.append(printIdent(ident + 2) + "Access.writeToConsole(access, \"DEBUG: \" + op.value );\n");
+		result.append(printIdent(ident) + "}\n");
 		return result.toString();
 	}
 	
 	public String logNode(int ident, Element n) throws Exception {
         StringBuffer result = new StringBuffer();
         String value = n.getAttribute("value");
-        result.append(printIdent(ident)
+        String condition = n.getAttribute("condition");
+        if (condition.equals("")) {
+            result.append(printIdent(ident) + "if (true) {");
+        } else {
+            result.append(printIdent(ident)
+                    + "if (Condition.evaluate("
+                    + replaceQuotes(condition)
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
+        }
+        
+        result.append(printIdent(ident + 2)
                 + "op = Expression.evaluate("
                 + replaceQuotes(value)
                 + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
-        result.append(printIdent(ident) + "writeToLog( op.value + \"\");\n");
+        result.append(printIdent(ident + 2) + "writeToLog( op.value + \"\");\n");
+        result.append(printIdent(ident) + "}\n");
         return result.toString();
     }
 

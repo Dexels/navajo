@@ -16,24 +16,24 @@ import com.dexels.navajo.parser.TMLExpressionException;
  * @version 1.0
  */
 
-public final class DateSubstract extends FunctionInterface {
+public final class DateSubtract extends FunctionInterface {
 
-	public DateSubstract() {}
+	public DateSubtract() {}
 
 	@Override
 	public String remarks() {
-		return "Substracts two date object";
+		return "Subtracts two date object";
 	}
 
 	@Override
 	public String usage() {
-		return "DateSubstract(Date1, Date2)";
+		return "DateSubtract(Date1, Date2)";
 	}
 
 	@Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		if (this.getOperands().size() != 2)
-			throw new TMLExpressionException("DateSubstract(Date1, Date2) expected. Wrong no. of args.");
+			throw new TMLExpressionException("DateSubtract(Date1, Date2) expected. Wrong no. of args.");
 
 		java.util.Date date1 = (java.util.Date) this.getOperands().get(0);
 		java.util.Date date2 = (java.util.Date) this.getOperands().get(1);

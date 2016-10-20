@@ -1645,9 +1645,9 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testDateSubstract() throws Exception {
+	public void testDateSubtract() throws Exception {
 
-		FunctionInterface fi = fff.getInstance(cl, "DateSubstract");
+		FunctionInterface fi = fff.getInstance(cl, "DateSubtract");
 		fi.reset();
 		fi.insertOperand(new java.util.Date());
 		fi.insertOperand(new java.util.Date());
