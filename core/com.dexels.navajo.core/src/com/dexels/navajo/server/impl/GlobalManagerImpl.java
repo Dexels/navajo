@@ -73,9 +73,9 @@ public class GlobalManagerImpl implements GlobalManager {
         paramMsg.addProperty(nu);
         Property nm = NavajoFactory.getInstance().createProperty(inMessage, "NavajoMethod", Property.STRING_PROPERTY, method, 50, "", Property.DIR_OUT);
         paramMsg.addProperty(nm);
-        if (paramMsg.getProperty("UserIdentifier") == null) {
+        if (paramMsg.getProperty("UpdateBy") == null) {
             // ensure it exists
-            Property ui = NavajoFactory.getInstance().createProperty(inMessage, "UserIdentifier", Property.STRING_PROPERTY, username, 50, "", Property.DIR_OUT);   
+            Property ui = NavajoFactory.getInstance().createProperty(inMessage, "UpdateBy", Property.STRING_PROPERTY, username, 50, "", Property.DIR_OUT);   
             paramMsg.addProperty(ui);
         }
         appendMapToInput(inMessage, extraParams);
