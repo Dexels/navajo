@@ -3,6 +3,7 @@ package com.dexels.navajo.document.json.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.text.DateFormat;
@@ -12,10 +13,13 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -23,6 +27,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.json.JSONTML;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.NavajoType;
 
 /**
@@ -32,7 +37,8 @@ import com.dexels.navajo.document.types.NavajoType;
  *
  */
 public class JSONTMLImpl implements JSONTML {
-    
+    private final static Logger logger = LoggerFactory.getLogger(JSONTMLImpl.class);
+
 	private JsonFactory jsonFactory = null;
 	private ObjectMapper om = null;
 	private String topLevelMessageName = null;
@@ -96,7 +102,6 @@ public class JSONTMLImpl implements JSONTML {
 	    JsonGenerator jg = null;
 		try {
 			jg = jsonFactory.createJsonGenerator(os); 
-
 			jg.useDefaultPrettyPrinter();
 			format(jg, n);
 		} catch (Exception e) {
@@ -158,27 +163,57 @@ public class JSONTMLImpl implements JSONTML {
 			} else {
 				om.writeValue(jg, "null");
 			}
-		} else {
-			if (this.typeIsValue) {
-			    String value = p.getType();
-			    if (isOptionalKey(p.getKey())) {
-			        value += ", optional";
-			    }
-				om.writeValue(jg, value);
-			} else {
-				Object value = p.getTypedValue();
-				if (p.getType().equals(Property.BINARY_PROPERTY)) {
-					value = p.getValue();
-				} else if (value instanceof NavajoType) {
-				    // Use toString for NavajoTypes
-				    value = value.toString();
-				}
-				om.writeValue(jg, value );
-
-			}
-		}
-
+        } else {
+            if (this.typeIsValue) {
+                String value = p.getType();
+                if (isOptionalKey(p.getKey())) {
+                    value += ", optional";
+                }
+                om.writeValue(jg, value);  
+            } else {
+                boolean written = false;
+                if (p.getType().equals(Property.BINARY_PROPERTY)) {
+                    written =  formatBinaryProperty(jg, p);
+                }
+                if (!written) {
+                    Object value = p.getTypedValue();
+                    if (value instanceof NavajoType) {
+                        value = value.toString();
+                    }
+                    om.writeValue(jg, value);
+                }
+            }
+        }
 	}
+
+    private boolean formatBinaryProperty(JsonGenerator jg, Property p) throws IOException, JsonGenerationException {
+        Binary bin = (Binary) p.getTypedValue();
+
+        // Get the writer for the JsonGenerator to write directly to the underlying stream
+        // This prevents writing the entire binary to a string in memory before adding it
+        // to the stream.
+        Writer w = null;
+        
+        Object o = jg.getOutputTarget();
+        if (o instanceof Writer) {
+            w = (Writer) o;
+            
+        } else if (o instanceof OutputStream) {
+            w = new OutputStreamWriter((OutputStream)o);
+        } else {
+            logger.warn("Unknown outputtarget from JsonGenerator: {}. Falling back to legacy mode.", o);
+            return false;
+        }
+       
+        // Write a quote as rawvalue to change the mode of JsonGenerator to VALUE
+        jg.writeRawValue("\"");
+        // Flush JsonGenerator since we will now be talking to the underlying stream itself
+        jg.flush();
+        // Write the binary to the stream, and end with another quote
+        bin.writeBase64(w, false);
+        jg.writeRaw("\"");
+        return true;
+    }
 	
 	private boolean isOptionalKey(String key) {
         return ( key != null && key.indexOf("optional") != -1 );
@@ -276,18 +311,19 @@ public class JSONTMLImpl implements JSONTML {
         }
     }
 
-	private void parseProperty(String name, String value, Message p, JsonParser jp) throws Exception {
+	private void parseProperty(String name, Object value, Message p, JsonParser jp) throws Exception {
 		if (name == null) {
 			// Give property the name of the message
 			name = p.getName();
 		}
-		Property prop = NavajoFactory.getInstance().createProperty(p.getRootDoc(), name, Property.STRING_PROPERTY, value, 0, "", "out");
+		Property prop = NavajoFactory.getInstance().createProperty(p.getRootDoc(), name, Property.STRING_PROPERTY, "", 0, "", "out");
+		prop.setAnyValue(value);
 		p.addProperty(prop);
 		if ( entityTemplate != null ) {
 			Property ep = getEntityTemplateProperty(prop);
  			if ( ep != null ) {
-				if ( ep.getType().equals(Property.SELECTION_PROPERTY)) {
-					Selection s = NavajoFactory.getInstance().createSelection(p.getRootDoc(), value, value, true);
+				if ( ep.getType().equals(Property.SELECTION_PROPERTY) && value != null) {
+					Selection s = NavajoFactory.getInstance().createSelection(p.getRootDoc(), value.toString(), value.toString(), true);
 					prop.setType(ep.getType());
 					prop.addSelection(s);
 				} else {
@@ -386,7 +422,20 @@ public class JSONTMLImpl implements JSONTML {
                 } else if (jp.getCurrentToken() == JsonToken.START_ARRAY) {
                     parseArrayMessage(name, n, parent, jp);
                 } else {
-                    String value = jp.getText();
+                    JsonToken currentToken = jp.getCurrentToken();
+                    Object value;
+                    if (currentToken.equals(JsonToken.VALUE_TRUE) ||currentToken.equals(JsonToken.VALUE_FALSE)) {
+                        value  = jp.getValueAsBoolean();
+                    } else if (currentToken.equals(JsonToken.VALUE_NULL)) {
+                        value = null;
+                    } else if (currentToken.equals(JsonToken.VALUE_NUMBER_INT)) {
+                        value = jp.getValueAsInt();
+                    } else if (currentToken.equals(JsonToken.VALUE_NUMBER_FLOAT)) {
+                        value = jp.getValueAsDouble();
+                    } else {
+                        value = jp.getText();
+                    }
+                    
                     if (value.equals("null")) {
                         value = null;
                     }
