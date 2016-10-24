@@ -480,6 +480,10 @@ public static final Message[] addMessage(Navajo doc, Message parent, String mess
         return messages;
       }
     }
+    
+    if (getBaseMessageName(message).contains(Navajo.MESSAGE_SEPARATOR)) {
+        throw new MappingException( "No submessage constructs allowed in messagename: " + message);
+    }
  
     /**
      * Added getBaseMessageName to support relative message creation.
