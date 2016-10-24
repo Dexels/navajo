@@ -16,15 +16,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ArticleClient {
 	
@@ -50,7 +51,7 @@ public class ArticleClient {
 	}
 	
 	private Iterator<String> getArticleNames() {
-		return meta.getFieldNames();
+		return meta.fieldNames();
 	}
 
 	private JsonNode getJSONFromURL(String item) throws IOException {
@@ -102,7 +103,7 @@ public class ArticleClient {
 			checkResult(article,jsonNode);
 			
 			
-			String value = ((ObjectNode)jsonNode).get(key).getTextValue();
+			String value = ((ObjectNode)jsonNode).get(key).textValue();
 			result.add(value);
 		}
 		return result;

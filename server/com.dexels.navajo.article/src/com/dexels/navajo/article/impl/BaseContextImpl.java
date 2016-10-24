@@ -12,9 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +28,9 @@ import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.oauth.api.OAuthToken;
 import com.dexels.oauth.api.TokenStore;
 import com.dexels.oauth.api.TokenStoreException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public abstract class BaseContextImpl implements ArticleContext {
 
@@ -190,7 +190,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 		
 		try (FileReader fr = new FileReader(in)) {
 			ObjectNode article = mapper.createObjectNode();
-			w.put(name, article);
+			w.set(name, article);
 			XMLElement x = new CaseSensitiveXMLElement();
 			x.parseFromReader(fr);
 			article.put("name", name);
@@ -216,7 +216,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 			for (String scope : scopeArray) {
 				scopeArgs.add(scope);
 			}
-			articleNode.put("scopes", scopeArgs);
+			articleNode.set("scopes", scopeArgs);
 		}
 		
 		String description = article.getStringAttribute("description");
@@ -226,7 +226,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 		
 		XMLElement argTag = article.getChildByTagName("_arguments");
 		ArrayNode inputArgs = mapper.createArrayNode();
-		articleNode.put("input", inputArgs);
+		articleNode.set("input", inputArgs);
 		if (argTag != null) {
 			List<XMLElement> args = argTag.getChildren();
 			for (XMLElement xmlElement : args) {
@@ -260,7 +260,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 			}
 		}
 		ArrayNode outputArgs = mapper.createArrayNode();
-		articleNode.put("output", outputArgs);
+		articleNode.set("output", outputArgs);
 		List<XMLElement> children = article.getChildren();
 
 		for (XMLElement e : children) {

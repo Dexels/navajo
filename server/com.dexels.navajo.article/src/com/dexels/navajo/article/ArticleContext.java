@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ObjectNode;
 
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.oauth.api.ScopeStoreException;
 import com.dexels.oauth.api.TokenStoreException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public interface ArticleContext {
 

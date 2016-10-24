@@ -3,16 +3,15 @@ package com.dexels.navajo.article.command.impl;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
-
 import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class DumpUserCommand implements ArticleCommand {
 
@@ -48,12 +47,12 @@ public class DumpUserCommand implements ArticleCommand {
 			scopesObject.add(e);
 		}
 
-		on.put("scopes", scopesObject);
+		on.set("scopes", scopesObject);
 		ObjectNode userObject = on.putObject("user");
 		for (Entry<String, Object> e : runtime.getUserAttributes().entrySet()) {
 			userObject.put(e.getKey(), ""+e.getValue());
 		}
-		on.put("user", userObject);
+		on.set("user", userObject);
 		long expireTimestamp = runtime.getToken().getExpireTimestamp();
 		on.put("expireTimestamp", expireTimestamp);
 		return on;

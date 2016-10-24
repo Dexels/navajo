@@ -2,9 +2,6 @@ package com.dexels.navajo.article.command.impl;
 
 import java.util.Map;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +20,9 @@ import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.navajo.server.DispatcherInterface;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class ServiceCommand implements ArticleCommand {
     private final static Logger statLogger = LoggerFactory.getLogger("stats");

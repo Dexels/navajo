@@ -8,9 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +17,10 @@ import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.resourcebundle.ResourceBundleStore;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 
 public abstract class ArticleBaseServlet extends HttpServlet implements Servlet {
 	private static final String VALIDATION_DESCRIPTION_LANG = "nl";
@@ -113,14 +114,14 @@ public abstract class ArticleBaseServlet extends HttpServlet implements Servlet 
 								
 				messages.add(conditionError);
 			}
-			error.put("messages", messages);
+			error.set("messages", messages);
 			
 		} else {
 			error.put("message", exception.getErrorCode().getDescription());
 		}
 		
 		error.put("code", exception.getErrorCode().getExternalCode());
-		rootNode.put("error", error);
+		rootNode.set("error", error);
 		response.setStatus(exception.getErrorCode().getHttpStatusCode());
 		PrintWriter pw = response.getWriter();
 		mapper.writer().writeValue(pw, rootNode);

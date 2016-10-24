@@ -10,10 +10,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +18,10 @@ import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.oauth.api.OAuthToken;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements ArticleRuntime {
 

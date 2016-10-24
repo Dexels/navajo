@@ -3,11 +3,6 @@ package com.dexels.navajo.article.command.impl;
 import java.io.ByteArrayInputStream;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
-
 import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.APIValue;
@@ -19,6 +14,10 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.types.Binary;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ElementCommand implements ArticleCommand {
 
@@ -137,24 +136,24 @@ public class ElementCommand implements ArticleCommand {
 					if (objects[objects.length - 1].equals(string)) { //Last
 						ObjectNode node = mapper.createObjectNode();
 						fillObject(node, e, string);
-						previous.put(string, node);
+						previous.set(string, node);
 					} else {
 						//Create a new object and assign it to previous so we get the levels effect
 						ObjectNode node = mapper.createObjectNode();
-						previous.put(string, node);
+						previous.set(string, node);
 						previous = node;
 					}
 				}
 			}
 			if (!isDefined) {
-				root.put(fieldName, object);
+				root.set(fieldName, object);
 			} else {
 				//The node was already defined so we do not need to create a wrapper object
 				return false;
 			}	
 		} else { 
 			fillObject(object, e, objects[0]);
-			root.put(name, object);
+			root.set(name, object);
 		}
 		
 		outputArgs.add(root);

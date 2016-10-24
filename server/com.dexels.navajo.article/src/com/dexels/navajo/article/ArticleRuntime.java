@@ -5,12 +5,11 @@ import java.io.Writer;
 import java.util.Map;
 import java.util.Set;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ObjectNode;
-
 import com.dexels.navajo.document.Navajo;
 import com.dexels.oauth.api.Token;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public interface ArticleRuntime {
 	public String resolveArgument(String name) throws APIException;

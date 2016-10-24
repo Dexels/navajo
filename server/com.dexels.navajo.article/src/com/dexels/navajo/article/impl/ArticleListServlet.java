@@ -8,12 +8,11 @@ import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.codehaus.jackson.node.ObjectNode;
-
 import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ArticleListServlet extends ArticleBaseServlet implements Servlet {
 	private static final long serialVersionUID = -6895324256139435015L;

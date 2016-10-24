@@ -6,11 +6,6 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
-
 import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.APIValue;
@@ -21,6 +16,10 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TableCommand implements ArticleCommand {
 
@@ -169,7 +168,7 @@ public class TableCommand implements ArticleCommand {
 		}
 		List<XMLElement> children = e.getChildrenByTagName("column");
 		ArrayNode an = mapper.createArrayNode();
-		on.put("columns", an);
+		on.set("columns", an);
 		for (XMLElement xmlElement : children) {
 			ObjectNode column = mapper.createObjectNode();
 			an.add(column);

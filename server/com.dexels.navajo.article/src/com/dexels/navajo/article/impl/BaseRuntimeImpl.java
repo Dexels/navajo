@@ -13,11 +13,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,11 +23,20 @@ import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.NoJSONOutputException;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.json.TmlBinarySerializer;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.oauth.api.OAuthToken;
 import com.dexels.oauth.api.Scope;
 import com.dexels.oauth.api.Token;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public abstract class BaseRuntimeImpl implements ArticleRuntime {
 
@@ -57,6 +61,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 
 	protected BaseRuntimeImpl(String articleName, XMLElement article, Set<String> suppliedScopes, String instance) {
 		rootNode = mapper.createObjectNode();
+		setupJackson();
 		this.article = article;
 		this.articleName = articleName;
 		this.suppliedScopes = suppliedScopes;
@@ -68,6 +73,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	protected BaseRuntimeImpl(String articleName, File articleFile,String instance, OAuthToken token)
 			throws IOException {
 		article = new CaseSensitiveXMLElement();
+		setupJackson();
 		rootNode = mapper.createObjectNode();
 		this.token = token;
 		
@@ -97,6 +103,12 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 			}
 		}
 	}
+	
+	   private void setupJackson() {
+	        SimpleModule module = new SimpleModule("MyModule", Version.unknownVersion());
+	        module.addSerializer(Binary.class, new TmlBinarySerializer());
+	        mapper.registerModule(module);
+	    }
 	
 	protected void verifyScopes() throws APIException {
 		Set<String> missing = null;
@@ -153,7 +165,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 			}
 		}
 		ObjectNode result = mapper.createObjectNode();
-		rootNode.put(name, result);
+		rootNode.set(name, result);
 		return result;
 	}
 	
