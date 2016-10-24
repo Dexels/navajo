@@ -48,8 +48,10 @@ public class TestTMLJson {
         
         Writer sw = new StringWriter();
         json.format(n,  sw, true);
-        
+
         String result = sw.toString();
+        System.out.println(result);
+
         // Length should be 113, right?
         Assert.assertEquals(113, result.length());
         

@@ -12,12 +12,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +21,17 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.json.JSONTML;
+import com.dexels.navajo.document.json.TmlBinarySerializer;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.NavajoType;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 /**
  * TODO: Create option to pass Navajo template for setting correct types.
@@ -52,6 +55,10 @@ public class JSONTMLImpl implements JSONTML {
 		jsonFactory =  new JsonFactory();
 		// Use default typing.
 		om = new ObjectMapper().enableDefaultTyping();
+		
+		SimpleModule module = new SimpleModule("MyModule", Version.unknownVersion());
+		module.addSerializer(Binary.class, new TmlBinarySerializer());
+		om.registerModule(module);
 	}
 
 	/* (non-Javadoc)
@@ -171,11 +178,9 @@ public class JSONTMLImpl implements JSONTML {
                 }
                 om.writeValue(jg, value);  
             } else {
-                boolean written = false;
                 if (p.getType().equals(Property.BINARY_PROPERTY)) {
-                    written =  formatBinaryProperty(jg, p);
-                }
-                if (!written) {
+                    om.writeValue(jg, p.getTypedValue());
+                } else {
                     Object value = p.getTypedValue();
                     if (value instanceof NavajoType) {
                         value = value.toString();
