@@ -134,5 +134,11 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 		}
 	}
 
+    @Override
+    public String getDeployment() {
+        logger.warn("getDeployment not implemented in OSGi implementation");
+        return null;
+    }
+
 
 }

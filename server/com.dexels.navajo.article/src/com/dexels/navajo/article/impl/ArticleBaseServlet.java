@@ -49,7 +49,7 @@ public abstract class ArticleBaseServlet extends HttpServlet implements Servlet 
 		this.resourceBundle = rb;
 	}
 	
-	public void clearResourceBundle() {
+	public void clearResourceBundle(ResourceBundleStore rb) {
 		this.resourceBundle = null;
 	}
 

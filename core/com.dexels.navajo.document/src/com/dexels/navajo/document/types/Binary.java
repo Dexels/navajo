@@ -898,51 +898,42 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
      *             memory exceptions
      */
     @Deprecated
-	public final String getBase64() {
-         final StringWriter sw = new StringWriter();
-         final OutputStream os = Base64.newEncoder( sw );
-            
-         InputStream dataAsStream = getDataAsStream();
-         if(dataAsStream==null) {
-        	 return null;
-         }
-   		 try {
-			copyResource(os, dataAsStream,true);
-			 os.close();
-			 dataAsStream.close();
-		} catch (IOException e) {
-			logger.error("Error: ", e);
-		}
-         return sw.toString();
+    public final String getBase64() {
+        final StringWriter sw = new StringWriter();
+        try {
+           writeBase64(sw, true);
+       } catch (IOException e) {
+           logger.error("IOexception on getting base64 encoding!", e);
+       }
+        return sw.toString();
+   }
 
-//        if (getData() != null) {
-//            sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
-//            String data = enc.encode(getData());
-//            data = data.replaceAll("\n", "\n  ");
-//            return data;
-//        } else {
-//            return null;
-//        }
-    }
-
-    /**
-     * writes the base64 to a Writer. Will not close the writer.
-     * 
-     * @throws IOException
-     */
-    public final void writeBase64(Writer sw) throws IOException {
-        final OutputStream os = Base64.newEncoder(sw);
-        if(!isResolved()) {
-        	resolveData();
-        }
-        InputStream dataInStream = getDataAsStream();
-        if (dataInStream!=null) {
-        	copyResource(os, dataInStream,true);
-		}
-//        logger.info("Copied to stream");
-        os.close();
-
-    }
+   /**
+    * writes the base64 to a Writer. Will not close the writer.
+    * 
+    * @throws IOException
+    */
+   public final void writeBase64(Writer sw) throws IOException {
+       writeBase64(sw, true);
+   }
+   
+   public final void writeBase64(Writer sw, boolean newline) throws IOException {
+       final OutputStream os;
+       if (newline) {
+           os = Base64.newEncoder(sw);
+       } else {
+           os = Base64.newEncoder(sw, 0, "");
+       }
+       if(!isResolved()) {
+           resolveData();
+       }
+       InputStream dataAsStream = getDataAsStream();
+       if (dataAsStream!=null) {
+           copyResource(os, dataAsStream,true);
+       }
+//       logger.info("Copied to stream");
+       os.close();
+   }
 
     /**
      * Get the file reference to a binary.

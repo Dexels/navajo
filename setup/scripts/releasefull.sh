@@ -55,7 +55,7 @@ fi
 echo "Going to release $BUNDLENAME $NEWMINOR1 and $NEWMINOR2 - press ctrl+c to cancel within 5 seconds"
 prettysleep 5
 
-mvn install
+mvn install -Denvironment=release -DskipTests
 if [ $? -ne 0 ]
 then
 	echo "Building failed - stopping release!"

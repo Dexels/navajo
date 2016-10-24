@@ -144,6 +144,11 @@ public abstract class TestContextImpl extends BaseContextImpl {
             public String determineScriptExtension(String scriptName, String tenant) {
                 return ".xml";
             }
+
+            @Override
+            public String getDeployment() {
+                return null;
+            }
 		});
 		final ElementCommand element = new ElementCommand("element");
 		

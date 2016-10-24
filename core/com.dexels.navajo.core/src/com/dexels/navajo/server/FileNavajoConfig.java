@@ -264,4 +264,11 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
     	}
     }
     
+
+    @Override
+    public String getDeployment() {
+        logger.warn("getDeplyoment not implemented in OSGi implementation");
+        return null;
+    }
+    
 }
