@@ -3,7 +3,11 @@ package com.dexels.navajo.functions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 /**
  * Title:        Navajo
@@ -14,6 +18,8 @@ import com.dexels.navajo.parser.FunctionInterface;
  * @version $Id$
  */
 public class IsDate extends FunctionInterface {
+    private final static Logger logger = LoggerFactory.getLogger(IsDate.class);
+
     public IsDate() {}
 
     @Override
@@ -32,13 +38,25 @@ public class IsDate extends FunctionInterface {
         if (o instanceof java.util.Date) {
             return Boolean.TRUE;
         } else if (o instanceof String) {
-            // Check if a format is given
             java.util.Date date = null;
-            // Going to guess some formats now by using the navajo function ToDate()
-            ParseDate td = new ParseDate();
-            td.reset();
-            td.insertOperand(o);
-            date = (java.util.Date)td.evaluate();
+            try
+            {
+                // Going to guess some formats now by using the navajo function ParseDate()
+                ParseDate td = new ParseDate();
+                td.reset();
+                td.insertOperand(o);
+                // Check if a format is given
+                if (this.getOperands().size() > 1 && this.getOperand(1) != null)
+                {
+                    td.insertOperand(this.getOperand(1));
+                }
+                date = (java.util.Date)td.evaluate();
+            }
+            catch (TMLExpressionException tee)
+            {
+                logger.debug("Not a date", tee);
+                return Boolean.FALSE;
+            }
             
             if (date != null) {
                 return Boolean.TRUE;
