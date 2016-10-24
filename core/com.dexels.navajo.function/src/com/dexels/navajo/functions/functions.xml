@@ -487,8 +487,8 @@
 		<result>boolean</result>
 	</function>
 	<function name="IsDate" class="com.dexels.navajo.functions.IsDate">
-		<description>IsDate(date|string)</description>
-		<input>date|string</input>
+		<description>IsDate(date|string,string|empty)</description>
+		<input>date|string,string|empty</input>
 		<result>boolean</result>
 	</function>
 	<function name="IsEmpty" class="com.dexels.navajo.functions.IsEmpty">
@@ -499,8 +499,8 @@
 		<result>boolean</result>
 	</function>
     <function name="IsFutureDate" class="com.dexels.navajo.functions.IsFutureDate">
-        <description>IsFutureDate(date|string)</description>
-        <input>date|string</input>
+        <description>IsFutureDate(date|string,string|empty)</description>
+        <input>date|string,string|empty</input>
         <result>boolean</result>
     </function>
 	<function name="IsNull" class="com.dexels.navajo.functions.IsNull">
