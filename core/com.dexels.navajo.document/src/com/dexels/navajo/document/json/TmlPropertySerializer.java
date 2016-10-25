@@ -27,15 +27,14 @@ public class TmlPropertySerializer extends StdSerializer<Property> {
     public void serialize(Property property, JsonGenerator jg, SerializerProvider provider) throws IOException {
         
         Object value = property.getTypedValue();
-
-        if (property.getType().equals(Property.DATE_PROPERTY)) {
+        if (value == null) {
+            jg.writeNull();
+        } else if (property.getType().equals(Property.DATE_PROPERTY)) {
             DateFormat df = new SimpleDateFormat(Property.DATE_FORMAT2);
             jg.writeString(df.format((Date) value));
         } else if (property.getType().equals(Property.TIMESTAMP_PROPERTY)) {
             DateFormat df = new SimpleDateFormat(Property.TIMESTAMP_FORMAT);
             jg.writeString(df.format((Date) value));
-        } else if (value == null) {
-            jg.writeNull();
         } else {
             JsonSerializer<Object> serializer = provider.findValueSerializer(value.getClass());
             serializer.serialize(value, jg, provider);
