@@ -196,16 +196,36 @@ public class Entity {
         return parent;
     }
 
-    private void processExtendedEntity(Message m, String extendedEntity) throws EntityException {
-        logger.info("Processing super entity {}", extendedEntity);
+    private void processExtendedEntity(Message m, String extendedEntity, String optionsString) throws EntityException {
+        logger.info("Processing super entity {} ", extendedEntity);
         Entity superEntity = getSuperEntity(extendedEntity);
 
         if (superEntity == null) {
             throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE, "Could not find super entity: " + extendedEntity + " for entity: " + getName());
         }
-
+        
+      
+        boolean ignoreKeys = false;
+        if (optionsString != null) {
+            String[] options = optionsString.split("&");
+            for (String op : options) {
+                String[] splitted = op.split("=");
+                if (splitted[0].equals("ignoreKeys")) {
+                    ignoreKeys = Boolean.valueOf(splitted[1]);
+                }
+            }
+        }
+        
+        Message incoming = superEntity.getMessage().copy(m.getRootDoc());
+        if (ignoreKeys) {
+            for (Property p : incoming.getAllProperties()) {
+                if (p.getKey() != null) {
+                    p.setKey(null);
+                }
+            }
+        }
         // Copy properties/messages from superEntity.
-        m.merge(superEntity.getMessage().copy(m.getRootDoc()));
+        m.merge(incoming);
         registerSuperEntity(superEntity);
     }
 
@@ -226,27 +246,29 @@ public class Entity {
     }
 
     private void findSuperEntities(Message m) throws EntityException {
-
         if (m.isArrayMessage()) {
             if (m.getDefinitionMessage() == null) {
                 logger.warn("Array message {} in entity without definition!", m.getName());
                 throw new EntityException(EntityException.PARSE_ERROR, "Definition message is mandatory in array message");
-
             }
             m = m.getDefinitionMessage();
         }
         if (m.getExtends() != null && !"".equals(m.getExtends())) {
-
-            if (m.getExtends().startsWith(NAVAJO_URI)) {
-                String ext = m.getExtends().substring(NAVAJO_URI.length());
-                String[] superEntities = ext.split(",");
-                for (String superEntity : superEntities) {
-                    superEntity = superEntity.replace("/", ".");
-                    processExtendedEntity(m, superEntity);
-                }
-            } else if (!"".equals(m.getExtends())) {
-                logger.error("Invalid extend message: {}", m.getExtends());
+            if (!(m.getExtends().startsWith(NAVAJO_URI))) {
+                logger.warn("Invalid extend message: {}", m.getExtends());
                 throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE, "Extension type not supported: " + myMessage.getExtends());
+            }
+            
+            String ext = m.getExtends().substring(NAVAJO_URI.length());
+            String[] superEntities = ext.split(",");
+            for (String superEntity : superEntities) {
+                superEntity = superEntity.replace("/", ".");
+                String options = null;
+                if (superEntity.indexOf('?') > 0) {
+                    options = superEntity.split("\\?")[1];
+                    superEntity = superEntity.split("\\?")[0];
+                }
+                processExtendedEntity(m, superEntity, options);
             }
         }
 

@@ -941,11 +941,18 @@ public class TslCompiler {
 				result.append(printIdent(ident + 2)
 						+ "currentOutMsg.setExtends(\"" + extendsMsg + "\");\n");
 				
+				
 				if (extendsMsg.startsWith("navajo://")) {
-					// Add ExtendDependency dependency
-					String entityName = extendsMsg.split("navajo://")[1];
-					deps.add(new ExtendDependency(ExtendDependency.getScriptTimeStamp(entityName),entityName ));
+				    String ext = extendsMsg.substring(9);
+		            String[] superEntities = ext.split(",");
+		            for (String superEntity : superEntities) {
+		                if (superEntity.indexOf('?') > 0) {
+		                    superEntity = superEntity.split("\\?")[0];
+		                }
+		                deps.add(new ExtendDependency(ExtendDependency.getScriptTimeStamp(superEntity),superEntity ));
+		            }
 				}
+					
 				
 			}
 			if (scopeMsg != null) {

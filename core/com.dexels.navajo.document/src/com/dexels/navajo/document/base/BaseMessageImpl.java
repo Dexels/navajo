@@ -1725,6 +1725,22 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             incoming.setName(getName());
         }
 
+        List<Property> properties = incoming.getAllProperties();
+        for (int i = 0; i < properties.size(); i++) {
+            Property p = (Property) properties.get(i).clone();
+            Property o_p = null;
+            if (preferThis) {
+                o_p = getProperty(p.getName());
+            }
+            if (!preferThis || o_p == null) {
+                addProperty(p);
+            }
+            // If we don't have a method set, use the incoming method
+            if (o_p != null && o_p.getMethod().equals("")) {
+                o_p.setMethod(p.getMethod());
+            }
+
+        }
         List<Message> subMessages = incoming.getAllMessages();
         for (int i = 0; i < subMessages.size(); i++) {
             String newMsgName = subMessages.get(i).getName();
@@ -1749,23 +1765,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             } else {
                 existing.merge(subMessages.get(i), preferThis);
             }
-        }
-
-        List<Property> properties = incoming.getAllProperties();
-        for (int i = 0; i < properties.size(); i++) {
-            Property p = (Property) properties.get(i).clone();
-            Property o_p = null;
-            if (preferThis) {
-                o_p = getProperty(p.getName());
-            }
-            if (!preferThis || o_p == null) {
-                addProperty(p);
-            }
-            // If we don't have a method set, use the incoming method
-            if (o_p != null && o_p.getMethod().equals("")) {
-                o_p.setMethod(p.getMethod());
-            }
-
         }
 
     }
