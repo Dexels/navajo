@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +31,6 @@ import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.DispatcherInterface;
 
 public class EntityContinuationRunner implements TmlRunnable {
-    private static final DateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private final static Logger logger = LoggerFactory.getLogger(EntityContinuationRunner.class);
     private final static String QUEUE_NAME = "normalPool";
 
@@ -185,7 +183,7 @@ public class EntityContinuationRunner implements TmlRunnable {
             response.setHeader("content-type", "application/json");
             Writer w = new OutputStreamWriter(response.getOutputStream());
             JSONTML json = JSONTMLFactory.getInstance();
-            json.setDateFormat(DATEFORMAT);
+            json.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
             try {
                 json.format(responseNavajo, w, true);
             } catch (Exception e) {

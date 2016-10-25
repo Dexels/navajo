@@ -3,18 +3,18 @@ package com.dexels.navajo.article;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.POJONode;
 
 public class APIValue {
 	
 	private final static String TYPE_SELECTION = "selection";
 	private final static String TYPE_DATETIME = "datetime";
 	private final static String TYPE_INTEGER = "integer";
-	private final static String TYPE_BOOLEAN = "boolean";
+	//private final static String TYPE_BOOLEAN = "boolean";
 	
 	public static void setValueOnNodeForType(ObjectNode node, String id, String type, Property property, ArticleRuntime runtime) throws APIException {
 		if (property == null || property.getTypedValue() == null) {
@@ -35,7 +35,7 @@ public class APIValue {
 					}
 				}
 				
-				node.put(id, options);
+				node.set(id, options);
 			} else if (TYPE_DATETIME.equals(type)) {
 				validatedType(property, Property.DATE_PROPERTY, id);
 				
@@ -63,6 +63,10 @@ public class APIValue {
 					} else {
 						node.put(id, property.getSelected().getName());
 					}
+				} else if (property.getType().equals(Property.BINARY_PROPERTY)) {
+				    // Put the binary object in - TmlBinarySerializer will take care of serializing it
+				    node.set(id, new POJONode(property.getTypedValue()));
+				    
 				} else {
 					//Default
 					node.put(id, property.getValue());
