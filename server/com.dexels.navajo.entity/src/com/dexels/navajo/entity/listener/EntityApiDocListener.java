@@ -113,7 +113,7 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         
         Entity e = myManager.getEntity(entityName);
         Navajo n = NavajoFactory.getInstance().createNavajo();
-        n.addMessage(e.getMessage());
+        n.addMessage(e.getMessage().copy(n));
         String entityNameUrl = entityName.replace(".", "/");
 
         result = template.replace("{{OP}}", method);
@@ -200,7 +200,6 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
 
             for (Property prop : properties) {
                 Property copied = prop.copy(nkey);
-                copied.setKey("");
                 mkey.addProperty(copied);
             }
             for (Property p : unboundRequestProperties) {

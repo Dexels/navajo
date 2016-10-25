@@ -1,6 +1,7 @@
 package com.dexels.navajo.entity;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ import com.dexels.navajo.document.Selection;
 
 public class Key {
 
-	private Set<Property> myKey = new HashSet<Property>();
+	private Set<Property> myKey = new LinkedHashSet<Property>();
 	private final Entity myEntity;
 	private final String id;
 	
