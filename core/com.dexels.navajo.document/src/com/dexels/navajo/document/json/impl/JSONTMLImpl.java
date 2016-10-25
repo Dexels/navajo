@@ -17,9 +17,9 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.json.JSONTML;
-import com.dexels.navajo.document.json.TmlBinarySerializer;
+import com.dexels.navajo.document.json.TmlNavajoTypeSerializer;
+import com.dexels.navajo.document.json.TmlPropertySerializer;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.document.types.NavajoType;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -50,7 +50,8 @@ public class JSONTMLImpl implements JSONTML {
 		om = new ObjectMapper().enableDefaultTyping();
 		
 		SimpleModule module = new SimpleModule("MyModule", Version.unknownVersion());
-		module.addSerializer(Binary.class, new TmlBinarySerializer());
+		module.addSerializer(Binary.class, new TmlNavajoTypeSerializer());
+		module.addSerializer(Property.class, new TmlPropertySerializer());
 		om.registerModule(module);
 	}
 
@@ -171,15 +172,7 @@ public class JSONTMLImpl implements JSONTML {
                 }
                 om.writeValue(jg, value);  
             } else {
-                if (p.getType().equals(Property.BINARY_PROPERTY)) {
-                    om.writeValue(jg, p.getTypedValue());
-                } else {
-                    Object value = p.getTypedValue();
-                    if (value instanceof NavajoType) {
-                        value = value.toString();
-                    }
-                    om.writeValue(jg, value);
-                }
+                om.writeValue(jg, p);
             }
         }
 	}

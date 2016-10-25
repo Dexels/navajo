@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -183,7 +182,6 @@ public class EntityContinuationRunner implements TmlRunnable {
             response.setHeader("content-type", "application/json");
             Writer w = new OutputStreamWriter(response.getOutputStream());
             JSONTML json = JSONTMLFactory.getInstance();
-            json.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
             try {
                 json.format(responseNavajo, w, true);
             } catch (Exception e) {

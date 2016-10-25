@@ -114,7 +114,9 @@ public class RESTAdapter extends NavajoMap {
         }
     }
 
+    @Deprecated
     public void setDateformat(String format) {
+        logger.warn("Deprecated dateFormat!");
         dateFormat = format;
     }
 

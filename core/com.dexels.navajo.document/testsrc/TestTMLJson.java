@@ -1,6 +1,7 @@
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,12 +26,45 @@ public class TestTMLJson {
         String result = sw.toString();
         System.out.println(result);
 
-        // Length should be 64, right?
+        // Length should be... 64! right?
         Assert.assertEquals(64, result.length());
         
         // Turn back into a Navajo and compare
         Navajo n2 = json.parse(new StringReader(result), "SimpleMessage");
         Assert.assertTrue(n.getMessage("SimpleMessage").messageEquals(n2.getMessage("SimpleMessage")));
+    }
+    
+    @Test
+    public void testDates() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message.xml"));
+        JSONTML json = JSONTMLFactory.getInstance();
+        
+        // Add date property
+        Property dateprop = NavajoFactory.getInstance().createProperty(n,  "date", "", "", "");
+        dateprop.setAnyValue(new Date(1477393027000L));
+        n.getMessage("SimpleMessage").addProperty(dateprop);
+        
+        // Add date property
+        Property tsprop = NavajoFactory.getInstance().createProperty(n,  "timestamp", "", "", "");
+        tsprop.setType(Property.TIMESTAMP_PROPERTY);
+        tsprop.setAnyValue(new Date(1477393027000L));
+        n.getMessage("SimpleMessage").addProperty(tsprop);
+        
+        Writer sw = new StringWriter();
+        json.format(n,  sw, true);
+        
+        String result = sw.toString();
+        System.out.println(result);
+
+        //Length should be 133... Right?
+        Assert.assertEquals(133, result.length());
+        
+        // Turn back into a Navajo and compare
+        Navajo n2 = json.parse(new StringReader(result), "SimpleMessage");
+        
+        Assert.assertEquals("2016-10-25", n2.getMessage("SimpleMessage").getProperty("date").getValue());
+        Assert.assertEquals("2016-10-25T12:57:07+0200", n2.getMessage("SimpleMessage").getProperty("timestamp").getValue());
+
     }
     
     @Test

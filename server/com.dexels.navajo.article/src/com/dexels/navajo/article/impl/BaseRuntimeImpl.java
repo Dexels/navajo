@@ -23,7 +23,9 @@ import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.NoJSONOutputException;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.json.TmlBinarySerializer;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.json.TmlNavajoTypeSerializer;
+import com.dexels.navajo.document.json.TmlPropertySerializer;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.types.Binary;
@@ -106,7 +108,8 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	
 	   private void setupJackson() {
 	        SimpleModule module = new SimpleModule("MyModule", Version.unknownVersion());
-	        module.addSerializer(Binary.class, new TmlBinarySerializer());
+	        module.addSerializer(Binary.class, new TmlNavajoTypeSerializer());
+	        module.addSerializer(Property.class, new TmlPropertySerializer());
 	        mapper.registerModule(module);
 	    }
 	

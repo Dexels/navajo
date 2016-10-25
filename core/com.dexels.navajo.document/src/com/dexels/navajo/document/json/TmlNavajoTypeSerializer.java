@@ -9,25 +9,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.NavajoType;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-public class TmlBinarySerializer extends StdSerializer<Binary> {
-    private final static Logger logger = LoggerFactory.getLogger(TmlBinarySerializer.class);
+public class TmlNavajoTypeSerializer extends StdSerializer<NavajoType> {
+    private final static Logger logger = LoggerFactory.getLogger(TmlNavajoTypeSerializer.class);
 
     private static final long serialVersionUID = 6193576754986884043L;
 
-    public TmlBinarySerializer() {
+    public TmlNavajoTypeSerializer() {
         this(null);
     }
 
-    public TmlBinarySerializer(Class<Binary> t) {
+    public TmlNavajoTypeSerializer(Class<NavajoType> t) {
         super(t);
     }
 
     @Override
-    public void serialize(Binary bin, JsonGenerator jg, SerializerProvider provider) throws IOException {
+    public void serialize(NavajoType type, JsonGenerator jg, SerializerProvider provider) throws IOException {
         
         Writer w = null;
         
@@ -42,13 +43,21 @@ public class TmlBinarySerializer extends StdSerializer<Binary> {
             return;
         }
        
-        // Write a quote as rawvalue to change the mode of JsonGenerator to VALUE
-        jg.writeRawValue("\"");
-        // Flush JsonGenerator since we will now be talking to the underlying stream itself
-        jg.flush();
-        // Write the binary to the stream, and end with another quote
-        bin.writeBase64(w, false);
-        jg.writeRaw("\"");
+        if (type instanceof Binary) {
+            // Write a quote as rawvalue to change the mode of JsonGenerator to VALUE
+            jg.writeRawValue("\"");
+            // Flush JsonGenerator since we will now be talking to the underlying stream itself
+            jg.flush();
+            // Write the binary to the stream, and end with another quote
+            ((Binary) type).writeBase64(w, false);
+            jg.writeRaw("\"");
+        } else {
+            jg.writeString(type.toString());
+        }
+        
     }
+
+    
+    
 
 }
