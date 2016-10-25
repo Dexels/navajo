@@ -3,7 +3,6 @@ package com.dexels.navajo.document.json.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.text.DateFormat;
@@ -11,9 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -25,7 +21,6 @@ import com.dexels.navajo.document.json.TmlBinarySerializer;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.NavajoType;
 import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -40,8 +35,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
  *
  */
 public class JSONTMLImpl implements JSONTML {
-    private final static Logger logger = LoggerFactory.getLogger(JSONTMLImpl.class);
-
 	private JsonFactory jsonFactory = null;
 	private ObjectMapper om = null;
 	private String topLevelMessageName = null;
