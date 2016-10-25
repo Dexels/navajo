@@ -103,6 +103,13 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	            return new SimpleDateFormat( Property.DATE_FORMAT3 );
 	        }
 	}; 
+	private final static ThreadLocal<SimpleDateFormat> timestampFormat = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+           protected SimpleDateFormat initialValue()
+           {
+               return new SimpleDateFormat( Property.TIMESTAMP_FORMAT );
+           }
+   }; 
 	//SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
 	
 	protected final ArrayList<BaseSelectionImpl> selectionList = new ArrayList<BaseSelectionImpl>() {
@@ -485,13 +492,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	        return false;
 	    }
 	    Property otherProperty = (Property) p;
-	    if (!getType().equals(otherProperty.getType())) {
-	        return false;
-	    }
-	    if (!getValue().equals(otherProperty.getValue())) {
-            return false;
-        }
-	    return true;
+	    return isEqual(otherProperty);
 	}
 
 	private void setListProperty(List<?> list) {
@@ -706,37 +707,47 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			} catch (Exception e) {
 				logger.error("Error: ", e);
 			}
-		}
+        } else if (getType().equals(Property.DATE_PROPERTY) || getType().equals(Property.TIMESTAMP_PROPERTY)) {
+            if (getValue() == null || getValue().equals("")) {
+                return null;
+            }
+            // Try in order from most specific to least specific
+            try {
+                Date d = timestampFormat.get().parse(getValue());
+                return d;
+            } catch (Exception ex) {
+                try {
+                    Date d = dateFormat4.get().parse(getValue());
+                    return d;
+                } catch (Exception ex2) {
+                    try {
+                        Date d = dateFormat1.get().parse(getValue());
+                        return d;
+                    } catch (Exception ex3) {
 
-		else if (getType().equals(Property.DATE_PROPERTY)) {
-			if (getValue() == null || getValue().equals("")) {
-				return null;
-			}
-
-			try {
-				Date d = dateFormat1.get().parse(getValue());
-				return d;
-			} catch (Exception ex) {
-				try {
-					Date d = dateFormat4.get().parse(getValue());
-					return d;
-				} catch (Exception ex2) {
-					try {
-						Date d = dateFormat2.get().parse(getValue());
-						return d;
-					} catch (Exception ex3) {
-						try {
-							Long l = Long.parseLong(getValue());
-							Date d = new java.util.Date();
-							d.setTime(l);
-							return d;
-						} catch (Exception e4) {
-							logger.info("Sorry I really can't parse that date: " + getValue());
-						}
-					}
-				}
-			}
-		} else if (getType().equals(Property.INTEGER_PROPERTY)) {
+                        try {
+                            Date d = dateFormat2.get().parse(getValue());
+                            return d;
+                        } catch (Exception ex4) {
+                            try {
+                                Long l = Long.parseLong(getValue());
+                                Date d = new java.util.Date();
+                                d.setTime(l);
+                                return d;
+                            } catch (Exception e5) {
+                                logger.info("Sorry I really can't parse that date: " + getValue());
+                            }
+                        }
+                    }
+                }
+            }
+            if (getType().equals(TIMESTAMP_PROPERTY)) {
+                // Could not parse, return null
+                // Date property still returns original value -> Dexels/navajo#254
+                return null;
+            }
+            
+        } else if (getType().equals(Property.INTEGER_PROPERTY)) {
 			if (getValue() == null || getValue().equals("")) {
 				return null;
 			}
@@ -901,10 +912,16 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	private final void setValue(java.util.Date value, Boolean internal) {
 		
 		Object old = getTypedValue();
-		setType(DATE_PROPERTY);
-
+		final ThreadLocal<SimpleDateFormat> formatter;
+		if (type.equals(TIMESTAMP_PROPERTY)) {
+		    formatter = timestampFormat;
+		} else {
+		    setType(DATE_PROPERTY);
+		    formatter = dateFormat1;
+		}
+		
 		if (value != null) {
-			setCheckedValue(dateFormat1.get().format(value));
+			setCheckedValue(formatter.get().format(value));
 		} else {
 			myValue = null;
 		}

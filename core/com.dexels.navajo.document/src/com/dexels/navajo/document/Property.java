@@ -47,6 +47,8 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String INTEGER_PROPERTY = "integer";
   public static final String LONG_PROPERTY = "long";
   public static final String DATE_PROPERTY = "date";
+  public static final String TIMESTAMP_PROPERTY = "timestamp";
+
   public static final String FLOAT_PROPERTY = "float";
   public static final String MONEY_PROPERTY = "money";
   public static final String PERCENTAGE_PROPERTY = "percentage";
@@ -123,10 +125,8 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String DATE_FORMAT3 = "dd-MM-yyyy";
   public static final String DATE_FORMAT4 = "yyyy-MM-dd HH:mm:ss:SS";
   
-//  public static final SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
-//  public static final SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
-//  public static final SimpleDateFormat dateFormat3 = new SimpleDateFormat( Property.DATE_FORMAT3 );
-	
+  public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+
   public boolean isEqual(Property o);
 
   /**
