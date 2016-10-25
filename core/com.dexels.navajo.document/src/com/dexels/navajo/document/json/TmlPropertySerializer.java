@@ -34,6 +34,8 @@ public class TmlPropertySerializer extends StdSerializer<Property> {
         } else if (property.getType().equals(Property.TIMESTAMP_PROPERTY)) {
             DateFormat df = new SimpleDateFormat(Property.TIMESTAMP_FORMAT);
             jg.writeString(df.format((Date) value));
+        } else if (value == null) {
+            jg.writeNull();
         } else {
             JsonSerializer<Object> serializer = provider.findValueSerializer(value.getClass());
             serializer.serialize(value, jg, provider);
