@@ -60,7 +60,7 @@ public class JSONTMLImpl implements JSONTML {
 	@Override
 	public Navajo parse(InputStream is) throws Exception {
 		try {
-			JsonParser jp = jsonFactory.createJsonParser(is);
+			JsonParser jp = jsonFactory.createParser(is);
 			Navajo n = parse(jp);
 			return n;
 		} catch (Exception e) {
@@ -80,7 +80,7 @@ public class JSONTMLImpl implements JSONTML {
 	@Override
 	public Navajo parse(Reader r) throws Exception {
 		try {
-			JsonParser jp = jsonFactory.createJsonParser(r);
+			JsonParser jp = jsonFactory.createParser(r);
 			Navajo n = parse(jp);
 			return n;
 		} catch (Exception e) {
@@ -101,7 +101,7 @@ public class JSONTMLImpl implements JSONTML {
 	public void format(Navajo n, OutputStream os) throws Exception {
 	    JsonGenerator jg = null;
 		try {
-			jg = jsonFactory.createJsonGenerator(os); 
+			jg = jsonFactory.createGenerator(os); 
 			jg.useDefaultPrettyPrinter();
 			format(jg, n);
 		} catch (Exception e) {
@@ -127,7 +127,7 @@ public class JSONTMLImpl implements JSONTML {
 	public void format(Navajo n, Writer w) throws Exception {
 	    JsonGenerator jg = null;
 		try {
-			jg = jsonFactory.createJsonGenerator(w); 
+			jg = jsonFactory.createGenerator(w); 
 			jg.useDefaultPrettyPrinter();
 			format(jg, n);
 		} catch (Exception e) {
