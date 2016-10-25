@@ -191,34 +191,6 @@ public class JSONTMLImpl implements JSONTML {
         }
 	}
 
-    private boolean formatBinaryProperty(JsonGenerator jg, Property p) throws IOException, JsonGenerationException {
-        Binary bin = (Binary) p.getTypedValue();
-
-        // Get the writer for the JsonGenerator to write directly to the underlying stream
-        // This prevents writing the entire binary to a string in memory before adding it
-        // to the stream.
-        Writer w = null;
-        
-        Object o = jg.getOutputTarget();
-        if (o instanceof Writer) {
-            w = (Writer) o;
-            
-        } else if (o instanceof OutputStream) {
-            w = new OutputStreamWriter((OutputStream)o);
-        } else {
-            logger.warn("Unknown outputtarget from JsonGenerator: {}. Falling back to legacy mode.", o);
-            return false;
-        }
-       
-        // Write a quote as rawvalue to change the mode of JsonGenerator to VALUE
-        jg.writeRawValue("\"");
-        // Flush JsonGenerator since we will now be talking to the underlying stream itself
-        jg.flush();
-        // Write the binary to the stream, and end with another quote
-        bin.writeBase64(w, false);
-        jg.writeRaw("\"");
-        return true;
-    }
 	
 	private boolean isOptionalKey(String key) {
         return ( key != null && key.indexOf("optional") != -1 );
