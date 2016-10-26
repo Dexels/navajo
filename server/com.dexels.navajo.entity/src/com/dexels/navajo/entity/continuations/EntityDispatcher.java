@@ -335,9 +335,7 @@ public class EntityDispatcher {
             }
         }
 
-        if (!auth.isAuthenticated(access, inDoc)) {
-            throw new AuthorizationException(true, false, auth.getUsername(), "Not authenticated");
-        }
+        auth.process(access);
 
         return access;
     }

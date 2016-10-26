@@ -97,7 +97,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				  try {
 				      int queueSize = getRequestQueue().getQueueSize();
 				      String queueId = getRequestQueue().getId();
-					  ClientInfo clientInfo = getRequest().createClientInfo(scheduledAt, startedAt, queueSize, queueId); 
+					  ClientInfo clientInfo = getRequest().createClientInfo(scheduledAt, startedAt, queueSize, queueId);
 					  setResponseNavajo(getLocalClient().handleInternal(getNavajoInstance(), in, getRequest().getCert(), clientInfo));
 				  } catch (NavajoDoneException e) {
 					  // temp catch, to be able to pre
