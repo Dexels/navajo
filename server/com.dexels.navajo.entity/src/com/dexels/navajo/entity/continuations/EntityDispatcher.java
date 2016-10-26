@@ -2,12 +2,8 @@ package com.dexels.navajo.entity.continuations;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
-
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.authentication.api.AuthenticationMethod;
+import com.dexels.navajo.authentication.api.AuthenticationMethodBuilder;
 import com.dexels.navajo.authentication.api.LoginStatisticsProvider;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -25,7 +23,6 @@ import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.entity.Entity;
-import com.dexels.navajo.entity.EntityAuthenticator;
 import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
@@ -45,7 +42,7 @@ public class EntityDispatcher {
     private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json", "xml", "birt", "tml"));
 
     private EntityManager myManager;
-    private Map<String, EntityAuthenticator> authenticators = new HashMap<>();
+    private AuthenticationMethodBuilder authMethodBuilder;
 
     public void run(EntityContinuationRunner runner) {
         Navajo result = null;
@@ -88,6 +85,12 @@ public class EntityDispatcher {
                 logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
                 throw new EntityException(EntityException.UNAUTHORIZED);
             }
+            String authHeader = runner.getHttpRequest().getHeader("Authorization");
+            if (authHeader == null) {
+                logger.warn("Missing authentication header!");
+                throw new EntityException(EntityException.UNAUTHORIZED);
+
+            }
 
             String ip = runner.getHttpRequest().getHeader("X-Forwarded-For");
             if (ip == null || ip.equals("")) {
@@ -99,12 +102,11 @@ public class EntityDispatcher {
                 throw new EntityException(EntityException.BAD_REQUEST);
             }
 
-            EntityAuthenticator auth = getAuthenticator(runner.getHttpRequest());
-            if (auth == null || auth.getUsername() == null) {
-                throw new EntityException(EntityException.UNAUTHORIZED);
-            }
 
-            logger.info("Entity request {} ({}, {}, {})", entityName, method, auth.getUsername(), ip);
+            
+
+
+            logger.info("Entity request {} ({}, {})", entityName, method, ip);
 
             entityName = entityName.replace("/", ".");
             Entity e = myManager.getEntity(entityName);
@@ -137,13 +139,14 @@ public class EntityDispatcher {
             }
 
             // Create a header from the input
-            Header header = NavajoFactory.getInstance().createHeader(input, "", auth.getUsername(), auth.getPassword(), -1);
+            Header header = NavajoFactory.getInstance().createHeader(input, "", "dummy", "dummy", -1);
             input.addHeader(header);
 
             // Create an access object for logging purposes
             Long startAuth = System.currentTimeMillis();
             String scriptName = "entity/" + entityName.replace('.', '/');
-            access = authenticateUser(auth, input, tenant, e, scriptName, ip);
+            access = authenticateUser(input, tenant, e, scriptName,authHeader, ip);
+            
             access.created = new Date(runner.getStartedAt());
             access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
             access.setClientDescription("entity");
@@ -163,7 +166,6 @@ public class EntityDispatcher {
             if (o.debugInput() || o.debugOutput()) {
                 access.setDebugAll(true);
             }
-            auth.checkAuthenticationFor(o);
 
             long opStartTime = System.currentTimeMillis();
             ServiceEntityOperation seo = new ServiceEntityOperation(myManager, runner.getDispatcher(), o);
@@ -215,25 +217,6 @@ public class EntityDispatcher {
         }
     }
 
-    private EntityAuthenticator getAuthenticator(HttpServletRequest request) throws EntityException {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || authHeader.equals("")) {
-            return null;
-        }
-
-        StringTokenizer st = new StringTokenizer(authHeader);
-        if (st.hasMoreTokens()) {
-            String id = st.nextToken();
-            EntityAuthenticator a = authenticators.get(id);
-            if (a != null) {
-                return a.getInstance(request);
-            } else {
-                logger.warn("Unsupported authorization scheme: {}", id);
-                throw new EntityException(EntityException.UNAUTHORIZED);
-            }
-        }
-        return null;
-    }
 
     private String determineInstanceFromRequest(final HttpServletRequest req) {
         String requestInstance = req.getHeader("X-Navajo-Instance");
@@ -312,31 +295,26 @@ public class EntityDispatcher {
         return mimeResult;
     }
 
-    private Access authenticateUser(EntityAuthenticator auth, Navajo inDoc, String tenant, Entity entity, String scriptname, String ip)
+    private Access authenticateUser(Navajo inDoc, String tenant, Entity entity, String scriptname, String authHeader, String ip)
             throws AuthorizationException {
-        Access access = new Access(1, 1, auth.getUsername(), scriptname, "", "", "", null, false, null);
+        
+        AuthenticationMethod authenticator = authMethodBuilder.getInstanceForRequest(authHeader);
+        if (authenticator == null) {
+            throw new AuthorizationException(false, false, null , "Missing authenticator"); 
+        }
+        Access access = new Access(1, 1, "dummy", scriptname, "", "", "", null, false, null);
         access.setTenant(tenant);
         access.ipAddress = ip;
         access.setInDoc(inDoc);
-        access.rpcPwd = auth.getPassword();
+        
+        authenticator.process(access);
+        
         appendGlobals(inDoc, tenant);
 
-        if (LoginStatisticsProvider.reachedAbortThreshold(auth.getUsername(), access.getIpAddress())) {
-            logger.info("Refusing request from {} for {}  due to too many failed auth attempts", access.getIpAddress(), auth.getUsername());
-            throw new AuthorizationException(true, false, auth.getUsername(), "Not authorized");
+        if (LoginStatisticsProvider.reachedAbortThreshold(access.getRpcUser(), access.getIpAddress())) {
+            logger.info("Refusing request from {} for {}  due to too many failed auth attempts", access.getIpAddress(), access.getRpcUser());
+            throw new AuthorizationException(true, false, access.getRpcUser(), "Not authorized");
         }
-
-        if (LoginStatisticsProvider.reachedRateLimitThreshold(auth.getUsername(), access.getIpAddress())) {
-            logger.info("Delaying request from {} for {} due to too many failed auth attempts", access.getIpAddress(), auth.getUsername());
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                return null;
-            }
-        }
-
-        auth.process(access);
-
         return access;
     }
 
@@ -366,11 +344,13 @@ public class EntityDispatcher {
         myManager = null;
     }
 
-    public void addEntityAuthenticator(EntityAuthenticator a) {
-        authenticators.put(a.getIdentifier(), a);
+    
+    public void setAuthenticationMethodBuilder(AuthenticationMethodBuilder amb) {
+        this.authMethodBuilder = amb;
     }
 
-    public void removeEntityAuthenticator(EntityAuthenticator a) {
-        authenticators.remove(a.getIdentifier());
+    public void clearAuthenticationMethodBuilder(AuthenticationMethodBuilder eventAdmin) {
+        this.authMethodBuilder = null;
     }
+
 }

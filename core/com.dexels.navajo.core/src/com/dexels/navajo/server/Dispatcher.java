@@ -158,6 +158,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>();
 
     protected boolean simulationMode;
+    private AuthenticationMethodBuilder authMethodBuilder;
 
     // optional, can be null
     // private BundleCreator bundleCreator;
@@ -1523,7 +1524,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
     private int health;
 
-    private AuthenticationMethodBuilder authMethodBuilder;
 
     @Override
     public int getHealth(String resourceId) {

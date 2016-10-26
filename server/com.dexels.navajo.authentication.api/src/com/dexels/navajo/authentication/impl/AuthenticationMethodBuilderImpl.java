@@ -18,12 +18,18 @@ public class AuthenticationMethodBuilderImpl implements AuthenticationMethodBuil
     }
     
     @Override
-    public AuthenticationMethod getInstanceForRequest(String header) {        
+    public AuthenticationMethod getInstanceForRequest(String header) {
+        final AuthenticationMethod method;
         if (header != null && header.startsWith("Basic")) {
-            return instances.get(AuthenticationMethod.BASIC_IDENTIFIER).getInstanceForRequest(header);
+            method= instances.get(AuthenticationMethod.BASIC_IDENTIFIER);
         } else if (header != null && header.startsWith("Bearer")) {
-            return instances.get(AuthenticationMethod.OAUTH_IDENTIFIER).getInstanceForRequest(header);
-        } 
-        return instances.get(AuthenticationMethod.DEFAULT_IDENTIFIER).getInstanceForRequest(header);
+            method= instances.get(AuthenticationMethod.OAUTH_IDENTIFIER);
+        } else {
+            method = instances.get(AuthenticationMethod.DEFAULT_IDENTIFIER);
+        }
+        if (method== null) {
+            return method;
+        }
+        return method.getInstanceForRequest(header);
     }
 }
