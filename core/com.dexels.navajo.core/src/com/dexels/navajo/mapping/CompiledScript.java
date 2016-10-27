@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.concurrent.locks.Lock;
@@ -128,6 +129,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
 
     @SuppressWarnings("unused")
     private ThreadInfo myThread = null;
+    private Set<String> scopes;
 
     @Override
     public String getScriptName() {
@@ -846,5 +848,27 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     	} finally {
     		acquiredLocks.remove(l);
     	}
+    }
+    
+    @Override
+    public void setScopes(String scopesString) {
+        if (scopesString != null) {
+            String[] arr = scopesString.split(",");
+            for (String element : arr) {
+                this.scopes.add(element);
+            }
+        }
+    }
+
+    @Override
+    public void setScopes( Set<String> newScopes) {
+        if (newScopes != null) {
+            this.scopes = newScopes;
+        }
+    }
+    
+    @Override
+    public  Set<String> getScopes() {
+        return scopes;
     }
 }
