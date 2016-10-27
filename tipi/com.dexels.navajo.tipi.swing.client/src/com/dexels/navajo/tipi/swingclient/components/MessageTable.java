@@ -1285,8 +1285,11 @@ public class MessageTable extends JTable implements CellEditorListener,
 			String id = m.getProperty("id").getValue();
 			String name = m.getProperty("name").getValue();
 			String editable = m.getProperty("editable").getValue();
+			
 			addColumn(id, name, "true".equals(editable));
 		}
+		
+		addColumn("fakeikd", "dit is een test", false);
 		createDefaultColumnsFromModel();
 
 		final int sortedColumn = Integer.parseInt(cdef.getProperty(

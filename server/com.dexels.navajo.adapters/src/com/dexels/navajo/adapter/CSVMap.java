@@ -106,34 +106,38 @@ public class CSVMap implements Mappable {
 	}
 
 	public CSVEntryMap[] getEntries() throws UserException {
+	    BufferedReader buffer = null;
+	    
 		try {
-			Reader f = null;
+		    Reader f = null;
 			if (fileContent != null) {
 				f = new InputStreamReader(fileContent.getDataAsStream(),"UTF-8");
 			} else {
 				f = new FileReader(fileName);
 			}
 
-			BufferedReader buffer = new BufferedReader(f);
+			buffer = new BufferedReader(f);
 			String line = "";
-			int lineCount = 0;
+			boolean firstLine = true;
+			int importCount = 0;
 			List<CSVEntryMap> entryList = new ArrayList<CSVEntryMap>();
+			
 			while ((line = buffer.readLine()) != null) {
-			    if (maximumImportCount == 0 || (lineCount <= maximumImportCount)) {
-					if (isSkipFirstRow() && lineCount == 0) {
-					    // First line will be skipped. Probably contains headers
+	            if (maximumImportCount != 0 && (importCount >= maximumImportCount)) {
+	                break;
+	            }
+				if (isSkipFirstRow() && firstLine) {
+				    // First line will be skipped. Probably contains headers
+				} else {
+				    if (includeEmpty) {
+						parseLineWithEmpty(line, entryList);
 					} else {
-    				    if (includeEmpty) {
-    						parseLineWithEmpty(line, entryList);
-    					} else {
-    						parseLineDefault(line, entryList);
-    					}
+						parseLineDefault(line, entryList);
 					}
-			    }
-				lineCount++;
+				    importCount++;
+				}
+			    firstLine = false;
 			}
-//				entries = new CSVEntryMap[entryList.size()];
-//				entries = entryList.toArray(entries);
 			entries = new CSVEntryMap[entryList.size()];
 			int i = 0;
 			for (CSVEntryMap ce : entryList) {
@@ -141,6 +145,14 @@ public class CSVMap implements Mappable {
 			}
 		} catch (java.io.IOException ioe) {
 			throw new UserException(-1, ioe.getMessage());
+		} finally {
+		    if (buffer != null) {
+		        try {
+                    buffer.close();
+                } catch (IOException e) {
+                    // Too late to apologize!
+                }
+		    }
 		}
 		return entries;
 	}
