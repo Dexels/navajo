@@ -102,10 +102,6 @@ public class EntityDispatcher {
                 throw new EntityException(EntityException.BAD_REQUEST);
             }
 
-
-            
-
-
             logger.info("Entity request {} ({}, {})", entityName, method, ip);
 
             entityName = entityName.replace("/", ".");
@@ -141,11 +137,18 @@ public class EntityDispatcher {
             // Create a header from the input
             Header header = NavajoFactory.getInstance().createHeader(input, "", "dummy", "dummy", -1);
             input.addHeader(header);
+            
+            Operation o = myManager.getOperation(entityName, method);
+            o.setTenant(tenant);
 
             // Create an access object for logging purposes
             Long startAuth = System.currentTimeMillis();
             String scriptName = "entity/" + entityName.replace('.', '/');
-            access = authenticateUser(input, tenant, e, scriptName,authHeader, ip);
+            
+            access = new Access(1, 1, "dummy", scriptName, "", "", "", null, false, null);
+            access.setOperation(o);
+            access.ipAddress = ip;
+            access = authenticateUser(input, tenant, access, authHeader);
             
             access.created = new Date(runner.getStartedAt());
             access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
@@ -161,8 +164,7 @@ public class EntityDispatcher {
 
             input.getMessage(entityMessage.getName()).setEtag(inputEtag);
 
-            Operation o = myManager.getOperation(entityName, method);
-            o.setTenant(tenant);
+            
             if (o.debugInput() || o.debugOutput()) {
                 access.setDebugAll(true);
             }
@@ -295,26 +297,28 @@ public class EntityDispatcher {
         return mimeResult;
     }
 
-    private Access authenticateUser(Navajo inDoc, String tenant, Entity entity, String scriptname, String authHeader, String ip)
+    private Access authenticateUser(Navajo inDoc, String tenant, Access access, String authHeader)
             throws AuthorizationException {
+        
+        access.setTenant(tenant);
+        access.setInDoc(inDoc);
+        
+        if (LoginStatisticsProvider.reachedAbortThreshold(access.getRpcUser(), access.getIpAddress())) {
+            logger.info("Refusing request from {} for {}  due to too many failed auth attempts", access.getIpAddress(), access.getRpcUser());
+            throw new AuthorizationException(true, false, access.getRpcUser(), "Not authorized");
+        }
         
         AuthenticationMethod authenticator = authMethodBuilder.getInstanceForRequest(authHeader);
         if (authenticator == null) {
             throw new AuthorizationException(false, false, null , "Missing authenticator"); 
         }
-        Access access = new Access(1, 1, "dummy", scriptname, "", "", "", null, false, null);
-        access.setTenant(tenant);
-        access.ipAddress = ip;
-        access.setInDoc(inDoc);
+        
+       
         
         authenticator.process(access);
-        
         appendGlobals(inDoc, tenant);
 
-        if (LoginStatisticsProvider.reachedAbortThreshold(access.getRpcUser(), access.getIpAddress())) {
-            logger.info("Refusing request from {} for {}  due to too many failed auth attempts", access.getIpAddress(), access.getRpcUser());
-            throw new AuthorizationException(true, false, access.getRpcUser(), "Not authorized");
-        }
+       
         return access;
     }
 
