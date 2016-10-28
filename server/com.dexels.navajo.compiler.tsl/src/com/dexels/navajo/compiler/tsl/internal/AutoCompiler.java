@@ -10,7 +10,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -159,7 +158,7 @@ public class AutoCompiler {
 				 logger.debug("Need to recompile : "+cleanPath);
 				 List<String> success = new ArrayList<String>();
 				 try {
-					bundleCreator.createBundle(cleanPath, new Date(), new ArrayList<String>(), success, new ArrayList<String>(), false, false, null);
+					bundleCreator.createBundle(cleanPath, new ArrayList<String>(), success, new ArrayList<String>(), false, false, null);
 					Thread.yield();
 				 } catch (Throwable e) {
 					logger.warn("Bundle creation problem for bundle: "+cleanPath,e);

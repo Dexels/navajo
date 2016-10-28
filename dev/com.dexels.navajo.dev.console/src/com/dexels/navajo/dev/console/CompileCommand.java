@@ -2,7 +2,6 @@ package com.dexels.navajo.dev.console;
 
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.felix.service.command.CommandSession;
@@ -47,7 +46,7 @@ public class CompileCommand extends ConsoleCommand {
 			List<String> success = new ArrayList<String>();
 			List<String> failures = new ArrayList<String>();
 			List<String> skipped = new ArrayList<String>();
-			bundleCreator.createBundle(script,new Date(),failures,success,skipped,force, keepIntermediateFiles, null);
+			bundleCreator.createBundle(script,failures,success,skipped,force,keepIntermediateFiles, null);
 			long tm2 = System.currentTimeMillis() - tm;
 			session.getConsole().println("Compiling java complete. took: "+tm2+" millis.");
 			session.getConsole().println("Succeeded: "+success.size()+" failed: "+failures.size()+" skipped: "+skipped.size());

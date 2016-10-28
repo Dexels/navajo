@@ -3,7 +3,6 @@ package com.dexels.navajo.compiler.tsl.internal;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,7 +71,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
                 List<String> skipped = new ArrayList<String>();
                 logger.info("Eagerly compiling: " + script);
                 try {
-                    bundleCreator.createBundle(script, new Date(), failures, success, skipped, true, keepIntermediateFiles, extension);
+                    bundleCreator.createBundle(script, failures, success, skipped, true, keepIntermediateFiles, extension);
                     bundleCreator.installBundle(script, failures, success, skipped, true, extension);
                     if (!skipped.isEmpty()) {
                         logger.info("Script compilation skipped: " + script);

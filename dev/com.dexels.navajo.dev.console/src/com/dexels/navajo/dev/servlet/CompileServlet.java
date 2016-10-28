@@ -2,7 +2,6 @@ package com.dexels.navajo.dev.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -57,7 +56,7 @@ public class CompileServlet extends HttpServlet {
 				script = "";
 			}
 //			System.err.println("Force: "+force);
-			bundleCreator.createBundle(script,new Date(),failures,success,skipped, force,keepIntermediateFiles, null);
+			bundleCreator.createBundle(script,failures,success,skipped,force, keepIntermediateFiles,null);
 			long ts1 = System.currentTimeMillis();
 			compileDuration = ts1 - tsStart;
 			logger.info("Compiling java complete. took: "+compileDuration+" millis.");

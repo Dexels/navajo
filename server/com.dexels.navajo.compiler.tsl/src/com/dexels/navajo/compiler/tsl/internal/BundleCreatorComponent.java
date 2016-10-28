@@ -8,8 +8,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -113,19 +111,13 @@ public class BundleCreatorComponent implements BundleCreator {
         this.eventAdmin = null;
     }
 
-    @Override
-    public String formatCompilationDate(Date d) {
-        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-        String formatted = df.format(d);
-        return formatted;
-    }
 
     /**
      * scriptName includes the _TENANT part
      */
     @Override
-    public void createBundle(String scriptName, Date compilationDate, List<String> failures, List<String> success,
-            List<String> skipped, boolean force, boolean keepIntermediate, String scriptExtension) throws Exception {
+    public void createBundle(String scriptName, List<String> failures, List<String> success, List<String> skipped,
+            boolean force, boolean keepIntermediate, String scriptExtension) throws Exception {
 
         String bareScript = scriptName.substring(scriptName.lastIndexOf("/") + 1);
         String rpcName = scriptName;
@@ -142,8 +134,8 @@ public class BundleCreatorComponent implements BundleCreator {
         ReentrantLock lockObject = getLock(rpcName, "compile");
         try {
             if (lockObject.tryLock()) {
-                createBundleNoLocking(rpcName, compilationDate, failures, success,
-                        skipped, force, keepIntermediate, scriptExtension);
+                createBundleNoLocking(rpcName, failures, success, skipped,
+                        force, keepIntermediate, scriptExtension);
             } else {
                 // Someone else is already compiling this script. Wait for it to release the lock,
                 // and then we can return immediately since they compiled the script for us
@@ -159,15 +151,15 @@ public class BundleCreatorComponent implements BundleCreator {
 
     }
 
-    private void createBundleNoLocking(String rpcName, Date compilationDate, List<String> failures, List<String> success,
-            List<String> skipped, boolean force, boolean keepIntermediate, String scriptExtension) throws Exception {
+    private void createBundleNoLocking(String rpcName, List<String> failures, List<String> success, List<String> skipped,
+            boolean force, boolean keepIntermediate, String scriptExtension) throws Exception {
 
         File scriptFolder = new File(navajoIOConfig.getScriptPath());
         File f = new File(scriptFolder, rpcName);
 
-        final String formatCompilationDate = formatCompilationDate(compilationDate);
+
         if (isDirectory(rpcName, scriptFolder, f)) {
-            compileAllIn(f, compilationDate, failures, success, skipped, force, keepIntermediate, scriptExtension);
+            compileAllIn(f, failures, success, skipped, force, keepIntermediate, scriptExtension);
         } else {   
             Path pathBase = Paths.get(navajoIOConfig.getScriptPath());
            
@@ -180,7 +172,7 @@ public class BundleCreatorComponent implements BundleCreator {
             
             // Compile non-tenant specific file
             if (new File(scriptFolder, rpcName + scriptExtension).exists()) {
-                createBundleForScript(rpcName,  rpcName, failures, success, skipped, keepIntermediate, scriptExtension, formatCompilationDate);
+                createBundleForScript(rpcName,  rpcName, failures, success, skipped, keepIntermediate, scriptExtension);
             }
             
             for (File ascript : files) {
@@ -188,7 +180,7 @@ public class BundleCreatorComponent implements BundleCreator {
                 String[] splitted = pathRelative.toString().split("\\.");
                 String tenantScriptName = splitted[0].replace('\\', '/');
                 String extension = "." + splitted[1];
-                createBundleForScript(tenantScriptName, rpcName, failures, success, skipped, keepIntermediate, extension, formatCompilationDate);
+                createBundleForScript(tenantScriptName, rpcName, failures, success, skipped, keepIntermediate, extension);
             }
             
             
@@ -196,7 +188,7 @@ public class BundleCreatorComponent implements BundleCreator {
     }
 
     private void createBundleForScript(String script, String rpcName, List<String> failures, List<String> success, List<String> skipped, boolean keepIntermediate,
-            String scriptExtension,  final String formatCompilationDate)
+            String scriptExtension)
             throws Exception {
        
         if (scriptExtension.length() == 0 || scriptExtension.charAt(0) != '.') {
@@ -223,8 +215,8 @@ public class BundleCreatorComponent implements BundleCreator {
             for (Dependency d : dependencies) {
                 if (d.isTentantSpecificDependee()) {
                     newTenants.add(d.getTentantDependee());
-                    compileAndCreateBundle(script, formatCompilationDate, scriptExtension, d.getTentantDependee(),
-                            hasTenantSpecificFile, true, keepIntermediate, success, skipped, failures);
+                    compileAndCreateBundle(script, scriptExtension, d.getTentantDependee(), hasTenantSpecificFile,
+                            true, keepIntermediate, success, skipped, failures);
                 }
 
             }
@@ -237,8 +229,8 @@ public class BundleCreatorComponent implements BundleCreator {
             uninstallObsoleteTenantScript(rpcName, newTenants);
         }
 
-        compileAndCreateBundle(script, formatCompilationDate, scriptExtension, scriptTenant, hasTenantSpecificFile, false,
-                keepIntermediate, success, skipped, failures);
+        compileAndCreateBundle(script, scriptExtension, scriptTenant, hasTenantSpecificFile, false, keepIntermediate,
+                success, skipped, failures);
     }
     
 
@@ -293,9 +285,9 @@ public class BundleCreatorComponent implements BundleCreator {
         }
     }
 
-    private void compileAndCreateBundle(String script, final String formatCompilationDate, String scriptExtension,
-            final String scriptTenant, boolean hasTenantSpecificFile, boolean forceTenant, boolean keepIntermediate,
-            List<String> success, List<String> skipped, List<String> failures) throws Exception {
+    private void compileAndCreateBundle(String script, String scriptExtension, final String scriptTenant,
+            boolean hasTenantSpecificFile, boolean forceTenant, boolean keepIntermediate, List<String> success,
+            List<String> skipped, List<String> failures) throws Exception {
         List<com.dexels.navajo.script.api.Dependency> dependencies = new ArrayList<com.dexels.navajo.script.api.Dependency>();
         String myScript = script;
         if (forceTenant) {
@@ -303,8 +295,7 @@ public class BundleCreatorComponent implements BundleCreator {
         }
 
         try{
-            scriptCompiler.compileTsl(script, formatCompilationDate, dependencies, scriptTenant, hasTenantSpecificFile,
-                    forceTenant);
+            scriptCompiler.compileTsl(script, dependencies, scriptTenant, hasTenantSpecificFile, forceTenant);
             javaCompiler.compileJava(myScript);
             javaCompiler.compileJava(myScript + "Factory");
             createBundleJar(myScript, scriptTenant, keepIntermediate, hasTenantSpecificFile, scriptExtension);
@@ -343,8 +334,8 @@ public class BundleCreatorComponent implements BundleCreator {
         return isDir && equalsCanonical;
     }
 
-    private void compileAllIn(File baseDir, Date compileDate, List<String> failures, List<String> success, List<String> skipped,
-            boolean force, boolean keepIntermediate, String extension) throws Exception {
+    private void compileAllIn(File baseDir, List<String> failures, List<String> success, List<String> skipped, boolean force,
+            boolean keepIntermediate, String extension) throws Exception {
         File scriptPath = new File(navajoIOConfig.getScriptPath());
 
         Iterator<File> it = FileUtils.iterateFiles(baseDir, new String[] { "xml", "scala" }, true);
@@ -355,8 +346,7 @@ public class BundleCreatorComponent implements BundleCreator {
             // logger.info("File: "+relative);
             String withoutEx = relative.substring(0, relative.lastIndexOf('.'));
             try {
-                createBundle(withoutEx, compileDate, failures, success, skipped, force, keepIntermediate,
-                        "." + FilenameUtils.getExtension(file.getAbsolutePath()));
+                createBundle(withoutEx, failures, success, skipped, force, keepIntermediate, "." + FilenameUtils.getExtension(file.getAbsolutePath()));
             } catch (Exception e) {
                 logger.warn("Error compiling script: " + relative, e);
                 failures.add("Error compiling script: " + relative);
@@ -800,7 +790,7 @@ public class BundleCreatorComponent implements BundleCreator {
                         keepIntermediateFiles = true;
                     }
 
-                    createBundleNoLocking(rpcName, new Date(), failures, success, skipped, force, keepIntermediateFiles, extension);
+                    createBundleNoLocking(rpcName, failures, success, skipped, force, keepIntermediateFiles, extension);
                     installBundleNoLocking(rpcName, failures, success, skipped, force, extension);
                 } else {
                     // Someone else is already compiling this script. Wait for it to release the lock,

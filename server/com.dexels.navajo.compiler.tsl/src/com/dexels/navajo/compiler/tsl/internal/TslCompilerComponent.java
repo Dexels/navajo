@@ -2,6 +2,9 @@ package com.dexels.navajo.compiler.tsl.internal;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -41,8 +44,8 @@ public class TslCompilerComponent implements ScriptCompiler {
     /* (non-Javadoc)
      * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String ) */
     @Override
-    public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies, String tenant,
-            boolean hasTenantSpecificFile, boolean forceTenant) throws Exception {
+    public void compileTsl(String scriptPath, List<Dependency> dependencies, String tenant, boolean hasTenantSpecificFile,
+            boolean forceTenant) throws Exception {
         String packagePath = null;
         String script = null;
         if (scriptPath.indexOf('/') >= 0) {
@@ -119,7 +122,7 @@ public class TslCompilerComponent implements ScriptCompiler {
         }
         generateFactoryClass(script, packagePath, dependentResources);
 
-        generateManifest(scriptString, "1.0.0", packagePath, script, packages, compileDate);
+        generateManifest(scriptString, "1.0.0", packagePath, script, packages);
         generateDs(packagePath, script, dependencies, dependentResources);
         if (packagePath.startsWith("entity")) {
             generateEntityDs(packagePath, script, dependencies, dependentResources);
@@ -205,16 +208,15 @@ public class TslCompilerComponent implements ScriptCompiler {
         }
     }
 
-    private void generateManifest(String description, String version, String packagePath, String script, Set<String> packages,
-            String compileDate) throws IOException {
+    private void generateManifest(String description, String version, String packagePath, String script, Set<String> packages) throws IOException {
         String symbolicName = "navajo.script." + description;
         PrintWriter w = new PrintWriter(
                 navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, script, ".MF"));
-
+        
         // properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"
         w.print("Manifest-Version: 1.0\r\n");
         w.print("Bundle-SymbolicName: " + symbolicName + "\r\n");
-        w.print("Bundle-Version: " + version + "." + compileDate + "\r\n");
+        w.print("Bundle-Version: " + version + "." + formatCompilationDate() + "\r\n");
         w.print("Bundle-Name: " + description + "\r\n");
         w.print("Bundle-RequiredExecutionEnvironment: JavaSE-1.6\r\n");
         w.print("Bundle-ManifestVersion: 2\r\n");
@@ -240,6 +242,12 @@ public class TslCompilerComponent implements ScriptCompiler {
         w.print("\r\n");
         w.flush();
         w.close();
+    }
+    
+    private String formatCompilationDate() {
+        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        String formatted = df.format(new Date());
+        return formatted;
     }
 
     private void generateDs(String packagePath, String script, List<Dependency> dependencies, Set<String> dependentResources)
