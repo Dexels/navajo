@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -45,6 +46,7 @@ public class RESTAdapter extends NavajoMap {
     
     protected List<String> parameters = new ArrayList<String>();
     protected Map<String, String> headers = new HashMap<String, String>();
+    private String textContent;
 
     
     public RESTAdapter() {
@@ -62,6 +64,15 @@ public class RESTAdapter extends NavajoMap {
     public void setUrl(String url) {
         this.url = url.trim();
     }
+    
+    
+    public void setTextContent(String s) {
+        textContent = s;
+    }
+    public String getTextContent() {
+        return textContent;
+    }
+    
 
     private void addParameter() {
         parameters.add(parameterName + "=" + parameterValue);
@@ -103,7 +114,9 @@ public class RESTAdapter extends NavajoMap {
         }
     }
 
+    @Deprecated
     public void setDateformat(String format) {
+        logger.warn("Deprecated dateFormat!");
         dateFormat = format;
     }
 
@@ -173,23 +186,34 @@ public class RESTAdapter extends NavajoMap {
         if (dateFormat != null && !dateFormat.equals("")) {
             json.setDateFormat(new SimpleDateFormat(dateFormat));
         }
-        // Remove globals and parms message
-        if (od.getMessage("__globals__") != null) {
-            od.removeMessage("__globals__");
-        }
-        if (od.getMessage("__parms__") != null) {
-            od.removeMessage("__parms__");
-        }
-
+       
         Writer w = new StringWriter();
         Binary bContent = new Binary();
-        try {
-            json.format(od, w, true);
-            bContent.getOutputStream().write(w.toString().getBytes("UTF-8"));
-        } catch (Exception e) {
-            logger.error("Exception on parsing input navajo as JSON! Not performing REST call!");
-            throw new UserException(e.getMessage(), e);
+        if (textContent == null) {
+            // Remove globals and parms message
+            if (od.getMessage("__globals__") != null) {
+                od.removeMessage("__globals__");
+            }
+            if (od.getMessage("__parms__") != null) {
+                od.removeMessage("__parms__");
+            }
+            
+            try {
+                json.format(od, w, true);
+                bContent.getOutputStream().write(w.toString().getBytes("UTF-8"));
+            } catch (Exception e) {
+                logger.error("Exception on parsing input navajo as JSON! Not performing REST call!");
+                throw new UserException(e.getMessage(), e);
+            }
+        } else {
+            try {
+                bContent.getOutputStream().write(textContent.toString().getBytes("UTF-8"));
+            } catch (IOException e) {
+                logger.error("IOException on writing textcontent! Not performing REST call!");
+                throw new UserException(e.getMessage(), e);
+            }
         }
+       
         HTTPMap http = new HTTPMap();
 
         setupHttpMap(http, bContent);

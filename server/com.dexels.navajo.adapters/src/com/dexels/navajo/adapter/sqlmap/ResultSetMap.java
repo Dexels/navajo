@@ -1,5 +1,8 @@
 package com.dexels.navajo.adapter.sqlmap;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -41,7 +44,28 @@ public class ResultSetMap implements Mappable {
 
     @Override
 	public final void kill() {}
+    
+    public ResultSetMap() {
+    	
+    }
 
+    public ResultSetMap(ResultSet rs) throws SQLException, UserException {
+		ResultSetMetaData meta = rs.getMetaData();
+		int columns = meta.getColumnCount();
+		
+		for (int i = 1; i < (columns + 1); i++) {
+			String param = meta.getColumnLabel(i);
+			int type = meta.getColumnType(i);
+
+			Object value = null;
+			value = SQLMapHelper.getColumnValue(rs, type, i);
+			addValue(param.toUpperCase(), value);
+		}
+
+    	
+    }
+
+    
     public final void addValue(String name, Object o) {
       values.put(name, o);
       order.add(name);

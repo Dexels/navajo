@@ -771,7 +771,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		    c = (Color) ra.getAttribute(RowAttribute.ROW_BACKGROUND_COLOR);
 		}
 		// logger.info("Looking for color... "+in);
-		if (c == null && ra == null) {
+		if (c == null && ra == null &&  getMessageRow(row) != null) {
 			createRowColor(row);
 			return getRowBackgroundColor(row, col);
 		} else {
@@ -789,7 +789,7 @@ public class MessageTable extends JTable implements CellEditorListener,
             c = (Color) ra.getAttribute(RowAttribute.ROW_FOREGROUND_COLOR);
         }
         // logger.info("Looking for color... "+in);
-        if (c == null && ra == null) {
+        if (c == null && ra == null &&  getMessageRow(row) != null) {
             createRowColor(row);
             return getRowForegroundColor(row, col);
         } else {
@@ -803,6 +803,9 @@ public class MessageTable extends JTable implements CellEditorListener,
 
     private final void createRowColor(int row) {
         Message m = getMessageRow(row);
+        if (m == null) {
+            return;
+        }
 
         // Create default null colors
         setRowColor(row, "", DEFAULT_BACKGROUND_COLOR, RowAttribute.ROW_BACKGROUND_COLOR);
@@ -1282,8 +1285,11 @@ public class MessageTable extends JTable implements CellEditorListener,
 			String id = m.getProperty("id").getValue();
 			String name = m.getProperty("name").getValue();
 			String editable = m.getProperty("editable").getValue();
+			
 			addColumn(id, name, "true".equals(editable));
 		}
+		
+		addColumn("fakeikd", "dit is een test", false);
 		createDefaultColumnsFromModel();
 
 		final int sortedColumn = Integer.parseInt(cdef.getProperty(

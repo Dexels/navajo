@@ -83,22 +83,37 @@ public class RandomColor extends FunctionInterface {
 	
 	@Override
 	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-
 		int rnd = 0;
-		if ( getOperands().size() > 0 ) {
+		if ( getOperands().size() > 0 && getOperand(0) != null ) {
 			Integer seed = (Integer) getOperand(0);
 			java.util.Random r2 = new java.util.Random(seed.longValue());
 			rnd = Math.abs(r2.nextInt()+1) % 20;
 		} else {
 			rnd = Math.abs(r.nextInt()+1) % 20;
 		}
-		return toGoogleColor(colors2[rnd]);
+		// Possibly skip the toGoogle part so it truly generates a random color
+		// Default is still true though
+		boolean useToGoogle = true;
+		if ( getOperands().size() > 1 ) {
+            useToGoogle = (Boolean) this.getOperand(1);
+		}
+		
+		if (useToGoogle) {
+			return toGoogleColor(colors2[rnd]);
+		} else {
+			String[] letters = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
+			String color = "";
+			for (int i = 0; i < 6; i++ ) {
+			   color += letters[(int) Math.round(Math.random() * 15)];
+			}
+			return color;
+		}
 
 	}
 	
 	@Override
 	public String usage() {
-		return "RandomColor(seed), returns a color string ffffff";
+		return "RandomColor(seed, (useGoogleColor)), returns a color string ffffff";
 	}
 	
 	public static void main(String[] args) throws Throwable {
@@ -114,6 +129,12 @@ public class RandomColor extends FunctionInterface {
 		System.err.println("Aap: "+r.evaluate());
 		
 		r.reset();
+		r.insertOperand(15);
+		System.err.println("Aap: "+r.evaluate());
+		
+		r.reset();
+		r.insertOperand(null);
+		r.insertOperand(false);
 		System.err.println("Aap: "+r.evaluate());
 		
 	}

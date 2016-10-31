@@ -9,13 +9,20 @@ package com.dexels.navajo.document.base;
  * @author Frank Lyaruu
  * @version 1.0
  */
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 
 public class BaseHeaderImpl
     extends BaseNode
@@ -174,6 +181,7 @@ public final String getRPCName() {
 public final String getRPCPassword() {
       return myTransaction.getRpc_pwd();
   }
+
 
   @Override
 public final void setRPCUser(String s) {
@@ -439,6 +447,8 @@ public boolean hasCallBackPointers() {
 public String getCallBackSignature() {
 	return getRPCUser() + "@" + getRPCName() + "-" + getCallback().getSignature();
 }
+
+
 
 
 }

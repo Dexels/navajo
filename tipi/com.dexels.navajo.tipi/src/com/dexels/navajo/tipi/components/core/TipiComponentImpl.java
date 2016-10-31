@@ -366,11 +366,8 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 		Object propval = getAttributeProperty(name).getTypedValue();
 		Object oo = getComponentValue(name);
-		if (oo == null) {
-		} else {
-			if (!oo.equals(propval)) {
-				getAttributeProperty(name).setAnyValue(oo);
-			}
+		if (oo != null && !oo.equals(propval)) {
+			getAttributeProperty(name).setAnyValue(oo);
 		}
 		/**
 		 * I should do an extra typecheck here, to check the supplied type
@@ -1177,6 +1174,8 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 			cparent.registerPropertyChild(c);
 		}
 		getStateMessage().addMessage(c.getStateMessage());
+		
+		
 		if (getContainer() != null && c.isVisibleElement()) {
 			addToContainer(c.getContainer(), td);
 			addedToParent();
@@ -1208,10 +1207,10 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		
 		try {
 			c.performTipiEvent("onInstantiate", null, true);
-		} catch (TipiException ex) {
-			logger.error("Error: ",ex);
-		} catch (TipiBreakException e) {
-		    
+		} catch (Throwable ex) {
+			logger.error("Error on OnInstantiate. Going to dispose component... ",ex);
+			myContext.disposeTipiComponent(c);
+			throw new TipiBreakException(TipiBreakException.COMPONENT_DISPOSED);
 		}
 	}
 

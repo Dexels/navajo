@@ -5,10 +5,15 @@ var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rp
 var serializer = new XMLSerializer();
 var editor ;
 
+var pretty_max_source_length = 80000;
+var pretty_max_response_length = 80000;
+
+
 var hooverdiv = '<div class="customRunOptionContainer">';
 hooverdiv += '  <div class="customRunOption scriptcompile">Compile</div> |';
-hooverdiv += '  <div class="customRunOption scriptsource">Source</div> | ';
-hooverdiv += '  <div class="customRunOption scriptinput">Custom Input</div>';
+hooverdiv += '  <div class="customRunOption scriptsource">Src</div> | ';
+hooverdiv += '  <div class="customRunOption compiledsource">Compiled src</div> | ';
+hooverdiv += '  <div class="customRunOption scriptinput">Input</div>';
 hooverdiv += '</div>';
 
 
@@ -18,6 +23,33 @@ function createEditor() {
     editor.getSession().setMode("ace/mode/xml");
     editor.setBehavioursEnabled(true);
     editor.setHighlightActiveLine(true);
+}
+
+function updateTenants() {
+	$.ajax({
+		dataType: "json",
+        url: "/testerapi?query=gettenants",
+	    type : "GET",
+	    async : true,
+	    success : function(response) {
+	        $.each(response, function(key, value) {
+	           $('#handlers').append($('<option>').text(value));
+	           
+	           // If we don't have a instance in our session storage, check if a part of
+	           // the url matches this instance
+	           if (!sessionStorage.instance) {
+	        	   if (window.location.href.toLowerCase().indexOf(value.toLowerCase()) > -1) {
+	                    sessionStorage.instance = value;
+	               }
+	           }
+	        });
+	        if (sessionStorage.instance) {
+	        	 $('#handlers').val(sessionStorage.instance);
+	        }
+	        $("#handlers").trigger("chosen:updated");
+	    }
+	});
+	
 }
 
 
@@ -42,26 +74,20 @@ function getScripts() {
                     over: function() {
                         // Only add if we don't have it yet
                         if ( $(this).find('.customRunOptionContainer').length === 0) {
-                            $(this).append(hooverdiv);
+                           $(this).append(hooverdiv);
                         }
                      },
                      out: function() {
                          var activeScript = $('#loadedScript').text();
                          var myScript = $(this).find('.script').attr('id');
-                         console.log(this)
-                         if ( myScript !== activeScript && $(this).find('.customRunOptionContainer').length > 0) {
-                             // Only remove if we are NOT the active script
-                             $(this).find('.customRunOptionContainer').remove();       
-                         } else {
-                        	 console.log(activeScript);
-                        	 console.log(myScript);
-                        	 console.log($(this).parent().find('.customRunOptionContainer').length)
-                        	
+                         var isRecentScript = $(this).hasClass('recentScript');
+
+                         if (myScript !== activeScript || !isRecentScript ) {
+                        	 $(this).find('.customRunOptionContainer').remove();
                          }
                      }, 
                      interval: 300
                 });
-
             },
             error: function () {
                 $("#scripts").html("Error getting scripts - retrying in a few seconds...");
@@ -111,11 +137,12 @@ function processLoginForm(){
     sessionStorage.user =     $('#navajousername').val();
     sessionStorage.password = $('#navajopassword').val();
     
-    $('#navajopassword').val('');
+    $('#navajopassword').val('***********');
     
-    if (sessionStorage.script && !loginTableVisible()) {
+    if ($('.LoginButton').attr('value') === 'Run script' && sessionStorage.script && !loginTableVisible()) {
         runScript(sessionStorage.script);
     }
+    $('.LoginButton').attr('value', 'Login');
     
     return true;
 }
@@ -123,28 +150,6 @@ function processLoginForm(){
 function loginTableVisible() {
     var instance =  $( "#handlers option:selected" ).text();
     return (instance === "" || !sessionStorage.user) 
-}
-
-function updateInstanceHandlers() {
-
-    if (!sessionStorage.instance) {
-        var match = false;
-        // See if the current url matches one of the handlers. If so, we use
-        // that as default handler
-        $('#handlers option').each(function(index, option) {
-            var optionValue = $(option).attr('value');
-            if (window.location.href.toLowerCase().indexOf(optionValue.toLowerCase()) > -1) {
-                sessionStorage.instance = optionValue;
-                match = true;
-            }
-        });
-        if (!match) {
-            return;
-        }
-    }
-    $('#handlers').val(sessionStorage.instance);
-    $('#handlers').trigger("chosen:updated")
-
 }
 
 function showLoginTable() {
@@ -162,6 +167,7 @@ function hideLoginTable() {
 function runScript(script) {
     $('#scriptCustomInputView').hide();
     $('#loadedScript').text(script);
+    sessionStorage.script = script;
     $('html, body').animate({
         scrollTop : 0
     }, 50);
@@ -192,6 +198,7 @@ function runScript(script) {
             type: "POST",
             url: "/navajo/" + instance,
             data: navajoinput,
+            headers: {"X-Navajo-Priority": "true"},
             success: function(xmlObj) {
                 replaceXml(script, xmlObj);
                 var stateObj = { script: script, xml:  serializer.serializeToString(xml) };
@@ -212,9 +219,15 @@ function runScript(script) {
     }
     
     $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
-        $('#scriptsourcecontent').removeClass('prettyprinted');
+    	$('#scriptsourcecontent').attr('class', 'prettyprint lang-xml linenums');
         $('#scriptsourcecontent').text(data)
-        prettyPrint();
+        if (data.length < pretty_max_source_length) {
+        	 prettyPrint();
+        } else {
+        	// add class to prevent it from being pretty-printed by script response prettyprint
+        	$('#scriptsourcecontent').addClass('prettyprinted');
+        }
+       
     });
 }
 
@@ -224,11 +237,17 @@ function replaceXml(script, xmlObj) {
         $('#scriptcontent').removeClass('prettyprinted');
         var xmltext = serializer.serializeToString(xmlObj)
         $('#scriptcontent').text(xmltext)
-        prettyPrint();
+
+        if (xmltext.length < pretty_max_response_length) {
+        	prettyPrint();
+        } else {
+        	// add class to prevent it from being pretty-printed by script source prettyprint
+        	$('#scriptcontent').addClass('prettyprinted');
+        }
+        
+        
         parseTmlToHtml(script, $('#HTMLview'), $('#methods'));
-        
-        
-       
+
         $('.overlay').hide(200);
         $('#scriptMainView').show();
         $('#scriptheader').text(script);
@@ -331,16 +350,26 @@ function getMyEntries(data, element) {
 
 
 $(document).on('click', '.script', function() {
-    var script =  $('#loadedScript').text();
-    var stateObj = {script: script,  xml:  serializer.serializeToString(xml) };
-    history.replaceState(stateObj, script, "tester.html?script=" + script);
+    var oldScript =  $('#loadedScript').text();
+    var stateObj = {script: oldScript,  xml:  serializer.serializeToString(xml) };
+    history.replaceState(stateObj, oldScript, "tester.html?script=" + oldScript);
     
+    var newScript = $(this).attr("id");
     // Remove all hoover divs and append the one to the current script
     $('.customRunOptionContainer').remove();
-    $(this).parent().append(hooverdiv);
     
-
-    runScript($(this).attr("id"));
+    var isRecent = $('li.recentScript>[id=\''+newScript+'\']').length > 0
+    if (!$(this).parent().hasClass('recentScript') && !isRecent) {
+    	var clonedDiv = $(this).parent().clone(true);
+        clonedDiv.addClass('recentScript')
+        clonedDiv.find('.script').text(newScript)
+        $('#recentscriptslist').prepend(clonedDiv);
+        $('#recentscriptslist').find(".scriptli").slice(5, 10).remove();
+    }
+    $('li.recentScript>[id=\''+newScript+'\']').parent().append(hooverdiv);
+    
+   
+    runScript(newScript);
 });
 
 $(document).on('click', '.folder', function() {
@@ -349,7 +378,8 @@ $(document).on('click', '.folder', function() {
 
 
 $(document).on('click', '.scriptcompile', function() {
-    var script = $(this).parent().parent().children('.script').attr('id');
+	var parentLi = $(this).parent().parent();
+    var script = parentLi.children('.script').attr('id');
     hourglassOn();
     
     $.ajax({
@@ -357,15 +387,15 @@ $(document).on('click', '.scriptcompile', function() {
         url: "/compile?script=" + script,
         dataType: "text",
         success: function() {
-            $('.customRunOption').html('<p>OK</p>');
+            $('.scriptcompile').html('OK');
             hourglassOff();
             setTimeout( function(){
-                        $('.customRunOption').remove();
+            			$('.customRunOptionContainer').remove();
+            			parentLi.append(hooverdiv);
                         }, 1000  
                     );  
         }
-    }); 
-    
+    });
 });
 
 $(document).on('click', '.scriptinput', function() {
@@ -440,15 +470,46 @@ $(document).on('click', '.scriptsource', function() {
     }, 50);
     
     $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
-        $('#scriptsourcecontent').removeClass('prettyprinted');
+    	$('#scriptsourcecontent').attr('class', 'prettyprint lang-xml linenums');
         $('#scriptsourcecontent').text(data)
-        prettyPrint();
+        if (data.length < pretty_max_source_length) {
+        	 prettyPrint();
+        } else {
+        	// add class to prevent it from being pretty-printed by script response prettyprint
+        	$('#scriptsourcecontent').addClass('prettyprinted');
+        }
         $('#scriptheader').text(script);
         $('#scriptMainView').show();
         $('#TMLSourceviewLink').click();
         hourglassOff();
     });
 });
+
+$(document).on('click', '.compiledsource', function() {
+    var script = $(this).parent().parent().children('.script').attr('id');
+    hourglassOn();
+    $('html, body').animate({
+        scrollTop : 0
+    }, 50);
+    
+    $.ajax({
+        type: "GET",
+        url: "/compile?script=" + script + '&keepIntermediateFiles=true',
+        dataType: "text",
+        success: function() {
+        	$.get("/testerapi?query=getcompiledcontent&file=" + script, function(data) {
+                $('#scriptsourcecontent').attr('class', 'prettyprint lang-java linenums');
+                $('#scriptsourcecontent').text(data)
+                prettyPrint();
+                $('#scriptheader').text(script);
+                $('#scriptMainView').show();
+                $('#TMLSourceviewLink').click();
+                hourglassOff();
+            });
+        }
+    });
+});
+
 
 
 $(document).on('click', '#showMoreArrow', function() {
@@ -533,7 +594,8 @@ $(document).on('click', '#CustomInputRunButton', function() {
     // Store input in local storage 
     localStorage.setItem("scriptinput" + script, inputString);
     editor.setValue("");
-    runScript(script)
+    var idEscpated = script.replace(/\//g, "\\/");
+    $('#' + idEscpated +'.script').first().click();
 });
 
 function convertJsonToTml(jsonString) {
@@ -599,14 +661,9 @@ $(document).on('input propertychange', '#scriptsFilter', function(evt) {
     window.clearTimeout($(this).data("timeout"));
     $(this).data("timeout", setTimeout(function() {
         var filter = $("#scriptsFilter").val();
-        if (filter.length == 0) {
-        	console.time('hide')
-        	
+        if (filter.length == 0) {       	
         	$(".scripts").find("li").filter(":visible").hide();
-        	console.timeEnd('hide')
-        	console.time('show')
-        	 $(".scripts").children("li").show();
-        	 console.timeEnd('show')
+        	$(".scripts").children("li").show();
             return;
         }
         
@@ -666,9 +723,7 @@ $(document).on('input change', '.tmlinputselect', function(evt) {
 
 
 window.onpopstate = function(event) {
-    if (!event.state) {
-        console.log('clear page')
-    } else {
+    if (event.state) {
         replaceXml(event.state.script, $.parseXML(event.state.xml));
     }
 };

@@ -68,13 +68,19 @@ public final class Access implements java.io.Serializable, Mappable {
     public static final int EXIT_BREAK = 3;
     public static final int EXIT_USEREXCEPTION = 4;
     public static final int EXIT_EXCEPTION = 5;
+    
+    // The following exit codes can be ignored in statistics
     public static final int EXIT_SCRIPT_NOT_FOUND = 6;
-
+    public static final int EXIT_AUTH_EXECPTION = 21;
+    
     @SuppressWarnings("unused")
     private static final String VERSION = "$Id$";
 
+    public static final String MISSING_APPLICATION = "noapp";
+
     public java.util.Date created = new java.util.Date();
     private static int AccessCount = 0;
+    
     public int threadCount = 0;
     public double cpuload = -1.0;
     public String accessID = "";
@@ -87,6 +93,9 @@ public final class Access implements java.io.Serializable, Mappable {
     public String userAgent;
     public String ipAddress;
     public String hostName;
+    public String application;
+    public String organization;
+    public String clientDescription;
     public boolean betaUser = false;
     public transient CompiledScriptInterface myScript = null;
     public int queueSize;
@@ -113,14 +122,11 @@ public final class Access implements java.io.Serializable, Mappable {
     public transient Binary responseNavajo;
     public boolean debugAll;
 
-    // Flag to indicate that during the execution of the webservice, break was
-    // called.
+    // Flag to indicate that during the execution of the webservice, break was called.
     private boolean breakWasSet = false;
 
     private transient Object scriptEnvironment = null;
     private String requestUrl;
-    private int requestNavajoSize; // in bytes
-    private int responseNavajoSize; // in bytes
     private int exitCode;
     private transient Throwable myException;
     private Navajo outputDoc;
@@ -155,9 +161,8 @@ public final class Access implements java.io.Serializable, Mappable {
     // commit the data and finalise the network connection.
     private transient TmlRunnable originalRunnable;
   
-    public Access(int userID, int serviceID, String rpcUser, String rpcName, String userAgent, String ipAddress,
- String hostName,
-            Object certificate, boolean betaUser, String accessID) {
+    public Access(int userID, int serviceID, String rpcUser, String rpcName, String userAgent, String ipAddress, String hostName, Object certificate,
+            boolean betaUser, String accessID) {
 
         this();
 
@@ -423,9 +428,10 @@ public final class Access implements java.io.Serializable, Mappable {
         a.parentAccessId = this.parentAccessId;
         a.debugAll = this.debugAll;
         a.exitCode = this.exitCode;
-        a.requestNavajoSize = this.requestNavajoSize;
-        a.responseNavajoSize = this.responseNavajoSize;
         a.tenant = this.tenant;
+        a.application = this.application;
+        a.organization = this.organization;
+        a.clientDescription = this.clientDescription;
         return a;
     }
 
@@ -652,6 +658,36 @@ public final class Access implements java.io.Serializable, Mappable {
     public void setCpuload(double cpuload) {
         this.cpuload = cpuload;
     }
+    
+
+    public String getApplication() {
+        return application;
+    }
+
+
+    public void setApplication(String application) {
+        this.application = application;
+        if (this.application == null) {
+            this.application = MISSING_APPLICATION;
+        }
+    }
+    
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+    
+    public String getClientDescription() {
+        return clientDescription;
+    }
+
+    public void setClientDescription(String clientDescription) {
+        this.clientDescription = clientDescription;
+    }
+
 
     public Binary getRequestNavajo() throws UserException {
         Binary b = new Binary();
@@ -697,6 +733,7 @@ public final class Access implements java.io.Serializable, Mappable {
      */
     private final void writeToConsole(String s) {
         consoleOutput.write(s);
+        consoleOutput.write("\n");
     }
 
     /**
@@ -708,7 +745,7 @@ public final class Access implements java.io.Serializable, Mappable {
             a.writeToConsole(s);
         }
         if (s != null) {
-            logger.info(s.trim());
+            logger.debug(s.trim());
         }
     }
 
@@ -814,21 +851,7 @@ public final class Access implements java.io.Serializable, Mappable {
         return this.tenant;
     }
 
-    public int getRequestNavajoSize() {
-        return requestNavajoSize;
-    }
-
-    public void setRequestNavajoSize(int requestNavajoSize) {
-        this.requestNavajoSize = requestNavajoSize;
-    }
-
-    public int getResponseNavajoSize() {
-        return responseNavajoSize;
-    }
-
-    public void setResponseNavajoSize(int responseNavajoSize) {
-        this.responseNavajoSize = responseNavajoSize;
-    }
+ 
 
     public int getExitCode() {
         return exitCode;

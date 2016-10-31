@@ -206,6 +206,8 @@
 			<value name="subject" type="string" required="false" direction="in" />
 			<value name="text" type="string" required="false" direction="in" />
 			<value name="recipients" type="string" required="false" direction="in" />
+            <value name="cc" type="string" required="false" direction="in" />
+            <value name="bcc" type="string" required="false" direction="in" />
 			<value name="attachment" map="attachment" required="false" direction="in" />
 			<value name="multipleAttachments" map="attachment []" required="false" direction="in" />
 			<value name="smtpUser" type="string" required="false" direction="in" />
@@ -213,6 +215,8 @@
 			<value name="useEncryption" type="boolean" required="false" direction="in" />
             <value name="port" type="integer" required="false" direction="in" />
             <value name="contentType" type="string" required="false" direction="in" />
+            <value name="cc" type="string" required="false" direction="in" />
+            <value name="bcc" type="string" required="false" direction="in" />
 		</values>
 	</map>
 	<!--Alternative mail adapter -->
@@ -227,6 +231,8 @@
 			<value name="subject" type="string" required="false" direction="in" />
 			<value name="text" type="string" required="false" direction="in" />
 			<value name="recipients" type="string" required="false" direction="in" />
+            <value name="cc" type="string" required="false" direction="in" />
+            <value name="bcc" type="string" required="false" direction="in" />
 			<value name="attachment" map="attachment" required="false" direction="in" />
 			<value name="relatedBodyPart" map="attachment" required="false" direction="in" />
 			<value name="multipleAttachments" map="attachment []" required="false" direction="in" />
@@ -243,6 +249,8 @@
 			<value name="subject" type="string" required="false" direction="in" />
 			<value name="bodyText" type="string" required="false" direction="in" />
 			<value name="to" type="string" required="false" direction="in" />
+            <value name="cc" type="string" required="false" direction="in" />
+            <value name="bcc" type="string" required="false" direction="in" />
 			<value name="attachment" map="attachment" required="false" direction="in" />
 			<value name="multipleAttachments" map="attachment []" required="false" direction="in" />
 			<value name="smtpUser" type="string" required="false" direction="in" />
@@ -250,7 +258,13 @@
 			<value name="useEncryption" type="boolean" required="false" direction="in" />
             <value name="mailPort" type="string" required="false" direction="in" />
 			<value name="debug" type="boolean" required="false" direction="in" />
+            <value name="ignoreFailures" type="boolean" required="false" direction="in" />
 		</values>
+        <methods>
+            <method name="doSend">
+                <param name="value" field="doSend" type="boolean" required="automatic" value="true" />
+            </method>
+        </methods>
 	</map>
 	<map abstract="true">
 		<tagname>attachment</tagname>
@@ -401,6 +415,7 @@
             <value name="append" type="string" required="false"  direction="in" />
             <value name="topMessage" type="string" required="false"  direction="in" />
             <value name="messagesPerRequest" type="integer" required="false"  direction="in" />
+            <value name="textContent" type="string" required="false" direction="in" />
 		</values>
 		<methods>
 			<!-- Creates a new property -->

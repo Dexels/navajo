@@ -89,7 +89,7 @@ public void load(Access access) throws UserException, MappableException {
 @Override
   protected ResultSetMap[] getResultSet(boolean updateOnly) throws UserException {
     if (debug) {
-      System.out.print("TIMING SPMAP, start query... : " + update);
+     logger.info("TIMING SPMAP, start query... : " + update);
 
     }
     long start = System.currentTimeMillis();
@@ -223,8 +223,8 @@ public void load(Access access) throws UserException, MappableException {
       }
     }
     catch (SQLException sqle) {
-      AuditLog.log( sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), "SPMap",Level.SEVERE, myAccess.accessID);
-      throw new UserException( -1,  sqle.getLocalizedMessage() + "/" + sqle.getSQLState());
+      AuditLog.log( sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), "SPMap",sqle,Level.SEVERE, myAccess.accessID);
+      throw new UserException( -1,  sqle.getLocalizedMessage() + "/" + sqle.getSQLState(),sqle);
     }
     finally {
     	 if (rs != null) {
@@ -239,7 +239,9 @@ public void load(Access access) throws UserException, MappableException {
     double total = (end - start) / 1000.0;
 
     totaltiming += total;
-    // logger.info("finished " + total + " seconds. Average query time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
+    if (debug) {
+        logger.info("finished " + total + " seconds. Average query time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
+    }
     return resultSet;
   }
 
@@ -386,8 +388,8 @@ public void setParameter(Object param) {
         }
       }
       catch (SQLException sqle) {
-    	  AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE, myAccess.accessID);
-        throw new UserException( -1, sqle.getMessage());
+    	  AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(),sqle, Level.SEVERE, myAccess.accessID);
+        throw new UserException( -1, sqle.getMessage(),sqle);
       }
       return value;
     }

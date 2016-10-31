@@ -19,20 +19,20 @@ public abstract class TipiBaseConnector extends TipiHeadlessComponentImpl
 
 	@Override
 	public final Navajo doTransaction() throws TipiBreakException, TipiException {
-		return doTransaction(null, null, null);
+		return doTransaction(null, null, 0);
 	}
 
 	@Override
 	public final Navajo doTransaction(String service) throws TipiBreakException,
 			TipiException {
-		return doTransaction(null, service, null);
+		return doTransaction(null, service, 0);
 	}
+	@Override
+   public Navajo doTransaction(Navajo n, String service, Integer retries)
+                   throws TipiBreakException, TipiException {
+           return doTransaction(n, service, (String) null);
+   }
 
-@Override
-	public Navajo doTransaction(Navajo n, String service)
-			throws TipiBreakException, TipiException {
-		return doTransaction(n, service, null);
-	}
 
 	protected Navajo injectNavajo(String service, Navajo n)
 			throws TipiBreakException {

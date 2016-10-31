@@ -322,7 +322,6 @@ public class ColumnManagementDialog extends JDialog {
 		myTable.removeAllColumns();
 		while (m.hasMoreElements()) {
 			String name = (String) m.nextElement();
-			logger.info("Name: " + name);
 			String id = nameIdMap.getByName(name);
 			if (id != null && !id.equals("") && !id.equals("ERROR!")) {
 				boolean editable = false;

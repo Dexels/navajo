@@ -35,6 +35,8 @@ public interface ManualAsyncClient extends AsyncClient {
 
 	public void close();
 	
+	public void setCloseAfterUse(boolean closeAfterUse);
+	
 	@Override
 	public boolean useHttps();
 	@Override

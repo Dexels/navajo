@@ -143,7 +143,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		va.setActionManager(new OSGiActionManager(TipiVaadinExtension.getInstance().getBundleContext()));
 		va.setDefaultConnector(defaultConnector);
 		BaseTipiApplicationInstance.processSettings(applicationDeploy, applicationProfile, installationFolder, va);
-
+		va.resetErrorHandler();
 		String theme = va.getSystemProperty("tipi.vaadin.theme");
 		logger.info("Theme resolved to: "+theme);
 		setTheme(theme);

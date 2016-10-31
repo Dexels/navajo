@@ -62,6 +62,15 @@ public class BaseRequestImpl implements AsyncRequest {
 		this.acceptEncoding = acceptEncoding;
 		this.cert = cert;
 		this.connectedAt = System.currentTimeMillis();
+		
+//		StringBuilder stringBuilder = new StringBuilder(10000);
+//		 Scanner scanner = new Scanner(request.getInputStream());
+//		    while (scanner.hasNextLine()) {
+//		        stringBuilder.append(scanner.nextLine());
+//		    }
+//
+//		    String body = stringBuilder.toString();
+		    
 		setUrl(createUrl(this.request));
 		this.inDoc = parseInputNavajo(request.getInputStream());
 		this.instance = instance;

@@ -53,6 +53,7 @@ import com.dexels.navajo.tipi.components.swingimpl.jnlp.WebStartProxy;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDesktop;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDialog;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSplash;
+import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiResourceLoader;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
@@ -79,7 +80,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 public class SwingTipiContext extends TipiContext {
 
-	private static final int INACTIVITY_LIMIT_IN_HOURS = 6;
+	private static final int INACTIVITY_LIMIT_IN_NINUTES = 420; // 7 hours
     private static final long serialVersionUID = -538400075423823232L;
 //	JFXPanel x;
 	private TipiSwingSplash splash;
@@ -125,15 +126,15 @@ public class SwingTipiContext extends TipiContext {
                 while (keepActivityMonitorThreadRunning) {
                     logger.debug("Checking for inactivity");
                     try {
-                        if (lam.getLastActivityInHours() > INACTIVITY_LIMIT_IN_HOURS) {
-                            logger.info("LastActivity is {} hours ago - showing dialog and closing application!", lam.getLastActivityInHours());
+                        if (lam.getInactiveInMinutes() > INACTIVITY_LIMIT_IN_NINUTES) {
+                            logger.info("LastActivity is {} hours ago - showing dialog and closing application!", lam.getInactiveInMinutes());
                             String inactivityTitle = getErrorHandler().getInactivityTitleText();
                             String inactivityMsg = getErrorHandler().getInactivityMsgText();
                             SwingTipiContext.this.showWarning(inactivityMsg, inactivityTitle, null);
-                            SwingTipiContext.this.shutdown();
+                            SwingTipiContext.this.doExit();
                         }
                         // Check every 5 minutes
-                        Thread.sleep(1 * 60 * 1000);
+                        Thread.sleep(5 * 60 * 1000);
                     } catch (InterruptedException e) {
                         keepActivityMonitorThreadRunning = false;
                     } catch (Exception e) {
@@ -144,6 +145,9 @@ public class SwingTipiContext extends TipiContext {
             }
         });
 		activityMonitorThread.start();
+		
+		eHandler = new BaseTipiErrorHandler();
+	    eHandler.setContext(this);
 
 		try {
 
@@ -496,7 +500,7 @@ public class SwingTipiContext extends TipiContext {
 	    Object topFrame = getTopDialog();
 	    if (topFrame instanceof JFrame) {
 	        parentFrame = (JFrame) topFrame;
-	    } else if (topFrame instanceof JDialog) {
+	    } else if (topFrame instanceof JDialog && ((JDialog) topFrame).getParent() instanceof JFrame ) {
 	        parentFrame = (JFrame) ((JDialog) topFrame).getParent();
 	    } else {
 	        parentFrame = null;

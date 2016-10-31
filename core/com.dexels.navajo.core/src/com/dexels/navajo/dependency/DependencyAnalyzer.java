@@ -21,7 +21,7 @@ public class DependencyAnalyzer {
     protected String scriptFolder;
 
     public void activate() {
-        logger.debug("Activating DependencyAnalyzer");
+        logger.info("Activating DependencyAnalyzer");
         precompiler = new TslPreCompiler();
         precompiler.setIOConfig(navajoIOConfig);
         scriptFolder = navajoIOConfig.getScriptPath();
@@ -36,20 +36,35 @@ public class DependencyAnalyzer {
 
     public void addDependencies(String script) {
 
-        List<Dependency> myDependencies = new ArrayList<Dependency>();
-        String scriptTenant = tenantFromScriptPath(script);
+		Thread t = Thread.currentThread(); 
+		ClassLoader cl = t.getContextClassLoader(); 
+		t.setContextClassLoader(getClass().getClassLoader()); 
+		try { 
+	        List<Dependency> myDependencies = new ArrayList<Dependency>();
+	        String scriptTenant = tenantFromScriptPath(script);
 
-        try {
-            precompiler.getAllDependencies(script, scriptFolder, myDependencies, scriptTenant);
-            // codeSearch.getAllWorkflowDependencies(scriptFile, scriptPath,
-            // scriptFolder, myDependencies);
-        } catch (Exception e) {
-            logger.error(" Exception on getting depencencies for {}: {}", script, e);
-            return;
-        }
-        dependencies.put(script, myDependencies);
+	        try {
+	            precompiler.getAllDependencies(script, scriptFolder, myDependencies, scriptTenant);
+	            // codeSearch.getAllWorkflowDependencies(scriptFile, scriptPath,
+	            // scriptFolder, myDependencies);
+	        } catch (Exception e) {
+	            logger.error(" Exception on getting depencencies for: "+ script, e);
+	            return;
+	        }
+	        dependencies.put(script, myDependencies);
 
-        updateReverseDependencies(myDependencies);
+	        updateReverseDependencies(myDependencies);
+	        
+	        // Also ensure any includes I depend on, have their dependencies set correct
+	        for (Dependency dep : myDependencies) {
+	            if (dep.getType() == Dependency.INCLUDE_DEPENDENCY) {
+	                addDependencies(dep.getDependee());
+	            }
+	        }		} finally { 
+		    t.setContextClassLoader(cl); 
+		} 
+	   
+
     }
 
     public List<Dependency> getDependencies(String scriptName) {
@@ -76,8 +91,17 @@ public class DependencyAnalyzer {
         String script = scriptPath;
 
         if (scriptPath.indexOf('_') > 0) {
-            // Remove tenant-specific part
-            script = scriptPath.substring(0, scriptPath.indexOf('_'));
+            int slashIndex = scriptPath.lastIndexOf("/");
+            
+            if (slashIndex != -1) {
+                // Check if the last '_' is after the / part, since a _ might occur in a directory name
+                String bareScript = scriptPath.substring(slashIndex + 1);
+                if (bareScript.indexOf('_') != -1) {
+                    script = scriptPath.substring(0, scriptPath.lastIndexOf('_'));
+                }
+            } else {
+                script = scriptPath.substring(0, scriptPath.lastIndexOf('_'));
+            }
         }
         if (reverseDependencies.containsKey(script)) {
             return reverseDependencies.get(script);
@@ -87,13 +111,20 @@ public class DependencyAnalyzer {
     }
 
     private String tenantFromScriptPath(String scriptPath) {
-        int scoreIndex = scriptPath.lastIndexOf("_");
+        int scoreIndex = scriptPath.lastIndexOf('_');
         int slashIndex = scriptPath.lastIndexOf("/");
-        if (scoreIndex >= 0 && slashIndex < scoreIndex) {
-            return scriptPath.substring(scoreIndex + 1, scriptPath.length());
-        } else {
-            return null;
+        
+        if (slashIndex != -1) {
+            String bareScript = scriptPath.substring(slashIndex + 1);
+            scoreIndex = bareScript.lastIndexOf('_');
+            if (scoreIndex != -1) {
+                return bareScript.substring(scoreIndex+1, bareScript.length());
+            } 
+        } else if (scoreIndex > -1)  {
+            return scriptPath.substring(scoreIndex+1, scriptPath.length());
         }
+        return null;
+        
     }
 
 
@@ -104,7 +135,10 @@ public class DependencyAnalyzer {
             if (!reverseDependencies.containsKey(dep.getDependee())) {
                 reverseDependencies.put(dep.getDependee(), new ArrayList<Dependency>());
             }
-            reverseDependencies.get(dep.getDependee()).add(dep);
+            List<Dependency> reverse = reverseDependencies.get(dep.getDependee());
+            if (!reverse.contains(dep)) {
+                reverseDependencies.get(dep.getDependee()).add(dep);
+            }
         }
     }
 

@@ -1,98 +1,49 @@
 package com.dexels.navajo.article.impl;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.Servlet;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.codehaus.jackson.node.ObjectNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.dexels.navajo.article.APIErrorCode;
+import com.dexels.navajo.article.APIException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import com.dexels.navajo.article.ArticleContext;
-
-public class ArticleListServlet extends HttpServlet implements Servlet {
-
+public class ArticleListServlet extends ArticleBaseServlet implements Servlet {
 	private static final long serialVersionUID = -6895324256139435015L;
-
-	private final static Logger logger = LoggerFactory
-			.getLogger(ArticleListServlet.class);
 	
-	private static String kARGUMENT_ARTICLE = "article";
-	private static String kARGUMENT_PRETTY = "pretty";
-	private static String kARGUMENT_EXTENDED = "extended";
-
-	private ArticleContext context;
+	private static String ARGUMENT_ARTICLE = "article";
+	private static String ARGUMENT_EXTENDED = "extended";
 
 	public ArticleListServlet() {
 
 	}
-
-	public ArticleContext getContext() {
-		return context;
-	}
-
-	public void setArticleContext(ArticleContext context) {
-		this.context = context;
-	}
-
-	public void clearArticleContext(ArticleContext context) {
-		this.context = null;
-	}
-
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException {
-		resp.addHeader("Access-Control-Allow-Origin", "*");
-		resp.setContentType("application/json; charset=utf-8");
-		
+	
+	protected void doServiceImpl(HttpServletRequest request, HttpServletResponse response) throws APIException {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode rootNode = mapper.createObjectNode();
-		String requestedArticle = req.getParameter(kARGUMENT_ARTICLE);
-		boolean extended = req.getParameter(kARGUMENT_EXTENDED) != null ? true : false;
+		boolean extended = request.getParameter(ARGUMENT_EXTENDED) != null ? true : false;
+		String requestedArticle = request.getParameter(ARGUMENT_ARTICLE);
+		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 
-		List<String> articles = context.listArticles();
-		
-		if (requestedArticle != null && articles.contains(requestedArticle)) {
-			try {
-				context.writeArticleMeta(requestedArticle, rootNode, mapper, extended);
-			} catch (Throwable e) {
-				logger.error("Error generating metadata for article: "
-						+ requestedArticle, e);
-			}
+		if (requestedArticle != null) {
+			getContext().writeArticleMeta(requestedArticle, rootNode, mapper, extended);
 		} else {
+			List<String> articles = getContext().listArticles();
 			for (String article : articles) {
-				try {
-					context.writeArticleMeta(article, rootNode, mapper, extended);
-				} catch (Throwable e) {
-					logger.error("Error generating metadata for article: "
-							+ article, e);
-				}
+				getContext().writeArticleMeta(article, rootNode, mapper, extended);
 			}
 		}
-
-		ObjectWriter writer = (req.getParameter(kARGUMENT_PRETTY) == null) 
-				? mapper.writer() : mapper.writer().withDefaultPrettyPrinter();
-
-		try {
-			writer.writeValue(resp.getWriter(), rootNode);
-			if (resp.getWriter() != null) {
-				resp.getWriter().close();
-			}
-		} catch (JsonGenerationException e) {
-			throw new ServletException("Error generating JSON", e);
-		} catch (JsonMappingException e) {
-			throw new ServletException("Error generating JSON", e);
-		} catch (IOException e) {
-			throw new ServletException("Error writing JSON", e);
+		
+		try (PrintWriter pw = response.getWriter()) {
+			writer.writeValue(pw, rootNode);
+		}  catch (IOException e) {
+			throw new APIException("Autoclose on printwriter failed", e, APIErrorCode.InternalError);
 		}
 	}
 }

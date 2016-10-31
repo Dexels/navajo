@@ -3,7 +3,6 @@ package com.dexels.navajo.compiler.tsl.internal;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,7 +71,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
                 List<String> skipped = new ArrayList<String>();
                 logger.info("Eagerly compiling: " + script);
                 try {
-                    bundleCreator.createBundle(script, new Date(), failures, success, skipped, true, keepIntermediateFiles, extension);
+                    bundleCreator.createBundle(script, failures, success, skipped, true, keepIntermediateFiles, extension);
                     bundleCreator.installBundle(script, failures, success, skipped, true, extension);
                     if (!skipped.isEmpty()) {
                         logger.info("Script compilation skipped: " + script);
@@ -128,6 +127,8 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
     private void checkForRemovedScripts(Event e) {
         List<String> deletedScripts = RepositoryEventParser.filterDeleted(e, SCRIPTS_FOLDER);
         for (String deletedScript : deletedScripts) {
+            // Replace windows backslashes with normal ones
+            deletedScript = deletedScript.replace("\\", "/");
             // Uninstall bundle
             String stripped = deletedScript.substring(SCRIPTS_FOLDER.length());
             int dotIndex = stripped.lastIndexOf(".");
@@ -169,7 +170,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
                         continue;
                     }
                     enqueueScript(scriptName, extension);
-                    enqueueDependentScripts(scriptName);
+                    enqueueDependentScripts(scriptName, new HashSet<String>());
                 }
             } catch (IllegalArgumentException e1) {
                 logger.warn("Error in handling changed script {}: {}", changedScript, e1);
@@ -177,12 +178,21 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
         }
     }
 
-    private void enqueueDependentScripts(String script) {
+
+    private void enqueueDependentScripts(String script, Set<String> history) {
+        history.add(script);
+        
         String rpcName = script;
-        if (script.indexOf("_") > 0) {
+        String bareScript = script.substring(script.lastIndexOf("/") + 1);
+        if (bareScript.indexOf("_") > 0) {
             rpcName = script.substring(0, script.lastIndexOf("_"));
         }
         List<Dependency> dependencies = depanalyzer.getReverseDependencies(rpcName);
+        
+        // Going to pretend all the scripts that include us, also changed. This triggers their
+        // re-compile, so that they have the correct version. This goes recursive, to allow
+        // handling includes within includes within includes etc. Use a History set to prevent
+        // a loop somewhere.
         // Use a set to prevent duplicates due to tenent-specific dependencies
         Set<String> dependentScripts = new HashSet<String>();
         for (Dependency dep : dependencies) {
@@ -192,8 +202,13 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 
         }
         for (String depScript : dependentScripts) {
-            logger.debug("Compiling {}; the following script should be recompiled too: {}", script, depScript);
-            enqueueScript(depScript, ".xml");
+            if (history.contains(depScript)) {
+                logger.warn("Circular include dependency found! history: {} new: {}", history, depScript);
+                return;
+            }
+            logger.info("Going to recompile {} after a change in {}", depScript, script);
+            enqueueScript(depScript, null);
+            enqueueDependentScripts(depScript, history);
         }
     }
 

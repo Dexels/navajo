@@ -138,7 +138,7 @@ public class MailMap implements MailMapInterface, Mappable,
 			try {
 				RequestResponseQueueFactory.getInstance().send(this, 100);
 			} catch (Exception e) {
-				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+				AuditLog.log("MailMap", e.getMessage(),e , Level.WARNING,
 						myAccess.accessID);
 				logger.error("Error: sending request (?)",e);
 			}
@@ -152,7 +152,7 @@ public class MailMap implements MailMapInterface, Mappable,
 			sendMail();
 		} catch (Exception e) {
 			if (myAccess != null) {
-				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+				AuditLog.log("MailMap", e.getMessage(),e, Level.WARNING,
 						myAccess.accessID);
 				myAccess.setException(e);
 			}
@@ -162,9 +162,13 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	private final void sendMail() throws UserException {
+	    final ClassLoader current = Thread.currentThread().getContextClassLoader();
+
 		retries++;
 
 		try {
+	        Thread.currentThread().setContextClassLoader(javax.mail.Session.class.getClassLoader());
+
 			String result = "";
 
 			result = text;
@@ -173,8 +177,7 @@ public class MailMap implements MailMapInterface, Mappable,
 			javax.mail.Message msg = new MimeMessage(session);
 
 			if (sender == null || "".equals(sender)) {
-				throw new UserException(-1,
-						"Error: Required sender address not set!");
+				throw new UserException(-1, "Error: Required sender address not set!");
 			}
 			msg.setFrom(new InternetAddress(sender));
 
@@ -278,16 +281,17 @@ public class MailMap implements MailMapInterface, Mappable,
 			Transport.send(msg);
 
 		} catch (Exception e) {
+		    logger.error("Exception on sending mail!", e);
 			if (ignoreFailures) {
-				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
-						myAccess.accessID);
+				AuditLog.log("MailMap", e.getMessage(), e,Level.WARNING, myAccess.accessID);
 				failure = e.getMessage();
 			} else {
-				AuditLog.log("MailMap", e.getMessage(), Level.SEVERE,
-						myAccess.accessID);
+				AuditLog.log("MailMap", e.getMessage(),e, Level.SEVERE, myAccess.accessID);
 				throw new UserException(-1, e.getMessage(), e);
 			}
-		}
+		} finally {
+            Thread.currentThread().setContextClassLoader( current );
+        }
 	}
 
 	private Session createSession() {

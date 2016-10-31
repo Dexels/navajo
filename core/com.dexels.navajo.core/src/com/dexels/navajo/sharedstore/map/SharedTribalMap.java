@@ -44,10 +44,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 		this.id = id;
 	}
 	
-	@Override
-	public void finalize() {
-	}
-	
+
 	public static Collection<SharedTribalMap> getAllTribalMaps() {
 		return registeredMaps.values();
 	}

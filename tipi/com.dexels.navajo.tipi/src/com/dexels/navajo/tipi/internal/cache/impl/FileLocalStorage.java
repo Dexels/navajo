@@ -123,6 +123,7 @@ public class FileLocalStorage implements LocalStorage {
 		copyResource(dos, data);
 		
 		storeDigest(location,md.digest());
+				
 	}
 
 	private void storeDigest(String location, byte[] digest) {
@@ -169,25 +170,12 @@ public class FileLocalStorage implements LocalStorage {
 	}
 
 	@Override
-	public URL getURL(String location) throws IOException {
+	public URL getURL(String location, InputStream is) throws IOException {
 		File f = new File(baseFile, convertPath(location));
 		return f.toURI().toURL();
 	}
 
 
-//	public boolean hasLocalWithDigest(String location, byte[] digest) {
-//		String digestString = (String) localDigestProperties.get(location);
-//		if(digestString==null) {
-//			logger.debug("No digest found. Not using local digest");
-//		}
-//		try {
-//			byte[] found = Base64.decode(digestString);
-//			return Arrays.equals(found, digest);
-//		} catch (DecodingException e) {
-//			logger.error("Error: ", e);
-//		}
-//		return false;
-//	}
 
 
 	@Override

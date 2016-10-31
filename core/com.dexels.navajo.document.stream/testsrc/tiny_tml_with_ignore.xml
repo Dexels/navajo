@@ -1,0 +1,10 @@
+<tml>
+   <header>
+      <transaction rpc_name="Tiny" rpc_pwd="pw" rpc_usr="username"/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="Message" mode="ignore">
+      <property name="Property" type="string" value="A value" direction="out"/>
+   </message>
+</tml>

@@ -20,7 +20,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.script.api.FatalException;
-import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
 /**
@@ -39,6 +39,8 @@ public class EntityManager {
     private BundleQueue bundleQueue;
 
     private NavajoConfigInterface navajoConfig;
+
+	private DispatcherInterface dispatcher;
 
     public EntityManager() {
     }
@@ -84,11 +86,6 @@ public class EntityManager {
             if (prop != null) {
                 Property prop_copy = prop.copy(n);
                 String propValue = parameters.get(key)[0];
-                if (propValue.indexOf('.') > 0) {
-                    // Dots in property values are not supported since they can
-                    // be used to indicate output format
-                    propValue = propValue.substring(0, propValue.indexOf('.'));
-                }
                 prop_copy.setUnCheckedStringAsValue(propValue);
                 m.addProperty(prop_copy);
             }
@@ -123,6 +120,7 @@ public class EntityManager {
 
     public void removeEntity(Entity e) {
         entityMap.remove(e.getName());
+        operationsMap.remove(e.getName());
     }
 
     public Operation getOperation(String entity, String method) throws EntityException {
@@ -168,8 +166,7 @@ public class EntityManager {
         buildAndLoadScript(entityDir);
     }
 
-    // Can be called on file or directory. If on directory, call recursively on
-    // each file
+    // Can be called on file or directory. If on directory, call recursively on each file
     private void buildAndLoadScript(File file) throws Exception {
         if (file.isFile()) {
             String filename = file.toString();
@@ -177,7 +174,7 @@ public class EntityManager {
                 return;
             }
             String script = filename.substring(filename.indexOf("scripts" + File.separator + "entity"), filename.indexOf(".xml"));
-            String stripped = script.substring("scripts/".length());
+            String stripped = script.substring("scripts".length() + 1);
             stripped = stripped.replace("\\", "/");
             bundleQueue.enqueueScript(stripped, ".xml");
         } else if (file.isDirectory()) {
@@ -185,7 +182,6 @@ public class EntityManager {
                 buildAndLoadScript(f);
             }
         }
-
     }
 
     public void setBundleQueue(BundleQueue queue) throws Exception {
@@ -196,13 +192,20 @@ public class EntityManager {
         this.bundleQueue = null;
     }
 
+    public void setDispatcher(DispatcherInterface di) {
+    	this.dispatcher = di;
+    }
+    
+    public void clearDispatcher(DispatcherInterface di) {
+    	this.dispatcher = null;
+    }
     public Navajo getEntityNavajo(String serviceName) throws InterruptedException, FatalException {
         Navajo in = NavajoFactory.getInstance().createNavajo();
-        Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
+        Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "_internal_", "", -1);
         in.addHeader(h);
 
         try {
-            return DispatcherFactory.getInstance().handle(in, true);
+            return dispatcher.handle(in, true);
         } catch (Exception e) {
             logger.error("Exception on getting the Entity Navajo. - cannot activate {}! {} ", serviceName, e);
             throw new FatalException("Exception on getting the Entity Navajo.");

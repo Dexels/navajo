@@ -5,7 +5,7 @@
 <!-- title and meta -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>Navajo Tester JS</title>
+<title>Tester.js</title>
 
 <!-- css -->
 <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,700,400italic' rel='stylesheet' type='text/css'>
@@ -69,6 +69,7 @@
 
 <script>
 
+updateTenants();
 getScripts();
 
 $(document).ready(function() {
@@ -80,8 +81,6 @@ $(document).ready(function() {
     $('#handlers').change(function() {
         sessionStorage.instance = $("#handlers :selected").text();
     });
-    
-    updateInstanceHandlers();
     
     Handlebars.registerHelper('equals', function(v1, v2, options) {
         if(v1 === v2) {
@@ -105,7 +104,7 @@ $(document).ready(function() {
         <header>
 
             <div id="title" class="container">
-                <h1>Navajo Tester JS</h1>
+                <h1>Tester.JS</h1>
             </div>
             <div class="headercontainer">
               <div class="loginform">
@@ -125,18 +124,7 @@ $(document).ready(function() {
                                 <div class="handlersdrop">
                                     <select data-placeholder="Select an Instance..." id="handlers">
                                         <option value=""></option>
-                                        <option value="KNAU">KNAU</option>
-                                        <option value="KNKV">KNKV</option>
-                                        <option value="KNVB">KNVB</option>
-                                        <option value="NeVoBo">NeVoBo</option>
-                                        <option value="Generic">Generic</option>
-                                        <option value="NHV">NHV</option>
-                                        <option value="KNZB">KNZB</option>
-                                        <option value="KNBSB">KNBSB</option>
-                                        <option value="JBN">JBN</option>
-                                        <option value="KNKF">KNKF</option>
-                                        <option value="KNHB">KNHB</option>
-                                        <option value="Redned">Redned</option>
+                               
                                     </select>
                                 </div> <input class="LoginButton" name="doLogin" type="submit" value="Login" />
                             </td>
@@ -157,8 +145,14 @@ $(document).ready(function() {
             <div id="content" class="content">
                
                 <div class="scriptsbar">
+                	<h2 class="title"> Recent scripts </h2>
+                    <div id="recentscripts">
+                    	<ul id="recentscriptslist"> </ul>
+                    </div>
+                    
                     <h2 class="title"> Methods </h2>
                     <div id="methods">
+                    
                     </div>
                     <h2 class="title"> Folders and scripts </h2>
                     <div id="scripts">

@@ -1,6 +1,8 @@
 package com.dexels.navajo.document;
 
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
@@ -45,6 +47,8 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String INTEGER_PROPERTY = "integer";
   public static final String LONG_PROPERTY = "long";
   public static final String DATE_PROPERTY = "date";
+  public static final String TIMESTAMP_PROPERTY = "timestamp";
+
   public static final String FLOAT_PROPERTY = "float";
   public static final String MONEY_PROPERTY = "money";
   public static final String PERCENTAGE_PROPERTY = "percentage";
@@ -61,6 +65,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String PASSWORD_PROPERTY = "password";
   public static final String TIPI_PROPERTY = "tipi";
   public static final String BINARY_PROPERTY = "binary";
+  public static final String BINARY_DIGEST_PROPERTY = "binary_digest";
   public static final String STOPWATCHTIME_PROPERTY = "stopwatchtime";
 
   public static final String SUBTYPE_REQUIRED = "required";
@@ -120,10 +125,8 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String DATE_FORMAT3 = "dd-MM-yyyy";
   public static final String DATE_FORMAT4 = "yyyy-MM-dd HH:mm:ss:SS";
   
-//  public static final SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
-//  public static final SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
-//  public static final SimpleDateFormat dateFormat3 = new SimpleDateFormat( Property.DATE_FORMAT3 );
-	
+  public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+
   public boolean isEqual(Property o);
 
   /**
@@ -636,4 +639,12 @@ public void forcePropertyChange();
 
 // for evaluating expressions
 public Object peekEvaluatedValue();
+
+public void printElement(final Writer sw, int indent) throws IOException;
+
+public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) throws IOException ;
+public void printBody(final Writer sw, int indent) throws IOException;
+public void printCloseTag(final Writer sw, int indent) throws IOException;
+
+boolean propertyEquals(Object p);
 }

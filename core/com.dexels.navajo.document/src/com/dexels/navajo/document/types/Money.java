@@ -1,14 +1,16 @@
 package com.dexels.navajo.document.types;
 
-import java.math.*;
-import java.text.*;
-import java.util.*;
-import java.util.regex.*;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 /**
  * <p>Title: Money objects</p>

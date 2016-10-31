@@ -1,13 +1,29 @@
 package com.dexels.navajo.document.base;
 
-import java.beans.*;
-import java.io.*;
-import java.util.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Method;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operation;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 /**
  * <p>
@@ -657,8 +673,8 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
             for (int j = 0; j < subMessages.size(); j++) {
                 Message subMsg = subMessages.get(j);
                 if (superMsg.getName().equals(subMsg.getName())) {
-                    boolean matchMethod = superMsg.getMethod().equals("") || subMsg.getMethod().equals("")
-                            || superMsg.getMethod().equals(method);
+                    boolean matchMethod = method.equals("") || superMsg.getMethod().equals("")
+                            || subMsg.getMethod().equals("") || superMsg.getMethod().equals(method);
 
                     if (!matchMethod) {
                         this.removeMessage(superMsg);

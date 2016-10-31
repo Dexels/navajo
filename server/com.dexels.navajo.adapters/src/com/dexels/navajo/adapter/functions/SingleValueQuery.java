@@ -22,13 +22,11 @@ import com.dexels.navajo.parser.TMLExpressionException;
  */
 
 public class SingleValueQuery extends FunctionInterface {
+    private final static Logger logger = LoggerFactory.getLogger(SingleValueQuery.class);
 
   public static final String DATASOURCEDELIMITER = ":";
   public static final String USERDELIMITER = "@";
   private String dbIdentifier = null;
-  
-  private final static Logger logger = LoggerFactory
-		.getLogger(SingleValueQuery.class);
 
   public String getDbIdentifier() { return this.dbIdentifier; }
   public void setDbIdentifier(String dbIdentifier) {
@@ -83,11 +81,15 @@ public class SingleValueQuery extends FunctionInterface {
 				  datasource = datasource.substring(datasource.indexOf(USERDELIMITER)+1);
 			  }
 
-			  if ( datasource != null && datasource.length() > 0 ) {
-				  sql.setDatasource(datasource);
+			  if ( datasource != null) {
+			      if (datasource.trim().equals("")) {
+			          logger.warn("Ignoring empty datasource - using default!");
+			      } else {
+		              sql.setDatasource(datasource);
+			      }
 			  }
-			  if ( user != null && user.length() > 0 ) {
-				  sql.setUsername(user);
+			  if ( user != null && !user.trim().equals("")) { 
+			     sql.setUsername(user);
 			  }
 
 		  }

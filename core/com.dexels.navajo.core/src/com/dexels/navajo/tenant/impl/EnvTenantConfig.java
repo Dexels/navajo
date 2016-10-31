@@ -56,20 +56,31 @@ public class EnvTenantConfig implements TenantConfig {
 				tenants.add(f.getName());
 			}
 		}
+		mastertenants.clear();
+		mastertenants.addAll(parseTenantMasters());
+	}
+
+	private Set<String> parseTenantMasters() {
+		Set<String> masters = new HashSet<>();
 		String tenantlist = System.getenv("TENANT_MASTER");
-		if(tenantlist==null) {
-			logger.info("No setup for task tenants, setting wildcard");
-			this.wildcard = true;
-			return;
+		if (tenantlist == null) {
+		    logger.warn("Master of no tenant!");
+		    return Collections.emptySet();
 		}
-		if(tenantlist.equals("-")) {
-			logger.info("Tenant master operations blocked. No tasks/workflows will be activated");
-			return;
+		if("wildcard".equals(tenantlist)) {
+			logger.warn("No setup for task tenants, setting wildcard");
+			this.wildcard = true;
+		    return Collections.emptySet();
+		}
+		if(tenantlist.equals("-") || tenantlist.equals("")) {
+			logger.warn("Tenant master operations blocked. No tasks/workflows will be activated");
+		    return Collections.emptySet();
 		}
 		String parts[] = tenantlist.split(",");
 		for (String tenant : parts) {
-			mastertenants.add(tenant);
+			masters.add(tenant);
 		}
+		return masters;
 	}
 	
 	public void deactivate() {

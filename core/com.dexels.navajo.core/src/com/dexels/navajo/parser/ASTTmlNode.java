@@ -127,7 +127,7 @@ public final class ASTTmlNode extends SimpleNode {
 //                System.err.println("# of matches: "+match.size());
             }
         } catch (NavajoException te) {
-            throw new TMLExpressionException(te.getMessage());
+            throw new TMLExpressionException(te.getMessage(),te);
         }
          for (int j = 0; j < match.size(); j++) {
             prop = (Property) match.get(j);

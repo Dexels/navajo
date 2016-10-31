@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Swing Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.5.1.qualifier
+Bundle-Version: 1.9.1.qualifier
 Bundle-Activator: tipiswing.TipiSwingExtension
 Export-Package: com.dexels.navajo.tipi.components.swingimpl;version="1
  .0.0",com.dexels.navajo.tipi.components.swingimpl.parsers;version="1.
@@ -29,6 +29,7 @@ Import-Package: com.dexels.navajo.client.stream;version="1.0.0",
  com.dexels.navajo.tipi.internal.cache.impl;version="1.1.42",
  com.dexels.navajo.tipi.internal.cookie;version="1.1.42",
  com.dexels.navajo.tipi.internal.cookie.impl;version="1.1.42",
+ com.dexels.navajo.tipi.swing.colorpicker,
  com.dexels.navajo.tipi.swingclient,
  com.dexels.navajo.tipi.swingclient.components,
  com.dexels.navajo.tipi.swingclient.components.remotecombobox,

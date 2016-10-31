@@ -9,4 +9,5 @@
    </service>
    <reference bind="setTokenStore" cardinality="1..1" interface="com.dexels.oauth.api.TokenStore" name="TokenStore" policy="dynamic" unbind="clearTokenStore"/>
    <reference bind="setClientStore" cardinality="1..1" interface="com.dexels.oauth.api.ClientStore" name="ClientStore" policy="dynamic" unbind="clearClientStore"/>
+   <reference bind="setResourceBundle" cardinality="1..1" interface="com.dexels.resourcebundle.ResourceBundleStore" name="ResourceBundle" policy="dynamic" unbind="clearResourceBundle"/>
 </scr:component>

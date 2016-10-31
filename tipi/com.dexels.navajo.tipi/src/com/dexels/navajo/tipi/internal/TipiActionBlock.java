@@ -69,7 +69,7 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 			// not sure if this is wise
 			setEvent(null);
 		} catch (TipiBreakException ex) {
-			if (TipiBreakException.BREAK_EVENT == ex.getType()) {
+			if (TipiBreakException.BREAK_EVENT == ex.getType() || TipiBreakException.WEBSERVICE_BREAK == ex.getType() ) {
 				throw ex;
 			}
 			return;

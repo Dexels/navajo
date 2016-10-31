@@ -39,22 +39,17 @@ import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import navajocore.Version;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -65,7 +60,6 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
-import com.dexels.navajo.legacy.compiler.EclipseCompiler;
 import com.dexels.navajo.legacy.compiler.JavaCompiler;
 import com.dexels.navajo.legacy.compiler.SunJavaCompiler;
 import com.dexels.navajo.loader.NavajoClassLoader;
@@ -87,6 +81,8 @@ import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.navajo.server.internal.LegacyNavajoIOConfig;
+
+import navajocore.Version;
 
 public class TslCompiler {
 
@@ -112,7 +108,7 @@ public class TslCompiler {
 	 * Use this as a placeholder for instantiated adapters (for meta data
 	 * usage).
 	 */
-	private HashMap<Class, DependentResource[]> instantiatedAdapters = new HashMap<Class, DependentResource[]>();
+	private HashMap<Class<?>, DependentResource[]> instantiatedAdapters = new HashMap<Class<? extends Object>, DependentResource[]>();
 
 	private Stack<Class> contextClassStack = new Stack<Class>();
 	private Class contextClass = null;
@@ -630,91 +626,79 @@ public class TslCompiler {
 		StringBuffer result = new StringBuffer();
 
 		NodeList children = n.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++) {
-			if (children.item(i).getNodeName().equals("operation")) {
-				Element e = (Element) children.item(i);
-				String entity = e.getAttribute("entity");
-				String service = e.getAttribute("service");
-				String tenant = e.getAttribute("tenant");
-				String validationService = e.getAttribute("validationService");
-				String method = e.getAttribute("method");
-				String debug = e.getAttribute("debug");
-				
-				result.append(printIdent(ident) + "if (true) {\n");
+        for (int i = 0; i < children.getLength(); i++) {
+            if (children.item(i).getNodeName().equals("operation")) {
+                Element e = (Element) children.item(i);
+                String entity = e.getAttribute("entity");
+                String service = e.getAttribute("service");
+                String tenant = e.getAttribute("tenant");
+                String validationService = e.getAttribute("validationService");
+                String method = e.getAttribute("method");
+                String debug = e.getAttribute("debug");
+                String scopes = e.getAttribute("scopes");
+                String description = e.getAttribute("description");
+                
+                result.append(printIdent(ident) + "if (true) {\n");
 
-				String operationString = "com.dexels.navajo.document.Operation o = "
-						+ "NavajoFactory.getInstance().createOperation(access.getOutputDoc(), "
-						+ "\""
-						+ method
-						+ "\", \""
-						+ service;
-				if (!validationService.equals("")) {
-					operationString += "\", \"" + validationService;
-				}
-						
-				operationString	+= "\", \""+ entity + "\", null);\n";
-
-				result.append(printIdent(ident + 2) + operationString);
-				// Find extra message definition.
-				NodeList extraMessages = e.getChildNodes();
-				DocumentBuilderFactory factory = DocumentBuilderFactory
-						.newInstance();
-				DocumentBuilder builder = factory.newDocumentBuilder();
-				DOMImplementation impl = builder.getDOMImplementation();
-				Document doc = impl.createDocument(null, null, null);
-
-				String extraMessageName = null;
-				Element extraMessageElement = null;
-
-				for (int j = 0; j < extraMessages.getLength(); j++) {
-					if (extraMessages.item(j).getNodeName().equals("message")) {
-						extraMessageElement = (Element) extraMessages.item(j);
-						extraMessageName = extraMessageElement
-								.getAttribute("name");
-						break;
-					}
-				}
-
-				if (extraMessageName != null) {
-					DOMSource domSource = new DOMSource(extraMessageElement);
-					Transformer transformer = TransformerFactory.newInstance()
-							.newTransformer();
-					transformer.setOutputProperty(
-							OutputKeys.OMIT_XML_DECLARATION, "yes");
-					transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-					transformer.setOutputProperty(OutputKeys.ENCODING,
-							"ISO-8859-1");
-					transformer.setOutputProperty(
-							"{http://xml.apache.org/xslt}indent-amount", "4");
-					transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-					StringWriter sw = new StringWriter();
-					StreamResult sr = new StreamResult(sw);
-					transformer.transform(domSource, sr);
-
-					String extraNavajo = removeNewLines("<tml>"
-							+ sw.toString().replace('\"', '\'') + "</tml>");
-
-					String extraNavajoOperation = "Navajo extra = NavajoFactory.getInstance().createNavajo(new java.io.StringReader(\""
-							+ extraNavajo
-							+ "\"));\n"
-							+ "o.setExtraMessage(extra.getMessage(\""
-							+ extraMessageName + "\"));\n";
-
-					result.append(printIdent(ident + 2) + extraNavajoOperation);
-
-				}
-				if (debug != null && !debug.equals("")) {
-				    result.append(printIdent(ident + 2) + "o.setDebug(\"" + debug + "\");\n");
-				}
-				if (tenant != null && !tenant.equals("")) {
-                    result.append(printIdent(ident + 2) + "o.setTenant(\"" + tenant + "\");\n");
+                String operationString = "com.dexels.navajo.document.Operation o = " + "NavajoFactory.getInstance().createOperation(access.getOutputDoc(), "
+                        + "\"" + method + "\", \"" + service;
+                if (!validationService.equals("")) {
+                    operationString += "\", \"" + validationService;
                 }
 
-				result.append(printIdent(ident + 2)
-						+ "access.getOutputDoc().addOperation(o);\n");
-				result.append(printIdent(ident) + "}\n");
-			}
-		}
+                operationString += "\", \"" + entity + "\", null);\n";
+
+                result.append(printIdent(ident + 2) + operationString);
+                // Find extra message definition.
+                NodeList extraMessages = e.getChildNodes();
+                String extraMessageName = null;
+                Element extraMessageElement = null;
+
+                for (int j = 0; j < extraMessages.getLength(); j++) {
+                    if (extraMessages.item(j).getNodeName().equals("message")) {
+                        extraMessageElement = (Element) extraMessages.item(j);
+                        extraMessageName = extraMessageElement.getAttribute("name");
+                        break;
+                    }
+                }
+
+                if (extraMessageName != null) {
+                    DOMSource domSource = new DOMSource(extraMessageElement);
+                    Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+                    transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+                    transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
+                    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+                    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                    StringWriter sw = new StringWriter();
+                    StreamResult sr = new StreamResult(sw);
+                    transformer.transform(domSource, sr);
+
+                    String extraNavajo = removeNewLines("<tml>" + sw.toString().replace('\"', '\'') + "</tml>");
+
+                    String extraNavajoOperation = "Navajo extra = NavajoFactory.getInstance().createNavajo(new java.io.StringReader(\"" + extraNavajo
+                            + "\"));\n" + "o.setExtraMessage(extra.getMessage(\"" + extraMessageName + "\"));\n";
+
+                    result.append(printIdent(ident + 2) + extraNavajoOperation);
+
+                }
+                if (debug != null && !debug.equals("")) {
+                    result.append(printIdent(ident + 2) + "o.setDebug(\"" + debug + "\");\n");
+                }
+                if (tenant != null && !tenant.equals("")) {
+                    result.append(printIdent(ident + 2) + "o.setTenant(\"" + tenant + "\");\n");
+                }
+                if (scopes != null && !scopes.equals("")) {
+                    result.append(printIdent(ident + 2) + "o.setScopes(\"" + scopes + "\");\n");
+                }
+                if (description != null && !description.equals("")) {
+                    result.append(printIdent(ident + 2) + "o.setDescription(\"" + description + "\");\n");
+                }
+                
+                result.append(printIdent(ident + 2) + "access.getOutputDoc().addOperation(o);\n");
+                result.append(printIdent(ident) + "}\n");
+            }
+        }
 
 		return result.toString();
 
@@ -957,11 +941,18 @@ public class TslCompiler {
 				result.append(printIdent(ident + 2)
 						+ "currentOutMsg.setExtends(\"" + extendsMsg + "\");\n");
 				
+				
 				if (extendsMsg.startsWith("navajo://")) {
-					// Add ExtendDependency dependency
-					String entityName = extendsMsg.split("navajo://")[1];
-					deps.add(new ExtendDependency(ExtendDependency.getScriptTimeStamp(entityName),entityName ));
+				    String ext = extendsMsg.substring(9);
+		            String[] superEntities = ext.split(",");
+		            for (String superEntity : superEntities) {
+		                if (superEntity.indexOf('?') > 0) {
+		                    superEntity = superEntity.split("\\?")[0];
+		                }
+		                deps.add(new ExtendDependency(ExtendDependency.getScriptTimeStamp(superEntity),superEntity ));
+		            }
 				}
+					
 				
 			}
 			if (scopeMsg != null) {
@@ -2517,14 +2508,46 @@ public class TslCompiler {
 	public String debugNode(int ident, Element n) throws Exception {
 		StringBuffer result = new StringBuffer();
 		String value = n.getAttribute("value");
-		result.append(printIdent(ident)
+		String condition = n.getAttribute("condition");
+        if (condition.equals("")) {
+            result.append(printIdent(ident) + "if (true) {");
+        } else {
+            result.append(printIdent(ident)
+                    + "if (Condition.evaluate("
+                    + replaceQuotes(condition)
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
+        }
+        
+		result.append(printIdent(ident + 2)
 				+ "op = Expression.evaluate("
 				+ replaceQuotes(value)
 				+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
-		result.append(printIdent(ident)
-				+ "Access.writeToConsole(access, \"DEBUG: \" + op.value );\n");
+		result.append(printIdent(ident + 2) + "Access.writeToConsole(access, \"DEBUG: \" + op.value );\n");
+		result.append(printIdent(ident) + "}\n");
 		return result.toString();
 	}
+	
+	public String logNode(int ident, Element n) throws Exception {
+        StringBuffer result = new StringBuffer();
+        String value = n.getAttribute("value");
+        String condition = n.getAttribute("condition");
+        if (condition.equals("")) {
+            result.append(printIdent(ident) + "if (true) {");
+        } else {
+            result.append(printIdent(ident)
+                    + "if (Condition.evaluate("
+                    + replaceQuotes(condition)
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
+        }
+        
+        result.append(printIdent(ident + 2)
+                + "op = Expression.evaluate("
+                + replaceQuotes(value)
+                + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
+        result.append(printIdent(ident + 2) + "writeToLog( op.value + \"\");\n");
+        result.append(printIdent(ident) + "}\n");
+        return result.toString();
+    }
 
 	public String requestNode(int ident, Element n) throws Exception {
 		StringBuffer result = new StringBuffer();
@@ -3061,6 +3084,8 @@ public class TslCompiler {
 			result.append(operationsNode(ident, (Element) n));
 		} else if (n.getNodeName().equals("debug")) {
 			result.append(debugNode(ident, (Element) n));
+		 } else if (n.getNodeName().equals("log")) {
+	            result.append(logNode(ident, (Element) n));
 		} else if (n.getNodeName().equals("break")) {
 			result.append(breakNode(ident, (Element) n));
 		} else if ( n.getNodeName().equals("synchronized")) {
@@ -3069,6 +3094,7 @@ public class TslCompiler {
 
 			String context = elt.getAttribute("context");
 			String key = elt.getAttribute("key");
+			String breakOnNoLock = elt.getAttribute("breakOnNoLock");
 			String keyValue = "null";
 			if ( key != null && !key.equals("") ) {
 			  keyValue=	"(\"\" + Expression.evaluate(\"" 
@@ -3090,29 +3116,30 @@ public class TslCompiler {
 			String methodName = "execute_sub" + (methodCounter++);
 			result.append(printIdent(ident) + "if (!kill) { " + methodName
 					+ "(access); }\n");
-
 			
 			methodBuffer.append(printIdent(ident) + "private final void "
 					+ methodName + "(Access access) throws Exception {\n\n");
 			ident += 2;
 			methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
-			
+	        ident += 2;
+
 			String lock = "Lock l = getLock(" + ( user ? "access.rpcUser" : null) + "," + ( service ? "access.rpcName" : "null" )+ 
 					"," + keyValue + ");\n";
+			methodBuffer.append(printIdent(ident) + lock);
 			
-			String tryLock = null;
 			boolean useTrylock = false;
 			if ( "".equals(timeout)) {
 				useTrylock = false;
-				tryLock = "l.lock(); try {\n";
+				methodBuffer.append(printIdent(ident) + "l.lock();\n");
+				methodBuffer.append(printIdent(ident) + "try {\n");
 			} else {
 				useTrylock = true;
-				tryLock = "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n" + "try {\n";
+				methodBuffer.append(printIdent(ident) + "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n");
+				ident += 2;
+				methodBuffer.append(printIdent(ident) + "try {\n");
+				
 			}
-			
-			methodBuffer.append(printIdent(ident) + lock);
-			methodBuffer.append(printIdent(ident) + tryLock);
-			
+			methodBuffer.append(printIdent(ident + 4) + "acquiredLock(l);\n");
 			NodeList children = n.getChildNodes();
 			for (int i = 0; i < children.getLength(); i++) {
 				if (children.item(i) instanceof Element) {
@@ -3120,14 +3147,25 @@ public class TslCompiler {
 				}
 			}
 			
-			ident -= 2;
 			methodBuffer.append(printIdent(ident) + "} finally {\n");
-            methodBuffer.append(printIdent(ident) +"releaseLock(l);\n");
+            methodBuffer.append(printIdent(ident + 2) +"releaseLock(l);\n");
             methodBuffer.append(printIdent(ident) +"}\n");
+            
 			if ( useTrylock ) {
-				methodBuffer.append(printIdent(ident) + "} else { Access.writeToConsole(access, \"No lock was obtained! \"); }\n");
+			    ident -= 2;
+				methodBuffer.append(printIdent(ident) + "} else {");
+				if ("true".equals(breakOnNoLock)) {
+				    methodBuffer.append(printIdent(ident + 2) + "throw new UserException(-1, \"Failed to aquire lock\");\n");
+				    methodBuffer.append(printIdent(ident) + "}\n");
+				} else {
+				    methodBuffer.append(printIdent(ident) + "Access.writeToConsole(access, \"No lock was obtained! \");\n");
+				    methodBuffer.append(printIdent(ident) + "}\n");
+				}
+				
 			}
+			ident -= 2;
 			methodBuffer.append(printIdent(ident) +"}\n");
+			ident -= 2;
 			methodBuffer.append(printIdent(ident) +"}\n");
 
 			methodClipboard.add(methodBuffer);
@@ -3955,93 +3993,6 @@ public class TslCompiler {
 
 		return hostname;
 
-	}
-
-	public static void main(String[] args) throws Exception {
-		NavajoIOConfig config = new LegacyNavajoIOConfig();
-		System.err.println("today = " + new java.util.Date());
-		final String configPath = config.getConfigPath();
-
-		if (args.length == 0) {
-			System.out
-					.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler <scriptDir> <compiledDir> [-all | scriptName]");
-			System.err
-					.println("NOTE: Startupswitch for extra class path (eg for adding an adaper jar) has not been implemented yet");
-			System.exit(1);
-		}
-
-		boolean all = args[2].equals("-all");
-		if (all) {
-			System.err.println("SCRIPT DIR = " + args[0]);
-		} else {
-			System.err.println("SERVICE = " + args[2]);
-		}
-
-		String input = args[0];
-		String output = args[1];
-		// String service = args[2];
-
-		if (all) {
-			File scriptDir = new File(input);
-			File outDir = new File(output);
-			compileDirectory(scriptDir, outDir, "", null, configPath, "knvb");
-		}
-	}
-
-	public void initJavaCompiler(String outputPath, ArrayList classpath,
-			Class javaCompilerClass) {
-		StringBuffer cpbuffer = new StringBuffer();
-		if (classpath != null) {
-			for (int i = 0; i < classpath.size(); i++) {
-				cpbuffer.append(classpath.get(i));
-				if (i < classpath.size() - 1) {
-					cpbuffer.append(System.getProperty("path.separator"));
-				}
-			}
-		}
-		compiler = new EclipseCompiler();
-		compiler.setClasspath(cpbuffer.toString());
-		compiler.setOutputDir(outputPath);
-		compiler.setClassDebugInfo(true);
-		compiler.setEncoding("UTF8");
-		compiler.setMsgOutput(System.out);
-		compiler.setCompilerClass(javaCompilerClass);
-
-	}
-
-	public void compileAllTslToJava(ArrayList elements) throws Exception {
-		removeDuplicates(elements);
-
-		compiler.compile(elements);
-	}
-
-	public void compileAllTslToJava(ArrayList elements, Class compilerClass)
-			throws Exception {
-		removeDuplicates(elements);
-
-		compiler.compile(elements);
-	}
-
-	public void setCompileClassLoader(ClassLoader cl) {
-		if (compiler != null) {
-			compiler.setCompileClassLoader(cl);
-		} else {
-			System.err.println("Warning: No java compiler present!");
-		}
-	}
-
-	private void removeDuplicates(ArrayList elements) {
-		for (int i = elements.size() - 1; i >= 0; i--) {
-			String element = (String) elements.get(i);
-			File f = new File(element);
-			if (!f.exists()) {
-				elements.remove(i);
-				continue;
-			}
-			if (f.length() == 0) {
-				elements.remove(i);
-			}
-		}
 	}
 
 }

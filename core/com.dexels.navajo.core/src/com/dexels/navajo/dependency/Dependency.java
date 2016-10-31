@@ -110,6 +110,32 @@ public class Dependency {
     public String toString() {
         return getScript() + " - " + getDependee();
     }
+    @Override
+    public boolean equals(Object object) {    
+        if (!(object instanceof Dependency)) {
+            return false;
+        }
+        Dependency otherDep = (Dependency) object;
+
+        if (!scriptFile.equals(otherDep.scriptFile)) {
+            return false;
+        }
+        if (!dependeeFile.equals(otherDep.dependeeFile)) {
+            return false;
+        }
+        if (type != otherDep.type) {
+            return false;
+        }
+        if (linenr != otherDep.linenr) {
+            return false;
+        }
+        if (isBroken != otherDep.isBroken) {
+            return false;
+        }
+        
+        
+        return true;
+    }
 
     public boolean isTentantSpecificDependee() {
         return tenantFromScriptPath(getDependee()) != null;

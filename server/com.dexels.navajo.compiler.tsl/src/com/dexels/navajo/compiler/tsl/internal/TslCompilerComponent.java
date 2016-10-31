@@ -1,5 +1,15 @@
 package com.dexels.navajo.compiler.tsl.internal;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,32 +17,35 @@ import com.dexels.navajo.compiler.ScriptCompiler;
 import com.dexels.navajo.compiler.tsl.custom.PackageListener;
 import com.dexels.navajo.compiler.tsl.custom.PackageReportingClassLoader;
 import com.dexels.navajo.document.ExpressionEvaluator;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
+import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
+import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;
+import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
+import com.dexels.navajo.script.api.CompiledScriptFactory;
+import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class TslCompilerComponent extends ScriptCompiler {
-
     private static String SCRIPT_EXTENSION = ".xml";
-    
+
+    private NavajoIOConfig navajoIOConfig = null;
     private ClassLoader classLoader = null;
     private final static Logger logger = LoggerFactory.getLogger(TslCompilerComponent.class);
     private TslCompiler compiler;
     String[] standardPackages = new String[] { "com.dexels.navajo.document", "com.dexels.navajo.document.types",
             "com.dexels.navajo.script.api", "com.dexels.navajo.server", "com.dexels.navajo.mapping",
-            "com.dexels.navajo.server.enterprise.tribe", "com.dexels.navajo.mapping.compiler.meta",
-            "com.dexels.navajo.parser", "com.dexels.navajo.loader", "org.osgi.framework",
-            "com.dexels.navajo.entity;resolution:=optional", "com.dexels.navajo.entity.impl;resolution:=optional",
-            "com.dexels.navajo.server.resource;resolution:=optional" };
+            "com.dexels.navajo.server.enterprise.tribe", "com.dexels.navajo.mapping.compiler.meta", "com.dexels.navajo.parser",
+            "com.dexels.navajo.loader", "org.osgi.framework", "com.dexels.navajo.entity;resolution:=optional",
+            "com.dexels.navajo.entity.impl;resolution:=optional", "com.dexels.navajo.server.resource;resolution:=optional" };
+    private ExpressionEvaluator expressionEvaluator;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String
-     * )
-     */
+    /* (non-Javadoc)
+     * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String ) */
 
-    protected void compileScript(String scriptPath, String compileDate, String tenant, boolean hasTenantSpecificFile,
+     protected void compileScript((String scriptPath, List<Dependency> dependencies, String tenant, boolean hasTenantSpecificFile,
             boolean forceTenant) throws Exception {
         String packagePath = null;
         String script = null;
@@ -43,21 +56,38 @@ public class TslCompilerComponent extends ScriptCompiler {
             packagePath = "";
             script = scriptPath;
         }
-
+        final Set<String> packages = new HashSet<String>();
         for (String pkg : standardPackages) {
             packages.add(pkg);
         }
-
         PackageReportingClassLoader prc = new PackageReportingClassLoader(classLoader);
         prc.addPackageListener(new PackageListener() {
+
             @Override
             public void packageFound(String name) {
                 packages.add(name);
             }
         });
+        String scriptPackage = packagePath;
+        // if("".equals(packagePath)) {
+        // scriptPackage = "defaultPackage";
+        // }
+        String scriptString = null;
+        if ("".equals(scriptPackage)) {
+            scriptString = script.replaceAll("_", "|");
+            if (forceTenant) {
+                scriptString = (script + "_" + tenant).replaceAll("_", "|");
+            }
+        } else {
+            scriptString = packagePath + "/" + script.replaceAll("_", "|");
+            if (forceTenant) {
+                scriptString = packagePath + "/" + (script + "_" + tenant).replaceAll("_", "|");
+            }
+        }
 
-        compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(),
-                packagePath, null, prc, navajoIOConfig, dependencies, tenant, hasTenantSpecificFile, forceTenant);
+        compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath,
+                scriptPackage, prc, navajoIOConfig, dependencies, tenant, hasTenantSpecificFile, forceTenant);
+        Set<String> dependentResources = new HashSet<String>();
     }
 
     public void setClassLoader(ClassLoader cls) {

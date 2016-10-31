@@ -1,7 +1,10 @@
 package com.dexels.navajo.document;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -66,6 +69,7 @@ public interface Header extends java.io.Serializable {
      * Get the password of the user (RPC password) from a Navajo message.
      */
     public String getRPCPassword();
+
 
     /**
      * Get the internal representation of the Header object.
@@ -203,5 +207,15 @@ public interface Header extends java.io.Serializable {
 	public void write(OutputStream err) throws NavajoException;
 
 	public Header copy(Navajo n);
+
+	/**
+	 * Write the whole object to a Writer
+	 * @param sw
+	 * @param indent
+	 * @throws IOException
+	 */
+	public void printElement(final Writer sw, int indent) throws IOException;
+
+
 
 }

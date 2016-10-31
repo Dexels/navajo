@@ -21,7 +21,7 @@ public class TmlWriteConnector extends TipiBaseConnector {
 			.getLogger(TmlWriteConnector.class);
 	// assume a load:
 	@Override
-	public Navajo doTransaction(Navajo input, String service)
+	public Navajo doTransaction(Navajo input, String service, Integer retries)
 			throws TipiBreakException, TipiException {
 		throw new TipiException("Please supply a service and a destination.");
 	}

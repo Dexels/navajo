@@ -1,7 +1,6 @@
 package com.dexels.navajo.adapter;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,9 +68,9 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	public AttachementMap attachment = null;
 	private Integer port = null;
 	private boolean debug;
-
-	
-
+	private String failure = "";
+	public boolean ignoreFailures = false;
+	private boolean sent = false;
 
 	public CommonsMailMap() {}
 	
@@ -119,6 +118,15 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 		return email;
 	}
 	
+	// Use from navascript
+	public void setDoSend(boolean ignore) throws UserException {
+	    if (sent) {
+	        logger.warn("Do no reuse mailmap for multiple separate e-mails!");
+	    }
+	    sendMail();
+	    sent = true;
+	}
+	
 	/**
 	 * This is where the actual mail is constructed and send
 	 * Inline images can be used through attachments
@@ -131,8 +139,15 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	 * @throws UserException
 	 */
 	public void sendMail() throws UserException {
+		final ClassLoader current = Thread.currentThread().getContextClassLoader();
+//		CommandMap.getDefaultCommandMap();
 		try {
-			logger.info("Sending mail to: "+to+" subject: "+subject);
+//			Thread.currentThread().setContextClassLoader( CommandMap.class.getClassLoader() );
+			 Thread.currentThread().setContextClassLoader(javax.mail.Session.class.getClassLoader());
+
+//			DataContentHandler dch=CommandMap.getDefaultCommandMap().createDataContentHandler("text/multipart");
+			
+//			logger.info("Sending mail to: "+to+" subject: "+subject+ " with handler: "+dch);
 			// Create the email message and fill the basics
 			HtmlEmail email = getNewHtmlEmail();
 			if(debug) {
@@ -160,7 +175,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 					}
 					File fl = new File(fileName);
 					URL url = fl.toURI().toURL();
-					logger.info("Using url: "+url);
+					logger.debug("Using url: "+url);
 					if (contentDisposition != null && contentDisposition.equalsIgnoreCase("Inline")) {
 					    // embed the image and get the content id
 					    inlineImages.add(email.embed(url, userFileName));
@@ -171,28 +186,32 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 			} else {
 				logger.info("No attachments");
 			}
-		logger.info("Setting body, before replace: "+bodyText);
+		  logger.debug("Setting body, before replace: "+bodyText);
 		  
 		  // Replace any inline image tags with the created ones
 		  bodyText = replaceInlineImageTags(bodyText, inlineImages);
 		  // Finally set the complete html
-		  logger.info("Setting body: "+bodyText);
+		  logger.debug("Setting body: "+bodyText);
 		  email.setHtmlMsg(bodyText);
 		  
 
 		  // set the alternative message
 		  email.setTextMsg(this.getNonHtmlText());
-			logger.info("Sending mail to "+to+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
+			logger.debug("Sending mail to "+to+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
 
 		  // send the email
 		  email.send();
-		} catch (MalformedURLException e) {
-			AuditLog.log("CommonsMailMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
-			throw new UserException(-1, e.getMessage(), e);
-		} catch (EmailException e) {
-			AuditLog.log("CommonsMailMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
-			throw new UserException(-1, e.getMessage(), e);
-		}
+    	} catch (Exception e) {
+            if (ignoreFailures) {
+                AuditLog.log("CommonsMailMap", e.getMessage(),e, Level.WARNING, myAccess.accessID);
+                failure = e.getMessage();
+            } else {
+                AuditLog.log("CommonsMailMap", e.getMessage(),e, Level.SEVERE, myAccess.accessID);
+                throw new UserException(-1, e.getMessage(), e);
+            }
+    	} finally {
+    		Thread.currentThread().setContextClassLoader( current );
+    	}
 	}
 	
 	/**
@@ -340,13 +359,16 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 
 	@Override
 	public void store() throws MappableException, UserException {
+	    if (sent) {
+	        return;
+	    }
 		if (!queuedSend) {
 			sendMail();
 		} else {
 			try {
 				RequestResponseQueueFactory.getInstance().send(this, 100);
 			} catch (Exception e) {
-				AuditLog.log("CommonsMailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
+				AuditLog.log("CommonsMailMap", e.getMessage(), e,Level.WARNING, myAccess.accessID);
 				logger.error("Error: sending request (?)",e);
 			}
 		}
@@ -363,7 +385,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 			sendMail();
 		} catch (Exception e) {
 			if (myAccess != null) {
-				AuditLog.log("CommonsMailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
+				AuditLog.log("CommonsMailMap", e.getMessage(),e, Level.WARNING, myAccess.accessID);
 				myAccess.setException(e);
 			}
 			return false;
@@ -602,4 +624,16 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	public boolean getDebug() {
 		return this.debug;
 	}
+	
+	public String getFailure() {
+        return failure;
+    }
+
+	public boolean getIgnoreFailures() {
+        return ignoreFailures;
+    }
+	
+	public void setIgnoreFailures(boolean b) {
+        ignoreFailures = b;
+    }
 }

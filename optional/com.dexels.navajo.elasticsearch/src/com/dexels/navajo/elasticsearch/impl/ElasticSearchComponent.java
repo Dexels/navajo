@@ -6,8 +6,12 @@ import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -16,7 +20,6 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
@@ -32,8 +35,7 @@ import com.dexels.navajo.elasticsearch.ElasticSearchService;
 
 public class ElasticSearchComponent implements ElasticSearchService {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(ElasticSearchComponent.class);
+	private final static Logger logger = LoggerFactory.getLogger(ElasticSearchComponent.class);
 	
 	private CloseableHttpClient httpclient;
 
@@ -48,6 +50,8 @@ public class ElasticSearchComponent implements ElasticSearchService {
 	public void activate(Map<String,Object> settings) {
 	     df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	    
+	     
+	     
 		logger.info("Activating elasticsearch");
 		httpclient = HttpClients.createDefault();
 		this.url = (String)settings.get("url");
@@ -69,16 +73,29 @@ public class ElasticSearchComponent implements ElasticSearchService {
 		}
 
 	}
+	
 	@Override
 	public void insert(Message m) throws IOException {
 		ObjectNode mm = (ObjectNode) messageToJSON(m);
+		String id = m.getProperty(this.id_property).getValue();
 		try {
-			putJSON(mm);
+			putJSON(id,mm);
 		} catch (URISyntaxException e) {
 			throw new IOException("Error putting to URI",e);
 		}
 	}
-	
+	@Override
+    public void insertJson(String jsonString) throws IOException {
+        ObjectNode mm =  (ObjectNode)  objectMapper.readTree(jsonString);
+		String id = mm.get(this.id_property).asText();
+
+        mm.put("@timestamp", df.format(new Date()));
+        try {
+            putJSON(id,mm);
+        } catch (URISyntaxException e) {
+            throw new IOException("Error putting to URI",e);
+        }
+    }
 
 
 	public JsonNode messageToJSON(Message message) {
@@ -97,7 +114,9 @@ public class ElasticSearchComponent implements ElasticSearchService {
 			}
 			List<Property> properties = message.getAllProperties();
 			for (Property property : properties) {
-				setPropertyValue(an,property,objectMapper);
+				if(!property.getName().equals(id_property)) {
+					setPropertyValue(an,property,objectMapper);
+				}
 			}
 			
 			an.put("@timestamp", df.format(new Date()));
@@ -128,20 +147,45 @@ public class ElasticSearchComponent implements ElasticSearchService {
 	}
 
 	
-	private void putJSON(ObjectNode node) throws ClientProtocolException, IOException, URISyntaxException {
-		String id = node.get(this.id_property).asText();
-		HttpPut httpPut = new HttpPut(assembleURI(id));
+	private void putJSON(String id, ObjectNode node) throws ClientProtocolException, IOException, URISyntaxException {
+	    replaceDots(node);
 		byte[] requestBytes = objectMapper.writer().withDefaultPrettyPrinter().writeValueAsBytes(node);
-		System.err.println("Request: \n"+new String(requestBytes));
+//		String id = node.get(this.id_property).asText();
+		HttpPut httpPut = new HttpPut(assembleURI(id));
 		HttpEntity he = new ByteArrayEntity(requestBytes);
+		System.err.println("Request:\n"+new String(requestBytes));
 		httpPut.setEntity(he);
 		CloseableHttpResponse response1 = httpclient.execute(httpPut);
-		HttpEntity respe = response1.getEntity();
-		String result = EntityUtils.toString(respe);
-		System.err.println("Response: " + result);
+		//HttpEntity respe = response1.getEntity();
+		//EntityUtils.toString(respe);
 		// response1.getEntity().getContent()
 		response1.close();
 	}
+	
+	 private void replaceDots(ObjectNode mm) {
+	        Iterator<Entry<String, JsonNode>> it = mm.getFields();
+	        Set<String> fieldsWithDots = new HashSet<>();
+	        Set<String> nestedFields = new HashSet<>();
+	        
+	        while (it.hasNext()) {
+	            Entry<String, JsonNode> entry = it.next();
+	            if (entry.getValue().size() > 0)  {
+	                nestedFields.add(entry.getKey());
+	            }
+	            if (entry.getKey().contains(".")) {
+	                fieldsWithDots.add(entry.getKey());
+	            }
+	        }
+	        for (String key : nestedFields) {
+	            replaceDots((ObjectNode) mm.get(key));
+	        }
+	        for (String key : fieldsWithDots) {
+	            String newKey = key.replace(".", "_");
+	            JsonNode value = mm.get(key);
+	            mm.put(newKey, value);
+	            mm.remove(key);
+	        }
+	    }
 
 	private URI assembleURI(String id) throws URISyntaxException {
 		StringBuilder sb = new StringBuilder(url);
@@ -157,7 +201,6 @@ public class ElasticSearchComponent implements ElasticSearchService {
 			sb.append("/");
 		}
 		sb.append(id);
-		System.err.println("URI: "+sb.toString());
 		return new URI(sb.toString());
 	}
 

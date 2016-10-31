@@ -1,9 +1,10 @@
 package com.dexels.navajo.document;
 
-import java.beans.*;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -352,6 +353,8 @@ public interface Message
    */
   public Property getPathProperty(String property);
 
+  public String getPath();
+
   /**
    * Return a property with a specific name if it exists. Property name may include references to sub-messages.
    * Example: getProperty("mymessage/sub1/subsub/propy").
@@ -570,6 +573,18 @@ public interface Message
 	 */
 	public Map<String, Object> getValueMap();
 
+	/**
+	 * Write the whole object to a Writer
+	 * @param sw
+	 * @param indent
+	 * @throws IOException
+	 */
+	public void printElement(final Writer sw, int indent) throws IOException;
 
+	public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) throws IOException ;
+	public void printBody(final Writer sw, int indent) throws IOException;
+	public void printCloseTag(final Writer sw, int indent) throws IOException;
+
+    boolean messageEquals(Object obj);
 
 }

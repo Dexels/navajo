@@ -120,8 +120,13 @@ public class TestEntity {
     public void testMatchKeyByPropertySet1() throws Exception {
         NavajoFactory f = NavajoFactory.getInstance();
         Navajo p_n = f.createNavajo();
+        Message m = f.createMessage(p_n, "MyEntity");
+        Property p = f.createProperty(p_n, "MatchId", Property.INTEGER_PROPERTY, "100", 0, "", "");
+        m.addProperty(p);
+        p_n.addMessage(m);
+        
         HashSet<Property> matchingProperties = new HashSet<Property>();
-        matchingProperties.add(f.createProperty(p_n, "MatchId", Property.INTEGER_PROPERTY, "100", 0, "", ""));
+        matchingProperties.add(p);
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
         Key k = e.getKey(matchingProperties);
@@ -134,8 +139,13 @@ public class TestEntity {
     public void testMatchKeyByPropertySet2() throws Exception {
         NavajoFactory f = NavajoFactory.getInstance();
         Navajo p_n = f.createNavajo();
+        Message m = f.createMessage(p_n, "MyEntity");
+        Property p = f.createProperty(p_n, "MatchId", Property.STRING_PROPERTY, "", 0, "", "");
+        m.addProperty(p);
+        p_n.addMessage(m);
+        
         HashSet<Property> matchingProperties = new HashSet<Property>();
-        matchingProperties.add(f.createProperty(p_n, "MatchId", Property.STRING_PROPERTY, "", 0, "", ""));
+        matchingProperties.add(p);
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
         Key k = e.getKey(matchingProperties);
@@ -146,9 +156,16 @@ public class TestEntity {
     public void testMatchKeyByPropertySet3() throws Exception {
         NavajoFactory f = NavajoFactory.getInstance();
         Navajo p_n = f.createNavajo();
+        Message m = f.createMessage(p_n, "MyEntity");
+        Property p1 = f.createProperty(p_n, "MatchId", Property.INTEGER_PROPERTY, "100", 0, "", "");
+        m.addProperty(p1);
+        Property p2 = f.createProperty(p_n, "Irrelevant", Property.INTEGER_PROPERTY, "5", 0, "", "");
+        m.addProperty(p2);
+        p_n.addMessage(m);
+        
         HashSet<Property> matchingProperties = new HashSet<Property>();
-        matchingProperties.add(f.createProperty(p_n, "MatchId", Property.INTEGER_PROPERTY, "100", 0, "", ""));
-        matchingProperties.add(f.createProperty(p_n, "Irrelevant", Property.INTEGER_PROPERTY, "5", 0, "", ""));
+        matchingProperties.add(p1);
+        matchingProperties.add(p2);
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
         Key k = e.getKey(matchingProperties);
@@ -160,8 +177,13 @@ public class TestEntity {
     public void testMatchKeyByPropertySet4() throws Exception {
         NavajoFactory f = NavajoFactory.getInstance();
         Navajo p_n = f.createNavajo();
+        Message m = f.createMessage(p_n, "MyEntity");
+        Property p = f.createProperty(p_n, "_id", Property.STRING_PROPERTY, "12", 0, "", "");
+        m.addProperty(p);
+        p_n.addMessage(m);
+        
         HashSet<Property> matchingProperties = new HashSet<Property>();
-        matchingProperties.add(f.createProperty(p_n, "_id", Property.STRING_PROPERTY, "12", 0, "", ""));
+        matchingProperties.add(p);
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
         Key k = e.getKey(matchingProperties);
@@ -174,10 +196,19 @@ public class TestEntity {
     public void testMatchKeyByPropertySet5() throws Exception {
         NavajoFactory f = NavajoFactory.getInstance();
         Navajo p_n = f.createNavajo();
+        Message m = f.createMessage(p_n, "MyEntity");
+        Property p1 = f.createProperty(p_n, "SeasonId", Property.STRING_PROPERTY, "1", 0, "", "");
+        Property p2 = f.createProperty(p_n, "ExternalMatchId", Property.STRING_PROPERTY, "2", 0, "", "");
+        Property p3 = f.createProperty(p_n, "OrganizingDistrictId", Property.STRING_PROPERTY, "3", 0, "", "");
+        m.addProperty(p1);
+        m.addProperty(p2);
+        m.addProperty(p3);
+        p_n.addMessage(m);
+        
         HashSet<Property> matchingProperties = new HashSet<Property>();
-        matchingProperties.add(f.createProperty(p_n, "SeasonId", Property.STRING_PROPERTY, "1", 0, "", ""));
-        matchingProperties.add(f.createProperty(p_n, "ExternalMatchId", Property.STRING_PROPERTY, "2", 0, "", ""));
-        matchingProperties.add(f.createProperty(p_n, "OrganizingDistrictId", Property.STRING_PROPERTY, "3", 0, "", ""));
+        matchingProperties.add(p1);
+        matchingProperties.add(p2);
+        matchingProperties.add(p3);
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
         Key k = e.getKey(matchingProperties);

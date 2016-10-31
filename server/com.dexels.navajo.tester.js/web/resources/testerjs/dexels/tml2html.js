@@ -256,7 +256,14 @@ function processProperty(property) {
 
         propertyString += '>' +  propvalue + '</textarea>';
     } else {
-        propertyString += '<input type="'+htmltype+'" value="'+escapeHTML(propvalue)+'" tmltype="'+proptype+'" ';
+    	
+		
+        propertyString += '<input type="'+htmltype+'" ';
+        if (typeof propvalue !== 'undefined') {
+        	propertyString += 'value="'+escapeHTML(propvalue)+'" ';
+        }
+        propertyString += 'tmltype="'+proptype+'" ';
+        
         if (htmltype === 'checkbox' && propvalue === "true" ) {
             propertyString += 'checked="checked"';
         }
@@ -281,7 +288,7 @@ function processProperty(property) {
 
 function escapeHTML(s) {
     if (typeof s === 'undefined') {
-        return s
+        return ;
     }
     return s.replace(/[&"<>]/g, function (c) {
         return {

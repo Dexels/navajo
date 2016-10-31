@@ -124,7 +124,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 			try {
 				RequestResponseQueueFactory.getInstance().send(this, 100);
 			} catch (Exception e) {
-				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+				AuditLog.log("MailMap", e.getMessage(),e, Level.WARNING,
 						myAccess.accessID);
 			}
 		}
@@ -137,7 +137,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 			sendMail();
 		} catch (Exception e) {
 			if (myAccess != null) {
-				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+				AuditLog.log("MailMap", e.getMessage(),e, Level.WARNING,
 						myAccess.accessID);
 				myAccess.setException(e);
 			}
@@ -313,11 +313,11 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 
 		} catch (Exception e) {
 			if (ignoreFailures) {
-				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+				AuditLog.log("MailMap", e.getMessage(),e, Level.WARNING,
 						myAccess.accessID);
 				failure = e.getMessage();
 			} else {
-				AuditLog.log("MailMap", e.getMessage(), Level.SEVERE,
+				AuditLog.log("MailMap", e.getMessage(),e, Level.SEVERE,
 						myAccess.accessID);
 				throw new UserException(-1, e.getMessage());
 			}

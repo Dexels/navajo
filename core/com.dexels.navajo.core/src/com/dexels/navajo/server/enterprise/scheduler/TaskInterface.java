@@ -3,19 +3,17 @@ package com.dexels.navajo.server.enterprise.scheduler;
 import java.io.Serializable;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.script.api.UserException;
 
 public interface TaskInterface extends Serializable, TaskMXBean {
 
-	public TaskInterface getInstance();
-	public void setNavajo(Navajo n);
 	@Override
 	public String getId();
+	public TaskInterface setNavajo(Navajo n);
 	public void setKeepRequestResponse(boolean keepRequestResponse);
 	public void setPersisted(boolean b);
 	public void runTask();
-	public void setTrigger(TriggerInterface trigger);
-	public void setTrigger(String s) throws UserException;
+	public TaskInterface setTrigger(TriggerInterface trigger);
+	public TaskInterface setTrigger(String s) throws TriggerException;
 	public TriggerInterface getTrigger();
 	public String getWorkflowId();
 	public String getWorkflowDefinition();
@@ -23,6 +21,6 @@ public interface TaskInterface extends Serializable, TaskMXBean {
 	public void setForceSync(boolean b);
 	public boolean isProxy();
 	public String getOwner();
-	public void setTenant(String tenant);
+	public TaskInterface setTenant(String tenant);
 	public String getTenant();	
 }

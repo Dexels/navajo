@@ -12,6 +12,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import com.dexels.navajo.document.PropertyTypeChecker;
 import com.dexels.navajo.document.PropertyTypeException;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.BinaryDigest;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.NavajoExpression;
@@ -101,6 +103,13 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	            return new SimpleDateFormat( Property.DATE_FORMAT3 );
 	        }
 	}; 
+	private final static ThreadLocal<SimpleDateFormat> timestampFormat = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+           protected SimpleDateFormat initialValue()
+           {
+               return new SimpleDateFormat( Property.TIMESTAMP_FORMAT );
+           }
+   }; 
 	//SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
 	
 	protected final ArrayList<BaseSelectionImpl> selectionList = new ArrayList<BaseSelectionImpl>() {
@@ -426,10 +435,16 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			setValue((Boolean) o, internal);
 			return;
 		}
-		if (o instanceof ArrayList) {
-			setValue((ArrayList<?>) o);
+		if (o instanceof List) {
+			setValue((List<?>) o);
 			return;
 		}		
+		if (o instanceof BinaryDigest) {
+			setValue(((BinaryDigest) o).hex());
+			setType(Property.BINARY_DIGEST_PROPERTY);
+			return;
+		}		
+
 		if (o instanceof String) {
 			if(!isStringType(getType())) {
 				setType(Property.STRING_PROPERTY);
@@ -450,6 +465,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		if(list.isEmpty()) {
 			// tricky. Will assume it is a selection property, for backward compatibility.
 			setSelectionList(list);
+			setListProperty(list);
 			return;
 		}
 		
@@ -466,9 +482,22 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		setListProperty(list);
 		
 	}
+	
+	@Override
+	public boolean propertyEquals(Object p) {
+	    if (p == null) {
+	        return false;
+	    }
+	    if (!(p instanceof Property)) {
+	        return false;
+	    }
+	    Property otherProperty = (Property) p;
+	    return isEqual(otherProperty);
+	}
 
 	private void setListProperty(List<?> list) {
 		tipiProperty = list;
+		myValue = list.toString();
 		setType(Property.LIST_PROPERTY);
 	}
 
@@ -678,37 +707,47 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			} catch (Exception e) {
 				logger.error("Error: ", e);
 			}
-		}
+        } else if (getType().equals(Property.DATE_PROPERTY) || getType().equals(Property.TIMESTAMP_PROPERTY)) {
+            if (getValue() == null || getValue().equals("")) {
+                return null;
+            }
+            // Try in order from most specific to least specific
+            try {
+                Date d = timestampFormat.get().parse(getValue());
+                return d;
+            } catch (Exception ex) {
+                try {
+                    Date d = dateFormat4.get().parse(getValue());
+                    return d;
+                } catch (Exception ex2) {
+                    try {
+                        Date d = dateFormat1.get().parse(getValue());
+                        return d;
+                    } catch (Exception ex3) {
 
-		else if (getType().equals(Property.DATE_PROPERTY)) {
-			if (getValue() == null || getValue().equals("")) {
-				return null;
-			}
-
-			try {
-				Date d = dateFormat1.get().parse(getValue());
-				return d;
-			} catch (Exception ex) {
-				try {
-					Date d = dateFormat4.get().parse(getValue());
-					return d;
-				} catch (Exception ex2) {
-					try {
-						Date d = dateFormat2.get().parse(getValue());
-						return d;
-					} catch (Exception ex3) {
-						try {
-							Long l = Long.parseLong(getValue());
-							Date d = new java.util.Date();
-							d.setTime(l);
-							return d;
-						} catch (Exception e4) {
-							logger.info("Sorry I really can't parse that date: " + getValue());
-						}
-					}
-				}
-			}
-		} else if (getType().equals(Property.INTEGER_PROPERTY)) {
+                        try {
+                            Date d = dateFormat2.get().parse(getValue());
+                            return d;
+                        } catch (Exception ex4) {
+                            try {
+                                Long l = Long.parseLong(getValue());
+                                Date d = new java.util.Date();
+                                d.setTime(l);
+                                return d;
+                            } catch (Exception e5) {
+                                logger.info("Sorry I really can't parse that date: " + getValue());
+                            }
+                        }
+                    }
+                }
+            }
+            if (getType().equals(TIMESTAMP_PROPERTY)) {
+                // Could not parse, return null
+                // Date property still returns original value -> Dexels/navajo#254
+                return null;
+            }
+            
+        } else if (getType().equals(Property.INTEGER_PROPERTY)) {
 			if (getValue() == null || getValue().equals("")) {
 				return null;
 			}
@@ -757,8 +796,27 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else if (getType().equals(Property.SELECTION_PROPERTY)) {
 			List<Selection> all = getAllSelectedSelections();
 			return all;
-		} else if (getType().equals(Property.TIPI_PROPERTY) || getType().equals(Property.LIST_PROPERTY) ) {
-			return tipiProperty;
+		} else if (getType().equals(Property.TIPI_PROPERTY)) {
+		    return tipiProperty;
+		} else if (getType().equals(Property.LIST_PROPERTY) ) {
+			if (tipiProperty != null || myValue == null) {
+			    return tipiProperty;
+			}
+			try {
+			    if (myValue != null && myValue.indexOf('[') == 0) {
+	                // Parse back into a list
+	                String stripped = myValue.substring(1,  myValue.length() -1);
+	                tipiProperty = Arrays.asList(stripped.split(", "));
+	                return tipiProperty;
+	            } else if (myValue != null &&  myValue.length() > 0) {
+	                logger.info("Failed to parse {} as a list!", myValue);
+	            }
+			} catch (Exception e ) {
+			    logger.warn("Exception on parsing {} as a list!", myValue, e);
+			}
+			return null;
+		} else if (getType().equals(Property.BINARY_DIGEST_PROPERTY) ) {
+			return new BinaryDigest(getValue());
 		}
 
 		return getValue();
@@ -791,7 +849,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		myValue = null;
 		setType(BINARY_PROPERTY);
 		if (b != null) {
-			addSubType("handle=" + b.getHandle());
+//			addSubType("handle=" + b.getHandle());     // Disabled to allow generating a hash over the output
 			addSubType("mime=" + b.getMimeType());
 			addSubType("extension=" + b.getExtension());
 		}
@@ -854,10 +912,16 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	private final void setValue(java.util.Date value, Boolean internal) {
 		
 		Object old = getTypedValue();
-		setType(DATE_PROPERTY);
-
+		final ThreadLocal<SimpleDateFormat> formatter;
+		if (type.equals(TIMESTAMP_PROPERTY)) {
+		    formatter = timestampFormat;
+		} else {
+		    setType(DATE_PROPERTY);
+		    formatter = dateFormat1;
+		}
+		
 		if (value != null) {
-			setCheckedValue(dateFormat1.get().format(value));
+			setCheckedValue(formatter.get().format(value));
 		} else {
 			myValue = null;
 		}
@@ -1254,7 +1318,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	@Override
 	public final void setType(String t) {
-		String old = type;
+	    String old = type;
 		type = t;
 		firePropertyChanged(PROPERTY_TYPE, old, type);
 	}
@@ -1900,7 +1964,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			m.put(Property.PROPERTY_BIND, bind);
 		}
 		
-		if ( method != null ) {
+		if ( method != null && !"".equals(method) ) {
 			m.put(Property.PROPERTY_METHOD, method);
 		}
 		

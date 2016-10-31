@@ -33,6 +33,13 @@ public class NavajoTesterServlet extends HttpServlet {
         } else if (query.equals("getfilecontent")) {
             result = helper.getFileContent(request.getParameter("file"));
             response.setContentType("text/plain");
+        } else if (query.equals("getcompiledcontent")) {
+            result = helper.getCompiledScriptContent(request.getParameter("file"));
+            response.setContentType("text/plain");
+        } else if (query.equals("gettenants")) {
+                List<String> files = helper.getSupportedTenants();
+                result = mapper.writeValueAsString(files);
+                response.setContentType("text/json");
         } else {
             logger.warn("Unsupported request: {}", query);
         }

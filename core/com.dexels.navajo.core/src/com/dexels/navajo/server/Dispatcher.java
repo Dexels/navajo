@@ -48,7 +48,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
 import com.dexels.navajo.authentication.api.AAAQuerier;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -64,7 +63,6 @@ import com.dexels.navajo.events.types.ServerReadyEvent;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.mapping.RemoteAsyncAnswer;
 import com.dexels.navajo.mapping.RemoteAsyncRequest;
-import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.ClientInfo;
@@ -82,9 +80,9 @@ import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
+import com.dexels.navajo.server.enterprise.scheduler.TriggerException;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
-import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 import com.dexels.navajo.server.global.GlobalManager;
 import com.dexels.navajo.server.global.GlobalManagerRepository;
 import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
@@ -207,13 +205,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
         // Start NavajoMapManager to register health of foreign (non-tribal)
         // Navajo Server instances.
-        NavajoMapManager.getInstance();
 
         // Startup tribal status collector.
         TribeManagerFactory.startStatusCollector();
-
-        // Startup Jabber
-        JabberWorkerFactory.getJabberWorkerInstance();
 
     }
 
@@ -871,11 +865,14 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 return outMessage;
             }
 
-            // Log request event - create a dummy Access object for it
-            // Later use this accessID for the real access object
             access = new Access(1, 1, rpcUser, rpcName, "", "", "", userCertificate, false, null);
             access.setTenant(instance);
+            access.rpcPwd = rpcPassword;
             access.setInDoc(inMessage);
+           
+            access.setClientDescription(header.getHeaderAttribute("clientdescription"));
+            access.setApplication(header.getHeaderAttribute("application"));
+            access.setOrganization(header.getHeaderAttribute("organization"));
             if (clientInfo != null) {
                 access.ipAddress = clientInfo.getIP();
                 access.hostName = clientInfo.getHost();
@@ -893,20 +890,22 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     if (instance == null) {
                         throw new SystemException(-1, "No tenant set -cannot authenticate!");
                     }
+                    authenticator.process(access);
 
-                    authenticator.process(instance, rpcUser, rpcPassword, rpcName, userCertificate, access);
-                    
-                    
                 } catch (AuthorizationException ex) {
                     outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
                     AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
                             + ", message=" + ex.getMessage(), Level.WARNING);
+                    myException = ex;
+                    access.setExitCode(Access.EXIT_AUTH_EXECPTION);
                     return outMessage;
                 } catch (SystemException se) {
                     logger.error("SystemException on authenticateUser  {} for {}: ", rpcUser, rpcName, se);
                     outMessage = generateErrorMessage(access, se.getMessage(), SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
                     AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + se.getMessage(),
                             Level.WARNING);
+                    myException = se;
+                    access.setExitCode(Access.EXIT_AUTH_EXECPTION);
                     return outMessage;
                 }
             }
@@ -1008,9 +1007,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                             }
                             trf.addTask(ti);
                             outMessage = generateScheduledMessage(inMessage.getHeader(), ti.getId(), false);
-                        } catch (UserException e) {
-                            logger.info("WARNING: Invalid trigger specified for task {}: {}", ti.getId(), inMessage
-                                    .getHeader().getSchedule());
+                        } catch (TriggerException e) {
+                            logger.info("WARNING: Invalid trigger specified for task {}: {}", ti.getId(), inMessage.getHeader().getSchedule());
                             trf.removeTask(ti);
                             outMessage = generateErrorMessage(access, "Could not schedule task:" + e.getMessage(), -1,
                                     -1, e);
@@ -1054,6 +1052,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             outMessage = generateAuthorizationErrorMessage(access, aee, rpcName);
             AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
                     + ", message=" + aee.getMessage() + ")", Level.WARNING);
+            myException = aee;
+            access.setExitCode(Access.EXIT_AUTH_EXECPTION);
             return outMessage;
         } catch (UserException ue) {
             try {
@@ -1164,11 +1164,13 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 }
 
                 // Call after web service event...
-                long a_start = System.currentTimeMillis();
-                afterWebServiceActivated = ( WebserviceListenerFactory.getInstance() != null ? 
-                		WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access) : false);
-                access.setAfterServiceTime((int) (System.currentTimeMillis() - a_start));
-
+                access.setAfterServiceTime(0);
+                if (access.getExitCode() != Access.EXIT_AUTH_EXECPTION) {
+                    long a_start = System.currentTimeMillis();
+                    afterWebServiceActivated = ( WebserviceListenerFactory.getInstance() != null ? 
+                            WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access) : false);
+                    access.setAfterServiceTime((int) (System.currentTimeMillis() - a_start));
+                }
                 // Set access to finished state.
                 access.setFinished();
 
@@ -1201,6 +1203,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
 
     private void generateNavajoRequestEvent(boolean hadException) {
+        if (eventAdmin == null) {
+            // non-OSGi?
+            return;
+        }
         Map<String, Object> properties = new HashMap<String, Object>();
         if (hadException) {
             properties.put("type", "navajoexception");
@@ -1241,11 +1247,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     @Override
     protected void finalize() {
         instances--;
-    }
-
-    @Override
-    public String getServerId() {
-        return TslCompiler.getHostName();
     }
 
     @Override

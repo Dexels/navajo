@@ -77,7 +77,6 @@ public class AjaxEditorDocument extends PlainDocument {
 	}
 
 	public void setFireEvents(boolean fireEvents) {
-		logger.info("Fire: " + fireEvents);
 		this.fireEvents = fireEvents;
 	}
 

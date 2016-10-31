@@ -1,7 +1,6 @@
 package com.dexels.navajo.server.enterprise.scheduler;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.script.api.UserException;
 
 public class DummyTask implements TaskInterface {
 
@@ -12,18 +11,18 @@ public class DummyTask implements TaskInterface {
 	private String tenant;
 	
 
-	@Override
 	public TaskInterface getInstance() {
 		return new DummyTask();
 	}
 
 	@Override
-	public void setNavajo(Navajo n) {
-		
+	public TaskInterface setNavajo(Navajo n) {
+		return this;
 	}
 
 	@Override
-	public void setTrigger(String s) throws UserException {
+	public TaskInterface setTrigger(String s) throws TriggerException {
+		return this;
 		
 	}
 
@@ -75,8 +74,9 @@ public class DummyTask implements TaskInterface {
 	}
 
 	@Override
-	public void setTrigger(TriggerInterface trigger) {
+	public TaskInterface setTrigger(TriggerInterface trigger) {
 		this.trigger = trigger;
+		return this;
 	}
 
 	@Override
@@ -120,8 +120,9 @@ public class DummyTask implements TaskInterface {
 	}
 
 	@Override
-	public void setTenant(String tenant) {
+	public TaskInterface setTenant(String tenant) {
 		this.tenant = tenant;
+		return this;
 	}
 
 	@Override

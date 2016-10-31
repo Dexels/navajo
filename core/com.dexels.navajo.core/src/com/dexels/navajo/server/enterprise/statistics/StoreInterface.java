@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.dexels.navajo.events.types.AuditLogEvent;
 import com.dexels.navajo.events.types.WorkflowEvent;
+import com.dexels.navajo.events.types.WorkflowLog;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.server.statistics.impl.TodoItem;
@@ -61,6 +62,8 @@ public interface StoreInterface {
 
   public void storeWorkflowEvents(final Set<WorkflowEvent> workflowEventSet);
   
+  public void storeWorkflowLogs(final Set<WorkflowLog> copyOfWorkflowLogs);
+
   /**
    * Clean up and consolidate action - to be called after completing inserting statistics data.
    */
@@ -83,4 +86,5 @@ public interface StoreInterface {
   public void initialize();
   
   public void shutdown();
+
 }

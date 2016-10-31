@@ -1,9 +1,10 @@
 package com.dexels.navajo.document.types;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.NavajoFactory;
 
 /**
  * <p>Title: </p>

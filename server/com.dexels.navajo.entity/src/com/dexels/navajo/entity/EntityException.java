@@ -36,6 +36,7 @@ public class EntityException extends UserException {
 	private static Map<Integer,String> errorCodes = new HashMap<Integer, String>();
 	
 	static {
+	    errorCodes.put(NOT_MODIFIED, "Not Modified");
 		errorCodes.put(CONFLICT, "Update conflict");
 		errorCodes.put(SERVER_ERROR, "Server Error");
 		errorCodes.put(ENTITY_LOOP, "Cannot add myself as subentity");

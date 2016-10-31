@@ -17,9 +17,9 @@ import com.dexels.navajo.tipi.internal.cache.RemoteStorage;
 
 public class HttpRemoteStorage implements RemoteStorage {
 	private URL baseUrl = null;
-	private long bandwidth = 0;
-	private final static Logger logger = LoggerFactory
-			.getLogger(HttpRemoteStorage.class);
+
+
+	private final static Logger logger = LoggerFactory.getLogger(HttpRemoteStorage.class);
 	
 	public HttpRemoteStorage(URL base) {
 		baseUrl = base;
@@ -49,8 +49,7 @@ public class HttpRemoteStorage implements RemoteStorage {
 			if(enc!=null) {
 				metadata.put("Content-Encoding", enc);
 			}
-			bandwidth += uc.getContentLengthLong();
-			logger.info("Total bandwidth: "+bandwidth);
+
 			if("gzip".equals(enc)) {
 				GZIPInputStream gzi = new GZIPInputStream(is);
 				return gzi;
@@ -68,7 +67,7 @@ public class HttpRemoteStorage implements RemoteStorage {
 		if(true) {
 			return 0;
 		}
-		logger.info("Checking modification date of location: "+location);
+		logger.debug("Checking modification date of location: "+location);
 		URL u = new URL(baseUrl, location);
 		URLConnection connection = u.openConnection();
 		if (connection instanceof HttpURLConnection) {

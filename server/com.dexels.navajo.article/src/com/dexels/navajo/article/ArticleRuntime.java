@@ -5,25 +5,24 @@ import java.io.Writer;
 import java.util.Map;
 import java.util.Set;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ObjectNode;
-
 import com.dexels.navajo.document.Navajo;
 import com.dexels.oauth.api.Token;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public interface ArticleRuntime {
-	public String resolveArgument(String name) throws ArticleException, ArticleClientException;
+	public String resolveArgument(String name) throws APIException;
 
-	public void execute(ArticleContext articleServlet) throws ArticleException, ArticleClientException, DirectOutputThrowable;
+	public void execute(ArticleContext articleServlet) throws APIException, NoJSONOutputException;
 
 	public void pushNavajo(String name,Navajo res);
 
 	public Navajo getNavajo(String name);
 
-	public String getPassword();
+
 	public String getUsername();
-	public void setPassword(String password);
+
 	public void setUsername(String username);
 	
 	public void setMimeType(String mime);
@@ -44,11 +43,11 @@ public interface ArticleRuntime {
 
 	public Map<String, String[]> getParameterMap();
 
-	public ObjectNode getGroupNode(String name) throws ArticleException;
+	public ObjectNode getGroupNode(String name) throws APIException;
 
 	public Set<String> getRequiredScopes();
 
-	public Object resolveScope(String name) throws ArticleException;
+	public Object resolveScope(String name) throws APIException;
 
 	public String getInstance();
 	

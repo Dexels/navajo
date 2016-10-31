@@ -108,22 +108,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		{
 			// nothing wrong, it is just not available for this class.
 		}
-		if (mySettingsService != null)
-		{
-			loadServices(mySettingsService);
-			Navajo settings = this.getContext().getNavajo(mySettingsService);
-			if (settings != null)
-			{
-				try
-				{
-					loadData(settings, mySettingsService);
-				}
-				catch(TipiException te)
-				{
-					logger.error("Something going wrong loading the settings data for component " + this + " with settings " + settings, te);
-				}
-			}
-		}
+		
 	}
 	@Override
 	public void registerPropertyChild(TipiComponent component) {
@@ -189,7 +174,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		if (myNavajo == null) {
 			myNavajo = NavajoFactory.getInstance().createNavajo();
 			myNavajo.addHeader(NavajoFactory.getInstance().createHeader(
-					myNavajo, service, "", "", -1));
+					myNavajo, service, "_internal_", "", -1));
 
 		}
 		context.performTipiMethod(this, myNavajo, tipiPath, service,

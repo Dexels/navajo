@@ -205,6 +205,11 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
             public void run() {
                 mm.setFooterRenderer(null);
                 mm.removeAllColumns();
+                columnCondition.clear();
+                List<Message> ss = columnMessage.getAllMessages();
+                for (Message message : ss) {
+                    columnMessage.removeMessage(message);
+                }
                 mm.getTable().updateTableSize();
                 mm.updateTableSize();
                 updateColumnVisibility();

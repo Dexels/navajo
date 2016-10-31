@@ -129,6 +129,7 @@ public interface SharedStoreInterface {
 	 * @param l
 	 * @throws SharedStoreException if object does not exist.
 	 */
+	@Deprecated
 	public void setLastModified(String parent, String name, long l) throws IOException;
 	
 	   /**

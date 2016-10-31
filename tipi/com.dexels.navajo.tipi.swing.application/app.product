@@ -25,7 +25,6 @@
       <plugin id="com.dexels.navajo.tipi.css"/>
       <plugin id="com.dexels.navajo.tipi.css.tkui"/>
       <plugin id="com.dexels.navajo.tipi.facilityoccupation"/>
-      <plugin id="com.dexels.navajo.tipi.jabber"/>
       <plugin id="com.dexels.navajo.tipi.jxlayer"/>
       <plugin id="com.dexels.navajo.tipi.mail"/>
       <plugin id="com.dexels.navajo.tipi.swing"/>
@@ -64,7 +63,6 @@
       <plugin id="com.dexels.navajo.document" autoStart="true" startLevel="0" />
       <plugin id="com.dexels.navajo.function" autoStart="true" startLevel="0" />
       <plugin id="com.dexels.navajo.tipi" autoStart="true" startLevel="0" />
-      <plugin id="com.dexels.navajo.tipi.jabber" autoStart="true" startLevel="0" />
       <plugin id="com.dexels.navajo.tipi.mail" autoStart="true" startLevel="0" />
       <plugin id="com.dexels.navajo.tipi.swing" autoStart="true" startLevel="0" />
       <plugin id="com.dexels.navajo.tipi.swing.application" autoStart="false" startLevel="5" />

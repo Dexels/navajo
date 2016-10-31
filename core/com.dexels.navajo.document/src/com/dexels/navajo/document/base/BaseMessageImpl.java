@@ -23,10 +23,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -1024,6 +1026,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         }
     }
 
+    @Override
     public final String getPath() {
         if (myParent != null) {
             if (myParent.getType().equals(Message.MSG_TYPE_ARRAY)) {
@@ -1273,7 +1276,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (eTag != null) {
             m.put(Message.MSG_ETAG, eTag);
         }
-        if (myType != null) {
+        // don't write type="simple", as it's default
+        if (myType != null && !Message.MSG_TYPE_SIMPLE.equals(myType)) {
             m.put("type", myType);
             if (Message.MSG_TYPE_ARRAY_ELEMENT.equals(myType)) {
                 m.put("index", "" + myIndex);
@@ -1423,6 +1427,80 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             }
         }
         return 0;
+    }
+    
+    @Override
+    public boolean messageEquals(Object obj) {
+        if (! (obj instanceof Message)) {
+            return false;
+        }
+        Message otherMessage = (Message) obj;
+        if (!otherMessage.getName().equals(getName())) {
+            return false;
+        }
+        if (!otherMessage.getType().equals(getType())) {
+            return false;
+        }
+        List<Property> myProps = getAllProperties();
+        List<Property> otherProps = otherMessage.getAllProperties();
+        if (myProps.size() != otherProps.size()) {
+            return false;
+        }
+        List<Message> myMessages = getAllMessages();
+        List<Message> otherMessages = otherMessage.getAllMessages();
+        if (myMessages.size() != otherMessages.size()) {
+            return false;
+        }
+        
+        if (getType().equals(Message.MSG_TYPE_ARRAY)) {
+            if (this.getElements().size() != otherMessage.getElements().size()) {
+                return false;
+            }
+            Set<Integer> coveredIndexes = new HashSet<>();
+            for (int i=0; i<this.getElements().size(); i++) {
+                Message arrayelem = this.getElements().get(i);
+                boolean foundMatch = false;
+                for (int j=0; j<otherMessage.getElements().size(); j++) {
+                    if (coveredIndexes.contains(j)) {
+                        continue;
+                    }
+                    Message otherArrayelem = otherMessage.getElements().get(j);
+                    if (arrayelem.messageEquals(otherArrayelem)) {
+                        foundMatch = true;
+                        coveredIndexes.add(j);
+                        break;
+                    }
+                }
+                if (!foundMatch) {
+                    return false;
+                }
+            }
+            
+            
+        } else {
+            for (Property p : getAllProperties()) {
+                Property otherProperty = otherMessage.getProperty(p.getName());
+                if (otherProperty == null) {
+                    return false;
+                }
+                if (!p.propertyEquals(otherProperty)) {
+                    return false;
+                }
+            }
+            for (Message m : myMessages) {
+                Message otherMsg = otherMessage.getMessage(m.getName());
+                if (otherMsg == null) {
+                    return false;
+                }
+                if (!m.messageEquals(otherMsg)) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+        
+        
     }
 
     @Override
@@ -1647,6 +1725,22 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             incoming.setName(getName());
         }
 
+        List<Property> properties = incoming.getAllProperties();
+        for (int i = 0; i < properties.size(); i++) {
+            Property p = (Property) properties.get(i).clone();
+            Property o_p = null;
+            if (preferThis) {
+                o_p = getProperty(p.getName());
+            }
+            if (!preferThis || o_p == null) {
+                addProperty(p);
+            }
+            // If we don't have a method set, use the incoming method
+            if (o_p != null && o_p.getMethod().equals("")) {
+                o_p.setMethod(p.getMethod());
+            }
+
+        }
         List<Message> subMessages = incoming.getAllMessages();
         for (int i = 0; i < subMessages.size(); i++) {
             String newMsgName = subMessages.get(i).getName();
@@ -1671,23 +1765,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             } else {
                 existing.merge(subMessages.get(i), preferThis);
             }
-        }
-
-        List<Property> properties = incoming.getAllProperties();
-        for (int i = 0; i < properties.size(); i++) {
-            Property p = (Property) properties.get(i).clone();
-            Property o_p = null;
-            if (preferThis) {
-                o_p = getProperty(p.getName());
-            }
-            if (!preferThis || o_p == null) {
-                addProperty(p);
-            }
-            // If we don't have a method set, use the incoming method
-            if (o_p != null && o_p.getMethod().equals("")) {
-                o_p.setMethod(p.getMethod());
-            }
-
         }
 
     }
@@ -1748,7 +1825,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         while (allMessages.hasNext()) {
 
             Message m = allMessages.next();
-            boolean matchMethod = m.getMethod().equals("") || mask.getMessage(m.getName()).getMethod().equals("")
+            
+            boolean matchMethod = m.getMethod().equals("") || method.equals("") || (mask.getMessage(m.getName()) != null && mask.getMessage(m.getName()).getMethod().equals(""))
                     || m.getMethod().equals(method);
 
             if (!matchMethod) {
@@ -2001,4 +2079,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         return Collections.unmodifiableMap(result);
     }
 
+	@Override
+	public void printElement(final Writer sw, int indent) throws IOException {
+
+		// Do not serialized message that have mode="ignore" or messages that
+		// start with "__" (reserved for internal messages)
+		if (Message.MSG_MODE_IGNORE.equals(getMode())) {
+			return;
+		}
+		super.printElement(sw, indent);
+	}
 }

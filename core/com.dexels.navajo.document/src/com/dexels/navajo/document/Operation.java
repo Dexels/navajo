@@ -1,5 +1,7 @@
 package com.dexels.navajo.document;
 
+import java.util.Set;
+
 /**
  * Operations for registering active REST based operations on Navajo Entity objects.
  * An operation supports (HTTP) methods for CRUD operations on Navajo Entity objects:
@@ -48,6 +50,13 @@ public interface Operation {
 	public Message getExtraMessage();
 
 	public Operation copy(Navajo n);
+	
+	public void setScopes(String scopes);
+	public void setScopes(Set<String> scopes);
+	public Set<String> getScopes();
+	
+	public void setDescription(String description);
+	public String getDescription();
 	
 	public void setDebug(String debugString);
 

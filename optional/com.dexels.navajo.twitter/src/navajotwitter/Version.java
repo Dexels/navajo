@@ -6,6 +6,7 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 import com.dexels.twitter.TwitterAdapterLibrary;
+import com.dexels.twitter.functions.TwitterFunctionLibrary;
 
 public class Version extends AbstractCoreExtension implements BundleActivator {
 
@@ -14,7 +15,9 @@ public class Version extends AbstractCoreExtension implements BundleActivator {
 		super.start(bc);
 		TwitterAdapterLibrary library = new TwitterAdapterLibrary();
 		registerAll(library);
-
+		
+		TwitterFunctionLibrary functions = new TwitterFunctionLibrary();
+        registerAll(functions);
 	}
 
 	@Override

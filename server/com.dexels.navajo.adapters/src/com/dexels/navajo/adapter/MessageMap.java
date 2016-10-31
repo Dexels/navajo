@@ -219,6 +219,10 @@ public class MessageMap implements Mappable {
 
 		for (int i = 0; i < children.size(); i++) {
 			msg1pointer = children.get(i);
+			if (msg1pointer.getType().equals(Message.MSG_TYPE_DEFINITION)) {
+			    // Skip definition messages
+			    continue;
+			}
 			Object [] joinValues1 = new Object[joinConditions.size()];
 			for (int p = 0; p < joinConditions.size(); p++ ) {
 				JoinCondition jc = joinConditions.get(p);
@@ -238,6 +242,11 @@ public class MessageMap implements Mappable {
 
 				for (int j = 0; j < children2.size(); j++) {
 					msg2pointer = children2.get(j);
+					
+					if (msg2pointer.getType().equals(Message.MSG_TYPE_DEFINITION)) {
+					    // Skip definition messages
+		                continue;
+		            }
 
 					Object [] joinValues2 = new Object[joinConditions.size()];
 					for (int p = 0; p < joinConditions.size(); p++ ) {
@@ -363,11 +372,11 @@ public class MessageMap implements Mappable {
 				Message m1 = resultingMessage.get(i).getMsg().copy();
 				resultingMessage.get(i).processSuppressedProperties(m1);
 				if ( !resultingMessage.get(i).isRemove() ) {
-					int hashCode = getMessageHash(m1);
+
 					for ( int j = i+1; j < resultingMessage.size(); j++ ) {
 						Message m2 = resultingMessage.get(j).getMsg().copy();
 						resultingMessage.get(j).processSuppressedProperties(m2);
-						if ( getMessageHash(m2) == hashCode ) {
+						if ( m1.messageEquals(m2)) {
 							resultingMessage.get(j).setRemove(true);
 						} 
 					}
@@ -391,18 +400,7 @@ public class MessageMap implements Mappable {
 		return this.resultMessage;
 	}
 
-	private int getMessageHash(Message m) {
-		int hashCode = 0;
-		for ( int i = 0; i < m.getAllProperties().size(); i++ ) {
-			if (  m.getAllProperties().get(i) != null && m.getAllProperties().get(i).getValue() != null ) {
-				hashCode += m.getAllProperties().get(i).getValue().hashCode();
-			} else {
-				hashCode += "".hashCode();
-			}
-		}
-		return hashCode;
-	}
-
+	
 	@Override
 	public void load(Access access) throws MappableException, UserException {
 		this.myAccess = access;
@@ -490,8 +488,6 @@ public class MessageMap implements Mappable {
 		}
 		a.setCurrentOutMessage(null);
 		mm.store();
-
-		out.write(System.err);
 	}
 
 	public void setSuppressProperties(String suppressProperties) {

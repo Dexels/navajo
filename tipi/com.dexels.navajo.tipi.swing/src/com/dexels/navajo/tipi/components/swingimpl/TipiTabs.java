@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
@@ -52,7 +55,6 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 	@Override
 	public Object createContainer() {
 		// final TipiComponent me = this;
-
 	    tabbedpane= new JTabbedPane() {
 			private static final long serialVersionUID = 1661243154472687618L;
 
@@ -84,6 +86,14 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 			public Dimension getPreferredSize() {
 				return checkMaxMin(super.getPreferredSize());
 			}
+			
+			 @Override
+	            public void paintComponent(Graphics g) {
+	                Graphics2D graphics2d = (Graphics2D) g;
+	                graphics2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+	                        RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HBGR);
+	                super.paintComponent(g);
+	            }
 		};
 		// jt.setBackground(new Color(0.0f,0.8f,0.0f,0.2f));
 		TipiHelper th = new TipiSwingHelper();
@@ -155,7 +165,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					}
 				});
 			} else {
-				logger.debug("Sorry could not find tab: " + tabName);
+				logger.debug("enableTab could not find tab: " + tabName);
 			}
 		}
 		if (name.equals("showTab")) {
@@ -166,7 +176,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 
 			final boolean visible = ((Boolean) value.value).booleanValue();
 			final TipiComponent t = (TipiComponent) component.value;
-			if (t != null) {
+			if (t != null && isChildVisible(t) != visible) {
 				runSyncInEventThread(new Runnable() {
 					@Override
 					public void run() {
@@ -177,8 +187,31 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 						rebuildTabs();
 					}
 				});
-			} else {
-				logger.debug("Sorry could not find tab");
+			} else if (t == null){
+				logger.debug("showTab could not find tab");
+			}
+		}
+		if (name.equals("selectByOrder")) {
+
+			Operand orderOp = compMeth.getEvaluatedParameter("order",
+					event);
+
+			final int order = ((Integer) orderOp.value).intValue();
+			final Component c = order >= childList.size() ? null : childList.get(order);
+			if (c != null && visibilityMap.get(c))
+			{
+				runSyncInEventThread(new Runnable() {
+					@Override
+					public void run() {
+						((JTabbedPane) getContainer())
+								.setSelectedComponent((Component) (c));
+					}
+				});
+			} else if (c != null)
+			{
+				logger.debug("SelectByOrder found non-visible tab at order " + order);
+			} else if (c == null){
+				logger.debug("SelectByOrder could not find tab at order " + order);
 			}
 		}
 	}
@@ -330,7 +363,9 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		
 		if (name.equals("opaque")) {
 		    UIManager.put("TabbedPane.contentOpaque", (Boolean) object);
-            tabbedpane.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI());
+		    javax.swing.plaf.basic.BasicTabbedPaneUI ui = new javax.swing.plaf.basic.BasicTabbedPaneUI();
+		    
+            tabbedpane.setUI(ui);
         }
 	}
 
@@ -366,6 +401,10 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		if (name.equals("selectedindex")) {
 			return new Integer(
 					((JTabbedPane) getContainer()).getSelectedIndex());
+		}
+		if (name.equals("selectedorder")) {
+			Component c = ((JTabbedPane) getContainer()).getSelectedComponent();
+			return childList.indexOf(c);
 		}
 		if (name.equals("lastselectedindex")) {
 			return new Integer(getIndexOfTab(lastSelectedTab));

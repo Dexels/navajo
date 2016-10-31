@@ -17,7 +17,7 @@ public class NavajoEventMapTest {
 
 	@Test
 	public void test() {
-		Assert.assertEquals(NavajoEventMap.navajoEvents.size(), 13);
+		Assert.assertEquals(NavajoEventMap.navajoEvents.size(), 12);
 		Assert.assertEquals(
 				NavajoEventMap.getEventClass(NavajoEventMap.AUDITLOG_EVENT),
 				AuditLogEvent.class);
@@ -48,9 +48,9 @@ public class NavajoEventMapTest {
 		Assert.assertEquals(
 				NavajoEventMap.getEventClass(NavajoEventMap.EXCEPTION_EVENT),
 				NavajoExceptionEvent.class);
-		Assert.assertEquals(NavajoEventMap
-				.getEventClass(NavajoEventMap.FULL_ACCESS_LOG_STATISTICS),
-				AccessLogEvent.class);
+//		Assert.assertEquals(NavajoEventMap
+//				.getEventClass(NavajoEventMap.FULL_ACCESS_LOG_STATISTICS),
+//				AccessLogEvent.class);
 	}
 
 }

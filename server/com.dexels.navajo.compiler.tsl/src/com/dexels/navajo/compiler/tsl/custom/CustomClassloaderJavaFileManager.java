@@ -82,7 +82,9 @@ public class CustomClassloaderJavaFileManager extends
 
 	@Override
 	public boolean hasLocation(Location location) {
-
+		if (location.equals( StandardLocation.CLASS_OUTPUT)) {
+			return false;
+		}
 		return true;
 	}
 

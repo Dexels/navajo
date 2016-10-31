@@ -9,14 +9,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -24,6 +17,16 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.json.JSONTML;
+import com.dexels.navajo.document.json.TmlNavajoTypeSerializer;
+import com.dexels.navajo.document.json.TmlPropertySerializer;
+import com.dexels.navajo.document.types.Binary;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 /**
  * TODO: Create option to pass Navajo template for setting correct types.
@@ -32,10 +35,6 @@ import com.dexels.navajo.document.json.JSONTML;
  *
  */
 public class JSONTMLImpl implements JSONTML {
-    
-    private final static Logger logger = LoggerFactory.getLogger(JSONTMLImpl.class);
-
-
 	private JsonFactory jsonFactory = null;
 	private ObjectMapper om = null;
 	private String topLevelMessageName = null;
@@ -49,6 +48,11 @@ public class JSONTMLImpl implements JSONTML {
 		jsonFactory =  new JsonFactory();
 		// Use default typing.
 		om = new ObjectMapper().enableDefaultTyping();
+		
+		SimpleModule module = new SimpleModule("MyModule", Version.unknownVersion());
+		module.addSerializer(Binary.class, new TmlNavajoTypeSerializer());
+		module.addSerializer(Property.class, new TmlPropertySerializer());
+		om.registerModule(module);
 	}
 
 	/* (non-Javadoc)
@@ -57,7 +61,7 @@ public class JSONTMLImpl implements JSONTML {
 	@Override
 	public Navajo parse(InputStream is) throws Exception {
 		try {
-			JsonParser jp = jsonFactory.createJsonParser(is);
+			JsonParser jp = jsonFactory.createParser(is);
 			Navajo n = parse(jp);
 			return n;
 		} catch (Exception e) {
@@ -77,7 +81,7 @@ public class JSONTMLImpl implements JSONTML {
 	@Override
 	public Navajo parse(Reader r) throws Exception {
 		try {
-			JsonParser jp = jsonFactory.createJsonParser(r);
+			JsonParser jp = jsonFactory.createParser(r);
 			Navajo n = parse(jp);
 			return n;
 		} catch (Exception e) {
@@ -98,8 +102,7 @@ public class JSONTMLImpl implements JSONTML {
 	public void format(Navajo n, OutputStream os) throws Exception {
 	    JsonGenerator jg = null;
 		try {
-			jg = jsonFactory.createJsonGenerator(os); 
-
+			jg = jsonFactory.createGenerator(os); 
 			jg.useDefaultPrettyPrinter();
 			format(jg, n);
 		} catch (Exception e) {
@@ -125,7 +128,7 @@ public class JSONTMLImpl implements JSONTML {
 	public void format(Navajo n, Writer w) throws Exception {
 	    JsonGenerator jg = null;
 		try {
-			jg = jsonFactory.createJsonGenerator(w); 
+			jg = jsonFactory.createGenerator(w); 
 			jg.useDefaultPrettyPrinter();
 			format(jg, n);
 		} catch (Exception e) {
@@ -161,20 +164,23 @@ public class JSONTMLImpl implements JSONTML {
 			} else {
 				om.writeValue(jg, "null");
 			}
-		} else {
-			if (this.typeIsValue) {
-				om.writeValue(jg, p.getType());
-			} else {
-				Object value = p.getTypedValue();
-				if (p.getType().equals(Property.BINARY_PROPERTY)) {
-					value = p.getValue();
-				} 
-				om.writeValue(jg, value );
-
-			}
-		}
-
+        } else {
+            if (this.typeIsValue) {
+                String value = p.getType();
+                if (isOptionalKey(p.getKey())) {
+                    value += ", optional";
+                }
+                om.writeValue(jg, value);  
+            } else {
+                om.writeValue(jg, p);
+            }
+        }
 	}
+
+	
+	private boolean isOptionalKey(String key) {
+        return ( key != null && key.indexOf("optional") != -1 );
+    }
 
 	private void format(JsonGenerator jg, Message m, boolean arrayElement) throws Exception {
 
@@ -268,18 +274,19 @@ public class JSONTMLImpl implements JSONTML {
         }
     }
 
-	private void parseProperty(String name, String value, Message p, JsonParser jp) throws Exception {
+	private void parseProperty(String name, Object value, Message p, JsonParser jp) throws Exception {
 		if (name == null) {
 			// Give property the name of the message
 			name = p.getName();
 		}
-		Property prop = NavajoFactory.getInstance().createProperty(p.getRootDoc(), name, Property.STRING_PROPERTY, value, 0, "", "out");
+		Property prop = NavajoFactory.getInstance().createProperty(p.getRootDoc(), name, Property.STRING_PROPERTY, "", 0, "", "out");
+		prop.setAnyValue(value);
 		p.addProperty(prop);
 		if ( entityTemplate != null ) {
-			Property ep = entityTemplate.getProperty(prop.getFullPropertyName());
+			Property ep = getEntityTemplateProperty(prop);
  			if ( ep != null ) {
-				if ( ep.getType().equals(Property.SELECTION_PROPERTY)) {
-					Selection s = NavajoFactory.getInstance().createSelection(p.getRootDoc(), value, value, true);
+				if ( ep.getType().equals(Property.SELECTION_PROPERTY) && value != null) {
+					Selection s = NavajoFactory.getInstance().createSelection(p.getRootDoc(), value.toString(), value.toString(), true);
 					prop.setType(ep.getType());
 					prop.addSelection(s);
 				} else {
@@ -290,6 +297,36 @@ public class JSONTMLImpl implements JSONTML {
 		}
 
 	}
+
+    private Property getEntityTemplateProperty(Property prop) {
+        // getFullPropertyName doesn't always work, since sometimes we need to get the definition message
+        // Thus we go through the hierarchy. If any message is an array message, we look for the definition
+        // message in the entity template
+        if (entityTemplate == null) {
+            return null;
+        }
+        String fullPath = prop.getFullPropertyName();
+        if (!fullPath.contains("@")) {
+            return entityTemplate.getProperty(prop.getFullPropertyName());
+        }
+        // We have an array message somewhere. Lets try to get the correct property from the entity template
+        StringTokenizer st = new StringTokenizer(prop.getParentMessage().getPath(),  "/");
+        Message next = entityTemplate.getMessage(st.nextToken());
+        while (next != null && st.hasMoreTokens()) {
+            String subpath = st.nextToken();
+            if (subpath.contains("@")) {
+                // Strip the @ part
+                subpath = subpath.substring(0, subpath.indexOf("@"));
+                next = next.getMessage(subpath).getDefinitionMessage();
+            } else {
+                next = next.getMessage(subpath);
+            }
+        }
+        if (next != null) {
+            return next.getProperty(prop.getName());
+        }
+        return null;
+    }
 
 	private void parseArrayMessageElement(Message arrayMessage, JsonParser jp) throws Exception {
 		Message m = NavajoFactory.getInstance().createMessage(arrayMessage.getRootDoc(), arrayMessage.getName());
@@ -348,8 +385,23 @@ public class JSONTMLImpl implements JSONTML {
                 } else if (jp.getCurrentToken() == JsonToken.START_ARRAY) {
                     parseArrayMessage(name, n, parent, jp);
                 } else {
-                    String value = jp.getText();
-
+                    JsonToken currentToken = jp.getCurrentToken();
+                    Object value;
+                    if (currentToken.equals(JsonToken.VALUE_TRUE) ||currentToken.equals(JsonToken.VALUE_FALSE)) {
+                        value  = jp.getValueAsBoolean();
+                    } else if (currentToken.equals(JsonToken.VALUE_NULL)) {
+                        value = null;
+                    } else if (currentToken.equals(JsonToken.VALUE_NUMBER_INT)) {
+                        value = jp.getValueAsInt();
+                    } else if (currentToken.equals(JsonToken.VALUE_NUMBER_FLOAT)) {
+                        value = jp.getValueAsDouble();
+                    } else {
+                        value = jp.getText();
+                    }
+                    
+                    if (value.equals("null")) {
+                        value = null;
+                    }
                     parseProperty(name, value, parent, jp);
                 }
 

@@ -56,10 +56,11 @@ public void store() throws MappableException, UserException {
       try {
         ClientInterface nc = NavajoClientFactory.createClient();
         inMessage.removeHeader();
-        Navajo out = nc.doSimpleSend(inMessage, server,
-                                     (method == null ? access.rpcName : method),
-                                     (username == null ? access.rpcUser : username),
-                                     (password == null ? access.rpcPwd : password), -1);
+        nc.setUsername(username == null ? access.rpcUser : username);
+        nc.setPassword(password == null ? access.rpcPwd : password);
+        nc.setAllowCompression(true);
+        nc.setServerUrl(server);
+        Navajo out = nc.doSimpleSend(inMessage, (method == null ? access.rpcName : method));
         access.setOutputDoc(out);
       } catch (Exception e) {
         throw new UserException(-1, e.getMessage());

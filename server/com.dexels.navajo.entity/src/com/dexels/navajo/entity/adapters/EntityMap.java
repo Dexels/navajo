@@ -18,7 +18,7 @@ import com.dexels.navajo.server.ConditionErrorException;
 public class EntityMap extends NavajoMap {
 
 	private EntityManager myManager;
-	private String entity;
+	private String entityName;
 	private String method;
 	private Entity myEntity;
 	
@@ -37,10 +37,9 @@ public class EntityMap extends NavajoMap {
 	
 	public void setCall(boolean v) throws Exception {
 		
-		if ( entity != null && method != null ) {
-			Operation o = myManager.getOperation(entity, method);
+		if ( entityName != null && method != null ) {
+			Operation o = myManager.getOperation(entityName, method);
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, this, o);
-			myEntity = seo.getMyEntity();
 			Navajo request = prepareOutDoc();
 			if ( request.getHeader() == null ) {
 				Header h = NavajoFactory.getInstance().createHeader(request, myEntity.getName(), access.rpcUser, access.rpcName, -1);
@@ -61,7 +60,7 @@ public class EntityMap extends NavajoMap {
 	public void setPropertyName(String s) throws UserException {
 		// Check if property name does not contain '/' character, i.e. it is a relative property name: append the entity name
 		if ( s.indexOf("/") == -1 ) {
-			s = "/" + entity + "/" + s; 
+			s = "/" + myEntity.getMessageName() + "/" + s; 
 		}
 		super.setPropertyName(s);
 	}
@@ -71,12 +70,16 @@ public class EntityMap extends NavajoMap {
 		super.waitForResult();
 	}
 	
-	public String getEntity() {
-		return entity;
+	public String getName() {
+		return entityName;
 	}
 
-	public void setEntity(String entity) {
-		this.entity = entity;
+	public void setName(String entityname) throws UserException{
+		this.entityName = entityname.replace("/", ".");;
+		this.myEntity = myManager.getEntity(this.entityName);
+		if (this.myEntity == null) {
+		    throw new UserException(-1, "Entity " + entityName + " not found!");
+		}
 	}
 
 	public String getMethod() {

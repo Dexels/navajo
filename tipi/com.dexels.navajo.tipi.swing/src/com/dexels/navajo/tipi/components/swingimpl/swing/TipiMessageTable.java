@@ -8,10 +8,12 @@ package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.awt.Point;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import org.slf4j.Logger;
@@ -114,8 +116,25 @@ public class TipiMessageTable extends MessageTable {
 		}
 	}
 
+  
+
+    @Override
+    protected boolean processKeyBinding(KeyStroke stroke, KeyEvent event, int condition, boolean pressed) {
+        if (stroke.getKeyCode() == 32 && stroke.getModifiers() == 130) {
+            // space + control: toggleAndAnchor event. This event toggles the current selection. However 
+            // this results in there being no more selected message in the TipiTable, while we are still
+            // possibly editing! This is undesired behavior, thus ignore this key event.
+            if (this.isEditing()) {
+                return true;
+            }
+        }
+        return super.processKeyBinding(stroke, event, condition, pressed);
+    }
+
 	// public TipiDndManager getDndManager() {
 	// return myDndManager;
 	// }
+	
+	
 
 }

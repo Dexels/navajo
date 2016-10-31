@@ -40,7 +40,7 @@ public abstract class ScriptCompiler {
     protected ExpressionEvaluator expressionEvaluator;
     protected NavajoIOConfig navajoIOConfig = null;
     
-    public void compile(String scriptPath, String compileDate, String tenant, boolean hasTenantSpecificFile,
+    public void compile(String scriptPath, String tenant, boolean hasTenantSpecificFile,
             boolean forceTenant) throws Exception {
         dependencies.clear();
         packages.clear();
@@ -48,7 +48,7 @@ public abstract class ScriptCompiler {
         
         
        try {
-           compileScript(scriptPath, compileDate, tenant, hasTenantSpecificFile, forceTenant);
+           compileScript(scriptPath, tenant, hasTenantSpecificFile, forceTenant);
        } catch (Exception e) {
            logger.error("Error! {}", e);
        }
@@ -79,7 +79,7 @@ public abstract class ScriptCompiler {
 
         generateFactoryClass(script, packagePath, dependentResources);
 
-        generateManifest(scriptString, "1.0.0", packagePath, script, packages, compileDate);
+        generateManifest(scriptString, "1.0.0", packagePath, script, packages);
         generateDs(packagePath, script, dependencies, dependentResources);
         if (packagePath.startsWith("entity")) {
             generateEntityDs(packagePath, script, dependencies, dependentResources);
@@ -89,7 +89,7 @@ public abstract class ScriptCompiler {
     /**
      * Takes care of any script-language specific compilation
      */
-    protected abstract void compileScript(String scriptPath, String compileDate, String tenant,
+    protected abstract void compileScript(String scriptPath, String tenant,
             boolean hasTenantSpecificFile, boolean forceTenant) throws Exception;
 
     /**
@@ -191,7 +191,7 @@ public abstract class ScriptCompiler {
     }
 
     private void generateManifest(String description, String version, String packagePath, String script,
-            Set<String> packages, String compileDate) throws IOException {
+            Set<String> packages) throws IOException {
         String symbolicName = "navajo.script." + description;
         PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(),
                 packagePath, script, ".MF"));

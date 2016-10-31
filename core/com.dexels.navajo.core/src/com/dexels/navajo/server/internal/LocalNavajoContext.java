@@ -40,7 +40,7 @@ public class LocalNavajoContext extends NavajoContext implements ClientContext {
 	/**
 	 * @param c  the LocalClient to remove
 	 */
-	public void clearLocalClient(LocalClient c, Map<String,Object> settings) {
+	public void removeLocalClient(LocalClient c, Map<String,Object> settings) {
 		if(settings==null) {
 			logger.warn("Missing settings while removing localclient");
 			return;

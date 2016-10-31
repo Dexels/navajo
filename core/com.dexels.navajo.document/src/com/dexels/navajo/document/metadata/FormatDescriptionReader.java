@@ -1,6 +1,9 @@
 package com.dexels.navajo.document.metadata;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Serializable;
 
 /**
  * Read {@link com.dexels.navajo.document.metadata.FormatDescription} objects from a semicolon-separated text file.

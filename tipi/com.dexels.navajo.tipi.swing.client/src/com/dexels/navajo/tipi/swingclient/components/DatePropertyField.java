@@ -39,8 +39,6 @@ public final class DatePropertyField extends PropertyField implements
 	private final static Logger logger = LoggerFactory
 			.getLogger(DatePropertyField.class);
 	
-	private static SimpleDateFormat displayDateFormat = new SimpleDateFormat(
-			"dd-MMM-yyyy", Locale.getDefault());
 	private static SimpleDateFormat inputFormat1 = new SimpleDateFormat(
 			"dd-MM-yy");
 	private static SimpleDateFormat inputFormat2 = new SimpleDateFormat(
@@ -49,6 +47,9 @@ public final class DatePropertyField extends PropertyField implements
 			"ddMMyy");
 	private static SimpleDateFormat inputFormat4 = new SimpleDateFormat("ddMM");
 	private static SimpleDateFormat inputFormat5 = new SimpleDateFormat("dd");
+	
+    private SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+    
 	private boolean showCalendarPickerButton = true;
 	private boolean readOnly = false;
 	private MessageTable myTable = null;
@@ -88,13 +89,15 @@ public final class DatePropertyField extends PropertyField implements
 			return;
 		}
 		if (!p.getType().equals(Property.DATE_PROPERTY)) {
-			System.err
-					.println("Warning: Setting date field to non date property of type: "
-							+ p.getType());
+			System.err.println("Warning: Setting date field to non date property of type: "+ p.getType());
 		}
 		initProperty = p;
 
 		setEditable(p.isDirIn());
+		if (p.getSubType("format") != null) {
+		    this.setDateFormat(p.getSubType("format"));
+		    
+		}
 
 		try {
 			setDate((Date) p.getTypedValue());
@@ -104,7 +107,11 @@ public final class DatePropertyField extends PropertyField implements
 		super.setProperty(p);
 	}
 
-	public final void setReadOnly(boolean b) {
+	private void setDateFormat(String format) {
+	    displayDateFormat = new SimpleDateFormat(format, Locale.getDefault());
+        
+    }
+    public final void setReadOnly(boolean b) {
 		readOnly = b;
 	}
 
@@ -180,7 +187,7 @@ public final class DatePropertyField extends PropertyField implements
 			return;
 		}
 		if (d != null) {
-			setText(displayDateFormat.format(d));
+			setText(  displayDateFormat.format(d));
 		} else {
 			setText("");
 		}
@@ -289,11 +296,7 @@ public final class DatePropertyField extends PropertyField implements
 					}
 					cpd.getMainPanel()
 							.setPreferredSize(new Dimension(255, 198));
-					logger.info("Entering: checkMouseClick: "
-							+ isEditable() + " -- " + showCalendarPickerButton
-							+ " >>> " + getHeight());
-					logger.info("ThreaD: "
-							+ Thread.currentThread().getName());
+					logger.debug("Entering: checkMouseClick: {}  --  {}  >>> ", isEditable(), showCalendarPickerButton, getHeight());
 					Property pp = getProperty();
 					if (pp != null
 							&& pp.getType().equals(Property.DATE_PROPERTY)) {
@@ -358,10 +361,7 @@ public final class DatePropertyField extends PropertyField implements
 		setDate(new Date());
 	}
 
-	public static final String formatDate(String s) throws ParseException {
-		Date d = new SimpleDateFormat().parse(s);
-		return displayDateFormat.format(d);
-	}
+	
 
 	@Override
 	public final String toString() {

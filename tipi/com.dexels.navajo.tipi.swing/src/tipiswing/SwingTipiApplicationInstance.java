@@ -19,6 +19,7 @@ import javax.swing.RootPaneContainer;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import tipi.BaseTipiApplicationInstance;
 import tipi.TipiExtension;
@@ -122,6 +123,11 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 
 		context.systemPropertyMap.putAll(systemProperties);
 		context.processProperties(properties);
+		
+		if (systemProperties.get("DTAP") != null) {
+		    MDC.put("dtap", systemProperties.get("DTAP"));
+		}
+		
 
 		if(tipiInstallationFolder!=null) {
 			logger.debug("Using install: "+tipiInstallationFolder.getAbsolutePath());

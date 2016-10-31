@@ -134,7 +134,7 @@ public class GenericThread implements Runnable, Mappable {
 				status = SLEEPING;
 				inactive();
 			}
-			logger.debug("Thread " + threadId + " is dying");
+			logger.info("Thread " + threadId + " is dying");
 			status = DEAD;
 		} finally {
 			finishThread();

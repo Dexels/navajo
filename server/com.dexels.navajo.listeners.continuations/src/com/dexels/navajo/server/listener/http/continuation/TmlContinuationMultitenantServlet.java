@@ -64,14 +64,19 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 	protected void service(final HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
-			String instance = determineInstanceFromRequest(req);
+			String instance = determineTenantFromRequest(req);
 			LocalClient localClient = getLocalClient();
 			if ( localClient == null ) {
 				localClient = getLocalClient(req);
 			} 
 			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,instance);
+			
 			if(instantiateRunnable!=null) {
-				getTmlScheduler().submit(instantiateRunnable, false);
+			    Boolean prio =  (Boolean) instantiateRunnable.getAttribute("priority");
+	            if (prio == null) 
+	                prio = false;
+	            
+				getTmlScheduler().submit(instantiateRunnable, prio);
 			}
 		} catch (Throwable e) {
 			if(e instanceof ServletException) {
@@ -81,13 +86,16 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 		}
 	}
 
-	private String determineInstanceFromRequest(final HttpServletRequest req) {
+	private String determineTenantFromRequest(final HttpServletRequest req) {
 		String requestInstance = req.getHeader("X-Navajo-Instance");
 		if(requestInstance!=null) {
 			return requestInstance;
 		}
 		String pathinfo = req.getPathInfo();
-		if(pathinfo.length() > 0 && pathinfo.charAt(0) == '/') {
+		if(pathinfo==null) {
+			return null;
+		}
+		if (pathinfo.length() > 0 && pathinfo.charAt(0) == '/') {
 			pathinfo = pathinfo.substring(1);
 		}
 		String instance = null;

@@ -25,202 +25,180 @@ import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 
 public class JnlpLocalStorage implements LocalStorage {
 
-	private static final long DEFAULT_SIZE = 1000000;
-	private final PersistenceService ps;
-	private final BasicService bs;
+    private static final long DEFAULT_SIZE = 1000000;
+    private final PersistenceService ps;
+    private final BasicService bs;
 
-	private final String cacheBase = "tipicache_";
-	private final String relativePath;
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(JnlpLocalStorage.class);
-	
-	
-//	private final Map<String, Long> localModificationMap = new HashMap<String, Long>();
-	private final String id;
+    private final String cacheBase = "tipicache_";
+    private final String relativePath;
 
-	public JnlpLocalStorage(String relativePath, CookieManager cm, String id)
-			throws UnavailableServiceException {
-		this.id = id;
-		ps = (PersistenceService) ServiceManager
-				.lookup("javax.jnlp.PersistenceService");
-		bs = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
-		this.relativePath = relativePath.replaceAll("/", "_");
-//		try {
-//			parseModMap();
-//		} catch (IOException e) {
-//			logger.error("Error detected",e);
-//		}
-	}
+    private final static Logger logger = LoggerFactory.getLogger(JnlpLocalStorage.class);
 
+    private final String id;
 
-	private URL getCacheBaseURL()  {
-		// return new URL(new URL(bs.getCodeBase(),cacheBase),relativePath);
-		return bs.getCodeBase();
-	}
+    public JnlpLocalStorage(String relativePath, CookieManager cm, String id) throws UnavailableServiceException {
+        this.id = id;
+        ps = (PersistenceService) ServiceManager.lookup("javax.jnlp.PersistenceService");
+        bs = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
+        this.relativePath = relativePath.replaceAll("/", "_");
 
-	private URL createMuffinUrl(String location) {
-		String fixed = cacheBase + relativePath + location.replaceAll("/", "_");
-		try {
-			URL url = new URL(getCacheBaseURL(), fixed);
-			return url;
-		} catch (MalformedURLException e) {
-			logger.error("Error detected",e);
-			return null;
-		}
-	}
+        String[] cacheMuffins;
+        try {
+            cacheMuffins = ps.getNames(getCacheBaseURL());
+            logger.info("local muffins size: {}", cacheMuffins.length);
+        } catch (Exception e) {
+            logger.error("Error on filling muffins: ", e);
+        }
 
-	@Override
-	public void flush(String location) throws IOException {
-		delete(location);
-	}
+    }
 
-	@Override
-	public void flushAll() throws IOException {
-		String[] cacheMuffins = ps.getNames(getCacheBaseURL());
-		for (int i = 0; i < cacheMuffins.length; i++) {
-			ps.delete(new URL(getCacheBaseURL(), cacheMuffins[i]));
-		}
-	}
+    private URL getCacheBaseURL() {
+        return bs.getCodeBase();
+    }
 
-	@Override
-	public InputStream getLocalData(String location) {
-		FileContents fc;
-		try {
-			URL muffinUrl = createMuffinUrl(location);
-			fc = ps.get(muffinUrl);
-			if (fc == null) {
-				logger.debug("Not found");
-				return null;
-			}
-			return fc.getInputStream();
-		} catch (MalformedURLException e) {
-			logger.error("Error detected",e);
-		} catch (FileNotFoundException e) {
-			// regular cache miss
-			logger.debug("not found: {} ",location);
-			return null;
-		} catch (IOException e) {
-			logger.error("Error detected",e);
+    private URL createMuffinUrl(String location) {
+        String fixed = cacheBase + relativePath + location.replaceAll("/", "_");
+        try {
+            URL url = new URL(getCacheBaseURL(), fixed);
+            return url;
+        } catch (MalformedURLException e) {
+            logger.error("Error detected", e);
+            return null;
+        }
+    }
 
-		}
-		return null;
-	}
+    @Override
+    public void flush(String location) throws IOException {
+        delete(location);
+    }
 
-	@Override
-	public long getLocalModificationDate(String location) throws IOException {
-		 return 0;
-	}
+    @Override
+    public void flushAll() throws IOException {
+        String[] cacheMuffins = ps.getNames(getCacheBaseURL());
+        for (int i = 0; i < cacheMuffins.length; i++) {
+            ps.delete(new URL(getCacheBaseURL(), cacheMuffins[i]));
+        }
+    }
 
-	@Override
-	public URL getURL(String location) throws IOException {
-		File f = File.createTempFile("tipiCache", "");
-		InputStream is = getLocalData(location);
-		OutputStream os = new FileOutputStream(f);
-		copyResource(os, is);
-		f.deleteOnExit();
-		return f.toURI().toURL();
-		// throw new
-		// IOException("URL GETTING NOT SUPPORTED IN JNLPLOCALSTORAGE!");
-	}
+    @Override
+    public InputStream getLocalData(String location) {
+        FileContents fc;
+        try {
+            URL muffinUrl = createMuffinUrl(location);
+            
+            fc = ps.get(muffinUrl);
+            if (fc == null ||  fc.getLength() < 1) {
+                logger.warn("Not found: {}", location);
+                delete(location);
+                return null;
+            }
+            return fc.getInputStream();
+        } catch (MalformedURLException e) {
+            logger.error("Error detected", e);
+        } catch (FileNotFoundException e) {
+            // regular cache miss
+            logger.debug("not found: {} ", location);
+            return null;
+        } catch (IOException e) {
+            logger.error("Error detected", e);
 
-	@Override
-	public boolean hasLocal(String location) {
-		logger.debug("Checking haslocal for location: {}",location);
-		FileContents fc = null;
-		try {
-			fc = ps.get(createMuffinUrl(location));
-			// if(fc!=null) {
-			// logger.debug("local entry found: "+fc.getLength()+" at location: "+location);
-			// } else {
-			// logger.debug("No local entry found at: "+location);
-			// }
-		} catch (MalformedURLException e) {
-			// logger.debug("Malformed panic blues!");
-			logger.error("Error detected",e);
-		} catch (FileNotFoundException e) {
-			// logger.debug("Local file: "+location+" not found!");
-		} catch (IOException e) {
-			logger.error("Error detected",e);
-		}
-		if (fc == null) {
-			logger.debug("Has local for: {}: no",location);
-			return false;
-		} else {
-			try {
-				logger.debug("Has local for: {}: length: {}, so {}",location,fc.getLength(),fc.getLength() != 0);
+        }
+        return null;
+    }
 
-				return fc.getLength() != 0;
-			} catch (IOException e) {
-				logger.error("Error detected",e);
-			}
-			logger.debug("Has local for {} failed",location);
-			return false;
-		}
-	}
+    @Override
+    public long getLocalModificationDate(String location) throws IOException {
+        return 0;
+    }
 
-	@Override
-	public void storeData(String location, InputStream data,
-			Map<String, Object> metadata) throws IOException {
-		FileContents fc = null;
-		URL muffinUrl = createMuffinUrl(location);
-		FileContents ff = null;
-		// Object l = (Object) metadata.get("length");
-		// if(l )
-		// long length = l==null?DEFAULT_SIZE:l;
-		long length = DEFAULT_SIZE;
-		// logger.debug("JNLP storage. Storing: "+length+" bytes.");
-		
-		try {
-			ff = ps.get(muffinUrl);
-//			ps.
-//			ff.setMaxLength(length);
+    @Override
+    public URL getURL(String location, InputStream is) throws IOException {
+        File f = File.createTempFile("tipiCache", "");
+        OutputStream os = new FileOutputStream(f);
+        copyResource(os, is);
+        f.deleteOnExit();
+        return f.toURI().toURL();
+    }
 
-		} catch (FileNotFoundException e) {
-			// logger.debug("Not found. fine.");
-		}
-		if (ff == null) {
-			long grantedSize = ps.create(muffinUrl, length);
-			logger.debug("Created element: "+muffinUrl+" for size: "+ grantedSize);
-		}
+    @Override
+    public boolean hasLocal(String location) {
+        FileContents fc = null;
+        try {
+            fc = ps.get(createMuffinUrl(location));
+        } catch (MalformedURLException e) {
+            // logger.debug("Malformed panic blues!");
+            logger.error("Error detected",e);
+        } catch (FileNotFoundException e) {
+            // logger.debug("Local file: "+location+" not found!");
+        } catch (IOException e) {
+            logger.error("Error detected",e);
+        }
+        if (fc == null) {
+            logger.debug("Has local for: {}: no",location);
+            return false;
+        } else {
+            try {
+                return fc.getLength() != 0;
+            } catch (IOException e) {
+                logger.error("Error detected",e);
+            }
+            logger.debug("Has local for {} failed",location);
+            return false;
+        }
+    }
 
-		fc = ps.get(muffinUrl);
-		OutputStream os = fc.getOutputStream(true);
-		copyResource(os, data);
+    @Override
+    public void storeData(final String location, final InputStream data, final Map<String, Object> metadata) throws IOException {
 
-		logger.debug("Stored entry into muffinstore. Location: "+location+ " id: "+id+" muffinurl: "+muffinUrl);
-		// throw new IOException("JNLP Storage not yet implemeented");
-//		URL url = new URL(getCacheBaseURL(), cacheBase + relativePath);
-//		logger.info("Now retrieving: "+location);
-//		InputStream is = getLocalData(location);
-//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//		copyResource(baos, is);
-//		logger.info("Result: "+baos.toByteArray().length+" bytes retrieved");
-	}
+        FileContents fc = null;
+        URL muffinUrl = createMuffinUrl(location);
+        FileContents ff = null;
 
-	private final void copyResource(OutputStream out, InputStream in)
-			throws IOException {
-		// BufferedInputStream bin = new BufferedInputStream(in);
-		BufferedOutputStream bout = new BufferedOutputStream(out);
-		byte[] buffer = new byte[1024];
-		int read;
-		while ((read = in.read(buffer)) > -1) {
-			// logger.debug("Read: "+read+" bytes from class: "+in);
-			bout.write(buffer, 0, read);
-		}
-		in.close();
-		bout.flush();
-		bout.close();
-	}
+        long length = DEFAULT_SIZE;
 
-	@Override
-	public void delete(String location) {
-		try {
-			ps.delete(createMuffinUrl(location));
-		} catch (IOException e) {
-			logger.error("Error: ", e);
-		}
+        try {
+            ff = ps.get(muffinUrl);
+        } catch (FileNotFoundException e) {
+            // logger.debug("Not found. fine.");
+        }
+        if (ff == null) {
+            ps.create(muffinUrl, length);
+        }
 
-	}
+        fc = ps.get(muffinUrl);
+        OutputStream os = fc.getOutputStream(true);
+        copyResource(os, data);
 
+    }
+
+    private final void copyResource(OutputStream out, InputStream in) throws IOException {
+        BufferedOutputStream bout = new BufferedOutputStream(out);
+        byte[] buffer = new byte[1024];
+        int read;
+        while ((read = in.read(buffer)) > -1) {
+            bout.write(buffer, 0, read);
+        }
+        in.close();
+        bout.flush();
+        bout.close();
+    }
+
+    @Override
+    public void delete(String location) {
+        try {
+            ps.delete(createMuffinUrl(location));
+        } catch (IOException e) {
+            logger.error("Error: ", e);
+        }
+
+    }
+
+    public static void main(String[] args) {
+        String muffinlocation = "tipicache_tipi_digest.properties";
+        String[] splitted = muffinlocation.split("tipicache_");
+        String muffinRelativePath = splitted[1].substring(0, splitted[1].indexOf("_") +1 );
+        String path = splitted[1].substring(splitted[1].indexOf("_") + 1);
+        String location = path.replaceAll("_", "/");
+        System.out.println(muffinRelativePath);
+    }
 }

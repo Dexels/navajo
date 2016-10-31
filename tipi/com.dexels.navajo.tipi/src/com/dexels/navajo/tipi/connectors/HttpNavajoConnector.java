@@ -18,7 +18,7 @@ public class HttpNavajoConnector extends TipiBaseConnector {
 	private static final long serialVersionUID = -8531849428188689877L;
 
 	@Override
-	public Navajo doTransaction(Navajo input, String service)
+	public Navajo doTransaction(Navajo input, String service, Integer retries)
 			throws TipiBreakException, TipiException {
 		if (input == null) {
 			input = NavajoFactory.getInstance().createNavajo();
@@ -31,7 +31,7 @@ public class HttpNavajoConnector extends TipiBaseConnector {
 			Map<String, Object> s = new HashMap<String, Object>();
 			s.put("service", service);
 			performTipiEvent("onServiceSent", s, false);
-			Navajo result = myContext.getClient().doSimpleSend(nn, service);
+			Navajo result = myContext.getClient().doSimpleSend(nn, service, retries);
 			performTipiEvent("onServiceReceived", s, false);
 			if (result.getHeader() != null) {
 				result.getHeader().setHeaderAttribute("sourceScript",
@@ -69,7 +69,7 @@ public class HttpNavajoConnector extends TipiBaseConnector {
 	@Override
 	public Navajo doTransaction(Navajo n, String service, String destination)
 			throws TipiBreakException, TipiException {
-		return doTransaction(n, service);
+		return doTransaction(n, service, 0);
 	}
 
 	@Override

@@ -161,9 +161,12 @@ public void store() throws MappableException, UserException {
          fw.close();
        }
        catch (NavajoException ex) {
+           logger.error("Error: ", ex);
          throw new UserException(-1,"Error writing Navajo!");
        }
        catch (IOException ex) {
+           logger.error("Error: ", ex);
+
          throw new UserException(-1,"Error writing Navajo!");
        } finally {
          if (fw!=null) {

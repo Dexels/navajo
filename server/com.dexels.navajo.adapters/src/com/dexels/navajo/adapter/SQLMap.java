@@ -394,12 +394,12 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			rowCount = 0;
 		} catch (NavajoException ne) {
 			ne.printStackTrace(Access.getConsoleWriter(myAccess));
-			AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE,
+			AuditLog.log("SQLMap", ne.getMessage(),ne, Level.SEVERE,
 					(myAccess != null ? myAccess.accessID : "unknown access"));
 			throw new MappableException(ne.getMessage(), ne);
 		} catch (java.io.IOException fnfe) {
 			fnfe.printStackTrace(Access.getConsoleWriter(myAccess));
-			AuditLog.log("SQLMap", fnfe.getMessage(), Level.SEVERE,
+			AuditLog.log("SQLMap", fnfe.getMessage(),fnfe, Level.SEVERE,
 					(myAccess != null ? myAccess.accessID : "unknown access"));
 			throw new MappableException(
 					"Could not load configuration file for SQLMap object: "
@@ -479,7 +479,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				}
 			}
 		} catch (SQLException sqle) {
-			AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE,
+			AuditLog.log("SQLMap", sqle.getMessage(),sqle, Level.SEVERE,
 					(myAccess != null ? myAccess.accessID : "unknown access"));
 			sqle.printStackTrace(Access.getConsoleWriter(myAccess));
 		} finally {
@@ -544,7 +544,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				}
 			} catch (SQLException sqle) {
 				logger.warn("COULD NOT RESET SCHEMA. session: "+resetSession);
-				AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access"));
+				AuditLog.log("SQLMap", sqle.getMessage(), sqle,Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access"));
 				throw new UserException(-1, sqle.getMessage(), sqle);
 			} finally {
 				if (fixedBroker != null && myConnectionBroker != null) {
@@ -590,7 +590,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				con.setAutoCommit(b);
 			}
 		} catch (SQLException sqle) {
-			AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE,
+			AuditLog.log("SQLMap", sqle.getMessage(), sqle,Level.SEVERE,
 					(myAccess != null ? myAccess.accessID : "unknown access"));
 			throw new UserException(-1, sqle.getMessage(), sqle);
 		}
@@ -758,6 +758,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 		}
 		if ((resultSet == null) || (resultSet.length == 0)) {
+		    logger.debug("Column {} not found! Rowcount: {} query: {}", columnName, getRowCount(), getQuery() );
 			throw new UserException(-1, "No records found");
 		}
 
@@ -938,7 +939,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
                 if (myConnectionBroker == null) {
                     throw new UserException(-1, "Could not create connection to datasource " + this.datasource
-                            + ", using username " + this.username + ", fixedBroker = " + fixedBroker);
+                            + ", using username " + this.username + ", fixedBroker = " + fixedBroker+ " for tenant: "+instance);
                 }
 
                 gc = myConnectionBroker.getGrusConnection();
@@ -1232,7 +1233,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			}
 		} catch (SQLException sqle) {
 			sqle.printStackTrace(Access.getConsoleWriter(myAccess));
-			AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access"));
+			AuditLog.log("SQLMap", sqle.getMessage(), sqle, Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access"));
 			throw new UserException(-1, sqle.getMessage(), sqle);
 		} 
 		
@@ -1360,8 +1361,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			}
 
 		} catch (Exception e) {
-			AuditLog.log("SQLMap", e.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access"));
-			throw new UserException(-1, e.getMessage());
+			AuditLog.log("SQLMap", e.getMessage(), e,Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access"));
+			throw new UserException(-1, e.getMessage(),e);
 		}
 	}
 

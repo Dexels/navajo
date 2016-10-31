@@ -41,7 +41,6 @@ public String remarks() {
   @Override
 public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     if (getOperands().size() == 1) {
-   	 System.err.println("One operand found");
    	 return getMessageFromNavajo((String)getOperand(0));
     }
     if (getOperands().size() != 2) {
@@ -67,7 +66,6 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 
 
   private Message getMessageFromNavajo(String path) {
-	  System.err.println("Looking for message in path: "+path);
 	  return inMessage.getMessage(path);
 }
 

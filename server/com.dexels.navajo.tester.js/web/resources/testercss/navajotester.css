@@ -382,6 +382,11 @@ section p:last-child {
 	background: rgba(255, 255, 0, 0.2);
 }
 
+.compiledsource:hover {
+	cursor: pointer;
+	background: rgba(255, 255, 0, 0.2);
+}
+
 .script:before {
 	content: url('/testerimg/xml-file.png');
 }
@@ -514,7 +519,6 @@ h3 {
 	content: url('/testerimg/export.png');
 	cursor: pointer;
 	margin-left: 4px;
-	position: absolute;
 	overflow: visible
 }
 

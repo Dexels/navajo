@@ -23,8 +23,6 @@ import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
-import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerInterface;
 
 @Deprecated
 public class AdminMap implements Mappable {
@@ -73,11 +71,7 @@ public class AdminMap implements Mappable {
   public String instanceName;
   public String instanceGroup;
   public String clientId;
-  
-  public String jabberServer;
-  public String jabberPort;
-  public String jabberService;
-  
+    
   // RequestRate windowSize
   public int requestRateWindowSize;
   
@@ -109,13 +103,6 @@ public void load(Access access) throws MappableException, UserException {
     instanceGroup = nc.getInstanceGroup();
     clientId = access.getClientToken();
     
-    JabberWorkerInterface jw = JabberWorkerFactory.getJabberWorkerInstance();
-    
-    if ( jw != null ) {
-    	jabberServer = jw.getJabberServer();
-    	jabberPort = jw.getJabberPort();
-    	jabberService = jw.getJabberService();
-    }
     
   }
   
@@ -450,17 +437,4 @@ public String getClientId() {
 }
 
 
-public String getJabberServer() {
-	return jabberServer;
-}
-
-
-public String getJabberPort() {
-	return jabberPort;
-}
-
-
-public String getJabberService() {
-	return jabberService;
-}
 }

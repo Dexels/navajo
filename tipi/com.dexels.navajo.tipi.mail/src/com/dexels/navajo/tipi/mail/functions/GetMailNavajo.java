@@ -104,6 +104,8 @@ public class GetMailNavajo extends FunctionInterface {
 		MimeMultipart mmp;
 		try {
 			mmp = new MimeMultipart(ds);
+			// if it's not a real mimemultipart, getCount crashes, which is too late, so crash here instead
+			mmp.getCount();
 			return mmp;
 		} catch (MessagingException e) {
 			logger.info("Can not create multipart.");

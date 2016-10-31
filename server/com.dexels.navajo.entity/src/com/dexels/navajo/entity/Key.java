@@ -1,6 +1,6 @@
 package com.dexels.navajo.entity;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -12,7 +12,7 @@ import com.dexels.navajo.document.Selection;
 
 public class Key {
 
-	private Set<Property> myKey = new HashSet<Property>();
+	private Set<Property> myKey = new LinkedHashSet<Property>();
 	private final Entity myEntity;
 	private final String id;
 	
@@ -47,9 +47,13 @@ public class Key {
 		// Copy properties.
 		for ( Property p : myKey ) {
 			Property copy = p.copy(n);
-			m.addProperty(copy);
+		
+			
 			if ( input != null ) {
 				Property ip = input.getProperty(p.getFullPropertyName());
+				if (ip == null || ip.getValue() == null) {
+				    continue;
+				}
 				if ( ip != null && ip.getType().equals(Property.SELECTION_PROPERTY) && ip.getCardinality().equals("1")) {
 					copy.setSelected(ip.getSelected().getValue());
 				} else
@@ -64,43 +68,45 @@ public class Key {
 					copy.setUnCheckedStringAsValue(ip.getValue());
 				}
 			}
+			m.addProperty(copy);
 		}
-		if ( input != null && input.getProperty("_id") != null ) {
-			m.addProperty(input.getProperty("_id").copy(n));
+		if ( input != null && input.getProperty("/" + myEntity.getMessageName() + "/_id") != null ) {
+			m.addProperty(input.getProperty("/" + myEntity.getMessageName() + "/_id").copy(n));
 		}
 		return n;
 	}
 	
 	private boolean propertyMatch(Property p1, Property p2) {
-	
-		if ( p1.getName().equals(p2.getName()) ) {
-			if ( p1.getType().equals(p2.getType() ) ) {
-				return true;
-			}
-		}
+	    if (p1.getName().equals(p2.getName())) {
+	        boolean matchType = p1.getType().equals(p2.getType());
+	        boolean matchParent = p1.getParentMessage().getName().equals(p2.getParentMessage().getName());
+	        if (matchType && matchParent) {
+	            return true;
+	        }
+	    }
 		return false;
 	}
 	
-	public boolean keyMatch(Set<Property> input) {
-		
-		for ( Property p : myKey ) {
-			if ( p.getKey().indexOf("optional") == -1 ) {
-				// Find property in input.
-				boolean foundProp = false;
-				for ( Property ip : input ) {
-					if ( propertyMatch(p, ip) && ! ip.getValue().equals("")) {
-						foundProp = true;
-						break;
-					}
-				}
-				if (!foundProp) {
-					return false;
-				}
-			}
-		}
-		
-		return true;
-	}
+    public boolean keyMatch(Set<Property> input) {
+        for (Property p : myKey) {
+            if (p.getKey().indexOf("optional") == -1) {
+
+                // Find property in input.
+                boolean foundProp = false;
+                for (Property ip : input) {
+                    if (propertyMatch(p, ip) && !(ip.getValue() == null || ip.getValue().equals(""))) {
+                        foundProp = true;
+                        break;
+                    }
+                }
+                if (!foundProp) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 	
 	public Set<Property> getKeyProperties() {
 		return myKey;

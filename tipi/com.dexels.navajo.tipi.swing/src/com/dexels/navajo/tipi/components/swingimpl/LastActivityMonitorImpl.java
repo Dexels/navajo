@@ -21,15 +21,13 @@ public class LastActivityMonitorImpl implements LastActivityMonitor {
     }
     @Override
     public void threadActivity(Map<TipiThread, String> threadStateMap, TipiThread tt, String state, int queueSize) {
-        logger.debug("Updating last activity");
+        logger.trace("Updating last activity");
         lastActivity = new Date().getTime(); 
     }
 
     @Override
-    public Integer getLastActivityInHours() {
+    public Integer getInactiveInMinutes() {
         long duration = new Date().getTime() - lastActivity;
-        return new Long(TimeUnit.MILLISECONDS.toHours(duration)).intValue();
+        return new Long(TimeUnit.MILLISECONDS.toMinutes(duration)).intValue();
     }
-    
-
 }

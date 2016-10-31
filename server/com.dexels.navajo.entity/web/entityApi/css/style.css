@@ -1,7 +1,7 @@
 .bodycenter {
 	margin-left: auto;
 	margin-right: auto;
-	width: 1024px;
+	width: 90%;
 	font-family: "Droid Sans",sans-serif;
 
 }
@@ -24,6 +24,10 @@ ul.operations {
     padding: 0px;
 }
 
+.operation.HEAD {
+	background-color: #eeeeec;
+}
+
 .operation.GET {
 	background-color: #E7F0F7;
 }
@@ -35,11 +39,14 @@ ul.operations {
 .operation.PUT {
 	background-color: #F9F2E9;
 }
-=
+
 .operation.DELETE {
 	background-color: #f5e8e8;
 }
 
+.operationHeader.HEAD {
+	border: 1px solid #888a85;
+}
 
 .operationHeader.GET {
 	border: 1px solid #C3D9EC;
@@ -91,35 +98,63 @@ li.operation .url {
 
 
 
-li.operation .descrption {
-	display: inline-block;
+li.operation .description {
+	padding-top: 19px;
 	padding-left: 10px;
-	float: right;
+/* 	float: left; */
 	font-family: "Droid Sans",sans-serif;
 	font-size: 0.8em;
 	text-decoration: none;
 }
 
-li.operation .descrption.GET {
+li.operation .description.HEAD {
+	color: #555753;
+}
+
+li.operation .description.GET {
 	color: #0F6AB4;
 }
 
-li.operation .descrption.POST {
+li.operation .description.POST {
 	color: #10A54A;
 }
 
-li.operation .descrption.PUT {
+li.operation .description.PUT {
 	color: #C5862B;
 }
 
-li.operation .descrption.DELETE {
+li.operation .description.DELETE {
 	color: #a41e22;
 }
 
+h2 {
+	font-weight: normal;
+	font-size: 1.2em;
+}
+
+h2.HEAD{
+	color: #555753;
+}
+
+h2.GET{
+	color: #0F6AB4;
+}
+h2.POST{
+	color: #10A54A;
+}
+h2.PUT{
+	color: #C5862B;
+}
+h2.DELETE{
+	color: #a41e22;
+}
+
+li.operation .httpHEAD {
+	background-color: #555753;
+}
 
 li.operation .httpGET {
 	background-color: #0F6AB4;
-	
 }
 
 li.operation .httpPOST {
@@ -162,4 +197,70 @@ li.operation pre {
 	font-size: 0.8em;
 	text-decoration: none;
 	color: #606060;
+}
+
+
+.errorcodeheader {
+	margin-top: 50px;
+}
+
+.errorcodediv {
+    padding-left: 40px;
+    width: 95%;
+}
+
+
+.errorcodetable {
+    border-collapse: collapse;
+    font-size: smaller;
+    width: 100%;
+}
+
+.errorcodetable thead tr {
+	text-align: left;
+	color: #666666;
+	border-bottom:1pt solid black;
+}
+.errorcodetable thead th {
+    text-align: inherit; /* NEEDED FOR IE*/
+}
+.errorcodetable tr {
+	border-bottom:1pt solid #dddddd;
+	
+}
+.errorcodetable tr > td {
+	padding-top: 3px;
+	
+}
+
+.errorcodetable td:nth-child(1) {  
+	font-family: monospace;
+}
+
+
+
+.commentsTable {
+    border-collapse: collapse;
+    font-size: smaller;
+    width: 75%;
+    margin: 20px;
+}
+
+.commentsTable thead tr {
+	text-align: left;
+	color: #666666;
+	border-bottom:1pt solid black;
+}
+.commentsTable thead th {
+    text-align: inherit; /* NEEDED FOR IE*/
+}
+.commentsTable tr {
+	border-bottom:1pt solid #dddddd;
+	
+}
+.commentsTable tr > td {
+	padding-top: 3px;
+}
+.commentsTable td:nth-child(1) {  
+	font-family: monospace;
 }

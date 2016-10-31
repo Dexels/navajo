@@ -3,20 +3,21 @@ package com.dexels.navajo.article.command.impl;
 import java.io.ByteArrayInputStream;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
-
+import com.dexels.navajo.article.APIErrorCode;
+import com.dexels.navajo.article.APIException;
+import com.dexels.navajo.article.APIValue;
 import com.dexels.navajo.article.ArticleContext;
-import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
-import com.dexels.navajo.article.DirectOutputThrowable;
+import com.dexels.navajo.article.NoJSONOutputException;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.types.Binary;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ElementCommand implements ArticleCommand {
 
@@ -39,12 +40,9 @@ public class ElementCommand implements ArticleCommand {
 	public String getName() {
 		return name;
 	}
-
-//    <element service="clubsites/nl/adresboek" name="parameters/achternaam" showlabel="true"/>
-
 	
 	@Override
-	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException, DirectOutputThrowable {
+	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws APIException, NoJSONOutputException {
 		String service = parameters.get("service");
 		Navajo current = null;
 		if(service==null) {
@@ -53,11 +51,11 @@ public class ElementCommand implements ArticleCommand {
 			current = runtime.getNavajo(service);
 		}
 		if(current==null) {
-			throw new ArticleException("No current navajo found.");
+			throw new APIException("No current navajo found for service " + service, null, APIErrorCode.InternalError);
 		}
 		String name = parameters.get("name");
 		if(name==null) {
-			throw new ArticleException("No 'name' parameter found in element. This is required.");
+			throw new APIException("No 'name' parameter found in element for service " + service + " we've got parameters " + parameters, null, APIErrorCode.InternalError);
 		}
 		String propertyName = parameters.get("propertyName");
 		if(propertyName==null) {
@@ -66,8 +64,7 @@ public class ElementCommand implements ArticleCommand {
 
 		Property p = current.getProperty(propertyName);
 		if(p==null) {
-			current.write(System.err);
-			throw new ArticleException("No property: "+propertyName+" found in current navajo.");
+			throw new APIException("No property: "+propertyName+" found in current navajo for service " + service, null, APIErrorCode.InternalError);
 		}
 		
 		if(parameters.get("direct")!=null) {
@@ -78,11 +75,11 @@ public class ElementCommand implements ArticleCommand {
 				if(mime==null) {
 					mime = b.guessContentType();
 				}
-				throw new DirectOutputThrowable(mime,b.getDataAsStream());
+				throw new NoJSONOutputException(mime,b.getDataAsStream());
 			} else {
 				String string = ""+value;
 				ByteArrayInputStream bais = new ByteArrayInputStream(string.getBytes());
-				throw new DirectOutputThrowable("text/plain",bais);
+				throw new NoJSONOutputException("text/plain",bais);
 			}
 		}
 		
@@ -90,20 +87,13 @@ public class ElementCommand implements ArticleCommand {
 			String msgpath = name.substring(0, name.lastIndexOf('/'));
 			String propname = name.substring(name.lastIndexOf('/')+1,name.length());
 			ObjectNode msgNode = runtime.getGroupNode(msgpath);
-			msgNode.put( propname, getValue( p ) );
-			
+			APIValue.setValueOnNodeForType(msgNode, propname, parameters.get("type"), p, runtime);
 			return null;
 		} else {
-			ObjectNode on = runtime.getRootNode();
-			on.put(name, getValue( p ));
+			ObjectNode on = runtime.getRootNode();			
+			APIValue.setValueOnNodeForType(on, name, parameters.get("type"), p, runtime);
 			return on;
 		}
-	}
-	
-	public String getValue( Property property ) {
-		if( property.getType().equals( Property.SELECTION_PROPERTY ) ) 
-			return property.getSelected().getName();
-		return property.getValue();
 	}
 
 	@Override
@@ -132,7 +122,7 @@ public class ElementCommand implements ArticleCommand {
 					if (objects[0].equals(string)) { //First
 						fieldName = string;
 						
-						//If the fieldName is allready defined we take that node
+						//If the fieldName is already defined we take that node
 						JsonNode node = getNodeByFieldName(outputArgs, fieldName);
 						if (node != null) {
 							previous = (ObjectNode)node;
@@ -146,24 +136,24 @@ public class ElementCommand implements ArticleCommand {
 					if (objects[objects.length - 1].equals(string)) { //Last
 						ObjectNode node = mapper.createObjectNode();
 						fillObject(node, e, string);
-						previous.put(string, node);
+						previous.set(string, node);
 					} else {
 						//Create a new object and assign it to previous so we get the levels effect
 						ObjectNode node = mapper.createObjectNode();
-						previous.put(string, node);
+						previous.set(string, node);
 						previous = node;
 					}
 				}
 			}
 			if (!isDefined) {
-				root.put(fieldName, object);
+				root.set(fieldName, object);
 			} else {
 				//The node was already defined so we do not need to create a wrapper object
 				return false;
 			}	
 		} else { 
 			fillObject(object, e, objects[0]);
-			root.put(name, object);
+			root.set(name, object);
 		}
 		
 		outputArgs.add(root);

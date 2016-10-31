@@ -2,8 +2,10 @@ package com.dexels.navajo.document.base;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -19,9 +21,12 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 	protected String tenant;
 	protected String validationService;
 	protected String entityName;
+	protected String description;
 	protected Message extraMessage;
 	protected boolean debugInput;
 	protected boolean debugOutput;
+
+    private Set<String> scopes= new HashSet<>();
 
 	public BaseOperationImpl(Navajo n) {
 		super(n);
@@ -125,6 +130,28 @@ public class BaseOperationImpl extends BaseNode implements Operation {
         }
     }
 	
+	@Override
+    public void setScopes(String scopesString) {
+        if (scopesString != null) {
+            String[] arr = scopesString.split(",");
+            for (String element : arr) {
+                this.scopes.add(element);
+            }
+        }
+    }
+
+	@Override
+    public void setScopes( Set<String> newScopes) {
+        if (newScopes != null) {
+            this.scopes = newScopes;
+        }
+    }
+	
+	@Override
+	public  Set<String> getScopes() {
+	    return scopes;
+	}
+	
 
     @Override
     public boolean debugInput() {
@@ -144,5 +171,16 @@ public class BaseOperationImpl extends BaseNode implements Operation {
     @Override
     public String getTenant() {
         return tenant;
+    }
+
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+        
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 }

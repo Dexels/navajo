@@ -1,18 +1,26 @@
-Bundle-Name: Navajo Tipi Jabber extension
+Bundle-Name: Navajo Tipi WebSocket extension
 Bundle-SymbolicName: com.dexels.navajo.tipi.websocket
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.14.qualifier
+Bundle-Version: 1.0.20.qualifier
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.tipi
 Bundle-Activator: tipiwebsocket.TipiWebsocketExtension
 Import-Package: com.dexels.navajo.client.sessiontoken,
  com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.tipi;version="1.1.42",
+ com.dexels.navajo.tipi.tipixml;version="1.1.42",
  com.dexels.navajo.tipilink,
  com.dexels.navajo.version,
  javax.net,
  javax.net.ssl,
- org.eclipse.jetty.util.component;version="8.1.9.v20130131",
- org.eclipse.jetty.websocket;version="[8.1.0,9.0.0)",
+ org.eclipse.jetty.server.session;version="9.2.14.v20151106",
+ org.eclipse.jetty.util.component;version="9.2.14.v20151106",
+ org.eclipse.jetty.websocket.api;version="9.2.14.v20151106",
+ org.eclipse.jetty.websocket.api.annotations;version="9.2.14.v20151106",
+ org.eclipse.jetty.websocket.client;version="9.2.10",
+ org.eclipse.jetty.websocket.common;version="9.3.9",
+ org.eclipse.jetty.websocket.common.scopes;version="9.3.9",
  org.osgi.framework;version="1.5.0",
- org.slf4j;version="[1.6.1,1.8.0)"
+ org.slf4j;version="[1.6.1,1.8.0)",
+ tipi;version="1.1.42"
 Export-Package: com.dexels.navajo.tipi.websocket
+Bundle-ClassPath: .

@@ -19,34 +19,34 @@ import com.dexels.navajo.events.NavajoEvent;
  */
 public class AccessLogEvent implements NavajoEvent {
 
-	private static final long serialVersionUID = 8600682387835507176L;
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(AccessLogEvent.class);
-	private int accessLogCount;
-	
-	public AccessLogEvent(int accessLogCount) {
-		this.accessLogCount = accessLogCount;
-	}
+    private static final long serialVersionUID = 8600682387835507176L;
+    
+    private final static Logger logger = LoggerFactory
+            .getLogger(AccessLogEvent.class);
+    private int accessLogCount;
+    
+    public AccessLogEvent(int accessLogCount) {
+        this.accessLogCount = accessLogCount;
+    }
 
-	@Override
-	public Navajo getEventNavajo() {
-		Navajo input = NavajoFactory.getInstance().createNavajo();
-		Message event = NavajoFactory.getInstance().createMessage(input, "__event__");
-		try {
-			input.addMessage(event);
-			Property count = NavajoFactory.getInstance().createProperty(input, "AccessLogCount", 
-					Property.INTEGER_PROPERTY, this.accessLogCount+"", 0, "", Property.DIR_OUT);
-			event.addProperty(count);
-		} catch (NavajoException e) {
-			logger.error("Error: ", e);
-		}
-		return input;
-	}
+    @Override
+    public Navajo getEventNavajo() {
+        Navajo input = NavajoFactory.getInstance().createNavajo();
+        Message event = NavajoFactory.getInstance().createMessage(input, "__event__");
+        try {
+            input.addMessage(event);
+            Property count = NavajoFactory.getInstance().createProperty(input, "AccessLogCount", 
+                    Property.INTEGER_PROPERTY, this.accessLogCount+"", 0, "", Property.DIR_OUT);
+            event.addProperty(count);
+        } catch (NavajoException e) {
+            logger.error("Error: ", e);
+        }
+        return input;
+    }
 
-	public int getAccessLogCount() {
-		return accessLogCount;
-	}
+    public int getAccessLogCount() {
+        return accessLogCount;
+    }
 
     @Override
     public boolean isSynchronousEvent() {

@@ -116,7 +116,6 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
 
     private HashSet<Lock> acquiredLocks = new HashSet<Lock>();
 
-    @SuppressWarnings("unused")
     private final static Logger logger = LoggerFactory.getLogger(CompiledScript.class);
 
     /**
@@ -540,15 +539,19 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
                 }
                 Property prop1 = NavajoFactory.getInstance().createProperty(outMessage, "Description",
                         Property.STRING_PROPERTY, description, 0, "", Property.DIR_OUT);
-                Property prop2 = NavajoFactory.getInstance().createProperty(outMessage, "FailedExpression",
-                        Property.STRING_PROPERTY, condition.condition, 0, "", Property.DIR_OUT);
-                Property prop3 = NavajoFactory.getInstance().createProperty(outMessage, "EvaluatedExpression",
-                        Property.STRING_PROPERTY, eval, 0, "", Property.DIR_OUT);
-
+                
                 msg.addProperty(prop0);
                 msg.addProperty(prop1);
-                msg.addProperty(prop2);
-                msg.addProperty(prop3);
+                
+//                if (System.getenv("DEBUG_SCRIPTS") != null && System.getenv("DEBUG_SCRIPTS").equals("true")) {
+                    Property prop2 = NavajoFactory.getInstance().createProperty(outMessage, "FailedExpression",
+                            Property.STRING_PROPERTY, condition.condition, 0, "", Property.DIR_OUT);
+                    Property prop3 = NavajoFactory.getInstance().createProperty(outMessage, "EvaluatedExpression",
+                            Property.STRING_PROPERTY, eval, 0, "", Property.DIR_OUT);
+                    msg.addProperty(prop2);
+                    msg.addProperty(prop3);
+//                }
+
                 messages.add(msg);
             }
         }
@@ -620,11 +623,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
         return f;
     }
 
-    @Override
-    protected void finalize() {
-        functions.clear();
-    }
-
+ 
     protected Map<String, Object> getEvaluationParams() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(Expression.ACCESS, myAccess);
@@ -815,6 +814,10 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
         }
         return null;
     }
+    
+    protected void writeToLog(String msg) {
+        logger.info(myAccess.getRpcName() + " (" + myAccess.getAccessID() + "): " +  msg);
+    }
 
     /**
      * Get a lock for the synchronized block.
@@ -827,9 +830,12 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
         String lockName = user + "-" + service + "-" + key;
         logger.debug("lockname: " + lockName);
         Lock l = TribeManagerFactory.getInstance().getLock(lockName);
-        acquiredLocks.add(l);
-
+ 
         return l;
+    }
+    
+    public void acquiredLock(Lock l ) {
+        acquiredLocks.add(l);
     }
 
     public void releaseLock(Lock l) {

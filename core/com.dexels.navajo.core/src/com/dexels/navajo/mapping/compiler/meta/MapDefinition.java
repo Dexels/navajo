@@ -162,7 +162,7 @@ public class MapDefinition {
 				if ( setterValue == null ) {
 					setterValue = child.getContent();
 					if ( setterValue == null || "".equals(setterValue) ) {
-						throw new MetaCompileException(filename, child, "Did not find any value that could be set for setter <" + child.getName() + "/>");
+						throw new MetaCompileException(filename, child, "Did not find any value that could be set for setter <" + child.getName() + "/>" + " in " + this.objectName);
 					}
 					setterValue = setterValue.trim();
 					isTextNode = true;
@@ -170,7 +170,7 @@ public class MapDefinition {
 
 				ValueDefinition vd = getValueDefinition(field);
 				if ( vd == null ) {
-					throw new MetaCompileException(filename, child, "Could not find definition for setter: " + field);
+					throw new MetaCompileException(filename, child, "Could not find definition for setter: " + field + " in " + this.objectName);
 				}
 				vd.generateCode(child, setterValue, isTextNode, condition, mout, true, filename );
 
@@ -299,6 +299,7 @@ public class MapDefinition {
 					    child.getName().equals("field") ||
 					    child.getName().equals("comment") ||
 					    child.getName().equals("debug") ||
+					    child.getName().equals("log") ||
 					    child.getName().equals("param") || 
 					    child.getName().equals("include") ||
 					    child.getName().equals("inject") ||
@@ -318,6 +319,7 @@ public class MapDefinition {
 					    child.getName().equals("operations") ||
 					    child.getName().equals("operation") ||
 					    child.getName().equals("synchronized") ||
+					    child.getName().equals("finally") ||
 					    child.getName().equals("check") ) ) {
 				throw new MetaCompileException(filename, child, "Unknown tag/method <" + child.getName() + "/> encountered");
 			}

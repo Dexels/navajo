@@ -23,7 +23,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
@@ -32,7 +32,9 @@ import com.dexels.navajo.parser.TMLExpressionException;
  */
 
 public class CheckEmail extends FunctionInterface {
-
+	private static final String EMAIL_PATTERN = "^[\\w!#$%&�*+/=?`{|}~^-]+(?:\\.[\\w!#$%&�*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,9}$";
+	
+	
   @Override
 public String remarks() {
    return "This functions checks the syntactic validity of email adressess";
@@ -49,7 +51,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
     String email = (String) o;
 
     try {
-     Pattern re = Pattern.compile("[A-z.\\-_&0-9]+[@]{1}[A-z\\-_0-9]+[A-z.\\-_0-9]+[A-z\\-_0-9]{1}");
+     Pattern re = Pattern.compile(EMAIL_PATTERN);
      boolean isMatch = re.matcher(email).matches();
      if(!isMatch) {
        return Boolean.FALSE;
@@ -63,10 +65,11 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
   }
 
   public static void main(String [] args ) throws TMLExpressionException {
-    CheckEmail ce = new CheckEmail();
+	Boolean b = null;
+	CheckEmail ce = new CheckEmail();
     ce.reset();
-    ce.insertOperand((String)null);
-    Boolean b = (Boolean) ce.evaluate();
+    ce.insertOperand("stefan@awesomo.amsterdam");
+    b = (Boolean) ce.evaluate();
     System.err.println("result = " + b);
   }
 

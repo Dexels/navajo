@@ -1,0 +1,32 @@
+<tml>
+   <header queueId="normalPool" queueSize="0" authorisationTime="0" cpuload="-1.0" requestParseTime="0" threadCount="0" processingTime="126" threadName="normalPool_9" queueTime="0" accessId="1451723060685-2728047" afterServiceTime="0" beforeServiceTime="0" postTime="0" serverTime="126">
+      <transaction rpc_name="example.ClubQuery" rpc_pwd="pw" rpc_usr="username"/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="Club">
+      <message name="Accommodation">
+         <message name="Address">
+            <property name="Street" type="string" value="Some Street" direction="in"/>
+            <property name="ZipCode" type="string" value="1234AB" direction="out"/>
+         </message>
+         <property name="Name" type="string" value="Some Club" direction="out"/>
+      </message>
+   </message>
+   <message name="Member" type="array">
+      <message name="Member" type="definition">
+         <property name="MemberType" type="string" value="Normal" direction="out"/>
+      </message>
+      <message name="Member" index="0" type="array_element">
+         <property name="Name" type="string" value="Joe" direction="out"/>
+      </message>
+      <message name="Member" index="1" type="array_element">
+         <property name="Name" type="string" value="Jennifer" direction="out"/>
+      </message>
+      <message name="Member" index="2" type="array_element">
+         <message name="Qualifications">
+         </message>
+         <property name="Name" type="string" value="Dmitri" direction="out"/>
+      </message>
+   </message>
+</tml>

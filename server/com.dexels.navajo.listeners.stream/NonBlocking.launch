@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.pde.ui.EquinoxLauncher">
+<booleanAttribute key="append.args" value="true"/>
+<booleanAttribute key="automaticAdd" value="false"/>
+<booleanAttribute key="automaticValidate" value="false"/>
+<stringAttribute key="bootstrap" value=""/>
+<stringAttribute key="checked" value="[NONE]"/>
+<booleanAttribute key="clearConfig" value="true"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/NonBlocking"/>
+<booleanAttribute key="default" value="true"/>
+<booleanAttribute key="default_auto_start" value="true"/>
+<intAttribute key="default_start_level" value="5"/>
+<booleanAttribute key="includeOptional" value="false"/>
+<stringAttribute key="karaf_boot_features" value=""/>
+<booleanAttribute key="karaf_features_management" value="true"/>
+<stringAttribute key="karaf_remote_console_password" value="karaf"/>
+<stringAttribute key="karaf_remote_console_username" value="karaf"/>
+<booleanAttribute key="karaf_start_local_console" value="true"/>
+<booleanAttribute key="karaf_start_remote_console" value="false"/>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/CDC-1.0%Foundation-1.0"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl en_US -console"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dorg.osgi.service.http.port=9090 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Xmx800M -Djava.awt.headless=true -Dorg.osgi.framework.startlevel.beginning=1 -Dorg.slf4j.simpleLogger.defaultLogLevel=info -Dorg.osgi.framework.system.packages.extra=sun.misc"/>
+<stringAttribute key="pde.version" value="3.3"/>
+<booleanAttribute key="show_selected_only" value="true"/>
+<stringAttribute key="target_bundles" value="com.fasterxml.aalto-xml@default:default,io.reactivex.rxjava@default:default,jackson-core-lgpl@default:default,jackson-mapper-lgpl@default:default,org.apache.commons.codec@default:default,org.apache.felix.configadmin@default:default,org.apache.felix.gogo.runtime@default:default,org.apache.felix.gogo.shell@default:default,org.apache.felix.metatype@default:default,org.apache.felix.scr@default:default,org.apache.felix.webconsole.plugins.ds@default:default,org.apache.felix.webconsole.plugins.event@default:default,org.apache.felix.webconsole.plugins.memoryusage@default:default,org.apache.felix.webconsole.plugins.packageadmin@default:default,org.apache.felix.webconsole.plugins.scriptconsole@default:default,org.apache.felix.webconsole@default:default,org.apache.xbean.bundleutils@default:default,org.apache.xbean.finder@default:default,org.eclipse.osgi@-1:true,org.objectweb.asm.commons@default:default,org.objectweb.asm.tree@default:default,org.objectweb.asm@default:default,org.ops4j.pax.web.pax-web-api@default:default,org.ops4j.pax.web.pax-web-extender-whiteboard@default:default,org.ops4j.pax.web.pax-web-jetty-bundle@default:default,org.ops4j.pax.web.pax-web-spi@default:default,slf4j.api@default:default,slf4j.simple@default:false,stax2-api@default:default"/>
+<booleanAttribute key="tracing" value="false"/>
+<booleanAttribute key="useCustomFeatures" value="false"/>
+<booleanAttribute key="useDefaultConfigArea" value="true"/>
+<stringAttribute key="workspace_bundles" value="com.dexels.navajo.document.stream@default:default,com.dexels.navajo.document@default:default,com.dexels.navajo.listeners.stream@default:default,com.dexels.navajo.version@default:default"/>
+</launchConfiguration>

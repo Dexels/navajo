@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="com.dexels.navajo.listeners.stream">
+   <implementation class="com.dexels.navajo.listeners.stream.NonBlockingListener"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <!-- Optional for now-->
+   <reference bind="setLocalClient" cardinality="0..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="dynamic" unbind="clearLocalClient"/>
+   <property name="asyncSupported" value="true"/>
+   <property name="alias" type="String" value="/stream"/>
+   <property name="servletName" type="String" value="stream-postman"/>
+   <property name="servlet-name" type="String" value="stream-postman"/>
+   <reference bind="addScript" cardinality="0..n" interface="com.dexels.navajo.document.stream.api.Script" name="Script" policy="dynamic" unbind="removeScript"/>
+   <reference bind="addSimpleScript" cardinality="0..n" interface="com.dexels.navajo.document.stream.api.SimpleScript" name="SimpleScript" policy="dynamic" unbind="removeSimpleScript"/>
+</scr:component>

@@ -1,0 +1,14 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo SWIFT driver" name="Navajo SWIFT driver" id="navajo.resource.swift">
+    <AD name="name"  id="name" required="false" type="String" default="resource_name"/>
+    <AD name="endpoint"  id="endpoint" required="true" type="String" default="http://openstack.instance"/>
+    <AD name="tenantId"  id="tenantId" required="false" type="String"/>
+    <AD name="container"  id="container" required="true" type="String" default="demo"/>
+    <AD name="user"  id="user" required="true" type="String"/>
+    <AD name="apiKey" id="apiKey" required="false"  type="String" default="12345"/>   
+    <AD name="instance"  id="instance" required="false" type="String" default="*"/>
+  </OCD>
+  <Designate pid="navajo.resource.swift" factoryPid="navajo.resource.swift">
+     <Object ocdref="navajo.resource.swift"/>
+  </Designate>
+</metatype:MetaData>

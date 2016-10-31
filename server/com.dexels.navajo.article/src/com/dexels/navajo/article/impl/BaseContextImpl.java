@@ -1,6 +1,7 @@
 package com.dexels.navajo.article.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -11,33 +12,31 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.article.ArticleClientException;
+import com.dexels.navajo.article.APIErrorCode;
+import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleContext;
-import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
-import com.dexels.navajo.article.DirectOutputThrowable;
+import com.dexels.navajo.article.NoJSONOutputException;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLParseException;
 import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.oauth.api.OAuthToken;
 import com.dexels.oauth.api.TokenStore;
 import com.dexels.oauth.api.TokenStoreException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public abstract class BaseContextImpl implements ArticleContext {
 
 	private final Map<String, ArticleCommand> commands = new HashMap<String, ArticleCommand>();
 	private NavajoIOConfig config;
 	private TokenStore tokenStore;
-	
-	private static String ARTICLE_TYPE = "type";
-	private static String ARTICLE_TYPE_DISPLAY = "display";
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseContextImpl.class);
@@ -164,8 +163,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 	}
 
 	@Override
-	public void interpretArticle(File article, ArticleRuntime ac)
-			throws IOException, ArticleException, ArticleClientException, DirectOutputThrowable {
+	public void interpretArticle(File article, ArticleRuntime ac) throws APIException, NoJSONOutputException {
 		XMLElement articleXml = new CaseSensitiveXMLElement();
 		Reader r = null;
 		try {
@@ -173,7 +171,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 			articleXml.parseFromReader(r);
 			ac.execute(this);
 		} catch (IOException e) {
-			throw e;
+			throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
 		} finally {
 			if (r != null) {
 				try {
@@ -184,10 +182,29 @@ public abstract class BaseContextImpl implements ArticleContext {
 			}
 		}
 	}
+	
 
-	public void interpretMeta(XMLElement article, ObjectMapper mapper,
-			ObjectNode articleNode, boolean extended) throws ArticleException {
+	@Override
+	public void writeArticleMeta(String name, ObjectNode w, ObjectMapper mapper, boolean extended) throws APIException {
+		File in = resolveArticle(name);
+		
+		try (FileReader fr = new FileReader(in)) {
+			ObjectNode article = mapper.createObjectNode();
+			w.set(name, article);
+			XMLElement x = new CaseSensitiveXMLElement();
+			x.parseFromReader(fr);
+			article.put("name", name);
+			interpretMeta(x, mapper, article, extended);
+		} catch (FileNotFoundException e) {
+			throw new APIException("Article " + name + " not found", e, APIErrorCode.ArticleNotFound);
+		} catch (XMLParseException e) {
+			throw new APIException("Article " + name + " is not valid XML", e, APIErrorCode.InternalError);
+		} catch (IOException e) {
+			throw new APIException("Autoclose on filereader failed", e, APIErrorCode.InternalError);
+		}
+	}
 
+	public void interpretMeta(XMLElement article, ObjectMapper mapper, ObjectNode articleNode, boolean extended) throws APIException {
 		String outputType = article.getStringAttribute("output");
 		if (outputType != null) {
 			articleNode.put("output", outputType);
@@ -199,7 +216,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 			for (String scope : scopeArray) {
 				scopeArgs.add(scope);
 			}
-			articleNode.put("scopes", scopeArgs);
+			articleNode.set("scopes", scopeArgs);
 		}
 		
 		String description = article.getStringAttribute("description");
@@ -207,11 +224,9 @@ public abstract class BaseContextImpl implements ArticleContext {
 			articleNode.put("description", description);
 		}
 		
-		articleNode.put(ARTICLE_TYPE, article.getStringAttribute(ARTICLE_TYPE, ARTICLE_TYPE_DISPLAY));
-
 		XMLElement argTag = article.getChildByTagName("_arguments");
 		ArrayNode inputArgs = mapper.createArrayNode();
-		articleNode.put("input", inputArgs);
+		articleNode.set("input", inputArgs);
 		if (argTag != null) {
 			List<XMLElement> args = argTag.getChildren();
 			for (XMLElement xmlElement : args) {
@@ -245,7 +260,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 			}
 		}
 		ArrayNode outputArgs = mapper.createArrayNode();
-		articleNode.put("output", outputArgs);
+		articleNode.set("output", outputArgs);
 		List<XMLElement> children = article.getChildren();
 
 		for (XMLElement e : children) {
@@ -255,7 +270,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 			}
 			ArticleCommand ac = getCommand(name);
 			if (ac == null) {
-				throw new ArticleException("Unknown command: " + name);
+				throw new APIException("Unknown command: " + name, null, APIErrorCode.InternalError);
 			}
 			Map<String, String> parameters = new HashMap<String, String>();
 
@@ -265,36 +280,9 @@ public abstract class BaseContextImpl implements ArticleContext {
 				parameters.put(attributeName,
 						e.getStringAttribute(attributeName));
 			}
-			if (ac.writeMetadata(e, outputArgs, mapper)) {
-			}
-
+			
+			ac.writeMetadata(e, outputArgs, mapper);
 		}
-	}
-
-	@Override
-	public void writeArticleMeta(String name, ObjectNode w, ObjectMapper mapper, boolean extended)
-			throws ArticleException {
-		File in = resolveArticle(name);
-		FileReader fr = null;
-		try {
-			ObjectNode article = mapper.createObjectNode();
-			w.put(name, article);
-			fr = new FileReader(in);
-			XMLElement x = new CaseSensitiveXMLElement();
-			x.parseFromReader(fr);
-			article.put("name", name);
-			interpretMeta(x, mapper, article, extended);
-		} catch (IOException e) {
-			logger.error("Problem parsing article: ", e);
-		} finally {
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-				}
-			}
-		}
-
 	}
 
 	public NavajoIOConfig getConfig() {

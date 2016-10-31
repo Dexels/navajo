@@ -1,7 +1,9 @@
 package com.dexels.navajo.document.base;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Navajo;
 
 public class BaseTransactionImpl extends BaseNode {
 	private static final long serialVersionUID = -6325965122672286543L;
@@ -15,6 +17,7 @@ private String rpc_usr;
 private String rpc_pwd;
 private String rpc_schedule;
 protected String myRequestId;
+
 
   public BaseTransactionImpl(Navajo n) {
     super(n);
@@ -66,6 +69,8 @@ public final void setRpc_pwd(String rpc_pwd) {
 public final String getRpc_usr() {
     return rpc_usr;
 }
+
+
 public final void setRpc_usr(String rpc_usr) {
     this.rpc_usr = rpc_usr;
 }
@@ -83,4 +88,6 @@ public String getRequestId() {
 public void setRequestId(String id) {
     myRequestId = id;
 }
+
+
   }

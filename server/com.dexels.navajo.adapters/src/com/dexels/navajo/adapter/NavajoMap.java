@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.navajomap.MessageMap;
-import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
 import com.dexels.navajo.client.NavajoResponseHandler;
 import com.dexels.navajo.client.async.AsyncClient;
 import com.dexels.navajo.client.async.AsyncClientFactory;
@@ -54,7 +53,6 @@ import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -845,6 +843,10 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             } else if (server != null) { // External request.
                 try {
                     ManualAsyncClient ac = AsyncClientFactory.getManualInstance();
+                    if (ac == null ){
+                        logger.warn("unable to find async client - cannot perform navajomap call!");
+                        throw new UserException(-1, "AsyncClient null");
+                    }
                     String server = this.server.startsWith("http") ? this.server : "http://" + this.server;
                     Integer timeout = null;
                     if (serverTimeout > -1) {
@@ -865,7 +867,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                     if (block) {
                         this.run();
                     } else {
-                        SchedulerRegistry.getScheduler().submit(this, true);
+                        SchedulerRegistry.getLowPrioScheduler().submit(this, true);
                     }
                     serviceCalled = true;
                     if (getException() != null) {
@@ -1413,6 +1415,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             // Clear request id.
             h.setRequestId(null);
             h.setHeaderAttribute("parentaccessid", access.accessID);
+            h.setHeaderAttribute("application", access.getApplication());
             String tenant = access.getTenant();
             boolean skipAuth = true;
             if (this.tenant != null && !this.tenant.equals("")) {
@@ -1572,13 +1575,6 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     public DependentResource[] getDependentResourceFields() {
         return new DependentResource[] { new GenericDependentResource(GenericDependentResource.SERVICE_DEPENDENCY, "doSend", AdapterFieldDependency.class),
                 new GenericDependentResource("navajoserver", "server", AdapterFieldDependency.class) };
-    }
-
-    public static ResourceManager getResourceManager(String resourceType) {
-        if (resourceType.equals("navajoserver")) {
-            return NavajoMapManager.getInstance();
-        }
-        return null;
     }
 
     public String getOutputProperties() {

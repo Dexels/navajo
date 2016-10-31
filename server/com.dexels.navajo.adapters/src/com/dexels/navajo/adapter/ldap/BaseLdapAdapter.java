@@ -170,7 +170,7 @@ public class BaseLdapAdapter implements Mappable {
 
 		final Navajo process2 = NavajoClientFactory.getClient().doSimpleSend(init, "club/ProcessQueryClub");
 		process2.getMessage("ClubData");
-		process2.write(System.err);
+
 		for (int i = 0; i < al.size(); i++) {
 			Message current = al.get(i);
 			bla.insertPerson(context, current,constants);

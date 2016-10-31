@@ -82,8 +82,8 @@ public final class MappingUtils {
             return Property.FLOAT_PROPERTY;
         else if (o instanceof Float)
             return Property.FLOAT_PROPERTY;
-        else if (o instanceof ArrayList)
-            return Property.SELECTION_PROPERTY;
+        else if (o instanceof List)
+            return Property.LIST_PROPERTY;
         else if (o instanceof Boolean)
             return Property.BOOLEAN_PROPERTY;
         else if (o.getClass().getName().startsWith("[Ljava.util.Vector"))
@@ -480,6 +480,10 @@ public static final Message[] addMessage(Navajo doc, Message parent, String mess
         return messages;
       }
     }
+    
+    if (getBaseMessageName(message).contains(Navajo.MESSAGE_SEPARATOR)) {
+        throw new MappingException( "No submessage constructs allowed in messagename: " + message);
+    }
  
     /**
      * Added getBaseMessageName to support relative message creation.
@@ -634,7 +638,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 
 		  return (mappable.isAssignableFrom(c) );
 		  
-	  } catch (Exception e) {
+	  } catch (Throwable e) {
 		  throw new UserException(-1, "Could not handle class as either mappable or POJO bean: " + className + ", cause: " + e.getMessage(),e);
 	  }
   }

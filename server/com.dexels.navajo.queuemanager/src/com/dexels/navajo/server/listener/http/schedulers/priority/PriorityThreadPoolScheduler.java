@@ -209,87 +209,92 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		if ( priority ) {
 			return queueMap.get("priorityPool");
 		}
-		
-		InputContext ic = new InputContext() {
-			
-			@Override
-			public String getUserName() {
-				return getInputNavajo().getHeader().getRPCUser();
-			}
-			
-			@Override
-			public String getServiceName() {
-				return getInputNavajo().getHeader().getRPCName();
-			}
-			
-			@Override
-			public boolean isPriority() {
-				return priority;
-			}
-
-			
-			@Override
-			public String getResourceAvailability() {
-				ServiceAvailability sa;
-				try {
-					sa = ResourceCheckerManager.getInstance().getResourceChecker(getServiceName(), myRunner.getInputNavajo()).getServiceAvailability();
-					return sa.getStatus();
-				} catch (IOException e) {
-					logger.error("Error: ", e);
-				}
-				return "ok";
-			}
-			
-			@Override
-			public HttpServletRequest getRequest() {
-
-				return (HttpServletRequest) myRunner.getAttribute("httpRequest");
-			}
-			
-			@Override
-			public Navajo getInputNavajo() {
-				try {
-					return myRunner.getInputNavajo();
-				} catch (IOException e) {
-					logger.error("Error: ", e);
-					return null;
-				}
-			}
-
-            @Override
-            public String getIpAddress() {
-                return myRunner.getRequest().getIpAddress();
-            }
-		};
-		
-		
-		if (LoginStatisticsProvider.reachedAbortThreshold(ic.getUserName(), ic.getIpAddress())) {
-		    logger.info("Too many failed login attemps for {}@{} - aborting!", ic.getUserName(), ic.getIpAddress());
-		    return null;
-		} else if (LoginStatisticsProvider.reachedRateLimitThreshold(ic.getUserName(), ic.getIpAddress())) {
-		    logger.info("Running request from {}@{} in slowpool due too repeated failed login attempts",ic.getUserName(), ic.getIpAddress() );
-		    return queueMap.get("slowPool");
-		}
-		
 		String queueName;
-		try {
-			queueName = queueManager.resolve(ic, "resolvequeue.js");
-//			queueName = "normalThread";
-//			if(false) {
-//				throw new NavajoSchedulingException(1, "sure");
-//			}
-			if(queueName==null) {
-				return getDefaultQueue();
-			}
-		} catch (NavajoSchedulingException e) {
-			if(e.getReason()==NavajoSchedulingException.SCRIPT_PROBLEM || e.getReason() == NavajoSchedulingException.UNKNOWN) {
-				logger.info(RESOLUTION_SCRIPT_DOES_NOT_EXIST, "Could not find queue resolution script, using default queue.",e);
-				return getDefaultQueue();
-			}
-			logger.error("Error: ", e);
-			return null;
+		if (myRunner.getAttributeNames().contains("queueName")) {
+		    queueName = (String) myRunner.getAttribute("queueName");
+		} else {
+		    InputContext ic = new InputContext() {
+	            
+	            @Override
+	            public String getUserName() {
+	                return getInputNavajo().getHeader().getRPCUser();
+	            }
+	            
+	            @Override
+	            public String getServiceName() {
+	                return getInputNavajo().getHeader().getRPCName();
+	            }
+	            
+	            @Override
+	            public boolean isPriority() {
+	                return priority;
+	            }
+
+	            
+	            @Override
+	            public String getResourceAvailability() {
+	                ServiceAvailability sa;
+	                try {
+	                    sa = ResourceCheckerManager.getInstance().getResourceChecker(getServiceName(), myRunner.getInputNavajo()).getServiceAvailability();
+	                    return sa.getStatus();
+	                } catch (IOException e) {
+	                    logger.error("Error: ", e);
+	                }
+	                return "ok";
+	            }
+	            
+	            @Override
+	            public HttpServletRequest getRequest() {
+
+	                return (HttpServletRequest) myRunner.getAttribute("httpRequest");
+	            }
+	            
+	            @Override
+	            public Navajo getInputNavajo() {
+	                try {
+	                    return myRunner.getInputNavajo();
+	                } catch (IOException e) {
+	                    logger.error("Error: ", e);
+	                    return null;
+	                }
+	            }
+
+	            @Override
+	            public String getIpAddress() {
+	                return myRunner.getRequest().getIpAddress();
+	            }
+	        };
+	        
+	        
+	        if (LoginStatisticsProvider.reachedAbortThreshold(ic.getUserName(), ic.getIpAddress())) {
+	            logger.warn("Refusing request from {} for {} due to too many failed auth attempts",  ic.getUserName(), ic.getIpAddress());
+	            return null;
+	        } else if (LoginStatisticsProvider.reachedRateLimitThreshold(ic.getUserName(), ic.getIpAddress())) {
+	            logger.warn("Slow pool for request from {} for {} due to too many failed auth attempts",  ic.getUserName(), ic.getIpAddress());
+	            return queueMap.get("slowPool");
+	        }
+	        
+	        
+	        try {
+	            queueName = queueManager.resolve(ic, "resolvequeue.js");
+//	          queueName = "normalThread";
+//	          if(false) {
+//	              throw new NavajoSchedulingException(1, "sure");
+//	          }
+	            if(queueName==null) {
+	                return getDefaultQueue();
+	            }
+	        } catch (NavajoSchedulingException e) {
+	            if(e.getReason()==NavajoSchedulingException.SCRIPT_PROBLEM || e.getReason() == NavajoSchedulingException.UNKNOWN) {
+	                logger.info(RESOLUTION_SCRIPT_DOES_NOT_EXIST, "Could not find queue resolution script, using default queue.",e);
+	                return getDefaultQueue();
+	            }
+	            logger.error("Error: ", e);
+	            return null;
+	        }
 		}
 		
+
 		RequestQueue r = queueMap.get(queueName);
 		if(r!=null) {
 			return r;

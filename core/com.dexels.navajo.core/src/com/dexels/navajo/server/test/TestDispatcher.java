@@ -80,13 +80,6 @@ public class TestDispatcher implements DispatcherInterface {
 	}
 
 	@Override
-	public String getServerId() {
-		
-		return null;
-	}
-
-
-	@Override
 	public String getThreadName(Access a) {
 		
 		return null;

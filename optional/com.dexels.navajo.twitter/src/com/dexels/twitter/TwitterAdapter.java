@@ -72,9 +72,7 @@ public class TwitterAdapter implements Mappable{
 	
 	public void setToken2(String t) {
 		token2 = t;
-		OAuthSignpostClient oauthClient = new OAuthSignpostClient(API_KEY,  API_SECRET, token1, token2);
-		System.err.println("Login in with token1: " + token1 + ", token2: " + token2);
-		
+		OAuthSignpostClient oauthClient = new OAuthSignpostClient(API_KEY,  API_SECRET, token1, token2);		
 		twit = new Twitter(null, oauthClient);
 	}
 

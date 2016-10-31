@@ -8,12 +8,12 @@ package com.dexels.navajo.document;
  * @author Arjen Schoneveld
  * @version 1.0
  */
+import java.beans.PropertyChangeListener;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
 
-import java.beans.*;
-import java.io.*;
-import java.util.*;
-
-import com.dexels.navajo.persistence.*;
+import com.dexels.navajo.persistence.Persistable;
 
 public interface Navajo extends Persistable {
 

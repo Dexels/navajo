@@ -109,6 +109,9 @@ import com.dexels.navajo.tipi.validation.TipiValidationDecorator;
  */
 public abstract class TipiContext implements ITipiExtensionContainer, Serializable {
 
+    private static final String PERF_COMPONENT_INSTANTIATE_JSON = "{\"action\": \"instantiate\", \"unhide\": \"{}\", \"component\": \"{}\", \"duration\": {}}";
+    private static final String PERF_EVENT_COMPLETED_JSON = "{\"action\": \"event\", \"name\": \"{}\", \"compid\": \"{}\", \"parentid\": \"{}\", \"duration\": {}}";
+
     private static final Logger logger = LoggerFactory.getLogger(TipiContext.class);
     private static final Logger perflogger = LoggerFactory.getLogger("perf");
     
@@ -282,6 +285,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if (myThreadPool == null) {
             myThreadPool = new TipiThreadPool(this, getPoolSize());
         }
+        
         NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
         tipiResourceLoader = new ClassPathResourceLoader();
         setStorageManager(new TipiNullStorageManager());
@@ -294,8 +298,15 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         } catch (Throwable e) {
             hasDebugger = false;
         }
+        eHandler = new BaseTipiErrorHandler();
+        eHandler.setContext(this);
+        
+        
         MDC.put("sessionToken", SessionTokenFactory.getSessionTokenProvider().getSessionToken());
-        logger.info("SESSION");
+        if (systemPropertyMap.get("DTAP") != null) {
+            MDC.put("dtap", systemPropertyMap.get("DTAP"));
+        }
+        logger.debug("sessionToken: {}", SessionTokenFactory.getSessionTokenProvider().getSessionToken());
     }
 
     public TipiApplicationInstance getApplicationInstance() {
@@ -513,7 +524,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         // getClassManager().clearClassMap();
         clearTopScreen();
 
-        eHandler = null;
+
         errorHandler = null;
         // rootPaneList.clear();
         Runtime runtimeObject = Runtime.getRuntime();
@@ -532,8 +543,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         }
         navajoCacheMap = new HashMap<String, CachedNavajo>();
         
-        // Will be updated on the next error, which should re-read validation.properties
-        eHandler = null;
+        resetErrorHandler();
     }
 
     public abstract void clearTopScreen();
@@ -1105,7 +1115,32 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             inst = instantiateComponent(xe, event, t, parent);
             // set its ID
             inst.setId(id);
-            parent.addComponent(inst, this, constraints);
+            
+            String overlayType = "opaque";
+            TipiSupportOverlayPane overlayComponent = null;
+            if (inst instanceof TipiSupportOverlayPane) {
+                try {
+                    if (inst.getValue("overlay") != null) {
+                        overlayType = (String) inst.getValue("overlay");
+                    }
+                } catch (Exception e) {
+                    // Something went wrong, let's just use default overlay...
+                }
+               
+                if (!overlayType.equals("none")) {
+                    overlayComponent = (TipiSupportOverlayPane) inst;
+                    overlayComponent.addOverlayProgressPanel(overlayType);
+                }
+            }
+            
+            try {
+                parent.addComponent(inst, this, constraints);
+            } finally {
+                if (overlayComponent != null && overlayComponent.getOverlayContainer() != null) {
+                    overlayComponent.removeOverlayProgressPanel();
+                }
+            }
+            
             // OnInstantiate event is called sync, so by this time we are actually finished 
             addInitiateStatisticsFinished(id, false); 
             fireTipiStructureChanged(inst);
@@ -1681,15 +1716,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         }
         navajoMap.put(method, navajo);
     }
+    
+    public void loadNavajo(Navajo reply, String method, boolean breakOnException) throws TipiBreakException {
 
-    public void loadNavajo(Navajo reply, String method) throws TipiBreakException {
         Header h = reply.getHeader();
         if (h == null) {
             h = NavajoFactory.getInstance().createHeader(reply, method, "unknown", "unknown", -1);
             reply.addHeader(h);
         }
         
-        loadNavajo(reply, method, "*", null, false);
+        loadNavajo(reply, method, "*", null, breakOnException);
         Navajo compNavajo = null;
         if (hasDebugger && !"NavajoListNavajo".equals(method)) {
             try {
@@ -1708,6 +1744,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
         assert (reply.getHeader() != null);
         
+    
+    }
+
+    public void loadNavajo(Navajo reply, String method) throws TipiBreakException {
+        loadNavajo(reply, method, false);
     }
     
 
@@ -1764,23 +1805,21 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     }
 
     public TipiErrorHandler getErrorHandler() {
-        // TODO Put this in a more elegant place
-        // TODO No remove completely. Don't like it.
-        if (eHandler == null) {
-            eHandler = new BaseTipiErrorHandler();
-            eHandler.setContext(this);
-        }
         return eHandler;
     }
 
-    private String getErrorMessage(Navajo reply, String errorMessage) {
+    private String getErrorMessage(Navajo reply, final String errorMessage) {
         String userError = errorMessage;
-        String dtap = systemPropertyMap.get("DTAP") == null? null: systemPropertyMap.get("DTAP");
-        Boolean isSportlinkUser = (Boolean) getGlobalValue("IsUserNameSportlink");
-        if (! (isSportlinkUser || dtap.equals("DEVELOPMENT") )) {
+        String dtap = systemPropertyMap.get("DTAP") == null ? null: systemPropertyMap.get("DTAP");
+        Boolean showFullErrorMessage = (Boolean) getGlobalValue("showFullErrorMessage");
+        if (showFullErrorMessage == null) showFullErrorMessage = false;
+        
+        // In everything besides DEVELOPMENT we replace the error message. 
+        // If the user is sportlink, we never replace it
+        if (!"DEVELOPMENT".equals(dtap) && !showFullErrorMessage)  {
             // We don't want to give the end-user an ugly stack trace, hence we replace the message
             // with an access id.
-            errorMessage = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
+            userError = "Code: " + reply.getHeader().getHeaderAttribute("accessId").toString();
         } 
         return userError;
     }
@@ -2411,10 +2450,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
     public void setGenericResourceLoader(String resourceCodeBase, String resourceCacheLocation) throws MalformedURLException {
         if (resourceCodeBase != null) {
-            setGenericResourceLoader(createResourceLoader(resourceCodeBase, resourceCacheLocation, "generic"));
+            setGenericResourceLoader(createResourceLoader(resourceCodeBase, resourceCacheLocation, "resource"));
         } else {
             // BEWARE: The trailing slash is important!
-            setGenericResourceLoader(createDefaultResourceLoader("resource/", useCache(),"generic"));
+            setGenericResourceLoader(createDefaultResourceLoader("resource/", useCache(),"resource"));
         }
     }
 
@@ -2505,20 +2544,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
         resetErrorHandler();
 
-        // try {
-        // Class<?> c = Class
-        // .forName("com.dexels.navajo.tipi.tools.TipiXSDBuilder");
-        // TipiContextAdapter tca = (TipiContextAdapter) c.newInstance();
-        // tca.execute(this);
-        // logger.info("xsd builder loaded");
-        // } catch (Throwable e) {
-        // logger.error("Error loading XSD?",e);
-        // }
 
     }
 
     public void resetErrorHandler() {
-        eHandler = null;
+        eHandler.removeContext(this);
+        eHandler = new BaseTipiErrorHandler();
+        eHandler.setContext(this);
     }
 
     public void fireTipiStructureChanged(TipiComponent tc) {
@@ -2946,9 +2978,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         return scriptManager.getEngineByName(engine);
     }
 
-    // public void setBundleContext(BundleContext context) {
-    // this.bundleContext = context;
-    // }
+ 
     public void setClassManager(IClassManager classManager) {
         this.classManager = classManager;
 
@@ -2977,7 +3007,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if (start == null) {
             return;
         }
-        perflogger.info("Component: {} finished in: {} unhide: {}", id, (end - start), unhide);
+       
+        perflogger.info(PERF_COMPONENT_INSTANTIATE_JSON, unhide, id, (end - start));
         tipiInstantiateStatistics.remove(id);
     }
     
@@ -2998,7 +3029,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if ( parent != null) {
             parentId = parent.getId();
         }
-        perflogger.info("Tipi Event {} on : {}-{} finished in: {}", eventname, component.getId(), parentId,  (end - start));
+        
+        perflogger.info(PERF_EVENT_COMPLETED_JSON , eventname, component.getId(), parentId,  (end - start));
 
         tipiEventStatistics.remove(component.getId()+eventname);
     }

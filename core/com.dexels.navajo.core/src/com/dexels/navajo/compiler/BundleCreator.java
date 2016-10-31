@@ -29,8 +29,8 @@ public interface BundleCreator {
 	
 //	public Collection<Long> installBundles(String scriptPrefix) throws BundleException;
 
-	public void createBundle(String script, Date date, List<String> failures,
-			List<String> success, List<String> skipped, boolean force, boolean keepIntermediateFiles, String extension) throws Exception;
+	public void createBundle(String script, List<String> failures, List<String> success,
+			List<String> skipped, boolean force, boolean keepIntermediateFiles, String extension) throws Exception;
 
 	public Date getBundleInstallationDate(String scriptPath, String tenant, String extension);
 	public Date getScriptModificationDate(String scriptPath, String tenant,String extension) throws FileNotFoundException;
@@ -43,12 +43,6 @@ public interface BundleCreator {
 
 	public void verifyScript(String script, List<String> failed, List<String> success);
 
-	/**
-	 * Format the compilation timestamp in a consistent way
-	 * @param d
-	 * @return
-	 */
-	public String formatCompilationDate(Date d);
 
 	/**
 	 * Tries to resolve a compiledscript. Returns null if not found.
@@ -57,7 +51,7 @@ public interface BundleCreator {
 	 * @return Null if not found
 	 * @throws ClassNotFoundException if something weird happened
 	 */
-	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant,boolean tenantQualified) throws ClassNotFoundException;
+	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant) throws ClassNotFoundException;
 
 	/**
 	 * Same as getCompiledScript, only will try to install (and compile if needed) bundle if it isn't there.
@@ -65,7 +59,7 @@ public interface BundleCreator {
 	 * @return
 	 * @throws Exception
 	 */
-	public CompiledScriptInterface getOnDemandScriptService(String scriptName, String rpcName, String tenant, boolean tenantQualified,boolean force,String extension);
+	public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant, boolean force,String extension) throws Exception;
 
 	/**
 	 * Uninstall the bundle belonging to <code>scriptName</code>. If <code>scriptName</code> is tenant-specific, only that 

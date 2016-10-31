@@ -40,10 +40,11 @@ public class TipiComposeMail extends TipiAction {
 		Message arrayList = (Message) getEvaluatedParameter("recipientList", event).value;
 		String subject = (String) getEvaluatedParameter("subject", event).value;
 		String body = (String) getEvaluatedParameter("body", event).value;
-		createEmail(arrayList, recipientProperty, subject, body);
+		String recipientsDelimiter = (String) getEvaluatedParameter("recipientsDelimiter", event).value;
+		createEmail(arrayList, recipientProperty, subject, body, recipientsDelimiter);
 	}
 	
-	private void createEmail(Message recipient, String propertyName, String subject, String body) {
+	private void createEmail(Message recipient, String propertyName, String subject, String body, String recipientsDelimiter) {
 
 		String emailAddress;
 		// "mailto:" is added by BinaryOpener
@@ -51,20 +52,23 @@ public class TipiComposeMail extends TipiAction {
 		boolean recipientsFound = false;
 
 		try {
+			// Make sure there is a valid delimiter
+			if ( recipientsDelimiter == null || ( !recipientsDelimiter.equals(",") && !recipientsDelimiter.equals(";") ) ) {
+				recipientsDelimiter = ",";
+			}
 
 			for (int i = 0; i < recipient.getArraySize(); i++) {
 				Message current = recipient.getMessage(i);
 				emailAddress = current.getProperty(propertyName).getValue();
 				if (emailAddress != null && !"".equals(emailAddress.trim())) {
 					recipientsFound = true;
-					emailString = emailString + emailAddress + ";";
+					emailString = emailString + emailAddress + recipientsDelimiter;
 				}
 			}
 			if (recipientsFound) {
 				emailString = emailString.substring(0,
 						(emailString.length() - 1));
-				emailString = emailString + "?subject=" + subject + "&body="
-						+ body;
+				emailString = emailString + "?subject=" + subject + "&body=" + body;
 				logger.info("Generated email string: " + emailString);
 				BinaryOpenerFactory.getInstance().mail(emailString);
 			} else {
