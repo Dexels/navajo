@@ -1,13 +1,6 @@
 package com.dexels.navajo.compiler.tsl.internal;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -17,21 +10,12 @@ import com.dexels.navajo.compiler.ScriptCompiler;
 import com.dexels.navajo.compiler.tsl.custom.PackageListener;
 import com.dexels.navajo.compiler.tsl.custom.PackageReportingClassLoader;
 import com.dexels.navajo.document.ExpressionEvaluator;
-import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
-import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
-import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;
-import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
-import com.dexels.navajo.script.api.CompiledScriptFactory;
-import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class TslCompilerComponent extends ScriptCompiler {
     private static String SCRIPT_EXTENSION = ".xml";
 
-    private NavajoIOConfig navajoIOConfig = null;
     private ClassLoader classLoader = null;
     private final static Logger logger = LoggerFactory.getLogger(TslCompilerComponent.class);
     private TslCompiler compiler;
@@ -40,13 +24,11 @@ public class TslCompilerComponent extends ScriptCompiler {
             "com.dexels.navajo.server.enterprise.tribe", "com.dexels.navajo.mapping.compiler.meta", "com.dexels.navajo.parser",
             "com.dexels.navajo.loader", "org.osgi.framework", "com.dexels.navajo.entity;resolution:=optional",
             "com.dexels.navajo.entity.impl;resolution:=optional", "com.dexels.navajo.server.resource;resolution:=optional" };
-    private ExpressionEvaluator expressionEvaluator;
 
-    /* (non-Javadoc)
-     * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String ) */
 
-     protected void compileScript((String scriptPath, List<Dependency> dependencies, String tenant, boolean hasTenantSpecificFile,
-            boolean forceTenant) throws Exception {
+    
+    @Override
+    protected void compileScript(String scriptPath, String tenant, boolean hasTenantSpecificFile, boolean forceTenant) throws Exception {
         String packagePath = null;
         String script = null;
         if (scriptPath.indexOf('/') >= 0) {
@@ -140,5 +122,6 @@ public class TslCompilerComponent extends ScriptCompiler {
     public String getScriptExtension() {
         return SCRIPT_EXTENSION;
     }
+
 
 }

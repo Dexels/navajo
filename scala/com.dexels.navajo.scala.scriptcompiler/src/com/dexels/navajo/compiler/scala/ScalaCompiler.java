@@ -52,7 +52,7 @@ public class ScalaCompiler extends ScriptCompiler {
     }
 
     @Override
-    protected void compileScript(String scriptPath, String compileDate, String tenant, boolean hasTenantSpecificFile,
+    protected void compileScript(String scriptPath, String tenant, boolean hasTenantSpecificFile,
             boolean forceTenant) throws Exception {
 
         for (String pkg : standardPackages) {

@@ -87,14 +87,6 @@ public class BundleCreatorComponent implements BundleCreator {
         depanalyzer = null;
     }
 
-    /**
-     * The java compiler to clear
-     * 
-     * @param javaCompiler
-     */
-    public void clearJavaCompiler(JavaCompiler javaCompiler) {
-        this.javaCompiler = null;
-    }
 
     public void setEventAdmin(EventAdmin eventAdmin) {
         this.eventAdmin = eventAdmin;
@@ -202,9 +194,11 @@ public class BundleCreatorComponent implements BundleCreator {
         }
 
         List<String> newTenants = new ArrayList<>();
-
-        depanalyzer.addDependencies(script);
-        List<Dependency> dependencies = depanalyzer.getDependencies(script, Dependency.INCLUDE_DEPENDENCY);
+        List<Dependency> dependencies = new ArrayList<>();
+        if (scriptExtension.equals(".xml")) {
+            depanalyzer.addDependencies(script);
+            dependencies = depanalyzer.getDependencies(script, Dependency.INCLUDE_DEPENDENCY);
+        }
 
         if (!hasTenantSpecificFile && dependencies != null) {
             // We are not tenant-specific, but check whether we include any tenant-specific files.
@@ -285,14 +279,13 @@ public class BundleCreatorComponent implements BundleCreator {
     private void compileAndCreateBundle(String script, String scriptExtension, final String scriptTenant,
             boolean hasTenantSpecificFile, boolean forceTenant, boolean keepIntermediate, List<String> success,
             List<String> skipped, List<String> failures) throws Exception {
-        List<com.dexels.navajo.script.api.Dependency> dependencies = new ArrayList<com.dexels.navajo.script.api.Dependency>();
         String myScript = script;
         if (forceTenant) {
             myScript = script + "_" + scriptTenant;
         }
 
         try{
-            getScriptCompiler(scriptExtension).compile(script, formatCompilationDate, scriptTenant, hasTenantSpecificFile, forceTenant);
+            getScriptCompiler(scriptExtension).compile(script, scriptTenant, hasTenantSpecificFile, forceTenant);
  
             if (getScriptCompiler(scriptExtension).scriptNeedsCompilation()){
                 javaCompiler.compileJava(myScript);

@@ -2,7 +2,10 @@ package com.dexels.navajo.compiler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -199,7 +202,7 @@ public abstract class ScriptCompiler {
         // properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"
         w.print("Manifest-Version: 1.0\r\n");
         w.print("Bundle-SymbolicName: " + symbolicName + "\r\n");
-        w.print("Bundle-Version: " + version + "." + compileDate + "\r\n");
+        w.print("Bundle-Version: " + version + "." + formatCompilationDate() + "\r\n");
         w.print("Bundle-Name: " + description + "\r\n");
         w.print("Bundle-RequiredExecutionEnvironment: JavaSE-1.6\r\n");
         w.print("Bundle-ManifestVersion: 2\r\n");
@@ -245,6 +248,12 @@ public abstract class ScriptCompiler {
         w.print("\r\n");
         w.flush();
         w.close();
+    }
+    
+    private String formatCompilationDate() {
+        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        String formatted = df.format(new Date());
+        return formatted;
     }
 
     private void generateDs(String packagePath, String script, List<Dependency> dependencies,

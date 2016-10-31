@@ -70,11 +70,11 @@ public class EntityMap extends NavajoMap {
 		super.waitForResult();
 	}
 	
-	public String getName() {
+	public String getEntity() {
 		return entityName;
 	}
 
-	public void setName(String entityname) throws UserException{
+	public void setEntity(String entityname) throws UserException{
 		this.entityName = entityname.replace("/", ".");;
 		this.myEntity = myManager.getEntity(this.entityName);
 		if (this.myEntity == null) {

@@ -111,10 +111,7 @@ trait FunctionComponent extends com.dexels.navajo.scala.BaseAdapters with com.de
     val function = this.setupFunction(new com.dexels.navajo.functions.DateField)
     function.evaluate().asInstanceOf[Any]
   }
-  def DateSubstract(): Any = {
-    val function = this.setupFunction(new com.dexels.navajo.functions.DateSubstract)
-    function.evaluate().asInstanceOf[Any]
-  }
+
   def DayOfWeek(arg0: java.lang.Integer, arg1: java.lang.Boolean): java.util.Date = {
     val function = this.setupFunction(new com.dexels.navajo.functions.DayOfWeek)
     function.insertOperand(arg0)

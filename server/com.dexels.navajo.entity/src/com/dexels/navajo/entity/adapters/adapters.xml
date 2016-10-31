@@ -12,7 +12,7 @@
         <tagname>entity</tagname>
         <object>com.dexels.navajo.entity.adapters.EntityMap</object>
         <values>
-            <value name="name" type="string" required="true" direction="in" />
+        	<value name="entity" type="string" required="true" direction="in" />
             <value name="sendThrough" type="boolean" required="false" direction="in" />
             <value name="server" type="string" required="false" direction="in" />
             <value name="id" type="string" required="false" direction="in" />
