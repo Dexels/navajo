@@ -1843,7 +1843,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		}
 
 		if ((this.getType() != null && p.getType() != null) && !this.getType().equals(p.getType())) {
-			logger.info("isEqual() property, types are not equal");
 			return false;
 		}
 
@@ -1892,7 +1891,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				}
 				return true;
 			} catch (Exception e) {
-				logger.error("Error: ", e);
+				logger.warn("Error: ", e);
 				return false;
 			}
 		} else if (p.getType().equals(Property.BINARY_PROPERTY)) {
@@ -1931,9 +1930,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			// We are only equal if our values match exactly..
 
 			boolean result = p.getValue().equals(this.getValue());
-			if (!result) {
-				logger.info("isEqual() property, values are not equal");
-			}
 			return result;
 		}
 
