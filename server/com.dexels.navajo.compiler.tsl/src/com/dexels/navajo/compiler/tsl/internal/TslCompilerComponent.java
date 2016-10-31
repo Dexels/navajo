@@ -38,7 +38,7 @@ public class TslCompilerComponent extends ScriptCompiler {
             packagePath = "";
             script = scriptPath;
         }
-        final Set<String> packages = new HashSet<String>();
+        //final Set<String> packages = new HashSet<String>();
         for (String pkg : standardPackages) {
             packages.add(pkg);
         }
@@ -51,25 +51,10 @@ public class TslCompilerComponent extends ScriptCompiler {
             }
         });
         String scriptPackage = packagePath;
-        // if("".equals(packagePath)) {
-        // scriptPackage = "defaultPackage";
-        // }
-        String scriptString = null;
-        if ("".equals(scriptPackage)) {
-            scriptString = script.replaceAll("_", "|");
-            if (forceTenant) {
-                scriptString = (script + "_" + tenant).replaceAll("_", "|");
-            }
-        } else {
-            scriptString = packagePath + "/" + script.replaceAll("_", "|");
-            if (forceTenant) {
-                scriptString = packagePath + "/" + (script + "_" + tenant).replaceAll("_", "|");
-            }
-        }
+
 
         compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath,
                 scriptPackage, prc, navajoIOConfig, dependencies, tenant, hasTenantSpecificFile, forceTenant);
-        Set<String> dependentResources = new HashSet<String>();
     }
 
     public void setClassLoader(ClassLoader cls) {

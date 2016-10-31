@@ -399,7 +399,7 @@ public class JSONTMLImpl implements JSONTML {
                         value = jp.getText();
                     }
                     
-                    if (value.equals("null")) {
+                    if (value == null || value.equals("null")) {
                         value = null;
                     }
                     parseProperty(name, value, parent, jp);

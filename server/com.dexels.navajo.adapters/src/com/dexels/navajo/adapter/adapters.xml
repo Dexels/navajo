@@ -368,8 +368,7 @@
 				<param name="direction" field="propertyDirective" type="string" required="true" />
 			</method>
 			<method name="callwebservice">
-				<param name="breakOnConditionError" field="breakOnConditionError" type="boolean"
-					required="false" />
+				<param name="breakOnConditionError" field="breakOnConditionError" type="boolean" required="false" />
 				<param name="breakOnException" field="breakOnException" type="boolean" required="false" />
 				<param name="server" field="server" type="string" required="false" />
 				<param name="serverTimeout" field="serverTimeout" type="integer" required="false" />

@@ -10,6 +10,7 @@ import scala.collection.mutable.ListBuffer
 import scala.reflect.ManifestFactory
 import com.dexels.navajo.scala.document.NavajoMessage
 import com.dexels.navajo.scala.document.NavajoFactory
+import com.dexels.navajo.server.DispatcherFactory
 
 abstract class ScalaScript extends CompiledScript {
     var runtime: NavajoRuntime = null
@@ -37,7 +38,11 @@ abstract class ScalaScript extends CompiledScript {
     def run()
 
     def callScript(script: String)(withResult: NavajoDocument => Unit) {
-
+        val in = NavajoFactory.create()
+        val header = NavajoFactory.createHeader(in, script)
+        in.wrapped.addHeader(header.wrapped);
+        val outdoc = new NavajoDocument(DispatcherFactory.getInstance.handle(in.wrapped, true));
+        withResult(outdoc);
     }
 
     def callScript(script: String, input: NavajoDocument)(result: NavajoDocument => Unit) {
@@ -75,6 +80,5 @@ abstract class ScalaScript extends CompiledScript {
     def scriptAccess: Access = {
         return myAccess
     }
-
 
 }

@@ -31,6 +31,8 @@ import com.dexels.navajo.server.NavajoIOConfig;
  *
  */
 public abstract class ScriptCompiler {
+    private static final String BUNDLE_BASE_VERSION = "1.0.0";
+
     private final static Logger logger = LoggerFactory.getLogger(ScriptCompiler.class);
 
     /**
@@ -39,22 +41,21 @@ public abstract class ScriptCompiler {
     protected final List<Dependency> dependencies = new ArrayList<Dependency>();
     protected final Set<String> packages = new HashSet<String>();
     protected final Set<String> reqBundles = new HashSet<String>();
-    
+
     protected ExpressionEvaluator expressionEvaluator;
     protected NavajoIOConfig navajoIOConfig = null;
-    
-    public void compile(String scriptPath, String tenant, boolean hasTenantSpecificFile,
-            boolean forceTenant) throws Exception {
+
+    public void compile(String scriptPath, String tenant, boolean hasTenantSpecificFile, boolean forceTenant)
+            throws Exception {
         dependencies.clear();
         packages.clear();
         reqBundles.clear();
-        
-        
-       try {
-           compileScript(scriptPath, tenant, hasTenantSpecificFile, forceTenant);
-       } catch (Exception e) {
-           logger.error("Error! {}", e);
-       }
+
+        try {
+            compileScript(scriptPath, tenant, hasTenantSpecificFile, forceTenant);
+        } catch (Exception e) {
+            logger.error("Error! {}", e);
+        }
 
         String packagePath = null;
         String script = null;
@@ -77,12 +78,12 @@ public abstract class ScriptCompiler {
         if (forceTenant) {
             scriptString = packagePath + "/" + (script + "_" + tenant).replaceAll("_", "|");
         }
-        
+
         Set<String> dependentResources = getDependentResources();
 
         generateFactoryClass(script, packagePath, dependentResources);
 
-        generateManifest(scriptString, "1.0.0", packagePath, script, packages);
+        generateManifest(scriptString, BUNDLE_BASE_VERSION, packagePath, script, packages);
         generateDs(packagePath, script, dependencies, dependentResources);
         if (packagePath.startsWith("entity")) {
             generateEntityDs(packagePath, script, dependencies, dependentResources);
@@ -92,31 +93,31 @@ public abstract class ScriptCompiler {
     /**
      * Takes care of any script-language specific compilation
      */
-    protected abstract void compileScript(String scriptPath, String tenant,
-            boolean hasTenantSpecificFile, boolean forceTenant) throws Exception;
+    protected abstract void compileScript(String scriptPath, String tenant, boolean hasTenantSpecificFile,
+            boolean forceTenant) throws Exception;
 
     /**
-     * @return A boolean to indicate whether the script has been compiled to a .java file 
-     * or straight to java byte code.
+     * @return A boolean to indicate whether the script has been compiled to a
+     *         .java file or straight to java byte code.
      */
     public abstract boolean scriptNeedsCompilation();
-    
-    
+
     /**
-     * @return Returns the script extension (INCLUDING the dot) this ScriptCompiler can handle
+     * @return Returns the script extension (INCLUDING the dot) this
+     *         ScriptCompiler can handle
      */
     public abstract String getScriptExtension();
-    
+
     private Set<String> getDependentResources() {
         Set<String> dependentResources = new HashSet<String>();
         for (Dependency d : dependencies) {
             if ("resource".equals(d.getType())) {
                 if (d instanceof AdapterFieldDependency) {
                     final AdapterFieldDependency adapterFieldDep = (AdapterFieldDependency) d;
-                    
+
                     Operand op = expressionEvaluator.evaluate(adapterFieldDep.getId(), null);
                     if (op != null && op.value instanceof String) {
-                        logger.debug("Succeeded evaluation of id: " + ((String) op.value));
+                        logger.debug("Succeeded evaluation of id: {}", op.value);
                         dependentResources.add((String) op.value);
                     } else {
                         logger.warn("Eval failed");
@@ -124,8 +125,7 @@ public abstract class ScriptCompiler {
                     Dependency[] subs = adapterFieldDep.getMultipleDependencies();
                     if (subs != null) {
                         for (Dependency dependency : subs) {
-                            logger.debug("Nested dependency detected:" + dependency.getClass().getName() + " type: "
-                                    + dependency.getType());
+                            logger.debug("Nested dependency detected: {} type: {}" , dependency.getClass().getName(),dependency.getType());
                         }
                     }
                 }
@@ -162,7 +162,8 @@ public abstract class ScriptCompiler {
             addResourceField(res, w);
         }
 
-        w.println("public CompiledScript getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException {");
+        w.println(
+                "public CompiledScript getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException {");
         w.println(" Class<? extends CompiledScript> c;");
         w.println(" c = (Class<? extends CompiledScript>) Class.forName(getScriptName());");
         w.println(" CompiledScript instance = c.newInstance();");
@@ -196,8 +197,8 @@ public abstract class ScriptCompiler {
     private void generateManifest(String description, String version, String packagePath, String script,
             Set<String> packages) throws IOException {
         String symbolicName = "navajo.script." + description;
-        PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(),
-                packagePath, script, ".MF"));
+        PrintWriter w = new PrintWriter(
+                navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, script, ".MF"));
 
         // properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"
         w.print("Manifest-Version: 1.0\r\n");
@@ -249,7 +250,7 @@ public abstract class ScriptCompiler {
         w.flush();
         w.close();
     }
-    
+
     private String formatCompilationDate() {
         DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
         String formatted = df.format(new Date());
@@ -318,8 +319,8 @@ public abstract class ScriptCompiler {
             dep.setAttribute("target", "(navajo.resource.name=" + resource + ")");
             xe.addChild(dep);
         }
-        PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(),
-                packagePath, script, ".xml"));
+        PrintWriter w = new PrintWriter(
+                navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, script, ".xml"));
         w.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         xe.write(w);
         w.flush();
@@ -414,8 +415,8 @@ public abstract class ScriptCompiler {
             xe.addChild(dep);
         }
 
-        PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(),
-                packagePath, "entity", ".xml"));
+        PrintWriter w = new PrintWriter(
+                navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, "entity", ".xml"));
         w.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         xe.write(w);
         w.flush();

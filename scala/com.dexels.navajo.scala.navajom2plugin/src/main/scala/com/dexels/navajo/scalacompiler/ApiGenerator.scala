@@ -398,6 +398,8 @@ class ApiGenerator {
             val required = f.attribute("required").get.text
             if (required.equals("automatic")) {
 
+            } else if (required.equals("false")) {
+                result.append(PARAM(name) withType ((NavajoFactory.getInstance().getJavaType(valueType).getName())) := NULL)
             } else {
                 result.append(PARAM(name) withType ((NavajoFactory.getInstance().getJavaType(valueType).getName())))
             }
