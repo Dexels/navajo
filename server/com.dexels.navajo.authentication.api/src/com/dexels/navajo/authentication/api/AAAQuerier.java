@@ -38,6 +38,11 @@ public interface AAAQuerier {
      * Perform the full authentication and authorization stack
      */
     public void process(Access access) throws AuthorizationException;
+    
+    /**
+     * Skips authentication 
+     */
+    public void authorize(Access access, Integer userid) throws AuthorizationException;
 
     
     /**

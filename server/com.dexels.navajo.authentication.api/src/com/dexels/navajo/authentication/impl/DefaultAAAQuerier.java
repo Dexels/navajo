@@ -18,6 +18,12 @@ public class DefaultAAAQuerier implements AAAQuerier {
 
 	}
 
+    @Override
+    public void authorize(Access access, Integer userid) throws AuthorizationException {
+        // TODO Auto-generated method stub
+        
+    }
+
 	@Override
 	public void reset(String tenant) {
 		// TODO Auto-generated method stub
@@ -47,5 +53,6 @@ public class DefaultAAAQuerier implements AAAQuerier {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 }

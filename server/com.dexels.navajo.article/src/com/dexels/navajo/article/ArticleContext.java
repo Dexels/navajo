@@ -6,8 +6,8 @@ import java.util.Map;
 
 
 import com.dexels.navajo.article.command.ArticleCommand;
-import com.dexels.oauth.api.ScopeStoreException;
-import com.dexels.oauth.api.TokenStoreException;
+import com.dexels.oauth.api.exception.ScopeStoreException;
+import com.dexels.oauth.api.exception.TokenStoreException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 

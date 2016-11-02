@@ -1,7 +1,6 @@
 package com.dexels.navajo.script.api;
 
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.Stack;
 
 import com.dexels.navajo.document.Message;
@@ -130,11 +129,6 @@ public interface CompiledScriptInterface {
 	public Navajo getInDoc();
 
 	public Stack<Message> getOutMsgStack();
-	
-	public void setScopes(String scopes);
-    public void setScopes(Set<String> scopes);
-    public Set<String> getScopes();
-
 
   
 
