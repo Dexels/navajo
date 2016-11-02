@@ -1,6 +1,5 @@
 package com.dexels.navajo.dependency;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -24,7 +23,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.NavajoIOConfig;
