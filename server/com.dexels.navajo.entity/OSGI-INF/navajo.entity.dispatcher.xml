@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0"  immediate="true" name="navajo.entity.dispatcher">
    <implementation class="com.dexels.navajo.entity.continuations.EntityDispatcher"/>
+      <reference bind="setAuthenticationMethodBuilder" cardinality="1..1" interface="com.dexels.navajo.authentication.api.AuthenticationMethodBuilder" name="AuthenticationMethodBuilder" policy="dynamic" unbind="clearAuthenticationMethodBuilder"/>
    
    <reference bind="setEntityManager" cardinality="1..1" interface="com.dexels.navajo.entity.EntityManager" name="EntityManager" policy="dynamic"/>   
    <reference cardinality="1..1" interface="com.dexels.navajo.server.DispatcherInterface" name="DispatcherInterface" policy="dynamic"/>
-   <reference bind="addEntityAuthenticator" cardinality="0..n" interface="com.dexels.navajo.entity.EntityAuthenticator" name="EntityAuthenticator" policy="dynamic" unbind="removeEntityAuthenticator"/>
    <service>
       <provide interface="com.dexels.navajo.entity.continuations.EntityDispatcher"/>
    </service>

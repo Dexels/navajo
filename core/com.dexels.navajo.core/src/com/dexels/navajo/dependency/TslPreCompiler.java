@@ -1,6 +1,5 @@
 package com.dexels.navajo.dependency;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -127,24 +126,28 @@ public class TslPreCompiler {
     }
 
 
-    protected void findEntityDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps,  Document tslDoc) {
+    protected void findEntityDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) {
+        if (scriptFile.indexOf("entity") < 1) {
+            return;
+        }
         NodeList operations = tslDoc.getElementsByTagName("operation");
+        NodeList messages = tslDoc.getElementsByTagName("message");
         for (int i = 0; i < operations.getLength(); i++) {
             Element n = (Element) operations.item(i);
-            
+
             String operationScript = n.getAttribute("service");
             if (operationScript == null || operationScript.equals("")) {
                 return;
             }
-            
+
             if (scriptTenant != null) {
                 // trying tenant-specific variant first
                 String operationScriptFile = scriptFolder + File.separator + operationScript + "_" + scriptTenant + ".xml";
-                
+
                 // Check if exists
                 if (new File(operationScriptFile).exists()) {
                     deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
-                    
+
                     // No need to try any other tenant-specific includes since we are tenant-specific in the first place
                     // Thus continue with next entity
                     continue;
@@ -158,7 +161,7 @@ public class TslPreCompiler {
             if (!new File(operationScriptFile).exists()) {
                 isBroken = true;
             }
-           
+
             deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
 
             // Going to check for tenant-specific include-variants
@@ -170,7 +173,58 @@ public class TslPreCompiler {
                     deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
                 }
             }
-          
+
+        }
+
+        for (int i = 0; i < messages.getLength(); i++) {
+            Element n = (Element) messages.item(i);
+
+            String extendsAttr = n.getAttribute("extends");
+            if (extendsAttr == null || extendsAttr.equals("") || !extendsAttr.startsWith("navajo://")) {
+                return;
+            }
+
+            String ext = extendsAttr.substring(9);
+            String[] superEntities = ext.split(",");
+            for (String superEntity : superEntities) {
+                if (superEntity.indexOf('?') > 0) {
+                    superEntity = superEntity.split("\\?")[0];
+                }
+
+                if (scriptTenant != null) {
+                    // trying tenant-specific variant first
+                    String operationScriptFile = scriptFolder + File.separator + superEntity + "_" + scriptTenant + ".xml";
+
+                    // Check if exists
+                    if (new File(operationScriptFile).exists()) {
+                        deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+
+                        // No need to try any other tenant-specific includes since we are tenant-specific in the first place
+                        // Thus continue with next entity
+                        continue;
+                    }
+                }
+
+                String operationScriptFile = scriptFolder + File.separator + "entity" + File.separator + superEntity + ".xml";
+
+                // Check if exists
+                boolean isBroken = false;
+                if (!new File(operationScriptFile).exists()) {
+                    isBroken = true;
+                }
+
+                deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
+
+                // Going to check for tenant-specific include-variants
+                if (scriptTenant == null) {
+                    File scriptFolderFile = new File(operationScriptFile).getParentFile();
+                    AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(superEntity) + "_*.xml");
+                    Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
+                    for (File f : files) {
+                        deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                    }
+                }
+            }
         }
     }
 

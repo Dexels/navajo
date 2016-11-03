@@ -23,10 +23,10 @@ import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.oauth.api.Client;
 import com.dexels.oauth.api.ClientStore;
-import com.dexels.oauth.api.ClientStoreException;
+import com.dexels.oauth.api.exception.ClientStoreException;
 import com.dexels.oauth.api.OAuthToken;
 import com.dexels.oauth.api.TokenStore;
-import com.dexels.oauth.api.TokenStoreException;
+import com.dexels.oauth.api.exception.TokenStoreException;
 
 public class OAuthArticleServlet extends ArticleBaseServlet {
 

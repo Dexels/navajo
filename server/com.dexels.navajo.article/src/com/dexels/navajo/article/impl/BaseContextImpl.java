@@ -27,7 +27,7 @@ import com.dexels.navajo.document.nanoimpl.XMLParseException;
 import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.oauth.api.OAuthToken;
 import com.dexels.oauth.api.TokenStore;
-import com.dexels.oauth.api.TokenStoreException;
+import com.dexels.oauth.api.exception.TokenStoreException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;

@@ -225,7 +225,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 			logger.info("About to send to: " + url);
 			URL u = null;
 			if(!url.startsWith("http://") && (!url.startsWith("https://"))) {
-				logger.warn("HTTPMap", "No protocol. Always prepend protocol. Assuming http.");
+				logger.warn("No protocol. Always prepend protocol. Assuming http.");
 				u = new URL("http://" + url);
 			} else {
 				u = new URL(url);

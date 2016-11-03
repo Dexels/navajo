@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.aaa.authenticator.basic">
+   <implementation class="com.dexels.navajo.authentication.impl.BasicAuthenticationMethod"/>
+   <reference bind="setAAAQuerier" cardinality="1..1" interface="com.dexels.navajo.authentication.api.AAAQuerier" name="AAAQuerier" policy="dynamic" unbind="clearAAAQuerier"/>
+   <service>
+      <provide interface="com.dexels.navajo.authentication.api.AuthenticationMethod"/>
+   </service>
+</scr:component>

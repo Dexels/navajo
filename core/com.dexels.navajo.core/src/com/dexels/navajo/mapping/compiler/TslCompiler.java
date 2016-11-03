@@ -3321,6 +3321,17 @@ public class TslCompiler {
         generatedCode.append("    return \"" + value + "\";");
         generatedCode.append("}\n\n");
     }
+    
+    private void generateSetScriptScopes(String value, StringBuffer generatedCode) {
+        if (value == null || "".equals(value.trim())) {
+            return;
+        }
+        generatedCode.append("@Override \n");
+        generatedCode.append("public final String getScopes() {\n");
+        generatedCode.append("    setScopes(\""+value+"\")\n");
+        generatedCode.append("    return this.scopes;");
+        generatedCode.append("}\n\n");
+    }
 	
 
 
@@ -3328,10 +3339,7 @@ public class TslCompiler {
 			String script, String scriptPath, Writer fo, List<Dependency> deps,
 			String tenant, boolean forceTenant) throws SystemException, SkipCompilationException {
 
-		boolean debugInput = false;
-		boolean debugOutput = false;
 		boolean broadcast = false;
-		boolean debugAll = false;
 
 		this.scriptPath = scriptPath;
 
@@ -3377,6 +3385,8 @@ public class TslCompiler {
 						+ scriptPath);
 			}
 			String debugLevel = tslElt.getAttribute("debug");
+			
+			String scopes = tslElt.getAttribute("scopes");
 			
 			String description = tslElt.getAttribute("notes");
 			String author = tslElt.getAttribute("author");
@@ -3468,6 +3478,7 @@ public class TslCompiler {
 				includeNode(scriptPath, includeArray[i], tslDoc, tenant, deps);
 			}
 			generateSetScriptDebug(debugLevel, result);
+			generateSetScriptScopes(scopes, result);
 
 			// Generate validation code.
 			generateValidations(tslDoc, result);

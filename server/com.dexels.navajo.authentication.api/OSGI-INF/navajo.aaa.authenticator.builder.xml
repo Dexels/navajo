@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.aaa.authenticator.builder">
+   <implementation class="com.dexels.navajo.authentication.impl.AuthenticationMethodBuilderImpl"/>
+   <reference bind="addMethod" cardinality="1..n" interface="com.dexels.navajo.authentication.api.AuthenticationMethod" name="AuthenticationMethod" policy="dynamic" unbind="removeMethod"/>
+   <service>
+      <provide interface="com.dexels.navajo.authentication.api.AuthenticationMethodBuilder"/>
+   </service>
+</scr:component>

@@ -19,11 +19,20 @@ public class TslCompilerComponent extends ScriptCompiler {
     private ClassLoader classLoader = null;
     private final static Logger logger = LoggerFactory.getLogger(TslCompilerComponent.class);
     private TslCompiler compiler;
-    String[] standardPackages = new String[] { "com.dexels.navajo.document", "com.dexels.navajo.document.types",
-            "com.dexels.navajo.script.api", "com.dexels.navajo.server", "com.dexels.navajo.mapping",
-            "com.dexels.navajo.server.enterprise.tribe", "com.dexels.navajo.mapping.compiler.meta", "com.dexels.navajo.parser",
-            "com.dexels.navajo.loader", "org.osgi.framework", "com.dexels.navajo.entity;resolution:=optional",
-            "com.dexels.navajo.entity.impl;resolution:=optional", "com.dexels.navajo.server.resource;resolution:=optional" };
+    String[] standardPackages = new String[] { "com.dexels.navajo.document", 
+            "com.dexels.navajo.document.types",
+            "com.dexels.navajo.script.api", 
+            "com.dexels.navajo.server",
+            "com.dexels.navajo.mapping",
+            "com.dexels.navajo.server.enterprise.tribe", 
+            "com.dexels.navajo.mapping.compiler.meta", 
+            "com.dexels.navajo.parser",
+            "com.dexels.navajo.loader",
+            "org.osgi.framework", 
+            "com.dexels.navajo.entity;resolution:=optional",
+            "com.dexels.navajo.entity.impl;resolution:=optional", 
+            "com.dexels.navajo.server.resource;resolution:=optional" };
+    private ExpressionEvaluator expressionEvaluator;
 
 
     

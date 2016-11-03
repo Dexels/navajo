@@ -45,6 +45,7 @@ public class ClientInfo {
     public int contentLength;
     public Date created;
     // public int threadCount;
+    private String authHeader;
 
     public ClientInfo(String ip, String host, String encoding, int parseTime, int queueTime, int queueSize, String queueId, boolean compressedrecv,
             boolean compressedsend, int contentLength, Date created) {
@@ -117,8 +118,13 @@ public class ClientInfo {
     public String getQueueId() {
         return queueId;
     }
-    // public int getThreadCount() {
-    // return threadCount;
-    // }
+
+    public String getAuthHeader() {
+        return authHeader;
+    }
+    
+    public void setAuthHeader(String authHeader) {
+        this.authHeader = authHeader;
+    }
 
 }
