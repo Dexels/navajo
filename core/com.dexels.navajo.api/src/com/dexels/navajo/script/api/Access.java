@@ -41,6 +41,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 
@@ -98,6 +99,7 @@ public final class Access implements java.io.Serializable, Mappable {
     public String clientDescription;
     public boolean betaUser = false;
     public transient CompiledScriptInterface myScript = null;
+    public transient Operation myOperation = null;
     public int queueSize;
     public String queueId;
 
@@ -361,6 +363,16 @@ public final class Access implements java.io.Serializable, Mappable {
     public CompiledScriptInterface getCompiledScript() {
         return myScript;
     }
+    
+    public Operation getOperation() {
+        return myOperation;
+    }
+    
+    public void setOperation(Operation op) {
+        myOperation = op;
+    }
+    
+    
 
     /**
      * Method to be used when an exception has occurred while processing this

@@ -33,7 +33,6 @@ public class TmlRunnableBuilder {
 		} else {
 		    instantiateRunnable.setAttribute("priority", false);
 		}
-
 		
 		instantiateRunnable.suspendContinuation();
 		return instantiateRunnable;

@@ -130,7 +130,6 @@ public interface CompiledScriptInterface {
 
 	public Stack<Message> getOutMsgStack();
 
-
   
 
 }

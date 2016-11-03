@@ -50,8 +50,6 @@ public class BaseRequestImpl implements AsyncRequest {
 	private String contentType;
 	
 
-
-	
 	public BaseRequestImpl(HttpServletRequest request,
 			HttpServletResponse response, String acceptEncoding,
 			String contentEncoding, Object cert, String instance) throws UnsupportedEncodingException, IOException {
@@ -180,11 +178,11 @@ public class BaseRequestImpl implements AsyncRequest {
 				(int) (startedAt - scheduledAt),
 				queueLength,
 				queueId,
-				(contentEncoding != null && (contentEncoding.equals(COMPRESS_GZIP) || contentEncoding
-						.equals(COMPRESS_JZLIB))),
-				(acceptEncoding != null && (acceptEncoding.equals(COMPRESS_GZIP) || acceptEncoding
-						.equals(COMPRESS_JZLIB))), request.getContentLength(),
+				(contentEncoding != null && (contentEncoding.equals(COMPRESS_GZIP) || contentEncoding.equals(COMPRESS_JZLIB))),
+				(acceptEncoding != null && (acceptEncoding.equals(COMPRESS_GZIP) || acceptEncoding.equals(COMPRESS_JZLIB))), 
+				request.getContentLength(),
 				new java.util.Date(connectedAt));
+		clientInfo.setAuthHeader(getAuthHeader());
 		return clientInfo;
 	}
 
@@ -347,6 +345,10 @@ public class BaseRequestImpl implements AsyncRequest {
 	public ServletRequest getHttpRequest() {
 		return request;
 	}
+
+    private String getAuthHeader() {
+        return request.getHeader("Authorization");
+    }
 	
 
 }

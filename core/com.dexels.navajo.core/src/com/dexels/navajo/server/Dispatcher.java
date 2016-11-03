@@ -48,7 +48,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import com.dexels.navajo.authentication.api.AAAQuerier;
+import com.dexels.navajo.authentication.api.AuthenticationMethod;
+import com.dexels.navajo.authentication.api.AuthenticationMethodBuilder;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -111,7 +112,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     
     public volatile static String edition;
     private final Map<String, GlobalManager> globalManagers = new HashMap<String, GlobalManager>();
-    private AAAQuerier authenticator;
+
     private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 
     static {
@@ -157,6 +158,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>();
 
     protected boolean simulationMode;
+    private AuthenticationMethodBuilder authMethodBuilder;
 
     // optional, can be null
     // private BundleCreator bundleCreator;
@@ -890,6 +892,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     if (instance == null) {
                         throw new SystemException(-1, "No tenant set -cannot authenticate!");
                     }
+                    AuthenticationMethod authenticator = authMethodBuilder.getInstanceForRequest(clientInfo.getAuthHeader());
+                    if (authenticator == null) {
+                        throw new FatalException("Missing authenticator"); 
+                    }
                     authenticator.process(access);
 
                 } catch (AuthorizationException ex) {
@@ -1518,6 +1524,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
     private int health;
 
+
     @Override
     public int getHealth(String resourceId) {
         return health;
@@ -1555,14 +1562,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         globalManagers.remove(settings.get("instance"));
     }
     
-    
-    public void setAuthenticator(AAAQuerier a) {
-        this.authenticator = a;
-    }
-    
-    public void clearAuthenticator(AAAQuerier a) {
-        this.authenticator = null;
-    }
 
 
     public void setEventAdmin(EventAdmin eventAdmin) {
@@ -1571,6 +1570,14 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
     public void clearEventAdmin(EventAdmin eventAdmin) {
         this.eventAdmin = null;
+    }
+    
+    public void setAuthenticationMethodBuilder(AuthenticationMethodBuilder amb) {
+        this.authMethodBuilder = amb;
+    }
+
+    public void clearAuthenticationMethodBuilder(AuthenticationMethodBuilder eventAdmin) {
+        this.authMethodBuilder = null;
     }
 
 }
