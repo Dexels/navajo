@@ -67,7 +67,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		}
 		MDC.put("maxMemory", ""+maxMem);
 		MDC.put("usedMemory", ""+usedMem);
-		schedulingStatus = schedulingStatus + ", totalmemory=" + maxMem + "Mb, usedmemory=" + usedMem + "Mb";
 		getRequest().writeOutput(getInputNavajo(), getResponseNavajo(), scheduledAt, startedAt, schedulingStatus);
 		continuation.complete();
 
