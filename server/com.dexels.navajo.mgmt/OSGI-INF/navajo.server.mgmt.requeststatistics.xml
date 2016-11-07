@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" immediate="true" name="navajo.server.mgmt.requeststatistics">
    <implementation class="com.dexels.navajo.mgmt.statistics.NavajoRequestsStatistics"/>
-   <property name="event.topics" type="String" value="navajo/request">
-		
+   <property name="event.topics" type="String">
+		navajo/request
    </property>
    <service>
       <provide interface="com.dexels.server.mgmt.api.ServerStatisticsProvider"/>
+      <provide interface="org.osgi.service.event.EventHandler" />
    </service>
 </scr:component>
