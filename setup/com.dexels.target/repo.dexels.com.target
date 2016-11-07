@@ -37,9 +37,9 @@
 <plugin id="com.dexels.log4j.server"/>
 <plugin id="com.dexels.logback.redis"/>
 <plugin id="com.dexels.mqtt.impl"/>
-<plugin id="com.dexels.oauth.api" version="14.0.0.201611031019"/>
-<plugin id="com.dexels.oauth.impl" version="1.0.33.201611031020"/>
-<plugin id="com.dexels.oauth.web" version="2.0.2.201611031021"/>
+<plugin id="com.dexels.oauth.api"/>
+<plugin id="com.dexels.oauth.impl"/>
+<plugin id="com.dexels.oauth.web"/>
 <plugin id="com.dexels.osgi.bundlesync"/>
 <plugin id="com.dexels.pubsub.api"/>
 <plugin id="com.dexels.replication.api"/>
