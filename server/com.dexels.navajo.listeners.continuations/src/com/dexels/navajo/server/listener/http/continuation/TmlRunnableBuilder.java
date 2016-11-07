@@ -28,7 +28,7 @@ public class TmlRunnableBuilder {
 		AsyncRequest request = constructRequest(req, resp, instance);
 		TmlContinuationRunner instantiateRunnable = new TmlContinuationRunner(request,localClient);
 		req.setAttribute("tmlRunner", instantiateRunnable);
-		if (req.getHeaders("X-Navajo-Priority") != null) {
+		if (req.getHeader("X-Navajo-Priority") != null ) {
 		    instantiateRunnable.setAttribute("priority", true);
 		} else {
 		    instantiateRunnable.setAttribute("priority", false);
