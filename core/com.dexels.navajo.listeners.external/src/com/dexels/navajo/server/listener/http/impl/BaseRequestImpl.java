@@ -287,8 +287,8 @@ public class BaseRequestImpl implements AsyncRequest {
 				&& inDoc.getHeader() != null
 				&& outDoc.getHeader() != null) {
 		    
-            statLogger.info("Finished {} ({}) in {}ms", outDoc.getHeader().getHeaderAttribute("accessId"), inDoc.getHeader().getRPCName(),
-                    (System.currentTimeMillis() - connectedAt));
+            statLogger.info("Finished {} ({}) in {}ms - {}", outDoc.getHeader().getHeaderAttribute("accessId"), inDoc.getHeader().getRPCName(),
+                    (System.currentTimeMillis() - connectedAt), threadStatus);
 			
 		}
 	}
