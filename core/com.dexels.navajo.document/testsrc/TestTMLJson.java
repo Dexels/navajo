@@ -31,7 +31,7 @@ public class TestTMLJson {
         
         // Turn back into a Navajo and compare
         Navajo n2 = json.parse(new StringReader(result), "SimpleMessage");
-        Assert.assertTrue(n.getMessage("SimpleMessage").messageEquals(n2.getMessage("SimpleMessage")));
+        Assert.assertTrue(n.getMessage("SimpleMessage").isEqual(n2.getMessage("SimpleMessage")));
     }
     
     @Test
