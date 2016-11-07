@@ -366,9 +366,7 @@ public class MessageMap implements Mappable {
 
 
 		if ( removeDuplicates ) {
-
 			for ( int i = 0; i < resultingMessage.size(); i++ ) {
-
 				Message m1 = resultingMessage.get(i).getMsg().copy();
 				resultingMessage.get(i).processSuppressedProperties(m1);
 				if ( !resultingMessage.get(i).isRemove() ) {
