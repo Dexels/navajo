@@ -9,8 +9,8 @@
 <repository location="http://repo.dexels.com/eclipse/equinox_mars"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.162.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.162"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.163.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.163"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.http.apache.feature.group" version="4.5.0.201609210915-r"/>
