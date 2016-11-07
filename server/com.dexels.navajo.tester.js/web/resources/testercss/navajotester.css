@@ -544,3 +544,14 @@ h3 {
 	height: 300px;
 	margin-top:10px;
 }
+
+.refreshscripts:after {
+	display: inline;
+	content: url('/testerimg/refresh.png');
+	cursor: pointer;
+	margin-left: 4px;
+	overflow: visible
+}
+.arrayheader {
+	cursor: pointer;
+}

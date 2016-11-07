@@ -377,6 +377,13 @@ $(document).on('click', '.folder', function() {
 });
 
 
+$(document).on('click', '.refreshscripts', function() {
+	getScripts();
+});
+
+
+
+
 $(document).on('click', '.scriptcompile', function() {
 	var parentLi = $(this).parent().parent();
     var script = parentLi.children('.script').attr('id');

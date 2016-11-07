@@ -240,7 +240,10 @@ public AsyncProxy [] getAsyncThreads() {
 	   List<AccessMap> d = new ArrayList<AccessMap>();
 	   while (iter.hasNext()) {
 		   Access a = iter.next();
-		   d.add(new AccessMap(a));
+		   for (int i=0;i<10;i++) {
+		       d.add(new AccessMap(a));
+		   }
+		   
 	   }
 	   AccessMap [] ams = new AccessMap[d.size()];
 	   return d.toArray(ams);
