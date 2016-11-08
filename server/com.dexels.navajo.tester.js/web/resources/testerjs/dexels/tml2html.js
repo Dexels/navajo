@@ -48,20 +48,20 @@ function parseTmlToHtml( scriptname, navajoelement, methodselement) {
 
 }
 
-function parseTmlArrayMessage(arraymessage) {
+function parseTmlArrayMessage(arraymessage, sort) {
     
     var divString = '<div class="messagediv">';
     divString += '<div class="exportcsv" id="'+getElementXPath(arraymessage[0])+'"> ';
     divString += '<h3> '+arraymessage.attr('name')+'</h3></div>'
    
-    divString += printArrayHorizontal(arraymessage);
+    divString += printArrayHorizontal(arraymessage,sort);
     //divString += printArrayVertical(arraymessage);
    
     divString += '</div>'
     return divString;    
 }
 
-function printArrayHorizontal(arraymessage) {
+function printArrayHorizontal(arraymessage, sort) {
 
     // Store properties in an array to prevent looping over dom element
     var properties = [];
@@ -85,7 +85,13 @@ function printArrayHorizontal(arraymessage) {
              definer[msgindex][elemindex]['name'] = $(this).attr('name');
          });
     });
-    arraymessage.children('message[type="array_element"]').each(function(msgindex){
+    var children = arraymessage.children('message[type="array_element"]');
+    var childrenArray = Array.prototype.slice.call(children, 0);
+    if (typeof sort !== "undefined") {
+    	childrenArray.sort(function(b,a){return $(a).children('property[name="'+sort+'"]').attr('value') - $(b).children('property[name="'+name+'"]').attr('value')})
+    }
+    
+    $(childrenArray).each(function(msgindex){
         if (typeof properties[msgindex] === 'undefined' ) {
             properties[msgindex] = [];
         }
