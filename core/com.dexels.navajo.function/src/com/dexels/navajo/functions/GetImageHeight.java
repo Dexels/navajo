@@ -49,7 +49,8 @@ public final class GetImageHeight extends FunctionInterface {
         		BufferedImage img = ImageIO.read(iis);
             	return img.getHeight();
             } catch (IOException e) {
-            	throw new TMLExpressionException(e.getMessage());
+            	return -1;
+//            	throw new TMLExpressionException(e.getMessage());
             } finally {
             	if ( is != null ) {
             		try {
