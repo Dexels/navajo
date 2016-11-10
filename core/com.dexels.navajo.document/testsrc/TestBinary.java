@@ -256,7 +256,15 @@ public class TestBinary {
 		Assert.assertEquals(Property.BINARY_PROPERTY,p1.getType());
 		p2.setAnyValue(b1.getDigest());
 		Assert.assertEquals(Property.BINARY_DIGEST_PROPERTY,p2.getType());
-		
 	}
 
+	@Test
+	public void testBinaryIterator() {
+		NavajoFactory.getInstance().setSandboxMode(false);
+		Binary b1 = new Binary(getClass().getResourceAsStream("datasources.xml"));
+		for (byte[] e : b1.getDataAsIterable(1024)) {
+			System.err.println("Data: "+new String(e));
+		}
+		
+	}
 }

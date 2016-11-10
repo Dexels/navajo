@@ -1,12 +1,10 @@
 package com.dexels.navajo.adapters.binarystore;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.BinaryDigest;
 import com.dexels.navajo.resource.binarystore.BinaryStore;
 import com.dexels.navajo.resource.binarystore.BinaryStoreFactory;
 import com.dexels.navajo.script.api.Access;
@@ -20,9 +18,6 @@ public class BinaryStoreAdapter implements Mappable {
 	private String tenant = null;
 	private Binary value = null;
 	private String resource = null;
-	private final Map<String,String> metadata = new HashMap<>();
-	private String metaname;
-	private String contentType;
 	
 	private final static Logger logger = LoggerFactory.getLogger(BinaryStoreAdapter.class);
 
@@ -30,7 +25,6 @@ public class BinaryStoreAdapter implements Mappable {
 	@Override
 	public void load(Access access) throws MappableException, UserException {
 		tenant = access.getTenant();
-		metadata.clear();
 	}
 
 	@Override
@@ -41,7 +35,7 @@ public class BinaryStoreAdapter implements Mappable {
 				logger.warn("Can not find swift resource: {} for tenant: {}",resource,tenant);
 				throw new UserException(-1, "Can not find binary store resource");
 			}
-			os.set(name, this.contentType, this.value, metadata);
+			os.store(this.value);
 		}
 
 	}
@@ -58,30 +52,10 @@ public class BinaryStoreAdapter implements Mappable {
 		this.value = binary;
 	}
 
-	public void setMetaName(String name) {
-		this.metaname = name;
-	}
-	
-	public void setContentType(String type) {
-		this.contentType = type;
-	}
-	
-	public void setMetaValue(String value) {
-		if(metaname==null) {
-			throw new NullPointerException("Set MetaName before setting MetaValue");
-		}
-		if(value==null) {
-			logger.info("Ignoring null metadata value for name: {}",metaname);
-		} else {
-			metadata.put(metaname, value);
-
-		}
-		metaname = null;
-	}
-	public Binary getGet(String name) {
+	public Binary getResolve(BinaryDigest digest) {
 		logger.info("Getting: {} from resource: {} with tenant: {}",name,resource,tenant);
 		BinaryStore os = BinaryStoreFactory.getInstance().getBinaryStore(resource, tenant);
-		return os.get(name);
+		return os.resolve(digest);
 	}
 	
 	@Override
