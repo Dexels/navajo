@@ -22,10 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
-import java.nio.channels.ByteChannel;
-import java.nio.channels.Channel;
 import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -800,8 +797,11 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 			result.add(inMemory);
 			return result;
 		}
-		FileChannel channel = getDataAsChannel();
-		ByteBuffer outputBuffer = ByteBuffer.allocate(bufferSize);
+		final FileChannel channel = getDataAsChannel();
+		// TODO Warning, I think this leaks filepointers, as this channel will never get closed,
+		// better to emit this thing as an Observable so we can close it on unsubscribe;
+		
+		final ByteBuffer outputBuffer = ByteBuffer.allocate(bufferSize);
     	return new Iterable<byte[]>(){
 
 			@Override
@@ -811,7 +811,11 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 					@Override
 					public boolean hasNext() {
 						try {
-							return (channel.position() < channel.size());
+							boolean isDone = channel.position() < channel.size();
+							if(isDone) {
+								channel.close();
+							}
+							return isDone;
 						} catch (IOException e) {
 							logger.error("Error: ", e);
 							return false;
