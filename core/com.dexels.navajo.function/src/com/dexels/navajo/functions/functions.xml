@@ -323,6 +323,16 @@
 		<input />
 		<result />
 	</function>
+    <function name="GetImageHeight" class="com.dexels.navajo.functions.GetImageHeight">
+        <description>Gets the height of a binary image</description>
+        <input>binary</input>
+        <result>integer</result>
+    </function>
+    <function name="GetImageWidth" class="com.dexels.navajo.functions.GetImageWidth">
+        <description>Gets the width of a binary image</description>
+        <input>binary</input>
+        <result>integer</result>
+    </function>
 	<function name="GetInitials" class="com.dexels.navajo.functions.GetInitials">
 		<description>This function returns the initials of a specified string
 			field . Eg. GetInitials(&apos;aap noot mies&apos;) results in &apos;a
