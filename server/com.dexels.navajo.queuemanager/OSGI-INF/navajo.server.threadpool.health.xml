@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="navajo.server.threadpool.health">
-   <implementation class="com.dexels.navajo.queuemanager.health.TmlSchedulerHealthMonitor"/>
+   <implementation class="com.dexels.navajo.queuemanager.health.ThreadPoolHealthMonitor"/>
    <reference bind="setPriorityTmlScheduler" cardinality="0..1" interface="com.dexels.navajo.script.api.TmlScheduler" name="TmlScheduler"  policy="dynamic" unbind="clearPriorityTmlScheduler"/>
    
 </scr:component>
