@@ -892,7 +892,14 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     if (instance == null) {
                         throw new SystemException(-1, "No tenant set -cannot authenticate!");
                     }
-                    AuthenticationMethod authenticator = authMethodBuilder.getInstanceForRequest(clientInfo.getAuthHeader());
+                    // Determine authenticator
+                    final AuthenticationMethod authenticator;
+                    if (clientInfo == null) {
+                        authenticator =  authMethodBuilder.getInstanceForRequest(null);
+                    } else {
+                        authenticator =  authMethodBuilder.getInstanceForRequest(clientInfo.getAuthHeader());
+                    }
+                   
                     if (authenticator == null) {
                         throw new FatalException("Missing authenticator"); 
                     }
