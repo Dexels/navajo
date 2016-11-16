@@ -982,6 +982,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
                     stmt.close();
                 } catch (Exception e) {
                     logger.error("Looking for schema based on username: " + this.alternativeUsername, e);
+                    throw new UserException(-1, "Switching to schema based on username " + this.alternativeUsername + " failed");
                 }
             }
 
