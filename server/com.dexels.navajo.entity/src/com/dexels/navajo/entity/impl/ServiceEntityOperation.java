@@ -1,10 +1,13 @@
 package com.dexels.navajo.entity.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,35 +36,38 @@ public class ServiceEntityOperation implements EntityOperation {
 	private DispatcherInterface dispatcher;
 	private EntityMap myEntityMap;
 	private Operation myOperation;
-	private final Entity myEntity;
+	private Entity myEntity;
 	private Key myKey;
-	String[] validMessages = null;
+	private Set<String> validMessages  =new HashSet<String>(Arrays.asList("__parms__", "__globals__"));
 
 	
 	public ServiceEntityOperation(EntityManager m, DispatcherInterface c, Operation o) throws EntityException {
-		this.manager = m;
 		this.dispatcher = c;
-		this.myOperation = o;
-		this.myEntity = manager.getEntity(myOperation.getEntityName());
-		validMessages = new String[] {myEntity.getMessageName()};
-		if ( myEntity == null ) {
-			logger.error("ServiceEntityOperation could not find requested entity!");
-			throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not find entity: " + myOperation.getEntityName());
-		}
+		setup(m, o);
 	}
 
 	public ServiceEntityOperation(EntityManager m, EntityMap c, Operation o) throws EntityException {
-		this.manager = m;
 		this.myEntityMap = c;
-		this.myOperation = o;
-		this.myEntity = manager.getEntity(myOperation.getEntityName());
-		validMessages = new String[] {myEntity.getMessageName()};
-		if ( myEntity == null ) {
-			logger.error("ServiceEntityOperation could not find requested entity!");
-			throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not find entity: " + myOperation.getEntityName());
-		}
+		setup(m, o);
+	}
+	
+	private void setup(EntityManager m,  Operation o) throws EntityException {
+	    this.manager = m;
+	    this.myOperation = o;
+	    this.myEntity = manager.getEntity(myOperation.getEntityName());
+	    
+	    if ( myEntity == null ) {
+            logger.error("ServiceEntityOperation could not find requested entity!");
+            throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not find entity: " + myOperation.getEntityName());
+        }
+	    
+	    this.validMessages.add(myEntity.getMessageName());
+        if (myOperation.getExtraMessage() != null) {
+            validMessages.add(myOperation.getExtraMessage().getName());
+        }
 	}
 
+	
 	public ServiceEntityOperation cloneServiceEntityOperation(Operation o) throws EntityException {
 		if ( myEntityMap != null ) {
 			return new ServiceEntityOperation(manager, myEntityMap, o);
@@ -193,15 +199,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			}
 		}
 	}
-	
-	private final boolean isInArray(String [] arr, String s) {
-		for ( int i = 0; i < arr.length; i++ ) {
-			if ( arr[i].equals(s) ) {
-				return true;
-			}
-		}
-		return false;
-	}
+
 	
 	private HashMap<String,Navajo> getInputNavajosForReferencedEntities(Navajo n) {
 		List<Property> allProps = myEntity.getMessage().getAllProperties();
@@ -224,17 +222,14 @@ public class ServiceEntityOperation implements EntityOperation {
 		
 	/**
 	 * Clean a Navajo document: only valid messages are kept, missing properties 
-	 * and messages are added, and filter properties on the right direction
-	 * @param merge TODO
-	 * @param validMessages
-	 * 
+	 * and messages are added, and filter properties on the right direction	 * 
 	 * @return
 	 */
 	private void clean(Navajo n, String method, boolean resolveLinks, boolean merge) {
 		
 		List<Message> all = n.getAllMessages();
 		for ( Message m : all ) {
-			if (!isInArray(validMessages, m.getName() ) ) {
+			if (!validMessages.contains(m.getName() ) ) {
 				n.removeMessage(m);
 			}
 		}
