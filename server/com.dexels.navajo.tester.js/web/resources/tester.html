@@ -72,6 +72,8 @@ updateTenants();
 getScripts();
 
 $(document).ready(function() {
+	updateFavorites();
+
     // Add Chosen to dropdowns
     $("#handlers").chosen({
         disable_search_threshold : 10,
@@ -151,8 +153,14 @@ $(document).ready(function() {
                     
                     <h2 class="title"> Methods </h2>
                     <div id="methods">
-                    
                     </div>
+                     
+                     
+                    <h2 class="title"> Favorites </h2>
+                    <div id="favorites" style="display:none">
+                    </div>
+                    
+                   
                     <h2 class="title refreshscripts"> Folders and scripts </h2>
                     <div id="scripts">
                     </div>

@@ -52,6 +52,40 @@ function updateTenants() {
 	
 }
 
+function updateFavorites() {
+	$("#favorites").html("");
+	var favorites = localStorage.getItem("scriptfavorites");
+	if (favorites == null || typeof favorites === "undefined" || favorites === "") {
+		return;
+	}
+	var splitted = favorites.split("|");
+	for (var i = 0; i < splitted.length; i++) {
+		var script = splitted[i];
+		if (script.length < 1) {
+			continue;
+		}
+		var li = $("<li>");
+		li.attr('class', 'scriptli');
+		
+		var div = $("<div>");
+		div.attr('class', 'script clickable');
+		div.attr('id', splitted[i]);
+		div.text(splitted[i]);
+		li.append(div);
+		$("#favorites").append(li);
+	}
+	$("#favorites").show();
+}
+
+function isFavorite(script) {
+	var favorites = localStorage.getItem("scriptfavorites");
+	if (favorites == null || typeof favorites === "undefined") {
+		return false;
+	}
+	if (favorites.indexOf(script + "|" ) !== -1) {
+		return true;
+	}
+}
 
 function getScripts() {
     $("#scripts").html("");
@@ -251,6 +285,11 @@ function replaceXml(script, xmlObj) {
         $('.overlay').hide(200);
         $('#scriptMainView').show();
         $('#scriptheader').text(script);
+        if (isFavorite(script) ) {
+        	$('#scriptheader').attr('class', 'scriptheader2');
+        } else {
+        	$('#scriptheader').attr('class', 'scriptheader');
+        }
         hourglassOff();
     } catch (err) {
         console.log("Caugh error " +  err.message);
@@ -382,6 +421,36 @@ $(document).on('click', '.refreshscripts', function() {
 });
 
 
+$(document).on('click', '.scriptheader', function() {
+	$(this).attr('class', 'scriptheader2');
+	// Add id to localstorage
+	if (isFavorite($(this).text())) {
+		return;
+	}
+	var favorites = localStorage.getItem("scriptfavorites");
+	if (favorites == null || typeof favorites === "undefined") {
+		favorites = "";
+	}
+    localStorage.setItem("scriptfavorites", $(this).text() + "|"  + favorites);
+    updateFavorites();
+});
+
+$(document).on('click', '.scriptheader2', function() {
+	$(this).attr('class', 'scriptheader');
+	// Remove script from favorites
+	
+	var favorites = localStorage.getItem("scriptfavorites");
+	if (typeof favorites === "undefined") {
+		// Weird, but hey, I'm not going to complain!
+		return;
+	}
+	favorites = favorites.replace($(this).text() + "|" , "");
+
+    localStorage.setItem("scriptfavorites", favorites);
+    updateFavorites();
+});
+
+
 
 
 $(document).on('click', '.scriptcompile', function() {
@@ -413,6 +482,12 @@ $(document).on('click', '.scriptinput', function() {
     }, 50);
     $('#loadedScript').text(script);
     $('#scriptheader').text(script);
+    if (isFavorite(script) ) {
+    	$('#scriptheader').attr('class', 'scriptheader2');
+    } else {
+    	$('#scriptheader').attr('class', 'scriptheader');
+    }
+    
     
     $('#scriptMainView').hide();
     editor.setValue("");
@@ -486,6 +561,11 @@ $(document).on('click', '.scriptsource', function() {
         	$('#scriptsourcecontent').addClass('prettyprinted');
         }
         $('#scriptheader').text(script);
+        if (isFavorite(script) ) {
+        	$('#scriptheader').attr('class', 'scriptheader2');
+        } else {
+        	$('#scriptheader').attr('class', 'scriptheader');
+        }
         $('#scriptMainView').show();
         $('#TMLSourceviewLink').click();
         hourglassOff();
@@ -509,6 +589,11 @@ $(document).on('click', '.compiledsource', function() {
                 $('#scriptsourcecontent').text(data)
                 prettyPrint();
                 $('#scriptheader').text(script);
+                if (isFavorite(script) ) {
+                	$('#scriptheader').attr('class', 'scriptheader2');
+                } else {
+                	$('#scriptheader').attr('class', 'scriptheader');
+                }
                 $('#scriptMainView').show();
                 $('#TMLSourceviewLink').click();
                 hourglassOff();

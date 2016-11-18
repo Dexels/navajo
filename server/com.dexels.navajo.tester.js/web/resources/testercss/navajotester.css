@@ -552,3 +552,19 @@ h3 {
 	margin-left: 4px;
 	overflow: visible
 }
+
+.scriptheader:after {
+	display: inline;
+	content: url('/testerimg/star1.png');
+	cursor: pointer;
+	margin-left: 4px;
+	overflow: visible
+}
+
+.scriptheader2:after {
+	display: inline;
+	content: url('/testerimg/star2.png');
+	cursor: pointer;
+	margin-left: 4px;
+	overflow: visible
+}
