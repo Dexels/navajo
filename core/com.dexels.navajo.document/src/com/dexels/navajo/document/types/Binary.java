@@ -21,11 +21,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -100,7 +104,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     private Map<String,List<String>> urlMetaData = null;
 
 	private Writer pushWriter;
-    
+
+	private OutputStream pushStream;
+
     private static final Logger logger = LoggerFactory.getLogger(Binary.class);
     /**
      * Construct a new Binary object with data from an InputStream It does close
@@ -421,11 +427,40 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	this.pushWriter.write(content);
     }
     
-    public void finishPushContent() throws IOException {
-    	this.pushWriter.flush();
-    	this.pushWriter.close();
+    public void finishPushContent() throws IOException  {
+		if(this.pushWriter!=null) {
+			this.pushWriter.flush();
+			this.pushWriter.close();
+			this.pushWriter = null;
+		} else if(this.pushStream!=null) {
+			this.pushStream.flush();
+			this.pushStream.close();
+			this.pushStream = null;
+		} else {
+			logger.error("Con not finish push as none seem to have started");
+		}
+    }
+
+    public void startBinaryPush()  {
+        try {
+			pushStream = null;
+			pushStream = createTempFileOutputStream();
+		} catch (IOException e) {
+			logger.error("Error starting binary push:",e);
+			throw new RuntimeException(e);
+		}
     }
     
+    public void pushContent(byte[] data) throws RuntimeException {
+        try {
+			pushStream.write(data);
+		} catch (IOException e) {
+			logger.error("Error pushing data into binary:",e);
+			throw new RuntimeException(e);
+		}
+    }
+
+
     private void parseFromReader(Reader reader) throws IOException {
         OutputStream fos = null;
         try {
@@ -747,6 +782,100 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     		return dataFile;
     	}
     }
+    /**
+     * Will return a
+     * @param bufferSize
+     * @return
+     */
+    public Iterable<byte[]> getDataAsIterable(final int bufferSize) {
+		if(inMemory!=null) {
+			logger.info("Binary: in memory detected bytes: "+inMemory.length);
+			if(inMemory.length> bufferSize) {
+				logger.warn("Should split, this array is too long!");
+			}
+			List<byte[]> result = new LinkedList<>();
+			result.add(inMemory);
+			return result;
+		}
+		final FileChannel channel = getDataAsChannel();
+		// TODO Warning, I think this leaks filepointers, as this channel will never get closed,
+		// better to emit this thing as an Observable so we can close it on unsubscribe;
+		
+		final ByteBuffer outputBuffer = ByteBuffer.allocate(bufferSize);
+    	return new Iterable<byte[]>(){
+
+			@Override
+			public Iterator<byte[]> iterator() {
+				return new Iterator<byte[]>(){
+
+					@Override
+					public boolean hasNext() {
+						try {
+							boolean isDone = channel.position() < channel.size();
+							if(isDone) {
+								channel.close();
+							}
+							return isDone;
+						} catch (IOException e) {
+							logger.error("Error: ", e);
+							return false;
+						}
+					}
+
+					@Override
+					public byte[] next() {
+						try {
+							int dataRead = channel.read(outputBuffer);
+							outputBuffer.flip();
+							byte[] result = new byte[dataRead];
+							System.err.println("Read: "+dataRead);
+							System.err.println("Remaining: "+outputBuffer.remaining());
+							outputBuffer.get(result);
+							return result;
+						} catch (IOException e) {
+							logger.error("Error: ", e);
+						}
+							
+						return null;
+					}};
+			}};
+    }
+    
+    public FileChannel getDataAsChannel() {
+    
+//    	if (NavajoFactory.getInstance().isSandboxMode()) {
+//		ByteArrayInputStream bais = new ByteArrayInputStream(NavajoFactory.getInstance().getHandle(dataFile.getName()));
+//		return bais;
+//	} else {
+		if(inMemory!=null) {
+			logger.info("Binary: in memory detected bytes: "+inMemory.length);
+			throw new UnsupportedOperationException("Not yet implemented: Streaming from memory");
+		}
+        if (lazySourceFile != null) {
+            try {
+            	RandomAccessFile rf = new RandomAccessFile(lazySourceFile, "r");
+            	return rf.getChannel();
+            } catch (FileNotFoundException e) {
+            	logger.error("Error: ", e);
+            	return null;
+            }
+        }
+        if (dataFile != null) {
+            try {
+            	RandomAccessFile rf = new RandomAccessFile(dataFile, "r");
+            	return rf.getChannel();
+            } catch (FileNotFoundException e) {
+            	logger.error("Error: ", e);
+            	return null;
+            }
+        } else if(this.lazyURL!=null) {
+			throw new UnsupportedOperationException("Not yet implemented: Remote direct streaming from URL");
+        } else {        
+            return null;
+        }
+
+    }
+    
     
     public final InputStream getDataAsStream() {
 //    	if (NavajoFactory.getInstance().isSandboxMode()) {

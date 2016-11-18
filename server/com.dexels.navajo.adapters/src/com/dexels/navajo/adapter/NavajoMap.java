@@ -1331,7 +1331,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                 }
                 throw new UserException(errorCode, errMsg);
             } else if (error != null) {
-                AuditLog.log("NavajoMap", "EXCEPTIONERROR OCCURED, BUT WAS EXCEPTION HANDLING WAS SET TO FALSE, RETURNING....", Level.INFO, access.accessID);
+                logger.debug("EXCEPTIONERROR OCCURED, BUT WAS EXCEPTION HANDLING WAS SET TO FALSE, RETURNING....");
                 return;
             }
 
@@ -1343,6 +1343,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                 authenticationError = true;
             }
             if (aaaError != null) {
+                
                 AuditLog.log("NavajoMap", "THROWING AUTHORIZATIONEXCEPTION IN NAVAJOMAP" + aaaError.getProperty("User").getValue(), Level.WARNING,
                         access.accessID);
                 throw new AuthorizationException(authenticationError, !authenticationError, aaaError.getProperty("User").getValue(),
@@ -1350,15 +1351,10 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             }
 
             if (breakOnConditionError && inDoc.getMessage("ConditionErrors") != null) {
-                String scriptName = "UNKNOWN";
-                if (access.getMyScript() != null) {
-                    scriptName = access.getMyScript().getScriptName();
-                }
-                AuditLog.log("NavajoMap", ">>>> BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR (" + scriptName + ")", Level.INFO,
-                        access.accessID);
+                logger.debug("BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR"); 
                 throw new ConditionErrorException(inDoc);
             } else if (inDoc.getMessage("ConditionErrors") != null) {
-                AuditLog.log("NavajoMap", "BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....", Level.INFO, access.accessID);
+                logger.debug("BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....");;
                 return;
             }
 

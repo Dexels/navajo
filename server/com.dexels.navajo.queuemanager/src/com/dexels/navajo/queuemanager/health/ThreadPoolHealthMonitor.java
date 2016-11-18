@@ -7,14 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.DispatcherFactory;
 
-public class TmlSchedulerHealthMonitor {
+public class ThreadPoolHealthMonitor {
     private static final int THREAD_SLEEP_TIME_NORMAL = 500;
-    private static final int THREAD_SLEEP_TIME_LONG = 5000;
+    private static final int THREAD_SLEEP_TIME_LONG = 10000;
 
-    private static final Logger logger = LoggerFactory.getLogger(TmlSchedulerHealthMonitor.class);
+    private static final Logger logger = LoggerFactory.getLogger(ThreadPoolHealthMonitor.class);
     private TmlScheduler tmlScheduler;
     private SchedulerHealthCheckThread healthThread;
 
@@ -27,13 +28,13 @@ public class TmlSchedulerHealthMonitor {
     }
 
     public void activate() {
-        logger.info("Activating TmlSchedulerHealthMonitor...");
+        logger.info("Activating ThreadPoolHealthMonitor...");
         healthThread = new SchedulerHealthCheckThread();
         healthThread.start();
     }
 
     public void deactivate() {
-        logger.info("Deactivating TmlSchedulerHealthMonitor...");
+        logger.info("Deactivating ThreadPoolHealthMonitor...");
         if (healthThread != null) {
             healthThread.setKeepRunning(false);
         }
@@ -56,7 +57,12 @@ public class TmlSchedulerHealthMonitor {
             while (keepRunning) {
                 int sleepTime = THREAD_SLEEP_TIME_NORMAL;
                 try {
-                    if (tmlScheduler.getDefaultQueue().getQueueSize() > 0) {
+                    RequestQueue queue = tmlScheduler.getDefaultQueue();
+                    // If a thread just finished, the activeRequestCount might be 1-2 less than the maximum
+                    // Yet we can still have queued requests. Thus we check if the number of threads left is
+                    // very small, and we have queued requests.
+                    int threadsLeft = queue.getMaximumActiveRequestCount() - queue.getActiveRequestCount();
+                    if (threadsLeft < 3 && queue.getQueueSize() > 0) {
                         logPoolInfo();
                         
                         // The server is not very happy, and to prevent flooding logs we can wait a bit longer 
