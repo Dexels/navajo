@@ -1,0 +1,8 @@
+Bundle-Name: Navajo Configuration Runtime
+Bundle-SymbolicName: com.dexels.config.runtime
+Bundle-Description: Navajo Runtime Config
+Bundle-ManifestVersion: 2
+Bundle-Version: 0.9.0.qualifier
+Bundle-Vendor: Dexels
+Bundle-ClassPath: .
+Export-Package: com.dexels.config.runtime
