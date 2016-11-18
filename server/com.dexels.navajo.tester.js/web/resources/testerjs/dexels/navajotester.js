@@ -728,19 +728,6 @@ $(document).on('input change', '.tmlinputselect', function(evt) {
     } 
 });
 
-$(document).on('click', '.arrayheader', function(evt) {
-    // If it's the propertychange event, make sure it's the value that changed.
-	var msgdiv = $(this).closest('div.messagediv');
-	var parentelem = msgdiv.parent();
-	msgdiv.remove()
-    var xpath = $(this).attr('id');
-    var element = $(xml).xpath(xpath)[0];
-    var name = $(this).text();
-    var newHtml = parseTmlArrayMessage($(element), name);
-    console.log(newHtml);
-    parentelem.append(newHtml);
-});
-
 
 window.onpopstate = function(event) {
     if (event.state) {

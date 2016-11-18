@@ -48,20 +48,19 @@ function parseTmlToHtml( scriptname, navajoelement, methodselement) {
 
 }
 
-function parseTmlArrayMessage(arraymessage, sort) {
+function parseTmlArrayMessage(arraymessage) {
     
     var divString = '<div class="messagediv">';
     divString += '<div class="exportcsv" id="'+getElementXPath(arraymessage[0])+'"> ';
     divString += '<h3> '+arraymessage.attr('name')+'</h3></div>'
    
-    divString += printArrayHorizontal(arraymessage,sort);
-    //divString += printArrayVertical(arraymessage);
+    divString += printArrayHorizontal(arraymessage);
    
     divString += '</div>'
     return divString;    
 }
 
-function printArrayHorizontal(arraymessage, sort) {
+function printArrayHorizontal(arraymessage) {
 
     // Store properties in an array to prevent looping over dom element
     var properties = [];
@@ -70,28 +69,7 @@ function printArrayHorizontal(arraymessage, sort) {
         // nothing to print
         return '<span>no array elements</span>';
     }
-    var definer = [];
-    arraymessage.children('message[type="definition"]').each(function(msgindex){
-    	 definer[msgindex] = [];
-         $(this).children().each(function(elemindex){ 
-        	 definer[msgindex][elemindex] = [];
-             if ($(this)[0].tagName === 'property') {
-            	 definer[msgindex][elemindex]['value'] = processProperty($(this));
-             } else if ($(this)[0].tagName === 'message'){
-            	 definer[msgindex][elemindex]['value'] = parseTmlMessage($(this));
-             } else {
-            	 definer[msgindex][elemindex]['value'] = '<span>unknown</span>';
-             }
-             definer[msgindex][elemindex]['name'] = $(this).attr('name');
-         });
-    });
-    var children = arraymessage.children('message[type="array_element"]');
-    var childrenArray = Array.prototype.slice.call(children, 0);
-    if (typeof sort !== "undefined") {
-    	childrenArray.sort(function(b,a){return $(a).children('property[name="'+sort+'"]').attr('value') - $(b).children('property[name="'+name+'"]').attr('value')})
-    }
-    
-    $(childrenArray).each(function(msgindex){
+    arraymessage.children('message[type="array_element"]').each(function(msgindex){
         if (typeof properties[msgindex] === 'undefined' ) {
             properties[msgindex] = [];
         }
@@ -107,6 +85,7 @@ function printArrayHorizontal(arraymessage, sort) {
             
             properties[msgindex][elemindex]['name'] = $(this).attr('name');
         });
+       
     });
     
     // Make header table
@@ -115,11 +94,8 @@ function printArrayHorizontal(arraymessage, sort) {
     tableString += '<tr><th ></th></tr>';
     
     // Print table header for each property'
-    if (typeof definer[0] === "undefined") {
-    	definer[0] = properties[0];
-    }
-    for (var propindex = 0; propindex < definer[0].length; propindex++) { 
-        tableString += '<tr><th class="arrayheader" id="'+getElementXPath(arraymessage[0])+ '">' + definer[0][propindex]['name'] + '</th></tr>';
+    for (var propindex = 0; propindex < properties[0].length; propindex++) { 
+        tableString += '<tr><th >' + properties[0][propindex]['name'] + '</th></tr>';
     }
     tableString += '</table></div> <div style="overflow: auto;"> <table class="tmlarraymessagetable"><tr> ';
     
