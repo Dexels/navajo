@@ -513,6 +513,15 @@ h3 {
 
 #methods {
 	line-height: 1.5;
+	max-height: 150px;
+	overflow:hidden;
+	overflow-y:auto;
+}
+
+#favorites {
+	max-height: 150px;
+	overflow:hidden;
+	overflow-y:auto;
 }
 
 .exportcsv:after {
