@@ -3,7 +3,8 @@
 // Holds the input navajo document for the next RPC call
 var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header></tml>');
 var serializer = new XMLSerializer();
-var editor ;
+var editor;
+var titleloader;
 
 var pretty_max_source_length = 80000;
 var pretty_max_response_length = 80000;
@@ -74,7 +75,8 @@ function updateFavorites() {
 		li.append(div);
 		$("#favorites").append(li);
 	}
-	$("#favorites").show();
+	
+	$(".favoritestitle").show();
 }
 
 function isFavorite(script) {
@@ -229,7 +231,9 @@ function runScript(script) {
         var navajoinput = prepareInputNavajo(script);
         
         $.ajax({
-            type: "POST",
+        	beforeSend: function() {startTitleLoader();},
+        	complete: function() {stopTitleLoader();},
+        	type: "POST",
             url: "/navajo/" + instance,
             data: navajoinput,
             headers: {"X-Navajo-Priority": "true"},
@@ -883,6 +887,16 @@ $(document).on('click', '.tmlbinary', function() {
 
 });
 
+
+/* Some helpers */
+Array.prototype.indexOfPath = function(path) {
+    for (var i = 0; i < this.length; i++)
+        if (this[i].path === path)
+            return i;
+    return -1;
+}
+
+
 function base64toBlob(base64Data, contentType) {
     contentType = contentType || '';
     var sliceSize = 1024;
@@ -904,14 +918,6 @@ function base64toBlob(base64Data, contentType) {
     return new Blob(byteArrays, { type: contentType });
 }
 
-
-/* Some helpers */
-Array.prototype.indexOfPath = function(path) {
-    for (var i = 0; i < this.length; i++)
-        if (this[i].path === path)
-            return i;
-    return -1;
-}
 
 
 function isInt(n){
@@ -954,4 +960,27 @@ function formatXml(xml) {
     });
 
     return formatted;
+}
+
+function startTitleLoader(){
+	document.title = 'Tester.js ';
+	function load() {
+		
+	    var title = $(document).prop('title'); 
+	    if (title.indexOf('......') == -1) {
+	        $(document).prop('title', title+ '.');
+	    } else {
+	    	$(document).prop('title', 'Tester.js');
+	    }
+	    titleloader = setTimeout(load, 1000);  
+	};
+	titleloader = setTimeout(load, 750);
+}
+
+function stopTitleLoader() {
+	if (titleloader) {
+		 clearTimeout(titleloader);
+		 titleloader = 0;
+		 document.title = 'Tester.js';
+	}
 }

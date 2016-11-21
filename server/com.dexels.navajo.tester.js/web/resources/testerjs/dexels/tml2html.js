@@ -9,6 +9,8 @@ $propertyvaluedivElem.attr('class', 'propertyvaluediv');
 function parseTmlToHtml( scriptname, navajoelement, methodselement) {
     navajoelement.html('')
     methodselement.html('')
+    $('.methodstitle').hide();
+    methodselement.hide();
      
     $xml = $( xml ),
     $tml = $xml.children('tml');
@@ -33,8 +35,11 @@ function parseTmlToHtml( scriptname, navajoelement, methodselement) {
     });
     
     var $methods = $(document.createElement('ul'));
+    var hasMethods = false;
+    
     $tml.children('methods').each(function(){
         $(this).children('method').each(function() {
+        	hasMethods = true;
             var $li = $(document.createElement('li'));
             var $div =$(document.createElement('div'));
             $div.attr('id', $(this).attr('name'));
@@ -44,6 +49,10 @@ function parseTmlToHtml( scriptname, navajoelement, methodselement) {
             $li.appendTo($methods)
         });
     });
+    if (hasMethods) {
+   	    $('.methodstitle').show();
+   	    methodselement.show();
+    }
     $methods.appendTo(methodselement);
 
 }
