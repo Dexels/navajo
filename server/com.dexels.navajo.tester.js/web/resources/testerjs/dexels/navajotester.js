@@ -964,22 +964,20 @@ function formatXml(xml) {
 
 function startTitleLoader(){
 	document.title = 'Tester.js ';
-	function load() {
-		
+	function loadTitle() {
 	    var title = $(document).prop('title'); 
 	    if (title.indexOf('......') == -1) {
 	        $(document).prop('title', title+ '.');
 	    } else {
 	    	$(document).prop('title', 'Tester.js');
 	    }
-	    titleloader = setTimeout(load, 1000);  
 	};
-	titleloader = setTimeout(load, 750);
+	titleloader = setInterval(loadTitle, 750);
 }
 
 function stopTitleLoader() {
 	if (titleloader) {
-		 clearTimeout(titleloader);
+		 clearInterval(titleloader);
 		 titleloader = 0;
 		 document.title = 'Tester.js';
 	}
