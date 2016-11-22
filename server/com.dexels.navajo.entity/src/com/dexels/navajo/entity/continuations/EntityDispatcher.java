@@ -148,7 +148,13 @@ public class EntityDispatcher {
             access = new Access(1, 1, "dummy", scriptName, "", "", "", null, false, null);
             access.setOperation(o);
             access.ipAddress = ip;
-            access = authenticateUser(input, tenant, access, authHeader);
+            
+            try {
+                access = authenticateUser(input, tenant, access, authHeader);
+            } catch (AuthorizationException auth) {
+                logger.warn("Auth exception: ", auth);
+                throw new EntityException(EntityException.UNAUTHORIZED);
+            }
             
             access.created = new Date(runner.getStartedAt());
             access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
@@ -184,6 +190,7 @@ public class EntityDispatcher {
             if (access != null) {
                 access.setExitCode(Access.EXIT_OK);
             }
+        
         } catch (Throwable ex) {
             result = handleException(ex, runner.getHttpResponse());
             
@@ -196,7 +203,11 @@ public class EntityDispatcher {
                     } else if (e.getCode() == EntityException.ENTITY_NOT_FOUND) {
                         skipLogging = true;
                         access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
+                    } else if (e.getCode() == EntityException.UNAUTHORIZED) {
+                        skipLogging = true;
+                        access.setExitCode(Access.EXIT_AUTH_EXECPTION);
                     }
+                    
                 }
                 
                 if (!skipLogging) {
