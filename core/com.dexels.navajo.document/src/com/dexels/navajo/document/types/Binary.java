@@ -811,15 +811,15 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 					@Override
 					public boolean hasNext() {
 						try {
-							boolean isDone = channel.position() < channel.size();
-							if(isDone) {
+							if(channel.position() < channel.size()) {
 								channel.close();
+								return false;
 							}
-							return isDone;
+							return true;
 						} catch (IOException e) {
 							logger.error("Error: ", e);
-							return false;
 						}
+						return false;
 					}
 
 					@Override
