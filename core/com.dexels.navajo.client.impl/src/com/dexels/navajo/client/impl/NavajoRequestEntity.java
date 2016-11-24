@@ -1,4 +1,4 @@
-package com.dexels.navajo.client;
+package com.dexels.navajo.client.impl;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;

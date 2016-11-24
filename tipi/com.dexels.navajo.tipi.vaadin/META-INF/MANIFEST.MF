@@ -7,6 +7,7 @@ Bundle-Activator: tipivaadin.TipiVaadinExtension
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.client,
+ com.dexels.navajo.client.impl.sessiontoken,
  com.dexels.navajo.client.sessiontoken,
  com.dexels.navajo.client.systeminfo,
  com.dexels.navajo.document;version="2.2.0",

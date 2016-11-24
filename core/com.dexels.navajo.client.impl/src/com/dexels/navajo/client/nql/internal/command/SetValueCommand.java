@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.nql.NQLCommand;
+import com.dexels.navajo.client.nql.NqlContextApi;
 import com.dexels.navajo.client.nql.OutputCallback;
-import com.dexels.navajo.client.nql.internal.NQLContext;
 import com.dexels.navajo.document.NavajoException;
 
 public class SetValueCommand implements NQLCommand {
@@ -18,7 +18,7 @@ public class SetValueCommand implements NQLCommand {
 			.getLogger(SetValueCommand.class);
 	
 	@Override
-	public void execute(NQLContext context,String tenant, String username, String password, OutputCallback callback) throws ClientException,NavajoException {
+	public void execute(NqlContextApi context,String tenant, String username, String password, OutputCallback callback) throws ClientException,NavajoException {
 		context.set(path, value);
 	}
 

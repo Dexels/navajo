@@ -4,7 +4,8 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.20.qualifier
 Bundle-Vendor: Dexels
 Bundle-Activator: tipiwebsocket.TipiWebsocketExtension
-Import-Package: com.dexels.navajo.client.sessiontoken,
+Import-Package: com.dexels.navajo.client.impl.sessiontoken,
+ com.dexels.navajo.client.sessiontoken,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.tipi;version="1.1.42",
  com.dexels.navajo.tipi.tipixml;version="1.1.42",

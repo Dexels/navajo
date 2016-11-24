@@ -1,9 +1,11 @@
-package com.dexels.navajo.client.sessiontoken;
+package com.dexels.navajo.client.impl.sessiontoken;
 
 import java.net.InetAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
 
 public class DefaultSessionTokenProvider implements SessionTokenProvider {
 

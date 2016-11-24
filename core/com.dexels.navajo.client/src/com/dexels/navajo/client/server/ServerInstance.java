@@ -1,7 +1,7 @@
 package com.dexels.navajo.client.server;
 
 import com.dexels.navajo.client.ClientException;
-import com.dexels.navajo.client.context.NavajoContext;
+import com.dexels.navajo.client.context.ClientContext;
 import com.dexels.navajo.document.Navajo;
 
 
@@ -13,7 +13,7 @@ public interface ServerInstance {
 
 	public void stopServer();
 
-	public NavajoContext getNavajoContext();
+	public ClientContext getNavajoContext();
 	
 	public Navajo callService(Navajo n, String service) throws ClientException;
 }

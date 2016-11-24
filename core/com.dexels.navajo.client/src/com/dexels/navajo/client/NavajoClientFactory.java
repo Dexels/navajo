@@ -3,6 +3,8 @@ package com.dexels.navajo.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+
 /**
  * Use the NavajoClientFactory for instantiating NavajoClients. The factory keeps track of all instances
  */
@@ -66,7 +68,7 @@ public class NavajoClientFactory {
   }
 
   public static ClientInterface createClient() {
-	  return new NavajoClient();
+	  return createClient("com.dexels.navajo.client.impl.NavajoClient",null,null);
   }
   
   /**
@@ -75,7 +77,7 @@ public class NavajoClientFactory {
    */
   public synchronized static ClientInterface createDefaultClient() {
     /** @todo Beware when refactoring */
-    return createClient("com.dexels.navajo.client.NavajoClient",null,null);
+    return createClient("com.dexels.navajo.client.impl.NavajoClient",null,null);
 //    return createClient("com.dexels.navajo.client.queueimpl.ClientQueueImpl",null,null);
   }
 

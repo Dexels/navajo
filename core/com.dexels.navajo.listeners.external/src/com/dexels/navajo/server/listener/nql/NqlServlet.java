@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.context.ClientContext;
-import com.dexels.navajo.client.context.NavajoRemoteContext;
+import com.dexels.navajo.client.impl.context.NavajoRemoteContext;
 import com.dexels.navajo.client.nql.NqlContextApi;
 import com.dexels.navajo.client.nql.OutputCallback;
 import com.dexels.navajo.document.NavajoException;

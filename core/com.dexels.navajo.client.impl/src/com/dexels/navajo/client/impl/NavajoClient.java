@@ -6,7 +6,7 @@
  * @author Arjen Schoneveld
  * @version $Id$
  */
-package com.dexels.navajo.client;
+package com.dexels.navajo.client.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,9 +31,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
+
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -43,7 +45,11 @@ import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
+import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.ClientInterface;
+import com.dexels.navajo.client.ConditionErrorHandler;
+import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.client.impl.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
 import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
 import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
@@ -55,6 +61,8 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
+
+
 
 public class NavajoClient implements ClientInterface, Serializable {
 

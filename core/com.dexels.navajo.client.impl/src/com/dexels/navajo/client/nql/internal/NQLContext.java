@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.context.ClientContext;
-import com.dexels.navajo.client.context.NavajoRemoteContext;
+import com.dexels.navajo.client.impl.context.NavajoRemoteContext;
 import com.dexels.navajo.client.nql.NQLCommand;
 import com.dexels.navajo.client.nql.NqlContextApi;
 import com.dexels.navajo.client.nql.OutputCallback;
@@ -95,6 +95,7 @@ public class NQLContext implements NqlContextApi {
 
 	// tml, btml, csv, tsv, json
 	
+	@Override
 	public void format(String type, OutputCallback callback) throws IOException, NavajoException {
 		if(callback==null) {
 			throw new UnsupportedOperationException("No outputWriter set.");
@@ -244,6 +245,7 @@ public class NQLContext implements NqlContextApi {
 		}
 	}
 
+	@Override
 	public void call(String service, String tenant,String username, String password, boolean force) throws ClientException {
 		 boolean present = context.hasNavajo(service);
 		 if(!present || force) {

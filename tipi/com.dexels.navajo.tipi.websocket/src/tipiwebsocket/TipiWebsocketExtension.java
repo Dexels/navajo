@@ -7,7 +7,7 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
+import com.dexels.navajo.client.impl.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.websocket.TipiWebSocket;
 

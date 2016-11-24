@@ -18,4 +18,12 @@ public interface NqlContextApi {
 
 	public ClientContext getNavajoContext();
 
+    void call(String service, String tenant, String username, String password, boolean force) throws ClientException;
+
+    public void format(String format, OutputCallback callback) throws IOException, NavajoException;
+
+    public void output(String path);
+
+    public void set(String path, String value);
+
 }

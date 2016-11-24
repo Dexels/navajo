@@ -27,8 +27,7 @@ package navajoclient;
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.client.NavajoClientFactory;
-import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
-import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
+import com.dexels.navajo.client.impl.sessiontoken.SessionTokenFactory;
 
 /**
  * VERSION HISTORY
@@ -53,14 +52,11 @@ import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
  */
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
-//	private final Map<String,NavajoContext> contextMap = new HashMap<String, NavajoContext>();
-//	private final Map<String,ServiceRegistration<ClientContext>> registryMap = new HashMap<String,ServiceRegistration<ClientContext>>();
 
 	@Override
 	public void shutdown() {
 		NavajoClientFactory.resetClient();
 		SessionTokenFactory.clearInstance();
-		SystemInfoFactory.clearInstance();
 		super.shutdown();
 	}
 	
@@ -69,50 +65,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		super.start(bc);
 	}
 //	
-	
-//	@Override
-//	public void deleted(String pid) {
-//		logger.info("Shutting down instance: "+pid);
-//		NavajoContext nc = contextMap.get(pid);
-//		if(nc==null) {
-//			logger.warn("Strange: Deleting, but already gone.");
-//			return;
-//		}
-//		contextMap.remove(pid);
-//		ServiceRegistration<ClientContext> reg = registryMap.get(pid);
-//		reg.unregister();
-//	}
-//
-//	@Override
-//	public String getName() {
-//		return "Navajo Client Factory";
-//	}
-
-//	@SuppressWarnings({ "rawtypes", "unchecked" })
-//	@Override
-//	public void updated(String pid, Dictionary settings)
-//			throws ConfigurationException {
-//		logger.info("CONFIG CHANGE DETECTED:");
-//		if(settings==null) {
-//			logger.info("Disabling Navajo client configuration: "+pid);
-//			return;
-//		}
-//		
-//		Enumeration en = settings.keys();
-//		while (en.hasMoreElements()) {
-//			Object o = en.nextElement();
-//			logger.info("Element: "+o+" : "+settings.get(o));
-//		}
-//		
-//		NavajoRemoteContext nc = new NavajoRemoteContext();
-//		nc.setupClient((String)settings.get("server"), (String)settings.get("username"), (String)settings.get("password"));
-//		
-//		ServiceRegistration reg = getBundleContext().registerService(ClientContext.class.getName(), nc, settings);
-//
-//		registryMap.put(pid, reg);
-//		logger.info("Activating NavajoClient component: "+settings);
-//		contextMap.put(pid, nc);
-//	}
 	
 	
 }

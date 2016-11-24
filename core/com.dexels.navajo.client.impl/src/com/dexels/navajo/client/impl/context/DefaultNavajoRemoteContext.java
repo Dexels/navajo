@@ -1,4 +1,4 @@
-package com.dexels.navajo.client.context;
+package com.dexels.navajo.client.impl.context;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
