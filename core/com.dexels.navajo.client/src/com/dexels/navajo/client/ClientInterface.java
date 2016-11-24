@@ -33,9 +33,11 @@ public interface ClientInterface {
 
     public Navajo doSimpleSend(Navajo out, String method, Integer retries) throws ClientException;
 
-    public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval) throws ClientException;
+    public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval)
+            throws ClientException;
 
-    public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException;
+    public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId)
+            throws ClientException;
 
     public void setUsername(String s);
 
@@ -53,8 +55,8 @@ public interface ClientInterface {
 
     public void setOrganization(String string);
 
-    public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format, String orientation,
-            int[] margins) throws NavajoException;
+    public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths,
+            String format, String orientation, int[] margins) throws NavajoException;
 
     public SystemInfoProvider getSystemInfoProvider();
 
@@ -88,16 +90,22 @@ public interface ClientInterface {
     /**
      * set the SSL socket factory to use whenever an HTTPS call is made.
      * 
-     * @param algorithm, the algorithm to use, for example: SunX509
-     * @param type Type of the keystore, for example PKCS12 or JKS
-     * @param source InputStream of the client certificate, supply null to reset the socketfactory to default
-     * @param password the keystore password
+     * @param algorithm,
+     *            the algorithm to use, for example: SunX509
+     * @param type
+     *            Type of the keystore, for example PKCS12 or JKS
+     * @param source
+     *            InputStream of the client certificate, supply null to reset
+     *            the socketfactory to default
+     * @param password
+     *            the keystore password
      */
 
     public void setClientCertificate(String algorithm, String type, InputStream is, char[] password) throws IOException;
 
     /**
-     * Created to force the client to encode the request using Gzip (GAE related)
+     * Created to force the client to encode the request using Gzip (GAE
+     * related)
      * 
      * @param forceGzip
      */
