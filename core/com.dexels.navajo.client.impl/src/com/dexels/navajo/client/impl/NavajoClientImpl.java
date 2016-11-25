@@ -10,10 +10,13 @@ package com.dexels.navajo.client.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.io.Serializable;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -21,14 +24,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLHandshakeException;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -42,14 +46,9 @@ import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClient;
 import com.dexels.navajo.client.impl.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
-import com.dexels.navajo.document.Guid;
 import com.dexels.navajo.document.Header;
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Property;
-
 
 
 public class NavajoClientImpl extends NavajoClient implements ClientInterface, Serializable {
@@ -110,7 +109,7 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
             }
         } catch (Throwable t) {
             // Check if we should attempt a retry. 
-            if (NavajoHttpRequestRetryHandler.retryRequest(t, retries)) {
+            if (retryRequest(t, retries)) {
                 try {
                     Thread.sleep((exceptionCount+1) * SLEEPTIME_PER_EXCEPTION);
                 } catch (InterruptedException e) {
@@ -129,6 +128,42 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
         return n;
     }
     
+    private boolean retryRequest(Throwable t, int retries) {
+        // First determine the type of exception. For some exceptions, we don't bother retrying!
+
+        if (t == null) {
+            throw new IllegalArgumentException("Exception parameter may not be null");
+        }
+        if (retries < 1) {
+            return false;
+        }
+
+        if (t instanceof NoHttpResponseException) {
+            // Retry if the server dropped connection on us
+            return true;
+        }
+        if (t instanceof InterruptedIOException) {
+            // Timeout
+            return true;
+        }
+        if (t instanceof UnknownHostException) {
+            // Unknown host
+            return true;
+        }
+        if (t instanceof ConnectException) {
+            // Connection refused
+            return true;
+        }
+        if (t instanceof SSLHandshakeException) {
+            // SSL handshake exception
+            return false;
+        }
+
+        // Some other exception occurred. Probably doesn't hurt to retry?
+        return true;
+    }
+
+
     protected Navajo handleException(Throwable exception, String host, long timeStamp) throws ClientException {
         Navajo n = null;
         if (exception instanceof java.net.UnknownHostException | exception instanceof org.apache.http.conn.HttpHostConnectException) {
@@ -168,130 +203,6 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
         return n;
     }
 
-    private void generateConnectionError(Navajo n, int id, String description) {
-        try {
-            Message conditionError = NavajoFactory.getInstance().createMessage(n, "ConditionErrors", Message.MSG_TYPE_ARRAY);
-            n.addMessage(conditionError);
-            Message conditionErrorElt = NavajoFactory.getInstance().createMessage(n, "ConditionErrors");
-            conditionError.addMessage(conditionErrorElt);
-            Property p1 = NavajoFactory.getInstance().createProperty(n, "Id", Property.INTEGER_PROPERTY, id + "", 10, "Id", Property.DIR_OUT);
-            Property p2 = NavajoFactory.getInstance().createProperty(n, "Description", Property.INTEGER_PROPERTY, description, 10, "Omschrijving",
-                    Property.DIR_OUT);
-            Property p3 = NavajoFactory.getInstance().createProperty(n, "FailedExpression", Property.INTEGER_PROPERTY, "", 10, "FailedExpression",
-                    Property.DIR_OUT);
-            Property p4 = NavajoFactory.getInstance().createProperty(n, "EvaluatedExpression", Property.INTEGER_PROPERTY, "", 10, "EvaluatedExpression",
-                    Property.DIR_OUT);
-            conditionErrorElt.addProperty(p1);
-            conditionErrorElt.addProperty(p2);
-            conditionErrorElt.addProperty(p3);
-            conditionErrorElt.addProperty(p4);
-        } catch (NavajoException ex) {
-            logger.error("Error: ", ex);
-        }
-    }
-  
-
-  
-    @Override
-    protected final Navajo doSimpleSend(Navajo out, String method, long expirationInterval, int retries) throws ClientException {
-        // NOTE: prefix persistence key with method, because same Navajo object
-        // could be used as a request
-        // for multiple methods!
-
-        // ============ compared services ===================
-
-        /**
-         * Make sure that same Navajo is not used simultaneously.
-         */
-        synchronized (out) {
-            // ====================================================
-
-            Header header = out.getHeader();
-            String callingService = null;
-            if (header == null) {
-                header = NavajoFactory.getInstance().createHeader(out, method, username, password, expirationInterval);
-                out.addHeader(header);
-            } else {
-                callingService = header.getRPCName();
-                header.setRPCName(method);
-                header.setRPCUser(username);
-                header.setRPCPassword(password);
-                header.setExpirationInterval(expirationInterval);
-            }
-            // ALWAY SET REQUEST ID AT THIS POINT.
-            if (header.getRequestId() != null && header.getRequestId().equals("42")) {
-                System.err.println("ENCOUNTERED TEST!!!");
-            } else {
-                header.setRequestId(Guid.create());
-            }
-            String sessionToken = getSessionTokenProvider().getSessionToken();
-            header.setHeaderAttribute("clientToken", sessionToken);
-            header.setHeaderAttribute("clientInfo", getSystemInfoProvider().toString());
-            // ========= Adding globalMessages
-
-            long clientTime = 0;
-            try {
-                if (out.getHeader() != null) {
-                    processPiggybackData(out.getHeader());
-                }
-
-                // ==================================================================
-                // set the locale
-                // ==============================================
-                if (localeCode != null) {
-                    out.getHeader().setHeaderAttribute("locale", localeCode);
-                }
-                // ==================================================================
-                // set the sublocale
-                // ==============================================
-                if (subLocale != null) {
-                    out.getHeader().setHeaderAttribute("sublocale", subLocale);
-                }
-
-                if (application != null) {
-                    out.getHeader().setHeaderAttribute("application", application);
-                }
-                if (organization != null) {
-                    out.getHeader().setHeaderAttribute("organization", organization);
-                }
-
-                Navajo n = null;
-
-                long timeStamp = System.currentTimeMillis();
-
-                n = doTransaction(out, allowCompression, retries, 0);
-                
-                if (n != null && n.getHeader() != null) {
-                    n.getHeader().setHeaderAttribute("sourceScript", callingService);
-                    clientTime = (System.currentTimeMillis() - timeStamp);
-                    n.getHeader().setHeaderAttribute("clientTime", "" + clientTime);
-                    String tot = n.getHeader().getHeaderAttribute("serverTime");                        
-                    long totalTime = -1;
-                    if (tot != null && !"".equals(tot)) {
-                        totalTime = Long.parseLong(tot);
-                        n.getHeader().setHeaderAttribute("transferTime", "" + (clientTime - totalTime));
-                    }
-                    Map<String, String> headerAttributes = n.getHeader().getHeaderAttributes();
-                    Map<String, String> pbd = new HashMap<String, String>(headerAttributes);
-                    pbd.put("type", "performanceStats");
-                    pbd.put("service", method);
-                    synchronized (piggyBackData) {
-                        piggyBackData.add(pbd);
-                    }
-                   
-                } else {
-                    logger.info("Null header in input message");
-                }
-                
-                return n;
-            } catch (ClientException e) {
-                throw e;
-            } catch (Exception e) {
-                logger.error("Error: ", e);
-                throw new ClientException(-1, -1, e.getMessage(), e);
-            }
-        }
-    }
 
     @SuppressWarnings("unused")
     private void appendHeaderToHttp(HttpURLConnection con, Header header) {

@@ -4,6 +4,7 @@ import java.security.KeyStore;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
 import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
 import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
+import com.dexels.navajo.document.Guid;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -128,7 +130,7 @@ public abstract class NavajoClient implements ClientInterface{
     
 
 
-    protected Navajo doTransaction(Navajo d, boolean useCompression, int retries, int exceptions) throws Throwable {
+    protected Navajo doTransaction(Navajo d, boolean useCompression, int retries, int exceptions) throws ClientException {
         throw new UnsupportedOperationException();
     }
 
@@ -151,14 +153,104 @@ public abstract class NavajoClient implements ClientInterface{
         throw new UnsupportedOperationException();
     }
 
-    
- 
-    
+    protected final Navajo doSimpleSend(Navajo out, String method, long expirationInterval, int retries) throws ClientException {
+        // NOTE: prefix persistence key with method, because same Navajo object
+        // could be used as a request
+        // for multiple methods!
 
-    
-    
-    protected Navajo doSimpleSend(Navajo n, String method, long expirationInterval, int retries) throws ClientException {
-        throw new UnsupportedOperationException();
+        // ============ compared services ===================
+
+        /**
+         * Make sure that same Navajo is not used simultaneously.
+         */
+        synchronized (out) {
+            // ====================================================
+
+            Header header = out.getHeader();
+            String callingService = null;
+            if (header == null) {
+                header = NavajoFactory.getInstance().createHeader(out, method, username, password, expirationInterval);
+                out.addHeader(header);
+            } else {
+                callingService = header.getRPCName();
+                header.setRPCName(method);
+                header.setRPCUser(username);
+                header.setRPCPassword(password);
+                header.setExpirationInterval(expirationInterval);
+            }
+            // ALWAY SET REQUEST ID AT THIS POINT.
+            if (header.getRequestId() != null && header.getRequestId().equals("42")) {
+                System.err.println("ENCOUNTERED TEST!!!");
+            } else {
+                header.setRequestId(Guid.create());
+            }
+            String sessionToken = getSessionTokenProvider().getSessionToken();
+            header.setHeaderAttribute("clientToken", sessionToken);
+            header.setHeaderAttribute("clientInfo", getSystemInfoProvider().toString());
+            // ========= Adding globalMessages
+
+            long clientTime = 0;
+            try {
+                if (out.getHeader() != null) {
+                    processPiggybackData(out.getHeader());
+                }
+
+                // ==================================================================
+                // set the locale
+                // ==============================================
+                if (localeCode != null) {
+                    out.getHeader().setHeaderAttribute("locale", localeCode);
+                }
+                // ==================================================================
+                // set the sublocale
+                // ==============================================
+                if (subLocale != null) {
+                    out.getHeader().setHeaderAttribute("sublocale", subLocale);
+                }
+
+                if (application != null) {
+                    out.getHeader().setHeaderAttribute("application", application);
+                }
+                if (organization != null) {
+                    out.getHeader().setHeaderAttribute("organization", organization);
+                }
+
+                Navajo n = null;
+
+                long timeStamp = System.currentTimeMillis();
+
+                n = doTransaction(out, allowCompression, retries, 0);
+                
+                if (n != null && n.getHeader() != null) {
+                    n.getHeader().setHeaderAttribute("sourceScript", callingService);
+                    clientTime = (System.currentTimeMillis() - timeStamp);
+                    n.getHeader().setHeaderAttribute("clientTime", "" + clientTime);
+                    String tot = n.getHeader().getHeaderAttribute("serverTime");                        
+                    long totalTime = -1;
+                    if (tot != null && !"".equals(tot)) {
+                        totalTime = Long.parseLong(tot);
+                        n.getHeader().setHeaderAttribute("transferTime", "" + (clientTime - totalTime));
+                    }
+                    Map<String, String> headerAttributes = n.getHeader().getHeaderAttributes();
+                    Map<String, String> pbd = new HashMap<String, String>(headerAttributes);
+                    pbd.put("type", "performanceStats");
+                    pbd.put("service", method);
+                    synchronized (piggyBackData) {
+                        piggyBackData.add(pbd);
+                    }
+                   
+                } else {
+                    logger.info("Null header in input message");
+                }
+                
+                return n;
+            } catch (ClientException e) {
+                throw e;
+            } catch (Exception e) {
+                logger.error("Error: ", e);
+                throw new ClientException(-1, -1, e.getMessage(), e);
+            }
+        }
     }
 
     /**
@@ -292,6 +384,30 @@ public abstract class NavajoClient implements ClientInterface{
             throw NavajoFactory.getInstance().createNavajoException(e);
         }
     }
+    
+    protected void generateConnectionError(Navajo n, int id, String description) {
+        try {
+            Message conditionError = NavajoFactory.getInstance().createMessage(n, "ConditionErrors", Message.MSG_TYPE_ARRAY);
+            n.addMessage(conditionError);
+            Message conditionErrorElt = NavajoFactory.getInstance().createMessage(n, "ConditionErrors");
+            conditionError.addMessage(conditionErrorElt);
+            Property p1 = NavajoFactory.getInstance().createProperty(n, "Id", Property.INTEGER_PROPERTY, id + "", 10, "Id", Property.DIR_OUT);
+            Property p2 = NavajoFactory.getInstance().createProperty(n, "Description", Property.INTEGER_PROPERTY, description, 10, "Omschrijving",
+                    Property.DIR_OUT);
+            Property p3 = NavajoFactory.getInstance().createProperty(n, "FailedExpression", Property.INTEGER_PROPERTY, "", 10, "FailedExpression",
+                    Property.DIR_OUT);
+            Property p4 = NavajoFactory.getInstance().createProperty(n, "EvaluatedExpression", Property.INTEGER_PROPERTY, "", 10, "EvaluatedExpression",
+                    Property.DIR_OUT);
+            conditionErrorElt.addProperty(p1);
+            conditionErrorElt.addProperty(p2);
+            conditionErrorElt.addProperty(p3);
+            conditionErrorElt.addProperty(p4);
+        } catch (NavajoException ex) {
+            logger.error("Error: ", ex);
+        }
+    }
+  
+    
 
     /**
      * Add piggyback data to header.
