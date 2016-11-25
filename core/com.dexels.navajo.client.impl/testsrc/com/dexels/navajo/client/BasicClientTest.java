@@ -2,8 +2,11 @@ package com.dexels.navajo.client;
 
 
 
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.dexels.navajo.client.impl.NavajoClientImpl;
 import com.dexels.navajo.document.Navajo;
 
 /**
@@ -17,7 +20,17 @@ public class BasicClientTest {
 	protected ClientInterface myClient;
 
 
+	@BeforeClass
+	public static void setup() {
+		ClientInterface ci = new NavajoClientImpl();
+		NavajoClientFactory.setDefaultClient(ci);
+	}
+	
+	@Before
+	public void getClient() {
+		myClient = NavajoClientFactory.getClient();
 
+	}
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -49,7 +62,7 @@ public class BasicClientTest {
 		reply2.write(System.err);
 		long time = System.currentTimeMillis() - start;
 		total += time;
-		System.err.println("Time: " + (time) );
+		System.err.println("Time: " + (total) );
 	}
 
 }

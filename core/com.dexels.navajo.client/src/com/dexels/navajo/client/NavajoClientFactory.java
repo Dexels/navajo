@@ -33,7 +33,7 @@ public class NavajoClientFactory {
     public static ClientInterface createDefaultClientForServerlist(String[] servers) {
         if (servers != null && servers.length > 0) {
             NavajoClientFactory.resetClient();
-            NavajoClientFactory.createDefaultClient();
+            NavajoClientFactory.createClient();
         }
         ClientInterface ci = getClient();
         ci.setServers(servers);
@@ -54,20 +54,12 @@ public class NavajoClientFactory {
         }
         
         try {
-            return defaultClient.getClass().newInstance();
+        	myClient = defaultClient.getClass().newInstance();
+        	return myClient;
         } catch (InstantiationException | IllegalAccessException e) {
             logger.error("Unable to create client!", e);
         }
         return null;
-    }
-
-    /**
-     * Create a default client (queue)
-     * 
-     * @return ClientInterface
-     */
-    public synchronized static ClientInterface createDefaultClient() {
-        return createClient();
     }
 
     /**
@@ -77,7 +69,7 @@ public class NavajoClientFactory {
      */
     public synchronized static ClientInterface getClient() {
         if (myClient == null) {
-            myClient = createDefaultClient();
+            createClient();
         }
 
         return myClient;

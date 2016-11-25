@@ -145,10 +145,6 @@ public abstract class NavajoClient implements ClientInterface{
     }
     
 
-    protected Navajo doSimpleSend(Navajo out, String method, int i, Integer retries) {
-        throw new UnsupportedOperationException();
-    }
-
     protected final Navajo doSimpleSend(Navajo out, String method, long expirationInterval, int retries) throws ClientException {
         // NOTE: prefix persistence key with method, because same Navajo object
         // could be used as a request

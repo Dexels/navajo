@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.asyncservice.ServerAsyncListener;
 import com.dexels.navajo.client.asyncservice.impl.AsyncRegistryImpl;
+import com.dexels.navajo.client.impl.NavajoClientImpl;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
@@ -19,7 +20,11 @@ public class TestAsyncService {
 	public TestAsyncService() {
 		this.registry = new AsyncRegistryImpl();
 		this.registry.setClientInterface(NavajoClientFactory.getClient());
+		
+		ClientInterface ci = new NavajoClientImpl();
+		NavajoClientFactory.setDefaultClient(ci);
 	}
+	
 
 	public void test(Navajo n) {
 		try {
