@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class NavajoClientFactory {
   private static ClientInterface myClient = null;
-
+  private static ClientInterface defaultClient = null;
   
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoClientFactory.class);

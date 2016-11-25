@@ -145,10 +145,6 @@ public abstract class NavajoClient implements ClientInterface{
     }
     
 
-
-    
-    
-
     protected Navajo doSimpleSend(Navajo out, String method, int i, Integer retries) {
         throw new UnsupportedOperationException();
     }

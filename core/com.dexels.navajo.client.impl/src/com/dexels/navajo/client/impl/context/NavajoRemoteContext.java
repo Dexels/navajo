@@ -59,14 +59,12 @@ public class NavajoRemoteContext extends NavajoContext {
 		}
 		
 		long time = System.currentTimeMillis();
-		input.write(System.err);
 		Navajo n = myClient.doSimpleSend(input, service);
 
 		logger.debug("Send complete!");
 		n.getHeader().setRPCName(service);
 		putNavajo(service, n);
-		long time2 = System.currentTimeMillis() - time;
-		logger.debug("Call took: "+time2+" millis!");
+		logger.debug("Call took: {} millis!", System.currentTimeMillis() - time);
 	}
 
 
