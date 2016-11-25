@@ -42,6 +42,7 @@ import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.ConditionErrorHandler;
 import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.client.impl.NavajoClientImpl;
 import com.dexels.navajo.client.impl.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -280,6 +281,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
         myParentContext = parent;
         initializeExtensions(preload.iterator());
+        NavajoClientFactory.setDefaultClient(new NavajoClientImpl());
         clientInterface = NavajoClientFactory.createClient();
 
         if (myThreadPool == null) {
