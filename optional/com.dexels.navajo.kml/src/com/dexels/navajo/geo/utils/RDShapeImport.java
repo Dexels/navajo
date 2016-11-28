@@ -33,7 +33,6 @@ public class RDShapeImport {
 	public RDShapeImport(String prefix) {
 		try {
 			NavajoClientFactory.resetClient();
-			NavajoClientFactory.createDefaultClient();
 			NavajoClientFactory.getClient().setServerUrl("penelope1.dexels.com/sportlink/test/knvb/Postman");
 			NavajoClientFactory.getClient().setUsername("ROOT");
 			NavajoClientFactory.getClient().setPassword("R20T");

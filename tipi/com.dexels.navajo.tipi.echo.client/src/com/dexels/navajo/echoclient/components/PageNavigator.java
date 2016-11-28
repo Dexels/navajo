@@ -190,7 +190,7 @@ public class PageNavigator extends Row {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					myTable.getTableReport(NavajoClientFactory.createClient(), "pdf", "horizontal", new int[] { 5,
+					myTable.getTableReport(NavajoClientFactory.getClient(), "pdf", "horizontal", new int[] { 5,
 							5, 5, 5 });
 				} catch (NavajoException e1) {
 					logger.error("Error: ", e1);

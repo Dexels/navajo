@@ -109,7 +109,7 @@ public class Base2LdapAdapter implements Mappable {
 
 	public static void main(String[] args) throws NamingException, ClientException, NavajoException {
 
-		ClientInterface cc = NavajoClientFactory.createDefaultClient();
+		ClientInterface cc = NavajoClientFactory.getClient();
 		cc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
 		cc.setUsername("ROOT");
 		cc.setPassword("R20T");

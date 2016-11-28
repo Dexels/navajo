@@ -433,7 +433,7 @@ public class AjaxComboBox extends JComboBox {
 
 		t.setSize(400, 500);
 		t.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		ClientInterface cc = NavajoClientFactory.createDefaultClient();
+		ClientInterface cc = NavajoClientFactory.getClient();
 		cc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
 		cc.setUsername("");
 		cc.setPassword("");

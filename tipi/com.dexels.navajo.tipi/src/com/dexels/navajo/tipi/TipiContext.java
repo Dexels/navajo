@@ -280,7 +280,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
         myParentContext = parent;
         initializeExtensions(preload.iterator());
-        clientInterface = NavajoClientFactory.createDefaultClient();
+        clientInterface = NavajoClientFactory.getClient();
 
         if (myThreadPool == null) {
             myThreadPool = new TipiThreadPool(this, getPoolSize());
