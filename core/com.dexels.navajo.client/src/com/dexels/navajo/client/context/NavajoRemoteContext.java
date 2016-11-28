@@ -115,7 +115,6 @@ public class NavajoRemoteContext extends NavajoContext {
 			logger.info("No server supplied. Creating default server url: "+server);
 		}
 		myClient.setServerUrl(server);		
-		myClient.setRetryAttempts(0);
 		this.debugAll = debugAll;
 	}
 
