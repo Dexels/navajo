@@ -10,7 +10,7 @@ import com.dexels.navajo.client.NavajoScriptingTests;
 @Suite.SuiteClasses({
 	NavajoScriptingTests.class, 
 	BasicNavajoServerTests.class})  
-public class NavajoClient {
+public class TestNavajoClient {
 
 
 
