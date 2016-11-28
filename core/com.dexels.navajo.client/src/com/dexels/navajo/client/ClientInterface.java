@@ -14,10 +14,7 @@ import java.security.KeyStore;
 
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
 import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.types.Binary;
 
 /**
  * See NavajoClient for an explanation of all methods
@@ -52,9 +49,6 @@ public interface ClientInterface {
     public void setApplication(String string);
 
     public void setOrganization(String string);
-
-    public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format, String orientation,
-            int[] margins) throws NavajoException;
 
     public SystemInfoProvider getSystemInfoProvider();
 

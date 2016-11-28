@@ -9,6 +9,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -20,6 +21,7 @@ import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.report.TipiReport;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.dexels.navajo.tipi.vaadin.components.impl.MessageTable;
@@ -261,7 +263,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 	
 			if ("printReport".equals(name)) {
 				try {
-					getTableReport("pdf", "horizontal", new int[] { 10, 10, 10, 10 });
+					getTableReport(myContext.getClient(), "pdf", "horizontal", new int[] { 10, 10, 10, 10 });
 				} catch (NavajoException e) {
 					logger.error("Error: ",e);
 				}
@@ -280,7 +282,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 	}
 
 
-	public void getTableReport(String format, String orientation,
+	public void getTableReport(ClientInterface ci, String format, String orientation,
 			int[] margins) throws NavajoException {
 
 		Collection<?> cids = table.getContainerDataSource().getContainerPropertyIds();
@@ -313,8 +315,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			logger.debug("Adding name: " + name.trim());
 			i++;
 		}
-		Binary result = getContext().getClient().getArrayMessageReport(
-				m, namesarray, titles, widths, format, orientation, margins);
+		Binary result = TipiReport.getArrayMessageReport(ci, m, namesarray, titles, widths, format, orientation, margins);
 		printTable(result);
 	}
 }
