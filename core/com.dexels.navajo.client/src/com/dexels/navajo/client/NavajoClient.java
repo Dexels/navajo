@@ -122,11 +122,6 @@ public class NavajoClient implements ClientInterface, Serializable {
     }
 
     @Override
-    public final void setRetryAttempts(int attempts) {
-        // unsupported
-    }
-
-    @Override
     public final Navajo doSimpleSend(String method) throws ClientException {
         return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method, 0);
     }

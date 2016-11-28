@@ -54,9 +54,6 @@ public class HttpNavajoConnector extends TipiBaseConnector {
 		if (name.equals("password")) {
 			myContext.getClient().setPassword((String) object);
 		}
-		if (name.equals("retryAttempt")) {
-			myContext.getClient().setRetryAttempts((Integer) object);
-		}
 
 		super.setComponentValue(name, object);
 	}

@@ -605,12 +605,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             getClient().setPassword(navajoPassword);
             getClient().setForceGzip(forceGzip);
             getClient().setHttps(secure);
-
-            Integer retryCount = (Integer) attemptGenericEvaluate(config.getStringAttribute("retryCount", "-1"));
-            if (retryCount != null) {
-                getClient().setRetryAttempts(retryCount);
-            }
-
         } else {
             throw new UnsupportedOperationException("Sorry, I deprecated the direct client for tipi usage");
         }

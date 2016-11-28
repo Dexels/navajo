@@ -42,8 +42,6 @@ public interface ClientInterface {
 
     public void setServerUrl(String url);
 
-    public void setRetryAttempts(int noOfAttempts);
-
     public void setServers(String[] servers);
 
     public void setApplication(String string);
