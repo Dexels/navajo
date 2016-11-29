@@ -20,7 +20,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 	@Before
 	public void setUp() throws Exception {
-		input = myClient.doSimpleSend("tests/InitProperties");
+		input = myClient.doSimpleSend(null, "tests/InitProperties");
 	}
 
 	@Test

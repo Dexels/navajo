@@ -129,7 +129,7 @@ public class BaseLdapAdapter implements Mappable {
 		cc.setUsername("");
 		cc.setPassword("");
 
-		final Navajo init = NavajoClientFactory.getClient().doSimpleSend("club/InitUpdateClub");
+		final Navajo init = NavajoClientFactory.getClient().doSimpleSend(null, "club/InitUpdateClub");
 		init.getProperty("Club/ClubIdentifier").setValue("BBFW63X");
 		init.getProperty("Club/LastName").setValue("");
 

@@ -112,7 +112,7 @@ public class RDShapeImport {
 	private void storeBinaryShapeRecord(String shapeId, File recordFile){
 		try{
 			Binary data = new Binary(recordFile);
-			Navajo pms = NavajoClientFactory.getClient().doSimpleSend("geospatial/InitInsertCBSPolyPoint");
+			Navajo pms = NavajoClientFactory.getClient().doSimpleSend(null, "geospatial/InitInsertCBSPolyPoint");
 			Message params =pms.getMessage("Parameters");
 			if(params != null){
 				params.getProperty("ShapeId").setValue(shapeId);
@@ -139,7 +139,7 @@ public class RDShapeImport {
 		try {
 			System.err.println(shapeId + ",  BBOX: " + min_lat + ", " + min_lon + " - " + max_lat + ", " + max_lon);
 
-			Navajo pms = NavajoClientFactory.getClient().doSimpleSend("geospatial/InitUpdateCBSBoundingBox");
+			Navajo pms = NavajoClientFactory.getClient().doSimpleSend(null, "geospatial/InitUpdateCBSBoundingBox");
 			Message params = pms.getMessage( "Parameters");
 			if(params != null){				
 				params.getProperty("ShapeId").setValue(shapeId);

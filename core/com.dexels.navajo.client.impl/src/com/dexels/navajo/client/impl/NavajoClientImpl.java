@@ -276,7 +276,6 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
     }
 
     
-    @Override
     public SessionTokenProvider getSessionTokenProvider() {
         if (sessionTokenProvider == null) {
             return SessionTokenFactory.getSessionTokenProvider();

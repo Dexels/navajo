@@ -9,7 +9,9 @@
  */
 package com.dexels.navajo.client;
 
-public class ClientException extends Exception {
+import java.io.IOException;
+
+public class ClientException extends IOException {
 
     private static final long serialVersionUID = 75302782005830988L;
     private int code;

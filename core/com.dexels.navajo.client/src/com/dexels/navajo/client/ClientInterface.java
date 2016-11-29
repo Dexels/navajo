@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
 
-import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
-import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
 import com.dexels.navajo.document.Navajo;
 
 /**
@@ -21,19 +19,13 @@ import com.dexels.navajo.document.Navajo;
  */
 public interface ClientInterface {
 
-    public static final String GLOBALSNAME = "__globals__";
-    public static final String GLOBALSPREFIX = "navajo.globals.";
-
-    public Navajo doSimpleSend(String method) throws ClientException;
-
     public Navajo doSimpleSend(Navajo out, String method) throws ClientException;
 
     public Navajo doSimpleSend(Navajo out, String method, Integer retries) throws ClientException;
 
-    public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval) throws ClientException;
-
     public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException;
 
+    
     public void setUsername(String s);
 
     public void setKeyStore(KeyStore keystore);
@@ -42,19 +34,11 @@ public interface ClientInterface {
 
     public void setServerUrl(String url);
 
-    public void setServers(String[] servers);
+    public void setServerUrls(String[] servers);
 
     public void setApplication(String string);
 
     public void setOrganization(String string);
-
-    public SystemInfoProvider getSystemInfoProvider();
-
-    public void setSystemInfoProvider(SystemInfoProvider sip);
-
-    public SessionTokenProvider getSessionTokenProvider();
-
-    public void setSessionTokenProvider(SessionTokenProvider stp);
 
     /*
      * sets the locale for the client, it will be appended to the header
@@ -73,9 +57,6 @@ public interface ClientInterface {
 
     public void setAllowCompression(boolean allowCompression);
 
-    public boolean useHttps();
-
-    public void setHttps(boolean useHttps);
 
     /**
      * set the SSL socket factory to use whenever an HTTPS call is made.

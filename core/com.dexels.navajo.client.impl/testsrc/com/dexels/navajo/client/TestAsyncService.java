@@ -80,7 +80,7 @@ public class TestAsyncService {
 		NavajoClientFactory.getClient().setUsername("");
 		NavajoClientFactory.getClient().setPassword("");
 		NavajoClientFactory.getClient().setServerUrl("http://localhost:8080/navajo/KNZB");
-		final Navajo n = NavajoClientFactory.getClient().doSimpleSend("InitAsync");
+		final Navajo n = NavajoClientFactory.getClient().doSimpleSend(null, "InitAsync");
 		tas.test(n);
 	}
 

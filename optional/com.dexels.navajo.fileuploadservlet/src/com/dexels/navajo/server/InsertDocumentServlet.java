@@ -105,7 +105,7 @@ public class InsertDocumentServlet extends HttpServlet {
 		    Binary b = new Binary(is);	    
 		    
 		    if(useLucene){
-			    Navajo ins = NavajoClientFactory.getClient().doSimpleSend("lucene/InitInsertDocument");
+			    Navajo ins = NavajoClientFactory.getClient().doSimpleSend(null, "lucene/InitInsertDocument");
 			    Message insert = ins.getMessage("DocumentData");
 			    insert.getProperty("AuthorName").setValue(author);
 	
@@ -114,7 +114,7 @@ public class InsertDocumentServlet extends HttpServlet {
 			    
 			    NavajoClientFactory.getClient().doSimpleSend(ins, "lucene/ProcessInsertDocument");
 		    } else {
-		    	Navajo ins = NavajoClientFactory.getClient().doSimpleSend("documents/InitInsertDocument");
+		    	Navajo ins = NavajoClientFactory.getClient().doSimpleSend(null, "documents/InitInsertDocument");
 			    Message insert = ins.getMessage("NewDocument");
 			    
 			    insert.getProperty("ObjectId").setValue(author);

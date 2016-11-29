@@ -26,7 +26,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.types.Binary;
 
 public abstract class NavajoClient implements ClientInterface{
     private final static Logger logger = LoggerFactory.getLogger(NavajoClient.class);
@@ -65,7 +64,7 @@ public abstract class NavajoClient implements ClientInterface{
     @Override
     public final void setServerUrl(String url) {
         serverUrls = new String[] { url };
-        setServers(serverUrls);
+        setServerUrls(serverUrls);
 
     }
 
@@ -74,13 +73,12 @@ public abstract class NavajoClient implements ClientInterface{
         password = pw;
     }
 
-    @Override
-    public final Navajo doSimpleSend(String method) throws ClientException {
-        return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method, 0);
-    }
 
     @Override
     public final Navajo doSimpleSend(Navajo out, String method) throws ClientException {
+    	if (out == null) {
+    		out = NavajoFactory.getInstance().createNavajo();
+    	}
         return doSimpleSend(out, method, 0);
     }
     
@@ -100,46 +98,11 @@ public abstract class NavajoClient implements ClientInterface{
 
     }
     
-    @Override
-    public final Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval) throws ClientException {
-        if (v != null) {
-            v.clearConditionErrors();
-        }
-
-        if (username == null) {
-            throw new ClientException(1, 1, "No username set!");
-        }
-        if (password == null) {
-            throw new ClientException(1, 1, "No password set!");
-        }
-        if (getCurrentHost() == null) {
-            throw new ClientException(1, 1, "No host set!");
-        }
-        Navajo result = doSimpleSend(n, method, expirationInterval, 0, false);
-
-        if (v != null) {
-            checkValidation(result, v);
-        }
-        return result;
-    }
-    
-
-
     protected Navajo doTransaction(Navajo d, boolean useCompression, int retries, int exceptions) throws ClientException {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public boolean useHttps() {
-        return useHttps;
-    }
-
-    @Override
-    public void setHttps(boolean useHttps) {
-        this.useHttps = useHttps;
-    }
-    
-
+   
     protected final Navajo doSimpleSend(Navajo out, String method, long expirationInterval, int retries) throws ClientException {
         // NOTE: prefix persistence key with method, because same Navajo object
         // could be used as a request
@@ -240,7 +203,12 @@ public abstract class NavajoClient implements ClientInterface{
         }
     }
 
-    /**
+    private SessionTokenProvider getSessionTokenProvider() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
      * Schedule a webservice @ a certain time. Note that this method does NOT return the response of the scheduled webservice. It contains a Navajo with the
      * status of the scheduling.
      * 
@@ -289,88 +257,7 @@ public abstract class NavajoClient implements ClientInterface{
     }
     
     
-    @Override
-    public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format, String orientation,
-            int[] margins) throws NavajoException {
-        // Message m = in.getMessage(messagePath);
-        if (m == null) {
-            throw NavajoFactory.getInstance().createNavajoException("Message not found. Can not run report.");
-        }
-        Navajo n = NavajoFactory.getInstance().createNavajo();
-        Message cp = m.copy(n);
-        Header h = NavajoFactory.getInstance().createHeader(n, "Irrelevant", "Irrelevant", "Irrelevant", -1);
-        n.addHeader(h);
-        h.setHeaderAttribute("sourceScript", "Irrelevant");
-        n.addMessage(cp);
-        Message repDef = NavajoFactory.getInstance().createMessage(n, "__ReportDefinition");
-        n.addMessage(repDef);
-        StringBuffer sz = new StringBuffer();
-        for (int i = 0; i < columnWidths.length; i++) {
-            if (i != 0) {
-                sz.append(",");
-            }
-            sz.append(columnWidths[i]);
-        }
-        Property sizeProp = NavajoFactory.getInstance().createProperty(n, "PropertySizes", Property.STRING_PROPERTY, sz.toString(), 0, "", Property.DIR_IN);
-        repDef.addProperty(sizeProp);
-
-        sz = new StringBuffer();
-        for (int i = 0; i < propertyNames.length; i++) {
-            if (i != 0) {
-                sz.append(",");
-            }
-            sz.append(propertyNames[i]);
-        }
-        String propertyNamesString = sz.toString();
-        Property namesProp = NavajoFactory.getInstance().createProperty(n, "PropertyNames", Property.STRING_PROPERTY, propertyNamesString, 0, "",
-                Property.DIR_IN);
-        repDef.addProperty(namesProp);
-
-        sz = new StringBuffer();
-        if (propertyTitles != null) {
-            for (int i = 0; i < propertyTitles.length; i++) {
-                if (i != 0) {
-                    sz.append(",");
-                }
-                sz.append(propertyTitles[i]);
-            }
-        } else {
-            // If no titles supplied, use property names
-            sz.append(propertyNamesString);
-        }
-        Property titlesProp = NavajoFactory.getInstance().createProperty(n, "PropertyTitles", Property.STRING_PROPERTY, sz.toString(), 0, "", Property.DIR_IN);
-        repDef.addProperty(titlesProp);
-
-        Property messagePathProp = NavajoFactory.getInstance().createProperty(n, "MessagePath", Property.STRING_PROPERTY, cp.getName(), 0, "", Property.DIR_IN);
-        repDef.addProperty(messagePathProp);
-
-        Property reportFormatProp = NavajoFactory.getInstance().createProperty(n, "OutputFormat", Property.STRING_PROPERTY, format, 0, "", Property.DIR_IN);
-        repDef.addProperty(reportFormatProp);
-
-        if (margins != null) {
-            Property marginProperty = NavajoFactory.getInstance().createProperty(n, "Margin", Property.STRING_PROPERTY,
-                    margins[0] + "," + margins[1] + "," + margins[2] + "," + margins[3], 0, "", Property.DIR_IN);
-            repDef.addProperty(marginProperty);
-        }
-        if (orientation != null) {
-            Property orientationProperty = NavajoFactory.getInstance().createProperty(n, "Orientation", Property.STRING_PROPERTY, orientation, 0, "",
-                    Property.DIR_IN);
-            repDef.addProperty(orientationProperty);
-        }
-
-        try {
-            Navajo result = NavajoClientFactory.getClient().doSimpleSend(n, "ProcessPrintTableBirt");
-            Property data = result.getProperty("/Result/Data");
-            if (data == null) {
-                result.write(System.err);
-                throw NavajoFactory.getInstance().createNavajoException("No report property found.");
-            }
-            Binary b = (Binary) data.getTypedValue();
-            return b;
-        } catch (ClientException e) {
-            throw NavajoFactory.getInstance().createNavajoException(e);
-        }
-    }
+  
     
     protected void generateConnectionError(Navajo n, int id, String description) {
         try {
@@ -415,16 +302,10 @@ public abstract class NavajoClient implements ClientInterface{
         }
 
     }
-    
-    private final void checkValidation(Navajo result, ConditionErrorHandler v) {
-        Message conditionErrors = result.getMessage("ConditionErrors");
-        if (conditionErrors != null && v != null) {
-            v.checkValidation(conditionErrors);
-        }
-    }
+   
 
     @Override
-    public void setServers(String[] servers) {
+    public void setServerUrls(String[] servers) {
         serverUrls = servers;
         if (servers.length > 0) {
             currentServerIndex = randomize.nextInt(servers.length);
@@ -512,25 +393,12 @@ public abstract class NavajoClient implements ClientInterface{
         this.forceGzip = forceGzip;
     }
 
-    @Override
-    public SystemInfoProvider getSystemInfoProvider() {
+    private SystemInfoProvider getSystemInfoProvider() {
         if (this.systemInfoProvider == null) {
             return SystemInfoFactory.getSystemInfo();
         }
         return systemInfoProvider;
     }
 
-    @Override
-    public void setSystemInfoProvider(SystemInfoProvider sip) {
-        this.systemInfoProvider = sip;
-    }
 
-  
-
-    @Override
-    public void setSessionTokenProvider(SessionTokenProvider stp) {
-        this.sessionTokenProvider = stp;
-    }
-
-    
 }

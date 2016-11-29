@@ -38,7 +38,7 @@ public class TipiPerformMethod extends TipiAction {
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
-		Operand hostUrlValue = null;
+
 		boolean breakOnError = false;
 		long expirationInterval = -1;
 		String hostUrl = null;
@@ -50,17 +50,11 @@ public class TipiPerformMethod extends TipiAction {
 		if (brk != null) {
 			breakOnError = ((Boolean) brk.value).booleanValue();
 		}
-		hostUrlValue = getEvaluatedParameter("hostUrl", event);
+
 		Operand usernameValue = getEvaluatedParameter("username", event);
 		Operand passwordValue = getEvaluatedParameter("password", event);
 		Operand keyStoreOperand = getEvaluatedParameter("keystore", event);
 		Operand keyPassOperand = getEvaluatedParameter("keypass", event);
-
-		if (hostUrlValue != null) {
-
-			Object o = hostUrlValue.value;
-			hostUrl = o == null ? null : o.toString();
-		}
 
 		if (usernameValue != null) {
 			Object o = usernameValue.value;

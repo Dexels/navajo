@@ -1,4 +1,4 @@
-package com.dexels.navajo.client.impl.stream;
+package com.dexels.navajo.tipi.internal;
 
 import java.io.FilterInputStream;
 import java.io.IOException;

@@ -26,13 +26,13 @@ public class BasicNavajoServerTests extends BasicClientTest {
 	
 	@Test
 	public void testAlive() throws Exception {
-		Navajo n = myClient.doSimpleSend("NavajoPing");
+		Navajo n = myClient.doSimpleSend(null, "NavajoPing");
 		Assert.assertNotNull(n.getMessage("ping"));
 	}
 
 	@Test
 	public void testGarbage() throws Exception {
-		Navajo n = myClient.doSimpleSend("navajo_pingetje");
+		Navajo n = myClient.doSimpleSend(null, "navajo_pingetje");
 		Assert.assertNull(n.getMessage("ping"));
 	}
 
@@ -51,18 +51,18 @@ public class BasicNavajoServerTests extends BasicClientTest {
 	@Test
 	public void testDisabledServer() throws Exception {
 		// Disable server first....
-		myClient.doSimpleSend("navajo/InitDisableServer");
+		myClient.doSimpleSend(null, "navajo/InitDisableServer");
 
 		// Call service.
-		Navajo n = myClient.doSimpleSend("tests/InitUnit");
+		Navajo n = myClient.doSimpleSend(null, "tests/InitUnit");
 		Assert.assertNotNull(n.getMessage("ConditionErrors"));
 		Assert.assertNotNull(n.getProperty("ConditionErrors@0/Id"));
 		Assert.assertEquals(n.getProperty("ConditionErrors@0/Id").getValue(),
 				"4444");
 
 		// Enable server again....
-		myClient.doSimpleSend("navajo/InitEnableServer");
-		n = myClient.doSimpleSend("tests/InitUnit");
+		myClient.doSimpleSend(null, "navajo/InitEnableServer");
+		n = myClient.doSimpleSend(null, "tests/InitUnit");
 		n.write(System.err);
 		Assert.assertNull(n.getMessage("ConditionErrors"));
 	}
@@ -71,18 +71,18 @@ public class BasicNavajoServerTests extends BasicClientTest {
 	public void testDisabledServerWithStaticLoadBalancing() throws Exception {
 		// Disable server first....
 		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
-		myClient.doSimpleSend("navajo/InitDisableServer");
+		myClient.doSimpleSend(null, "navajo/InitDisableServer");
 
 		// Call service.
-		Navajo n = myClient.doSimpleSend("tests/InitUnit");
+		Navajo n = myClient.doSimpleSend(null, "tests/InitUnit");
 		Assert.assertNull(n.getMessage("ConditionErrors"));
 		Assert.assertNotNull(n.getMessage("UnitMessage"));
 
 		// Enable server again....
 		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
-		myClient.doSimpleSend("navajo/InitEnableServer");
+		myClient.doSimpleSend(null, "navajo/InitEnableServer");
 
-		n = myClient.doSimpleSend("tests/InitUnit");
+		n = myClient.doSimpleSend(null, "tests/InitUnit");
 		Assert.assertNull(n.getMessage("ConditionErrors"));
 		Assert.assertNotNull(n.getMessage("UnitMessage"));
 	}
@@ -91,18 +91,18 @@ public class BasicNavajoServerTests extends BasicClientTest {
 	public void testDisabledServerWithDynamicLoadBalancing() throws Exception {
 		// Disable server first....
 		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
-		myClient.doSimpleSend("navajo/InitDisableServer");
+		myClient.doSimpleSend(null, "navajo/InitDisableServer");
 
 		// Call service.
-		Navajo n = myClient.doSimpleSend("tests/InitUnit");
+		Navajo n = myClient.doSimpleSend(null, "tests/InitUnit");
 		Assert.assertNull(n.getMessage("ConditionErrors"));
 		Assert.assertNotNull(n.getMessage("UnitMessage"));
 
 		// Enable server again....
 		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
-		myClient.doSimpleSend("navajo/InitEnableServer");
+		myClient.doSimpleSend(null, "navajo/InitEnableServer");
 
-		n = myClient.doSimpleSend("tests/InitUnit");
+		n = myClient.doSimpleSend(null, "tests/InitUnit");
 		Assert.assertNull(n.getMessage("ConditionErrors"));
 		Assert.assertNotNull(n.getMessage("UnitMessage"));
 	}
@@ -111,24 +111,24 @@ public class BasicNavajoServerTests extends BasicClientTest {
 	public void testDisabledServerWithManualLoadBalancing() throws Exception {
 		// Disable server first....
 		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
-		myClient.doSimpleSend("navajo/InitDisableServer");
+		myClient.doSimpleSend(null, "navajo/InitDisableServer");
 
 		// Call service.
-		Navajo n = myClient.doSimpleSend("tests/InitUnit");
+		Navajo n = myClient.doSimpleSend(null, "tests/InitUnit");
 		Assert.assertNotNull(n.getMessage("ConditionErrors"));
 		Assert.assertNull(n.getMessage("UnitMessage"));
 
 		// Call service on different server manually.
 		myClient.setCurrentHost("localhost:8080/NavajoServer2/Postman");
-		n = myClient.doSimpleSend("tests/InitUnit");
+		n = myClient.doSimpleSend(null, "tests/InitUnit");
 		Assert.assertNull(n.getMessage("ConditionErrors"));
 		Assert.assertNotNull(n.getMessage("UnitMessage"));
 
 		// Enable server again....
 		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
-		myClient.doSimpleSend("navajo/InitEnableServer");
+		myClient.doSimpleSend(null, "navajo/InitEnableServer");
 
-		n = myClient.doSimpleSend("tests/InitUnit");
+		n = myClient.doSimpleSend(null, "tests/InitUnit");
 		Assert.assertNull(n.getMessage("ConditionErrors"));
 		Assert.assertNotNull(n.getMessage("UnitMessage"));
 

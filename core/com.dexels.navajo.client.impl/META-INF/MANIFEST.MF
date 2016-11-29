@@ -34,6 +34,5 @@ Import-Package: com.dexels.navajo.client,
  org.slf4j;version="1.7.21"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.dexels.navajo.client.impl,
- com.dexels.navajo.client.impl.context,
  com.dexels.navajo.client.impl.sessiontoken,
  com.dexels.navajo.client.impl.stream

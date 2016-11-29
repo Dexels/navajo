@@ -55,7 +55,7 @@ public class BasicClientTest {
 		myClient.setServerUrl("http://localhost:9090/stream/KNVB");
 		long total = 0;
 		long start = System.currentTimeMillis();
-		Navajo reply = myClient.doSimpleSend("club/InitSearchClubs");
+		Navajo reply = myClient.doSimpleSend(null, "club/InitSearchClubs");
 		reply.write(System.err);
 		reply.getProperty("ClubSearch/SearchName").setAnyValue("vel");
 		Navajo reply2 = myClient.doSimpleSend(reply,"club/ProcessSearchClubs");
