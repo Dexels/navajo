@@ -66,7 +66,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
 		ClientInterface ci = new NavajoClientImpl();
-		//NavajoClientFactory.setDefaultClient(ci);
+		NavajoClientFactory.setDefaultClient(ci);
 	}
 //	
 	

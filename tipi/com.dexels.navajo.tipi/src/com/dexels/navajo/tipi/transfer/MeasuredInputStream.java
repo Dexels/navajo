@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.internal;
+package com.dexels.navajo.tipi.transfer;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -7,8 +7,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.client.stream.TransferDataListener;
 
 public class MeasuredInputStream extends FilterInputStream {
 	

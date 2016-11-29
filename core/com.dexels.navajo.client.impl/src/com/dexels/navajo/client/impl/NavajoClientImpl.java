@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.io.InterruptedIOException;
 import java.io.Serializable;
 import java.net.ConnectException;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
@@ -203,19 +202,6 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
         return n;
     }
 
-
-    @SuppressWarnings("unused")
-    private void appendHeaderToHttp(HttpURLConnection con, Header header) {
-        con.setRequestProperty("rpcName", header.getRPCName());
-        con.setRequestProperty("rpcUser", header.getRPCUser());
-        Map<String, String> attrs = header.getHeaderAttributes();
-        for (Entry<String, String> element : attrs.entrySet()) {
-            if (element.getValue() != null) {
-                con.setRequestProperty(element.getKey(), element.getValue());
-            }
-        }
-    }
-
     private void appendHeaderToHttp(HttpPost httppost, Header header) {
         httppost.setHeader("rpcName", header.getRPCName());
         httppost.setHeader("rpcUser", header.getRPCUser());
@@ -262,17 +248,10 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
             context.init(keyManagerFactory.getKeyManagers(), null, new SecureRandom());
             this.socketFactory = context.getSocketFactory();
             return;
-        } catch (UnrecoverableKeyException e) {
-            throw new IOException("Error loading certificate: ", e);
-        } catch (KeyManagementException e) {
-            throw new IOException("Error loading certificate: ", e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IOException("Error loading certificate: ", e);
-        } catch (KeyStoreException e) {
-            throw new IOException("Error loading certificate: ", e);
-        } catch (CertificateException e) {
-            throw new IOException("Error loading certificate: ", e);
-        }
+		} catch (UnrecoverableKeyException | KeyManagementException | NoSuchAlgorithmException | KeyStoreException
+				| CertificateException e) {
+			throw new IOException("Error loading certificate: ", e);
+		}
     }
 
     

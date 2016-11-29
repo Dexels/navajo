@@ -14,7 +14,8 @@ import java.util.zip.GZIPInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.stream.TransferDataListener;
+import com.dexels.navajo.tipi.transfer.MeasuredInputStream;
+import com.dexels.navajo.tipi.transfer.TransferDataListener;
 
 public class HttpResourceLoader extends ClassPathResourceLoader implements Serializable, TransferDataListener {
 

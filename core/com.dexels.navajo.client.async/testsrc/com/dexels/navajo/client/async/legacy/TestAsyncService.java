@@ -1,11 +1,12 @@
-package com.dexels.navajo.client;
+package com.dexels.navajo.client.async.legacy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.asyncservice.ServerAsyncListener;
-import com.dexels.navajo.client.asyncservice.impl.AsyncRegistryImpl;
-import com.dexels.navajo.client.impl.NavajoClientImpl;
+import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.client.async.legacy.AsyncRegistryImpl;
+import com.dexels.navajo.client.async.legacy.ServerAsyncListener;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
@@ -21,8 +22,8 @@ public class TestAsyncService {
 		this.registry = new AsyncRegistryImpl();
 		this.registry.setClientInterface(NavajoClientFactory.getClient());
 		
-		ClientInterface ci = new NavajoClientImpl();
-		NavajoClientFactory.setDefaultClient(ci);
+		
+
 	}
 	
 

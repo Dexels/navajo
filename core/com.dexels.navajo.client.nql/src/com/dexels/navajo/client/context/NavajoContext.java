@@ -7,6 +7,9 @@ import java.util.Stack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.client.context.ClientContext;
+import com.dexels.navajo.client.context.internal.MessageAccessMap;
+import com.dexels.navajo.client.context.internal.PropertyAccessMap;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;

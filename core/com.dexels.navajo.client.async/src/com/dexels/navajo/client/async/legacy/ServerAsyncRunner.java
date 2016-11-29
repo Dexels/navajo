@@ -1,9 +1,7 @@
-package com.dexels.navajo.client.asyncservice.impl;
+package com.dexels.navajo.client.async.legacy;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
-import com.dexels.navajo.client.asyncservice.AsyncRegistry;
-import com.dexels.navajo.client.asyncservice.ServerAsyncListener;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 

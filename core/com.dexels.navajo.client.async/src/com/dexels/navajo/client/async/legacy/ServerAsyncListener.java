@@ -1,4 +1,4 @@
-package com.dexels.navajo.client.asyncservice;
+package com.dexels.navajo.client.async.legacy;
 
 import com.dexels.navajo.document.Navajo;
 

@@ -1,4 +1,4 @@
-package com.dexels.navajo.server.internal;
+package com.dexels.navajo.client.context;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
-import com.dexels.navajo.client.context.ClientContext;
-import com.dexels.navajo.client.context.NavajoContext;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.script.api.FatalException;

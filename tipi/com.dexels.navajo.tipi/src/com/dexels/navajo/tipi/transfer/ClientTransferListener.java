@@ -1,9 +1,7 @@
-package com.dexels.navajo.client.impl.stream;
+package com.dexels.navajo.tipi.transfer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.client.stream.TransferDataListener;
 
 public class ClientTransferListener implements TransferDataListener {
 

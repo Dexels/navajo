@@ -1,4 +1,4 @@
-package com.dexels.navajo.client.stream;
+package com.dexels.navajo.tipi.transfer;
 
 public interface TransferDataListener {
 	public void transferCompleted(String label, long bytes, long duration);
