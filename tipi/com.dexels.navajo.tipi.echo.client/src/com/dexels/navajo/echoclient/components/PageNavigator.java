@@ -43,6 +43,7 @@ import nextapp.echo2.app.Row;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 
+import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.NavajoException;
 
 /**
@@ -189,7 +190,7 @@ public class PageNavigator extends Row {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					myTable.getTableReport("pdf", "horizontal", new int[] { 5,
+					myTable.getTableReport(NavajoClientFactory.getClient(), "pdf", "horizontal", new int[] { 5,
 							5, 5, 5 });
 				} catch (NavajoException e1) {
 					logger.error("Error: ", e1);

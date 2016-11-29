@@ -7,6 +7,7 @@ Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.functions.scale;version="3.1.7",
+ com.dexels.navajo.tipi.report,
  com.dexels.navajo.version,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)"

@@ -51,7 +51,6 @@ public class BasicNavajoServerTests extends BasicClientTest {
 	@Test
 	public void testDisabledServer() throws Exception {
 		// Disable server first....
-		myClient.setRetryAttempts(1);
 		myClient.doSimpleSend("navajo/InitDisableServer");
 
 		// Call service.
@@ -72,7 +71,6 @@ public class BasicNavajoServerTests extends BasicClientTest {
 	public void testDisabledServerWithStaticLoadBalancing() throws Exception {
 		// Disable server first....
 		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
-		myClient.setRetryAttempts(2);
 		myClient.doSimpleSend("navajo/InitDisableServer");
 
 		// Call service.
@@ -93,7 +91,6 @@ public class BasicNavajoServerTests extends BasicClientTest {
 	public void testDisabledServerWithDynamicLoadBalancing() throws Exception {
 		// Disable server first....
 		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
-		myClient.setRetryAttempts(2);
 		myClient.doSimpleSend("navajo/InitDisableServer");
 
 		// Call service.
@@ -114,7 +111,6 @@ public class BasicNavajoServerTests extends BasicClientTest {
 	public void testDisabledServerWithManualLoadBalancing() throws Exception {
 		// Disable server first....
 		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
-		myClient.setRetryAttempts(2);
 		myClient.doSimpleSend("navajo/InitDisableServer");
 
 		// Call service.

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Console commands
 Bundle-SymbolicName: com.dexels.navajo.dev.console
-Bundle-Version: 3.0.29.qualifier
+Bundle-Version: 3.0.31.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.client,

@@ -345,6 +345,6 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 	}
 
 	public Binary getTableReport(String format, String orientation, int[] margins) throws NavajoException {
-		return myTable.getTableReport(format, orientation, margins);
+		return myTable.getTableReport(myContext.getClient(), format, orientation, margins);
 	}
 }

@@ -75,11 +75,6 @@ public abstract class NavajoClient implements ClientInterface{
     }
 
     @Override
-    public final void setRetryAttempts(int attempts) {
-        // unsupported
-    }
-
-    @Override
     public final Navajo doSimpleSend(String method) throws ClientException {
         return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method, 0);
     }
@@ -120,7 +115,7 @@ public abstract class NavajoClient implements ClientInterface{
         if (getCurrentHost() == null) {
             throw new ClientException(1, 1, "No host set!");
         }
-        Navajo result = doSimpleSend(n, method, expirationInterval, 0);
+        Navajo result = doSimpleSend(n, method, expirationInterval, 0, false);
 
         if (v != null) {
             checkValidation(result, v);

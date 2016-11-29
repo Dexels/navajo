@@ -19,7 +19,6 @@ import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
@@ -69,7 +68,7 @@ import javax.swing.table.TableColumn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -77,6 +76,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.report.TipiReport;
 import com.dexels.navajo.tipi.swingclient.UserInterface;
 import com.dexels.navajo.tipi.swingclient.components.sort.CustomTableHeaderRenderer;
 import com.dexels.navajo.tipi.swingclient.components.sort.TableSorter;
@@ -1476,7 +1476,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	// public Binary getArrayMessageReport(Message m, String[] propertyNames,
 	// int[] columnWidths, String format) throws NavajoException {
 
-	public Binary getTableReport(String format, String orientation,
+	public Binary getTableReport(ClientInterface ci, String format, String orientation,
 			int[] margins) throws NavajoException {
 		Message m = getMessageAsPresentedOnTheScreen(false);
 		if (m == null) {
@@ -1505,10 +1505,8 @@ public class MessageTable extends JTable implements CellEditorListener,
 			logger.info("Adding width: " + width);
 			logger.info("Adding name: " + name);
 		}
-		System.err
-				.println("USING NAVAJOCLIENTFACTORY. This will stop working pretty soon.");
-		Binary result = NavajoClientFactory.getClient().getArrayMessageReport(
-				m, names, titles, widths, format, orientation, margins);
+		
+		Binary result = TipiReport.getArrayMessageReport(ci, m, names, titles, widths, format, orientation, margins);
 		return result;
 	}
 

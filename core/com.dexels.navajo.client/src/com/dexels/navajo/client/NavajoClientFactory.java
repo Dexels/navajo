@@ -1,6 +1,5 @@
 package com.dexels.navajo.client;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,71 +9,64 @@ import org.slf4j.LoggerFactory;
  */
 
 public class NavajoClientFactory {
-    private static ClientInterface defaultClient = null;
-    private static ClientInterface myClient = null;
-    private final static Logger logger = LoggerFactory.getLogger(NavajoClientFactory.class);
+	private static ClientInterface myClient = null;
 
-  
-    
-
-    public static void setDefaultClient(ClientInterface ci) {
-        defaultClient = ci;
-        defaultClient.setUsername("");
-        defaultClient.setPassword("");
-        defaultClient.setServerUrl("");
-    }
-    
-    static void clearDefaultClient(ClientInterface ci) {
-        defaultClient = null;
-    }
-    
-    
-
-    public static ClientInterface createDefaultClientForServerlist(String[] servers) {
-        if (servers != null && servers.length > 0) {
-            NavajoClientFactory.resetClient();
-            NavajoClientFactory.createClient();
-        }
-        ClientInterface ci = getClient();
-        ci.setServers(servers);
-        return ci;
-    }
-
-    /**
-     * Clear current client
-     */
-    public static void resetClient() {
-        myClient = null;
-    }
-
-    public static ClientInterface createClient() {
-        if (defaultClient == null) {
-            logger.error("No default client set. Missing impl?");
-            return null;
-        }
-        
-        try {
-        	myClient = defaultClient.getClass().newInstance();
-        	return myClient;
-        } catch (InstantiationException | IllegalAccessException e) {
-            logger.error("Unable to create client!", e);
-        }
-        return null;
-    }
-
-    /**
-     * Get the instantiated client (default, if not instatiated yet)
-     * 
-     * @return ClientInterface
-     */
-    public synchronized static ClientInterface getClient() {
-        if (myClient == null) {
-            createClient();
-        }
-
-        return myClient;
-    }
+	private final static Logger logger = LoggerFactory.getLogger(NavajoClientFactory.class);
 
 
+	/**
+	 * Clear current client
+	 */
+	public static void resetClient() {
+		myClient = null;
+	}
+
+	public static ClientInterface createClient() {
+		return new NavajoClient();
+	}
+
+	/**
+	 * Get the instantiated client (default, if not instatiated yet)
+	 * 
+	 * @return ClientInterface
+	 */
+	public synchronized static ClientInterface getClient() {
+		if (myClient == null) {
+			/** @todo Beware when refactoring */
+
+			ClientInterface client = null;
+			try {
+				Class<?> clientClass = Class.forName("com.dexels.navajo.client.NavajoClient");
+				client = (ClientInterface) clientClass.newInstance();
+			} catch (ClassNotFoundException ex) {
+				logger.error("Error: ", ex);
+			} catch (IllegalAccessException ex) {
+				logger.error("Error: ", ex);
+			} catch (InstantiationException ex) {
+				logger.error("Error: ", ex);
+			}
+			if (client == null) {
+				return null;
+			}
+			if (myClient == null) {
+				myClient = client;
+			}
+			client.setUsername("");
+			client.setPassword("");
+			client.setServerUrl("");
+		}
+
+		return myClient;
+	}
+
+	/**
+	 * Set tht current client
+	 * 
+	 * @param ci
+	 *            ClientInterface
+	 */
+	public static void setCurrentClient(ClientInterface ci) {
+		myClient = ci;
+	}
 
 }
