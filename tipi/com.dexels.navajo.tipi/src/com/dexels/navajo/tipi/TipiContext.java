@@ -42,7 +42,7 @@ import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.impl.NavajoClientImpl;
-import com.dexels.navajo.client.impl.sessiontoken.SessionTokenFactory;
+import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;

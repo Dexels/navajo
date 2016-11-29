@@ -29,7 +29,6 @@ import org.osgi.framework.BundleContext;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.impl.NavajoClientImpl;
-import com.dexels.navajo.client.impl.sessiontoken.SessionTokenFactory;
 
 /**
  * VERSION HISTORY
@@ -58,7 +57,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void shutdown() {
 		NavajoClientFactory.resetClient();
-		SessionTokenFactory.clearInstance();
 		super.shutdown();
 	}
 	

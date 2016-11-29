@@ -10,9 +10,6 @@ import org.junit.Test;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.document.types.Money;
 
 public class NavajoScriptingTests extends BasicClientTest {
 
@@ -141,8 +138,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 		Assert.assertEquals(fl.getProperty("FullTestMoneyProperty").getValue(),
 				"10.0");
-		Assert.assertEquals(fl.getProperty("FullTestMoneyProperty")
-				.getTypedValue(), new Money(10.0));
+		
 
 		Assert.assertEquals(
 				fl.getProperty("WrongTestMoneyProperty").getValue(), "aap");
@@ -183,8 +179,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 		Assert.assertEquals(fl.getProperty("FullTestClocktimeProperty")
 				.getValue(), "12:00:00");
-		Assert.assertEquals(fl.getProperty("FullTestClocktimeProperty")
-				.getTypedValue(), new ClockTime("12:00:00"));
+	
 
 		Assert.assertEquals(fl.getProperty("WrongTestClocktimeProperty")
 				.getValue(), "aap");
@@ -207,8 +202,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 		Assert.assertNotSame(fl.getProperty("FullTestBinaryProperty")
 				.getValue(), "");
-		Assert.assertEquals(fl.getProperty("FullTestBinaryProperty")
-				.getTypedValue().getClass(), Binary.class);
+		
 
 	}
 

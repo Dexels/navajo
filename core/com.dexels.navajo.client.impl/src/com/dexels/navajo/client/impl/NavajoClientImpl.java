@@ -43,8 +43,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClient;
-import com.dexels.navajo.client.impl.sessiontoken.SessionTokenFactory;
-import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -254,12 +252,5 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
 		}
     }
 
-    
-    public SessionTokenProvider getSessionTokenProvider() {
-        if (sessionTokenProvider == null) {
-            return SessionTokenFactory.getSessionTokenProvider();
-        }
-        return this.sessionTokenProvider;
-    }
-    
+ 
 }

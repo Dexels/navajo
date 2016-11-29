@@ -16,6 +16,7 @@ import javax.net.ssl.SSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
 import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
 import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
@@ -203,10 +204,12 @@ public abstract class NavajoClient implements ClientInterface{
         }
     }
 
-    private SessionTokenProvider getSessionTokenProvider() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    protected SessionTokenProvider getSessionTokenProvider() {
+        if (sessionTokenProvider == null) {
+            return SessionTokenFactory.getSessionTokenProvider();
+        }
+        return this.sessionTokenProvider;
+    }
 
 	/**
      * Schedule a webservice @ a certain time. Note that this method does NOT return the response of the scheduled webservice. It contains a Navajo with the
