@@ -28,7 +28,7 @@ public class NavajoClientFactory {
 	}
 
 	/**
-	 * Get the instantiated client (default, if not instatiated yet)
+	 * Get the instantiated client (default, if not instantiated yet)
 	 * 
 	 * @return ClientInterface
 	 */
