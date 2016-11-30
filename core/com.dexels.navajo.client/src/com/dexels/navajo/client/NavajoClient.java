@@ -90,16 +90,14 @@ public abstract class NavajoClient implements ClientInterface{
         if (getCurrentHost() == null) {
             throw new ClientException(1, 1, "No host set!");
         }
-        return doSimpleSend(out, method, -1, retries);
+        return doSimpleSend(out, method, retries);
 
     }
     
-    protected Navajo doTransaction(Navajo d, boolean useCompression, int retries, int exceptions) throws ClientException {
-        throw new UnsupportedOperationException();
-    }
+
 
    
-    protected final Navajo doSimpleSend(Navajo out, String method, long expirationInterval, int retries) throws ClientException {
+    protected final Navajo doSimpleSend(Navajo out, String method, int retries) throws ClientException {
         // NOTE: prefix persistence key with method, because same Navajo object
         // could be used as a request
         // for multiple methods!
@@ -115,14 +113,13 @@ public abstract class NavajoClient implements ClientInterface{
             Header header = out.getHeader();
             String callingService = null;
             if (header == null) {
-                header = NavajoFactory.getInstance().createHeader(out, method, username, password, expirationInterval);
+                header = NavajoFactory.getInstance().createHeader(out, method, username, password, -1);
                 out.addHeader(header);
             } else {
                 callingService = header.getRPCName();
                 header.setRPCName(method);
                 header.setRPCUser(username);
                 header.setRPCPassword(password);
-                header.setExpirationInterval(expirationInterval);
             }
             // ALWAY SET REQUEST ID AT THIS POINT.
             if (header.getRequestId() != null && header.getRequestId().equals("42")) {
@@ -151,7 +148,7 @@ public abstract class NavajoClient implements ClientInterface{
 
                 n = doTransaction(out, allowCompression, retries, 0);
                 
-                if (n != null && n.getHeader() != null) {
+                if (n.getHeader() != null) {
                     n.getHeader().setHeaderAttribute("sourceScript", callingService);
                     clientTime = (System.currentTimeMillis() - timeStamp);
                     n.getHeader().setHeaderAttribute("clientTime", "" + clientTime);
@@ -168,9 +165,8 @@ public abstract class NavajoClient implements ClientInterface{
                     synchronized (piggyBackData) {
                         piggyBackData.add(pbd);
                     }
-                   
                 } else {
-                    logger.info("Null header in input message");
+                    logger.info("Null header in input message?");
                 }
                 
                 return n;
@@ -181,6 +177,10 @@ public abstract class NavajoClient implements ClientInterface{
                 throw new ClientException(-1, -1, e.getMessage(), e);
             }
         }
+    }
+    
+    protected Navajo doTransaction(Navajo d, boolean useCompression, int retries, int exceptions) throws ClientException {
+        throw new UnsupportedOperationException();
     }
 
     protected SessionTokenProvider getSessionTokenProvider() {

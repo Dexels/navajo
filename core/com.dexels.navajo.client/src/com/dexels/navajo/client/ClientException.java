@@ -29,7 +29,11 @@ public class ClientException extends IOException {
         this.level = level;
     }
 
-    public int getCode() {
+    public ClientException(String message) {
+		this(-1,-1,message);
+	}
+
+	public int getCode() {
         return this.code;
     }
 

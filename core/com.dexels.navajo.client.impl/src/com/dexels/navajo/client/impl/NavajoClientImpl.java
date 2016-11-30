@@ -61,14 +61,6 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
         httpclient = HttpClients.custom().setDefaultRequestConfig(config).build();
     }
 
-   
-    public void setKeyStore(KeyStore keyStore) {
-        if (socketFactory != null) {
-            throw new RuntimeException("Not yet implemented: combination of custom keystore and client certificates is not yet implemented");
-        }
-        this.keyStore = keyStore;
-    }
-
     
 
     @Override
@@ -80,7 +72,7 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
             uri = new URI(getCurrentHost());
         } catch (URISyntaxException e) {
            logger.error("Syntax exception!", e);
-           return n;
+           throw new ClientException("Invalid host");
         }
         
         long timeStamp = System.currentTimeMillis();
@@ -122,6 +114,17 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
         }
         return n;
     }
+    
+
+    
+    public void setKeyStore(KeyStore keyStore) {
+        if (socketFactory != null) {
+            throw new RuntimeException("Not yet implemented: combination of custom keystore and client certificates is not yet implemented");
+        }
+        this.keyStore = keyStore;
+    }
+
+    
     
     private boolean retryRequest(Throwable t, int retries) {
         // First determine the type of exception. For some exceptions, we don't bother retrying!
@@ -192,13 +195,10 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
             logger.warn("Connection problem: SocketException {} exception to {}! ", exception.getMessage(), host, exception);
             n = NavajoFactory.getInstance().createNavajo();
             generateConnectionError(n, 55555, "SocketException: " + exception.getMessage());
-        } else if (exception instanceof IOException) {
-            logger.warn("Connection problem: IOException {} exception to {}! ", exception.getMessage(), host, exception);
-            throw new ClientException(-1, -1, exception.getMessage(), exception);
-        } else {
-            logger.error("Error: ", exception);
         }
-        return n;
+        
+        logger.warn("Connection problem: Exception {} to {}!", exception.getMessage(), host, exception);
+        throw new ClientException(-1, -1, exception.getMessage(), exception);
     }
 
     private void appendHeaderToHttp(HttpPost httppost, Header header) {
