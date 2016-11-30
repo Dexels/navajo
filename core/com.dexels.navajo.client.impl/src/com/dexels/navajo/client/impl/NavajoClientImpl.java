@@ -142,7 +142,6 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
             return true;
         }
         if (t instanceof UnknownHostException) {
-            // Unknown host
             return true;
         }
         if (t instanceof ConnectException) {
@@ -150,7 +149,6 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
             return true;
         }
         if (t instanceof SSLHandshakeException) {
-            // SSL handshake exception
             return false;
         }
 
@@ -160,6 +158,11 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
 
 
     protected Navajo handleException(Throwable exception, String host, long timeStamp) throws ClientException {
+        if (!generateConditionErrors) {
+            logger.error("Error: ", exception);
+             throw new ClientException(-1, -1, exception.getMessage(), exception);
+        }
+        
         Navajo n = null;
         if (exception instanceof java.net.UnknownHostException | exception instanceof org.apache.http.conn.HttpHostConnectException) {
             logger.warn("Connection problem: UnknownHostException exception to {}!", host, exception);

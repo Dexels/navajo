@@ -44,6 +44,8 @@ public abstract class NavajoClient implements ClientInterface{
     protected SessionTokenProvider sessionTokenProvider;
     protected SSLSocketFactory socketFactory;
     protected KeyStore keyStore;
+
+    protected boolean generateConditionErrors = true;
     
     @Override
     public final void setUsername(String s) {
@@ -308,7 +310,14 @@ public abstract class NavajoClient implements ClientInterface{
 		
 		}
 		httpHeaders.put(key, value.toString());
+	}
+
+	@Override
+	public void setGenerateConditionErrors(boolean set) {
+		this.generateConditionErrors  = set;
 		
 	}
+	
+	
 
 }

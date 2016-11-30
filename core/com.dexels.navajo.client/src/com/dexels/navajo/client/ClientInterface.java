@@ -43,12 +43,18 @@ public interface ClientInterface {
      * sets the locale for the client, it will be appended to the header
      */
     public void setHeader(String key, Object value);
+    
     public void setNavajoHeader(String key, Object value);
     
     public void setCurrentHost(String host);
 
     public void setAllowCompression(boolean allowCompression);
 
+    /**
+     * Handle common connection exceptions as ValidationError, instead of throwing the exception itself.
+     * Default is true.
+     */
+    public void setGenerateConditionErrors(boolean set);
 
     /**
      * set the SSL socket factory to use whenever an HTTPS call is made.
