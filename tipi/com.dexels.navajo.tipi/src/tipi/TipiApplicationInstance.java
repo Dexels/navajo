@@ -24,7 +24,7 @@ public interface TipiApplicationInstance {
 	public String getDefinition();
 
 	public void reboot() throws IOException, TipiException;
-	
+
 	public void setEvalUrl(URL context, String relativeUri);
 
 	public void setContextUrl(URL contextUrl);
@@ -32,19 +32,23 @@ public interface TipiApplicationInstance {
 	public URL getContextUrl();
 
 	public Locale getLocale();
-	
+
 	public void close();
 
 	void setDefaultConnector(TipiConnector tipiConnector);
 
 	void addTipiContextListener(TipiContextListener t);
 
-		public void setLocaleCode(String locale);
-		public String getLocaleCode();
-		public void setSubLocaleCode(String locale);
-		public String getSubLocaleCode();
+	public void setLocaleCode(String locale);
+
+	public String getLocaleCode();
+
+	public void setSubLocaleCode(String locale);
+
+	public String getSubLocaleCode();
 
 	public void addLocaleListener(LocaleListener l);
+
 	public void removeLocaleListener(LocaleListener l);
-	
+
 }
