@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class NavajoClientFactory {
 	private static ClientInterface myClient = null;
+	private static ClientInterface defaultClient;
 
 	private final static Logger logger = LoggerFactory.getLogger(NavajoClientFactory.class);
 
@@ -33,19 +34,18 @@ public class NavajoClientFactory {
 	 */
 	public synchronized static ClientInterface getClient() {
 		if (myClient == null) {
-			/** @todo Beware when refactoring */
-
+			if (defaultClient == null) {
+				logger.warn("No default client set. Missing impl? Cannot create client!", new Exception());
+				return null;
+			}
 			ClientInterface client = null;
 			try {
-				Class<?> clientClass = Class.forName("com.dexels.navajo.client.NavajoClient");
-				client = (ClientInterface) clientClass.newInstance();
-			} catch (ClassNotFoundException ex) {
-				logger.error("Error: ", ex);
-			} catch (IllegalAccessException ex) {
-				logger.error("Error: ", ex);
-			} catch (InstantiationException ex) {
+				client = (ClientInterface) defaultClient.getClass().newInstance();
+			
+			} catch (InstantiationException |IllegalAccessException ex) {
 				logger.error("Error: ", ex);
 			}
+			
 			if (client == null) {
 				return null;
 			}
@@ -70,8 +70,8 @@ public class NavajoClientFactory {
 		myClient = ci;
 	}
 
-	public static void setDefaultClient(ClientInterface navajoClientImpl) {
-		// TODO Auto-generated method stub
+	public static void setDefaultClient(ClientInterface client) {
+		defaultClient = client;
 		
 	}
 

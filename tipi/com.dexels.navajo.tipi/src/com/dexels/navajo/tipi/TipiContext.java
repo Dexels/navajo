@@ -41,7 +41,6 @@ import tipipackage.ITipiExtensionContainer;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
-import com.dexels.navajo.client.impl.NavajoClientImpl;
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -280,7 +279,23 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
         myParentContext = parent;
         initializeExtensions(preload.iterator());
-        NavajoClientFactory.setDefaultClient(new NavajoClientImpl());
+        
+        // Non-osgi activation...
+        try {
+			Class<ClientInterface> clazz = (Class<ClientInterface>) Class.forName("com.dexels.navajo.client.impl.NavajoClientImpl");
+			NavajoClientFactory.setDefaultClient(clazz.newInstance());
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        
         clientInterface = NavajoClientFactory.createClient();
 
         if (myThreadPool == null) {

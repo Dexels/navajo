@@ -23,7 +23,6 @@ public interface ClientInterface {
 
     public Navajo doSimpleSend(Navajo out, String method, Integer retries) throws ClientException;
 
-    public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException;
 
     
     public void setUsername(String s);
@@ -43,14 +42,8 @@ public interface ClientInterface {
     /*
      * sets the locale for the client, it will be appended to the header
      */
-    public void setLocaleCode(String locale);
-
-    public String getLocaleCode();
-
-    public void setSubLocaleCode(String locale);
-
-    public String getSubLocaleCode();
-
+    public void setHeader(String key, Object value);
+    
     public String getCurrentHost();
 
     public void setCurrentHost(String host);

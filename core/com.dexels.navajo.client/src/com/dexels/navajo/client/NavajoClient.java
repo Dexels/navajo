@@ -1,9 +1,6 @@
 package com.dexels.navajo.client;
 
 import java.security.KeyStore;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -211,57 +208,7 @@ public abstract class NavajoClient implements ClientInterface{
         return this.sessionTokenProvider;
     }
 
-	/**
-     * Schedule a webservice @ a certain time. Note that this method does NOT return the response of the scheduled webservice. It contains a Navajo with the
-     * status of the scheduling.
-     * 
-     * @out contains the request Navajo
-     * @method defines the webservice
-     * @schedule defines a timestamp of the format: HH:mm:ss dd-MM-yyyy. If null assume immediate execution.
-     * 
-     */
-    @Override
-    public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException {
-
-        String triggerURL = null;
-
-        if (schedule == null) {
-            schedule = "now";
-        }
-
-        Header h = out.getHeader();
-        if (h == null) {
-            h = NavajoFactory.getInstance().createHeader(out, method, username, password, -1);
-            out.addHeader(h);
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd-MM-yyyy");
-        Calendar c = Calendar.getInstance();
-        if (!schedule.equals("now")) {
-            try {
-                c.setTime(sdf.parse(schedule));
-                triggerURL = "time:" + (c.get(Calendar.MONTH) + 1) + "|" + c.get(Calendar.DAY_OF_MONTH) + "|" + c.get(Calendar.HOUR_OF_DAY) + "|"
-                        + c.get(Calendar.MINUTE) + "|*|" + c.get(Calendar.YEAR);
-            } catch (ParseException e) {
-                throw new ClientException(-1, -1, "Unknown schedule timestamp format: " + schedule);
-            }
-        } else {
-            triggerURL = "time:" + schedule;
-        }
-        if (description != null) {
-            h.setHeaderAttribute("description", description);
-        }
-        if (clientId != null) {
-            h.setHeaderAttribute("clientid", clientId);
-        }
-        h.setHeaderAttribute("keeprequestresponse", "true");
-        h.setSchedule(triggerURL);
-
-        return doSimpleSend(out, method);
-    }
-    
-    
-  
-    
+ 
     protected void generateConnectionError(Navajo n, int id, String description) {
         try {
             Message conditionError = NavajoFactory.getInstance().createMessage(n, "ConditionErrors", Message.MSG_TYPE_ARRAY);
@@ -346,25 +293,8 @@ public abstract class NavajoClient implements ClientInterface{
         }
     }
 
-    @Override
-    public void setLocaleCode(String locale) {
-        this.localeCode = locale;
-    }
+    
 
-    @Override
-    public String getLocaleCode() {
-        return this.localeCode;
-    }
-
-    @Override
-    public void setSubLocaleCode(String locale) {
-        this.subLocale = locale;
-    }
-
-    @Override
-    public String getSubLocaleCode() {
-        return this.subLocale;
-    }
 
     public String getApplication() {
         return application;
