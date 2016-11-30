@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import javax.net.ssl.SSLSocketFactory;
@@ -34,20 +33,17 @@ public abstract class NavajoClient implements ClientInterface{
     protected boolean useHttps = false;
     protected int currentServerIndex;
 
-    protected final Random randomize = new Random(System.currentTimeMillis());
     // Warning: Not thread safe!
     protected final Set<Map<String, String>> piggyBackData = new HashSet<Map<String, String>>();
+    protected Map<String, String> httpHeaders;
+    protected Map<String, String> navajoHeaders;
 
-    protected String localeCode = null;
-    protected String subLocale;
-    protected String application;
     protected boolean allowCompression = true;
     protected boolean forceGzip = true;
     protected SystemInfoProvider systemInfoProvider;
     protected SessionTokenProvider sessionTokenProvider;
     protected SSLSocketFactory socketFactory;
     protected KeyStore keyStore;
-    protected String organization;
     
     @Override
     public final void setUsername(String s) {
@@ -135,32 +131,16 @@ public abstract class NavajoClient implements ClientInterface{
             String sessionToken = getSessionTokenProvider().getSessionToken();
             header.setHeaderAttribute("clientToken", sessionToken);
             header.setHeaderAttribute("clientInfo", getSystemInfoProvider().toString());
+            
+            for (String key : navajoHeaders.keySet()) {
+            	header.setHeaderAttribute(key, navajoHeaders.get(key));
+            }
             // ========= Adding globalMessages
 
             long clientTime = 0;
             try {
                 if (out.getHeader() != null) {
                     processPiggybackData(out.getHeader());
-                }
-
-                // ==================================================================
-                // set the locale
-                // ==============================================
-                if (localeCode != null) {
-                    out.getHeader().setHeaderAttribute("locale", localeCode);
-                }
-                // ==================================================================
-                // set the sublocale
-                // ==============================================
-                if (subLocale != null) {
-                    out.getHeader().setHeaderAttribute("sublocale", subLocale);
-                }
-
-                if (application != null) {
-                    out.getHeader().setHeaderAttribute("application", application);
-                }
-                if (organization != null) {
-                    out.getHeader().setHeaderAttribute("organization", organization);
                 }
 
                 Navajo n = null;
@@ -258,12 +238,11 @@ public abstract class NavajoClient implements ClientInterface{
     public void setServerUrls(String[] servers) {
         serverUrls = servers;
         if (servers.length > 0) {
-            currentServerIndex = randomize.nextInt(servers.length);
+            currentServerIndex = 0;
         }
     }
 
-    @Override
-    public String getCurrentHost() {
+    protected String getCurrentHost() {
         if (serverUrls != null && serverUrls.length > 0) {
             String currentServer = serverUrls[currentServerIndex];
             
@@ -293,29 +272,6 @@ public abstract class NavajoClient implements ClientInterface{
         }
     }
 
-    
-
-
-    public String getApplication() {
-        return application;
-    }
-
-    @Override
-    public void setApplication(String application) {
-        this.application = application;
-    }
-
-    @Override
-    public void setOrganization(String organization) {
-        this.organization = organization;
-
-    }
-
-    public String getOrganization() {
-        return organization;
-    }
-    
-
     @Override
     public void setAllowCompression(boolean allowCompression) {
         this.allowCompression = allowCompression;
@@ -333,5 +289,26 @@ public abstract class NavajoClient implements ClientInterface{
         return systemInfoProvider;
     }
 
+
+	@Override
+	public void setHeader(String key, Object value) {
+		if (httpHeaders == null) {
+			httpHeaders = new HashMap<>();
+		
+		}
+		httpHeaders.put(key, value.toString());
+		
+	}
+	
+
+	@Override
+	public void setNavajoHeader(String key, Object value) {
+		if (navajoHeaders == null) {
+			httpHeaders = new HashMap<>();
+		
+		}
+		httpHeaders.put(key, value.toString());
+		
+	}
 
 }

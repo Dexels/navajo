@@ -18,6 +18,10 @@ import com.dexels.navajo.document.Navajo;
  * See NavajoClient for an explanation of all methods
  */
 public interface ClientInterface {
+	public final static String LOCALE_HEADER_KEY = "locale";
+	public final static String SUBLOCALE_HEADER_KEY = "sublocale";
+	public final static String ORG_HEADER_KEY = "organization";
+	public final static String APP_HEADER_KEY = "application";
 
     public Navajo doSimpleSend(Navajo out, String method) throws ClientException;
 
@@ -35,17 +39,12 @@ public interface ClientInterface {
 
     public void setServerUrls(String[] servers);
 
-    public void setApplication(String string);
-
-    public void setOrganization(String string);
-
     /*
      * sets the locale for the client, it will be appended to the header
      */
     public void setHeader(String key, Object value);
+    public void setNavajoHeader(String key, Object value);
     
-    public String getCurrentHost();
-
     public void setCurrentHost(String host);
 
     public void setAllowCompression(boolean allowCompression);

@@ -23,9 +23,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -58,8 +55,6 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
     private static final int SLEEPTIME_PER_EXCEPTION = 1500;
 
     private CloseableHttpClient httpclient;
-
-	private Map<String, String> extraHeaders;
 
     public NavajoClientImpl() {
         RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(0).build();
@@ -204,13 +199,10 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
     }
 
     private void appendHeaderToHttp(HttpPost httppost, Header header) {
-        httppost.setHeader("rpcName", header.getRPCName());
-        httppost.setHeader("rpcUser", header.getRPCUser());
-        Map<String, String> attrs = header.getHeaderAttributes();
-        for (Entry<String, String> element : attrs.entrySet()) {
-            if (element.getValue() != null) {
-                httppost.setHeader(element.getKey(), element.getValue());
-            }
+        httppost.setHeader("X-Navajo-RpcName", header.getRPCName());
+        httppost.setHeader("X-Navajo-RpcUser", header.getRPCUser());
+        for (String key : httpHeaders.keySet()) {
+        	httppost.setHeader(key, httpHeaders.get(key));
         }
 
     }
@@ -256,15 +248,6 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
     }
 
 
-	@Override
-	public void setHeader(String key, Object value) {
-		if (extraHeaders == null) {
-			extraHeaders = new HashMap<>();
-		
-		}
-		extraHeaders.put(key, value.toString());
-		
-	}
 
  
 }
