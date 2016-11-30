@@ -17,6 +17,7 @@
             <value name="server" type="string" required="false" direction="in" />
             <value name="id" type="string" required="false" direction="in" />
             <value name="block" type="boolean" required="false" direction="in" />
+            <value name="tenant" type="string" required="false" direction="in" />
             <value name="username" type="string" required="false" direction="in" />
             <value name="password" type="string" required="false" direction="in" />
             <value name="resource" type="string" required="false" direction="in" />
