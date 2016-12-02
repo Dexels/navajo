@@ -34,6 +34,10 @@ public interface ClientInterface {
     public void setKeyStore(KeyStore keystore);
 
     public void setPassword(String pw);
+    
+    public void setBearerToken(String token);
+    
+    public void useBasicAuthentication(boolean enableBasicAuth);
 
     public void setServerUrl(String url);
 

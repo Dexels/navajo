@@ -28,6 +28,7 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLHandshakeException;
 
+import org.apache.commons.net.util.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.config.RequestConfig;
@@ -84,6 +85,11 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
             NavajoRequestEntity reqEntity = new NavajoRequestEntity(d, useCompression, forceGzip);
             httppost.setEntity(reqEntity);
             CloseableHttpResponse response = httpclient.execute(httppost);
+            if (bearerToken != null) {
+            	httppost.setHeader("Authorization", "Bearer " + bearerToken);
+            } else if (useBasicAuth) {
+            	httppost.setHeader("Authorization", "Basic " + Base64.encodeBase64((username+":"+password).getBytes()));
+            }
             
             try {
                 if (response.getStatusLine().getStatusCode() >= 400) {

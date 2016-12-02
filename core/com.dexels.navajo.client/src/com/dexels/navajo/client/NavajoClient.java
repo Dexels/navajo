@@ -40,12 +40,16 @@ public abstract class NavajoClient implements ClientInterface{
 
     protected boolean allowCompression = true;
     protected boolean forceGzip = true;
+    protected boolean useBasicAuth;
+    protected String bearerToken;
+    protected boolean generateConditionErrors = true;
+    
     protected SystemInfoProvider systemInfoProvider;
     protected SessionTokenProvider sessionTokenProvider;
     protected SSLSocketFactory socketFactory;
     protected KeyStore keyStore;
 
-    protected boolean generateConditionErrors = true;
+
     
     @Override
     public final void setUsername(String s) {
@@ -69,8 +73,21 @@ public abstract class NavajoClient implements ClientInterface{
         password = pw;
     }
 
+    
 
     @Override
+	public void setBearerToken(String token) {
+		this.bearerToken = token;
+		
+	}
+
+	@Override
+	public void useBasicAuthentication(boolean enableBasicAuth) {
+		this.useBasicAuth = enableBasicAuth;
+		
+	}
+
+	@Override
     public final Navajo doSimpleSend(Navajo out, String method) throws ClientException {
     	if (out == null) {
     		out = NavajoFactory.getInstance().createNavajo();
@@ -81,11 +98,13 @@ public abstract class NavajoClient implements ClientInterface{
 
     @Override
     public final Navajo doSimpleSend(Navajo out, String method, Integer retries) throws ClientException {
-        if (username == null) {
+        if (bearerToken == null){
+        	if (username == null) {
             throw new ClientException(1, 1, "No username set!");
-        }
-        if (password == null) {
-            throw new ClientException(1, 1, "No password set!");
+	        }
+	        if (password == null) {
+	            throw new ClientException(1, 1, "No password set!");
+	        }
         }
         if (getCurrentHost() == null) {
             throw new ClientException(1, 1, "No host set!");
