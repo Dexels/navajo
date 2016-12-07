@@ -13,11 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
+import com.dexels.navajo.dependency.Dependency;
+import com.dexels.navajo.dependency.DependencyAnalyzer;
 
 public class CompileServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1696342524348410364L;
 	private BundleCreator bundleCreator = null;
+	private DependencyAnalyzer dependencyAnalyzer;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(CompileServlet.class);
@@ -59,15 +62,12 @@ public class CompileServlet extends HttpServlet {
 			bundleCreator.createBundle(script,failures,success,skipped,force, keepIntermediateFiles,null);
 			long ts1 = System.currentTimeMillis();
 			compileDuration = ts1 - tsStart;
-			logger.info("Compiling java complete. took: "+compileDuration+" millis.");
-			logger.info("Succeeded: "+success.size()+" failed: "+failures.size()+" skipped: "+skipped.size());
-			logger.info("Avg: "+(1000 * (float)success.size() / compileDuration)+" scripts / sec");
-			for (String failed : failures) {
-				logger.info("Failed: "+failed);
-			}
+			logger.info("Compiling java complete. took: {}ms. Succeeded: {} failed: {} skipped: {}", compileDuration, success.size(),failures.size(), skipped.size());
+			logger.warn("Failed compiling: {}", failures);
+			
 		    bundleCreator.installBundles(script,failures, success, skipped, true, null);
 			tsInstall = System.currentTimeMillis() - ts1;
-			logger.info("Installing bundles took "+tsInstall+" millis.");
+			logger.info("Installing bundles took {}ms", tsInstall);
 			
 		} catch (Throwable e) {
 			logger.error("Error compiling scripts form servlet:",e);
@@ -81,29 +81,50 @@ public class CompileServlet extends HttpServlet {
 		    resp.setContentType("text/plain");
 			resp.getWriter().write("Compiling java complete. took: "+compileDuration+" millis.");
 			resp.getWriter().write(" Succeeded: "+success.size()+" failed: "+failures.size()+" skipped: "+skipped.size());
-			resp.getWriter().write(" Avg: "+(1000 * (float)success.size() / compileDuration)+" scripts / sec");
+			
+			if (! script.equals("")) {
+				resp.getWriter().write(" Broken deps: " + containsBrokenDependencies(script));
+			}
 			for (String failed : failures) {
 				resp.getWriter().write(" Failed: "+failed);
 			}
 			if (failedReason != null) {
 			    resp.getWriter().write(" failreason=" + failedReason);
 			}
+			resp.getWriter().write(" Avg: "+(1000 * (float)success.size() / compileDuration)+" scripts / sec");
 		}
 	}
+
+    private boolean containsBrokenDependencies(String scriptPath) {
+        List<Dependency> deps = dependencyAnalyzer.getDependencies(scriptPath);
+        if (deps == null) {
+            return false;
+        }
+
+        for (Dependency dep : deps) {
+            if (dep.isBroken()) {
+                return true;
+            }
+        }
+        return false;
+}
 	
 	
 	public void setBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = bundleCreator;
 	}
 
-	/**
-	 * 
-	 * @param bundleCreator the bundlecreator to clear
-	 */
 	public void clearBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = null;
 	}
 
+	public void setDependencyAnalyzer(DependencyAnalyzer d) {
+		this.dependencyAnalyzer = d;
+	}
+	
+	public void clearDependencyAnalyzer(DependencyAnalyzer d) {
+		this.dependencyAnalyzer = null;
+	}
 
 	
 }
