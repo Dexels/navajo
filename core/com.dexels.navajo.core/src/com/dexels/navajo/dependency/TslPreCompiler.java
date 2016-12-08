@@ -135,8 +135,9 @@ public class TslPreCompiler {
             Element n = (Element) operations.item(i);
 
             String operationScript = n.getAttribute("service");
+            String operationValidationScript = n.getAttribute("validationService");
             if (operationScript == null || operationScript.equals("")) {
-                return;
+                continue;
             }
 
             if (scriptTenant != null) {
@@ -154,7 +155,10 @@ public class TslPreCompiler {
             }
 
             String operationScriptFile = scriptFolder + File.separator + operationScript + ".xml";
-
+            String operationValidationScriptFile = null;
+            if (operationValidationScript != null && !"".equals(operationValidationScript)) {
+                operationValidationScriptFile = scriptFolder + File.separator + operationValidationScript + ".xml";
+            }
             // Check if exists
             boolean isBroken = false;
             if (!new File(operationScriptFile).exists()) {
@@ -170,6 +174,25 @@ public class TslPreCompiler {
                 Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
                 for (File f : files) {
                     deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                }
+            }
+            // Handle validation service
+            if (operationValidationScriptFile != null) {
+                isBroken = false;
+                if (!new File(operationValidationScriptFile).exists()) {
+                    isBroken = true;
+                }
+
+                deps.add(new Dependency(scriptFile, operationValidationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
+
+                // Going to check for tenant-specific include-variants
+                if (scriptTenant == null) {
+                    File scriptFolderFile = new File(operationValidationScriptFile).getParentFile();
+                    AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(operationValidationScript) + "_*.xml");
+                    Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
+                    for (File f : files) {
+                        deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                    }
                 }
             }
 
