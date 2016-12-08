@@ -1710,7 +1710,16 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public void maskMessage(Message mask, String method) {
-
+        if (isArrayMessage() && !mask.isArrayMessage()) {
+            // No need to check any properties or submessages
+            if (this.getParentMessage() != null) {
+                this.getParentMessage().removeMessage(this);
+            } else {
+                this.getRootDoc().removeMessage(this);
+            }
+            
+            return;
+        }
         // Mask all properties.
         Iterator<Property> allProperties = new ArrayList<Property>(this.getAllProperties()).iterator();
 
@@ -1743,7 +1752,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                 child.maskMessage(mask, method);
             }
             return;
-        }
+        } 
 
         // Mask all messages.
         Iterator<Message> allMessages = new ArrayList<Message>(this.getAllMessages()).iterator();

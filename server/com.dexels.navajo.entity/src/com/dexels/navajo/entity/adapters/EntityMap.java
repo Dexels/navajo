@@ -6,6 +6,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.entity.Entity;
+import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
 import com.dexels.navajo.script.api.Access;
@@ -47,11 +48,14 @@ public class EntityMap extends NavajoMap {
 			}
 
 			Navajo result = seo.perform(request);
-			if ( result != null ) {
-				this.serviceCalled = true;
-				this.serviceFinished = true;
-				this.inDoc = result;
-			}
+			if (result == null  || result.getMessage(seo.getMyEntity().getMessageName()) == null) {
+                throw new UserException(-1, "Entity not found");
+            }
+			
+			this.serviceCalled = true;
+			this.serviceFinished = true;
+			this.inDoc = result;
+			
 		}
 		
 	}
