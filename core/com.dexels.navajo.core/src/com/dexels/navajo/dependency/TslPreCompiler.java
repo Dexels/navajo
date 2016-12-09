@@ -227,19 +227,19 @@ public class TslPreCompiler {
                     }
                 }
 
-                String operationScriptFile = scriptFolder + File.separator + "entity" + File.separator + superEntity + ".xml";
+                String superScriptFile = scriptFolder + File.separator + "entity" + File.separator + superEntity + ".xml";
 
                 // Check if exists
                 boolean isBroken = false;
-                if (!new File(operationScriptFile).exists()) {
+                if (!new File(superScriptFile).exists()) {
                     isBroken = true;
                 }
 
-                deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
+                deps.add(new Dependency(scriptFile, superScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
 
                 // Going to check for tenant-specific include-variants
                 if (scriptTenant == null) {
-                    File scriptFolderFile = new File(operationScriptFile).getParentFile();
+                    File scriptFolderFile = new File(superScriptFile).getParentFile();
                     AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(superEntity) + "_*.xml");
                     Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
                     for (File f : files) {
@@ -436,7 +436,7 @@ public class TslPreCompiler {
         
         // Going to check for tenant-specific include-variants
         if (scriptTenant == null) {
-            File scriptFolderFile = new File(scriptFile).getParentFile();
+            File scriptFolderFile = new File(scriptFolder, cleanScript).getParentFile();
             AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(cleanScript) + "_*.xml");
             Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
             for (File f : files) {
