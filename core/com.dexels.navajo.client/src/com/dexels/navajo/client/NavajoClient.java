@@ -30,7 +30,6 @@ public abstract class NavajoClient implements ClientInterface{
     protected String username = null;
     protected String password = null;
     protected String[] serverUrls;
-    protected boolean useHttps = false;
     protected int currentServerIndex;
 
     // Warning: Not thread safe!
@@ -268,11 +267,8 @@ public abstract class NavajoClient implements ClientInterface{
             String currentServer = serverUrls[currentServerIndex];
             
             if (!currentServer.startsWith("http") && currentServer.length() > 0) {
-                if (useHttps) {
-                    return "https://" + currentServer;
-                } else {
-                    return "http://" + currentServer;
-                }
+            	logger.warn("Server should contain protocol! Fallback to http");
+                return "http://" + currentServer;
             }
             return currentServer;
         }
