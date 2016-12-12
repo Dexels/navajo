@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyStore;
+import java.util.Base64;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,6 +108,12 @@ public class NavajoClientImplJavanet extends NavajoClient implements ClientInter
 
 	private void postNavajo(Navajo inputNavajo, boolean useCompression, HttpURLConnection con)
 			throws UnsupportedEncodingException, IOException {
+		 if (bearerToken != null) {
+         	con.setRequestProperty("Authorization", "Bearer " + bearerToken);
+         } else if (useBasicAuth) {
+        	 con.setRequestProperty("Authorization", "Basic " + Base64.getEncoder().encodeToString((username+":"+password).getBytes()));
+         }
+		 
 		if (useCompression) {
 			if (forceGzip) {
 				con.setRequestProperty("Content-Encoding", "gzip");

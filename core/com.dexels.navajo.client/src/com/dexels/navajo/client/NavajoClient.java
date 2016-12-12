@@ -34,8 +34,8 @@ public abstract class NavajoClient implements ClientInterface{
 
     // Warning: Not thread safe!
     protected final Set<Map<String, String>> piggyBackData = new HashSet<Map<String, String>>();
-    protected Map<String, String> httpHeaders;
-    protected Map<String, String> navajoHeaders;
+    protected Map<String, String> httpHeaders = new HashMap<>();
+    protected Map<String, String> navajoHeaders = new HashMap<>();
 
     protected boolean allowCompression = true;
     protected boolean forceGzip = true;
@@ -94,28 +94,25 @@ public abstract class NavajoClient implements ClientInterface{
         return doSimpleSend(out, method, 0);
     }
     
-
-    @Override
-    public final Navajo doSimpleSend(Navajo out, String method, Integer retries) throws ClientException {
-        if (bearerToken == null){
-        	if (username == null) {
-            throw new ClientException(1, 1, "No username set!");
-	        }
-	        if (password == null) {
-	            throw new ClientException(1, 1, "No password set!");
-	        }
-        }
-        if (getCurrentHost() == null) {
-            throw new ClientException(1, 1, "No host set!");
-        }
-        return doSimpleSend(out, method, retries);
-
-    }
     
 
 
-   
-    protected final Navajo doSimpleSend(Navajo out, String method, int retries) throws ClientException {
+    @Override
+    public final Navajo doSimpleSend(Navajo out, String method, Integer retries) throws ClientException {
+    	
+    	 if (bearerToken == null){
+         	if (username == null) {
+             throw new ClientException(1, 1, "No username set!");
+ 	        }
+ 	        if (password == null) {
+ 	            throw new ClientException(1, 1, "No password set!");
+ 	        }
+         }
+         if (getCurrentHost() == null) {
+             throw new ClientException(1, 1, "No host set!");
+         }
+         
+         
         // NOTE: prefix persistence key with method, because same Navajo object
         // could be used as a request
         // for multiple methods!
@@ -309,10 +306,6 @@ public abstract class NavajoClient implements ClientInterface{
 
 	@Override
 	public void setHeader(String key, Object value) {
-		if (httpHeaders == null) {
-			httpHeaders = new HashMap<>();
-		
-		}
 		httpHeaders.put(key, value.toString());
 		
 	}
@@ -320,11 +313,7 @@ public abstract class NavajoClient implements ClientInterface{
 
 	@Override
 	public void setNavajoHeader(String key, Object value) {
-		if (navajoHeaders == null) {
-			httpHeaders = new HashMap<>();
-		
-		}
-		httpHeaders.put(key, value.toString());
+		navajoHeaders.put(key, value.toString());
 	}
 
 	@Override

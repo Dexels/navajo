@@ -282,7 +282,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         
         // Non-osgi activation...
         try {
-			Class<ClientInterface> clazz = (Class<ClientInterface>) Class.forName("com.dexels.navajo.client.impl.NavajoClientImpl");
+			Class<ClientInterface> clazz = (Class<ClientInterface>) Class.forName("com.dexels.navajo.client.impl.javanet.NavajoClientImplJavanet");
 			NavajoClientFactory.setDefaultClient(clazz.newInstance());
 		} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block

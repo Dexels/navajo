@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.NavajoClient;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -44,8 +45,8 @@ public class TipiNewCallService extends TipiAction {
     @Override
     public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 
-        getContext().getClient().setHeader("locale", getContext().getApplicationInstance().getLocaleCode());
-        getContext().getClient().setHeader("sublocale", getContext().getApplicationInstance().getSubLocaleCode());
+        getContext().getClient().setNavajoHeader(NavajoClient.LOCALE_HEADER_KEY, getContext().getApplicationInstance().getLocaleCode());
+        getContext().getClient().setNavajoHeader(NavajoClient.SUBLOCALE_HEADER_KEY, getContext().getApplicationInstance().getSubLocaleCode());
 
         String service = (String) getEvaluatedParameterValue("service", event);
         Navajo input = (Navajo) getEvaluatedParameterValue("input", event);
@@ -120,8 +121,8 @@ public class TipiNewCallService extends TipiAction {
         if (getContext().getClient() == null) {
             throw new TipiException("No (HTTP) client configured, call will fail.");
         }
-        getContext().getClient().setHeader("locale", getContext().getApplicationInstance().getLocaleCode());
-        getContext().getClient().setHeader("sublocale", getContext().getApplicationInstance().getSubLocaleCode());
+        getContext().getClient().setNavajoHeader(NavajoClient.LOCALE_HEADER_KEY, getContext().getApplicationInstance().getLocaleCode());
+        getContext().getClient().setNavajoHeader(NavajoClient.SUBLOCALE_HEADER_KEY, getContext().getApplicationInstance().getSubLocaleCode());
 
         if (parameter != null) {
             unevaluated = parameter.getValue();

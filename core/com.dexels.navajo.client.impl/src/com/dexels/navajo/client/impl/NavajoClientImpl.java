@@ -81,15 +81,16 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
             HttpPost httppost = new HttpPost(uri);
            
             appendHeaderToHttp(httppost, d.getHeader());
-
-            NavajoRequestEntity reqEntity = new NavajoRequestEntity(d, useCompression, forceGzip);
-            httppost.setEntity(reqEntity);
-            CloseableHttpResponse response = httpclient.execute(httppost);
             if (bearerToken != null) {
             	httppost.setHeader("Authorization", "Bearer " + bearerToken);
             } else if (useBasicAuth) {
             	httppost.setHeader("Authorization", "Basic " + Base64.encodeBase64((username+":"+password).getBytes()));
             }
+
+            NavajoRequestEntity reqEntity = new NavajoRequestEntity(d, useCompression, forceGzip);
+            httppost.setEntity(reqEntity);
+            CloseableHttpResponse response = httpclient.execute(httppost);
+           
             
             try {
                 if (response.getStatusLine().getStatusCode() >= 400) {
