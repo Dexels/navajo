@@ -47,9 +47,9 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 
 
-public class NavajoClientImpl extends NavajoClient implements ClientInterface, Serializable {
+public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterface, Serializable {
 
-    private final static Logger logger = LoggerFactory.getLogger(NavajoClientImpl.class);
+    private final static Logger logger = LoggerFactory.getLogger(ApacheNavajoClientImpl.class);
 
     private static final long serialVersionUID = -7848349362973607161L;
     public static final int CONNECT_TIMEOUT = 10000;
@@ -57,7 +57,7 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
 
     private CloseableHttpClient httpclient;
 
-    public NavajoClientImpl() {
+    public ApacheNavajoClientImpl() {
         RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(0).build();
         httpclient = HttpClients.custom().setDefaultRequestConfig(config).build();
     }

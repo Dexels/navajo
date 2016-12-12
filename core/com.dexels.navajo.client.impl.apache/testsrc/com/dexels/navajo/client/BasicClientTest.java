@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.dexels.navajo.client.impl.NavajoClientImpl;
+import com.dexels.navajo.client.impl.ApacheNavajoClientImpl;
 import com.dexels.navajo.document.Navajo;
 
 /**
@@ -22,7 +22,7 @@ public class BasicClientTest {
 
 	@BeforeClass
 	public static void setup() {
-		ClientInterface ci = new NavajoClientImpl();
+		ClientInterface ci = new ApacheNavajoClientImpl();
 		NavajoClientFactory.setDefaultClient(ci);
 	}
 	

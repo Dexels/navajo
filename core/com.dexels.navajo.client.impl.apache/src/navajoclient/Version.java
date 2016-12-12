@@ -28,7 +28,7 @@ import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
-import com.dexels.navajo.client.impl.NavajoClientImpl;
+import com.dexels.navajo.client.impl.ApacheNavajoClientImpl;
 
 /**
  * VERSION HISTORY
@@ -63,7 +63,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		NavajoClientFactory.setDefaultClient(new NavajoClientImpl());
+		NavajoClientFactory.setDefaultClient(new ApacheNavajoClientImpl());
 	}
 //	
 	
