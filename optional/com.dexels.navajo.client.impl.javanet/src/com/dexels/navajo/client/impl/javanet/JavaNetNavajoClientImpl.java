@@ -14,6 +14,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyStore;
 import java.util.Base64;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,15 +27,13 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.jcraft.jzlib.DeflaterOutputStream;
-import com.jcraft.jzlib.GZIPInputStream;
-import com.jcraft.jzlib.GZIPOutputStream;
 import com.jcraft.jzlib.InflaterInputStream;
 
-public class NavajoClientImplJavanet extends NavajoClient implements ClientInterface, Serializable {
+public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInterface, Serializable {
 
 	private static final long serialVersionUID = 4279069306367565223L;
 
-	private final static Logger logger = LoggerFactory.getLogger(NavajoClientImplJavanet.class);
+	private final static Logger logger = LoggerFactory.getLogger(JavaNetNavajoClientImpl.class);
 
 	public static final int CONNECT_TIMEOUT = 10000;
 
@@ -41,10 +41,12 @@ public class NavajoClientImplJavanet extends NavajoClient implements ClientInter
 	protected Navajo doTransaction(Navajo inputNavajo, boolean useCompression, int retries, int exceptionCount)
 			throws ClientException {
 		Navajo resultNavajo = null;
+		
+		
+		HttpURLConnection con = null;
 		try {
 			URL url = new URL(getCurrentHost());
-
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("POST");
 			con.setConnectTimeout(CONNECT_TIMEOUT);
 
@@ -66,14 +68,51 @@ public class NavajoClientImplJavanet extends NavajoClient implements ClientInter
 			postNavajo(inputNavajo, useCompression, con);
 
 			resultNavajo = readResponse(useCompression, con);
-		} catch (IOException e) {
-			throw new ClientException(-1, -1, e.getMessage(), e);
+		} catch (Throwable t) {
+			resultNavajo = handleException(t, getCurrentHost());
 		}
+		    
 
 		return resultNavajo;
 	}
 
-	private Navajo readResponse(boolean useCompression,  HttpURLConnection con) throws IOException {
+	private Navajo handleException(Throwable exception, String host) throws ClientException {
+		if (!generateConditionErrors) {
+			logger.error("Error: ", exception);
+			throw new ClientException(-1, -1, exception.getMessage(), exception);
+		}
+
+		Navajo n = null;
+		if (exception instanceof java.net.UnknownHostException) {
+			logger.warn("Connection problem: UnknownHostException exception to {}!", host, exception);
+			n = NavajoFactory.getInstance().createNavajo();
+			generateConnectionError(n, 7777777, "Unknown host: " + exception.getMessage());
+		} else if (exception instanceof java.net.NoRouteToHostException) {
+			logger.warn("Connection problem: NoRouteToHostException exception to {}!", host, exception);
+			n = NavajoFactory.getInstance().createNavajo();
+			generateConnectionError(n, 55555, "No route to host: " + exception.getMessage());
+
+		} else if (exception instanceof java.net.SocketTimeoutException
+				|| exception instanceof java.net.ConnectException
+				|| exception instanceof java.net.NoRouteToHostException) {
+			logger.warn("Connection problem: SocketTimeoutException exception to {}!", host, exception);
+			n = NavajoFactory.getInstance().createNavajo();
+			generateConnectionError(n, 55555, "Error on getting response data: " + exception.getMessage());
+		} else if (exception instanceof javax.net.ssl.SSLHandshakeException) {
+			logger.warn("Connection problem: SSLHandshakeException exception to {}!", host, exception);
+			n = NavajoFactory.getInstance().createNavajo();
+			generateConnectionError(n, 666666, "SSL fout " + exception.getMessage());
+		}
+		if (n != null) {
+			return n;
+		}
+
+		logger.warn("Connection problem: Exception {} to {}!", exception.getMessage(), host, exception);
+		throw new ClientException(-1, -1, exception.getMessage(), exception);
+
+	}
+
+	private Navajo readResponse(boolean useCompression, HttpURLConnection con) throws IOException {
 		// Check for errors.
 		InputStream in = null;
 		Navajo res = null;
@@ -101,19 +140,18 @@ public class NavajoClientImplJavanet extends NavajoClient implements ClientInter
 				in.close();
 				in = null;
 			}
-			// con.disconnect();
 		}
 		return res;
 	}
 
 	private void postNavajo(Navajo inputNavajo, boolean useCompression, HttpURLConnection con)
 			throws UnsupportedEncodingException, IOException {
-		 if (bearerToken != null) {
-         	con.setRequestProperty("Authorization", "Bearer " + bearerToken);
-         } else if (useBasicAuth) {
-        	 con.setRequestProperty("Authorization", "Basic " + Base64.getEncoder().encodeToString((username+":"+password).getBytes()));
-         }
-		 
+		if (bearerToken != null) {
+			con.setRequestProperty("Authorization", "Bearer " + bearerToken);
+		} else if (useBasicAuth) {
+			con.setRequestProperty("Authorization","Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
+		}
+
 		if (useCompression) {
 			if (forceGzip) {
 				con.setRequestProperty("Content-Encoding", "gzip");
@@ -127,17 +165,15 @@ public class NavajoClientImplJavanet extends NavajoClient implements ClientInter
 			BufferedWriter out = null;
 			try {
 				if (forceGzip) {
-					out = new BufferedWriter(
-							new OutputStreamWriter(new GZIPOutputStream(con.getOutputStream()), "UTF-8"));
+					out = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(con.getOutputStream()), "UTF-8"));
 				} else {
-					out = new BufferedWriter(
-							new OutputStreamWriter(new DeflaterOutputStream(con.getOutputStream()), "UTF-8"));
+					out = new BufferedWriter(new OutputStreamWriter(new DeflaterOutputStream(con.getOutputStream()), "UTF-8"));
 				}
 				inputNavajo.write(out);
 			} finally {
 				if (out != null) {
 					try {
-						// out.flush();
+						out.flush();
 						out.close();
 					} catch (IOException e) {
 						logger.error("Error: ", e);
@@ -195,7 +231,7 @@ public class NavajoClientImplJavanet extends NavajoClient implements ClientInter
 	private final void copyResource(OutputStream out, InputStream in) throws IOException {
 
 		BufferedInputStream bin = null;
-		BufferedOutputStream bout= null;
+		BufferedOutputStream bout = null;
 		try {
 			bin = new BufferedInputStream(in);
 			bout = new BufferedOutputStream(out);

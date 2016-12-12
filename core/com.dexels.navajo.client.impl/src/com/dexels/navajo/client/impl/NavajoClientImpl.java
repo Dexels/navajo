@@ -90,7 +90,6 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
             NavajoRequestEntity reqEntity = new NavajoRequestEntity(d, useCompression, forceGzip);
             httppost.setEntity(reqEntity);
             CloseableHttpResponse response = httpclient.execute(httppost);
-           
             
             try {
                 if (response.getStatusLine().getStatusCode() >= 400) {
@@ -202,6 +201,9 @@ public class NavajoClientImpl extends NavajoClient implements ClientInterface, S
             logger.warn("Connection problem: SocketException {} exception to {}! ", exception.getMessage(), host, exception);
             n = NavajoFactory.getInstance().createNavajo();
             generateConnectionError(n, 55555, "SocketException: " + exception.getMessage());
+        }
+        if (n != null) {
+        	return n;
         }
         
         logger.warn("Connection problem: Exception {} to {}!", exception.getMessage(), host, exception);
