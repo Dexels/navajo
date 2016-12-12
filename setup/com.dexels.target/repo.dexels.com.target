@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2113">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2157">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.server.core.feature.group" version="1.3.100.v20150529-1857"/>
@@ -16,12 +16,8 @@
 <repository location="http://mirrorservice.org/sites/download.eclipse.org/eclipseMirror/egit/updates/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.3.10.201607130511"/>
-<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.10.v20160621/"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.164.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.164"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.170.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.170"/>
 </location>
 </locations>
 <includeBundles>
@@ -33,6 +29,7 @@
 <plugin id="com.dexels.hazelcast"/>
 <plugin id="com.dexels.index.api"/>
 <plugin id="com.dexels.kafka.impl"/>
+<plugin id="com.dexels.kafka.streams"/>
 <plugin id="com.dexels.log4j.httpappender"/>
 <plugin id="com.dexels.log4j.server"/>
 <plugin id="com.dexels.logback.redis"/>
@@ -56,7 +53,10 @@
 <plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
 <plugin id="com.fasterxml.jackson.core.jackson-core"/>
 <plugin id="com.fasterxml.jackson.core.jackson-databind"/>
+<plugin id="com.fasterxml.jackson.dataformat.jackson-dataformat-xml"/>
 <plugin id="com.fasterxml.jackson.dataformat.jackson-dataformat-yaml"/>
+<plugin id="com.fasterxml.jackson.module.jackson-module-jaxb-annotations"/>
+<plugin id="com.fasterxml.woodstox.woodstox-core"/>
 <plugin id="com.google.guava"/>
 <plugin id="com.google.inject"/>
 <plugin id="com.hazelcast"/>
@@ -85,6 +85,7 @@
 <plugin id="javaewah" version="0.7.9.v201605172130"/>
 <plugin id="javax.el.source"/>
 <plugin id="javax.inject"/>
+<plugin id="lz4-java"/>
 <plugin id="org.apache.aries.jmx.api"/>
 <plugin id="org.apache.aries.jmx.core"/>
 <plugin id="org.apache.aries.jmx.whiteboard"/>
@@ -184,8 +185,6 @@
 <plugin id="org.eclipse.equinox.simpleconfigurator"/>
 <plugin id="org.eclipse.equinox.supplement"/>
 <plugin id="org.eclipse.equinox.util"/>
-<plugin id="org.eclipse.jetty.proxy"/>
-<plugin id="org.eclipse.jetty.proxy.source"/>
 <plugin id="org.eclipse.jgit"/>
 <plugin id="org.eclipse.jgit.archive"/>
 <plugin id="org.eclipse.jgit.http.apache"/>
@@ -202,6 +201,7 @@
 <plugin id="org.objectweb.asm"/>
 <plugin id="org.objectweb.asm.commons"/>
 <plugin id="org.objectweb.asm.tree"/>
+<plugin id="org.openstreetmap.jmapviewer"/>
 <plugin id="org.ops4j.base.io"/>
 <plugin id="org.ops4j.base.lang"/>
 <plugin id="org.ops4j.base.monitors"/>
@@ -240,6 +240,9 @@
 <plugin id="org.scala-lang.scala-compiler"/>
 <plugin id="org.scala-lang.scala-library"/>
 <plugin id="org.scala-lang.scala-reflect"/>
+<plugin id="org.yaml.snakeyaml"/>
+<plugin id="pi4j-core"/>
+<plugin id="pi4j-service"/>
 <plugin id="redis.clients.jedis"/>
 <plugin id="rocksdb.osgi"/>
 <plugin id="slf4j.api"/>

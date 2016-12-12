@@ -75,10 +75,9 @@ public class TslPreCompiler {
     protected void getAllDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc)
             throws UserException, XPathExpressionException {
         findIncludeDependencies(scriptFile, scriptTenant, scriptFolder, deps, tslDoc);
-        findNavajoDependencies(scriptFile, scriptTenant, scriptFolder, deps, tslDoc);
+        findMapDependencies(scriptFile, scriptTenant, scriptFolder, deps, tslDoc);
         findMethodDependencies(scriptFile, scriptTenant, scriptFolder, deps, tslDoc);
         findEntityDependencies(scriptFile,scriptTenant, scriptFolder, deps, tslDoc);
-        
     }
 
     protected void findMethodDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) {
@@ -136,8 +135,9 @@ public class TslPreCompiler {
             Element n = (Element) operations.item(i);
 
             String operationScript = n.getAttribute("service");
+            String operationValidationScript = n.getAttribute("validationService");
             if (operationScript == null || operationScript.equals("")) {
-                return;
+                continue;
             }
 
             if (scriptTenant != null) {
@@ -155,7 +155,10 @@ public class TslPreCompiler {
             }
 
             String operationScriptFile = scriptFolder + File.separator + operationScript + ".xml";
-
+            String operationValidationScriptFile = null;
+            if (operationValidationScript != null && !"".equals(operationValidationScript)) {
+                operationValidationScriptFile = scriptFolder + File.separator + operationValidationScript + ".xml";
+            }
             // Check if exists
             boolean isBroken = false;
             if (!new File(operationScriptFile).exists()) {
@@ -171,6 +174,25 @@ public class TslPreCompiler {
                 Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
                 for (File f : files) {
                     deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                }
+            }
+            // Handle validation service
+            if (operationValidationScriptFile != null) {
+                isBroken = false;
+                if (!new File(operationValidationScriptFile).exists()) {
+                    isBroken = true;
+                }
+
+                deps.add(new Dependency(scriptFile, operationValidationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
+
+                // Going to check for tenant-specific include-variants
+                if (scriptTenant == null) {
+                    File scriptFolderFile = new File(operationValidationScriptFile).getParentFile();
+                    AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(operationValidationScript) + "_*.xml");
+                    Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
+                    for (File f : files) {
+                        deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                    }
                 }
             }
 
@@ -205,19 +227,19 @@ public class TslPreCompiler {
                     }
                 }
 
-                String operationScriptFile = scriptFolder + File.separator + "entity" + File.separator + superEntity + ".xml";
+                String superScriptFile = scriptFolder + File.separator + "entity" + File.separator + superEntity + ".xml";
 
                 // Check if exists
                 boolean isBroken = false;
-                if (!new File(operationScriptFile).exists()) {
+                if (!new File(superScriptFile).exists()) {
                     isBroken = true;
                 }
 
-                deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
+                deps.add(new Dependency(scriptFile, superScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
 
                 // Going to check for tenant-specific include-variants
                 if (scriptTenant == null) {
-                    File scriptFolderFile = new File(operationScriptFile).getParentFile();
+                    File scriptFolderFile = new File(superScriptFile).getParentFile();
                     AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(superEntity) + "_*.xml");
                     Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
                     for (File f : files) {
@@ -226,7 +248,10 @@ public class TslPreCompiler {
                 }
             }
         }
+
     }
+    
+   
 
     protected void findIncludeDependencies(String fullScriptPath, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc)
             throws UserException {
@@ -277,7 +302,7 @@ public class TslPreCompiler {
 
 
 
-    protected void findNavajoDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc)
+    protected void findMapDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc)
             throws XPathExpressionException {
         XPath xPath = XPathFactory.newInstance().newXPath();
 
@@ -300,7 +325,7 @@ public class TslPreCompiler {
                 // Going to try to parse param ...
                 List<String> result = getParamValue(tslDoc, navajoScript);
                 for (String res : result) {
-                    addNavajoDependency(scriptFile, scriptTenant, deps, res, scriptFolder, getLineNr(expression));
+                    addScriptDependency(scriptFile, scriptTenant, deps, res, scriptFolder, getLineNr(expression), Dependency.NAVAJO_DEPENDENCY);
                 }
 
             } else if (navajoScript.startsWith("[/")) {
@@ -308,9 +333,42 @@ public class TslPreCompiler {
                 // result - not supported
                 deps.add(new Dependency(scriptFile, "scripts/__unknown__.xml", Dependency.UNKNOWN_TYPE, getLineNr(expression)));
             } else {
-                addNavajoDependency(scriptFile, scriptTenant, deps, navajoScript, scriptFolder, getLineNr(expression));
+                addScriptDependency(scriptFile, scriptTenant, deps, navajoScript, scriptFolder, getLineNr(expression), Dependency.NAVAJO_DEPENDENCY);
             }
         }
+        
+      
+        // Entity map
+        xPath = XPathFactory.newInstance().newXPath();
+      //  ((NodeList) xPath.evaluate("//map[@object='com.dexels.navajo.entity.adapters.EntityMap']/field[@name='name']/expression", tslDoc.getDocumentElement(), XPathConstants.NODESET)).getLength();
+  
+        nodes = (NodeList) xPath.evaluate("//map[@object='com.dexels.navajo.entity.adapters.EntityMap']/field[@name='name']/expression",
+                tslDoc.getDocumentElement(), XPathConstants.NODESET);
+
+        for (int i = 0; i < nodes.getLength(); ++i) {
+            Element expression = (Element) nodes.item(i);
+            String navajoScript = expression.getAttribute("value");
+            if (navajoScript.equals("")) {
+                // Dealing with navascript, wher the value is a sub element
+                // instead of an attribute of expression
+                Element value = (Element) expression.getElementsByTagName("value").item(0);
+                navajoScript = value.getTextContent();
+            }
+            if (navajoScript.contains("@")) {
+                // Going to try to parse param ...
+                List<String> result = getParamValue(tslDoc, navajoScript);
+                for (String res : result) {                        
+                    addScriptDependency(scriptFile, scriptTenant, deps, res, scriptFolder, getLineNr(expression), Dependency.ENTITY_DEPENDENCY);
+                }
+
+            } else if (navajoScript.startsWith("[/")) {
+                // The navajo script is retrieved from the Indoc or database result - not supported
+                deps.add(new Dependency(scriptFile, "scripts/__unknown__.xml", Dependency.UNKNOWN_TYPE, getLineNr(expression)));
+            } else {
+                addScriptDependency(scriptFile, scriptTenant, deps, navajoScript, scriptFolder, getLineNr(expression), Dependency.ENTITY_DEPENDENCY);
+            }
+        }
+       
     }
 
     private List<String> getParamValue(Document tslDoc, String paramString) throws XPathExpressionException {
@@ -343,17 +401,19 @@ public class TslPreCompiler {
         return result;
     }
     
-    private void addNavajoDependency(String scriptFile, String scriptTenant, List<Dependency> deps,
-            String navajoScript, String scriptFolder, int linenr) {
+    private void addScriptDependency(String scriptFile, String scriptTenant, List<Dependency> deps,
+            String navajoScript, String scriptFolder, int linenr, int type) {
         String cleanScript = navajoScript.replace("'", "");
-        
+        if (type == Dependency.ENTITY_DEPENDENCY) {
+            cleanScript = "entity/" + cleanScript;
+        }
         if (scriptTenant != null) {
             // trying tenant-specific variant first
             String navajoScriptFile = scriptFolder + File.separator + cleanScript + "_" + scriptTenant + ".xml";
             
             // Check if exists
             if (new File(navajoScriptFile).exists()) {
-                deps.add(new Dependency(scriptFile, navajoScriptFile, Dependency.NAVAJO_DEPENDENCY, linenr));
+                deps.add(new Dependency(scriptFile, navajoScriptFile, type, linenr));
                 
                 // No need to try any other tenant-specific includes since we are tenant-specific in the first place
                 // Thus return
@@ -371,16 +431,16 @@ public class TslPreCompiler {
         
        
 
-        deps.add(new Dependency(scriptFile, navajoScriptFile, Dependency.NAVAJO_DEPENDENCY, linenr, isBroken));
+        deps.add(new Dependency(scriptFile, navajoScriptFile, type, linenr, isBroken));
 
         
         // Going to check for tenant-specific include-variants
         if (scriptTenant == null) {
-            File scriptFolderFile = new File(scriptFile).getParentFile();
+            File scriptFolderFile = new File(scriptFolder, cleanScript).getParentFile();
             AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(cleanScript) + "_*.xml");
             Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
             for (File f : files) {
-                deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.NAVAJO_DEPENDENCY, linenr));
+                deps.add(new Dependency(scriptFile, f.getAbsolutePath(), type, linenr));
             }
 
         }

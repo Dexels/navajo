@@ -26,8 +26,15 @@ public class DependencyAnalyzer {
         precompiler.setIOConfig(navajoIOConfig);
         scriptFolder = navajoIOConfig.getScriptPath();
         initialize();
-
     }
+    
+    public void deactivate() {
+        logger.info("DeActivating DependencyAnalyzer");
+        precompiler = null;
+        dependencies.clear();
+        reverseDependencies.clear();
+    }
+
 
     protected void initialize() {
         dependencies = new HashMap<String, List<Dependency>>();

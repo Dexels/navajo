@@ -13,17 +13,4 @@
 		<version>1.0.0</version>
 		<relativePath>../../setup/com.dexels.repository</relativePath>
 	</parent>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>${tycho-groupid}</groupId>
-				<artifactId>tycho-compiler-plugin</artifactId>
-				<version>${tycho-version}</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>
