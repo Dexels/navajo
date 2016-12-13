@@ -26,6 +26,7 @@
             <value name="selectionPointer" type="string" required="false" direction="in" />
             <value name="message" map="messagemap" required="false" direction="out" />
             <value name="messages" map="messagemap []" required="false" direction="out" />
+            <value name="breakOnNoResult" type="boolean" required="false" direction="in" />
         </values>
         <methods>
             <!-- Creates a new property -->

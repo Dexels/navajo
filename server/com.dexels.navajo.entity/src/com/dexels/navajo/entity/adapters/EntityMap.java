@@ -6,7 +6,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.entity.Entity;
-import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
 import com.dexels.navajo.script.api.Access;
@@ -22,6 +21,7 @@ public class EntityMap extends NavajoMap {
 	private String entityName;
 	private String method;
 	private Entity myEntity;
+	private boolean breakOnNoResult = true;
 	
 	@Override
 	public void load(Access access) throws MappableException, UserException {
@@ -48,8 +48,8 @@ public class EntityMap extends NavajoMap {
 			}
 
 			Navajo result = seo.perform(request);
-			if (result == null  || result.getMessage(seo.getMyEntity().getMessageName()) == null) {
-                throw new UserException(-1, "Entity not found");
+			if (breakOnNoResult && (result == null  || result.getMessage(seo.getMyEntity().getMessageName()) == null)) {
+                throw new UserException(-1, "Entity "+ entityName + " not found or no output from operation");
             }
 			
 			this.serviceCalled = true;
@@ -57,7 +57,10 @@ public class EntityMap extends NavajoMap {
 			this.inDoc = result;
 			
 		}
-		
+	}
+	
+	public void setBreakOnNoResult(boolean breaky) {
+		this.breakOnNoResult = breaky;
 	}
 	
 	@Override
