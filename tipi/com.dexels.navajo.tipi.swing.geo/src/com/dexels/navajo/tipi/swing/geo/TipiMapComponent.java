@@ -121,6 +121,9 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	@Override
 	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
 		super.loadData(n, method);
+		
+		mapComponents.clear();
+		overlayPanel.removeAll();
 
 		if (messagePath == null) {
 			return;
