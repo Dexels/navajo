@@ -183,12 +183,12 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
     
     private String printRequestKeysDefinition(Entity e) throws ServletException {
         String result = "";
-        Set<Property> unboundRequestProperties = new HashSet<>();
-        for (Property p : e.getMessage().getAllProperties()) {
-            if (!Key.isKey(p.getKey()) && p.getMethod().equals("request")) {
-                unboundRequestProperties.add(p);
-            }
-        }
+//        Set<Property> unboundRequestProperties = new HashSet<>();
+//        for (Property p : e.getMessage().getAllProperties()) {
+//            if (!Key.isKey(p.getKey()) && p.getMethod().equals("request")) {
+//                unboundRequestProperties.add(p);
+//            }
+//        }
         for (Key key : e.getKeys()) {
             String requestbody = getTemplate("operationrequestbody.template");
             // Get all properties for this key, put them in a temp Navajo and use the JSONTML to print it
@@ -202,11 +202,11 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
                 Property copied = prop.copy(nkey);
                 mkey.addProperty(copied);
             }
-            for (Property p : unboundRequestProperties) {
-                Property copied = p.copy(nkey);
-                copied.setKey("");
-                mkey.addProperty(copied);
-            }
+//            for (Property p : unboundRequestProperties) {
+//                Property copied = p.copy(nkey);
+//                copied.setKey("");
+//                mkey.addProperty(copied);
+//            }
 
             // Printing result.
             requestbody = requestbody.replace("{{REQUEST_BODY}}", writeEntityJson(nkey, "request"));

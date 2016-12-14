@@ -26,6 +26,7 @@
             <value name="selectionPointer" type="string" required="false" direction="in" />
             <value name="message" map="messagemap" required="false" direction="out" />
             <value name="messages" map="messagemap []" required="false" direction="out" />
+            <value name="breakOnNoResult" type="boolean" required="false" direction="in" />
         </values>
         <methods>
             <!-- Creates a new property -->
@@ -72,6 +73,7 @@
                 <param name="block" field="block" type="boolean" required="false" />
                 <param name="appendTo" field="appendTo" type="string" required="false" />
                 <param name="append" field="append" type="string" required="false" />
+                
             </method>
             <method name="get">
                 <param name="method" field="method" type="string" required="automatic" value="'GET'" />
@@ -87,6 +89,8 @@
                 <param name="block" field="block" type="boolean" required="false" />
                 <param name="appendTo" field="appendTo" type="string" required="false" />
                 <param name="append" field="append" type="string" required="false" />
+                <param name="breakOnNoResult" field="breakOnNoResult" type="boolean" required="false" />
+                
             </method>
             <method name="put">
                 <param name="method" field="method" type="string" required="automatic" value="'PUT'" />
@@ -102,6 +106,7 @@
                 <param name="block" field="block" type="boolean" required="false" />
                 <param name="appendTo" field="appendTo" type="string" required="false" />
                 <param name="append" field="append" type="string" required="false" />
+                <param name="breakOnNoResult" field="breakOnNoResult" type="boolean" required="false" />
             </method>
             <method name="post">
                 <param name="method" field="method" type="string" required="automatic" value="'POST'" />
@@ -117,6 +122,8 @@
                 <param name="block" field="block" type="boolean" required="false" />
                 <param name="appendTo" field="appendTo" type="string" required="false" />
                 <param name="append" field="append" type="string" required="false" />
+                <param name="breakOnNoResult" field="breakOnNoResult" type="boolean" required="false" />
+                
             </method>
             <method name="delete">
                 <param name="method" field="method" type="string" required="automatic" value="'DELETE'" />
@@ -132,6 +139,8 @@
                 <param name="block" field="block" type="boolean" required="false" />
                 <param name="appendTo" field="appendTo" type="string" required="false" />
                 <param name="append" field="append" type="string" required="false" />
+                <param name="breakOnNoResult" field="breakOnNoResult" type="boolean" required="false" />
+                
             </method>
         </methods>
     </map>
