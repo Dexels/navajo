@@ -61,12 +61,12 @@ public class EntityManager {
     }
 
     public void setNavajoConfig(NavajoConfigInterface nci) {
-        logger.info("Setting NavajoConfig");
+        logger.debug("Setting NavajoConfig");
         this.navajoConfig = nci;
     }
 
     public void clearNavajoConfig(NavajoConfigInterface nci) {
-        logger.info("Clearing NavajoConfig");
+        logger.debug("Clearing NavajoConfig");
         this.navajoConfig = null;
     }
 

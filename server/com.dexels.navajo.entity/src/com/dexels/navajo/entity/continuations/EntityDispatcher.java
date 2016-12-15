@@ -25,6 +25,7 @@ import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
+import com.dexels.navajo.entity.EntityMapper;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
@@ -43,6 +44,7 @@ public class EntityDispatcher {
 
     private EntityManager myManager;
     private AuthenticationMethodBuilder authMethodBuilder;
+    private EntityMapper myMapper;
 
     public void run(EntityContinuationRunner runner) {
         Navajo result = null;
@@ -103,9 +105,25 @@ public class EntityDispatcher {
             }
 
             logger.info("Entity request {} ({}, {})", entityName, method, ip);
-
+           
+            
+            // Check entity mapper for this folder. If we find an entity mapped to this folder 
+            // named like our request, this is our entity
             entityName = entityName.replace("/", ".");
-            Entity e = myManager.getEntity(entityName);
+            String entitySubName = entityName.substring(entityName.lastIndexOf('.')+1);
+            String folder = path.substring(1, path.lastIndexOf("/"));
+            Set<String> entities = myMapper.getEntities(folder);
+            String mappedEntity = null;
+            for (String s : entities) {
+                String anEntity = s.substring(s.lastIndexOf('.')+1);
+                if (anEntity.equals(entitySubName)) {
+                    mappedEntity = s;
+                    break;
+                }
+            }
+            
+            Entity e = myManager.getEntity(mappedEntity);
+           
             if (e == null) {
                 // Requested entity not found
                 logger.warn("Requested entity not registred! {}", entityName);
@@ -138,7 +156,7 @@ public class EntityDispatcher {
             Header header = NavajoFactory.getInstance().createHeader(input, "", "dummy", "dummy", -1);
             input.addHeader(header);
             
-            Operation o = myManager.getOperation(entityName, method);
+            Operation o = myManager.getOperation(e.getName(), method);
             o.setTenant(tenant);
 
             // Create an access object for logging purposes
@@ -367,5 +385,14 @@ public class EntityDispatcher {
     public void clearAuthenticationMethodBuilder(AuthenticationMethodBuilder eventAdmin) {
         this.authMethodBuilder = null;
     }
+    
+    public void setEntityMapper(EntityMapper mapp) {
+        myMapper = mapp;
+    }
+
+    public void clearEntityMapper(EntityMapper mapp) {
+        myMapper = null;
+    }
+    
 
 }
