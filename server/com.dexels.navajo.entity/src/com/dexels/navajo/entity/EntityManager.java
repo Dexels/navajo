@@ -152,6 +152,9 @@ public class EntityManager {
 			if (!filename.endsWith(".xml")) {
 				return;
 			}
+			if (filename.endsWith("entitymapping.xml")) {
+				return;
+			}
 			String script = filename.substring(filename.indexOf("scripts" + File.separator + "entity"),
 					filename.indexOf(".xml"));
 			String stripped = script.substring("scripts".length() + 1);
