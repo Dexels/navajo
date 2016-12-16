@@ -1416,7 +1416,6 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             boolean skipAuth = true;
             if (this.tenant != null && !this.tenant.equals("")) {
                 tenant = this.tenant;
-                skipAuth = false;
             }
 
             inDoc = DispatcherFactory.getInstance().handle(outDoc, tenant, skipAuth);
