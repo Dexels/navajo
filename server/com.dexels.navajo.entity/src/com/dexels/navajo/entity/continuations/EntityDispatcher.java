@@ -27,6 +27,7 @@ import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.EntityMapper;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
+import com.dexels.navajo.entity.util.EntityHelper;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.script.api.Access;
@@ -139,7 +140,7 @@ public class EntityDispatcher {
 
             // Get the input document
             if (method.equals("GET") || method.equals("DELETE")) {
-                input = myManager.deriveNavajoFromParameterMap(e, runner.getHttpRequest().getParameterMap());
+                input = EntityHelper.deriveNavajoFromParameterMap(e, runner.getHttpRequest().getParameterMap());
             } else {
                 JSONTML json = JSONTMLFactory.getInstance();
                 json.setEntityTemplate(entityMessage.getRootDoc());
