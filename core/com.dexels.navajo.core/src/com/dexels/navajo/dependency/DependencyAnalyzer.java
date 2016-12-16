@@ -43,34 +43,37 @@ public class DependencyAnalyzer {
 
     public void addDependencies(String script) {
 
-		Thread t = Thread.currentThread(); 
-		ClassLoader cl = t.getContextClassLoader(); 
-		t.setContextClassLoader(getClass().getClassLoader()); 
-		try { 
-	        List<Dependency> myDependencies = new ArrayList<Dependency>();
-	        String scriptTenant = tenantFromScriptPath(script);
+        Thread t = Thread.currentThread();
+        ClassLoader cl = t.getContextClassLoader();
+        t.setContextClassLoader(getClass().getClassLoader());
+        try {
+            List<Dependency> myDependencies = new ArrayList<Dependency>();
+            String scriptTenant = tenantFromScriptPath(script);
 
-	        try {
-	            precompiler.getAllDependencies(script, scriptFolder, myDependencies, scriptTenant);
-	            // codeSearch.getAllWorkflowDependencies(scriptFile, scriptPath,
-	            // scriptFolder, myDependencies);
-	        } catch (Exception e) {
-	            logger.error(" Exception on getting depencencies for: "+ script, e);
-	            return;
-	        }
-	        dependencies.put(script, myDependencies);
+            synchronized (script) {
+                try {
+                    precompiler.getAllDependencies(script, scriptFolder, myDependencies, scriptTenant);
+                    // codeSearch.getAllWorkflowDependencies(scriptFile,
+                    // scriptPath,
+                    // scriptFolder, myDependencies);
+                } catch (Exception e) {
+                    logger.error(" Exception on getting depencencies for: " + script, e);
+                    return;
+                }
+                dependencies.put(script, myDependencies);
 
-	        updateReverseDependencies(myDependencies);
-	        
-	        // Also ensure any includes I depend on, have their dependencies set correct
-	        for (Dependency dep : myDependencies) {
-	            if (dep.getType() == Dependency.INCLUDE_DEPENDENCY) {
-	                addDependencies(dep.getDependee());
-	            }
-	        }		} finally { 
-		    t.setContextClassLoader(cl); 
-		} 
-	   
+                updateReverseDependencies(myDependencies);
+            }
+            // Also ensure any includes I depend on, have their dependencies
+            // set correct
+            for (Dependency dep : myDependencies) {
+                if (dep.getType() == Dependency.INCLUDE_DEPENDENCY) {
+                    addDependencies(dep.getDependee());
+                }
+            }
+        } finally {
+            t.setContextClassLoader(cl);
+        }
 
     }
 
