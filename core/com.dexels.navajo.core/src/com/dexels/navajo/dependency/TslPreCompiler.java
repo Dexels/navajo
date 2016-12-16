@@ -115,7 +115,7 @@ public class TslPreCompiler {
 
 			// Going to check for tenant-specific include-variants
 			File scriptFolderFile = new File(methodScriptFile).getParentFile();
-			if (scriptTenant == null && scriptFolderFile.exists()) {
+			if (scriptTenant == null && scriptFolderFile.exists() && scriptFolderFile.isDirectory()) {
 				AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(methodScript) + "_*.xml");
 				Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
 				for (File f : files) {
@@ -176,13 +176,14 @@ public class TslPreCompiler {
 			// Going to check for tenant-specific include-variants
 			if (scriptTenant == null) {
 				File scriptFolderFile = new File(operationScriptFile).getParentFile();
-				AbstractFileFilter fileFilter = new WildcardFileFilter(
-						FilenameUtils.getName(operationScript) + "_*.xml");
-				Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
-				for (File f : files) {
-					deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY,
-							getLineNr(n)));
+				if (scriptFolderFile.exists() && scriptFolderFile.isDirectory()) {
+					AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(operationScript) + "_*.xml");
+					Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
+					for (File f : files) {
+						deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY,getLineNr(n)));
+					}
 				}
+				
 			}
 			// Handle validation service
 			if (operationValidationScriptFile != null) {
@@ -197,13 +198,15 @@ public class TslPreCompiler {
 				// Going to check for tenant-specific include-variants
 				if (scriptTenant == null) {
 					File scriptFolderFile = new File(operationValidationScriptFile).getParentFile();
-					AbstractFileFilter fileFilter = new WildcardFileFilter(
-							FilenameUtils.getName(operationValidationScript) + "_*.xml");
-					Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
-					for (File f : files) {
-						deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY,
-								getLineNr(n)));
+					if (scriptFolderFile.exists() && scriptFolderFile.isDirectory()) {
+						AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(operationValidationScript) + "_*.xml");
+						Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
+						for (File f : files) {
+							deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY,
+									getLineNr(n)));
+						}
 					}
+					
 				}
 			}
 
@@ -256,12 +259,13 @@ public class TslPreCompiler {
 				// Going to check for tenant-specific include-variants
 				if (scriptTenant == null) {
 					File scriptFolderFile = new File(superScriptFile).getParentFile();
-					AbstractFileFilter fileFilter = new WildcardFileFilter(
-							FilenameUtils.getName(superEntity) + "_*.xml");
-					Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
-					for (File f : files) {
-						deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY,
-								getLineNr(n)));
+					if (scriptFolderFile.exists() && scriptFolderFile.isDirectory()) {
+						AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(superEntity) + "_*.xml");
+						Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
+						for (File f : files) {
+							deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY,
+									getLineNr(n)));
+						}
 					}
 				}
 			}
@@ -309,12 +313,12 @@ public class TslPreCompiler {
 			// Going to check for tenant-specific include-variants
 			if (scriptTenant == null) {
 				File scriptFolderFile = new File(includeScriptFile).getParentFile();
-				AbstractFileFilter fileFilter = new WildcardFileFilter(
-						FilenameUtils.getName(includedScript) + "_*.xml");
-				Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
-				for (File f : files) {
-					deps.add(new Dependency(fullScriptPath, f.getAbsolutePath(), Dependency.INCLUDE_DEPENDENCY,
-							getLineNr(n)));
+				if (scriptFolderFile.exists() && scriptFolderFile.isDirectory()) {
+					AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(includedScript) + "_*.xml");
+					Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
+					for (File f : files) {
+						deps.add(new Dependency(fullScriptPath, f.getAbsolutePath(), Dependency.INCLUDE_DEPENDENCY,getLineNr(n)));
+					}
 				}
 			}
 
@@ -468,10 +472,12 @@ public class TslPreCompiler {
 		// Going to check for tenant-specific include-variants
 		if (scriptTenant == null && !isExpression) {
 			File scriptFolderFile = new File(scriptFolder, cleanScript).getParentFile();
-			AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(cleanScript) + "_*.xml");
-			Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
-			for (File f : files) {
-				deps.add(new Dependency(scriptFile, f.getAbsolutePath(), type, linenr));
+			if (scriptFolderFile.exists() && scriptFolderFile.isDirectory()) {
+				AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(cleanScript) + "_*.xml");
+				Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
+				for (File f : files) {
+					deps.add(new Dependency(scriptFile, f.getAbsolutePath(), type, linenr));
+				}
 			}
 
 		}
