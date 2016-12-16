@@ -25,6 +25,20 @@
          unpack="false"/>
 
    <plugin
+         id="com.dexels.navajo.client.impl.apache"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.client.impl.javanet"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="com.dexels.navajo.client.async"
          download-size="0"
          install-size="0"
