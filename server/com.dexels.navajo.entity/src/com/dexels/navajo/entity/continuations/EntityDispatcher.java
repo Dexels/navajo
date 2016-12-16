@@ -111,7 +111,12 @@ public class EntityDispatcher {
             // named like our request, this is our entity
             entityName = entityName.replace("/", ".");
             String entitySubName = entityName.substring(entityName.lastIndexOf('.')+1);
-            String folder = path.substring(1, path.lastIndexOf("/"));
+            String folder;
+            if (entityName.equals(entitySubName)) {
+            	folder = ""; // Root folder
+            } else {
+            	folder = path.substring(1, path.lastIndexOf("/"));
+            }
             Set<String> entities = myMapper.getEntities(folder);
             String mappedEntity = null;
             for (String s : entities) {

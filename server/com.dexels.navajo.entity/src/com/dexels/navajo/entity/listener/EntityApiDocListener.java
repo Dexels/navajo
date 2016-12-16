@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -99,7 +97,7 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         String sourcetemplate = getTemplate("source.template");
         String operationtemplate = getTemplate("operation.template");
 
-        String result = sourcetemplate.replace("{{ENTITY_PATH}}", path.substring(1));
+        String result = sourcetemplate.replace("{{ENTITY_PATH}}", path);
 
         Set<String> entityNames = myMapper.getEntities(path);
 

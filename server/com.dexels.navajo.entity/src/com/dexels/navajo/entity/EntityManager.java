@@ -1,24 +1,25 @@
 package com.dexels.navajo.entity;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.compiler.tsl.BundleQueue;
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;
+import com.dexels.navajo.script.api.CompiledScriptInterface;
+import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
@@ -30,194 +31,219 @@ import com.dexels.navajo.server.NavajoConfigInterface;
  * 
  */
 public class EntityManager {
-    private final static Logger logger = LoggerFactory.getLogger(EntityManager.class);
+	private final static Logger logger = LoggerFactory.getLogger(EntityManager.class);
 
-    private Map<String, Entity> entityMap = new ConcurrentHashMap<String, Entity>();
-    private Map<String, Map<String, Operation>> operationsMap = new ConcurrentHashMap<String, Map<String, Operation>>();
+	private Map<String, Entity> entityMap = new ConcurrentHashMap<String, Entity>();
+	private Map<String, Map<String, Operation>> operationsMap = new ConcurrentHashMap<String, Map<String, Operation>>();
 
-    private static EntityManager instance;
-    private BundleQueue bundleQueue;
+	private static EntityManager instance;
 
-    private NavajoConfigInterface navajoConfig;
+	private NavajoConfigInterface navajoConfig;
 
 	private DispatcherInterface dispatcher;
 
-    public EntityManager() {
-    }
+	private BundleCreator bundleCreator;
 
-    public void activate() throws Exception {
-        instance = this;
-        buildAndLoadScripts();
-    }
+	private BundleContext bundleContext;
 
-    public void deactivate() {
-        entityMap.clear();
-        operationsMap.clear();
-        instance = null;
-    }
+	public EntityManager() {
+	}
 
-    public static EntityManager getInstance() {
-        return instance;
-    }
+	public void activate(BundleContext bundleContext) throws Exception {
+		instance = this;
+		this.bundleContext = bundleContext;
+	}
 
-    public void setNavajoConfig(NavajoConfigInterface nci) {
-        logger.debug("Setting NavajoConfig");
-        this.navajoConfig = nci;
-    }
+	public void deactivate() {
+		entityMap.clear();
+		operationsMap.clear();
+		instance = null;
+	}
 
-    public void clearNavajoConfig(NavajoConfigInterface nci) {
-        logger.debug("Clearing NavajoConfig");
-        this.navajoConfig = null;
-    }
+	public static EntityManager getInstance() {
+		return instance;
+	}
 
-    public Navajo deriveNavajoFromParameterMap(Entity entity, Map<String, String[]> parameters) {
 
-        Navajo n = NavajoFactory.getInstance().createNavajo();
-        Message m = NavajoFactory.getInstance().createMessage(n, entity.getMessageName());
-        n.addMessage(m);
+	public Navajo deriveNavajoFromParameterMap(Entity entity, Map<String, String[]> parameters) {
 
-        for (String key : parameters.keySet()) {
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		Message m = NavajoFactory.getInstance().createMessage(n, entity.getMessageName());
+		n.addMessage(m);
 
-            String propertyName = key;
-            if (!propertyName.startsWith("/" + entity.getMessageName() + "/")) {
-                propertyName = "/" + entity.getMessageName() + "/" + propertyName;
-            }
-            Property prop = entity.getMessage().getProperty(propertyName);
-            if (prop != null) {
-                Property prop_copy = prop.copy(n);
-                String propValue = parameters.get(key)[0];
-                prop_copy.setUnCheckedStringAsValue(propValue);
-                m.addProperty(prop_copy);
-            }
+		for (String key : parameters.keySet()) {
 
+			String propertyName = key;
+			if (!propertyName.startsWith("/" + entity.getMessageName() + "/")) {
+				propertyName = "/" + entity.getMessageName() + "/" + propertyName;
+			}
+			Property prop = entity.getMessage().getProperty(propertyName);
+			if (prop != null) {
+				Property prop_copy = prop.copy(n);
+				String propValue = parameters.get(key)[0];
+				prop_copy.setUnCheckedStringAsValue(propValue);
+				m.addProperty(prop_copy);
+			}
+
+		}
+
+		return n;
+	}
+
+	public void addOperation(Operation o) {
+		Map<String, Operation> operationEntry = null;
+		if ((operationEntry = operationsMap.get(o.getEntityName())) == null) {
+			operationEntry = new HashMap<String, Operation>();
+			operationsMap.put(o.getEntityName(), operationEntry);
+		}
+		operationEntry.put(o.getMethod(), o);
+	}
+
+	public void removeOperation(Operation o) {
+		Map<String, Operation> operationEntry = null;
+		if ((operationEntry = operationsMap.get(o.getEntityName())) != null) {
+			operationEntry.remove(o.getMethod());
+		}
+	}
+
+	public void registerEntity(Entity e) {
+		logger.info("Registring {}", e.getName());
+		entityMap.put(e.getName(), e);
+		if (operationsMap.get(e.getName()) == null) {
+			operationsMap.put(e.getName(), new HashMap<String, Operation>());
+		}
+	}
+
+	public void removeEntity(Entity e) {
+		entityMap.remove(e.getName());
+		operationsMap.remove(e.getName());
+	}
+
+	public Operation getOperation(String entity, String method) throws EntityException {
+		if (operationsMap.get(entity) != null && operationsMap.get(entity).get(method) != null) {
+			return operationsMap.get(entity).get(method);
+		}
+		if (getEntity(entity) == null) {
+			throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Unknown entity: " + entity);
+		}
+		throw new EntityException(EntityException.OPERATION_NOT_SUPPORTED,
+				"Operation " + method + " not supported for entity: " + entity);
+	}
+
+	public Entity getEntity(String name) {
+		if (name == null) {
+			return null;
+		}
+		Entity e = entityMap.get(name);
+		if (e == null) {
+			// Try lazy compilation
+			e = checkAndLoadScript(name);
+		}
+		return e;
+	}
+
+	public Navajo getEntityNavajo(String serviceName) throws InterruptedException, FatalException {
+		Navajo in = NavajoFactory.getInstance().createNavajo();
+		Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "_internal_", "", -1);
+		in.addHeader(h);
+
+		try {
+			return dispatcher.handle(in, true);
+		} catch (Exception e) {
+			logger.error("Exception on getting the Entity Navajo. - cannot activate {}! {} ", serviceName, e);
+			throw new FatalException("Exception on getting the Entity Navajo.");
+		}
+	}
+	
+
+	private Entity checkAndLoadScript(String entityName) {
+		String scriptPath = navajoConfig.getScriptPath();
+		String entityPath = entityName.replace(".", File.separator);
+		String rpcName = "entity/" + entityPath.replace('.', '/');
+
+		File entityFile = new File(scriptPath + File.separator + "entity", entityPath + ".xml");
+		if (!entityFile.exists()) {
+			return null;
+		}
+		
+		logger.info("getOnDemand of entity {}", entityPath);
+		try {
+			CompiledScriptInterface onDemandScriptService = bundleCreator.getOnDemandScriptService(rpcName, null, false, null);
+			
+			// Also compile all dependencies of this entity
+			for (int i = 0; i < onDemandScriptService.getDependencies().length; i++) {
+	            Dependency d = onDemandScriptService.getDependencies()[i];
+	            if (d instanceof ExtendDependency) {
+	                String extendedEntity = d.getId().replaceAll("/", ".");
+	                checkAndLoadScript(extendedEntity);
+	            }
+	        }
+		} catch (Exception e) {
+			logger.error("Exception on getting compiled service {}", rpcName, e);
+			return null;
+		}
+	
+
+		return getEntityService(entityName);		
+	}
+
+	@SuppressWarnings("unchecked")
+	private Entity getEntityService(String entityName) {
+		String filter = "(entity.name=" + entityName + ")";
+		ServiceReference<Entity>[] servicereferences;
+		try {
+			servicereferences = (ServiceReference<Entity>[]) bundleContext.getServiceReferences(Entity.class.getName(), filter);
+			if (servicereferences != null) {
+				// First try to find one that matches our tenant
+				for (ServiceReference<Entity> srinstance : servicereferences) {
+					Entity entityService = bundleContext.getService(srinstance);
+					if (entityService == null) {
+						logger.warn("Script with filter: " + filter + " found, but could not be resolved.");
+						return null;
+					}
+					return entityService;
+
+				}
+			}
+		} catch (Exception e) {
+           logger.error("Error resolving script service for: {} ",entityName, e);
         }
+		return null;
+	}
 
-        return n;
-    }
+	public Map<String, Map<String, Operation>> getOperationsMap() {
+		return operationsMap;
+	}
 
-    public void addOperation(Operation o) {
-        Map<String, Operation> operationEntry = null;
-        if ((operationEntry = operationsMap.get(o.getEntityName())) == null) {
-            operationEntry = new HashMap<String, Operation>();
-            operationsMap.put(o.getEntityName(), operationEntry);
-        }
-        operationEntry.put(o.getMethod(), o);
-    }
+	public Map<String, Operation> getOperations(String entityName) {
+		return operationsMap.get(entityName);
+	}
+	
 
-    public void removeOperation(Operation o) {
-        Map<String, Operation> operationEntry = null;
-        if ((operationEntry = operationsMap.get(o.getEntityName())) != null) {
-            operationEntry.remove(o.getMethod());
-        }
-    }
+	public void setNavajoConfig(NavajoConfigInterface nci) {
+		logger.debug("Setting NavajoConfig");
+		this.navajoConfig = nci;
+	}
 
-    public void registerEntity(Entity e) {
-        entityMap.put(e.getName(), e);
-        if (operationsMap.get(e.getName()) == null) {
-            operationsMap.put(e.getName(), new HashMap<String, Operation>());
-        }
-    }
+	public void clearNavajoConfig(NavajoConfigInterface nci) {
+		logger.debug("Clearing NavajoConfig");
+		this.navajoConfig = null;
+	}
+	
+	public void setBundleCreator(BundleCreator bundleCreator) throws Exception {
+		this.bundleCreator = bundleCreator;
+	}
 
-    public void removeEntity(Entity e) {
-        entityMap.remove(e.getName());
-        operationsMap.remove(e.getName());
-    }
+	public void clearBundleQueue(BundleCreator bundleCreator) {
+		this.bundleCreator = null;
+	}
 
-    public Operation getOperation(String entity, String method) throws EntityException {
-        if (operationsMap.get(entity) != null && operationsMap.get(entity).get(method) != null) {
-            return operationsMap.get(entity).get(method);
-        }
-        if (getEntity(entity) == null) {
-            throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Unknown entity: " + entity);
-        }
-        throw new EntityException(EntityException.OPERATION_NOT_SUPPORTED, "Operation " + method + " not supported for entity: "
-                + entity);
-    }
+	public void setDispatcher(DispatcherInterface di) {
+		this.dispatcher = di;
+	}
 
-    public Entity getEntity(String name) {
-        Entity e = entityMap.get(name);
-        return e;
-    }
-
-    public List<String> getRegisteredEntities(String packagePath) {
-        Set<String> unsortedResult = new HashSet<String>();
-        // List<String> result = ;
-
-        for (String entity : entityMap.keySet()) {
-            // Reconstruct entity from packagePath + entityName
-            String testName = packagePath + entity.substring(entity.lastIndexOf(".") + 1);
-            if (testName.equals(entity)) {
-                unsortedResult.add(entity);
-            }
-        }
-        List<String> result = new ArrayList<String>(unsortedResult);
-        java.util.Collections.sort(result);
-        return result;
-    }
-
-    private void buildAndLoadScripts() throws Exception {
-        String scriptPath = navajoConfig.getScriptPath();
-        logger.info("Compiling and installing scripts in: {}", scriptPath + File.separator + "entity");
-        File entityDir = new File(scriptPath + File.separator + "entity");
-        if (!entityDir.exists()) {
-            return;
-        }
-
-        buildAndLoadScript(entityDir);
-    }
-
-    // Can be called on file or directory. If on directory, call recursively on each file
-    private void buildAndLoadScript(File file) throws Exception {
-        if (file.isFile()) {
-            String filename = file.toString();
-            if (!filename.endsWith(".xml")) {
-                return;
-            }
-            String script = filename.substring(filename.indexOf("scripts" + File.separator + "entity"), filename.indexOf(".xml"));
-            String stripped = script.substring("scripts".length() + 1);
-            stripped = stripped.replace("\\", "/");
-            bundleQueue.enqueueScript(stripped, ".xml");
-        } else if (file.isDirectory()) {
-            for (File f : file.listFiles()) {
-                buildAndLoadScript(f);
-            }
-        }
-    }
-
-    public void setBundleQueue(BundleQueue queue) throws Exception {
-        this.bundleQueue = queue;
-    }
-
-    public void clearBundleQueue(BundleQueue queue) {
-        this.bundleQueue = null;
-    }
-
-    public void setDispatcher(DispatcherInterface di) {
-    	this.dispatcher = di;
-    }
-    
-    public void clearDispatcher(DispatcherInterface di) {
-    	this.dispatcher = null;
-    }
-    public Navajo getEntityNavajo(String serviceName) throws InterruptedException, FatalException {
-        Navajo in = NavajoFactory.getInstance().createNavajo();
-        Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "_internal_", "", -1);
-        in.addHeader(h);
-
-        try {
-            return dispatcher.handle(in, true);
-        } catch (Exception e) {
-            logger.error("Exception on getting the Entity Navajo. - cannot activate {}! {} ", serviceName, e);
-            throw new FatalException("Exception on getting the Entity Navajo.");
-        }
-    }
-
-    public Map<String, Map<String, Operation>> getOperationsMap() {
-        return operationsMap;
-    }
-
-    public Map<String, Operation> getOperations(String entityName) {
-        return operationsMap.get(entityName);
-    }
+	public void clearDispatcher(DispatcherInterface di) {
+		this.dispatcher = null;
+	}
 
 }

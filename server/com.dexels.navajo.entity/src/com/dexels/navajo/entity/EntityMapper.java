@@ -24,18 +24,7 @@ public class EntityMapper {
     private Map<String, Set<String>> mappings = new HashMap<>();
 
     public void activate() {
-        buildAndLoadScripts();
-    }
-
-    private void buildAndLoadScripts() {
-        String scriptPath = navajoConfig.getScriptPath();
-        logger.info("Compiling and installing scripts in: {}", scriptPath + File.separator + "entity");
-        File entityDir = new File(scriptPath + File.separator + "entity");
-        if (!entityDir.exists()) {
-            return;
-        }
-
-        buildAndLoadScript(entityDir);
+    	processMappings();
     }
     
     public Set<String> getEntities(String path) {
@@ -44,6 +33,18 @@ public class EntityMapper {
         }
         return mappings.get(path);
     }
+
+    private void processMappings() {
+        String scriptPath = navajoConfig.getScriptPath();
+        File entityDir = new File(scriptPath + File.separator + "entity");
+        if (!entityDir.exists()) {
+            return;
+        }
+
+        buildAndLoadScript(entityDir);
+    }
+    
+
 
     // Can be called on file or directory. If on directory, call recursively on
     // each file
@@ -61,12 +62,17 @@ public class EntityMapper {
     }
 
     private void processMapping(File file) {
-        // TODO Auto-generated method stub
         File parentFolder = file.getParentFile();
-        String folderString = parentFolder.toString();
         
-        String pattern = Pattern.quote("scripts" + File.separator + "entity"  + File.separator);
-        String folder = folderString.split(pattern)[1];
+        String folder;
+        if (parentFolder.equals(new File(navajoConfig.getScriptPath() + File.separator + "entity"))) {
+        	folder = ""; // Root folder
+        } else {
+        	String folderString = parentFolder.toString();
+        	String pattern = Pattern.quote("scripts" + File.separator + "entity");
+            folder = folderString.split(pattern)[1];
+        }
+
         Set<String> existing = mappings.get(folder);
         if (existing == null) {
             existing = new HashSet<>();
