@@ -1,5 +1,4 @@
 
-
 /**
  * Title:        Navajo<p>
  * Description:  <p>
@@ -10,26 +9,31 @@
  */
 package com.dexels.navajo.client;
 
-public class ClientException extends Exception {
+import java.io.IOException;
 
-   private static final long serialVersionUID = 75302782005830988L;
-	private int code;
+public class ClientException extends IOException {
+
+    private static final long serialVersionUID = 75302782005830988L;
+    private int code;
     private int level;
 
     public ClientException(int level, int code, String message) {
-    	super(message);
+        super(message);
         this.code = code;
         this.level = level;
     }
 
     public ClientException(int level, int code, String message, Throwable cause) {
-    	super(message,cause);
+        super(message, cause);
         this.code = code;
         this.level = level;
     }
 
-    
-    public int getCode() {
+    public ClientException(String message) {
+		this(-1,-1,message);
+	}
+
+	public int getCode() {
         return this.code;
     }
 

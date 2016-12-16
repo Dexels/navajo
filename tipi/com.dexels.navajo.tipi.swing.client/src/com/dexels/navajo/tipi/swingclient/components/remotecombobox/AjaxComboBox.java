@@ -433,14 +433,14 @@ public class AjaxComboBox extends JComboBox {
 
 		t.setSize(400, 500);
 		t.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		ClientInterface cc = NavajoClientFactory.getClient();
+		ClientInterface cc = NavajoClientFactory.createClient();
 		cc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
 		cc.setUsername("");
 		cc.setPassword("");
 
 		final JButton myValue = new JButton("nada");
 		final Navajo init = NavajoClientFactory.getClient().doSimpleSend(
-				"club/InitSearchClubs");
+				null, "club/InitSearchClubs");
 		// t.getContentPane().add(new JButton("a"));
 		localCombo = new AjaxComboBox();
 		localCombo.setMessagePath("Club");

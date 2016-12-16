@@ -40,7 +40,6 @@ import tipipackage.ITipiExtensionContainer;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
-import com.dexels.navajo.client.ConditionErrorHandler;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.document.Header;
@@ -280,7 +279,24 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
         myParentContext = parent;
         initializeExtensions(preload.iterator());
-        clientInterface = NavajoClientFactory.getClient();
+        
+        // Non-osgi activation...
+        try {
+			Class<ClientInterface> clazz = (Class<ClientInterface>) Class.forName("com.dexels.navajo.client.impl.javanet.NavajoClientImplJavanet");
+			NavajoClientFactory.setDefaultClient(clazz.newInstance());
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        
+        clientInterface = NavajoClientFactory.createClient();
 
         if (myThreadPool == null) {
             myThreadPool = new TipiThreadPool(this, getPoolSize());
@@ -593,7 +609,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         navajoPassword = (String) attemptGenericEvaluate(config.getStringAttribute("password", ""));
         setSystemProperty("tipi.client.password", navajoPassword);
         boolean forceGzip = (Boolean) attemptGenericEvaluate(config.getStringAttribute("forceGzip", "false"));
-        boolean secure = (Boolean) attemptGenericEvaluate(config.getStringAttribute("https", "false"));
 
         logger.info("Connecting to server: " + navajoServer);
         if (!impl.equals("direct")) {
@@ -604,7 +619,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             getClient().setUsername(navajoUsername);
             getClient().setPassword(navajoPassword);
             getClient().setForceGzip(forceGzip);
-            getClient().setHttps(secure);
+
         } else {
             throw new UnsupportedOperationException("Sorry, I deprecated the direct client for tipi usage");
         }
@@ -1593,17 +1608,17 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
      * @deprecated
      */
     @Deprecated
-    private Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval,
+    private Navajo doSimpleSend(Navajo n, String service, long expirtationInterval,
             String hosturl, String username, String password, String keystore, String keypass, boolean breakOnError)
             throws TipiBreakException {
-        return doSimpleSend(n, service, ch, expirtationInterval, hosturl, username, password, breakOnError);
+        return doSimpleSend(n, service, expirtationInterval, hosturl, username, password, breakOnError);
     }
 
     /**
      * @deprecated
      */
     @Deprecated
-    private Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval,
+    private Navajo doSimpleSend(Navajo n, String service, long expirtationInterval,
             String hosturl, String username, String password, boolean breakOnError) throws TipiBreakException {
         Navajo reply = null;
         try {
@@ -1615,11 +1630,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                 getClient().setServerUrl(hosturl);
                 getClient().setUsername(username);
                 getClient().setPassword(password);
-                reply = getClient().doSimpleSend(n, service, ch, expirtationInterval);
+                reply = getClient().doSimpleSend(n, service);
                 // getClient().setServerUrl(url);
                 debugLog("data", "simpleSend to host: " + hosturl + " username: " + username + " method: " + service);
             } else {
-                reply = getClient().doSimpleSend(n, service, ch, expirtationInterval);
+                reply = getClient().doSimpleSend(n, service);
                 debugLog("data", "simpleSend method: " + service);
             }
         } catch (Throwable ex) {
@@ -1647,7 +1662,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             String password, String keystore, String keypass) throws TipiBreakException {
 
         fireNavajoSent(n, method);
-        Navajo reply = doSimpleSend(n, method, null, expirationInterval, hosturl, username, password, keystore,
+        Navajo reply = doSimpleSend(n, method, expirationInterval, hosturl, username, password, keystore,
                 keypass, breakOnError);
         fireNavajoReceived(reply, method);
 
