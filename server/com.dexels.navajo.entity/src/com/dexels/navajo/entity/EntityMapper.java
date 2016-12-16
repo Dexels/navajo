@@ -90,9 +90,9 @@ public class EntityMapper implements EventHandler {
 			String folderString = parentFolder.toString();
 			String pattern = Pattern.quote("scripts" + File.separator + "entity");
 			folder = folderString.split(pattern)[1];
-		}
-		if (folder.startsWith(File.separator)) {
-			folder = folder.substring(1);
+			if (folder.startsWith(File.separator)) {
+				folder = folder.substring(1);
+			}
 		}
 
 		Set<String> existing = mappings.get(folder);
@@ -128,6 +128,14 @@ public class EntityMapper implements EventHandler {
 			Set<String> changedScripts = new HashSet<String>(RepositoryEventParser.filterChanged(e, ENTITY_FOLDER));
 			Set<String> deletedScripts = new HashSet<String>(RepositoryEventParser.filterDeleted(e, ENTITY_FOLDER));
 
+			for (String changed : deletedScripts) {
+				if (changed.endsWith("entitymapping.xml")) {
+					String folder = getFolder(changed);
+					logger.info("Removing entity mappings for {}", folder);
+					mappings.remove(folder);
+				}
+			}
+			
 			for (String changed : changedScripts) {
 				if (changed.endsWith("entitymapping.xml")) {
 					logger.debug("Updating mappings for {}", changed);
@@ -136,13 +144,7 @@ public class EntityMapper implements EventHandler {
 					processMapping(new File(navajoConfig.getRootPath(), changed));
 				}
 			}
-			for (String changed : deletedScripts) {
-				if (changed.endsWith("entitymapping.xml")) {
-					String folder = getFolder(changed);
-					logger.info("Removing entity mappings for {}", folder);
-					mappings.remove(folder);
-				}
-			}
+			
 		} catch (Throwable t) {
 			logger.error("Error while handling event!", t);
 		}
