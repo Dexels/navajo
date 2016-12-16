@@ -41,14 +41,14 @@ public class EntityMapper {
             return;
         }
 
-        buildAndLoadScript(entityDir);
+        processMappings(entityDir);
     }
     
 
 
     // Can be called on file or directory. If on directory, call recursively on
     // each file
-    private void buildAndLoadScript(File file) {
+    private void processMappings(File file) {
         if (file.isFile()) {
             String filename = file.toString();
             if (filename.endsWith("entitymapping.xml")) {
@@ -56,7 +56,7 @@ public class EntityMapper {
             }
         } else if (file.isDirectory()) {
             for (File f : file.listFiles()) {
-                buildAndLoadScript(f);
+            	processMappings(f);
             }
         }
     }
@@ -79,14 +79,12 @@ public class EntityMapper {
             mappings.put(folder,  existing);
         }
         try(FileReader fr = new FileReader(file);) {
-
             Navajo n = NavajoFactory.getInstance().createNavajo(fr);
             for (Message m : n.getMessage("entities").getElements()) {
                 String entityPath = m.getProperty("entity").getValue();
                 entityPath = entityPath.replace('/', '.');
                 existing.add(entityPath);
             }
-
         } catch (IOException e) {
             logger.error("IOException on reading entitymapping {}", file.toString(), e);
         }
