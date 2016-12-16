@@ -403,6 +403,10 @@ public class TslPreCompiler {
     
     private void addScriptDependency(String scriptFile, String scriptTenant, List<Dependency> deps,
             String navajoScript, String scriptFolder, int linenr, int type) {
+    	boolean isExpression = false;
+    	if (navajoScript.startsWith("[/")) {
+    		isExpression = true;
+    	}
         String cleanScript = navajoScript.replace("'", "");
         if (type == Dependency.ENTITY_DEPENDENCY) {
             cleanScript = "entity/" + cleanScript;
@@ -425,7 +429,7 @@ public class TslPreCompiler {
 
         // Check if exists
         boolean isBroken = false;
-        if (!new File(navajoScriptFile).exists()) {
+        if (!new File(navajoScriptFile).exists() && !isExpression) {
             isBroken = true;
         }
         
@@ -435,7 +439,7 @@ public class TslPreCompiler {
 
         
         // Going to check for tenant-specific include-variants
-        if (scriptTenant == null) {
+        if (scriptTenant == null && !isExpression) {
             File scriptFolderFile = new File(scriptFolder, cleanScript).getParentFile();
             AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(cleanScript) + "_*.xml");
             Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
