@@ -60,6 +60,9 @@ public class EntityManager {
 	}
 
 	public Entity getEntity(String name) {
+	    if (name == null) {
+	        return null;
+	    }
 		Entity e = entityMap.get(name);
 		if (e == null && lazy) {
 			// Try lazy compilation
