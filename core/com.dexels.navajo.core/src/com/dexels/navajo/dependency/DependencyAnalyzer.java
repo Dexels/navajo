@@ -42,14 +42,15 @@ public class DependencyAnalyzer {
     }
 
     public void addDependencies(String script) {
-        synchronized (script) {
-            Thread t = Thread.currentThread();
-            ClassLoader cl = t.getContextClassLoader();
-            t.setContextClassLoader(getClass().getClassLoader());
-            try {
-                List<Dependency> myDependencies = new ArrayList<Dependency>();
-                String scriptTenant = tenantFromScriptPath(script);
 
+        Thread t = Thread.currentThread();
+        ClassLoader cl = t.getContextClassLoader();
+        t.setContextClassLoader(getClass().getClassLoader());
+        try {
+            List<Dependency> myDependencies = new ArrayList<Dependency>();
+            String scriptTenant = tenantFromScriptPath(script);
+
+            synchronized (script) {
                 try {
                     precompiler.getAllDependencies(script, scriptFolder, myDependencies, scriptTenant);
                     // codeSearch.getAllWorkflowDependencies(scriptFile,
@@ -62,17 +63,16 @@ public class DependencyAnalyzer {
                 dependencies.put(script, myDependencies);
 
                 updateReverseDependencies(myDependencies);
-
-                // Also ensure any includes I depend on, have their dependencies
-                // set correct
-                for (Dependency dep : myDependencies) {
-                    if (dep.getType() == Dependency.INCLUDE_DEPENDENCY) {
-                        addDependencies(dep.getDependee());
-                    }
-                }
-            } finally {
-                t.setContextClassLoader(cl);
             }
+            // Also ensure any includes I depend on, have their dependencies
+            // set correct
+            for (Dependency dep : myDependencies) {
+                if (dep.getType() == Dependency.INCLUDE_DEPENDENCY) {
+                    addDependencies(dep.getDependee());
+                }
+            }
+        } finally {
+            t.setContextClassLoader(cl);
         }
 
     }
