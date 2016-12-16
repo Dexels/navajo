@@ -43,8 +43,9 @@ public class EntityManager {
 	private BundleQueue bundleQueue;
 	private boolean lazy;
 
-	public void activate() throws Exception {
+	public void activate(BundleContext bundleContext) throws Exception {
 		instance = this;
+		this.bundleContext = bundleContext;
 		buildAndLoadScripts();
 	}
 
@@ -225,6 +226,14 @@ public class EntityManager {
 
 	public void clearBundleQueue(BundleQueue queue) {
 		this.bundleQueue = null;
+	}
+	
+	public void setBundleCreator(BundleCreator bundleCreator) throws Exception {
+		this.bundleCreator = bundleCreator;
+	}
+
+	public void clearBundleQueue(BundleCreator bundleCreator) {
+		this.bundleCreator = null;
 	}
 
 	public void setDispatcher(DispatcherInterface di) {
