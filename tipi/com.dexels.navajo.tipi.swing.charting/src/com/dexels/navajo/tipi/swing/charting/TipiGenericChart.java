@@ -36,6 +36,7 @@ public class TipiGenericChart extends TipiSwingDataComponentImpl {
 	private String messagePath = "HistoricOverview";
 	private String type = "";
 	private String title = "Title";
+	private boolean show3D = false;
 	private Color backgroundColor = null;
 	
 	@Override
@@ -75,15 +76,31 @@ public class TipiGenericChart extends TipiSwingDataComponentImpl {
 	      
 	      JFreeChart f = null;
 	      if ( type.equals("bar")) {
-	       f = ChartFactory.createBarChart(title, xAxisTitle, yAxisTitle, dataSet, PlotOrientation.VERTICAL, true, true, false);
+	    	  if ( show3D ) {
+	    		  f = ChartFactory.createBarChart3D(title, xAxisTitle, yAxisTitle, dataSet, PlotOrientation.VERTICAL, true, true, false);
+	    	  } else {
+	    		  f = ChartFactory.createBarChart(title, xAxisTitle, yAxisTitle, dataSet, PlotOrientation.VERTICAL, true, true, false);
+	    	  }
 	      } else if ( type.equals("pie") ) {
 	    	  if ( !hasMultipleSeries ) {
-	    		  f = ChartFactory.createPieChart(title, pieDataSet, true, true, false);
+		    	  if ( show3D ) {
+		    		  f = ChartFactory.createPieChart3D(title, pieDataSet, true, true, false);
+		    	  } else {
+		    		  f = ChartFactory.createPieChart(title, pieDataSet, true, true, false);
+		    	  }
 	    	  } else {
-	    		  f = ChartFactory.createMultiplePieChart(title, dataSet, TableOrder.BY_COLUMN, true, true, false);
+		    	  if ( show3D ) {
+		    		  f = ChartFactory.createMultiplePieChart3D(title, dataSet, TableOrder.BY_COLUMN, true, true, false);
+		    	  } else {
+		    		  f = ChartFactory.createMultiplePieChart(title, dataSet, TableOrder.BY_COLUMN, true, true, false);
+		    	  }
 	    	  }
 	      } else {
-	    	  f = ChartFactory.createLineChart(title, xAxisTitle, yAxisTitle, dataSet, PlotOrientation.VERTICAL, true, true, false);
+	    	  if ( show3D ) {
+		    	  f = ChartFactory.createLineChart3D(title, xAxisTitle, yAxisTitle, dataSet, PlotOrientation.VERTICAL, true, true, false);
+	    	  } else {
+		    	  f = ChartFactory.createLineChart(title, xAxisTitle, yAxisTitle, dataSet, PlotOrientation.VERTICAL, true, true, false);
+	    	  }
 	      }
 	     
 	      return f;
@@ -116,6 +133,10 @@ public class TipiGenericChart extends TipiSwingDataComponentImpl {
 		
 		if("value".equals(name)){
 			this.value = object.toString();
+		}
+		
+		if("show3D".equals(name)){
+			this.show3D = (Boolean)object;
 		}
 		
 		if("messagePath".equals(name)){
