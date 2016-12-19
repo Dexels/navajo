@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -98,7 +99,7 @@ public class EntityMapper implements EventHandler {
 
 		Set<String> existing = mappings.get(folder);
 		if (existing == null) {
-			existing = new HashSet<>();
+			existing = new LinkedHashSet<>();
 			mappings.put(folder, existing);
 		}
 		try (FileReader fr = new FileReader(file);) {
