@@ -281,22 +281,27 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         initializeExtensions(preload.iterator());
         
         // Non-osgi activation...
+        Class<ClientInterface> clazz = null;
         try {
-			Class<ClientInterface> clazz = (Class<ClientInterface>) Class.forName("com.dexels.navajo.client.impl.apache.ApacheNavajoClientImpl");
+			clazz = (Class<ClientInterface>) Class.forName("com.dexels.navajo.client.impl.apache.ApacheNavajoClientImpl");
 			if (clazz == null) {
 			    clazz = (Class<ClientInterface>) Class.forName( "com.dexels.navajo.client.impl.javanet.JavaNetNavajoClientImpl");
 			} 
-			NavajoClientFactory.setDefaultClient(clazz.newInstance());
 		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    try {
+                clazz = (Class<ClientInterface>) Class.forName( "com.dexels.navajo.client.impl.javanet.JavaNetNavajoClientImpl");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
 		}
+        try {
+            NavajoClientFactory.setDefaultClient(clazz.newInstance());
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+       
         
         
         clientInterface = NavajoClientFactory.createClient();
