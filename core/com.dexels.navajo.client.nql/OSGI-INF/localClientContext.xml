@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="com.dexels.navajo.local.context">
-   <implementation class="com.dexels.navajo.server.internal.LocalNavajoContext"/>
+   <implementation class="com.dexels.navajo.client.context.LocalNavajoContext"/>
    <service>
       <provide interface="com.dexels.navajo.client.context.ClientContext"/>
    </service>
