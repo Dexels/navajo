@@ -1112,7 +1112,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             msgPointer = null;
             return;
         }
-        if (m.startsWith("/")) {
+        if (msgPointer != null && m.startsWith("/")) {
             // Allow resetting messagepointer when starting with / - See https://github.com/Dexels/navajo/issues/374 
             // To refine within the current message start without slash
             logger.info("Resetting existing message pointer from {}!", messagePointerString);
