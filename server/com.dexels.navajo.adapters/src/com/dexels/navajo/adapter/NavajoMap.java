@@ -106,7 +106,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     public MessageMap[] messages;
     public OptionMap[] selections;
 
-    public String messagePointer;
+    public String messagePointerString;
 
     public int serverTimeout = -1;
     public String selectionPointer = null;
@@ -470,8 +470,8 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     public void setPropertyName(String fullName) throws UserException {
-        currentFullName = ((messagePointer == null || messagePointer.equals("")) ? fullName
-                : messagePointer + "/" + ((fullName.length() > 0 && fullName.charAt(0) == '/' ? fullName.substring(1) : fullName)));
+        currentFullName = ((messagePointerString == null || messagePointerString.equals("")) ? fullName
+                : messagePointerString + "/" + ((fullName.length() > 0 && fullName.charAt(0) == '/' ? fullName.substring(1) : fullName)));
         String propName = MappingUtils.getStrippedPropertyName(fullName);
         try {
             if (msgPointer != null)
@@ -1106,15 +1106,20 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
      * @throws UserException
      */
     public void setMessagePointer(String m) throws UserException {
-
         waitForResult();
 
-        this.messagePointer = m;
         if (m.equals("")) {
             msgPointer = null;
             return;
         }
-        msgPointer = (msgPointer == null ? inDoc.getMessage(messagePointer) : msgPointer.getMessage(messagePointer));
+        if (m.startsWith("/")) {
+            // Allow resetting messagepointer when starting with / - See https://github.com/Dexels/navajo/issues/374 
+            // To refine within the current message start without slash
+            logger.info("Resetting existing message pointer from {}!", messagePointerString);
+            msgPointer = null;
+        }
+        this.messagePointerString = m;
+        msgPointer = (msgPointer == null ? inDoc.getMessage(messagePointerString) : msgPointer.getMessage(messagePointerString));
 
     }
 
@@ -1147,7 +1152,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
         try {
             List<Message> all = msgPointer.getAllMessages(); // inDoc.getMessages(messagePointer);
             if ((all == null))
-                throw new UserException(-1, "Could not find messages: " + messagePointer + " in response document");
+                throw new UserException(-1, "Could not find messages: " + messagePointerString + " in response document");
             messages = new MessageMap[all.size()];
             for (int i = 0; i < all.size(); i++) {
                 MessageMap msg = new MessageMap();
@@ -1792,7 +1797,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     public String getMessagePointer() {
-        return messagePointer;
+        return messagePointerString;
     }
 
     public boolean getUseCurrentOutDoc() {
