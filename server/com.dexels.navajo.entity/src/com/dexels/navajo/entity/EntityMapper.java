@@ -93,6 +93,7 @@ public class EntityMapper implements EventHandler {
 			if (folder.startsWith(File.separator)) {
 				folder = folder.substring(1);
 			}
+			folder = folder.replace("\\", "/");
 		}
 
 		Set<String> existing = mappings.get(folder);

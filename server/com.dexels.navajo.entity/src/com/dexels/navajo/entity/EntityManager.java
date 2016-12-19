@@ -173,7 +173,7 @@ public class EntityManager {
 	private Entity checkAndLoadScript(String entityName) {
 		String scriptPath = navajoConfig.getScriptPath();
 		String entityPath = entityName.replace(".", File.separator);
-		String rpcName = "entity/" + entityPath.replace('.', '/');
+		String rpcName = "entity/" + entityName.replace('.', '/');
 
 		File entityFile = new File(scriptPath + File.separator + "entity", entityPath + ".xml");
 		if (!entityFile.exists()) {
