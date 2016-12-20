@@ -1,10 +1,13 @@
 package com.dexels.navajo.entity.util;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.entity.Entity;
 
 public class EntityHelper {
 
@@ -86,4 +89,30 @@ public class EntityHelper {
 			}
 		}
 	}
+	
+	public static Navajo deriveNavajoFromParameterMap(Entity entity, Map<String, String[]> parameters) {
+
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		Message m = NavajoFactory.getInstance().createMessage(n, entity.getMessageName());
+		n.addMessage(m);
+
+		for (String key : parameters.keySet()) {
+
+			String propertyName = key;
+			if (!propertyName.startsWith("/" + entity.getMessageName() + "/")) {
+				propertyName = "/" + entity.getMessageName() + "/" + propertyName;
+			}
+			Property prop = entity.getMessage().getProperty(propertyName);
+			if (prop != null) {
+				Property prop_copy = prop.copy(n);
+				String propValue = parameters.get(key)[0];
+				prop_copy.setUnCheckedStringAsValue(propValue);
+				m.addProperty(prop_copy);
+			}
+
+		}
+
+		return n;
+	}
+
 }

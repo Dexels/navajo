@@ -138,12 +138,14 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
             }
 
             String extension = stripped.substring(dotIndex, stripped.length());
+            String scriptName = stripped.substring(0, dotIndex);
             if (!SUPPORTED_EXTENSIONS.contains(extension)) {
                 logger.info("Ignoring file delete {} due to non-matching extension: {} ", deletedScript, extension);
                 return;
             }
-
-            String scriptName = stripped.substring(0, dotIndex);
+            if (scriptName.endsWith("entitymapping")) {
+            	continue;
+            }
             enqueueDeleteScript(scriptName);
         }
     }
@@ -168,6 +170,9 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
                     if (!SUPPORTED_EXTENSIONS.contains(extension)) {
                         logger.info("Ignoring file update {} due to non-matching extension: {} ", scriptName, extension);
                         continue;
+                    }
+                    if (scriptName.endsWith("entitymapping")) {
+                    	continue;
                     }
                     enqueueScript(scriptName, extension);
                     enqueueDependentScripts(scriptName, new HashSet<String>());
