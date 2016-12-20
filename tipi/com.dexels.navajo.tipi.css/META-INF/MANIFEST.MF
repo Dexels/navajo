@@ -25,7 +25,8 @@ Import-Package: com.dexels.navajo.client;version="1.0.0",
  org.w3c.dom.css,
  org.w3c.dom.stylesheets,
  tipi
-Require-Bundle: com.dexels.navajo.tipi.css.tkui;bundle-version="1.0.12"
+Require-Bundle: com.dexels.navajo.tipi.css.tkui;bundle-version="1.0.12",
+ com.dexels.navajo.client.impl.javanet;bundle-version="0.9.0"
 Export-Package: com.dexels.navajo.tipi.css.actions
 Bundle-ClassPath: .
 Service-Component: OSGI-INF/tipi.css.contextextender.xml
