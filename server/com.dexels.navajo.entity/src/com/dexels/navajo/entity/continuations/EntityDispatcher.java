@@ -134,10 +134,7 @@ public class EntityDispatcher {
                 throw new EntityException(EntityException.BAD_REQUEST);
             }
 
-            // Create a header from the input
-            Header header = NavajoFactory.getInstance().createHeader(input, "", "dummy", "dummy", -1);
-            input.addHeader(header);
-            
+           
             Operation o = myManager.getOperation(entityName, method);
             o.setTenant(tenant);
 
@@ -145,7 +142,7 @@ public class EntityDispatcher {
             Long startAuth = System.currentTimeMillis();
             String scriptName = "entity/" + entityName.replace('.', '/');
             
-            access = new Access(1, 1, "dummy", scriptName, "", "", "", null, false, null);
+            access = new Access(1, 1, "placeholder", scriptName, "", "", "", null, false, null);
             access.setOperation(o);
             access.ipAddress = ip;
             
@@ -155,6 +152,9 @@ public class EntityDispatcher {
                 logger.warn("Auth exception: ", auth);
                 throw new EntityException(EntityException.UNAUTHORIZED);
             }
+            // Create a header from the input
+            Header header = NavajoFactory.getInstance().createHeader(input, "", access.rpcUser, access.rpcPwd, -1);
+            input.addHeader(header);
             
             access.created = new Date(runner.getStartedAt());
             access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
