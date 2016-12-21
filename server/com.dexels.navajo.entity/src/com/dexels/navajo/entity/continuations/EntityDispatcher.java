@@ -129,7 +129,7 @@ public class EntityDispatcher {
                 }
             }
 
-            Entity e = myManager.getEntity(entityName);
+            Entity e = myManager.getEntity(mappedEntity);
 
             if (e == null) {
                 // Requested entity not found
