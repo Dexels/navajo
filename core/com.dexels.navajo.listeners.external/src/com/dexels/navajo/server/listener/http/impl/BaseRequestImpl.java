@@ -139,7 +139,7 @@ public class BaseRequestImpl implements AsyncRequest {
 		BufferedReader r;
 		//InputStream is = getRequestInputStream();
 		Navajo in = null;
-		logger.debug("Send encoding: "+contentEncoding);
+		logger.debug("Parsing using encoding: "+contentEncoding);
 		if (contentEncoding != null
 				&& contentEncoding.equals(AsyncRequest.COMPRESS_JZLIB)) {
 			r = new BufferedReader(new java.io.InputStreamReader(
