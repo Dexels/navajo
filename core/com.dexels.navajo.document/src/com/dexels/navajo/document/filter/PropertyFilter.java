@@ -62,10 +62,18 @@ private boolean checkProperty(Property p) throws NavajoException {
       return true;
     }
     if ("==".equals(myOperator)) {
-      return p.compareTo(myValue)==0;
+    	if ( (p.getTypedValue() == null || p.getTypedValue().equals("")) && (myValue.getTypedValue() == null || myValue.getTypedValue().equals("")) ) {
+    		return true;
+    	} else {
+    	      return p.compareTo(myValue)==0;
+    	}
     }
     if ("!=".equals(myOperator)) {
-      return p.compareTo(myValue)!=0;
+    	if ( (p.getTypedValue() == null || p.getTypedValue().equals("")) && (myValue.getTypedValue() == null || myValue.getTypedValue().equals("")) ) {
+    		return false;
+    	} else {
+    		return p.compareTo(myValue)!=0;
+    	}
     }
     if (">".equals(myOperator)) {
       return p.compareTo(myValue)>0;
@@ -74,10 +82,18 @@ private boolean checkProperty(Property p) throws NavajoException {
       return p.compareTo(myValue)<0;
     }
     if (">=".equals(myOperator)) {
-      return p.compareTo(myValue)>=0;
+    	if ( (p.getTypedValue() == null || p.getTypedValue().equals("")) && (myValue.getTypedValue() == null || myValue.getTypedValue().equals("")) ) {
+    		return true;
+    	} else {
+    		return p.compareTo(myValue)>=0;
+    	}
     }
     if ("<=".equals(myOperator)) {
-      return p.compareTo(myValue)<=0;
+    	if ( (p.getTypedValue() == null || p.getTypedValue().equals("")) && (myValue.getTypedValue() == null || myValue.getTypedValue().equals("")) ) {
+    		return true;
+    	} else {
+    		return p.compareTo(myValue)<=0;
+    	}
     }
     if ("startsWith".equals(myOperator) && "string".equals(p.getType())) {
     	if(p.getValue() != null){
