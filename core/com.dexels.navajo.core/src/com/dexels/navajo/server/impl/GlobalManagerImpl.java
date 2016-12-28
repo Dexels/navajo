@@ -2,7 +2,6 @@ package com.dexels.navajo.server.impl;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -55,47 +54,56 @@ public class GlobalManagerImpl implements GlobalManager {
 
         Message msg = inMessage.getMessage(GLOBALSMSGNAME);
 
-        Message paramMsg = null;
+        Message globalsMsg = null;
         if (msg != null) {
-            paramMsg = msg;
+            globalsMsg = msg;
         } else {
-            paramMsg = NavajoFactory.getInstance().createMessage(inMessage, GLOBALSMSGNAME);
-            inMessage.addMessage(paramMsg);
+            globalsMsg = NavajoFactory.getInstance().createMessage(inMessage, GLOBALSMSGNAME);
+            inMessage.addMessage(globalsMsg);
         }
 
         Property nu = NavajoFactory.getInstance().createProperty(inMessage, "NavajoUser", Property.STRING_PROPERTY, username, 50, "", Property.DIR_OUT);
-        paramMsg.addProperty(nu);
+        globalsMsg.addProperty(nu);
         Property nm = NavajoFactory.getInstance().createProperty(inMessage, "NavajoMethod", Property.STRING_PROPERTY, method, 50, "", Property.DIR_OUT);
-        paramMsg.addProperty(nm);
-        if (paramMsg.getProperty("UpdateBy") == null) {
+        globalsMsg.addProperty(nm);
+        if (globalsMsg.getProperty("UpdateBy") == null) {
             // ensure it exists
             Property ui = NavajoFactory.getInstance().createProperty(inMessage, "UpdateBy", Property.STRING_PROPERTY, username, 50, "", Property.DIR_OUT);
-            paramMsg.addProperty(ui);
+            globalsMsg.addProperty(ui);
         }
-        appendMapToInput(inMessage, extraParams);
+        appendMapToGlobals(inMessage, extraParams);
     }
 
-    public static void appendMapToInput(Navajo inMessage, Map<String, String> extraParams) {
+    public static void appendMapToGlobals(Navajo inMessage, Map<String, String> extraParams) {
+        Map<String, Object> newMap = new HashMap<>(extraParams);
+        appendMapToInput(inMessage, newMap, GLOBALSMSGNAME);
+    }
+    
+    public static void appendMapToParms(Navajo inMessage, Map<String, Object> extraParams) {
+        appendMapToInput(inMessage, extraParams, Message.MSG_PARAMETERS_BLOCK);
+    }
+    
+    public static void appendMapToAAA(Navajo inMessage, Map<String, Object> extraParams) {
+        appendMapToInput(inMessage, extraParams, Message.MSG_AAA_BLOCK);
+    }
 
-        Message msg = inMessage.getMessage(GLOBALSMSGNAME);
+    private static void appendMapToInput(Navajo inMessage, Map<String, Object> extraParams, String msgName) {
+        Message msg = inMessage.getMessage(msgName);
 
         Message paramMsg = null;
         if (msg != null) {
             paramMsg = msg;
         } else {
-            paramMsg = NavajoFactory.getInstance().createMessage(inMessage, GLOBALSMSGNAME);
+            paramMsg = NavajoFactory.getInstance().createMessage(inMessage, msgName);
             inMessage.addMessage(paramMsg);
         }
 
         if (extraParams != null) {
-            for (Iterator<Entry<String, String>> iter = extraParams.entrySet().iterator(); iter.hasNext();) {
-                Entry<String, String> e = iter.next();
-                String key = e.getKey();
-                String value = e.getValue();
-                Property p2 = NavajoFactory.getInstance().createProperty(inMessage, key, Property.STRING_PROPERTY, value, 10, "", Property.DIR_OUT);
+            for (String key : extraParams.keySet()) {
+                Property p2 = NavajoFactory.getInstance().createProperty(inMessage, key, Property.STRING_PROPERTY, "", 10, "", Property.DIR_OUT);
+                p2.setAnyValue(extraParams.get(key));
                 paramMsg.addProperty(p2);
             }
-
         }
     }
 
