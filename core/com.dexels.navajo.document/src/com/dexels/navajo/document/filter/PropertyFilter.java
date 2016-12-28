@@ -103,22 +103,22 @@ public final class PropertyFilter {
             } else if (p.getType().equals(Property.SELECTION_PROPERTY)) {
                 return p.getSelected().getName().startsWith(myValue.getSelected().getName().toLowerCase());
             }
-            
+
             return p.getValue().startsWith(myValue.getValue());
         }
         if ("endsWith".equals(myOperator)) {
             if (p.getType().equals(Property.STRING_PROPERTY)) {
                 if (p.getValue() != null) {
                     return p.getValue().toLowerCase().endsWith(((String) myValue.getTypedValue()).toLowerCase());
-                } 
+                }
                 return false;
             } else if (p.getType().equals(Property.SELECTION_PROPERTY)) {
                 return p.getSelected().getName().endsWith(myValue.getSelected().getName().toLowerCase());
             }
-            
+
             return p.getValue().endsWith(myValue.getValue());
         }
-       
+
         if ("contains".equals(myOperator)) {
             if (p.getType().equals(Property.STRING_PROPERTY)) {
                 if (p.getValue() != null) {
@@ -140,7 +140,7 @@ public final class PropertyFilter {
                     }
                 }
                 return false;
-            } else if (p.getValue() != null){
+            } else if (p.getValue() != null) {
                 return p.getValue().indexOf(myValue.getValue()) >= 0;
             }
             return false;
