@@ -75,7 +75,8 @@ public class GlobalManagerImpl implements GlobalManager {
     }
 
     public static void appendMapToGlobals(Navajo inMessage, Map<String, String> extraParams) {
-        Map<String, Object> newMap = new HashMap<>(extraParams);
+        Map<String, Object> newMap = new HashMap<>();
+        newMap.putAll(extraParams);
         appendMapToInput(inMessage, newMap, GLOBALSMSGNAME);
     }
     
