@@ -61,14 +61,14 @@ public final class PropertyFilter {
             return true;
         }
         if ("==".equals(myOperator)) {
-            if ((p.getTypedValue() == null || p.getTypedValue().equals("")) && (myValue.getTypedValue() == null || myValue.getTypedValue().equals(""))) {
+            if (nullOrEmpty(p)) {
                 return true;
             } else {
                 return p.compareTo(myValue) == 0;
             }
         }
         if ("!=".equals(myOperator)) {
-            if ((p.getTypedValue() == null || p.getTypedValue().equals("")) && (myValue.getTypedValue() == null || myValue.getTypedValue().equals(""))) {
+            if (nullOrEmpty(p)) {
                 return false;
             } else {
                 return p.compareTo(myValue) != 0;
@@ -81,56 +81,51 @@ public final class PropertyFilter {
             return p.compareTo(myValue) < 0;
         }
         if (">=".equals(myOperator)) {
-            if ((p.getTypedValue() == null || p.getTypedValue().equals("")) && (myValue.getTypedValue() == null || myValue.getTypedValue().equals(""))) {
+            if (nullOrEmpty(p)) {
                 return true;
             } else {
                 return p.compareTo(myValue) >= 0;
             }
         }
         if ("<=".equals(myOperator)) {
-            if ((p.getTypedValue() == null || p.getTypedValue().equals("")) && (myValue.getTypedValue() == null || myValue.getTypedValue().equals(""))) {
+            if (nullOrEmpty(p)) {
                 return true;
             } else {
                 return p.compareTo(myValue) <= 0;
             }
         }
-        if ("startsWith".equals(myOperator) && "string".equals(p.getType())) {
-            if (p.getValue() != null) {
-                return p.getValue().toLowerCase().startsWith(((String) myValue.getTypedValue()).toLowerCase());
-            } else {
-                return false;
-            }
-        }
         if ("startsWith".equals(myOperator)) {
-            if (p.getType().equals(Property.SELECTION_PROPERTY)) {
-                return p.getSelected().getName().startsWith(myValue.getSelected().getName().toLowerCase());
-            } else {
-                return p.getValue().startsWith(myValue.getValue());
-            }
-        }
-        if ("endsWith".equals(myOperator) && "string".equals(p.getType())) {
-            if (p.getValue() != null) {
-                return p.getValue().toLowerCase().endsWith(((String) myValue.getTypedValue()).toLowerCase());
-            } else {
+            if (p.getType().equals(Property.STRING_PROPERTY)) {
+                if (p.getValue() != null) {
+                    return p.getValue().toLowerCase().startsWith(((String) myValue.getTypedValue()).toLowerCase());
+                }
                 return false;
+            } else if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+                return p.getSelected().getName().startsWith(myValue.getSelected().getName().toLowerCase());
             }
+            
+            return p.getValue().startsWith(myValue.getValue());
         }
         if ("endsWith".equals(myOperator)) {
-            if (p.getType().equals(Property.SELECTION_PROPERTY)) {
-                return p.getSelected().getName().endsWith(myValue.getSelected().getName().toLowerCase());
-            } else {
-                return p.getValue().endsWith(myValue.getValue());
-            }
-        }
-        if ("contains".equals(myOperator) && "string".equals(p.getType())) {
-            if (p.getValue() != null) {
-                return p.getValue().toLowerCase().indexOf(((String) myValue.getTypedValue()).toLowerCase()) >= 0;
-            } else {
+            if (p.getType().equals(Property.STRING_PROPERTY)) {
+                if (p.getValue() != null) {
+                    return p.getValue().toLowerCase().endsWith(((String) myValue.getTypedValue()).toLowerCase());
+                } 
                 return false;
+            } else if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+                return p.getSelected().getName().endsWith(myValue.getSelected().getName().toLowerCase());
             }
+            
+            return p.getValue().endsWith(myValue.getValue());
         }
+       
         if ("contains".equals(myOperator)) {
-            if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+            if (p.getType().equals(Property.STRING_PROPERTY)) {
+                if (p.getValue() != null) {
+                    return p.getValue().toLowerCase().indexOf(((String) myValue.getTypedValue()).toLowerCase()) >= 0;
+                }
+                return false;
+            } else if (p.getType().equals(Property.SELECTION_PROPERTY)) {
                 String name = "";
                 if (myValue.getType().equals(Property.SELECTION_PROPERTY)) {
                     name = myValue.getSelected().getName();
@@ -145,13 +140,10 @@ public final class PropertyFilter {
                     }
                 }
                 return false;
-            } else {
-                if (p.getValue() != null) {
-                    return p.getValue().indexOf(myValue.getValue()) >= 0;
-                } else {
-                    return false;
-                }
+            } else if (p.getValue() != null){
+                return p.getValue().indexOf(myValue.getValue()) >= 0;
             }
+            return false;
         }
         if ("regularExpression".equals(myOperator)) {
             if (p.getValue() != null) {
@@ -162,5 +154,9 @@ public final class PropertyFilter {
         }
 
         return true;
+    }
+
+    private boolean nullOrEmpty(Property p) {
+        return (p.getTypedValue() == null || p.getTypedValue().equals("")) && (myValue.getTypedValue() == null || myValue.getTypedValue().equals(""));
     }
 }
