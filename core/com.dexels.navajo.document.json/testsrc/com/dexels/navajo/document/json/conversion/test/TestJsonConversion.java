@@ -16,8 +16,6 @@ import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TestJsonConversion {
@@ -30,8 +28,8 @@ public class TestJsonConversion {
 //		System.err.println("MMM: "+m.toString());
 		ObjectNode on = JsonTmlFactory.getInstance().toNode(m, "ble");
 		ReplicationMessage rmsg = ReplicationFactory.getDefaultInstance().parseJson(on);
-		ObjectMapper mapper  = new ObjectMapper();
-		JsonNode n = rmsg.toJSON(mapper);
+//		ObjectMapper mapper  = new ObjectMapper();
+//		JsonNode n = rmsg.toJSON(mapper);
 //		System.err.println("Before:\n");
 //		mapper.writerWithDefaultPrettyPrinter().writeValue(System.err, on);
 //		System.err.println("After:\n");

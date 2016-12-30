@@ -15,7 +15,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.conversion.JsonTmlConverter;
 import com.dexels.replication.api.ReplicationMessage;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -179,15 +178,7 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 	}
 
 	
-	private JsonNode createJSONNode(Message msg, String primaryKeys) {
-		
 
-		return toNode(msg, primaryKeys);
-//		parseMessageToJSONNode(msg, result);
-//		return result;
-		
-	}
-	
 	private ObjectNode createTopLevel(String primaryKeys) {
 		ObjectNode result = objectMapper.createObjectNode();
 		result.put("Timestamp", new Date().getTime());
