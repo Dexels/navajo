@@ -12,6 +12,7 @@
 	    <module>../../com.dexels.navajo.version</module>
 		<module>../../com.dexels.navajo.document</module>
 		<module>../../com.dexels.navajo.document.stream</module>
+		<module>../../com.dexels.navajo.document.json</module>
 		<module>../../com.dexels.navajo.client</module>
                 <module>../../com.dexels.navajo.client.impl.javanet</module>
                 <module>../../com.dexels.navajo.client.impl.apache</module>

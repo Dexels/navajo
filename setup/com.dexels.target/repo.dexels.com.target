@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2170">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2175">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.server.core.feature.group" version="1.3.100.v20150529-1857"/>
@@ -16,8 +16,8 @@
 <repository location="http://mirrorservice.org/sites/download.eclipse.org/eclipseMirror/egit/updates/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.172.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.172"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.173.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.173"/>
 </location>
 </locations>
 <includeBundles>
