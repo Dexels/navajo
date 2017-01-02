@@ -66,6 +66,7 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 	@Override
 	public Navajo toReplicationNavajo(ReplicationMessage message, String tenant, String table, Optional<String> datasource) {
 			try {
+				System.err.println("Message: \n"+message.toFlatJsonString()+"\n");
 				Navajo n = NavajoFactory.getInstance().createNavajo();
 				Message msg = createTransactionMessage(message, tenant, table, datasource, n);
 				
