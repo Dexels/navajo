@@ -178,8 +178,6 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 		return msg;
 	}
 
-	
-
 	private ObjectNode createTopLevel(String primaryKeys) {
 		ObjectNode result = objectMapper.createObjectNode();
 		result.put("Timestamp", new Date().getTime());
@@ -189,42 +187,11 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 		if(primaryKeys!=null) {
 			StringTokenizer st = new StringTokenizer(primaryKeys,",");
 			while (st.hasMoreTokens()) {
-				pks.add(st.nextToken().toLowerCase());
+				pks.add(st.nextToken());
 			}		
 		}
 		return result;
 	}
-
-//	private void parseMessageToJSONNode(Message message, ObjectNode result) {
-//		ObjectNode columnValuesList = objectMapper.createObjectNode();
-//		result.set("Columns", columnValuesList);
-//		for (Property p : msg.getAllProperties()) {
-//			ObjectNode o = objectMapper.createObjectNode();
-//			o.put("Name", p.getName());
-//			o.put("Type", p.getType());
-//			o.put("Value",p.getValue());
-//			
-//			columnValuesList.set(p.getName(),o);
-//		}
-//		
-//		
-//		for (Message submessage : message.getAllMessages()) {
-//			if (Message.MSG_TYPE_ARRAY.equals((submessage.getType()))) {
-//				ObjectNode submessages = ensureSub("SubMessages",result);
-//				String name = submessage.getName();
-//				ArrayNode node = objectMapper.createArrayNode();
-//				submessages.set(name, node);
-//				
-//				
-//			} else {
-//
-//			}
-//			ObjectNode submsgnode = objectMapper.createObjectNode();
-//			parseMessageToJSONNode(submessage, submsgnode);
-//			columnValuesList.set(submessage.getName(), submsgnode);
-//		}
-//	}
-
 
 	private ObjectNode ensureSub(String name, ObjectNode result) {
 		ObjectNode nn = (ObjectNode) result.get(name);
@@ -243,7 +210,6 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 	 */
 	@Override
 	public ObjectNode toNode(Message m, final String primaryKeys) {
-//		result.put("Timestamp", new Date().getTime());
 		ObjectNode result = createTopLevel(primaryKeys);
 		ObjectNode columnValuesList = objectMapper.createObjectNode();
 		result.set("Columns", columnValuesList);
@@ -251,10 +217,9 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 		if(allProperties!=null) {
 			for (Property p : allProperties) {
 				ObjectNode o = objectMapper.createObjectNode();
-//				o.put("Name", p.getName());
 				o.put("Type", p.getType());
 				o.put("Value",p.getValue());
-				columnValuesList.set(p.getName().toLowerCase(),o);
+				columnValuesList.set(p.getName(),o);
 			}
 		}
 		for (Message submessage : m.getAllMessages()) {
@@ -265,13 +230,11 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 					node.add(toNode(element,primaryKeys));
 				}
 				ObjectNode submessages = ensureSub("SubMessage",result);
-				submessages.set(name.toLowerCase(), node);
+				submessages.set(name, node);
 			} else {
 				ObjectNode submsg = ensureSub("SubMessage",result);
-				submsg.set(name.toLowerCase(),toNode(submessage,primaryKeys));
+				submsg.set(name,toNode(submessage,primaryKeys));
 			}
-//			parseMessageToJSONNode(submessage, submsgnode);
-//			columnValuesList.set(submessage.getName(), submsgnode);
 		}
 		return result;
 	}
