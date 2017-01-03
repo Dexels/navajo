@@ -222,14 +222,18 @@ public final class SaxHandler implements DocHandler {
         if (currentHeader==null) {
             throw new IllegalArgumentException("Callback tag outside header tag.");
         }
+        // Unescape some common sequences 
         BaseTransactionImpl bci = new BaseTransactionImpl(currentDocument);
         bci.setRpc_name(h.get("rpc_name"));
         bci.setRpc_usr(h.get("rpc_usr"));
-        bci.setRpc_pwd(h.get("rpc_pwd"));
+        bci.setRpc_pwd(BaseNode.XMLUnescape(h.get("rpc_pwd")));
         bci.setRpc_schedule(h.get("rpc_schedule"));
         bci.setRequestId(h.get("requestid"));
         currentHeader.addTransaction(bci);        
     }
+
+
+
 
     private final void parsePiggyback(Hashtable<String,String> h) {
         if (currentHeader==null) {
