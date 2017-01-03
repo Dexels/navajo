@@ -1,0 +1,374 @@
+<tml documentImplementation="SAXP">
+   <header queueId="priorityPool" queueSize="0" authorisationTime="0" cpuload="-1.0" requestParseTime="0" threadCount="0" processingTime="42" threadName="priorityPool_3" queueTime="1" accessId="1482835382657-206654" afterServiceTime="0" beforeServiceTime="1" postTime="0" serverTime="43">
+      <transaction rpc_pwd="blabla" rpc_name="competition/ProcessGetPoolStanding" rpc_usr="bla"/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="SelectedGlobals">
+      <property name="SeasonId" type="string" value="2016" direction="out"/>
+   </message>
+   <message name="Pool">
+      <property name="Tenant" type="string" value="KNVB" direction="out"/>
+      <property name="PoolId" type="integer" value="12345" direction="out"/>
+      <property name="CompetitionKind" type="string" value="DEFAULT_COMPETITION" direction="out"/>
+      <property name="CompetitionTypeId" type="string" value="0251" direction="out"/>
+      <property name="CompetitionTypeName" type="string" value="0251 Onder 13 competitie" direction="out"/>
+      <property name="DisciplineType" type="string" value="VE" direction="out"/>
+      <property name="ClassName" type="string" value="2e klasse" direction="out"/>
+      <property name="PoolName" type="string" value="D21" direction="out"/>
+      <property name="MaxRounds" type="integer" value="22" direction="out"/>
+      <property name="TotalTeams" type="integer" value="12" direction="out"/>
+      <message name="Standings" orderby="com.dexels.sportlink.comparison.GoalDifferenceRanking()" type="array">
+         <message name="Standings" index="0" type="array_element">
+            <property length="5" name="Position" description="Positie" type="integer" value="1" direction="out"/>
+            <property length="10" name="OrganizationId" description="Relatiecode ver." type="string" value="BBHZ42L" direction="out"/>
+            <property length="30" name="PoolId" description="PoolId" type="integer" value="12345" direction="out"/>
+            <property name="PoolName" description="Poolnaam" type="string" value="D21" direction="out"/>
+            <property length="30" name="TeamId" description="TeamId" type="integer" value="300150" direction="out"/>
+            <property length="30" name="TeamSex" description="TeamId" type="string" value="man" direction="out"/>
+            <property length="30" name="ClubName" description="ClubName" type="string" value="Police" direction="out"/>
+            <property length="30" name="ClubNameShort" description="ClubNameShort" type="string" value="Vlissingen" direction="out"/>
+            <property length="30" name="TeamReportingName" description="TeamReportingName" type="" direction="out"/>
+            <property length="30" name="TeamName" description="Team" type="string" value="Police JO13-1" direction="out"/>
+            <property length="5" name="TotalMatches" description="Totaal wedstrijden" type="integer" value="12" direction="out"/>
+            <property length="5" name="GamesWon" description="Gewonnen" type="integer" value="10" direction="out"/>
+            <property length="5" name="GamesLost" description="Verloren" type="integer" value="1" direction="out"/>
+            <property length="5" name="GamesDrawn" description="Gelijk" type="integer" value="1" direction="out"/>
+            <property length="5" name="GamesWonAway" description="Gewonnen (uitwedstrijden)" type="integer" value="4" direction="out"/>
+            <property length="5" name="HomeGoals" description="Doelp. voor" type="integer" value="36" direction="out"/>
+            <property name="HomePenaltiesResult" description="Strafworpen thuis" type="integer" value="0" direction="out"/>
+            <property length="5" name="AwayGoals" description="Doelp. tegen" type="integer" value="12" direction="out"/>
+            <property length="5" name="HomeGoalsAway" description="Doelp. voor (uitwedstrijden)" type="integer" value="16" direction="out"/>
+            <property name="AwayPenaltiesResult" description="Strafworpen uit" type="integer" value="0" direction="out"/>
+            <property length="5" name="GoalDifference" description="Doelsaldo" type="integer" value="24" direction="out"/>
+            <property length="5" name="Points" description="Punten" type="integer" value="31" direction="out"/>
+            <property length="5" name="ExtraPolatedPoints" description="Geextrapoleerde Punten" type="integer" value="37" direction="out"/>
+            <property length="5" name="BasePoints" description="Punten bij aanvang competitie (indien positief)" type="integer" value="0" direction="out"/>
+            <property length="5" name="Penalties" description="Minderingspunten" type="integer" value="0" direction="out"/>
+            <property length="5" name="TeamLack" description="Wedstrijdachterstand" type="integer" value="0" direction="out"/>
+            <property name="IsCompeting" description="Buiten mededinging" type="boolean" value="false" direction="out"/>
+         </message>
+         <message name="Standings" index="1" type="array_element">
+            <property length="5" name="Position" description="Positie" type="integer" value="2" direction="out"/>
+            <property length="10" name="OrganizationId" description="Relatiecode ver." type="string" value="BBHV568" direction="out"/>
+            <property length="30" name="PoolId" description="PoolId" type="integer" value="12345" direction="out"/>
+            <property name="PoolName" description="Poolnaam" type="string" value="D21" direction="out"/>
+            <property length="30" name="TeamId" description="TeamId" type="integer" value="282170" direction="out"/>
+            <property length="30" name="TeamSex" description="TeamId" type="string" value="gemengd" direction="out"/>
+            <property length="30" name="ClubName" description="ClubName" type="string" value="Intercity" direction="out"/>
+            <property length="30" name="ClubNameShort" description="ClubNameShort" type="string" value="Intercity" direction="out"/>
+            <property length="30" name="TeamReportingName" description="TeamReportingName" type="string" value="Intercity JO13-1G" direction="out"/>
+            <property length="30" name="TeamName" description="Team" type="string" value="Intercity JO13-1" direction="out"/>
+            <property length="5" name="TotalMatches" description="Totaal wedstrijden" type="integer" value="11" direction="out"/>
+            <property length="5" name="GamesWon" description="Gewonnen" type="integer" value="9" direction="out"/>
+            <property length="5" name="GamesLost" description="Verloren" type="integer" value="2" direction="out"/>
+            <property length="5" name="GamesDrawn" description="Gelijk" type="integer" value="0" direction="out"/>
+            <property length="5" name="GamesWonAway" description="Gewonnen (uitwedstrijden)" type="integer" value="3" direction="out"/>
+            <property length="5" name="HomeGoals" description="Doelp. voor" type="integer" value="53" direction="out"/>
+            <property name="HomePenaltiesResult" description="Strafworpen thuis" type="integer" value="0" direction="out"/>
+            <property length="5" name="AwayGoals" description="Doelp. tegen" type="integer" value="11" direction="out"/>
+            <property length="5" name="HomeGoalsAway" description="Doelp. voor (uitwedstrijden)" type="integer" value="22" direction="out"/>
+            <property name="AwayPenaltiesResult" description="Strafworpen uit" type="integer" value="0" direction="out"/>
+            <property length="5" name="GoalDifference" description="Doelsaldo" type="integer" value="42" direction="out"/>
+            <property length="5" name="Points" description="Punten" type="integer" value="27" direction="out"/>
+            <property length="5" name="ExtraPolatedPoints" description="Geextrapoleerde Punten" type="integer" value="33" direction="out"/>
+            <property length="5" name="BasePoints" description="Punten bij aanvang competitie (indien positief)" type="integer" value="0" direction="out"/>
+            <property length="5" name="Penalties" description="Minderingspunten" type="integer" value="0" direction="out"/>
+            <property length="5" name="TeamLack" description="Wedstrijdachterstand" type="integer" value="0" direction="out"/>
+            <property name="IsCompeting" description="Buiten mededinging" type="boolean" value="false" direction="out"/>
+         </message>
+         <message name="Standings" index="2" type="array_element">
+            <property length="5" name="Position" description="Positie" type="integer" value="3" direction="out"/>
+            <property length="10" name="OrganizationId" description="Relatiecode ver." type="string" value="BBJH76Q" direction="out"/>
+            <property length="30" name="PoolId" description="PoolId" type="integer" value="12345" direction="out"/>
+            <property name="PoolName" description="Poolnaam" type="string" value="D21" direction="out"/>
+            <property length="30" name="TeamId" description="TeamId" type="integer" value="285010" direction="out"/>
+            <property length="30" name="TeamSex" description="TeamId" type="string" value="man" direction="out"/>
+            <property length="30" name="ClubName" description="ClubName" type="string" value="Phreak" direction="out"/>
+            <property length="30" name="ClubNameShort" description="ClubNameShort" type="string" value="Phreak" direction="out"/>
+            <property length="30" name="TeamReportingName" description="TeamReportingName" type="string" value="ST Schoondijke/Phreak JO13-1" direction="out"/>
+            <property length="30" name="TeamName" description="Team" type="string" value="Phreak JO13-1" direction="out"/>
+            <property length="5" name="TotalMatches" description="Totaal wedstrijden" type="integer" value="11" direction="out"/>
+            <property length="5" name="GamesWon" description="Gewonnen" type="integer" value="7" direction="out"/>
+            <property length="5" name="GamesLost" description="Verloren" type="integer" value="3" direction="out"/>
+            <property length="5" name="GamesDrawn" description="Gelijk" type="integer" value="1" direction="out"/>
+            <property length="5" name="GamesWonAway" description="Gewonnen (uitwedstrijden)" type="integer" value="3" direction="out"/>
+            <property length="5" name="HomeGoals" description="Doelp. voor" type="integer" value="31" direction="out"/>
+            <property name="HomePenaltiesResult" description="Strafworpen thuis" type="integer" value="0" direction="out"/>
+            <property length="5" name="AwayGoals" description="Doelp. tegen" type="integer" value="25" direction="out"/>
+            <property length="5" name="HomeGoalsAway" description="Doelp. voor (uitwedstrijden)" type="integer" value="9" direction="out"/>
+            <property name="AwayPenaltiesResult" description="Strafworpen uit" type="integer" value="0" direction="out"/>
+            <property length="5" name="GoalDifference" description="Doelsaldo" type="integer" value="6" direction="out"/>
+            <property length="5" name="Points" description="Punten" type="integer" value="22" direction="out"/>
+            <property length="5" name="ExtraPolatedPoints" description="Geextrapoleerde Punten" type="integer" value="28" direction="out"/>
+            <property length="5" name="BasePoints" description="Punten bij aanvang competitie (indien positief)" type="integer" value="0" direction="out"/>
+            <property length="5" name="Penalties" description="Minderingspunten" type="integer" value="0" direction="out"/>
+            <property length="5" name="TeamLack" description="Wedstrijdachterstand" type="integer" value="0" direction="out"/>
+            <property name="IsCompeting" description="Buiten mededinging" type="boolean" value="false" direction="out"/>
+         </message>
+         <message name="Standings" index="3" type="array_element">
+            <property length="5" name="Position" description="Positie" type="integer" value="4" direction="out"/>
+            <property length="10" name="OrganizationId" description="Relatiecode ver." type="string" value="BBHX65K" direction="out"/>
+            <property length="30" name="PoolId" description="PoolId" type="integer" value="12345" direction="out"/>
+            <property name="PoolName" description="Poolnaam" type="string" value="D21" direction="out"/>
+            <property length="30" name="TeamId" description="TeamId" type="integer" value="300403" direction="out"/>
+            <property length="30" name="TeamSex" description="TeamId" type="string" value="man" direction="out"/>
+            <property length="30" name="ClubName" description="ClubName" type="string" value="Insistent" direction="out"/>
+            <property length="30" name="ClubNameShort" description="ClubNameShort" type="string" value="Insistent" direction="out"/>
+            <property length="30" name="TeamReportingName" description="TeamReportingName" type="string" value="ST Ijzendijke/Insistent JO13-1" direction="out"/>
+            <property length="30" name="TeamName" description="Team" type="string" value="Insistent JO13-1" direction="out"/>
+            <property length="5" name="TotalMatches" description="Totaal wedstrijden" type="integer" value="11" direction="out"/>
+            <property length="5" name="GamesWon" description="Gewonnen" type="integer" value="6" direction="out"/>
+            <property length="5" name="GamesLost" description="Verloren" type="integer" value="3" direction="out"/>
+            <property length="5" name="GamesDrawn" description="Gelijk" type="integer" value="2" direction="out"/>
+            <property length="5" name="GamesWonAway" description="Gewonnen (uitwedstrijden)" type="integer" value="2" direction="out"/>
+            <property length="5" name="HomeGoals" description="Doelp. voor" type="integer" value="29" direction="out"/>
+            <property name="HomePenaltiesResult" description="Strafworpen thuis" type="integer" value="0" direction="out"/>
+            <property length="5" name="AwayGoals" description="Doelp. tegen" type="integer" value="22" direction="out"/>
+            <property length="5" name="HomeGoalsAway" description="Doelp. voor (uitwedstrijden)" type="integer" value="13" direction="out"/>
+            <property name="AwayPenaltiesResult" description="Strafworpen uit" type="integer" value="0" direction="out"/>
+            <property length="5" name="GoalDifference" description="Doelsaldo" type="integer" value="7" direction="out"/>
+            <property length="5" name="Points" description="Punten" type="integer" value="20" direction="out"/>
+            <property length="5" name="ExtraPolatedPoints" description="Geextrapoleerde Punten" type="integer" value="26" direction="out"/>
+            <property length="5" name="BasePoints" description="Punten bij aanvang competitie (indien positief)" type="integer" value="0" direction="out"/>
+            <property length="5" name="Penalties" description="Minderingspunten" type="integer" value="0" direction="out"/>
+            <property length="5" name="TeamLack" description="Wedstrijdachterstand" type="integer" value="0" direction="out"/>
+            <property name="IsCompeting" description="Buiten mededinging" type="boolean" value="false" direction="out"/>
+         </message>
+         <message name="Standings" index="4" type="array_element">
+            <property length="5" name="Position" description="Positie" type="integer" value="5" direction="out"/>
+            <property length="10" name="OrganizationId" description="Relatiecode ver." type="string" value="RSLC61S" direction="out"/>
+            <property length="30" name="PoolId" description="PoolId" type="integer" value="12345" direction="out"/>
+            <property name="PoolName" description="Poolnaam" type="string" value="D21" direction="out"/>
+            <property length="30" name="TeamId" description="TeamId" type="integer" value="311862" direction="out"/>
+            <property length="30" name="TeamSex" description="TeamId" type="string" value="man" direction="out"/>
+            <property length="30" name="ClubName" description="ClubName" type="string" value="Usul" direction="out"/>
+            <property length="30" name="ClubNameShort" description="ClubNameShort" type="string" value="Usul" direction="out"/>
+            <property length="30" name="TeamReportingName" description="TeamReportingName" type="" direction="out"/>
+            <property length="30" name="TeamName" description="Team" type="string" value="Usul JO13-1" direction="out"/>
+            <property length="5" name="TotalMatches" description="Totaal wedstrijden" type="integer" value="12" direction="out"/>
+            <property length="5" name="GamesWon" description="Gewonnen" type="integer" value="6" direction="out"/>
+            <property length="5" name="GamesLost" description="Verloren" type="integer" value="4" direction="out"/>
+            <property length="5" name="GamesDrawn" description="Gelijk" type="integer" value="2" direction="out"/>
+            <property length="5" name="GamesWonAway" description="Gewonnen (uitwedstrijden)" type="integer" value="3" direction="out"/>
+            <property length="5" name="HomeGoals" description="Doelp. voor" type="integer" value="27" direction="out"/>
+            <property name="HomePenaltiesResult" description="Strafworpen thuis" type="integer" value="0" direction="out"/>
+            <property length="5" name="AwayGoals" description="Doelp. tegen" type="integer" value="16" direction="out"/>
+            <property length="5" name="HomeGoalsAway" description="Doelp. voor (uitwedstrijden)" type="integer" value="10" direction="out"/>
+            <property name="AwayPenaltiesResult" description="Strafworpen uit" type="integer" value="0" direction="out"/>
+            <property length="5" name="GoalDifference" description="Doelsaldo" type="integer" value="11" direction="out"/>
+            <property length="5" name="Points" description="Punten" type="integer" value="20" direction="out"/>
+            <property length="5" name="ExtraPolatedPoints" description="Geextrapoleerde Punten" type="integer" value="26" direction="out"/>
+            <property length="5" name="BasePoints" description="Punten bij aanvang competitie (indien positief)" type="integer" value="0" direction="out"/>
+            <property length="5" name="Penalties" description="Minderingspunten" type="integer" value="0" direction="out"/>
+            <property length="5" name="TeamLack" description="Wedstrijdachterstand" type="integer" value="0" direction="out"/>
+            <property name="IsCompeting" description="Buiten mededinging" type="boolean" value="false" direction="out"/>
+         </message>
+         <message name="Standings" index="5" type="array_element">
+            <property length="5" name="Position" description="Positie" type="integer" value="6" direction="out"/>
+            <property length="10" name="OrganizationId" description="Relatiecode ver." type="string" value="AABBCC" direction="out"/>
+            <property length="30" name="PoolId" description="PoolId" type="integer" value="12345" direction="out"/>
+            <property name="PoolName" description="Poolnaam" type="string" value="D21" direction="out"/>
+            <property length="30" name="TeamId" description="TeamId" type="integer" value="262480" direction="out"/>
+            <property length="30" name="TeamSex" description="TeamId" type="string" value="man" direction="out"/>
+            <property length="30" name="ClubName" description="ClubName" type="string" value="Hoempapa" direction="out"/>
+            <property length="30" name="ClubNameShort" description="ClubNameShort" type="string" value="Hoempapa" direction="out"/>
+            <property length="30" name="TeamReportingName" description="TeamReportingName" type="" direction="out"/>
+            <property length="30" name="TeamName" description="Team" type="string" value="Hoempapa JO13-2" direction="out"/>
+            <property length="5" name="TotalMatches" description="Totaal wedstrijden" type="integer" value="12" direction="out"/>
+            <property length="5" name="GamesWon" description="Gewonnen" type="integer" value="6" direction="out"/>
+            <property length="5" name="GamesLost" description="Verloren" type="integer" value="5" direction="out"/>
+            <property length="5" name="GamesDrawn" description="Gelijk" type="integer" value="1" direction="out"/>
+            <property length="5" name="GamesWonAway" description="Gewonnen (uitwedstrijden)" type="integer" value="3" direction="out"/>
+            <property length="5" name="HomeGoals" description="Doelp. voor" type="integer" value="28" direction="out"/>
+            <property name="HomePenaltiesResult" description="Strafworpen thuis" type="integer" value="0" direction="out"/>
+            <property length="5" name="AwayGoals" description="Doelp. tegen" type="integer" value="26" direction="out"/>
+            <property length="5" name="HomeGoalsAway" description="Doelp. voor (uitwedstrijden)" type="integer" value="10" direction="out"/>
+            <property name="AwayPenaltiesResult" description="Strafworpen uit" type="integer" value="0" direction="out"/>
+            <property length="5" name="GoalDifference" description="Doelsaldo" type="integer" value="2" direction="out"/>
+            <property length="5" name="Points" description="Punten" type="integer" value="19" direction="out"/>
+            <property length="5" name="ExtraPolatedPoints" description="Geextrapoleerde Punten" type="integer" value="25" direction="out"/>
+            <property length="5" name="BasePoints" description="Punten bij aanvang competitie (indien positief)" type="integer" value="0" direction="out"/>
+            <property length="5" name="Penalties" description="Minderingspunten" type="integer" value="0" direction="out"/>
+            <property length="5" name="TeamLack" description="Wedstrijdachterstand" type="integer" value="0" direction="out"/>
+            <property name="IsCompeting" description="Buiten mededinging" type="boolean" value="false" direction="out"/>
+         </message>
+         <message name="Standings" index="6" type="array_element">
+            <property length="5" name="Position" description="Positie" type="integer" value="7" direction="out"/>
+            <property length="10" name="OrganizationId" description="Relatiecode ver." type="string" value="AABBCC" direction="out"/>
+            <property length="30" name="PoolId" description="PoolId" type="integer" value="12345" direction="out"/>
+            <property name="PoolName" description="Poolnaam" type="string" value="D21" direction="out"/>
+            <property length="30" name="TeamId" description="TeamId" type="integer" value="302086" direction="out"/>
+            <property length="30" name="TeamSex" description="TeamId" type="string" value="man" direction="out"/>
+            <property length="30" name="ClubName" description="ClubName" type="string" value="Blobbo" direction="out"/>
+            <property length="30" name="ClubNameShort" description="ClubNameShort" type="string" value="Blobbo" direction="out"/>
+            <property length="30" name="TeamReportingName" description="TeamReportingName" type="" direction="out"/>
+            <property length="30" name="TeamName" description="Team" type="string" value="Blobbo JO13-1" direction="out"/>
+            <property length="5" name="TotalMatches" description="Totaal wedstrijden" type="integer" value="11" direction="out"/>
+            <property length="5" name="GamesWon" description="Gewonnen" type="integer" value="5" direction="out"/>
+            <property length="5" name="GamesLost" description="Verloren" type="integer" value="6" direction="out"/>
+            <property length="5" name="GamesDrawn" description="Gelijk" type="integer" value="0" direction="out"/>
+            <property length="5" name="GamesWonAway" description="Gewonnen (uitwedstrijden)" type="integer" value="1" direction="out"/>
+            <property length="5" name="HomeGoals" description="Doelp. voor" type="integer" value="22" direction="out"/>
+            <property name="HomePenaltiesResult" description="Strafworpen thuis" type="integer" value="0" direction="out"/>
+            <property length="5" name="AwayGoals" description="Doelp. tegen" type="integer" value="34" direction="out"/>
+            <property length="5" name="HomeGoalsAway" description="Doelp. voor (uitwedstrijden)" type="integer" value="9" direction="out"/>
+            <property name="AwayPenaltiesResult" description="Strafworpen uit" type="integer" value="0" direction="out"/>
+            <property length="5" name="GoalDifference" description="Doelsaldo" type="integer" value="-12" direction="out"/>
+            <property length="5" name="Points" description="Punten" type="integer" value="15" direction="out"/>
+            <property length="5" name="ExtraPolatedPoints" description="Geextrapoleerde Punten" type="integer" value="21" direction="out"/>
+            <property length="5" name="BasePoints" description="Punten bij aanvang competitie (indien positief)" type="integer" value="0" direction="out"/>
+            <property length="5" name="Penalties" description="Minderingspunten" type="integer" value="0" direction="out"/>
+            <property length="5" name="TeamLack" description="Wedstrijdachterstand" type="integer" value="0" direction="out"/>
+            <property name="IsCompeting" description="Buiten mededinging" type="boolean" value="false" direction="out"/>
+         </message>
+         <message name="Standings" index="7" type="array_element">
+            <property length="5" name="Position" description="Positie" type="integer" value="8" direction="out"/>
+            <property length="10" name="OrganizationId" description="Relatiecode ver." type="string" value="BBJL86F" direction="out"/>
+            <property length="30" name="PoolId" description="PoolId" type="integer" value="12345" direction="out"/>
+            <property name="PoolName" description="Poolnaam" type="string" value="D21" direction="out"/>
+            <property length="30" name="TeamId" description="TeamId" type="integer" value="300014" direction="out"/>
+            <property length="30" name="TeamSex" description="TeamId" type="string" value="man" direction="out"/>
+            <property length="30" name="ClubName" description="ClubName" type="string" value="HVV'24" direction="out"/>
+            <property length="30" name="ClubNameShort" description="ClubNameShort" type="string" value="HVV'24" direction="out"/>
+            <property length="30" name="TeamReportingName" description="TeamReportingName" type="string" value="ST HVV '24/Clinge JO13-2" direction="out"/>
+            <property length="30" name="TeamName" description="Team" type="string" value="HVV'24 JO13-2" direction="out"/>
+            <property length="5" name="TotalMatches" description="Totaal wedstrijden" type="integer" value="12" direction="out"/>
+            <property length="5" name="GamesWon" description="Gewonnen" type="integer" value="3" direction="out"/>
+            <property length="5" name="GamesLost" description="Verloren" type="integer" value="6" direction="out"/>
+            <property length="5" name="GamesDrawn" description="Gelijk" type="integer" value="3" direction="out"/>
+            <property length="5" name="GamesWonAway" description="Gewonnen (uitwedstrijden)" type="integer" value="2" direction="out"/>
+            <property length="5" name="HomeGoals" description="Doelp. voor" type="integer" value="26" direction="out"/>
+            <property name="HomePenaltiesResult" description="Strafworpen thuis" type="integer" value="0" direction="out"/>
+            <property length="5" name="AwayGoals" description="Doelp. tegen" type="integer" value="33" direction="out"/>
+            <property length="5" name="HomeGoalsAway" description="Doelp. voor (uitwedstrijden)" type="integer" value="16" direction="out"/>
+            <property name="AwayPenaltiesResult" description="Strafworpen uit" type="integer" value="0" direction="out"/>
+            <property length="5" name="GoalDifference" description="Doelsaldo" type="integer" value="-7" direction="out"/>
+            <property length="5" name="Points" description="Punten" type="integer" value="12" direction="out"/>
+            <property length="5" name="ExtraPolatedPoints" description="Geextrapoleerde Punten" type="integer" value="18" direction="out"/>
+            <property length="5" name="BasePoints" description="Punten bij aanvang competitie (indien positief)" type="integer" value="0" direction="out"/>
+            <property length="5" name="Penalties" description="Minderingspunten" type="integer" value="0" direction="out"/>
+            <property length="5" name="TeamLack" description="Wedstrijdachterstand" type="integer" value="0" direction="out"/>
+            <property name="IsCompeting" description="Buiten mededinging" type="boolean" value="false" direction="out"/>
+         </message>
+         <message name="Standings" index="8" type="array_element">
+            <property length="5" name="Position" description="Positie" type="integer" value="9" direction="out"/>
+            <property length="10" name="OrganizationId" description="Relatiecode ver." type="string" value="BBHZ49S" direction="out"/>
+            <property length="30" name="PoolId" description="PoolId" type="integer" value="12345" direction="out"/>
+            <property name="PoolName" description="Poolnaam" type="string" value="D21" direction="out"/>
+            <property length="30" name="TeamId" description="TeamId" type="integer" value="55555" direction="out"/>
+            <property length="30" name="TeamSex" description="TeamId" type="string" value="man" direction="out"/>
+            <property length="30" name="ClubName" description="ClubName" type="string" value="Vogelwaarde" direction="out"/>
+            <property length="30" name="ClubNameShort" description="ClubNameShort" type="string" value="Vogelwaarde" direction="out"/>
+            <property length="30" name="TeamReportingName" description="TeamReportingName" type="" direction="out"/>
+            <property length="30" name="TeamName" description="Team" type="string" value="Vogelwaarde JO13-1" direction="out"/>
+            <property length="5" name="TotalMatches" description="Totaal wedstrijden" type="integer" value="12" direction="out"/>
+            <property length="5" name="GamesWon" description="Gewonnen" type="integer" value="3" direction="out"/>
+            <property length="5" name="GamesLost" description="Verloren" type="integer" value="6" direction="out"/>
+            <property length="5" name="GamesDrawn" description="Gelijk" type="integer" value="3" direction="out"/>
+            <property length="5" name="GamesWonAway" description="Gewonnen (uitwedstrijden)" type="integer" value="2" direction="out"/>
+            <property length="5" name="HomeGoals" description="Doelp. voor" type="integer" value="29" direction="out"/>
+            <property name="HomePenaltiesResult" description="Strafworpen thuis" type="integer" value="0" direction="out"/>
+            <property length="5" name="AwayGoals" description="Doelp. tegen" type="integer" value="43" direction="out"/>
+            <property length="5" name="HomeGoalsAway" description="Doelp. voor (uitwedstrijden)" type="integer" value="11" direction="out"/>
+            <property name="AwayPenaltiesResult" description="Strafworpen uit" type="integer" value="0" direction="out"/>
+            <property length="5" name="GoalDifference" description="Doelsaldo" type="integer" value="-14" direction="out"/>
+            <property length="5" name="Points" description="Punten" type="integer" value="12" direction="out"/>
+            <property length="5" name="ExtraPolatedPoints" description="Geextrapoleerde Punten" type="integer" value="18" direction="out"/>
+            <property length="5" name="BasePoints" description="Punten bij aanvang competitie (indien positief)" type="integer" value="0" direction="out"/>
+            <property length="5" name="Penalties" description="Minderingspunten" type="integer" value="0" direction="out"/>
+            <property length="5" name="TeamLack" description="Wedstrijdachterstand" type="integer" value="0" direction="out"/>
+            <property name="IsCompeting" description="Buiten mededinging" type="boolean" value="false" direction="out"/>
+         </message>
+         <message name="Standings" index="9" type="array_element">
+            <property length="5" name="Position" description="Positie" type="integer" value="10" direction="out"/>
+            <property length="10" name="OrganizationId" description="Relatiecode ver." type="string" value="BBHY92V" direction="out"/>
+            <property length="30" name="PoolId" description="PoolId" type="integer" value="12345" direction="out"/>
+            <property name="PoolName" description="Poolnaam" type="string" value="D21" direction="out"/>
+            <property length="30" name="TeamId" description="TeamId" type="integer" value="22222" direction="out"/>
+            <property length="30" name="TeamSex" description="TeamId" type="string" value="man" direction="out"/>
+            <property length="30" name="ClubName" description="ClubName" type="string" value="Steen" direction="out"/>
+            <property length="30" name="ClubNameShort" description="ClubNameShort" type="string" value="Steen" direction="out"/>
+            <property length="30" name="TeamReportingName" description="TeamReportingName" type="" direction="out"/>
+            <property length="30" name="TeamName" description="Team" type="string" value="Steen JO13-1" direction="out"/>
+            <property length="5" name="TotalMatches" description="Totaal wedstrijden" type="integer" value="12" direction="out"/>
+            <property length="5" name="GamesWon" description="Gewonnen" type="integer" value="2" direction="out"/>
+            <property length="5" name="GamesLost" description="Verloren" type="integer" value="6" direction="out"/>
+            <property length="5" name="GamesDrawn" description="Gelijk" type="integer" value="4" direction="out"/>
+            <property length="5" name="GamesWonAway" description="Gewonnen (uitwedstrijden)" type="integer" value="2" direction="out"/>
+            <property length="5" name="HomeGoals" description="Doelp. voor" type="integer" value="21" direction="out"/>
+            <property name="HomePenaltiesResult" description="Strafworpen thuis" type="integer" value="0" direction="out"/>
+            <property length="5" name="AwayGoals" description="Doelp. tegen" type="integer" value="25" direction="out"/>
+            <property length="5" name="HomeGoalsAway" description="Doelp. voor (uitwedstrijden)" type="integer" value="18" direction="out"/>
+            <property name="AwayPenaltiesResult" description="Strafworpen uit" type="integer" value="0" direction="out"/>
+            <property length="5" name="GoalDifference" description="Doelsaldo" type="integer" value="-4" direction="out"/>
+            <property length="5" name="Points" description="Punten" type="integer" value="10" direction="out"/>
+            <property length="5" name="ExtraPolatedPoints" description="Geextrapoleerde Punten" type="integer" value="16" direction="out"/>
+            <property length="5" name="BasePoints" description="Punten bij aanvang competitie (indien positief)" type="integer" value="0" direction="out"/>
+            <property length="5" name="Penalties" description="Minderingspunten" type="integer" value="0" direction="out"/>
+            <property length="5" name="TeamLack" description="Wedstrijdachterstand" type="integer" value="0" direction="out"/>
+            <property name="IsCompeting" description="Buiten mededinging" type="boolean" value="false" direction="out"/>
+         </message>
+         <message name="Standings" index="10" type="array_element">
+            <property length="5" name="Position" description="Positie" type="integer" value="11" direction="out"/>
+            <property length="10" name="OrganizationId" description="Relatiecode ver." type="string" value="BBHX40J" direction="out"/>
+            <property length="30" name="PoolId" description="PoolId" type="integer" value="12345" direction="out"/>
+            <property name="PoolName" description="Poolnaam" type="string" value="D21" direction="out"/>
+            <property length="30" name="TeamId" description="TeamId" type="integer" value="286772" direction="out"/>
+            <property length="30" name="TeamSex" description="TeamId" type="string" value="gemengd" direction="out"/>
+            <property length="30" name="ClubName" description="ClubName" type="string" value="NLL" direction="out"/>
+            <property length="30" name="ClubNameShort" description="ClubNameShort" type="string" value="NLL" direction="out"/>
+            <property length="30" name="TeamReportingName" description="TeamReportingName" type="string" value="NLL JO13-1G" direction="out"/>
+            <property length="30" name="TeamName" description="Team" type="string" value="NLL JO13-1" direction="out"/>
+            <property length="5" name="TotalMatches" description="Totaal wedstrijden" type="integer" value="12" direction="out"/>
+            <property length="5" name="GamesWon" description="Gewonnen" type="integer" value="3" direction="out"/>
+            <property length="5" name="GamesLost" description="Verloren" type="integer" value="9" direction="out"/>
+            <property length="5" name="GamesDrawn" description="Gelijk" type="integer" value="0" direction="out"/>
+            <property length="5" name="GamesWonAway" description="Gewonnen (uitwedstrijden)" type="integer" value="2" direction="out"/>
+            <property length="5" name="HomeGoals" description="Doelp. voor" type="integer" value="18" direction="out"/>
+            <property name="HomePenaltiesResult" description="Strafworpen thuis" type="integer" value="0" direction="out"/>
+            <property length="5" name="AwayGoals" description="Doelp. tegen" type="integer" value="48" direction="out"/>
+            <property length="5" name="HomeGoalsAway" description="Doelp. voor (uitwedstrijden)" type="integer" value="9" direction="out"/>
+            <property name="AwayPenaltiesResult" description="Strafworpen uit" type="integer" value="0" direction="out"/>
+            <property length="5" name="GoalDifference" description="Doelsaldo" type="integer" value="-30" direction="out"/>
+            <property length="5" name="Points" description="Punten" type="integer" value="9" direction="out"/>
+            <property length="5" name="ExtraPolatedPoints" description="Geextrapoleerde Punten" type="integer" value="15" direction="out"/>
+            <property length="5" name="BasePoints" description="Punten bij aanvang competitie (indien positief)" type="integer" value="0" direction="out"/>
+            <property length="5" name="Penalties" description="Minderingspunten" type="integer" value="0" direction="out"/>
+            <property length="5" name="TeamLack" description="Wedstrijdachterstand" type="integer" value="0" direction="out"/>
+            <property name="IsCompeting" description="Buiten mededinging" type="boolean" value="false" direction="out"/>
+         </message>
+         <message name="Standings" index="11" type="array_element">
+            <property length="5" name="Position" description="Positie" type="integer" value="12" direction="out"/>
+            <property length="10" name="OrganizationId" description="Relatiecode ver." type="string" value="BBHZ20N" direction="out"/>
+            <property length="30" name="PoolId" description="PoolId" type="integer" value="12345" direction="out"/>
+            <property name="PoolName" description="Poolnaam" type="string" value="D21" direction="out"/>
+            <property length="30" name="TeamId" description="TeamId" type="integer" value="11111" direction="out"/>
+            <property length="30" name="TeamSex" description="TeamId" type="string" value="man" direction="out"/>
+            <property length="30" name="ClubName" description="ClubName" type="string" value="KVV" direction="out"/>
+            <property length="30" name="ClubNameShort" description="ClubNameShort" type="string" value="KVV" direction="out"/>
+            <property length="30" name="TeamReportingName" description="TeamReportingName" type="" direction="out"/>
+            <property length="30" name="TeamName" description="Team" type="string" value="KVV JO13-1" direction="out"/>
+            <property length="5" name="TotalMatches" description="Totaal wedstrijden" type="integer" value="12" direction="out"/>
+            <property length="5" name="GamesWon" description="Gewonnen" type="integer" value="1" direction="out"/>
+            <property length="5" name="GamesLost" description="Verloren" type="integer" value="10" direction="out"/>
+            <property length="5" name="GamesDrawn" description="Gelijk" type="integer" value="1" direction="out"/>
+            <property length="5" name="GamesWonAway" description="Gewonnen (uitwedstrijden)" type="integer" value="0" direction="out"/>
+            <property length="5" name="HomeGoals" description="Doelp. voor" type="integer" value="16" direction="out"/>
+            <property name="HomePenaltiesResult" description="Strafworpen thuis" type="integer" value="0" direction="out"/>
+            <property length="5" name="AwayGoals" description="Doelp. tegen" type="integer" value="41" direction="out"/>
+            <property length="5" name="HomeGoalsAway" description="Doelp. voor (uitwedstrijden)" type="integer" value="11" direction="out"/>
+            <property name="AwayPenaltiesResult" description="Strafworpen uit" type="integer" value="0" direction="out"/>
+            <property length="5" name="GoalDifference" description="Doelsaldo" type="integer" value="-25" direction="out"/>
+            <property length="5" name="Points" description="Punten" type="integer" value="4" direction="out"/>
+            <property length="5" name="ExtraPolatedPoints" description="Geextrapoleerde Punten" type="integer" value="10" direction="out"/>
+            <property length="5" name="BasePoints" description="Punten bij aanvang competitie (indien positief)" type="integer" value="0" direction="out"/>
+            <property length="5" name="Penalties" description="Minderingspunten" type="integer" value="0" direction="out"/>
+            <property length="5" name="TeamLack" description="Wedstrijdachterstand" type="integer" value="0" direction="out"/>
+            <property name="IsCompeting" description="Buiten mededinging" type="boolean" value="false" direction="out"/>
+         </message>
+      </message>
+   </message>
+   <methods/>
+   <operations/>
+</tml>

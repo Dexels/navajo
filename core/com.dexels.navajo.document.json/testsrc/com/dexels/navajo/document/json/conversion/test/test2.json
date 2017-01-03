@@ -1,0 +1,1676 @@
+{
+  "Timestamp": 1483358998701,
+  "PrimaryKeys": [
+    "poolid"
+  ],
+  "Columns": {
+    "tenant": {
+      "Type": "string",
+      "Value": "KNVB"
+    },
+    "poolid": {
+      "Type": "integer",
+      "Value": "456797"
+    },
+    "competitionkind": {
+      "Type": "string",
+      "Value": "DEFAULT_COMPETITION"
+    },
+    "competitiontypeid": {
+      "Type": "string",
+      "Value": "0213"
+    },
+    "competitiontypename": {
+      "Type": "string",
+      "Value": "0213 Mannen Zaterdag reserve (A-cat)"
+    },
+    "disciplinetype": {
+      "Type": "string",
+      "Value": "VE"
+    },
+    "classname": {
+      "Type": "string",
+      "Value": "1e klasse"
+    },
+    "poolname": {
+      "Type": "string",
+      "Value": "B"
+    },
+    "maxrounds": {
+      "Type": "integer",
+      "Value": "26"
+    },
+    "totalteams": {
+      "Type": "integer",
+      "Value": "14"
+    }
+  },
+  "SubMessage": {
+    "standings": [
+      {
+        "Timestamp": 1483358998701,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "BBKR444"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "157543"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "AZSV"
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "AZSV"
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "AZSV 3"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "10"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "10"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "10"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "16"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      },
+      {
+        "Timestamp": 1483358998701,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "BBKT86S"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "164039"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "Vroomshoopse Boys"
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "Vroomshoopse Boys"
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "Vroomshoopse Boys 2"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "12"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "6"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "8"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "10"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "16"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      },
+      {
+        "Timestamp": 1483358998701,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "BBKV45P"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "163767"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "Bergentheim"
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "Bergentheim"
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "Bergentheim 2"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "6"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "9"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "15"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      },
+      {
+        "Timestamp": 1483358998702,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "FZTG08A"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "189617"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "v.v. Hellendoorn"
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "Hellendoorn v.v."
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "v.v. Hellendoorn 2"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "9"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "6"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "6"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "9"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "15"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      },
+      {
+        "Timestamp": 1483358998702,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "5"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "BBKT84Q"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "163662"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "Sparta E."
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "Sparta E."
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "Sparta E. 2"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "5"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "7"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "13"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      },
+      {
+        "Timestamp": 1483358998702,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "6"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "BBKT04W"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "161732"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "Excelsior '31"
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "Excelsior'31"
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "Excelsior '31 3"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "9"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "7"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "6"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "12"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      },
+      {
+        "Timestamp": 1483358998702,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "7"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "BBKS62D"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "162568"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "Hulzense Boys"
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "Hulzense Boys"
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "Hulzense Boys 2"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "9"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "9"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "6"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "12"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      },
+      {
+        "Timestamp": 1483358998702,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "8"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "BBKT78R"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "163072"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "Enter Vooruit"
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "Enter Vooruit"
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "Enter Vooruit 2"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "6"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "-2"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "6"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "12"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      },
+      {
+        "Timestamp": 1483358998702,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "9"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "BBKV73W"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "161655"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "DETO"
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "DETO"
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "DETO 2"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "5"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "5"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "11"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      },
+      {
+        "Timestamp": 1483358998702,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "10"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "BBKR466"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "157892"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "DOS '37"
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "DOS '37"
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "DOS '37 2"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "9"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "-5"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "10"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      },
+      {
+        "Timestamp": 1483358998702,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "11"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "BBKS93N"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "160749"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "AVW '66"
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "AVW '66"
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "AVW '66 2"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "-1"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "9"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      },
+      {
+        "Timestamp": 1483358998702,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "12"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "BBKR94J"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "157906"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "Be Quick '28"
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "Be Quick'28"
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "Be Quick '28 2"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "8"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "2"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "-5"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "9"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      },
+      {
+        "Timestamp": 1483358998702,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "13"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "BBKT082"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "162636"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "Den Ham"
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "Den Ham"
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "Den Ham 2"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "10"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "3"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "-6"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "6"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      },
+      {
+        "Timestamp": 1483358998702,
+        "PrimaryKeys": [
+          "poolid"
+        ],
+        "Columns": {
+          "position": {
+            "Type": "integer",
+            "Value": "14"
+          },
+          "organizationid": {
+            "Type": "string",
+            "Value": "BBKY50E"
+          },
+          "poolid": {
+            "Type": "integer",
+            "Value": "456797"
+          },
+          "poolname": {
+            "Type": "string",
+            "Value": "B"
+          },
+          "teamid": {
+            "Type": "integer",
+            "Value": "167308"
+          },
+          "teamsex": {
+            "Type": "string",
+            "Value": "man"
+          },
+          "clubname": {
+            "Type": "string",
+            "Value": "WVF"
+          },
+          "clubnameshort": {
+            "Type": "string",
+            "Value": "WVF"
+          },
+          "teamreportingname": {
+            "Type": "string",
+            "Value": null
+          },
+          "teamname": {
+            "Type": "string",
+            "Value": "WVF 2"
+          },
+          "totalmatches": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "gameswon": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "gameslost": {
+            "Type": "integer",
+            "Value": "4"
+          },
+          "gamesdrawn": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "gameswonaway": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "homegoals": {
+            "Type": "integer",
+            "Value": "1"
+          },
+          "homepenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaygoals": {
+            "Type": "integer",
+            "Value": "13"
+          },
+          "homegoalsaway": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "awaypenaltiesresult": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "goaldifference": {
+            "Type": "integer",
+            "Value": "-12"
+          },
+          "points": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "extrapolatedpoints": {
+            "Type": "integer",
+            "Value": "6"
+          },
+          "basepoints": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "penalties": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "teamlack": {
+            "Type": "integer",
+            "Value": "0"
+          },
+          "iscompeting": {
+            "Type": "boolean",
+            "Value": "false"
+          }
+        }
+      }
+    ]
+  }
+}
