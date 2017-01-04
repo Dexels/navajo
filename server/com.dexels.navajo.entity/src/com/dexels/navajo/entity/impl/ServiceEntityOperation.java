@@ -38,7 +38,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	private Operation myOperation;
 	private Entity myEntity;
 	private Key myKey;
-	private Set<String> validMessages  =new HashSet<String>(Arrays.asList("__parms__", "__globals__"));
+	private Set<String> validMessages  =new HashSet<String>(Arrays.asList("__parms__", "__globals__", "__aaa__"));
 
 	
 	public ServiceEntityOperation(EntityManager m, DispatcherInterface c, Operation o) throws EntityException {
