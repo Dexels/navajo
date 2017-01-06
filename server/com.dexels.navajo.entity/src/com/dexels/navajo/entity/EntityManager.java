@@ -93,7 +93,7 @@ public class EntityManager {
 
         for (String entity : entityMap.keySet()) {
             // Reconstruct entity from packagePath + entityName
-            String testName = packagePath + entity.substring(entity.lastIndexOf(".") + 1);
+            String testName = packagePath + "." + entity.substring(entity.lastIndexOf(".") + 1);
             if (testName.equals(entity)) {
                 unsortedResult.add(entity);
             }

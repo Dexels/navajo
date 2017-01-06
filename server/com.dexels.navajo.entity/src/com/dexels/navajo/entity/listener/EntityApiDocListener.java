@@ -100,7 +100,8 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         String result = sourcetemplate.replace("{{ENTITY_PATH}}", path);
         Set<String> entityNames;
         if (debug) {
-            entityNames = myManager.getRegisteredEntities(path);
+            String entityPath = path.replace("/", ".");
+            entityNames = myManager.getRegisteredEntities(entityPath);
         } else {
             entityNames = myMapper.getEntities(path);
         }
