@@ -21,7 +21,7 @@ public class EntityMap extends NavajoMap {
 	private String entityName;
 	private String method;
 	private Entity myEntity;
-	private boolean breakOnNoResult = true;
+	private boolean breakOnNoResult = false;
 	
 	@Override
 	public void load(Access access) throws MappableException, UserException {
