@@ -162,6 +162,9 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         String requestBody = null;
         if ((method.equals(Operation.GET) || method.equals(Operation.DELETE)) && e.getKeys().size() > 0) {
             requestBody = printRequestKeysDefinition(e);
+        } else if (method.equals(Operation.GET) || method.equals(Operation.DELETE)) {
+            String requestbodyTemplate = getTemplate("operationrequestbody.template");
+            requestBody =  requestbodyTemplate.replace("{{REQUEST_BODY}}", "{ }");
         } else {
             String requestbodyTemplate = getTemplate("operationrequestbody.template");
             requestBody = requestbodyTemplate.replace("{{REQUEST_BODY}}", writeEntityJson(n, "request"));
