@@ -83,23 +83,14 @@ public class GenericBinaryOpener implements BinaryOpener {
 
     @Override
     public boolean exportCsv(String fileName, Message m, String delimiter) {
-        Writer out = null;
-        try {
-            File f = new File(fileName);
-            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), "UTF-8"));
+//        Writer out = null;
+        File f = new File(fileName);
+        try(Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), "UTF-8"))) {
             m.writeAsCSV(out, delimiter);
-            return open(f);
         } catch (Throwable e) {
             logger.error("Error exporting {} to CSV ", fileName, e);
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    // whatever
-                }
-            }
+            return false;
         }
-        return false;
+        return open(f);
     }
 }
