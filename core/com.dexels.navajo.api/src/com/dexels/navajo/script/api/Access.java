@@ -77,8 +77,6 @@ public final class Access implements java.io.Serializable, Mappable {
     @SuppressWarnings("unused")
     private static final String VERSION = "$Id$";
 
-    public static final String MISSING_APPLICATION = "noapp";
-
     public java.util.Date created = new java.util.Date();
     private static int AccessCount = 0;
     
@@ -679,9 +677,7 @@ public final class Access implements java.io.Serializable, Mappable {
 
     public void setApplication(String application) {
         this.application = application;
-        if (this.application == null) {
-            this.application = MISSING_APPLICATION;
-        }
+        
     }
     
     public String getOrganization() {
