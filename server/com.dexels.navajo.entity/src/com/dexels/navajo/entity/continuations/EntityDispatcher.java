@@ -25,7 +25,9 @@ import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
+import com.dexels.navajo.entity.EntityMapper;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
+import com.dexels.navajo.entity.util.EntityHelper;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.script.api.Access;
@@ -43,6 +45,7 @@ public class EntityDispatcher {
 
     private EntityManager myManager;
     private AuthenticationMethodBuilder authMethodBuilder;
+    private EntityMapper myMapper;
 
     public void run(EntityContinuationRunner runner) {
         Navajo result = null;
@@ -64,7 +67,8 @@ public class EntityDispatcher {
             }
             String urlOutput = null;
             if (dotString != null) {
-                // The output format can be set by adding a trailing .<format> to
+                // The output format can be set by adding a trailing .<format>
+                // to
                 // the URL. This overrules accept-encoding
                 urlOutput = dotString.substring(dotString.lastIndexOf('.') + 1);
                 if (!SUPPORTED_OUTPUT.contains(urlOutput)) {
@@ -104,8 +108,29 @@ public class EntityDispatcher {
 
             logger.info("Entity request {} ({}, {})", entityName, method, ip);
 
+            // Check entity mapper for this folder. If we find an entity mapped
+            // to this folder
+            // named like our request, this is our entity
             entityName = entityName.replace("/", ".");
-            Entity e = myManager.getEntity(entityName);
+            String entitySubName = entityName.substring(entityName.lastIndexOf('.') + 1);
+            String folder;
+            if (entityName.equals(entitySubName)) {
+                folder = ""; // Root folder
+            } else {
+                folder = path.substring(1, path.lastIndexOf("/"));
+            }
+            Set<String> entities = myMapper.getEntities(folder);
+            String mappedEntity = null;
+            for (String s : entities) {
+                String anEntity = s.substring(s.lastIndexOf('.') + 1);
+                if (anEntity.equals(entitySubName)) {
+                    mappedEntity = s;
+                    break;
+                }
+            }
+
+            Entity e = myManager.getEntity(mappedEntity);
+
             if (e == null) {
                 // Requested entity not found
                 logger.warn("Requested entity not registred! {}", entityName);
@@ -116,12 +141,12 @@ public class EntityDispatcher {
 
             // Get the input document
             if (method.equals("GET") || method.equals("DELETE")) {
-                input = myManager.deriveNavajoFromParameterMap(e, runner.getHttpRequest().getParameterMap());
+                input = EntityHelper.deriveNavajoFromParameterMap(e, runner.getHttpRequest().getParameterMap());
             } else {
                 JSONTML json = JSONTMLFactory.getInstance();
                 json.setEntityTemplate(entityMessage.getRootDoc());
                 try {
-                    input = json.parse(runner.getHttpRequest().getInputStream(), entityMessage.getName());
+                    input = json.parse(runner.getRequestInputStream(), entityMessage.getName());
                 } catch (Exception e1) {
                     logger.error("Error in parsing input JSON");
                     throw new EntityException(EntityException.BAD_REQUEST);
@@ -134,21 +159,18 @@ public class EntityDispatcher {
                 throw new EntityException(EntityException.BAD_REQUEST);
             }
 
-            // Create a header from the input
-            Header header = NavajoFactory.getInstance().createHeader(input, "", "dummy", "dummy", -1);
-            input.addHeader(header);
-            
-            Operation o = myManager.getOperation(entityName, method);
+           
+            Operation o = myManager.getOperation(e.getName(), method);
             o.setTenant(tenant);
 
             // Create an access object for logging purposes
             Long startAuth = System.currentTimeMillis();
             String scriptName = "entity/" + entityName.replace('.', '/');
-            
-            access = new Access(1, 1, "dummy", scriptName, "", "", "", null, false, null);
+
+            access = new Access(1, 1, "placeholder", scriptName, "", "", "", null, false, null);
             access.setOperation(o);
             access.ipAddress = ip;
-            
+
             try {
                 access = authenticateUser(input, tenant, access, authHeader);
             } catch (AuthorizationException auth) {
@@ -156,6 +178,11 @@ public class EntityDispatcher {
                 throw new EntityException(EntityException.UNAUTHORIZED);
             }
             
+            // Create a header from the input
+            Header header = NavajoFactory.getInstance().createHeader(input, "", access.rpcUser, access.rpcPwd, -1);
+            input.addHeader(header);
+
+
             access.created = new Date(runner.getStartedAt());
             access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
             access.setClientDescription("entity");
@@ -170,7 +197,6 @@ public class EntityDispatcher {
 
             input.getMessage(entityMessage.getName()).setEtag(inputEtag);
 
-            
             if (o.debugInput() || o.debugOutput()) {
                 access.setDebugAll(true);
             }
@@ -178,7 +204,7 @@ public class EntityDispatcher {
             long opStartTime = System.currentTimeMillis();
             ServiceEntityOperation seo = new ServiceEntityOperation(myManager, runner.getDispatcher(), o);
             result = seo.perform(input);
-            
+
             if (result.getMessage(entityMessage.getName()) == null) {
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND);
             }
@@ -190,15 +216,15 @@ public class EntityDispatcher {
             if (access != null) {
                 access.setExitCode(Access.EXIT_OK);
             }
-        
+
         } catch (Throwable ex) {
             result = handleException(ex, runner.getHttpResponse());
-            
+
             if (access != null) {
                 boolean skipLogging = false;
                 if (ex instanceof EntityException) {
                     EntityException e = (EntityException) ex;
-                    if (e.getCode() ==  EntityException.NOT_MODIFIED) {
+                    if (e.getCode() == EntityException.NOT_MODIFIED) {
                         skipLogging = true;
                     } else if (e.getCode() == EntityException.ENTITY_NOT_FOUND) {
                         skipLogging = true;
@@ -207,9 +233,9 @@ public class EntityDispatcher {
                         skipLogging = true;
                         access.setExitCode(Access.EXIT_AUTH_EXECPTION);
                     }
-                    
+
                 }
-                
+
                 if (!skipLogging) {
                     access.setExitCode(Access.EXIT_EXCEPTION);
                     access.setException(ex);
@@ -229,7 +255,6 @@ public class EntityDispatcher {
             }
         }
     }
-
 
     private String determineInstanceFromRequest(final HttpServletRequest req) {
         String requestInstance = req.getHeader("X-Navajo-Instance");
@@ -308,28 +333,27 @@ public class EntityDispatcher {
         return mimeResult;
     }
 
-    private Access authenticateUser(Navajo inDoc, String tenant, Access access, String authHeader)
-            throws AuthorizationException {
-        
+    private Access authenticateUser(Navajo inDoc, String tenant, Access access, String authHeader) throws AuthorizationException {
+
         access.setTenant(tenant);
         access.setInDoc(inDoc);
-        
+
         if (LoginStatisticsProvider.reachedAbortThreshold(access.getRpcUser(), access.getIpAddress())) {
             logger.info("Refusing request from {} for {}  due to too many failed auth attempts", access.getIpAddress(), access.getRpcUser());
             throw new AuthorizationException(true, false, access.getRpcUser(), "Not authorized");
         }
-        
+
+       
         AuthenticationMethod authenticator = authMethodBuilder.getInstanceForRequest(authHeader);
         if (authenticator == null) {
-            throw new AuthorizationException(false, false, null , "Missing authenticator"); 
+            throw new AuthorizationException(false, false, null, "Missing authenticator");
         }
         
-       
-        
+
+
         authenticator.process(access);
         appendGlobals(inDoc, tenant);
 
-       
         return access;
     }
 
@@ -359,13 +383,20 @@ public class EntityDispatcher {
         myManager = null;
     }
 
-    
     public void setAuthenticationMethodBuilder(AuthenticationMethodBuilder amb) {
         this.authMethodBuilder = amb;
     }
 
     public void clearAuthenticationMethodBuilder(AuthenticationMethodBuilder eventAdmin) {
         this.authMethodBuilder = null;
+    }
+
+    public void setEntityMapper(EntityMapper mapp) {
+        myMapper = mapp;
+    }
+
+    public void clearEntityMapper(EntityMapper mapp) {
+        myMapper = null;
     }
 
 }

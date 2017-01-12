@@ -109,7 +109,7 @@ public class Base2LdapAdapter implements Mappable {
 
 	public static void main(String[] args) throws NamingException, ClientException, NavajoException {
 
-		ClientInterface cc = NavajoClientFactory.getClient();
+		ClientInterface cc = NavajoClientFactory.createClient();
 		cc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
 		cc.setUsername("ROOT");
 		cc.setPassword("R20T");
@@ -140,9 +140,9 @@ public class Base2LdapAdapter implements Mappable {
 	}
 
 	private void insertLeague(DirContext root) throws ClientException, NamingException {
-		final Navajo init = NavajoClientFactory.getClient().doSimpleSend("club/InitUpdateClub");
+		final Navajo init = NavajoClientFactory.getClient().doSimpleSend(null, "club/InitUpdateClub");
 
-		final Navajo initSearch = NavajoClientFactory.getClient().doSimpleSend("club/InitSearchClubs");
+		final Navajo initSearch = NavajoClientFactory.getClient().doSimpleSend(null, "club/InitSearchClubs");
 		initSearch.getProperty("ClubSearch/SearchName").setValue("a");
 		final Navajo process2 = NavajoClientFactory.getClient().doSimpleSend(initSearch, "club/ProcessSearchClubs");
 		Message result = process2.getMessage("Club");

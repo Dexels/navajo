@@ -2,10 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Management
 Bundle-SymbolicName: com.dexels.navajo.mgmt
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.0.5.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.compiler,
+ com.dexels.navajo.entity,
  com.dexels.navajo.mapping,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,

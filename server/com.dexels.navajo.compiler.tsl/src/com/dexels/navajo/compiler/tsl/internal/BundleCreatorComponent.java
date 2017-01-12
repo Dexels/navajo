@@ -13,10 +13,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
@@ -204,7 +206,7 @@ public class BundleCreatorComponent implements BundleCreator {
             return;
         }
 
-        List<String> newTenants = new ArrayList<>();
+        Set<String> newTenants = new HashSet<>();
 
         depanalyzer.addDependencies(script);
         List<Dependency> dependencies = depanalyzer.getDependencies(script, Dependency.INCLUDE_DEPENDENCY);
@@ -215,11 +217,14 @@ public class BundleCreatorComponent implements BundleCreator {
             for (Dependency d : dependencies) {
                 if (d.isTentantSpecificDependee()) {
                     newTenants.add(d.getTentantDependee());
-                    compileAndCreateBundle(script, scriptExtension, d.getTentantDependee(), hasTenantSpecificFile,
-                            true, keepIntermediate, success, skipped, failures);
                 }
-
             }
+            for(String newTenant : newTenants) {
+                compileAndCreateBundle(script, scriptExtension, newTenant, hasTenantSpecificFile,
+                        true, keepIntermediate, success, skipped, failures);
+            }
+            
+            
         }
 
         if (!hasTenantSpecificFile) {
@@ -257,7 +262,7 @@ public class BundleCreatorComponent implements BundleCreator {
     }
 
     @SuppressWarnings("unchecked")
-    private void uninstallObsoleteTenantScript(String rpcName, List<String> newTenants) {
+    private void uninstallObsoleteTenantScript(String rpcName, Set<String> newTenants) {
         String osgiScriptName = rpcName.replaceAll("/", ".");
         String filter = "(navajo.scriptName=" + osgiScriptName + ")";
 
@@ -307,8 +312,12 @@ public class BundleCreatorComponent implements BundleCreator {
             failures.add(script);
             throw e;
         }
-          
-        logger.info("Finished compiling and bundling {}", script);
+        if (forceTenant) {
+            logger.info("Finished compiling and bundling {} for {}", script, scriptTenant);
+        } else {
+            logger.info("Finished compiling and bundling {}", script);
+        }
+       
     }
 
     private synchronized ReentrantLock getLock(String script, String context) {

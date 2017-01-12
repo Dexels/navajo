@@ -966,10 +966,10 @@ function startTitleLoader(){
 	document.title = 'Tester.js ';
 	function loadTitle() {
 	    var title = $(document).prop('title'); 
-	    if (title.indexOf('......') == -1) {
+	    if (title.indexOf('.......') == -1) {
 	        $(document).prop('title', title+ '.');
 	    } else {
-	    	$(document).prop('title', 'Tester.js');
+	    	$(document).prop('title', 'Tester.js .');
 	    }
 	};
 	titleloader = setInterval(loadTitle, 750);

@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Document reference implementation
 Bundle-SymbolicName: com.dexels.navajo.document
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.4.3.qualifier
+Bundle-Version: 3.4.13.qualifier
 Bundle-Activator: navajodocument.Version
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

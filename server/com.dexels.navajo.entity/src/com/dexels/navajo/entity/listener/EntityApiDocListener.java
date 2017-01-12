@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,6 +28,7 @@ import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.EntityManager;
+import com.dexels.navajo.entity.EntityMapper;
 import com.dexels.navajo.entity.Key;
 
 public class EntityApiDocListener extends HttpServlet implements ResourceMapping {
@@ -39,6 +38,8 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
 
     private EntityManager myManager;
     private final DefaultResourceMapping resourceMapping = new DefaultResourceMapping();
+
+    private EntityMapper myMapper;
 
     public void activate() {
         resourceMapping.setAlias("/entityApi");
@@ -67,34 +68,54 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
     public void clearEntityManager(EntityManager em) {
         myManager = null;
     }
+    
+    public void setEntityMapper(EntityMapper mapp) {
+        myMapper = mapp;
+    }
+
+    public void clearEntityMapper(EntityMapper mapp) {
+        myMapper = null;
+    }
+    
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String path = request.getPathInfo();
         boolean debug = Boolean.valueOf(request.getParameter("developer"));
-        String basePath = "";
+
         if (path == null) {
-            path = "/";
-        } else if (path != null && !path.equals("/")) {
-            for (String subPath : path.split("/")) {
-                basePath += subPath + ".";
+            path = "";
+        } else {
+            if (path.startsWith("/")) {
+                path = path.substring(1);
             }
-            basePath = basePath.substring(1);
+            if (path.endsWith("/")) {
+                path = path.substring(0, path.length()-1);
+            }
         }
         String sourcetemplate = getTemplate("source.template");
         String operationtemplate = getTemplate("operation.template");
 
-        String result = sourcetemplate.replace("{{ENTITY_PATH}}", path.substring(1));
-
-        List<String> entityNames = myManager.getRegisteredEntities(basePath);
+        String result = sourcetemplate.replace("{{ENTITY_PATH}}", path);
+        Set<String> entityNames;
+        if (debug) {
+            String entityPath = path.replace("/", ".");
+            entityNames = myManager.getRegisteredEntities(entityPath);
+        } else {
+            entityNames = myMapper.getEntities(path);
+        }
+        
 
         String operations = "";
         for (String entityName : entityNames) {
-            Map<String, Operation> ops = myManager.getOperations(entityName);
-            for (String op : ops.keySet()) {
-                operations += writeEntityOperation(operationtemplate, entityName, ops.get(op));
+            if (myManager.getEntity(entityName) == null) {
+                logger.warn("Missing entity: {} at {}", entityName, path);
+                continue;
             }
+
+            operations += writeEntityOperations(operationtemplate, entityName, path);
+           
             if (debug) {
                 operations += writeHeadEntityOperation(operationtemplate, entityName);
             }
@@ -106,15 +127,25 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         response.getOutputStream().write(result.getBytes());
 
     }
+    
+    private String writeEntityOperations(String operationtemplate, String entityName, String path) throws ServletException {
+        String result = "";
+        Map<String, Operation> ops = myManager.getOperations(entityName);
+        Entity entity = myManager.getEntity(entityName);
+        for (String op : ops.keySet()) {
+            result += writeEntityOperation(operationtemplate, entity, path, ops.get(op));
+        }
+        return result;
+        
+    }
 
-    private String writeEntityOperation(String template, String entityName, Operation op) throws ServletException {
+    private String writeEntityOperation(String template, Entity e, String path, Operation op) throws ServletException {
         String result = "";
         String method = op.getMethod();
         
-        Entity e = myManager.getEntity(entityName);
         Navajo n = NavajoFactory.getInstance().createNavajo();
         n.addMessage(e.getMessage().copy(n));
-        String entityNameUrl = entityName.replace(".", "/");
+        String entityNameUrl = path + "/" + e.getMessageName();
 
         result = template.replace("{{OP}}", method);
         result = result.replace("{{URL}}", entityNameUrl);
@@ -131,6 +162,9 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         String requestBody = null;
         if ((method.equals(Operation.GET) || method.equals(Operation.DELETE)) && e.getKeys().size() > 0) {
             requestBody = printRequestKeysDefinition(e);
+        } else if (method.equals(Operation.GET) || method.equals(Operation.DELETE)) {
+            String requestbodyTemplate = getTemplate("operationrequestbody.template");
+            requestBody =  requestbodyTemplate.replace("{{REQUEST_BODY}}", "{ }");
         } else {
             String requestbodyTemplate = getTemplate("operationrequestbody.template");
             requestBody = requestbodyTemplate.replace("{{REQUEST_BODY}}", writeEntityJson(n, "request"));

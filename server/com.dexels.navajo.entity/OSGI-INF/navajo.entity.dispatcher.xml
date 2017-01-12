@@ -3,7 +3,9 @@
    <implementation class="com.dexels.navajo.entity.continuations.EntityDispatcher"/>
       <reference bind="setAuthenticationMethodBuilder" cardinality="1..1" interface="com.dexels.navajo.authentication.api.AuthenticationMethodBuilder" name="AuthenticationMethodBuilder" policy="dynamic" unbind="clearAuthenticationMethodBuilder"/>
    
-   <reference bind="setEntityManager" cardinality="1..1" interface="com.dexels.navajo.entity.EntityManager" name="EntityManager" policy="dynamic"/>   
+   <reference bind="setEntityManager" cardinality="1..1" interface="com.dexels.navajo.entity.EntityManager" name="EntityManager" policy="dynamic"/>
+   <reference bind="setEntityMapper" unbind="clearEntityMapper"  cardinality="1..1" interface="com.dexels.navajo.entity.EntityMapper" name="EntityMapper" policy="dynamic"/>
+      
    <reference cardinality="1..1" interface="com.dexels.navajo.server.DispatcherInterface" name="DispatcherInterface" policy="dynamic"/>
    <service>
       <provide interface="com.dexels.navajo.entity.continuations.EntityDispatcher"/>

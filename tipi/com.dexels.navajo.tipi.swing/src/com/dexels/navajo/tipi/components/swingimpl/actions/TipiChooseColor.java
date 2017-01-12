@@ -6,7 +6,6 @@ import java.awt.GradientPaint;
 import java.awt.Rectangle;
 import java.awt.Window;
 
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import com.dexels.navajo.document.Operand;

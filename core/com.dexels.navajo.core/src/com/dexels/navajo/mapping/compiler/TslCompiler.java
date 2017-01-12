@@ -949,6 +949,11 @@ public class TslCompiler {
 		                if (superEntity.indexOf('?') > 0) {
 		                    superEntity = superEntity.split("\\?")[0];
 		                }
+		                addDependency(
+		        				"dependentObjects.add( new ExtendDependency( new Long(\""
+		        						+ ExtendDependency.getScriptTimeStamp(superEntity)
+		        						+ "\"), \"" + superEntity + "\"));\n", "EXTEND" + superEntity);
+		                
 		                deps.add(new ExtendDependency(ExtendDependency.getScriptTimeStamp(superEntity),superEntity ));
 		            }
 				}
@@ -3403,6 +3408,7 @@ public class TslCompiler {
 					+ "import java.util.HashMap;\n"
 					+ "import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;\n"
+					+ "import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.SQLFieldDependency;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.InheritDependency;\n"

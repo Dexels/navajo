@@ -124,12 +124,12 @@ public class BaseLdapAdapter implements Mappable {
 
 	public static void main(String[] args) throws NamingException, ClientException, NavajoException {
 
-		ClientInterface cc = NavajoClientFactory.getClient();
+		ClientInterface cc = NavajoClientFactory.createClient();
 		cc.setServerUrl("hera1.dexels.com/sportlink/knvb/servlet/Postman");
 		cc.setUsername("");
 		cc.setPassword("");
 
-		final Navajo init = NavajoClientFactory.getClient().doSimpleSend("club/InitUpdateClub");
+		final Navajo init = NavajoClientFactory.getClient().doSimpleSend(null, "club/InitUpdateClub");
 		init.getProperty("Club/ClubIdentifier").setValue("BBFW63X");
 		init.getProperty("Club/LastName").setValue("");
 
