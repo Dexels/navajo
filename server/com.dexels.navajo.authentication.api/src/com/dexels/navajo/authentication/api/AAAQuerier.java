@@ -53,7 +53,7 @@ public interface AAAQuerier {
 
     public void resetCachedUserCredential(String tenant, String username);
     
-    public Integer getUserId(String tenant, String username);
+    public Integer getUserId(Access a);
 
     
     public boolean isFirstUseAccount(Access access);

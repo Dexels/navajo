@@ -37,7 +37,7 @@ public class DefaultAAAQuerier implements AAAQuerier {
 	}
 
 	@Override
-	public Integer getUserId(String tenant, String username) {
+	public Integer getUserId(Access a) {
 		// TODO Auto-generated method stub
 		return null;
 	}
