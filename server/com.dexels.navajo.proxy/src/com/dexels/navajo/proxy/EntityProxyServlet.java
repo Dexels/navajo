@@ -63,16 +63,19 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 	@Override
 	protected void sendProxyRequest(HttpServletRequest request, HttpServletResponse response, Request proxyRequest
 			) {
+	    logger.warn("headers: {}", proxyRequest.getHeaders());
 		proxyRequest.getHeaders().remove("Host");
-		proxyRequest.getHeaders().remove("Accept-Encoding");
+		//proxyRequest.getHeaders().remove("Accept-Encoding");
 		
 		if (username != null && password != null) {
+		    logger.warn("Adding basic auth");
             // Use HTTP Basic auth - should only be used over HTTPS!
             String authString = username + ":" + password;
             byte[] bytes = authString.getBytes(Charset.forName("UTF-8"));
             String encoded = Base64.encode(bytes, 0, bytes.length, 0, "");
             proxyRequest.getHeaders().add("Authorization", "Basic " + encoded);
         }
+		logger.warn("finished appending headers");
 		
 	}
 
@@ -90,17 +93,17 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 		}
 
 //		URI finalURI = URI.create(construct);
-		
+		logger.warn("Rewritten target to {}", construct);
 		return construct;
 	}
 	
-	private String getEntityFromServer() {
+	private synchronized String getEntityFromServer() {
 		if(this.url!=null) {
 			return this.url;
 		}
 		final String POSTFIX = "/navajo";
 		if(this.server.endsWith(POSTFIX)) {
-			String url = server.substring(0,server.length()-POSTFIX.length())+"/entity";
+			url = server.substring(0,server.length()-POSTFIX.length())+"/entity";
 			return url;
 		}
 		return null;
