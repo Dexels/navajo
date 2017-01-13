@@ -967,7 +967,7 @@ function startTitleLoader(){
 	function loadTitle() {
 	    var title = $(document).prop('title'); 
 	    if (title.indexOf('.......') == -1) {
-	        $(document).prop('title', title+ '.');
+	        $(document).prop('title', title + '.');
 	    } else {
 	    	$(document).prop('title', 'Tester.js .');
 	    }
