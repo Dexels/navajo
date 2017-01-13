@@ -1,6 +1,7 @@
 package com.dexels.navajo.proxy;
 
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -60,22 +61,22 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 	    return httpClient;
 	}
 	
-	@Override
+
+    @Override
 	protected void sendProxyRequest(HttpServletRequest request, HttpServletResponse response, Request proxyRequest
 			) {
-	    logger.warn("headers: {}", proxyRequest.getHeaders());
 		proxyRequest.getHeaders().remove("Host");
-		//proxyRequest.getHeaders().remove("Accept-Encoding");
+		proxyRequest.getHeaders().remove("Accept-Encoding");
 		
 		if (username != null && password != null) {
-		    logger.warn("Adding basic auth");
             // Use HTTP Basic auth - should only be used over HTTPS!
             String authString = username + ":" + password;
             byte[] bytes = authString.getBytes(Charset.forName("UTF-8"));
             String encoded = Base64.encode(bytes, 0, bytes.length, 0, "");
             proxyRequest.getHeaders().add("Authorization", "Basic " + encoded);
         }
-		logger.warn("finished appending headers");
+		// If we don't call super, this request will hang!
+		super.sendProxyRequest(request,response,proxyRequest);
 		
 	}
 
@@ -93,7 +94,6 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 		}
 
 //		URI finalURI = URI.create(construct);
-		logger.warn("Rewritten target to {}", construct);
 		return construct;
 	}
 	
