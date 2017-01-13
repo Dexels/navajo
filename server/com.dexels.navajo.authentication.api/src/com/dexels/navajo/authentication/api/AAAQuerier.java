@@ -31,7 +31,7 @@ public interface AAAQuerier {
     public static final String FAILED_LOGIN_TOPIC = "aaa/failedlogin";
     
     
-    public int authenticateUsernamePassword(Access access, String username, String password);
+    public int authenticateUsernamePassword(Access access);
     
     
     /**
@@ -56,9 +56,9 @@ public interface AAAQuerier {
     public Integer getUserId(String tenant, String username);
 
     
-    public boolean isFirstUseAccount(String tenant, String username);
+    public boolean isFirstUseAccount(Access access);
     
-    public int getDaysUntilExpiration(String tenant, String username);
+    public int getDaysUntilExpiration(Access access);
 
 
 
