@@ -25,7 +25,7 @@ public class DefaultAAAQuerier implements AAAQuerier {
     }
 
 	@Override
-	public void reset(String tenant) {
+	public void reset() {
 		// TODO Auto-generated method stub
 
 	}

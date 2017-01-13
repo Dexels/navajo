@@ -49,7 +49,7 @@ public interface AAAQuerier {
      * Reset AAA module, i.e. re-load all configuration data.
      *
      */
-    public void reset(String tenant);
+    public void reset();
 
     public void resetCachedUserCredential(String tenant, String username);
     
