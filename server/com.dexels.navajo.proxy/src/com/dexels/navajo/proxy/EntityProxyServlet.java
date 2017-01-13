@@ -1,4 +1,4 @@
-package com.dexels.navajo.jsp.proxy;
+package com.dexels.navajo.proxy;
 
 
 import java.net.URI;
