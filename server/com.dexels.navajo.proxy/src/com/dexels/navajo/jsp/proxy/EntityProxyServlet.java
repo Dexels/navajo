@@ -64,6 +64,7 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 	protected void sendProxyRequest(HttpServletRequest request, HttpServletResponse response, Request proxyRequest
 			) {
 		proxyRequest.getHeaders().remove("Host");
+		proxyRequest.getHeaders().remove("Accept-Encoding");
 		
 		if (username != null && password != null) {
             // Use HTTP Basic auth - should only be used over HTTPS!
