@@ -1417,6 +1417,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             h.setRequestId(null);
             h.setHeaderAttribute("parentaccessid", access.accessID);
             h.setHeaderAttribute("application", access.getApplication());
+            h.setHeaderAttribute("organization", access.getOrganization());
             String tenant = access.getTenant();
             boolean skipAuth = true;
             if (this.tenant != null && !this.tenant.equals("")) {
