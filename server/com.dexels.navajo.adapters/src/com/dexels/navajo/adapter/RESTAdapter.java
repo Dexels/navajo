@@ -236,6 +236,9 @@ public class RESTAdapter extends NavajoMap {
             } else {
                 inDoc = NavajoFactory.getInstance().createNavajo();
             }
+            if (breakOnException && responseCode >= 300) {
+                throw new UserException(responseCode, responseMessage);
+            }
             continueAfterRun();
 
         } catch (Exception e) {
