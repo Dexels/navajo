@@ -225,7 +225,14 @@ public class RESTAdapter extends NavajoMap {
         try {
             if (result != null) {
                 rawResult = new String(result.getData());
-                inDoc = json.parse(result.getDataAsStream(), topMessage);
+                if (http.getResponseContentType().equals("application/json")) {
+                    try {
+                        
+                        inDoc = json.parse(result.getDataAsStream(), topMessage);
+                    } catch (Throwable t) {
+                        logger.warn("Unable to parse response as JSON!", t);
+                    }
+                }
             } else {
                 inDoc = NavajoFactory.getInstance().createNavajo();
             }
