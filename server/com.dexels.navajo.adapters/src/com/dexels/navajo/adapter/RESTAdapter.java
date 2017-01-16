@@ -236,16 +236,21 @@ public class RESTAdapter extends NavajoMap {
             } else {
                 inDoc = NavajoFactory.getInstance().createNavajo();
             }
-            if (breakOnException && responseCode >= 300) {
-                throw new UserException(responseCode, responseMessage);
-            }
+            if (responseCode >= 300) {
+                if (breakOnException) {
+                    throw new UserException(responseCode, responseMessage);
+                } else {
+                    logger.warn("Got a non-200 response code!");
+                }
+               
+            } 
             continueAfterRun();
 
         } catch (Exception e) {
             if (breakOnException) {
                 throw new UserException(e.getMessage(), e);
             } else {
-                logger.warn("Exception on parsing response, but breakOnException was set. Continuing!");
+                logger.warn("Exception on getting response, but breakOnException was set. Continuing!");
             }
 
         }
