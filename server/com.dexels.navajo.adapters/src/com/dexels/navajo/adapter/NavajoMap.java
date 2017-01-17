@@ -800,6 +800,15 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                 e.printStackTrace(Access.getConsoleWriter(access));
             }
         }
+        // Always copy aaa message
+        if (inMessage.getMessage("__aaa__") != null) {
+            Message aaamsg = inMessage.getMessage("__aaa__").copy(outDoc);
+            try {
+                outDoc.addMessage(aaamsg);
+            } catch (NavajoException e) {
+                e.printStackTrace(Access.getConsoleWriter(access));
+            }
+        }
 
         return outDoc;
     }
