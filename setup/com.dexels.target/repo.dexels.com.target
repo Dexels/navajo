@@ -16,8 +16,8 @@
 <repository location="http://mirrorservice.org/sites/download.eclipse.org/eclipseMirror/egit/updates/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.175.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.175"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.176.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.176"/>
 </location>
 </locations>
 <includeBundles>
