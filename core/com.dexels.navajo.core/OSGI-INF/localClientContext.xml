@@ -3,6 +3,6 @@
    <implementation class="com.dexels.navajo.server.internal.LocalNavajoContext"/>
    <reference bind="addLocalClient" cardinality="0..n" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="dynamic" unbind="removeLocalClient"/>
    <service>
-      <provide interface="com.dexels.navajo.client.ClientContext"/>
+      <provide interface="com.dexels.navajo.client.context.ClientContext"/>
    </service>
 </scr:component>
