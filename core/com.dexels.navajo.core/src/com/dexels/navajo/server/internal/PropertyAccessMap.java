@@ -1,10 +1,9 @@
-package com.dexels.navajo.client.context.internal;
+package com.dexels.navajo.server.internal;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import com.dexels.navajo.client.context.NavajoContext;
 import com.dexels.navajo.document.Property;
 
 public class PropertyAccessMap implements Map<String, Property> {

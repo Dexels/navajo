@@ -9,6 +9,7 @@ import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.server.internal.NavajoContext;
 
 public class NavajoRemoteContext extends NavajoContext {
 
