@@ -6,12 +6,13 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.ClientContext;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
+
+import com.dexels.navajo.client.context.ClientContext;
 
 public class LocalNavajoContext extends NavajoContext implements ClientContext {
 

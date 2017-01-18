@@ -1,7 +1,8 @@
-package com.dexels.navajo.client;
+package com.dexels.navajo.client.context;
 
 import java.util.Map;
 
+import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 
