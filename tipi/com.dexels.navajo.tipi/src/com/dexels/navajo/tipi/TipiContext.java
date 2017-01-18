@@ -37,6 +37,7 @@ import org.slf4j.MDC;
 import tipi.TipiApplicationInstance;
 import tipi.TipiExtension;
 import tipipackage.ITipiExtensionContainer;
+import tipipackage.Version;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
@@ -281,29 +282,29 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         initializeExtensions(preload.iterator());
         
         // Non-osgi activation...
-        Class<ClientInterface> clazz = null;
-        try {
-			clazz = (Class<ClientInterface>) Class.forName("com.dexels.navajo.client.impl.apache.ApacheNavajoClientImpl");
-			if (clazz == null) {
-			    clazz = (Class<ClientInterface>) Class.forName( "com.dexels.navajo.client.impl.javanet.JavaNetNavajoClientImpl");
-			} 
-		} catch (ClassNotFoundException e1) {
-		    try {
-                clazz = (Class<ClientInterface>) Class.forName( "com.dexels.navajo.client.impl.javanet.JavaNetNavajoClientImpl");
-            } catch (ClassNotFoundException e) {
+        if (!Version.osgiActive()) {
+            Class<ClientInterface> clazz = null;
+            try {
+                clazz = (Class<ClientInterface>) Class.forName("com.dexels.navajo.client.impl.apache.ApacheNavajoClientImpl");
+                if (clazz == null) {
+                    clazz = (Class<ClientInterface>) Class.forName( "com.dexels.navajo.client.impl.javanet.JavaNetNavajoClientImpl");
+                } 
+            } catch (ClassNotFoundException e1) {
+                try {
+                    clazz = (Class<ClientInterface>) Class.forName( "com.dexels.navajo.client.impl.javanet.JavaNetNavajoClientImpl");
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                NavajoClientFactory.setDefaultClient(clazz.newInstance());
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-		}
-        try {
-            NavajoClientFactory.setDefaultClient(clazz.newInstance());
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
         }
-       
-        
-        
+
         clientInterface = NavajoClientFactory.createClient();
 
         if (myThreadPool == null) {
