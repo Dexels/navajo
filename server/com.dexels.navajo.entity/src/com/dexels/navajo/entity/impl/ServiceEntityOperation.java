@@ -611,6 +611,9 @@ public class ServiceEntityOperation implements EntityOperation {
 		if (input.getMessage("__parms__") != null) {
 		    request.addMessage(input.getMessage("__parms__").copy(request));
 		}
+		if (input.getMessage("__aaa__") != null) {
+            request.addMessage(input.getMessage("__aaa__").copy(request));
+        }
 		if ( getop.getExtraMessage() != null ) {
 		    request.addMessage(getop.getExtraMessage().copy(request));
         }

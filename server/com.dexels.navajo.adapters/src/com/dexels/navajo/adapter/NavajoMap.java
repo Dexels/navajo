@@ -803,8 +803,12 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
         // Always copy aaa message
         if (inMessage.getMessage("__aaa__") != null) {
             Message aaamsg = inMessage.getMessage("__aaa__").copy(outDoc);
+            Message existing = outDoc.getMessage("__aaa__");
             try {
                 outDoc.addMessage(aaamsg);
+                if (existing != null) {
+                    outDoc.addMessage(existing);
+                }
             } catch (NavajoException e) {
                 e.printStackTrace(Access.getConsoleWriter(access));
             }
