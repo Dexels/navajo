@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,21 +131,28 @@ public class FileMap implements Mappable {
                 }
                 setLine(line);
             }
-        } else if (o instanceof com.dexels.navajo.adapter.navajomap.MessageMap[]) {
-            com.dexels.navajo.adapter.navajomap.MessageMap[] maps = (com.dexels.navajo.adapter.navajomap.MessageMap[]) o;
-            for (com.dexels.navajo.adapter.navajomap.MessageMap map : maps) {
-                FileLineMap line = new FileLineMap();
-                for (Property p : map.getMsg().getAllProperties()) {
-                    if (p.getTypedValue() != null) {
-                        line.setColumn(p.getTypedValue().toString());
-                    } else {
-                        line.setColumn("");
+        } else if (o instanceof List) {
+            @SuppressWarnings("rawtypes")
+            List maps = (List) o;
+            for (Object mapobject : maps) {
+                if (mapobject instanceof com.dexels.navajo.adapter.navajomap.MessageMap) {
+                    com.dexels.navajo.adapter.navajomap.MessageMap map = (com.dexels.navajo.adapter.navajomap.MessageMap) mapobject;
+                    FileLineMap line = new FileLineMap();
+                    for (Property p : map.getMsg().getAllProperties()) {
+                        if (p.getName().equals("__id")) {
+                            continue;
+                        }
+                        if (p.getTypedValue() != null) {
+                            line.setColumn(p.getTypedValue().toString());
+                        } else {
+                            line.setColumn("");
+                        }
                     }
+                    setLine(line);
                 }
-                setLine(line);
             }
         } else {
-            throw new MappableException("SetMessage only accepts array message or MessageMap");
+            throw new MappableException("SetMessage only accepts array message or List, but got a " + o.getClass());
         }
     }
 
