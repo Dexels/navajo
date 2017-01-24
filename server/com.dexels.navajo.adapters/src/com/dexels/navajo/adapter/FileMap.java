@@ -126,6 +126,7 @@ public class FileMap implements Mappable {
             }
             for (Message m : arrraymessage.getElements()) {
                 FileLineMap line = new FileLineMap();
+                line.setSeparator(separator);
                 for (Property p : m.getAllProperties()) {
                     line.setColumn(p.getTypedValue().toString());
                 }
@@ -138,6 +139,7 @@ public class FileMap implements Mappable {
                 if (mapobject instanceof com.dexels.navajo.adapter.navajomap.MessageMap) {
                     com.dexels.navajo.adapter.navajomap.MessageMap map = (com.dexels.navajo.adapter.navajomap.MessageMap) mapobject;
                     FileLineMap line = new FileLineMap();
+                    line.setSeparator(separator);
                     for (Property p : map.getMsg().getAllProperties()) {
                         if (p.getName().equals("__id")) {
                             continue;
