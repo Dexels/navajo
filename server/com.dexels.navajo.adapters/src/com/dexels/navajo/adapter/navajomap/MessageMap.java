@@ -171,6 +171,9 @@ public void setIntegerProperty(String fullName) {
   public void setMessagePointer(String s) {
     this.messagePointer = s;
   }
+  public Message getMsg() {
+      return msg;
+  }
 
 
     public MessageMap getMessage() throws UserException {

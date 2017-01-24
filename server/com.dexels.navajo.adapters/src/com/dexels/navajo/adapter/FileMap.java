@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.filemap.FileLineMap;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
@@ -49,6 +51,7 @@ public class FileMap implements Mappable {
 	 */
 	@Override
 	public void load(Access access) throws MappableException, UserException {
+
 	}
 
 	private byte[] getBytes() throws Exception {
@@ -57,7 +60,7 @@ public class FileMap implements Mappable {
 		for (int i = 0; i < lineArray.size(); i++) {
 			FileLineMap flm = lineArray.get(i);
 
-			if (flm.getLine() != null) {
+			if (flm != null && flm.getLine() != null) {
 				String nextLine = handleLineEnds( flm.getLine() );
 
 				baos.write( ( charsetName == null ) ? nextLine.getBytes() : nextLine.getBytes( charsetName ) );
@@ -113,6 +116,37 @@ public class FileMap implements Mappable {
 	@Override
 	public void kill() {
 	}
+	
+    public void setMessage(Object o) throws MappableException {
+        if (o instanceof Message) {
+            Message arrraymessage = (Message) o;
+            if (!arrraymessage.getType().equals(Message.MSG_TYPE_ARRAY)) {
+                throw new MappableException("SetMssage only accepts array message");
+            }
+            for (Message m : arrraymessage.getElements()) {
+                FileLineMap line = new FileLineMap();
+                for (Property p : m.getAllProperties()) {
+                    line.setColumn(p.getTypedValue().toString());
+                }
+                setLine(line);
+            }
+        } else if (o instanceof com.dexels.navajo.adapter.navajomap.MessageMap[]) {
+            com.dexels.navajo.adapter.navajomap.MessageMap[] maps = (com.dexels.navajo.adapter.navajomap.MessageMap[]) o;
+            for (com.dexels.navajo.adapter.navajomap.MessageMap map : maps) {
+                FileLineMap line = new FileLineMap();
+                for (Property p : map.getMsg().getAllProperties()) {
+                    if (p.getTypedValue() != null) {
+                        line.setColumn(p.getTypedValue().toString());
+                    } else {
+                        line.setColumn("");
+                    }
+                }
+                setLine(line);
+            }
+        } else {
+            throw new MappableException("SetMessage only accepts array message or MessageMap");
+        }
+    }
 
 	public void setLines(FileLineMap[] l) {
 		if (lineArray == null) {
