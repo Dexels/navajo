@@ -4,6 +4,7 @@ import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.server.mgmt.api.ServerStatisticsProvider;
 
 public class NavajoPoolStatistics implements ServerStatisticsProvider {
+    private static final String SEPARATOR = "/";
     private TmlScheduler tmlScheduler;
 
     public void setPriorityTmlScheduler(TmlScheduler sched) {
@@ -25,7 +26,10 @@ public class NavajoPoolStatistics implements ServerStatisticsProvider {
         if (tmlScheduler == null) {
             res = "error";
         } else {
-            res = tmlScheduler.getDefaultQueue().getActiveRequestCount() + "/" + tmlScheduler.getDefaultQueue().getMaximumActiveRequestCount() + "/"
+            res =     tmlScheduler.getDefaultQueue().getActiveRequestCount() 
+                    + SEPARATOR 
+                    + tmlScheduler.getDefaultQueue().getMaximumActiveRequestCount() 
+                    + SEPARATOR
                     + tmlScheduler.getDefaultQueue().getQueueSize();
         }
         return res;
