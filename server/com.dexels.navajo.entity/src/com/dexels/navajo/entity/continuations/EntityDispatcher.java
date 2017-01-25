@@ -165,7 +165,7 @@ public class EntityDispatcher {
 
             // Create an access object for logging purposes
             Long startAuth = System.currentTimeMillis();
-            String scriptName = "entity/" + entityName.replace('.', '/');
+            String scriptName = "entity/" + entityName.replace('.', '/') + "-" + method;
 
             access = new Access(1, 1, "placeholder", scriptName, "", "", "", null, false, null);
             access.setOperation(o);
