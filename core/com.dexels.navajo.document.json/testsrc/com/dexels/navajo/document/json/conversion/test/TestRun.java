@@ -34,12 +34,12 @@ public class TestRun {
 	        Message match = nn.getMessage("Match");
 	        assertNotNull( match.getProperty("matchtime"));
 	        Property matchtime = match.getProperty("matchtime");
-	        assertEquals(matchtime.getType(), Property.DATE_PROPERTY);
+	        assertEquals(Property.DATE_PROPERTY, matchtime.getType());
 	        Date matchtimeobj = (Date) matchtime.getTypedValue();
 	        Calendar cal = Calendar.getInstance();
 	        cal.setTime(matchtimeobj);
-	        assertEquals(cal.get(Calendar.YEAR), 1971);
-	        assertEquals(cal.get(Calendar.HOUR), 12);
-	        assertEquals(cal.get(Calendar.MINUTE), 0);
+	        assertEquals(1971, cal.get(Calendar.YEAR));
+	        assertEquals(12, cal.get(Calendar.HOUR));
+	        assertEquals(0, cal.get(Calendar.MINUTE));
 	    }
 }
