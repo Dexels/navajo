@@ -165,7 +165,7 @@ public class EntityDispatcher {
 
             // Create an access object for logging purposes
             Long startAuth = System.currentTimeMillis();
-            String scriptName = "entity/" + entityName.replace('.', '/') + "-" + method;
+            String scriptName = "entity/" + entityName.replace('.', '/');
 
             access = new Access(1, 1, "placeholder", scriptName, "", "", "", null, false, null);
             access.setOperation(o);
@@ -189,7 +189,10 @@ public class EntityDispatcher {
             header.setHeaderAttribute("parentaccessid", access.accessID);
 
             runner.getDispatcher().getAccessSet().add(access);
-
+            
+            
+            // Update RPCName to reflect method
+            access.rpcName = access.rpcName + "-" + method;
             inputEtag = runner.getHttpRequest().getHeader("If-Match");
             if (inputEtag == null) {
                 inputEtag = runner.getHttpRequest().getHeader("If-None-Match");
