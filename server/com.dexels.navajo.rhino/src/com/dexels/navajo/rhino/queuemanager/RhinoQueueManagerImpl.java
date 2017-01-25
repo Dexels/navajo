@@ -21,14 +21,14 @@ import com.dexels.navajo.listener.http.queuemanager.api.QueueResponse;
 import com.dexels.navajo.rhino.NavajoScopeManager;
 import com.dexels.navajo.server.NavajoIOConfig;
 
-public class QueueManagerImpl implements QueueManager {
+public class RhinoQueueManagerImpl implements QueueManager {
 	private QueueContext queueContext;
 	private final Map<String,BaseQueueResponse> cache = new HashMap<String,BaseQueueResponse>();
 	private File scriptDir = null;
 	private NavajoIOConfig navajoIOConfig;
 	
 	private final static Logger logger = LoggerFactory
-			.getLogger(QueueManagerImpl.class);
+			.getLogger(RhinoQueueManagerImpl.class);
 	
 	public void activate() {
 		logger.info("Activating Queuemanager");

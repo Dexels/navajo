@@ -14,7 +14,7 @@ public class QueueManagerFactory {
 	public synchronized static QueueManager getInstance() {
 		logger.warn("In static QueueManager getter, should only happen in non-OSGi");
 		if(instance==null) {
-			instance = new QueueManagerImpl();
+			instance = new RhinoQueueManagerImpl();
 		}
 		return instance;
 	}
