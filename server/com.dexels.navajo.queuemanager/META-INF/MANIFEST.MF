@@ -25,4 +25,5 @@ Export-Package: com.dexels.navajo.queuemanager,
 Bundle-Activator: navajoqueuemanager.Version
 Service-Component: OSGI-INF/navajo.server.threadpool.priority.xml,
  OSGI-INF/navajo.server.queuemanager.xml,
+ OSGI-INF/navajo.server.queuemanager.null.xml,
  OSGI-INF/navajo.server.threadpool.health.xml
