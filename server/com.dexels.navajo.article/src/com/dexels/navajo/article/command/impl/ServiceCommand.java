@@ -1,5 +1,6 @@
 package com.dexels.navajo.article.command.impl;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.server.impl.GlobalManagerImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -91,6 +93,7 @@ public class ServiceCommand implements ArticleCommand {
 		} else {
 			n = NavajoFactory.getInstance().createNavajo();
 		}
+		appendAAAMessage(runtime, n);
 		final String username = runtime.getUsername();
 		Header h = NavajoFactory.getInstance().createHeader(n, name, username, "", -1);
 		n.addHeader(h);
@@ -102,7 +105,24 @@ public class ServiceCommand implements ArticleCommand {
 		return null;
 	}
 
-	protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n, String instance) throws APIException {
+	private void appendAAAMessage(ArticleRuntime runtime, Navajo n) {
+	    Map<String, Object> extraParams = new HashMap<String, Object>();
+	    if (runtime.getToken() != null && runtime.getToken().getUser() != null) {
+	        extraParams.put("USERID", runtime.getToken().getUser().getId());
+	    } else {
+	        extraParams.put("USERID", -1);
+	    }
+        extraParams.put("USERNAME", runtime.getUsername());
+        extraParams.put("TENANT", runtime.getInstance());
+        extraParams.put("PERSONID", "");
+        extraParams.put("DOMAIN", "");
+        extraParams.put("UNIONID", "");
+        GlobalManagerImpl.appendMapToAAA(n, extraParams);
+        
+        
+    }
+
+    protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n, String instance) throws APIException {
      
         try {
             Navajo result =  dispatcher.handle(n, instance, true);
