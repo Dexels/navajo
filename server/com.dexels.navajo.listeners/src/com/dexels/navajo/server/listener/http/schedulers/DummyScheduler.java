@@ -42,9 +42,14 @@ public class DummyScheduler implements TmlScheduler {
 
 	@Override
 	public RequestQueue getDefaultQueue() {
-		throw new UnsupportedOperationException(
-				"Can not getGenericPool using DummyScheduler");
+		throw new UnsupportedOperationException("Can not getGenericPool using DummyScheduler");
 
 	}
+
+
+    @Override
+    public RequestQueue getQueue(String queueid) {
+        throw new UnsupportedOperationException("Can not getQueue using DummyScheduler");
+    }
 
 }

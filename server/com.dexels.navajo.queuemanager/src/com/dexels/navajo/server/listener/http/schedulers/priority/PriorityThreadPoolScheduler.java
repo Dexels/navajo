@@ -637,6 +637,12 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		return pool.getQueuedRequests();
 	}
 	
+	@Override
+    public RequestQueue getQueue(String queueid) {
+        return queueMap.get(queueid);
+    }
+
+	
 	public static void main(String [] args) {
 		
 		long start = System.currentTimeMillis();
@@ -646,9 +652,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		 
 		 System.err.println("total: " + total);
 		 System.err.println("free: " + free);
-		 
-		
-		
 	}
 
+    
 }
