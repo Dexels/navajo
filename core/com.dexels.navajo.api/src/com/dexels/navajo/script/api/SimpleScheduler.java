@@ -58,4 +58,12 @@ public class SimpleScheduler implements Scheduler {
 		return normalPool;
 	}
 
+    @Override
+    public RequestQueue getQueue(String queueid) {
+        if (queueid.equals("normalPool")) {
+            return normalPool;
+        }
+        return null;
+    }
+
 }
