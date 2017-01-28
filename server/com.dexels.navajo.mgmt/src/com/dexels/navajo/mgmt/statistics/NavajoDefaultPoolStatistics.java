@@ -3,7 +3,7 @@ package com.dexels.navajo.mgmt.statistics;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.server.mgmt.api.ServerStatisticsProvider;
 
-public class NavajoPoolStatistics implements ServerStatisticsProvider {
+public class NavajoDefaultPoolStatistics implements ServerStatisticsProvider {
     private static final String SEPARATOR = "/";
     private TmlScheduler tmlScheduler;
 

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Article
 Bundle-SymbolicName: com.dexels.navajo.article
-Bundle-Version: 3.6.1.qualifier
+Bundle-Version: 3.6.3.qualifier
 Bundle-Activator: navajoarticle.Activator
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
@@ -15,6 +15,7 @@ Import-Package: com.dexels.navajo.client;version="1.0.0",
  com.dexels.navajo.events.types,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
+ com.dexels.navajo.server.impl,
  com.dexels.oauth.api,
  com.dexels.oauth.api.exception,
  com.dexels.resourcebundle;version="1.0.0",

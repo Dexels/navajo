@@ -45,4 +45,6 @@ public interface Scheduler {
 	 * @return
 	 */
 	public RequestQueue getDefaultQueue();
+	
+	public RequestQueue getQueue(String queueid);
 }
