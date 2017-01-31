@@ -442,6 +442,10 @@ public class ServiceEntityOperation implements EntityOperation {
         // After a POST or PUT, return the full new object resulting from the previous operation
         // effectively this is a GET. However, if this fails (e.g. no GET operation is defined
         // for this entity), we return the original result
+        // If the output contains the entity name, prefer this!
+        if (result.getMessage(myEntity.getMessageName()) != null) {
+            return result;
+        }
         try {
             return getEntity(input);
         } catch (EntityException e) {
