@@ -697,7 +697,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	public void setUpdate(final String newUpdate) throws UserException {
 		update = newUpdate;
 
-			logger.info( "SQLMap(): update = {}", update);
+			Access.writeToConsole(myAccess, "SQLMap(): update = " + update
+					+ "\n");
 		
 
 		this.savedQuery = newUpdate;
