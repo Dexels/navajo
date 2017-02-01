@@ -32,15 +32,10 @@ import com.dexels.navajo.server.resource.ServiceAvailability;
 
 public final class PriorityThreadPoolScheduler implements TmlScheduler, PriorityThreadPoolSchedulerMBean, QueueContext {
 	
-	private static final String FAST_POOL = "fastPool";
-    private static final String SLOW_POOL = "slowPool";
-    private static final String SYSTEM_POOL = "systemPool";
-    private static final String PRIORITY_POOL = "priorityPool";
-    private static final String NORMAL_POOL = "normalPool";
+
     private static final int DEFAULT_POOL_SIZE = 15;
 	private static final int DEFAULT_MAXBACKLOG = 500;
 	private static final Logger logger = LoggerFactory.getLogger(PriorityThreadPoolScheduler.class);
-	private static String RESOLUTION_SCRIPT_DOES_NOT_EXIST = "resolutionscript";
 
 //	private RequestQueue normalPool;
 //	private RequestQueue priorityPool;
@@ -298,7 +293,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	            }
 	        } catch (NavajoSchedulingException e) {
 	            if(e.getReason()==NavajoSchedulingException.SCRIPT_PROBLEM || e.getReason() == NavajoSchedulingException.UNKNOWN) {
-	                logger.info(RESOLUTION_SCRIPT_DOES_NOT_EXIST, "Could not find queue resolution script, using default queue.",e);
+	                logger.info("resolutionscript: Could not find queue resolution script, using default queue.",e);
 	                return getDefaultQueue();
 	            }
 	            logger.error("Error: ", e);
@@ -315,6 +310,13 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		}
 		return getDefaultQueue();
 	}
+	
+
+    @Override
+    public void submit(TmlRunnable myRunner, String queueid) {
+        submitToPool(myRunner, getQueue(queueid) ) ;
+        
+    }
 	
 	private final void submitToPool(TmlRunnable run, RequestQueue pool) {
 		
@@ -411,12 +413,11 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 
 	@Override
 	public void shutdownScheduler() {
-		queueMap.get(SYSTEM_POOL).shutDownQueue();
 		queueMap.get(NORMAL_POOL).shutDownQueue();
 		queueMap.get(SYSTEM_POOL).shutDownQueue();
 		queueMap.get(FAST_POOL).shutDownQueue();
 		queueMap.get(SLOW_POOL).shutDownQueue();
-		
+		queueMap.get(PRIORITY_POOL).shutDownQueue();
 		logger.info("Shutdown complete");
 	}
 
@@ -639,6 +640,10 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	
 	@Override
     public RequestQueue getQueue(String queueid) {
+	    if (!queueMap.containsKey(queueid)) {
+	        logger.info("Requested pool {} not available, returning default queue!", queueid);
+	        return getDefaultQueue();
+	    }
         return queueMap.get(queueid);
     }
 
@@ -653,6 +658,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		 System.err.println("total: " + total);
 		 System.err.println("free: " + free);
 	}
+
 
     
 }

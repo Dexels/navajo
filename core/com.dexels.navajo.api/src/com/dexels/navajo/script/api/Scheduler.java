@@ -4,6 +4,11 @@ package com.dexels.navajo.script.api;
 import java.io.IOException;
 
 public interface Scheduler {
+    public static final String SLOW_POOL = "slowPool";
+    public static final String SYSTEM_POOL = "systemPool";
+    public static final String FAST_POOL = "fastPool";
+    public static final String PRIORITY_POOL = "priorityPool";
+    public static final String NORMAL_POOL = "normalPool";
 
 	
 	/**
@@ -23,6 +28,8 @@ public interface Scheduler {
 	 */
 	public void submit(TmlRunnable myRunner, boolean priority) throws IOException;
 	
+    public void submit(TmlRunnable myRunner, String queueid);
+
 
 	/**
 	 * Run the Runnable synchronously
@@ -47,4 +54,5 @@ public interface Scheduler {
 	public RequestQueue getDefaultQueue();
 	
 	public RequestQueue getQueue(String queueid);
+
 }

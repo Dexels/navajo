@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.scheduler.registry">
+   <implementation class="com.dexels.navajo.script.api.SchedulerRegistry"/>
+  
+   <service>
+      <provide interface="com.dexels.navajo.script.api.SchedulerRegistry"/>
+   </service>
+   <reference bind="setTmlScheduler" cardinality="1..1" interface="com.dexels.navajo.script.api.TmlScheduler" name="TmlScheduler" policy="dynamic" unbind="clearTmlScheduler"/>
+</scr:component>

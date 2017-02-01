@@ -46,6 +46,7 @@ import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.RequestQueue;
+import com.dexels.navajo.script.api.Scheduler;
 import com.dexels.navajo.script.api.SchedulerRegistry;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.TmlRunnable;
@@ -880,7 +881,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                     if (block) {
                         this.run();
                     } else {
-                        SchedulerRegistry.getLowPrioScheduler().submit(this, true);
+                        SchedulerRegistry.submit(this, true, Scheduler.SYSTEM_POOL);
                     }
                     serviceCalled = true;
                     if (getException() != null) {

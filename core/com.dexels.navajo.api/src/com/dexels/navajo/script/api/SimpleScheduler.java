@@ -9,11 +9,8 @@ public class SimpleScheduler implements Scheduler {
 	private final RequestQueue normalPool;
 	
 	public SimpleScheduler(boolean lowprio) {
-	    if (lowprio) {
-            normalPool = ThreadPoolRequestQueue.create(this, "async", Thread.NORM_PRIORITY, 50);
-        } else {
-            normalPool = ThreadPoolRequestQueue.create(this, "async", Thread.MIN_PRIORITY, 5);
-        }
+        normalPool = ThreadPoolRequestQueue.create(this, "async", Thread.NORM_PRIORITY, 50);
+        
 	}
 
 	// public void cancel(TmlRunnable myRunner) {
@@ -64,6 +61,12 @@ public class SimpleScheduler implements Scheduler {
             return normalPool;
         }
         return null;
+    }
+
+    @Override
+    public void submit(TmlRunnable myRunner, String queueid) {
+        normalPool.submit(myRunner);
+        
     }
 
 }
