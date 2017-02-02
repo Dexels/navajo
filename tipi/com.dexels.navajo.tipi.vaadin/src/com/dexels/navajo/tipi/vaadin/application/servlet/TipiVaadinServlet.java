@@ -205,9 +205,9 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		if(proto==null) {
 			proto = "http";
 		}
-		logger.info("Extracting referer. Proto: "+proto+" : "+host+" : "+url);
+		logger.info("Extracting referer. Proto: "+proto+" : "+host);
 		if(url !=null && host!=null) {
-			return proto+"://"+host+url;
+			return proto+"://"+host;
 		}
 		return host;
 	}
