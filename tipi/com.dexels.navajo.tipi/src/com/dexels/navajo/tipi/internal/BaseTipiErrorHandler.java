@@ -53,6 +53,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	private TipiContext context;
 	private transient ResourceBundle errorMessageBundle;
     private Thread retrieveValidationThread;
+    private volatile boolean keepValidationRunning = false;
 	
 	public BaseTipiErrorHandler() {
 		// initResource();
@@ -193,6 +194,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 		    return;
 		}
         retrieveValidationThread = new Thread(new Runnable() {
+            private int attemptsLeft = 30;
             @Override
             public void run() {
                 // Get validation.properties from the remote server.
@@ -200,14 +202,16 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
                 // retrieve it at a later moment.
                 getRemoteValidationProperties();
                 
-                while (errorMessageBundle == null) {
+                while (errorMessageBundle == null && attemptsLeft > 0 && keepValidationRunning) {
                     logger.info("Retrying retrieval of remote validation.properties...");
                     getRemoteValidationProperties();
                     try {
                         Thread.sleep(VALIDATIONPROPERTIES_RETRY_INTERVAL);
                     } catch (InterruptedException e) {
+                        keepValidationRunning = false;
                         break;
                     }
+                    attemptsLeft--;
                 }
                
             }
@@ -217,7 +221,9 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	
 	@Override
     public void removeContext(TipiContext c) {
+	    keepValidationRunning = false;
 	    retrieveValidationThread.interrupt();
+	    retrieveValidationThread = null;
 	    context = null;
 	}
 
