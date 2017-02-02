@@ -188,6 +188,10 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		} else {
 			logoutURL = request.getRequestURL().toString();
 		}
+		while (logoutURL.endsWith("/")) {
+		    // Prevent url's with ////
+            logoutURL = logoutURL.substring(0, logoutURL.length()-1);
+		}
 		logger.info("Setting logout url to: "+logoutURL);
 		tipiApplication.setLogoutURL(logoutURL);
      	HttpSession hs = request.getSession();
@@ -337,4 +341,5 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 	public void clearLocalClient(LocalClient lc) {
 		this.localClient = null;
 	}
+
 }
