@@ -256,8 +256,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 							navajoResponseCallback.responseReceived(n);
 						}
 						setActualCalls(getActualCalls() - 1);
-						SchedulerRegistry.getScheduler().submit(onSuccess,
-								false);
+						SchedulerRegistry.submit(onSuccess, false);
 					}
 				} catch (IOException e) {
 					logger.error("Error: ", e);
@@ -271,7 +270,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 				setActualCalls(getActualCalls() - 1);
 				try {
 					if (onFail != null) {
-						SchedulerRegistry.getScheduler().submit(onFail, false);
+						SchedulerRegistry.submit(onFail, false);
 					}
 				} catch (IOException e) {
 					logger.error("Error: ", e);

@@ -7,11 +7,11 @@ public interface Scheduler {
     /** Slow pool with only few threads. */
     public static final String SLOW_POOL = "slowPool";
     /** Default pool for all external requests */
-    public static final String EXT_NORMAL_POOL = "externalNormalPool"; 
+    public static final String NORMAL_POOL = "externalNormalPool"; 
     /** External requests that less important. Should have little backlog */
     public static final String EXT_LOWPRIO_POOL = "externalLowPrioPool";
     /** Navajomap non-blocking but highprio calls*/
-    public static final String EXT_PRIO_POOL = "externalPrioPool";
+    public static final String PRIORITY_POOL = "priorityPool";
     /**  Calls made through Navajo tester */
     public static final String EXT_TESTER_POOL = "externalTesterPool";
     /**  High prio internal calls such as tasks. Should have no max backlog*/
