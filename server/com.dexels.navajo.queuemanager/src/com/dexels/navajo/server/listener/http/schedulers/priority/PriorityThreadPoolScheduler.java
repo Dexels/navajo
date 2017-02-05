@@ -155,7 +155,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	private Integer extractMaxBacklogSize(Map<String, Object> params, String key) {
         Object value = params.get(key);
         if(value==null) {
-            if (key.equals(SYSTEM_POOL) || key.equals(INTERNAL_LOWPRIO_POOL)) {
+            if (key.equals(TASKS_POOL) || key.equals(NAVAJOMAP_LOWPRIO_POOL)) {
                 return Integer.MAX_VALUE;
             }
             return maxbacklog;
@@ -174,15 +174,15 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	    createPool(SLOW_POOL, settings);
 	    createPool(NORMAL_POOL, settings);
 	    createPool(EXT_LOWPRIO_POOL, settings);
-	    createPool(PRIORITY_POOL, settings);
-	    createPool(EXT_TESTER_POOL, settings);
-	    createPool(SYSTEM_POOL, settings);
-	    createPool(INTERNAL_LOWPRIO_POOL, settings);
+	    createPool(NAVAJOMAP_PRIORITY_POOL, settings);
+	    createPool(TESTER_POOL, settings);
+	    createPool(TASKS_POOL, settings);
+	    createPool(NAVAJOMAP_LOWPRIO_POOL, settings);
 	    
     }
 	
 	private void createPool(String name, Map<String, Object> settings) {
-	    int poolSize = extractPoolSize(settings, name + "PoolSize");
+	    int poolSize = extractPoolSize(settings, name + "Size");
 	    int maxBacklogSize =extractMaxBacklogSize(settings, name + "MaxBacklogSize") ;
 	    int prio = extractPoolPrio(settings, name + "Prio");
 	    queueMap.put(name, ThreadPoolRequestQueue.create(this, name, prio, poolSize));
@@ -224,7 +224,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		 * Priority immediately returns priority pool (currently only used for scheduled Tasks).
 		 */
 		if ( priority ) {
-			return queueMap.get(PRIORITY_POOL);
+			return queueMap.get(NAVAJOMAP_PRIORITY_POOL);
 		}
 		String queueName;
 		if (myRunner.getAttributeNames().contains("queueName")) {
@@ -349,7 +349,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
             logger.warn("All {} threads in {} busy. Entering queue with {} threads ahead of us",
                     pool.getMaximumActiveRequestCount(), pool.getId(), pool.getQueueSize());
 		}
-		if( pool.getQueueSize() >= maxbacklog) {
+		if( pool.getQueueSize() >= queueMaxBacklogMap.get(pool.getId())) {
 			run.abort("Server too busy.");
 			return;
 		}
@@ -388,11 +388,11 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 
 	@Override
 	public final double getExpectedPriorityQueueTime() {
-		return queueMap.get(PRIORITY_POOL).getExpectedQueueTime();
+		return queueMap.get(NAVAJOMAP_PRIORITY_POOL).getExpectedQueueTime();
 	}
 	@Override
 	public final double getExpectedSystemQueueTime() {
-		return queueMap.get(SYSTEM_POOL).getExpectedQueueTime();
+		return queueMap.get(TASKS_POOL).getExpectedQueueTime();
 	}
 
 	
@@ -492,7 +492,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 
 	@Override
 	public int getPriorityQueueSize() {
-		return queueMap.get(PRIORITY_POOL).getQueueSize();
+		return queueMap.get(NAVAJOMAP_PRIORITY_POOL).getQueueSize();
 	}
 
 	@Override
@@ -512,7 +512,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 
 	@Override
 	public int getSystemQueueSize() {
-		return queueMap.get(SYSTEM_POOL).getQueueSize();
+		return queueMap.get(TASKS_POOL).getQueueSize();
 	}
 
 	@Override
@@ -579,12 +579,12 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 
 	@Override
 	public int getSystemPoolSize() {
-		return queueMap.get(SYSTEM_POOL).getMaximumActiveRequestCount();
+		return queueMap.get(TASKS_POOL).getMaximumActiveRequestCount();
 	}
 
 	@Override
 	public int getSystemActive() {
-		return queueMap.get(SYSTEM_POOL).getActiveRequestCount();
+		return queueMap.get(TASKS_POOL).getActiveRequestCount();
 	}
 
 	@Override
@@ -594,12 +594,12 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 
 	@Override
 	public int getPriorityActive() {
-		return queueMap.get(PRIORITY_POOL).getActiveRequestCount();
+		return queueMap.get(NAVAJOMAP_PRIORITY_POOL).getActiveRequestCount();
 	}
 
 	@Override
 	public int flushSystemQueue() {
-		return queueMap.get(SYSTEM_POOL).flushQueue();
+		return queueMap.get(TASKS_POOL).flushQueue();
 	}
 
 	@Override
@@ -609,7 +609,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 
 	@Override
 	public int flushPriorityQueue() {
-		return  queueMap.get(PRIORITY_POOL).flushQueue();
+		return  queueMap.get(NAVAJOMAP_PRIORITY_POOL).flushQueue();
 	}
 
 	@Override
@@ -636,11 +636,11 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	}
 	
 	public List<TmlRunnable> getPriorityRequests() {
-		return queueMap.get(PRIORITY_POOL).getQueuedRequests();
+		return queueMap.get(NAVAJOMAP_PRIORITY_POOL).getQueuedRequests();
 	}
 	
 	public List<TmlRunnable> getSystemRequests() {
-		final RequestQueue pool = queueMap.get(SYSTEM_POOL);
+		final RequestQueue pool = queueMap.get(TASKS_POOL);
 		if(pool==null) {
 			return null;
 		}

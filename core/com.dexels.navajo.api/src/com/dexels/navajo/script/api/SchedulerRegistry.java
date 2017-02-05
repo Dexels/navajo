@@ -35,9 +35,9 @@ public class SchedulerRegistry {
 
 
     public static void submit(TmlRunnable myRunner, boolean lowPrio) throws IOException {
-        String queueid = Scheduler.INTERNAL_LOWPRIO_POOL;
+        String queueid = Scheduler.NAVAJOMAP_LOWPRIO_POOL;
         if (!lowPrio) {
-            queueid = Scheduler.SYSTEM_POOL;
+            queueid = Scheduler.TASKS_POOL;
         }
         instance.tmlScheduler.submit(myRunner, queueid);
     }
