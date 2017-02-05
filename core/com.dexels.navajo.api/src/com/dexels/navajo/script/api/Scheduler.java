@@ -5,11 +5,11 @@ import java.io.IOException;
 
 public interface Scheduler {
     public static final String SLOW_POOL = "slowPool";
+    public static final String EXT_NORMAL_POOL = "externalNormalPool";
+    public static final String EXT_LOWPRIO_POOL = "externalLowPrioPool";
+    public static final String EXT_PRIO_POOL = "externalPrioPool";
     public static final String SYSTEM_POOL = "systemPool";
-    public static final String FAST_POOL = "fastPool";
-    public static final String PRIORITY_POOL = "priorityPool";
-    public static final String NORMAL_POOL = "normalPool";
-
+    public static final String INTERNAL_PRIO_POOL = "internalPriorityPool";
 	
 	/**
 	 * Return the timeout you want to give to this specific request.
