@@ -113,8 +113,12 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
         try {
             createPools(settings);
         } catch (Throwable e) {
-            logger.error("Error: ", e);
+            logger.error("Error creating pools: ", e);
         }
+    }
+    
+    public void modified(Map<String, Object> settings) {
+        logger.warn("MODIFIED NOT SUPPORTED FOR PriorityThreadPoolScheduler! RESTART SERVER TO APPLY");
     }
     
     public void deactivate() {
