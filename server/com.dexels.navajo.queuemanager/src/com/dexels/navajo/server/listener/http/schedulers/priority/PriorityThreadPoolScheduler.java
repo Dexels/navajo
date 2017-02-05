@@ -139,10 +139,23 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		}
 		return DEFAULT_POOL_SIZE;
 	}
+	private Integer extractPoolPrio(Map<String, Object> params, String key) {
+        Object value = params.get(key);
+        if(value==null) {
+            return Thread.NORM_PRIORITY;
+        }
+        if(value instanceof Integer) {
+            return (Integer) params.get(key);
+        }
+        if(value instanceof String) {
+            return Integer.parseInt((String) value);
+        }
+        return Thread.NORM_PRIORITY;
+    }
 	private Integer extractMaxBacklogSize(Map<String, Object> params, String key) {
         Object value = params.get(key);
         if(value==null) {
-            if (key.equals(SYSTEM_POOL)) {
+            if (key.equals(SYSTEM_POOL) || key.equals(INTERNAL_LOWPRIO_POOL)) {
                 return Integer.MAX_VALUE;
             }
             return maxbacklog;
@@ -157,22 +170,23 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
     }
 	
 
-
-
-	
 	private void createPools(Map<String, Object> settings) {
 	    createPool(SLOW_POOL, settings);
 	    createPool(EXT_NORMAL_POOL, settings);
 	    createPool(EXT_LOWPRIO_POOL, settings);
 	    createPool(EXT_PRIO_POOL, settings);
+	    createPool(EXT_TESTER_POOL, settings);
 	    createPool(SYSTEM_POOL, settings);
-	    createPool(INTERNAL_PRIO_POOL, settings);
+	    createPool(INTERNAL_LOWPRIO_POOL, settings);
 	    
     }
 	
 	private void createPool(String name, Map<String, Object> settings) {
-	    queueMap.put(name, ThreadPoolRequestQueue.create(this, name, 1, extractPoolSize(settings, name + "PoolSize")));
-	    queueMaxBacklogMap.put(name, extractMaxBacklogSize(settings, name + "MaxBacklogSize") );
+	    int poolSize = extractPoolSize(settings, name + "PoolSize");
+	    int maxBacklogSize =extractMaxBacklogSize(settings, name + "MaxBacklogSize") ;
+	    int prio = extractPoolPrio(settings, name + "Prio");
+	    queueMap.put(name, ThreadPoolRequestQueue.create(this, name, prio, poolSize));
+	    queueMaxBacklogMap.put(name, maxBacklogSize );
 	}
 
 	

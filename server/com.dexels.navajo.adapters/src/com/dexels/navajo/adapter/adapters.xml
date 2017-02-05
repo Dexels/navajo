@@ -322,6 +322,7 @@
 			<value name="serverTimeout" type="integer" required="false" direction="in" />
 			<value name="id" type="string" required="false" direction="in" />
 			<value name="block" type="boolean" required="false" direction="in" />
+            <value name="lowPriority" type="boolean" required="false" direction="in" />
 			<value name="username" type="string" required="false" direction="in" />
 			<value name="password" type="string" required="false" direction="in" />
             <value name="tenant" type="string" required="false" direction="in" />
@@ -381,6 +382,7 @@
 				<param name="inputProperties" field="inputProperties" type="string" required="false" />
 				<param name="outputProperties" field="outputProperties" type="string" required="false" />
 				<param name="block" field="block" type="boolean" required="false" />
+                <value name="lowPriority" type="boolean" required="false" direction="in" />
 				<param name="name" field="doSend" type="string" required="true" />
 				<param name="appendTo" field="appendTo" type="string" required="false" />
 				<param name="append" field="append" type="string" required="false" />

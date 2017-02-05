@@ -34,10 +34,11 @@ public class SchedulerRegistry {
     }
 
 
-    public static void submit(TmlRunnable myRunner, boolean prio, String queueid) throws IOException {
-        if (queueid == null) {
+    public static void submit(TmlRunnable myRunner, boolean lowPrio) throws IOException {
+        String queueid = Scheduler.INTERNAL_LOWPRIO_POOL;
+        if (!lowPrio) {
             queueid = Scheduler.SYSTEM_POOL;
-        } 
+        }
         instance.tmlScheduler.submit(myRunner, queueid);
     }
 

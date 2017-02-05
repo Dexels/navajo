@@ -46,7 +46,6 @@ import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.RequestQueue;
-import com.dexels.navajo.script.api.Scheduler;
 import com.dexels.navajo.script.api.SchedulerRegistry;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.TmlRunnable;
@@ -163,9 +162,17 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
 
     public String method;
 
-    // If block is set, the web service calls blocks until a result is received.
-    // Default value is TRUE.
+    /** 
+     * If block is set, the web service calls blocks until a result is received.
+     * Default value is TRUE.
+     */
     public boolean block = true;
+    /** 
+     * Used in combination with block = false to determine the threadpool 
+     * Default value is TRUE: non-blocking calls are low priority
+     * */
+    private boolean lowPriority = true;
+
     protected boolean serviceCalled = false;
     protected boolean serviceFinished = false;
     private Exception myException = null;
@@ -881,7 +888,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                     if (block) {
                         this.run();
                     } else {
-                        SchedulerRegistry.submit(this, true, Scheduler.SYSTEM_POOL);
+                        SchedulerRegistry.submit(this, lowPriority );
                     }
                     serviceCalled = true;
                     if (getException() != null) {
@@ -1870,5 +1877,14 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     public void setServerTimeout(int serverTimeout) {
         this.serverTimeout = serverTimeout;
     }
+
+    public boolean isLowPriority() {
+        return lowPriority;
+    }
+
+    public void setLowPriority(boolean lowPriority) {
+        this.lowPriority = lowPriority;
+    }
+    
 
 }

@@ -4,12 +4,20 @@ package com.dexels.navajo.script.api;
 import java.io.IOException;
 
 public interface Scheduler {
+    /** Slow pool with only few threads. */
     public static final String SLOW_POOL = "slowPool";
-    public static final String EXT_NORMAL_POOL = "externalNormalPool";
+    /** Default pool for all external requests */
+    public static final String EXT_NORMAL_POOL = "externalNormalPool"; 
+    /** External requests that less important. Should have little backlog */
     public static final String EXT_LOWPRIO_POOL = "externalLowPrioPool";
+    /** Navajomap non-blocking but highprio calls*/
     public static final String EXT_PRIO_POOL = "externalPrioPool";
+    /**  Calls made through Navajo tester */
+    public static final String EXT_TESTER_POOL = "externalTesterPool";
+    /**  High prio internal calls such as tasks. Should have no max backlog*/
     public static final String SYSTEM_POOL = "systemPool";
-    public static final String INTERNAL_PRIO_POOL = "internalPriorityPool";
+    /** Low prio internal calls (such as non-blocking navajomaps). Should have no max backlog but low prio */
+    public static final String INTERNAL_LOWPRIO_POOL = "internalLowPriorityPool";
 	
 	/**
 	 * Return the timeout you want to give to this specific request.
