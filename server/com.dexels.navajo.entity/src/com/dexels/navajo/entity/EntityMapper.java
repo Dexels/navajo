@@ -85,7 +85,7 @@ public class EntityMapper implements EventHandler {
 		File parentFolder = file.getParentFile();
 
 		String folder;
-		if (parentFolder.equals(new File(navajoConfig.getScriptPath() + File.separator + "entity"))) {
+		if (parentFolder.equals(new File(navajoConfig.getScriptPath(), "entity"))) {
 			folder = ""; // Root folder
 		} else {
 			String folderString = parentFolder.toString();
@@ -115,12 +115,10 @@ public class EntityMapper implements EventHandler {
 	}
 
 	public void setNavajoConfig(NavajoConfigInterface nci) {
-		logger.debug("Setting NavajoConfig");
 		this.navajoConfig = nci;
 	}
 
 	public void clearNavajoConfig(NavajoConfigInterface nci) {
-		logger.debug("Clearing NavajoConfig");
 		this.navajoConfig = null;
 	}
 

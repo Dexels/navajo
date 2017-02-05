@@ -86,7 +86,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void shutdown() {
 		super.shutdown();
-		SchedulerRegistry.setScheduler(null);
+
 	}
 
 	public static BundleContext getDefaultBundleContext() {

@@ -4,7 +4,21 @@ package com.dexels.navajo.script.api;
 import java.io.IOException;
 
 public interface Scheduler {
-
+    /** Slow pool with only few threads. */
+    public static final String SLOW_POOL = "slowPool";
+    /** Default pool for all external requests */
+    public static final String NORMAL_POOL = "normalPool"; 
+    /** Low prio internal calls (such as non-blocking navajomaps). Should have no max backlog but low prio */
+    public static final String NAVAJOMAP_LOWPRIO_POOL = "navajomapLowPriorityPool";
+    /** External requests that less important. Should have low max backlog */
+    public static final String EXT_LOWPRIO_POOL = "externalLowPrioPool";
+    /** Navajomap non-blocking but highprio calls*/
+    public static final String NAVAJOMAP_PRIORITY_POOL = "navajomapPriorityPool";
+    /**  Calls made through Navajo tester */
+    public static final String TESTER_POOL = "testerPool";
+    /**  High prio internal calls such as tasks. Should have no max backlog*/
+    public static final String TASKS_POOL = "tasksPool";
+   
 	
 	/**
 	 * Return the timeout you want to give to this specific request.
@@ -23,6 +37,8 @@ public interface Scheduler {
 	 */
 	public void submit(TmlRunnable myRunner, boolean priority) throws IOException;
 	
+    public void submit(TmlRunnable myRunner, String queueid);
+
 
 	/**
 	 * Run the Runnable synchronously
@@ -47,4 +63,5 @@ public interface Scheduler {
 	public RequestQueue getDefaultQueue();
 	
 	public RequestQueue getQueue(String queueid);
+
 }
