@@ -274,6 +274,11 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                 }
             }
         }
+        if (!block && serviceFinished) {
+            if (myException != null) {
+                throw new UserException(-1, myException.getMessage());
+            }
+        }
     }
 
     /**
