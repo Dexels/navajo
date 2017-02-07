@@ -3,8 +3,7 @@ package com.dexels.navajo.mgmt.statistics;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.server.mgmt.api.ServerStatisticsProvider;
 
-public class NavajoFastPoolStatistics implements ServerStatisticsProvider {
-    private static final String SEPARATOR = "/";
+public class NavajoFullPoolStatistics implements ServerStatisticsProvider {
     private TmlScheduler tmlScheduler;
 
     public void setPriorityTmlScheduler(TmlScheduler sched) {
@@ -17,7 +16,7 @@ public class NavajoFastPoolStatistics implements ServerStatisticsProvider {
 
     @Override
     public String getKey() {
-        return "fastpoolstatus";
+        return "fullpoolstatus";
     }
 
     @Override
@@ -26,11 +25,7 @@ public class NavajoFastPoolStatistics implements ServerStatisticsProvider {
         if (tmlScheduler == null) {
             res = "error";
         } else {
-            res =     tmlScheduler.getQueue("fastPool").getActiveRequestCount() 
-                    + SEPARATOR 
-                    + tmlScheduler.getQueue("fastPool").getMaximumActiveRequestCount() 
-                    + SEPARATOR
-                    + tmlScheduler.getQueue("fastPool").getQueueSize();
+            res =  tmlScheduler.getSchedulingStatus();
         }
         return res;
     }
