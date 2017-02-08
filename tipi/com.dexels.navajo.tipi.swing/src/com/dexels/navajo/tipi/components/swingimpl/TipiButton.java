@@ -57,7 +57,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 	@Override
 	public Object createContainer() {
 		final TipiSwingButton myButton = new TipiSwingButton(this);
-		buttonAction = new AbstractAction("onActionPerformed") {
+		buttonAction = new AbstractAction("") {
 
 			private static final long serialVersionUID = 706723341030407319L;
 
