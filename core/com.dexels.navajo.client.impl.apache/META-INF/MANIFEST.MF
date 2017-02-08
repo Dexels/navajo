@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-Name: Navajo Client Impl
 Bundle-SymbolicName: com.dexels.navajo.client.impl.apache
 Bundle-ManifestVersion: 2
-Bundle-Version: 0.9.0.qualifier
+Bundle-Version: 1.0.0
 Bundle-Activator: navajoclient.Version
 Bundle-ClassPath: .
 Bundle-Vendor: Dexels
