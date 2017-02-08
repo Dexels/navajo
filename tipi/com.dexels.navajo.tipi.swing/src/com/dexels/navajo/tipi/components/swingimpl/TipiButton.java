@@ -63,7 +63,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			    
+			    logger.info("Button clicked");
 				doFireAction(myButton);
 			}
 		};
@@ -192,10 +192,11 @@ public class TipiButton extends TipiSwingComponentImpl {
                 }
             });
         }
-        
+        logger.info("About to call onActionPerformed" );
 		performTipiEvent("onActionPerformed", null, false, new Runnable() {
 			@Override
 			public void run() {
+			    logger.info("Finished onActionPerformed!");
 				setWaitCursor(false, root);
 			}
 		});
