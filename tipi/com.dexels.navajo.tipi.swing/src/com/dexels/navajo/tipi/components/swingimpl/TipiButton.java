@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.awt.Container;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 
@@ -68,15 +67,8 @@ public class TipiButton extends TipiSwingComponentImpl {
 				doFireAction(myButton);
 			}
 		};
-		myButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			    
-				buttonAction.actionPerformed(e);
-			}
-		});
-
+		myButton.setAction(buttonAction);
+	
 		return myButton;
 	}
 
