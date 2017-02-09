@@ -107,28 +107,32 @@ public class EntityDispatcher {
             }
 
             logger.info("Entity request {} ({}, {})", entityName, method, ip);
+            boolean debug = Boolean.valueOf(runner.getHttpRequest().getParameter("developer"));
 
             // Check entity mapper for this folder. If we find an entity mapped
-            // to this folder
-            // named like our request, this is our entity
+            // to this folder named like our request, this is our entity
             entityName = entityName.replace("/", ".");
-            String entitySubName = entityName.substring(entityName.lastIndexOf('.') + 1);
-            String folder;
-            if (entityName.equals(entitySubName)) {
-                folder = ""; // Root folder
-            } else {
-                folder = path.substring(1, path.lastIndexOf("/"));
-            }
-            Set<String> entities = myMapper.getEntities(folder);
             String mappedEntity = null;
-            for (String s : entities) {
-                String anEntity = s.substring(s.lastIndexOf('.') + 1);
-                if (anEntity.equals(entitySubName)) {
-                    mappedEntity = s;
-                    break;
+            if (debug) {
+                mappedEntity = entityName;
+            } else {
+                String entitySubName = entityName.substring(entityName.lastIndexOf('.') + 1);
+                String folder;
+                if (entityName.equals(entitySubName)) {
+                    folder = ""; // Root folder
+                } else {
+                    folder = path.substring(1, path.lastIndexOf("/"));
+                }
+                Set<String> entities = myMapper.getEntities(folder);
+               
+                for (String s : entities) {
+                    String anEntity = s.substring(s.lastIndexOf('.') + 1);
+                    if (anEntity.equals(entitySubName)) {
+                        mappedEntity = s;
+                        break;
+                    }
                 }
             }
-
             Entity e = myManager.getEntity(mappedEntity);
 
             if (e == null) {
