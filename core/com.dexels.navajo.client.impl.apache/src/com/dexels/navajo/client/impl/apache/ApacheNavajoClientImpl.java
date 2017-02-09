@@ -6,7 +6,7 @@
  * @author Arjen Schoneveld
  * @version $Id$
  */
-package com.dexels.navajo.client.impl;
+package com.dexels.navajo.client.impl.apache;
 
 import java.io.IOException;
 import java.io.InputStream;

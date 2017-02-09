@@ -39,7 +39,10 @@ public class TestRun {
 	        Calendar cal = Calendar.getInstance();
 	        cal.setTime(matchtimeobj);
 	        assertEquals(1971, cal.get(Calendar.YEAR));
-	        assertEquals(12, cal.get(Calendar.HOUR));
+	        assertEquals(12, cal.get(Calendar.HOUR_OF_DAY));
 	        assertEquals(0, cal.get(Calendar.MINUTE));
+	        
+	        Property matchtime2 = match.getProperty("matchtime2");
+            assertEquals(Property.CLOCKTIME_PROPERTY, matchtime2.getType());
 	    }
 }

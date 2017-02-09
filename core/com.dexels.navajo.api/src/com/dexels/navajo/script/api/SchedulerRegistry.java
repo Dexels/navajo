@@ -18,10 +18,16 @@ public class SchedulerRegistry {
     private static SchedulerRegistry instance;
     
     public void activate() {
+        if (instance != null && instance.tmlScheduler != null) {
+           logger.warn("Overwriting existing scheduler!");
+           instance.tmlScheduler.shutdownScheduler();
+           instance.tmlScheduler = null;
+        }
         instance = this;
     }
     
     public void deactivate() {
+        logger.info("Deactivating SchedulerRegistry" );
         instance = null;
     }
 
@@ -33,16 +39,16 @@ public class SchedulerRegistry {
         this.tmlScheduler = null;
     }
 
-
+  
     public static void submit(TmlRunnable myRunner, boolean lowPrio) throws IOException {
         String queueid = Scheduler.NAVAJOMAP_LOWPRIO_POOL;
         if (!lowPrio) {
             queueid = Scheduler.NAVAJOMAP_PRIORITY_POOL;
         }
-        instance.tmlScheduler.submit(myRunner, queueid);
+        getScheduler().submit(myRunner, queueid);
     }
     public static void submitTask(TmlRunnable task) {
-        instance.tmlScheduler.submit(task, Scheduler.TASKS_POOL);        
+        getScheduler().submit(task, Scheduler.TASKS_POOL);        
     }
 
     public static void setScheduler(TmlScheduler scheduler) {

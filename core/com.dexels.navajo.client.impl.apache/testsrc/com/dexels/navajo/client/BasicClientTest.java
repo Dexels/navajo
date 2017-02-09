@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.dexels.navajo.client.impl.ApacheNavajoClientImpl;
+import com.dexels.navajo.client.impl.apache.ApacheNavajoClientImpl;
 import com.dexels.navajo.document.Navajo;
 
 /**
