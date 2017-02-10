@@ -854,7 +854,7 @@
       </description>
 
       <values>
-         <value direction="in" name="opaque" type="boolean" property="opaque" />
+         <value direction="in" name="opaque" type="boolean" property="opaque" value="false"/>
          <value direction="in" name="paint" type="paint" property="paint" />
 
          <value direction="in" name="image" type="resource" property="imageUrl" />
@@ -882,7 +882,7 @@
       <events>
       </events>
       <values>
-         <value direction="in" name="opaque" type="boolean" property="opaque" />
+         <value direction="in" name="opaque" type="boolean" property="opaque" value="false"/>
          <value direction="in" name="paint" type="paint" property="paint" />
 
          <value direction="in" name="image" type="resource" property="imageUrl" />
@@ -910,7 +910,7 @@
       <events>
       </events>
       <values>
-         <value direction="in" name="opaque" type="boolean" property="opaque" />
+         <value direction="in" name="opaque" type="boolean" property="opaque" value="false"/>
          <value direction="in" name="paint" type="paint" property="paint" />
 
          <value direction="in" name="image" type="resource" property="imageUrl" />
@@ -994,7 +994,7 @@
       <events>
       </events>
       <values>
-         <value direction="in" name="opaque" type="boolean" property="opaque" />
+         <value direction="in" name="opaque" type="boolean" property="opaque" value="false"/>
          <value direction="in" name="x" type="integer" property="x" />
          <value direction="in" name="y" type="integer" property="y" />
       </values>
@@ -1192,7 +1192,7 @@
       <values>
          <!--           <value direction="inout" name="selected" type="tipi"/>
             <value direction="inout" name="lastselected" type="tipi"/>-->
-         <value direction="in" name="opaque" type="boolean" property="opaque" />
+         <value direction="in" name="opaque" type="boolean" property="opaque" value="false" />
          <value direction="inout" name="selected" type="component" />
          <value direction="inout" name="selectedindex" type="integer" />
          <value direction="out" name="lastselectedindex" type="integer" />
@@ -1226,7 +1226,7 @@
       <events>
       </events>
       <values>
-         <value direction="in" name="opaque" type="boolean" property="opaque" />
+         <value direction="in" name="opaque" type="boolean" property="opaque" value="false" />
          <value direction="in" name="tabForeground" type="color" property="tabForegroundColor" />
          <value direction="in" name="tabBackground" type="color" property="tabBackgroundColor" />
          <value direction="in" name="tabIcon" type="resource" property="iconUrl" />
@@ -1363,7 +1363,7 @@
          <value direction="inout" name="text" type="string" property="text" />
          <value direction="in" name="icon" type="resource" property="iconUrl" />
 
-         <value direction="in" name="borderVisible" type="boolean" property="borderVisible">
+         <value direction="in" name="borderVisible" type="boolean" property="borderVisible" value="false">
 			<description>
 				Indicates if the border will be drawn (default true). Setting it to false, will put the button in
 				'toolbar style'
@@ -1745,7 +1745,7 @@
             <option description="Vertical" value="vertical" />
          </value>
          <value direction="inout" name="floatable" type="boolean" />
-         <value direction="in" name="opaque" type="boolean" property="opaque" />
+         <value direction="in" name="opaque" type="boolean" property="opaque" value="false" />
       </values>
       <methods />
    </tipiclass>
@@ -1923,7 +1923,7 @@
          <value direction="in" name="columnWidth" type="string" />
          <value direction="in" name="height" type="integer" />
          <value direction="in" name="enabled" type="boolean" />
-         <value direction="in" name="opaque" type="boolean" property="opaque" />
+         <value direction="in" name="opaque" type="boolean" property="opaque" value="false" />
       </values>
       <methods />
    </tipiclass>
