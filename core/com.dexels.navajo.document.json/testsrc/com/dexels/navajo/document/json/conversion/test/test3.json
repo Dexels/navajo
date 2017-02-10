@@ -61,6 +61,11 @@
       "Type" : "date",
       "Value" : "1971-01-01 12:00:00.00"
     },
+    "matchtime2" : {
+      "Name" : "matchtime",
+      "Type" : "clocktime",
+      "Value" : "12:00:00.00"
+    },
     "updateby" : {
       "Name" : "updateby",
       "Type" : "string",
