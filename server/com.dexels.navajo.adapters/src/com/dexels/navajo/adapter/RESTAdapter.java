@@ -245,6 +245,7 @@ public class RESTAdapter extends NavajoMap {
             continueAfterRun();
 
         } catch (Exception e) {
+            logger.error("Error", e);
             if (breakOnException) {
                 throw new UserException(e.getMessage(), e);
             } else {
