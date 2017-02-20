@@ -41,6 +41,7 @@ import tipipackage.Version;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
+import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -294,12 +295,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             }
             try {
                 clientInterface = clazz.newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }   
+            } catch (Throwable e) {
+                logger.error("Unable to create NavajoClient!", e);
+            } 
+        } else {
+            try {
+                clientInterface = NavajoClientFactory.createClient().getClass().newInstance();
+            } catch (Throwable e) {
+                logger.error("Unable to create NavajoClient!", e);
+            } 
+        }
 
         if (myThreadPool == null) {
             myThreadPool = new TipiThreadPool(this, getPoolSize());
