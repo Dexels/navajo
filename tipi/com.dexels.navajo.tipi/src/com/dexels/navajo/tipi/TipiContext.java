@@ -41,7 +41,6 @@ import tipipackage.Version;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
-import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -294,15 +293,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                 }
             }
             try {
-                NavajoClientFactory.setDefaultClient(clazz.newInstance());
+                clientInterface = clazz.newInstance();
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }   
-        clientInterface = NavajoClientFactory.createClient();
-        logger.info("Creating new context {} username", clientInterface.hashCode());
 
         if (myThreadPool == null) {
             myThreadPool = new TipiThreadPool(this, getPoolSize());
@@ -625,7 +622,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             getClient().setUsername(navajoUsername);
             getClient().setPassword(navajoPassword);
             getClient().setForceGzip(forceGzip);
-            logger.info("Set username {} for Client {}", navajoUsername, getClient().hashCode());
 
         } else {
             throw new UnsupportedOperationException("Sorry, I deprecated the direct client for tipi usage");
@@ -1637,7 +1633,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                 getClient().setServerUrl(hosturl);
                 getClient().setUsername(username);
                 getClient().setPassword(password);
-                logger.info("Set username {} for Client {}", navajoUsername, getClient().hashCode());
 
                 reply = getClient().doSimpleSend(n, service);
                 // getClient().setServerUrl(url);
@@ -2143,8 +2138,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         getClient().setPassword(navajoPasswordProperty);
         getClient().setServerUrl(navajoServerProperty);
         
-        logger.info("Setting username {} for Client {}", navajoUsernameProperty,getClient().hashCode());
-
     }
 
     public void addTipiActivityListener(TipiActivityListener listener) {
