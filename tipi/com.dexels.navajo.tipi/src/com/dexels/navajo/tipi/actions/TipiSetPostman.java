@@ -47,6 +47,9 @@ public class TipiSetPostman extends TipiAction {
 		myContext.getClient().setServerUrl("" + serv.value);
 		myContext.getClient().setUsername("" + user.value);
 		myContext.getClient().setPassword("" + pass.value);
+		
+        logger.info("Set username {} for Client {}", user.value,myContext.getClient().hashCode());
+
 		if (app != null && app.value != null) {
 			myContext.getClient().setNavajoHeader(NavajoClient.APP_HEADER_KEY, "" + app.value);
 		}
