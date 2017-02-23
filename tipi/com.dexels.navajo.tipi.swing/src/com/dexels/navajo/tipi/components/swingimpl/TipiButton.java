@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.awt.Container;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 
@@ -57,18 +58,14 @@ public class TipiButton extends TipiSwingComponentImpl {
 	@Override
 	public Object createContainer() {
 		final TipiSwingButton myButton = new TipiSwingButton(this);
-		buttonAction = new AbstractAction("") {
+		 myButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    logger.info("Button clicked");
+                    doFireAction(myButton);
+            }
+        });
 
-			private static final long serialVersionUID = 706723341030407319L;
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			    logger.info("Button clicked");
-				doFireAction(myButton);
-			}
-		};
-		myButton.setAction(buttonAction);
-	
 		return myButton;
 	}
 
@@ -84,6 +81,9 @@ public class TipiButton extends TipiSwingComponentImpl {
 				if (name.equals("icon")) {
 					((JButton) getContainer()).setIcon(getIcon(object));
 				}
+				if (name.equals("borderVisible")) {
+				    ((TipiSwingButton) getContainer()).setBorderVisible((Boolean) object);
+                }
 				if (name.equals("enabled")) {
 					// Just for the record.
 					if (object == null) {
