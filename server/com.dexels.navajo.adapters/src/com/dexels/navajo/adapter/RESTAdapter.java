@@ -227,26 +227,25 @@ public class RESTAdapter extends NavajoMap {
                 rawResult = new String(result.getData());
                 if (http.getResponseContentType().equals("application/json")) {
                     try {
-                        
                         inDoc = json.parse(result.getDataAsStream(), topMessage);
                     } catch (Throwable t) {
                         logger.warn("Unable to parse response as JSON!", t);
                     }
                 }
-            } else {
+            }
+            if (inDoc == null) {
                 inDoc = NavajoFactory.getInstance().createNavajo();
             }
             if (responseCode >= 300) {
+                logger.warn("Got a non-200 response code: {}!", responseCode);
                 if (breakOnException) {
                     throw new UserException(responseCode, responseMessage);
-                } else {
-                    logger.warn("Got a non-200 response code!");
                 }
-               
             } 
             continueAfterRun();
 
         } catch (Exception e) {
+            logger.error("Error", e);
             if (breakOnException) {
                 throw new UserException(e.getMessage(), e);
             } else {

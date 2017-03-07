@@ -294,15 +294,17 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                 }
             }
             try {
-                NavajoClientFactory.setDefaultClient(clazz.newInstance());
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+                clientInterface = clazz.newInstance();
+            } catch (Throwable e) {
+                logger.error("Unable to create NavajoClient!", e);
+            } 
+        } else {
+            try {
+                clientInterface = NavajoClientFactory.createClient().getClass().newInstance();
+            } catch (Throwable e) {
+                logger.error("Unable to create NavajoClient!", e);
+            } 
         }
-
-        clientInterface = NavajoClientFactory.createClient();
 
         if (myThreadPool == null) {
             myThreadPool = new TipiThreadPool(this, getPoolSize());
@@ -1636,6 +1638,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                 getClient().setServerUrl(hosturl);
                 getClient().setUsername(username);
                 getClient().setPassword(password);
+
                 reply = getClient().doSimpleSend(n, service);
                 // getClient().setServerUrl(url);
                 debugLog("data", "simpleSend to host: " + hosturl + " username: " + username + " method: " + service);
@@ -2139,6 +2142,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         getClient().setUsername(navajoUsernameProperty);
         getClient().setPassword(navajoPasswordProperty);
         getClient().setServerUrl(navajoServerProperty);
+        
     }
 
     public void addTipiActivityListener(TipiActivityListener listener) {

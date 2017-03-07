@@ -180,7 +180,7 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		}		
 		String referer = extractReferer(request);
 		logger.info("Creating application. Referer: "+referer);
-		tipiApplication.setReferer(referer);
+		
 		String logoutURL = null;
 		
 		if(referer!=null) {
@@ -192,6 +192,7 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		    // Prevent url's with ////
             logoutURL = logoutURL.substring(0, logoutURL.length()-1);
 		}
+		tipiApplication.setReferer(logoutURL);
 		logger.info("Setting logout url to: "+logoutURL);
 		tipiApplication.setLogoutURL(logoutURL);
      	HttpSession hs = request.getSession();
