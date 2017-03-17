@@ -547,12 +547,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
                 swriter = new StringWriter();
                 writer = new PrintWriter(swriter);
-                // inMessage.getMessageBuffer().write(writer);
-                
-                // Remove some messages that might contain sensitive info
-                inMessage.removeMessage(GlobalManager.GLOBALSMSGNAME);
-                inMessage.removeMessage(Message.MSG_AAA_BLOCK);
-                inMessage.removeMessage(Message.MSG_PARAMETERS_BLOCK);
+                // Remove some messages that might contain sensitive info.
+                removeInternalMessages(inMessage);
                 inMessage.write(writer);
 
                 message += swriter.getBuffer().toString();
