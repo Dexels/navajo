@@ -1,5 +1,8 @@
 package com.dexels.navajo.functions.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -11,7 +14,7 @@ import com.dexels.navajo.parser.FunctionInterface;
 
 
 public class OSGiFunctionFactoryFactory  {
-
+    private static Map<String, Object> cache = new HashMap<>();
 	private final static Logger logger = LoggerFactory
 			.getLogger(OSGiFunctionFactoryFactory.class);
 	
@@ -31,6 +34,9 @@ public class OSGiFunctionFactoryFactory  {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
+	    if (cache.containsKey(name+serviceKey+interfaceClass)) {
+	        return cache.get(name+serviceKey+interfaceClass);
+	    }
 		BundleContext context = navajocore.Version.getDefaultBundleContext();
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass.getName(), "("+serviceKey+"="+name+")");
@@ -38,6 +44,7 @@ public class OSGiFunctionFactoryFactory  {
 				logger.error("Service resolution failed: Query: "+"("+serviceKey+"="+name+")"+" class: "+interfaceClass.getName());
 				return null;
 			}
+			cache.put(name+serviceKey+interfaceClass, context.getService(refs[0]));
 			return context.getService(refs[0]);
 			
 		} catch (InvalidSyntaxException e) {
