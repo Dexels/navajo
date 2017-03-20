@@ -120,7 +120,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
      *   </message>
 	 */
 	private void readConfig() throws Exception {
-
+	    
 		Navajo config = DispatcherFactory.getInstance().getNavajoConfig().readConfig(CACHE_CONFIG);
 
 		if ( config != null ) {
@@ -139,8 +139,6 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 				}
 			}
 		}
-		
-		setConfigTimeStamp();
 	}
 	
 	private String constructPersistenceKey(Navajo in, String service) {
@@ -216,6 +214,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 			} catch (Exception e) {
 				logger.error("Error: ", e);
 			}
+			setConfigTimeStamp();
 		}
 		
 	}
