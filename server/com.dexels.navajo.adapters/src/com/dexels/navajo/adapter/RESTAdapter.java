@@ -235,7 +235,7 @@ public class RESTAdapter extends NavajoMap {
                 }
             }
             
-            if (http.getResponseContentType().equalsIgnoreCase("application/json")) {
+            if (http.getResponseContentType().contains("application/json")) {
                 try {
                     inDoc = json.parse(result.getDataAsStream(), topMessage);
                 } catch (Throwable t) {
