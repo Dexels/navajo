@@ -317,7 +317,7 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
             if (method == null) {
                 propertyMethod =  p.getParentMessage().getMethod();
             }
-            if (propertyMethod.equals(method)
+            if (method.equals("response") && propertyMethod.equals(method)
                     || (method.equals("request") && (op.equals(Operation.GET) || op.equals(Operation.DELETE)) && Key.isKey(p.getKey()))) {
                 String commentRow = getTemplate("operationcommentrow.template");
                 commentRow = commentRow.replace("{{COMMENT_KEY}}", p.getName());
