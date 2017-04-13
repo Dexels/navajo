@@ -18,7 +18,7 @@ public class LoginStatistics implements EventHandler {
     private static final Logger logger = LoggerFactory.getLogger(LoginStatistics.class);
     
     private LoadingCache<String, Integer> cache = null;
-    private Integer failedLoginAbortThreshold = 20;
+    private Integer failedLoginAbortThreshold = 15;
     private Integer failedLoginSlowpoolThreshold = 3;
     
     
@@ -33,7 +33,7 @@ public class LoginStatistics implements EventHandler {
 
         }
 
-        cache = CacheBuilder.newBuilder().expireAfterWrite(60, TimeUnit.SECONDS).softValues().build(new CacheLoader<String, Integer>() {
+        cache = CacheBuilder.newBuilder().expireAfterWrite(180, TimeUnit.SECONDS).softValues().build(new CacheLoader<String, Integer>() {
             public Integer load(String key) {
                 return 0;
             }

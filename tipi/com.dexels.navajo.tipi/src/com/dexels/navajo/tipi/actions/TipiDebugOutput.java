@@ -43,9 +43,9 @@ public class TipiDebugOutput extends TipiAction {
 		Operand value = getEvaluatedParameter("value", event);
 		
 		if (value != null) {
-		    logger.debug("DEBUG: Value={}, type={} for event: {}", value.value, value.type, event.getEventName() );
+		    logger.info("DEBUG: Value={}, type={} for event: {}", value.value, value.type, event.getEventName() );
 		} else {
-		    logger.debug("DEBUG: value evaluated to null for event {}", event.getEventName());
+		    logger.info("DEBUG: value evaluated to null for event {}", event.getEventName());
 		}
 	}
 }

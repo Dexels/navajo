@@ -138,7 +138,10 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
                 }
             }
         } catch (MissingResourceException ex) {
-            logger.warn("Cannot find reference for  {}", ERROR_TITLE);
+            if (key == null || !"-1".equals(key))
+            {   // Don't error on -1, this is probably meant to not be found
+                logger.warn("Cannot find reference for {}", key);
+            }
         }
         return null;
     }
