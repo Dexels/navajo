@@ -1737,12 +1737,17 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                     removeProperty(p);
                 }
             } else {
-                if (mask.getProperty(p.getName()) == null) {
+                if (m_p == null) {
                     removeProperty(p);
                 }
             }
             if (!matchMethod) {
                 removeProperty(p);
+            } else if (m_p != null){
+                if (!p.getType().equals(m_p.getType())) {
+                    logger.debug("Overriding type for {} - from {} setting to {}", p.getName(), p.getType(), m_p.getType());
+                    p.setType(m_p.getType());
+                }
             }
         }
 
