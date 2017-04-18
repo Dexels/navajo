@@ -52,7 +52,6 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
         String username = client.getUsername();
         String pathInfo = req.getPathInfo();
         String instance = client.getInstance();
-        String url = client.getRedirectURLPrefix();
 
         if (pathInfo == null) {
             throw new APIException("Pathinfo is null, we cannot find an article then", null, APIErrorCode.ArticleNotFound);
@@ -79,7 +78,7 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
         try {
             ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, "", username, article, pathInfo, req.getParameterMap(), instance, oauthToken);
             runtime.setUsername(client.getUsername());
-            runtime.setURL(url);
+
             runtime.execute(getContext());
             resp.setContentType("application/json; charset=utf-8");
             a.setExitCode(Access.EXIT_OK);

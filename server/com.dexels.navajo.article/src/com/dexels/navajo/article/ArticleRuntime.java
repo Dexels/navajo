@@ -50,9 +50,6 @@ public interface ArticleRuntime {
 	public Object resolveScope(String name) throws APIException;
 
 	public String getInstance();
-	
-	public String getURL();
-    public void setURL(String url);
 
 	public ObjectNode getRootNode();
 

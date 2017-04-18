@@ -198,16 +198,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 		return instance;
 	}
 	
-	@Override
-    public String getURL() {
-        return url;
-    }
-	
-	@Override
-    public void setURL(String url) {
-        this.url = url;
-    }
-	
+
 	@Override
 	public void execute(ArticleContext context) throws APIException, NoJSONOutputException {
 		verifyScopes();
