@@ -178,7 +178,7 @@
 							<keypass></keypass>
 							<arguments>
 								<argument>-tsa</argument>
-								<argument>https://timestamp.geotrust.com/tsa</argument>
+								<argument>http://sha256timestamp.ws.symantec.com/sha256/timestamp</argument>
 							</arguments>
 						</configuration>
 					</plugin>
