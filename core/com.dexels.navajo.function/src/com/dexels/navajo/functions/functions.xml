@@ -659,7 +659,7 @@
 			transparency if needed). Keeps aspect ratio, and uses the largest
 			value of the dimensions
 		</description>
-		<input>binary,integer,integer</input>
+		<input>binary,integer,integer,string|empty</input>
 		<result>binary</result>
 	</function>
 	<function name="ScaleImageCropped" class="com.dexels.navajo.functions.ScaleImageCropped">
@@ -667,28 +667,28 @@
 			transparency if needed). Keeps aspect ratio, and crops the image to
 			the new size if necessary
 		</description>
-		<input>binary,integer,integer</input>
+		<input>binary,integer,integer,string|empty</input>
 		<result>binary</result>
 	</function>
 	<function name="ScaleImageFree" class="com.dexels.navajo.functions.ScaleImageFree">
 		<description>Scales an image to the specified dimensions. Does not
 			keep aspect ratio.
 		</description>
-		<input>binary,integer,integer</input>
+		<input>binary,integer,integer,string|empty</input>
 		<result>binary</result>
 	</function>
 	<function name="ScaleImageMax" class="com.dexels.navajo.functions.ScaleImageMax">
 		<description>Scales an image to the specified dimensions. Keeps aspect
 			ratio, and uses the largest value of the dimensions
 		</description>
-		<input>binary,integer,integer</input>
+		<input>binary,integer,integer,string|empty</input>
 		<result>binary</result>
 	</function>
 	<function name="ScaleImageMin" class="com.dexels.navajo.functions.ScaleImageMin">
 		<description>Scales an image to the specified dimensions. Keeps aspect
 			ratio, and uses the smallest value of the dimensions
 		</description>
-		<input>binary,integer,integer</input>
+		<input>binary,integer,integer,string|empty</input>
 		<result>binary</result>
 	</function>
 	<function name="SetAllProperties" class="com.dexels.navajo.functions.SetAllProperties">

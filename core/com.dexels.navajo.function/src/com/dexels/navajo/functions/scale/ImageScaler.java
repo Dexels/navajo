@@ -27,7 +27,7 @@ public class ImageScaler {
 	private final static Logger logger = LoggerFactory
 			.getLogger(ImageScaler.class);
 	
-    private static Binary scale(Binary b, int width, int height, boolean keepAspect, boolean alsoScaleUp, boolean clipToCenter, boolean cropToCenter) throws IOException {
+    private static Binary scale(Binary b, int width, int height, boolean keepAspect, boolean alsoScaleUp, boolean clipToCenter, boolean cropToCenter, String imageType) throws IOException {
     	if (b==null || b.getLength()<=0) {
             return null;
         }
@@ -42,7 +42,7 @@ public class ImageScaler {
         	os = c.getOutputStream();
         	ios = ImageIO.createImageOutputStream(os);
         	os.flush();
-            ImageScaler.scale(iis, ios, width, height, keepAspect, alsoScaleUp, clipToCenter, cropToCenter);
+            ImageScaler.scale(iis, ios, width, height, keepAspect, alsoScaleUp, clipToCenter, cropToCenter, imageType);
         	ios.flush();
         	ios.close();
         	ios = null;
@@ -81,30 +81,30 @@ public class ImageScaler {
         }
     }
 
-	public static Binary scaleToMax(Binary b, int width, int height) throws IOException {
+	public static Binary scaleToMax(Binary b, int width, int height, String imageType) throws IOException {
 		if (width > height) {
 			height = width;
 		}
 		if (height > width) {
 			width = height;
 		}
-		return scale(b, width, height, true, false, false, false);
+		return scale(b, width, height, true, false, false, false, imageType);
 	}
 	
-	public static Binary scaleToMin(Binary b, int width, int height) throws IOException {
-		return scale(b, width, height, true, true, false, false);
+	public static Binary scaleToMin(Binary b, int width, int height, String imageType) throws IOException {
+		return scale(b, width, height, true, true, false, false, imageType);
 	}
 	
-	public static Binary scaleFree(Binary b, int width, int height) throws IOException {
-		return scale(b, width, height, false, true, false, false);
+	public static Binary scaleFree(Binary b, int width, int height, String imageType) throws IOException {
+		return scale(b, width, height, false, true, false, false, imageType);
 	}
 	
-	public static Binary scaleCentered(Binary b, int width, int height) throws IOException {
-		return scale(b, width, height, false, false, true, false);
+	public static Binary scaleCentered(Binary b, int width, int height, String imageType) throws IOException {
+		return scale(b, width, height, false, false, true, false, imageType);
 	}
 	
-	public static Binary scaleCropped(Binary b, int width, int height) throws IOException{
-		return scale(b, width, height, false, false, false, true);
+	public static Binary scaleCropped(Binary b, int width, int height, String imageType) throws IOException{
+		return scale(b, width, height, false, false, false, true, imageType);
 	}
 
 	/**
@@ -126,14 +126,15 @@ public class ImageScaler {
 							  boolean keepAspect,
 							  boolean alsoScaleUp,
 							  boolean clipToCenter,
-							  boolean cropToCenter) throws IOException {
+							  boolean cropToCenter,
+							  String imageType) throws IOException {
 		
 		if (clipToCenter) {
-			scaleCenter(infile, outfile, width, height);
+			scaleCenter(infile, outfile, width, height, imageType);
 		} else if (cropToCenter) {
-			scaleCrop(infile, outfile, width, height);
+			scaleCrop(infile, outfile, width, height, imageType);
 		} else {
-			scale(infile, outfile, width, height, keepAspect, alsoScaleUp);
+			scale(infile, outfile, width, height, keepAspect, alsoScaleUp, imageType);
 		}
 	}
 	
@@ -150,7 +151,8 @@ public class ImageScaler {
 	private static void scaleCrop(ImageInputStream infile,
 							      ImageOutputStream outfile, 
 							      int width,
-							      int height) throws IOException {
+							      int height,
+							      String imageType) throws IOException {
 		
 		BufferedImage original = ImageIO.read(infile);
 		if (original == null) {
@@ -162,7 +164,7 @@ public class ImageScaler {
 		
 		original = ImageScaler.getSubScaledBufferedImage(original, width, height, (int)dim.getWidth(), (int)dim.getHeight());
 
-		scale(original, outfile, width, height, 1, 1);
+		scale(original, outfile, width, height, 1, 1, imageType);
 	}
 	
 	/**
@@ -226,7 +228,8 @@ public class ImageScaler {
 	private static void scaleCenter(ImageInputStream infile,
 			 				        ImageOutputStream outfile, 
 							        int width,
-							        int height) throws IOException {
+							        int height,
+							        String imageType) throws IOException {
 
 		BufferedImage original = ImageIO.read(infile);
 		if (original == null) {
@@ -263,7 +266,7 @@ public class ImageScaler {
 			original = original.getSubimage(x, y, width, height);
 		}
 
-		scale(original, outfile, width, height, 1, 1);
+		scale(original, outfile, width, height, 1, 1, imageType);
 	}
 	
 	/**
@@ -342,7 +345,8 @@ public class ImageScaler {
 							  int width, 
 							  int height,
 							  boolean keepAspect, 
-							  boolean alsoScaleUp) throws IOException {
+							  boolean alsoScaleUp,
+							  String imageType) throws IOException {
 
 		BufferedImage original = ImageIO.read(infile);
 		if (original == null) {
@@ -365,7 +369,7 @@ public class ImageScaler {
 			factorY = factorX;
 		}
 
-		scale(original, outfile, width, height, factorX, factorY);
+		scale(original, outfile, width, height, factorX, factorY, imageType);
 	}
 
 	/**
@@ -383,10 +387,11 @@ public class ImageScaler {
 							  int width,
 							  int height,
 							  float factorX,
- 							  float factorY) throws IOException {
+ 							  float factorY,
+ 							  String imageType) throws IOException {
 		
 		BufferedImage out = ImageScaler.getScaledBufferedImage(original, Math.round(original.getWidth() / factorX), Math.round(original.getHeight() / factorY));
-		ImageIO.write(out, "png", outfile);
+		ImageIO.write(out, imageType != null ? imageType : "png", outfile);
 	}
 	
 	/**
@@ -487,7 +492,7 @@ public class ImageScaler {
       try {
 //          Binary res = ImageScaler.scaleToMax(b, width.intValue(), height.intValue(), 1);
 //          Binary res = ImageScaler.scaleFree(b, width.intValue(), height.intValue(), 1);
-          Binary res = ImageScaler.scaleCentered(b, width.intValue(), height.intValue());
+          Binary res = ImageScaler.scaleCentered(b, width.intValue(), height.intValue(), null);
 //          Binary res = ImageScaler.scaleCropped(b, width.intValue(), height.intValue());
           res.write(res.getOutputStream());
           System.out.println("Filename: " + res.getFile().getAbsolutePath() + res.getFile().getName());
