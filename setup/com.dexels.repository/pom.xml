@@ -178,7 +178,7 @@
 							<keypass></keypass>
 							<arguments>
 								<argument>-tsa</argument>
-								<argument>https://timestamp.geotrust.com/tsa</argument>
+								<argument>http://timestamp.verisign.com/scripts/timstamp.dll</argument>
 							</arguments>
 						</configuration>
 					</plugin>
