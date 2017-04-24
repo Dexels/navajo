@@ -40,6 +40,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.BinaryDigest;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Memo;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.NavajoExpression;
 import com.dexels.navajo.document.types.Percentage;
@@ -427,6 +428,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			setValue((Money) o, internal);
 			return;
 		}
+		if (o instanceof Memo) {
+            setValue((Memo) o, internal);
+            return;
+        }
 		if (o instanceof Percentage) {
 			setValue((Percentage) o, internal);
 			return;
@@ -961,6 +966,18 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		}
 		firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
 	}
+	
+	private final void setValue(Memo value, Boolean internal) {
+        Object old = getTypedValue();
+        setType(MEMO_PROPERTY);
+
+        if (value != null) {
+            setCheckedValue(value.toString());
+        } else {
+            myValue = null;
+        }
+        firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+    }
 
 	@Override
 	public final void setValue(Percentage value) {
