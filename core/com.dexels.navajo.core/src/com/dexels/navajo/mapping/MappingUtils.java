@@ -334,7 +334,7 @@ public final class MappingUtils {
     }
     else { // Existing property.
     	prop.clearValue();
-    	prop.setType(type);
+    	
     	
     	if ( value != null && value instanceof Property ) {
     		// Value is a property itself!
@@ -363,8 +363,8 @@ public final class MappingUtils {
     	if ( Property.DIR_IN.equals(direction) || Property.DIR_OUT.equals(direction) ) {
     		prop.setDirection(direction);
     	}
-
-      prop.setName(actualName); // Should not matter ;)
+    	prop.setType(type);
+       prop.setName(actualName); // Should not matter ;)
     }
 
     // Set subtype if not empty.
