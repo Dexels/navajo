@@ -501,6 +501,11 @@
 		<input>date|string,string|empty</input>
 		<result>boolean</result>
 	</function>
+    <function name="IsDateBetween" class="com.dexels.navajo.functions.IsDateBetween">
+        <description>IsDateBetween(date|string,date|string,date|string)</description>
+        <input>date|string,date|string,date|string</input>
+        <result>boolean</result>
+    </function>
 	<function name="IsEmpty" class="com.dexels.navajo.functions.IsEmpty">
 		<description>Determines whether a given object is null or empty
 		</description>
