@@ -1765,14 +1765,18 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         while (allMessages.hasNext()) {
 
             Message m = allMessages.next();
+            Message mask_message = mask.getMessage(m.getName());
+            if (mask_message == null && this.getIndex() > -1) {
+                mask_message = mask.getDefinitionMessage().getMessage(m.getName());
+            }
+                
             
-            if (mask.getMessage(m.getName()) == null) {
+            if (mask_message == null ) {
                 removeMessage(m);
                 continue;
             }
             
-            boolean matchMethod = m.getMethod().equals("") || method.equals("") || (mask.getMessage(m.getName()).getMethod().equals(""))
-                    || m.getMethod().equals(method);
+            boolean matchMethod = m.getMethod().equals("") || method.equals("") || mask_message.getMethod().equals("") || m.getMethod().equals(method);
 
             if (!matchMethod) {
                 removeMessage(m);
@@ -1783,17 +1787,17 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
             // If message m is an array message, mask each element
             if (m.isArrayMessage()) {
-                Message definitionMessage = mask.getMessage(m.getName()).getDefinitionMessage();
+                Message definitionMessage = mask_message.getDefinitionMessage();
                 if (definitionMessage == null) {
                     logger.debug("Unable to mask {} since the mask has no defintion message", m.getName());
                     
                 } else {
                     for (int i = 0; i < m.getElements().size(); i++) {
-                            m.getElements().get(i).maskMessage(mask.getMessage(m.getName()), method);
+                            m.getElements().get(i).maskMessage(mask_message, method);
                     }
                 }
             } else {
-                m.maskMessage(mask.getMessage(m.getName()), method);
+                m.maskMessage(mask_message, method);
             }
 
         }
