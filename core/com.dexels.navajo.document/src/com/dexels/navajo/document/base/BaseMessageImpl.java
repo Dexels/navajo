@@ -1256,7 +1256,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public final void setDefinitionMessage(Message m) {
-        m.setType(Message.MSG_TYPE_DEFINITION);
+        if (!m.getType().equals(Message.MSG_TYPE_DEFINITION)) {
+            m.setType(Message.MSG_TYPE_DEFINITION);
+        }
         this.definitionMessage = (BaseMessageImpl) m;
         // Remove from child list, to be sure.
         if (messageList != null) {
