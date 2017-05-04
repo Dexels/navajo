@@ -1256,6 +1256,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public final void setDefinitionMessage(Message m) {
+        m.setType(Message.MSG_TYPE_DEFINITION);
         this.definitionMessage = (BaseMessageImpl) m;
         // Remove from child list, to be sure.
         if (messageList != null) {
@@ -1726,28 +1727,26 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         while (allProperties.hasNext()) {
             Property p = allProperties.next();
             Property m_p = mask.getProperty(p.getName());
+            
+            // If we didn't find a mask property but we are an array element, check for definition message
+            if (m_p == null && this.getIndex() > -1) {
+                m_p = ((BaseMessageImpl) mask).getPropertyDefinition(p.getName());
+            }
+            
+            if (m_p == null) {
+                removeProperty(p);
+                continue;
+            }
 
             // A method that is null or "" is considered to always match
-            boolean matchMethod = m_p == null || m_p.getMethod() == null || m_p.getMethod().equals("")
+            boolean matchMethod =  m_p.getMethod() == null || m_p.getMethod().equals("")
                     || p.getMethod().equals("") || p.getMethod().equals(method);
 
-            // It's an array message element. Check mask's definition message if it exists..
-            if (this.getIndex() >= 0) { 
-                if (!mask.isArrayMessage() || ((BaseMessageImpl) mask).getPropertyDefinition(p.getName()) == null) {
-                    removeProperty(p);
-                }
-            } else {
-                if (m_p == null) {
-                    removeProperty(p);
-                }
-            }
             if (!matchMethod) {
                 removeProperty(p);
-            } else if (m_p != null){
-                if (!p.getType().equals(m_p.getType()) && m_p.getType() != Property.SELECTION_PROPERTY) { 
-                    logger.debug("Overriding type for {} - from {} setting to {}", p.getName(), p.getType(), m_p.getType());
-                    p.setType(m_p.getType());
-                }
+            } else if (!p.getType().equals(m_p.getType()) && m_p.getType() != Property.SELECTION_PROPERTY) { 
+                logger.debug("Overriding type for {} - from {} setting to {}", p.getName(), p.getType(), m_p.getType());
+                p.setType(m_p.getType());
             }
         }
 
@@ -1765,7 +1764,12 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
             Message m = allMessages.next();
             
-            boolean matchMethod = m.getMethod().equals("") || method.equals("") || (mask.getMessage(m.getName()) != null && mask.getMessage(m.getName()).getMethod().equals(""))
+            if (mask.getMessage(m.getName()) == null) {
+                removeMessage(m);
+                continue;
+            }
+            
+            boolean matchMethod = m.getMethod().equals("") || method.equals("") || (mask.getMessage(m.getName()).getMethod().equals(""))
                     || m.getMethod().equals(method);
 
             if (!matchMethod) {
@@ -1773,31 +1777,17 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                 continue;
             }
 
-            // Check if message m exists in the mask. If the mask is an array
-            // message, we must look in the definition message.
-            if (mask.isArrayMessage() && mask.getDefinitionMessage() != null) {
-                if (mask.getDefinitionMessage().getMessage(m.getName()) == null) {
-                    removeMessage(m);
-                    continue;
-                }
-                m.maskMessage(mask.getDefinitionMessage().getMessage(m.getName()), method);
-                continue;
-            } else {
-                if (mask.getMessage(m.getName()) == null) {
-                    removeMessage(m);
-                    continue;
-                }
-            }
+            
 
             // If message m is an array message, mask each element
             if (m.isArrayMessage()) {
-                for (int i = 0; i < m.getElements().size(); i++) {
-                    if (mask.getDefinitionMessage() != null) {
-                        m.getElements().get(i).maskMessage(mask.getDefinitionMessage().getMessage(m.getName()), method);
-
-                    } else {
-                        m.getElements().get(i).maskMessage(mask.getMessage(m.getName()), method);
-
+                Message definitionMessage = mask.getMessage(m.getName()).getDefinitionMessage();
+                if (definitionMessage == null) {
+                    logger.debug("Unable to mask {} since the mask has no defintion message", m.getName());
+                    
+                } else {
+                    for (int i = 0; i < m.getElements().size(); i++) {
+                            m.getElements().get(i).maskMessage(mask.getMessage(m.getName()), method);
                     }
                 }
             } else {
