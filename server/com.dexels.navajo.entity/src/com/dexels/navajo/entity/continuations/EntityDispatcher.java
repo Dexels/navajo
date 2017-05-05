@@ -57,7 +57,7 @@ public class EntityDispatcher {
         }
         Navajo input = null;
         String inputEtag = null;
-
+       
         try {
 
             // Check for a .<format> in the URL - can be in RequestURI
@@ -107,7 +107,8 @@ public class EntityDispatcher {
             }
 
             logger.info("Entity request {} ({}, {})", entityName, method, ip);
-            boolean debug = Boolean.valueOf(runner.getHttpRequest().getParameter("developer"));
+            String queryString = runner.getHttpRequest().getQueryString();
+            boolean debug = queryString != null && queryString.contains("developer=true");
 
             // Check entity mapper for this folder. If we find an entity mapped
             // to this folder named like our request, this is our entity
@@ -133,6 +134,7 @@ public class EntityDispatcher {
                     }
                 }
             }
+            
             Entity e = myManager.getEntity(mappedEntity);
 
             if (e == null) {
@@ -147,6 +149,7 @@ public class EntityDispatcher {
             if (method.equals("GET") || method.equals("DELETE")) {
                 input = EntityHelper.deriveNavajoFromParameterMap(e, runner.getHttpRequest().getParameterMap());
             } else {
+              
                 JSONTML json = JSONTMLFactory.getInstance();
                 json.setEntityTemplate(entityMessage.getRootDoc());
                 try {
@@ -155,8 +158,7 @@ public class EntityDispatcher {
                     logger.error("Error in parsing input JSON");
                     throw new EntityException(EntityException.BAD_REQUEST);
                 }
-            }
-
+            }            
             // Check if input contains the entityMessage
             if (input.getMessage(entityMessage.getName()) == null) {
                 logger.error("Entity name not found in input - format incorrect or bad request");
