@@ -47,8 +47,13 @@ public class SchedulerRegistry {
         }
         getScheduler().submit(myRunner, queueid);
     }
-    public static void submitTask(TmlRunnable task) {
-        getScheduler().submit(task, Scheduler.TASKS_POOL);        
+    public static boolean submitTask(TmlRunnable task) {
+    	if(getScheduler().getQueue(Scheduler.TASKS_POOL).getActiveRequestCount() >= getScheduler().getQueue(Scheduler.TASKS_POOL).getMaximumActiveRequestCount()) {
+    		return false;
+    	}
+    	
+    	getScheduler().submit(task, Scheduler.TASKS_POOL);        
+    	return true;
     }
 
     public static void setScheduler(TmlScheduler scheduler) {
