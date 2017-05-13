@@ -34,7 +34,7 @@ public class TestJsonConversion {
 //		mapper.writerWithDefaultPrettyPrinter().writeValue(System.err, on);
 //		System.err.println("After:\n");
 //		mapper.writerWithDefaultPrettyPrinter().writeValue(System.err, n);
-		Optional<List<ReplicationMessage>> r = rmsg.subMessages("standings");
+		Optional<List<ReplicationMessage>> r = rmsg.subMessages("Standings");
 //		System.err.println("Present? "+r.isPresent());
 		Assert.assertTrue(r.isPresent());
 		Assert.assertEquals(12, r.get().size());
