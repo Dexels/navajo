@@ -43,5 +43,25 @@ public class TestJsonConversion {
 		Assert.assertEquals(10, rr.getMessage("Transaction/Columns").getArraySize());
 	}
 
+	@Test
+	public void testConversionNavajo() throws JsonGenerationException, JsonMappingException, IOException {
+        InputStream resource = TestJsonConversion.class.getResourceAsStream("testtml.xml");
+        Navajo base = NavajoFactory.getInstance().createNavajo(resource);
+        
+
+
+        ObjectNode on = JsonTmlFactory.getInstance().toNode(base);
+        Assert.assertTrue(on.has("header"));
+        Assert.assertTrue(on.has("Pool"));
+        Assert.assertTrue(on.has("SelectedGlobals"));
+//        ReplicationMessage rmsg = ReplicationFactory.getDefaultInstance().parseJson(on);
+//
+//        Optional<List<ReplicationMessage>> r = rmsg.subMessages("Standings");
+//        Assert.assertTrue(r.isPresent());
+//        Assert.assertEquals(12, r.get().size());
+//        Navajo rr = JsonTmlFactory.getInstance().toReplicationNavajo(rmsg, "Tenant", "Table",Optional.of("Datasource"));
+//
+//        Assert.assertEquals(10, rr.getMessage("Transaction/Columns").getArraySize());
+    }
 	
 }
