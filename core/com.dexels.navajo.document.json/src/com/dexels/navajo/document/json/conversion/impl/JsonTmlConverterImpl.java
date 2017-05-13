@@ -43,6 +43,7 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 			Property colProp = NavajoFactory.getInstance().createProperty(rootNavajo, columnName, 
 					type, columnName, 0, "", Property.DIR_OUT);
 			colProp.setAnyValue(value);
+			colProp.setType(type);
 			cV.addProperty(colProp);
 		}
 		for (Entry<String,List<ReplicationMessage>> e : message.subMessageListMap().entrySet()) {
