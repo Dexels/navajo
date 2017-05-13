@@ -19,6 +19,11 @@ public interface WebserviceListenerRegistryInterface {
 			HashSet<String> ignoreTaskList, boolean locally);
 	public boolean isRegisteredWebservice(String string);
 	public void setWorkflowManager(WorkFlowManagerInterface wfmi);
+	
+	/** Register a webservice as having a possible before- or afterwebservice trigger
+	 */
+    public void addToCheckWebservice(String wfName, String webservice);
+    public void removeToCheckWebservices(String wfName);
 
 	
 }

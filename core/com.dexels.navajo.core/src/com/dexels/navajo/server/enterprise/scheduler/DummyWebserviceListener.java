@@ -58,4 +58,16 @@ public class DummyWebserviceListener implements WebserviceListenerRegistryInterf
 		
 	}
 
+    @Override
+    public void addToCheckWebservice(String wfName, String webservice) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void removeToCheckWebservices(String wfName) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }
