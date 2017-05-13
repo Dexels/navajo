@@ -12,6 +12,8 @@ public interface JsonTmlConverter {
 	public Navajo toReplicationNavajo(ReplicationMessage message, String tenant, String table, Optional<String> datasource);
 
 	public ObjectNode toNode(Message m, String primaryKeys);
+	
+	public ObjectNode toNode(Navajo m);
 
 	public Message toMessage(String messageName, ReplicationMessage message, Navajo rootNavajo);
 
