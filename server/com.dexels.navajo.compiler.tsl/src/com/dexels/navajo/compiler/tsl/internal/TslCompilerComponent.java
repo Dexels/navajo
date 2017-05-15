@@ -131,9 +131,9 @@ public class TslCompilerComponent implements ScriptCompiler {
         generateFactoryClass(script, packagePath, dependentResources);
 
         generateManifest(scriptString, "1.0.0", packagePath, script, packages);
-        generateDs(packagePath, script, dependencies, dependentResources);
+        String compiledDate = generateDs(packagePath, script, dependencies, dependentResources);
         if (packagePath.startsWith("entity")) {
-            generateEntityDs(packagePath, script, dependencies, dependentResources);
+            generateEntityDs(packagePath, script, compiledDate, dependencies, dependentResources);
         }
     }
 
@@ -258,9 +258,10 @@ public class TslCompilerComponent implements ScriptCompiler {
         return formatted;
     }
 
-    private void generateDs(String packagePath, String script, List<Dependency> dependencies, Set<String> dependentResources)
+    private String generateDs(String packagePath, String script, List<Dependency> dependencies, Set<String> dependentResources)
             throws IOException {
         String fullName;
+        String compiledDate = "" + new Long(new Date().getTime());
         if (packagePath.equals("")) {
             fullName = script;
         } else {
@@ -301,8 +302,10 @@ public class TslCompilerComponent implements ScriptCompiler {
         XMLElement provide = new CaseSensitiveXMLElement("provide");
         service.addChild(provide);
         provide.setAttribute("interface", CompiledScriptFactory.class.getName());
+        
 
         addProperty("navajo.scriptName", "String", symbolicName, xe);
+        addProperty("navajo.compileddate", "String",  compiledDate, xe);
         if (hasTenantSpecificFile) {
             addProperty("navajo.tenant", "String", tenant, xe);
             addProperty("service.ranking", "Integer", "1000", xe);
@@ -327,6 +330,8 @@ public class TslCompilerComponent implements ScriptCompiler {
         xe.write(w);
         w.flush();
         w.close();
+        
+        return compiledDate;
     }
 
     private String getTentantSpecificDependency(List<Dependency> dependencies) {
@@ -341,9 +346,10 @@ public class TslCompilerComponent implements ScriptCompiler {
         return null;
     }
 
-    private void generateEntityDs(String packagePath, String script, List<Dependency> dependencies,
+    private void generateEntityDs(String packagePath, String script,  String compiledDate, List<Dependency> dependencies,
             Set<String> dependentResources) throws IOException {
         String fullName;
+
         if (packagePath.equals("")) {
             fullName = script;
         } else {
@@ -385,9 +391,13 @@ public class TslCompilerComponent implements ScriptCompiler {
 
         XMLElement refScript = new CaseSensitiveXMLElement("reference");
         refScript.setAttribute("cardinality", "1..1");
+        refScript.setAttribute("bind", "setCompiledScript");
+        refMan.setAttribute("unbind", "clearCompiledScript");
         refScript.setAttribute("interface", "com.dexels.navajo.script.api.CompiledScriptFactory");
         refScript.setAttribute("name", "CompiledScript");
-        refScript.setAttribute("target", "(component.name=" + symbolicName.replace("/", ".") + ")");
+        String target1 = "component.name=" + symbolicName.replace("/", ".");
+        String target2 = "navajo.compileddate=" + compiledDate;
+        refScript.setAttribute("target", "(&("+target1+")("+target2 +"))");
         xe.addChild(refScript);
 
         for (int i = 0; i < dependencies.size(); i++) {
@@ -422,8 +432,9 @@ public class TslCompilerComponent implements ScriptCompiler {
         w.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         xe.write(w);
         w.flush();
-        w.close();
-    }
+        w.close();}
+
+   
 
     protected void addProperty(final String key, final String type, final String value, final XMLElement xe) {
         XMLElement property = new CaseSensitiveXMLElement("property");

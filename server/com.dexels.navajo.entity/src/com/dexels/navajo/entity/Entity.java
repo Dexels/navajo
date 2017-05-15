@@ -15,6 +15,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.script.api.CompiledScriptFactory;
 
 public class Entity {
 
@@ -156,6 +157,13 @@ public class Entity {
         startEntity();
 
     }
+    
+    public void setCompiledScript(CompiledScriptFactory c1) {
+
+    }
+    public void clearCompiledScript(CompiledScriptFactory c1) {
+        
+    }       
 
     private void addSubEntity(Entity sub) throws EntityException {
         if (sub.equals(this)) {
