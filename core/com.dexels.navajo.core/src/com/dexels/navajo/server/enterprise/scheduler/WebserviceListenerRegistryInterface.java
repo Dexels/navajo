@@ -17,13 +17,15 @@ public interface WebserviceListenerRegistryInterface {
 	public void registerTrigger(TriggerInterface afterWebserviceTrigger);
 	public boolean afterWebservice(String webservice, Access a,
 			HashSet<String> ignoreTaskList, boolean locally);
-	public boolean isRegisteredWebservice(String string);
+	public boolean isActiveRegisteredWebservice(String string);
 	public void setWorkflowManager(WorkFlowManagerInterface wfmi);
 	
-	/** Register a webservice as having a possible before- or afterwebservice trigger
+	/** Register a webservice as having a possible before- or afterwebservice trigger.
+	 * Note that it doesn't have to be active still - that is determined in isActiveRegisteredWebservice()
+	 * The workflow is used for de-registring.
 	 */
-    public void addToCheckWebservice(String wfName, String webservice);
-    public void removeToCheckWebservices(String wfName);
+    public void addRegisteredWebservice(String wfName, String webservice);
+    public void unregisterWebservicesFromWorkflow(String wfName);
 
 	
 }
