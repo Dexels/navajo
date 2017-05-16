@@ -161,7 +161,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
         } else { // I am array child element.
             if (getParent() != null) {
                 if (myObject != null) {
-                    ArrayChildStatistics acs = getParent().getArrayChildStatistics(myObject.getClass().getSimpleName());
+                    ArrayChildStatistics acs = getParent().getArrayChildStatistics(myObject.getClass().getName());
                     if (acs != null) {
                         acs.totalTime += getTotaltime();
                     }
