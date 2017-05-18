@@ -197,9 +197,13 @@ public class RESTAdapter extends NavajoMap {
             if (od.getMessage("__parms__") != null) {
                 od.removeMessage("__parms__");
             }
+            if (od.getMessage("__aaa__") != null) {
+                od.removeMessage("__aaa__");
+            }
             
             try {
                 json.format(od, w, true);
+                
                 bContent.getOutputStream().write(w.toString().getBytes("UTF-8"));
             } catch (Exception e) {
                 logger.error("Exception on parsing input navajo as JSON! Not performing REST call!");
