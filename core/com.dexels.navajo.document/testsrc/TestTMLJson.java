@@ -6,6 +6,7 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
@@ -28,6 +29,37 @@ public class TestTMLJson {
 
         // Length should be... 64! right?
         Assert.assertEquals(64, result.length());
+        
+        // Turn back into a Navajo and compare
+        Navajo n2 = json.parse(new StringReader(result), "SimpleMessage");
+        Assert.assertTrue(n.getMessage("SimpleMessage").isEqual(n2.getMessage("SimpleMessage")));
+    }
+    
+    @Test
+    public void TestJsonIgnoreMessage() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message.xml"));
+        JSONTML json = JSONTMLFactory.getInstance();
+        
+        Message ignoreMessage = NavajoFactory.getInstance().createMessage(n,  "ignoreme");
+        n.addMessage(ignoreMessage);
+        ignoreMessage.setMode(Message.MSG_MODE_IGNORE);
+        Property testprop = NavajoFactory.getInstance().createProperty(n,  "TestProp", "", "", "");
+        testprop.setAnyValue("100a");
+        ignoreMessage.addProperty(testprop);
+        
+        
+        
+        Writer sw = new StringWriter();
+        json.format(n,  sw, true);
+        
+        String result = sw.toString();
+        System.out.println(result);
+
+        // Length should be... 64! right?
+        Assert.assertEquals(64, result.length());
+        
+        // Ignore message shouldnt be present
+        Assert.assertFalse(result.contains("ignoreme"));
         
         // Turn back into a Navajo and compare
         Navajo n2 = json.parse(new StringReader(result), "SimpleMessage");
