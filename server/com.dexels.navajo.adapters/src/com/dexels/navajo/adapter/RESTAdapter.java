@@ -47,6 +47,7 @@ public class RESTAdapter extends NavajoMap {
     protected List<String> parameters = new ArrayList<String>();
     protected Map<String, String> headers = new HashMap<String, String>();
     private String textContent;
+    private boolean jsonResponse = true;
 
     
     public RESTAdapter() {
@@ -122,6 +123,11 @@ public class RESTAdapter extends NavajoMap {
 
     public void setMessagesPerRequest(int count) {
         this.messagesPerRequest = count;
+    }
+
+    
+    public void setJsonResponse(boolean jsonResponse) {
+        this.jsonResponse  = jsonResponse;
     }
 
     @Override
@@ -238,21 +244,25 @@ public class RESTAdapter extends NavajoMap {
                     throw new UserException(responseCode, responseMessage);
                 }
             }
-            
-            if (http.getResponseContentType().contains("application/json")) {
-                try {
-                    inDoc = json.parse(result.getDataAsStream(), topMessage);
-                } catch (Throwable t) {
-                    logger.warn("Unable to parse response as JSON!", t);
-                    if (breakOnException) {
-                        throw t;
+            if (jsonResponse) {
+                if (http.getResponseContentType().contains("application/json")) {
+                    try {
+                        inDoc = json.parse(result.getDataAsStream(), topMessage);
+                    } catch (Throwable t) {
+                        logger.warn("Unable to parse response as JSON!", t);
+                        if (breakOnException) {
+                            throw t;
+                        }
+                    }
+                } else {
+                    logger.warn("Unexpected output content type: {}", http.getResponseContentType());
+                    if ( breakOnException) {
+                        throw new UserException(-1, "Unexpected content type: " + http.getResponseContentType());
                     }
                 }
             } else {
-                logger.warn("Unexpected output content type: {}", http.getResponseContentType());
-                if (breakOnException) {
-                    throw new UserException(-1, "Unexpected content type: " + http.getResponseContentType());
-                }
+                logger.debug("Non-json response - creating empty Navajo");
+                inDoc = NavajoFactory.getInstance().createNavajo();
             }
         } catch (Throwable e) {
             logger.error("Exception on getting response", e);
