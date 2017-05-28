@@ -13,8 +13,6 @@ public interface JsonTmlConverter {
 
 	public ObjectNode toNode(Message m, String primaryKeys);
 	
-	public ObjectNode toNode(Navajo m);
-
 	public Message toMessage(String messageName, ReplicationMessage message, Navajo rootNavajo);
 
 	public Navajo toFlatNavajo(String name,ReplicationMessage message);
