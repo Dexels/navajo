@@ -491,13 +491,13 @@ h3 {
 }
 
 .headercontainer {
-	width: 300px;
+	width: 600px;
 	margin: 0 auto;
 	text-align: center;
 }
 
 .handlersdrop {
-	display: inline;
+	display: inline-block;
 }
 
 .LoginButton {

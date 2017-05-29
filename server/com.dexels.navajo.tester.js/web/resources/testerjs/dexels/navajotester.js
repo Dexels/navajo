@@ -169,12 +169,11 @@ function sortFileObject(element) {
 
 function processLoginForm(){
     hideLoginTable();
+    sessionStorage.app = $("#applications :selected").text();
     sessionStorage.instance = $( "#handlers option:selected" ).text()
     sessionStorage.user =     $('#navajousername').val();
     sessionStorage.password = $('#navajopassword').val();
-    
-    $('#navajopassword').val('***********');
-    
+
     if ($('.LoginButton').attr('value') === 'Run script' && sessionStorage.script && !loginTableVisible()) {
         runScript(sessionStorage.script);
     }
@@ -217,7 +216,7 @@ function runScript(script) {
         return;
     }
     
-    var instance =  $( "#handlers option:selected" ).text();
+    var instance = $( "#handlers option:selected" ).text();
     try {
         hourglassOn();
         $('.overlay').show();
@@ -322,6 +321,14 @@ function prepareInputNavajo(script) {
     $transaction.attr('rpc_name', script);
     $transaction.attr('rpc_usr', sessionStorage.user);
     $transaction.attr('rpc_pwd', sessionStorage.password)
+    
+     var $header = $xml.find('tml header ');
+    
+    if (sessionStorage.app === 'legcay') {
+    	 $header.attr('application', null)
+    } else {
+    	 $header.attr('application', sessionStorage.app)
+    }
     
     return serializer.serializeToString(xml);
 }

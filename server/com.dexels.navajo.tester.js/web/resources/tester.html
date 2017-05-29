@@ -39,13 +39,13 @@
 <input id="scriptsFilter" type="text" />
 <ul class="scripts">
     {{#each this}} 
-		{{#equals this.type 'FOLDER'}}
- 			<li> <div class="folder" id="{{script}}"> {{name}} </div> 
-				{{> subscripts this }}
-			</li> 
-	 	{{else}}
-			 <li class="scriptli"> <div class="script clickable" id="{{script}}"> {{name}} </div>  </li>
-		{{/equals}}
+        {{#equals this.type 'FOLDER'}}
+             <li> <div class="folder" id="{{script}}"> {{name}} </div> 
+                {{> subscripts this }}
+            </li> 
+         {{else}}
+             <li class="scriptli"> <div class="script clickable" id="{{script}}"> {{name}} </div>  </li>
+        {{/equals}}
        
         
     {{/each}}
@@ -57,8 +57,8 @@
     {{#each this.entries}} 
         {{#equals this.type 'FOLDER'}}
             <li style="display: none"> <div class="folder" id="{{script}}" > {{name}} </div> 
-				{{> subscripts this }}
-			</li> 
+                {{> subscripts this }}
+            </li> 
         {{else}}
              <li class="scriptli" style="display: none"> <div class="script clickable" id="{{script}}"> {{name}} </div>  </li>
         {{/equals}}
@@ -72,15 +72,25 @@ updateTenants();
 getScripts();
 
 $(document).ready(function() {
-	updateFavorites();
+    updateFavorites();
 
     // Add Chosen to dropdowns
     $("#handlers").chosen({
         disable_search_threshold : 10,
         width : "150px"
     });
+    
     $('#handlers').change(function() {
         sessionStorage.instance = $("#handlers :selected").text();
+    });
+    
+    $("#applications").chosen({
+        disable_search_threshold : 10,
+        width : "150px"
+    });
+    
+    $('#applications').change(function() {
+        sessionStorage.app = $("#applications :selected").text();
     });
     
     Handlebars.registerHelper('equals', function(v1, v2, options) {
@@ -110,28 +120,21 @@ $(document).ready(function() {
             <div class="headercontainer">
               <div class="loginform">
                 <form id="loginform" target="temp" onsubmit="processLoginForm()">
-                    <table id="logintable">
-                        <tr>
-                            <td width="70px">Username</td>
-                            <td><input id="navajousername" name="username" type="text" /></td>
-                        </tr>
-                        <tr>
-                            <td>Password</td>
-                            <td><input id="navajopassword" name="password" type="password" /></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>
-                                <div class="handlersdrop">
-                                    <select data-placeholder="Select an Instance..." id="handlers">
-                                        <option value=""></option>
-                               
-                                    </select>
-                                </div> <input class="LoginButton" name="doLogin" type="submit" value="Login" />
-                            </td>
-                        </tr>
-                    </table>
-               
+                    
+                     <input id="navajousername" name="username" type="text" />
+                     <input id="navajopassword" name="password" placeholder="Password" type="password" />
+                    
+                     <span class="handlersdrop">
+                     <select data-placeholder="Select an Application" id="applications">
+                          <option value="legacy" selected="1">Oracle</option>
+                          <option value="MEMBERPORTAL" >Memberportal</option>
+                          <option value="VOETBALNL" >VoetbalNL</option>
+                       </select>
+                       <select data-placeholder="Select an Instance..." id="handlers">
+                           <option value=""></option>
+                       </select>
+                     </span> 
+                     <input class="LoginButton" name="doLogin" type="submit" value="Login" />
                 </form>
                </div>
                <div id="showLessArrow" class="arrow">&#8648; </div>
@@ -146,9 +149,9 @@ $(document).ready(function() {
             <div id="content" class="content">
                
                 <div class="scriptsbar">
-                	<h2 class="title"> Recent scripts </h2>
+                    <h2 class="title"> Recent scripts </h2>
                     <div id="recentscripts">
-                    	<ul id="recentscriptslist"> </ul>
+                        <ul id="recentscriptslist"> </ul>
                     </div>
                     
                     <h2 class="title methodstitle" style="display:none"> Methods </h2>
