@@ -2,16 +2,13 @@ package com.dexels.navajo.document.json.conversion.impl;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -242,52 +239,7 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 		return result;
 	}
 
-    @Override
-    public ObjectNode toNode(Navajo n) {
-        ObjectNode node = createTopLevel(null);
-        Header h = n.getHeader();
-        if (h != null) {
-            ObjectNode headernode = navajoHeaderToNode(h);
-            node.set("header", headernode);
-        }
 
-        for (Message m : n.getAllMessages()) {
-            node.set(m.getName(),  toNode(m, null));
-        }
-        return node;
-    }
 
-    private ObjectNode navajoHeaderToNode(Header header) {
-        ObjectNode headernode = objectMapper.createObjectNode();
-        try {
-            headernode.put("hostName", header.getHostName());
-            headernode.put("ipAddress", header.getIPAddress());
-            headernode.put("requestId", header.getRequestId());
-            headernode.put("rpcName", header.getRPCName());
-            headernode.put("rpcUser", header.getRPCUser());
-            headernode.put("rpcPassword", header.getRPCPassword());
-            headernode.put("schedule", header.getSchedule());
-            headernode.put("userAgent", header.getUserAgent());
-
-            if (header.getHeaderAttributes() != null) {
-                headernode.set("attributes", objectMapper.valueToTree(header.getHeaderAttributes()));
-            }
-
-            Set<Map<String, String>> piggybackData = header.getPiggybackData();
-            if (piggybackData != null) {
-                ArrayNode piggynode = headernode.putArray("piggybackdata");
-                for (Map<String, String> m : piggybackData) {
-                    ObjectNode piggybackdatanode = objectMapper.createObjectNode();
-                    piggynode.add(piggybackdatanode);
-                    for (String key : m.keySet()) {
-                        piggybackdatanode.put(key, m.get(key));
-                    }
-                }
-            }
-        } catch (Throwable t) {
-            logger.error("Exception on parsing Header to ObjectNode: ", t);
-        }
-        return headernode;
-    }
 
 }
