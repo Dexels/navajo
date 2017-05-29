@@ -169,7 +169,7 @@ function sortFileObject(element) {
 
 function processLoginForm(){
     hideLoginTable();
-    sessionStorage.app = $("#applications :selected").text();
+    sessionStorage.app = $("#applications :selected").val();
     sessionStorage.instance = $( "#handlers option:selected" ).text()
     sessionStorage.user =     $('#navajousername').val();
     sessionStorage.password = $('#navajopassword').val();

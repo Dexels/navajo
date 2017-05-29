@@ -90,7 +90,7 @@ $(document).ready(function() {
     });
     
     $('#applications').change(function() {
-        sessionStorage.app = $("#applications :selected").text();
+        sessionStorage.app = $("#applications :selected").val();
     });
     
     Handlebars.registerHelper('equals', function(v1, v2, options) {
