@@ -72,11 +72,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,instance);
 			
 			if(instantiateRunnable!=null) {
-			    Boolean prio =  (Boolean) instantiateRunnable.getAttribute("priority");
-	            if (prio == null) 
-	                prio = false;
-	            
-				getTmlScheduler().submit(instantiateRunnable, prio);
+				getTmlScheduler().submit(instantiateRunnable, false);
 			}
 		} catch (Throwable e) {
 			if(e instanceof ServletException) {

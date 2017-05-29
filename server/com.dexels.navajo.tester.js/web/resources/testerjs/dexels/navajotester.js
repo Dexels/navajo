@@ -235,7 +235,10 @@ function runScript(script) {
         	type: "POST",
             url: "/navajo/" + instance,
             data: navajoinput,
-            headers: {"X-Navajo-Priority": "true", "Authorization" : null},
+            headers: {"X-Navajo-Tester": "true"},
+            beforeSend: function (req) {
+                req.setRequestHeader('Authorization', null);
+            }
             success: function(xmlObj) {
                 replaceXml(script, xmlObj);
                 var stateObj = { script: script, xml:  serializer.serializeToString(xml) };

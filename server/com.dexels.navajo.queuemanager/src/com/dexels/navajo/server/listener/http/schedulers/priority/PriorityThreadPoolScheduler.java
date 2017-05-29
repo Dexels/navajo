@@ -230,6 +230,9 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		if ( priority ) {
 			return queueMap.get(NAVAJOMAP_PRIORITY_POOL);
 		}
+		if ( myRunner.getAttributeNames().contains("tester") && (boolean) myRunner.getAttribute("tester")) {
+            return queueMap.get(TESTER_POOL);
+        }
 		String queueName;
 		if (myRunner.getAttributeNames().contains("queueName")) {
 		    queueName = (String) myRunner.getAttribute("queueName");
