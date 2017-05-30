@@ -230,15 +230,12 @@ function runScript(script) {
         var navajoinput = prepareInputNavajo(script);
         
         $.ajax({
-        	beforeSend: function() {startTitleLoader();},
+        	beforeSend: function(req) {startTitleLoader(); req.setRequestHeader('Authorization', null);},
         	complete: function() {stopTitleLoader();},
         	type: "POST",
             url: "/navajo/" + instance,
             data: navajoinput,
             headers: {"X-Navajo-Tester": "true"},
-            beforeSend: function (req) {
-                req.setRequestHeader('Authorization', null);
-            }
             success: function(xmlObj) {
                 replaceXml(script, xmlObj);
                 var stateObj = { script: script, xml:  serializer.serializeToString(xml) };
