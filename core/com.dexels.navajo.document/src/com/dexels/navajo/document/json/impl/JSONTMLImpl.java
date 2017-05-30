@@ -289,6 +289,7 @@ public class JSONTMLImpl implements JSONTML {
  			if ( ep != null ) {
 				if ( ep.getType().equals(Property.SELECTION_PROPERTY) && value != null) {
 					Selection s = NavajoFactory.getInstance().createSelection(p.getRootDoc(), value.toString(), value.toString(), true);
+					prop.setCardinality(ep.getCardinality());
 					prop.setType(ep.getType());
 					prop.addSelection(s);
 				} else {
