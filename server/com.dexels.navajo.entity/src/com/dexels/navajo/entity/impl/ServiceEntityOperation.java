@@ -385,7 +385,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	
 			Message validationErrors;
 			if ((validationErrors = validationResult.getMessage("ConditionErrors")) != null ) {
-				throw new EntityException(EntityException.FAILURE, validationErrors.getMessage(0)
+				throw new EntityException(EntityException.VALIDATION_ERROR, validationErrors.getMessage(0)
 						.getProperty("Id").toString());
 			}
 		}
@@ -699,7 +699,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			
 			Message validationErrors;
 			if ((validationErrors = result.getMessage("ConditionErrors")) != null ) {
-				throw new EntityException(EntityException.FAILURE, validationErrors.getMessage(0).getProperty("Id").toString());
+				throw new EntityException(EntityException.VALIDATION_ERROR, validationErrors.getMessage(0).getProperty("Id").toString());
 			}
 			
 		}

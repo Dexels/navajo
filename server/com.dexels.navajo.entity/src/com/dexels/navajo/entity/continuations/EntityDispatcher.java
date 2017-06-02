@@ -57,7 +57,7 @@ public class EntityDispatcher {
         }
         Navajo input = null;
         String inputEtag = null;
-       
+        boolean entityFound = false;
         try {
 
             // Check for a .<format> in the URL - can be in RequestURI
@@ -142,6 +142,7 @@ public class EntityDispatcher {
                 logger.warn("Requested entity not registred! {}", entityName);
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND);
             }
+            entityFound = true;
 
             Message entityMessage = e.getMessage();
 
@@ -235,14 +236,16 @@ public class EntityDispatcher {
                     EntityException e = (EntityException) ex;
                     if (e.getCode() == EntityException.NOT_MODIFIED) {
                         skipLogging = true;
-                    } else if (e.getCode() == EntityException.ENTITY_NOT_FOUND) {
+                    } else if (e.getCode() == EntityException.ENTITY_NOT_FOUND && !entityFound) {
                         skipLogging = true;
                         access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
                     } else if (e.getCode() == EntityException.UNAUTHORIZED) {
                         skipLogging = true;
                         access.setExitCode(Access.EXIT_AUTH_EXECPTION);
+                    } else if (e.getCode() == EntityException.VALIDATION_ERROR) {
+                        skipLogging = true;
+                        access.setExitCode(Access.EXIT_VALIDATION_ERR);
                     }
-
                 }
 
                 if (!skipLogging) {
@@ -255,12 +258,10 @@ public class EntityDispatcher {
             runner.setResponseNavajo(result);
             if (access != null) {
                 runner.getDispatcher().getAccessSet().remove(access);
-
                 access.setFinished();
                 access.setOutputDoc(result);
                 NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
                 statLogger.info("Finished {} ({}) in {}ms", access.accessID, access.getRpcName(), (System.currentTimeMillis() - runner.getStartedAt()));
-
             }
         }
     }
