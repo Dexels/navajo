@@ -3,6 +3,7 @@ package com.dexels.navajo.server.listener.http.continuation;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.continuation.Continuation;
 import org.eclipse.jetty.continuation.ContinuationSupport;
@@ -32,6 +33,15 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		super(request,lc);
 		continuation = ContinuationSupport.getContinuation(request.getHttpRequest());
 		continuation.setTimeout(10000000);
+		
+		if (continuation.isExpired()) {
+            logger.warn("Expired continuation!");
+            abort("Internal server error");
+        }
+        if (!continuation.isInitial()) {
+            logger.warn("Non-initial continuation!");
+            abort("Internal server error");
+        }
 	}
 	
 	@Override
@@ -45,6 +55,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		} catch (FatalException e) {
 			logger.error("Error: ", e);
 		}
+		continuation.complete();
 		getRequest().fail(new ServletException(reason));
 		
 	}
@@ -143,6 +154,9 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		continuation.suspend();
 	}
 	
+    public void suspendContinuation(HttpServletResponse resp) {
+        continuation.suspend(resp);
+    }
 
 
 	@Override
@@ -182,4 +196,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	private static void clearThreadLocal(boolean clear) {
 	    clearThreadLocal = clear;
     }
+
+
 }

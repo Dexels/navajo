@@ -65,8 +65,17 @@ public class EntityContinuationRunner implements TmlRunnable {
         this.request = request;
         this.response = response;
         continuation = ContinuationSupport.getContinuation(request);
-        continuation.setTimeout(10000000);
-        continuation.suspend();
+        continuation.setTimeout(5*60*1000L); // 5 minutes
+        continuation.suspend(response);
+        
+        if (continuation.isExpired()) {
+            logger.warn("Expired continuation!");
+            abort("Internal server error");
+        }
+        if (!continuation.isInitial()) {
+            logger.warn("Non-initial continuation!");
+            abort("Internal server error");
+        }
 
         attributes = new HashMap<String, Object>();
         attributes.put("queueName", QUEUE_NAME);
@@ -125,6 +134,7 @@ public class EntityContinuationRunner implements TmlRunnable {
         } catch (IOException e1) {
             logger.error("Error: ", e1);
         }
+        continuation.complete();
     }
 
     public long getStartedAt() {

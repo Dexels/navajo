@@ -347,8 +347,8 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		
 		// Again, check back log size.
 		if ( pool == null) {
-				run.abort("Scheduling refused");
-		
+		    logger.warn("Null pool - cannot schedule request!");
+			run.abort("Scheduling refused");
 			return;
 		}
 		

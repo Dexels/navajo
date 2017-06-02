@@ -34,7 +34,7 @@ public class TmlRunnableBuilder {
 		    instantiateRunnable.setAttribute("tester", false);
 		}
 		
-		instantiateRunnable.suspendContinuation();
+		instantiateRunnable.suspendContinuation(resp);
 		return instantiateRunnable;
 	}
 
