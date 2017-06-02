@@ -67,7 +67,7 @@ public class EntityManager {
             return null;
         }
         Entity e = entityMap.get(name);
-        if (e == null && lazy) {
+        if (e == null ) {
             // Try lazy compilation
             e = checkAndLoadScript(name);
         }
