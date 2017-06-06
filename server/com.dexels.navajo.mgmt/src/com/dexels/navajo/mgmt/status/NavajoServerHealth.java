@@ -21,7 +21,7 @@ public class NavajoServerHealth implements ServerHealthCheck {
     @Override
     public boolean isOk() {
         return navajoConfig != null && dispatcherInterface != null && javaCompiler != null && workflowManagerInterface != null 
-                && tribeManagerInterface != null && tmlScheduler != null && entityManager != null;
+                && tribeManagerInterface != null && tmlScheduler != null && entityManager != null && entityManager.isFinishedCompiling();
     }
 
     @Override
@@ -53,6 +53,9 @@ public class NavajoServerHealth implements ServerHealthCheck {
         }
         if (entityManager == null) {
             return "No entityManager";
+        }
+        if (!entityManager.isFinishedCompiling()) {
+            return "EntityManager compiling";
         }
         return "";
     }

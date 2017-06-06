@@ -1,8 +1,10 @@
 package com.dexels.navajo.entity;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -43,18 +45,23 @@ public class EntityManager {
     private DispatcherInterface dispatcher;
     private BundleCreator bundleCreator;
     private BundleContext bundleContext;
-    private BundleQueue bundleQueue;
+    private EntityCompiler entityCompiler;
+
     private boolean lazy;
 
     public void activate(BundleContext bundleContext) throws Exception {
         instance = this;
         this.bundleContext = bundleContext;
+        this.entityCompiler = new EntityCompiler();
         buildAndLoadScripts();
     }
 
     public void deactivate() {
         entityMap.clear();
         operationsMap.clear();
+        if (entityCompiler != null) {
+            entityCompiler.stop();
+        }
         instance = null;
     }
 
@@ -163,6 +170,12 @@ public class EntityManager {
         }
 
         buildAndLoadScript(entityDir);
+        // Start compilation in a separate thread to not hold up the activator
+        new Thread(entityCompiler).start();
+    }
+    
+    public boolean isFinishedCompiling() {
+        return !entityCompiler.isRunning();
     }
 
     // Can be called on file or directory. If on directory, call recursively on
@@ -179,7 +192,7 @@ public class EntityManager {
             String script = filename.substring(filename.indexOf("scripts" + File.separator + "entity"), filename.indexOf(".xml"));
             String stripped = script.substring("scripts".length() + 1);
             stripped = stripped.replace("\\", "/");
-            bundleQueue.enqueueScript(stripped, ".xml");
+            entityCompiler.addEntityToCompile(stripped);;
         } else if (file.isDirectory()) {
             for (File f : file.listFiles()) {
                 buildAndLoadScript(f);
@@ -241,14 +254,6 @@ public class EntityManager {
         return null;
     }
 
-    public void setBundleQueue(BundleQueue queue) throws Exception {
-        this.bundleQueue = queue;
-    }
-
-    public void clearBundleQueue(BundleQueue queue) {
-        this.bundleQueue = null;
-    }
-
     public void setBundleCreator(BundleCreator bundleCreator) throws Exception {
         this.bundleCreator = bundleCreator;
     }
@@ -275,4 +280,48 @@ public class EntityManager {
         this.navajoConfig = null;
     }
 
+    private class EntityCompiler implements Runnable {
+        private List<String> success = new ArrayList<String>();
+        private List<String> failures = new ArrayList<String>();
+        private List<String> skipped = new ArrayList<String>();
+        
+        private Set<String> entitiesToCompile = new HashSet<>();
+        private boolean running = false;
+        
+        protected void addEntityToCompile(String entity) {
+            entitiesToCompile.add(entity);
+        }
+        
+        protected boolean isRunning() {
+            return running;
+        }
+        
+        protected void stop() {
+            running = false;
+        }
+        
+        @Override
+        public void run() {
+            running = true;
+            while (running == true) {
+                for (String script : entitiesToCompile) {
+                    try {
+                        bundleCreator.createBundle(script, failures, success, skipped, true, false, null);
+                        bundleCreator.installBundle(script, failures, success, skipped, true, null);
+                        if (!skipped.isEmpty()) {
+                            logger.info("Script compilation skipped: " + script);
+                        }
+                        if (!failures.isEmpty()) {
+                            logger.info("Script compilation failed: " + script);
+                        }
+
+                    } catch (Throwable e) {
+                        logger.error("Error: ", e);
+                    }
+                }
+                entitiesToCompile.clear();
+                running = false;
+            }
+        }
+    }
 }
