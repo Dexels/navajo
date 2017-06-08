@@ -741,7 +741,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
             }
             
         } else if (getType().equals(Property.INTEGER_PROPERTY)) {
-			if (getValue() == null || getValue().equals("")) {
+			if (getValue() == null || getValue().equals("") || getValue().trim().equals("null")) {
 				return null;
 			}
 			try {
