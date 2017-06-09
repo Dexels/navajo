@@ -13,6 +13,16 @@
 
     <h1>Entity API Documentation: {{ENTITY_PATH}}</h1>
 
+	<div class="unlocked">
+		<button id="authbutton" class="authorize button"
+			<span>Authorize</span>
+		</button>
+	</div>
+
+	<div id="setauth" style="display:none"/>
+		Bearer token <input name="auth" type="text" id="bearertoken"/>
+	</div>
+
     <H2> Operations </h2>
     {{OPERATIONS}}
 

@@ -14,7 +14,23 @@ $(document).ready(function() {
 		$("div.XML").slideDown(); 
 		
 	});
+    
+    $(document).on('click', '#authbutton', function() {
+        if ($(this).hasClass('set')) {
+            $('#setauth').hide();
+            $(this).removeClass('set');
+            $(this).text('Authorize');
+            sessionStorage.token = $('#bearertoken').val();
+        } else {
+            $('#setauth').show();
+            $(this).addClass('set');
+            $(this).text('Set');
+        }
+        
+    });
 	
+    
+    
     $(document).on('click', '.callentitybutton', function() {
         if ($(this).hasClass('cancel')) {
             $(this).text("Try it out");

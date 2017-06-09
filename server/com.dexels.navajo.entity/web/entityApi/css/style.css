@@ -280,7 +280,6 @@ li.operation pre {
     font-family: Titillium Web,sans-serif;
     color: #3b4151;
     
-    
 }
 .callentitybutton {
     outline: none;
@@ -288,6 +287,20 @@ li.operation pre {
     margin: 0px auto 10px auto;
     padding: 5px 23px;
 }
+
+.button.authorize {
+    outline: none;
+    float: right;
+    margin: 0px auto 10px auto;
+    padding: 5px 23px;
+    color: #49cc90;
+    border-color: #49cc90;
+}
+
+#setauth {
+	 float: right;
+}
+
 .callentitybutton.cancel {
 	color: red;
 }
