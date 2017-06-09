@@ -15,22 +15,56 @@ $(document).ready(function() {
 		
 	});
     
+    $(document).on('click', '.docallentitybutton', function() {
+        var method = "GET";
+        var url = $(this).closest('.operation').find('.url').text();
+        try {
+            $.ajax({
+                beforeSend: function(req) {
+                    req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token); 
+                    req.setRequestHeader('Accept', 'application/json'); 
+                    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+                        req.setRequestHeader('X-Navajo-Instance', sessionStorage.tenant); 
+                    }
+                },
+                dataType: 'json',
+                type: method,
+                url: "/entity/" + url,
+                complete: function(data) {
+                   var pre = $('<pre>', {'class': 'prettyprint lang-json'});
+                   pre.text(data.responseText);
+                   $('.entityresponsebody').append(pre);
+                }
+            });
+        } catch(err) {
+            console.log("Caugh error " +  err.message);
+            console.log(err.stack);
+        }
+        
+    });
+    
+    
+    
     $(document).on('click', '#authbutton', function() {
         if ($(this).hasClass('set')) {
             $('#setauth').hide();
             $(this).removeClass('set');
             $(this).text('Authorize');
             sessionStorage.token = $('#bearertoken').val();
+            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+                sessionStorage.tenant = $('#tenantinput').val();
+            }
         } else {
             $('#setauth').show();
             $(this).addClass('set');
             $(this).text('Set');
+            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+                $('#tenant').show();
+            }
         }
         
     });
 	
-    
-    
     $(document).on('click', '.callentitybutton', function() {
         if ($(this).hasClass('cancel')) {
             $(this).text("Try it out");
@@ -38,6 +72,7 @@ $(document).ready(function() {
             var parent =  $(this).closest('.entityDescription');
             
             parent.find('.call-entityinput').remove();
+            parent.find('.entityresponsebody').children().remove();
             parent.children('.responsebody').show();
             parent.find('.requestinput').show();
             parent.children('.perform-call-entity').hide();

@@ -20,7 +20,8 @@
 	</div>
 
 	<div id="setauth" style="display:none"/>
-		Bearer token <input name="auth" type="text" id="bearertoken"/>
+		Bearer token <input name="auth" type="text" id="bearertoken"/> <br/>
+		<span id="tenant">Tenant <input name="tenant" type="text" id="tenantinput"/> </span>
 	</div>
 
     <H2> Operations </h2>

@@ -7,5 +7,5 @@
 </div>
 
 <div class="perform-call-entity" style="display:none">
-	<button class="docallentitybutton button">Execute</button>
+	<button method="{{OP}}" url="{{URL}}" class="docallentitybutton button">Execute</button>
 </div>
