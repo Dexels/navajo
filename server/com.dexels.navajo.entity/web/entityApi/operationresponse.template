@@ -1,10 +1,15 @@
-<h2 class="{{OP}}"> Response </h2>
-<small> <a href="#" class="outputFormatJSON">JSON</a></small> <small> |  <a href="#" class="outputFormatXML">XML</a> </small>
-
-<div class="JSON">
-	<pre class="prettyprint">{{RESPONSE_JSON}}</pre>
+<div class="responseheader">
+	<h2 class="{{OP}}"> Response </h2>
 </div>
+<div class="responsebody">
 
-<div class="XML" style="display: none; " ">
-	<pre class="prettyprint lang-xml">{{RESPONSE_XML}}</pre>
+	<small> <a href="#" class="outputFormatJSON">JSON</a></small> <small> |  <a href="#" class="outputFormatXML">XML</a> </small>
+	
+	<div class="JSON">
+		<pre class="prettyprint">{{RESPONSE_JSON}}</pre>
+	</div>
+	
+	<div class="XML" style="display: none; " ">
+		<pre class="prettyprint lang-xml">{{RESPONSE_XML}}</pre>
+	</div>
 </div>

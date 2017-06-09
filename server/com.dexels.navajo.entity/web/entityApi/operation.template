@@ -4,12 +4,9 @@
 			<div class="operationHeader {{OP}}">
 				<div class="method http{{OP}}">{{OP}}</div>
 				<div class="url">{{URL}}</div>
-				
-				
 			</div>
 		</a>
 		<div style="display: none " class="entityDescription">
-			<div class="description {{OP}}"> {{DESCRIPTION}}</div>
 		    {{OPREQUEST}}
 		    {{OPREQUESTCOMMENT}}
 		    {{OPRESPONSE}}

@@ -1,3 +1,11 @@
-<pre class=prettyprint>
+<div class="requestbody">
+	<div class="requestinput">
+		<pre class=prettyprint>
 {{REQUEST_BODY}}
-</pre>
+		</pre>
+	</div>
+</div>
+
+<div class="perform-call-entity" style="display:none">
+	<button class="docallentitybutton button">Execute</button>
+</div>
