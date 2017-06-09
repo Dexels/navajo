@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    prettyPrint();
+    
     $(document).on('click', 'a', function(event) {
         event.preventDefault();
 		$(this).next().filter(".entityDescription").slideToggle(); 
@@ -17,7 +19,7 @@ $(document).ready(function() {
 	});
     
     $(document).on('click', '.docallentitybutton', function() {
-        var method = "GET";
+        var method = $(this).attr('method');
         var url = $(this).closest('.operation').find('.url').text();
         try {
             $.ajax({
