@@ -4,8 +4,10 @@
 <title>Navajo Entity API documentation</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="/entityApi/css/style.css" />
+<link href="/testercss/prettify.css" type="text/css" rel="stylesheet" />
+
 <script type="text/javascript" src="/entityApi/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="/entityApi/run_prettify.js"></script>
+<script type="text/javascript" src="/entityApi/prettify.js"></script>
 <script type="text/javascript" src="/entityApi/entity.js"></script>
 </head>
 

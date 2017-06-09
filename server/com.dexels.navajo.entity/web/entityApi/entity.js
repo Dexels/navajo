@@ -1,15 +1,16 @@
 $(document).ready(function() {
-    $(document).on('click', 'a', function() {
+    $(document).on('click', 'a', function(event) {
+        event.preventDefault();
 		$(this).next().filter(".entityDescription").slideToggle(); 
 	});
     
     
-    $(document).on('click', '.outputFormatJSON', function() {
+    $(document).on('click', '.outputFormatJSON', function(event) {
 		$("div.JSON").slideDown(); 
 		$("div.XML").slideUp(); 
 	});
 
-    $(document).on('click', '.outputFormatXML', function() {
+    $(document).on('click', '.outputFormatXML', function(event) {
 		$("div.JSON").slideUp(); 
 		$("div.XML").slideDown(); 
 		
@@ -34,6 +35,7 @@ $(document).ready(function() {
                    var pre = $('<pre>', {'class': 'prettyprint lang-json'});
                    pre.text(data.responseText);
                    $('.entityresponsebody').append(pre);
+                   prettyPrint();
                 }
             });
         } catch(err) {
