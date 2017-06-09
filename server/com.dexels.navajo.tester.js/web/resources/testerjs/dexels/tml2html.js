@@ -7,22 +7,26 @@ $propertyvaluedivElem.attr('class', 'propertyvaluediv');
 
 
 function parseTmlToHtml( scriptname, navajoelement, methodselement) {
+    if (scriptname.startsWith('entity')) {
+      processEntity(scriptname, navajoelement);
+      return;
+    }
     navajoelement.html('')
     methodselement.html('')
     $('.methodstitle').hide();
     methodselement.hide();
-     
+
     $xml = $( xml ),
     $tml = $xml.children('tml');
-    
+
     var messagesdiv = '<div>'
-    
+
     $tml.children('message').each(function(index){
         messagesdiv += parseTmlMessage($(this));
     });
     messagesdiv += '</div>'
     navajoelement[0].innerHTML = messagesdiv
-    
+
     // Fix input to match their value length
     $(".propertyvaluediv input").each(function() {
         var value = $(this).val();
@@ -33,13 +37,13 @@ function parseTmlToHtml( scriptname, navajoelement, methodselement) {
 
         $(this).css("width", (size / 2)+'em');
     });
-    
+
     var $methods = $(document.createElement('ul'));
     var hasMethods = false;
-    
+
     $tml.children('methods').each(function(){
         $(this).children('method').each(function() {
-        	hasMethods = true;
+        	  hasMethods = true;
             var $li = $(document.createElement('li'));
             var $div =$(document.createElement('div'));
             $div.attr('id', $(this).attr('name'));
@@ -58,15 +62,15 @@ function parseTmlToHtml( scriptname, navajoelement, methodselement) {
 }
 
 function parseTmlArrayMessage(arraymessage) {
-    
+
     var divString = '<div class="messagediv">';
     divString += '<div class="exportcsv" id="'+getElementXPath(arraymessage[0])+'"> ';
     divString += '<h3> '+arraymessage.attr('name')+'</h3></div>'
-   
+
     divString += printArrayHorizontal(arraymessage);
-   
+
     divString += '</div>'
-    return divString;    
+    return divString;
 }
 
 function printArrayHorizontal(arraymessage) {
@@ -82,7 +86,7 @@ function printArrayHorizontal(arraymessage) {
         if (typeof properties[msgindex] === 'undefined' ) {
             properties[msgindex] = [];
         }
-        $(this).children().each(function(elemindex){ 
+        $(this).children().each(function(elemindex){
             properties[msgindex][elemindex] = [];
             if ($(this)[0].tagName === 'property') {
                 properties[msgindex][elemindex]['value'] = processProperty($(this));
@@ -91,37 +95,37 @@ function printArrayHorizontal(arraymessage) {
             } else {
                 properties[msgindex][elemindex]['value'] = '<span>unknown</span>';
             }
-            
+
             properties[msgindex][elemindex]['name'] = $(this).attr('name');
         });
-       
+
     });
-    
+
     // Make header table
     var tableString = '<div style="float: left;"> <table class="tmlarraymessagetable"> ';
     // create empty row for array index row
     tableString += '<tr><th ></th></tr>';
-    
+
     // Print table header for each property'
-    for (var propindex = 0; propindex < properties[0].length; propindex++) { 
+    for (var propindex = 0; propindex < properties[0].length; propindex++) {
         tableString += '<tr><th >' + properties[0][propindex]['name'] + '</th></tr>';
     }
     tableString += '</table></div> <div style="overflow: auto;"> <table class="tmlarraymessagetable"><tr> ';
-    
+
     // Print message index first as top row
-    for (var msgindex = 0; msgindex < properties.length; msgindex++) { 
+    for (var msgindex = 0; msgindex < properties.length; msgindex++) {
         tableString += '<th>' + arrayName + '[' + msgindex + '] </th>';
     }
     tableString += '</tr>';
-      
+
     // Iterate over remaining array
-    for (var propindex = 0; propindex < properties[0].length; propindex++) { 
+    for (var propindex = 0; propindex < properties[0].length; propindex++) {
         tableString += '<tr>'
-            for (var msgindex = 0; msgindex < properties.length; msgindex++) { 
+            for (var msgindex = 0; msgindex < properties.length; msgindex++) {
                 if (typeof properties[msgindex][propindex] != 'undefined') {
                     tableString += '<td>' + properties[msgindex][propindex]['value']  + '</td>'
                 }
-               
+
             }
         tableString += '</tr>';
     }
@@ -132,20 +136,20 @@ function printArrayHorizontal(arraymessage) {
 function printArrayVertical(arraymessage) {
     // Count the properties an array-element has. We assume the first element contains
     // the same amount as the other elements
-  
+
     var tableString = '<table class="tmlarraymessagetable"> '
-        
+
     arraymessage.children('message[type="array_element"]').each(function(index){
         // TODO: support for messages in array
         tableString += '<tr>'
         if (index == 0) {
             tableString += '<th>' + $(this).attr('name') + '</th>';
         }
-        
+
         $(this).children('message').each(function() {
             tableString += '<td>' + parseTmlMessage($(this)) + '</td>';
         });
-        
+
         $(this).children('property').each(function() {
             tableString += '<td>' + processProperty($(this)) + '</td>';
         });
@@ -168,10 +172,10 @@ function parseTmlMessage(message) {
     message.children('message').each(function(index){
         divString += parseTmlMessage($(this));
     });
-    
+
     // Add all my properties
     message.children('property').each(function() {
-        divString += processProperty($(this));        
+        divString += processProperty($(this));
     });
     divString += '</div>';
     return divString;
@@ -179,36 +183,36 @@ function parseTmlMessage(message) {
 
 function processProperty(property) {
     // Use strings for performance
-    var propertyString = '<div class="propertydiv"><div class="propertynamediv"><b>'   
-    
+    var propertyString = '<div class="propertydiv"><div class="propertynamediv"><b>'
+
     propertyString += property.attr('name');
     propertyString += '</b>';
-    var propdesc = property.attr('description') 
+    var propdesc = property.attr('description')
     if (typeof propdesc != 'undefined' && propdesc !== "") {
         propertyString += '<div class="propdescription">' + propdesc + '</div>';
     }
     propertyString += '</div><div class="propertyvaluediv">'
-    
+
     var propvalue = property.attr('value');
     var propdirection = property.attr('direction')
     var proptype = property.attr('type')
     var htmltype = tmlTypeToHtml(proptype)
 
     // TODO: property description
-   
+
     if (htmltype === 'select') {
         propertyString += '<select ';
         if (property.attr('cardinality') !== '1')  {
             propertyString += 'multiple="multiple" ';
         }
-        
+
         if (propdirection === "out") {
             propertyString += 'disabled="disabled" ';
         } else {
             propertyString += 'class="tmlinput' + htmltype + '" ';
             propertyString += 'id="'+getElementXPath(property[0])+'"';
         }
-        
+
         propertyString += '>';
         property.children('option').each(function() {
             propertyString += '<option value="'+$(this).attr('value')+'" '
@@ -220,7 +224,7 @@ function processProperty(property) {
         });
         propertyString += '</select>';
     } else if (htmltype === 'binary') {
-      
+
         var subtype = property.attr('subtype');
         if (typeof subtype !== typeof undefined && subtype !== false ) {
             if (subtype.indexOf("image/png") > 0) {
@@ -229,7 +233,7 @@ function processProperty(property) {
                 var filename = property.attr('name');
                 var mime;
                 var extension;
-                
+
                 var splitted = subtype.split(",");
                 splitted.forEach( function process( item, index ) {
                     var subsplit = item.split("=");
@@ -240,14 +244,14 @@ function processProperty(property) {
                         mime = subsplit[1];
                     }
                 });
-                
+
                 propertyString += '<div';
                 propertyString += ' id="' + getElementXPath(property[0]) + '"';
                 propertyString += ' class="tmlbinary" data="';
                 propertyString += property.text();
                 propertyString += '" extension="'+extension+'" mimetype="'+mime+'" filename="'+filename+'"> Download </div>';
             }
-            
+
         }
     } else if (htmltype === 'textarea') {
         propertyString += '<textarea rows="5" style="width:70%" tmltype="'+proptype+'" ';
@@ -265,14 +269,14 @@ function processProperty(property) {
 
         propertyString += '>' +  propvalue + '</textarea>';
     } else {
-    	
-		
+
+
         propertyString += '<input type="'+htmltype+'" ';
         if (typeof propvalue !== 'undefined') {
         	propertyString += 'value="'+escapeHTML(propvalue)+'" ';
         }
         propertyString += 'tmltype="'+proptype+'" ';
-        
+
         if (htmltype === 'checkbox' && propvalue === "true" ) {
             propertyString += 'checked="checked"';
         }
@@ -314,7 +318,7 @@ function tmlTypeToHtml(tmlType) {
     if (tmlType === "string") {
         return "text";
     }
-    
+
     if (tmlType === "boolean") {
         return "checkbox";
     }
@@ -327,6 +331,6 @@ function tmlTypeToHtml(tmlType) {
     if (tmlType === "binary") {
         return "binary";
     }
-    
+
     return "text"
 }

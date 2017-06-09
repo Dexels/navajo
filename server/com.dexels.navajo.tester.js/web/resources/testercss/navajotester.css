@@ -577,3 +577,9 @@ h3 {
 	margin-left: 4px;
 	overflow: visible
 }
+
+.betaimg {
+	position: absolute;
+	right: 10px;
+	top:  1px;
+}

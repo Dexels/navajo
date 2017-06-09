@@ -11,6 +11,7 @@
 <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,700,400italic' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
 <link href="/testercss/navajotester.css" rel="stylesheet" />
+<link href="/testercss/entity.css" rel="stylesheet" />
 <link href="/testercss/prettify.css" type="text/css" rel="stylesheet" />
 <link href="/testercss/chosen.css" type="text/css" rel="stylesheet">
 
@@ -27,6 +28,8 @@
 <script src="/testerjs/ace/ext-beautify.js" type="text/javascript" charset="utf-8"></script>
 
 
+<script src="/testerjs/dexels/entity.js"  type="text/javascript"></script>
+<script src="/testerjs/dexels/jsontml.js"  type="text/javascript"></script>
 <script src="/testerjs/dexels/tml2html.js"  type="text/javascript"></script>
 <script src="/testerjs/dexels/xpath.js"  type="text/javascript"></script>
 <script src="/testerjs/dexels/navajotester.js" type="text/javascript"></script>
@@ -38,27 +41,27 @@
 <script id="scripts-template" type="text/x-handlebars-template">
 <input id="scriptsFilter" type="text" />
 <ul class="scripts">
-    {{#each this}} 
+    {{#each this}}
         {{#equals this.type 'FOLDER'}}
-             <li> <div class="folder" id="{{script}}"> {{name}} </div> 
+             <li> <div class="folder" id="{{script}}"> {{name}} </div>
                 {{> subscripts this }}
-            </li> 
+            </li>
          {{else}}
              <li class="scriptli"> <div class="script clickable" id="{{script}}"> {{name}} </div>  </li>
         {{/equals}}
-       
-        
+
+
     {{/each}}
  </ul>
 </script>
 
 <script id="folder-template" type="text/x-handlebars-template">
 <ul >
-    {{#each this.entries}} 
+    {{#each this.entries}}
         {{#equals this.type 'FOLDER'}}
-            <li style="display: none"> <div class="folder" id="{{script}}" > {{name}} </div> 
+            <li style="display: none"> <div class="folder" id="{{script}}" > {{name}} </div>
                 {{> subscripts this }}
-            </li> 
+            </li>
         {{else}}
              <li class="scriptli" style="display: none"> <div class="script clickable" id="{{script}}"> {{name}} </div>  </li>
         {{/equals}}
@@ -79,20 +82,20 @@ $(document).ready(function() {
         disable_search_threshold : 10,
         width : "150px"
     });
-    
+
     $('#handlers').change(function() {
         sessionStorage.instance = $("#handlers :selected").text();
     });
-    
+
     $("#applications").chosen({
         disable_search_threshold : 10,
         width : "150px"
     });
-    
+
     $('#applications').change(function() {
         sessionStorage.app = $("#applications :selected").val();
     });
-    
+
     Handlebars.registerHelper('equals', function(v1, v2, options) {
         if(v1 === v2) {
             return options.fn(this);
@@ -120,10 +123,10 @@ $(document).ready(function() {
             <div class="headercontainer">
               <div class="loginform">
                 <form id="loginform" target="temp" onsubmit="processLoginForm()">
-                    
+
                      <input id="navajousername" name="username" placeholder="Username" type="text" />
                      <input id="navajopassword" name="password" placeholder="Password" type="password" />
-                    
+
                      <span class="handlersdrop">
                      <select data-placeholder="Select an Application" id="applications">
                           <option value="legacy" selected="1">Oracle</option>
@@ -133,49 +136,49 @@ $(document).ready(function() {
                        <select data-placeholder="Select an Instance..." id="handlers">
                            <option value=""></option>
                        </select>
-                     </span> 
+                     </span>
                      <input class="LoginButton" name="doLogin" type="submit" value="Login" />
                 </form>
                </div>
                <div id="showLessArrow" class="arrow">&#8648; </div>
                <div style="display:none" class="arrow" id="showMoreArrow" >&#8650; </div>
             </div>
-         
+
         </header>
 
         <div id="main">
             <div class="container"></div>
-          
+
             <div id="content" class="content">
-               
+
                 <div class="scriptsbar">
                     <h2 class="title"> Recent scripts </h2>
                     <div id="recentscripts">
                         <ul id="recentscriptslist"> </ul>
                     </div>
-                    
+
                     <h2 class="title methodstitle" style="display:none"> Methods </h2>
                     <div id="methods">
                     </div>
-                     
-                     
+
+
                     <h2 class="title favoritestitle" style="display:none"> Favorites </h2>
                     <div id="favorites">
                     </div>
-                    
-                   
+
+
                     <h2 class="title refreshscripts"> Folders and scripts </h2>
                     <div id="scripts">
                     </div>
                 </div>
-                
-                
+
+
                  <div id="mainview" class="mainview">
                   <div id="loadedScript"  style="display: none;"></div>
                     <div class="overlay"> </div>
                     <h2 id="scriptheader"></h2>
                     <div id="scriptMainView" style="display: none;">
-                       
+
                         <a id="HTMLviewLink" href="">HTML</a> | <a id="TMLviewLink" href="">TML</a>  | <a id="TMLSourceviewLink" href=""> Source</a>
                         <div id="HTMLview"></div>
                         <div id="TMLview" style="display: none;">
@@ -185,11 +188,11 @@ $(document).ready(function() {
                            <pre id="scriptsourcecontent" class="prettyprint lang-xml"></pre>
                         </div>
                     </div>
-                    
+
                      <div id="scriptCustomInputView" style="display: none;">
                         <div id="AddInit" class="clickable"  style="display: none;">Add Init</div>
                         <div id="editor"></div>
-                        
+
                         <br>
                         <input type="radio" class="custominputtype" checked="checked" name="custominputtype" value="TML">TML
                         <br>
@@ -198,8 +201,8 @@ $(document).ready(function() {
                         <br>
                         <input id="CustomInputRunButton" name="runCustomInput" type="button" value="Run script"/>
                      </div>
-                    
-                     
+
+
                 </div>
             </div>
         </div>
