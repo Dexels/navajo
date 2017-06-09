@@ -258,12 +258,12 @@ li.operation pre {
 
 .requestheader {
 	padding: 8px 8px;
-    background: rgba(255,255,255,.8);
+    background: rgba(255,255,255,.6);
     box-shadow: 0 1px 2px rgba(0,0,0,.1);
 }
 .responseheader {
 	padding: 8px 8px;
-    background: rgba(255,255,255,.8);
+    background: rgba(255,255,255,.6);
     box-shadow: 0 1px 2px rgba(0,0,0,.1);
 }
 .button {
@@ -302,6 +302,15 @@ li.operation pre {
     border-color: #4990e2;
     width: 100%;
     padding: 8px 40px;
+}
+
+
+
+.call-entityinput {
+	width: 75%;
+	min-height: 100px;
+	margin-left: 15px;
+    padding: 10px;
 }
 
 /* pulse stuff... */
