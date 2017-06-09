@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 // Holds the input navajo document for the next RPC call
 var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header></tml>');
@@ -299,6 +299,7 @@ function replaceXml(script, xmlObj) {
         hourglassOff();
     } catch (err) {
         console.log("Caugh error " +  err.message);
+        console.log(err.stack);
         $('#HTMLview')[0].innerHTML = "Error on running script: " + err.message;
         $('#scriptMainView').show();
         $('.overlay').hide();

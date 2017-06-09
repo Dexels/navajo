@@ -86,7 +86,6 @@ a:hover {
 }
 
 .container {
-	width: 80%;
 	margin: 0 auto;
 	padding: 0 0px;
 }
@@ -126,7 +125,9 @@ header {
 }
 
 #title {
-	text-align: center;
+	position: absolute;
+	left: 10px;
+	top: 0px;
 }
 
 #title h1 {
@@ -492,13 +493,12 @@ h3 {
 
 .headercontainer {
 	width: 600px;
-	margin: 0 auto;
+	margin: 10px auto 0 ;
 	text-align: center;
+	min-height: 3.5em;
+	
 }
 
-.handlersdrop {
-	display: inline-block;
-}
 
 .LoginButton {
 	display: inline

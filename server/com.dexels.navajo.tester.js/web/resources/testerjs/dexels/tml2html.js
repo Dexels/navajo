@@ -7,10 +7,6 @@ $propertyvaluedivElem.attr('class', 'propertyvaluediv');
 
 
 function parseTmlToHtml( scriptname, navajoelement, methodselement) {
-    if (scriptname.startsWith('entity')) {
-      processEntity(scriptname, navajoelement);
-      return;
-    }
     navajoelement.html('')
     methodselement.html('')
     $('.methodstitle').hide();
