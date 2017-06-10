@@ -8,9 +8,9 @@
 		</a>
 		<div style="display: none " class="entityDescription">
 		    {{OPREQUEST}}
-		    {{OPREQUESTCOMMENT}}
+		    {{OPREQUESTMODEL}}
 		    {{OPRESPONSE}}
-		    {{OPRESPONSECOMMENT}}
+		    {{OPRESPONSEMODEL}}
         </div>
 	</li>
 </ul>

@@ -1,0 +1,6 @@
+<tr>
+	<td>
+		<div class="propname {{REQUIREDCLASS}}">{{NAME}}</div>
+		<div class="proptype">{{TYPE}} </div></th>
+    <td>{{COMMENT}}</th>
+</tr>

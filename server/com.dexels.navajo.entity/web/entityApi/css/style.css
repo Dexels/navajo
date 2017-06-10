@@ -224,30 +224,27 @@ li.operation pre {
 
 
 
-.commentsTable {
+.modelTable {
     border-collapse: collapse;
     font-size: smaller;
     width: 75%;
     margin: 20px;
 }
 
-.commentsTable thead tr {
+.modelTable thead tr {
 	text-align: left;
 	color: #666666;
 	border-bottom:1pt solid black;
 }
-.commentsTable thead th {
+.modelTable thead th {
     text-align: inherit; /* NEEDED FOR IE*/
 }
-.commentsTable tr {
+.modelTable tr {
 	border-bottom:1pt solid #dddddd;
 	
 }
-.commentsTable tr > td {
+.modelTable tr > td {
 	padding-top: 3px;
-}
-.commentsTable td:nth-child(1) {  
-	font-family: monospace;
 }
 
 .call-entity {
@@ -316,15 +313,33 @@ li.operation pre {
     width: 100%;
     padding: 8px 40px;
 }
-
-
-
 .call-entityinput {
 	width: 75%;
 	min-height: 100px;
 	margin-left: 15px;
     padding: 10px;
 }
+
+.propname {
+	font-weight: 700;
+	font-size: 12px;
+}
+
+.proptype {
+	font-family: monospace;
+	margin: 8px 0 8px;
+}
+
+.propname.required:after {
+    content: "*Required";
+    color: red; 
+    font-size: 10px;
+	font-family: monospace;
+	margin-left: 4px;
+}
+
+
+
 
 /* pulse stuff... */
 .button.docallentitybutton {

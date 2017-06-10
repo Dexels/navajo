@@ -154,12 +154,10 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         String opresponsetemplate = getTemplate("operationresponse.template");
 
         String requestBody = null;
+//        String modelBody =  printModel(e.getMessage(), method, "request");
+        result = result.replace("{{OPREQUESTMODEL}}", "");
         if (method.equals(Operation.GET) || method.equals(Operation.DELETE)) {
-            String commentBody =  printProperties(e.getMessage(), method, "request");
-            result = result.replace("{{OPREQUESTCOMMENT}}", commentBody);
-            requestBody =  "";
-           // result = result.replace("{{OPREQUESTCOMMENT}}", commentBody);
-            //requestBody = printRequestKeysDefinition(e);
+            requestBody =  printRequestKeysDefinition(e);
         } else {
             String requestbodyTemplate = getTemplate("operationrequestbody.template");
             requestBody = requestbodyTemplate.replace("{{REQUEST_BODY}}", writeEntityJson(n, "request"));
@@ -174,16 +172,14 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
             result = result.replace("{{DESCRIPTION}}", operationDescription(method) + e.getMessage().getName());
         }
         
-//        String commentBody =  printPropertiesDescription(e.getMessage(), method, "request");
-//        result = result.replace("{{OPREQUESTCOMMENT}}", commentBody);
+        String modelBody =  printModel(e.getMessage(), method, "response");
+        result = result.replace("{{OPRESPONSEMODEL}}", modelBody);
         
         String responseBody = opresponsetemplate.replace("{{RESPONSE_JSON}}", writeEntityJson(n, "response"));
         responseBody = responseBody.replace("{{OP}}", method);
         responseBody = responseBody.replace("{{RESPONSE_XML}}", StringEscapeUtils.escapeHtml(writeEntityXml(n)));
         result = result.replace("{{OPRESPONSE}}", responseBody);
         
-        String commentBody =  printProperties(e.getMessage(), method, "response");
-        result = result.replace("{{OPRESPONSECOMMENT}}", commentBody);
         return result;
     }
     
@@ -203,16 +199,16 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         String opresponsetemplate = getTemplate("operationresponse.template");
         
         result = result.replace("{{OPREQUEST}}", "");
-        result = result.replace("{{OPREQUESTCOMMENT}}", "");
+        result = result.replace("{{OPREQUESTMODEL}}", "");
         
         String responseBody = opresponsetemplate.replace("{{RESPONSE_JSON}}", writeEntityJson(n, ""));
         responseBody = responseBody.replace("{{OP}}", method);
         responseBody = responseBody.replace("{{RESPONSE_XML}}", StringEscapeUtils.escapeHtml(writeEntityXml(n)));
         result = result.replace("{{OPRESPONSE}}", responseBody);
         
-        String commentBody = printProperties(e.getMessage(), method, "request");
-        commentBody += printProperties(e.getMessage(), method, "response");
-        result = result.replace("{{OPRESPONSECOMMENT}}", commentBody);
+        String modelBody = printModel(e.getMessage(), method, "request");
+        modelBody += printModel(e.getMessage(), method, "response");
+        result = result.replace("{{OPRESPONSEMODEL}}", modelBody);
         return result;
     }
         
@@ -245,10 +241,40 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         return writer.toString();
     }
 
+    private String printRequestKeysDefinition(Entity e) throws ServletException {
+        String result = "";
+        for (Key key : e.getKeys()) {
+            String rows = "";
+            String opmodeltemplate = getTemplate("operationrequestmodel.template");
+            Set<Property> properties = key.getKeyProperties();
+           
+            for (Property prop : properties) {
+                String modelRow = getTemplate("operationrequestmodelrow.template");
+                modelRow = modelRow.replace("{{NAME}}", prop.getName());
+                modelRow = modelRow.replace("{{TYPE}}", prop.getType());
+                modelRow = modelRow.replace("{{COMMENT}}", prop.getDescription());
+                if (prop.getKey().contains("optional")) { 
+                    modelRow = modelRow.replace("{{REQUIREDCLASS}}", "optional");
+                } else {
+                    modelRow = modelRow.replace("{{REQUIREDCLASS}}", "required");
+                }
+                rows += modelRow;
+            }
+            if (!rows.equals("")) {
+                String modelTable = opmodeltemplate.replace("{{MODEL_TABLE_ROWS}}", rows);
+                result += modelTable;
+            }           
+        }
+        if (result.equals("")) {
+            result = "No input";
+        }
+        result.replace("{{CLASS}}", "inputmodel");
+        return result;
+    }
     
-    private String printProperties(Message m, String op, String method) {
+    private String printModel(Message m, String op, String method) {
         String rows = "";
-        String opcommenttemplate = getTemplate("operationcomment.template");
+        String opmodeltemplate = getTemplate("operationmodel.template");
 
 
         String propertiesResult = printPropertiesForMessage(m, op, method);
@@ -259,24 +285,26 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         // And other submessages
         for (Message submessage : m.getAllMessages()) {
             
-            propertiesResult = printProperties(submessage, op, method);
+            propertiesResult = printModel(submessage, op, method);
             if (!propertiesResult.equals("")){
                 rows += propertiesResult;
             }
         }
 
         if (!rows.equals("")) {
-            String commentTable = opcommenttemplate.replace("{{COMMENT_TABLE_ROWS}}", rows);
-            return commentTable;
+            String modelTable = opmodeltemplate.replace("{{MODEL_TABLE_ROWS}}", rows);
+            return modelTable;
         }
-        return "No input required";
+        return "";
     }
     
     private String printPropertiesForMessage(Message m, String op, String method) {
         // Check entity message
         String rows = "";
         for (Property p : m.getAllProperties()) {
-
+            if (p.getDescription().equals("")) {
+                continue;
+            }
             // Print if the property matches the method, OR if we are a request,
             // if we are a key and this is a GET or DELETE operation.
             String propertyMethod = p.getMethod();
@@ -285,10 +313,10 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
             }
             if (method.equals("response") && propertyMethod.equals(method)
                     || (method.equals("request") && (op.equals(Operation.GET) || op.equals(Operation.DELETE)) && Key.isKey(p.getKey()))) {
-                String commentRow = getTemplate("operationcommentrow.template");
-                commentRow = commentRow.replace("{{COMMENT_KEY}}", p.getName());
-                commentRow = commentRow.replace("{{COMMENT_VALUE}}", p.getDescription());
-                rows += commentRow;
+                String modelRow = getTemplate("operationmodelrow.template");
+                modelRow = modelRow.replace("{{NAME}}", p.getName());
+                modelRow = modelRow.replace("{{COMMENT}}", p.getDescription());
+                rows += modelRow;
             }
         }
 
