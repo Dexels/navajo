@@ -94,6 +94,7 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
                 path = path.substring(0, path.length()-1);
             }
         }
+        path = StringEscapeUtils.escapeHtml(path); /* Prevent javascript injection attacks */
         String sourcetemplate = getTemplate("source.template");
         String operationtemplate = getTemplate("operation.template");
 
@@ -127,6 +128,7 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         response.getOutputStream().write(result.getBytes());
 
     }
+    
     
     private String writeEntityOperations(String operationtemplate, String entityName, String path) throws ServletException {
         String result = "";
