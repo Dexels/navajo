@@ -10,3 +10,6 @@
 <div class="perform-call-entity" style="display:none">
 	<button method="{{OP}}" url="{{URL}}" class="docallentitybutton button">Execute</button>
 </div>
+<div class="shell-body" style="display:none">
+	
+</div>

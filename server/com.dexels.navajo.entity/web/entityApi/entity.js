@@ -2,15 +2,8 @@ $(document).ready(function() {
     
     $(document).on('click', 'a', function(event) {
         event.preventDefault();
-//        if ($(this).attr('method') === 'GET' || $(this).attr('method') === 'DELETE') {
-//            var jsontext = $(this).next().find('.JSON').children('pre');
-//            var json = $.parseJSON(jsontext);
-            
-//        } else {
-            $(this).next().find('.JSON').children('pre').addClass("prettyprint");
-            prettyPrint();
-//        }
-       
+        $(this).next().find('.JSON').children('pre').addClass("prettyprint");
+        prettyPrint();
 		$(this).next().filter(".entityDescription").slideToggle();
 	});
     
@@ -28,7 +21,8 @@ $(document).ready(function() {
     
     $(document).on('click', '.docallentitybutton', function() {
         var method = $(this).attr('method');
-        $(this).closest('.entityDescription').find('.entityresponsebody').children().remove();
+        $('.entityresponsebody').children().remove();
+        $('.shell-body').text('');
         var url = $(this).closest('.operation').find('.url').text();
         try {
             if (method === "GET" || method === "DELETE") {
@@ -36,7 +30,10 @@ $(document).ready(function() {
                 $(this).closest('.entityDescription').find('.requestTable tbody tr').each(function() {
                     var name = $(this).find('.propname').text();
                     var value = $(this).find('input').val();
-                    url += "&" + name + "=" + value;
+                    if (value !== '') {
+                        url += "&" + name + "=" + value;
+                    }
+                    
                 });
                 url = url.replace('&', '?'); // Replaces first &
                 console.log(url);
@@ -58,6 +55,10 @@ $(document).ready(function() {
                        pre.text(data.responseText);
                        $('.entityresponsebody').append(pre);
                        prettyPrint();
+                       
+                       // Add curl statement
+                       $('.shell-body').text(getCurlUrlGetDelete(url));
+                       $('.shell-body').show();
                     }
                 });
             } else {
@@ -90,7 +91,17 @@ $(document).ready(function() {
         
     });
     
-    
+    function getCurlUrlGetDelete(url) {
+        var curl=  'curl ';
+        curl += '-H "Authorization: Bearer ' + sessionStorage.token +'" ';
+        curl += '-H "Accept: application/json" ';
+        if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+            curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'" ';
+        }
+        
+        curl += '"http://' + location.hostname + '/' + url + '"'
+        return curl;
+    }
     
     $(document).on('click', '#authbutton', function() {
         if ($(this).hasClass('set')) {
@@ -119,6 +130,9 @@ $(document).ready(function() {
             var parent =  $(this).closest('.entityDescription');
             
             parent.find('.call-entityinput').remove();
+            $('.shell-body').hide();
+            parent.find('.tableinputheader').remove();
+            parent.find('.tableinputtd').remove();
             parent.find('.entityresponsebody').children().remove();
             parent.children('.responsebody').show();
             parent.find('.requestinput').show();
@@ -132,10 +146,9 @@ $(document).ready(function() {
             parent.children('.responsebody').hide();
              
             // Add input to table
-            parent.find('.requestTable th:last-child').after('<th>Input</th>');
-            parent.find('.requestTable tbody td:last-child').after('<td><input type="text"></input></td>');
+            parent.find('.requestTable th:last-child').after('<th class="tableinputheader">Input</th>');
+            parent.find('.requestTable tbody td:last-child').after('<td class="tableinputtd"><input type="text"></input></td>');
 
-           
             parent.children('.perform-call-entity').show();
         }
        
