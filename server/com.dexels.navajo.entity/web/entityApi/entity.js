@@ -35,8 +35,7 @@ $(document).ready(function() {
                     }
                     
                 });
-                url = url.replace('&', '?'); // Replaces first &
-                console.log(url);
+                url = "/entity/" + url.replace('&', '?'); // Replaces first &
                 
                 // Do request
                 $.ajax({
@@ -49,7 +48,7 @@ $(document).ready(function() {
                     },
                     dataType: 'json',
                     type: method,
-                    url: "/entity/" + url,
+                    url: url,
                     complete: function(data) {
                        var pre = $('<pre>', {'class': 'prettyprint lang-json'});
                        pre.text(data.responseText);
@@ -99,7 +98,7 @@ $(document).ready(function() {
             curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'" ';
         }
         
-        curl += '"http://' + location.hostname + '/' + url + '"'
+        curl += '"' +window.location.origin + encodeURI(url) + '"'
         return curl;
     }
     
