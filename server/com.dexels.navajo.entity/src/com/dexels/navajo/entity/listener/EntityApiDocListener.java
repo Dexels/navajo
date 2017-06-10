@@ -154,11 +154,12 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         String opresponsetemplate = getTemplate("operationresponse.template");
 
         String requestBody = null;
-        if ((method.equals(Operation.GET) || method.equals(Operation.DELETE)) && e.getKeys().size() > 0) {
-            requestBody = printRequestKeysDefinition(e);
-        } else if (method.equals(Operation.GET) || method.equals(Operation.DELETE)) {
-            String requestbodyTemplate = getTemplate("operationrequestbody.template");
-            requestBody =  requestbodyTemplate.replace("{{REQUEST_BODY}}", "{ }");
+        if (method.equals(Operation.GET) || method.equals(Operation.DELETE)) {
+            String commentBody =  printProperties(e.getMessage(), method, "request");
+            result = result.replace("{{OPREQUESTCOMMENT}}", commentBody);
+            requestBody =  "";
+           // result = result.replace("{{OPREQUESTCOMMENT}}", commentBody);
+            //requestBody = printRequestKeysDefinition(e);
         } else {
             String requestbodyTemplate = getTemplate("operationrequestbody.template");
             requestBody = requestbodyTemplate.replace("{{REQUEST_BODY}}", writeEntityJson(n, "request"));
@@ -173,15 +174,15 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
             result = result.replace("{{DESCRIPTION}}", operationDescription(method) + e.getMessage().getName());
         }
         
-        String commentBody =  printPropertiesDescription(e.getMessage(), method, "request");
-        result = result.replace("{{OPREQUESTCOMMENT}}", commentBody);
+//        String commentBody =  printPropertiesDescription(e.getMessage(), method, "request");
+//        result = result.replace("{{OPREQUESTCOMMENT}}", commentBody);
         
         String responseBody = opresponsetemplate.replace("{{RESPONSE_JSON}}", writeEntityJson(n, "response"));
         responseBody = responseBody.replace("{{OP}}", method);
         responseBody = responseBody.replace("{{RESPONSE_XML}}", StringEscapeUtils.escapeHtml(writeEntityXml(n)));
         result = result.replace("{{OPRESPONSE}}", responseBody);
         
-        commentBody =  printPropertiesDescription(e.getMessage(), method, "response");
+        String commentBody =  printProperties(e.getMessage(), method, "response");
         result = result.replace("{{OPRESPONSECOMMENT}}", commentBody);
         return result;
     }
@@ -209,36 +210,12 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
         responseBody = responseBody.replace("{{RESPONSE_XML}}", StringEscapeUtils.escapeHtml(writeEntityXml(n)));
         result = result.replace("{{OPRESPONSE}}", responseBody);
         
-        String commentBody = printPropertiesDescription(e.getMessage(), method, "request");
-        commentBody += printPropertiesDescription(e.getMessage(), method, "response");
+        String commentBody = printProperties(e.getMessage(), method, "request");
+        commentBody += printProperties(e.getMessage(), method, "response");
         result = result.replace("{{OPRESPONSECOMMENT}}", commentBody);
         return result;
     }
-    
-    private String printRequestKeysDefinition(Entity e) throws ServletException {
-        String result = "";
-
-        for (Key key : e.getKeys()) {
-            String requestbody = getTemplate("operationrequestbody.template");
-            // Get all properties for this key, put them in a temp Navajo and use the JSONTML to print it
-            Set<Property> properties = key.getKeyProperties();
-
-            Navajo nkey = NavajoFactory.getInstance().createNavajo();
-            Message mkey = NavajoFactory.getInstance().createMessage(nkey, "keys");
-            nkey.addMessage(mkey);
-
-            for (Property prop : properties) {
-                Property copied = prop.copy(nkey);
-                mkey.addProperty(copied);
-            }
-
-            // Printing result.
-            requestbody = requestbody.replace("{{REQUEST_BODY}}", writeEntityJson(nkey, "request"));
-            result += requestbody;
-        }
-        return result;
-    }
-    
+        
     private String writeEntityJson(Navajo n, String method) throws ServletException {
         StringWriter writer = new StringWriter();
         JSONTML json = JSONTMLFactory.getInstance();
@@ -269,7 +246,7 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
     }
 
     
-    private String printPropertiesDescription(Message m, String op, String method) {
+    private String printProperties(Message m, String op, String method) {
         String rows = "";
         String opcommenttemplate = getTemplate("operationcomment.template");
 
@@ -281,7 +258,8 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
 
         // And other submessages
         for (Message submessage : m.getAllMessages()) {
-            propertiesResult = printPropertiesForMessage(submessage, op, method);
+            
+            propertiesResult = printProperties(submessage, op, method);
             if (!propertiesResult.equals("")){
                 rows += propertiesResult;
             }
@@ -291,17 +269,15 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
             String commentTable = opcommenttemplate.replace("{{COMMENT_TABLE_ROWS}}", rows);
             return commentTable;
         }
-        return "";
+        return "No input required";
     }
     
     private String printPropertiesForMessage(Message m, String op, String method) {
         // Check entity message
         String rows = "";
         for (Property p : m.getAllProperties()) {
-            if (p.getDescription() == null ||  p.getDescription().equals("")) {
-                continue;
-            }
-            // Property has a description. Print if the property matches the method, OR if we are a request,
+
+            // Print if the property matches the method, OR if we are a request,
             // if we are a key and this is a GET or DELETE operation.
             String propertyMethod = p.getMethod();
             if (method == null) {

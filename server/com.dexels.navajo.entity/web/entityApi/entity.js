@@ -1,9 +1,17 @@
 $(document).ready(function() {
-    prettyPrint();
     
     $(document).on('click', 'a', function(event) {
         event.preventDefault();
-		$(this).next().filter(".entityDescription").slideToggle(); 
+//        if ($(this).attr('method') === 'GET' || $(this).attr('method') === 'DELETE') {
+//            var jsontext = $(this).next().find('.JSON').children('pre');
+//            var json = $.parseJSON(jsontext);
+            
+//        } else {
+            $(this).next().find('.JSON').children('pre').addClass("prettyprint");
+            prettyPrint();
+//        }
+       
+		$(this).next().filter(".entityDescription").slideToggle();
 	});
     
     

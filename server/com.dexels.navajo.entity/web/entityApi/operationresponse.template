@@ -6,11 +6,11 @@
 	<small> <a href="#" class="outputFormatJSON">JSON</a></small> <small> |  <a href="#" class="outputFormatXML">XML</a> </small>
 	
 	<div class="JSON">
-		<pre class="prettyprint">{{RESPONSE_JSON}}</pre>
+		<pre>{{RESPONSE_JSON}}</pre>
 	</div>
 	
 	<div class="XML" style="display: none; " ">
-		<pre class="prettyprint lang-xml">{{RESPONSE_XML}}</pre>
+		<pre>{{RESPONSE_XML}}</pre>
 	</div>
 </div>
 <div class="entityresponsebody">

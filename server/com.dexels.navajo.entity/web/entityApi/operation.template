@@ -1,6 +1,6 @@
-<ul class="operations">
+<ul class="operations" >
 	<li class="operation {{OP}}">
-		<a href="#"> 
+		<a href="#" method="{{OP}}"> 
 			<div class="operationHeader {{OP}}">
 				<div class="method http{{OP}}">{{OP}}</div>
 				<div class="url">{{URL}}</div>

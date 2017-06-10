@@ -1,6 +1,6 @@
 <div class="requestbody">
-	<div class="requestinput">
-		<pre class=prettyprint>
+	<div class="requestinput JSON">
+		<pre>
 {{REQUEST_BODY}}
 		</pre>
 	</div>
