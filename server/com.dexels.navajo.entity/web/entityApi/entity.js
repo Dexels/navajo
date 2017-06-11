@@ -56,22 +56,24 @@ $(document).ready(function() {
                        prettyPrint();
                        
                        // Add curl statement
-                       $('.shell-body').text(getCurlUrlGetDelete(url));
+                       $('.shell-body').text(getCurlUrlGetDelete(method, url));
                        $('.shell-body').show();
                     }
                 });
             } else {
                 // Get data input
-                
+                var requestdata = $(this).closest('.entityDescription').find('textarea.call-entityinput').val();
                 $.ajax({
                     beforeSend: function(req) {
                         req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token); 
-                        req.setRequestHeader('Accept', 'application/json'); 
+                        req.setRequestHeader('Accept', 'application/json');
+                        req.setRequestHeader('content-type', 'application/json');
                         if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
                             req.setRequestHeader('X-Navajo-Instance', sessionStorage.tenant); 
                         }
                     },
                     dataType: 'json',
+                    data: requestdata,
                     type: method,
                     url: "/entity/" + url,
                     complete: function(data) {
@@ -79,6 +81,10 @@ $(document).ready(function() {
                        pre.text(data.responseText);
                        $('.entityresponsebody').append(pre);
                        prettyPrint();
+                       
+                       // Add curl statement
+                       $('.shell-body').text(getCurlUrlPostPut(method, url, requestdata));
+                       $('.shell-body').show();
                     }
                 });
             }
@@ -90,14 +96,29 @@ $(document).ready(function() {
         
     });
     
-    function getCurlUrlGetDelete(url) {
+    function getCurlUrlGetDelete(method, url) {
         var curl=  'curl ';
-        curl += '-H "Authorization: Bearer ' + sessionStorage.token +'" ';
+        curl += '-X' + method;
+        curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
         curl += '-H "Accept: application/json" ';
         if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
             curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'" ';
         }
         
+        curl += '"' +window.location.origin + encodeURI(url) + '"'
+        return curl;
+    }
+    function getCurlUrlPostPut(method, url, data) {
+        var curl=  'curl ';
+        curl += '-X' + method;
+        curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
+        curl +=  '-H "Accept: application/json" ';
+        if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+            curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'" ';
+        }
+        curl += '-d "';
+        curl += data.replace(new RegExp('\"', 'g'), '\\"').replace(new RegExp('\n', 'g'), '')
+        curl += '" ';
         curl += '"' +window.location.origin + encodeURI(url) + '"'
         return curl;
     }
@@ -145,9 +166,19 @@ $(document).ready(function() {
             parent.children('.responsebody').hide();
              
             // Add input to table
-            parent.find('.requestTable th:last-child').after('<th class="tableinputheader">Input</th>');
-            parent.find('.requestTable tbody td:last-child').after('<td class="tableinputtd"><input type="text"></input></td>');
-
+            var method =  $(this).closest('a').attr('method') ;
+            
+            if (method === "GET" || method === "DELETE") {
+                parent.find('.requestTable th:last-child').after('<th class="tableinputheader">Input</th>');
+                parent.find('.requestTable tbody td:last-child').after('<td class="tableinputtd"><input type="text"></input></td>');
+            } else {
+                parent.find('.requestinput').hide();
+                var input = parent.find('.requestinput').text().trim();
+                var textinput = $('<textarea>', {'class': 'call-entityinput'});
+                textinput.text(input);
+                parent.children('.requestbody').append(textinput);
+            }
+         
             parent.children('.perform-call-entity').show();
         }
        
