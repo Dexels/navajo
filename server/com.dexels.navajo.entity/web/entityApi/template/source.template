@@ -6,6 +6,7 @@
 <link href="/entityApi/css/style.css" type="text/css" rel="stylesheet"/>
 <link href="/entityApi/css/prettify.css" type="text/css" rel="stylesheet" />
 <link href="/entityApi/css/tingle.min.css" type="text/css" rel="stylesheet" />
+<link href="/entityApi/css/rotate.css" type="text/css" rel="stylesheet" />
 
 
 <script type="text/javascript" src="/entityApi/js/jquery-3.2.1.min.js"></script>

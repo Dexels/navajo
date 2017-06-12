@@ -86,7 +86,7 @@ $(document).ready(function() {
             if (missingRequired) {
             	return;
             }
-            url = "/entity/" + url.replace('&', '?'); // Replaces first &
+            myOp.find('.entityresponsebody').append('<div class="loader sk-rotating-plane"></div><div class="loadertext">Loading...</div>')
             // Do request
             $.ajax({
                 beforeSend: function(req) {
