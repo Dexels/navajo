@@ -4,7 +4,7 @@
 		<button class="tryentitybutton button">Try it out</button>
 	</div>
 </div>
-<div class="description {{OP}}"> {{DESCRIPTION}}</div>
+<div class="description {{OP}}">{{DESCRIPTION}}</div>
 {{ENTITY_REQUEST_BODY}}
 
 <div class="perform-call-entity" style="display:none">

@@ -393,6 +393,13 @@ h2.authdialog {
 	margin: 0 auto;
 	font-size: 0.8em;
 }
+.noinput {
+    font-family: "Droid Sans",sans-serif;
+    font-size: 14px;
+    margin: 19px 0 19px 10px;
+    text-decoration: none;
+    color: #3b4151;
+} 
 /* pulse stuff... */
 .button.docallentitybutton {
     -webkit-animation: pulse 2s infinite;

@@ -268,8 +268,10 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
             }           
         }
         if (result.equals("")) {
-            result = "No input";
+            result = getTemplate("operationrequestnoinput.template");
         }
+        
+
         result.replace("{{CLASS}}", "inputmodel");
         return result;
     }
