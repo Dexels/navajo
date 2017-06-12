@@ -56,14 +56,14 @@ $(document).ready(function() {
     
     $(document).on('click', '.docallentitybutton', function() {
     	var myOp =  $(this).closest('.operation');
-    	if (sessionStorage.getItem("token") === null) {
+    	if (sessionStorage.getItem("token") === null ) {
     		modal.open();
     		return;
     	}
         var method = $(this).attr('method');
         myOp.find('.entityresponsebody').children().remove();
         myOp.find('.shell-body').text('');
-        var url = myOp.find('.url').text();
+        var url = window.location.origin + "/entity/"+ myOp.find('.url').text();
        
         if (method === "GET" || method === "DELETE") {
             // prepare URL
@@ -86,7 +86,8 @@ $(document).ready(function() {
             if (missingRequired) {
             	return;
             }
-            myOp.find('.entityresponsebody').append('<div class="loader sk-rotating-plane"></div><div class="loadertext">Loading...</div>')
+            url = url.replace('&', '?'); // replace first & with ?
+            myOp.find('.entityresponsebody').html('<div class="loader sk-rotating-plane"></div><div class="loadertext">Loading...</div>')
             // Do request
             $.ajax({
                 beforeSend: function(req) {
@@ -102,7 +103,7 @@ $(document).ready(function() {
                 complete: function(data) {
                    var pre = $('<pre>', {'class': 'prettyprint lang-json'});
                    pre.text(data.responseText);
-                   myOp.find('.entityresponsebody').append(pre);
+                   myOp.find('.entityresponsebody').html(pre);
                    prettyPrint();
                    
                    // Add curl statement
@@ -126,7 +127,7 @@ $(document).ready(function() {
                 dataType: 'json',
                 data: requestdata,
                 type: method,
-                url: "/entity/" + url,
+                url: url,
                 complete: function(data) {
                    var pre = $('<pre>', {'class': 'prettyprint lang-json'});
                    pre.text(data.responseText);
@@ -139,9 +140,6 @@ $(document).ready(function() {
                 }
             });
         }
-      
-       
-        
     });
     
     function getCurlUrlGetDelete(method, url) {
@@ -153,7 +151,7 @@ $(document).ready(function() {
             curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'" ';
         }
         
-        curl += '"' +window.location.origin + encodeURI(url) + '"'
+        curl += '"' + encodeURI(url) + '"'
         return curl;
     }
     
@@ -168,7 +166,7 @@ $(document).ready(function() {
         curl += '-d "';
         curl += data.replace(new RegExp('\"', 'g'), '\\"').replace(new RegExp('\n', 'g'), '')
         curl += '" ';
-        curl += '"' +window.location.origin + encodeURI(url) + '"'
+        curl += '"' + encodeURI(url) + '"'
         return curl;
     }
     

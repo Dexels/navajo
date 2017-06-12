@@ -387,6 +387,12 @@ h2.authdialog {
 	border-color: #f93e3e;
 	background-color: rgba(254, 235, 235, 0.4);
 }
+
+.loadertext {
+	text-align: center;
+	margin: 0 auto;
+	font-size: 0.8em;
+}
 /* pulse stuff... */
 .button.docallentitybutton {
     -webkit-animation: pulse 2s infinite;

@@ -1,12 +1,9 @@
-.loadertext {
-	 margin: 0 auto;
-}
 
 .sk-rotating-plane {
   width: 40px;
   height: 40px;
   background-color: #0F6AB4;
-  margin: 40px auto;
+  margin: 40px auto 3px;
   color: white;
   -webkit-animation: sk-rotatePlane 1.2s infinite ease-in-out;
           animation: sk-rotatePlane 1.2s infinite ease-in-out; }
