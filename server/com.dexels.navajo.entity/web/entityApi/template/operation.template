@@ -1,19 +1,16 @@
-<ul class="operations">
+<ul class="operations" >
 	<li class="operation {{OP}}">
-		<a href="#"> 
+		<a href="#" method="{{OP}}"> 
 			<div class="operationHeader {{OP}}">
 				<div class="method http{{OP}}">{{OP}}</div>
 				<div class="url">{{URL}}</div>
-				
-				
 			</div>
 		</a>
 		<div style="display: none " class="entityDescription">
-			<div class="description {{OP}}"> {{DESCRIPTION}}</div>
 		    {{OPREQUEST}}
-		    {{OPREQUESTCOMMENT}}
+		    {{OPREQUESTMODEL}}
 		    {{OPRESPONSE}}
-		    {{OPRESPONSECOMMENT}}
+		    {{OPRESPONSEMODEL}}
         </div>
 	</li>
 </ul>

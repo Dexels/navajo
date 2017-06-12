@@ -3,15 +3,44 @@
 <head>
 <title>Navajo Entity API documentation</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" href="/entityApi/css/style.css" />
-<script type="text/javascript" src="/entityApi/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="/entityApi/run_prettify.js"></script>
-<script type="text/javascript" src="/entityApi/entity.js"></script>
+<link href="/entityApi/css/style.css" type="text/css" rel="stylesheet"/>
+<link href="/entityApi/css/prettify.css" type="text/css" rel="stylesheet" />
+<link href="/entityApi/css/tingle.min.css" type="text/css" rel="stylesheet" />
+<link href="/entityApi/css/rotate.css" type="text/css" rel="stylesheet" />
+
+
+<script type="text/javascript" src="/entityApi/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/entityApi/js/prettify.js"></script>
+<script type="text/javascript" src="/entityApi/js/tingle.min.js"></script>
+
+<script type="text/javascript" src="/entityApi/js/dexels/entity.js"></script>
 </head>
 
 <body class=bodycenter>
 
     <h1>Entity API Documentation: {{ENTITY_PATH}}</h1>
+
+	<div class="unlocked">
+		<button id="authbutton" class="authorize button"
+			<span>Authorize</span>
+		</button>
+	</div>
+
+	<div class="authdialog" id="setauth" style="display:none"/>
+		<h2 class="authdialog"> Authorize </h2>
+		<label class="authdialog" > Bearer token </label> <input name="auth" type="text" id="bearertoken"/>
+		<div id ="tenant"> 
+			<label class="authdialog" >Tenant </label><input name="tenant" type="text" id="tenantinput"/>
+		 </div>
+		 <!-- Unsupported
+		 <hr class="authdialog" />
+		 <h3> Oauth2 </h3>
+		 <label class="authdialog" > Client id </label> <input name="clientid" type="text" id="clientid"/>
+		 <button id="oauthflowbutton" class="oauthauthorize button"
+			<span>Authorize</span>
+		</button>
+		-->
+	</div>
 
     <H2> Operations </h2>
     {{OPERATIONS}}

@@ -1,0 +1,7 @@
+<div class="requestbody">
+	<div class="requestinput JSON">
+		<pre>
+{{REQUEST_BODY}}
+		</pre>
+	</div>
+</div>

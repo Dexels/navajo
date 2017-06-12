@@ -1,0 +1,4 @@
+<tr>
+	<td>{{NAME}}</th>
+    <td>{{COMMENT}}</th>
+</tr>
