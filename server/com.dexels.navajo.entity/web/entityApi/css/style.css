@@ -278,7 +278,7 @@ li.operation pre {
     color: #3b4151;
     
 }
-.callentitybutton {
+.tryentitybutton {
     outline: none;
     float: right;
     margin: 0px auto 10px auto;
@@ -294,11 +294,24 @@ li.operation pre {
     border-color: #49cc90;
 }
 
+#clientid {
+	display: block;
+}
+
+.button.oauthauthorize {
+    outline: none;
+    float: left;
+    margin: 10px auto 10px auto;
+    padding: 5px 23px;
+    color: #49cc90;
+    border-color: #49cc90;
+}
+
 #setauth {
 	 float: right;
 }
 
-.callentitybutton.cancel {
+.tryentitybutton.cancel {
 	color: red;
 }
 
@@ -356,8 +369,24 @@ li.operation pre {
 }
 
 
+label.authdialog {
+	display: block;
+    margin: 0.25em 0;
+}
 
+hr.authdialog {
+	margin: 1.5em 0 1.5em;
+}
 
+h2.authdialog {
+	font-size: 2em;
+	margin: 0.2em 0 1.4em;
+}
+
+.missinginput {
+	border-color: #f93e3e;
+	background-color: rgba(254, 235, 235, 0.4);
+}
 /* pulse stuff... */
 .button.docallentitybutton {
     -webkit-animation: pulse 2s infinite;

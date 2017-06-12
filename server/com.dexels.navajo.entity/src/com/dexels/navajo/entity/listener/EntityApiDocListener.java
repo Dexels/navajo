@@ -343,7 +343,7 @@ public class EntityApiDocListener extends HttpServlet implements ResourceMapping
 
     private String getTemplate(String name) {
         try {
-            URL url = getClass().getResource("/entityApi" + File.separator + name);
+            URL url = getClass().getResource("/entityApi" + File.separator + "template" + File.separator + name);
             String content = IOUtils.toString(url.openStream(), "utf-8");
             return content;
         } catch (IOException e) {

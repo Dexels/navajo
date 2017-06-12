@@ -1,7 +1,7 @@
 <div class="requestheader">
 	<h2 class="{{OP}} entityrequest"> Request </h2> 
 	<div class="call-entity">
-		<button class="callentitybutton button">Try it out</button>
+		<button class="tryentitybutton button">Try it out</button>
 	</div>
 </div>
 <div class="description {{OP}}"> {{DESCRIPTION}}</div>
