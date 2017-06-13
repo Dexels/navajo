@@ -319,7 +319,7 @@ li.operation pre {
 	display: block;
 	margin: 10px;
 }
-.docallentitybutton {
+.callentitybutton {
  	animation: pulse 2s infinite;
     color: #fff;
     border-color: #4990e2;
@@ -401,7 +401,7 @@ h2.authdialog {
     color: #3b4151;
 } 
 /* pulse stuff... */
-.button.docallentitybutton {
+.button.callentitybutton {
     -webkit-animation: pulse 2s infinite;
     animation: pulse 2s infinite;
     color: #fff;

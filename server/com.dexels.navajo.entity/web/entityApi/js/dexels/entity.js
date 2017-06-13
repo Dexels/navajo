@@ -1,7 +1,7 @@
 var modal;
 
 function setupLoginDialog() {
-	// instanciate new modal
+	// instantiate new modal
 	modal= new tingle.modal({
 	    footer: true,
 	    stickyFooter: false,
@@ -14,10 +14,12 @@ function setupLoginDialog() {
 	        //console.log('modal closed');
 	    },
 	    beforeClose: function() {
-	    	sessionStorage.token = $('#bearertoken').val();
-            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-                sessionStorage.tenant = $('#tenantinput').val();
-            }
+	    	if ($('#bearertoken').val()) {
+	    		sessionStorage.token = $('#bearertoken').val();
+	            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+	                sessionStorage.tenant = $('#tenantinput').val();
+	            }
+	    	}
 	        return true; // close the modal
 	    }
 	});
@@ -54,9 +56,10 @@ $(document).ready(function() {
 		
 	});
     
-    $(document).on('click', '.docallentitybutton', function() {
+    $(document).on('click', '.callentitybutton', function() {
+    	var myRequest =  $(this).closest('.requestbody');
     	var myOp =  $(this).closest('.operation');
-    	if (sessionStorage.getItem("token") === null ) {
+    	if (sessionStorage.getItem("token") === null || !sessionStorage.getItem("token") ) {
     		modal.open();
     		return;
     	}
@@ -68,7 +71,7 @@ $(document).ready(function() {
         if (method === "GET" || method === "DELETE") {
             // prepare URL
         	var missingRequired = false;
-            $(this).closest('.entityDescription').find('.requestTable tbody tr').each(function() {
+        	myRequest.find('.requestTable tbody tr').each(function() {
                 var name = $(this).find('.propname').text();
                 var value = $(this).find('input').val();
                 if (value !== '') {
@@ -114,7 +117,7 @@ $(document).ready(function() {
         
         } else {
             // Get data input
-            var requestdata = $(this).closest('.entityDescription').find('textarea.call-entityinput').val();
+            var requestdata = myRequest.find('textarea.call-entityinput').val();
             $.ajax({
                 beforeSend: function(req) {
                     req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token); 
@@ -131,12 +134,12 @@ $(document).ready(function() {
                 complete: function(data) {
                    var pre = $('<pre>', {'class': 'prettyprint lang-json'});
                    pre.text(data.responseText);
-                   $('.entityresponsebody').append(pre);
+                   myOp.find('.entityresponsebody').append(pre);
                    prettyPrint();
                    
                    // Add curl statement
-                   $('.shell-body').text(getCurlUrlPostPut(method, url, requestdata));
-                   $('.shell-body').show();
+                   myOp.find('.shell-body').text(getCurlUrlPostPut(method, url, requestdata));
+                   myOp.find('.shell-body').show();
                 }
             });
         }
@@ -175,13 +178,13 @@ $(document).ready(function() {
     });
 	
     $(document).on('click', '.tryentitybutton', function() {
-    	var parent =  $(this).closest('.entityDescription');
+    	var parent = $(this).closest('.operation');
         if ($(this).hasClass('cancel')) {
             $(this).text("Try it out");
             $(this).removeClass('cancel');
             
             parent.find('.call-entityinput').remove();
-            $('.shell-body').hide();
+            parent.find('.shell-body').hide();
             parent.find('.tableinputheader').remove();
             parent.find('.tableinputtd').remove();
             parent.find('.entityresponsebody').children().remove();
@@ -193,23 +196,24 @@ $(document).ready(function() {
             $(this).addClass('cancel');
             
             // Hide response
-            parent.children('.responsebody').hide();
+            parent.find('.responsebody').hide();
              
             // Add input to table
-            var method =  $(this).closest('.operation').find('a').attr('method') ;
+            var method = parent.find('a').attr('method') ;
             
             if (method === "GET" || method === "DELETE") {
                 parent.find('.requestTable th:last-child').after('<th class="tableinputheader">Input</th>');
                 parent.find('.requestTable tbody td:last-child').after('<td class="tableinputtd"><input type="text"></input></td>');
             } else {
-                parent.find('.requestinput').hide();
-                var input = parent.find('.requestinput').text().trim();
+            	var requestinput = parent.find('.requestinput');
+            	requestinput.hide();
+                var input = requestinput.text().trim();
                 var textinput = $('<textarea>', {'class': 'call-entityinput'});
                 textinput.text(input);
-                parent.children('.requestbody').append(textinput);
+                parent.find('.requestbody').prepend(textinput);
             }
          
-            parent.children('.perform-call-entity').show();
+            parent.find('.perform-call-entity').show();
         }
        
     });
