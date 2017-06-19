@@ -502,7 +502,7 @@ public class ServiceEntityOperation implements EntityOperation {
 
         
         Navajo currentEntity = getCurrentEntity(input);
-        if (currentEntity == null || currentEntity.getMessage(myEntity.getMessageName()) == null) {
+        if (currentEntity != null && currentEntity.getMessage(myEntity.getMessageName()) == null) {
             throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not peform delete, entity not found");
         }
         

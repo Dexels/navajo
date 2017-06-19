@@ -8,7 +8,9 @@ function setupLoginDialog() {
 	    closeMethods: ['overlay', 'button', 'escape'],
 	    closeLabel: "Close",
 	    onOpen: function() {
-	        //console.log('modal open');
+	    	if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+               $('#tenant').show();
+            }
 	    },
 	    onClose: function() {
 	        //console.log('modal closed');
@@ -16,9 +18,7 @@ function setupLoginDialog() {
 	    beforeClose: function() {
 	    	if ($('#bearertoken').val()) {
 	    		sessionStorage.token = $('#bearertoken').val();
-	            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-	                sessionStorage.tenant = $('#tenantinput').val();
-	            }
+	            sessionStorage.tenant = $('#tenantinput').val();
 	    	}
 	        return true; // close the modal
 	    }
@@ -188,9 +188,11 @@ $(document).ready(function() {
             parent.find('.tableinputheader').remove();
             parent.find('.tableinputtd').remove();
             parent.find('.entityresponsebody').children().remove();
-            parent.children('.responsebody').show();
+            parent.find('.responsebody').show();
             parent.find('.requestinput').show();
             parent.children('.perform-call-entity').hide();
+           
+             
         } else {
             $(this).text("Cancel");
             $(this).addClass('cancel');

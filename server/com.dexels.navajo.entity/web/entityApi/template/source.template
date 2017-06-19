@@ -29,7 +29,7 @@
 	<div class="authdialog" id="setauth" style="display:none"/>
 		<h2 class="authdialog"> Authorize </h2>
 		<label class="authdialog" > Bearer token </label> <input name="auth" type="text" id="bearertoken"/>
-		<div id ="tenant"> 
+		<div id="tenant" style="display:none"> 
 			<label class="authdialog" >Tenant </label><input name="tenant" type="text" id="tenantinput"/>
 		 </div>
 		 <!-- Unsupported
