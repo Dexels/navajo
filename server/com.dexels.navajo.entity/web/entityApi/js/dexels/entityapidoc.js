@@ -71,7 +71,9 @@ $(document).ready(function() {
     	localStorage.clientid = clientid;
     	
     	var url;
-    	if (location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.hostname.includes("test")) {
+    	if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+    		url = "http://localhost:9090/oauth";
+    	} else if (location.hostname.includes("test")) {
     		url = "https://authtest.sportlink.com/oauth";
     	} else {
     		url = "https://auth.sportlink.com/oauth";
