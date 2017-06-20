@@ -84,17 +84,21 @@ public class EntityDispatcher {
                 entityName = entityName.substring(0, entityName.indexOf('.'));
             }
 
-            String tenant = determineInstanceFromRequest(runner.getHttpRequest());
-            if (tenant == null) {
-                logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
-                throw new EntityException(EntityException.UNAUTHORIZED);
-            }
             String authHeader = runner.getHttpRequest().getHeader("Authorization");
             if (authHeader == null) {
                 logger.warn("Missing authentication header!");
                 throw new EntityException(EntityException.UNAUTHORIZED);
 
             }
+            
+            String tenant = determineInstanceFromRequest(runner.getHttpRequest());
+            if (tenant == null && !authHeader.startsWith(AuthenticationMethod.OAUTH_IDENTIFIER)) {
+                // No tenant only supported for Oauth login
+                logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
+                throw new EntityException(EntityException.UNAUTHORIZED);
+                
+            }
+            
 
             String ip = runner.getHttpRequest().getHeader("X-Forwarded-For");
             if (ip == null || ip.equals("")) {
@@ -168,7 +172,7 @@ public class EntityDispatcher {
 
            
             Operation o = myManager.getOperation(e.getName(), method);
-            o.setTenant(tenant);
+            
 
             // Create an access object for logging purposes
             Long startAuth = System.currentTimeMillis();
@@ -184,6 +188,7 @@ public class EntityDispatcher {
                 logger.warn("Auth exception: ", auth);
                 throw new EntityException(EntityException.UNAUTHORIZED);
             }
+            o.setTenant(access.getTenant());
             
             // Create a header from the input
             Header header = NavajoFactory.getInstance().createHeader(input, "", access.rpcUser, access.rpcPwd, -1);
@@ -344,7 +349,6 @@ public class EntityDispatcher {
     }
 
     private Access authenticateUser(Navajo inDoc, String tenant, Access access, String authHeader) throws AuthorizationException {
-
         access.setTenant(tenant);
         access.setInDoc(inDoc);
 
@@ -359,31 +363,10 @@ public class EntityDispatcher {
             throw new AuthorizationException(false, false, null, "Missing authenticator");
         }
         
-
-
         authenticator.process(access);
-        appendGlobals(inDoc, tenant);
-
         return access;
     }
 
-    private void appendGlobals(Navajo inMessage, String tenant) {
-        final GlobalManagerRepository globalManagerInstance = GlobalManagerRepositoryFactory.getGlobalManagerInstance();
-        if (globalManagerInstance == null) {
-            logger.info("No global manager found- not adding globals!");
-            return;
-        }
-        GlobalManager gm = null;
-        if (tenant == null) {
-            gm = globalManagerInstance.getGlobalManager("default");
-        } else {
-            gm = globalManagerInstance.getGlobalManager(tenant);
-        }
-
-        if (gm != null) {
-            gm.initGlobals(inMessage);
-        }
-    }
 
     public void setEntityManager(EntityManager em) {
         myManager = em;

@@ -8,9 +8,7 @@ function setupLoginDialog() {
 	    closeMethods: ['overlay', 'button', 'escape'],
 	    closeLabel: "Close",
 	    onOpen: function() {
-	    	if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-               $('#tenant').show();
-            }
+
 	    },
 	    onClose: function() {
 	        //console.log('modal closed');
@@ -18,7 +16,6 @@ function setupLoginDialog() {
 	    beforeClose: function() {
 	    	if ($('#bearertoken').val()) {
 	    		sessionStorage.token = $('#bearertoken').val();
-	            sessionStorage.tenant = $('#tenantinput').val();
 	    	}
 	        return true; // close the modal
 	    }
@@ -27,16 +24,16 @@ function setupLoginDialog() {
 	// set content
 	modal.setContent($('#setauth').html());
 
-	// add a button
-	modal.addFooterBtn('Authorize', 'tingle-btn tingle-btn--pull-right tingle-btn--primary', function() {
-	    // here goes some logic
-	    modal.close();
-	});
 }
 
 $(document).ready(function() {
 	setupLoginDialog();
+	if (localStorage.clientid != null) {
+		$('#clientid').val(localStorage.clientid);
+	}
 	
+	
+	/* Event handling */
     $(document).on('click', 'a', function(event) {
         event.preventDefault();
         $(this).next().find('.JSON').children('pre').addClass("prettyprint");
@@ -56,6 +53,47 @@ $(document).ready(function() {
 		
 	});
     
+    /* Bearer flow button. Close dialog and set token */
+    $(document).on('click', '#bearerflowbutton', function() {
+    	modal.close();
+    });
+     
+
+    /* Clicking on the oauth authorize button should initiate the oauth flow
+     * For this we redirect the user to the oauth login page
+     */
+    $(document).on('click', '#oauthflowbutton', function() {
+    	
+    	var redirect = document.location;
+    	var clientid = $('#clientid').val();
+    	var scopes = $('#oauthscopes').val(); // TODO: scopes empty
+    	
+    	localStorage.clientid = clientid;
+    	
+    	var url;
+    	if (location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.hostname.includes("test")) {
+    		url = "https://authtest.sportlink.com/oauth";
+    	} else {
+    		url = "https://auth.sportlink.com/oauth";
+    	}
+    	url += "?redirect_uri="+redirect;
+    	url += "&response_type=token";
+    	url += "&client_id="+clientid;
+    	if (scopes) {
+    		url += "&scope="+scopes;
+    	}
+    	url += "&state=123abcdef";
+    	url += "&login_page_type=full";
+    	window.location = url;
+    });
+    
+    
+    
+    $(document).on('click', '#authbutton', function() {
+        modal.open();
+    });
+    
+    /* Going to perform an entity call */
     $(document).on('click', '.callentitybutton', function() {
     	var myRequest =  $(this).closest('.requestbody');
     	var myOp =  $(this).closest('.operation');
@@ -96,9 +134,6 @@ $(document).ready(function() {
                 beforeSend: function(req) {
                     req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token); 
                     req.setRequestHeader('Accept', 'application/json'); 
-                    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-                        req.setRequestHeader('X-Navajo-Instance', sessionStorage.tenant); 
-                    }
                 },
                 dataType: 'json',
                 type: method,
@@ -123,9 +158,6 @@ $(document).ready(function() {
                     req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token); 
                     req.setRequestHeader('Accept', 'application/json');
                     req.setRequestHeader('content-type', 'application/json');
-                    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-                        req.setRequestHeader('X-Navajo-Instance', sessionStorage.tenant); 
-                    }
                 },
                 dataType: 'json',
                 data: requestdata,
@@ -143,39 +175,31 @@ $(document).ready(function() {
                 }
             });
         }
-    });
-    
-    function getCurlUrlGetDelete(method, url) {
-        var curl=  'curl ';
-        curl += '-X' + method;
-        curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
-        curl += ' -H "Accept: application/json" ';
-        if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-            curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'" ';
+        
+        /* Helper functions */
+        function getCurlUrlGetDelete(method, url) {
+            var curl=  'curl ';
+            curl += '-X' + method;
+            curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
+            curl += ' -H "Accept: application/json" ';
+            curl += '"' + encodeURI(url) + '"'
+            return curl;
         }
         
-        curl += '"' + encodeURI(url) + '"'
-        return curl;
-    }
-    
-    function getCurlUrlPostPut(method, url, data) {
-        var curl=  'curl ';
-        curl += '-X' + method;
-        curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
-        curl +=  ' -H "Accept: application/json" ';
-        if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-            curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'" ';
+        function getCurlUrlPostPut(method, url, data) {
+            var curl=  'curl ';
+            curl += '-X' + method;
+            curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
+            curl +=  ' -H "Accept: application/json" ';
+            curl += '-d "';
+            curl += data.replace(new RegExp('\"', 'g'), '\\"').replace(new RegExp('\n', 'g'), '')
+            curl += '" ';
+            curl += '"' + encodeURI(url) + '"'
+            return curl;
         }
-        curl += '-d "';
-        curl += data.replace(new RegExp('\"', 'g'), '\\"').replace(new RegExp('\n', 'g'), '')
-        curl += '" ';
-        curl += '"' + encodeURI(url) + '"'
-        return curl;
-    }
-    
-    $(document).on('click', '#authbutton', function() {
-        modal.open();
+        
     });
+    
 	
     $(document).on('click', '.tryentitybutton', function() {
     	var parent = $(this).closest('.operation');

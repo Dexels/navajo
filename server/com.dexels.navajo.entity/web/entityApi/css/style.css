@@ -294,14 +294,13 @@ li.operation pre {
     border-color: #49cc90;
 }
 
-#clientid {
+.authdialoginput {
 	display: block;
 }
 
 .button.oauthauthorize {
     outline: none;
-    float: left;
-    margin: 10px auto 10px auto;
+    margin: 20px auto 10px;
     padding: 5px 23px;
     color: #49cc90;
     border-color: #49cc90;
@@ -371,7 +370,7 @@ li.operation pre {
 
 label.authdialog {
 	display: block;
-    margin: 0.25em 0;
+    margin: 0.15em 0;
 }
 
 hr.authdialog {
@@ -400,6 +399,7 @@ h2.authdialog {
     text-decoration: none;
     color: #3b4151;
 } 
+
 /* pulse stuff... */
 .button.callentitybutton {
     -webkit-animation: pulse 2s infinite;

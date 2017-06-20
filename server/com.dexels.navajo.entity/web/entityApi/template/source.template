@@ -9,12 +9,16 @@
 <link href="/entityApi/css/rotate.css" type="text/css" rel="stylesheet" />
 
 
+
 <script type="text/javascript" src="/entityApi/js/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="/entityApi/js/prettify.js"></script>
 <script type="text/javascript" src="/entityApi/js/tingle.min.js"></script>
 
-<script type="text/javascript" src="/entityApi/js/dexels/entity.js"></script>
+<script type="text/javascript" src="/entityApi/js/dexels/entityapidoc.js"></script>
+<script type="text/javascript" src="/entityApi/js/dexels/navajofeeds-json-parser.js"></script>
+
 </head>
+
 
 <body class=bodycenter>
 
@@ -28,18 +32,24 @@
 
 	<div class="authdialog" id="setauth" style="display:none"/>
 		<h2 class="authdialog"> Authorize </h2>
-		<label class="authdialog" > Bearer token </label> <input name="auth" type="text" id="bearertoken"/>
-		<div id="tenant" style="display:none"> 
-			<label class="authdialog" >Tenant </label><input name="tenant" type="text" id="tenantinput"/>
-		 </div>
-		 <!-- Unsupported
-		 <hr class="authdialog" />
-		 <h3> Oauth2 </h3>
-		 <label class="authdialog" > Client id </label> <input name="clientid" type="text" id="clientid"/>
-		 <button id="oauthflowbutton" class="oauthauthorize button"
-			<span>Authorize</span>
-		</button>
-		-->
+		
+	    <label class="authdialog" > Client id </label>
+	    <input class="authdialoginput" name="clientid" type="text" id="clientid"/>
+	    <label class="authdialog" > Scopes </label>
+	    <input class="authdialoginput"  name="oauthscopes" type="text" id="oauthscopes" />
+	   
+	    <button id="oauthflowbutton" class="oauthauthorize button">
+	    	<span>Authorize</span>
+	    </button>
+
+		<hr class="authdialog" />
+		
+		<label class="authdialog" > Bearer token </label> 
+		<input class="authdialoginput"  name="auth" type="text" id="bearertoken"/>
+		
+		<button id="bearerflowbutton" class="oauthauthorize button">
+	    	<span>Authorize</span>
+	    </button>
 	</div>
 
     <H2> Operations </h2>
