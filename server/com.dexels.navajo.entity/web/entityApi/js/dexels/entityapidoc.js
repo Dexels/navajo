@@ -130,7 +130,7 @@ $(document).ready(function() {
             	return;
             }
             url = url.replace('&', '?'); // replace first & with ?
-            myOp.find('.entityresponsebody').html('<div class="loader sk-rotating-plane"></div><div class="loadertext">Loading...</div>')
+            addSpinner();
             // Do request
             $.ajax({
                 beforeSend: function(req) {
@@ -155,6 +155,7 @@ $(document).ready(function() {
         } else {
             // Get data input
             var requestdata = myRequest.find('textarea.call-entityinput').val();
+            addSpinner();
             $.ajax({
                 beforeSend: function(req) {
                     req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token); 
@@ -168,7 +169,7 @@ $(document).ready(function() {
                 complete: function(data) {
                    var pre = $('<pre>', {'class': 'prettyprint lang-json'});
                    pre.text(data.responseText);
-                   myOp.find('.entityresponsebody').append(pre);
+                   myOp.find('.entityresponsebody').html(pre);
                    prettyPrint();
                    
                    // Add curl statement
@@ -176,6 +177,11 @@ $(document).ready(function() {
                    myOp.find('.shell-body').show();
                 }
             });
+        }
+        
+        function addSpinner() {
+            myOp.find('.entityresponsebody').html('<div class="loader spinner"> <div class="cube1"></div><div class="cube2"></div></div><div class="loadertext">Loading...</div>')
+
         }
         
         /* Helper functions */
