@@ -542,6 +542,11 @@
         <input>binary</input>
         <result>boolean</result>        
     </function>
+    <function name="LimitList" class="com.dexels.navajo.functions.LimitList">
+        <description>Return a list with at most x elements</description>
+        <input>list,number</input>
+        <result>list</result>
+    </function>
 	<function name="KeyValueMap" class="com.dexels.navajo.functions.KeyValueMap">
 		<description>KeyValueMap(string,string,string)</description>
 		<input>string,string,string</input>
@@ -825,6 +830,11 @@
 		<input>any</input>
 		<result>integer</result>
 	</function>
+    <function name="ToList" class="com.dexels.navajo.functions.ToList">
+        <description>Converts a single item to a new list, or add an element to an existing list</description>
+        <input>list|any,empty|any,empty|string</input>
+        <result>list</result>
+    </function>
 	<function name="ToLong" class="com.dexels.navajo.functions.ToLong">
 		<description>Get an long representation of given object.</description>
 		<input>any</input>
