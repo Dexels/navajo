@@ -231,9 +231,10 @@ function runScript(script) {
 
         $.ajax({
         	beforeSend: function(req) {
-            startTitleLoader();
-            req.setRequestHeader('Authorization', null); // Safai fix
-          },
+        		startTitleLoader();
+        		req.setRequestHeader('Authorization', null); // Safari fix
+        		req.setRequestHeader('Content-Type', "text/xml;charset=utf-8");
+        	},
         	complete: function() {stopTitleLoader();},
         	type: "POST",
             url: "/navajo/" + instance,
@@ -328,7 +329,7 @@ function prepareInputNavajo(script) {
 
      var $header = $xml.find('tml header ');
 
-    if (sessionStorage.app === 'legcay') {
+    if (sessionStorage.app === 'legacy') {
     	 $header.attr('application', null)
     } else {
     	 $header.attr('application', sessionStorage.app)
