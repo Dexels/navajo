@@ -74,6 +74,8 @@ public final class Access implements java.io.Serializable, Mappable {
     public static final int EXIT_SCRIPT_NOT_FOUND = 6;
     public static final int EXIT_AUTH_EXECPTION = 21;
     
+    public static final String LEGACY_APPLICTION = "legacy";
+    
     @SuppressWarnings("unused")
     private static final String VERSION = "$Id$";
 
@@ -92,7 +94,7 @@ public final class Access implements java.io.Serializable, Mappable {
     public String userAgent;
     public String ipAddress;
     public String hostName;
-    public String application;
+    public String application = LEGACY_APPLICTION;
     public String organization;
     public String clientDescription;
     public boolean betaUser = false;
@@ -676,6 +678,10 @@ public final class Access implements java.io.Serializable, Mappable {
 
 
     public void setApplication(String application) {
+        if (application == null || "".equals(application.trim()) || application.equals(this.application) ) {
+            return;
+        }
+
         this.application = application;
         
     }
