@@ -172,10 +172,8 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 				for (Message deploymentMessage : deployments.getAllMessages()) {
 					String name = deploymentMessage.getName();
 					if (name.equals(deployment)) {
-						Message deploymentResources = deploymentMessage
-								.getMessage("resources");
-						Message deploymentAliasMessage = deploymentMessage
-								.getMessage("alias");
+						Message deploymentResources = deploymentMessage.getMessage("resources");
+						Message deploymentAliasMessage = deploymentMessage.getMessage("alias");
 						// Map<String, Set<String>> deploymentAliases = new
 						// HashMap<String, Set<String>>(aliases);
 						appendResources(aliases, result, deploymentResources,
@@ -699,5 +697,4 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
     public String getDeployment() {
         return repositoryInstance.getDeployment();
     }
-
 }
