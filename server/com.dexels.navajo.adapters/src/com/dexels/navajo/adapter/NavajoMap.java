@@ -932,6 +932,15 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             throw new UserException(-1, "Message " + fullName + " does not exists in response document");
         return msg;
     }
+    
+    public final Object getPropertyOrElse(String fullName, Object elseValue) {
+        try {
+            return getProperty(fullName);
+        } catch (Throwable t) {
+            // Property probably doesn't exist - no biggie
+        }
+        return elseValue;
+    }
 
     public final Object getProperty(String fullName) throws Exception {
 
