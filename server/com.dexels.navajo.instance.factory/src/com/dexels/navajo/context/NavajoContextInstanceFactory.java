@@ -156,6 +156,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			Message resources = n.getMessage("datasources");
 			Message deployments = n.getMessage("deployments");
 			Message aliasMessage = n.getMessage("alias");
+						
 			if (resources != null) {
 				logger.warn("In datasource definitions, please use 'resources' instead of 'datasources' as top level message name");
 			} else {
@@ -165,7 +166,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			// logger.warn("In datasource definitions, no 'resources' found.");
 			// return result;
 			// }
-			appendResources(aliases, result, resources, aliasMessage);
+			appendResources(aliases, result, resources, aliasMessage, null);
 			logger.info("# of (deployment independent): resources "
 					+ result.size());
 			if (deployment != null && deployments != null) {
@@ -174,10 +175,11 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 					if (name.equals(deployment)) {
 						Message deploymentResources = deploymentMessage.getMessage("resources");
 						Message deploymentAliasMessage = deploymentMessage.getMessage("alias");
+						Message aliasConditionalMessage = deploymentMessage.getMessage("alias_conditional");
 						// Map<String, Set<String>> deploymentAliases = new
 						// HashMap<String, Set<String>>(aliases);
 						appendResources(aliases, result, deploymentResources,
-								deploymentAliasMessage);
+								deploymentAliasMessage, aliasConditionalMessage);
 					} else {
 						logger.debug("Ignoring not-matching datasource ("
 								+ name + " vs. " + deployment + ")");
@@ -208,7 +210,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 
 	private void appendResources(Map<String, Set<String>> aliases,
-			Map<String, Message> result, Message resources, Message aliasMessage) {
+			Map<String, Message> result, Message resources, Message aliasMessage, Message aliasConditionalMessage) {
 		if (aliasMessage != null) {
 			List<Property> aliasProps = aliasMessage.getAllProperties();
 			for (Property property : aliasProps) {
@@ -222,6 +224,35 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 				found.add(name);
 			}
 		}
+		if (aliasConditionalMessage != null) {
+		    for (Message m : aliasConditionalMessage.getAllMessages()) {
+		        String name = m.getName();
+		        Property conditionProp = m.getProperty("condition");
+		        Property trueValueProp = m.getProperty("true_value");
+		        Property falseValueProp = m.getProperty("false_value");
+		        
+		        if (conditionProp == null || conditionProp.getTypedValue() == null) {
+		            logger.warn("Invalid conditional alias message! {}", m);
+		            continue;
+		        }
+		        boolean evaluated = checkEliasCondition(conditionProp.getValue());
+		        String aliasValue = null;
+		        if (evaluated && trueValueProp != null) {
+		            aliasValue = trueValueProp.getValue();           
+
+		        } else if (!evaluated && falseValueProp != null) {
+		            aliasValue = falseValueProp.getValue();
+		        }
+		        if (aliasValue != null) {
+		            Set<String> found = aliases.get(aliasValue);
+	                if (found == null) {
+	                    found = new HashSet<String>();
+	                    aliases.put(aliasValue, found);
+	                }
+	                found.add(name);
+		        }
+		    }
+		}
 		if (resources != null) {
 			List<Message> sources = resources.getAllMessages();
 			for (Message rsrc : sources) {
@@ -230,7 +261,40 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		}
 	}
 
-	private Map<String, Object> readProperties(File propertyFile,
+	/* 
+	 * Condition in format (!)?(a=b)
+	 * For example, !(cluster=abc)
+	 * Currently supported: CLUSTER 
+	 */
+	private boolean checkEliasCondition(String condition) {
+	    boolean negate = condition.startsWith("!");
+	    if (negate) {
+	        condition = condition.substring(1);
+	    }
+	    // Remove ( and )
+	    condition = condition.substring(1,  condition.length()-1);
+	    String[] splitted = condition.split("=");
+	    if ((splitted.length % 2) != 0) {
+	        logger.warn("Invalid condition in subtype! {}", condition);
+	        return true;
+	    }
+	    boolean match = true;
+	    for (int i=0;i<splitted.length;i+=2) {
+	        String key = splitted[i];
+	        String value = splitted[i+1];
+	        
+	        if (key.equalsIgnoreCase("cluster")) {
+	            String cluster = System.getenv("CLUSTER");
+	            match = match && cluster.equalsIgnoreCase(value);
+	        }
+	    }
+	    if (negate) {
+	        match = !match;
+	    }
+        return match;
+    }
+
+    private Map<String, Object> readProperties(File propertyFile,
 			String deployment) {
 		final Map<String, Object> result = new HashMap<String, Object>();
 		if (!propertyFile.exists()) {
