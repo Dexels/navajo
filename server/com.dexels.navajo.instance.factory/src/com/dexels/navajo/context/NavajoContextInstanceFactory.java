@@ -35,21 +35,12 @@ import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.server.api.NavajoServerContext;
 
 public class NavajoContextInstanceFactory implements NavajoServerContext {
-	private final static Logger logger = LoggerFactory
-			.getLogger(NavajoContextInstanceFactory.class);
+	private final static Logger logger = LoggerFactory.getLogger(NavajoContextInstanceFactory.class);
 
 	private final boolean sharableResources = false;
 
-	// private BundleContext bundleContext;
 	private ConfigurationAdmin configAdmin;
-	
 	private Set<Configuration> ownedConfigurations = new HashSet<Configuration>();
-
-//	private int modified = 0;
-//	private int registered = 0;
-//	private int unregistering = 0;
-	// private final Map<String,Set<String>> aliasesForDataSource = new
-	// HashMap<String, Set<String>>();
 	private final Set<String> resourcePids = new HashSet<String>();
 
 	public NavajoContextInstanceFactory() {
@@ -66,13 +57,12 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 
 	public void activate(BundleContext context) throws FileNotFoundException {
-			String deployment = repositoryInstance.getDeployment();
-			startInstanceFactory(repositoryInstance.getRepositoryFolder(), deployment);
+			startInstanceFactory(repositoryInstance.getRepositoryFolder());
 
 	}
 
-	private void startInstanceFactory(File rootPath, String deployment) throws FileNotFoundException {
-	    if (deployment == null) {
+	private void startInstanceFactory(File rootPath) throws FileNotFoundException {
+	    if (repositoryInstance.getDeployment() == null) {
 	        logger.warn("=================== NO DEPLOYMENT DEFINED! ===================");
 	    }
 		File settings = new File(rootPath, "settings");
@@ -89,12 +79,10 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		File globalResourceFile = new File(config, "resources.xml");
 		File[] fd = settings.listFiles();
 		File globalPropertyFile = new File(settings, "application.properties");
-		Map<String, Object> globalProperties = readProperties(
-				globalPropertyFile, deployment);
+		Map<String, Object> globalProperties = readProperties(globalPropertyFile);
 		registerGlobalConfiguration(globalProperties);
 		Map<String, Set<String>> aliases = new HashMap<String, Set<String>>();
-		Map<String, Message> globalResources = readResources(
-				globalResourceFile, aliases, deployment);
+		Map<String, Message> globalResources = readResources(globalResourceFile, aliases);
 		for (Message dataSource : globalResources.values()) {
 			try {
 				addDatasource(null, dataSource, aliases);
@@ -110,8 +98,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 				try {
 					appendInstance(name, file,
 							Collections.unmodifiableMap(globalProperties),
-							Collections.unmodifiableMap(globalResources),
-							deployment);
+							Collections.unmodifiableMap(globalResources));
 				} catch (IOException e) {
 					logger.error("Error appending instance: {}", name, e);
 				}
@@ -147,9 +134,10 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 
 	private Map<String, Message> readResources(File resource,
-			Map<String, Set<String>> aliases, String deployment) {
+			Map<String, Set<String>> aliases) {
 		Map<String, Message> result = new HashMap<String, Message>();
 		FileReader fr = null;
+		String deployment = repositoryInstance.getDeployment();
 		try {
 			fr = new FileReader(resource);
 			Navajo n = NavajoFactory.getInstance().createNavajo(fr);
@@ -158,17 +146,12 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			Message aliasMessage = n.getMessage("alias");
 						
 			if (resources != null) {
-				logger.warn("In datasource definitions, please use 'resources' instead of 'datasources' as top level message name");
-			} else {
-				resources = n.getMessage("resources");
-			}
-			// if(resources==null) {
-			// logger.warn("In datasource definitions, no 'resources' found.");
-			// return result;
-			// }
+			    logger.warn("In datasource definitions, please use 'resources' instead of 'datasources' as top level message name");
+		    } else {
+		        resources = n.getMessage("resources");
+		    }
 			appendResources(aliases, result, resources, aliasMessage, null);
-			logger.info("# of (deployment independent): resources "
-					+ result.size());
+			logger.info("# of (deployment independent): resources {}", result.size());
 			if (deployment != null && deployments != null) {
 				for (Message deploymentMessage : deployments.getAllMessages()) {
 					String name = deploymentMessage.getName();
@@ -176,22 +159,17 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 						Message deploymentResources = deploymentMessage.getMessage("resources");
 						Message deploymentAliasMessage = deploymentMessage.getMessage("alias");
 						Message aliasConditionalMessage = deploymentMessage.getMessage("alias_conditional");
-						// Map<String, Set<String>> deploymentAliases = new
-						// HashMap<String, Set<String>>(aliases);
-						appendResources(aliases, result, deploymentResources,
-								deploymentAliasMessage, aliasConditionalMessage);
+						appendResources(aliases, result, deploymentResources, deploymentAliasMessage, aliasConditionalMessage);
 					} else {
-						logger.debug("Ignoring not-matching datasource ("
-								+ name + " vs. " + deployment + ")");
+						logger.debug("Ignoring not-matching datasource ({} vs {})", name, deployment);
 					}
 				}
 			} else {
-				logger.warn("No deployment whatsoever, ignoring all deployment specific sources");
-				logger.warn("deployment: "+deployment);
+				logger.warn("No deployment whatsoever, ignoring all deployment specific sources. My deployment: {}", deployment);
 				if(deployments!=null) {
 					deployments.write(System.err);
 				} else {
-					logger.warn("No deployments message");
+					logger.warn("No deployments message either!");
 				}
 			}
 
@@ -225,33 +203,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			}
 		}
 		if (aliasConditionalMessage != null) {
-		    for (Message m : aliasConditionalMessage.getAllMessages()) {
-		        String name = m.getName();
-		        Property conditionProp = m.getProperty("condition");
-		        Property trueValueProp = m.getProperty("true_value");
-		        Property falseValueProp = m.getProperty("false_value");
-		        
-		        if (conditionProp == null || conditionProp.getTypedValue() == null) {
-		            logger.warn("Invalid conditional alias message! {}", m);
-		            continue;
-		        }
-		        boolean evaluated = checkEliasCondition(conditionProp.getValue());
-		        String aliasValue = null;
-		        if (evaluated && trueValueProp != null) {
-		            aliasValue = trueValueProp.getValue();           
-
-		        } else if (!evaluated && falseValueProp != null) {
-		            aliasValue = falseValueProp.getValue();
-		        }
-		        if (aliasValue != null) {
-		            Set<String> found = aliases.get(aliasValue);
-	                if (found == null) {
-	                    found = new HashSet<String>();
-	                    aliases.put(aliasValue, found);
-	                }
-	                found.add(name);
-		        }
-		    }
+		    appendConditionalAlias(aliasConditionalMessage, aliases);
 		}
 		if (resources != null) {
 			List<Message> sources = resources.getAllMessages();
@@ -260,6 +212,36 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			}
 		}
 	}
+
+    private void appendConditionalAlias(Message aliasConditionalMessage, Map<String, Set<String>> aliases) {
+        for (Message m : aliasConditionalMessage.getAllMessages()) {
+            String name = m.getName();
+            Property conditionProp = m.getProperty("condition");
+            Property trueValueProp = m.getProperty("true_value");
+            Property falseValueProp = m.getProperty("false_value");
+            
+            if (conditionProp == null || conditionProp.getTypedValue() == null) {
+                logger.warn("Invalid conditional alias message! {}", m);
+                continue;
+            }
+            boolean evaluated = checkEliasCondition(conditionProp.getValue());
+            String aliasValue = null;
+            if (evaluated && trueValueProp != null) {
+                aliasValue = trueValueProp.getValue();           
+
+            } else if (!evaluated && falseValueProp != null) {
+                aliasValue = falseValueProp.getValue();
+            }
+            if (aliasValue != null) {
+                Set<String> found = aliases.get(aliasValue);
+                if (found == null) {
+                    found = new HashSet<String>();
+                    aliases.put(aliasValue, found);
+                }
+                found.add(name);
+            }
+        }
+    }
 
 	/* 
 	 * Condition in format (!)?(a=b)
@@ -286,6 +268,9 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	        if (key.equalsIgnoreCase("cluster")) {
 	            String cluster = System.getenv("CLUSTER");
 	            match = match && cluster.equalsIgnoreCase(value);
+	        } else {
+	            logger.warn("unsupported condition: {}. Ignoring", key);
+	            return false;
 	        }
 	    }
 	    if (negate) {
@@ -294,8 +279,8 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
         return match;
     }
 
-    private Map<String, Object> readProperties(File propertyFile,
-			String deployment) {
+    private Map<String, Object> readProperties(File propertyFile) {
+        String deployment = repositoryInstance.getDeployment();
 		final Map<String, Object> result = new HashMap<String, Object>();
 		if (!propertyFile.exists()) {
 			logger.warn("Skipping non-existant global property file: {}",
@@ -343,54 +328,43 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 
 	private void appendInstance(String name, File instanceFolder,
 			Map<String, Object> globalProperties,
-			Map<String, Message> globalResources, String deployment)
+			Map<String, Message> globalResources)
 			throws IOException {
 		logger.info("Instance name: " + name);
-		if (skipDeployment(instanceFolder, deployment)) {
+		if (skipDeployment(instanceFolder)) {
 			return;
 		}
 		Map<String, Object> copyOfProperties = new HashMap<String, Object>(
 				globalProperties);
-		// copyOfProperties.putAll(globalProperties);
-		// Map<String,Message> copyOfResources = new HashMap<String,
-		// Message>(globalResources);
 		File config = new File(instanceFolder, "config");
 		File instanceProperties = new File(config, "application.properties");
 		if (instanceProperties.exists()) {
-			final Map<String, Object> instanceSpecific = readProperties(
-					instanceProperties, deployment);
-			logger.info("spec: " + instanceSpecific.size()
-					+ instanceProperties.getAbsolutePath());
+			final Map<String, Object> instanceSpecific = readProperties(instanceProperties);
+			logger.info("spec: {}, {}", instanceSpecific.size(), instanceProperties.getAbsolutePath());
 			copyOfProperties.putAll(instanceSpecific);
 		}
 		File instanceResource = new File(config, "resources.xml");
 		Map<String, Set<String>> aliases = new HashMap<String, Set<String>>();
-		Map<String, Message> resources = readResources(instanceResource,
-				aliases, deployment);
+		Map<String, Message> resources = readResources(instanceResource,aliases);
 
-//		registerAuthorization(name, instanceFolder);
-		// copyOfResources.putAll(resources);
-		// registerInstance(name);
 		registerInstanceProperties(name, copyOfProperties);
 		registerInstanceResources(name, resources, aliases);
-		registerLocalClients(name, instanceFolder, deployment);
+		registerLocalClients(name, instanceFolder);
 	}
 
-	private boolean skipDeployment(File instanceFolder, String deployment) {
+	private boolean skipDeployment(File instanceFolder) {
 		File deploymentFile = new File(instanceFolder, "deployment.cfg");
 		if (!deploymentFile.exists()) {
 			return false;
 		}
+		String deployment = repositoryInstance.getDeployment();
 		InputStream is = null;
 		try {
 			is = new FileInputStream(deploymentFile);
 			PropertyResourceBundle prb = new PropertyResourceBundle(is);
 			String deploymentList = prb.getString("deployment");
 			if (deploymentList == null) {
-				logger.warn(
-						"Bad deployment file in {}",
-						instanceFolder.getAbsolutePath()
-								+ " : Key ' deployment' missing. Skipping instance.");
+				logger.warn("Bad deployment file in {} : Key ' deployment' missing. Skipping instance.",instanceFolder.getAbsolutePath());
 				return true;
 			}
 			String[] parts = deploymentList.split(",");
@@ -412,8 +386,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		return true;
 	}
 
-	private void registerLocalClients(String name, File instanceFolder,
-			String deployment) {
+	private void registerLocalClients(String name, File instanceFolder) {
 		Map<String, Object> settings = new HashMap<String, Object>();
 		settings.put("instance", name);
 		File clientProperties = new File(instanceFolder, "navajoclient.cfg");
@@ -421,6 +394,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			logger.debug("Ignoring non existing navajoclient.cfg");
 			return;
 		}
+		String deployment = repositoryInstance.getDeployment();
 		InputStream is = null;
 		try {
 			is = new FileInputStream(clientProperties);
@@ -496,8 +470,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 
 	// navajo.instance.properties
-	private void registerInstanceProperties(String instance,
-			Map<String, Object> map) throws IOException {
+	private void registerInstanceProperties(String instance, Map<String, Object> map) throws IOException {
 		registerConfiguration(instance, map, "navajo.global.manager");
 	}
 
@@ -558,11 +531,13 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			aliasVector.add(name);
 			settings.put("aliases", aliasVector);
 		}
+		
 		settings.put("name", name);
 		if (instance != null) {
 			settings.put("instance", instance);
 			settings.put(instance, "instance");
 		}
+		settings.put("deployment", repositoryInstance.getDeployment());
 		
 		Property typeProperty = dataSource.getProperty("type");
 		if(typeProperty==null) {
@@ -589,8 +564,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	private String createFilter(String instance, String name,
 			Dictionary<String, Object> settings, String type, String uniqueId) {
 		if(this.sharableResources && uniqueId!=null) {
-			final String filter;
-			filter = "(&(navajo.uniqueid=" + uniqueId
+			final String filter = "(&(navajo.uniqueid=" + uniqueId
 					+ ")(service.factoryPid=navajo.resource." + type + "))";
 			return filter;
 			
