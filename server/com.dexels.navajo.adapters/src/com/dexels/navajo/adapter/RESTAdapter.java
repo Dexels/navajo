@@ -236,7 +236,7 @@ public class RESTAdapter extends NavajoMap {
             if (result == null) {
                 throw new UserException(-1, "Null result");
             }
-            rawResult = new String(result.getData());
+            
             
             if (responseCode >= 300) {
                 logger.warn("Got a non-200 response code: {}!", responseCode);
@@ -244,6 +244,7 @@ public class RESTAdapter extends NavajoMap {
                     throw new UserException(responseCode, responseMessage);
                 }
             }
+            rawResult = new String(result.getData());
             if (jsonResponse) {
                 if (http.getResponseContentType().contains("application/json")) {
                     try {
