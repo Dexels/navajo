@@ -290,10 +290,10 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	        };
 	        
 	        
-	        if (LoginStatisticsProvider.reachedAbortThreshold(ic.getUserName(), ic.getIpAddress())) {
+	        if (LoginStatisticsProvider.reachedAbortThreshold(ic.getUserName())) {
 	            logger.warn("Refusing request from {} for {} due to too many failed auth attempts",  ic.getUserName(), ic.getIpAddress());
 	            return null;
-	        } else if (LoginStatisticsProvider.reachedRateLimitThreshold(ic.getUserName(), ic.getIpAddress())) {
+	        } else if (LoginStatisticsProvider.reachedRateLimitThreshold(ic.getUserName())) {
 	            logger.warn("Slow pool for request from {} for {} due to too many failed auth attempts",  ic.getUserName(), ic.getIpAddress());
 	            return queueMap.get(SLOW_POOL);
 	        }

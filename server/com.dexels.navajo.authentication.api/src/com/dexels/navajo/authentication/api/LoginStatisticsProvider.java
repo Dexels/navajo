@@ -1,7 +1,5 @@
 package com.dexels.navajo.authentication.api;
 
-import com.dexels.navajo.authentication.impl.LoginStatistics;
-
 public class LoginStatisticsProvider {
 
     private static LoginStatistics instance;
@@ -10,19 +8,17 @@ public class LoginStatisticsProvider {
         instance = object;
     }
     
-    public static boolean reachedAbortThreshold(String username, String ip ) {
+    public static boolean reachedAbortThreshold(String username ) {
         if (instance == null) {
             return false;
         }
-        return instance.reachedAbortThreshold(username, ip);
+        return instance.reachedAbortThreshold(username);
     }
     
-    public static boolean reachedRateLimitThreshold(String username, String ip ) {
+    public static boolean reachedRateLimitThreshold(String username ) {
         if (instance == null) {
             return false;
         }
-        return instance.reachedRateLimitThreshold(username, ip);
+        return instance.reachedRateLimitThreshold(username);
     }
-    
-    
 }

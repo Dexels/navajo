@@ -352,7 +352,7 @@ public class EntityDispatcher {
         access.setTenant(tenant);
         access.setInDoc(inDoc);
 
-        if (LoginStatisticsProvider.reachedAbortThreshold(access.getRpcUser(), access.getIpAddress())) {
+        if (LoginStatisticsProvider.reachedAbortThreshold(access.getRpcUser())) {
             logger.info("Refusing request from {} for {}  due to too many failed auth attempts", access.getIpAddress(), access.getRpcUser());
             throw new AuthorizationException(true, false, access.getRpcUser(), "Not authorized");
         }
