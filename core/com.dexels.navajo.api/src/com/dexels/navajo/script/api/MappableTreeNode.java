@@ -251,11 +251,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
                             + getMyMap());
                 }
             }
-
-            
-            
         }
-        
         return m;
 
     }
