@@ -194,10 +194,11 @@ public final class MappableTreeNode implements Mappable, Serializable {
 
         // Determine method unique method key:a
         Class[] classArray = null;
-
+        int argsLength = 0;
         if (arguments != null) {
             // Get method with arguments.
             classArray = new Class[arguments.length];
+            argsLength = arguments.length;
             for (int i = 0; i < arguments.length; i++) {
                 classArray[i] = arguments[i].getClass();
                 key.append(arguments[i].getClass().getName());
@@ -215,16 +216,46 @@ public final class MappableTreeNode implements Mappable, Serializable {
             String methodName = methodNameBuffer.toString();
 
             Class c = myObject.getClass();
-
+            
             try {
                 m = c.getMethod(methodName, classArray);
                 methods.put(key.toString(), m);
             } catch (NoSuchMethodException nsme) {
-                throw new MappingException("Could not find method in Mappable object: " + methodName + " in object: "
-                        + getMyMap());
+                // Check if its a parameter mismatch but interface match
+                
+                for (Method method : c.getMethods()) {
+                    if (!method.getName().equals(methodName)) {
+                        continue;
+                    }
+                    Class<?>[] parameterTypes = method.getParameterTypes();
+                    if ( method.getParameterTypes().length !=  argsLength) {
+                        continue;
+                    }
+                    boolean matches = true;
+                    for (int i = 0; i < parameterTypes.length; i++) {
+                        if (!parameterTypes[i].isAssignableFrom(arguments[i].getClass())) {
+                            matches = false;
+                            break;
+                        }
+                    }
+                    if (matches) {
+                        m = method;
+                        methods.put(key.toString(), m);
+                        break;
+                    }
+                }
+                
+                // If m is still null...
+                if (m == null) {
+                    throw new MappingException("Could not find method in Mappable object: " + methodName + " in object: "
+                            + getMyMap());
+                }
             }
-        }
 
+            
+            
+        }
+        
         return m;
 
     }
