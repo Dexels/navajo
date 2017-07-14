@@ -764,7 +764,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		try {
 			if ( myEntityMap != null ) {
 				try {
-					myEntityMap.setDoSend(o.getService(), cleaned);
+					myEntityMap.setDoSend(input.getHeader().getRPCName(), cleaned);
 					myEntityMap.waitForResult();
 					Navajo n = myEntityMap.getResponseNavajo();
 					return n;
