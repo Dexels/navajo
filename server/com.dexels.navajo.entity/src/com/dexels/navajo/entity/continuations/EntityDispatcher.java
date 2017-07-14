@@ -171,7 +171,7 @@ public class EntityDispatcher {
             }
 
            
-            Operation o = myManager.getOperation(e.getName(), method);
+            Operation entityOperation = myManager.getOperation(e.getName(), method);
             
 
             // Create an access object for logging purposes
@@ -179,7 +179,7 @@ public class EntityDispatcher {
             String scriptName = "entity/" + entityName.replace('.', '/');
 
             access = new Access(1, 1, "placeholder", scriptName, "", "", "", null, false, null);
-            access.setOperation(o);
+            access.setOperation(entityOperation);
             access.ipAddress = ip;
 
             try {
@@ -188,7 +188,7 @@ public class EntityDispatcher {
                 logger.warn("Auth exception: ", auth);
                 throw new EntityException(EntityException.UNAUTHORIZED);
             }
-            o.setTenant(access.getTenant());
+            entityOperation.setTenant(access.getTenant());
             
             // Create a header from the input
             Header header = NavajoFactory.getInstance().createHeader(input, "", access.rpcUser, access.rpcPwd, -1);
@@ -212,12 +212,12 @@ public class EntityDispatcher {
 
             input.getMessage(entityMessage.getName()).setEtag(inputEtag);
 
-            if (o.debugInput() || o.debugOutput()) {
+            if (entityOperation.debugInput() || entityOperation.debugOutput()) {
                 access.setDebugAll(true);
             }
 
             long opStartTime = System.currentTimeMillis();
-            ServiceEntityOperation seo = new ServiceEntityOperation(myManager, runner.getDispatcher(), o);
+            ServiceEntityOperation seo = new ServiceEntityOperation(myManager, runner.getDispatcher(), entityOperation);
             result = seo.perform(input);
 
             if (result.getMessage(entityMessage.getName()) == null) {
