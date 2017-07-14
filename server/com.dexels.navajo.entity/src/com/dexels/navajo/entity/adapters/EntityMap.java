@@ -41,6 +41,7 @@ public class EntityMap extends NavajoMap {
 		
 		if ( entityName != null && method != null ) {
 			Operation o = myManager.getOperation(entityName, method);
+			o.setTenant(access.getTenant());
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, o);
 			Navajo request = prepareOutDoc();
 			if ( request.getHeader() == null ) {
