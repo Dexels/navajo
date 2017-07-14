@@ -3,6 +3,7 @@ package com.dexels.navajo.entity;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.UserException;
 
 public class EntityException extends UserException {
@@ -51,6 +52,8 @@ public class EntityException extends UserException {
 		errorCodes.put(UNAUTHORIZED, "Unauthorized");
 
 	}
+
+    private Navajo navajo = null;
 	
 	public EntityException() {
 	}
@@ -58,6 +61,11 @@ public class EntityException extends UserException {
 	public EntityException(int code, String msg) {
 		super(code, errorCodes.get(code) + " : " + msg);
 	}
+	
+	public EntityException(int code, String msg, Navajo navajo) {
+        super(code, errorCodes.get(code) + " : " + msg);
+        this.navajo = navajo;
+    }
 	
 	public EntityException(int code) {
 		super(code, errorCodes.get(code));
@@ -75,4 +83,9 @@ public class EntityException extends UserException {
 		super(code, errorCodes.get(code), arg1);
 	}
 
+    public Navajo getNavajo() {
+        return navajo;
+    }
+
+	
 }
