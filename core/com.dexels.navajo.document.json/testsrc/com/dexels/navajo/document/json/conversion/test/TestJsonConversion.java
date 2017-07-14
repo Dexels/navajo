@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.dexels.navajo.document.Message;
@@ -14,11 +15,18 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.json.conversion.JsonTmlFactory;
 import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;
+import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TestJsonConversion {
+
+	@Before
+	public void setup() {
+		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
+	}
+	
 
 	@Test
 	public void testConversion() throws JsonGenerationException, JsonMappingException, IOException {
@@ -27,7 +35,8 @@ public class TestJsonConversion {
 		Message m = base.getMessage("Pool");
 //		System.err.println("MMM: "+m.toString());
 		ObjectNode on = JsonTmlFactory.getInstance().toNode(m, "ble");
-		ReplicationMessage rmsg = ReplicationFactory.getDefaultInstance().parseJson(on);
+		JSONReplicationMessageParserImpl parser = new JSONReplicationMessageParserImpl();
+		ReplicationMessage rmsg = parser.parseJson(on);
 //		ObjectMapper mapper  = new ObjectMapper();
 //		JsonNode n = rmsg.toJSON(mapper);
 //		System.err.println("Before:\n");
