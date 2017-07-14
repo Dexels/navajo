@@ -200,8 +200,15 @@ public final class MappableTreeNode implements Mappable, Serializable {
             classArray = new Class[arguments.length];
             argsLength = arguments.length;
             for (int i = 0; i < arguments.length; i++) {
-                classArray[i] = arguments[i].getClass();
-                key.append(arguments[i].getClass().getName());
+                if (arguments[i] == null) {
+                    classArray[i] = null;
+                    key.append("null");
+
+                } else {
+                    classArray[i] = arguments[i].getClass();
+                    key.append(arguments[i].getClass().getName());
+                }
+               
             }
         }
 
@@ -233,10 +240,15 @@ public final class MappableTreeNode implements Mappable, Serializable {
                     }
                     boolean matches = true;
                     for (int i = 0; i < parameterTypes.length; i++) {
-                        if (!parameterTypes[i].isAssignableFrom(arguments[i].getClass())) {
+                        if (arguments[i] == null) {
+                            // Null argument is allowed. isAssignableFrom would give NPE however
+                            matches = true;
+                            break;
+                        } else if (!parameterTypes[i].isAssignableFrom(arguments[i].getClass())) {
                             matches = false;
                             break;
                         }
+                        
                     }
                     if (matches) {
                         m = method;
