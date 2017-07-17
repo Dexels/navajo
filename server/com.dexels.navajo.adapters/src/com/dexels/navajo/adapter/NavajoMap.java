@@ -183,7 +183,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     private List<String> deletedProperties = new ArrayList<String>();
     private List<String> deletedMessages = new ArrayList<String>();
     private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
-    private static final long MAX_WAITTIME = 300000;
+    private static final long MAX_WAITTIME = 600000; // 10 min
 
     public NavajoMap() {
 
@@ -270,8 +270,16 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                 try {
                     waitForResult.wait(MAX_WAITTIME);
                 } catch (InterruptedException e) {
-                    logger.error("WaitForResult has timed out: Error: ", e);
+                    logger.error("WaitForResult interrupted: Error: ", e);
                 }
+                // We could also be here as a result of a timeout
+                if (!serviceFinished) {
+                    logger.error("waitForResult finished but no serviceFinished! Probably result of timeout. Setting empty navajo as result", new Exception());
+                    serviceFinished = true;
+                    serviceCalled = true;
+                    inDoc = NavajoFactory.getInstance().createNavajo();
+                }
+               
             }
         }
         if (!block && serviceFinished) {
