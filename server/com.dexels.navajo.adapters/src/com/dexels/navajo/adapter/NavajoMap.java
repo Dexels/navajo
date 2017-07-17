@@ -277,7 +277,9 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                     logger.error("waitForResult finished but no serviceFinished! Probably result of timeout. Setting empty navajo as result", new Exception());
                     serviceFinished = true;
                     serviceCalled = true;
-                    inDoc = NavajoFactory.getInstance().createNavajo();
+                    if (inDoc == null) {
+                        inDoc = NavajoFactory.getInstance().createNavajo();
+                    }
                 }
                
             }
