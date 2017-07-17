@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.dexels.navajo.document.Message;
@@ -15,12 +16,18 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.conversion.JsonTmlFactory;
 import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;
+import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 
 public class TestRun {
 
+	@Before
+	public void setup() {
+		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
+	}
+	
 	@Test
 	public void testReplicationToTML()  {
-		ReplicationMessage msg = ReplicationFactory.getDefaultInstance().parseStream(getClass().getResourceAsStream("test.json"));
+		ReplicationMessage msg = ReplicationFactory.getInstance().parseStream(getClass().getResourceAsStream("test.json"));
 		Navajo nn =  JsonTmlFactory.getInstance().toFlatNavajo("Pool",msg);
 		Message standings = nn.getMessage("Pool").getMessage("standings");
 		Assert.assertEquals(14,standings.getArraySize());
@@ -29,7 +36,7 @@ public class TestRun {
 	
 	   @Test
     public void testTimestamp()  {
-	        ReplicationMessage msg = ReplicationFactory.getDefaultInstance().parseStream(getClass().getResourceAsStream("test3.json"));
+	        ReplicationMessage msg = ReplicationFactory.getInstance().parseStream(getClass().getResourceAsStream("test3.json"));
 	        Navajo nn =  JsonTmlFactory.getInstance().toFlatNavajo("Match",msg);
 	        Message match = nn.getMessage("Match");
 	        assertNotNull( match.getProperty("matchtime"));
