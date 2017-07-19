@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2275">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2279">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
@@ -110,7 +110,9 @@
 <plugin id="org.apache.felix.eventadmin"/>
 <plugin id="org.apache.felix.fileinstall"/>
 <plugin id="org.apache.felix.framework"/>
+<plugin id="org.apache.felix.gogo.command" version="1.0.2"/>
 <plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
+<plugin id="org.apache.felix.gogo.runtime" version="1.0.6"/>
 <plugin id="org.apache.felix.gogo.shell"/>
 <plugin id="org.apache.felix.inventory"/>
 <plugin id="org.apache.felix.log"/>
