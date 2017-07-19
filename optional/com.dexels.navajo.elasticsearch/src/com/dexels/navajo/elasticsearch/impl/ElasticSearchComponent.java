@@ -20,10 +20,6 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +28,10 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.elasticsearch.ElasticSearchFactory;
 import com.dexels.navajo.elasticsearch.ElasticSearchService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ElasticSearchComponent implements ElasticSearchService {
 
@@ -110,7 +110,7 @@ public class ElasticSearchComponent implements ElasticSearchService {
 			List<Message> msgs = message.getAllMessages();
 			ObjectNode an = objectMapper.createObjectNode();
 			for (Message m : msgs) {
-				an.put(m.getName(), messageToJSON(m));
+				an.set(m.getName(), messageToJSON(m));
 			}
 			List<Property> properties = message.getAllProperties();
 			for (Property property : properties) {
@@ -163,7 +163,7 @@ public class ElasticSearchComponent implements ElasticSearchService {
 	}
 	
 	 private void replaceDots(ObjectNode mm) {
-	        Iterator<Entry<String, JsonNode>> it = mm.getFields();
+	        Iterator<Entry<String, JsonNode>> it = mm.fields();
 	        Set<String> fieldsWithDots = new HashSet<>();
 	        Set<String> nestedFields = new HashSet<>();
 	        
@@ -182,7 +182,7 @@ public class ElasticSearchComponent implements ElasticSearchService {
 	        for (String key : fieldsWithDots) {
 	            String newKey = key.replace(".", "_");
 	            JsonNode value = mm.get(key);
-	            mm.put(newKey, value);
+	            mm.set(newKey, value);
 	            mm.remove(key);
 	        }
 	    }
