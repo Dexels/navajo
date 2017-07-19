@@ -108,7 +108,7 @@ public class ServiceCommand implements ArticleCommand {
 	private void appendAAAMessage(ArticleRuntime runtime, Navajo n) {
 	    Map<String, Object> extraParams = new HashMap<String, Object>();
 	    if (runtime.getToken() != null && runtime.getToken().getUser() != null) {
-	        extraParams.put("USERID", runtime.getToken().getUser().getId());
+	        extraParams.put("USERID", runtime.getToken().getUser().getUserId());
 	    } else {
 	        extraParams.put("USERID", -1);
 	    }
