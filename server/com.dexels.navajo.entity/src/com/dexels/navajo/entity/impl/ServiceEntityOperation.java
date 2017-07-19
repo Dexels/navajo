@@ -24,7 +24,6 @@ import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.EntityOperation;
 import com.dexels.navajo.entity.Key;
-import com.dexels.navajo.entity.adapters.EntityMap;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
@@ -34,20 +33,20 @@ public class ServiceEntityOperation implements EntityOperation {
     
 	private EntityManager manager;
 	private DispatcherInterface dispatcher;
-	private EntityMap myEntityMap;
 	private Operation myOperation;
 	private Entity myEntity;
 	private Key myKey;
 	private Set<String> validMessages  =new HashSet<String>(Arrays.asList("__parms__", "__globals__", "__aaa__"));
 
 	
+
+	public ServiceEntityOperation(EntityManager m, Operation o) throws EntityException {
+        this.dispatcher = DispatcherFactory.getInstance();
+        setup(m, o);
+    }
+	
 	public ServiceEntityOperation(EntityManager m, DispatcherInterface c, Operation o) throws EntityException {
 		this.dispatcher = c;
-		setup(m, o);
-	}
-
-	public ServiceEntityOperation(EntityManager m, EntityMap c, Operation o) throws EntityException {
-		this.myEntityMap = c;
 		setup(m, o);
 	}
 	
@@ -69,9 +68,7 @@ public class ServiceEntityOperation implements EntityOperation {
 
 	
 	public ServiceEntityOperation cloneServiceEntityOperation(Operation o) throws EntityException {
-		if ( myEntityMap != null ) {
-			return new ServiceEntityOperation(manager, myEntityMap, o);
-		} else if ( dispatcher != null ) {
+		if ( dispatcher != null ) {
 			return new ServiceEntityOperation(manager, dispatcher, o);
 		} else {
 			return null;
@@ -97,10 +94,6 @@ public class ServiceEntityOperation implements EntityOperation {
 	
 	public Entity getMyEntity() {
 		return myEntity;
-	}
-
-	public EntityMap getMyEntityMap() {
-		return myEntityMap;
 	}
 
 	/**
@@ -385,8 +378,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	
 			Message validationErrors;
 			if ((validationErrors = validationResult.getMessage("ConditionErrors")) != null ) {
-				throw new EntityException(EntityException.VALIDATION_ERROR, validationErrors.getMessage(0)
-						.getProperty("Id").toString());
+				throw new EntityException(EntityException.VALIDATION_ERROR, validationErrors.getMessage(0).getProperty("Id").toString(), validationResult);
 			}
 		}
 		
@@ -699,7 +691,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			
 			Message validationErrors;
 			if ((validationErrors = result.getMessage("ConditionErrors")) != null ) {
-				throw new EntityException(EntityException.VALIDATION_ERROR, validationErrors.getMessage(0).getProperty("Id").toString());
+				throw new EntityException(EntityException.VALIDATION_ERROR, validationErrors.getMessage(0).getProperty("Id").toString(), result);
 			}
 			
 		}
@@ -762,16 +754,6 @@ public class ServiceEntityOperation implements EntityOperation {
 		// Remove bind properties, these properties do not belong to this entity
 		Navajo cleaned = removeBindProperties(input);
 		try {
-			if ( myEntityMap != null ) {
-				try {
-					myEntityMap.setDoSend(o.getService(), cleaned);
-					myEntityMap.waitForResult();
-					Navajo n = myEntityMap.getResponseNavajo();
-					return n;
-				} catch (Exception e) {
-					throw new EntityException(EntityException.SERVER_ERROR, e.getMessage(), e);
-				} 
-			}
 			if ( dispatcher != null ) {
 				return dispatcher.handle(cleaned, myOperation.getTenant(), true);
 			} else {

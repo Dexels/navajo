@@ -392,7 +392,7 @@ public class TslCompilerComponent implements ScriptCompiler {
         XMLElement refScript = new CaseSensitiveXMLElement("reference");
         refScript.setAttribute("cardinality", "1..1");
         refScript.setAttribute("bind", "setCompiledScript");
-        refMan.setAttribute("unbind", "clearCompiledScript");
+        refScript.setAttribute("unbind", "clearCompiledScript");
         refScript.setAttribute("interface", "com.dexels.navajo.script.api.CompiledScriptFactory");
         refScript.setAttribute("name", "CompiledScript");
         String target1 = "component.name=" + symbolicName.replace("/", ".");

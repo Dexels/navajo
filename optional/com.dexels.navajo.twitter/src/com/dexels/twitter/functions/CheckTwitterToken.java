@@ -37,8 +37,8 @@ public class CheckTwitterToken  extends FunctionInterface {
                 return false;
             }
             // At this point, we not really sure. We got an exception, but it's not 
-            // an invalid account (code 89). We return null.
-            return null;
+            // an invalid account (code 89).
+            return false;
         }
         return true;
     }

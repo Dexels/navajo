@@ -58,13 +58,24 @@ public class TipiButton extends TipiSwingComponentImpl {
 	@Override
 	public Object createContainer() {
 		final TipiSwingButton myButton = new TipiSwingButton(this);
-		 myButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    logger.info("Button clicked");
-                    doFireAction(myButton);
-            }
-        });
+		buttonAction = new AbstractAction("onActionPerformed") {
+
+			private static final long serialVersionUID = 706723341030407319L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			    
+				doFireAction(myButton);
+			}
+		};
+		myButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			    
+				buttonAction.actionPerformed(e);
+			}
+		});
 
 		return myButton;
 	}
@@ -82,7 +93,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 					((JButton) getContainer()).setIcon(getIcon(object));
 				}
 				if (name.equals("borderVisible")) {
-				    ((TipiSwingButton) getContainer()).setBorderVisible((Boolean) object);
+                    ((TipiSwingButton) getContainer()).setBorderVisible((Boolean) object);
                 }
 				if (name.equals("enabled")) {
 					// Just for the record.
@@ -192,11 +203,10 @@ public class TipiButton extends TipiSwingComponentImpl {
                 }
             });
         }
-        logger.info("About to call onActionPerformed" );
+        
 		performTipiEvent("onActionPerformed", null, false, new Runnable() {
 			@Override
 			public void run() {
-			    logger.info("Finished onActionPerformed!");
 				setWaitCursor(false, root);
 			}
 		});
