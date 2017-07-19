@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2261">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2275">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
@@ -16,8 +16,8 @@
 <repository location="http://mirrorservice.org/sites/download.eclipse.org/eclipseMirror/egit/updates/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.198.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.198"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.10.1.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.10.1"/>
 </location>
 </locations>
 <includeBundles>
@@ -82,9 +82,7 @@
 <plugin id="io.reactivex.rxnetty-common"/>
 <plugin id="io.reactivex.rxnetty-http"/>
 <plugin id="io.reactivex.rxnetty-tcp"/>
-<plugin id="jackson-core-lgpl"/>
-<plugin id="jackson-mapper-lgpl"/>
-<plugin id="javaewah" version="1.1.6.v20160919-1400"/>
+<plugin id="javaewah"/>
 <plugin id="javax.el.source"/>
 <plugin id="javax.inject"/>
 <plugin id="lz4-java"/>
@@ -101,7 +99,6 @@
 <plugin id="org.apache.commons.dbcp"/>
 <plugin id="org.apache.commons.email"/>
 <plugin id="org.apache.commons.fileupload"/>
-<plugin id="org.apache.commons.httpclient"/>
 <plugin id="org.apache.commons.io"/>
 <plugin id="org.apache.commons.lang"/>
 <plugin id="org.apache.commons.logging"/>
@@ -113,9 +110,8 @@
 <plugin id="org.apache.felix.eventadmin"/>
 <plugin id="org.apache.felix.fileinstall"/>
 <plugin id="org.apache.felix.framework"/>
-<plugin id="org.apache.felix.framework.security"/>
 <plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
-<plugin id="org.apache.felix.gogo.shell" version="0.10.0.v201212101605"/>
+<plugin id="org.apache.felix.gogo.shell"/>
 <plugin id="org.apache.felix.inventory"/>
 <plugin id="org.apache.felix.log"/>
 <plugin id="org.apache.felix.metatype"/>
@@ -135,8 +131,8 @@
 <plugin id="org.apache.felix.webconsole.plugins.scriptconsole"/>
 <plugin id="org.apache.felix.webconsole.plugins.upnp"/>
 <plugin id="org.apache.httpcomponents.httpasyncclient"/>
-<plugin id="org.apache.httpcomponents.httpclient" version="4.4.1"/>
-<plugin id="org.apache.httpcomponents.httpcore" version="4.4.3"/>
+<plugin id="org.apache.httpcomponents.httpclient" version="4.5.3"/>
+<plugin id="org.apache.httpcomponents.httpcore" version="4.4.6"/>
 <plugin id="org.apache.james.protocols.api"/>
 <plugin id="org.apache.james.protocols.netty"/>
 <plugin id="org.apache.james.protocols.smtp"/>
@@ -224,7 +220,6 @@
 <plugin id="org.ops4j.pax.url.cache"/>
 <plugin id="org.ops4j.pax.url.classpath"/>
 <plugin id="org.ops4j.pax.url.commons"/>
-<plugin id="org.ops4j.pax.url.dir"/>
 <plugin id="org.ops4j.pax.url.link"/>
 <plugin id="org.ops4j.pax.url.mvn"/>
 <plugin id="org.ops4j.pax.url.obr"/>
