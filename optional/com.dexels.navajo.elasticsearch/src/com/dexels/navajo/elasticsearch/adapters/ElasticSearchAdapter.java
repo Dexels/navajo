@@ -12,10 +12,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.http.client.ClientProtocolException;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +23,10 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ElasticSearchAdapter implements Mappable {
 
@@ -89,7 +89,7 @@ public class ElasticSearchAdapter implements Mappable {
 			List<Message> msgs = message.getAllMessages();
 			ObjectNode an = objectMapper.createObjectNode();
 			for (Message m : msgs) {
-				an.put(m.getName(), messageToJSON(m));
+				an.set(m.getName(), messageToJSON(m));
 			}
 			List<Property> properties = message.getAllProperties();
 			for (Property property : properties) {
@@ -139,7 +139,7 @@ public class ElasticSearchAdapter implements Mappable {
 	}
 	
 	 private void replaceDots(ObjectNode mm) {
-	        Iterator<Entry<String, JsonNode>> it = mm.getFields();
+	        Iterator<Entry<String, JsonNode>> it = mm.fields();
 	        Set<String> fieldsWithDots = new HashSet<>();
 	        Set<String> nestedFields = new HashSet<>();
 	        
@@ -158,14 +158,13 @@ public class ElasticSearchAdapter implements Mappable {
 	        for (String key : fieldsWithDots) {
 	            String newKey = key.replace(".", "_");
 	            JsonNode value = mm.get(key);
-	            mm.put(newKey, value);
+	            mm.set(newKey, value);
 	            mm.remove(key);
 	        }
 	    }
 
 	@Override
 	public void kill() {
-		// TODO Auto-generated method stub
 		
 	}
 }
