@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Resource Framework
 Bundle-SymbolicName: com.dexels.navajo.resource.manager
-Bundle-Version: 2.0.6
+Bundle-Version: 2.0.7.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.document;version="2.2.0",
