@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2236">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2261">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
@@ -16,8 +16,8 @@
 <repository location="http://mirrorservice.org/sites/download.eclipse.org/eclipseMirror/egit/updates/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.191.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.191"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.197.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.197"/>
 </location>
 </locations>
 <includeBundles>
@@ -233,7 +233,6 @@
 <plugin id="org.ops4j.pax.url.wrap"/>
 <plugin id="org.ops4j.pax.web.pax-web-api"/>
 <plugin id="org.ops4j.pax.web.pax-web-extender-whiteboard"/>
-<plugin id="org.ops4j.pax.web.pax-web-jetty"/>
 <plugin id="org.ops4j.pax.web.pax-web-jetty-bundle"/>
 <plugin id="org.ops4j.pax.web.pax-web-runtime"/>
 <plugin id="org.ops4j.pax.web.pax-web-spi"/>
@@ -246,7 +245,6 @@
 <plugin id="pi4j-core"/>
 <plugin id="pi4j-service"/>
 <plugin id="redis.clients.jedis"/>
-<plugin id="rocksdb.osgi"/>
 <plugin id="slf4j.api"/>
 <plugin id="slf4j.simple"/>
 <plugin id="stax2-api"/>
