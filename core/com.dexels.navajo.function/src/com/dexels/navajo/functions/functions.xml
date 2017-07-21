@@ -651,6 +651,12 @@
 		<input>integer,string|empty</input>
 		<result>string</result>
 	</function>
+    <function name="QuotePattern" class="com.dexels.navajo.functions.QuotePattern">
+        <description>
+        </description>
+        <input>string</input>
+        <result>string</result>
+    </function>
     <function name="ReplaceDiacriticCharacters" class="com.dexels.navajo.functions.ReplaceDiacriticCharacters">
         <description>Does what it says, replace diacritic chars with non diacritic chars</description>
         <input>string</input>
@@ -875,6 +881,12 @@
 		<input>string|float|integer</input>
 		<result>percentage</result>
 	</function>
+    <function name="ToPattern" class="com.dexels.navajo.functions.ToPattern">
+        <description>Cast a string/double/integer to a percentage object
+        </description>
+        <input>string,string|empty</input>
+        <result>object</result>
+    </function>
 	<function name="ToSecureImage" class="com.dexels.navajo.functions.ToSecureImage">
 		<description>Creates a Binary containing a PNG image representation of
 			specified objects string representation&#xa; max. inputlength is 6
