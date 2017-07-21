@@ -7,9 +7,9 @@ import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 
-public class RegexQuote extends FunctionInterface {
+public class QuotePattern extends FunctionInterface {
 
-  public RegexQuote() {}
+  public QuotePattern() {}
 
   @Override
 public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
@@ -24,7 +24,7 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
 
   @Override
 public String usage() {
-      return "RegexQuote(String)";
+      return "QuotePattern(String)";
   }
 
   @Override

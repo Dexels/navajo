@@ -7,17 +7,24 @@ import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 
-public class ToRegex extends FunctionInterface {
+public class ToPattern extends FunctionInterface {
 
-  public ToRegex() {}
+  public ToPattern() {}
 
   @Override
 public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
       String s = (String) this.getOperands().get(0);
-
+      
       if (s == null)
-        return null;
+          return null;
 
+      int options = 0;
+      if (this.getOperands().size() > 1) {
+          String soptions = (String) this.getOperands().get(1);
+          if (soptions.indexOf('i') > 0) {
+              options = options | Pattern.CASE_INSENSITIVE;
+          }
+      }
       try {
           return Pattern.compile(s);
       } catch (PatternSyntaxException e) { 
@@ -27,7 +34,7 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
 
   @Override
 public String usage() {
-      return "ToRegex(String)";
+      return "ToPattern(String pattern, string options)";
   }
 
   @Override
