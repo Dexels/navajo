@@ -21,12 +21,12 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
       int options = 0;
       if (this.getOperands().size() > 1) {
           String soptions = (String) this.getOperands().get(1);
-          if (soptions.indexOf('i') > 0) {
+          if (soptions.indexOf('i') > -1) {
               options = options | Pattern.CASE_INSENSITIVE;
           }
       }
       try {
-          return Pattern.compile(s);
+          return Pattern.compile(s, options);
       } catch (PatternSyntaxException e) { 
           throw new TMLExpressionException("Invalid regex!");
       }
