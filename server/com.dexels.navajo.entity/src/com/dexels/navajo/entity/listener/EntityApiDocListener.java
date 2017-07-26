@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.ops4j.pax.web.extender.whiteboard.ResourceMapping;
-import org.ops4j.pax.web.extender.whiteboard.runtime.DefaultResourceMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,35 +29,19 @@ import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.EntityMapper;
 import com.dexels.navajo.entity.Key;
 
-public class EntityApiDocListener extends HttpServlet implements ResourceMapping {
+public class EntityApiDocListener extends HttpServlet  {
     private static final long serialVersionUID = -2642151786192206338L;
 
     private final static Logger logger = LoggerFactory.getLogger(EntityApiDocListener.class);
 
     private EntityManager myManager;
-    private final DefaultResourceMapping resourceMapping = new DefaultResourceMapping();
 
     private EntityMapper myMapper;
 
     public void activate() {
-        resourceMapping.setAlias("/entityApi");
-        resourceMapping.setPath("entityApi");
     }
 
-    @Override
-    public String getAlias() {
-        return resourceMapping.getAlias();
-    }
 
-    @Override
-    public String getHttpContextId() {
-        return resourceMapping.getHttpContextId();
-    }
-
-    @Override
-    public String getPath() {
-        return resourceMapping.getPath();
-    }
 
     public void setEntityManager(EntityManager em) {
         myManager = em;

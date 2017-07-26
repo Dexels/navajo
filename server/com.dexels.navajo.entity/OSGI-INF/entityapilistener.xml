@@ -2,7 +2,6 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" immediate="true" name="navajo.entity.api.listener">
    <service>
       <provide interface="javax.servlet.Servlet"/>
-      <provide interface="org.ops4j.pax.web.extender.whiteboard.ResourceMapping"/>
    </service>
    <implementation class="com.dexels.navajo.entity.listener.EntityApiDocListener"/>
    <property name="alias" type="String" value="/entityDocumentation"/>
