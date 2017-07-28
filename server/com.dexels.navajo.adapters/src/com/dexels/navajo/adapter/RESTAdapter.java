@@ -246,7 +246,7 @@ public class RESTAdapter extends NavajoMap {
             }
             rawResult = new String(result.getData());
             if (jsonResponse) {
-                if (http.getResponseContentType().contains("application/json")) {
+                if (http.getResponseContentType() != null && http.getResponseContentType().contains("application/json")) {
                     try {
                         inDoc = json.parse(result.getDataAsStream(), topMessage);
                     } catch (Throwable t) {
@@ -255,6 +255,9 @@ public class RESTAdapter extends NavajoMap {
                             throw t;
                         }
                     }
+                } else if (http.getResponseContentType() == null ) {
+                    logger.info("No response content type - creating empty navajo as response");
+                    inDoc = NavajoFactory.getInstance().createNavajo();
                 } else {
                     logger.warn("Unexpected output content type: {}", http.getResponseContentType());
                     if ( breakOnException) {
