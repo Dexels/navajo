@@ -16,7 +16,9 @@ public final class ToList extends FunctionInterface {
         Object elem2 = null;
         Object transformer = null;
         
-        elem1 = this.getOperands().get(0);
+        if (getOperands().size() > 0) {
+            elem1 = this.getOperands().get(0);
+        }
         if (getOperands().size() > 1) {
             elem2 = this.getOperands().get(1);
         }
@@ -25,7 +27,6 @@ public final class ToList extends FunctionInterface {
         }
        
        
-        
         List<Object> result = new ArrayList<>();
         if (elem1 == null || "".equals(elem1))
             return result;
