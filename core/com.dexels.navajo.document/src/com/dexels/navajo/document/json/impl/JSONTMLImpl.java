@@ -20,6 +20,7 @@ import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.TmlNavajoTypeSerializer;
 import com.dexels.navajo.document.json.TmlPropertySerializer;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.ClockTime;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -50,7 +51,11 @@ public class JSONTMLImpl implements JSONTML {
 		om = new ObjectMapper().enableDefaultTyping();
 		
 		SimpleModule module = new SimpleModule("MyModule", Version.unknownVersion());
-		module.addSerializer(Binary.class, new TmlNavajoTypeSerializer());
+        module.addSerializer(Binary.class, new TmlNavajoTypeSerializer());
+        module.addSerializer(ClockTime.class, new TmlNavajoTypeSerializer());
+        module.addSerializer(ClockTime.class, new TmlNavajoTypeSerializer());
+
+		
 		module.addSerializer(Property.class, new TmlPropertySerializer());
 		om.registerModule(module);
 	}
