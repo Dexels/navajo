@@ -285,6 +285,11 @@ public class TslCompiler {
 						c = clause.charAt(i);
 					}
 				}
+				if (name.toString().contains("..")) {
+				    // We cannot optimize these yet
+				    continue;
+				    
+				}
 				i++;
 
 				StringBuffer params = new StringBuffer();
@@ -350,7 +355,10 @@ public class TslCompiler {
 							} else if (v instanceof Double) {
 								objectizedParams
 										.append("new Double(" + v + ")");
-							} else
+							} else if (v == null) {
+							    // Null support
+							    objectizedParams.append(v);
+							} else 
 								throw new UserException(-1,
 										"Unknown type encountered during compile time: "
 												+ v.getClass().getName()
