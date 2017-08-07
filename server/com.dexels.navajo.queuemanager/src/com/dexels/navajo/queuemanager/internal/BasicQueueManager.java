@@ -58,7 +58,11 @@ public class BasicQueueManager  implements QueueManager {
 
     @Override
     public String resolve(InputContext in, String resolvescript) throws NavajoSchedulingException {
-        return (String) settings.get(in.getServiceName());
+        String serviceName = in.getServiceName();
+        if(serviceName==null) {
+        	return null;
+        }
+		return (String) settings.get(serviceName);
         
     }
 }
