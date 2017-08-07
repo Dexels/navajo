@@ -75,7 +75,7 @@ public class TestProtobufConversion {
         values.put("starttime", new Date(39604));
         types.put("starttime", "clocktime");
         
-        values.put("sortorder", 15.2F);
+        values.put("sortorder", 15.2D);
         types.put("sortorder", "float");
         
         values.put("played", true);
