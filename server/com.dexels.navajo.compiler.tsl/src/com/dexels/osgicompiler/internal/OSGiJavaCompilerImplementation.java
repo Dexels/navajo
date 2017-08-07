@@ -147,7 +147,7 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 			@Override
 			public void report(Diagnostic<? extends JavaFileObject> jfo) {
 				try {
-					sw.write("Compilation problem: "
+					sw.write("Compilation problen. Line in .java file: " + jfo.getLineNumber() + ", error: " 
 							+ jfo.getMessage(Locale.ENGLISH) + "\n");
 				} catch (IOException e) {
 					logger.error("Compilation problem: ", e);
