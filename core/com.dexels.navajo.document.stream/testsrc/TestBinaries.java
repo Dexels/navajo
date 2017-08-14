@@ -4,23 +4,28 @@ import java.util.Collections;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.stream.NavajoDomStreamer;
+import com.dexels.navajo.document.stream.NavajoStreamOperatorsNew;
 import com.dexels.navajo.document.stream.api.NAVADOC;
-import com.dexels.navajo.document.stream.xml.Bytes;
 import com.dexels.navajo.document.stream.xml.XML;
+import com.dexels.navajo.document.stream.xml.XML2;
+import com.github.davidmoten.rx2.Bytes;
 
 public class TestBinaries {
 
 	@Test  
 	public void testStreamParserAndSerializerWithBinary() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Bytes.fromAbsoluteClassPath("tml_with_binary.xml")
-			.lift(XML.parse())
-			.lift(NAVADOC.parse(Collections.emptyMap()))
-			.doOnNext(e->System.err.println("Event: "+e))
-			.lift(NAVADOC.serialize())
-				.toBlocking().forEach(b -> {
+		Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_with_binary.xml"))
+			.lift(XML2.parse())
+			.lift(NavajoStreamOperatorsNew.parse())
+			.doOnNext(e->System.err.println("Event: "+e.toString()))
+			.lift(NavajoStreamOperatorsNew.serialize())
+			.blockingForEach(b -> {
 					try {
 						baos.write(b);
+						System.err.println("e> "+new String(b));
 					} catch (Exception e) {
 					}
 				});
@@ -31,15 +36,16 @@ public class TestBinaries {
 
 	@Test 
 	public void testWithBinary() throws Exception {
-		int nn = Bytes.fromAbsoluteClassPath("tml_with_binary.xml")
-			.lift(XML.parse())
-			.lift(NAVADOC.parse(Collections.emptyMap()))
+		long nn = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_with_binary.xml"),4096)
+//		int nn = Bytes.fromAbsoluteClassPath("tml_with_binary.xml")
+			.lift(XML2.parse())
+			.lift(NavajoStreamOperatorsNew.parse())
+			.toObservable()
 			.doOnNext(e->System.err.println("Event: "+e))
-			.lift(NAVADOC.collect(Collections.emptyMap()))
-			.lift(NAVADOC.stream())
-			.count()
-			.toBlocking()
-			.first();
+//			.lift(NavajoStreamOperatorsNew.collect())
+//			.lift(NavajoStreamOperatorsNew.domStream())
+//			.lift(NavajoStreamOperatorsNew.serializeObservable())
+			.count().blockingGet();
 		System.err.println("eventcount: "+nn);
 //		nn.write(System.err);
 //					System.err.println("RESULT:\n"+new String(baos.toByteArray()));

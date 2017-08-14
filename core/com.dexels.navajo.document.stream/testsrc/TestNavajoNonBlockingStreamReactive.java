@@ -14,16 +14,21 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.NavajoDomStreamer;
 import com.dexels.navajo.document.stream.NavajoStreamCollector;
+import com.dexels.navajo.document.stream.NavajoStreamOperatorsNew;
 import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
-import com.dexels.navajo.document.stream.xml.Bytes;
 import com.dexels.navajo.document.stream.xml.XML;
+import com.dexels.navajo.document.stream.xml.XML2;
+import com.github.davidmoten.rx2.Bytes;
 
-import rx.Observable;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
 
-public class TestNavajoNonBlockingStream {
 
-	private final static Logger logger = LoggerFactory.getLogger(TestNavajoNonBlockingStream.class);
+public class TestNavajoNonBlockingStreamReactive {
+
+	private final static Logger logger = LoggerFactory.getLogger(TestNavajoNonBlockingStreamReactive.class);
 
 	@Test 
 	public void testDomStreamerAndCollector() throws Exception {
@@ -31,12 +36,11 @@ public class TestNavajoNonBlockingStream {
 		Navajo baseTml = NavajoFactory.getInstance()
 				.createNavajo(getClass().getClassLoader().getResourceAsStream("tiny_tml.xml"));
 
-		NavajoStreamCollector nsc = new NavajoStreamCollector();
-		Navajo result = Observable.<Navajo>just(baseTml)		
-		.flatMap(navajo -> NavajoDomStreamer.feed(navajo))
-		  .flatMap(navajoEvent -> nsc.feed(navajoEvent))
-		  .toBlocking()
-		  .first();
+		Navajo result = Observable.just(baseTml)	
+			.lift(NavajoStreamOperatorsNew.domStream())
+			.lift(NavajoStreamOperatorsNew.collect())
+//			.blockingLast();
+			.blockingFirst();
 
 		StringWriter sw1 = new StringWriter();
 		baseTml.write(sw1);
@@ -48,23 +52,20 @@ public class TestNavajoNonBlockingStream {
 	@Test
 	public void testDomStream() throws Exception {
 		final Navajo baseTml = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("tml.xml"));
-		int count = Observable.just(baseTml)
-				.flatMap(NavajoDomStreamer::feed)
+		long count = Flowable.just(baseTml)
+				.flatMap(NavajoDomStreamer::feedFlowable)
 				.count()
-				.toBlocking()
-				.first();
+				.blockingGet();
 		Assert.assertEquals(23, count);
 	}
 	
 	@Test 
 	public void testStreamParser() throws Exception {
-
-		int count = Bytes.fromAbsoluteClassPathBuffer("tml_without_binary.xml")
-				.lift(XML.parse())
-				.lift(NAVADOC.parse(Collections.emptyMap()))
+		long count = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_without_binary.xml"), 8192)
+				.lift(XML2.parse())
+				.lift(NavajoStreamOperatorsNew.parse())
 				.count()
-				.toBlocking()
-				.first();
+				.blockingGet();
 			Assert.assertEquals(20, count);
 	}
 
@@ -72,12 +73,12 @@ public class TestNavajoNonBlockingStream {
 	@Test 
 	public void testStreamParserAndSerializer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Bytes.fromAbsoluteClassPath("tml_without_binary.xml")
-			.lift(XML.parse())
-			.lift(NAVADOC.parse(Collections.emptyMap()))
+		Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_without_binary.xml"),8192)
+			.lift(XML2.parse())
+			.lift(NavajoStreamOperatorsNew.parse())
 			.doOnNext(System.err::println)
-			.lift(NAVADOC.serialize())
-			.toBlocking().forEach(b -> {
+			.lift(NavajoStreamOperatorsNew.serialize())
+			.blockingForEach(b -> {
 				try {
 					baos.write(b);
 				} catch (Exception e) {
@@ -93,36 +94,38 @@ public class TestNavajoNonBlockingStream {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		final Navajo baseTml = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("tml_with_binary.xml"));
 		Observable.just(baseTml)
-			.lift(NAVADOC.stream())
-			.lift(NAVADOC.serialize())
+			.lift(NavajoStreamOperatorsNew.domStream())
+			.lift(NavajoStreamOperatorsNew.serializeObservable())
 			.doOnNext(b -> {
 				try {
 					baos.write(b);
 				} catch (Exception e) {
 				}
 			})
-			.lift(XML.parse())
-			.lift(NAVADOC.parse(Collections.emptyMap()))
+			.toFlowable(BackpressureStrategy.BUFFER)
+			.lift(XML2.parse())
+			.lift(NavajoStreamOperatorsNew.parse())
 			.filter(event->NavajoEventTypes.MESSAGE==event.type())
 			.filter(event->"SecureImage".equals(event.path()))
 			.doOnNext(event->System.err.println(event.path()))
 			.map(event->event.body())
-			.toBlocking()
-			.first()
-			;
-		Assert.assertTrue(baos.toByteArray().length>5000);
+			.blockingFirst();
+		byte[] byteArray = baos.toByteArray();
+		System.err.println("Output: "+new String(byteArray));
+		Assert.assertTrue(byteArray.length>5000);
 	}
 	@Test 
 	public void testStreamParserAndSerializerWithSelection() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Bytes.fromAbsoluteClassPath("tml_with_selection.xml")
-			.lift(XML.parse())
-			.lift(NAVADOC.parse(Collections.emptyMap()))
-			.lift(NAVADOC.collect(Collections.emptyMap()))
+		Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_with_selection.xml"),8192)
+			.lift(XML2.parse())
+			.lift(NavajoStreamOperatorsNew.parse())
+			.toObservable()
+			.lift(NavajoStreamOperatorsNew.collect())
 			.doOnNext(n->n.write(System.err))
-			.lift(NAVADOC.stream())
-			.lift(NAVADOC.serialize())
-				.toBlocking().forEach(b -> {
+			.lift(NavajoStreamOperatorsNew.domStream())
+			.lift(NavajoStreamOperatorsNew.serializeObservable())
+				.blockingForEach(b -> {
 					try {
 						baos.write(b);
 					} catch (Exception e) {
@@ -136,16 +139,18 @@ public class TestNavajoNonBlockingStream {
 	@Test 
 	public void testStreamParserAndSerializerWithDate() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Bytes.fromAbsoluteClassPath("tml_with_date.xml")
-			.lift(XML.parse())
-			.lift(NAVADOC.parse(Collections.emptyMap()))
+		Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_with_date.xml"),8192)
+			.lift(XML2.parse())
+			.lift(NavajoStreamOperatorsNew.parse())
 			.doOnNext(n->System.err.println("><>>>1 "+n))
-			.lift(NAVADOC.collect(Collections.emptyMap()))
+			.toObservable()
+			.lift(NavajoStreamOperatorsNew.collect())
 			.doOnNext(n->System.err.println("><>>>2 "+n))
-			.lift(NAVADOC.stream())
+			.lift(NavajoStreamOperatorsNew.domStream())
 			.doOnNext(n->System.err.println("><>>>3 "+n))
-			.lift(NAVADOC.serialize())
-				.toBlocking().forEach(b -> {
+			.toFlowable(BackpressureStrategy.BUFFER)
+			.lift(NavajoStreamOperatorsNew.serialize())
+				.blockingForEach(b -> {
 					try {
 						baos.write(b);
 					} catch (Exception e) {
@@ -157,14 +162,15 @@ public class TestNavajoNonBlockingStream {
 
 	@Test
 	public void testHeader() {
-		Navajo navajo = Bytes.fromAbsoluteClassPath("tiny_tml.xml")
-		.lift(XML.parse())
-		.lift(NAVADOC.parse(Collections.emptyMap()))
+
+		Navajo navajo = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tiny_tml.xml"),8192)
+		.lift(XML2.parse())
+		.lift(NavajoStreamOperatorsNew.parse())
 		.doOnNext(n->System.err.println("><>>>1 "+n))
-		.lift(NAVADOC.collect(Collections.emptyMap()))
+		.toObservable()
+		.lift(NavajoStreamOperatorsNew.collect())
 		.doOnNext(n->System.err.println("><>>>2 "+n))
-		.toBlocking()
-		.first();
+		.blockingFirst();
 		String rpc = navajo.getHeader().getRPCName();
 		System.err.println("RPC: "+rpc);
 		Assert.assertEquals("Tiny", rpc);
@@ -175,14 +181,15 @@ public class TestNavajoNonBlockingStream {
 		final Navajo navajo = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("tiny_tml.xml"));
 		
 		Observable.just(navajo)
-		.lift(NAVADOC.stream())
-		.lift(NAVADOC.serialize())
-		.lift(XML.parse())
-		.lift(NAVADOC.parse(Collections.emptyMap()))
+		.lift(NavajoStreamOperatorsNew.domStream())
+		.toFlowable(BackpressureStrategy.BUFFER)
+		.lift(NavajoStreamOperatorsNew.serialize())
+		.lift(XML2.parse())
+		.lift(NavajoStreamOperatorsNew.parse())
 		.doOnNext(n->System.err.println("><>>>1 "+n))
-		.lift(NAVADOC.collect(Collections.emptyMap()))
-		.toBlocking()
-		.first();
+		.toObservable()
+		.lift(NavajoStreamOperatorsNew.collect())
+		.blockingFirst();
 		
 		String rpc = navajo.getHeader().getRPCName();
 		System.err.println("RPC: "+rpc);
@@ -192,11 +199,10 @@ public class TestNavajoNonBlockingStream {
 	
 	@Test 
 	public void testStreamParserAndSerializerWithIgnoreMessage() throws Exception {
-		Navajo navajo =
-		Bytes.fromAbsoluteClassPath("tiny_tml_with_ignore.xml")
-			.lift(XML.parse())
-			.lift(NAVADOC.parse(Collections.emptyMap()))
-			.lift(NAVADOC.filterMessageIgnore())
+		Navajo navajo = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tiny_tml_with_ignore.xml"),8192)
+			.lift(XML2.parse())
+			.lift(NavajoStreamOperatorsNew.parse())
+			.lift(NavajoStreamOperatorsNew.filterMessageIgnore())
 			.lift(NAVADOC.collect(Collections.emptyMap()))
 			.toBlocking().first();
 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,8 +22,6 @@ import com.dexels.navajo.document.stream.api.Select;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.types.Binary;
 
-import rx.Observable;
-import rx.Subscriber;
 
 public class NavajoStreamCollector {
 
@@ -42,39 +41,12 @@ public class NavajoStreamCollector {
 	
 	public NavajoStreamCollector() {
 	}
-
-	// TODO use just the operators
-	
-	public Observable<Navajo> feed(final NavajoStreamEvent streamEvents) {
-		Observable<Navajo> processNavajoEvent = processNavajoEvent(streamEvents,null);
-		return processNavajoEvent;
-		
-		
-	}
-
-	public void feed(final NavajoStreamEvent streamEvents, Subscriber<? super Navajo> subscriber) {
-		processNavajoEvent(streamEvents,subscriber);
-	}
-
-	
-	private String currentPath() {
-		StringBuilder sb = new StringBuilder();
-		for (String path : tagStack) {
-			sb.append(path);
-			sb.append('/');
-		}
-		int len = sb.length();
-		if(sb.charAt(len-1)=='/') {
-			sb.deleteCharAt(len-1);
-		}
-		return sb.toString();
-	}
-
-	private Observable<Navajo> processNavajoEvent(NavajoStreamEvent n, Subscriber<? super Navajo> subscriber) {
+	// return # of emitted items, for handling the backpressure
+	public Optional<Navajo> processNavajoEvent(NavajoStreamEvent n) throws IOException {
 		switch (n.type()) {
 		case NAVAJO_STARTED:
 			createHeader((NavajoHead)n.body());
-			return Observable.<Navajo>empty();
+			return Optional.empty();
 
 		case MESSAGE_STARTED:
 			Message prMessage = null;
@@ -92,7 +64,7 @@ public class NavajoStreamCollector {
 			}
 			messageStack.push(msg);
 			tagStack.push(n.path());
-			return Observable.<Navajo>empty();
+			return Optional.empty();
 		case MESSAGE:
 			Message msgParent = messageStack.pop();
 			tagStack.pop();
@@ -105,7 +77,7 @@ public class NavajoStreamCollector {
 				msgParent.addProperty(createBinaryProperty(e.getKey(),e.getValue()));
 			}
 			pushBinaries.clear();
-			return Observable.<Navajo>empty();
+			return Optional.empty();
 		case ARRAY_STARTED:
 			tagStack.push(n.path());
 			String path = currentPath();
@@ -127,12 +99,12 @@ public class NavajoStreamCollector {
 				parentMessage.addMessage(arr);
 			}
 			messageStack.push(arr);
-			return Observable.<Navajo>empty();
+			return Optional.empty();
 		case ARRAY_DONE:
 			String apath = currentPath();
 			arrayCounts.remove(apath);
 			this.messageStack.pop();
-			return Observable.<Navajo>empty();
+			return Optional.empty();
 		case ARRAY_ELEMENT_STARTED:
 			String arrayElementName = tagStack.peek();
 			String  arrayPath = currentPath();
@@ -144,7 +116,7 @@ public class NavajoStreamCollector {
 			Message arrParent = messageStack.peek();
 			arrParent.addElement(newElt);
 			messageStack.push(newElt);
-			return Observable.<Navajo>empty();
+			return Optional.empty();
 		case ARRAY_ELEMENT:
 			tagStack.pop();
 			Message elementParent = messageStack.pop();
@@ -158,56 +130,52 @@ public class NavajoStreamCollector {
 			}
 			pushBinaries.clear();
 
-			return Observable.<Navajo>empty();
+			return Optional.empty();
 			
 		case MESSAGE_DEFINITION_STARTED:
 			// TODO
-			return Observable.<Navajo>empty();
+			return Optional.empty();
 		case MESSAGE_DEFINITION:
 			// TODO
 			//			tagStack.push(n.path());
 			//			deferredMessages.get(stripIndex(n.path())).setDefinitionMessage((Message) n.body());
-			return Observable.<Navajo>empty();
+			return Optional.empty();
 		case NAVAJO_DONE:
-			if(subscriber!=null) {
-				subscriber.onNext(assemble);
-			}
-			return Observable.<Navajo>just(assemble);
-		
+			return Optional.of(assemble);
 		case BINARY_STARTED:
-			try {
-				String name = n.path();
-				this.currentBinary = new Binary();
-				this.currentBinary.startPushRead();
-				this.pushBinaries.put(name, currentBinary);
-				return Observable.<Navajo>empty();
-			} catch (IOException e1) {
-				return Observable.error(e1);
-			}
+			String name = n.path();
+			this.currentBinary = new Binary();
+			this.currentBinary.startPushRead();
+			this.pushBinaries.put(name, currentBinary);
+			return Optional.empty();
 			
 		case BINARY_CONTENT:
-			try {
 				if(this.currentBinary==null) {
 					// whoops;
 				}
 				this.currentBinary.pushContent((String) n.body());
-				return Observable.<Navajo>empty();
-			} catch (IOException e1) {
-				return Observable.error(e1);
-			}
-			
+				return Optional.empty();
+
 		case BINARY_DONE:
-			try {
 				this.currentBinary.finishPushContent();
-				return Observable.<Navajo>empty();
-			} catch (IOException e1) {
-				return Observable.error(e1);
-			}
+				return Optional.empty();
 		default:
-			return Observable.<Navajo>empty();
+			return Optional.empty();
 		}
 	}
 	
+	private String currentPath() {
+		StringBuilder sb = new StringBuilder();
+		for (String path : tagStack) {
+			sb.append(path);
+			sb.append('/');
+		}
+		int len = sb.length();
+		if(sb.charAt(len-1)=='/') {
+			sb.deleteCharAt(len-1);
+		}
+		return sb.toString();
+	}
 	private Property createBinaryProperty(String name, Binary value) {
 		Property result = NavajoFactory.getInstance().createProperty(assemble, name, Property.BINARY_PROPERTY, null,0,"", Property.DIR_IN);
 		result.setAnyValue(value);

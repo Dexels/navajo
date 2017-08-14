@@ -22,44 +22,26 @@ import com.dexels.navajo.document.stream.xml.XmlInputHandler;
 
 public final class StreamSaxHandler implements XmlInputHandler {
 
-//    private Navajo currentDocument=null;
-//    private final Stack<String> messageNameStack = new Stack<>();
     private List<Prop> currentProperties = new ArrayList<>();
     private Stack<Map<String,String>> attributeStack = new Stack<>();
-    
-//    private Message currentMessage = null;
-//    private Prop currentProperty = null;
     private Method currentMethod = null;
 	private final NavajoStreamHandler handler;
-    
-//	private Writer currentBinaryWriter = null;
-//	private Binary currentBinary = null; 
-
-//	private final Map<String,AtomicInteger> arrayCount = new HashMap<>();
 	private Map<String, String> transactionAttributes;
 	private Map<String, String> piggybackAttriutes;
 	private Map<String, String> asyncAttributes;
 	private final List<Select> currentSelections = new ArrayList<>();
-//	private Binary currentBinary;
-//	private Writer currentBinaryWriter;
-//	private boolean binaryStarted;
-//	private final static Logger logger = LoggerFactory
-//			.getLogger(StreamSaxHandler.class);
-
-//	private Subscriber<? super String> binarySink;
 	
 	public StreamSaxHandler(NavajoStreamHandler handler) {
 		this.handler = handler;
 	}
-    @Override
-	public final void startElement(String tag, Map<String,String> h) {
+
+	@Override
+	public final int startElement(String tag, Map<String,String> h) {
     	
     	attributeStack.push(h);
         // Unescape all the shit.
         if (tag.equals("tml")) {
-//            currentDocument = NavajoFactory.getInstance().createNavajo();
-
-            return;
+            return 0;
         }
         if (tag.equals("message")) {
         	String type = h.get("type");
@@ -72,12 +54,13 @@ public final class StreamSaxHandler implements XmlInputHandler {
         	} else {
             	handler.messageStarted(h);
         	}
-            return;
+            return 1;
         }
         if (tag.equals("property")) {
         	String propType = h.get("type");
         	if("binary".equals(propType)) {
         		handler.binaryStarted(h.get("name"));
+        		return 1;
         	}
 //            String val = h.get("value");
 //            if (val!=null) {
@@ -92,7 +75,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
 //            currentProperties.add(currentProperty);
 //            currentSelections.clear();
 
-        	return;
+        	return 0;
         }
         if (tag.equals("option")) {
             String val = h.get("value");
@@ -103,54 +86,55 @@ public final class StreamSaxHandler implements XmlInputHandler {
     		h2.put("value", val);
     		h2.put("name", name);
     			
-    			parseSelection(h2);
-            return;
+    		parseSelection(h2);
+            return 0;
         }
         if (tag.equals("method")) {
             parseMethod(h);
-            return;
+            return 0;
         }
         if (tag.equals("header")) {
-            return;
+            return 0;
         }
         if (tag.equals("transaction")) {
             parseTransaction(h);
-            return;
+            return 0;
         }
         if (tag.equals("callback")) {
             parseCallback(h);
-            return;
+            return 0;
         }
         if (tag.equals("methods")) {
             parseMethods(h);
-            return;
+            return 0;
         }
         if (tag.equals(Navajo.OPERATIONS_DEFINITION)) {
         	parseOperations(h);
-        	return;
+        	return 0;
         }
         if (tag.equals("client")) {
-            return;
+            return 0;
         }
         if (tag.equals("server")) {
-            return;
+            return 0;
         }
         if (tag.equals("agent")) {
             parseAgent(h);
-            return;
+            return 0;
         }
         if (tag.equals("required")) {
             parseRequired(h);
-            return;
+            return 0;
         }
         if (tag.equals("object")) {
             parseObject(h);
-            return;
+            return 0;
         }
         if (tag.equals("piggyback")) {
             parsePiggyback(h);
-            return;
+            return 0;
         }        
+        return 0;
     }
     
     
@@ -193,13 +177,6 @@ public final class StreamSaxHandler implements XmlInputHandler {
 
     private final void parseTransaction(Map<String,String> h) {
         this.transactionAttributes = h;
-//        BaseTransactionImpl bci = new BaseTransactionImpl(currentDocument);
-//        bci.setRpc_name(h.get("rpc_name"));
-//        bci.setRpc_usr(h.get("rpc_usr"));
-//        bci.setRpc_pwd(h.get("rpc_pwd"));
-//        bci.setRpc_schedule(h.get("rpc_schedule"));
-//        bci.setRequestId(h.get("requestid"));
-//        currentHeader.addTransaction(bci);        
     }
 
     private final void parsePiggyback(Map<String,String> h) {
@@ -224,10 +201,11 @@ public final class StreamSaxHandler implements XmlInputHandler {
     }
 
     @Override
-	public final void endElement(String tag) {
+	public final int endElement(String tag) {
     	Map<String,String> attributes = attributeStack.pop();
         if (tag.equals("tml")) {
         	handler.navajoDone();
+        	return 1;
          }
         if (tag.equals("message")) {
         	String type = attributes.get("type");
@@ -244,7 +222,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
             	}
             }
             currentProperties.clear();
-//            messageNameStack.pop();
+            return 1;
         }
         if (tag.equals("property")) {
         	Prop currentProperty;
@@ -258,50 +236,54 @@ public final class StreamSaxHandler implements XmlInputHandler {
                 currentProperty = Prop.create(h2,currentSelections);
             } else if("binary".equals(attributes.get("type"))) {
             	handler.binaryDone();
-            	return;
+            	return 1;
             } else {
                 currentProperty = Prop.create(attributes,currentSelections);
 			}
         	currentProperties.add(currentProperty);
         	currentProperty = null;
         	currentSelections.clear();
+        	return 0;
         }
+        if (tag.equals("header")) {
+            parseHeader(attributes);
+            return 1;
+        }
+
         if (tag.equals("option")) {
-//        	parseSelection(attributes);
-//        	currentProperty.addSelect(s);
         	
         }
         if (tag.equals("method")) {
         	
         }
-        if (tag.equals("header")) {
-            parseHeader(attributes);
-        }
         if (tag.equals("transaction")) {
         }
         if (tag.equals("callback")) {
         }
+        return 0;
     }
 
 
   
 
     @Override
-	public final void startDocument() {
+	public final int startDocument() {
+    	return 0;
     }
 
 
     @Override
-	public final void endDocument() {
-    	// the navajoDone event is emitted by the tml end tag
-//        handler.navajoDone();
+	public final int endDocument() {
+    	return 0;
     }
 
     @Override
-	public final void text(String r)  {
+	public final int text(String r)  {
     	if(!"".equals(r.trim())) {
         	handler.binaryContent(r);
+        	return 1;
     	}
+    	return 0;
     }
 
 }

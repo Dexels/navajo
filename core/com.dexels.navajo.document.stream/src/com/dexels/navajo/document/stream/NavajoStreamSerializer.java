@@ -1,6 +1,8 @@
 package com.dexels.navajo.document.stream;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -57,6 +59,18 @@ public class NavajoStreamSerializer {
 		});
 	}
 	
+	public byte[] serialize(final NavajoStreamEvent event) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		OutputStreamWriter writer = new OutputStreamWriter(baos);
+//		StringWriter w = new StringWriter();
+		processNavajoEvent(event, writer);
+		try {
+			writer.close();
+		} catch (IOException e) {
+			logger.error("Error: ", e);
+		}
+		return baos.toByteArray();
+	}
 	private void processNavajoEvent(NavajoStreamEvent event,Writer w) {
 		try {
 			String name = event.path();

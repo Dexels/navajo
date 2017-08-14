@@ -33,6 +33,7 @@ import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.types.Binary;
 
+import io.reactivex.Flowable;
 import rx.Observable;
 
 public class NavajoDomStreamer {
@@ -47,7 +48,11 @@ public class NavajoDomStreamer {
 		return Observable.from(processNavajo(navajo));
 	}
 	
-	private static List<NavajoStreamEvent> processNavajo(Navajo navajo) {
+	public static Flowable<NavajoStreamEvent> feedFlowable(final Navajo navajo) {
+		return Flowable.fromIterable(processNavajo(navajo));
+	}
+	
+	public static List<NavajoStreamEvent> processNavajo(Navajo navajo) {
 		List<NavajoStreamEvent> result = new ArrayList<>();
 		Navajo output = NavajoFactory.getInstance().createNavajo();
 		List<Message> all = navajo.getAllMessages();
