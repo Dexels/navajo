@@ -943,13 +943,29 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
         return msg;
     }
     
-    public final Object getPropertyOrElse(String fullName, Object elseValue) {
-        try {
-            return getProperty(fullName);
-        } catch (Throwable t) {
-            // Property probably doesn't exist - no biggie
+    public final Object getPropertyOrElse(String fullName, Object elseValue) throws UserException {
+        
+        waitForResult();
+
+        Property p = null;
+        if (msgPointer != null) {
+            p = msgPointer.getProperty(fullName);
+        } else {
+            p = inDoc.getProperty(fullName);
         }
-        return elseValue;
+        if (p == null) {
+            return elseValue;
+        }
+        
+        if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+            if (p.getSelected() != null) {
+                return p.getSelected().getValue();
+            } else {
+                return null;
+            }
+        }
+        return p.getTypedValue();
+        
     }
 
     public final Object getProperty(String fullName) throws Exception {
