@@ -32,9 +32,6 @@ import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
-import com.dexels.navajo.server.global.GlobalManager;
-import com.dexels.navajo.server.global.GlobalManagerRepository;
-import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
 
 public class EntityDispatcher {
     private final static Logger logger = LoggerFactory.getLogger(EntityDispatcher.class);
@@ -181,6 +178,10 @@ public class EntityDispatcher {
             access = new Access(1, 1, "placeholder", scriptName, "", "", "", null, false, null);
             access.setOperation(entityOperation);
             access.ipAddress = ip;
+            if (queryString != null) {
+                access.addScriptLogging(queryString);
+            }
+            
 
             try {
                 access = authenticateUser(input, tenant, access, authHeader);
