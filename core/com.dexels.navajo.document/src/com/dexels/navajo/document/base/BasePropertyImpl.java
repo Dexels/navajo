@@ -846,7 +846,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			addSubType("mime=" + b.getMimeType());
 			addSubType("extension=" + b.getExtension());
 		}
-		if(fireUpdateEvent) {
+		if(fireUpdateEvent && myPropertyDataListeners != null) {
 			firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), false);
 		}
 
@@ -894,7 +894,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} catch (Exception e) {
 			logger.error("Error: ", e);
 		}
-		firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		if (myPropertyDataListeners != null) {
+		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		}
 	}
 
 	@Override
@@ -918,7 +920,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else {
 			myValue = null;
 		}
-		firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		if (myPropertyDataListeners != null) {
+		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		}
 	}
 
 	@Override
@@ -934,7 +938,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else {
 			myValue = null;
 		}
-		firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		if (myPropertyDataListeners != null) {
+		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		}
 	}
 
 	@Override
@@ -964,7 +970,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else {
 			myValue = null;
 		}
-		firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		if (myPropertyDataListeners != null) {
+		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		}
 	}
 	
 	private final void setValue(Memo value, Boolean internal) {
@@ -976,7 +984,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
         } else {
             myValue = null;
         }
-        firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+        if (myPropertyDataListeners != null) {
+            firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+        }
     }
 
 	@Override
@@ -992,7 +1002,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else {
 			myValue = null;
 		}
-		firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		if (myPropertyDataListeners != null) {
+		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		}
 	}
 
 	@Override
@@ -1008,7 +1020,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else {
 			myValue = null;
 		}
-		firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		if (myPropertyDataListeners != null) {
+		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		}
 	}
 
 	@Override
@@ -1025,7 +1039,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else {
 			myValue = null;
 		}
-		firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		if (myPropertyDataListeners != null) {
+		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		}
 	}
 
 	@Override
@@ -1046,7 +1062,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else {
 			myValue = null;
 		}
-		firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		if (myPropertyDataListeners != null) {
+		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		}
+		
 	}
 	
 	@Override
@@ -1062,7 +1081,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else {
 			myValue = null;
 		}
-		firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		if (myPropertyDataListeners != null) {
+		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		}
 	}
 
 	@Override
@@ -1083,7 +1104,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else {
 			myValue = null;
 		}
-		firePropertyChanged(PROPERTY_VALUE, old, value, internal);
+		if (myPropertyDataListeners != null) {
+		    firePropertyChanged(PROPERTY_VALUE, old, value, internal);
+		}
 	}
 
 	@Override
@@ -1095,7 +1118,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		Object old = getTypedValue();
 		setType(LONG_PROPERTY);
 		setCheckedValue(value + "");
-		firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		if (myPropertyDataListeners != null) {
+		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+		}
 	}
 
 	@Override
