@@ -131,10 +131,17 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
     }
 
 	private Integer extractPoolSize(Map<String, Object> params, String key) {
-		Object value = params.get(key);
+	    String cluster = System.getenv("CLUSTER");
+	    String clusterKey = cluster + "/" + key;
+	    
+		Object value = params.get(clusterKey);
 		if(value==null) {
-			return DEFAULT_POOL_SIZE;
+		    // Try non-prefixed key
+		    value = params.get(key);
 		}
+		if(value==null) {
+            return DEFAULT_POOL_SIZE;
+        }
 		if(value instanceof Integer) {
 			return (Integer) params.get(key);
 		}
@@ -144,7 +151,14 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		return DEFAULT_POOL_SIZE;
 	}
 	private Integer extractPoolPrio(Map<String, Object> params, String key) {
-        Object value = params.get(key);
+	    String cluster = System.getenv("CLUSTER");
+        String clusterKey = cluster + "/" + key;
+        
+        Object value = params.get(clusterKey);
+        if(value==null) {
+            // Try non-prefixed key
+            value = params.get(key);
+        }
         if(value==null) {
             return Thread.NORM_PRIORITY;
         }
@@ -157,7 +171,14 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
         return Thread.NORM_PRIORITY;
     }
 	private Integer extractMaxBacklogSize(Map<String, Object> params, String key) {
-        Object value = params.get(key);
+	    String cluster = System.getenv("CLUSTER");
+        String clusterKey = cluster + "/" + key;
+        
+        Object value = params.get(clusterKey);
+        if(value==null) {
+            // Try non-prefixed key
+            value = params.get(key);
+        }
         if(value==null) {
             if (key.equals(TASKS_POOL) || key.equals(NAVAJOMAP_LOWPRIO_POOL)) {
                 return Integer.MAX_VALUE;
