@@ -74,7 +74,15 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	 */
 	private static final long serialVersionUID = 5167262782916246791L;
 	protected String myName;
+	
 	protected String myValue = null;
+	
+	/*
+	 * If we set a Date property, we keep our own copy of the date object. Uses a little more memory
+	 * but saves us from having to use DateFormat.parse() on getTypedValue()
+	 */
+	protected Date myDate;
+	
 	private static final Logger logger = LoggerFactory.getLogger(BasePropertyImpl.class);
 	private final static ThreadLocal<SimpleDateFormat> dateFormat1 = new ThreadLocal<SimpleDateFormat>() {
 		 @Override
@@ -701,8 +709,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				logger.error("Error: ", e);
 			}
         } else if (getType().equals(Property.DATE_PROPERTY) || getType().equals(Property.TIMESTAMP_PROPERTY)) {
-            if (getValue() == null || getValue().equals("")) {
+            if (getValue() == null || getValue().equals("") || getValue().equals("null")) {
                 return null;
+            }
+            if (myDate != null) {
+                return myDate;
             }
             // Try in order from most specific to least specific
             try {
@@ -905,8 +916,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	private final void setValue(java.util.Date value, Boolean internal) {
-		
-		Object old = getTypedValue();
+	    Object old = getTypedValue();
 		final ThreadLocal<SimpleDateFormat> formatter;
 		if (type.equals(TIMESTAMP_PROPERTY)) {
 		    formatter = timestampFormat;
@@ -917,8 +927,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		
 		if (value != null) {
 			setCheckedValue(formatter.get().format(value));
+			this.myDate = value;
 		} else {
 			myValue = null;
+			myDate = null;
 		}
 		if (myPropertyDataListeners != null) {
 		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
