@@ -4,7 +4,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -19,12 +18,12 @@ import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
+import com.dexels.navajo.document.stream.xml.BackpressureAdministrator;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;
 import io.reactivex.FlowableSubscriber;
 import io.reactivex.FlowableTransformer;
-import io.reactivex.internal.util.BackpressureHelper;
 
 public class NavajoReactiveOperators {
 
@@ -39,10 +38,9 @@ public class NavajoReactiveOperators {
 				return new Op(child);
 			}
 
-			final class Op implements FlowableSubscriber<byte[]>, Subscription {
+			final class Op implements FlowableSubscriber<byte[]> {
 				final Subscriber<? super byte[]> child;
-
-				Subscription parentSubscription;
+				private BackpressureAdministrator backpressureAdmin;
 
 				public Op(Subscriber<? super byte[]> child) {
 					this.child = child;
@@ -50,13 +48,16 @@ public class NavajoReactiveOperators {
 
 				@Override
 				public void onSubscribe(Subscription s) {
-					this.parentSubscription = s;
-					child.onSubscribe(this);
+			        this.backpressureAdmin = new BackpressureAdministrator("identity",1, s);
+					child.onSubscribe(backpressureAdmin);
+					backpressureAdmin.initialize();
+				
 				}
 
 				@Override
 				public void onNext(byte[] v) {
 					child.onNext(v);
+					backpressureAdmin.registerEmission(1);
 				}
 
 				@Override
@@ -67,16 +68,6 @@ public class NavajoReactiveOperators {
 				@Override
 				public void onComplete() {
 					child.onComplete();
-				}
-
-				@Override
-				public void cancel() {
-					parentSubscription.cancel();
-				}
-
-				@Override
-				public void request(long n) {
-					parentSubscription.request(n);
 				}
 			}
 		};
@@ -113,10 +104,10 @@ public class NavajoReactiveOperators {
 				return new Op(child);
 			}
 
-			final class Op implements FlowableSubscriber<byte[]>, Subscription {
+			final class Op implements FlowableSubscriber<byte[]> {
 				final Subscriber<? super byte[]> child;
 
-				Subscription parentSubscription;
+				private BackpressureAdministrator backpressureAdmin;
 
 				public Op(Subscriber<? super byte[]> child) {
 					this.child = child;
@@ -124,9 +115,9 @@ public class NavajoReactiveOperators {
 
 				@Override
 				public void onSubscribe(Subscription s) {
-					this.parentSubscription = s;
-					child.onSubscribe(this);
-				}
+			        this.backpressureAdmin = new BackpressureAdministrator("deflate",1, s);
+					child.onSubscribe(backpressureAdmin);
+					backpressureAdmin.initialize();				}
 
 				@Override
 				public void onNext(byte[] in) {
@@ -138,6 +129,7 @@ public class NavajoReactiveOperators {
 						if(read>0) {
 							byte[] copied = Arrays.copyOfRange(buffer, 0, read);
 							child.onNext(copied);
+							backpressureAdmin.registerEmission(1);
 						} else {
 							break;
 						}
@@ -156,16 +148,6 @@ public class NavajoReactiveOperators {
 					onNext(new byte[]{});
 					child.onComplete();
 				}
-
-				@Override
-				public void cancel() {
-					parentSubscription.cancel();
-				}
-
-				@Override
-				public void request(long n) {
-					parentSubscription.request(n);
-				}
 			}
 		};
 	}
@@ -180,12 +162,9 @@ public class NavajoReactiveOperators {
 				return new Op(child);
 			}
 
-			final class Op implements FlowableSubscriber<byte[]>, Subscription {
+			final class Op implements FlowableSubscriber<byte[]> {
 				final Subscriber<? super byte[]> child;
-			    final AtomicLong requested = new AtomicLong();
-				long emitted;
-
-				Subscription parentSubscription;
+				private BackpressureAdministrator backpressureAdmin;
 
 				public Op(Subscriber<? super byte[]> child) {
 					this.child = child;
@@ -193,8 +172,9 @@ public class NavajoReactiveOperators {
 
 				@Override
 				public void onSubscribe(Subscription s) {
-					this.parentSubscription = s;
-					child.onSubscribe(this);
+			        this.backpressureAdmin = new BackpressureAdministrator("inflate",1, s);
+					child.onSubscribe(backpressureAdmin);
+					backpressureAdmin.initialize();			
 				}
 
 				@Override
@@ -208,11 +188,10 @@ public class NavajoReactiveOperators {
 							if(read>0) {
 								child.onNext(Arrays.copyOfRange(buffer, 0, read));
 							}
-							emitted++;
+							backpressureAdmin.registerEmission(1);
 						}
 					} catch (DataFormatException e) {
 						child.onError(e);
-						parentSubscription.cancel();
 					}
 				}
 
@@ -227,42 +206,8 @@ public class NavajoReactiveOperators {
 					if(remaining>0) {
 						byte[] rm = new byte[remaining];
 						child.onNext(rm);
-
 					}
 					child.onComplete();
-				}
-
-				@Override
-				public void cancel() {
-					parentSubscription.cancel();
-				}
-
-				@Override
-				public void request(long n) {
-					BackpressureHelper.add(requested, n);
-					if(n==Long.MAX_VALUE) {
-						parentSubscription.request(Long.MAX_VALUE);
-					}
-					requestIfNeeded();
-				}
-				
-				public long amountToRequest(long emitted,long requested) {
-//					System.err.println("Request: emitted: "+emitted+" requested: "+requested);
-					if(requested == Long.MAX_VALUE) {
-						return 0;
-					}
-					if(requested > emitted) {
-						return requested - emitted;
-					}
-					return 0;
-				}
-				
-				private void requestIfNeeded() {
-					// locking incorrect I think
-					long req = amountToRequest(emitted, requested.get());
-					if(req>0) {
-						parentSubscription.request(req);
-					}
 				}
 			}
 		};

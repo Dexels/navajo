@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.stream.NavajoStreamOperatorsNew;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.api.NavajoHead;
@@ -32,8 +33,9 @@ import com.dexels.navajo.document.stream.api.Script;
 import com.dexels.navajo.document.stream.api.SimpleScript;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
+import com.dexels.navajo.document.stream.io.NavajoReactiveOperators;
 import com.dexels.navajo.document.stream.io.NavajoStreamOperators;
-import com.dexels.navajo.document.stream.xml.XML;
+import com.dexels.navajo.document.stream.xml.XML2;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 
@@ -146,8 +148,8 @@ public class NonBlockingListener extends HttpServlet {
 		}
 		
 		Observable<NavajoStreamEvent> eventStream = createReadListener(ac.getRequest().getInputStream())
-				.lift(NavajoStreamOperators.decompress(requestEncoding))
-				.lift(XML.parse())
+				.lift(NavajoReactiveOperators.decompress(requestEncoding))
+				.lift(XML2.parse())
 				.lift(NAVADOC.parse(attributes));	
 
 		processStreamingScript(req,navajoService,eventStream,attributes,ac,responseEncoding)

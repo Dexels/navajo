@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -74,7 +73,7 @@ public class TestRx {
 	public void testDeflate() throws FileNotFoundException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] original = 
-				Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("TestCompression.class"))
+				Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("TestBinaries.class"))
 				.reduce(baos, (byteout,bytes)->{try {
 					byteout.write(bytes);
 					} catch (Exception e) {
@@ -82,7 +81,7 @@ public class TestRx {
 				.blockingGet()
 				.toByteArray();
 		ByteArrayOutputStream baos_compressed = new ByteArrayOutputStream();
-		byte[] compressed = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("TestCompression.class"))
+		byte[] compressed = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("TestBinaries.class"))
 				.lift(NavajoReactiveOperators.deflate())
 				.reduce(baos_compressed, (byteout,bytes)->{try {
 					byteout.write(bytes);

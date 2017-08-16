@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.adapters.stream.Bytes;
+import com.dexels.navajo.adapters.stream.ByteSource;
 import com.dexels.navajo.adapters.stream.SQL;
 import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
@@ -110,7 +110,7 @@ public class TestStreamingInput  {
 	public void testSQLFromFile() throws IOException {
 		FileOutputStream out = new FileOutputStream("response.xml");
 		
-		Bytes.fromAbsoluteClassPath("org2.xml")
+		ByteSource.fromAbsoluteClassPath("org2.xml")
 		.lift(XML.parse())
 		.lift(NAVADOC.parse(Collections.emptyMap()))
 		.filter(e->e.type()==NavajoEventTypes.ARRAY_ELEMENT)

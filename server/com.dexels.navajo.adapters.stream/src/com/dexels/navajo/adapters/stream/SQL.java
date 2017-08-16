@@ -1,16 +1,13 @@
 package com.dexels.navajo.adapters.stream;
 
-import static com.dexels.navajo.document.stream.io.NavajoStreamOperators.inArray;
-import static com.dexels.navajo.document.stream.io.NavajoStreamOperators.inNavajo;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
 
@@ -18,13 +15,16 @@ import org.dexels.grus.GrusProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.stream.NavajoStreamOperatorsNew;
 import com.dexels.navajo.document.stream.api.Msg;
-import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.api.Prop;
+import com.dexels.navajo.document.stream.io.NavajoReactiveOperators;
 import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
 import com.dexels.navajo.script.api.UserException;
 import com.github.davidmoten.rx.jdbc.Database;
 
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.Flowable;
 import rx.Observable;
 
 public class SQL {
@@ -34,25 +34,26 @@ public class SQL {
 
 	
 	public static void main(String[] args) throws SQLException, InterruptedException, UserException {
-//
-//        int count = SQL.query("authentication", "select * from SPORT").count().toBlocking().first();
-//        System.err.println("Count: "+count);
-//        
-        SQL.queryToMessage("dummy", "select * from ORGANIZATION")
+		testBackpressure();
+		if(true) {
+			return;
+		}
+        SQL.queryToMessage("dummy", "sometenant","select * from ORGANIZATION")
         	.map(m->m.renameProperty("ORGANIZATIONID", "Id"))
-        	.take(10)
-        	.flatMap(m->m.stream())
-	    	.compose(inArray("Sport"))
-	    	.compose(inNavajo("SportList","dummy","dummy"))
-	    	.lift(NAVADOC.collect(Collections.emptyMap()))
-	    	.doOnCompleted(()->System.err.println("Done!"))
-        	.toBlocking().forEach(oa->{
-    		oa.write(System.err);
+        	.take(1000)
+//        	.toObservable()
+        	.flatMap(m->m.streamFlowable())
+	    	.compose(NavajoReactiveOperators.inArray("Organization"))
+	    	.compose(NavajoReactiveOperators.inNavajo("SportList","dummy","dummy"))
+	    	.lift(NavajoStreamOperatorsNew.serialize())
+			.lift(NavajoStreamOperatorsNew.decode("UTF-8"))
+//			.compose(StringFlowable.split("\r"))
+//	    	.toObservable()
+//	    	.lift(NavajoStreamOperatorsNew.collect())
+//	    	.doOnComplete(()->System.err.println("Done!"))
+	    	.blockingForEach(oa->{
+    		System.err.print(oa);
     	});       
-//    	.concatMap(row->Msg.createElement("Sport", msg->{
-//        		msg.add(Prop.create("SportType").withValue(row.getColumnValue("SPORTTYPE")));
-//    	} ))
-
 	}
 	
 	public static DataSource resolveDataSource(String dataSourceName, String tenant) {
@@ -80,30 +81,42 @@ public class SQL {
 		return source;
 	}
 	
-	public static Observable<SQLResult> query(String datasource, String query) {
-		return Database
-			.fromDataSource(resolveDataSource(datasource,"KNVB"))
+	public static void testBackpressure() {
+		Database
+		.fromDataSource(resolveDataSource("dummy","something"))
+		.select("select * from ORGANIZATION")
+		.get(SQL::resultSet)
+		.map(rs->rs.columnNames().toString())
+		.zipWith(Observable.interval(10, TimeUnit.MILLISECONDS), (rs,i)->{
+			return rs;
+		})
+		.subscribe(s->System.err.println("res: "+s));
+	}
+	
+	public static Flowable<SQLResult> query(String datasource, String tenant, String query) {
+		return RxJavaInterop.toV2Flowable(Database
+			.fromDataSource(resolveDataSource(datasource,tenant))
 			.select(query)
-			.get(SQL::resultSet);
+			.get(SQL::resultSet));
 
 	}
 
-	private static Observable<SQLResult> query(String tenant, String datasource, String query, String... params) {
-		return Database
+	private static Flowable<SQLResult> query(String tenant, String datasource, String query, String... params) {
+		return RxJavaInterop.toV2Flowable(Database
 			.fromDataSource(resolveDataSource(datasource,tenant))
 			.select(query)
 			.parameters((Object[])params)
-			.get(SQL::resultSet)
-			;
+			.get(SQL::resultSet));
+			
 	}
 
-	public static Observable<Msg> queryToMessage(String tenant, String datasource, String query, String... params)  {
+	public static Flowable<Msg> queryToMessage(String tenant, String datasource, String query, String... params)  {
 		return query(tenant,datasource,query,params)
 				.map(SQL::defaultSqlResultToMsg);
 	}
 	
-	public static Observable<Msg> queryToMessage(String datasource, String query)  {
-		return query(datasource,query)
+	public static Flowable<Msg> queryToMessage(String datasource, String tenant, String query)  {
+		return query(datasource,tenant,query)
 				.map(SQL::defaultSqlResultToMsg);
 	}
 

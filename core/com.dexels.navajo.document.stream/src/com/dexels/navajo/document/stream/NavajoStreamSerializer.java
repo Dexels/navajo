@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +19,6 @@ import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
-import rx.Observable;
-
 public class NavajoStreamSerializer {
 
 	private int tagDepth = 0;
@@ -33,30 +29,6 @@ public class NavajoStreamSerializer {
 	public static final int INDENT = 3;
 
 	public NavajoStreamSerializer() {
-	}
-	
-	// TODO Does this break backpressure?
-	public Observable<byte[]> feed(final NavajoStreamEvent streamEvents) {
-		return Observable.create(subscribe->{
-			Writer w = new Writer(){
-				@Override
-				public void write(char[] cbuf, int off, int len) throws IOException {
-					if(len>0) {
-						String fragment = new String(Arrays.copyOfRange(cbuf, off, off+len));
-						subscribe.onNext( fragment.getBytes(StandardCharsets.UTF_8));
-					} else {
-					}
-				}
-
-				@Override
-				public void flush() throws IOException {}
-
-				@Override
-				public void close() throws IOException {}
-			};
-			processNavajoEvent(streamEvents,w);
-			subscribe.onCompleted();
-		});
 	}
 	
 	public byte[] serialize(final NavajoStreamEvent event) {

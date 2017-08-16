@@ -1,14 +1,9 @@
 import java.io.ByteArrayOutputStream;
-import java.util.Collections;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.stream.NavajoDomStreamer;
 import com.dexels.navajo.document.stream.NavajoStreamOperatorsNew;
-import com.dexels.navajo.document.stream.api.NAVADOC;
-import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.document.stream.xml.XML2;
 import com.github.davidmoten.rx2.Bytes;
 

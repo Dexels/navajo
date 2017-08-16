@@ -2,7 +2,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.util.Collections;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,11 +12,8 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.NavajoDomStreamer;
-import com.dexels.navajo.document.stream.NavajoStreamCollector;
 import com.dexels.navajo.document.stream.NavajoStreamOperatorsNew;
-import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
-import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.document.stream.xml.XML2;
 import com.github.davidmoten.rx2.Bytes;
 
@@ -203,8 +199,9 @@ public class TestNavajoNonBlockingStreamReactive {
 			.lift(XML2.parse())
 			.lift(NavajoStreamOperatorsNew.parse())
 			.lift(NavajoStreamOperatorsNew.filterMessageIgnore())
-			.lift(NAVADOC.collect(Collections.emptyMap()))
-			.toBlocking().first();
+			.toObservable()
+			.lift(NavajoStreamOperatorsNew.collect())
+			.blockingFirst();
 
 		Message ignored = navajo.getMessage("Message");
 		Assert.assertNull(ignored);

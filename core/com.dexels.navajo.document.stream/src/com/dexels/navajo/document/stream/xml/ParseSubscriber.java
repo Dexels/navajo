@@ -1,7 +1,5 @@
 package com.dexels.navajo.document.stream.xml;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
@@ -21,7 +19,7 @@ public class ParseSubscriber implements FlowableSubscriber<byte[]> {
 
 	@Override
 	public void onSubscribe(Subscription s) {
-        this.backpressureAdmin = new BackpressureAdministrator(1, s);
+        this.backpressureAdmin = new BackpressureAdministrator("xmlParse",1, s);
 		child.onSubscribe(backpressureAdmin);
 		backpressureAdmin.initialize();
 	}

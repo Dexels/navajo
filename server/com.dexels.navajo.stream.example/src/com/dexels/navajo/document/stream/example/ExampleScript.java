@@ -17,8 +17,6 @@ import com.dexels.navajo.document.stream.api.SimpleScript;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.io.NavajoStreamOperators;
-import com.dexels.navajo.document.stream.xml.XML;
-import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
 
 import rx.Observable;
 import rx.schedulers.Schedulers;
