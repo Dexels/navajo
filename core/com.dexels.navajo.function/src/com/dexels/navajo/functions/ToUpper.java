@@ -19,7 +19,7 @@ public final class ToUpper extends FunctionInterface {
 
     @Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-        String s = (String) this.getOperands().get(0);
+        String s = this.getOperands().get(0).toString();
 
         if (s == null)
           return null;
