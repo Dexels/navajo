@@ -816,6 +816,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     }
     
     protected void writeToLog(String msg) {
+        myAccess.addScriptLogging(msg);
         logger.info(myAccess.getRpcName() + " (" + myAccess.getAccessID() + "): " +  msg);
     }
 

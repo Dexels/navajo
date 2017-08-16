@@ -142,7 +142,7 @@ public final class Access implements java.io.Serializable, Mappable {
     private String clientToken = null;
     private String clientInfo = null;
     private String tenant;
-    private String scriptLogging = "";
+    private String scriptLogging = null;
     
     /**
      * Create a private logging console for this access object. TODO: Maybe
@@ -866,6 +866,10 @@ public final class Access implements java.io.Serializable, Mappable {
     }
 
     public void addScriptLogging(String log) {
+        if (scriptLogging == null) {
+            this.scriptLogging = log;
+            return;
+        }
         this.scriptLogging += "\n";
         this.scriptLogging += log;
     }

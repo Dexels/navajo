@@ -179,7 +179,7 @@ public class EntityDispatcher {
             access.setOperation(entityOperation);
             access.ipAddress = ip;
             if (queryString != null) {
-                access.addScriptLogging(queryString);
+                access.addScriptLogging("Entity Query = " + queryString);
             }
             
 
