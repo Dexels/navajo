@@ -275,6 +275,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		myName = name;
 
 	}
+	
+	private boolean hasPropertyDataListeners() {
+	    return myPropertyDataListeners != null;
+	}
 
 	@Override
 	public final String getName() {
@@ -848,7 +852,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		setValue(b,true);
 	}
 	public final void setValue(Binary b, boolean fireUpdateEvent) {
-		Object old = getTypedValue();
+	    Object old = null;
+	    if (hasPropertyDataListeners()) {
+	        old = getTypedValue();
+	    }
+		
 		myBinary = b;
 		myValue = null;
 		setType(BINARY_PROPERTY);
@@ -857,7 +865,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			addSubType("mime=" + b.getMimeType());
 			addSubType("extension=" + b.getExtension());
 		}
-		if(fireUpdateEvent && myPropertyDataListeners != null) {
+		if(fireUpdateEvent && hasPropertyDataListeners()) {
 			firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), false);
 		}
 
@@ -883,7 +891,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	@Deprecated
 	private final void setValue(URL url, Boolean internal) {
-		Object old = getTypedValue();
+	    Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
 		try {
 			if (type.equals(BINARY_PROPERTY)) {
 				InputStream in = url.openStream();
@@ -905,7 +916,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} catch (Exception e) {
 			logger.error("Error: ", e);
 		}
-		if (myPropertyDataListeners != null) {
+		if (hasPropertyDataListeners()) {
 		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
 		}
 	}
@@ -916,7 +927,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	private final void setValue(java.util.Date value, Boolean internal) {
-	    Object old = getTypedValue();
+	    Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
 		final ThreadLocal<SimpleDateFormat> formatter;
 		if (type.equals(TIMESTAMP_PROPERTY)) {
 		    formatter = timestampFormat;
@@ -932,7 +946,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			myValue = null;
 			myDate = null;
 		}
-		if (myPropertyDataListeners != null) {
+		if (hasPropertyDataListeners()) {
 		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
 		}
 	}
@@ -943,14 +957,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	private final void setValue(Boolean value, Boolean internal) {
-		Object old = getTypedValue();
+	    Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
 		setType(BOOLEAN_PROPERTY);
 		if (value != null) {
 			setCheckedValue((value.booleanValue() ? "true" : "false"));
 		} else {
 			myValue = null;
 		}
-		if (myPropertyDataListeners != null) {
+		if (hasPropertyDataListeners()) {
 		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
 		}
 	}
@@ -974,7 +991,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	private final void setValue(Money value, Boolean internal) {
-		Object old = getTypedValue();
+	    Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
 		setType(MONEY_PROPERTY);
 
 		if (value != null) {
@@ -982,13 +1002,16 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else {
 			myValue = null;
 		}
-		if (myPropertyDataListeners != null) {
+		if (hasPropertyDataListeners()) {
 		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
 		}
 	}
 	
 	private final void setValue(Memo value, Boolean internal) {
-        Object old = getTypedValue();
+	    Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
         setType(MEMO_PROPERTY);
 
         if (value != null) {
@@ -996,7 +1019,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
         } else {
             myValue = null;
         }
-        if (myPropertyDataListeners != null) {
+        if (hasPropertyDataListeners()) {
             firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
         }
     }
@@ -1007,14 +1030,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	private final void setValue(Percentage value, Boolean internal) {
-		Object old = getTypedValue();
+	    Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
 		setType(PERCENTAGE_PROPERTY);
 		if (value != null) {
 			setCheckedValue(value.toString());
 		} else {
 			myValue = null;
 		}
-		if (myPropertyDataListeners != null) {
+		if (hasPropertyDataListeners()) {
 		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
 		}
 	}
@@ -1025,14 +1051,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	private final void setValue(ClockTime value, Boolean internal) {
-		Object old = getTypedValue();
+	    Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
 		setType(CLOCKTIME_PROPERTY);
 		if (value != null) {
 			setCheckedValue(value.toString());
 		} else {
 			myValue = null;
 		}
-		if (myPropertyDataListeners != null) {
+		if (hasPropertyDataListeners()) {
 		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
 		}
 	}
@@ -1043,7 +1072,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	private final void setValue(StopwatchTime value, Boolean internal) {
-		Object old = getTypedValue();
+	    Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
 		setType(STOPWATCHTIME_PROPERTY);
 
 		if (value != null) {
@@ -1051,7 +1083,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else {
 			myValue = null;
 		}
-		if (myPropertyDataListeners != null) {
+		if (hasPropertyDataListeners()) {
 		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
 		}
 	}
@@ -1067,14 +1099,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	private final void setValue(Double value, Boolean internal) {
-		Object old = getTypedValue();
+	    Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
 		setType(FLOAT_PROPERTY);
 		if (value != null) {
 			setCheckedValue(value.doubleValue() + "");
 		} else {
 			myValue = null;
 		}
-		if (myPropertyDataListeners != null) {
+		if (hasPropertyDataListeners()) {
 		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
 		}
 		
@@ -1086,14 +1121,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	private final void setValue(Float value, Boolean internal) {
-		Object old = getTypedValue();
+	    Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
 		setType(FLOAT_PROPERTY);
 		if (value != null) {
 			setCheckedValue(value.floatValue() + "");
 		} else {
 			myValue = null;
 		}
-		if (myPropertyDataListeners != null) {
+		if (hasPropertyDataListeners()) {
 		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
 		}
 	}
@@ -1109,14 +1147,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	private final void setValue(Integer value, Boolean internal) {
-		Object old = getTypedValue();
+	    Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
 		setType(INTEGER_PROPERTY);
 		if (value != null) {
 			setCheckedValue(value.intValue() + "");
 		} else {
 			myValue = null;
 		}
-		if (myPropertyDataListeners != null) {
+		if (hasPropertyDataListeners()) {
 		    firePropertyChanged(PROPERTY_VALUE, old, value, internal);
 		}
 	}
@@ -1127,10 +1168,13 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	private final void setLongValue(long value, Boolean internal) {
-		Object old = getTypedValue();
+	    Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
 		setType(LONG_PROPERTY);
 		setCheckedValue(value + "");
-		if (myPropertyDataListeners != null) {
+		if (hasPropertyDataListeners()) {
 		    firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
 		}
 	}
@@ -1146,7 +1190,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	private final void setValue(String value, Boolean internal) {
-		String old = getValue();
+	    Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
 		if (BINARY_PROPERTY.equals(getType())) {
 			//logger.info("Warning: Very deprecated. use setValue(Binary) instead");
 			try {
@@ -1193,7 +1240,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	 * @param newValue
 	 */
 	protected void firePropertyChanged(String name, Object oldValue, Object newValue, Boolean internal) {
-		if (myPropertyDataListeners != null) {
+		if (hasPropertyDataListeners()) {
 
 			if (oldValue == null && newValue == null) {
 				return;
@@ -1209,7 +1256,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				}
 			}
 
-			if (myPropertyDataListeners != null) {
+			if (hasPropertyDataListeners()) {
 				for (int i = 0; i < myPropertyDataListeners.size(); i++) {
 					PropertyChangeListener c = myPropertyDataListeners.get(i);
 					c.propertyChange(new DocumentPropertyChangeEvent(this, name, oldValue, newValue, internal));
@@ -2200,7 +2247,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	@Override
 	public void forcePropertyChange() {
-		if (myPropertyDataListeners != null) {
+		if (hasPropertyDataListeners()) {
 			for (int i = 0; i < myPropertyDataListeners.size(); i++) {
 				PropertyChangeListener c = myPropertyDataListeners.get(i);
 				
