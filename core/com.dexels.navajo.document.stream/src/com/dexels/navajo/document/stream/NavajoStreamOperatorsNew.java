@@ -244,7 +244,7 @@ public class NavajoStreamOperatorsNew {
 
 				@Override
 				public void onSubscribe(Subscription s) {
-			        this.backpressureAdmin = new BackpressureAdministrator("parseNavajoStream",Long.MAX_VALUE, s);
+			        this.backpressureAdmin = new BackpressureAdministrator("parseNavajoStream",1, s);
 					child.onSubscribe(backpressureAdmin);
 					backpressureAdmin.initialize();
 				}
@@ -255,6 +255,7 @@ public class NavajoStreamOperatorsNew {
 					if(emitted == 0) {
 						backpressureAdmin.request(1);
 					}
+					System.err.println("Emitted: "+emitted);
 					backpressureAdmin.registerEmission(emitted);
 				}
 

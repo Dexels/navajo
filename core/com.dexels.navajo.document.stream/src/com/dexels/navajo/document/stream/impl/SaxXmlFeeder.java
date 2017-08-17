@@ -85,21 +85,21 @@ public class SaxXmlFeeder implements AsyncByteArrayFeeder {
 						}
 
 						try{
-						switch (currentToken) {
-						case XMLStreamConstants.START_DOCUMENT:
-							return new XMLEvent(XmlEventTypes.START_DOCUMENT, null, null);
-						case XMLStreamConstants.END_DOCUMENT:
-							return new XMLEvent(XmlEventTypes.END_DOCUMENT, null, null);
-						case XMLStreamConstants.START_ELEMENT:
-							Map<String, String> attributes = new HashMap<>();
-							for (int i = 0; i < parser.getAttributeCount(); i++) {
-								attributes.put(parser.getAttributeLocalName(i), parser.getAttributeValue(i));
-							}
-							return new XMLEvent(XmlEventTypes.START_ELEMENT, parser.getLocalName(), Collections.unmodifiableMap(attributes));
-						case XMLStreamConstants.END_ELEMENT:
-							return new XMLEvent(XmlEventTypes.END_ELEMENT, parser.getLocalName(), null);
-						case XMLStreamConstants.CHARACTERS:
-							return new XMLEvent(XmlEventTypes.TEXT, parser.getText(), null);
+							switch (currentToken) {
+							case XMLStreamConstants.START_DOCUMENT:
+								return new XMLEvent(XmlEventTypes.START_DOCUMENT, null, null);
+							case XMLStreamConstants.END_DOCUMENT:
+								return new XMLEvent(XmlEventTypes.END_DOCUMENT, null, null);
+							case XMLStreamConstants.START_ELEMENT:
+								Map<String, String> attributes = new HashMap<>();
+								for (int i = 0; i < parser.getAttributeCount(); i++) {
+									attributes.put(parser.getAttributeLocalName(i), parser.getAttributeValue(i));
+								}
+								return new XMLEvent(XmlEventTypes.START_ELEMENT, parser.getLocalName(), Collections.unmodifiableMap(attributes));
+							case XMLStreamConstants.END_ELEMENT:
+								return new XMLEvent(XmlEventTypes.END_ELEMENT, parser.getLocalName(), null);
+							case XMLStreamConstants.CHARACTERS:
+								return new XMLEvent(XmlEventTypes.TEXT, parser.getText(), null);
 						}
 						return null;
 					} finally {

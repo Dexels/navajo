@@ -46,17 +46,20 @@ public class ParseSubscriber implements FlowableSubscriber<byte[]> {
 
 	@Override
 	public void onNext(byte[] t) {
+		backpressureAdmin.registerIncoming(1);
 		Iterable<XMLEvent> it = feeder.parse(t);
 		int count = 0;
 		for (XMLEvent xmlEvent : it) {
+			if(xmlEvent==null) {
+				continue;
+			}
 			child.onNext(xmlEvent);
 			backpressureAdmin.registerEmission(1);
 //			emitted++;
 			count++;
 		}
 		if(count==0) {
-			backpressureAdmin.emitSingle();
-			
+			backpressureAdmin.requestSingleFromUpstream();
 		} else {
 			backpressureAdmin.requestIfNeeded();
 		}

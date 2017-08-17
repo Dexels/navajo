@@ -3,45 +3,46 @@ package com.dexels.navajo.document.stream.xml;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.reactivestreams.Subscription;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.reactivex.internal.util.BackpressureHelper;
 
 public class BackpressureAdministrator implements Subscription {
 
 	private final long initialRequest;
-	private final Subscription parentSubscription;
+	private final Subscription downstreamSubsciption;
 	private final String operatorName;
+	private long incoming = 0;
+	private final AtomicLong requested = new AtomicLong();
 
-	
-	private final static Logger logger = LoggerFactory.getLogger(BackpressureAdministrator.class);
-
-    final AtomicLong requested = new AtomicLong();
-	long emitted = 0;
-
-	public BackpressureAdministrator(String operatorName, long initialRequest, Subscription parentSubscription) {
+	public BackpressureAdministrator(String operatorName, long initialRequest, Subscription downstreamSubscription) {
 		this.initialRequest = initialRequest;
 		this.operatorName = operatorName;
-		this.parentSubscription = parentSubscription;
+		this.downstreamSubsciption = downstreamSubscription;
 	}
 	
+
+	public void registerIncoming(int i) {
+		incoming += i;
+		System.err.println("Incoming total: "+incoming);
+	}
+
 	public void initialize() {
-		this.parentSubscription.request(initialRequest);
+		this.downstreamSubsciption.request(initialRequest);
 	}
 	@Override
 	public void cancel() {
-        parentSubscription.cancel();
+        downstreamSubsciption.cancel();
     }
 
 	public void consumedEvent() {
-		request(1);
+		downstreamSubsciption.request(1);
 	}
 	@Override
 	public void request(long n) {
+		System.err.println("Request received by: "+this.operatorName+" : "+n);
 		BackpressureHelper.add(requested, n);
 		if(n==Long.MAX_VALUE) {
-			parentSubscription.request(Long.MAX_VALUE);
+			downstreamSubsciption.request(Long.MAX_VALUE);
 		} else {
 			requestIfNeeded();
 		}
@@ -53,31 +54,33 @@ public class BackpressureAdministrator implements Subscription {
 		if(requested == Long.MAX_VALUE) {
 			return 0;
 		}
-		if(requested > emitted) {
-			return requested - emitted;
+		if(incoming < requested) {
+			return 1;
 		}
 		return 0;
 	}
 	
 	public void requestIfNeeded() {
 		// locking incorrect I think
-		long req = amountToRequest(emitted, requested.get());
-		logger.info("Request name: {} emitted: {} requested: {} requesting more: {}",this.operatorName,emitted,requested.get(),req);
+		long req = amountToRequest(incoming, requested.get());
+		System.err.println("Request name: "+this.operatorName+" incoming: "+incoming+" requested: "+requested.get()+" requesting more: "+req);
 		if(req>0) {
-			parentSubscription.request(req);
+			downstreamSubsciption.request(req);
+			requested.addAndGet(req);
 		}
 	}
 
-	public void emitSingle() {
+	public void requestSingleFromUpstream() {
 		if(!(requested.get()==Long.MAX_VALUE)) {
-			parentSubscription.request(1);
+//			emitted++;
+			downstreamSubsciption.request(1);
 		}
 	}
 
 	public void registerEmission(int i) {
-		logger.info("Emitted new items: {} name: {} emitted: {} requested: {}",i,this.operatorName,emitted,requested.get());
-
-		emitted+=i;
+//		System.err.println("WHOOP!");
+//		emitted+=i;
+		System.err.println("Emitted new items: "+i+" name: "+this.operatorName+" requested: "+requested.get()+" incoming: "+incoming);
 	}
 
 }
