@@ -3,7 +3,9 @@ package com.dexels.navajo.tipi.swing.geo.impl;
 import java.beans.*;
 
 import org.jdesktop.swingx.*;
-import org.jdesktop.swingx.mapviewer.*;
+import org.jxmapviewer.JXMapKit;
+import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.GeoPosition;
 
 import com.dexels.navajo.tipi.swing.geo.impl.tilefactory.*;
 

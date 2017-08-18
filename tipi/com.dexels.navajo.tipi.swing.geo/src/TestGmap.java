@@ -4,7 +4,9 @@ import java.util.*;
 import javax.swing.*;
 
 import org.jdesktop.swingx.*;
-import org.jdesktop.swingx.mapviewer.*;
+import org.jxmapviewer.JXMapKit;
+import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.GeoPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
