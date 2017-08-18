@@ -103,12 +103,18 @@ public class MessageMap implements Mappable {
     }
     
     public Object getPropertyOrElse(String fullName, Object elseValue) {
-        try {
-            return getProperty(fullName);
-        } catch (Exception e) {
-           // Property probably doesn't exist - no biggie
+        Property p = msg.getProperty(fullName);
+        if (p == null) {
+            return elseValue;
         }
-        return elseValue;
+        if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+            if (p.getSelected() != null) {
+                return p.getSelected().getValue();
+            }
+            return null;
+        }
+        return p.getTypedValue();
+        
     }
 
     public Object getProperty(String fullName) throws NavajoException, UserException {

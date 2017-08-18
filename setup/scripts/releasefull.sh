@@ -20,9 +20,12 @@ function prettysleep {
 dirty=$(git_num_files)
 if [ $dirty -gt 0 ]
 then
-        echo "$dirty dirty files - Please commit before releasing!"
-        exit 1
+    echo "$dirty dirty files - Please commit before releasing!"
+    exit 1
 fi
+
+echo "Git pulling..."
+git pull
 
 BUNDLENAME=`cat META-INF/MANIFEST.MF | grep Bundle-SymbolicName | awk '{ print $2 }'`
 VERSION=`cat META-INF/MANIFEST.MF | grep Bundle-Version | awk '{ print $2 }'`

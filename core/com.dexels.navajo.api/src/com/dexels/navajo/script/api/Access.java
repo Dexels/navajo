@@ -74,7 +74,7 @@ public final class Access implements java.io.Serializable, Mappable {
     public static final int EXIT_SCRIPT_NOT_FOUND = 6;
     public static final int EXIT_AUTH_EXECPTION = 21;
     
-    public static final String LEGACY_APPLICTION = "legacy";
+    public static final String LEGACY_APPLICATION = "legacy";
     
     @SuppressWarnings("unused")
     private static final String VERSION = "$Id$";
@@ -94,7 +94,7 @@ public final class Access implements java.io.Serializable, Mappable {
     public String userAgent;
     public String ipAddress;
     public String hostName;
-    public String application = LEGACY_APPLICTION;
+    public String application = LEGACY_APPLICATION;
     public String organization;
     public String clientDescription;
     public boolean betaUser = false;
@@ -120,8 +120,6 @@ public final class Access implements java.io.Serializable, Mappable {
     public boolean compressedSend = false;
     public boolean isFinished = false;
     public int contentLength;
-    public transient Binary requestNavajo;
-    public transient Binary responseNavajo;
     public boolean debugAll;
 
     // Flag to indicate that during the execution of the webservice, break was called.
@@ -144,7 +142,8 @@ public final class Access implements java.io.Serializable, Mappable {
     private String clientToken = null;
     private String clientInfo = null;
     private String tenant;
-
+    private String scriptLogging = null;
+    
     /**
      * Create a private logging console for this access object. TODO: Maybe
      * restrict maximum size of console... or use Binary...
@@ -444,6 +443,7 @@ public final class Access implements java.io.Serializable, Mappable {
         a.application = this.application;
         a.organization = this.organization;
         a.clientDescription = this.clientDescription;
+        a.scriptLogging = this.scriptLogging;
         return a;
     }
 
@@ -865,6 +865,18 @@ public final class Access implements java.io.Serializable, Mappable {
         return this.tenant;
     }
 
+    public void addScriptLogging(String log) {
+        if (scriptLogging == null) {
+            this.scriptLogging = log;
+            return;
+        }
+        this.scriptLogging += "\n";
+        this.scriptLogging += log;
+    }
+    
+    public String getScriptLogging() {
+        return this.scriptLogging;
+    }
  
 
     public int getExitCode() {

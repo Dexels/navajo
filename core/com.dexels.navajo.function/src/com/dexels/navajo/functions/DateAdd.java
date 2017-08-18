@@ -43,7 +43,7 @@ public final class DateAdd extends FunctionInterface {
 			} else if (field.equals("MONTH")) {
 				cal.add(Calendar.MONTH, arg.intValue());
 			} else if (field.equals("DAY")) {
-				cal.add(Calendar.DAY_OF_MONTH, arg.intValue());
+				cal.add(Calendar.DAY_OF_YEAR, arg.intValue());
 			} else if (field.equals("WEEK")) {
 				cal.add(Calendar.WEEK_OF_YEAR, arg.intValue());
 			} else if (field.equals("HOUR")) {

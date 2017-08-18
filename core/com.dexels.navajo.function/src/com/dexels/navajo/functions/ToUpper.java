@@ -19,12 +19,14 @@ public final class ToUpper extends FunctionInterface {
 
     @Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-        String s = (String) this.getOperands().get(0);
+        Object op = this.getOperands().get(0);
+        
 
-        if (s == null)
+        if (op == null)
           return null;
+        
+        return op.toString().toUpperCase();
 
-        return s.toUpperCase();
     }
 
     @Override
