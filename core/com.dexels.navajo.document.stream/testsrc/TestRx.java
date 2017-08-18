@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -18,7 +17,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.stream.NavajoStreamOperatorsNew;
 import com.dexels.navajo.document.stream.io.NavajoReactiveOperators;
 import com.dexels.navajo.document.stream.xml.XML;
-import com.dexels.navajo.document.stream.xml.XML2;
 import com.dexels.navajo.document.stream.xml.XMLEvent;
 import com.github.davidmoten.rx2.Bytes;
 
@@ -28,7 +26,7 @@ import io.reactivex.disposables.Disposable;
 
 public class TestRx {
 	
-	@Test @Ignore
+	@Test 
 	public void testFromIterableCompletes() {
 		List<String> l = Arrays.asList(new String[]{"a","b","c"});
 		Flowable<String> a = Flowable.fromIterable(l);
@@ -57,7 +55,7 @@ public class TestRx {
 //			.subscribe(event->System.err.println("Event: "+event));
 	}
 	
-	@Test @Ignore
+	@Test 
 	public void simplerXMLObservable() {
 		String[] parts = new String[]{"<a><ble></ble><aba>","tralala</aba></a>"};
 		Observable.fromArray(parts)
@@ -69,7 +67,7 @@ public class TestRx {
 			.subscribe(event->System.err.println("Event: "+event));
 	}
 
-	@Test @Ignore
+	@Test 
 	public void simpleXML() throws InterruptedException {
 		Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_with_binary.xml"), 128)
 			.lift(XML.parseFlowable())
@@ -86,7 +84,7 @@ public class TestRx {
 //		Flowable
 //	}
 	
-	@Test @Ignore
+	@Test 
 	public void testXML() {
 		Navajo result = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_with_binary.xml"), 128)
 			.lift(XML.parseFlowable())
@@ -102,7 +100,7 @@ public class TestRx {
 	
 	
 	
-	@Test @Ignore
+	@Test 
 	public void repro() throws IOException {
 		
 		File compressed = File.createTempFile("dump", ".xml.deflated");
@@ -130,7 +128,7 @@ public class TestRx {
 	}
 	
 	
-	@Test @Ignore
+	@Test 
 	public void testDeflate() throws FileNotFoundException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] original = 
@@ -169,7 +167,7 @@ public class TestRx {
 	}
 	
 	
-	@Test @Ignore
+	@Test 
 	public void testBackpressure() {
 		
 		final int DELAY = 10;
@@ -178,7 +176,8 @@ public class TestRx {
 		final long started = System.currentTimeMillis();
 		AtomicLong count = new AtomicLong();
 		Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml.xml"), 1)
-			.lift(XML2.parse())
+			.lift(XML.parseFlowable())
+			.flatMap(e->e)
 			.subscribe(new Subscriber<XMLEvent>(){
 				Disposable timer;
 				@Override

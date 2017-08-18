@@ -96,7 +96,6 @@ public class ObservableNavajoParser  {
 				return ObservableNavajoParser.this.feeder.startDocument();
 			case END_DOCUMENT:
 				return ObservableNavajoParser.this.feeder.endDocument();
-//				subscriber.onComplete();;
 			case START_ELEMENT:
 				return ObservableNavajoParser.this.feeder.startElement(xmlEvent.getText(),xmlEvent.getAttributes());
 			case END_ELEMENT:
