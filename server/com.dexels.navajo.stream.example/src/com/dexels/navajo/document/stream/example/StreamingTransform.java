@@ -5,16 +5,16 @@ import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.Script;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
-import com.dexels.navajo.document.stream.io.NavajoStreamOperators;
+import com.dexels.navajo.document.stream.io.NavajoReactiveOperators;
 
-import rx.Observable;
+import io.reactivex.Flowable;
 
 public class StreamingTransform implements Script {
 
 //	Executor exe = Executors.newFixedThreadPool(10);
 
 	@Override
-	public Observable<NavajoStreamEvent> call(Observable<NavajoStreamEvent> input) {
+	public Flowable<NavajoStreamEvent> call(Flowable<NavajoStreamEvent> input) {
 		return input
 			.filter(e->e.type()==NavajoEventTypes.ARRAY_ELEMENT)
 			.map(e->e.message())
@@ -23,7 +23,7 @@ public class StreamingTransform implements Script {
 			.map(name->Msg.createElement()
 					.with(Prop.create("Name").withValue(name.toUpperCase()))
 					.with(Prop.create(name).withBinaryFromFile("/Users/frank/Downloads/sharknado1.jpg")))
-			.concatMap(m->m.stream())
-			.compose(NavajoStreamOperators.inArray("Organizations"));
+			.concatMap(m->m.streamFlowable())
+			.compose(NavajoReactiveOperators.inArray("Organizations"));
 	}
 }

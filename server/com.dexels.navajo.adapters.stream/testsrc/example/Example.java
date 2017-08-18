@@ -1,17 +1,5 @@
 package example;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Collections;
-
-import com.dexels.navajo.adapters.stream.ByteSource;
-import com.dexels.navajo.adapters.stream.HTTP;
-import com.dexels.navajo.document.stream.api.NAVADOC;
-import com.dexels.navajo.document.stream.xml.XML2;
-import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
-
-import rx.Observable;
-
 public class Example {
 
 //	public static void main(String[] args) {

@@ -117,7 +117,8 @@ public class NavajoReactiveOperators {
 				public void onSubscribe(Subscription s) {
 			        this.backpressureAdmin = new BackpressureAdministrator("deflate",1, s);
 					child.onSubscribe(backpressureAdmin);
-					backpressureAdmin.initialize();				}
+					backpressureAdmin.initialize();
+				}
 
 				@Override
 				public void onNext(byte[] in) {

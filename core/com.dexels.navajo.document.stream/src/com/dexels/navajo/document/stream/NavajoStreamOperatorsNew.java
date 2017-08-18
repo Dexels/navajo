@@ -155,6 +155,68 @@ public class NavajoStreamOperatorsNew {
 		};
 	}
 	
+	
+	public static FlowableOperator<Navajo, NavajoStreamEvent> collectFlowable() {
+		return new FlowableOperator<Navajo,NavajoStreamEvent>() {
+
+			NavajoStreamCollector collector = new NavajoStreamCollector();
+			@Override
+			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super Navajo> child) throws Exception {
+				return new Op(child);
+			}
+			final class Op implements Subscriber<NavajoStreamEvent>, Subscription {
+				final Subscriber<? super Navajo> child;
+
+				Subscription parentSubscription;
+
+				final AtomicBoolean isCancelled = new AtomicBoolean(false);
+				public Op(Subscriber<? super Navajo> child) {
+					this.child = child;
+				}
+				@Override
+				public void onSubscribe(Subscription s) {
+					this.parentSubscription = s;
+					child.onSubscribe(this);
+				}
+
+				@Override
+				public void onNext(NavajoStreamEvent v) {
+					try {
+						System.err.println("Event: "+v);
+						Optional<Navajo> result = collector.processNavajoEvent(v);
+						if(result.isPresent()) {
+							System.err.println("Result: "+result.get());
+							child.onNext(result.get());
+						}
+					} catch (IOException e) {
+						onError(e);
+						cancel();
+					}
+				}
+
+				@Override
+				public void onError(Throwable e) {
+					child.onError(e);
+				}
+
+				@Override
+				public void onComplete() {
+					child.onComplete();
+				}
+				@Override
+				public void cancel() {
+					isCancelled.set(true);
+					parentSubscription.cancel();
+				}
+				@Override
+				public void request(long n) {
+					parentSubscription.request(Long.MAX_VALUE);
+				}
+			}
+		};
+	}	
+	
+	
 	public static FlowableOperator<Binary,String> gatherBinary() {
 		return new FlowableOperator<Binary,String>() {
 

@@ -2,6 +2,8 @@ package com.dexels.navajo.document.stream.xml;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
@@ -52,7 +54,13 @@ public class ParseSubscriber2 implements Subscription, FlowableSubscriber<byte[]
 
 	@Override
 	public void onNext(byte[] t) {
-		Iterable<XMLEvent> it = feeder.parse(t);
+		Iterable<XMLEvent> it;
+		try {
+			it = feeder.parse(t);
+		} catch (XMLStreamException e) {
+			child.onError(e);
+			return;
+		}
 		int count = 0;
 		for (XMLEvent xmlEvent : it) {
 			child.onNext(xmlEvent);

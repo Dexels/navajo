@@ -50,8 +50,8 @@ public class BasicClientTest {
 //		myClient.setPassword("aap");
 		myClient = NavajoClientFactory.getClient();
 		myClient.setAllowCompression(false);
-		myClient.setUsername("");
-		myClient.setPassword("");
+		myClient.setUsername("ROOT");
+		myClient.setPassword("ROOT");
 		myClient.setServerUrl("http://localhost:9090/stream/KNVB");
 		long total = 0;
 		long start = System.currentTimeMillis();

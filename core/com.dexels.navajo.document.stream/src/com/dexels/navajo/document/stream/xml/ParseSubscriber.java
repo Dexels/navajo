@@ -1,5 +1,7 @@
 package com.dexels.navajo.document.stream.xml;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
@@ -47,7 +49,13 @@ public class ParseSubscriber implements FlowableSubscriber<byte[]> {
 	@Override
 	public void onNext(byte[] t) {
 		backpressureAdmin.registerIncoming(1);
-		Iterable<XMLEvent> it = feeder.parse(t);
+		Iterable<XMLEvent> it;
+		try {
+			it = feeder.parse(t);
+		} catch (XMLStreamException e) {
+			onError(e);
+			return;
+		}
 		int count = 0;
 		for (XMLEvent xmlEvent : it) {
 			if(xmlEvent==null) {

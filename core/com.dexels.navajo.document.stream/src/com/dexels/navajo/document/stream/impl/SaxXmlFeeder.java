@@ -41,15 +41,19 @@ public class SaxXmlFeeder implements AsyncByteArrayFeeder {
 		return this.failedWith;
 	}
 
-	public Iterable<XMLEvent> parse(byte[] buffer) {
-		try {
+	public Iterable<XMLEvent> parse(byte[] buffer) throws XMLStreamException {
+//		try {
 			wrappedFeeder.feedInput(buffer,0,buffer.length);
-		} catch (XMLStreamException e) {
-			logger.error("XML problem in SaxXML");
-			failedWith = e;
-		}
+//		} catch (XMLStreamException e) {
+//			logger.error("XML problem in SaxXML",e);
+//			failedWith = e;
+//		}
 //		updateSax();
+		
+		return getIterable();
+	}
 
+	public Iterable<XMLEvent> getIterable() {
 		return new Iterable<XMLEvent>(){
 			
 			@Override

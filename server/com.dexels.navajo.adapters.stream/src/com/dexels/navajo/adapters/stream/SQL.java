@@ -35,10 +35,11 @@ public class SQL {
 	
 	public static void main(String[] args) throws SQLException, InterruptedException, UserException {
 		testBackpressure();
+		Thread.sleep(10000);
 		if(true) {
 			return;
 		}
-        SQL.queryToMessage("dummy", "sometenant","select * from ORGANIZATION")
+        SQL.queryToMessage("sometenant","dummy","select * from ORGANIZATION")
         	.map(m->m.renameProperty("ORGANIZATIONID", "Id"))
         	.take(1000)
 //        	.toObservable()
@@ -86,8 +87,8 @@ public class SQL {
 		.fromDataSource(resolveDataSource("dummy","something"))
 		.select("select * from ORGANIZATION")
 		.get(SQL::resultSet)
-		.map(rs->rs.columnNames().toString())
-		.zipWith(Observable.interval(10, TimeUnit.MILLISECONDS), (rs,i)->{
+		.map(rs->rs.columnValue("NAME"))
+		.zipWith(Observable.interval(100, TimeUnit.MILLISECONDS), (rs,i)->{
 			return rs;
 		})
 		.subscribe(s->System.err.println("res: "+s));
@@ -115,8 +116,8 @@ public class SQL {
 				.map(SQL::defaultSqlResultToMsg);
 	}
 	
-	public static Flowable<Msg> queryToMessage(String datasource, String tenant, String query)  {
-		return query(datasource,tenant,query)
+	public static Flowable<Msg> queryToMessage(String tenant,String datasource,  String query)  {
+		return query(tenant,datasource,query)
 				.map(SQL::defaultSqlResultToMsg);
 	}
 
