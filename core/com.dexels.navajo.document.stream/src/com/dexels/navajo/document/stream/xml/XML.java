@@ -28,33 +28,103 @@ public class XML {
 	public static FlowableOperator<Flowable<XMLEvent>, byte[]> parseFlowable() {
 		return new FlowableOperator<Flowable<XMLEvent>, byte[]>() {
 
+			final SpscArrayQueue<Flowable<XMLEvent>> queue = new SpscArrayQueue<Flowable<XMLEvent>>(100);
+			final AtomicInteger request = new AtomicInteger();
+			final AtomicLong requested = new AtomicLong();
+			private Subscription subscription;
+		    volatile boolean done;
+		    Throwable error;
+		    volatile boolean cancelled;
 
+			void drain(Subscriber<? super Flowable<XMLEvent>> child) {
+			    if (request.getAndIncrement() != 0) {
+			        return;
+			    }
+
+			    int missed = 1;
+
+			    for (;;) {
+			        long r = requested.get();
+			        long e = 0L;
+			        
+			        while (e != r) {
+			            if (cancelled) {
+			                return;
+			            }
+			            boolean d = done;
+
+			            if (d) {
+			                Throwable ex = error;
+			                if (ex != null) {
+			                    child.onError(ex);
+			                    return;
+			                }
+			            }
+
+			            Flowable<XMLEvent> v = queue.poll();
+			            boolean empty = v == null;
+
+			            if (d && empty) {
+			                child.onComplete();
+			                return;
+			            }
+
+			            if (empty) {
+			                break;
+			            }
+
+			            child.onNext(v);
+			            
+			            e++;
+			        }
+
+			        if (e == r) {
+			            if (cancelled) {
+			                return;
+			            }
+
+			            if (done) {
+			                Throwable ex = error;
+			                if (ex != null) {
+			                    child.onError(ex);
+			                    return;
+			                }
+			                if (queue.isEmpty()) {
+			                    child.onComplete();
+			                    return;
+			                }
+			            }
+			        }
+
+			        if (e != 0L) {
+			            BackpressureHelper.produced(requested, e);
+			            subscription.request(e);
+			        }
+
+			        missed = request.addAndGet(-missed);
+			        if (missed == 0) {
+			            break;
+			        }
+			    }
+			}				    
+		    
 			@Override
 			public Subscriber<? super byte[]> apply(Subscriber<? super Flowable<XMLEvent>> child) throws Exception {
 				return new Subscriber<byte[]>(){
-					final SpscArrayQueue<Flowable<XMLEvent>> queue = new SpscArrayQueue<Flowable<XMLEvent>>(100);
-					final AtomicInteger request = new AtomicInteger();
-					final AtomicLong requested = new AtomicLong();
 					private final SaxXmlFeeder feeder = new SaxXmlFeeder();
-					private Subscription subscription;
-//					private final AtomicLong counter = new AtomicLong();
-				    volatile boolean done;
-				    Throwable error;
-
-				    volatile boolean cancelled;
 
 				    @Override
 				    public void onError(Throwable t) {
 				        error = t;
 				        done = true;
-				        drain();
+				        drain(child);
 				    }
 
 				    @Override
 				    public void onComplete() {
 						feeder.endOfInput();
 				        done = true;
-				        drain();
+				        drain(child);
 				    }
 					@Override
 					public void onNext(byte[] buffer) {
@@ -64,7 +134,7 @@ public class XML {
 					                .collect(Collectors.toList());
 							fromIterable = Flowable.fromIterable(x);
 							queue.offer(fromIterable);
-							drain();
+							drain(child);
 						} catch (XMLStreamException e) {
 							child.onError(e);
 							return;
@@ -73,13 +143,13 @@ public class XML {
 
 					@Override
 					public void onSubscribe(Subscription s) {
-						this.subscription = s;
+						subscription = s;
 						child.onSubscribe(new Subscription() {
 							
 							@Override
 							public void request(long n) {
 						        BackpressureHelper.add(requested, n);
-						        drain();
+						        drain(child);
 							}
 							
 							@Override
@@ -91,78 +161,6 @@ public class XML {
 						s.request(1);
 						
 					}
-
-					void drain() {
-					    if (request.getAndIncrement() != 0) {
-					        return;
-					    }
-
-					    int missed = 1;
-
-					    for (;;) {
-					        long r = requested.get();
-					        long e = 0L;
-					        
-					        while (e != r) {
-					            if (cancelled) {
-					                return;
-					            }
-					            boolean d = done;
-
-					            if (d) {
-					                Throwable ex = error;
-					                if (ex != null) {
-					                    child.onError(ex);
-					                    return;
-					                }
-					            }
-
-					            Flowable<XMLEvent> v = queue.poll();
-					            boolean empty = v == null;
-
-					            if (d && empty) {
-					                child.onComplete();
-					                return;
-					            }
-
-					            if (empty) {
-					                break;
-					            }
-
-					            child.onNext(v);
-					            
-					            e++;
-					        }
-
-					        if (e == r) {
-					            if (cancelled) {
-					                return;
-					            }
-
-					            if (done) {
-					                Throwable ex = error;
-					                if (ex != null) {
-					                    child.onError(ex);
-					                    return;
-					                }
-					                if (queue.isEmpty()) {
-					                    child.onComplete();
-					                    return;
-					                }
-					            }
-					        }
-
-					        if (e != 0L) {
-					            BackpressureHelper.produced(requested, e);
-					            subscription.request(e);
-					        }
-
-					        missed = request.addAndGet(-missed);
-					        if (missed == 0) {
-					            break;
-					        }
-					    }
-					}					
 				};
 			}
 			
