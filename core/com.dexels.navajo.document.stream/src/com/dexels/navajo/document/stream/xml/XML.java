@@ -37,7 +37,7 @@ public class XML {
 					final AtomicLong requested = new AtomicLong();
 					private final SaxXmlFeeder feeder = new SaxXmlFeeder();
 					private Subscription subscription;
-					private final AtomicLong counter = new AtomicLong();
+//					private final AtomicLong counter = new AtomicLong();
 				    volatile boolean done;
 				    Throwable error;
 
@@ -53,7 +53,6 @@ public class XML {
 				    @Override
 				    public void onComplete() {
 						feeder.endOfInput();
-						System.err.println("Completing main flowable after "+counter.get()+" items");
 				        done = true;
 				        drain();
 				    }
@@ -63,19 +62,9 @@ public class XML {
 						try {
 							List<XMLEvent> x = StreamSupport.stream(feeder.parse(buffer).spliterator(), false).filter(elt->elt!=null)
 					                .collect(Collectors.toList());
-							System.err.println("# of elements: "+x.size());
-							long itemno = counter.getAndIncrement();
-							fromIterable = Flowable
-									.fromIterable(x)
-									.doOnComplete(()->System.err.println("Sub Flowable #"+itemno+" completed!"))
-//									.doOnNext(y->System.err.println("Requested: "+y))
-									.doOnSubscribe(s->System.err.println("Subscr"));
-							System.err.println("before emission");
+							fromIterable = Flowable.fromIterable(x);
 							queue.offer(fromIterable);
-//							child.onNext(fromIterable);
-							
-							System.err.println("emission done");
-							subscription.request(1);
+							drain();
 						} catch (XMLStreamException e) {
 							child.onError(e);
 							return;
