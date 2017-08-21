@@ -1,4 +1,4 @@
-package com.dexels.navajo.document.stream.xml;
+package com.dexels.navajo.document.stream.base;
 
 import java.util.concurrent.atomic.AtomicLong;
 

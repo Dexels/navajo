@@ -57,7 +57,7 @@ public class BasicClientTest {
 		long start = System.currentTimeMillis();
 		Navajo reply = myClient.doSimpleSend(null, "club/InitSearchClubs");
 		reply.write(System.err);
-		reply.getProperty("ClubSearch/SearchName").setAnyValue("vel");
+		reply.getProperty("ClubSearch/SearchName").setAnyValue("%%%");
 		Navajo reply2 = myClient.doSimpleSend(reply,"club/ProcessSearchClubs");
 		reply2.write(System.err);
 		long time = System.currentTimeMillis() - start;

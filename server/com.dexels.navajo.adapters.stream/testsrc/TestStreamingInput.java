@@ -9,8 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapters.stream.SQL;
-import com.dexels.navajo.document.stream.NavajoStreamOperatorsNew;
-import com.dexels.navajo.document.stream.io.NavajoReactiveOperators;
+import com.dexels.navajo.document.stream.StreamDocument;
 
 public class TestStreamingInput  {
 	private final static Logger logger = LoggerFactory.getLogger(TestStreamingInput.class);
@@ -22,9 +21,9 @@ public class TestStreamingInput  {
 			.map(SQL::defaultSqlResultToMsg)
 			.doOnNext(m->System.err.println("Message: "+m))
 			.flatMap(m->m.streamFlowable())
-			.compose(NavajoReactiveOperators.inArray("Organizations"))
-			.compose(NavajoReactiveOperators.inNavajo("dummu", "username", "password"))
-			.lift(NavajoStreamOperatorsNew.serialize())
+			.compose(StreamDocument.inArray("Organizations"))
+			.compose(StreamDocument.inNavajo("dummu", "username", "password"))
+			.lift(StreamDocument.serialize())
 			.doOnComplete(()->System.err.println("Done query method"))
 			.subscribe(new Subscriber<byte[]>() {
 
@@ -70,9 +69,9 @@ public class TestStreamingInput  {
 			.doOnNext(m->System.err.println("Message: "+m))
 			.doOnComplete(()->System.err.println("Done!"))
 			.flatMap(m->m.streamFlowable())
-			.compose(NavajoReactiveOperators.inArray("Organizations"))
-			.compose(NavajoReactiveOperators.inNavajo("dummu", "username", "password"))
-			.lift(NavajoStreamOperatorsNew.serialize())
+			.compose(StreamDocument.inArray("Organizations"))
+			.compose(StreamDocument.inNavajo("dummu", "username", "password"))
+			.lift(StreamDocument.serialize())
 			.subscribe(new Subscriber<byte[]>() {
 
 				@Override

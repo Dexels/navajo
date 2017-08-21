@@ -5,6 +5,7 @@ import javax.xml.stream.XMLStreamException;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
+import com.dexels.navajo.document.stream.base.BackpressureAdministrator;
 import com.dexels.navajo.document.stream.impl.SaxXmlFeeder;
 
 import io.reactivex.FlowableSubscriber;

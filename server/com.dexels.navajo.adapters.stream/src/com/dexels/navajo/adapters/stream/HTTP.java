@@ -4,20 +4,45 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.reactivex.Flowable;
 import io.reactivex.netty.protocol.http.client.HttpClient;
 import io.reactivex.netty.protocol.http.client.HttpClientResponse;
+import rx.schedulers.Schedulers;
 
 public class HTTP {
-	private static final int BUFFERSIZE = 8192;
 
-	
+	// TODO test, support extra headers
+	public static Flowable<byte[]> post(String postURL, Flowable<byte[]> body, Map<String,List<Object>> headers) throws MalformedURLException {
+		URL u = new URL(postURL);
+		boolean secure = u.getProtocol().equals("https");
+		String host = u.getHost();
+		int port = u.getPort()==-1?(secure?443:80):u.getPort();
+		String path = u.getPath();
+		
+		HttpClient<ByteBuf,ByteBuf> client = secure ? HttpClient.newClient(host,port).secure(defaultSSLEngineForClient(host, port)) : HttpClient.newClient(host,port);
+
+		return RxJavaInterop.toV2Flowable(
+				client.createPost(path)
+				    .addHeader("Host", host)
+				    .addHeaders(headers)
+//				    .addHeader("X-Navajo-Instance", "KNVB")
+//				    .addHeader("Content-Type", "text/xml")
+				    .writeContentAndFlushOnEach(RxJavaInterop.toV1Observable(body).map(HTTP::toByteBuf))
+					.observeOn(Schedulers.io())
+			    )
+			    .map(HTTP::processResponse)
+			    .concatMapEager(e->e);
+		
+	}
 	// TODO Rewrite using non blocking HTTP Client
 	public static Flowable<byte[]> get(String getUrl) throws MalformedURLException {
 		URL u = new URL(getUrl);
@@ -25,19 +50,8 @@ public class HTTP {
 		String host = u.getHost();
 		int port = u.getPort()==-1?(secure?443:80):u.getPort();
 		String path = u.getPath();
-		System.err.println("Path: "+path);
-		System.err.println("query: "+u.getQuery());
-		
-		
 		HttpClient<ByteBuf,ByteBuf> client = secure ? HttpClient.newClient(host,port).secure(defaultSSLEngineForClient(host, port)) : HttpClient.newClient(host,port);
 
-		Flowable<byte[]> get = RxJavaInterop.toV2Flowable(client.createPost("/navajo")
-			    .addHeader("Host", "knvb-test.sportlink.com")
-			    .addHeader("X-Navajo-Instance", "KNVB")
-			    .addHeader("Content-Type", "text/xml"))
-			    .map(HTTP::processResponse)
-			    .concatMap(e->e);
-		
 		
 		return RxJavaInterop.toV2Flowable(client
 		    .createGet(path+"?"+u.getQuery())
@@ -69,7 +83,7 @@ public class HTTP {
 //	}
 
 	private static Flowable<byte[]> processResponse(HttpClientResponse<ByteBuf> response) {
-		return RxJavaInterop.toV2Flowable(response.getContent().asObservable().map(HTTP::toBytes));
+		return RxJavaInterop.toV2Flowable(response.getContent().asObservable().doOnSubscribe(()->System.err.println("Subscribe happened")).doOnNext(e->System.err.println("Something read")). map(HTTP::toBytes));
 	}
 	
 	private static  byte[] toBytes(ByteBuf bytebuf) {
@@ -78,6 +92,9 @@ public class HTTP {
 		return bytes;
 	}
 	
+	private static ByteBuf toByteBuf(byte[] b) {
+		return Unpooled.copiedBuffer(b);
+	}
     private static SSLEngine defaultSSLEngineForClient(String host, int port) {
         try {
 			SSLContext sslCtx = SSLContext.getDefault();

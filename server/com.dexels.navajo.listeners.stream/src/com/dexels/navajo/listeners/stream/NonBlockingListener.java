@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.stream.NavajoStreamOperatorsNew;
+import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
@@ -26,8 +26,7 @@ import com.dexels.navajo.document.stream.api.Script;
 import com.dexels.navajo.document.stream.api.SimpleScript;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.navajo.document.stream.io.NavajoReactiveOperators;
-import com.dexels.navajo.document.stream.xml.XML2;
+import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 
@@ -101,9 +100,9 @@ public class NonBlockingListener extends HttpServlet {
 		
 		Map<String, Object> attributes = extractHeaders(req);
 		processStreamingScript(req,navajoService,emptyInput,attributes,ac,responseEncoding)
-			.lift(NavajoStreamOperatorsNew.filterMessageIgnore())
-			.lift(NavajoStreamOperatorsNew.serialize())
-			.lift(NavajoReactiveOperators.compress(responseEncoding))
+			.lift(StreamDocument.filterMessageIgnore())
+			.lift(StreamDocument.serialize())
+			.compose(StreamDocument.compress(responseEncoding))
 			.subscribe(Servlets.createSubscriber(ac));
 		return;
 	}
@@ -133,15 +132,17 @@ public class NonBlockingListener extends HttpServlet {
 		
 		Flowable<NavajoStreamEvent> eventStream = Servlets.createFlowable(ac, 1000)
 			.observeOn(Schedulers.io(),false,10)
-			.lift(NavajoReactiveOperators.decompress(requestEncoding))
-			.lift(XML2.parse())
-			.lift(NavajoStreamOperatorsNew.parse());
+			.compose(StreamDocument.decompress2(requestEncoding))
+			.lift(XML.parseFlowable(10))
+			.flatMap(e->e)
+			.lift(StreamDocument.parse())
+			.concatMap(e->e);
 			
 
 		processStreamingScript(req,navajoService,eventStream,attributes,ac,responseEncoding)
-			.lift(NavajoStreamOperatorsNew.filterMessageIgnore())
-			.lift(NavajoStreamOperatorsNew.serialize())
-			.lift(NavajoReactiveOperators.compress(responseEncoding))
+			.lift(StreamDocument.filterMessageIgnore())
+			.lift(StreamDocument.serialize())
+			.compose(StreamDocument.compress(responseEncoding))
 			.subscribe(Servlets.createSubscriber(ac));
 	}
 
@@ -175,20 +176,20 @@ public class NonBlockingListener extends HttpServlet {
 		}
 		if(navajoService ==null) {
 			return eventStream
-					.lift(NavajoStreamOperatorsNew.collectFlowable())
+					.lift(StreamDocument.collectFlowable())
 					.flatMap(inputNav->executeLegacy(navajoService, tenant, inputNav));
 		}
 		SimpleScript simple = simpleScripts.get(navajoService);
 		if(simple!=null) {
 			return eventStream
-				.lift(NavajoStreamOperatorsNew.collectFlowable())
+				.lift(StreamDocument.collectFlowable())
 				.flatMap(simple::call)
-				.compose(NavajoReactiveOperators.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")));
+				.compose(StreamDocument.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")));
 		}
 		Script s = scripts.get(navajoService);
 		if(s!=null) {
 			return s.call(eventStream)
-					.compose(NavajoReactiveOperators.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")));
+					.compose(StreamDocument.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")));
 		}
 		logger.debug("Script unresolved.");
 		return emptyDocument(navajoService, "", "");
@@ -201,7 +202,7 @@ public class NonBlockingListener extends HttpServlet {
 				.with(Prop.create("description", "Could not resolve script: "+in.getHeader().getRPCName()))
 				.stream()
 				.toFlowable(BackpressureStrategy.BUFFER)
-				.compose(NavajoReactiveOperators.inNavajo(in.getHeader().getRPCName(), in.getHeader().getRPCUser(), ""));
+				.compose(StreamDocument.inNavajo(in.getHeader().getRPCName(), in.getHeader().getRPCUser(), ""));
 	}
 	
 	
@@ -250,7 +251,7 @@ public class NonBlockingListener extends HttpServlet {
 			return errorMessage(in);
 		}
 		return Observable.just(result)
-			.lift(NavajoStreamOperatorsNew.domStream())
+			.lift(StreamDocument.domStream())
 			.toFlowable(BackpressureStrategy.BUFFER);
 	}
 	

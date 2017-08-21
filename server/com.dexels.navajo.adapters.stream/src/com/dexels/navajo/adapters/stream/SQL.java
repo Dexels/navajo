@@ -15,12 +15,9 @@ import org.dexels.grus.GrusProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.stream.NavajoStreamOperatorsNew;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.Prop;
-import com.dexels.navajo.document.stream.io.NavajoReactiveOperators;
 import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
-import com.dexels.navajo.script.api.UserException;
 import com.github.davidmoten.rx.jdbc.Database;
 
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
@@ -32,31 +29,6 @@ public class SQL {
 	
 	private final static Logger logger = LoggerFactory.getLogger(SQL.class);
 
-	
-	public static void main(String[] args) throws SQLException, InterruptedException, UserException {
-		testBackpressure();
-		Thread.sleep(10000);
-		if(true) {
-			return;
-		}
-        SQL.queryToMessage("sometenant","dummy","select * from ORGANIZATION")
-        	.map(m->m.renameProperty("ORGANIZATIONID", "Id"))
-        	.take(1000)
-//        	.toObservable()
-        	.flatMap(m->m.streamFlowable())
-	    	.compose(NavajoReactiveOperators.inArray("Organization"))
-	    	.compose(NavajoReactiveOperators.inNavajo("SportList","dummy","dummy"))
-	    	.lift(NavajoStreamOperatorsNew.serialize())
-			.lift(NavajoStreamOperatorsNew.decode("UTF-8"))
-//			.compose(StringFlowable.split("\r"))
-//	    	.toObservable()
-//	    	.lift(NavajoStreamOperatorsNew.collect())
-//	    	.doOnComplete(()->System.err.println("Done!"))
-	    	.blockingForEach(oa->{
-    		System.err.print(oa);
-    	});       
-	}
-	
 	public static DataSource resolveDataSource(String dataSourceName, String tenant) {
 		
 		if(dataSourceName.equals("dummy")) {

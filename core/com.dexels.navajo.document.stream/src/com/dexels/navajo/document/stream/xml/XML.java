@@ -1,8 +1,6 @@
 package com.dexels.navajo.document.stream.xml;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -19,95 +17,13 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableOperator;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.queue.SpscArrayQueue;
 import io.reactivex.internal.util.BackpressureHelper;
 
 public class XML {
 	
-	
-	public static FlowableOperator<Flowable<XMLEvent>, byte[]> parseFlowable() {
-		return new FlowableOperator<Flowable<XMLEvent>, byte[]>() {
-
-			final SpscArrayQueue<Flowable<XMLEvent>> queue = new SpscArrayQueue<Flowable<XMLEvent>>(100);
-			final AtomicInteger request = new AtomicInteger();
-			final AtomicLong requested = new AtomicLong();
-			private Subscription subscription;
-		    volatile boolean done;
-		    Throwable error;
-		    volatile boolean cancelled;
-
-			void drain(Subscriber<? super Flowable<XMLEvent>> child) {
-			    if (request.getAndIncrement() != 0) {
-			        return;
-			    }
-
-			    int missed = 1;
-
-			    for (;;) {
-			        long r = requested.get();
-			        long e = 0L;
-			        
-			        while (e != r) {
-			            if (cancelled) {
-			                return;
-			            }
-			            boolean d = done;
-
-			            if (d) {
-			                Throwable ex = error;
-			                if (ex != null) {
-			                    child.onError(ex);
-			                    return;
-			                }
-			            }
-
-			            Flowable<XMLEvent> v = queue.poll();
-			            boolean empty = v == null;
-
-			            if (d && empty) {
-			                child.onComplete();
-			                return;
-			            }
-
-			            if (empty) {
-			                break;
-			            }
-
-			            child.onNext(v);
-			            
-			            e++;
-			        }
-
-			        if (e == r) {
-			            if (cancelled) {
-			                return;
-			            }
-
-			            if (done) {
-			                Throwable ex = error;
-			                if (ex != null) {
-			                    child.onError(ex);
-			                    return;
-			                }
-			                if (queue.isEmpty()) {
-			                    child.onComplete();
-			                    return;
-			                }
-			            }
-			        }
-
-			        if (e != 0L) {
-			            BackpressureHelper.produced(requested, e);
-			            subscription.request(e);
-			        }
-
-			        missed = request.addAndGet(-missed);
-			        if (missed == 0) {
-			            break;
-			        }
-			    }
-			}				    
-		    
+	public static FlowableOperator<Flowable<XMLEvent>, byte[]> parseFlowable(int queueSize) {
+		return new BaseFlowableOperator<Flowable<XMLEvent>, byte[]>(queueSize) {
+			
 			@Override
 			public Subscriber<? super byte[]> apply(Subscriber<? super Flowable<XMLEvent>> child) throws Exception {
 				return new Subscriber<byte[]>(){
@@ -159,7 +75,6 @@ public class XML {
 							}
 						});
 						s.request(1);
-						
 					}
 				};
 			}

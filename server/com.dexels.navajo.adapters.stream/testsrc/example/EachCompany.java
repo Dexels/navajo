@@ -1,16 +1,14 @@
 package example;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 
 import com.dexels.navajo.adapters.stream.CSV;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.stream.NavajoStreamOperatorsNew;
+import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.github.davidmoten.rx2.Bytes;
 
 import hu.akarnokd.rxjava2.string.StringFlowable;
-import hu.akarnokd.rxjava2.string.StringObservable;
 
 
 public class EachCompany  {
@@ -39,7 +37,7 @@ public class EachCompany  {
 	
 	public static void csvExample() {
 		Bytes.from(EachCompany.class.getClassLoader().getResourceAsStream("com/dexels/navajo/adapters/stream/sqlmap/example/example.csv"))
-			.lift(NavajoStreamOperatorsNew.decode("UTF-8"))
+			.lift(StreamDocument.decode("UTF-8"))
 			.compose(StringFlowable.split("\r"))
 			.toObservable()
 			.lift(CSV.rows(","))

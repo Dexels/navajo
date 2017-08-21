@@ -1,5 +1,8 @@
+import java.io.File;
 import java.net.MalformedURLException;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -7,8 +10,13 @@ import org.junit.Test;
 import com.dexels.navajo.adapters.stream.HTTP;
 import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
+import com.github.davidmoten.rx2.Bytes;
 
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.netty.buffer.Unpooled;
 import io.reactivex.Flowable;
+import io.reactivex.netty.protocol.http.client.HttpClient;
+import io.reactivex.schedulers.Schedulers;
 
 public class TestHttp {
 
@@ -16,7 +24,7 @@ public class TestHttp {
 	public void testHttpGet() throws MalformedURLException {
 		
 		String weather = HTTP.get("http://api.openweathermap.org/data/2.5/weather?q=Amsterdam&APPID=c9a22840a45f9da6f235c718475c4f08&mode=xml")
-		.lift(XML.parseFlowable())
+		.lift(XML.parseFlowable(10))
 		.flatMap(x->x)
 		.filter(e->e.getType()==XmlEventTypes.START_ELEMENT)
 		.filter(e->e.getText().equals("weather"))
@@ -29,21 +37,53 @@ public class TestHttp {
 	}
 
 
-	@Test 
+	@Test @Ignore
 	public void testBiggerDownload() throws MalformedURLException, InterruptedException {
-//		String url = "https://repo.dexels.com/nexus/service/local/repositories/central/content/org/apache/tika/tika-bundle/1.6/tika-bundle-1.6.jar";
-//		String url = "http://spiritus.dexels.com:909/0/nexus/content/repositories/obr2/.meta/obr.xml";
-		String url = "http://localhost:8080/example.xml";
-		Flowable<Long> timer = Flowable.interval(1, TimeUnit.MILLISECONDS);
-		HTTP.get(url)
-			.lift(XML.parseFlowable())
+		String url = "https://repo.dexels.com/nexus/service/local/repositories/central/content/org/apache/tika/tika-bundle/1.6/tika-bundle-1.6.jar";
+//		String url = "http://spiritus.dexels.com:9090/nexus/content/repositories/obr2/.meta/obr.xml";
+//		String url = "http://localhost:8080/clubs.xml";
+		long l = HTTP.get(url)
+			.lift(XML.parseFlowable(10))
 			.flatMap(x->x)
 //			.lift(NavajoStreamOperatorsNew.parse())
-			.zipWith(timer, (a,b)->a)
-			.blockingForEach(e->System.err.println(e));
+//			.zipWith(timer, (a,b)->a)
+			.count().blockingGet();
+		System.err.println(">> "+l);
+//			.blockingForEach(e->System.err.println(e));
 //		Thread.sleep(40000);
 	}
 
+	@Test 
+	public void testBigPost() throws MalformedURLException, InterruptedException {
+//		String url = "https://repo.dexels.com/nexus/service/local/repositories/central/content/org/apache/tika/tika-bundle/1.6/tika-bundle-1.6.jar";
+//		String url = "http://spiritus.dexels.com:9090/nexus/content/repositories/obr2/.meta/obr.xml";
+		String url = "http://localhost:8080/reactive-servlet/reactive";
+		AtomicLong readCount = new AtomicLong(0);
+		Flowable<byte[]> input = Bytes.from(new File("/Users/frank/git/reactive-servlet/rxjava-extras-0.8.0.8.jar"))
+				.doOnNext(c->{
+					long r = readCount.addAndGet(c.length);
+					System.err.println("Read "+r);
+				})
+				.doOnComplete(()->{System.err.println("input done");});
+		AtomicLong count = new AtomicLong(0);
+		long l = HTTP.post(url,input,Collections.emptyMap())
+//			.lift(XML.parseFlowable(10))
+//			.flatMap(x->x)
+				.observeOn(Schedulers.io())
+				.doOnNext(c->{
+					long r = count.addAndGet(c.length);
+					System.err.println("Data: "+r);
+				})
+//			.lift(NavajoStreamOperatorsNew.parse())
+//			.zipWith(timer, (a,b)->a)
+			.count().blockingGet();
+		System.err.println(">> "+l);
+//			.blockingForEach(e->System.err.println(e));
+//		Thread.sleep(40000);
+	}
+	
+
+	
 	@Test @Ignore
 	public void testBackPressure() throws InterruptedException {
 //		String xml1 = "<tag><ble";
@@ -55,7 +95,7 @@ public class TestHttp {
 		Flowable.fromArray(xmls)
 				.doOnNext(i->System.err.println("Source emitting: "+i))
 				.map(i->i.getBytes())
-				.lift(XML.parseFlowable())
+				.lift(XML.parseFlowable(10))
 				.flatMap(x->x)
 				.doOnError(t->t.printStackTrace())
 				.zipWith(timer, (a,b)->a)
