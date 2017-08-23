@@ -39,6 +39,8 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	// double lon,lat;
 	String mapFactory;
 	int zoom;
+	int maxZoom = 10;
+	boolean allowZoom = true;
 	private JLayeredPane jp = new JLayeredPane();
 	private TipiSwingMapImpl myMapKit;
 	private final Map<Component, GeoPosition> mapComponents = new HashMap<Component, GeoPosition>();
@@ -63,6 +65,12 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 					@Override
 					public void propertyChange(PropertyChangeEvent p) {
 						if (p.getPropertyName().equals("zoom")) {
+							layoutChildren();
+						}
+						if (p.getPropertyName().equals("maxZoom")) {
+							layoutChildren();
+						}
+						if (p.getPropertyName().equals("allowZoom")) {
 							layoutChildren();
 						}
 						if (p.getPropertyName().equals("centerPosition")) {
@@ -168,7 +176,18 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	public void setZoom(int zoom) {
 		this.zoom = zoom;
+		// Prevent zooming when a limit has been set
+		if (zoom > maxZoom) {
+			zoom = maxZoom;
+		}
 		myMapKit.setZoom(zoom);
+	}
+	public void setMaxZoom(int maxZoom) {
+		this.maxZoom = maxZoom;
+	}
+	public void setAllowZoom(boolean z) {
+		this.allowZoom = z;
+		myMapKit.setAllowZoom(z);
 	}
 
 	@Override
@@ -180,6 +199,9 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 				if (name.equals("zoom")) {
 					myMapKit.setZoomExternal((Integer) object);
+				}
+				if (name.equals("allowZoom")) {
+					myMapKit.setAllowZoom((Boolean) object);
 				}
 				// if(name.equals("lat")) {
 				// Number n = (Number)object;
