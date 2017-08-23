@@ -132,10 +132,8 @@ public class StreamDocument {
 				@Override
 				public void onNext(NavajoStreamEvent v) {
 					try {
-						System.err.println("Event: "+v);
 						Optional<Navajo> result = collector.processNavajoEvent(v);
 						if(result.isPresent()) {
-							System.err.println("Result: "+result.get());
 							child.onNext(result.get());
 						}
 					} catch (IOException e) {
@@ -195,10 +193,8 @@ public class StreamDocument {
 				@Override
 				public void onNext(NavajoStreamEvent v) {
 					try {
-						System.err.println("Event: "+v);
 						Optional<Navajo> result = collector.processNavajoEvent(v);
 						if(result.isPresent()) {
-							System.err.println("Result: "+result.get());
 							child.onNext(result.get());
 						}
 					} catch (IOException e) {
@@ -637,6 +633,7 @@ public class StreamDocument {
 							case ARRAY_ELEMENT:
 							case MESSAGE_DEFINITION:
 							case MESSAGE:
+
 								if(!ignoreLevel.contains(true)) {
 									operatorNext(event, e->e, child);
 //									child.onNext(event);
@@ -648,10 +645,14 @@ public class StreamDocument {
 								
 							case NAVAJO_DONE:
 							case NAVAJO_STARTED:
+							case BINARY_STARTED:
+							case BINARY_CONTENT:
+							case BINARY_DONE:
 								operatorNext(event, e->e, child);
 								return;
+								
 							default:
-								throw new UnsupportedOperationException("Unknown event found in NAVADOC");
+								throw new UnsupportedOperationException("Unknown event found in NAVADOC: "+event.type());
 
 						}
 						operatorRequest(1);
