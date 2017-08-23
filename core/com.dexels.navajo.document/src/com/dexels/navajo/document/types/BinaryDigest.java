@@ -7,6 +7,9 @@ public final class BinaryDigest {
 	private final byte[] digest;
 
 	public BinaryDigest(byte[] digest) {
+		if(digest==null) {
+			throw new NullPointerException("Cant make a digest out of null");
+		}
 		this.digest = Arrays.copyOf(digest, digest.length);
 	}
 
