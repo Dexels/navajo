@@ -309,12 +309,15 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
 	
 	public BinaryDigest getDigest() {
-		if(!isResolved()) {
+		if(!isResolved() && this.digest !=null) {
 			try {
 				resolveData();
 			} catch (IOException e) {
 				logger.error("Error: ", e);
 			}
+		}
+		if(this.digest==null) {
+			return null;
 		}
 		return new BinaryDigest(this.digest);
 	}

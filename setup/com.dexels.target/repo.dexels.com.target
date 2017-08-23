@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2320">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2358">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
@@ -19,8 +19,8 @@
 <repository location="http://download.eclipse.org/egit/updates/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.10.11.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.10.11"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.10.17.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.10.17"/>
 </location>
 </locations>
 <includeBundles>
@@ -61,6 +61,7 @@
 <plugin id="com.fasterxml.jackson.dataformat.jackson-dataformat-yaml"/>
 <plugin id="com.fasterxml.jackson.module.jackson-module-jaxb-annotations"/>
 <plugin id="com.fasterxml.woodstox.woodstox-core"/>
+<plugin id="com.github.akarnokd.rxjava2-interop"/>
 <plugin id="com.google.guava"/>
 <plugin id="com.google.inject"/>
 <plugin id="com.google.protobuf"/>
@@ -82,6 +83,7 @@
 <plugin id="io.reactivex.rxjava"/>
 <plugin id="io.reactivex.rxjava-joins"/>
 <plugin id="io.reactivex.rxjava-string"/>
+<plugin id="io.reactivex.rxjava2.rxjava"/>
 <plugin id="io.reactivex.rxnetty-common"/>
 <plugin id="io.reactivex.rxnetty-http"/>
 <plugin id="io.reactivex.rxnetty-tcp"/>
@@ -115,8 +117,8 @@
 <plugin id="org.apache.felix.fileinstall"/>
 <plugin id="org.apache.felix.framework"/>
 <plugin id="org.apache.felix.gogo.command" version="1.0.2"/>
-<plugin id="org.apache.felix.gogo.runtime" version="1.0.6"/>
 <plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
+<plugin id="org.apache.felix.gogo.runtime" version="1.0.6"/>
 <plugin id="org.apache.felix.gogo.shell"/>
 <plugin id="org.apache.felix.inventory"/>
 <plugin id="org.apache.felix.log"/>
@@ -221,8 +223,11 @@
 <plugin id="org.freemarker.freemarker"/>
 <plugin id="org.h2"/>
 <plugin id="org.jboss.netty"/>
+<plugin id="org.jctools.core"/>
 <plugin id="org.jvnet.mimepull"/>
 <plugin id="org.jvnet.staxex.stax-ex"/>
+<plugin id="org.mongodb.driver-async"/>
+<plugin id="org.mongodb.driver-reactivestreams"/>
 <plugin id="org.mongodb.mongo-java-driver"/>
 <plugin id="org.objectweb.asm"/>
 <plugin id="org.objectweb.asm.commons"/>
@@ -260,6 +265,7 @@
 <plugin id="org.ops4j.pax.web.pax-web-runtime"/>
 <plugin id="org.ops4j.pax.web.pax-web-spi"/>
 <plugin id="org.postgresql.jdbc4"/>
+<plugin id="org.reactivestreams.reactive-streams"/>
 <plugin id="org.scala-lang.modules.scala-xml"/>
 <plugin id="org.scala-lang.scala-compiler"/>
 <plugin id="org.scala-lang.scala-library"/>
