@@ -203,7 +203,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	@Override
 	public void addToContainer(final Object c, Object constraints) {
-		logger.info("entering add");
+		logger.debug("entering add");
 		myMapKit.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
 		overlayPanel.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
 
@@ -227,19 +227,19 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 			lonRightBottom = st.nextToken();
 
 			if (latRightBottom.startsWith("+")) {
-				logger.info("REL LAT:" + latRightBottom);
+				logger.debug("REL LAT:" + latRightBottom);
 				double rel = Double.parseDouble(latRightBottom.substring(1));
 				latRB = latF + rel;
-				logger.info("REsults: " + latRB);
+				logger.debug("REsults: " + latRB);
 			} else {
 				latRB = Double.parseDouble(latRightBottom);
 			}
 
 			if (lonRightBottom.startsWith("+")) {
-				logger.info("REL LON:" + lonRightBottom);
+				logger.debug("REL LON:" + lonRightBottom);
 				double rel = Double.parseDouble(lonRightBottom.substring(1));
 				lonRB = lonF + rel;
-				logger.info("REsults: " + lonRB);
+				logger.debug("REsults: " + lonRB);
 			} else {
 				lonRB = Double.parseDouble(lonRightBottom);
 			}
@@ -255,7 +255,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		} else {
 			if (c instanceof JComponent) {
 				JComponent jc = (JComponent) c;
-				logger.info("Adding with default size: " + jc.getPreferredSize());
+				logger.debug("Adding with default size: " + jc.getPreferredSize());
 				jc.setSize(jc.getPreferredSize());
 			} else {
 				((Component) c).setSize(100, 100);
@@ -282,7 +282,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 			}});
 		jp.repaint();
 		// layoutChildren();
-		logger.info("leaving add");
+		logger.debug("leaving add");
 
 	}
 
