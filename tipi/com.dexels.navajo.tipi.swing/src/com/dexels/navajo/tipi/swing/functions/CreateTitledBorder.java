@@ -90,6 +90,8 @@ public class CreateTitledBorder extends FunctionInterface {
 				// typedBorder = BorderFactory.createLineBorder(linecolor, lineSize, true);
 			} else if ( bordertype.equalsIgnoreCase("window") ) {
 				typedBorder = new TipiRoundedBorder(linecolor, lineSize, startGradientColor, endGradientColor, "vertical", false);
+			} else if ( bordertype.equalsIgnoreCase("rounded") ) {
+				typedBorder = new TipiRoundedBorder(linecolor, lineSize, null, null, "horizontal", false);
 			} else if ( bordertype.equalsIgnoreCase("roundedgradient_horizontal") ) {
 				typedBorder = new TipiRoundedBorder(linecolor, lineSize, startGradientColor, endGradientColor, "horizontal", false);
 			} else if ( bordertype.equalsIgnoreCase("roundedgradient_vertical") ) {
