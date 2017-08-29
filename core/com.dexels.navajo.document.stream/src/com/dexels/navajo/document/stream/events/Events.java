@@ -8,7 +8,7 @@ import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 
 public class Events {
-	
+
 	public static NavajoStreamEvent messageDefinitionStarted(String name) {
 		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE_DEFINITION_STARTED,null,Collections.emptyMap());
 	}

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2358">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2365">
 <locations>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.10.17.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.10.17"/>
+</location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.11.0.v20150602-1417"/>
@@ -14,13 +18,9 @@
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.feature.group" version="4.8.0.201706111038-r"/>
-<unit id="org.eclipse.jgit.lfs.feature.group" version="4.8.0.201706111038-r"/>
 <unit id="org.eclipse.jgit.http.apache.feature.group" version="4.8.0.201706111038-r"/>
+<unit id="org.eclipse.jgit.lfs.feature.group" version="4.8.0.201706111038-r"/>
 <repository location="http://download.eclipse.org/egit/updates/"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.10.17.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.10.17"/>
 </location>
 </locations>
 <includeBundles>

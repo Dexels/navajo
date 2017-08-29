@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -188,7 +189,8 @@ public class NavajoDomStreamer {
 		} else {
 			value = tmlProperty.getValue();
 		}
-		return Prop.create(tmlProperty.getName(),value,tmlProperty.getType(),selections,"in".equals(tmlProperty.getDirection())?Direction.IN:Direction.OUT, tmlProperty.getDescription(),tmlProperty.getLength(),tmlProperty.getSubType(),tmlProperty.getCardinality());
+		Optional<Direction> direction = "in".equals(tmlProperty.getDirection())?Optional.of(Direction.IN):"out".equals(tmlProperty.getDirection())?Optional.of(Direction.OUT):Optional.empty();
+		return Prop.create(tmlProperty.getName(),value,tmlProperty.getType(),selections,direction, tmlProperty.getDescription(),tmlProperty.getLength(),tmlProperty.getSubType(),Optional.ofNullable(tmlProperty.getCardinality()));
 	}
 	
 	 private static List<Select> selectFromTml(List<Selection> in) {

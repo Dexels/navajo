@@ -24,6 +24,7 @@ import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.Script;
 import com.dexels.navajo.document.stream.api.SimpleScript;
+import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.xml.XML;
@@ -32,6 +33,7 @@ import com.dexels.navajo.script.api.LocalClient;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.FlowableTransformer;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import nl.codemonkey.reactiveservlet.Servlets;
@@ -98,8 +100,7 @@ public class NonBlockingListener extends HttpServlet {
 		}
 		Flowable<NavajoStreamEvent> emptyInput = emptyDocument(navajoService,"","");
 		
-		Map<String, Object> attributes = extractHeaders(req);
-		processStreamingScript(req,navajoService,emptyInput,attributes,ac,responseEncoding)
+		processStreamingScript(req,emptyInput)
 			.lift(StreamDocument.filterMessageIgnore())
 			.lift(StreamDocument.serialize())
 			.compose(StreamDocument.compress(responseEncoding))
@@ -139,7 +140,7 @@ public class NonBlockingListener extends HttpServlet {
 			.concatMap(e->e);
 			
 
-		processStreamingScript(req,navajoService,eventStream,attributes,ac,responseEncoding)
+		processStreamingScript(req,eventStream)
 			.lift(StreamDocument.filterMessageIgnore())
 			.lift(StreamDocument.serialize())
 			.compose(StreamDocument.compress(responseEncoding))
@@ -169,31 +170,43 @@ public class NonBlockingListener extends HttpServlet {
 //	.subscribe(output);
 
 	
-	private Flowable<NavajoStreamEvent> processStreamingScript(HttpServletRequest request,String navajoService,Flowable<NavajoStreamEvent> eventStream, Map<String, Object> attributes, AsyncContext asyncContext, String responseEncoding) throws IOException {
-		String tenant = determineTenantFromRequest(request);
-		System.err.println("Tenant determined: "+tenant+" service: "+navajoService);
-		if(tenant==null) {
-		}
-		if(navajoService ==null) {
+	private Flowable<NavajoStreamEvent> processStreamingScript(HttpServletRequest request,Flowable<NavajoStreamEvent> eventStream) throws IOException {
+		StreamScriptContext context = determineContextFromRequest(request);
+		System.err.println("Tenant determined: "+context.tenant()+" service: "+context.service());
+		if(context.service() ==null) {
 			return eventStream
 					.lift(StreamDocument.collectFlowable())
-					.flatMap(inputNav->executeLegacy(navajoService, tenant, inputNav));
+					.flatMap(inputNav->executeLegacy(context.service(), context.tenant(), inputNav));
 		}
-		SimpleScript simple = simpleScripts.get(navajoService);
-		if(simple!=null) {
-			return eventStream
-				.lift(StreamDocument.collectFlowable())
-				.flatMap(simple::call)
-				.compose(StreamDocument.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")));
-		}
-		Script s = scripts.get(navajoService);
-		if(s!=null) {
-			return s.call(eventStream)
-					.compose(StreamDocument.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")));
-		}
-		logger.debug("Script unresolved.");
-		return emptyDocument(navajoService, "", "");
+		return eventStream
+				.compose(createTransformerScript(context))
+				.compose(StreamDocument.inNavajo(context.service(), context.username(), ""));
+//		SimpleScript simple = simpleScripts.get(navajoService);
+//		if(simple!=null) {
+//			return eventStream
+//				.lift(StreamDocument.collectFlowable())
+//				.compose(event->simple.call(event,context))
+//				.compose(StreamDocument.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")));
+//		}
+//		Script s = scripts.get(navajoService);
+//		if(s!=null) {
+//			eventStream.compose(s.call(context))
+//					.compose(StreamDocument.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")));
+//		}
+//		logger.debug("Script unresolved.");
+//		return emptyDocument(navajoService, "", "");
 
+	}
+//	.compose(StreamDocument.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")));
+
+	private FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> createTransformerScript(StreamScriptContext context) {
+		Script s = scripts.get(context.service());
+		return s.call(context)
+				;
+//			.
+//		if(s!=null) {
+//			eventStream.compose(s.call(context))
+//		}
 	}
 
 	private static Flowable<NavajoStreamEvent> errorMessage(Navajo in) {
@@ -306,6 +319,15 @@ public class NonBlockingListener extends HttpServlet {
 		}
 	}
 
+	private static StreamScriptContext determineContextFromRequest(final HttpServletRequest req) {
+		String username = req.getHeader("X-Navajo-Username");
+		String tenant = determineTenantFromRequest(req);
+		Map<String, Object> attributes = extractHeaders(req);
+		String serviceHeader = req.getHeader("X-Navajo-Service");
+
+		return new StreamScriptContext(tenant,serviceHeader, username,attributes);
+	}
+	
 	// warn: Duplicated code
 	private static String determineTenantFromRequest(final HttpServletRequest req) {
 		String requestInstance = req.getHeader("X-Navajo-Instance");

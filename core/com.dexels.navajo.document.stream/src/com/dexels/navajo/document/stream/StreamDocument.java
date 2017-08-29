@@ -11,9 +11,12 @@ import java.nio.charset.CoderResult;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -27,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
+import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.base.BackpressureAdministrator;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
@@ -35,6 +39,7 @@ import com.dexels.navajo.document.stream.xml.BaseFlowableOperator;
 import com.dexels.navajo.document.stream.xml.ObservableNavajoParser;
 import com.dexels.navajo.document.stream.xml.XMLEvent;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;
@@ -1003,93 +1008,6 @@ public class StreamDocument {
 
 		};
 	}
-	public static FlowableOperator<NavajoStreamEvent,NavajoStreamEvent> messageWithPathOld(final String messagePath, final Func1<Msg,Msg> operation, boolean filterOthers) {
-		return new FlowableOperator<NavajoStreamEvent,NavajoStreamEvent>(){
-			@Override
-			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super NavajoStreamEvent> child) {
-				return new Subscriber<NavajoStreamEvent>() {
-
-					private final Stack<String> pathStack = new Stack<>();
-					private BackpressureAdministrator backpressureAdmin;
-					
-					@Override
-					public void onSubscribe(Subscription s) {
-				        this.backpressureAdmin = new BackpressureAdministrator("messageWithPath",Long.MAX_VALUE, s);
-						child.onSubscribe(backpressureAdmin);
-						backpressureAdmin.initialize();					}
-					
-					@Override
-					public void onComplete() {
-						child.onComplete();
-					}
-
-					@Override
-					public void onError(Throwable e) {
-						child.onError(e);
-						
-					}
-
-					@Override
-					public void onNext(NavajoStreamEvent event) {
-						switch(event.type()) {
-						case MESSAGE_STARTED:
-							pathStack.push(event.path());
-							backpressureAdmin.consumedEvent();
-							break;
-						case ARRAY_ELEMENT_STARTED:
-							backpressureAdmin.consumedEvent();
-							break;
-						case MESSAGE:
-							if(matches(messagePath,pathStack)) {
-								Msg transformed = operation.call((Msg) event.body());
-								child.onNext(Events.message(transformed, event.path(), event.attributes()));
-								backpressureAdmin.registerEmission(1);
-								backpressureAdmin.requestIfNeeded();
-								return;
-							} else {
-								backpressureAdmin.consumedEvent();
-							}
-							pathStack.pop();
-							break;
-						case ARRAY_ELEMENT:
-							if(matches(messagePath,pathStack)) {
-								Msg transformed = operation.call((Msg) event.body());
-								child.onNext(Events.arrayElement(transformed,event.attributes()));
-								backpressureAdmin.registerEmission(1);
-								backpressureAdmin.requestIfNeeded();
-								return;
-							} else {
-								backpressureAdmin.consumedEvent();
-							}
-							break;
-							// TODO Support these?
-						case ARRAY_STARTED:
-							pathStack.push(event.path());
-							backpressureAdmin.consumedEvent();
-							break;
-						case ARRAY_DONE:
-							pathStack.pop();
-							backpressureAdmin.consumedEvent();
-							break;
-						default:
-							break;
-						}
-						if(!filterOthers) {
-							child.onNext(event);
-							backpressureAdmin.registerEmission(1);
-							backpressureAdmin.requestIfNeeded();
-						}
-					}
-
-					private boolean matches(String path, Stack<String> pathStack) {
-						String joined = String.join("/", pathStack);
-						return path.equals(joined);
-					}
-
-				};
-			}
-		};
-	}
 	
 	public static FlowableOperator<String, byte[]> decodeNew(String encodingName) {
 		
@@ -1555,7 +1473,7 @@ public class StreamDocument {
 											boolean needsInput = inflater.needsInput();
 											
 											try {
-												System.err.println("NeedsInput: "+needsInput+" first: "+first+" bytes: "+new String(data));
+//												System.err.println("NeedsInput: "+needsInput+" first: "+first+" bytes: "+new String(data));
 												read = inflater.inflate(buffer);
 												boolean hasMore = (first || needsInput) && read > 0;
 												first = false;
@@ -1745,7 +1663,51 @@ public class StreamDocument {
 			}
 		};
 	}
+	
+	public static Flowable<NavajoStreamEvent> replicationMessageToStreamEvents(String name, ReplicationMessage msg,boolean isArrayElement) {
+		
+		Flowable<NavajoStreamEvent> subm = Flowable.fromIterable(
+				msg.subMessageMap()
+					.entrySet())
+					.concatMap(e-> {
+						return replicationMessageToStreamEvents(e.getKey(),e.getValue(),false);
+					});
+		
+		
+		Flowable<NavajoStreamEvent> subList = Flowable.fromIterable(
+				msg.subMessageListMap()
+				.entrySet())
+				.concatMap(e->streamReplicationMessageList(e.getKey(),e.getValue()));
+		
+		if(isArrayElement) {
+			return subm.startWith(Events.arrayElementStarted(Collections.emptyMap())).concatWith(subList).concatWith(Flowable.just(Events.arrayElement(replicationToMsg(msg,isArrayElement),Collections.emptyMap())));
+		} else {
+			return subm.startWith(Events.messageStarted(name, Collections.emptyMap())).concatWith(subList).concatWith(Flowable.just(Events.message(replicationToMsg(msg,isArrayElement), name, Collections.emptyMap())));
+		}
 
+	}
+
+	private static Flowable<NavajoStreamEvent> streamReplicationMessageList(String name, List<ReplicationMessage> l) {
+		if(l.isEmpty()) {
+			return Flowable.empty();
+		}
+		return Flowable.fromIterable(l)
+				.concatMap(msg->replicationMessageToStreamEvents(name,msg,true))
+				.startWith(Events.arrayStarted(name, Collections.emptyMap()))
+				.concatWith(Flowable.just(Events.arrayDone(name))
+					)
+		;
+	}
+	
+	public static Msg replicationToMsg(ReplicationMessage rpl, boolean isArrayMessage) {
+		Map<String,String> types = rpl.types();
+		List<Prop> properties = rpl.values()
+			.entrySet()
+			.stream()
+			.map(e->Prop.create(e.getKey(), e.getValue(), types.get(e.getKey())))
+			.collect(Collectors.toList());
+		return isArrayMessage ? Msg.createElement(properties) : Msg.create(properties);
+	}
 	public static FlowableOperator<NavajoStreamEvent, NavajoStreamEvent> elementsInPath() {
 		return new FlowableOperator<NavajoStreamEvent, NavajoStreamEvent>() {
 
