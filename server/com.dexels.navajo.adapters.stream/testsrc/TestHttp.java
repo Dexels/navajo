@@ -12,10 +12,7 @@ import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
 import com.github.davidmoten.rx2.Bytes;
 
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
-import io.netty.buffer.Unpooled;
 import io.reactivex.Flowable;
-import io.reactivex.netty.protocol.http.client.HttpClient;
 import io.reactivex.schedulers.Schedulers;
 
 public class TestHttp {

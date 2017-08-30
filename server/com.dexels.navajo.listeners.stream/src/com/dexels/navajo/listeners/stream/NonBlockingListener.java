@@ -109,6 +109,7 @@ public class NonBlockingListener extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		AsyncContext ac = request.startAsync();
+		ac.setTimeout(3600000);
 		StreamScriptContext context = determineContextFromRequest(request);
 		String requestEncoding = (String) context.attributes.get("Content-Encoding");
 		String responseEncoding = decideEncoding(request.getHeader("Accept-Encoding"));
@@ -159,6 +160,8 @@ public class NonBlockingListener extends HttpServlet {
 //				.compose(StreamDocument.inNavajo(context.service, context.username, ""));
 	}
 	
+//	com.dexels.navajo.authentication.api.AuthenticationMethod
+//	public void addAuthenticationMethod(AuthenticationMethod method)
 	public void authenticate(StreamScriptContext context) {
 		Access a = new Access(-1,-1,context.username,context.service,"stream","ip","hostname",null,false,"access");
 	}

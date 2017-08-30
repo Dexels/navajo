@@ -1,4 +1,4 @@
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -15,8 +15,10 @@ public class TestStreamingInput  {
 	private final static Logger logger = LoggerFactory.getLogger(TestStreamingInput.class);
 
 	@Test
-	public void simpleTest() throws FileNotFoundException {
-		FileOutputStream out = new FileOutputStream("simpleresponse.xml");
+	public void simpleTest() throws IOException {
+		File tempFile = File.createTempFile("simpleresponse", ".xml");
+		tempFile.deleteOnExit();
+		FileOutputStream out = new FileOutputStream(tempFile);
 		SQL.query("dummy","sometenant", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
 			.map(SQL::defaultSqlResultToMsg)
 			.doOnNext(m->System.err.println("Message: "+m))
@@ -61,10 +63,12 @@ public class TestStreamingInput  {
 	}
 	
 	@Test
-	public void testSingleQuery() throws FileNotFoundException {
-		FileOutputStream out = new FileOutputStream("singleresponse.xml");
+	public void testSingleQuery() throws IOException {
 
-		
+		File tempFile = File.createTempFile("singleresponse", ".xml");
+		tempFile.deleteOnExit();
+		FileOutputStream out = new FileOutputStream(tempFile);
+
 		SQL.queryToMessage("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
 			.doOnNext(m->System.err.println("Message: "+m))
 			.doOnComplete(()->System.err.println("Done!"))
