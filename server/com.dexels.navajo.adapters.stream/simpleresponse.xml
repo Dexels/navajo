@@ -1,7 +1,0 @@
-<tml>
-   <header>
-      <transaction rpc_pwd="password" rpc_name="dummu" rpc_usr="username"/>
-      <callback/>
-      <client/>
-   </header>
-   <message name="Organizations" type="array">

@@ -1,8 +1,8 @@
 
 
 import java.io.File;
-import java.nio.charset.Charset;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.davidmoten.rx.Bytes;
@@ -15,7 +15,7 @@ import rx.schedulers.Schedulers;
 
 public class TestRxNetty {
 
-	@Test
+	@Test @Ignore
 	public void testRxNettyIssue596() {
 	Observable<ByteBuf> body = Bytes.from(new File("/Users/frank/git/reactive-servlet/rxjava-extras-0.8.0.8.jar"))
 			.doOnNext(e->System.err.println("Read some data"))
