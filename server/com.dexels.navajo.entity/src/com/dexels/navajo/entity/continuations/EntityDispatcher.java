@@ -241,7 +241,7 @@ public class EntityDispatcher {
                     EntityException e = (EntityException) ex;
                     if (e.getCode() == EntityException.NOT_MODIFIED) {
                         skipLogging = true;
-                    } else if (e.getCode() == EntityException.ENTITY_NOT_FOUND && !entityFound) {
+                    } else if (e.getCode() == EntityException.ENTITY_NOT_FOUND && entityFound) {
                         skipLogging = true;
                         access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
                     } else if (e.getCode() == EntityException.UNAUTHORIZED) {
@@ -250,7 +250,10 @@ public class EntityDispatcher {
                     } else if (e.getCode() == EntityException.VALIDATION_ERROR) {
                         skipLogging = true;
                         access.setExitCode(Access.EXIT_VALIDATION_ERR);
-                    }
+	                } else if (e.getCode() == EntityException.CONFLICT) {
+	                    skipLogging = true;
+	                    access.setExitCode(Access.EXIT_ENTITY_CONFLICT);
+	                }
                 }
 
                 if (!skipLogging) {

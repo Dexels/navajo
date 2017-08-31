@@ -69,6 +69,9 @@ public final class Access implements java.io.Serializable, Mappable {
     public static final int EXIT_BREAK = 3;
     public static final int EXIT_USEREXCEPTION = 4;
     public static final int EXIT_EXCEPTION = 5;
+    public static final int EXIT_ENTITY_CONFLICT = 10;
+    public static final int EXIT_ENTITY_ETAG = 11;
+    
     
     // The following exit codes can be ignored in statistics
     public static final int EXIT_SCRIPT_NOT_FOUND = 6;
