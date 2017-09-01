@@ -2,9 +2,9 @@ package com.dexels.navajo.document.stream.api;
 
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
-import rx.Observable;
-import rx.Observable.Transformer;
+import io.reactivex.FlowableTransformer;
 
-public interface Script extends Transformer<NavajoStreamEvent, NavajoStreamEvent> {
-	public Observable<NavajoStreamEvent> call(Observable<NavajoStreamEvent> input);
+public interface Script {
+	public FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> call(StreamScriptContext context);
+
 }

@@ -50,14 +50,14 @@ public class BasicClientTest {
 //		myClient.setPassword("aap");
 		myClient = NavajoClientFactory.getClient();
 		myClient.setAllowCompression(false);
-		myClient.setUsername("");
-		myClient.setPassword("");
+		myClient.setUsername("ROOT");
+		myClient.setPassword("ROOT");
 		myClient.setServerUrl("http://localhost:9090/stream/KNVB");
 		long total = 0;
 		long start = System.currentTimeMillis();
 		Navajo reply = myClient.doSimpleSend(null, "club/InitSearchClubs");
 		reply.write(System.err);
-		reply.getProperty("ClubSearch/SearchName").setAnyValue("vel");
+		reply.getProperty("ClubSearch/SearchName").setAnyValue("%%%");
 		Navajo reply2 = myClient.doSimpleSend(reply,"club/ProcessSearchClubs");
 		reply2.write(System.err);
 		long time = System.currentTimeMillis() - start;

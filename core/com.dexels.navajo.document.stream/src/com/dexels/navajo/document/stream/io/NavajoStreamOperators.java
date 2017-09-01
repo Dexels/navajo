@@ -1,6 +1,5 @@
 package com.dexels.navajo.document.stream.io;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,11 +17,11 @@ import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
+
 import rx.Observable;
 import rx.Observable.Operator;
 import rx.Observable.Transformer;
 import rx.Subscriber;
-import rx.schedulers.Schedulers;
 
 public class NavajoStreamOperators {
 	
@@ -31,12 +30,6 @@ public class NavajoStreamOperators {
 //	private static final int COMPRESSION_BUFFER_SIZE = 1024;
 	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamOperators.class);
 
-	
-	<T> Transformer<T, T> applySchedulers() {  
-	    return observable -> observable.subscribeOn(Schedulers.io())
-	        .observeOn(Schedulers.newThread());
-	}
-	
 	public static Transformer<NavajoStreamEvent, NavajoStreamEvent> inArray(String name) {
 		return new Transformer<NavajoStreamEvent, NavajoStreamEvent>() {
 
@@ -101,6 +94,8 @@ public class NavajoStreamOperators {
 			}};
 		
 	}
+	
+	
 	public static Operator<byte[], byte[]> decompress(String encoding) {
 //		logger.info("Starting decompress with encoding: {}",encoding);
 		if("jzlib".equals(encoding) || "deflate".equals(encoding) || "inflate".equals(encoding)) {
@@ -125,37 +120,6 @@ public class NavajoStreamOperators {
 		// TODO gzip
 		return identityEncoding();
 	}
-	
-	public static Operator<byte[], byte[]> collect() {
-		return new Operator<byte[], byte[]>(){
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			@Override
-			public Subscriber<? super byte[]> call(Subscriber<? super byte[]> sub) {
-				return new Subscriber<byte[]>() {
-
-					@Override
-					public void onCompleted() {
-						sub.onNext(baos.toByteArray());
-						sub.onCompleted();
-					}
-
-					@Override
-					public void onError(Throwable t) {
-						sub.onError(t);
-					}
-
-					@Override
-					public void onNext(byte[] b) {
-						try {
-							baos.write(b);
-						} catch (IOException e) {
-							sub.onError(e);
-						}
-					}
-				};
-			}};
-	}
-	
 	
 	public static Operator<byte[], byte[]> deflate() throws FileNotFoundException {
 //		final FileOutputStream fos = new FileOutputStream("/Users/frank/uncompressed.xml");
@@ -251,6 +215,7 @@ public class NavajoStreamOperators {
 			}
 		};
 	}
+	
     public static Operator<byte[], byte[]> inflate() {
 		return new Operator<byte[],byte[]>(){
 

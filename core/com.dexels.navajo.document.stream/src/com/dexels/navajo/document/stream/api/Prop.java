@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
@@ -25,9 +26,9 @@ public class Prop {
 	private final List<Select> selections = new ArrayList<>();
 	private final int length;
 	private final String description;
-	private final Direction direction;
+	private final Optional<Direction> direction;
 	private final String subtype;
-	private final String cardinality;
+	private final Optional<String> cardinality;
 	
 	
 	private final static Logger logger = LoggerFactory.getLogger(Prop.class);
@@ -37,8 +38,8 @@ public class Prop {
 		IN,OUT
 	}
 	
-	Prop(String name, Object value, String type, List<Select> selections, String cardinality) {
-		this(name,value,type,selections,Direction.OUT,"",-1,"",cardinality);
+	Prop(String name, Object value, String type, List<Select> selections, Optional<String> cardinality) {
+		this(name,value,type,selections,Optional.empty(),"",-1,"",cardinality);
 	}
 	
 	public Prop copy() {
@@ -46,11 +47,11 @@ public class Prop {
 	}
 
 	public Prop(String name, Object value, String type) {
-		this(name, value, type, Collections.emptyList(),"1");
+		this(name, value, type, Collections.emptyList(),Optional.empty());
 	}
 
-	public Prop(String name, Object value, String type, List<Select> selections, Prop.Direction direction,
-			String description, int length, String subtype,String cardinality) {
+	public Prop(String name, Object value, String type, List<Select> selections, Optional<Prop.Direction> direction,
+			String description, int length, String subtype,Optional<String> cardinality) {
 		this.name = name;
 		this.type = type;
 		this.value = value;
@@ -71,7 +72,7 @@ public class Prop {
 		String lngth = attributes.get("length");
 		String cardinality = attributes.get("cardinality");
 		int len = lngth==null || "".equals(lngth)?-1:Integer.parseInt(lngth);
-		return create(attributes.get("name"),attributes.get("value"),attributes.get("type"),selections,attributes.get("direction").equals("in")?Direction.IN:Direction.OUT,attributes.get("description"),len,attributes.get("subtype"),cardinality);
+		return create(attributes.get("name"),attributes.get("value"),attributes.get("type"),selections,parseDirection(attributes.get("direction")),attributes.get("description"),len,attributes.get("subtype"),Optional.ofNullable(cardinality));
 	}
 
 	public static Prop create(Map<String, String> attributes, Binary currentBinary) {
@@ -79,11 +80,11 @@ public class Prop {
 		return create(attributes.get("name"),currentBinary,attributes.get("type"),Collections.emptyList(),parseDirection(attributes.get("direction")),attributes.get("description"),len,attributes.get("subtype"),null);
 	}
 	
-	private static Direction parseDirection(String direction) {
+	private static Optional<Direction> parseDirection(String direction) {
 		if(direction==null) {
-			return Direction.OUT;
+			return Optional.empty();
 		}
-		return direction.equals("in")?Direction.IN:Direction.OUT;
+		return direction.equals("in")?Optional.of(Direction.IN):Optional.of(Direction.OUT);
 	}
 
 	public static Prop create(String name, Object value) {
@@ -94,11 +95,11 @@ public class Prop {
 		return new Prop(name,value,type);
 	}
 	
-	public static Prop create(String name, Object value, String type,List<Select> selections, String cardinality) {
-		return new Prop(name,value,type,selections,Prop.Direction.OUT,"",-1,"",cardinality);
+	public static Prop create(String name, Object value, String type,List<Select> selections, Optional<String> cardinality) {
+		return new Prop(name,value,type,selections,Optional.empty(),"",-1,"",cardinality);
 	}
 	
-	public static Prop create(String name, Object value, String type,List<Select> selections, Prop.Direction direction, String description, int length, String subtype, String cardinality ) {
+	public static Prop create(String name, Object value, String type,List<Select> selections, Optional<Prop.Direction> direction, String description, int length, String subtype, Optional<String> cardinality ) {
 		return new Prop(name,value,type,selections,direction,description,length,subtype,cardinality);
 	}
 	
@@ -155,12 +156,15 @@ public class Prop {
 		return this.description;
 	}
 
-	public String direction() {
-		switch(this.direction) {
+	public Optional<String> direction() {
+		if(!this.direction.isPresent()) {
+			return Optional.empty();
+		}
+		switch(this.direction.get()) {
 		case IN:
-			return "in";
+			return Optional.of("in");
 		default:
-			return "out";
+			return Optional.of("out");
 		}
 
 	}
@@ -201,14 +205,14 @@ public class Prop {
 			 String escapedValue = StringEscapeUtils.escapeXml(value);
 			sw.write(" value=\""+escapedValue+"\"");
 		 }
-		 if(direction!=null) {
-			 sw.write(" direction=\""+direction()+"\"");
+		 if(direction!=null && direction.isPresent()) {
+			 sw.write(" direction=\""+direction().get()+"\"");
 		 }
 		 if(description!=null && !"".equals(description)) {
 			 sw.write(" description=\""+description+"\"");
 		 }
-		 if(cardinality!=null && !"".equals(cardinality)) {
-			 sw.write(" cardinality=\""+cardinality+"\"");
+		 if(cardinality!=null && cardinality.isPresent() && !"".equals(cardinality)) {
+			 sw.write(" cardinality=\""+cardinality.get()+"\"");
 		 }		 
 		 if(length>0) {
 			 sw.write(" length=\""+length+"\"");
@@ -278,7 +282,7 @@ public class Prop {
 		
 	}
 
-	public String cardinality() {
+	public Optional<String> cardinality() {
 		return cardinality;
 	}
 

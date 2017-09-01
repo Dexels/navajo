@@ -1,5 +1,6 @@
 package com.dexels.navajo.document.stream.xml;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -13,155 +14,89 @@ import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.impl.StreamSaxHandler;
 
-import rx.Subscriber;
 
 public class ObservableNavajoParser  {
 	
 	private StreamSaxHandler feeder;
+	List<NavajoStreamEvent> list = new ArrayList<>();
 	
-	public ObservableNavajoParser(final Map<String,Object> attributes, final Subscriber<? super NavajoStreamEvent> subscriber) {
+	public ObservableNavajoParser() {
 		this.feeder = new StreamSaxHandler(new NavajoStreamHandler(){
 
 			@Override
 			public void messageDone(Map<String, String> attributes, List<Prop> properties) {
-				subscriber.onNext(Events.message(Msg.create(properties), attributes.get("name"),attributes));
+				list.add(Events.message(Msg.create(properties), attributes.get("name"),attributes));
 			}
 
 			@Override
 			public void messageStarted(Map<String, String> attributes) {
-				subscriber.onNext(Events.messageStarted(attributes.get("name"),attributes));
+				list.add(Events.messageStarted(attributes.get("name"),attributes));
 			}
 
 			@Override
 			public void messageDefinitionStarted(Map<String, String> attributes) {
-				subscriber.onNext(Events.messageDefinitionStarted(attributes.get("name")));
-				
+				list.add(Events.messageDefinitionStarted(attributes.get("name")));
 			}
 
 			@Override
 			public void messageDefinition(Map<String, String> attributes, List<Prop> properties) {
-				subscriber.onNext(Events.messageDefinition(Msg.createDefinition(properties), attributes.get("name")));				
+				list.add(Events.messageDefinition(Msg.createDefinition(properties), attributes.get("name")));				
 			}
 
 			@Override
 			public void arrayStarted(Map<String, String> attributes) {
-				subscriber.onNext(Events.arrayStarted(attributes.get("name"),attributes));
+				list.add(Events.arrayStarted(attributes.get("name"),attributes));
 			}
 
 			@Override
 			public void arrayElementStarted() {
-				subscriber.onNext(Events.arrayElementStarted(Collections.emptyMap()));
+				list.add(Events.arrayElementStarted(Collections.emptyMap()));
 			}
 
 			@Override
 			public void arrayElement(List<Prop> properties) {
-				subscriber.onNext(Events.arrayElement(Msg.createElement(properties), Collections.emptyMap()));				
+				list.add(Events.arrayElement(Msg.createElement(properties), Collections.emptyMap()));				
 			}
 
 			@Override
 			public void arrayDone(String name) {
-				subscriber.onNext(Events.arrayDone(name));				
+				list.add(Events.arrayDone(name));				
 			}
 
 			@Override
 			public void navajoStart(NavajoHead head) {
-				subscriber.onNext(Events.started(head));
+				list.add(Events.started(head));
 			}
 
 			@Override
 			public void navajoDone() {
-				subscriber.onNext(Events.done());				
+				list.add(Events.done());				
 			}
 
 			@Override
 			public void binaryStarted(String name) {
-				subscriber.onNext(Events.binaryStarted(name));
-				
+				list.add(Events.binaryStarted(name));
 			}
 
 			@Override
 			public void binaryContent(String data) {
-				subscriber.onNext(Events.binaryContent(data));
+				list.add(Events.binaryContent(data));
 			}
 
 			@Override
 			public void binaryDone() {
-				subscriber.onNext(Events.binaryDone());
+				list.add(Events.binaryDone());
 			}
 		});
 	}
-//	public ObservableNavajoParser(Map<String,Object> attributes) {
-//		this.feeder = new StreamSaxHandler(new NavajoStreamHandler(){
-//
-//			@Override
-//			public void messageDone(Map<String, String> attributes, List<Prop> properties) {
-//					currentSubscriber.onNext(Events.message(Msg.create(properties), attributes.get("name"), attributes));
-//			}
-//
-//			@Override
-//			public void messageStarted(Map<String, String> attributes) {
-//				currentSubscriber.onNext(Events.messageStarted(attributes.get("name"),attributes));
-//			}
-//
-//			@Override
-//			public void messageDefinitionStarted(Map<String, String> attributes) {
-//				currentSubscriber.onNext(Events.messageDefinitionStarted(attributes.get("name")));
-//				
-//			}
-//
-//			@Override
-//			public void messageDefinition(Map<String, String> attributes, List<Prop> properties) {
-//				currentSubscriber.onNext(Events.messageDefinition(Msg.createDefinition(properties), attributes.get("name")));				
-//			}
-//
-//			@Override
-//			public void arrayStarted(Map<String, String> attributes) {
-//				currentSubscriber.onNext(Events.arrayStarted(attributes.get("name"),attributes));
-//			}
-//
-//			@Override
-//			public void arrayElementStarted() {
-//				currentSubscriber.onNext(Events.arrayElementStarted( Collections.emptyMap()));
-//			}
-//
-//			@Override
-//			public void arrayElement(List<Prop> properties) {
-//				currentSubscriber.onNext(Events.arrayElement(Msg.createElement(properties), Collections.emptyMap()));				
-//			}
-//
-//			@Override
-//			public void arrayDone(String name) {
-//				currentSubscriber.onNext(Events.arrayDone(name));				
-//			}
-//
-//			@Override
-//			public void navajoStart(NavajoHead head) {
-//				currentSubscriber.onNext(Events.started(head));
-//			}
-//
-//			@Override
-//			public void navajoDone() {
-//				currentSubscriber.onNext(Events.done());				
-//			}
-//		});
-//	}
 
-//	public Observable<NavajoStreamEvent> feed(final XMLEvent xmlEvent) {
-//		return Observable.<NavajoStreamEvent>create(subscriber-> {
-//				ObservableNavajoParser.this.currentSubscriber = subscriber;
-//				parseXmlEvent(xmlEvent, subscriber);
-//				subscriber.onCompleted();
-//		});
-//	}
-
-	public void parseXmlEvent(final XMLEvent xmlEvent, Subscriber<? super NavajoStreamEvent> subscriber) {
+	public List<NavajoStreamEvent> parseXmlEvent(final XMLEvent xmlEvent) {
 		switch(xmlEvent.getType()) {
 			case START_DOCUMENT:
 				ObservableNavajoParser.this.feeder.startDocument();
 				break;
 			case END_DOCUMENT:
 				ObservableNavajoParser.this.feeder.endDocument();
-				subscriber.onCompleted();;
 				break;
 			case START_ELEMENT:
 				ObservableNavajoParser.this.feeder.startElement(xmlEvent.getText(),xmlEvent.getAttributes());
@@ -173,6 +108,9 @@ public class ObservableNavajoParser  {
 				ObservableNavajoParser.this.feeder.text(xmlEvent.getText());
 				break;
 		}
+		List<NavajoStreamEvent> copy = new ArrayList<>(list);
+		list.clear();
+		return copy;
 	}
 
 }
