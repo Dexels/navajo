@@ -237,7 +237,7 @@ function runScript(script) {
         	},
         	complete: function() {stopTitleLoader();},
         	type: "POST",
-            url: "/stream/" + instance,
+            url: "/navajo/" + instance,
             data: navajoinput,
             headers: {"X-Navajo-Tester": "true"},
             success: function(xmlObj) {
@@ -538,7 +538,7 @@ $(document).on('click', '#AddInit', function() {
     // Going to try to get init script...
     $.ajax({
         type: "POST",
-        url: "/stream/" + instance,
+        url: "/navajo/" + instance,
         data: navajoinput,
         success: function(xmlObj) {
             var messages = $(xmlObj).find('message');
