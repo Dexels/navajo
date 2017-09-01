@@ -296,10 +296,14 @@ public void stop() {
 
   @Override
 protected void finalize() {
+	  if ( pointer == null ) {  // Check if pointer was set, if not, it was not an async web service.
+		  return;
+	  }
 	  if (killOnFinnish) {
 		  kill = true;
 		  //disconnectJMX();
 		  AsyncStore.getInstance().removeInstance(this.pointer);
+		  
 	  }
   }
 
