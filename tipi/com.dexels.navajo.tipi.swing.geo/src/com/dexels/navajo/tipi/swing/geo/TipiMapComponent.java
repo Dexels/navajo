@@ -9,6 +9,7 @@ import java.awt.event.ComponentListener;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,9 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.painter.CompoundPainter;
+import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +32,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
+import com.dexels.navajo.tipi.swing.geo.impl.FieldWaypointPainter;
 import com.dexels.navajo.tipi.swing.geo.impl.TipiSwingMapImpl;
 
 public class TipiMapComponent extends TipiSwingDataComponentImpl {
@@ -49,6 +54,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	private String messagePath = null;
 
 	private JPanel overlayPanel = null;
+	List<Painter<JXMapViewer>> painters = new ArrayList<>();
 
 	@Override
 	public Object createContainer() {
@@ -79,6 +85,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 					}
 				});
 
+				
 				// crate a WaypointPainter to draw the points
 				// WaypointPainter painter = new WaypointPainter();
 				jp.addComponentListener(new ComponentListener() {
@@ -136,6 +143,8 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		if (messagePath == null) {
 			return;
 		}
+		
+		
 		final Message m = n.getMessage(messagePath);
 		runSyncInEventThread(new Runnable() {
 
@@ -233,10 +242,17 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		StringTokenizer st = new StringTokenizer(con, ",");
 		String lat = st.nextToken();
 		String lon = st.nextToken();
+		String bearing = st.nextToken();
 		double lonF = Double.parseDouble(lon);
 		double latF = Double.parseDouble(lat);
-
+		double bearingF = Double.parseDouble(bearing);
+		
 		final GeoPosition gp = new GeoPosition(latF, lonF);
+		FieldWaypointPainter fieldWaypointPainter = new FieldWaypointPainter(gp, bearingF);
+		painters.add(fieldWaypointPainter);
+		CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+		myMapKit.getMainMap().setOverlayPainter(painter);
+		
 		GeoPosition rightB = null;
 		mapComponents.put((Component) c, gp);
 		overlayPanel.add((Component) c);
