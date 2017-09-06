@@ -1,17 +1,22 @@
 package com.dexels.navajo.tipi.swing.geo.impl;
 
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import org.jdesktop.swingx.*;
-import org.jdesktop.swingx.mapviewer.*;
+import org.jxmapviewer.JXMapKit;
+import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.GeoPosition;
 
-import com.dexels.navajo.tipi.swing.geo.impl.tilefactory.*;
+import com.dexels.navajo.tipi.swing.geo.impl.tilefactory.GoogleTileFactoryInfo;
+import com.dexels.navajo.tipi.swing.geo.impl.tilefactory.OpenStreetMapTileFactoryInfo;
 
 public class TipiSwingMapImpl extends JXMapKit {
 	
 	private static final long serialVersionUID = 3381042625940446945L;
 	protected GeoPosition myCenter = null;
+	protected boolean allowZoom = true;
 	protected int myZoom = 0;
+	protected int myMaxZoom = 10;
 	// need this ugly construction to prevent the change in factory to reset the location + zoomlevel.
 	private boolean allowEvents = true;
 	public void setLat(double lat) {
@@ -31,6 +36,18 @@ public class TipiSwingMapImpl extends JXMapKit {
 					}
 //					myZoom = newZoom;
 					
+				}
+				if(p.getPropertyName().equals("maxZoom")) {
+					Integer newMaxZoom = (Integer) p.getNewValue();
+					if(allowEvents) {
+						myMaxZoom = newMaxZoom;
+					}
+				}
+				if (p.getPropertyName().equals("allowZoom")) {
+					boolean newAllowZoom = (Boolean) p.getNewValue();
+					if (allowEvents) {
+						allowZoom = newAllowZoom;
+					}
 				}
 				if(p.getPropertyName().equals("centerPosition")) {
 //					myCenter = (GeoPosition) p.getNewValue();
@@ -54,10 +71,22 @@ public class TipiSwingMapImpl extends JXMapKit {
 
 	public void setZoomExternal(int z) {
 		myZoom = z;
-		
+		// Prevent zooming when a limit has been set
+		if (myZoom > myMaxZoom) {
+			myZoom = myMaxZoom;
+		}
 		super.setZoom(z);
 	}
-	
+	public void setMaxZoomExternal(int z) {
+		myMaxZoom = z;
+	}
+
+	public void setAllowZoom(boolean z) {
+		allowZoom = z;
+		super.setZoomButtonsVisible(z);
+		super.setZoomSliderVisible(z);
+	}
+
 	public void setLon(double lon) {
 		if(myCenter==null) {
 			myCenter = getCenterPosition();
@@ -72,6 +101,7 @@ public class TipiSwingMapImpl extends JXMapKit {
 		if(factory.equals("google")) {
 			// zoom and center is lost after switching:
 			setTileFactory(new DefaultTileFactory(new GoogleTileFactoryInfo(0, 15, 17, 256,  true,true,false)));
+			setAllowZoom(allowZoom);
 			if(myCenter!=null) {
 				setCenterPosition(myCenter);
 				setZoomExternal(myZoom);
@@ -81,6 +111,7 @@ public class TipiSwingMapImpl extends JXMapKit {
 		} else if(factory.equals("openstreetmap")) {
 			setTileFactory(new DefaultTileFactory(new OpenStreetMapTileFactoryInfo(17)));
 			// zoom and center is lost after switching:
+			setAllowZoom(allowZoom);
 			if(myCenter!=null) {
 				setCenterPosition(myCenter);
 				setZoomExternal(myZoom);

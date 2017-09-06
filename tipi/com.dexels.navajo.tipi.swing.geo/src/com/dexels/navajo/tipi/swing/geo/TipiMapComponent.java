@@ -19,7 +19,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jxmapviewer.viewer.GeoPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +39,8 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	// double lon,lat;
 	String mapFactory;
 	int zoom;
+	int maxZoom = 10;
+	boolean allowZoom = true;
 	private JLayeredPane jp = new JLayeredPane();
 	private TipiSwingMapImpl myMapKit;
 	private final Map<Component, GeoPosition> mapComponents = new HashMap<Component, GeoPosition>();
@@ -63,6 +65,12 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 					@Override
 					public void propertyChange(PropertyChangeEvent p) {
 						if (p.getPropertyName().equals("zoom")) {
+							layoutChildren();
+						}
+						if (p.getPropertyName().equals("maxZoom")) {
+							layoutChildren();
+						}
+						if (p.getPropertyName().equals("allowZoom")) {
 							layoutChildren();
 						}
 						if (p.getPropertyName().equals("centerPosition")) {
@@ -168,7 +176,18 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	public void setZoom(int zoom) {
 		this.zoom = zoom;
+		// Prevent zooming when a limit has been set
+		if (zoom > maxZoom) {
+			zoom = maxZoom;
+		}
 		myMapKit.setZoom(zoom);
+	}
+	public void setMaxZoom(int maxZoom) {
+		this.maxZoom = maxZoom;
+	}
+	public void setAllowZoom(boolean z) {
+		this.allowZoom = z;
+		myMapKit.setAllowZoom(z);
 	}
 
 	@Override
@@ -180,6 +199,9 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 				if (name.equals("zoom")) {
 					myMapKit.setZoomExternal((Integer) object);
+				}
+				if (name.equals("allowZoom")) {
+					myMapKit.setAllowZoom((Boolean) object);
 				}
 				// if(name.equals("lat")) {
 				// Number n = (Number)object;
@@ -203,7 +225,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	@Override
 	public void addToContainer(final Object c, Object constraints) {
-		logger.info("entering add");
+		logger.debug("entering add");
 		myMapKit.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
 		overlayPanel.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
 
@@ -227,19 +249,19 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 			lonRightBottom = st.nextToken();
 
 			if (latRightBottom.startsWith("+")) {
-				logger.info("REL LAT:" + latRightBottom);
+				logger.debug("REL LAT:" + latRightBottom);
 				double rel = Double.parseDouble(latRightBottom.substring(1));
 				latRB = latF + rel;
-				logger.info("REsults: " + latRB);
+				logger.debug("REsults: " + latRB);
 			} else {
 				latRB = Double.parseDouble(latRightBottom);
 			}
 
 			if (lonRightBottom.startsWith("+")) {
-				logger.info("REL LON:" + lonRightBottom);
+				logger.debug("REL LON:" + lonRightBottom);
 				double rel = Double.parseDouble(lonRightBottom.substring(1));
 				lonRB = lonF + rel;
-				logger.info("REsults: " + lonRB);
+				logger.debug("REsults: " + lonRB);
 			} else {
 				lonRB = Double.parseDouble(lonRightBottom);
 			}
@@ -255,7 +277,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		} else {
 			if (c instanceof JComponent) {
 				JComponent jc = (JComponent) c;
-				logger.info("Adding with default size: " + jc.getPreferredSize());
+				logger.debug("Adding with default size: " + jc.getPreferredSize());
 				jc.setSize(jc.getPreferredSize());
 			} else {
 				((Component) c).setSize(100, 100);
@@ -282,7 +304,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 			}});
 		jp.repaint();
 		// layoutChildren();
-		logger.info("leaving add");
+		logger.debug("leaving add");
 
 	}
 

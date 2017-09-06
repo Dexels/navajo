@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.swing.geo.impl.tilefactory;
 
-import org.jdesktop.swingx.mapviewer.*;
+import org.jxmapviewer.viewer.TileFactoryInfo;
 
 public class GoogleTileFactoryInfo extends TileFactoryInfo {
 	  boolean sateliteView;
