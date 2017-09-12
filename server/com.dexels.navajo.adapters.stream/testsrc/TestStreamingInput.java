@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -14,7 +15,7 @@ import com.dexels.navajo.document.stream.StreamDocument;
 public class TestStreamingInput  {
 	private final static Logger logger = LoggerFactory.getLogger(TestStreamingInput.class);
 
-	@Test
+	@Test @Ignore
 	public void simpleTest() throws IOException {
 		File tempFile = File.createTempFile("simpleresponse", ".xml");
 		tempFile.deleteOnExit();
@@ -62,7 +63,7 @@ public class TestStreamingInput  {
 		
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testSingleQuery() throws IOException {
 
 		File tempFile = File.createTempFile("singleresponse", ".xml");

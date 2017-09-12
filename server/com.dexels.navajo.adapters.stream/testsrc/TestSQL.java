@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.navajo.adapters.stream.SQL;
@@ -17,7 +18,7 @@ import io.reactivex.Flowable;
 
 public class TestSQL {
 
-	@Test
+	@Test @Ignore
 	public void testBackpressure() {
 		RxJavaInterop.toV2Flowable(Database
 		.fromDataSource(resolveDataSource("dummy","something"))
