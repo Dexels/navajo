@@ -1,8 +1,13 @@
 package com.dexels.navajo.article.impl;
 
 import java.io.File;
+
+import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
@@ -16,7 +21,8 @@ import com.dexels.oauth.api.OAuthToken;
 import com.dexels.oauth.api.TokenStore;
 import com.dexels.oauth.api.exception.TokenStoreException;
 
-public class OAuthArticleServlet extends ArticleBaseServlet {
+public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
+    private final static Logger logger = LoggerFactory.getLogger(OAuthArticleServlet.class);
 
     private static final long serialVersionUID = 1199676363102046960L;
     private static final String AUTHORIZATION_BEARER_PREFIX = "Bearer";
@@ -24,8 +30,17 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
     private ClientStore clientStore;
     private TmlScheduler tmlScheduler;
 
+    public void activate() {
+        logger.info("Activating OAuthArticleServlet");
+    } 
+    public void deactivate() {
+        logger.info("DeActivating OAuthArticleServlet");
+    }
+    
+ 
     @Override
     protected void doServiceImpl(HttpServletRequest req, HttpServletResponse resp) throws APIException {
+       
         String token = getToken(req);
 
         OAuthToken oauthToken = null;
@@ -54,13 +69,16 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
         try {
             ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, "", username, article, pathInfo, req.getParameterMap(),
                     instance, oauthToken);
+            
             runtime.setUsername(client.getUsername());
-            ArticleRunnable articleRunnable = new ArticleRunnable(req, resp, runtime, getContext());
+            ArticleRunnable articleRunnable = new ArticleRunnable(req, resp, client, runtime, getContext());
             tmlScheduler.submit(articleRunnable, false);
         } catch (Throwable e) {
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
         }
     }
+
+    
 
     public void setTmlScheduler(TmlScheduler scheduler) {
         this.tmlScheduler = scheduler;

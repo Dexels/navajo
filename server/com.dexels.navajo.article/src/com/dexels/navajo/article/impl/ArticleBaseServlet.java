@@ -3,7 +3,7 @@ package com.dexels.navajo.article.impl;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.Servlet;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
-public abstract class ArticleBaseServlet extends HttpServlet implements Servlet {
+public abstract class ArticleBaseServlet extends HttpServlet  {
 	private static final String VALIDATION_DESCRIPTION_LANG = "nl";
     private final static long serialVersionUID = -6895324256139435015L;
 	private final static Logger logger = LoggerFactory.getLogger(ArticleBaseServlet.class);
@@ -55,11 +55,8 @@ public abstract class ArticleBaseServlet extends HttpServlet implements Servlet 
 	}
 
 	@Override
-	protected final void service(HttpServletRequest request, HttpServletResponse response) {
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			response.addHeader("Access-Control-Allow-Origin", "*");
-			response.setContentType("application/json; charset=utf-8");
-			
 			doServiceImpl(request, response);
 		} catch (Throwable t1) {
 			APIException exception = (t1 instanceof APIException) ? (APIException)t1 : new APIException(t1.getMessage(), t1, APIErrorCode.InternalError);
