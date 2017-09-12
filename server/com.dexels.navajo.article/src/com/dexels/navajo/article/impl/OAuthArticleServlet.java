@@ -1,29 +1,14 @@
 package com.dexels.navajo.article.impl;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Map.Entry;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
 
 import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleRuntime;
-import com.dexels.navajo.article.NoJSONOutputException;
 import com.dexels.navajo.article.runnable.ArticleRunnable;
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.events.NavajoEventRegistry;
-import com.dexels.navajo.events.types.NavajoResponseEvent;
-import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.TmlScheduler;
-import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.oauth.api.Client;
 import com.dexels.oauth.api.ClientStore;
 import com.dexels.oauth.api.exception.ClientStoreException;
@@ -71,7 +56,7 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
             runtime.setUsername(client.getUsername());
             ArticleRunnable articleRunnable = new ArticleRunnable(req,resp, runtime, getContext());
             tmlScheduler.submit(articleRunnable, false);
-        } catch (Throwable  e) {
+        } catch (Throwable e) {
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
         } 
     }
@@ -87,12 +72,13 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
     
     
     private String getToken(HttpServletRequest request) {
-    	String authorizationHeaderValue = request.getHeader("Authorization");
-   
-    	if (authorizationHeaderValue != null && authorizationHeaderValue.startsWith(AUTHORIZATION_BEARER_PREFIX) &&  authorizationHeaderValue.length() > AUTHORIZATION_BEARER_PREFIX.length() + 1) {
-    		return authorizationHeaderValue.substring(AUTHORIZATION_BEARER_PREFIX.length() + 1);
-    	}
-    	return request.getParameter("token");
+        String authorizationHeaderValue = request.getHeader("Authorization");
+
+        if (authorizationHeaderValue != null && authorizationHeaderValue.startsWith(AUTHORIZATION_BEARER_PREFIX)
+                && authorizationHeaderValue.length() > AUTHORIZATION_BEARER_PREFIX.length() + 1) {
+            return authorizationHeaderValue.substring(AUTHORIZATION_BEARER_PREFIX.length() + 1);
+        }
+        return request.getParameter("token");
     }
 
     
