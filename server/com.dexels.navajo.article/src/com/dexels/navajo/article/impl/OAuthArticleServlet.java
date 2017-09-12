@@ -14,6 +14,7 @@ import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.NoJSONOutputException;
+import com.dexels.navajo.article.runnable.ArticleRunnable;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -21,6 +22,8 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.TmlScheduler;
+import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.oauth.api.Client;
 import com.dexels.oauth.api.ClientStore;
 import com.dexels.oauth.api.exception.ClientStoreException;
@@ -34,6 +37,7 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
     private static final String AUTHORIZATION_BEARER_PREFIX = "Bearer";
     private TokenStore tokenStore;
     private ClientStore clientStore;
+    private TmlScheduler tmlScheduler;
 
     @Override
     protected void doServiceImpl(HttpServletRequest req, HttpServletResponse resp) throws APIException {
@@ -62,58 +66,25 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
             throw new APIException("Article does not exist", null, APIErrorCode.ArticleNotFound);
         }
 
-        String ip = req.getHeader("X-Forwarded-For");
-        if (ip == null || ip.equals("")) {
-            ip = req.getRemoteAddr();
-        }
-
-        Access a = new Access(-1, -1, username, "article/" + articleName, "", "", "", null, false, null);
-        a.setTenant(instance);
-        a.rpcPwd = token;
-        a.created = new Date();
-        a.ipAddress = ip;
-        a.setClientDescription("article");
-        a.setClientToken("Client id: " + client.getId());
-
         try {
             ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, "", username, article, pathInfo, req.getParameterMap(), instance, oauthToken);
             runtime.setUsername(client.getUsername());
-
-            runtime.execute(getContext());
-            resp.setContentType("application/json; charset=utf-8");
-            a.setExitCode(Access.EXIT_OK);
-        } catch (NoJSONOutputException e) {
-            resp.setContentType(e.getMimeType());
-            try {
-                IOUtils.copy(e.getStream(), resp.getOutputStream());
-            } catch (IOException e1) {
-                throw new APIException(e1.getMessage(), e1, APIErrorCode.InternalError);
-            }
-            return;
-            
-        } catch (APIException apiException) {
-            if (apiException.getErrorCode() == APIErrorCode.InternalError) {
-                logExceptionToAccess(a, apiException, createNavajoFromRequest(req));
-            } else if (apiException.getErrorCode() == APIErrorCode.ConditionError) {
-                a.setExitCode(Access.EXIT_VALIDATION_ERR);
-            }
-          
-            throw apiException;
+            ArticleRunnable articleRunnable = new ArticleRunnable(req,resp, runtime, getContext());
+            tmlScheduler.submit(articleRunnable, false);
         } catch (Throwable  e) {
-            logExceptionToAccess(a, e, createNavajoFromRequest(req));
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
-        } finally {
-            a.setFinished();
-            NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(a));
-        }
+        } 
     }
 
-    private void logExceptionToAccess(Access a, Throwable e, Navajo navajo) {
-        a.setExitCode(Access.EXIT_EXCEPTION);
-        // Create a navajo of the input
-        a.setInDoc(navajo);
-        a.setException(e);
+    public void setTmlScheduler(TmlScheduler scheduler) {
+        this.tmlScheduler = scheduler;
     }
+
+    public void clearTmlScheduler(TmlScheduler scheduler) {
+        this.tmlScheduler = null;
+    }
+
+    
     
     private String getToken(HttpServletRequest request) {
     	String authorizationHeaderValue = request.getHeader("Authorization");
@@ -124,21 +95,7 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
     	return request.getParameter("token");
     }
 
-    private Navajo createNavajoFromRequest(HttpServletRequest req) {
-        Navajo navajo = NavajoFactory.getInstance().createNavajo();
-        Message properties = NavajoFactory.getInstance().createMessage(navajo, "Input");
-        navajo.addMessage(properties);
-        for (Entry<String, String[]> entry : req.getParameterMap().entrySet()) {
-            Property property = NavajoFactory.getInstance().createProperty(navajo, entry.getKey(), null, null, null);
-            property.setType("string");
-         
-            if (entry.getValue() != null && entry.getValue().length > 0) {
-            	property.setValue(String.join("|", entry.getValue()));
-            }
-            properties.addProperty(property);
-        }
-        return navajo;
-    }
+    
 
     private OAuthToken getOAuthToken(String token) throws APIException {
         try {

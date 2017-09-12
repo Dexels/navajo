@@ -26,7 +26,7 @@ public abstract class ArticleBaseServlet extends HttpServlet implements Servlet 
 	private static final String VALIDATION_DESCRIPTION_LANG = "nl";
     private final static long serialVersionUID = -6895324256139435015L;
 	private final static Logger logger = LoggerFactory.getLogger(ArticleBaseServlet.class);
-	private ResourceBundleStore resourceBundle;
+	private static ResourceBundleStore resourceBundle;
 	
 	private ArticleContext context;
 	
@@ -47,11 +47,11 @@ public abstract class ArticleBaseServlet extends HttpServlet implements Servlet 
 	}
 	
 	public void setResourceBundle(ResourceBundleStore rb) {
-		this.resourceBundle = rb;
+	    ArticleBaseServlet.resourceBundle = rb;
 	}
 	
 	public void clearResourceBundle(ResourceBundleStore rb) {
-		this.resourceBundle = null;
+	    ArticleBaseServlet.resourceBundle = null;
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public abstract class ArticleBaseServlet extends HttpServlet implements Servlet 
 		}
 	}
 	
-	private void writeJSONErrorResponse(APIException exception, HttpServletResponse response) throws IOException {
+	public static void writeJSONErrorResponse(APIException exception, HttpServletResponse response) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode rootNode = mapper.createObjectNode();
 		ObjectNode error = mapper.createObjectNode();
