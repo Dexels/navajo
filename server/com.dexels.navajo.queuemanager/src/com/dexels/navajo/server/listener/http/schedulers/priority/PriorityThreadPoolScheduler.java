@@ -306,7 +306,11 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 
 	            @Override
 	            public String getIpAddress() {
-	                return myRunner.getRequest().getIpAddress();
+	                if (myRunner.getRequest() != null) {
+	                    return myRunner.getRequest().getIpAddress();
+	                }
+	                return (String) myRunner.getAttribute("ip");
+	               
 	            }
 	        };
 	        
