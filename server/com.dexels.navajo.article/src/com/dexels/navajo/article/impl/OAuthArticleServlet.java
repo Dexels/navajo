@@ -26,7 +26,7 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
 
     @Override
     protected void doServiceImpl(HttpServletRequest req, HttpServletResponse resp) throws APIException {
-    	String token = getToken(req);
+        String token = getToken(req);
 
         OAuthToken oauthToken = null;
         Client client = null;
@@ -52,13 +52,14 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
         }
 
         try {
-            ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, "", username, article, pathInfo, req.getParameterMap(), instance, oauthToken);
+            ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, "", username, article, pathInfo, req.getParameterMap(),
+                    instance, oauthToken);
             runtime.setUsername(client.getUsername());
-            ArticleRunnable articleRunnable = new ArticleRunnable(req,resp, runtime, getContext());
+            ArticleRunnable articleRunnable = new ArticleRunnable(req, resp, runtime, getContext());
             tmlScheduler.submit(articleRunnable, false);
         } catch (Throwable e) {
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
-        } 
+        }
     }
 
     public void setTmlScheduler(TmlScheduler scheduler) {
@@ -69,8 +70,6 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
         this.tmlScheduler = null;
     }
 
-    
-    
     private String getToken(HttpServletRequest request) {
         String authorizationHeaderValue = request.getHeader("Authorization");
 
@@ -80,8 +79,6 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
         }
         return request.getParameter("token");
     }
-
-    
 
     private OAuthToken getOAuthToken(String token) throws APIException {
         try {
