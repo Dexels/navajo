@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import com.dexels.navajo.authentication.api.AuthenticationMethodBuilder;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.Msg;
@@ -30,6 +31,7 @@ import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 
@@ -48,6 +50,8 @@ public class NonBlockingListener extends HttpServlet {
 				
 	private final static Logger logger = LoggerFactory.getLogger(NonBlockingListener.class);
 
+	private AuthenticationMethodBuilder authMethodBuilder;
+	
 	public LocalClient getLocalClient() {
 		return localClient;
 	}
@@ -59,6 +63,14 @@ public class NonBlockingListener extends HttpServlet {
 	public void clearLocalClient(LocalClient localClient) {
 		this.localClient = null;
 	}
+
+    public void setAuthenticationMethodBuilder(AuthenticationMethodBuilder amb) {
+        this.authMethodBuilder = amb;
+    }
+
+    public void clearAuthenticationMethodBuilder(AuthenticationMethodBuilder eventAdmin) {
+        this.authMethodBuilder = null;
+    }
 
 	public void addScript(Script script,Map<String,Object> settings) {
 		String name = (String) settings.get("navajo.scriptName");
@@ -90,7 +102,7 @@ public class NonBlockingListener extends HttpServlet {
 
 	private static Flowable<NavajoStreamEvent> emptyDocument(StreamScriptContext context) {
 		return Flowable.just(
-				Events.started(NavajoHead.createSimple(context.service, context.username, ""))
+				Events.started(NavajoHead.createSimple(context.service, context.username, context.password))
 				, Events.done()
 				);
 	}
@@ -115,7 +127,17 @@ public class NonBlockingListener extends HttpServlet {
 		String responseEncoding = decideEncoding(request.getHeader("Accept-Encoding"));
 		System.err.println("Tenant determined: "+context.tenant+" service: "+context.service);
 
+
 		boolean isGet = "GET".equals(request.getMethod());
+		try {
+			authenticate(context, (String)context.attributes.get("Authorization"));
+		} catch (Exception e1) {
+			errorMessage(context.service, context.username, -1, e1.getMessage())
+			.lift(StreamDocument.serialize())
+			.compose(StreamDocument.compress(responseEncoding))
+			.subscribe(Servlets.createSubscriber(ac));
+			return;
+		}
 
 		Flowable<NavajoStreamEvent> input = isGet ? emptyDocument(context) : 
 			Servlets.createFlowable(ac, 1000)
@@ -136,11 +158,12 @@ public class NonBlockingListener extends HttpServlet {
 
 	private Flowable<NavajoStreamEvent> processStreamingScript(HttpServletRequest request,Flowable<NavajoStreamEvent> eventStream) throws IOException {
 		StreamScriptContext context = determineContextFromRequest(request);
+
 		System.err.println("Tenant determined: "+context.tenant+" service: "+context.service);
 		if(context.service ==null) {
 			return eventStream
 					.lift(StreamDocument.collectFlowable())
-					.flatMap(inputNav->executeLegacy(context.service, context.tenant, inputNav));
+					.flatMap(inputNav->executeLegacy(context.service, context.username, context.tenant, inputNav));
 		}
 		Script s = scripts.get(context.service);
 		if(s!=null) {
@@ -156,14 +179,14 @@ public class NonBlockingListener extends HttpServlet {
 		}
 		return eventStream
 				.lift(StreamDocument.collectFlowable())
-				.flatMap(inputNav->executeLegacy(context.service, context.tenant, inputNav));
+				.flatMap(inputNav->executeLegacy(context.service, context.username, context.tenant, inputNav));
 //				.compose(StreamDocument.inNavajo(context.service, context.username, ""));
 	}
 	
-//	com.dexels.navajo.authentication.api.AuthenticationMethod
-//	public void addAuthenticationMethod(AuthenticationMethod method)
-	public void authenticate(StreamScriptContext context) {
-		Access a = new Access(-1,-1,context.username,context.service,"stream","ip","hostname",null,false,"access");
+
+	public void authenticate(StreamScriptContext context, String authHeader) throws AuthorizationException {
+//		Access a = new Access(-1,-1,context.username,context.service,"stream","ip","hostname",null,false,"access");
+//		authMethodBuilder.getInstanceForRequest(authHeader).process(a);
 	}
 
 //	private FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> createTransformerScript(StreamScriptContext context) {
@@ -179,13 +202,13 @@ public class NonBlockingListener extends HttpServlet {
 //		return s.call(context);
 //	}
 
-	private static Flowable<NavajoStreamEvent> errorMessage(Navajo in, int code, String message) {
-		return Msg.create()
+	private static Flowable<NavajoStreamEvent> errorMessage(String service, String user, int code, String message) {
+		return Msg.create("error")
 				.with(Prop.create("code",code))
 				.with(Prop.create("description", message))
 				.stream()
 				.toFlowable(BackpressureStrategy.BUFFER)
-				.compose(StreamDocument.inNavajo(in.getHeader().getRPCName(), in.getHeader().getRPCUser(), ""));
+				.compose(StreamDocument.inNavajo(service, user, ""));
 	}
 	
 	public static String decideEncoding(String accept) {
@@ -206,14 +229,13 @@ public class NonBlockingListener extends HttpServlet {
 		return null;
 	}
 
-	private final Flowable<NavajoStreamEvent> executeLegacy(String navajoService, String tenant,Navajo in) {
+	private final Flowable<NavajoStreamEvent> executeLegacy(String service, String user, String tenant,Navajo in) {
 		Navajo result;
 		try {
 			result = execute(tenant, in);
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
-			
-			return errorMessage(in,101,"Could not resolve script: "+in.getHeader().getRPCName());
+			return errorMessage(service,user,101,"Could not resolve script: "+service);
 		}
 		return Observable.just(result)
 			.lift(StreamDocument.domStream())
@@ -254,11 +276,12 @@ public class NonBlockingListener extends HttpServlet {
 
 	private static StreamScriptContext determineContextFromRequest(final HttpServletRequest req) {
 		String username = req.getHeader("X-Navajo-Username");
+		String password = req.getHeader("X-Navajo-Password");
 		String tenant = determineTenantFromRequest(req);
 		Map<String, Object> attributes = extractHeaders(req);
 		String serviceHeader = req.getHeader("X-Navajo-Service");
 
-		return new StreamScriptContext(tenant,serviceHeader, username,attributes);
+		return new StreamScriptContext(tenant,serviceHeader, username,password,attributes);
 	}
 	
 	// warn: Duplicated code

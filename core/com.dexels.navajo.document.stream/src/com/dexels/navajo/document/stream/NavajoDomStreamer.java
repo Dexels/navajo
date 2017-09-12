@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.stream.api.Method;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
@@ -67,7 +69,7 @@ public class NavajoDomStreamer {
 		for (Message message : all) {
 			emitMessage(message,result,output);
 		}
-		result.add(done());
+		result.add(done(navajo.getAllMethods().stream().map(e->new Method(e.getName())).collect(Collectors.toList())));
 //		subscribe.onNext(done());
 //		subscribe.onCompleted();
 		return result;

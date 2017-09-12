@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dexels.navajo.document.stream.NavajoStreamHandler;
+import com.dexels.navajo.document.stream.api.Method;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
@@ -69,8 +70,8 @@ public class ObservableNavajoParser  {
 			}
 
 			@Override
-			public void navajoDone() {
-				list.add(Events.done());				
+			public void navajoDone(List<Method> methods) {
+				list.add(Events.done(methods));				
 			}
 
 			@Override

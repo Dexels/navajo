@@ -6,14 +6,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 public class Msg {
 	private final String name;
@@ -40,8 +39,8 @@ public class Msg {
 		return new Msg(this);
 	}
 
-	private Msg(List<Prop> properties,Msg.MessageType type) {
-		this.name = "Unnamed";
+	private Msg(Optional<String> name, List<Prop> properties,Msg.MessageType type) {
+		this.name = name.orElse("Unnamed");
 		this.type = type;
 		this.mode = null;
 		this.properties.addAll(properties);
@@ -57,26 +56,30 @@ public class Msg {
 	}
 
 	public static Msg createElement() {
-		return new Msg(Collections.emptyList(),Msg.MessageType.ARRAY_ELEMENT);
+		return new Msg(Optional.empty(), Collections.emptyList(),Msg.MessageType.ARRAY_ELEMENT);
 	}
 	
 	public static Msg create() {
-		return new Msg(Collections.emptyList(),Msg.MessageType.SIMPLE);
+		return new Msg(Optional.empty(),Collections.emptyList(),Msg.MessageType.SIMPLE);
+	}
+	
+	public static Msg create(String name) {
+		return new Msg(Optional.of(name),Collections.emptyList(),Msg.MessageType.SIMPLE);
 	}
 	
 	public static Msg createDefinition() {
-		return new Msg(Collections.emptyList(),Msg.MessageType.DEFINITION);
+		return new Msg(Optional.empty(),Collections.emptyList(),Msg.MessageType.DEFINITION);
 	}
 	public static Msg create(List<Prop> properties) {
-		return new Msg(properties,Msg.MessageType.SIMPLE);
+		return new Msg(Optional.empty(),properties,Msg.MessageType.SIMPLE);
 	}
 	
 	public static Msg createDefinition(List<Prop> properties) {
-		return new Msg(properties,Msg.MessageType.DEFINITION);
+		return new Msg(Optional.empty(),properties,Msg.MessageType.DEFINITION);
 	}
 	
 	public static Msg createElement(List<Prop> properties) {
-		return new Msg(properties,Msg.MessageType.ARRAY_ELEMENT);
+		return new Msg(Optional.empty(),properties,Msg.MessageType.ARRAY_ELEMENT);
 	}
 
 	public Prop add(Prop property) {
@@ -87,6 +90,10 @@ public class Msg {
 	public Msg withValue(String propertyName, Object value) {
 		return copy().with(property(propertyName).withValue(value));
 	}
+	public Msg withName(String messageName) {
+		return new Msg(Optional.of(messageName),properties,type);
+	}
+	
 	
 	private Prop property(String name) {
 		return propertiesByName.get(name);

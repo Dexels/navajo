@@ -10,11 +10,12 @@ import java.util.Stack;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.document.stream.NavajoStreamHandler;
+import com.dexels.navajo.document.stream.api.Method;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.Select;
@@ -24,12 +25,13 @@ public final class StreamSaxHandler implements XmlInputHandler {
 
     private List<Prop> currentProperties = new ArrayList<>();
     private Stack<Map<String,String>> attributeStack = new Stack<>();
-    private Method currentMethod = null;
+//    private Method currentMethod = null;
 	private final NavajoStreamHandler handler;
 	private Map<String, String> transactionAttributes;
 	private Map<String, String> piggybackAttriutes;
 	private Map<String, String> asyncAttributes;
 	private final List<Select> currentSelections = new ArrayList<>();
+    private List<Method> methods = new ArrayList<>();
 	
 	public StreamSaxHandler(NavajoStreamHandler handler) {
 		this.handler = handler;
@@ -146,7 +148,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
 
 
     private final void parseRequired(Map<String,String> h) {
-        currentMethod.addRequired(h.get("name"));
+//        currentMethod.addRequired(h.get("name"));
     }
 
 
@@ -191,7 +193,8 @@ public final class StreamSaxHandler implements XmlInputHandler {
     }
 
     private final void parseMethod(Map<String,String> h) throws NavajoException {
-//        String name = h.get("name");
+        String name = h.get("name");
+        methods.add(new Method(name));
 //        currentMethod = NavajoFactory.getInstance().createMethod(currentDocument, name, null);
 //        currentDocument.addMethod(currentMethod);
     }
@@ -202,9 +205,9 @@ public final class StreamSaxHandler implements XmlInputHandler {
 
     @Override
 	public final int endElement(String tag) {
-    	Map<String,String> attributes = attributeStack.pop();
+    		Map<String,String> attributes = attributeStack.pop();
         if (tag.equals("tml")) {
-        	handler.navajoDone();
+        	handler.navajoDone(methods);
         	return 1;
          }
         if (tag.equals("message")) {

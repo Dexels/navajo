@@ -1,8 +1,10 @@
 package com.dexels.navajo.document.stream.events;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
+import com.dexels.navajo.document.stream.api.Method;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
@@ -43,8 +45,13 @@ public class Events {
 	}
 
 	public static NavajoStreamEvent done() {
-		return new NavajoStreamEvent(null,NavajoEventTypes.NAVAJO_DONE,null,Collections.emptyMap());
+		return new NavajoStreamEvent(null,NavajoEventTypes.NAVAJO_DONE,Collections.emptyList(),Collections.emptyMap());
 	}
+
+	public static NavajoStreamEvent done(List<Method> methods) {
+		return new NavajoStreamEvent(null,NavajoEventTypes.NAVAJO_DONE,methods,Collections.emptyMap());
+	}
+
 	public static NavajoStreamEvent started(NavajoHead head) {
 		return new NavajoStreamEvent(null,NavajoEventTypes.NAVAJO_STARTED,head,Collections.emptyMap());
 	}

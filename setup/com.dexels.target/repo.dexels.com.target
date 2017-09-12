@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2365">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2380">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.10.17.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.10.17"/>
+<unit id="org.eclipse.jgit.feature.group" version="4.8.0.201706111038-r"/>
+<unit id="org.eclipse.jgit.http.apache.feature.group" version="4.8.0.201706111038-r"/>
+<unit id="org.eclipse.jgit.lfs.feature.group" version="4.8.0.201706111038-r"/>
+<repository location="http://download.eclipse.org/egit/updates/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
@@ -17,10 +19,8 @@
 <repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.20.v20170531/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jgit.feature.group" version="4.8.0.201706111038-r"/>
-<unit id="org.eclipse.jgit.http.apache.feature.group" version="4.8.0.201706111038-r"/>
-<unit id="org.eclipse.jgit.lfs.feature.group" version="4.8.0.201706111038-r"/>
-<repository location="http://download.eclipse.org/egit/updates/"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.10.18.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.10.18"/>
 </location>
 </locations>
 <includeBundles>
@@ -117,9 +117,9 @@
 <plugin id="org.apache.felix.fileinstall"/>
 <plugin id="org.apache.felix.framework"/>
 <plugin id="org.apache.felix.gogo.command" version="1.0.2"/>
-<plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
 <plugin id="org.apache.felix.gogo.runtime" version="1.0.6"/>
-<plugin id="org.apache.felix.gogo.shell"/>
+<plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
+<plugin id="org.apache.felix.gogo.shell" version="1.0.0"/>
 <plugin id="org.apache.felix.inventory"/>
 <plugin id="org.apache.felix.log"/>
 <plugin id="org.apache.felix.metatype"/>

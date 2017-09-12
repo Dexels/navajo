@@ -450,56 +450,7 @@ public class StreamDocument {
 			
 		};
 	}
-//	public static FlowableOperator<NavajoStreamEvent, XMLEvent> parseOld() {
-//		return new FlowableOperator<NavajoStreamEvent, XMLEvent>() {
-//			@Override
-//			public Subscriber<? super XMLEvent> apply(Subscriber<? super NavajoStreamEvent> child) throws Exception {
-//				return new Op(child);
-//			}
-//
-//			
-//			final class Op implements FlowableSubscriber<XMLEvent> {
-//				final Subscriber<? super NavajoStreamEvent> child;
-//
-//				ObservableNavajoParser parser = null;
-//
-//				private BackpressureAdministrator backpressureAdmin;
-//
-//				public Op(Subscriber<? super NavajoStreamEvent> child) {
-//					this.child = child;
-//					parser = new ObservableNavajoParser(child);
-//				}
-//
-//				@Override
-//				public void onSubscribe(Subscription s) {
-//			        this.backpressureAdmin = new BackpressureAdministrator("parseNavajoStream",1, s);
-//					child.onSubscribe(backpressureAdmin);
-//					backpressureAdmin.initialize();
-//				}
-//
-//				@Override
-//				public void onNext(XMLEvent xmlEvent) {
-//					int emitted = parser.parseXmlEvent(xmlEvent);
-//					if(emitted == 0) {
-//						backpressureAdmin.request(1);
-//					}
-//					System.err.println("Emitted: "+emitted);
-//					backpressureAdmin.registerEmission(emitted);
-//				}
-//
-//				@Override
-//				public void onError(Throwable e) {
-//					child.onError(e);
-//				}
-//
-//				@Override
-//				public void onComplete() {
-//					child.onComplete();
-//				}
-//			}
-//		};
-//	}
-//	
+
 	public static ObservableOperator<byte[], NavajoStreamEvent> serializeObservable() {
 		return new ObservableOperator<byte[], NavajoStreamEvent>() {
 			private final NavajoStreamSerializer collector = new NavajoStreamSerializer();
@@ -557,8 +508,45 @@ public class StreamDocument {
 		};
 	}
 	
+	
+//	public static FlowableOperator<byte[], NavajoStreamEvent> serialize() {
+//		return new BaseFlowableOperator<byte[], NavajoStreamEvent>(100) {
+//			@Override
+//			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super byte[]> child) throws Exception {
+//				return new Subscriber<NavajoStreamEvent>() {
+//					
+//					Subscription subscription = null;
+//					private final NavajoStreamSerializer serializer = new NavajoStreamSerializer();
+//
+//					@Override
+//					public void onComplete() {
+//						child.onComplete();
+//					}
+///
+//					@Override
+//					public void onError(Throwable e) {
+//						child.onError(e);
+//					}
+//
+//					@Override
+//					public void onNext(NavajoStreamEvent event) {
+//						byte[] serialized = serializer.serialize(event);
+//						System.err.println("Propagating bytes with size: "+serialized.length);
+//						child.onNext(serialized);
+//						subscription.request(1);
+//					}
+//
+//					@Override
+//					public void onSubscribe(Subscription s) {
+//						subscription = s;
+//						s.request(1);
+//					}};
+//			}
+//		};
+//	}
+
 	public static FlowableOperator<byte[], NavajoStreamEvent> serialize() {
-		return new BaseFlowableOperator<byte[],NavajoStreamEvent>(1) {
+		return new BaseFlowableOperator<byte[],NavajoStreamEvent>(32000) {
 			private final NavajoStreamSerializer collector = new NavajoStreamSerializer();
 
 			@Override
@@ -673,85 +661,6 @@ public class StreamDocument {
 			}
 		};
 		}
-//			
-//			@Override
-//			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super NavajoStreamEvent> child) throws Exception {
-//				return new BaseOp
-//			}
-	
-//	public static FlowableOperator<NavajoStreamEvent, NavajoStreamEvent> filterMessageIgnore() {
-//		return new FlowableOperator<NavajoStreamEvent, NavajoStreamEvent>() {
-//			private final Stack<Boolean> ignoreLevel = new Stack<Boolean>();
-//			
-//			@Override
-//			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super NavajoStreamEvent> child) throws Exception {
-//				return new Op(child);
-//			}
-//			
-//			final class Op implements FlowableSubscriber<NavajoStreamEvent> {
-//				final Subscriber<? super NavajoStreamEvent> child;
-//				private Subscription subscription;
-//
-//				public Op(Subscriber<? super NavajoStreamEvent> child) {
-//					this.child = child;
-//				}
-//
-//				@Override
-//				public void onSubscribe(Subscription s) {
-//					this.subscription = s;
-//					
-//				}
-//				
-//				@Override
-//				public void onNext(NavajoStreamEvent event) {
-//					switch(event.type()) {
-//					case ARRAY_ELEMENT_STARTED:
-//					case ARRAY_STARTED:
-//					case MESSAGE_STARTED:
-//					case MESSAGE_DEFINITION_STARTED:
-//						String mode = (String) event.attribute("mode");
-//						boolean isIgnore = "ignore".equals(mode);
-//						ignoreLevel.push(isIgnore);
-//						if(!ignoreLevel.contains(true)) {
-//							child.onNext(event);
-//						}
-//						backpressureAdmin.registerEmission(1);
-//						break;
-//						
-//					case ARRAY_DONE:
-//					case ARRAY_ELEMENT:
-//					case MESSAGE_DEFINITION:
-//					case MESSAGE:
-//						if(!ignoreLevel.contains(true)) {
-//							child.onNext(event);
-//						}
-//						backpressureAdmin.registerEmission(1);
-//						ignoreLevel.pop();
-//						break;
-//						
-//					case NAVAJO_DONE:
-//					case NAVAJO_STARTED:
-//						child.onNext(event);
-//						backpressureAdmin.registerEmission(1);
-//						break;
-//					default:
-//						throw new UnsupportedOperationException("Unknown event found in NAVADOC");
-//
-//					}
-//				}
-//
-//				@Override
-//				public void onError(Throwable e) {
-//					child.onError(e);
-//				}
-//
-//				@Override
-//				public void onComplete() {
-//					child.onComplete();
-//				}
-//			};
-//		};
-//	}
 
 	public static FlowableOperator<NavajoStreamEvent,NavajoStreamEvent> setPropertyValue(final String messagePath, String property, Object value) {
 		return messageWithPath(messagePath, msg->msg.withValue(property, value),false);

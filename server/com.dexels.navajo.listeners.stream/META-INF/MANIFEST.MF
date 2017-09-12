@@ -5,7 +5,8 @@ Bundle-SymbolicName: com.dexels.navajo.listeners.stream
 Bundle-Version: 1.0.6.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: com.dexels.navajo.document;version="2.2.1",
+Import-Package: com.dexels.navajo.authentication.api,
+ com.dexels.navajo.document;version="2.2.1",
  com.dexels.navajo.document.stream,
  com.dexels.navajo.document.stream.api,
  com.dexels.navajo.document.stream.events,
