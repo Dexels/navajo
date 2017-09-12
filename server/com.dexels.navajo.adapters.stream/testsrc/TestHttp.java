@@ -50,7 +50,7 @@ public class TestHttp {
 //		Thread.sleep(40000);
 	}
 
-	@Test 
+	@Test @Ignore
 	public void testBigPost() throws MalformedURLException, InterruptedException {
 //		String url = "https://repo.dexels.com/nexus/service/local/repositories/central/content/org/apache/tika/tika-bundle/1.6/tika-bundle-1.6.jar";
 //		String url = "http://spiritus.dexels.com:9090/nexus/content/repositories/obr2/.meta/obr.xml";
