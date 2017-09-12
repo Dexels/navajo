@@ -3,7 +3,6 @@ package com.dexels.navajo.document.json.conversion.test;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -17,8 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.conversion.JsonTmlFactory;
 import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.api.ReplicationMessage.Operation;

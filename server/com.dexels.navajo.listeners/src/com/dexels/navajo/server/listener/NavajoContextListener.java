@@ -11,8 +11,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import navajolisteners.Version;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
@@ -25,6 +23,8 @@ import com.dexels.navajo.server.LocalClientDispatcherWrapper;
 import com.dexels.navajo.server.api.impl.NavajoServerInstance;
 import com.dexels.navajo.server.listener.http.SchedulerTools;
 import com.dexels.navajo.version.AbstractVersion;
+
+import navajolisteners.Version;
 
 public class NavajoContextListener implements ServletContextListener {
 

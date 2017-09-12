@@ -12,7 +12,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.document.stream.NavajoStreamHandler;
 import com.dexels.navajo.document.stream.api.Method;

@@ -37,8 +37,6 @@ import com.dexels.navajo.server.api.NavajoServerContext;
 public class NavajoContextInstanceFactory implements NavajoServerContext {
 	private final static Logger logger = LoggerFactory.getLogger(NavajoContextInstanceFactory.class);
 
-	private final boolean sharableResources = false;
-
 	private ConfigurationAdmin configAdmin;
 	private Set<Configuration> ownedConfigurations = new HashSet<Configuration>();
 	private final Set<String> resourcePids = new HashSet<String>();
@@ -563,23 +561,16 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 
 	private String createFilter(String instance, String name,
 			Dictionary<String, Object> settings, String type, String uniqueId) {
-		if(this.sharableResources && uniqueId!=null) {
-			final String filter = "(&(navajo.uniqueid=" + uniqueId
+		final String filter;
+		if (instance == null) {
+			filter = "(&(name=navajo.resource." + name
 					+ ")(service.factoryPid=navajo.resource." + type + "))";
-			return filter;
-			
 		} else {
-			final String filter;
-			if (instance == null) {
-				filter = "(&(name=navajo.resource." + name
-						+ ")(service.factoryPid=navajo.resource." + type + "))";
-			} else {
-				filter = "(&(instance=" + instance + ")(name=navajo.resource."
-						+ name + ")(service.factoryPid=navajo.resource." + type
-						+ "))";
-			}
-			return filter;
+			filter = "(&(instance=" + instance + ")(name=navajo.resource."
+					+ name + ")(service.factoryPid=navajo.resource." + type
+					+ "))";
 		}
+		return filter;
 	}
 
 	/**

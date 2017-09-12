@@ -1,10 +1,8 @@
 package com.dexels.navajo.functions;
 
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 
 
 public class QuotePattern extends FunctionInterface {

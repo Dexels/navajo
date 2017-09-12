@@ -18,12 +18,12 @@ import java.util.StringTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tipipackage.ITipiExtensionContainer;
-
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.connectors.TipiConnector;
 import com.dexels.navajo.tipi.locale.LocaleListener;
+
+import tipipackage.ITipiExtensionContainer;
 
 public abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
 

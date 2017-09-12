@@ -20,3 +20,4 @@ Service-Component: OSGI-INF/navajo.server.context.factory.xml,
  OSGI-INF/navajo.resource.repository.xml,
  OSGI-INF/navajo.global.repository.xml,
  OSGI-INF/navajo.path.listener.xml
+Bundle-ActivationPolicy: lazy

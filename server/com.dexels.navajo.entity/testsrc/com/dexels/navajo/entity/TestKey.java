@@ -1,7 +1,7 @@
 package com.dexels.navajo.entity;
 
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
 
 public class TestKey {
 

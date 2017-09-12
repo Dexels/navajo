@@ -26,7 +26,6 @@ package navajoclient;
 
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.impl.javanet.JavaNetNavajoClientImpl;
 

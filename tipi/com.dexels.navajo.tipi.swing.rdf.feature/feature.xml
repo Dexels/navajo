@@ -17,11 +17,5 @@
       [Enter License Description here.]
    </license>
 
-   <plugin
-         id="com.dexels.navajo.tipi.swing.rdf"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
 </feature>

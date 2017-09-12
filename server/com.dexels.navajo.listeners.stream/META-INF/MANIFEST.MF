@@ -32,3 +32,4 @@ Service-Component: OSGI-INF/*
 Export-Package: com.dexels.navajo.listeners.stream;version="1.0.6"
 Bundle-ClassPath: .,
  lib/reactive-servlet.jar
+Bundle-ActivationPolicy: lazy

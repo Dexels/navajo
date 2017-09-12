@@ -47,3 +47,4 @@ Export-Package: com.dexels.navajo.entity,
  com.dexels.navajo.entity.impl,
  com.dexels.navajo.entity.transactions,
  com.dexels.navajo.entity.util
+Bundle-ActivationPolicy: lazy

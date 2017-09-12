@@ -289,27 +289,27 @@ public class CssComponentResponderImpl implements TipiComponentInstantiatedListe
         return null;
     }
 
-    private CSSTipiEngineImpl prepareEngine(List<String> styleList) {
-        CSSTipiEngineImpl engine = new CSSTipiEngineImpl();
-        engine.setErrorHandler(new CSSErrorHandler() {
-            @Override
-            public void error(Exception e) {
-                logger.error("CSS Error: ", e);
-            }
-        });
-        // String style = "JLabel {uppercase:true}";
-        // long mark = System.currentTimeMillis();
-        try {
-
-            for (String styleString : styleList) {
-                engine.parseStyleSheet(new StringReader(styleString));
-            }
-            return engine;
-        } catch (IOException e) {
-            logger.error("Error: ", e);
-        }
-        return null;
-    }
+//    private CSSTipiEngineImpl prepareEngine(List<String> styleList) {
+//        CSSTipiEngineImpl engine = new CSSTipiEngineImpl();
+//        engine.setErrorHandler(new CSSErrorHandler() {
+//            @Override
+//            public void error(Exception e) {
+//                logger.error("CSS Error: ", e);
+//            }
+//        });
+//        // String style = "JLabel {uppercase:true}";
+//        // long mark = System.currentTimeMillis();
+//        try {
+//
+//            for (String styleString : styleList) {
+//                engine.parseStyleSheet(new StringReader(styleString));
+//            }
+//            return engine;
+//        } catch (IOException e) {
+//            logger.error("Error: ", e);
+//        }
+//        return null;
+//    }
 
     @SuppressWarnings("unused")
     private void applyStyleToPreparedEngine(CSSTipiEngineImpl engine, TipiComponent component, final TipiEvent event) {

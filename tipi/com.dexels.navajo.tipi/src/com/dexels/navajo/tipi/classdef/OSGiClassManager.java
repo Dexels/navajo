@@ -8,16 +8,11 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
-import navajo.ExtensionDefinition;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import tipi.ServiceRegistrationUtils;
-import tipi.TipiExtension;
 
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.tipi.TipiComponent;
@@ -25,6 +20,10 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
+
+import navajo.ExtensionDefinition;
+import tipi.ServiceRegistrationUtils;
+import tipi.TipiExtension;
 
 public class OSGiClassManager extends BaseClassManager implements IClassManager, Serializable {
 

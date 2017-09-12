@@ -28,16 +28,9 @@ import javax.imageio.spi.ServiceRegistry;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-import navajo.ExtensionDefinition;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-
-import tipi.TipiApplicationInstance;
-import tipi.TipiExtension;
-import tipipackage.ITipiExtensionContainer;
-import tipipackage.Version;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
@@ -89,6 +82,12 @@ import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 import com.dexels.navajo.tipi.validation.TipiValidationDecorator;
+
+import navajo.ExtensionDefinition;
+import tipi.TipiApplicationInstance;
+import tipi.TipiExtension;
+import tipipackage.ITipiExtensionContainer;
+import tipipackage.Version;
 
 /**
  * <p>

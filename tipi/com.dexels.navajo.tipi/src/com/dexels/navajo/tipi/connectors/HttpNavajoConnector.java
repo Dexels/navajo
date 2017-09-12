@@ -11,7 +11,6 @@ import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.tipi.TipiBreakException;
-import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 
 public class HttpNavajoConnector extends TipiBaseConnector {

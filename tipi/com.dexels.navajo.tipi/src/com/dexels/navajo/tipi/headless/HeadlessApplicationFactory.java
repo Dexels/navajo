@@ -12,12 +12,12 @@ import java.util.StringTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tipi.TipiCoreExtension;
-import tipi.TipiExtension;
-
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiScreen;
 import com.dexels.navajo.tipi.internal.FileResourceLoader;
+
+import tipi.TipiCoreExtension;
+import tipi.TipiExtension;
 
 public class HeadlessApplicationFactory {
 

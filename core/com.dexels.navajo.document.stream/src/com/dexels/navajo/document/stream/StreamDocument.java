@@ -287,62 +287,6 @@ public class StreamDocument {
 					}	
 				};
 			}
-
-			final class Op implements FlowableSubscriber<String> {
-				final Subscriber<? super Binary> child;
-				Binary result = null;
-				private BackpressureAdministrator backpressureAdmin;
-
-				public Op(Subscriber<? super Binary> child) {
-					this.child = child;
-				}
-
-				@Override
-				public void onSubscribe(Subscription s) {
-			        this.backpressureAdmin = new BackpressureAdministrator("gatherBinary",Long.MAX_VALUE, s);
-					child.onSubscribe(backpressureAdmin);
-					backpressureAdmin.initialize();				}
-
-				@Override
-				public void onNext(String s) {
-					if(result==null) {
-						result = createBinary();
-					}
-					try {
-						result.pushContent(s);
-					} catch (IOException e) {
-						child.onError(e);
-					}			
-				}
-
-				@Override
-				public void onError(Throwable e) {
-					child.onError(e);
-				}
-
-				@Override
-				public void onComplete() {
-					try {
-						if(result!=null) {
-							result.finishPushContent();
-							child.onNext(result);
-						}
-						child.onComplete();
-					} catch (IOException e) {
-						child.onError(e);
-					}
-				}
-
-				private Binary createBinary() {
-					Binary result = new Binary();
-					try {
-						result.startPushRead();
-					} catch (IOException e1) {
-						logger.error("Error: ", e1);
-					}
-					return result;
-				}
-			}
 		};
 	}
 

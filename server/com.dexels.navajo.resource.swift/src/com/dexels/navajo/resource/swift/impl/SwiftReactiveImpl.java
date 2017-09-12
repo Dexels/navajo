@@ -1,23 +1,11 @@
 package com.dexels.navajo.resource.swift.impl;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.BinaryDigest;
@@ -30,7 +18,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.netty.protocol.http.client.HttpClient;
 import io.reactivex.netty.protocol.http.client.HttpClientResponse;
 import rx.Observable;
@@ -45,9 +32,6 @@ public class SwiftReactiveImpl implements BinaryStore {
 	private String tenantId;
 	private String container;
 	private URL endpointURL;
-
-	
-	private final static Logger logger = LoggerFactory.getLogger(SwiftReactiveImpl.class);
 
 	
 	@Override
@@ -212,14 +196,15 @@ public class SwiftReactiveImpl implements BinaryStore {
 		}
 		return result;
 	}
-	private Observable<Binary> getBinaryByPath(String path, Optional<String> swiftEndpoint, Optional<String> tenantId,
-			String accessToken) {
-		return createClientFromURL(swiftEndpoint.get())
-		    .createGet("/v1/"+tenantId.get()+"/"+path)
-		    .addHeader("X-Auth-Token", accessToken)
-		    .lift(parseBinary())
-		    ;
-	}
+
+//	private Observable<Binary> getBinaryByPath(String path, Optional<String> swiftEndpoint, Optional<String> tenantId,
+//			String accessToken) {
+//		return createClientFromURL(swiftEndpoint.get())
+//		    .createGet("/v1/"+tenantId.get()+"/"+path)
+//		    .addHeader("X-Auth-Token", accessToken)
+//		    .lift(parseBinary())
+//		    ;
+//	}
 
 	
 	private static String getAuthToken(ObjectNode authNode) {
@@ -302,32 +287,6 @@ public class SwiftReactiveImpl implements BinaryStore {
 		return authClient;
 	}
 	
-	private Subscriber<Map<String,String>> createStoreEndpoint() {
-		return new Subscriber<Map<String,String>>() {
-
-			@Override
-			public void onStart() {
-				request(100);
-				super.onStart();
-			}
-
-			@Override
-			public void onCompleted() {
-				
-			}
-
-			@Override
-			public void onError(Throwable e) {
-				logger.error("Error: ", e);
-			}
-
-			@Override
-			public void onNext(Map<String, String> arg0) {
-				
-			}
-		};
-	}
-	
 	private static Operator<Binary,HttpClientResponse<ByteBuf>> parseBinary() {
 		return new Operator<Binary,HttpClientResponse<ByteBuf>>(){
 
@@ -400,17 +359,15 @@ public class SwiftReactiveImpl implements BinaryStore {
 		buf.getBytes(readerIndex, bytes);
 		return bytes;
 	}
-    private static SSLEngine defaultSSLEngineForClient(String host, int port) {
-        try {
-
-        	SSLContext sslCtx = SSLContext.getDefault();
-//			final SSLContext sslCtx = SSLContext.getInstance("TLS");
-		    SSLEngine sslEngine = sslCtx.createSSLEngine(host, port);
-			sslEngine.setUseClientMode(true);
-			return sslEngine;
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return null;
-		}
-    }
+//    private static SSLEngine defaultSSLEngineForClient(String host, int port) {
+//        try {
+//        		SSLContext sslCtx = SSLContext.getDefault();
+//		    SSLEngine sslEngine = sslCtx.createSSLEngine(host, port);
+//			sslEngine.setUseClientMode(true);
+//			return sslEngine;
+//		} catch (NoSuchAlgorithmException e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//    }
 }

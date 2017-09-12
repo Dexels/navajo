@@ -11,10 +11,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
+
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
-
-import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
 
 public class CoreTipi extends AbstractTipiTest {
 	

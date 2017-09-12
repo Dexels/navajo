@@ -8,13 +8,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import navajo.ExtensionDefinition;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
+
+import navajo.ExtensionDefinition;
 
 public final class ClassManager extends BaseClassManager implements Serializable, IClassManager {
 	

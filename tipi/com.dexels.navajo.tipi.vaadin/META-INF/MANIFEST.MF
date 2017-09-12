@@ -66,3 +66,4 @@ Bundle-ClassPath: lib/borderlayout-0.3.jar,
  .
 Service-Component: OSGI-INF/tipi.instance.xml,OSGI-INF/tipi.instance.global.xml,
  OSGI-INF/tipi.vaadin.httpcontext.xml
+Bundle-ActivationPolicy: lazy

@@ -26,8 +26,6 @@ package navajolisteners;
 
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.script.api.SchedulerRegistry;
-
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	// Included packages.

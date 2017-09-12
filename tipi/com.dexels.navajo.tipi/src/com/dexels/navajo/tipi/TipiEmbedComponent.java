@@ -12,8 +12,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import navajo.ExtensionDefinition;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +25,8 @@ import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TmlResourceLoader;
 import com.dexels.navajo.tipi.internal.ZipResourceLoader;
+
+import navajo.ExtensionDefinition;
 
 @Deprecated
 public abstract class TipiEmbedComponent extends TipiDataComponentImpl {

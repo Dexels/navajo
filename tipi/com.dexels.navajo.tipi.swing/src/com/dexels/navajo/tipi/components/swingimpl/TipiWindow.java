@@ -22,7 +22,6 @@ import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.core.TipiSupportOverlayPane;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDesktop;
-import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDialog;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingWindow;
 import com.dexels.navajo.tipi.internal.TipiEvent;

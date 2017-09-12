@@ -8,7 +8,6 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -46,6 +45,7 @@ public class NavajoStreamSerializer {
 		}
 		return baos.toByteArray();
 	}
+	@SuppressWarnings("unchecked")
 	private void processNavajoEvent(NavajoStreamEvent event,Writer w) {
 		try {
 			String name = event.path();

@@ -56,3 +56,4 @@ Export-Package: com.dexels.navajo.compiler.tsl,com.dexels.navajo.compi
  avax.tools,com.dexels.osgicompiler,org.osgi.framework",navajotsl;uses
  :="org.osgi.framework"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy

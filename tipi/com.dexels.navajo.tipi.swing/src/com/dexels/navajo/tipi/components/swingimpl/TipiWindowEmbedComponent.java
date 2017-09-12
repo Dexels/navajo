@@ -17,12 +17,12 @@ import javax.swing.event.InternalFrameEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tipiswing.SwingTipiApplicationInstance;
-
 import com.dexels.navajo.tipi.TipiEmbedComponent;
 import com.dexels.navajo.tipi.components.core.ShutdownListener;
 import com.dexels.navajo.tipi.components.swingimpl.embed.TipiSwingStandaloneContainer;
 import com.dexels.navajo.tipi.components.swingimpl.swing.EmbeddedTipiFrame;
+
+import tipiswing.SwingTipiApplicationInstance;
 
 @Deprecated
 public class TipiWindowEmbedComponent extends TipiEmbedComponent {

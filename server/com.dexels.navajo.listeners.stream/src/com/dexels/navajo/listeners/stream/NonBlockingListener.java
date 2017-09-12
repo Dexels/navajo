@@ -185,8 +185,8 @@ public class NonBlockingListener extends HttpServlet {
 	
 
 	public void authenticate(StreamScriptContext context, String authHeader) throws AuthorizationException {
-//		Access a = new Access(-1,-1,context.username,context.service,"stream","ip","hostname",null,false,"access");
-//		authMethodBuilder.getInstanceForRequest(authHeader).process(a);
+		Access a = new Access(-1,-1,context.username,context.service,"stream","ip","hostname",null,false,"access");
+		authMethodBuilder.getInstanceForRequest(authHeader).process(a);
 	}
 
 //	private FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> createTransformerScript(StreamScriptContext context) {

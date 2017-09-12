@@ -22,3 +22,4 @@ Import-Package: com.dexels.navajo.client,
  org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/nqlServlet.xml,OSGI-INF/navajo.laszlo.request.xml,OSGI-INF/navajo.laszlo.response.xml,
  OSGI-INF/navajo.laszlo.servlet.xml
+Bundle-ActivationPolicy: lazy

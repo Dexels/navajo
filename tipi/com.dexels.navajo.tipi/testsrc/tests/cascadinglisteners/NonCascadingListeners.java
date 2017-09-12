@@ -9,10 +9,10 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
+
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
-
-import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
 
 public class NonCascadingListeners extends AbstractTipiTest {
 

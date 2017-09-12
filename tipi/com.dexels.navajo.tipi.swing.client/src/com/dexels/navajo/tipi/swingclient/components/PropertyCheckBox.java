@@ -10,7 +10,6 @@ import com.dexels.navajo.document.Property;
 
 public final class PropertyCheckBox extends JCheckBox implements
 		PropertyControlled {
-    private static final String DECORATION_AREA_TYPE = "substancelaf.internal.painter.decorationAreaType";
     
 	private static final long serialVersionUID = 7272685312953373721L;
 	private Property myProperty = null;

@@ -67,13 +67,6 @@
          unpack="false"/>
 
    <plugin
-         id="osgi.enterprise"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.dexels.navajo.resource.jdbc.oracle"
          download-size="0"
          install-size="0"
