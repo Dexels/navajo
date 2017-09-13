@@ -96,7 +96,9 @@ public class ServiceCommand implements ArticleCommand {
 		appendAAAMessage(runtime, n);
 		final String username = runtime.getUsername();
 		Header h = NavajoFactory.getInstance().createHeader(n, name, username, "", -1);
-		h.setHeaderAttribute("parentaccessid", runtime.getAccess().accessID);
+		if (runtime.getAccess() != null) {
+		      h.setHeaderAttribute("parentaccessid", runtime.getAccess().accessID);
+		}
 		n.addHeader(h);
         h.setHeaderAttribute("application", "article");
 		final Navajo result = performCall(runtime, name, n, runtime.getInstance());
