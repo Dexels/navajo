@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleRuntime;
-import com.dexels.navajo.article.runnable.ArticleRunnable;
+import com.dexels.navajo.article.runnable.ArticleTmlRunnable;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.oauth.api.Client;
 import com.dexels.oauth.api.ClientStore;
@@ -71,7 +71,7 @@ public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
                     instance, oauthToken);
             
             runtime.setUsername(client.getUsername());
-            ArticleRunnable articleRunnable = new ArticleRunnable(req, resp, client, runtime, getContext());
+            ArticleTmlRunnable articleRunnable = new ArticleTmlRunnable(req, resp, client, runtime, getContext());
             tmlScheduler.submit(articleRunnable, false);
         } catch (Throwable e) {
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);

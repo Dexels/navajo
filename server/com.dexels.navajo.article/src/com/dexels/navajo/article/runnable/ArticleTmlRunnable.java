@@ -38,8 +38,8 @@ import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.oauth.api.Client;
 
-public class ArticleRunnable implements TmlRunnable{
-    private final static Logger logger = LoggerFactory.getLogger(ArticleRunnable.class);
+public class ArticleTmlRunnable implements TmlRunnable{
+    private final static Logger logger = LoggerFactory.getLogger(ArticleTmlRunnable.class);
 
     private final ArticleRuntime runtime;
     private final ArticleContext context;
@@ -53,7 +53,7 @@ public class ArticleRunnable implements TmlRunnable{
     private RequestQueue requestQueue;
 
     
-    public ArticleRunnable(HttpServletRequest req, HttpServletResponse resp, Client client, ArticleRuntime runtime, ArticleContext context) {
+    public ArticleTmlRunnable(HttpServletRequest req, HttpServletResponse resp, Client client, ArticleRuntime runtime, ArticleContext context) {
         this.httpRequest = req;
         this.httpResponse = resp;
         this.runtime = runtime;
@@ -99,12 +99,12 @@ public class ArticleRunnable implements TmlRunnable{
 
     private void runInternal() throws APIException {
         try {
-            
+            access.setQueueId(this.getRequestQueue().getId());
+            runtime.setAccess(access);
             runtime.execute(context);
             httpResponse.addHeader("Access-Control-Allow-Origin", "*");
             httpResponse.setContentType("application/json; charset=utf-8");
             access.setExitCode(Access.EXIT_OK);
-
         } catch (NoJSONOutputException e) {
             httpResponse.setContentType(e.getMimeType());
             try {
