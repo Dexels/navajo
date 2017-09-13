@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.BinaryDigest;
 import com.dexels.navajo.resource.binarystore.BinaryStore;
@@ -16,8 +17,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpMethod;
+import io.reactivex.Flowable;
 import io.reactivex.netty.protocol.http.client.HttpClient;
 import io.reactivex.netty.protocol.http.client.HttpClientResponse;
 import rx.Observable;
@@ -39,9 +42,9 @@ public class SwiftReactiveImpl implements BinaryStore {
 		String path = "/v1/"+tenantId+"/"+container+"/"+digestToPath(digest);
 		return requestWithResponse(path, HttpMethod.GET)
 				.doOnError(e->e.printStackTrace())
-				.onErrorResumeNext(e->Observable.just(new Binary()))
-				.toBlocking()
-				.first();
+				.toObservable()
+				.lift(StreamDocument.createBinary())
+				.blockingFirst();
 	}
 
 	private void ensureContainerExists() {
@@ -57,23 +60,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 	
 	public void createContainer() {
 		String path = "/v1/"+tenantId+"/"+container;
-//		try {
-//			URL u = new URL( this.endpointURL.getProtocol()+"://"+this.endpointURL.getHost()+path);
-//			HttpURLConnection uc = (HttpURLConnection) u.openConnection();
-//			uc.setRequestMethod("PUT");
-//			uc.addRequestProperty("X-Auth-Token", accessToken);
-//			int tt = uc.getResponseCode();
-//			System.err.println("TT: "+tt);
-//			System.err.println("u: "+u);
-//		} catch (MalformedURLException e1) {
-//			e1.printStackTrace();
-//		} catch (ProtocolException e1) {
-//			e1.printStackTrace();
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
-		
-		Map<String, String> result =  requestWithBody(path, HttpMethod.PUT,Observable.just(new byte[]{}))
+		Map<String, String> result =  requestWithBody(path, HttpMethod.PUT,rx.Observable.just(new byte[]{}))
 				.doOnError(e->e.printStackTrace())
 				.toBlocking()
 				.first();
@@ -123,30 +110,6 @@ public class SwiftReactiveImpl implements BinaryStore {
         ensureContainerExists();
 	}
 
-//	public static void main(String[] args) throws JsonProcessingException, IOException {
-//		String endpoint = "https://identity.api.rackspacecloud.com/v2.0";
-//		String username = System.getenv("SWIFTUSER");
-//		String apiKey = System.getenv("SWIFTAPIKEY");
-//		String container = "knvb-develop";
-////		"/v1/"+tenantId.get()+"/"
-//		SwiftReactiveImpl instance = new SwiftReactiveImpl();
-//		instance.configure(endpoint, username, apiKey, container);
-//		ObjectNode authNode = authenticate(endpoint, username, apiKey);
-//        
-//		Optional<String> swiftEndpoint = findObjectStoreURL(authNode,false);
-//        Optional<String> tenantId = findTenantId(authNode);
-//        String accessToken = getAuthToken(authNode);
-//		if(!swiftEndpoint.isPresent()) {
-//			System.err.println("Catalog: "+mapper.writerWithDefaultPrettyPrinter().writeValueAsString(authNode.get("access").get("serviceCatalog")));
-//			throw new FileNotFoundException("No cloud files found in endpoint catalog");
-//		}
-//		authNode.get("access").get("serviceCatalog");
-//
-//        Binary content = getBinaryByPath(container+"/CLUBLOGO/1013507", swiftEndpoint, tenantId, accessToken)
-//        		.toBlocking().first();
-//        System.err.println("Content:\n"+content.getLength()+" type: "+content.getMimeType());
-//	}
-
 	// HEAD / DELETE
 	private Observable<Map<String,String>> request(String path, HttpMethod method) {
 		return this.client
@@ -157,12 +120,23 @@ public class SwiftReactiveImpl implements BinaryStore {
 			.map(this::responseHeaders);
 	}
 
-	private Observable<Binary> requestWithResponse(String path, HttpMethod method) {
-		return this.client
+	private Flowable<byte[]> requestWithResponse(String path, HttpMethod method) {
+		return RxJavaInterop.toV2Flowable(this.client
 			.createRequest(method, path)
 		    .addHeader("X-Auth-Token", accessToken)
 			.asObservable()
-			.lift(parseBinary());
+			.concatMapEager(e->e.getContent().asObservable())
+			.map(buf->{
+				byte[] bytes = new byte[buf.readableBytes()];
+				buf.readBytes(bytes);
+				return bytes;
+			}))
+//			.lift(StreamDocument.createBinary())
+				
+				;
+			
+			
+//			.lift(parseBinary());
 	}
 
 	private Observable<Map<String,String>> requestWithBinaryBody(String path, HttpMethod method, Binary input, int bufferSize) {
@@ -170,7 +144,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 		return requestWithBody(path, method, body);
 	}
 
-	private Observable<Map<String, String>> requestWithBody(String path, HttpMethod method, Observable<byte[]> body) {
+	private Observable<Map<String, String>> requestWithBody(String path, HttpMethod method, rx.Observable<byte[]> body) {
 		return this.client
 				.createRequest(method, path)
 			    .addHeader("X-Auth-Token", accessToken)
