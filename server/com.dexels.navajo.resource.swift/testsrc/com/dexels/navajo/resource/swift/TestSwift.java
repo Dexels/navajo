@@ -45,7 +45,7 @@ public class TestSwift {
 	}
 
 	
-	@Test @Ignore
+	@Test
 	public void test() throws IOException {
 
 		Binary b1 = new Binary(getClass().getResourceAsStream("logo.gif"));
@@ -74,20 +74,22 @@ public class TestSwift {
 	@Test
 	public void testStoreURLBasedBinary() throws IOException {
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
-		Binary b = new Binary(u,true,true);	
+		Binary b = new Binary(u,true);	
 		osi.store(b);
 	}
 	
 	@Test
-	@Ignore /* TODO: FIX ME*/
 	public void testFactory() throws IOException {
 //		BinaryStore os = BinaryStoreFactory.getInstance().getBinaryStore("testresource", "Generic");
 		Map<String,String> meta = new HashMap<String,String>();
 		meta.put("aap", "noot");
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
-		Binary b = new Binary(u,true,true);		
+		Binary b = new Binary(u,true);		
 		osi.store(b);
 		Binary b2 = osi.resolve(b.getDigest());
+		Assert.assertTrue(b2.getLength() > 0);
+		System.err.println("B size: "+b.getLength());
+		System.err.println("B2s size: "+b2.getLength());
 		Assert.assertEquals(b, b2);
 //		os.set("test/factory","image/png", b, meta);
 //		os.set("test/factory","image/png", b, meta);
@@ -99,7 +101,7 @@ public class TestSwift {
 		Map<String,String> meta = new HashMap<String,String>();
 		meta.put("aap", "noot");
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
-		Binary b = new Binary(u,true,true);		
+		Binary b = new Binary(u,true);		
 		osi.store(b);
 //		osi.set("test/factory",null, b, meta);
 	}	
@@ -109,7 +111,7 @@ public class TestSwift {
 		Map<String,String> meta = new HashMap<String,String>();
 		meta.put("aap", "noot");
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
-		Binary b = new Binary(u,true,true);
+		Binary b = new Binary(u,true);
 		osi.store(b);
 //		osi.set("test/factory","blablalba", b, meta);
 	}	

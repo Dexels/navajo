@@ -38,6 +38,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 	public Binary resolve(BinaryDigest digest) {
 		String path = "/v1/"+tenantId+"/"+container+"/"+digestToPath(digest);
 		return requestWithResponse(path, HttpMethod.GET)
+				.doOnError(e->e.printStackTrace())
 				.onErrorResumeNext(e->Observable.just(new Binary()))
 				.toBlocking()
 				.first();

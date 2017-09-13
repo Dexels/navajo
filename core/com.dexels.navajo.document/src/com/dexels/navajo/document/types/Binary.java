@@ -309,7 +309,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
 	
 	public BinaryDigest getDigest() {
-		if(!isResolved() && this.digest !=null) {
+		if(!isResolved() && this.digest ==null) {
 			try {
 				resolveData();
 			} catch (IOException e) {
@@ -388,10 +388,10 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	parseFromReader(reader);
     }
 
-    public Binary(URL u, boolean lazyMetaData, boolean lazyData) throws IOException {
+    public Binary(URL u, boolean lazyData) throws IOException {
         super(Property.BINARY_PROPERTY);
     	this.lazyURL = u;
-    	if(lazyMetaData && lazyData) {
+    	if(lazyData) {
     		// nothing to do now
     		return;
     	}
@@ -553,7 +553,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 //    }
     
     public long getLength() {
-    	if(urlMetaData!=null) {
+    	if(urlMetaData!=null && !isResolved()) {
     		System.err.println("URLMETA: "+urlMetaData);
     		List<String> lengthHeaders = urlMetaData.get("Content-Length");
     		if(lengthHeaders!=null && !lengthHeaders.isEmpty()) {
@@ -814,7 +814,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 					@Override
 					public boolean hasNext() {
 						try {
-							if(channel.position() < channel.size()) {
+							if(channel.position() >= channel.size()) {
 								channel.close();
 								return false;
 							}
@@ -831,8 +831,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 							int dataRead = channel.read(outputBuffer);
 							outputBuffer.flip();
 							byte[] result = new byte[dataRead];
-							System.err.println("Read: "+dataRead);
-							System.err.println("Remaining: "+outputBuffer.remaining());
 							outputBuffer.get(result);
 							return result;
 						} catch (IOException e) {

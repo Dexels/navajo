@@ -87,7 +87,7 @@ public class TestBinary {
 		NavajoFactory.getInstance().setSandboxMode(true);
 		Binary binary_x = new Binary(getClass().getResourceAsStream("binary1.txt"));
 		long l = binary_x.getLength();
-		System.err.println(":: "+l);
+		Assert.assertEquals(7, l);
 	}
 //
 	@Test
@@ -147,15 +147,12 @@ public class TestBinary {
 		NavajoFactory.getInstance().setSandboxMode(true);
 		Binary binary_x = new Binary(getClass().getResourceAsStream("binary1.txt"));
 		long l = binary_x.getLength();
-		System.err.println(":: "+l);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(baos);
 		oos.writeObject(binary_x);
 		byte[] bb = baos.toByteArray();
-		System.err.println("byte: "+bb.length);
 		ObjectInputStream ois =  new ObjectInputStream(new ByteArrayInputStream(bb));
 		Binary ooo = (Binary) ois.readObject();
-		System.err.println(">> "+ooo.equals(binary_x));
 		Assert.assertTrue(ooo.equals(binary_x));
 	}
 
@@ -192,17 +189,14 @@ public class TestBinary {
 	@Test
 	public void testBinaryFromURL() throws IOException {
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
-		Binary b = new Binary(u,false,false);
-		System.err.println("B: "+b.getLength());
+		Binary b = new Binary(u,false);
 		Assert.assertTrue("",b.getLength()>2000);
-		byte[] data = b.getData();
-		System.err.println("DATA: "+new String(data));
 	}
 	
 	@Test
 	public void testUnresolvedBinary() throws IOException {
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
-		Binary b = new Binary(u,true,true);		
+		Binary b = new Binary(u,true);		
 		Assert.assertFalse(b.isResolved());
 		Assert.assertTrue("",b.getData().length>2000);
 		Assert.assertTrue(b.isResolved());
@@ -212,14 +206,13 @@ public class TestBinary {
 	@Test
 	public void testResolveOnTransport() throws IOException {
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
-		Binary b = new Binary(u,true,true);		
+		Binary b = new Binary(u,true);		
 		Assert.assertFalse(b.isResolved());
 		StringWriter sw = new StringWriter();
 		b.writeBase64(sw);
 		sw.close();
 		String result = sw.toString();
 		Assert.assertTrue(b.isResolved());
-		System.err.println("Result");
 		Assert.assertTrue(result.length()>1000);
 	}
 	
@@ -262,9 +255,25 @@ public class TestBinary {
 	public void testBinaryIterator() {
 		NavajoFactory.getInstance().setSandboxMode(false);
 		Binary b1 = new Binary(getClass().getResourceAsStream("datasources.xml"));
+		int i = 0;
 		for (byte[] e : b1.getDataAsIterable(1024)) {
-			System.err.println("Data: "+new String(e));
+			i+=e.length;
 		}
-		
+		Assert.assertEquals(b1.getLength(), i);
 	}
+
+	@Test
+	public void testBinaryIteratorFromLazyURL() throws IOException {
+		NavajoFactory.getInstance().setSandboxMode(false);
+		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
+		Binary b1 = new Binary(u,false);
+		
+		int i = 0;
+		for (byte[] e : b1.getDataAsIterable(128)) {
+//			System.err.println("Data: "+new String(e));
+			i++;
+		}
+		Assert.assertEquals(93, i);
+	}
+
 }
