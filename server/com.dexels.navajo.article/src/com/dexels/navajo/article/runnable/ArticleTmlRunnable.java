@@ -49,8 +49,9 @@ public class ArticleTmlRunnable implements TmlRunnable{
     private final Continuation continuation;
     
     private Navajo requestNavajo;
-    private Access access;
     private RequestQueue requestQueue;
+
+    private long scheduledAt;
 
     
     public ArticleTmlRunnable(HttpServletRequest req, HttpServletResponse resp, Client client, ArticleRuntime runtime, ArticleContext context) {
@@ -66,7 +67,6 @@ public class ArticleTmlRunnable implements TmlRunnable{
         requestNavajo = NavajoFactory.getInstance().createNavajo();
         Header h = NavajoFactory.getInstance().createHeader(requestNavajo, runtime.getArticleName(), runtime.getUsername(),"", -1);
         requestNavajo.addHeader(h);
-        access = getAccessObject(client);
         
         if (continuation.isExpired()) {
             logger.warn("Expired continuation!");
@@ -86,8 +86,8 @@ public class ArticleTmlRunnable implements TmlRunnable{
            fail(t1);
         } finally {
             continuation.complete();
-            access.setFinished();
-            NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
+            runtime.getAccess().setFinished();
+            NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(runtime.getAccess()));
 
             if (getRequestQueue() != null) { // Check whether there is a request queue available.
                 getRequestQueue().finished();
@@ -99,12 +99,13 @@ public class ArticleTmlRunnable implements TmlRunnable{
 
     private void runInternal() throws APIException {
         try {
-            access.setQueueId(this.getRequestQueue().getId());
-            runtime.setAccess(access);
+            runtime.getAccess().setQueueId(this.getRequestQueue().getId());
+            runtime.getAccess().queueTime = (int) (System.currentTimeMillis() - scheduledAt);
+            
             runtime.execute(context);
             httpResponse.addHeader("Access-Control-Allow-Origin", "*");
             httpResponse.setContentType("application/json; charset=utf-8");
-            access.setExitCode(Access.EXIT_OK);
+            runtime.getAccess().setExitCode(Access.EXIT_OK);
         } catch (NoJSONOutputException e) {
             httpResponse.setContentType(e.getMimeType());
             try {
@@ -116,14 +117,14 @@ public class ArticleTmlRunnable implements TmlRunnable{
 
         } catch (APIException apiException) {
             if (apiException.getErrorCode() == APIErrorCode.InternalError) {
-                logExceptionToAccess(access, apiException, createNavajoFromRequest(httpRequest));
+                logExceptionToAccess(runtime.getAccess(), apiException, createNavajoFromRequest(httpRequest));
             } else if (apiException.getErrorCode() == APIErrorCode.ConditionError) {
-                access.setExitCode(Access.EXIT_VALIDATION_ERR);
+                runtime.getAccess().setExitCode(Access.EXIT_VALIDATION_ERR);
             }
 
             throw apiException;
         } catch (Throwable e) {
-            logExceptionToAccess(access, e, createNavajoFromRequest(httpRequest));
+            logExceptionToAccess(runtime.getAccess(), e, createNavajoFromRequest(httpRequest));
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
         }
     }
@@ -133,26 +134,6 @@ public class ArticleTmlRunnable implements TmlRunnable{
         // Create a navajo of the input
         a.setInDoc(navajo);
         a.setException(e);
-    }
-
-    private Access getAccessObject(Client client) {
-        String ip = httpRequest.getHeader("X-Forwarded-For");
-        if (ip == null || ip.equals("")) {
-            ip = httpRequest.getRemoteAddr();
-        }
-
-        access = new Access(-1, -1, runtime.getUsername(), "article/" + runtime.getArticleName(), "", "", "", null, false, null);
-        access.setTenant(runtime.getInstance());
-        if (runtime.getToken() != null) {
-            access.rpcPwd = runtime.getToken().getCode();
-        }
-       
-        access.created = new Date();
-        access.ipAddress = ip;
-        access.setClientDescription("article");
-        access.setClientToken("Client id: " + client.getId());
-
-        return access;
     }
 
     private Navajo createNavajoFromRequest(HttpServletRequest req) {
@@ -183,8 +164,8 @@ public class ArticleTmlRunnable implements TmlRunnable{
     }
 
     @Override
-    public void setScheduledAt(long currentTimeMillis) {
-        // TODO Auto-generated method stub
+    public void setScheduledAt(long scheduledAt) {
+       this.scheduledAt = scheduledAt;
 
     }
 
@@ -277,7 +258,7 @@ public class ArticleTmlRunnable implements TmlRunnable{
     @Override
     public Object getAttribute(String name) {
         if (name.equals("ip")) {
-            return access.getIpAddress();
+            return runtime.getAccess().getIpAddress();
         }
         return null;
     }

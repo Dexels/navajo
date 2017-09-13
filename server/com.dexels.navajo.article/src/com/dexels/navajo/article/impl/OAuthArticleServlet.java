@@ -1,6 +1,7 @@
 package com.dexels.navajo.article.impl;
 
 import java.io.File;
+import java.util.Date;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.runnable.ArticleTmlRunnable;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.oauth.api.Client;
 import com.dexels.oauth.api.ClientStore;
@@ -67,8 +69,22 @@ public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
         }
 
         try {
+            String ip = req.getHeader("X-Forwarded-For");
+            if (ip == null || ip.equals("")) {
+                ip = req.getRemoteAddr();
+            }
+
+            Access a = new Access(-1, -1, username, "article/" + articleName, "", "", "", null, false, null);
+            a.setTenant(instance);
+            a.rpcPwd = token;
+            a.created = new Date();
+            a.ipAddress = ip;
+            a.setClientDescription("Article");
+            a.setClientToken("Client id: " + client.getId());
+            
             ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, "", username, article, pathInfo, req.getParameterMap(),
                     instance, oauthToken);
+            runtime.setAccess(a);
             
             runtime.setUsername(client.getUsername());
             ArticleTmlRunnable articleRunnable = new ArticleTmlRunnable(req, resp, client, runtime, getContext());
