@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" configuration-policy="require" name="navajo.article.errorcatch.filter">
-   <implementation class="com.dexels.navajo.article.impl.ExceptionFilter"/>
-   <property name="filter-name" type="String" value="errorcatch"/>
-   <property name="urlPatterns" type="String" value="/data/*"/>
-   <service>
-      <provide interface="javax.servlet.Filter"/>
-   </service>
-</scr:component>
