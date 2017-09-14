@@ -92,6 +92,9 @@ public class TipiButton extends TipiSwingComponentImpl {
 				if (name.equals("icon")) {
 					((JButton) getContainer()).setIcon(getIcon(object));
 				}
+				if (name.equals("borderVisible")) {
+                    ((TipiSwingButton) getContainer()).setBorderVisible((Boolean) object);
+                }
 				if (name.equals("enabled")) {
 					// Just for the record.
 					if (object == null) {

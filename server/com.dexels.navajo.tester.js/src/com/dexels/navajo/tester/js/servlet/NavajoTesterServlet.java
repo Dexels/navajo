@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tester.js.NavajoTesterHelper;
 import com.dexels.navajo.tester.js.model.NavajoFileSystemEntry;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class NavajoTesterServlet extends HttpServlet {
 

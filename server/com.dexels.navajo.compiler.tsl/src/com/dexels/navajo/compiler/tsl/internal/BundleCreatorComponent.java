@@ -193,7 +193,7 @@ public class BundleCreatorComponent implements BundleCreator {
             return;
         }
 
-        List<String> newTenants = new ArrayList<>();
+        Set<String> newTenants = new HashSet<>();
         List<Dependency> dependencies = new ArrayList<>();
         if (scriptExtension.equals(".xml")) {
             depanalyzer.addDependencies(script);
@@ -211,6 +211,12 @@ public class BundleCreatorComponent implements BundleCreator {
                 }
 
             }
+            for(String newTenant : newTenants) {
+                compileAndCreateBundle(script, scriptExtension, newTenant, hasTenantSpecificFile,
+                        true, keepIntermediate, success, skipped, failures);
+            }
+            
+            
         }
 
         if (!hasTenantSpecificFile) {
@@ -248,7 +254,7 @@ public class BundleCreatorComponent implements BundleCreator {
     }
 
     @SuppressWarnings("unchecked")
-    private void uninstallObsoleteTenantScript(String rpcName, List<String> newTenants) {
+    private void uninstallObsoleteTenantScript(String rpcName, Set<String> newTenants) {
         String osgiScriptName = rpcName.replaceAll("/", ".");
         String filter = "(navajo.scriptName=" + osgiScriptName + ")";
 
@@ -279,6 +285,7 @@ public class BundleCreatorComponent implements BundleCreator {
     private void compileAndCreateBundle(String script, String scriptExtension, final String scriptTenant,
             boolean hasTenantSpecificFile, boolean forceTenant, boolean keepIntermediate, List<String> success,
             List<String> skipped, List<String> failures) throws Exception {
+        List<com.dexels.navajo.script.api.Dependency> dependencies = new ArrayList<com.dexels.navajo.script.api.Dependency>();
         String myScript = script;
         if (forceTenant) {
             myScript = script + "_" + scriptTenant;
@@ -301,13 +308,18 @@ public class BundleCreatorComponent implements BundleCreator {
             failures.add(script);
             throw e;
         }
-          
-        logger.info("Finished compiling and bundling {}", script);
+        if (forceTenant) {
+            logger.info("Finished compiling and bundling {} for {}", script, scriptTenant);
+        } else {
+            logger.info("Finished compiling and bundling {}", script);
+        }
+       
     }
-    
-    private ScriptCompiler getScriptCompiler(String scriptExtension) throws Exception {
+
+ private ScriptCompiler getScriptCompiler(String scriptExtension) throws Exception {
         return compilers.get(scriptExtension);
     }
+
 
     private synchronized ReentrantLock getLock(String script, String context) {
         String key = script + context;

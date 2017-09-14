@@ -2,7 +2,7 @@ Bundle-Name: Navajo Entity model implementation
 Bundle-SymbolicName: com.dexels.navajo.entity
 Bundle-Description: Entity
 Bundle-ManifestVersion: 2
-Bundle-Version: 4.0.7.qualifier
+Bundle-Version: 6.2.17.qualifier
 Bundle-Activator: navajoentity.Version
 Bundle-ClassPath: .
 Bundle-Vendor: Dexels
@@ -12,12 +12,16 @@ Navajo-Name: Entity
 Import-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.authentication.api,
  com.dexels.navajo.client,
+ com.dexels.navajo.compiler,
  com.dexels.navajo.compiler.tsl,
+ com.dexels.navajo.dependency,
  com.dexels.navajo.document,
  com.dexels.navajo.document.base;version="2.2.1",
  com.dexels.navajo.document.json,
  com.dexels.navajo.events,
  com.dexels.navajo.events.types,
+ com.dexels.navajo.mapping.compiler.meta,
+ com.dexels.navajo.repository.api.util;version="1.0.0",
  com.dexels.navajo.script.api,
  com.dexels.navajo.server,
  com.dexels.navajo.server.global,
@@ -31,14 +35,11 @@ Import-Package: com.dexels.navajo.adapter,
  org.apache.commons.io;version="2.4.0",
  org.apache.commons.lang;version="2.4.0",
  org.apache.commons.net.util;version="3.3.0",
- org.codehaus.jackson;version="1.9.11",
- org.codehaus.jackson.map;version="1.6.0",
  org.eclipse.jetty.continuation;version="[8.0.0,10.0.0)",
  org.junit;version="4.0.0";resolution:=optional,
  org.junit.runners;version="4.0.0";resolution:=optional,
- org.ops4j.pax.web.extender.whiteboard;version="3.0.6",
- org.ops4j.pax.web.extender.whiteboard.runtime;version="3.0.6",
  org.osgi.framework;version="1.6.0",
+ org.osgi.service.event;version="[1.1.0,2.0.0)",
  org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/*.xml
 Export-Package: com.dexels.navajo.entity,
@@ -46,3 +47,4 @@ Export-Package: com.dexels.navajo.entity,
  com.dexels.navajo.entity.impl,
  com.dexels.navajo.entity.transactions,
  com.dexels.navajo.entity.util
+Bundle-ActivationPolicy: lazy

@@ -547,7 +547,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
                 swriter = new StringWriter();
                 writer = new PrintWriter(swriter);
-                // inMessage.getMessageBuffer().write(writer);
+                // Remove some messages that might contain sensitive info.
+                removeInternalMessages(inMessage);
                 inMessage.write(writer);
 
                 message += swriter.getBuffer().toString();
@@ -892,7 +893,14 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     if (instance == null) {
                         throw new SystemException(-1, "No tenant set -cannot authenticate!");
                     }
-                    AuthenticationMethod authenticator = authMethodBuilder.getInstanceForRequest(clientInfo.getAuthHeader());
+                    // Determine authenticator
+                    final AuthenticationMethod authenticator;
+                    if (clientInfo == null) {
+                        authenticator =  authMethodBuilder.getInstanceForRequest(null);
+                    } else {
+                        authenticator =  authMethodBuilder.getInstanceForRequest(clientInfo.getAuthHeader());
+                    }
+                   
                     if (authenticator == null) {
                         throw new FatalException("Missing authenticator"); 
                     }
@@ -902,7 +910,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
                     AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
                             + ", message=" + ex.getMessage(), Level.WARNING);
-                    myException = ex;
                     access.setExitCode(Access.EXIT_AUTH_EXECPTION);
                     return outMessage;
                 } catch (SystemException se) {
@@ -910,8 +917,13 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     outMessage = generateErrorMessage(access, se.getMessage(), SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
                     AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + se.getMessage(),
                             Level.WARNING);
-                    myException = se;
                     access.setExitCode(Access.EXIT_AUTH_EXECPTION);
+                    return outMessage;
+                } catch (Throwable t) {
+                    logger.error("Unexpected exception on authenticateUser  {} for {}: ", rpcUser, rpcName, t);
+                    outMessage = generateErrorMessage(access, t.getMessage(), SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
+                    access.setExitCode(Access.EXIT_AUTH_EXECPTION);
+                    access.setException(t);
                     return outMessage;
                 }
             }

@@ -573,7 +573,7 @@ public class TestMessage {
 	  maskArrayMsg.setType(Message.MSG_TYPE_ARRAY);
 	  myMask.addMessage(maskArrayMsg);
 	  Message defMsg = NavajoFactory.getInstance().createMessage(maskDoc, "MyArrayMessage");
-	  Property mp4 = NavajoFactory.getInstance().createProperty(maskDoc, "MyProp4", "string", "", 0, "", "in", "");
+	  Property mp4 = NavajoFactory.getInstance().createProperty(maskDoc, "MyProp4", "integer", "", 0, "", "in", "");
 	  defMsg.addProperty(mp4);
 	  Property mp5 = NavajoFactory.getInstance().createProperty(maskDoc, "MyProp5", "string", "", 0, "", "in", "");
 	  defMsg.addProperty(mp5);
@@ -606,6 +606,7 @@ public class TestMessage {
 	  Assert.assertNull(myMessage.getProperty("MyArrayMessage@0/MyProp6"));
 	  Assert.assertNotNull(myMessage.getProperty("MyArrayMessage@0/MyProp4"));
 	  Assert.assertNotNull(myMessage.getProperty("MyArrayMessage@0/MyProp5"));
+	  Assert.assertEquals("integer", myMessage.getProperty("MyArrayMessage@0/MyProp4").getType());
 	  Assert.assertNull(myMessage.getMessage("SomeChildMessage"));
 	  Assert.assertNotNull(myMessage.getProperty("SomeValidChildMessage/MyProp7"));
 	  Assert.assertNull(myMessage.getProperty("SomeValidChildMessage/MyProp8"));

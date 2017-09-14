@@ -1,10 +1,13 @@
 package com.dexels.navajo.entity.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +24,6 @@ import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.EntityOperation;
 import com.dexels.navajo.entity.Key;
-import com.dexels.navajo.entity.adapters.EntityMap;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
@@ -31,41 +33,42 @@ public class ServiceEntityOperation implements EntityOperation {
     
 	private EntityManager manager;
 	private DispatcherInterface dispatcher;
-	private EntityMap myEntityMap;
 	private Operation myOperation;
-	private final Entity myEntity;
+	private Entity myEntity;
 	private Key myKey;
-	String[] validMessages = null;
+	private Set<String> validMessages  =new HashSet<String>(Arrays.asList("__parms__", "__globals__", "__aaa__"));
 
 	
+
+	public ServiceEntityOperation(EntityManager m, Operation o) throws EntityException {
+        this.dispatcher = DispatcherFactory.getInstance();
+        setup(m, o);
+    }
+	
 	public ServiceEntityOperation(EntityManager m, DispatcherInterface c, Operation o) throws EntityException {
-		this.manager = m;
 		this.dispatcher = c;
-		this.myOperation = o;
-		this.myEntity = manager.getEntity(myOperation.getEntityName());
-		validMessages = new String[] {myEntity.getMessageName()};
-		if ( myEntity == null ) {
-			logger.error("ServiceEntityOperation could not find requested entity!");
-			throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not find entity: " + myOperation.getEntityName());
-		}
+		setup(m, o);
+	}
+	
+	private void setup(EntityManager m,  Operation o) throws EntityException {
+	    this.manager = m;
+	    this.myOperation = o;
+	    this.myEntity = manager.getEntity(myOperation.getEntityName());
+	    
+	    if ( myEntity == null ) {
+            logger.error("ServiceEntityOperation could not find requested entity!");
+            throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not find entity: " + myOperation.getEntityName());
+        }
+	    
+	    this.validMessages.add(myEntity.getMessageName());
+        if (myOperation.getExtraMessage() != null) {
+            validMessages.add(myOperation.getExtraMessage().getName());
+        }
 	}
 
-	public ServiceEntityOperation(EntityManager m, EntityMap c, Operation o) throws EntityException {
-		this.manager = m;
-		this.myEntityMap = c;
-		this.myOperation = o;
-		this.myEntity = manager.getEntity(myOperation.getEntityName());
-		validMessages = new String[] {myEntity.getMessageName()};
-		if ( myEntity == null ) {
-			logger.error("ServiceEntityOperation could not find requested entity!");
-			throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not find entity: " + myOperation.getEntityName());
-		}
-	}
-
+	
 	public ServiceEntityOperation cloneServiceEntityOperation(Operation o) throws EntityException {
-		if ( myEntityMap != null ) {
-			return new ServiceEntityOperation(manager, myEntityMap, o);
-		} else if ( dispatcher != null ) {
+		if ( dispatcher != null ) {
 			return new ServiceEntityOperation(manager, dispatcher, o);
 		} else {
 			return null;
@@ -91,10 +94,6 @@ public class ServiceEntityOperation implements EntityOperation {
 	
 	public Entity getMyEntity() {
 		return myEntity;
-	}
-
-	public EntityMap getMyEntityMap() {
-		return myEntityMap;
 	}
 
 	/**
@@ -193,15 +192,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			}
 		}
 	}
-	
-	private final boolean isInArray(String [] arr, String s) {
-		for ( int i = 0; i < arr.length; i++ ) {
-			if ( arr[i].equals(s) ) {
-				return true;
-			}
-		}
-		return false;
-	}
+
 	
 	private HashMap<String,Navajo> getInputNavajosForReferencedEntities(Navajo n) {
 		List<Property> allProps = myEntity.getMessage().getAllProperties();
@@ -224,17 +215,14 @@ public class ServiceEntityOperation implements EntityOperation {
 		
 	/**
 	 * Clean a Navajo document: only valid messages are kept, missing properties 
-	 * and messages are added, and filter properties on the right direction
-	 * @param merge TODO
-	 * @param validMessages
-	 * 
+	 * and messages are added, and filter properties on the right direction	 * 
 	 * @return
 	 */
 	private void clean(Navajo n, String method, boolean resolveLinks, boolean merge) {
 		
 		List<Message> all = n.getAllMessages();
 		for ( Message m : all ) {
-			if (!isInArray(validMessages, m.getName() ) ) {
+			if (!validMessages.contains(m.getName() ) ) {
 				n.removeMessage(m);
 			}
 		}
@@ -390,8 +378,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	
 			Message validationErrors;
 			if ((validationErrors = validationResult.getMessage("ConditionErrors")) != null ) {
-				throw new EntityException(EntityException.FAILURE, validationErrors.getMessage(0)
-						.getProperty("Id").toString());
+				throw new EntityException(EntityException.VALIDATION_ERROR, validationErrors.getMessage(0).getProperty("Id").toString(), validationResult);
 			}
 		}
 		
@@ -447,6 +434,10 @@ public class ServiceEntityOperation implements EntityOperation {
         // After a POST or PUT, return the full new object resulting from the previous operation
         // effectively this is a GET. However, if this fails (e.g. no GET operation is defined
         // for this entity), we return the original result
+        // If the output contains the entity name, prefer this!
+        if (result.getMessage(myEntity.getMessageName()) != null) {
+            return result;
+        }
         try {
             return getEntity(input);
         } catch (EntityException e) {
@@ -503,7 +494,7 @@ public class ServiceEntityOperation implements EntityOperation {
 
         
         Navajo currentEntity = getCurrentEntity(input);
-        if (currentEntity == null || currentEntity.getMessage(myEntity.getMessageName()) == null) {
+        if (currentEntity != null && currentEntity.getMessage(myEntity.getMessageName()) == null) {
             throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not peform delete, entity not found");
         }
         
@@ -616,6 +607,9 @@ public class ServiceEntityOperation implements EntityOperation {
 		if (input.getMessage("__parms__") != null) {
 		    request.addMessage(input.getMessage("__parms__").copy(request));
 		}
+		if (input.getMessage("__aaa__") != null) {
+            request.addMessage(input.getMessage("__aaa__").copy(request));
+        }
 		if ( getop.getExtraMessage() != null ) {
 		    request.addMessage(getop.getExtraMessage().copy(request));
         }
@@ -697,7 +691,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			
 			Message validationErrors;
 			if ((validationErrors = result.getMessage("ConditionErrors")) != null ) {
-				throw new EntityException(EntityException.FAILURE, validationErrors.getMessage(0).getProperty("Id").toString());
+				throw new EntityException(EntityException.VALIDATION_ERROR, validationErrors.getMessage(0).getProperty("Id").toString(), result);
 			}
 			
 		}
@@ -760,16 +754,6 @@ public class ServiceEntityOperation implements EntityOperation {
 		// Remove bind properties, these properties do not belong to this entity
 		Navajo cleaned = removeBindProperties(input);
 		try {
-			if ( myEntityMap != null ) {
-				try {
-					myEntityMap.setDoSend(o.getService(), cleaned);
-					myEntityMap.waitForResult();
-					Navajo n = myEntityMap.getResponseNavajo();
-					return n;
-				} catch (Exception e) {
-					throw new EntityException(EntityException.SERVER_ERROR, e.getMessage(), e);
-				} 
-			}
 			if ( dispatcher != null ) {
 				return dispatcher.handle(cleaned, myOperation.getTenant(), true);
 			} else {

@@ -323,6 +323,16 @@
 		<input />
 		<result />
 	</function>
+    <function name="GetImageHeight" class="com.dexels.navajo.functions.GetImageHeight">
+        <description>Gets the height of a binary image</description>
+        <input>binary</input>
+        <result>integer</result>
+    </function>
+    <function name="GetImageWidth" class="com.dexels.navajo.functions.GetImageWidth">
+        <description>Gets the width of a binary image</description>
+        <input>binary</input>
+        <result>integer</result>
+    </function>
 	<function name="GetInitials" class="com.dexels.navajo.functions.GetInitials">
 		<description>This function returns the initials of a specified string
 			field . Eg. GetInitials(&apos;aap noot mies&apos;) results in &apos;a
@@ -491,6 +501,11 @@
 		<input>date|string,string|empty</input>
 		<result>boolean</result>
 	</function>
+    <function name="IsDateBetween" class="com.dexels.navajo.functions.IsDateBetween">
+        <description>IsDateBetween(date|string,date|string,date|string)</description>
+        <input>date|string,date|string,date|string</input>
+        <result>boolean</result>
+    </function>
 	<function name="IsEmpty" class="com.dexels.navajo.functions.IsEmpty">
 		<description>Determines whether a given object is null or empty
 		</description>
@@ -526,6 +541,11 @@
         <description>This function checks whether a given binary argmument represents a valid xml format</description>
         <input>binary</input>
         <result>boolean</result>        
+    </function>
+    <function name="LimitList" class="com.dexels.navajo.functions.LimitList">
+        <description>Return a list with at most x elements</description>
+        <input>list,number</input>
+        <result>list</result>
     </function>
 	<function name="KeyValueMap" class="com.dexels.navajo.functions.KeyValueMap">
 		<description>KeyValueMap(string,string,string)</description>
@@ -631,6 +651,12 @@
 		<input>integer,string|empty</input>
 		<result>string</result>
 	</function>
+    <function name="QuotePattern" class="com.dexels.navajo.functions.QuotePattern">
+        <description>
+        </description>
+        <input>string</input>
+        <result>string</result>
+    </function>
     <function name="ReplaceDiacriticCharacters" class="com.dexels.navajo.functions.ReplaceDiacriticCharacters">
         <description>Does what it says, replace diacritic chars with non diacritic chars</description>
         <input>string</input>
@@ -649,7 +675,7 @@
 			transparency if needed). Keeps aspect ratio, and uses the largest
 			value of the dimensions
 		</description>
-		<input>binary,integer,integer</input>
+		<input>binary,integer,integer,string|empty</input>
 		<result>binary</result>
 	</function>
 	<function name="ScaleImageCropped" class="com.dexels.navajo.functions.ScaleImageCropped">
@@ -657,28 +683,28 @@
 			transparency if needed). Keeps aspect ratio, and crops the image to
 			the new size if necessary
 		</description>
-		<input>binary,integer,integer</input>
+		<input>binary,integer,integer,string|empty</input>
 		<result>binary</result>
 	</function>
 	<function name="ScaleImageFree" class="com.dexels.navajo.functions.ScaleImageFree">
 		<description>Scales an image to the specified dimensions. Does not
 			keep aspect ratio.
 		</description>
-		<input>binary,integer,integer</input>
+		<input>binary,integer,integer,string|empty</input>
 		<result>binary</result>
 	</function>
 	<function name="ScaleImageMax" class="com.dexels.navajo.functions.ScaleImageMax">
 		<description>Scales an image to the specified dimensions. Keeps aspect
 			ratio, and uses the largest value of the dimensions
 		</description>
-		<input>binary,integer,integer</input>
+		<input>binary,integer,integer,string|empty</input>
 		<result>binary</result>
 	</function>
 	<function name="ScaleImageMin" class="com.dexels.navajo.functions.ScaleImageMin">
 		<description>Scales an image to the specified dimensions. Keeps aspect
 			ratio, and uses the smallest value of the dimensions
 		</description>
-		<input>binary,integer,integer</input>
+		<input>binary,integer,integer,string|empty</input>
 		<result>binary</result>
 	</function>
 	<function name="SetAllProperties" class="com.dexels.navajo.functions.SetAllProperties">
@@ -810,6 +836,11 @@
 		<input>any</input>
 		<result>integer</result>
 	</function>
+    <function name="ToList" class="com.dexels.navajo.functions.ToList">
+        <description>Converts a single item to a new list, or add an element to an existing list</description>
+        <input>list|any,empty|any,empty|string</input>
+        <result>list</result>
+    </function>
 	<function name="ToLong" class="com.dexels.navajo.functions.ToLong">
 		<description>Get an long representation of given object.</description>
 		<input>any</input>
@@ -850,6 +881,12 @@
 		<input>string|float|integer</input>
 		<result>percentage</result>
 	</function>
+    <function name="ToPattern" class="com.dexels.navajo.functions.ToPattern">
+        <description>Cast a string/double/integer to a percentage object
+        </description>
+        <input>string,string|empty</input>
+        <result>object</result>
+    </function>
 	<function name="ToSecureImage" class="com.dexels.navajo.functions.ToSecureImage">
 		<description>Creates a Binary containing a PNG image representation of
 			specified objects string representation&#xa; max. inputlength is 6

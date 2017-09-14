@@ -1,8 +1,9 @@
 package com.dexels.navajo.functions.security;
 
 import java.nio.charset.Charset;
-import java.security.*;
-import javax.crypto.*;
+import java.security.Key;
+
+import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.dexels.utils.Base64;

@@ -47,7 +47,7 @@ public class DummyWebserviceListener implements WebserviceListenerRegistryInterf
 	}
 
 	@Override
-	public boolean isRegisteredWebservice(String string) {
+	public boolean isActiveRegisteredWebservice(String string) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -57,5 +57,17 @@ public class DummyWebserviceListener implements WebserviceListenerRegistryInterf
 		// TODO Auto-generated method stub
 		
 	}
+
+    @Override
+    public void addRegisteredWebservice(String wfName, String webservice) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void unregisterWebservicesFromWorkflow(String wfName) {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

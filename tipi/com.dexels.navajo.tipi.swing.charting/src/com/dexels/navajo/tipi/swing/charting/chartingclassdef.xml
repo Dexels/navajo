@@ -64,6 +64,7 @@
 			<value direction="in" name="category" type="string" />
 			<value direction="in" name="value" type="string" />
 			<value direction="in" name="type" type="string" />
+            <value direction="in" name="show3D" type="boolean" />
 			<value direction="in" name="messagePath" type="string" />
 		</values>
 		<methods>

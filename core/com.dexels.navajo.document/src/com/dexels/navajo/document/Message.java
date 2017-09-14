@@ -35,6 +35,7 @@ public interface Message
   public static final String MSG_CONDITION = "condition";
   public static final String MSG_ETAG = "etag";
   public static final String MSG_PARAMETERS_BLOCK = "__parms__";
+  public static final String MSG_AAA_BLOCK = "__aaa__";
 
   public static final String MSG_TYPE_SIMPLE = "simple";
   public static final String MSG_TYPE_ARRAY = "array";
@@ -585,6 +586,5 @@ public interface Message
 	public void printBody(final Writer sw, int indent) throws IOException;
 	public void printCloseTag(final Writer sw, int indent) throws IOException;
 
-    boolean messageEquals(Object obj);
 
 }

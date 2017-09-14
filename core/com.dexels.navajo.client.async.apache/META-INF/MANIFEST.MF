@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Async Client
 Bundle-SymbolicName: com.dexels.navajo.client.async.apache
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.0.13.qualifier
+Bundle-Version: 2.0.17.qualifier
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .
 Import-Package: com.dexels.navajo.client,
@@ -20,9 +20,9 @@ Import-Package: com.dexels.navajo.client,
  org.apache.http.concurrent;version="4.4.3",
  org.apache.http.entity;version="4.4.3",
  org.apache.http.impl.client;version="4.4.1",
- org.apache.http.impl.nio.client;version="4.2.0.alpha1-SNAPSHOT",
+ org.apache.http.impl.nio.client;version="4.1.0",
  org.apache.http.message;version="4.4.3",
- org.apache.http.nio.client;version="4.2.0.alpha1-SNAPSHOT",
+ org.apache.http.nio.client;version="4.1.0",
  org.junit;resolution:=optional,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)"

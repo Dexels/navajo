@@ -86,7 +86,6 @@ a:hover {
 }
 
 .container {
-	width: 80%;
 	margin: 0 auto;
 	padding: 0 0px;
 }
@@ -126,7 +125,9 @@ header {
 }
 
 #title {
-	text-align: center;
+	position: absolute;
+	left: 10px;
+	top: 0px;
 }
 
 #title h1 {
@@ -491,14 +492,13 @@ h3 {
 }
 
 .headercontainer {
-	width: 300px;
-	margin: 0 auto;
+	width: 600px;
+	margin: 10px auto 0 ;
 	text-align: center;
+	min-height: 3.5em;
+	
 }
 
-.handlersdrop {
-	display: inline;
-}
 
 .LoginButton {
 	display: inline
@@ -513,6 +513,15 @@ h3 {
 
 #methods {
 	line-height: 1.5;
+	max-height: 150px;
+	overflow:hidden;
+	overflow-y:auto;
+}
+
+#favorites {
+	max-height: 150px;
+	overflow:hidden;
+	overflow-y:auto;
 }
 
 .exportcsv:after {
@@ -543,4 +552,34 @@ h3 {
 	left: 0;
 	height: 300px;
 	margin-top:10px;
+}
+
+.refreshscripts:after {
+	display: inline;
+	content: url('/testerimg/refresh.png');
+	cursor: pointer;
+	margin-left: 4px;
+	overflow: visible
+}
+
+.scriptheader:after {
+	display: inline;
+	content: url('/testerimg/star1.png');
+	cursor: pointer;
+	margin-left: 4px;
+	overflow: visible
+}
+
+.scriptheader2:after {
+	display: inline;
+	content: url('/testerimg/star2.png');
+	cursor: pointer;
+	margin-left: 4px;
+	overflow: visible
+}
+
+.betaimg {
+	position: absolute;
+	right: 10px;
+	top:  1px;
 }

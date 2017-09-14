@@ -12,4 +12,5 @@
    <property name="servlet-name" type="String" value="stream-postman"/>
    <reference bind="addScript" cardinality="0..n" interface="com.dexels.navajo.document.stream.api.Script" name="Script" policy="dynamic" unbind="removeScript"/>
    <reference bind="addSimpleScript" cardinality="0..n" interface="com.dexels.navajo.document.stream.api.SimpleScript" name="SimpleScript" policy="dynamic" unbind="removeSimpleScript"/>
+   <reference bind="setAuthenticationMethodBuilder" cardinality="1..1" interface="com.dexels.navajo.authentication.api.AuthenticationMethodBuilder" name="AuthenticationMethodBuilder" policy="dynamic" unbind="clearAuthenticationMethodBuilder"/>
 </scr:component>

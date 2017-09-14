@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.server.article.servlet.oauth">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="navajo.server.article.servlet.oauth">
    <implementation class="com.dexels.navajo.article.impl.OAuthArticleServlet"/>
-   <reference bind="setArticleContext" cardinality="1..1" interface="com.dexels.navajo.article.ArticleContext" name="ArticleContext" policy="dynamic" unbind="clearArticleContext"/>
    <property name="alias" type="String" value="/data"/>
-   <property name="servlet-name" type="String" value="oauthdata"/>
+   <property name="servletName" type="String" value="data"/>
    <service>
       <provide interface="javax.servlet.Servlet"/>
    </service>
+   <reference bind="setTmlScheduler" cardinality="1..1" interface="com.dexels.navajo.script.api.TmlScheduler" name="TmlScheduler" policy="dynamic" unbind="clearTmlScheduler"/>
+   <reference bind="setArticleContext" cardinality="1..1" interface="com.dexels.navajo.article.ArticleContext" name="ArticleContext" policy="dynamic" unbind="clearArticleContext"/>
    <reference bind="setTokenStore" cardinality="1..1" interface="com.dexels.oauth.api.TokenStore" name="TokenStore" policy="dynamic" unbind="clearTokenStore"/>
    <reference bind="setClientStore" cardinality="1..1" interface="com.dexels.oauth.api.ClientStore" name="ClientStore" policy="dynamic" unbind="clearClientStore"/>
    <reference bind="setResourceBundle" cardinality="1..1" interface="com.dexels.resourcebundle.ResourceBundleStore" name="ResourceBundle" policy="dynamic" unbind="clearResourceBundle"/>

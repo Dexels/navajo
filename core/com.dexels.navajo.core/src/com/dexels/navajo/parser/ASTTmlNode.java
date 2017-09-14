@@ -81,6 +81,15 @@ public final class ASTTmlNode extends SimpleNode {
         	isParam = true;
         	val = val.substring(2);
         }
+        if (val.contains("__globals__")) { // Absolute globals property.
+            parentMsg = doc.getMessage("__globals__");
+            int length = "__globals__".length();
+            if (val.startsWith("/")) {
+                length += 1;
+            }
+            length += 1; // trailing /
+            val = val.substring(length);
+        }
     
         if (Util.isRegularExpression(val))
             singleMatch = false;

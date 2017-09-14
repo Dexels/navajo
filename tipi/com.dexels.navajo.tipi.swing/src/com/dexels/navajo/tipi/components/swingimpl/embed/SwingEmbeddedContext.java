@@ -3,18 +3,17 @@ package com.dexels.navajo.tipi.components.swingimpl.embed;
 import java.io.IOException;
 import java.util.List;
 
-import navajo.ExtensionDefinition;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import tipiswing.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiUserInterface;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
+
+import navajo.ExtensionDefinition;
+import tipiswing.SwingTipiApplicationInstance;
 
 /**
  * <p>

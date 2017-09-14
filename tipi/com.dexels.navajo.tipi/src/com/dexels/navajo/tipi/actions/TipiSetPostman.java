@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.client.NavajoClient;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -46,11 +47,14 @@ public class TipiSetPostman extends TipiAction {
 		myContext.getClient().setServerUrl("" + serv.value);
 		myContext.getClient().setUsername("" + user.value);
 		myContext.getClient().setPassword("" + pass.value);
+		
+        logger.info("Set username {} for Client {}", user.value,myContext.getClient().hashCode());
+
 		if (app != null && app.value != null) {
-		    myContext.getClient().setApplication("" + app.value);
+			myContext.getClient().setNavajoHeader(NavajoClient.APP_HEADER_KEY, "" + app.value);
 		}
 		if (org != null && org.value != null) {
-		    myContext.getClient().setOrganization("" + org.value);
+			myContext.getClient().setNavajoHeader(NavajoClient.ORG_HEADER_KEY, "" + org.value);
         }
 		
 		 

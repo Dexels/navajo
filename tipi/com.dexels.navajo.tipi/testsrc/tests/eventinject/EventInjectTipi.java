@@ -11,12 +11,12 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tipi.TipiCoreExtension;
-import tipi.TipiExtension;
-
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
+
+import tipi.TipiCoreExtension;
+import tipi.TipiExtension;
 
 public class EventInjectTipi extends AbstractTipiTest {
 

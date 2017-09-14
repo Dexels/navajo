@@ -17,6 +17,7 @@ import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.oauth.api.OAuthToken;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -31,9 +32,9 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	private String username;
 	private final StringWriter writer = new StringWriter();
 	private final Map<String, String[]> parameterMap;
+    private Access access;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(ServletArticleRuntimeImpl.class);
+	private final static Logger logger = LoggerFactory.getLogger(ServletArticleRuntimeImpl.class);
 	
 	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, String password, String username, File article,String articleName, Map<String, String[]> parameterMap,String instance,OAuthToken t) throws IOException {
 		super(articleName,article,instance,t);
@@ -113,4 +114,16 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 		writer.writeValue(response.getWriter(), rootNode);
 	}
 
+
+    @Override
+    public void setAccess(Access a) {
+        this.access = a;
+        
+    }
+
+
+    @Override
+    public Access getAccess() {
+        return access;
+    }
 }

@@ -39,7 +39,7 @@ public class TipiGridPanel extends TipiPanel {
 	private int gridwidth = 0;
 	private final List<Integer> myWidths = new ArrayList<Integer>();
 	private final Map<Integer, Component> heightStrutComponentMap = new HashMap<Integer, Component>();
-	private final Map<Integer, Integer> heightStrutHeightMap = new HashMap<Integer, Integer>();
+//	private final Map<Integer, Integer> heightStrutHeightMap = new HashMap<Integer, Integer>();
 	private final Set<Integer> fixedSet = new HashSet<Integer>();
 	private final Set<Coordinate> availabilityMatrix = new HashSet<Coordinate>();
 
@@ -137,12 +137,10 @@ public class TipiGridPanel extends TipiPanel {
 		if (component == null) {
 			return;
 		}
-		Integer h = heightStrutHeightMap.get(component);
+		Integer h = null; //heightStrutHeightMap.get(component);
 		int height = 0;
 		if (h == null) {
 			height = 0;
-		} else {
-			height = h.intValue();
 		}
 		Insets ins = myData.insets;
 		int vertical = height;

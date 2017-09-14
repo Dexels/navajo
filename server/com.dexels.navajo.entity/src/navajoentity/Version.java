@@ -1,12 +1,12 @@
 package navajoentity;
 
-import navajoextension.AbstractCoreExtension;
-
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.entity.adapters.NavajoEntityAdapterLibrary;
+
+import navajoextension.AbstractCoreExtension;
 
 
 /**

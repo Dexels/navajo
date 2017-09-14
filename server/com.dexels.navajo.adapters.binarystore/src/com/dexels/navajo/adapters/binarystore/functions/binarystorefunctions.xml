@@ -2,7 +2,14 @@
 <functiondef>
     <function name="BinaryStoreValue" class="com.dexels.navajo.adapters.binarystore.functions.BinaryStoreValue">
         <description>Gets the value from an objectstore</description>
-        <input>string,string</input>
+        <input>string,binary_digest</input>
         <result>binary</result>
     </function>
+    <function name="ToBinaryDigest" class="com.dexels.navajo.adapters.binarystore.functions.ToBinaryDigest">
+        <description>A convertor to parse binary digests to a binary_digest object</description>
+        <input>string</input>
+        <result>binary_digest</result>
+    </function>
+    
+    
 </functiondef>

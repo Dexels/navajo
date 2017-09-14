@@ -88,6 +88,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 
 	private int responseCode;
 	private String responseMessage;
+    private String responseContentType;
 	
 	@Override
 	public void load(Access access) throws MappableException, UserException {
@@ -287,7 +288,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 
 			responseCode =  con.getResponseCode();
 			responseMessage = con.getResponseMessage();
-			
+			responseContentType = con.getHeaderField("Content-Type");
 			InputStream is = ( responseCode < 400 ? con.getInputStream() : con.getErrorStream() ) ;
 			if (responseCode > 299) {
 			    logger.warn("Got a {} response code back on call to {}: {}", responseCode, url, responseMessage );
@@ -491,8 +492,14 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 	public void setCatchConnectionTimeOut(boolean catchConnectionTimeOut) {
 		this.catchConnectionTimeOut = catchConnectionTimeOut;
 	}
+	
+	
 
-	public Binary getContent() {
+	public String getResponseContentType() {
+        return responseContentType;
+    }
+
+    public Binary getContent() {
 		return content;
 	}
 

@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.swing.RepaintManager;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
 
@@ -21,13 +20,12 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tipiswing.SwingTipiApplicationInstance;
-import tipiswing.TipiSwingExtension;
-
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.application.InstallationPathResolver;
 import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
-import com.dexels.navajo.tipi.swingclient.components.CheckThreadViolationRepaintManager;
+
+import tipiswing.SwingTipiApplicationInstance;
+import tipiswing.TipiSwingExtension;
 
 public class MainApplication {
 

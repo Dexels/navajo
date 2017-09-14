@@ -1,35 +1,77 @@
 package com.dexels.navajo.script.api;
 
+import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Class that is used to register the primary service scheduler.
  * 
- * @author arjen
+ * @author cbrouwer
  *
  */
 public class SchedulerRegistry {
+    private final static Logger logger = LoggerFactory.getLogger(SchedulerRegistry.class);
 
-	private static volatile Scheduler myScheduler;
-	private static volatile Scheduler lowPrioScheduler;
-
-	public static void setScheduler(Scheduler s) {
-		myScheduler = s;
-	}
-
-	public static Scheduler getScheduler() {
-		if ( myScheduler != null ) {
-			return myScheduler;
-		} else {
-			myScheduler = new SimpleScheduler(false);
-		}
-		return myScheduler;
-	}
-	
-	public static Scheduler getLowPrioScheduler() {
-        if ( lowPrioScheduler != null ) {
-            return lowPrioScheduler;
-        } else {
-            lowPrioScheduler = new SimpleScheduler(true);
+    private volatile Scheduler tmlScheduler;
+    private static SchedulerRegistry instance;
+    
+    public void activate() {
+        if (instance != null && instance.tmlScheduler != null) {
+           logger.warn("Overwriting existing scheduler!");
+           instance.tmlScheduler.shutdownScheduler();
+           instance.tmlScheduler = null;
         }
-        return lowPrioScheduler;
+        instance = this;
     }
+    
+    public void deactivate() {
+        logger.info("Deactivating SchedulerRegistry" );
+        instance = null;
+    }
+
+    public void setTmlScheduler(TmlScheduler scheduler) {
+        this.tmlScheduler = scheduler;
+    }
+
+    public void clearTmlScheduler(TmlScheduler scheduler) {
+        this.tmlScheduler = null;
+    }
+
+  
+    public static void submit(TmlRunnable myRunner, boolean lowPrio) throws IOException {
+        String queueid = Scheduler.NAVAJOMAP_LOWPRIO_POOL;
+        if (!lowPrio) {
+            queueid = Scheduler.NAVAJOMAP_PRIORITY_POOL;
+        }
+        getScheduler().submit(myRunner, queueid);
+    }
+    public static boolean submitTask(TmlRunnable task) {
+    	if(getScheduler().getQueue(Scheduler.TASKS_POOL).getActiveRequestCount() >= getScheduler().getQueue(Scheduler.TASKS_POOL).getMaximumActiveRequestCount()) {
+    		return false;
+    	}
+    	
+    	getScheduler().submit(task, Scheduler.TASKS_POOL);        
+    	return true;
+    }
+
+    public static void setScheduler(TmlScheduler scheduler) {
+        logger.warn("Non-osgi mode!");
+        if (instance == null) {
+            instance = new SchedulerRegistry();
+        }
+        instance.tmlScheduler = scheduler;
+    }
+
+    public static Scheduler getScheduler() {
+        if (instance == null) {
+            logger.warn("Non-osgi mode!");
+            instance = new SchedulerRegistry();
+            instance.tmlScheduler = new SimpleScheduler(true);
+        }
+        return instance.tmlScheduler;
+    }
+
+
 }

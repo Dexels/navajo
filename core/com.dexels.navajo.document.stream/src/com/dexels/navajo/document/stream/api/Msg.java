@@ -6,13 +6,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
 
 public class Msg {
 	private final String name;
@@ -20,8 +20,6 @@ public class Msg {
 	private final MessageType type;
 	private final List<Prop> properties = new ArrayList<>();
 	private final Map<String,Prop> propertiesByName = new HashMap<>();
-	private final Func1<Msg,Observable<NavajoStreamEvent>> subMessages;
-	private final Action1<Msg> msgAction;
 	private enum MessageType {
 		SIMPLE,DEFINITION,ARRAY_ELEMENT
 	};
@@ -41,12 +39,10 @@ public class Msg {
 		return new Msg(this);
 	}
 
-	private Msg(List<Prop> properties,Msg.MessageType type) {
-		this.name = "Unnamed";
+	private Msg(Optional<String> name, List<Prop> properties,Msg.MessageType type) {
+		this.name = name.orElse("Unnamed");
 		this.type = type;
 		this.mode = null;
-		this.subMessages = f->Observable.empty();
-		this.msgAction = m->{};
 		this.properties.addAll(properties);
 		properties.stream().forEach(a->propertiesByName.put(a.name(), a));
 	}
@@ -55,33 +51,35 @@ public class Msg {
 		this.name = source.name;
 		this.type = source.type;
 		this.mode = source.mode;
-		this.subMessages = f->Observable.empty();
-		this.msgAction = m->{};		
 		this.properties.addAll(source.properties);
 		this.propertiesByName.putAll(source.propertiesByName);
 	}
 
 	public static Msg createElement() {
-		return new Msg(Collections.emptyList(),Msg.MessageType.ARRAY_ELEMENT);
+		return new Msg(Optional.empty(), Collections.emptyList(),Msg.MessageType.ARRAY_ELEMENT);
 	}
 	
 	public static Msg create() {
-		return new Msg(Collections.emptyList(),Msg.MessageType.SIMPLE);
+		return new Msg(Optional.empty(),Collections.emptyList(),Msg.MessageType.SIMPLE);
+	}
+	
+	public static Msg create(String name) {
+		return new Msg(Optional.of(name),Collections.emptyList(),Msg.MessageType.SIMPLE);
 	}
 	
 	public static Msg createDefinition() {
-		return new Msg(Collections.emptyList(),Msg.MessageType.DEFINITION);
+		return new Msg(Optional.empty(),Collections.emptyList(),Msg.MessageType.DEFINITION);
 	}
 	public static Msg create(List<Prop> properties) {
-		return new Msg(properties,Msg.MessageType.SIMPLE);
+		return new Msg(Optional.empty(),properties,Msg.MessageType.SIMPLE);
 	}
 	
 	public static Msg createDefinition(List<Prop> properties) {
-		return new Msg(properties,Msg.MessageType.DEFINITION);
+		return new Msg(Optional.empty(),properties,Msg.MessageType.DEFINITION);
 	}
 	
 	public static Msg createElement(List<Prop> properties) {
-		return new Msg(properties,Msg.MessageType.ARRAY_ELEMENT);
+		return new Msg(Optional.empty(),properties,Msg.MessageType.ARRAY_ELEMENT);
 	}
 
 	public Prop add(Prop property) {
@@ -92,6 +90,10 @@ public class Msg {
 	public Msg withValue(String propertyName, Object value) {
 		return copy().with(property(propertyName).withValue(value));
 	}
+	public Msg withName(String messageName) {
+		return new Msg(Optional.of(messageName),properties,type);
+	}
+	
 	
 	private Prop property(String name) {
 		return propertiesByName.get(name);
@@ -159,36 +161,38 @@ public class Msg {
 		return value.toString();
 	}
 	public Observable<NavajoStreamEvent> stream() {
-		msgAction.call(this);
-		return subMessages.call(this).startWith(before()).concatWith(after());
+		return Observable.just(before(), after());
+	}
+	public Flowable<NavajoStreamEvent> streamFlowable() {
+		return Flowable.just(before(), after());
 	}
 
-	private Observable<NavajoStreamEvent> before() {
+	
+	private NavajoStreamEvent before()  {
 		switch (type) {
 		case ARRAY_ELEMENT:
-			return Observable.<NavajoStreamEvent>just(Events.arrayElementStarted(Collections.emptyMap()));
+			return Events.arrayElementStarted(Collections.emptyMap());
 		case SIMPLE:
-			return Observable.<NavajoStreamEvent>just(Events.messageStarted(name,Collections.emptyMap()));
+			return Events.messageStarted(name,Collections.emptyMap());
 		case DEFINITION:
-			return Observable.<NavajoStreamEvent>just(Events.messageDefinitionStarted(name));
+			return Events.messageDefinitionStarted(name);
 		default:
 			break;
 		}
-		return Observable.error(new IllegalArgumentException("Unexpected type:"+ type));
+		throw new IllegalArgumentException("Unexpected type:"+ type);
 	}
 	
-	private Observable<NavajoStreamEvent> after() {
+	private NavajoStreamEvent after() {
 		switch (type) {
 		case ARRAY_ELEMENT:
-			return Observable.<NavajoStreamEvent>just(Events.arrayElement(this,Collections.emptyMap()));
+			return Events.arrayElement(this,Collections.emptyMap());
 		case SIMPLE:
-			return Observable.<NavajoStreamEvent>just(Events.message(this,name,Collections.emptyMap()));
+			return Events.message(this,name,Collections.emptyMap());
 		case DEFINITION:
-			return Observable.<NavajoStreamEvent>just(Events.messageDefinition(this,name));
+			return Events.messageDefinition(this,name);
 		default:
 			break;
 		}
-		return Observable.error(new IllegalArgumentException("Unexpected type:"+ type));
-
+		throw new IllegalArgumentException("Unexpected type:"+ type);
 	}
 }

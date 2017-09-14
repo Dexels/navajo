@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import tipi.TipiExtension;
-
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
+
+import tipi.TipiExtension;
 
 public class HeadlessTipiContext extends TipiContext {
 

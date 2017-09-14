@@ -26,7 +26,7 @@ import nextapp.echo2.app.table.TableCellRenderer;
 import nextapp.echo2.app.table.TableColumn;
 import nextapp.echo2.app.table.TableColumnModel;
 
-import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -36,6 +36,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeEvent;
 import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeListener;
+import com.dexels.navajo.tipi.report.TipiReport;
 
 import echopointng.table.DefaultPageableSortableTableModel;
 import echopointng.table.DefaultSortableTableModel;
@@ -543,7 +544,7 @@ public class MessageTable extends PageableSortableTable implements
 		}
 	}
 
-	public Binary getTableReport(String format, String orientation,
+	public Binary getTableReport(ClientInterface ci, String format, String orientation,
 			int[] margins) throws NavajoException {
 		Message m = getMessageAsPresentedOnTheScreen(false);
 		if (m == null) {
@@ -572,8 +573,7 @@ public class MessageTable extends PageableSortableTable implements
 			logger.info("Adding name: " + name);
 		}
 
-		Binary result = NavajoClientFactory.getClient().getArrayMessageReport(
-				m, namesarray, titles, widths, format, orientation, margins);
+		Binary result = TipiReport.getArrayMessageReport(ci , m, namesarray, titles, widths, format, orientation, margins);
 		firePrintEvent(result);
 		return result;
 	}

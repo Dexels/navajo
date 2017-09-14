@@ -80,7 +80,11 @@ public class MethodDefinition {
 		while ( auto.hasNext() )  {
 			ParameterDefinition pd = auto.next();
 			if ( pd.getRequired().equals("automatic") ) {
-				XMLElement pdx = pd.generateCode(in, pd.getValue(), false, ( hasCondition ? "[/@" + tempParamName + "]" : null ), out, false, filename);
+			    String setterValue = pd.getValue();
+			    if (in.getAttribute(pd.getName()) != null) {
+			        setterValue = (String) in.getAttribute(pd.getName());
+			    }
+				XMLElement pdx = pd.generateCode(in, setterValue, false, ( hasCondition ? "[/@" + tempParamName + "]" : null ), out, false, filename);
 				orderedParameters.put(new Integer(pd.getOrder()), pdx);
 			} else if ( pd.getRequired().equals("true") ) {
 				required.add(pd.getName());

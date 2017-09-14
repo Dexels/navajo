@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.12.7.qualifier
+Bundle-Version: 2.13.9.qualifier
 Bundle-Activator: tipipackage.Version
 Export-Package: com.dexels.navajo.tipi;version="1.1.42";
   uses:="com.dexels.navajo.client,
@@ -77,6 +77,7 @@ Export-Package: com.dexels.navajo.tipi;version="1.1.42";
  com.dexels.navajo.tipi.internal.cookie;version="1.1.42",
  com.dexels.navajo.tipi.internal.cookie.impl;version="1.1.42",
  com.dexels.navajo.tipi.locale,
+ com.dexels.navajo.tipi.report,
  com.dexels.navajo.tipi.testimpl;version="1.1.42",
  com.dexels.navajo.tipi.tipixml;version="1.1.42",
  com.dexels.navajo.tipi.validation;version="1.1.42";uses:="com.dexels.navajo.tipi",
@@ -92,7 +93,6 @@ Export-Package: com.dexels.navajo.tipi;version="1.1.42";
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.client;version="1.0.0",
  com.dexels.navajo.client.sessiontoken,
- com.dexels.navajo.client.stream;version="1.0.0",
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.metadata;version="2.2.0",
@@ -121,3 +121,4 @@ Service-Component: OSGI-INF/tipi.context.manager.xml,OSGI-INF/tipi.context.insta
  OSGI-INF/tipi.multitenant.instance.xml,OSGI-INF/tipi.extensions.xml,
  OSGI-INF/tipi.multitenant.configurator.xml,
  OSGI-INF/tipi.repository.provider.xml
+Require-Bundle: com.dexels.navajo.client.impl.javanet;bundle-version="0.9.0"

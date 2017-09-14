@@ -1,26 +1,21 @@
 package com.dexels.navajo.article.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
-import java.util.Map.Entry;
 
+import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleRuntime;
-import com.dexels.navajo.article.NoJSONOutputException;
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.events.NavajoEventRegistry;
-import com.dexels.navajo.events.types.NavajoResponseEvent;
+import com.dexels.navajo.article.runnable.ArticleTmlRunnable;
 import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.oauth.api.Client;
 import com.dexels.oauth.api.ClientStore;
 import com.dexels.oauth.api.exception.ClientStoreException;
@@ -28,16 +23,27 @@ import com.dexels.oauth.api.OAuthToken;
 import com.dexels.oauth.api.TokenStore;
 import com.dexels.oauth.api.exception.TokenStoreException;
 
-public class OAuthArticleServlet extends ArticleBaseServlet {
+public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
+    private final static Logger logger = LoggerFactory.getLogger(OAuthArticleServlet.class);
 
     private static final long serialVersionUID = 1199676363102046960L;
     private static final String AUTHORIZATION_BEARER_PREFIX = "Bearer";
     private TokenStore tokenStore;
     private ClientStore clientStore;
+    private TmlScheduler tmlScheduler;
 
+    public void activate() {
+        logger.info("Activating OAuthArticleServlet");
+    } 
+    public void deactivate() {
+        logger.info("DeActivating OAuthArticleServlet");
+    }
+    
+ 
     @Override
     protected void doServiceImpl(HttpServletRequest req, HttpServletResponse resp) throws APIException {
-    	String token = getToken(req);
+       
+        String token = getToken(req);
 
         OAuthToken oauthToken = null;
         Client client = null;
@@ -52,7 +58,6 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
         String username = client.getUsername();
         String pathInfo = req.getPathInfo();
         String instance = client.getInstance();
-        String url = client.getRedirectURLPrefix();
 
         if (pathInfo == null) {
             throw new APIException("Pathinfo is null, we cannot find an article then", null, APIErrorCode.ArticleNotFound);
@@ -63,82 +68,50 @@ public class OAuthArticleServlet extends ArticleBaseServlet {
             throw new APIException("Article does not exist", null, APIErrorCode.ArticleNotFound);
         }
 
-        String ip = req.getHeader("X-Forwarded-For");
-        if (ip == null || ip.equals("")) {
-            ip = req.getRemoteAddr();
-        }
-
-        Access a = new Access(-1, -1, username, "article/" + articleName, "", "", "", null, false, null);
-        a.setTenant(instance);
-        a.rpcPwd = token;
-        a.created = new Date();
-        a.ipAddress = ip;
-        a.setClientDescription("article");
-        a.setClientToken("Client id: " + client.getId());
-
         try {
-            ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, "", username, article, pathInfo, req.getParameterMap(), instance, oauthToken);
-            runtime.setUsername(client.getUsername());
-            runtime.setURL(url);
-            runtime.execute(getContext());
-            resp.setContentType("application/json; charset=utf-8");
-            a.setExitCode(Access.EXIT_OK);
-        } catch (NoJSONOutputException e) {
-            resp.setContentType(e.getMimeType());
-            try {
-                IOUtils.copy(e.getStream(), resp.getOutputStream());
-            } catch (IOException e1) {
-                throw new APIException(e1.getMessage(), e1, APIErrorCode.InternalError);
+            String ip = req.getHeader("X-Forwarded-For");
+            if (ip == null || ip.equals("")) {
+                ip = req.getRemoteAddr();
             }
-            return;
+
+            Access a = new Access(-1, -1, username, "article/" + articleName, "", "", "", null, false, null);
+            a.setTenant(instance);
+            a.rpcPwd = token;
+            a.created = new Date();
+            a.ipAddress = ip;
+            a.setClientDescription("Article");
+            a.setClientToken("Client id: " + client.getId());
             
-        } catch (APIException apiException) {
-            if (apiException.getErrorCode() == APIErrorCode.InternalError) {
-                logExceptionToAccess(a, apiException, createNavajoFromRequest(req));
-            } else if (apiException.getErrorCode() == APIErrorCode.ConditionError) {
-                a.setExitCode(Access.EXIT_VALIDATION_ERR);
-            }
-          
-            throw apiException;
-        } catch (Throwable  e) {
-            logExceptionToAccess(a, e, createNavajoFromRequest(req));
+            ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, "", username, article, pathInfo, req.getParameterMap(),
+                    instance, oauthToken);
+            runtime.setAccess(a);
+            
+            runtime.setUsername(client.getUsername());
+            ArticleTmlRunnable articleRunnable = new ArticleTmlRunnable(req, resp, client, runtime, getContext());
+            tmlScheduler.submit(articleRunnable, false);
+        } catch (Throwable e) {
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
-        } finally {
-            a.setFinished();
-            NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(a));
         }
     }
 
-    private void logExceptionToAccess(Access a, Throwable e, Navajo navajo) {
-        a.setExitCode(Access.EXIT_EXCEPTION);
-        // Create a navajo of the input
-        a.setInDoc(navajo);
-        a.setException(e);
-    }
     
-    private String getToken(HttpServletRequest request) {
-    	String authorizationHeaderValue = request.getHeader("Authorization");
-   
-    	if (authorizationHeaderValue != null && authorizationHeaderValue.startsWith(AUTHORIZATION_BEARER_PREFIX) &&  authorizationHeaderValue.length() > AUTHORIZATION_BEARER_PREFIX.length() + 1) {
-    		return authorizationHeaderValue.substring(AUTHORIZATION_BEARER_PREFIX.length() + 1);
-    	}
-    	return request.getParameter("token");
+
+    public void setTmlScheduler(TmlScheduler scheduler) {
+        this.tmlScheduler = scheduler;
     }
 
-    private Navajo createNavajoFromRequest(HttpServletRequest req) {
-        Navajo navajo = NavajoFactory.getInstance().createNavajo();
-        Message properties = NavajoFactory.getInstance().createMessage(navajo, "Input");
-        navajo.addMessage(properties);
-        for (Entry<String, String[]> entry : req.getParameterMap().entrySet()) {
-            Property property = NavajoFactory.getInstance().createProperty(navajo, entry.getKey(), null, null, null);
-            property.setType("string");
-         
-            if (entry.getValue() != null && entry.getValue().length > 0) {
-            	property.setValue(String.join("|", entry.getValue()));
-            }
-            properties.addProperty(property);
+    public void clearTmlScheduler(TmlScheduler scheduler) {
+        this.tmlScheduler = null;
+    }
+
+    private String getToken(HttpServletRequest request) {
+        String authorizationHeaderValue = request.getHeader("Authorization");
+
+        if (authorizationHeaderValue != null && authorizationHeaderValue.startsWith(AUTHORIZATION_BEARER_PREFIX)
+                && authorizationHeaderValue.length() > AUTHORIZATION_BEARER_PREFIX.length() + 1) {
+            return authorizationHeaderValue.substring(AUTHORIZATION_BEARER_PREFIX.length() + 1);
         }
-        return navajo;
+        return request.getParameter("token");
     }
 
     private OAuthToken getOAuthToken(String token) throws APIException {

@@ -6,10 +6,10 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.tipi.TipiException;
+
 import tipi.MainApplication;
 import tipiswing.SwingTipiApplicationInstance;
-
-import com.dexels.navajo.tipi.TipiException;
 
 public class TipiSwingWrapper {
 	

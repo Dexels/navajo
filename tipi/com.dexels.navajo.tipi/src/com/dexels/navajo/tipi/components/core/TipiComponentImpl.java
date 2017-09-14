@@ -17,8 +17,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tipi.TipiExtension;
-
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -50,6 +48,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiLayout;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipilink.TipiLink;
+
+import tipi.TipiExtension;
 
 public abstract class TipiComponentImpl implements TipiEventListener,
 		TipiComponent, TipiLink, Serializable {

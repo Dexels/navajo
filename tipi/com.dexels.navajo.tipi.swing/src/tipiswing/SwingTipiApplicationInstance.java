@@ -21,10 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import tipi.BaseTipiApplicationInstance;
-import tipi.TipiExtension;
-import tipipackage.ITipiExtensionContainer;
-
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiContextListener;
 import com.dexels.navajo.tipi.TipiException;
@@ -37,6 +33,10 @@ import com.dexels.navajo.tipi.components.swingimpl.TipiScreen;
 import com.dexels.navajo.tipi.internal.FileResourceLoader;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
+
+import tipi.BaseTipiApplicationInstance;
+import tipi.TipiExtension;
+import tipipackage.ITipiExtensionContainer;
 
 public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance implements ITipiExtensionContainer {
 

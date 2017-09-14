@@ -1,20 +1,15 @@
 package com.dexels.navajo.listeners.stream;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,34 +18,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import com.dexels.navajo.authentication.api.AuthenticationMethodBuilder;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.Msg;
-import com.dexels.navajo.document.stream.api.NAVADOC;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.Script;
 import com.dexels.navajo.document.stream.api.SimpleScript;
+import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.navajo.document.stream.io.NavajoStreamOperators;
 import com.dexels.navajo.document.stream.xml.XML;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 
-import rx.Observable;
-import rx.Observable.OnSubscribe;
-import rx.Subscriber;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
+import nl.codemonkey.reactiveservlet.Servlets;
 
 public class NonBlockingListener extends HttpServlet {
-//	private static final int BACKPRESSURE_LIMIT = 1000000;
 	private static final long serialVersionUID = -4381216748627396838L;
+
 	private LocalClient localClient;
-//	private Script script;
 	private final Map<String,Script> scripts = new HashMap<>();
 	private final Map<String,SimpleScript> simpleScripts = new HashMap<>();
 				
 	private final static Logger logger = LoggerFactory.getLogger(NonBlockingListener.class);
 
+	private AuthenticationMethodBuilder authMethodBuilder;
+	
 	public LocalClient getLocalClient() {
 		return localClient;
 	}
@@ -62,6 +63,14 @@ public class NonBlockingListener extends HttpServlet {
 	public void clearLocalClient(LocalClient localClient) {
 		this.localClient = null;
 	}
+
+    public void setAuthenticationMethodBuilder(AuthenticationMethodBuilder amb) {
+        this.authMethodBuilder = amb;
+    }
+
+    public void clearAuthenticationMethodBuilder(AuthenticationMethodBuilder eventAdmin) {
+        this.authMethodBuilder = null;
+    }
 
 	public void addScript(Script script,Map<String,Object> settings) {
 		String name = (String) settings.get("navajo.scriptName");
@@ -90,82 +99,14 @@ public class NonBlockingListener extends HttpServlet {
 			simpleScripts.remove(name);
 		}
 	}
-	
-	@Override
-	protected void doGet(HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-		AsyncContext ac = req.startAsync();
-		
-		String navajoService = determineService(req);
-		String responseEncoding = decideEncoding(req.getHeader("Accept-Encoding"));
-		
-		if (responseEncoding != null) {
-			resp.addHeader("Content-Encoding", responseEncoding);
-		}
-		Observable<NavajoStreamEvent> emptyInput = emptyDocument(navajoService,"","");
-		
-		Map<String, Object> attributes = extractHeaders(req);
-		processStreamingScript(req,navajoService,emptyInput,attributes,ac,responseEncoding)
-			.lift(NAVADOC.filterMessageIgnore())
-			.lift(NAVADOC.serialize())
-			.lift(NavajoStreamOperators.compress(responseEncoding))
-			.subscribe(createOutput(ac,"text/xml"));
-		return;
-	}
 
-	private static String determineService(HttpServletRequest req) {
-		String serviceHeader = req.getHeader("X-Navajo-Service");
-		if(serviceHeader!=null) {
-			return serviceHeader;
-		}
-		String serviceParam = req.getParameter("service");
-		if(serviceParam!=null) {
-			return serviceParam;
-		}
-		return null;
-	}
-	
-    public static Observable<byte[]> createReadListener(final ServletInputStream in) {
-        return Observable.create(new OnSubscribe<byte[]>() {
-            @Override
-            public void call(Subscriber<? super byte[]> subscriber) {
-                final ServletReadListener listener = new ServletReadListener(in, subscriber);
-                in.setReadListener(listener);
-            }
-        });
-    }
-	
-	@Override
-	protected void doPost(HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-		AsyncContext ac = req.startAsync();
-		Map<String, Object> attributes = extractHeaders(req);
-		String navajoService = determineService(req);
-		String requestEncoding = (String) attributes.get("Content-Encoding");
-		String responseEncoding = decideEncoding((String) attributes.get("Accept-Encoding"));
-		if (responseEncoding != null) {
-			resp.addHeader("Content-Encoding", responseEncoding);
-		}
-		
-		Observable<NavajoStreamEvent> eventStream = createReadListener(ac.getRequest().getInputStream())
-				.lift(NavajoStreamOperators.decompress(requestEncoding))
-				.lift(XML.parse())
-				.lift(NAVADOC.parse(attributes));	
-
-		processStreamingScript(req,navajoService,eventStream,attributes,ac,responseEncoding)
-				.lift(NAVADOC.filterMessageIgnore())
-				.lift(NAVADOC.serialize())
-				.lift(NavajoStreamOperators.compress(responseEncoding))
-				.subscribe(createOutput(ac,"text/xml"));
-			return;
-
-	}
-
-
-	private static Observable<NavajoStreamEvent> emptyDocument(String service, String username, String password) {
-		return Observable.just(
-				Events.started(NavajoHead.createSimple(service, username, password))
+	private static Flowable<NavajoStreamEvent> emptyDocument(StreamScriptContext context) {
+		return Flowable.just(
+				Events.started(NavajoHead.createSimple(context.service, context.username, context.password))
 				, Events.done()
 				);
 	}
+	
 	private static Map<String, Object> extractHeaders(HttpServletRequest req) {
 		Map<String, Object> attributes = new HashMap<>();
 		Enumeration<String> en = req.getHeaderNames();
@@ -174,59 +115,102 @@ public class NonBlockingListener extends HttpServlet {
 			String headerValue = req.getHeader(headerName);
 			attributes.put(headerName, headerValue);
 		}
-		return attributes;
+		return Collections.unmodifiableMap(attributes);
+	}
+	
+	@Override
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		AsyncContext ac = request.startAsync();
+		ac.setTimeout(3600000);
+		StreamScriptContext context = determineContextFromRequest(request);
+		String requestEncoding = (String) context.attributes.get("Content-Encoding");
+		String responseEncoding = decideEncoding(request.getHeader("Accept-Encoding"));
+		System.err.println("Tenant determined: "+context.tenant+" service: "+context.service);
+
+
+		boolean isGet = "GET".equals(request.getMethod());
+		try {
+			authenticate(context, (String)context.attributes.get("Authorization"));
+		} catch (Exception e1) {
+			errorMessage(context.service, context.username, -1, e1.getMessage())
+			.lift(StreamDocument.serialize())
+			.compose(StreamDocument.compress(responseEncoding))
+			.subscribe(Servlets.createSubscriber(ac));
+			return;
+		}
+
+		Flowable<NavajoStreamEvent> input = isGet ? emptyDocument(context) : 
+			Servlets.createFlowable(ac, 1000)
+			.observeOn(Schedulers.io(),false,10)
+			.compose(StreamDocument.decompress2(requestEncoding))
+			.lift(XML.parseFlowable(10))
+			.flatMap(e->e)
+			.lift(StreamDocument.parse())
+			.concatMap(e->e);
+		
+		processStreamingScript(request,input)
+			.lift(StreamDocument.filterMessageIgnore())
+			.lift(StreamDocument.serialize())
+			.compose(StreamDocument.compress(responseEncoding))
+			.subscribe(Servlets.createSubscriber(ac));
+
 	}
 
-//	.lift(NAVADOC.serialize())
-//	.lift(NavajoStreamOperators.compress(responseEncoding))
-//	.subscribe(output);
+	private Flowable<NavajoStreamEvent> processStreamingScript(HttpServletRequest request,Flowable<NavajoStreamEvent> eventStream) throws IOException {
+		StreamScriptContext context = determineContextFromRequest(request);
 
-	
-	private Observable<NavajoStreamEvent> processStreamingScript(HttpServletRequest request,String navajoService,Observable<NavajoStreamEvent> eventStream, Map<String, Object> attributes, AsyncContext asyncContext, String responseEncoding) throws IOException {
-//		ServletInputStream in = asyncContext.getRequest().getInputStream();
-//		String contentEncoding = (String) attributes.get("Content-Encoding");
-//		if("echo".equals(navajoService)) {
-//			return eventStream.subscribeOn(Schedulers.io()).doOnNext(e->System.err.println("Event: "+e))			.compose(NavajoStreamOperators.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")));
-//		}
-		String tenant = determineTenantFromRequest(request);
-
-		if(tenant==null) {
-			// generate error eent
-			
-		}
-		if(navajoService ==null) {
+		System.err.println("Tenant determined: "+context.tenant+" service: "+context.service);
+		if(context.service ==null) {
 			return eventStream
-					.lift(NAVADOC.collect(attributes))
-					.flatMap(inputNav->executeLegacy(navajoService, tenant, inputNav));
-
+					.lift(StreamDocument.collectFlowable())
+					.flatMap(inputNav->executeLegacy(context.service, context.username, context.tenant, inputNav));
 		}
-		SimpleScript simple = simpleScripts.get(navajoService);
-		if(simple!=null) {
-			return eventStream
-				.lift(NAVADOC.collect(attributes))
-				.flatMap(simple::call)
-				.compose(NavajoStreamOperators.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")));
-		}
-		Script s = scripts.get(navajoService);
+		Script s = scripts.get(context.service);
 		if(s!=null) {
 			return eventStream
-					.compose(s)
-					.compose(NavajoStreamOperators.inNavajo(navajoService, (String)attributes.get("rpc_usr"), (String)attributes.get("rpc_pwd")));
+					.compose(s.call(context));
 		}
-		logger.debug("Script unresolved.");
-		return null;
+		SimpleScript ss = simpleScripts.get(context.service);
+		if(ss!=null) {
+			return eventStream
+					.lift(StreamDocument.collectFlowable())
+					.compose(ss.apply(context))
+					.compose(StreamDocument.inNavajo(context.service, context.username, ""));
+		}
+		return eventStream
+				.lift(StreamDocument.collectFlowable())
+				.flatMap(inputNav->executeLegacy(context.service, context.username, context.tenant, inputNav));
+//				.compose(StreamDocument.inNavajo(context.service, context.username, ""));
+	}
+	
 
+	public void authenticate(StreamScriptContext context, String authHeader) throws AuthorizationException {
+		Access a = new Access(-1,-1,context.username,context.service,"stream","ip","hostname",null,false,"access");
+		authMethodBuilder.getInstanceForRequest(authHeader).process(a);
 	}
 
-	private static Observable<NavajoStreamEvent> errorMessage(Navajo in) {
-		return Msg.create()
-				.with(Prop.create("code",101))
-				.with(Prop.create("description", "Could not resolve script: "+in.getHeader().getRPCName()))
+//	private FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> createTransformerScript(StreamScriptContext context) {
+//		Script s = scripts.get(context.service);
+//		if(s!=null) {
+//			return s.call(context);
+//		}
+//		SimpleScript ss = simpleScripts.get(context.service);
+//		if(ss!=null) {
+//			
+//			return ss.apply(context);
+//		}
+//		return s.call(context);
+//	}
+
+	private static Flowable<NavajoStreamEvent> errorMessage(String service, String user, int code, String message) {
+		return Msg.create("error")
+				.with(Prop.create("code",code))
+				.with(Prop.create("description", message))
 				.stream()
-				.compose(NavajoStreamOperators.inNavajo(in.getHeader().getRPCName(), in.getHeader().getRPCUser(), ""));
+				.toFlowable(BackpressureStrategy.BUFFER)
+				.compose(StreamDocument.inNavajo(service, user, ""));
 	}
-
-
+	
 	public static String decideEncoding(String accept) {
 		if (accept == null) {
 			return null;
@@ -245,24 +229,23 @@ public class NonBlockingListener extends HttpServlet {
 		return null;
 	}
 
-	private final Observable<NavajoStreamEvent> executeLegacy(String navajoService, String tenant,Navajo in) {
+	private final Flowable<NavajoStreamEvent> executeLegacy(String service, String user, String tenant,Navajo in) {
 		Navajo result;
 		try {
 			result = execute(tenant, in);
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
-			return errorMessage(in);
+			return errorMessage(service,user,101,"Could not resolve script: "+service);
 		}
 		return Observable.just(result)
-				.lift(NAVADOC.stream());
+			.lift(StreamDocument.domStream())
+			.toFlowable(BackpressureStrategy.BUFFER);
 	}
+	
 	private final Navajo execute(String tenant, Navajo in) throws IOException, ServletException {
 
-		// BufferedReader r = null;
 		if (tenant != null) {
 			MDC.put("instance", tenant);
-			// myRequest.getInputDocument().getHeader().setHeaderAttribute("instance",
-			// tenant);
 		}
 		try {
 			in.getHeader().setHeaderAttribute("useComet", "true");
@@ -291,6 +274,16 @@ public class NonBlockingListener extends HttpServlet {
 		}
 	}
 
+	private static StreamScriptContext determineContextFromRequest(final HttpServletRequest req) {
+		String username = req.getHeader("X-Navajo-Username");
+		String password = req.getHeader("X-Navajo-Password");
+		String tenant = determineTenantFromRequest(req);
+		Map<String, Object> attributes = extractHeaders(req);
+		String serviceHeader = req.getHeader("X-Navajo-Service");
+
+		return new StreamScriptContext(tenant,serviceHeader, username,password,attributes);
+	}
+	
 	// warn: Duplicated code
 	private static String determineTenantFromRequest(final HttpServletRequest req) {
 		String requestInstance = req.getHeader("X-Navajo-Instance");
@@ -312,108 +305,4 @@ public class NonBlockingListener extends HttpServlet {
 		}
 		return instance;
 	}
-
-	private static Subscriber<byte[]> createOutput(AsyncContext context, String contentType) throws IOException {
-		context.getResponse().setContentType(contentType);
-		final ServletOutputStream out = context.getResponse().getOutputStream();
-		final AtomicBoolean done = new AtomicBoolean(false);
-		final AtomicBoolean completed = new AtomicBoolean(false);
-		final Queue<byte[]> outputQueue = new ConcurrentLinkedQueue<byte[]>();
-		out.setWriteListener(new WriteListener() {
-			
-			@Override
-			public void onWritePossible() throws IOException {
-				if(done.get() && !completed.get()) {
-					logger.debug("Done switch trapped and write complete, closing context.");
-					completed.compareAndSet(false, true);
-					context.complete();
-				}
-				boolean ready = false;
-				while(!outputQueue.isEmpty()) {
-					byte[] element = outputQueue.poll();
-					if(element!=null) {
-						writeOutput(out, element);
-						ready = isOutputReady(out);
-					}
-					if(!ready) {
-						// according to: http://jetty.4.x6.nabble.com/jetty-users-jetty-9-1-ServletOutputStream-isReady-how-much-data-can-be-written-without-blocking-td4961171.html
-						// not ready, will break loop and await new onWritePossible call
-						return;
-//					} else {
-//						outputQueue.poll();
-					}
-				}
-			}
-			
-			@Override
-			public void onError(Throwable e) {
-				logger.error("Error: ", e);
-				// TODO Does not work with Async. Duh.
-				context.complete();
-			}
-		});
-		
-		return new Subscriber<byte[]>(){
-
-			
-			@Override
-			public void onCompleted() {
-				try {
-					logger.debug("Input completed. Setting done: "+done.get());
-					done.compareAndSet(false,true);
-					logger.debug("Write Done: "+done.get());
-					if(isOutputReady(out)) {
-						logger.debug("onCompleted done, and still ready, so closing context:");
-						completed.compareAndSet(false, true);
-						context.complete();
-					} else {
-						logger.debug("onCompleted done, but not ready, so deferring complete to onWritePossible");
-					}
-				
-				} catch (Exception e) {
-					logger.error("Error: ", e);
-				}
-			}
-
-			@Override
-			public void onError(Throwable ex) {
-					logger.error("Error!",ex);
-					context.complete();
-			}
-
-			@Override
-			public void onNext(byte[] b) {
-				try {
-					outputQueue.offer(b);
-					boolean ready = true;
-					while(ready && !outputQueue.isEmpty()) {
-						ready = isOutputReady(out);
-						if(!ready) {
-							break;
-						}
-						byte[] element = outputQueue.poll();
-						writeOutput(out, element);
-					}
-
-				} catch (Exception e) {
-					logger.error("Error: ", e);
-					onError(e);
-					unsubscribe();
-				}
-				
-			}
-		};
-	}
-
-	
-	private static boolean isOutputReady(ServletOutputStream out) {
-		boolean ready = out.isReady();
-		return ready;
-	}
-
-	private static void writeOutput(final ServletOutputStream out, byte[] element) throws IOException {
-		out.write(element);
-	}
-
-	
 }

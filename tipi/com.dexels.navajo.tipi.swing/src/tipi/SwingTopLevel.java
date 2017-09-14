@@ -2,8 +2,6 @@ package tipi;
 
 import java.io.IOException;
 
-import navajo.ExtensionDefinition;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +11,8 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiStandaloneToplevelContainer;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
+
+import navajo.ExtensionDefinition;
 
 public class SwingTopLevel implements TipiStandaloneToplevelContainer {
 

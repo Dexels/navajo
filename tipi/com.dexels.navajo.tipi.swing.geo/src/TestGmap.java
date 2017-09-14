@@ -1,14 +1,16 @@
-import java.beans.*;
-import java.util.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Locale;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
-import org.jdesktop.swingx.*;
-import org.jdesktop.swingx.mapviewer.*;
+import org.jxmapviewer.JXMapKit;
+import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.GeoPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.swing.geo.impl.tilefactory.*;
+import com.dexels.navajo.tipi.swing.geo.impl.tilefactory.GoogleTileFactoryInfo;
 
  
 public class TestGmap {

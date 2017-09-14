@@ -16,3 +16,4 @@ Export-Package: com.dexels.navajo.resource,
  org.osgi.service.jdbc;version="1.0.0"
 Bundle-ClassPath: lib/osgi.cmpn_4.3.0.201111022214.jar,
  .
+Bundle-ActivationPolicy: lazy

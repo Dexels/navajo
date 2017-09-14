@@ -285,6 +285,11 @@ public class TslCompiler {
 						c = clause.charAt(i);
 					}
 				}
+				if (name.toString().contains("..")) {
+				    // We cannot optimize these yet
+				    continue;
+				    
+				}
 				i++;
 
 				StringBuffer params = new StringBuffer();
@@ -350,7 +355,10 @@ public class TslCompiler {
 							} else if (v instanceof Double) {
 								objectizedParams
 										.append("new Double(" + v + ")");
-							} else
+							} else if (v == null) {
+							    // Null support
+							    objectizedParams.append(v);
+							} else 
 								throw new UserException(-1,
 										"Unknown type encountered during compile time: "
 												+ v.getClass().getName()
@@ -949,6 +957,11 @@ public class TslCompiler {
 		                if (superEntity.indexOf('?') > 0) {
 		                    superEntity = superEntity.split("\\?")[0];
 		                }
+		                addDependency(
+		        				"dependentObjects.add( new ExtendDependency( new Long(\""
+		        						+ ExtendDependency.getScriptTimeStamp(superEntity)
+		        						+ "\"), \"" + superEntity + "\"));\n", "EXTEND" + superEntity);
+		                
 		                deps.add(new ExtendDependency(ExtendDependency.getScriptTimeStamp(superEntity),superEntity ));
 		            }
 				}
@@ -3321,18 +3334,6 @@ public class TslCompiler {
         generatedCode.append("    return \"" + value + "\";");
         generatedCode.append("}\n\n");
     }
-    
-    private void generateSetScriptScopes(String value, StringBuffer generatedCode) {
-        if (value == null || "".equals(value.trim())) {
-            return;
-        }
-        generatedCode.append("@Override \n");
-        generatedCode.append("public final String getScopes() {\n");
-        generatedCode.append("    setScopes(\""+value+"\")\n");
-        generatedCode.append("    return this.scopes;");
-        generatedCode.append("}\n\n");
-    }
-	
 
 
 	private final void compileScript(InputStream is, String packagePath,
@@ -3385,9 +3386,7 @@ public class TslCompiler {
 						+ scriptPath);
 			}
 			String debugLevel = tslElt.getAttribute("debug");
-			
-			String scopes = tslElt.getAttribute("scopes");
-			
+						
 			String description = tslElt.getAttribute("notes");
 			String author = tslElt.getAttribute("author");
 
@@ -3417,6 +3416,7 @@ public class TslCompiler {
 					+ "import java.util.HashMap;\n"
 					+ "import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;\n"
+					+ "import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.SQLFieldDependency;\n"
 					+ "import com.dexels.navajo.mapping.compiler.meta.InheritDependency;\n"
@@ -3478,7 +3478,6 @@ public class TslCompiler {
 				includeNode(scriptPath, includeArray[i], tslDoc, tenant, deps);
 			}
 			generateSetScriptDebug(debugLevel, result);
-			generateSetScriptScopes(scopes, result);
 
 			// Generate validation code.
 			generateValidations(tslDoc, result);

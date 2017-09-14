@@ -180,7 +180,7 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		}		
 		String referer = extractReferer(request);
 		logger.info("Creating application. Referer: "+referer);
-		tipiApplication.setReferer(referer);
+		
 		String logoutURL = null;
 		
 		if(referer!=null) {
@@ -188,6 +188,11 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		} else {
 			logoutURL = request.getRequestURL().toString();
 		}
+		while (logoutURL.endsWith("/")) {
+		    // Prevent url's with ////
+            logoutURL = logoutURL.substring(0, logoutURL.length()-1);
+		}
+		tipiApplication.setReferer(logoutURL);
 		logger.info("Setting logout url to: "+logoutURL);
 		tipiApplication.setLogoutURL(logoutURL);
      	HttpSession hs = request.getSession();
@@ -205,9 +210,9 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		if(proto==null) {
 			proto = "http";
 		}
-		logger.info("Extracting referer. Proto: "+proto+" : "+host+" : "+url);
+		logger.info("Extracting referer. Proto: "+proto+" : "+host);
 		if(url !=null && host!=null) {
-			return proto+"://"+host+url;
+			return proto+"://"+host;
 		}
 		return host;
 	}
@@ -337,4 +342,5 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 	public void clearLocalClient(LocalClient lc) {
 		this.localClient = null;
 	}
+
 }

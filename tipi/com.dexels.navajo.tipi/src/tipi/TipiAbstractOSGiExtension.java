@@ -6,8 +6,6 @@ import java.net.MalformedURLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import navajoextension.AbstractCoreExtension;
-
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -17,6 +15,7 @@ import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import navajoextension.AbstractCoreExtension;
 import tipipackage.ITipiExtensionRegistry;
 import tipipackage.TipiJarServiceExtensionProvider;
 

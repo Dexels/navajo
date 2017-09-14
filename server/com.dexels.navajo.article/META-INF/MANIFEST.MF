@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Article
 Bundle-SymbolicName: com.dexels.navajo.article
-Bundle-Version: 3.5.3.qualifier
+Bundle-Version: 4.0.7.qualifier
 Bundle-Activator: navajoarticle.Activator
 Bundle-Vendor: DEXELS
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.navajo.client;version="1.0.0",
  com.dexels.navajo.document;version="2.2.1",
  com.dexels.navajo.document.json;version="2.2.1",
@@ -15,18 +15,23 @@ Import-Package: com.dexels.navajo.client;version="1.0.0",
  com.dexels.navajo.events.types,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
+ com.dexels.navajo.server.impl,
  com.dexels.oauth.api,
- com.dexels.oauth.api.exception;version="1.0.0",
+ com.dexels.oauth.api.exception,
  com.dexels.resourcebundle;version="1.0.0",
  com.fasterxml.jackson.core;version="2.6.3",
  com.fasterxml.jackson.databind;version="2.6.3",
  com.fasterxml.jackson.databind.module;version="2.6.3",
  com.fasterxml.jackson.databind.node;version="2.6.3",
+ org.apache.commons.io;version="2.0.1",
+ org.eclipse.jetty.continuation;version="[8.0.0,10.0.0)",
+ javax.activation,
+ org.eclipse.jetty.servlets,
  javax.servlet;version="3.0.0",
  javax.servlet.http;version="3.0.0",
- org.apache.commons.io;version="2.0.1",
- org.eclipse.jetty.servlets;version="8.1.0",
+ javax.transaction;version="1.1.0", 
  org.junit;version="[4.0.0,5.0.0)";resolution:=optional,
  org.osgi.framework;version="1.3.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/*.xml
+Bundle-ActivationPolicy: lazy

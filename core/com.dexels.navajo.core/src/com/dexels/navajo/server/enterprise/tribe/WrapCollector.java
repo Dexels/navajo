@@ -60,7 +60,7 @@ public class WrapCollector extends GenericThread {
 
     @Override
     public synchronized void worker() {
-        if (!tribeManager.getIsChief()) {
+        if (tribeManager == null || !tribeManager.getIsChief()) {
             return;
         }
         

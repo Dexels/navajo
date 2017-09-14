@@ -43,6 +43,7 @@ import com.dexels.navajo.tipi.connectors.TipiConnector;
 import com.dexels.navajo.tipi.echo.functions.EchoFunctionDefinition;
 import com.dexels.navajo.tipi.locale.LocaleListener;
 
+@SuppressWarnings("unused")
 public class TipiEchoInstance extends ApplicationInstance implements TipiApplicationInstance {
 
 	private static final long serialVersionUID = 4880562953035112989L;

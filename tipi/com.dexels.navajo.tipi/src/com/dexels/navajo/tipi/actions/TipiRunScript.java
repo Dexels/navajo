@@ -12,8 +12,6 @@ import javax.script.ScriptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tipi.TipiExtension;
-
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.actions.adapters.BaseActions;
 import com.dexels.navajo.tipi.actions.adapters.Evaluator;
@@ -21,6 +19,8 @@ import com.dexels.navajo.tipi.components.core.TipiComponentImpl;
 import com.dexels.navajo.tipi.components.core.adapter.BaseAdapter;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
+
+import tipi.TipiExtension;
 
 /**
  * <p>Title: </p>

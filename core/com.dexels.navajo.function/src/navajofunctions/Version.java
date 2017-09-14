@@ -24,12 +24,12 @@
  */
 package navajofunctions;
 
-import navajoextension.AbstractCoreExtension;
-
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.functions.StandardFunctionDefinitions;
+
+import navajoextension.AbstractCoreExtension;
 
 
 public class Version extends AbstractCoreExtension {

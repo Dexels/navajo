@@ -26,7 +26,7 @@ public class ScaleImageCentered extends FunctionInterface {
 	 */
 	@Override
 	public String usage() {
-		return "ScaleImageCentered(Binary,int width,int height)";
+		return "ScaleImageCentered(Binary,int width,int height,String imageType)";
 	}
 
 	/*
@@ -35,15 +35,19 @@ public class ScaleImageCentered extends FunctionInterface {
 	 */
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		if (getOperands().size() != 3) {
+	    if (getOperands().size() < 3) {
 			throw new TMLExpressionException(this, "Three operands expected. ");
 		}
 		Binary b = (Binary) getOperand(0);
 		Integer width = (Integer) getOperand(1);
 		Integer height = (Integer) getOperand(2);
+    	String imageType = "png";
+        if ( getOperands().size() == 4 && (String)getOperand(3) != null ) {
+        	imageType = (String)getOperand(3);
+        }
 
 		try {
-			Binary res = ImageScaler.scaleCentered(b, width.intValue(), height.intValue());
+			Binary res = ImageScaler.scaleCentered(b, width.intValue(), height.intValue(), imageType);
 			return res;
 		} catch (IOException e) {
 			return null;

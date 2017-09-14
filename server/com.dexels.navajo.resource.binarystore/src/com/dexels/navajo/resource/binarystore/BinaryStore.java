@@ -3,13 +3,13 @@ package com.dexels.navajo.resource.binarystore;
 import java.util.Map;
 
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.BinaryDigest;
 
 public interface BinaryStore {
-	public Binary get(String name);
-	public boolean exists(String name);
-	public void delete(String name);
-	public Map<String, Object> metadata(String name);
-	public void set(String name, String contentType, Binary contents, Map<String, String> metadata);
+	public Binary resolve(BinaryDigest digest);
+	public void store(Binary b);
+	public void delete(BinaryDigest b);
+	public Map<String,String> metadata(BinaryDigest b);
 	
 }
 

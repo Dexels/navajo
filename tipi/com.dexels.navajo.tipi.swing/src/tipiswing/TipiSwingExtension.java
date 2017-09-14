@@ -3,22 +3,21 @@ package tipiswing;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import navajo.ExtensionDefinition;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tipi.TipiAbstractXMLExtension;
-import tipi.TipiExtension;
-import tipi.TipiMainExtension;
-
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.swing.functions.TipiSwingFunctionDefinition;
 import com.dexels.navajo.tipi.swing.laf.api.LookAndFeelWrapper;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
+
+import navajo.ExtensionDefinition;
+import tipi.TipiAbstractXMLExtension;
+import tipi.TipiExtension;
+import tipi.TipiMainExtension;
 
 public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		TipiExtension,TipiMainExtension {

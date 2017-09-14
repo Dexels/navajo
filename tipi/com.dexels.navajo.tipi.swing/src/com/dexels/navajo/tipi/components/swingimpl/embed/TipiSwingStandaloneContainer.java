@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import navajo.ExtensionDefinition;
-import tipiswing.SwingTipiApplicationInstance;
-
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
@@ -14,6 +11,9 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiStandaloneToplevelContainer;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.swingclient.UserInterface;
+
+import navajo.ExtensionDefinition;
+import tipiswing.SwingTipiApplicationInstance;
 
 /**
  * <p>

@@ -2,9 +2,9 @@ package tipiswinggeo;
 
 import org.osgi.framework.BundleContext;
 
-import tipi.TipiAbstractXMLExtension;
-
 import com.dexels.navajo.tipi.TipiContext;
+
+import tipi.TipiAbstractXMLExtension;
 
 	public class TipiGeoSwingExtension extends TipiAbstractXMLExtension  {
 

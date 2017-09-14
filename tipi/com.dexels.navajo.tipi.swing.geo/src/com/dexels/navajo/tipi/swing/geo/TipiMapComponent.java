@@ -9,6 +9,7 @@ import java.awt.event.ComponentListener;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,10 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.painter.CompoundPainter;
+import org.jxmapviewer.painter.Painter;
+import org.jxmapviewer.viewer.GeoPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +32,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
+import com.dexels.navajo.tipi.swing.geo.impl.FieldWaypointPainter;
 import com.dexels.navajo.tipi.swing.geo.impl.TipiSwingMapImpl;
 
 public class TipiMapComponent extends TipiSwingDataComponentImpl {
@@ -39,6 +44,8 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	// double lon,lat;
 	String mapFactory;
 	int zoom;
+	int maxZoom = 10;
+	boolean allowZoom = true;
 	private JLayeredPane jp = new JLayeredPane();
 	private TipiSwingMapImpl myMapKit;
 	private final Map<Component, GeoPosition> mapComponents = new HashMap<Component, GeoPosition>();
@@ -47,6 +54,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	private String messagePath = null;
 
 	private JPanel overlayPanel = null;
+	List<Painter<JXMapViewer>> painters = new ArrayList<>();
 
 	@Override
 	public Object createContainer() {
@@ -65,12 +73,19 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 						if (p.getPropertyName().equals("zoom")) {
 							layoutChildren();
 						}
+						if (p.getPropertyName().equals("maxZoom")) {
+							layoutChildren();
+						}
+						if (p.getPropertyName().equals("allowZoom")) {
+							layoutChildren();
+						}
 						if (p.getPropertyName().equals("centerPosition")) {
 							layoutChildren();
 						}
 					}
 				});
 
+				
 				// crate a WaypointPainter to draw the points
 				// WaypointPainter painter = new WaypointPainter();
 				jp.addComponentListener(new ComponentListener() {
@@ -121,10 +136,15 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	@Override
 	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
 		super.loadData(n, method);
+		
+		mapComponents.clear();
+		overlayPanel.removeAll();
 
 		if (messagePath == null) {
 			return;
 		}
+		
+		
 		final Message m = n.getMessage(messagePath);
 		runSyncInEventThread(new Runnable() {
 
@@ -165,7 +185,18 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	public void setZoom(int zoom) {
 		this.zoom = zoom;
+		// Prevent zooming when a limit has been set
+		if (zoom > maxZoom) {
+			zoom = maxZoom;
+		}
 		myMapKit.setZoom(zoom);
+	}
+	public void setMaxZoom(int maxZoom) {
+		this.maxZoom = maxZoom;
+	}
+	public void setAllowZoom(boolean z) {
+		this.allowZoom = z;
+		myMapKit.setAllowZoom(z);
 	}
 
 	@Override
@@ -177,6 +208,9 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 				if (name.equals("zoom")) {
 					myMapKit.setZoomExternal((Integer) object);
+				}
+				if (name.equals("allowZoom")) {
+					myMapKit.setAllowZoom((Boolean) object);
 				}
 				// if(name.equals("lat")) {
 				// Number n = (Number)object;
@@ -200,7 +234,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	@Override
 	public void addToContainer(final Object c, Object constraints) {
-		logger.info("entering add");
+		logger.debug("entering add");
 		myMapKit.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
 		overlayPanel.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
 
@@ -208,10 +242,17 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		StringTokenizer st = new StringTokenizer(con, ",");
 		String lat = st.nextToken();
 		String lon = st.nextToken();
+		String bearing = st.nextToken();
 		double lonF = Double.parseDouble(lon);
 		double latF = Double.parseDouble(lat);
-
+		double bearingF = Double.parseDouble(bearing);
+		
 		final GeoPosition gp = new GeoPosition(latF, lonF);
+		FieldWaypointPainter fieldWaypointPainter = new FieldWaypointPainter(gp, bearingF);
+		painters.add(fieldWaypointPainter);
+		CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+		myMapKit.getMainMap().setOverlayPainter(painter);
+		
 		GeoPosition rightB = null;
 		mapComponents.put((Component) c, gp);
 		overlayPanel.add((Component) c);
@@ -224,19 +265,19 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 			lonRightBottom = st.nextToken();
 
 			if (latRightBottom.startsWith("+")) {
-				logger.info("REL LAT:" + latRightBottom);
+				logger.debug("REL LAT:" + latRightBottom);
 				double rel = Double.parseDouble(latRightBottom.substring(1));
 				latRB = latF + rel;
-				logger.info("REsults: " + latRB);
+				logger.debug("REsults: " + latRB);
 			} else {
 				latRB = Double.parseDouble(latRightBottom);
 			}
 
 			if (lonRightBottom.startsWith("+")) {
-				logger.info("REL LON:" + lonRightBottom);
+				logger.debug("REL LON:" + lonRightBottom);
 				double rel = Double.parseDouble(lonRightBottom.substring(1));
 				lonRB = lonF + rel;
-				logger.info("REsults: " + lonRB);
+				logger.debug("REsults: " + lonRB);
 			} else {
 				lonRB = Double.parseDouble(lonRightBottom);
 			}
@@ -252,7 +293,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		} else {
 			if (c instanceof JComponent) {
 				JComponent jc = (JComponent) c;
-				logger.info("Adding with default size: " + jc.getPreferredSize());
+				logger.debug("Adding with default size: " + jc.getPreferredSize());
 				jc.setSize(jc.getPreferredSize());
 			} else {
 				((Component) c).setSize(100, 100);
@@ -279,7 +320,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 			}});
 		jp.repaint();
 		// layoutChildren();
-		logger.info("leaving add");
+		logger.debug("leaving add");
 
 	}
 

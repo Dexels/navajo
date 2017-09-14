@@ -71,6 +71,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 		return commands.get(name);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Map<String, Object> getScopes(String token) throws TokenStoreException {
 		Map<String, Object> result = new HashMap<String, Object>();

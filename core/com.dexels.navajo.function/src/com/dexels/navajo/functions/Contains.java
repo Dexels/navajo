@@ -10,7 +10,6 @@ package com.dexels.navajo.functions;
  * @version $Id$
  */
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.dexels.navajo.parser.FunctionInterface;
@@ -32,7 +31,7 @@ public final class Contains extends FunctionInterface {
         for (int i = 0; i < list.size(); i++) {
             Object a = list.get(i);
 
-            if (a instanceof ArrayList)
+            if (a instanceof List)
                 result = contains((List<?>) a, o);
             else
                 result = Utils.equals(a, o);
@@ -49,7 +48,7 @@ public final class Contains extends FunctionInterface {
             throw new TMLExpressionException("Contains(ArrayList, Object) expected");
         Object a = this.getOperands().get(0);
 
-        if (!(a instanceof ArrayList))
+        if (!(a instanceof List))
             throw new TMLExpressionException("Contains(ArrayList, Object) expected");
         Object b = this.getOperands().get(1);
 

@@ -6,6 +6,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.entity.Entity;
+import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
 import com.dexels.navajo.script.api.Access;
@@ -21,6 +22,7 @@ public class EntityMap extends NavajoMap {
 	private String entityName;
 	private String method;
 	private Entity myEntity;
+	private boolean breakOnNoResult = false;
 	
 	@Override
 	public void load(Access access) throws MappableException, UserException {
@@ -39,21 +41,37 @@ public class EntityMap extends NavajoMap {
 		
 		if ( entityName != null && method != null ) {
 			Operation o = myManager.getOperation(entityName, method);
-			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, this, o);
+			o.setTenant(access.getTenant());
+			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, o);
 			Navajo request = prepareOutDoc();
 			if ( request.getHeader() == null ) {
 				Header h = NavajoFactory.getInstance().createHeader(request, myEntity.getName(), access.rpcUser, access.rpcName, -1);
 				request.addHeader(h);
 			}
 
-			Navajo result = seo.perform(request);
-			if ( result != null ) {
-				this.serviceCalled = true;
-				this.serviceFinished = true;
-				this.inDoc = result;
+			Navajo result;
+			try {
+			    result = seo.perform(request);
+			} catch (EntityException e) {
+			    if (e.getCode() == EntityException.VALIDATION_ERROR) {
+			        throw new ConditionErrorException(e.getNavajo());
+			    }
+			    throw e;
 			}
+			
+			if (breakOnNoResult && (result == null  || result.getMessage(seo.getMyEntity().getMessageName()) == null)) {
+                throw new UserException(-1, "Entity "+ entityName + " not found or no output from operation");
+            }
+			
+			this.serviceCalled = true;
+			this.serviceFinished = true;
+			this.inDoc = result;
+			
 		}
-		
+	}
+	
+	public void setBreakOnNoResult(boolean breaky) {
+		this.breakOnNoResult = breaky;
 	}
 	
 	@Override

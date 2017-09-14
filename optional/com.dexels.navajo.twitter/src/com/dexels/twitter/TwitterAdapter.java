@@ -14,6 +14,7 @@ import winterwell.jtwitter.Message;
 import winterwell.jtwitter.OAuthSignpostClient;
 import winterwell.jtwitter.Status;
 import winterwell.jtwitter.Twitter;
+import winterwell.jtwitter.TwitterException;
 import winterwell.jtwitter.User;
 
 import com.dexels.navajo.document.types.Binary;
@@ -58,6 +59,9 @@ public class TwitterAdapter implements Mappable{
 			s = twit.getStatus();
 		}else{
 			s = twit.getStatus(currentUser);
+		}
+		if (s == null) {
+		    throw new TwitterException("Unable to get twitter obj");
 		}
 		return new TwitterStatus(s);
 	}

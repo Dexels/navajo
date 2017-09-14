@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2113">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2380">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.equinox.server.core.feature.group" version="1.3.100.v20150529-1857"/>
-<unit id="org.eclipse.equinox.server.jetty.feature.group" version="1.2.0.v20150519-1816"/>
+<unit id="org.eclipse.jgit.feature.group" version="4.8.0.201706111038-r"/>
+<unit id="org.eclipse.jgit.http.apache.feature.group" version="4.8.0.201706111038-r"/>
+<unit id="org.eclipse.jgit.lfs.feature.group" version="4.8.0.201706111038-r"/>
+<repository location="http://download.eclipse.org/egit/updates/"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.11.0.v20150602-1417"/>
+<unit id="org.eclipse.equinox.server.core.feature.group" version="1.3.100.v20150529-1857"/>
+<unit id="org.eclipse.equinox.server.jetty.feature.group" version="1.2.0.v20150519-1816"/>
 <repository location="http://repo.dexels.com/eclipse/equinox_mars"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.9.162.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.9.162"/>
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.3.20.201706061646"/>
+<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.20.v20170531/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jgit.http.apache.feature.group" version="4.5.0.201609210915-r"/>
-<unit id="org.eclipse.jgit.lfs.feature.group" version="4.5.0.201609210915-r"/>
-<unit id="org.eclipse.jgit.source.feature.group" version="4.5.0.201609210915-r"/>
-<unit id="org.eclipse.jgit.feature.group" version="4.5.0.201609210915-r"/>
-<repository location="http://mirrorservice.org/sites/download.eclipse.org/eclipseMirror/egit/updates/"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.3.10.201607130511"/>
-<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.10.v20160621/"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.10.18.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.10.18"/>
 </location>
 </locations>
 <includeBundles>
@@ -37,13 +36,15 @@
 <plugin id="com.dexels.log4j.server"/>
 <plugin id="com.dexels.logback.redis"/>
 <plugin id="com.dexels.mqtt.impl"/>
-<plugin id="com.dexels.oauth.api" version="14.0.0.201611031019"/>
-<plugin id="com.dexels.oauth.impl" version="1.0.33.201611031020"/>
-<plugin id="com.dexels.oauth.web" version="2.0.2.201611031021"/>
+<plugin id="com.dexels.oauth.api"/>
+<plugin id="com.dexels.oauth.impl"/>
+<plugin id="com.dexels.oauth.web"/>
 <plugin id="com.dexels.osgi.bundlesync"/>
 <plugin id="com.dexels.pubsub.api"/>
 <plugin id="com.dexels.replication.api"/>
 <plugin id="com.dexels.replication.impl"/>
+<plugin id="com.dexels.replication.impl.json"/>
+<plugin id="com.dexels.replication.impl.protobuf"/>
 <plugin id="com.dexels.repository.api"/>
 <plugin id="com.dexels.repository.file"/>
 <plugin id="com.dexels.repository.git"/>
@@ -56,9 +57,14 @@
 <plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
 <plugin id="com.fasterxml.jackson.core.jackson-core"/>
 <plugin id="com.fasterxml.jackson.core.jackson-databind"/>
+<plugin id="com.fasterxml.jackson.dataformat.jackson-dataformat-xml"/>
 <plugin id="com.fasterxml.jackson.dataformat.jackson-dataformat-yaml"/>
+<plugin id="com.fasterxml.jackson.module.jackson-module-jaxb-annotations"/>
+<plugin id="com.fasterxml.woodstox.woodstox-core"/>
+<plugin id="com.github.akarnokd.rxjava2-interop"/>
 <plugin id="com.google.guava"/>
 <plugin id="com.google.inject"/>
+<plugin id="com.google.protobuf"/>
 <plugin id="com.hazelcast"/>
 <plugin id="com.jcraft.jsch" version="0.1.53.v201508180515"/>
 <plugin id="com.mysql.jdbc"/>
@@ -77,14 +83,15 @@
 <plugin id="io.reactivex.rxjava"/>
 <plugin id="io.reactivex.rxjava-joins"/>
 <plugin id="io.reactivex.rxjava-string"/>
+<plugin id="io.reactivex.rxjava2.rxjava"/>
 <plugin id="io.reactivex.rxnetty-common"/>
 <plugin id="io.reactivex.rxnetty-http"/>
 <plugin id="io.reactivex.rxnetty-tcp"/>
-<plugin id="jackson-core-lgpl"/>
-<plugin id="jackson-mapper-lgpl"/>
-<plugin id="javaewah" version="0.7.9.v201605172130"/>
+<plugin id="javaewah"/>
 <plugin id="javax.el.source"/>
 <plugin id="javax.inject"/>
+<plugin id="javax.servlet"/>
+<plugin id="lz4-java"/>
 <plugin id="org.apache.aries.jmx.api"/>
 <plugin id="org.apache.aries.jmx.core"/>
 <plugin id="org.apache.aries.jmx.whiteboard"/>
@@ -98,7 +105,6 @@
 <plugin id="org.apache.commons.dbcp"/>
 <plugin id="org.apache.commons.email"/>
 <plugin id="org.apache.commons.fileupload"/>
-<plugin id="org.apache.commons.httpclient"/>
 <plugin id="org.apache.commons.io"/>
 <plugin id="org.apache.commons.lang"/>
 <plugin id="org.apache.commons.logging"/>
@@ -110,9 +116,10 @@
 <plugin id="org.apache.felix.eventadmin"/>
 <plugin id="org.apache.felix.fileinstall"/>
 <plugin id="org.apache.felix.framework"/>
-<plugin id="org.apache.felix.framework.security"/>
+<plugin id="org.apache.felix.gogo.command" version="1.0.2"/>
+<plugin id="org.apache.felix.gogo.runtime" version="1.0.6"/>
 <plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
-<plugin id="org.apache.felix.gogo.shell" version="0.10.0.v201212101605"/>
+<plugin id="org.apache.felix.gogo.shell" version="1.0.0"/>
 <plugin id="org.apache.felix.inventory"/>
 <plugin id="org.apache.felix.log"/>
 <plugin id="org.apache.felix.metatype"/>
@@ -132,8 +139,8 @@
 <plugin id="org.apache.felix.webconsole.plugins.scriptconsole"/>
 <plugin id="org.apache.felix.webconsole.plugins.upnp"/>
 <plugin id="org.apache.httpcomponents.httpasyncclient"/>
-<plugin id="org.apache.httpcomponents.httpclient" version="4.4.1"/>
-<plugin id="org.apache.httpcomponents.httpcore" version="4.4.3"/>
+<plugin id="org.apache.httpcomponents.httpclient" version="4.5.3"/>
+<plugin id="org.apache.httpcomponents.httpcore" version="4.4.6"/>
 <plugin id="org.apache.james.protocols.api"/>
 <plugin id="org.apache.james.protocols.netty"/>
 <plugin id="org.apache.james.protocols.smtp"/>
@@ -184,8 +191,28 @@
 <plugin id="org.eclipse.equinox.simpleconfigurator"/>
 <plugin id="org.eclipse.equinox.supplement"/>
 <plugin id="org.eclipse.equinox.util"/>
-<plugin id="org.eclipse.jetty.proxy"/>
-<plugin id="org.eclipse.jetty.proxy.source"/>
+<plugin id="org.eclipse.jetty.alpn.client"/>
+<plugin id="org.eclipse.jetty.alpn.server"/>
+<plugin id="org.eclipse.jetty.annotations"/>
+<plugin id="org.eclipse.jetty.client"/>
+<plugin id="org.eclipse.jetty.continuation" version="9.3.20.v20170531"/>
+<plugin id="org.eclipse.jetty.http" version="9.3.20.v20170531"/>
+<plugin id="org.eclipse.jetty.io" version="9.3.20.v20170531"/>
+<plugin id="org.eclipse.jetty.jmx"/>
+<plugin id="org.eclipse.jetty.osgi.httpservice"/>
+<plugin id="org.eclipse.jetty.security" version="9.3.20.v20170531"/>
+<plugin id="org.eclipse.jetty.server" version="9.3.20.v20170531"/>
+<plugin id="org.eclipse.jetty.servlet" version="9.3.20.v20170531"/>
+<plugin id="org.eclipse.jetty.servlets"/>
+<plugin id="org.eclipse.jetty.util" version="9.3.20.v20170531"/>
+<plugin id="org.eclipse.jetty.websocket.api"/>
+<plugin id="org.eclipse.jetty.websocket.client"/>
+<plugin id="org.eclipse.jetty.websocket.common"/>
+<plugin id="org.eclipse.jetty.websocket.javax.websocket"/>
+<plugin id="org.eclipse.jetty.websocket.javax.websocket.server"/>
+<plugin id="org.eclipse.jetty.websocket.server"/>
+<plugin id="org.eclipse.jetty.websocket.servlet"/>
+<plugin id="org.eclipse.jetty.xml" version="9.3.20.v20170531"/>
 <plugin id="org.eclipse.jgit"/>
 <plugin id="org.eclipse.jgit.archive"/>
 <plugin id="org.eclipse.jgit.http.apache"/>
@@ -196,12 +223,16 @@
 <plugin id="org.freemarker.freemarker"/>
 <plugin id="org.h2"/>
 <plugin id="org.jboss.netty"/>
+<plugin id="org.jctools.core"/>
 <plugin id="org.jvnet.mimepull"/>
 <plugin id="org.jvnet.staxex.stax-ex"/>
+<plugin id="org.mongodb.driver-async"/>
+<plugin id="org.mongodb.driver-reactivestreams"/>
 <plugin id="org.mongodb.mongo-java-driver"/>
 <plugin id="org.objectweb.asm"/>
 <plugin id="org.objectweb.asm.commons"/>
 <plugin id="org.objectweb.asm.tree"/>
+<plugin id="org.openstreetmap.jmapviewer"/>
 <plugin id="org.ops4j.base.io"/>
 <plugin id="org.ops4j.base.lang"/>
 <plugin id="org.ops4j.base.monitors"/>
@@ -222,7 +253,6 @@
 <plugin id="org.ops4j.pax.url.cache"/>
 <plugin id="org.ops4j.pax.url.classpath"/>
 <plugin id="org.ops4j.pax.url.commons"/>
-<plugin id="org.ops4j.pax.url.dir"/>
 <plugin id="org.ops4j.pax.url.link"/>
 <plugin id="org.ops4j.pax.url.mvn"/>
 <plugin id="org.ops4j.pax.url.obr"/>
@@ -232,16 +262,18 @@
 <plugin id="org.ops4j.pax.web.pax-web-api"/>
 <plugin id="org.ops4j.pax.web.pax-web-extender-whiteboard"/>
 <plugin id="org.ops4j.pax.web.pax-web-jetty"/>
-<plugin id="org.ops4j.pax.web.pax-web-jetty-bundle"/>
 <plugin id="org.ops4j.pax.web.pax-web-runtime"/>
 <plugin id="org.ops4j.pax.web.pax-web-spi"/>
 <plugin id="org.postgresql.jdbc4"/>
+<plugin id="org.reactivestreams.reactive-streams"/>
 <plugin id="org.scala-lang.modules.scala-xml"/>
 <plugin id="org.scala-lang.scala-compiler"/>
 <plugin id="org.scala-lang.scala-library"/>
 <plugin id="org.scala-lang.scala-reflect"/>
+<plugin id="org.yaml.snakeyaml"/>
+<plugin id="pi4j-core"/>
+<plugin id="pi4j-service"/>
 <plugin id="redis.clients.jedis"/>
-<plugin id="rocksdb.osgi"/>
 <plugin id="slf4j.api"/>
 <plugin id="slf4j.simple"/>
 <plugin id="stax2-api"/>

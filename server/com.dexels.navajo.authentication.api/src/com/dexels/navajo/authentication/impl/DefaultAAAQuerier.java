@@ -7,7 +7,7 @@ import com.dexels.navajo.script.api.AuthorizationException;
 public class DefaultAAAQuerier implements AAAQuerier {
 
 	@Override
-	public int authenticateUsernamePassword(Access access, String username, String password) {
+	public int authenticateUsernamePassword(Access access) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -25,7 +25,7 @@ public class DefaultAAAQuerier implements AAAQuerier {
     }
 
 	@Override
-	public void reset(String tenant) {
+	public void reset() {
 		// TODO Auto-generated method stub
 
 	}
@@ -37,19 +37,19 @@ public class DefaultAAAQuerier implements AAAQuerier {
 	}
 
 	@Override
-	public Integer getUserId(String tenant, String username) {
+	public Integer getUserId(Access a) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean isFirstUseAccount(String tenant, String username) {
+	public boolean isFirstUseAccount(Access access) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public int getDaysUntilExpiration(String tenant, String username) {
+	public int getDaysUntilExpiration(Access access) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

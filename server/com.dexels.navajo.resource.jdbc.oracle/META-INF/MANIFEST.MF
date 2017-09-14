@@ -19,3 +19,4 @@ Import-Package: com.dexels.navajo.resource,
 Bundle-ClassPath: .
 Service-Component: OSGI-INF/navajo.resource.oracle.xml
 Export-Package: com.dexels.navajo.resource.jdbc.oracle;uses:="javax.sql,org.osgi.framework,org.osgi.service.jdbc"
+Bundle-ActivationPolicy: lazy

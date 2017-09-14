@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Set of Stream Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters.stream
-Bundle-Version: 1.0.12.qualifier
+Bundle-Version: 1.0.14.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.navajo.adapter.sqlmap,
@@ -12,27 +12,48 @@ Import-Package: com.dexels.navajo.adapter.sqlmap,
  com.dexels.navajo.document.stream.events;version="1.0.0",
  com.dexels.navajo.document.stream.io,
  com.dexels.navajo.document.stream.xml;version="1.0.0",
- com.dexels.navajo.listeners.stream;version="1.0.0",
  com.dexels.navajo.resource.jdbc.mysql,
  com.dexels.navajo.script.api;version="1.0.0",
  com.mysql.jdbc;version="5.1.34",
+ hu.akarnokd.rxjava.interop;version="0.10.2",
+ io.netty.buffer;version="4.1.4",
+ io.netty.channel;version="4.1.4",
+ io.netty.handler.codec;version="4.1.4",
+ io.netty.handler.codec.http;version="4.1.4",
+ io.netty.handler.logging;version="4.1.4",
+ io.netty.resolver;version="4.1.4",
+ io.netty.util;version="4.1.4",
+ io.netty.util.concurrent;version="4.1.4",
+ io.reactivex;version="2.1.2",
+ io.reactivex.disposables;version="2.1.2",
+ io.reactivex.netty;version="0.5.2",
+ io.reactivex.netty.channel;version="0.5.2",
+ io.reactivex.netty.protocol.http;version="0.5.2",
+ io.reactivex.netty.protocol.http.client;version="0.5.2",
+ io.reactivex.netty.protocol.http.server;version="0.5.2",
+ io.reactivex.netty.protocol.tcp.client;version="0.5.2",
+ io.reactivex.schedulers;version="2.1.2",
  javax.sql,
  org.dexels.grus;version="1.0.0",
  org.junit;version="4.0.0";resolution:=optional,
+ org.reactivestreams;version="1.0.0.release",
  org.slf4j;version="1.7.0",
- rx;version="[1.1.0,1.2.0)",
+ rx;version="[1.1.5,2.0.0)",
  rx.exceptions;version="1.1.5",
- rx.functions;version="1.1.0",
- rx.observables;version="1.1.0",
- rx.schedulers;version="1.1.0",
- rx.subjects;version="1.1.0",
- rx.subscriptions;version="1.1.0"
+ rx.functions;version="1.1.5",
+ rx.observables;version="1.1.5",
+ rx.observers;version="1.3.0",
+ rx.schedulers;version="1.1.5",
+ rx.subjects;version="1.1.5",
+ rx.subscriptions;version="1.1.5"
 Export-Package: com.dexels.navajo.adapters.stream,
- com.github.davidmoten.rx;version="0.7.2",
- com.github.davidmoten.rx.jdbc;version="0.7.2",
- com.github.davidmoten.rx.jdbc.annotations;version="0.7.2",
- com.github.davidmoten.rx.jdbc.exceptions;version="0.7.2",
- com.github.davidmoten.rx.jdbc.tuple;version="0.7.2"
+ com.github.davidmoten.rx;version="0.7.3",
+ com.github.davidmoten.rx.jdbc;version="0.7.3",
+ com.github.davidmoten.rx.jdbc.annotations;version="0.7.3",
+ com.github.davidmoten.rx.jdbc.exceptions;version="0.7.3",
+ com.github.davidmoten.rx.jdbc.tuple;version="0.7.3"
 Bundle-ClassPath: .,
- lib/rxjava-extras-0.7.9.4.jar,
- lib/rxjava-jdbc-0.7.2.jar
+ lib/rxjava2-extras-0.1.12.jar,
+ lib/rxjava2-extensions-0.17.5.jar,
+ lib/rxjava-jdbc-0.7.3-RC3-SNAPSHOT.jar,
+ lib/rxjava-extras-0.8.0.8.jar

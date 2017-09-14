@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.article.impl.BaseRuntimeImpl;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.script.api.Access;
 
 public class TestRuntimeImpl extends BaseRuntimeImpl {
 
@@ -69,5 +70,17 @@ public class TestRuntimeImpl extends BaseRuntimeImpl {
 		// TODO Auto-generated method stub
 		
 	}
+
+    @Override
+    public void setAccess(Access a) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public Access getAccess() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

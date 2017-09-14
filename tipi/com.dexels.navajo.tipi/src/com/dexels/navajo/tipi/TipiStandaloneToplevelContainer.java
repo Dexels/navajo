@@ -8,9 +8,9 @@ package com.dexels.navajo.tipi;
 
 import java.io.IOException;
 
-import navajo.ExtensionDefinition;
-
 import com.dexels.navajo.document.Navajo;
+
+import navajo.ExtensionDefinition;
 
 public interface TipiStandaloneToplevelContainer {
 	// public void setResourceBaseDirectory(File f);

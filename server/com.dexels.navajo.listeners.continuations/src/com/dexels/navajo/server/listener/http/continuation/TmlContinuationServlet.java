@@ -71,10 +71,7 @@ public class TmlContinuationServlet extends HttpServlet implements
 			logger.debug("Servlet path info: "+req.getPathInfo());
 			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,null);
 			if(instantiateRunnable!=null) {
-			    Boolean prio =  (Boolean) instantiateRunnable.getAttribute("priority");
-	            if (prio == null) 
-	                prio = false;
-				getTmlScheduler().submit(instantiateRunnable,  prio);
+				getTmlScheduler().submit(instantiateRunnable,  false);
 			}
 		} catch (Throwable e) {
 			if(e instanceof ServletException) {

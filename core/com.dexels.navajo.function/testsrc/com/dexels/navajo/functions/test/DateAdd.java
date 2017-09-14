@@ -1,10 +1,11 @@
 package com.dexels.navajo.functions.test;
 
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Date;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Generated code for the test suite <b>DateAdd</b> located at

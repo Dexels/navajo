@@ -26,8 +26,6 @@ package navajolisteners;
 
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.script.api.SchedulerRegistry;
-
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	// Included packages.
@@ -86,7 +84,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void shutdown() {
 		super.shutdown();
-		SchedulerRegistry.setScheduler(null);
+
 	}
 
 	public static BundleContext getDefaultBundleContext() {

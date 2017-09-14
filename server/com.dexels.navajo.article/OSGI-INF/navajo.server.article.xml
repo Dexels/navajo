@@ -3,7 +3,7 @@
    <implementation class="com.dexels.navajo.article.impl.ServletContextImpl"/>
    <service>
       <provide interface="com.dexels.navajo.article.ArticleContext"/>
-   </service>
+   </service>   
    <reference bind="setConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoIOConfig" name="NavajoIOConfig" policy="dynamic" unbind="clearConfig"/>
    <reference bind="addCommand" cardinality="0..n" interface="com.dexels.navajo.article.command.ArticleCommand" name="ArticleCommand" policy="dynamic" unbind="removeCommand"/>
 </scr:component>

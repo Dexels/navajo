@@ -334,7 +334,7 @@ public final class MappingUtils {
     }
     else { // Existing property.
     	prop.clearValue();
-    	prop.setType(type);
+    	
     	
     	if ( value != null && value instanceof Property ) {
     		// Value is a property itself!
@@ -363,8 +363,8 @@ public final class MappingUtils {
     	if ( Property.DIR_IN.equals(direction) || Property.DIR_OUT.equals(direction) ) {
     		prop.setDirection(direction);
     	}
-
-      prop.setName(actualName); // Should not matter ;)
+    	prop.setType(type);
+       prop.setName(actualName); // Should not matter ;)
     }
 
     // Set subtype if not empty.
@@ -813,27 +813,27 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 					 return c.getDeclaredField(name).getType();
 				 }
 			 } catch (Exception e2) {
-				 try {
-					 Method m = c.getMethod(constructGetMethod(name), (Class[])null);
-					 if ( m.getReturnType().equals(Iterator.class) && fetchGenericType ) {
-						 ParameterizedType pt = (ParameterizedType) m.getGenericReturnType();
-						 return (pt.getActualTypeArguments()[0]);
-					 } else {
-						 return m.getReturnType();
-					 }
-				 } catch (NoSuchMethodException nsme) {
-					 // Try set method.
-					 Method [] methods = c.getMethods();
-					 String setMethod = constructSetMethod(name);
-					 for ( int j = 0; j < methods.length; j++ ) {
-						 if ( methods[j].getName().equals(setMethod) ) {
-							 Class [] types = methods[j].getParameterTypes();
-							 Type type = types[0];
-							 return type;
-						 }
-					 }
-					 throw new MappingException("Could not find method " + constructGetMethod(name) + " in Mappable object: " + c.getSimpleName());
-				 }
+			     Method [] methods = c.getMethods();
+			     String getMethod = constructGetMethod(name);
+                 String setMethod = constructSetMethod(name);
+                 
+                 for ( int j = 0; j < methods.length; j++ ) {
+                     if ( methods[j].getName().equals(getMethod) ) {
+                         Method m =  methods[j];
+                         if ( m.getReturnType().equals(Iterator.class) && fetchGenericType ) {
+                             ParameterizedType pt = (ParameterizedType) m.getGenericReturnType();
+                             return (pt.getActualTypeArguments()[0]);
+                         } else {
+                             return m.getReturnType();
+                         }
+                          
+                     } else if ( methods[j].getName().equals(setMethod) ) {
+                         Class [] types = methods[j].getParameterTypes();
+                         Type type = types[0];
+                         return type;
+                     }
+                 }
+                 throw new MappingException("Could not find method " + constructGetMethod(name) + " in Mappable object: " + c.getSimpleName());
 			 }
 		 }
 	 }

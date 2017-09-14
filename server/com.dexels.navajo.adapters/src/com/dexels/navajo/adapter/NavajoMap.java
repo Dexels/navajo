@@ -106,7 +106,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     public MessageMap[] messages;
     public OptionMap[] selections;
 
-    public String messagePointer;
+    public String messagePointerString;
 
     public int serverTimeout = -1;
     public String selectionPointer = null;
@@ -162,9 +162,17 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
 
     public String method;
 
-    // If block is set, the web service calls blocks until a result is received.
-    // Default value is TRUE.
+    /** 
+     * If block is set, the web service calls blocks until a result is received.
+     * Default value is TRUE.
+     */
     public boolean block = true;
+    /** 
+     * Used in combination with block = false to determine the threadpool 
+     * Default value is TRUE: non-blocking calls are low priority
+     * */
+    private boolean lowPriority = true;
+
     protected boolean serviceCalled = false;
     protected boolean serviceFinished = false;
     private Exception myException = null;
@@ -175,7 +183,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     private List<String> deletedProperties = new ArrayList<String>();
     private List<String> deletedMessages = new ArrayList<String>();
     private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
-    private static final long MAX_WAITTIME = 300000;
+    private static final long MAX_WAITTIME = 600000; // 10 min
 
     public NavajoMap() {
 
@@ -262,8 +270,23 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                 try {
                     waitForResult.wait(MAX_WAITTIME);
                 } catch (InterruptedException e) {
-                    logger.error("WaitForResult has timed out: Error: ", e);
+                    logger.error("WaitForResult interrupted: Error: ", e);
                 }
+                // We could also be here as a result of a timeout
+                if (!serviceFinished) {
+                    logger.error("waitForResult finished but no serviceFinished! Probably result of timeout. Setting empty navajo as result", new Exception());
+                    serviceFinished = true;
+                    serviceCalled = true;
+                    if (inDoc == null) {
+                        inDoc = NavajoFactory.getInstance().createNavajo();
+                    }
+                }
+               
+            }
+        }
+        if (!block && serviceFinished) {
+            if (myException != null) {
+                throw new UserException(-1, myException.getMessage());
             }
         }
     }
@@ -470,8 +493,8 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     public void setPropertyName(String fullName) throws UserException {
-        currentFullName = ((messagePointer == null || messagePointer.equals("")) ? fullName
-                : messagePointer + "/" + ((fullName.length() > 0 && fullName.charAt(0) == '/' ? fullName.substring(1) : fullName)));
+        currentFullName = ((messagePointerString == null || messagePointerString.equals("")) ? fullName
+                : messagePointerString + "/" + ((fullName.length() > 0 && fullName.charAt(0) == '/' ? fullName.substring(1) : fullName)));
         String propName = MappingUtils.getStrippedPropertyName(fullName);
         try {
             if (msgPointer != null)
@@ -800,6 +823,19 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                 e.printStackTrace(Access.getConsoleWriter(access));
             }
         }
+        // Always copy aaa message
+        if (inMessage.getMessage("__aaa__") != null) {
+            Message aaamsg = inMessage.getMessage("__aaa__").copy(outDoc);
+            Message existing = outDoc.getMessage("__aaa__");
+            try {
+                outDoc.addMessage(aaamsg);
+                if (existing != null) {
+                    outDoc.addMessage(existing);
+                }
+            } catch (NavajoException e) {
+                e.printStackTrace(Access.getConsoleWriter(access));
+            }
+        }
 
         return outDoc;
     }
@@ -867,7 +903,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                     if (block) {
                         this.run();
                     } else {
-                        SchedulerRegistry.getLowPrioScheduler().submit(this, true);
+                        SchedulerRegistry.submit(this, lowPriority );
                     }
                     serviceCalled = true;
                     if (getException() != null) {
@@ -905,6 +941,31 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
         if (msg == null)
             throw new UserException(-1, "Message " + fullName + " does not exists in response document");
         return msg;
+    }
+    
+    public final Object getPropertyOrElse(String fullName, Object elseValue) throws UserException {
+        
+        waitForResult();
+
+        Property p = null;
+        if (msgPointer != null) {
+            p = msgPointer.getProperty(fullName);
+        } else {
+            p = inDoc.getProperty(fullName);
+        }
+        if (p == null) {
+            return elseValue;
+        }
+        
+        if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+            if (p.getSelected() != null) {
+                return p.getSelected().getValue();
+            } else {
+                return null;
+            }
+        }
+        return p.getTypedValue();
+        
     }
 
     public final Object getProperty(String fullName) throws Exception {
@@ -1106,15 +1167,20 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
      * @throws UserException
      */
     public void setMessagePointer(String m) throws UserException {
-
         waitForResult();
 
-        this.messagePointer = m;
         if (m.equals("")) {
             msgPointer = null;
             return;
         }
-        msgPointer = (msgPointer == null ? inDoc.getMessage(messagePointer) : msgPointer.getMessage(messagePointer));
+        if (msgPointer != null && m.startsWith("/")) {
+            // Allow resetting messagepointer when starting with / - See https://github.com/Dexels/navajo/issues/374 
+            // To refine within the current message start without slash
+            logger.debug("Resetting existing message pointer from {}!", messagePointerString);
+            msgPointer = null;
+        }
+        this.messagePointerString = m;
+        msgPointer = (msgPointer == null ? inDoc.getMessage(messagePointerString) : msgPointer.getMessage(messagePointerString));
 
     }
 
@@ -1147,7 +1213,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
         try {
             List<Message> all = msgPointer.getAllMessages(); // inDoc.getMessages(messagePointer);
             if ((all == null))
-                throw new UserException(-1, "Could not find messages: " + messagePointer + " in response document");
+                throw new UserException(-1, "Could not find messages: " + messagePointerString + " in response document");
             messages = new MessageMap[all.size()];
             for (int i = 0; i < all.size(); i++) {
                 MessageMap msg = new MessageMap();
@@ -1331,7 +1397,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                 }
                 throw new UserException(errorCode, errMsg);
             } else if (error != null) {
-                AuditLog.log("NavajoMap", "EXCEPTIONERROR OCCURED, BUT WAS EXCEPTION HANDLING WAS SET TO FALSE, RETURNING....", Level.INFO, access.accessID);
+                logger.debug("EXCEPTIONERROR OCCURED, BUT WAS EXCEPTION HANDLING WAS SET TO FALSE, RETURNING....");
                 return;
             }
 
@@ -1343,6 +1409,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
                 authenticationError = true;
             }
             if (aaaError != null) {
+                
                 AuditLog.log("NavajoMap", "THROWING AUTHORIZATIONEXCEPTION IN NAVAJOMAP" + aaaError.getProperty("User").getValue(), Level.WARNING,
                         access.accessID);
                 throw new AuthorizationException(authenticationError, !authenticationError, aaaError.getProperty("User").getValue(),
@@ -1350,15 +1417,10 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             }
 
             if (breakOnConditionError && inDoc.getMessage("ConditionErrors") != null) {
-                String scriptName = "UNKNOWN";
-                if (access.getMyScript() != null) {
-                    scriptName = access.getMyScript().getScriptName();
-                }
-                AuditLog.log("NavajoMap", ">>>> BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR (" + scriptName + ")", Level.INFO,
-                        access.accessID);
+                logger.debug("BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR"); 
                 throw new ConditionErrorException(inDoc);
             } else if (inDoc.getMessage("ConditionErrors") != null) {
-                AuditLog.log("NavajoMap", "BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....", Level.INFO, access.accessID);
+                logger.debug("BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....");;
                 return;
             }
 
@@ -1416,11 +1478,11 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             h.setRequestId(null);
             h.setHeaderAttribute("parentaccessid", access.accessID);
             h.setHeaderAttribute("application", access.getApplication());
+            h.setHeaderAttribute("organization", access.getOrganization());
             String tenant = access.getTenant();
             boolean skipAuth = true;
             if (this.tenant != null && !this.tenant.equals("")) {
                 tenant = this.tenant;
-                skipAuth = false;
             }
 
             inDoc = DispatcherFactory.getInstance().handle(outDoc, tenant, skipAuth);
@@ -1797,7 +1859,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     }
 
     public String getMessagePointer() {
-        return messagePointer;
+        return messagePointerString;
     }
 
     public boolean getUseCurrentOutDoc() {
@@ -1855,5 +1917,14 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     public void setServerTimeout(int serverTimeout) {
         this.serverTimeout = serverTimeout;
     }
+
+    public boolean isLowPriority() {
+        return lowPriority;
+    }
+
+    public void setLowPriority(boolean lowPriority) {
+        this.lowPriority = lowPriority;
+    }
+    
 
 }

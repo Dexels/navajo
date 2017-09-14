@@ -2,12 +2,12 @@ package tipi;
 
 import java.io.Serializable;
 
-import navajo.ExtensionDefinition;
-
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.functions.TipiCoreFunctionDefinition;
+
+import navajo.ExtensionDefinition;
 
 public class TipiCoreExtension extends TipiAbstractXMLExtension implements Serializable {
 

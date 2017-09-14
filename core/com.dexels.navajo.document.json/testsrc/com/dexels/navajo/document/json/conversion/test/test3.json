@@ -1,0 +1,125 @@
+{
+  "TransactionId" : "35.4.1687",
+  "Tenant" : "KNVB",
+  "ClientId" : "test-knvb",
+  "Timestamp" : 1485261885000,
+  "Operation" : "UPDATE",
+  "PrimaryKeys" : [ "matchid" ],
+  "Columns" : {
+    "facilityid" : {
+      "Name" : "facilityid",
+      "Type" : "string",
+      "Value" : "BBDC53I"
+    },
+    "ageclasscode" : {
+      "Name" : "ageclasscode",
+      "Type" : "string",
+      "Value" : "001"
+    },
+    "subfacilityid" : {
+      "Name" : "subfacilityid",
+      "Type" : "string",
+      "Value" : "BBDC53I-2"
+    },
+    "hometeam" : {
+      "Name" : "hometeam",
+      "Type" : "string",
+      "Value" : "Geinburgia 1"
+    },
+    "organizationid" : {
+      "Name" : "organizationid",
+      "Type" : "string",
+      "Value" : "BBCY45I"
+    },
+    "awayteamid" : {
+      "Name" : "awayteamid",
+      "Type" : "string",
+      "Value" : "-1"
+    },
+    "duration" : {
+      "Name" : "duration",
+      "Type" : "integer",
+      "Value" : "90"
+    },
+    "hometeamid" : {
+      "Name" : "hometeamid",
+      "Type" : "string",
+      "Value" : "0"
+    },
+    "sportid" : {
+      "Name" : "sportid",
+      "Type" : "string",
+      "Value" : "SOCCER-VE-ZO"
+    },
+    "matchdate" : {
+      "Name" : "matchdate",
+      "Type" : "date",
+      "Value" : "2017-01-29 00:00:00.00"
+    },
+    "matchtime" : {
+      "Name" : "matchtime",
+      "Type" : "date",
+      "Value" : "1971-01-01 12:00:00.00"
+    },
+    "matchtime2" : {
+      "Name" : "matchtime",
+      "Type" : "clocktime",
+      "Value" : "12:00:00.00"
+    },
+    "updateby" : {
+      "Name" : "updateby",
+      "Type" : "string",
+      "Value" : "user "
+    },
+    "awayteam" : {
+      "Name" : "awayteam",
+      "Type" : "string",
+      "Value" : "FC Weesp 1"
+    },
+    "matchtype" : {
+      "Name" : "matchtype",
+      "Type" : "string",
+      "Value" : "Oefen"
+    },
+    "homematch" : {
+      "Name" : "homematch",
+      "Type" : "string",
+      "Value" : "1"
+    },
+    "homeresult" : {
+      "Name" : "homeresult",
+      "Type" : "string",
+      "Value" : null
+    },
+    "halffield" : {
+      "Name" : "halffield",
+      "Type" : "string",
+      "Value" : "0"
+    },
+    "externalmatchid" : {
+      "Name" : "externalmatchid",
+      "Type" : "integer",
+      "Value" : "987"
+    },
+    "lastupdate" : {
+      "Name" : "lastupdate",
+      "Type" : "date",
+      "Value" : "2017-01-24 08:11:30.00"
+    },
+    "matchid" : {
+      "Name" : "matchid",
+      "Type" : "integer",
+      "Value" : "11248433"
+    },
+    "awayresult" : {
+      "Name" : "awayresult",
+      "Type" : "string",
+      "Value" : null
+    },
+    "status" : {
+      "Name" : "status",
+      "Type" : "string",
+      "Value" : "-1"
+    }
+  }
+}

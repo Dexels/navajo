@@ -24,7 +24,7 @@ public class PerformanceTest {
 		this.client = NavajoClientFactory.getClient();
 		this.client.setUsername("username");
 		this.client.setPassword("password");
-		this.client.setServers(new String[]{"test.ortlink.com/navajo"});
+		this.client.setServerUrls(new String[]{"test.ortlink.com/navajo"});
 	}
 	
 	@Test
@@ -32,7 +32,7 @@ public class PerformanceTest {
 		int count = 5;
 		long start = System.currentTimeMillis();
 		for (int i=0; i<count;i++) {
-			Navajo init = client.doSimpleSend("club/InitSearchClub");
+			Navajo init = client.doSimpleSend(null, "club/InitSearchClub");
 			init.getProperty("ClubSearch/ClubName").setAnyValue(randomString(3));
 			Navajo process = client.doSimpleSend(init, "club/ProcessSearchClub");
 			process.write(System.out);

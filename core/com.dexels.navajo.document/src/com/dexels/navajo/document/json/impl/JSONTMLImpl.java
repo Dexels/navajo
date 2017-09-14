@@ -20,6 +20,7 @@ import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.TmlNavajoTypeSerializer;
 import com.dexels.navajo.document.json.TmlPropertySerializer;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.ClockTime;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -50,7 +51,11 @@ public class JSONTMLImpl implements JSONTML {
 		om = new ObjectMapper().enableDefaultTyping();
 		
 		SimpleModule module = new SimpleModule("MyModule", Version.unknownVersion());
-		module.addSerializer(Binary.class, new TmlNavajoTypeSerializer());
+        module.addSerializer(Binary.class, new TmlNavajoTypeSerializer());
+        module.addSerializer(ClockTime.class, new TmlNavajoTypeSerializer());
+        module.addSerializer(ClockTime.class, new TmlNavajoTypeSerializer());
+
+		
 		module.addSerializer(Property.class, new TmlPropertySerializer());
 		om.registerModule(module);
 	}
@@ -183,7 +188,9 @@ public class JSONTMLImpl implements JSONTML {
     }
 
 	private void format(JsonGenerator jg, Message m, boolean arrayElement) throws Exception {
-
+	    if (m.getMode().equals(Message.MSG_MODE_IGNORE)) {
+            return;
+        }
 		if (!arrayElement && !m.getName().equals(TOP_LEVEL_MSG) ) {
 			jg.writeFieldName(  m.getName() );
 		}
@@ -287,6 +294,7 @@ public class JSONTMLImpl implements JSONTML {
  			if ( ep != null ) {
 				if ( ep.getType().equals(Property.SELECTION_PROPERTY) && value != null) {
 					Selection s = NavajoFactory.getInstance().createSelection(p.getRootDoc(), value.toString(), value.toString(), true);
+					prop.setCardinality(ep.getCardinality());
 					prop.setType(ep.getType());
 					prop.addSelection(s);
 				} else {

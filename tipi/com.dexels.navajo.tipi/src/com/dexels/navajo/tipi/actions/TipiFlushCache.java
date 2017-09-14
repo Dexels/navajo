@@ -1,7 +1,5 @@
 package com.dexels.navajo.tipi.actions;
 
-import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 

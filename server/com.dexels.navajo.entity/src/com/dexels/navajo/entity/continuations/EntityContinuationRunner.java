@@ -2,13 +2,19 @@ package com.dexels.navajo.entity.continuations;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +24,7 @@ import org.eclipse.jetty.continuation.Continuation;
 import org.eclipse.jetty.continuation.ContinuationSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoLaszloConverter;
@@ -52,16 +59,30 @@ public class EntityContinuationRunner implements TmlRunnable {
 
     private EntityDispatcher entityDispatcher;
     private DispatcherInterface dispatcher;
+    private String contentEncoding;
+    private String acceptEncoding;
 
     public EntityContinuationRunner(HttpServletRequest request, HttpServletResponse response) {
         this.request = request;
         this.response = response;
         continuation = ContinuationSupport.getContinuation(request);
-        continuation.setTimeout(10000000);
-        continuation.suspend();
+        continuation.setTimeout(5*60*1000L); // 5 minutes
+        continuation.suspend(response);
+        
+        if (continuation.isExpired()) {
+            logger.warn("Expired continuation!");
+            abort("Internal server error");
+        }
+        if (!continuation.isInitial()) {
+            logger.warn("Non-initial continuation!");
+            abort("Internal server error");
+        }
 
         attributes = new HashMap<String, Object>();
         attributes.put("queueName", QUEUE_NAME);
+        
+        contentEncoding = request.getHeader("Content-Encoding");
+        acceptEncoding = request.getHeader("Accept-Encoding");
     }
 
     public void setEntityDispatcher(EntityDispatcher ed) {
@@ -114,6 +135,7 @@ public class EntityContinuationRunner implements TmlRunnable {
         } catch (IOException e1) {
             logger.error("Error: ", e1);
         }
+        continuation.complete();
     }
 
     public long getStartedAt() {
@@ -178,25 +200,32 @@ public class EntityContinuationRunner implements TmlRunnable {
         if (outputEtag != null) {
             response.setHeader("etag", outputEtag);
         }
-        if (outputFormat.equals("json")) {
-            response.setHeader("content-type", "application/json");
-            Writer w = new OutputStreamWriter(response.getOutputStream());
-            JSONTML json = JSONTMLFactory.getInstance();
-            try {
-                json.format(responseNavajo, w, true);
-            } catch (Exception e) {
-                logger.error("Error in writing entity output in JSON!", e);
-                fail(new ServletException("Error producing output"));
-                return;
+        
+        
+        try (OutputStream out = getOutputStream(acceptEncoding, response.getOutputStream())) {
+            if (outputFormat.equals("json")) {
+                response.setHeader("content-type", "application/json");
+                Writer w = new OutputStreamWriter(out);
+                JSONTML json = JSONTMLFactory.getInstance();
+                try {
+                    json.format(responseNavajo, w, true);
+                } catch (Exception e) {
+                    logger.error("Error in writing entity output in JSON!", e);
+                    fail(new ServletException("Error producing output"));
+                    return;
+                }
+                w.close();
+            } else if (outputFormat.equals("birt")) {
+                response.setHeader("content-type", "text/xml");
+                Writer w = new OutputStreamWriter(out);
+                NavajoLaszloConverter.writeBirtXml(responseNavajo,w );
+                w.close();
+            } else {
+                response.setHeader("content-type", "text/xml");
+                responseNavajo.write(out);
             }
-            w.close();
-        } else if (outputFormat.equals("birt")) {
-            response.setHeader("content-type", "text/xml");
-            NavajoLaszloConverter.writeBirtXml(responseNavajo, response.getWriter());
-        } else {
-            response.setHeader("content-type", "text/xml");
-            responseNavajo.write(response.getOutputStream());
         }
+      
     }
 
     @Override
@@ -276,6 +305,41 @@ public class EntityContinuationRunner implements TmlRunnable {
     public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException, UnsupportedEncodingException, NavajoException {
         throw new UnsupportedOperationException("EntityRunnable does not support writeOutput");
 
+    }
+    
+    private static OutputStream getOutputStreamByEncoding(String encoding, OutputStream source) throws IOException {
+        if(AsyncRequest.COMPRESS_JZLIB.equals(encoding)) {
+            return new DeflaterOutputStream(source);
+        } else if(AsyncRequest.COMPRESS_GZIP.equals(encoding)) {
+            return new java.util.zip.GZIPOutputStream(source);
+        }
+        // unsupported:
+        return null;
+    }
+    private  OutputStream getOutputStream(String acceptEncoding, OutputStream source) throws IOException {
+        if(acceptEncoding == null) {
+            return source;
+        } else {
+            List<String> accepted = Arrays.asList(acceptEncoding.split(","));
+            for (String encoding : accepted) {
+                OutputStream o = getOutputStreamByEncoding(encoding, source);
+                if(o!=null) {
+                    response.setHeader("Content-Encoding", encoding);
+                    return o;
+                }
+            }
+            return source;
+        }
+
+    }
+
+    public InputStream getRequestInputStream() throws IOException {
+        if (contentEncoding != null && contentEncoding.equals(AsyncRequest.COMPRESS_JZLIB)) {
+            return new InflaterInputStream(request.getInputStream());
+        } else if (contentEncoding != null && contentEncoding.equals(AsyncRequest.COMPRESS_GZIP)) {
+            return new java.util.zip.GZIPInputStream(request.getInputStream());
+        }
+        return request.getInputStream();
     }
 
 }

@@ -1,62 +1,51 @@
 package com.dexels.navajo.document.stream;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.stream.api.Method;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
-import rx.Observable;
-
 public class NavajoStreamSerializer {
 
-	private int tagDepth = 0;
+	private volatile int tagDepth = 0;
 	private Stack<String> messageNameStack = new Stack<>();
 	private Stack<Boolean> messageIgnoreStack = new Stack<>();
-	private final Map<String,Integer> arrayCounter = new HashMap<>();
+//	private final Map<String,AtomicInteger> arrayCounter = new ConcurrentHashMap<>();
+	private final Stack<AtomicInteger> counterStack = new Stack<>();
 	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamSerializer.class);
 	public static final int INDENT = 3;
 
 	public NavajoStreamSerializer() {
 	}
 	
-	// TODO Does this break backpressure?
-	public Observable<byte[]> feed(final NavajoStreamEvent streamEvents) {
-		return Observable.create(subscribe->{
-			Writer w = new Writer(){
-				@Override
-				public void write(char[] cbuf, int off, int len) throws IOException {
-					if(len>0) {
-						String fragment = new String(Arrays.copyOfRange(cbuf, off, off+len));
-						subscribe.onNext( fragment.getBytes(StandardCharsets.UTF_8));
-					} else {
-					}
-				}
-
-				@Override
-				public void flush() throws IOException {}
-
-				@Override
-				public void close() throws IOException {}
-			};
-			processNavajoEvent(streamEvents,w);
-			subscribe.onCompleted();
-		});
+	public byte[] serialize(final NavajoStreamEvent event) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		OutputStreamWriter writer = new OutputStreamWriter(baos);
+//		StringWriter w = new StringWriter();
+		processNavajoEvent(event, writer);
+		try {
+			writer.close();
+		} catch (IOException e) {
+			logger.error("Error: ", e);
+		}
+		return baos.toByteArray();
 	}
-	
+	@SuppressWarnings("unchecked")
 	private void processNavajoEvent(NavajoStreamEvent event,Writer w) {
 		try {
 			String name = event.path();
@@ -81,7 +70,7 @@ public class NavajoStreamSerializer {
 					messageIgnoreStack.push("ignore".equals(event.attribute("mode")));
 					String arrayName = messageNameStack.peek();
 					String pth = currentPath();
-					Integer index = arrayCounter.get(pth);
+					AtomicInteger index = counterStack.peek();
 	
 					if(index==null) {
 						System.err.println("no current index for path: "+pth);
@@ -90,8 +79,9 @@ public class NavajoStreamSerializer {
 						printStartTag(w, INDENT * (tagDepth+1),true,"message",createMessageAttributes("name=\""+arrayName+"\" index=\""+index+"\" type=\"array_element\"",event.attributes()));
 						tagDepth++;
 					}
-					arrayCounter.put(pth, ++index);
-					messageNameStack.push("@"+index);
+					int ind = index.getAndIncrement();
+//					arrayCounter.put(pth, ++index);
+					messageNameStack.push("@"+ind);
 	//				startPath(mstart, this.tagStack, outputStreamWriter);
 					break;
 				case MESSAGE:
@@ -125,16 +115,17 @@ public class NavajoStreamSerializer {
 					}
 					messageNameStack.push(name);
 					tagDepth++;
-
-					arrayCounter.put(currentPath(), 0);
+					counterStack.push(new AtomicInteger());
+//					arrayCounter.put(currentPath(), new AtomicInteger(0));
 					break;
 				case ARRAY_DONE:
 					if(!messageIgnoreStack.contains(true)) {
 						printEndTag(w, INDENT*tagDepth, "message");
 					}
 //					printCloseTag(w, INDENT*tagStack.size());
-					arrayCounter.remove(currentPath());
+//					arrayCounter.remove(currentPath());
 					tagDepth--;
+					counterStack.pop();
 					messageIgnoreStack.pop();
 					messageNameStack.pop();
 					break;
@@ -147,6 +138,19 @@ public class NavajoStreamSerializer {
 //					h.printElement(w, INDENT);
 					break;				
 				case NAVAJO_DONE:
+					List<Method> methods = (List<Method>) event.body();
+					if(methods.size()>0) {
+						printStartTag(w, INDENT * (tagDepth+1),true,"method","name=\""+name+"\" type=\"array\"");
+						methods.forEach(e->{
+							try {
+								e.write(w, INDENT * (tagDepth+2));
+							} catch (IOException e1) {
+								logger.error("Error: ", e1);
+							}
+						});
+						printEndTag(w, INDENT*(tagDepth+1), "method");
+						
+					}
 					w.write("</tml>\n");
 					break;
 				case BINARY_STARTED:

@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -11,6 +14,7 @@ import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 
 public class HttpNavajoConnector extends TipiBaseConnector {
+    private static final Logger logger = LoggerFactory.getLogger(HttpNavajoConnector.class);
 
 	/**
 	 * 
@@ -50,12 +54,11 @@ public class HttpNavajoConnector extends TipiBaseConnector {
 		}
 		if (name.equals("username")) {
 			myContext.getClient().setUsername((String) object);
+	        logger.info("Setting username {} for Client {}", (String) object, myContext.getClient().hashCode());
+
 		}
 		if (name.equals("password")) {
 			myContext.getClient().setPassword((String) object);
-		}
-		if (name.equals("retryAttempt")) {
-			myContext.getClient().setRetryAttempts((Integer) object);
 		}
 
 		super.setComponentValue(name, object);

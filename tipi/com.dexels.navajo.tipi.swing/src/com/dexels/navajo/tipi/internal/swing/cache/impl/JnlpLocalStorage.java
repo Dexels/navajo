@@ -34,7 +34,8 @@ public class JnlpLocalStorage implements LocalStorage {
 
     private final static Logger logger = LoggerFactory.getLogger(JnlpLocalStorage.class);
 
-    private final String id;
+    @SuppressWarnings("unused")
+	private final String id;
 
     public JnlpLocalStorage(String relativePath, CookieManager cm, String id) throws UnavailableServiceException {
         this.id = id;
@@ -198,7 +199,7 @@ public class JnlpLocalStorage implements LocalStorage {
         String[] splitted = muffinlocation.split("tipicache_");
         String muffinRelativePath = splitted[1].substring(0, splitted[1].indexOf("_") +1 );
         String path = splitted[1].substring(splitted[1].indexOf("_") + 1);
-        String location = path.replaceAll("_", "/");
+        path.replaceAll("_", "/");
         System.out.println(muffinRelativePath);
     }
 }

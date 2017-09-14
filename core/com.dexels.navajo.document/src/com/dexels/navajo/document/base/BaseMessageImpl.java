@@ -23,12 +23,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -867,6 +865,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         cp.setExtends(getExtends());
         cp.setScope(getScope());
         cp.setMethod(getMethod());
+        cp.setOrderBy(getOrderBy());
 
         // If definition message is available, copy it as well.
         if (isArrayMessage() && getDefinitionMessage() != null) {
@@ -1202,7 +1201,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (messageList != null && allOther == null) {
             return false;
         }
-        if (allOther != null && messageList != null && allOther.size() != messageList.size()) {
+        if (allOther != null && allOther.size() != messageList.size()) {
             return false;
         }
         if (allOther != null) {
@@ -1258,6 +1257,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public final void setDefinitionMessage(Message m) {
+        if (!m.getType().equals(Message.MSG_TYPE_DEFINITION)) {
+            m.setType(Message.MSG_TYPE_DEFINITION);
+        }
         this.definitionMessage = (BaseMessageImpl) m;
         // Remove from child list, to be sure.
         if (messageList != null) {
@@ -1429,79 +1431,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         return 0;
     }
     
-    @Override
-    public boolean messageEquals(Object obj) {
-        if (! (obj instanceof Message)) {
-            return false;
-        }
-        Message otherMessage = (Message) obj;
-        if (!otherMessage.getName().equals(getName())) {
-            return false;
-        }
-        if (!otherMessage.getType().equals(getType())) {
-            return false;
-        }
-        List<Property> myProps = getAllProperties();
-        List<Property> otherProps = otherMessage.getAllProperties();
-        if (myProps.size() != otherProps.size()) {
-            return false;
-        }
-        List<Message> myMessages = getAllMessages();
-        List<Message> otherMessages = otherMessage.getAllMessages();
-        if (myMessages.size() != otherMessages.size()) {
-            return false;
-        }
-        
-        if (getType().equals(Message.MSG_TYPE_ARRAY)) {
-            if (this.getElements().size() != otherMessage.getElements().size()) {
-                return false;
-            }
-            Set<Integer> coveredIndexes = new HashSet<>();
-            for (int i=0; i<this.getElements().size(); i++) {
-                Message arrayelem = this.getElements().get(i);
-                boolean foundMatch = false;
-                for (int j=0; j<otherMessage.getElements().size(); j++) {
-                    if (coveredIndexes.contains(j)) {
-                        continue;
-                    }
-                    Message otherArrayelem = otherMessage.getElements().get(j);
-                    if (arrayelem.messageEquals(otherArrayelem)) {
-                        foundMatch = true;
-                        coveredIndexes.add(j);
-                        break;
-                    }
-                }
-                if (!foundMatch) {
-                    return false;
-                }
-            }
-            
-            
-        } else {
-            for (Property p : getAllProperties()) {
-                Property otherProperty = otherMessage.getProperty(p.getName());
-                if (otherProperty == null) {
-                    return false;
-                }
-                if (!p.propertyEquals(otherProperty)) {
-                    return false;
-                }
-            }
-            for (Message m : myMessages) {
-                Message otherMsg = otherMessage.getMessage(m.getName());
-                if (otherMsg == null) {
-                    return false;
-                }
-                if (!m.messageEquals(otherMsg)) {
-                    return false;
-                }
-            }
-        }
-        
-        return true;
-        
-        
-    }
 
     @Override
     public void firePropertyDataChanged(Property p, Object oldValue, Object newValue) {
@@ -1785,30 +1714,44 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public void maskMessage(Message mask, String method) {
-
+        if (isArrayMessage() && !mask.isArrayMessage()) {
+            // No need to check any properties or submessages
+            if (this.getParentMessage() != null) {
+                this.getParentMessage().removeMessage(this);
+            } else {
+                this.getRootDoc().removeMessage(this);
+            }
+            
+            return;
+        }
         // Mask all properties.
         Iterator<Property> allProperties = new ArrayList<Property>(this.getAllProperties()).iterator();
 
         while (allProperties.hasNext()) {
             Property p = allProperties.next();
             Property m_p = mask.getProperty(p.getName());
+            
+            // If we didn't find a mask property but we are an array element, check for definition message
+            if (m_p == null && this.getIndex() > -1) {
+                m_p = ((BaseMessageImpl) mask).getPropertyDefinition(p.getName());
+            }
+            
+            if (m_p == null) {
+                removeProperty(p);
+                continue;
+            }
 
             // A method that is null or "" is considered to always match
-            boolean matchMethod = m_p == null || m_p.getMethod() == null || m_p.getMethod().equals("")
+            boolean matchMethod =  m_p.getMethod() == null || m_p.getMethod().equals("")
                     || p.getMethod().equals("") || p.getMethod().equals(method);
 
-            // It's an array message element. Check mask's definition message if it exists..
-            if (this.getIndex() >= 0) { 
-                if (!mask.isArrayMessage() || ((BaseMessageImpl) mask).getPropertyDefinition(p.getName()) == null) {
-                    removeProperty(p);
-                }
-            } else {
-                if (mask.getProperty(p.getName()) == null) {
-                    removeProperty(p);
-                }
-            }
             if (!matchMethod) {
                 removeProperty(p);
+            } else if (!p.getType().equals(m_p.getType()) && m_p.getType() != Property.SELECTION_PROPERTY) { 
+                if (p.getValue() != null) {
+                    logger.debug("Overriding property type for {} - {} to {}", p.getFullPropertyName(), p.getType(), m_p.getType());
+                }
+                p.setType(m_p.getType());
             }
         }
 
@@ -1818,51 +1761,46 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                 child.maskMessage(mask, method);
             }
             return;
-        }
+        } 
 
         // Mask all messages.
         Iterator<Message> allMessages = new ArrayList<Message>(this.getAllMessages()).iterator();
         while (allMessages.hasNext()) {
 
             Message m = allMessages.next();
+            Message mask_message = mask.getMessage(m.getName());
+            if (mask_message == null && this.getIndex() > -1) {
+                mask_message = mask.getDefinitionMessage().getMessage(m.getName());
+            }
+                
             
-            boolean matchMethod = m.getMethod().equals("") || method.equals("") || (mask.getMessage(m.getName()) != null && mask.getMessage(m.getName()).getMethod().equals(""))
-                    || m.getMethod().equals(method);
+            if (mask_message == null ) {
+                removeMessage(m);
+                continue;
+            }
+            
+            boolean matchMethod = m.getMethod().equals("") || method.equals("") || mask_message.getMethod().equals("") || m.getMethod().equals(method);
 
             if (!matchMethod) {
                 removeMessage(m);
                 continue;
             }
 
-            // Check if message m exists in the mask. If the mask is an array
-            // message, we must look in the definition message.
-            if (mask.isArrayMessage() && mask.getDefinitionMessage() != null) {
-                if (mask.getDefinitionMessage().getMessage(m.getName()) == null) {
-                    removeMessage(m);
-                    continue;
-                }
-                m.maskMessage(mask.getDefinitionMessage().getMessage(m.getName()), method);
-                continue;
-            } else {
-                if (mask.getMessage(m.getName()) == null) {
-                    removeMessage(m);
-                    continue;
-                }
-            }
+            
 
             // If message m is an array message, mask each element
             if (m.isArrayMessage()) {
-                for (int i = 0; i < m.getElements().size(); i++) {
-                    if (mask.getDefinitionMessage() != null) {
-                        m.getElements().get(i).maskMessage(mask.getDefinitionMessage().getMessage(m.getName()), method);
-
-                    } else {
-                        m.getElements().get(i).maskMessage(mask.getMessage(m.getName()), method);
-
+                Message definitionMessage = mask_message.getDefinitionMessage();
+                if (definitionMessage == null) {
+                    logger.debug("Unable to mask {} since the mask has no defintion message", m.getName());
+                    
+                } else {
+                    for (int i = 0; i < m.getElements().size(); i++) {
+                            m.getElements().get(i).maskMessage(mask_message, method);
                     }
                 }
             } else {
-                m.maskMessage(mask.getMessage(m.getName()), method);
+                m.maskMessage(mask_message, method);
             }
 
         }

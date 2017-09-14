@@ -55,7 +55,6 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	private final ObjectNode rootNode;
 
 	private final String instance;
-    private String url;
 
 	private final Map<String, Object> userAttributes;
 	private final OAuthToken token;
@@ -72,6 +71,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 		this.token = null;
 	}
 
+	@SuppressWarnings("deprecation")
 	protected BaseRuntimeImpl(String articleName, File articleFile,String instance, OAuthToken token)
 			throws IOException {
 		article = new CaseSensitiveXMLElement();
@@ -198,16 +198,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 		return instance;
 	}
 	
-	@Override
-    public String getURL() {
-        return url;
-    }
-	
-	@Override
-    public void setURL(String url) {
-        this.url = url;
-    }
-	
+
 	@Override
 	public void execute(ArticleContext context) throws APIException, NoJSONOutputException {
 		verifyScopes();

@@ -1,6 +1,7 @@
 package com.dexels.navajo.mgmt.status;
 
 import com.dexels.navajo.compiler.JavaCompiler;
+import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
@@ -15,11 +16,12 @@ public class NavajoServerHealth implements ServerHealthCheck {
     private TribeManagerInterface tribeManagerInterface;
     private WorkFlowManagerInterface workflowManagerInterface;
     private TmlScheduler tmlScheduler;
+    private EntityManager entityManager;
 
     @Override
     public boolean isOk() {
-        return navajoConfig != null && dispatcherInterface != null && javaCompiler != null && workflowManagerInterface != null && tribeManagerInterface != null
-                && tmlScheduler != null;
+        return navajoConfig != null && dispatcherInterface != null && javaCompiler != null && workflowManagerInterface != null 
+                && tribeManagerInterface != null && tmlScheduler != null && entityManager != null && entityManager.isFinishedCompiling();
     }
 
     @Override
@@ -48,6 +50,12 @@ public class NavajoServerHealth implements ServerHealthCheck {
         }
         if (tmlScheduler == null) {
             return "No tmlScheduler";
+        }
+        if (entityManager == null) {
+            return "No entityManager";
+        }
+        if (!entityManager.isFinishedCompiling()) {
+            return "EntityManager compiling";
         }
         return "";
     }
@@ -100,4 +108,11 @@ public class NavajoServerHealth implements ServerHealthCheck {
         this.workflowManagerInterface = null;
     }
 
+    public void setEntityManager(EntityManager ent) {
+        this.entityManager = ent;
+    }
+
+    public void clearEntityManager(EntityManager ent) {
+        this.entityManager = null;
+    }
 }

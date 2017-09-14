@@ -1201,7 +1201,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
     public void doRunReport(String format, String orientation, int[] margins) throws TipiException {
         Binary b;
         try {
-            b = mm.getTableReport(format, orientation, margins);
+            b = mm.getTableReport(myContext.getClient(), format, orientation, margins);
         } catch (NavajoException e) {
             throw new TipiException("Error calling birt report!", e);
         }

@@ -47,6 +47,7 @@ public class RESTAdapter extends NavajoMap {
     protected List<String> parameters = new ArrayList<String>();
     protected Map<String, String> headers = new HashMap<String, String>();
     private String textContent;
+    private boolean jsonResponse = true;
 
     
     public RESTAdapter() {
@@ -124,6 +125,11 @@ public class RESTAdapter extends NavajoMap {
         this.messagesPerRequest = count;
     }
 
+    
+    public void setJsonResponse(boolean jsonResponse) {
+        this.jsonResponse  = jsonResponse;
+    }
+
     @Override
     public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException {
 
@@ -197,9 +203,13 @@ public class RESTAdapter extends NavajoMap {
             if (od.getMessage("__parms__") != null) {
                 od.removeMessage("__parms__");
             }
+            if (od.getMessage("__aaa__") != null) {
+                od.removeMessage("__aaa__");
+            }
             
             try {
                 json.format(od, w, true);
+                
                 bContent.getOutputStream().write(w.toString().getBytes("UTF-8"));
             } catch (Exception e) {
                 logger.error("Exception on parsing input navajo as JSON! Not performing REST call!");
@@ -223,23 +233,54 @@ public class RESTAdapter extends NavajoMap {
         responseCode = http.getResponseCode();
         responseMessage = http.getResponseMessage();
         try {
-            if (result != null) {
-                rawResult = new String(result.getData());
-                inDoc = json.parse(result.getDataAsStream(), topMessage);
+            if (result == null) {
+                throw new UserException(-1, "Null result");
+            }
+            
+            
+            if (responseCode >= 300) {
+                logger.warn("Got a non-200 response code: {}!", responseCode);
+                if (breakOnException) {
+                    throw new UserException(responseCode, responseMessage);
+                }
+            }
+            rawResult = new String(result.getData());
+            if (jsonResponse) {
+                if (http.getResponseContentType() != null && http.getResponseContentType().contains("application/json")) {
+                    try {
+                        inDoc = json.parse(result.getDataAsStream(), topMessage);
+                    } catch (Throwable t) {
+                        logger.warn("Unable to parse response as JSON!", t);
+                        if (breakOnException) {
+                            throw t;
+                        }
+                    }
+                } else if (http.getResponseContentType() == null ) {
+                    logger.info("No response content type - creating empty navajo as response");
+                    inDoc = NavajoFactory.getInstance().createNavajo();
+                } else {
+                    logger.warn("Unexpected output content type: {}", http.getResponseContentType());
+                    if ( breakOnException) {
+                        throw new UserException(-1, "Unexpected content type: " + http.getResponseContentType());
+                    }
+                }
             } else {
+                logger.debug("Non-json response - creating empty Navajo");
                 inDoc = NavajoFactory.getInstance().createNavajo();
             }
-            continueAfterRun();
-
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            logger.error("Exception on getting response", e);
             if (breakOnException) {
+                logger.warn("Raw response data: {}", rawResult);
                 throw new UserException(e.getMessage(), e);
             } else {
-                logger.warn("Exception on parsing response, but breakOnException was set. Continuing!");
+                logger.warn("Exception on getting response, but breakOnException was set. Continuing!");
             }
-
         }
-
+        if (inDoc == null) {
+            logger.warn("No indoc - creating empty one");
+            inDoc = NavajoFactory.getInstance().createNavajo();
+        }
     }
 
     private void setupHttpMap(HTTPMap http, Binary content) throws UserException {

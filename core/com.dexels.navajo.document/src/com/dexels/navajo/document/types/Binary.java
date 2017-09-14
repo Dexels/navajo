@@ -21,11 +21,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -100,7 +104,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     private Map<String,List<String>> urlMetaData = null;
 
 	private Writer pushWriter;
-    
+
+	private OutputStream pushStream;
+
     private static final Logger logger = LoggerFactory.getLogger(Binary.class);
     /**
      * Construct a new Binary object with data from an InputStream It does close
@@ -303,12 +309,15 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
 	
 	public BinaryDigest getDigest() {
-		if(!isResolved()) {
+		if(!isResolved() && this.digest ==null) {
 			try {
 				resolveData();
 			} catch (IOException e) {
 				logger.error("Error: ", e);
 			}
+		}
+		if(this.digest==null) {
+			return null;
 		}
 		return new BinaryDigest(this.digest);
 	}
@@ -379,10 +388,10 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	parseFromReader(reader);
     }
 
-    public Binary(URL u, boolean lazyMetaData, boolean lazyData) throws IOException {
+    public Binary(URL u, boolean lazyData) throws IOException {
         super(Property.BINARY_PROPERTY);
     	this.lazyURL = u;
-    	if(lazyMetaData && lazyData) {
+    	if(lazyData) {
     		// nothing to do now
     		return;
     	}
@@ -421,11 +430,40 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	this.pushWriter.write(content);
     }
     
-    public void finishPushContent() throws IOException {
-    	this.pushWriter.flush();
-    	this.pushWriter.close();
+    public void finishPushContent() throws IOException  {
+		if(this.pushWriter!=null) {
+			this.pushWriter.flush();
+			this.pushWriter.close();
+			this.pushWriter = null;
+		} else if(this.pushStream!=null) {
+			this.pushStream.flush();
+			this.pushStream.close();
+			this.pushStream = null;
+		} else {
+			logger.error("Con not finish push as none seem to have started");
+		}
+    }
+
+    public void startBinaryPush()  {
+        try {
+			pushStream = null;
+			pushStream = createTempFileOutputStream();
+		} catch (IOException e) {
+			logger.error("Error starting binary push:",e);
+			throw new RuntimeException(e);
+		}
     }
     
+    public void pushContent(byte[] data) throws RuntimeException {
+        try {
+			pushStream.write(data);
+		} catch (IOException e) {
+			logger.error("Error pushing data into binary:",e);
+			throw new RuntimeException(e);
+		}
+    }
+
+
     private void parseFromReader(Reader reader) throws IOException {
         OutputStream fos = null;
         try {
@@ -515,7 +553,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 //    }
     
     public long getLength() {
-    	if(urlMetaData!=null) {
+    	if(urlMetaData!=null && !isResolved()) {
     		System.err.println("URLMETA: "+urlMetaData);
     		List<String> lengthHeaders = urlMetaData.get("Content-Length");
     		if(lengthHeaders!=null && !lengthHeaders.isEmpty()) {
@@ -747,6 +785,100 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     		return dataFile;
     	}
     }
+    /**
+     * Will return a
+     * @param bufferSize
+     * @return
+     */
+    public Iterable<byte[]> getDataAsIterable(final int bufferSize) {
+		if(inMemory!=null) {
+			logger.info("Binary: in memory detected bytes: "+inMemory.length);
+			if(inMemory.length> bufferSize) {
+				logger.warn("Should split, this array is too long!");
+			}
+			List<byte[]> result = new LinkedList<>();
+			result.add(inMemory);
+			return result;
+		}
+		final FileChannel channel = getDataAsChannel();
+		// TODO Warning, I think this leaks filepointers, as this channel will never get closed,
+		// better to emit this thing as an Observable so we can close it on unsubscribe;
+		
+		final ByteBuffer outputBuffer = ByteBuffer.allocate(bufferSize);
+    	return new Iterable<byte[]>(){
+
+			@Override
+			public Iterator<byte[]> iterator() {
+				return new Iterator<byte[]>(){
+
+					@Override
+					public boolean hasNext() {
+						try {
+							if(channel.position() >= channel.size()) {
+								channel.close();
+								return false;
+							}
+							return true;
+						} catch (IOException e) {
+							logger.error("Error: ", e);
+						}
+						return false;
+					}
+
+					@Override
+					public byte[] next() {
+						try {
+							int dataRead = channel.read(outputBuffer);
+							outputBuffer.flip();
+							byte[] result = new byte[dataRead];
+							outputBuffer.get(result);
+							return result;
+						} catch (IOException e) {
+							logger.error("Error: ", e);
+						}
+							
+						return null;
+					}
+				};
+			}
+		};
+    }
+    
+    public FileChannel getDataAsChannel() {
+    
+//    	if (NavajoFactory.getInstance().isSandboxMode()) {
+//		ByteArrayInputStream bais = new ByteArrayInputStream(NavajoFactory.getInstance().getHandle(dataFile.getName()));
+//		return bais;
+//	} else {
+		if(inMemory!=null) {
+			logger.info("Binary: in memory detected bytes: "+inMemory.length);
+			throw new UnsupportedOperationException("Not yet implemented: Streaming from memory");
+		}
+        if (lazySourceFile != null) {
+            try {
+            	RandomAccessFile rf = new RandomAccessFile(lazySourceFile, "r");
+            	return rf.getChannel();
+            } catch (FileNotFoundException e) {
+            	logger.error("Error: ", e);
+            	return null;
+            }
+        }
+        if (dataFile != null) {
+            try {
+            	RandomAccessFile rf = new RandomAccessFile(dataFile, "r");
+            	return rf.getChannel();
+            } catch (FileNotFoundException e) {
+            	logger.error("Error: ", e);
+            	return null;
+            }
+        } else if(this.lazyURL!=null) {
+			throw new UnsupportedOperationException("Not yet implemented: Remote direct streaming from URL");
+        } else {        
+            return null;
+        }
+
+    }
+    
     
     public final InputStream getDataAsStream() {
 //    	if (NavajoFactory.getInstance().isSandboxMode()) {
@@ -931,7 +1063,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
        if (dataAsStream!=null) {
            copyResource(os, dataAsStream,true);
        }
-//       logger.info("Copied to stream");
        os.close();
    }
 
@@ -1055,63 +1186,27 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     /**
      * Custom deserialization is needed.
      */
-    private void readObject(ObjectInputStream aStream) throws IOException, ClassNotFoundException {
-    	aStream.defaultReadObject();
-    	//manually deserialize
-    	loadBinaryFromStream(aStream, false);
-    }
+	private void readObject(ObjectInputStream aStream) throws IOException, ClassNotFoundException {
+		aStream.defaultReadObject();
+		// manually deserialize
+		loadBinaryFromStream(aStream, false);
+	}
 
-     /**
-     * Custom serialization is needed.
-     */
-    private void writeObject(ObjectOutputStream aStream) throws IOException {
-    	aStream.defaultWriteObject();
-    	//manually serialize superclass
-    	if ( dataFile != null ) {
-    		copyResource(aStream, new FileInputStream(dataFile),true);
-    	} else if ( lazySourceFile != null ) {
-    		copyResource(aStream, new FileInputStream(lazySourceFile),true);
-    	}
-    	aStream.flush();
-    }
-     
-    public static void main(String [] args) throws Exception {
-    	
-    	Navajo doc = NavajoFactory.getInstance().createNavajo();
-    	Message m = NavajoFactory.getInstance().createMessage(doc, "Test");
-    	doc.addMessage(m);
-    	Property p = NavajoFactory.getInstance().createProperty(doc, "Bin", "binary", "", 0, "", "out");
-    	m.addProperty(p);
-    	Binary b1 = new Binary( new File("responsetimes_290307.xls" ), false );
-    	b1.setMimeType("application/excel");
-    	p.setValue(b1);
-    	
-    	FileOutputStream fos = new FileOutputStream(new File("a"));
-    	doc.write(fos);
-    	fos.close();
-    	
-//    	doc.write(System.err);
-    	
-//    	ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/home/arjen/a")));
-//    	oos.writeObject(b1);
-//    	oos.close();
-//    	
-//    	ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("/home/arjen/a")));
-//    	Binary b2 = (Binary) ois.readObject();
-//    	ois.close();
-    	
-//    	logger.info(b2.getMimeType());
-    	
-    	FileInputStream fis = new FileInputStream(new File("a"));
-    	Navajo doc2 = NavajoFactory.getInstance().createNavajo(fis);
-    	fis.close();
-    	
-    	Binary b2 = (Binary) doc2.getProperty("/Test/Bin").getTypedValue();
-    	logger.info(b2.getMimeType());
-    	
-    }
+	/**
+	 * Custom serialization is needed.
+	 */
+	private void writeObject(ObjectOutputStream aStream) throws IOException {
+		aStream.defaultWriteObject();
+		// manually serialize superclass
+		if (dataFile != null) {
+			copyResource(aStream, new FileInputStream(dataFile), true);
+		} else if (lazySourceFile != null) {
+			copyResource(aStream, new FileInputStream(lazySourceFile), true);
+		}
+		aStream.flush();
+	}
 
-	public void setFormatDescriptor(FormatDescription fd) {
+    public void setFormatDescriptor(FormatDescription fd) {
 		currentFormatDescription = fd;
 	}    	
 }

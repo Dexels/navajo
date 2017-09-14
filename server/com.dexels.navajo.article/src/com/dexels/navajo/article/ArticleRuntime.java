@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.oauth.api.Token;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,9 +51,6 @@ public interface ArticleRuntime {
 	public Object resolveScope(String name) throws APIException;
 
 	public String getInstance();
-	
-	public String getURL();
-    public void setURL(String url);
 
 	public ObjectNode getRootNode();
 
@@ -61,5 +59,9 @@ public interface ArticleRuntime {
 	public Map<String, Object> getUserAttributes();
 
 	public Token getToken();
+	
+	public void setAccess(Access a);
+
+    public Access getAccess();
 	
 }

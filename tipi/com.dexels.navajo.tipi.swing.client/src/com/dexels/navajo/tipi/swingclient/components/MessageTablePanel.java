@@ -35,6 +35,7 @@ import javax.swing.table.TableCellRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.document.BinaryOpenerFactory;
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.Message;
@@ -200,7 +201,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 	}
 
 	public void firePopupEvent(MouseEvent e) {
-		logger.info("Popupevent fired!!!!");
+		logger.debug("Popupevent fired!!!!");
 		stopCellEditing();
 		final int col = messageTable.getColumnModel().getColumnIndexAtX(
 				e.getX());
@@ -267,7 +268,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 					@Override
 					public final void actionPerformed(ActionEvent e) {
 						try {
-							Binary b = getTableReport(null, null, null);
+							Binary b = getTableReport(null, null, null, null);
 							BinaryOpenerFactory.getInstance().open(b);
 
 						} catch (Exception ex) {
@@ -1152,9 +1153,8 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 
 	}
 
-	public Binary getTableReport(String format, String orientation,
-			int[] margins) throws NavajoException {
-		return messageTable.getTableReport(format, orientation, margins);
+	public Binary getTableReport(ClientInterface ci, String format, String orientation,int[] margins) throws NavajoException {
+		return messageTable.getTableReport(ci, format, orientation, margins);
 	}
 
 }

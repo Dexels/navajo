@@ -137,7 +137,7 @@ public final class IntegerPropertyField extends PropertyField implements
 		} catch (PropertyTypeException ex1) {
 			if (longMode) {
 				if(initProperty!=null) {
-					initProperty.setValue((Long) null);
+//					initProperty.setValue((Long) null);
 				}
 
 			} else {

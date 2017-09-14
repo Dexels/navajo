@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tsl compiler for Navajo
 Bundle-SymbolicName: com.dexels.navajo.compiler.tsl
-Bundle-Version: 4.1.21.qualifier
+Bundle-Version: 4.1.29.qualifier
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.dependency,
@@ -56,3 +56,4 @@ Export-Package: com.dexels.navajo.compiler.tsl,com.dexels.navajo.compi
  avax.tools,com.dexels.osgicompiler,org.osgi.framework",navajotsl;uses
  :="org.osgi.framework"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
