@@ -40,6 +40,7 @@ public class ArticleListServlet extends ArticleBaseServlet implements Servlet {
 			}
 		}
 		
+        response.addHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("application/json; charset=utf-8");
 		try (PrintWriter pw = response.getWriter()) {
 			writer.writeValue(pw, rootNode);
