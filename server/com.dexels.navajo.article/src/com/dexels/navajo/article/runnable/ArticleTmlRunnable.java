@@ -102,9 +102,11 @@ public class ArticleTmlRunnable implements TmlRunnable{
             runtime.getAccess().setQueueId(this.getRequestQueue().getId());
             runtime.getAccess().queueTime = (int) (System.currentTimeMillis() - scheduledAt);
             
-            runtime.execute(context);
             httpResponse.addHeader("Access-Control-Allow-Origin", "*");
             httpResponse.setContentType("application/json; charset=utf-8");
+            
+            runtime.execute(context);
+            
             runtime.getAccess().setExitCode(Access.EXIT_OK);
         } catch (NoJSONOutputException e) {
             httpResponse.setContentType(e.getMimeType());
