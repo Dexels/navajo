@@ -57,6 +57,8 @@ public abstract class ArticleBaseServlet extends HttpServlet  {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
+		    response.addHeader("Access-Control-Allow-Origin", "*");
+	        response.setContentType("application/json; charset=utf-8");
 			doServiceImpl(request, response);
 		} catch (Throwable t1) {
 			APIException exception = (t1 instanceof APIException) ? (APIException)t1 : new APIException(t1.getMessage(), t1, APIErrorCode.InternalError);

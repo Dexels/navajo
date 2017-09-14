@@ -25,9 +25,6 @@ public class ArticleListServlet extends ArticleBaseServlet implements Servlet {
 	}
 	
 	protected void doServiceImpl(HttpServletRequest request, HttpServletResponse response) throws APIException {
-	    response.addHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("application/json; charset=utf-8");
-        
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode rootNode = mapper.createObjectNode();
 		boolean extended = request.getParameter(ARGUMENT_EXTENDED) != null ? true : false;
