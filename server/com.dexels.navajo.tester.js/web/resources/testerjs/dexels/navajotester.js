@@ -239,7 +239,7 @@ function runScript(script) {
         	type: "POST",
             url: "/navajo/" + instance,
             data: navajoinput,
-            headers: [{"X-Navajo-Tester": "true"},{"X-Navajo-Username":sessionStorage.user},{"X-Navajo-Password":sessionStorage.pass}],
+            headers: {"X-Navajo-Tester": "true","X-Navajo-Username":sessionStorage.user,"X-Navajo-Password":sessionStorage.password},
             success: function(xmlObj) {
               replaceXml(script, xmlObj);
               var stateObj = { script: script, xml:  serializer.serializeToString(xml) };
