@@ -1491,7 +1491,19 @@ public class StreamDocument {
 			}
 		};
 	}
-	
+
+	public static FlowableTransformer<ReplicationMessage, NavajoStreamEvent> toArray(String name) {
+		return new FlowableTransformer<ReplicationMessage, NavajoStreamEvent>() {
+
+			@Override
+			public Flowable<NavajoStreamEvent> apply(Flowable<ReplicationMessage> in) {
+				return in.concatMap(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,true))
+						.startWith(Flowable.just(Events.arrayStarted(name,Collections.emptyMap())))
+						.concatWith(Flowable.just(Events.arrayDone(name)));
+			}
+		};
+	}
+
 	public static FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> inMessage(String name) {
 		return new FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent>() {
 
@@ -1560,6 +1572,59 @@ public class StreamDocument {
 			.map(e->Prop.create(e.getKey(), e.getValue(), types.get(e.getKey())))
 			.collect(Collectors.toList());
 		return isArrayMessage ? Msg.createElement(properties) : Msg.create(properties);
+	}
+
+	public static ObservableOperator<Binary, byte[]> createBinary() {
+		return new ObservableOperator<Binary, byte[]>() {
+
+			@Override
+			public Observer<? super byte[]> apply(Observer<? super Binary> out) throws Exception {
+				Binary result = new Binary();
+				result.startBinaryPush();
+				return new Observer<byte[]>() {
+
+
+					@Override
+					public void onComplete() {
+						try {
+							result.finishPushContent();
+						} catch (IOException e) {
+							e.printStackTrace();
+							out.onError(e);
+							return;
+						} 
+						out.onNext(result);
+						out.onComplete();
+					}
+
+					@Override
+					public void onError(Throwable e) {
+						out.onError(e);
+					}
+
+					@Override
+					public void onNext(byte[] b) {
+						result.pushContent(b);
+					}
+
+					@Override
+					public void onSubscribe(Disposable d) {
+						out.onSubscribe(new Disposable() {
+							private boolean disposed = false;
+							@Override
+							public void dispose() {
+								disposed = true;
+							}
+
+							@Override
+							public boolean isDisposed() {
+								return disposed;
+							}});
+					}
+
+				};
+			}
+};
 	}
 	public static FlowableOperator<NavajoStreamEvent, NavajoStreamEvent> elementsInPath() {
 		return new FlowableOperator<NavajoStreamEvent, NavajoStreamEvent>() {

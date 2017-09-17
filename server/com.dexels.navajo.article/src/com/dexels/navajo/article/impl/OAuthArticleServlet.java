@@ -42,7 +42,6 @@ public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
  
     @Override
     protected void doServiceImpl(HttpServletRequest req, HttpServletResponse resp) throws APIException {
-       
         String token = getToken(req);
 
         OAuthToken oauthToken = null;

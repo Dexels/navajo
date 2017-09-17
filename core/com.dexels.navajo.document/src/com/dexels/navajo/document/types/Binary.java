@@ -838,8 +838,10 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 						}
 							
 						return null;
-					}};
-			}};
+					}
+				};
+			}
+		};
     }
     
     public FileChannel getDataAsChannel() {
@@ -1061,7 +1063,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
        if (dataAsStream!=null) {
            copyResource(os, dataAsStream,true);
        }
-//       logger.info("Copied to stream");
        os.close();
    }
 
@@ -1185,63 +1186,27 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     /**
      * Custom deserialization is needed.
      */
-    private void readObject(ObjectInputStream aStream) throws IOException, ClassNotFoundException {
-    	aStream.defaultReadObject();
-    	//manually deserialize
-    	loadBinaryFromStream(aStream, false);
-    }
+	private void readObject(ObjectInputStream aStream) throws IOException, ClassNotFoundException {
+		aStream.defaultReadObject();
+		// manually deserialize
+		loadBinaryFromStream(aStream, false);
+	}
 
-     /**
-     * Custom serialization is needed.
-     */
-    private void writeObject(ObjectOutputStream aStream) throws IOException {
-    	aStream.defaultWriteObject();
-    	//manually serialize superclass
-    	if ( dataFile != null ) {
-    		copyResource(aStream, new FileInputStream(dataFile),true);
-    	} else if ( lazySourceFile != null ) {
-    		copyResource(aStream, new FileInputStream(lazySourceFile),true);
-    	}
-    	aStream.flush();
-    }
-     
-    public static void main(String [] args) throws Exception {
-    	
-    	Navajo doc = NavajoFactory.getInstance().createNavajo();
-    	Message m = NavajoFactory.getInstance().createMessage(doc, "Test");
-    	doc.addMessage(m);
-    	Property p = NavajoFactory.getInstance().createProperty(doc, "Bin", "binary", "", 0, "", "out");
-    	m.addProperty(p);
-    	Binary b1 = new Binary( new File("responsetimes_290307.xls" ), false );
-    	b1.setMimeType("application/excel");
-    	p.setValue(b1);
-    	
-    	FileOutputStream fos = new FileOutputStream(new File("a"));
-    	doc.write(fos);
-    	fos.close();
-    	
-//    	doc.write(System.err);
-    	
-//    	ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/home/arjen/a")));
-//    	oos.writeObject(b1);
-//    	oos.close();
-//    	
-//    	ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("/home/arjen/a")));
-//    	Binary b2 = (Binary) ois.readObject();
-//    	ois.close();
-    	
-//    	logger.info(b2.getMimeType());
-    	
-    	FileInputStream fis = new FileInputStream(new File("a"));
-    	Navajo doc2 = NavajoFactory.getInstance().createNavajo(fis);
-    	fis.close();
-    	
-    	Binary b2 = (Binary) doc2.getProperty("/Test/Bin").getTypedValue();
-    	logger.info(b2.getMimeType());
-    	
-    }
+	/**
+	 * Custom serialization is needed.
+	 */
+	private void writeObject(ObjectOutputStream aStream) throws IOException {
+		aStream.defaultWriteObject();
+		// manually serialize superclass
+		if (dataFile != null) {
+			copyResource(aStream, new FileInputStream(dataFile), true);
+		} else if (lazySourceFile != null) {
+			copyResource(aStream, new FileInputStream(lazySourceFile), true);
+		}
+		aStream.flush();
+	}
 
-	public void setFormatDescriptor(FormatDescription fd) {
+    public void setFormatDescriptor(FormatDescription fd) {
 		currentFormatDescription = fd;
 	}    	
 }

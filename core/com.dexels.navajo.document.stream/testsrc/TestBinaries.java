@@ -31,6 +31,16 @@ public class TestBinaries {
 		Assert.assertTrue(baos.toByteArray().length>5000);
 	}
 	
+	@Test  
+	public void testBinaryStream() throws Exception {
+		Binary b = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_with_binary.xml"))
+			.toObservable()
+			.lift(StreamDocument.createBinary())
+			.firstOrError()
+			.blockingGet();
+//		5,258
+		Assert.assertEquals(5258, b.getLength());
+	}
 
 	@Test 
 	public void testWithBinary() throws Exception {
