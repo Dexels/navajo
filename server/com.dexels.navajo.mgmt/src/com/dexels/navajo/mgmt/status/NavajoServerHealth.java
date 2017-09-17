@@ -20,8 +20,10 @@ public class NavajoServerHealth implements ServerHealthCheck {
 
     @Override
     public boolean isOk() {
+        boolean threadsFull = tmlScheduler != null && (tmlScheduler.getDefaultQueue().getQueueSize() > 40);
         return navajoConfig != null && dispatcherInterface != null && javaCompiler != null && workflowManagerInterface != null 
-                && tribeManagerInterface != null && tmlScheduler != null && entityManager != null && entityManager.isFinishedCompiling();
+                && tribeManagerInterface != null && tmlScheduler != null && entityManager != null && entityManager.isFinishedCompiling() 
+                && !threadsFull;
     }
 
     @Override
@@ -56,6 +58,10 @@ public class NavajoServerHealth implements ServerHealthCheck {
         }
         if (!entityManager.isFinishedCompiling()) {
             return "EntityManager compiling";
+        }
+        boolean threadsFull = tmlScheduler != null && (tmlScheduler.getDefaultQueue().getQueueSize() > 40);
+        if (threadsFull) {
+            return "Queue size";
         }
         return "";
     }
