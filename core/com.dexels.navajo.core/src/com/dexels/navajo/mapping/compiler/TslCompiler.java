@@ -2501,9 +2501,11 @@ public class TslCompiler {
 					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
 
 		}
+		String linenr = n.getAttribute("linenr");
 		// Check for error definition. If error is defined throw UserException else just BreakEvent
 		String error = n.getAttribute("error");
 		if ( error == null || error.equals("") ) {
+			result.append(printIdent(ident + 2) + "Access.writeToConsole(access, \"Breaking at line: " + linenr + "\");\n");
 			result.append(printIdent(ident + 2) + "throw new BreakEvent();\n");
 			result.append(printIdent(ident) + "}\n");
 		} else {
