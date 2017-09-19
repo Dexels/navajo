@@ -61,7 +61,7 @@ public class ArticleTmlRunnable implements TmlRunnable{
         this.context = context;
 
         continuation = ContinuationSupport.getContinuation(httpRequest);
-        continuation.setTimeout(1*60*1000L); // 5 minutes
+        continuation.setTimeout(5*60*1000L); // 5 minutes
         continuation.suspend(httpResponse);
         
         requestNavajo = NavajoFactory.getInstance().createNavajo();
