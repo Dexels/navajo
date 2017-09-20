@@ -9,11 +9,11 @@ options {
    MULTI=true;
    LOOKAHEAD=1;
    STATIC=false;
-   NODE_PACKAGE="com.dexels.navajo.parser";
+   NODE_PACKAGE="com.dexels.navajo.parser.internal";
 }
 
 PARSER_BEGIN(TMLParser)
-package com.dexels.navajo.parser;
+package com.dexels.navajo.parser.internal;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.tipilink.TipiLink;
