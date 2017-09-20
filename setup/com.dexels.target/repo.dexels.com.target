@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2380">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2385">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.feature.group" version="4.8.0.201706111038-r"/>
@@ -19,8 +19,8 @@
 <repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.20.v20170531/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.10.18.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.10.18"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.10.19.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.10.19"/>
 </location>
 </locations>
 <includeBundles>
