@@ -49,6 +49,7 @@ import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 import com.dexels.navajo.tipi.actionmanager.IActionManager;
 import com.dexels.navajo.tipi.actionmanager.TipiActionManager;
 import com.dexels.navajo.tipi.actions.TipiInstantiateTipi;
@@ -309,7 +310,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             myThreadPool = new TipiThreadPool(this, getPoolSize());
         }
         
-        NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
+        NavajoFactory.getInstance().setExpressionEvaluator(new CachedExpressionEvaluator());
         tipiResourceLoader = new ClassPathResourceLoader();
         setStorageManager(new TipiNullStorageManager());
         try {

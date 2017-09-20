@@ -11,7 +11,6 @@ package com.dexels.navajo.parser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.dexels.navajo.document.Message;
@@ -45,7 +44,7 @@ public abstract class FunctionInterface {
 
 	private Access access;
 	@SuppressWarnings("unused")
-	private Map<String, Object> params;
+//	private Map<String, Object> params;
 
 	private final Class[] getMyReturnType() {
 		return returnType.get(this.getClass());
@@ -98,6 +97,10 @@ public abstract class FunctionInterface {
 	public FunctionInterface() {
 	}
 
+	public boolean isPure() {
+		return false;
+	}
+	
 	public void load(FunctionDefinition fd) {
 		myFunctionDefinition = fd;
 		if (fd.getInputParams() != null) {
@@ -333,10 +336,10 @@ public abstract class FunctionInterface {
 	public void setAccess(Access access) {
 		this.access = access;
 	}
-
-	public void setParams(Map<String, Object> params) {
-		this.params = params;
-	}
+//
+//	public void setParams(Map<String, Object> params) {
+//		this.params = params;
+//	}
 
 	public Access getAccess() {
 		return this.access;

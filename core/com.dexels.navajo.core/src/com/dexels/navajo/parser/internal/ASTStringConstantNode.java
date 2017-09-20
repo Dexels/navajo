@@ -9,6 +9,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
+import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 
 public final class ASTStringConstantNode extends SimpleNode {
 
@@ -31,7 +32,7 @@ public final class ASTStringConstantNode extends SimpleNode {
 		System.err.println("alright.");
 		System.setProperty("com.dexels.navajo.DocumentImplementation",
 				"com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
-		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
+		NavajoFactory.getInstance().setExpressionEvaluator(new CachedExpressionEvaluator());
 
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message m = NavajoFactory.getInstance().createMessage(n, "Aap");

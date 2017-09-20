@@ -7,7 +7,7 @@ package com.dexels.navajo.parser;
  * @version 1.0
  */
 
-public class TMLExpressionException extends Exception {
+public class TMLExpressionException extends RuntimeException {
 
 	/**
 	 * 

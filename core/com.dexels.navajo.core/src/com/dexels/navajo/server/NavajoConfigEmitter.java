@@ -25,6 +25,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
+import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.server.api.NavajoServerContext;
@@ -278,7 +279,7 @@ public class NavajoConfigEmitter implements EventHandler {
 			NavajoFactory.resetImplementation();
 			NavajoFactory.getInstance();
 			NavajoFactory.getInstance().setExpressionEvaluator(
-					new DefaultExpressionEvaluator());
+					new CachedExpressionEvaluator());
 		}
 		
 		addAllProperties(body.getMessage("parameters"),data);

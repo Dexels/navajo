@@ -3,6 +3,7 @@ package com.dexels.navajo.parser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.dexels.navajo.document.ExpressionEvaluator;
@@ -12,13 +13,17 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 
 public class ExpressionTest {
 
+	@Before
+	public void setup() {
+		NavajoFactory.getInstance().setExpressionEvaluator(
+				new CachedExpressionEvaluator());
+	}
 	@Test
 	public void testExpression() throws Exception {
-		NavajoFactory.getInstance().setExpressionEvaluator(
-				new DefaultExpressionEvaluator());
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
@@ -66,8 +71,6 @@ public class ExpressionTest {
 
 	@Test
 	public void testUnicode() throws Exception {
-		NavajoFactory.getInstance().setExpressionEvaluator(
-				new DefaultExpressionEvaluator());
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
@@ -77,8 +80,6 @@ public class ExpressionTest {
 
 	@Test
 	public void testExpressionNewlineOutside() throws Exception {
-		NavajoFactory.getInstance().setExpressionEvaluator(
-				new DefaultExpressionEvaluator());
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
@@ -88,8 +89,6 @@ public class ExpressionTest {
 
 	@Test
 	public void testExpressionNewline() throws Exception {
-		NavajoFactory.getInstance().setExpressionEvaluator(
-				new DefaultExpressionEvaluator());
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
@@ -99,8 +98,6 @@ public class ExpressionTest {
 	
 	@Test
 	public void testNonAscii() throws Exception {
-		NavajoFactory.getInstance().setExpressionEvaluator(
-				new DefaultExpressionEvaluator());
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 

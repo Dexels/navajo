@@ -1,14 +1,11 @@
 package com.dexels.navajo.parser;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import navajocore.Version;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +18,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.comparatormanager.ComparatorManager;
-import com.dexels.navajo.document.comparatormanager.ComparatorManagerFactory;
 import com.dexels.navajo.script.api.MappableTreeNode;
-import com.dexels.navajo.server.DispatcherFactory;
 
 /**
  * <p>
@@ -44,7 +38,7 @@ import com.dexels.navajo.server.DispatcherFactory;
  * @version 1.0
  */
 
-public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
+public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 
 	private final static Logger logger = LoggerFactory.getLogger(DefaultExpressionEvaluator.class);
 
@@ -53,13 +47,13 @@ public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
 	}
 
 	@Override
-	public final Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent)
+	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent)
 			throws NavajoException {
 		return evaluate(clause, inMessage, mappableTreeNode, parent, null);
 	}
 
 	@Override
-	public final Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent,
+	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent,
 			Message currentParam) throws NavajoException {
 		if (parent != null) {
 			// System.err.println("Inmessage info: "+parent.getIndex()+" type:
@@ -77,7 +71,7 @@ public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
 	}
 
 	@Override
-	public final Operand evaluate(String clause, Navajo inMessage) throws NavajoException {
+	public Operand evaluate(String clause, Navajo inMessage) throws NavajoException {
 		try {
 			return Expression.evaluate(clause, inMessage);
 		} catch (Throwable ex) {
@@ -87,17 +81,7 @@ public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
 		}
 	}
 
-	@Override
-	public Message match(String matchString, Navajo inMessage, Object mappableTreeNode, Message parent)
-			throws NavajoException {
-		try {
-			return Expression.match(matchString, inMessage, (MappableTreeNode) mappableTreeNode, parent);
-		} catch (Exception ex) {
-			throw NavajoFactory.getInstance().createNavajoException(ex);
-		}
-	}
-
-	private final List<Property> getExpressionList(Navajo n) throws NavajoException {
+	private List<Property> getExpressionList(Navajo n) throws NavajoException {
 		List<Property> expressionList = new ArrayList<Property>();
 		List<Message> a = n.getAllMessages();
 		for (int i = 0; i < a.size(); i++) {
@@ -210,21 +194,10 @@ public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
 
 	@Override
 	public final List<Property> processRefreshQueue(Map<Property, List<Property>> depMap) throws NavajoException {
-		// printStamp("Before processRefreshQueue: ");
 		List<Property> updateQueue = createUpdateQueue(depMap);
 		return processRefreshQueue(updateQueue);
-		// System.err.println("processed refresh queue");
-		// printStamp("After processRefreshQueue: ");
-		// return updateQueue;
 	}
 
-	// public final void processRefreshQueue(Map depMap, Property p) throws
-	// NavajoException {
-	// printStamp("Before processRefreshQueue: ");
-	// processRefreshQueue(createUpdateQueue(depMap));
-	// System.err.println("processed refresh queue");
-	// printStamp("After processRefreshQueue: ");
-	// }
 
 	private final Map<Property, List<Property>> getExpressionDependencyMap(Navajo n, List<Property> exprList)
 			throws NavajoException {
@@ -238,17 +211,6 @@ public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
 	}
 
 	private final Map<Property, List<Property>> duplicateDependencyMap(Map<Property, List<Property>> original) {
-		// Map copy = new HashMap();
-		// for (Iterator iter = original.keySet().iterator(); iter.hasNext(); ) {
-		// Property item = (Property)iter.next();
-		// ArrayList orig = (ArrayList)original.get(item);
-		// if (orig==null) {
-		// copy.put(item,null);
-		// } else {
-		// copy.put(item,orig.clone());
-		// }
-		// }
-		// return copy;
 		return original;
 	}
 
@@ -258,56 +220,6 @@ public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
 		Map<Property, List<Property>> mm = getExpressionDependencyMap(n, l);
 		return mm;
 	}
-
-	// public Map createInverseDependencyMap(Navajo n, List expressionList,
-	// Map<Property,List<Property>> dependencyMap) throws
-	// NavajoException {
-	// return null;
-	// }
-
-	// private final void getExpressionsDependingOn(Navajo n, List propertyList,
-	// Map<Property,List<Property>> dependencyMap,
-	// List outputList) throws
-	// NavajoException {
-	// ArrayList al = new ArrayList();
-	// for (int i = 0; i < propertyList.size(); i++) {
-	// Property current = (Property) propertyList.get(i);
-	// List deps = (List) dependencyMap.get(current);
-	// for (int j = 0; j < deps.size(); j++) {
-	// Property curProp = (Property) deps.get(i);
-	//
-	// }
-	// if (deps != null && deps.contains(current) &&
-	// !outputList.contains(current)) {
-	// propertyList.add(current);
-	// }
-	// }
-	//// return al;
-	// }
-
-	// private final void dumpDep(Property p, List deps, int indent,
-	// Map dependencyMap, PrintWriter out) throws
-	// NavajoException {
-	// spaces(indent, out);
-	// if (deps == null) {
-	// out.println("Property: " + p.getFullPropertyName() + " <none>");
-	// return;
-	// }
-	// out.println("Property: " + p.getFullPropertyName() + " depends on: ");
-	//
-	// for (int i = 0; i < deps.size(); i++) {
-	//// spaces(indent+10);
-	// Property current = (Property) deps.get(i);
-	// List dd = (List) dependencyMap.get(current);
-	// dumpDep(current, dd, indent + 3, dependencyMap, out);
-	// }
-	// }
-
-	// private final void spaces(int l, PrintWriter out) {
-	// for (int i = 0; i < l; i++) {
-	// out.print(" ");
-	// }
-	// }
 
 	private final List<Property> createUpdateQueue(Map<Property, List<Property>> mm) throws NavajoException {
 		Map<Property, List<Property>> dependencyMap = duplicateDependencyMap(mm);
@@ -427,84 +339,5 @@ public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
 			}
 		}
 		return false;
-	}
-
-	public static void main(String[] args) throws Exception {
-
-		System.setProperty("com.dexels.navajo.DocumentImplementation",
-				"com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
-		DefaultExpressionEvaluator dee = new DefaultExpressionEvaluator();
-		NavajoFactory.getInstance().setExpressionEvaluator(dee);
-		Navajo n = NavajoFactory.getInstance().createNavajo();
-		Message aap = NavajoFactory.getInstance().createMessage(n, "aap");
-		n.addMessage(aap);
-		Property noot = NavajoFactory.getInstance().createProperty(n, "noot", Property.INTEGER_PROPERTY, "4", 0, "",
-				Property.DIR_IN);
-		Property mies = NavajoFactory.getInstance().createProperty(n, "mies", Property.INTEGER_PROPERTY, "3", 0, "",
-				Property.DIR_IN);
-		Property wim = NavajoFactory.getInstance().createProperty(n, "wim", Property.EXPRESSION_PROPERTY,
-				"[noot]+[mies]", 0, "", Property.DIR_IN);
-		Property zus = NavajoFactory.getInstance().createProperty(n, "zus", Property.EXPRESSION_PROPERTY,
-				"[wim]+[noot]", 0, "", Property.DIR_IN);
-		Property jet = NavajoFactory.getInstance().createProperty(n, "jet", Property.EXPRESSION_PROPERTY,
-				"ToMoney([zus]-[noot])", 0, "", Property.DIR_IN);
-		Property teun = NavajoFactory.getInstance().createProperty(n, "teun", Property.EXPRESSION_PROPERTY, "[noot]", 0,
-				"", Property.DIR_IN);
-
-		aap.addProperty(teun);
-		aap.addProperty(zus);
-		aap.addProperty(noot);
-		aap.addProperty(wim);
-		aap.addProperty(jet);
-		aap.addProperty(mies);
-
-		n.write(System.err);
-		List<Property> exprList = dee.getExpressionList(n);
-
-		Map<Property, List<Property>> depMap = dee.getExpressionDependencyMap(n, exprList);
-
-		List<Property> queue = dee.createUpdateQueue(depMap);
-		dee.processRefreshQueue(queue);
-
-	}
-
-	@Override
-	public ClassLoader getScriptClassLoader() {
-		return DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
-	}
-
-	@Override
-	public Comparator<Message> getComparator(String compareFunction) {
-		if (!Version.osgiActive()) {
-			return getLegacyComparator(compareFunction);
-		}
-		final ComparatorManager instance = ComparatorManagerFactory.getInstance();
-		if (instance == null) {
-			logger.warn("No ComparatorManager available.");
-			return null;
-		}
-		return instance.getComparator(compareFunction);
-	}
-
-	@SuppressWarnings("unchecked")
-	private Comparator<Message> getLegacyComparator(String compareFunction) {
-		ClassLoader cl = getScriptClassLoader();
-		if (cl == null) {
-			cl = getClass().getClassLoader();
-		}
-		try {
-			Class<? extends Comparator<Message>> compareClass = (Class<? extends Comparator<Message>>) Class
-					.forName(compareFunction, true, cl);
-			Comparator<Message> c = compareClass.newInstance();
-			return c;
-		} catch (InstantiationException e) {
-			logger.error("Can not find compare function: " + compareFunction + " in non-OSGI mode", e);
-		} catch (IllegalAccessException e) {
-			logger.error("Can not find compare function: " + compareFunction + " in non-OSGI mode", e);
-		} catch (ClassNotFoundException e) {
-			logger.error("Can not find compare function: " + compareFunction + " in non-OSGI mode", e);
-		}
-
-		return null;
 	}
 }

@@ -25,6 +25,7 @@ Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
    com.dexels.navajo.loader",
  com.dexels.navajo.mapping.compiler.meta,
  com.dexels.navajo.parser,
+ com.dexels.navajo.parser.compiled.api,
  com.dexels.navajo.persistence.impl,
  com.dexels.navajo.server;
   uses:="com.dexels.navajo.server.enterprise.integrity,

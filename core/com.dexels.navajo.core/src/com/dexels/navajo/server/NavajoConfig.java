@@ -16,7 +16,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoLegacyClassLoader;
-import com.dexels.navajo.parser.DefaultExpressionEvaluator;
+import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.PersistenceManagerFactory;
 import com.dexels.navajo.script.api.NavajoClassSupplier;
@@ -363,7 +363,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     			System.setProperty("com.dexels.navajo.DocumentImplementation", documentClass);
     			NavajoFactory.resetImplementation();
     			NavajoFactory.getInstance();
-    			NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
+    			NavajoFactory.getInstance().setExpressionEvaluator(new CachedExpressionEvaluator());
     		} 
 
     		

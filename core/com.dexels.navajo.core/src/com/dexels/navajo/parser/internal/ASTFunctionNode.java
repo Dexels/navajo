@@ -176,7 +176,7 @@ public final class ASTFunctionNode extends SimpleNode {
 		f.setInMessage(doc);
 		f.setCurrentMessage(parentMsg);
 		f.setAccess(access);
-		f.setParams(params);
+//		f.setParams(params);
 		f.reset();
 
 		for (int i = 0; i < args; i++) {

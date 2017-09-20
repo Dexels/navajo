@@ -36,13 +36,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.ExpressionChangedException;
-import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.MessageMappable;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.comparatormanager.ComparatorManager;
+import com.dexels.navajo.document.comparatormanager.ComparatorManagerFactory;
 import com.dexels.navajo.document.types.Binary;
 
 public class BaseMessageImpl extends BaseNode implements Message, Comparable<Message> {
@@ -1395,8 +1396,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                                     // = null;
                                     // logger.info("Instantiating function " +
                                     // compareFunction);
-                                    ExpressionEvaluator ee = NavajoFactory.getInstance().getExpressionEvaluator();
-                                    c = ee.getComparator(compareFunction);
+	                            		final ComparatorManager instance = ComparatorManagerFactory.getInstance();
+	                            		c = instance.getComparator(compareFunction);
+
+//                                    ExpressionEvaluator ee = NavajoFactory.getInstance().getExpressionEvaluator();
+//                                    c = ee.getComparator(compareFunction);
                                     if (c == null) {
                                         logger.error("Comparator not found: {}. Not sorting.", compareFunction);
                                         compare = 0;

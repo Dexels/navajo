@@ -16,6 +16,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
+import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
@@ -400,7 +401,7 @@ public void kill() {
 	  System.setProperty("com.dexels.navajo.DocumentImplementation", s);
 	  NavajoFactory.resetImplementation();
 	  NavajoFactory.getInstance().setTempDir(DispatcherFactory.getInstance().getTempDir());
-		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
+		NavajoFactory.getInstance().setExpressionEvaluator(new CachedExpressionEvaluator());
 	  logger.debug("Document class is now: " + getDocumentClass());
   }
   

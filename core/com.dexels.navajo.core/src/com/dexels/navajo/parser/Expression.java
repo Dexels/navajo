@@ -15,11 +15,11 @@ import java.util.StringTokenizer;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.mapping.MappingUtils;
+import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 import com.dexels.navajo.parser.internal.ParseException;
 import com.dexels.navajo.parser.internal.TMLParser;
 import com.dexels.navajo.script.api.Access;
@@ -32,10 +32,16 @@ public final class Expression {
 
 	public static String ACCESS = "ACCESS";
 
+	private static CachedExpressionEvaluator evaluator = new CachedExpressionEvaluator();
+	
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
 			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params)
 			throws TMLExpressionException, SystemException {
 
+		if(true) {
+			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent);
+		}
+		
 		Object aap = null;
 
 		if (clause.trim().equals("")) {
@@ -175,26 +181,5 @@ public final class Expression {
 				result.append(clause.substring(0, clause.length()));
 		}
 		return result.toString();
-	}
-
-	public static void main(String[] args) throws Exception {
-
-		Navajo doc = NavajoFactory.getInstance().createNavajo();
-		Message params = NavajoFactory.getInstance().createMessage(doc, "Test");
-		doc.addMessage(params);
-		Property p = NavajoFactory.getInstance().createProperty(doc, "Selection", "+", "", "in");
-		params.addProperty(p);
-		p.addSelection(NavajoFactory.getInstance().createSelection(doc, "A", "1", true));
-		p.addSelection(NavajoFactory.getInstance().createSelection(doc, "B", "2", true));
-		p.addSelection(NavajoFactory.getInstance().createSelection(doc, "C", "0", false));
-
-		String exp = "FormatStringList([/Test/Selection:value], ';')";
-		Operand op = Expression.evaluate(exp, doc);
-		// System.err.println("result = " + op.value);
-		//
-		// StringTokenizer tok = new StringTokenizer("1", ",");
-		// while ( tok.hasMoreTokens() ) {
-		// System.err.println(tok.nextToken());
-		// }
 	}
 }
