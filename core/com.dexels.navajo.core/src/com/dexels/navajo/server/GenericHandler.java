@@ -450,7 +450,7 @@ public class GenericHandler extends ServiceHandler {
         outDoc = NavajoFactory.getInstance().createNavajo();
         CompiledScriptInterface cso = null;
         try {
-            cso = loadOnDemand(access.rpcName, false);
+            cso = loadOnDemand(access.rpcName);
         } catch (Throwable e) {
             logger.error("Exception on getting compiledscript", e);
             if (e instanceof FileNotFoundException) {
@@ -505,7 +505,7 @@ public class GenericHandler extends ServiceHandler {
     }
 
 	// THIS rpcName seems to have a tenant suffix
-	private CompiledScriptInterface loadOnDemand(String rpcName, boolean force) throws Exception {
+	private CompiledScriptInterface loadOnDemand(String rpcName) throws Exception {
 		
 		
 		final String tenant;
@@ -515,7 +515,7 @@ public class GenericHandler extends ServiceHandler {
 			tenant = access.getTenant();
 		}
 		
-        CompiledScriptInterface sc = BundleCreatorFactory.getInstance().getOnDemandScriptService(rpcName, tenant, force, null);
+        CompiledScriptInterface sc = BundleCreatorFactory.getInstance().getOnDemandScriptService(rpcName, tenant);
 		return sc;
 	}
 

@@ -211,7 +211,7 @@ public class EntityManager {
 
         logger.info("getOnDemand of entity {}", entityPath);
         try {
-            CompiledScriptInterface onDemandScriptService = bundleCreator.getOnDemandScriptService(rpcName, null, false, null);
+            CompiledScriptInterface onDemandScriptService = bundleCreator.getOnDemandScriptService(rpcName, null);
 
             // Also compile all dependencies of this entity
             for (int i = 0; i < onDemandScriptService.getDependencies().length; i++) {

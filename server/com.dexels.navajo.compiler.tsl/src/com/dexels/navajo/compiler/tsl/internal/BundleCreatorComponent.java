@@ -771,7 +771,7 @@ public class BundleCreatorComponent implements BundleCreator {
      * @throws Exception 
      */
     @Override 
-    public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant, boolean force, String extension) throws Exception {
+    public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant) throws Exception {
 
         if (rpcName.indexOf("/") == -1) {
             if (rpcName.indexOf('_') != -1) {
@@ -780,26 +780,21 @@ public class BundleCreatorComponent implements BundleCreator {
         }
         CompiledScriptInterface sc = getCompiledScript(rpcName, tenant);
 
-        if (sc != null && !force) {
+        if (sc != null) {
             return sc;
         } else {
             ReentrantLock lockObject = getLock(rpcName, "compileinstall");
             try {
                 if (lockObject.tryLock()) {
-                    if (extension == null) {
-                        extension = navajoIOConfig.determineScriptExtension(rpcName, tenant);
-                        logger.info("No known extension for {} - determined {} as script extension!", rpcName, extension);
-                    }
-    
+                    String extension = navajoIOConfig.determineScriptExtension(rpcName, tenant);
+                    logger.info("No known extension for {} - determined {} as script extension!", rpcName, extension);
+                    
                     List<String> failures = new ArrayList<String>();
                     List<String> success = new ArrayList<String>();
                     List<String> skipped = new ArrayList<String>();
     
                     boolean keepIntermediateFiles = false;
-                    if ("true".equals(System.getenv("DEVELOP_MODE"))) {
-                        keepIntermediateFiles = true;
-                    }
-
+                    boolean force = false;
                     createBundleNoLocking(rpcName, failures, success, skipped, force, keepIntermediateFiles, extension);
                     installBundleNoLocking(rpcName, failures, success, skipped, force, extension);
                 } else {
