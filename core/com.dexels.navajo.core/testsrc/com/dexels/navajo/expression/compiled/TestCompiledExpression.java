@@ -1,6 +1,7 @@
 package com.dexels.navajo.expression.compiled;
 
 import java.io.StringReader;
+import java.util.stream.IntStream;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -107,5 +108,36 @@ public class TestCompiledExpression {
 //        System.err.println("Result: "+ss.apply(input, null, null, null, null, null, null,null));
 	}
 
+	@Test
+	public void parsePerformanceTest() throws TMLExpressionException, SystemException {
+		long before = System.currentTimeMillis();
+		for (int i = 0; i < 10000; i++) {
+			Object o3 = Expression.evaluate("?[/@Param] AND [/@Param] != ''", input);
+		}
+		long now = System.currentTimeMillis();
+		long compiledTime = (now-before);
+		System.err.println("Compiled Parsing: "+compiledTime);
+		Expression.dumpStats();
+		before = System.currentTimeMillis();
+		for (int i = 0; i < 10000; i++) {
+			Object o3 = Expression.evaluate("?[/@Param] AND [/@Param] != ''", input);
+		}
+		now = System.currentTimeMillis();
+		compiledTime = (now-before);
+		System.err.println("Compiled parsing after warm-up: "+compiledTime);
+		Expression.dumpStats();
+		Expression.forceInterpreter = true;
+		
+
+		before = System.currentTimeMillis();
+		Expression.forceInterpreter = true;
+		for (int i = 0; i < 100000; i++) {
+			Object o3 = Expression.evaluate("?[/@Param] AND [/@Param] != ''", input);
+		}
+		now = System.currentTimeMillis();
+		compiledTime = (now-before);
+		System.err.println("Interpreted Parsing: "+compiledTime);
+		
+	}
 	
 }

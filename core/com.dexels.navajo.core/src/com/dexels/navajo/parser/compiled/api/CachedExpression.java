@@ -48,8 +48,8 @@ public class CachedExpression {
 			String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) {
 		Object cachedValue = expressionValueCache.get(expression);
 		if(cachedValue!=null) {
-			System.err.println("Found cached expression value: "+cachedValue);
 			pureHitCount.incrementAndGet();
+			printStats();
 			return cachedValue;
 		}
 		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode, tipiLink,access);
@@ -101,7 +101,7 @@ public class CachedExpression {
 
 	}
 	
-	private void printStats() {
+	public void printStats() {
 		logger.info("Function cache stats. Value hit: {} expression hit: {} parse count: {} cached expression size: {} cached value size: {}",pureHitCount.get(),hitCount.get(), parsedCount.get(),this.expressionCache.size(),this.expressionValueCache.size());
 	}
 	
