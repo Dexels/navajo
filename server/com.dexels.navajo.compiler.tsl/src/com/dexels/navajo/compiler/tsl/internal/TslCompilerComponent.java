@@ -16,12 +16,13 @@ import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class TslCompilerComponent extends ScriptCompiler {
+    private final static Logger logger = LoggerFactory.getLogger(TslCompilerComponent.class);
+
     private static String SCRIPT_EXTENSION = ".xml";
 
-    private NavajoIOConfig navajoIOConfig = null;
     private ClassLoader classLoader = null;
-    private final static Logger logger = LoggerFactory.getLogger(TslCompilerComponent.class);
     private TslCompiler compiler;
+    
     String[] standardPackages = new String[] { "com.dexels.navajo.document", "com.dexels.navajo.document.types",
             "com.dexels.navajo.script.api", "com.dexels.navajo.server", "com.dexels.navajo.mapping",
             "com.dexels.navajo.server.enterprise.tribe", "com.dexels.navajo.mapping.compiler.meta",
