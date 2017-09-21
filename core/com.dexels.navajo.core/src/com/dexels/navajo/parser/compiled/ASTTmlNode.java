@@ -14,6 +14,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.NavajoType;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
 import com.dexels.navajo.util.Util;
@@ -44,13 +45,6 @@ public final class ASTTmlNode extends SimpleNode {
 
     @Override
 	public final ContextExpression interpretToLambda() {
-
-        return interpretStatic();
-    }
-    
-    
-
-	private ContextExpression interpretStatic() {
 		return new ContextExpression() {
 	
 			@Override
@@ -59,22 +53,24 @@ public final class ASTTmlNode extends SimpleNode {
 			}
 			
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel, String option,
-					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink) {
+			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+					String selectionOpt, MappableTreeNode mapNode, TipiLink tipiLink, Access access) {
+//				System.err.println("Val: "+val+" exists: "+exists);
 				List match = null;
 		        ArrayList resultList = new ArrayList();
 		        boolean singleMatch = true;
 		       // boolean selectionProp = false;
+		        String text = val;
 		        
 		        boolean isParam = false;
-
+		        String selectionOption = selectionOpt == null ? "" :selectionOpt;
 		        Property prop = null;
 //		        System.err.println("Interpreting TMLNODE... val= "+val);
 		        
 		        if (parentSel != null) {
-		            String dum = val;
+		            String dum = text;
 		            if (dum.length() > 1) 
-		              dum = dum.substring(1, val.length());
+		              dum = dum.substring(1, text.length());
 		            if (dum.equals("name") ||  selectionOption.equals("name")) {
 		              return parentSel.getName();
 		            }
@@ -86,71 +82,71 @@ public final class ASTTmlNode extends SimpleNode {
 		        }
 
 		        if (!exists) {
-		            val = val.substring(1, val.length());
+		            text = text.substring(1, text.length());
 		        }  else {
-		            val = val.substring(2, val.length());
+		            text = text.substring(2, text.length());
 		        }
-		        if (val.length() > 0 && val.charAt(0) == '@') { // relative param property.
-		        	isParam = true;
-		        	val = val.substring(1);
+		        if (text.length() > 0 && text.charAt(0) == '@') { // relative param property.
+		        		isParam = true;
+		        		text = text.substring(1);
 		        }
 		        
-		        if (val.startsWith("/@")) { // Absolute param property.
-		        	parentParamMsg = doc.getMessage("__parms__");
-		        	isParam = true;
-		        	val = val.substring(2);
+		        if (text.startsWith("/@")) { // Absolute param property.
+		        		parentParamMsg = doc.getMessage("__parms__");
+		        		isParam = true;
+		        		text = text.substring(2);
 		        }
-		        if (val.contains("__globals__")) { // Absolute globals property.
+		        if (text.contains("__globals__")) { // Absolute globals property.
 		            parentMsg = doc.getMessage("__globals__");
 		            int length = "__globals__".length();
-		            if (val.startsWith("/")) {
+		            if (text.startsWith("/")) {
 		                length += 1;
 		            }
 		            length += 1; // trailing /
-		            val = val.substring(length);
+		            text = text.substring(length);
 		        }
 		    
-		        if (Util.isRegularExpression(val))
+		        if (Util.isRegularExpression(text))
 		            singleMatch = false;
 		        else
 		            singleMatch = true;
 
 		        try {
 		            if (parentMsg == null && !isParam) {
-		                if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
+		                if (text.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
 		                	if(doc==null) {
 		                		throw new NullPointerException("Can't evaluate TML node: No parent message and no document found.");
 		                	}
-		                	match = doc.getProperties(val);
+		                	match = doc.getProperties(text);
 		                    if (match.size() > 1) {
 		                      singleMatch = false;
 		                    }
 		                }
 		                else {
-		                   throw new RuntimeException("No parent message present for property: " + val);
+		                   throw new RuntimeException("No parent message present for property: " + text);
 		                }
 		            } else if (parentParamMsg == null && isParam) {
 		            	parentParamMsg = doc.getMessage("__parms__");
-		            	 if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
-		                    match = doc.getProperties(val);
+		            	 if (text.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
+		                    match = doc.getProperties(text);
 		                    if (match.size() > 1) {
 		                       singleMatch = false;
 		                    }  
 		                }
 		                else
-		                    throw new RuntimeException("No parent message present for param: " + val);
+		                    throw new RuntimeException("No parent message present for param: " + text);
 		            } else {
 		                //System.err.println("Looking for properties: "+val+" parentMessage: "+parentMsg.getFullMessageName());
 
-		                if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
-		                  match = (!isParam ? parentMsg.getProperties(val) : parentParamMsg.getProperties(val));
+		                if (text.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
+		                  match = (!isParam ? parentMsg.getProperties(text) : parentParamMsg.getProperties(text));
 		                  if (match.size() > 1)
 		                    singleMatch = false;
 
 		                }
 		                else {
 		                    match = new ArrayList();
-		                    match.add((!isParam ? parentMsg.getProperty(val) : parentParamMsg.getProperty(val)));
+		                    match.add((!isParam ? parentMsg.getProperty(text) : parentParamMsg.getProperty(text)));
 		                }
 //		                System.err.println("# of matches: "+match.size());
 		            }
@@ -161,9 +157,9 @@ public final class ASTTmlNode extends SimpleNode {
 		            prop = (Property) match.get(j);
 		              if (!exists && (prop == null))
 		            	  if (parentMsg!=null) {
-		                      throw new RuntimeException("TML property does not exist: " + val+" parent message: "+parentMsg.getFullMessageName());
+		                      throw new RuntimeException("TML property does not exist: " + text+" parent message: "+parentMsg.getFullMessageName());
 						} else {
-			                throw new RuntimeException("TML property does not exist: " + val);
+			                throw new RuntimeException("TML property does not exist: " + text+" exists? "+exists);
 						}
 		            else if (exists) { // Check for existence and datatype validity.
 		                if (prop != null) {
@@ -241,6 +237,7 @@ public final class ASTTmlNode extends SimpleNode {
 
 		                        if (list.size() > 0) {
 		                            Selection sel = (Selection) list.get(0);
+		                            System.err.println(">>"+sel+"<<>>"+selectionOption+"<<");
 		                            resultList.add((selectionOption.equals("name") ? sel.getName() : sel.getValue()));
 		                        } else {
 		                          return null;
@@ -335,7 +332,7 @@ public final class ASTTmlNode extends SimpleNode {
 		        else if (resultList.size() > 0)
 		            return resultList.get(0);
 		        else if (!exists)
-		            throw new RuntimeException("Property does not exist: " + val);
+		            throw new RuntimeException("Property does not exist: " + text);
 		        else
 		            return Boolean.valueOf(false);
 			}

@@ -10,6 +10,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
 
@@ -41,11 +42,11 @@ public final class ASTListNode extends SimpleNode {
 			}
 			
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel, String option,
-					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink) throws TMLExpressionException {
+			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
 				List<Object> result = new ArrayList<>();
 				for (ContextExpression contextExpression : exprs) {
-					result.add(contextExpression.apply(doc, parentMsg, parentParamMsg, parentSel, option, selectionOption, mapNode, tipiLink));
+					result.add(contextExpression.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode, tipiLink, access));
 				}
 				return result;
 			}

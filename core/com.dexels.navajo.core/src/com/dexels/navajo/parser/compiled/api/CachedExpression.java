@@ -3,6 +3,11 @@ package com.dexels.navajo.parser.compiled.api;
 import java.io.StringReader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -11,8 +16,11 @@ import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ContextExpression;
 import com.dexels.navajo.parser.compiled.ParseException;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
+
+import io.reactivex.Observable;
 
 public class CachedExpression {
 
@@ -20,25 +28,40 @@ public class CachedExpression {
 
 	private final ConcurrentMap<String, ContextExpression> expressionCache = new ConcurrentHashMap<>();
 	private final ConcurrentMap<String, Object> expressionValueCache = new ConcurrentHashMap<>();
+	
+	private final AtomicLong hitCount = new AtomicLong();
+	private final AtomicLong pureHitCount = new AtomicLong();
+	private final AtomicLong parsedCount = new AtomicLong();
+	private final static Logger logger = LoggerFactory.getLogger(CachedExpression.class);
+
 	CachedExpression() {
-		
+		try {
+			Observable.interval(1, TimeUnit.MINUTES)
+				.doOnError(e->logger.error("Error printing stats: ", e))
+				.forEach(l->printStats());
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	public Object evaluate(String expression,Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel, String option,
-			String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink) {
+	public Object evaluate(String expression,Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+			String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) {
 		Object cachedValue = expressionValueCache.get(expression);
 		if(cachedValue!=null) {
 			System.err.println("Found cached expression value: "+cachedValue);
+			pureHitCount.incrementAndGet();
 			return cachedValue;
 		}
-		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, option, selectionOption, mapNode, tipiLink);
+		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode, tipiLink,access);
 		
 	}
 	
 	public ContextExpression parse(String expression) {
 		ContextExpression cachedParsedExpression = expressionCache.get(expression);
 		if(cachedParsedExpression!=null) {
-			System.err.println("Found cached expression: "+expression);
+//			System.err.println("Found cached expression: "+expression);
+			hitCount.incrementAndGet();
 			return cachedParsedExpression;
 		}
 		CompiledParser cp;
@@ -48,8 +71,9 @@ public class CachedExpression {
 			cp = new CompiledParser(sr);
 			cp.Expression();
 	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda();
+	        parsedCount.incrementAndGet();
 	        if(parsed.isLiteral()) {
-	        		Object result = parsed.apply(null, null, null, null, null, null, null, null);
+	        		Object result = parsed.apply(null, null, null, null, null, null, null,null);
 	        		expressionValueCache.put(expression, result);
 	        		expressionCache.put(expression,parsed);
 	        		return new ContextExpression() {
@@ -60,8 +84,8 @@ public class CachedExpression {
 						}
 						
 						@Override
-						public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel, String option,
-								String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink) throws TMLExpressionException {
+						public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+								String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
 							return result;
 						}
 					};
@@ -74,6 +98,10 @@ public class CachedExpression {
 			throw new TMLExpressionException("Error parsing expression: "+expression, e);
 		}
 
+	}
+	
+	private void printStats() {
+		logger.info("Function cache stats. Value hit: {} expression hit: {} parse count: {} cached expression size: {} cached value size: {}",pureHitCount.get(),hitCount.get(), parsedCount.get(),this.expressionCache.size(),this.expressionValueCache.size());
 	}
 	
 	public static CachedExpression getInstance() {

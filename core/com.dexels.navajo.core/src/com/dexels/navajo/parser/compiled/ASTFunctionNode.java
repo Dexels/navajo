@@ -11,6 +11,7 @@ import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.OSGiFunctionFactoryFactory;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.tipilink.TipiLink;
@@ -48,16 +49,17 @@ public final class ASTFunctionNode extends SimpleNode {
 			}
 			
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel, String option,
-					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink) throws TMLExpressionException {
+			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
 				FunctionInterface f = getFunction();
 				f.setInMessage(doc);
 				f.setCurrentMessage(parentMsg);
+				f.setAccess(access);
 				f.reset();
 				l.stream()
 					.map(e->{
 						try {
-							return e.apply(doc, parentMsg, parentParamMsg, parentSel, option, selectionOption, mapNode,tipiLink);
+							return e.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode,tipiLink, access);
 						} catch (TMLExpressionException e1) {
 							throw new RuntimeException("Error parsing parameters for function: "+functionName, e1);
 						}

@@ -37,9 +37,9 @@ public final class Expression {
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
 			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params)
 			throws TMLExpressionException, SystemException {
-
+		Access a = params==null?null: (Access) params.get(ACCESS);
 		if(true) {
-			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent);
+			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,a);
 		}
 		
 		Object aap = null;
@@ -58,9 +58,9 @@ public final class Expression {
 			java.io.StringReader input = new java.io.StringReader(clause);
 			parser = new TMLParser(input);
 			if (params != null) {
-				Access a = (Access) params.get(ACCESS);
-				if (a != null) {
-					parser.setAccess(a);
+				Access acc = (Access) params.get(ACCESS);
+				if (acc != null) {
+					parser.setAccess(acc);
 				}
 			}
 			parser.setNavajoDocument(inMessage);
@@ -105,7 +105,6 @@ public final class Expression {
 		return evaluate(clause, inMessage, o, parent, null, null, null, null);
 	}
 
-	@Deprecated
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
 			Message parentParam) throws TMLExpressionException, SystemException {
 		return evaluate(clause, inMessage, o, parent, parentParam, null, null, null);

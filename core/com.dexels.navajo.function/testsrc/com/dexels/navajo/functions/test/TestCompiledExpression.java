@@ -35,7 +35,7 @@ public class TestCompiledExpression {
 
 	@Test
 	public void parseFunction() throws TMLExpressionException {
-		Object o = CachedExpression.getInstance().evaluate("ToUpper('ble')", input, null, null, null, null, null,null);
+		Object o = CachedExpression.getInstance().evaluate("ToUpper('ble')", input, null, null, null, null, null,null,null);
 		System.err.println(": "+o);
 		Assert.assertEquals("BLE", o);
 	}

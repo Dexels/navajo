@@ -10,11 +10,13 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ContextExpression;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.parser.compiled.api.CachedExpression;
+import com.dexels.navajo.script.api.SystemException;
 
 public class TestCompiledExpression {
 
@@ -44,9 +46,9 @@ public class TestCompiledExpression {
         ContextExpression ss2 =  CachedExpression.getInstance().parse("1+1");
         System.err.println("ss: "+ss.isLiteral());
         System.err.println("ss2: "+ss2.isLiteral());
-        System.err.println("Result: "+ss.apply(null, null, null, null, null, null,null));
-        Assert.assertEquals(2, ss.apply(null, null, null, null, null, null,null));
-        Assert.assertEquals(2, ss2.apply(null, null, null, null, null, null,null));
+        System.err.println("Result: "+ss.apply(null, null, null, null, null, null,null,null));
+        Assert.assertEquals(2, ss.apply(null, null, null, null, null, null,null,null));
+        Assert.assertEquals(2, ss2.apply(null, null, null, null, null, null,null,null));
         Assert.assertTrue(ss.isLiteral());
         Assert.assertTrue(ss2.isLiteral());
 
@@ -59,25 +61,47 @@ public class TestCompiledExpression {
 		cp.Expression();
         ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda();
         System.err.println("tml: "+ss.isLiteral());
-        System.err.println("TMLVALUE: "+ss.apply(input, null, null, null, null, null,null));
-        Assert.assertEquals("TestValue", ss.apply(input, null, null, null, null, null,null));
+        System.err.println("TMLVALUE: "+ss.apply(input, null, null, null, null, null,null,null));
+        Assert.assertEquals("TestValue", ss.apply(input, null, null, null, null, null,null,null));
         Assert.assertFalse(ss.isLiteral());
 	}
 
 	@Test
+	public void testParseExistsCheck() throws ParseException, TMLExpressionException, SystemException {
+		String clause = "?[/TestMessage/TestProperty] AND [/TestMessage/TestProperty] != ''";
+		StringReader sr = new StringReader(clause);
+		CompiledParser cp = new CompiledParser(sr);
+		Object o = Expression.evaluate(clause,input, null, null, null).value;
+		System.err.println("<o>"+o);
+		cp.Expression();
+        Assert.assertEquals(true, o);
+	}
+	
+	@Test
+	public void testParseExistsCheckNotExisting() throws ParseException, TMLExpressionException, SystemException {
+		String clause = "?[/TestMessage/TestProperty2] AND [/TestMessage/TestProperty2] != ''";
+		StringReader sr = new StringReader(clause);
+		CompiledParser cp = new CompiledParser(sr);
+		Object o = Expression.evaluate(clause,input, null, null, null).value;
+		System.err.println("<o>"+o);
+		cp.Expression();
+        Assert.assertEquals(false, o);
+	}
+	
+	@Test
 	public void parseExpressionLiteral() throws ParseException, TMLExpressionException {
-		Object o = CachedExpression.getInstance().evaluate("FORALL( '/TestArrayMessageMessage', `?[Property]`)", input, null, null, null, null, null,null);
+		Object o = CachedExpression.getInstance().evaluate("FORALL( '/TestArrayMessageMessage', `?[Property]`)", input, null, null, null, null, null,null,null);
         System.err.println("ss: "+o);
 //        System.err.println("Result: "+ss.apply(input, null, null, null, null, null, null,null));
 	}
 	@Test
 	public void parseExpressionWithParam() throws ParseException, TMLExpressionException {
 //		Object o = CachedExpression.getInstance().evaluate("?[/@ClubId] AND Trim([/@ClubId]) != ''", input, null, null, null, null, null, null,null);
-		Object o = CachedExpression.getInstance().evaluate("?[/@Param]", input, null, null, null, null, null,null);
+		Object o = CachedExpression.getInstance().evaluate("?[/@Param]", input, null, null, null, null, null,null,null);
 		Assert.assertEquals(true, o);
-		Object o2 = CachedExpression.getInstance().evaluate("?[/@Paramzz]", input, null, null, null, null, null,null);
+		Object o2 = CachedExpression.getInstance().evaluate("?[/@Paramzz]", input, null, null, null, null, null,null,null);
 		Assert.assertFalse((Boolean)o2);
-		Object o3 = CachedExpression.getInstance().evaluate("?[/@Param] AND [/@Param] != ''", input, null, null, null, null, null,null);
+		Object o3 = CachedExpression.getInstance().evaluate("?[/@Param] AND [/@Param] != ''", input, null, null, null, null, null,null,null);
 		Assert.assertTrue((Boolean)o3);
 		System.err.println("ss: "+o3);
 //        System.err.println("Result: "+ss.apply(input, null, null, null, null, null, null,null));

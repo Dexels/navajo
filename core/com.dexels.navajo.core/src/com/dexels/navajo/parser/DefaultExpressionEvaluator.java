@@ -49,12 +49,12 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 	@Override
 	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent)
 			throws NavajoException {
-		return evaluate(clause, inMessage, mappableTreeNode, parent, null);
+		return evaluate(clause, inMessage, mappableTreeNode, parent, null,null);
 	}
 
 	@Override
 	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent,
-			Message currentParam) throws NavajoException {
+			Message currentParam, Object access) throws NavajoException {
 		if (parent != null) {
 			// System.err.println("Inmessage info: "+parent.getIndex()+" type:
 			// "+parent.getType()+" name: "+parent.getName());

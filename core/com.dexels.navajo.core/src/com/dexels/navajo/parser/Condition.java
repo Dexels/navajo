@@ -9,10 +9,12 @@
  */
 package com.dexels.navajo.parser;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 import com.dexels.navajo.parser.internal.ParseException;
 import com.dexels.navajo.parser.internal.TMLParser;
 import com.dexels.navajo.script.api.Access;
@@ -27,8 +29,9 @@ public final class Condition {
 		// if (inMessage == null)
 		// throw new TMLExpressionException("Empty Navajo specified while evaluating
 		// condition");
-
-		Operand evaluate = Expression.evaluate(clause, inMessage, o, parent, paramParent);
+		Map<String,Object> params = new HashMap<>();
+		params.put(Expression.ACCESS, access);
+		Operand evaluate = Expression.evaluate(clause, inMessage, o, parent, paramParent, null, null, params); //valuate(clause, inMessage, o, parent, paramParent);
 		if(true) {
 			return (boolean) evaluate.value;
 		}

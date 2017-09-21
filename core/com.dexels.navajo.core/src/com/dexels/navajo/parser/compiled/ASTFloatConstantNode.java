@@ -4,6 +4,7 @@ package com.dexels.navajo.parser.compiled;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
 
@@ -26,7 +27,7 @@ public final class ASTFloatConstantNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					String option, String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink) {
+					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) {
 		        return new Double(val);
 			}
 		};

@@ -9,6 +9,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
 
@@ -107,9 +108,9 @@ public abstract class SimpleNode implements Node {
 		return new ContextExpression() {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					String option, String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, option, selectionOption, mapNode,tipiLink);
-		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, option, selectionOption, mapNode,tipiLink);
+					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
+		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode,tipiLink,access);
+		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode,tipiLink,access);
 				return func.apply(a, b);
 			}
 
@@ -126,8 +127,8 @@ public abstract class SimpleNode implements Node {
 		return new ContextExpression() {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					String option, String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, option, selectionOption, mapNode, tipiLink);
+					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
+		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode, tipiLink, access);
 				return func.apply(a);
 			}
 

@@ -14,6 +14,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.bean.DomainObjectMapper;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
 
@@ -42,8 +43,8 @@ public final class ASTMappableNode extends SimpleNode {
 			}
 			
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel, String option,
-					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink) throws TMLExpressionException {
+			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
 		        if (mapNode == null) {
 		            throw new TMLExpressionException("No known mapobject");
 		        }
@@ -57,7 +58,7 @@ public final class ASTMappableNode extends SimpleNode {
 		            objects = new ArrayList();
 		        }
 		        for (int i = 0; i < args; i++) {
-		            Object a = jjtGetChild(i).interpretToLambda().apply(doc, parentMsg, parentParamMsg, parentSel, option, selectionOption, mapNode, tipiLink);
+		            Object a = jjtGetChild(i).interpretToLambda().apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode, tipiLink, access);
 		            if(objects!=null) {
 		                objects.add(a);
 		            }
