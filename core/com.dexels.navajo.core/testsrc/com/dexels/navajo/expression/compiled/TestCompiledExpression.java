@@ -44,9 +44,9 @@ public class TestCompiledExpression {
         ContextExpression ss2 =  CachedExpression.getInstance().parse("1+1");
         System.err.println("ss: "+ss.isLiteral());
         System.err.println("ss2: "+ss2.isLiteral());
-        System.err.println("Result: "+ss.apply(null, null, null, null, null, null, null,null));
-        Assert.assertEquals(2, ss.apply(null, null, null, null, null, null, null,null));
-        Assert.assertEquals(2, ss2.apply(null, null, null, null, null, null, null,null));
+        System.err.println("Result: "+ss.apply(null, null, null, null, null, null,null));
+        Assert.assertEquals(2, ss.apply(null, null, null, null, null, null,null));
+        Assert.assertEquals(2, ss2.apply(null, null, null, null, null, null,null));
         Assert.assertTrue(ss.isLiteral());
         Assert.assertTrue(ss2.isLiteral());
 
@@ -59,31 +59,25 @@ public class TestCompiledExpression {
 		cp.Expression();
         ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda();
         System.err.println("tml: "+ss.isLiteral());
-        System.err.println("TMLVALUE: "+ss.apply(input, null, null, null, null, null, null,null));
-        Assert.assertEquals("TestValue", ss.apply(input, null, null, null, null, null, null,null));
+        System.err.println("TMLVALUE: "+ss.apply(input, null, null, null, null, null,null));
+        Assert.assertEquals("TestValue", ss.apply(input, null, null, null, null, null,null));
         Assert.assertFalse(ss.isLiteral());
 	}
 
 	@Test
-	public void parseFunction() throws ParseException, TMLExpressionException {
-		Object o = CachedExpression.getInstance().evaluate("ToUpper('ble')", input, null, null, null, null, null, null,null);
-		System.err.println(": "+o);
-		Assert.assertEquals("BLE", o);
-	}
-	@Test
 	public void parseExpressionLiteral() throws ParseException, TMLExpressionException {
-		Object o = CachedExpression.getInstance().evaluate("FORALL( '/TestArrayMessageMessage', `?[Property]`)", input, null, null, null, null, null, null,null);
+		Object o = CachedExpression.getInstance().evaluate("FORALL( '/TestArrayMessageMessage', `?[Property]`)", input, null, null, null, null, null,null);
         System.err.println("ss: "+o);
 //        System.err.println("Result: "+ss.apply(input, null, null, null, null, null, null,null));
 	}
 	@Test
 	public void parseExpressionWithParam() throws ParseException, TMLExpressionException {
 //		Object o = CachedExpression.getInstance().evaluate("?[/@ClubId] AND Trim([/@ClubId]) != ''", input, null, null, null, null, null, null,null);
-		Object o = CachedExpression.getInstance().evaluate("?[/@Param]", input, null, null, null, null, null, null,null);
+		Object o = CachedExpression.getInstance().evaluate("?[/@Param]", input, null, null, null, null, null,null);
 		Assert.assertEquals(true, o);
-		Object o2 = CachedExpression.getInstance().evaluate("?[/@Paramzz]", input, null, null, null, null, null, null,null);
+		Object o2 = CachedExpression.getInstance().evaluate("?[/@Paramzz]", input, null, null, null, null, null,null);
 		Assert.assertFalse((Boolean)o2);
-		Object o3 = CachedExpression.getInstance().evaluate("?[/@Param] AND [/@Param] != ''", input, null, null, null, null, null, null,null);
+		Object o3 = CachedExpression.getInstance().evaluate("?[/@Param] AND [/@Param] != ''", input, null, null, null, null, null,null);
 		Assert.assertTrue((Boolean)o3);
 		System.err.println("ss: "+o3);
 //        System.err.println("Result: "+ss.apply(input, null, null, null, null, null, null,null));
