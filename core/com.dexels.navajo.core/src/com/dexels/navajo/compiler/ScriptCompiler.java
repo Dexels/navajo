@@ -181,6 +181,26 @@ public abstract class ScriptCompiler {
 
         }
         w.print("Import-Package: " + sb.toString() + "\r\n");
+
+        sb = new StringBuffer();
+        it = getRequiredBundles().iterator();
+        first = true;
+        while (it.hasNext()) {
+            if (!first) {
+                sb.append(' ');
+            }
+            first = false;
+            String pck = it.next();
+            sb.append(pck);
+            if (it.hasNext()) {
+                sb.append(",\r\n");
+            }
+
+        }
+        if (sb.toString().length() > 0) {
+            w.print("Require-Bundle: " + sb.toString() + "\r\n");
+        }
+
         w.print("Service-Component: OSGI-INF/*.xml\r\n");
         w.print("\r\n");
         w.flush();
@@ -430,5 +450,10 @@ public abstract class ScriptCompiler {
      *         ScriptCompiler can handle
      */
     public abstract String getScriptExtension();
+    
+    /**
+     * @return Returns the required OSGi bundles
+     */
+    public abstract Set<String> getRequiredBundles();
 
 }

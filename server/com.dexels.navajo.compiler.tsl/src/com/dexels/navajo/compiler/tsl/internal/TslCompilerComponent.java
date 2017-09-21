@@ -1,5 +1,6 @@
 package com.dexels.navajo.compiler.tsl.internal;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -97,5 +98,11 @@ public class TslCompilerComponent extends ScriptCompiler {
     public String getScriptExtension() {
         return SCRIPT_EXTENSION;
     }
+
+	@Override
+	public Set<String> getRequiredBundles() {
+		return Collections.<String>emptySet();
+
+	}
 
 }
