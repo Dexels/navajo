@@ -15,6 +15,10 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public final class Euro  extends FunctionInterface{
   public Euro() {
   }
+  @Override
+	public boolean isPure() {
+  		return true;
+  }
 
       @Override
 	public String remarks() {

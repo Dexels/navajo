@@ -43,7 +43,14 @@ public final class CheckDate extends FunctionInterface {
     public CheckDate() {
     }
 
+    
     @Override
+	public boolean isPure() {
+    		return true;
+    }
+
+
+	@Override
     public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object o = this.getOperand(0);
         

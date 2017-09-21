@@ -27,6 +27,10 @@ public final class Date extends FunctionInterface {
 	public String usage() {
         return "Date(String s)";
     }
+    @Override
+	public boolean isPure() {
+    		return true;
+    }
 
     @Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {

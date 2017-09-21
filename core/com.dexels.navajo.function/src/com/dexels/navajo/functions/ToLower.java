@@ -35,5 +35,9 @@ public String usage() {
 public String remarks() {
       return "Returns a lowercase version of the supplied string.";
   }
+  @Override
+	public boolean isPure() {
+  		return false;
+  }
 
 }

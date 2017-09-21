@@ -23,6 +23,10 @@ public final class ToMoney extends FunctionInterface {
 public String remarks() {
     return "Cast a string/double/integer to a money object";
   }
+  @Override
+	public boolean isPure() {
+  		return false;
+  }
 
   @Override
 public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {

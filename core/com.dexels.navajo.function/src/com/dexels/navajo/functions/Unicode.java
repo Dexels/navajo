@@ -25,6 +25,10 @@ public class Unicode extends FunctionInterface {
 	public String remarks() {
 		return "Parses a number string (can be hex, use 0x... in that case), returns a unicode character";
 	}
+    @Override
+	public boolean isPure() {
+    		return false;
+    }
 
 	@Override
 	public String usage() {

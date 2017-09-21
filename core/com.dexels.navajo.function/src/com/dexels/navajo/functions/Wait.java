@@ -10,7 +10,11 @@ public final class Wait extends FunctionInterface {
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(Wait.class);
-	
+    @Override
+	public boolean isPure() {
+    		return false;
+    }
+
 	@Override
 	public final Object evaluate() throws TMLExpressionException {
 		if ( getOperands().size() == 0) {

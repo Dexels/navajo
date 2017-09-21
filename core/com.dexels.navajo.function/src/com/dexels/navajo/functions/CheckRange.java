@@ -24,7 +24,12 @@ public final class CheckRange extends FunctionInterface {
 
     @Override
 	public String remarks() {
-        return "Check if a list of values is zero or lesser than a given number.";
+        return "Check if a list of values is zero or less than a given number.";
+    }
+
+    @Override
+	public boolean isPure() {
+    		return true;
     }
 
     @Override

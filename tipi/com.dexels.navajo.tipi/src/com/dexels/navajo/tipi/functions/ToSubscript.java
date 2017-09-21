@@ -55,4 +55,9 @@ public class ToSubscript extends FunctionInterface {
         }
         return result;
     }
+    @Override
+	public boolean isPure() {
+    		return false;
+    }
+
 }

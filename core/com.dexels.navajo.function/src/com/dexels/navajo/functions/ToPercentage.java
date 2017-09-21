@@ -34,6 +34,10 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
      return new Percentage(o);
    }
   }
+  @Override
+	public boolean isPure() {
+  		return false;
+  }
 
   @Override
 public String usage() {

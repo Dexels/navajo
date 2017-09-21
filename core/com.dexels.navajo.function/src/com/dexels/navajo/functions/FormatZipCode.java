@@ -50,6 +50,10 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
         return o;
     }
   }
+  @Override
+	public boolean isPure() {
+  		return true;
+  }
 
   @Override
 public String usage() {

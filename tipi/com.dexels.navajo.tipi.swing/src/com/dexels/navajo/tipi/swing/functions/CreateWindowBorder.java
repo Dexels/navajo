@@ -23,6 +23,11 @@ public class CreateWindowBorder extends FunctionInterface {
 	public String remarks() {
 		return "Creates a border based on colors";
 	}
+	
+    @Override
+	public boolean isPure() {
+    		return true;
+    }
 
 	/*
 	 * (non-Javadoc)

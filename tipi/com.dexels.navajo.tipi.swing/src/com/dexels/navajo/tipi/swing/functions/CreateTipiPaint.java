@@ -12,6 +12,11 @@ public class CreateTipiPaint extends FunctionInterface {
         return "Creates a TipiPaint based on colors";
     }
 
+    @Override
+	public boolean isPure() {
+    		return true;
+    }
+
     /*
      * (non-Javadoc)
      * 

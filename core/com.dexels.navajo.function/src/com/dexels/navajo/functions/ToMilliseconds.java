@@ -38,6 +38,10 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
        throw new com.dexels.navajo.parser.TMLExpressionException(this, "Expected one of: ClockTime, StopwatchTime");
 
     }
+  @Override
+	public boolean isPure() {
+  		return false;
+  }
 
     @Override
 	public String usage() {

@@ -64,6 +64,10 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
 	public String usage() {
         return "ToString(Object)";
     }
+    @Override
+	public boolean isPure() {
+    		return false;
+    }
 
     @Override
 	public String remarks() {

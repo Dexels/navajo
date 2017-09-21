@@ -25,6 +25,10 @@ public class ValidatePhoneNumber extends FunctionInterface {
 	public String usage() {
         return "ValidatePhoneNumber(String|Long)";
     }
+    @Override
+	public boolean isPure() {
+    		return false;
+    }
 
 	@Override
     public Object evaluate() throws TMLExpressionException {

@@ -29,6 +29,11 @@ public class EqualsPattern extends FunctionInterface {
 	}
 
 	@Override
+	public boolean isPure() {
+    		return true;
+    }
+
+	@Override
 	public String remarks() {
 		return "Determines whether a string matches a pattern";
 	}

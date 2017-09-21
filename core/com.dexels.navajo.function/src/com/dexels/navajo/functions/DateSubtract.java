@@ -29,6 +29,10 @@ public final class DateSubtract extends FunctionInterface {
 	public String usage() {
 		return "DateSubtract(Date1, Date2)";
 	}
+    @Override
+	public boolean isPure() {
+    		return true;
+    }
 
 	@Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {

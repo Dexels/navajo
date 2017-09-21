@@ -23,6 +23,10 @@ public final class Contains extends FunctionInterface {
 	public String remarks() {
         return "Checks whether an arraylist contains a certain object";
     }
+    @Override
+	public boolean isPure() {
+    		return true;
+    }
 
     public final boolean contains(List<?> list, Object o) throws TMLExpressionException {
 

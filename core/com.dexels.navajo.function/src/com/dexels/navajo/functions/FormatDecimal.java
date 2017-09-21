@@ -21,6 +21,12 @@ public class FormatDecimal extends FunctionInterface {
 	public String remarks() {
        return "Formats a number";
     }
+    
+    @Override
+	public boolean isPure() {
+    		return true;
+    }
+
 
     /* (non-Javadoc)
      * @see com.dexels.navajo.parser.FunctionInterface#usage()

@@ -37,6 +37,10 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 public String usage() {
     return "ToMemo(String): Memo";
   }
+  @Override
+	public boolean isPure() {
+  		return false;
+  }
 
 
 }

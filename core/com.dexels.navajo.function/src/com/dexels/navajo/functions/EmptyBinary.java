@@ -40,5 +40,11 @@ public class EmptyBinary extends FunctionInterface {
         }
 	    return new Binary(new byte[0]);
 	}
+	
+    @Override
+	public boolean isPure() {
+    		return true;
+    }
+
 
 }

@@ -23,7 +23,11 @@ public final class Trunc extends FunctionInterface {
 		}
 		return date;
 	}
-	
+    @Override
+	public boolean isPure() {
+    		return false;
+    }
+
 	@Override
 	public String usage() {
 	    return "Trunc(Date)";

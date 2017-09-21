@@ -27,6 +27,12 @@ public final class EqualsIgnoreCase  extends FunctionInterface {
 	public String usage() {
         return "";
     }
+    
+    @Override
+	public boolean isPure() {
+    		return true;
+    }
+
 
     @Override
 	public final Object evaluate() throws TMLExpressionException {

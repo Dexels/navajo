@@ -47,6 +47,10 @@ public final class ToLong extends FunctionInterface {
 	public String remarks() {
         return "Get an long representation of given object.";
     }
+    @Override
+	public boolean isPure() {
+    		return false;
+    }
 
     public static void main(String [] args) {
     }

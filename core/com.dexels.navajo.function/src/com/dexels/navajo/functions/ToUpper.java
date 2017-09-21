@@ -38,4 +38,9 @@ public final class ToUpper extends FunctionInterface {
 	public String remarks() {
         return "Get an uppercase representation of given string.";
     }
+    @Override
+	public boolean isPure() {
+    		return true;
+    }
+
 }

@@ -25,6 +25,12 @@ public final class FormatDate extends FunctionInterface {
     	//super(new String[][]{ {"date"}, {"string"}, {"string", null}});
     	//setReturnType(new String[]{"string"});
     }
+    
+    @Override
+	public boolean isPure() {
+    		return true;
+    }
+
 
     @Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {

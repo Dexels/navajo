@@ -49,6 +49,12 @@ public class Base64Encode extends FunctionInterface {
 	public String usage() {
 		return "Base64Encode(Binary|String)";
 	}
+	
+	@Override
+	public boolean isPure() {
+		return true;
+	}
+
     
     // I think this function does not work when you pass a Binary into it.
     // It is a bit pointless anyway, it is more like a 'clone' then.

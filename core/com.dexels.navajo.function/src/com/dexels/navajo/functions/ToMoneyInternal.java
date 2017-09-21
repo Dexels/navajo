@@ -21,6 +21,10 @@ public final class ToMoneyInternal extends FunctionInterface {
 public String remarks() {
     return "Cast a money to period separated double (as a string)";
   }
+  @Override
+	public boolean isPure() {
+  		return false;
+  }
 
   @Override
 public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {

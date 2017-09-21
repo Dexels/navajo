@@ -26,7 +26,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
   
   @Override
 public String usage() {
-    return "SwiftValue(resource, digest)";
+    return "BinaryStoreValue(resource, digest)->Binary";
   }
   @Override
 public String remarks() {

@@ -26,6 +26,12 @@ public class Abs extends FunctionInterface {
 		return "Returns absolute value of a number";
 	}
 
+	
+	@Override
+	public boolean isPure() {
+		return true;
+	}
+
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */

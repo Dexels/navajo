@@ -44,6 +44,10 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
         return "Get a stopwatchtime representation of the supplied integer(in milliseconds) or date.";
     }
 
+    @Override
+	public boolean isPure() {
+    		return false;
+    }
 
 
 	public static void main(String[] args) throws TMLExpressionException {

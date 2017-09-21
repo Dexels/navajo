@@ -44,6 +44,11 @@ public class CreateTitledBorder extends FunctionInterface {
 		return "CreateTitledBorder(String title, [String bordertype], [Color linecolor], [Color shadowcolor], [titlealignment], [String style])";
 	}
 
+    @Override
+	public boolean isPure() {
+    		return true;
+    }
+
 	// GetComponent({component://init/desktop},{event:/from})
 	/*
 	 * (non-Javadoc)

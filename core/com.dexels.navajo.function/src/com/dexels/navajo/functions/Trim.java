@@ -27,6 +27,10 @@ public final class Trim extends FunctionInterface {
 
 	public Trim() {
 	}
+    @Override
+	public boolean isPure() {
+    		return false;
+    }
 
 	@Override
 	public final Object evaluate()

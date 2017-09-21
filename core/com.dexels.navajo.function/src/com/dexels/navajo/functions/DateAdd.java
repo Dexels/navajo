@@ -29,6 +29,12 @@ public final class DateAdd extends FunctionInterface {
 	public String usage() {
         return "DateAdd(Date date, Integer amount, String field)";
     }
+    
+    @Override
+	public boolean isPure() {
+    		return true;
+    }
+
 
     @Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {

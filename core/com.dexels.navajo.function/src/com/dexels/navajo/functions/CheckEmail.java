@@ -39,6 +39,12 @@ public class CheckEmail extends FunctionInterface {
 public String remarks() {
    return "This functions checks the syntactic validity of email adressess";
   }
+  
+  @Override
+	public boolean isPure() {
+  		return true;
+  }
+
   @Override
 public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
