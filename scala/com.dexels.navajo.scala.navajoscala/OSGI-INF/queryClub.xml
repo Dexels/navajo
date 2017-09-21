@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component immediate="false" name="testscala.QueryClub" xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate">
+    <implementation class="testscala.QueryClubFactory"/>
+    <service>
+        <provide interface="com.dexels.navajo.script.api.CompiledScriptFactory"/>
+    </service>
+    <property name="navajo.scriptName" type="String" value="testscala.QueryClub"/>
+    <property name="service.ranking" type="Integer" value="0"/>
+</scr:component>
