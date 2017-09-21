@@ -40,8 +40,7 @@ public class CachedExpression {
 				.doOnError(e->logger.error("Error printing stats: ", e))
 				.forEach(l->printStats());
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -74,8 +73,10 @@ public class CachedExpression {
 	        parsedCount.incrementAndGet();
 	        if(parsed.isLiteral()) {
 	        		Object result = parsed.apply(null, null, null, null, null, null, null,null);
-	        		expressionValueCache.put(expression, result);
 	        		expressionCache.put(expression,parsed);
+	        		if(result!=null) {
+		        		expressionValueCache.put(expression, result);
+	        		}
 	        		return new ContextExpression() {
 						
 						@Override

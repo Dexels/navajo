@@ -1,5 +1,7 @@
 package com.dexels.navajo.parser.compiled.api;
 
+import java.util.Map;
+
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -7,8 +9,10 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
+import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
+import com.dexels.navajo.tipilink.TipiLink;
 
 public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implements ExpressionEvaluator {
 
@@ -23,9 +27,10 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 
 	@Override
 	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent,
-			Message currentParam, Object access) throws NavajoException {
+			Message currentParam, Object tipiLink, Map<String,Object> params) throws NavajoException {
 		CachedExpression ce = CachedExpression.getInstance();
-		Object val =ce.evaluate(clause, inMessage, parent, currentParam, null, null, (MappableTreeNode)mappableTreeNode, null, (Access)access);
+		Access access = params == null? null : (Access)params.get(Expression.ACCESS);
+		Object val =ce.evaluate(clause, inMessage, parent, currentParam, null, null, (MappableTreeNode)mappableTreeNode, (TipiLink) tipiLink, access);
 		String type = MappingUtils.determineNavajoType(val);
 		return new Operand(val, type, "");
 	}

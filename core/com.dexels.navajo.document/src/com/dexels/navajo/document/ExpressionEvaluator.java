@@ -14,7 +14,7 @@ import java.util.Map;
 
 public interface ExpressionEvaluator {
   public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException;
-  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Message currentParam, Object access) throws NavajoException;
+  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Message currentParam, Object tipiLink, Map<String,Object> params) throws NavajoException;
   public Operand evaluate(String clause, Navajo inMessage) throws NavajoException;
   public Map<Property,List<Property>> createDependencyMap(Navajo n) throws NavajoException;
   public List<Property> processRefreshQueue(Map<Property,List<Property>> depMap) throws NavajoException;

@@ -39,7 +39,7 @@ public final class Expression {
 			throws TMLExpressionException, SystemException {
 		Access a = params==null?null: (Access) params.get(ACCESS);
 		if(true) {
-			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,a);
+			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,tl,params);
 		}
 		
 		Object aap = null;

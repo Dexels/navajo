@@ -13,7 +13,7 @@ import com.dexels.navajo.tipilink.TipiLink;
 public final class ASTTipiNode extends SimpleNode {
 
   String val = "";
-  TipiLink tipiLink;
+//  TipiLink tipiLink;
 
   public ASTTipiNode(int id) {
     super(id);
