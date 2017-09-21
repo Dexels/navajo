@@ -443,8 +443,8 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	}
 
 	@Override
-	public boolean hasTenantScriptFile(String rpcName, String tenant,String extension) {
-		return navajoIOConfig.hasTenantScriptFile(rpcName, tenant,extension);
+	public boolean hasTenantScriptFile(String rpcName, String tenant,String scriptPath) {
+		return navajoIOConfig.hasTenantScriptFile(rpcName, tenant,scriptPath);
 	}
 
 	@Override

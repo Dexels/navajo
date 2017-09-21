@@ -61,7 +61,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
     /* (non-Javadoc)
      * @see com.dexels.navajo.compiler.tsl.internal.BundleQueue#enqueueScript(java .lang.String) */
     @Override
-    public void enqueueScript(final String script, final String extension) {
+    public void enqueueScript(final String script, final String path) {
         executor.execute(new Runnable() {
 
             @Override
@@ -71,8 +71,8 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
                 List<String> skipped = new ArrayList<String>();
                 logger.info("Eagerly compiling: " + script);
                 try {
-                    bundleCreator.createBundle(script, failures, success, skipped, true, keepIntermediateFiles, extension);
-                    bundleCreator.installBundle(script, failures, success, skipped, true, extension);
+                    bundleCreator.createBundle(script, failures, success, skipped, true, keepIntermediateFiles, path);
+                    bundleCreator.installBundle(script, failures, success, skipped, true, path);
                     if (!skipped.isEmpty()) {
                         logger.info("Script compilation skipped: " + script);
                     }
@@ -174,7 +174,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
                     if (scriptName.endsWith("entitymapping")) {
                     	continue;
                     }
-                    enqueueScript(scriptName, extension);
+                    enqueueScript(scriptName, changedScript);
                     enqueueDependentScripts(scriptName, new HashSet<String>());
                 }
             } catch (IllegalArgumentException e1) {

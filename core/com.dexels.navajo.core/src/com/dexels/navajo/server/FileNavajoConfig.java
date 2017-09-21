@@ -149,7 +149,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 	/**
 	 * Name does not include tenant suffix
 	 */
-	public boolean hasTenantScriptFile(String rpcName, String tenant, String extension) {
+	public boolean hasTenantScriptFile(String rpcName, String tenant, String scriptPath) {
 		if(tenant==null) {
 			return false;
 		}

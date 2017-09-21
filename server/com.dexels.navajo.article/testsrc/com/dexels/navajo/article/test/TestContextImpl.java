@@ -130,7 +130,7 @@ public abstract class TestContextImpl extends BaseContextImpl {
 			}
 
 			@Override
-			public boolean hasTenantScriptFile(String rpcName, String tenant,String extension) {
+			public boolean hasTenantScriptFile(String rpcName, String tenant,String scriptPath) {
 				return false;
 			}
 
