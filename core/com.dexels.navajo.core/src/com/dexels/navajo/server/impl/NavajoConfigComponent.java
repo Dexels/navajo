@@ -452,12 +452,6 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 		return navajoIOConfig.getScript(name, tenant,extension);
 	}
 
-
-    @Override
-    public String determineScriptExtension(String scriptName, String tenant) throws FileNotFoundException {
-        return navajoIOConfig.determineScriptExtension(scriptName, tenant);
-    }
-
     @Override 
     public boolean useLegacyDateMode() {
         Object value = getParameter("isLegacyMode"); 
@@ -476,5 +470,5 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
     public String getDeployment() {
         return navajoIOConfig.getDeployment();
     }
-	
+
 }

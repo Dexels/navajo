@@ -1,5 +1,6 @@
 package com.dexels.navajo.compiler;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
@@ -15,8 +16,6 @@ import com.dexels.navajo.script.api.CompiledScriptInterface;
  */
 public interface BundleCreator {
 
-	public static final String SCRIPTPROTOCOL = "script://";
-
 	/**
 	 * Install a bundle of a specific script
 	 * @param force 
@@ -29,8 +28,8 @@ public interface BundleCreator {
 	
 //	public Collection<Long> installBundles(String scriptPrefix) throws BundleException;
 
-	public void createBundle(String script, List<String> failures, List<String> success,
-			List<String> skipped, boolean force, boolean keepIntermediateFiles, String extension) throws Exception;
+	public void createBundle(String script, List<String> failures,
+			List<String> success, List<String> skipped, boolean force, boolean keepIntermediateFiles) throws Exception;
 
 	public Date getBundleInstallationDate(String scriptPath, String tenant, String extension);
 	public Date getScriptModificationDate(String scriptPath, String tenant,String extension) throws FileNotFoundException;
@@ -38,8 +37,7 @@ public interface BundleCreator {
 
 //	public void installBundles(File baseDir, List<String> failures, List<String> success) throws Exception;
 	public void installBundles(String scriptPath,List<String> failures,List<String> success, List<String> skipped, boolean force,String extension) throws Exception;
-	public void installBundle(String scriptPath,
-			List<String> failures, List<String> success, List<String> skipped, boolean force,String extension);
+	public void installBundle(String scriptPath, List<String> failures, List<String> success, List<String> skipped, boolean force,String extension);
 
 	public void verifyScript(String script, List<String> failed, List<String> success);
 

@@ -158,7 +158,7 @@ public class AutoCompiler {
 				 logger.debug("Need to recompile : "+cleanPath);
 				 List<String> success = new ArrayList<String>();
 				 try {
-					bundleCreator.createBundle(cleanPath, new ArrayList<String>(), success, new ArrayList<String>(), false, false, null);
+					bundleCreator.createBundle(cleanPath, new ArrayList<String>(), success, new ArrayList<String>(), false, false);
 					Thread.yield();
 				 } catch (Throwable e) {
 					logger.warn("Bundle creation problem for bundle: "+cleanPath,e);

@@ -16,9 +16,10 @@ import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
-public class TslCompilerComponent extends ScriptCompiler {
-    private final static Logger logger = LoggerFactory.getLogger(TslCompilerComponent.class);
+public class TslScriptCompiler extends ScriptCompiler {
+    private final static Logger logger = LoggerFactory.getLogger(TslScriptCompiler.class);
 
+	private static final String SCRIPT_PATH = "scripts";
     private static String SCRIPT_EXTENSION = ".xml";
 
     private ClassLoader classLoader = null;
@@ -97,6 +98,11 @@ public class TslCompilerComponent extends ScriptCompiler {
     @Override
     public String getScriptExtension() {
         return SCRIPT_EXTENSION;
+    }
+    
+    @Override
+    public String getRelativeScriptPath() {
+        return SCRIPT_PATH;
     }
 
 	@Override

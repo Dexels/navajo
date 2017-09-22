@@ -71,7 +71,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
                 List<String> skipped = new ArrayList<String>();
                 logger.info("Eagerly compiling: " + script);
                 try {
-                    bundleCreator.createBundle(script, failures, success, skipped, true, keepIntermediateFiles, path);
+                    bundleCreator.createBundle(script, failures, success, skipped, true, keepIntermediateFiles);
                     bundleCreator.installBundle(script, failures, success, skipped, true, path);
                     if (!skipped.isEmpty()) {
                         logger.info("Script compilation skipped: " + script);

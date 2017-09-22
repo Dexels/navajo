@@ -14,8 +14,12 @@ public interface NavajoIOConfig {
 	
 	public File getContextRoot();
 
+	@Deprecated
 	public InputStream getScript(String name) throws IOException;
+	
+	@Deprecated
 	public InputStream getScript(String name, String tenant,String extension) throws IOException;
+	
 	public InputStream getConfig(String name) throws IOException;
     public InputStream getResourceBundle(String name) throws IOException;
     public Writer getOutputWriter(String outputPath, String scriptPackage, String scriptName, String extension) throws IOException;
@@ -62,10 +66,6 @@ public interface NavajoIOConfig {
 	 * Name does not include tenant suffix
 	 */
 	public boolean hasTenantScriptFile(String rpcName, String tenant, String scriptPath);
-
-    public String determineScriptExtension(String scriptName, String tenant) throws FileNotFoundException;
     
-    public String determineScriptPath(String scriptName, String tenant) throws FileNotFoundException;
-
 
 }

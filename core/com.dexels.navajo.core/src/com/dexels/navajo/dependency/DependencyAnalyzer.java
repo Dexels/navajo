@@ -1,5 +1,6 @@
 package com.dexels.navajo.dependency;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ public class DependencyAnalyzer {
     protected Map<String, List<Dependency>> dependencies;;
     protected Map<String, List<Dependency>> reverseDependencies;
     protected String scriptFolder;
+    private Object sync = new Object();
 
     public void activate() {
         logger.info("Activating DependencyAnalyzer");
@@ -41,23 +43,23 @@ public class DependencyAnalyzer {
         reverseDependencies = new HashMap<String, List<Dependency>>();
     }
 
-    public void addDependencies(String script) {
+    public void addDependencies(String script, File scriptFile) {
 
         Thread t = Thread.currentThread();
         ClassLoader cl = t.getContextClassLoader();
         t.setContextClassLoader(getClass().getClassLoader());
         try {
             List<Dependency> myDependencies = new ArrayList<Dependency>();
-            String scriptTenant = tenantFromScriptPath(script);
+            String scriptTenant = tenantFromScriptPath(scriptFile.getAbsolutePath());
 
-            synchronized (script) {
+            synchronized (sync) {
                 try {
-                    precompiler.getAllDependencies(script, scriptFolder, myDependencies, scriptTenant);
+                    precompiler.getAllDependencies(scriptFile, scriptFolder, myDependencies, scriptTenant);
                     // codeSearch.getAllWorkflowDependencies(scriptFile,
                     // scriptPath,
                     // scriptFolder, myDependencies);
                 } catch (Exception e) {
-                    logger.error(" Exception on getting depencencies for: " + script, e);
+                    logger.error(" Exception on getting depencencies for: " + scriptFile.getAbsolutePath(), e);
                     return;
                 }
                 dependencies.put(script, myDependencies);
@@ -68,7 +70,7 @@ public class DependencyAnalyzer {
             // set correct
             for (Dependency dep : myDependencies) {
                 if (dep.getType() == Dependency.INCLUDE_DEPENDENCY) {
-                    addDependencies(dep.getDependee());
+                    addDependencies(dep.getDependee(), new File(dep.getDependeeFile()));
                 }
             }
         } finally {

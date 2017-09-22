@@ -452,6 +452,11 @@ public abstract class ScriptCompiler {
     public abstract String getScriptExtension();
     
     /**
+     * @return Returns the relative script path, i.e. "scripts" or "scalascripts"
+     */
+    public abstract String getRelativeScriptPath();
+    
+    /**
      * @return Returns the required OSGi bundles
      */
     public abstract Set<String> getRequiredBundles();

@@ -2,6 +2,7 @@ package com.dexels.navajo.dependency;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,11 +26,15 @@ import org.w3c.dom.NodeList;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.script.api.UserException;
+import com.dexels.navajo.server.FileInputStreamReader;
+import com.dexels.navajo.server.InputStreamReader;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class TslPreCompiler {
     private final static Logger logger = LoggerFactory.getLogger(TslPreCompiler.class);
     private NavajoIOConfig navajoIOConfig = null;
+    private final InputStreamReader inputStreamReader = new FileInputStreamReader();
+
 
     public void setIOConfig(NavajoIOConfig config) {
         this.navajoIOConfig = config;
@@ -39,34 +44,41 @@ public class TslPreCompiler {
         this.navajoIOConfig = null;
     }
 
-    public void getAllDependencies(String script, String scriptFolder, List<Dependency> deps, String scriptTenant) throws XPathExpressionException, UserException {
-        final String extension = ".xml";
-        String fullScriptPath = null;
+    public void getAllDependencies(File script, String scriptFolder, List<Dependency> deps, String scriptTenant) throws XPathExpressionException, UserException {
         Document tslDoc = null;
         InputStream is = null;
 
-        fullScriptPath = scriptFolder + File.separator + script + ".xml";
 
         try {
             // Check for metascript.
-            if (MapMetaData.isMetaScript(fullScriptPath)) {
+            if (MapMetaData.isMetaScript(script.getAbsolutePath())) {
                 MapMetaData mmd = MapMetaData.getInstance();
-                InputStream metais = navajoIOConfig.getScript(script, scriptTenant, extension);
+                InputStream metais = inputStreamReader.getResource(script.getAbsolutePath());
 
-                String intermed = mmd.parse(fullScriptPath, metais);
+                String intermed = mmd.parse(script.getAbsolutePath(), metais);
                 metais.close();
                 is = new ByteArrayInputStream(intermed.getBytes());
             } else {
-                is = navajoIOConfig.getScript(script, scriptTenant, extension);
+                is = inputStreamReader.getResource(script.getAbsolutePath());
             }
-
+            tslDoc = XMLDocumentUtils.createDocument(is, false);
         } catch (Exception e) {
             logger.error("Pre-compiler failed!", e);
             throw new UserException(-1, "Exception on pre-compiling script: " + script);
+        } finally {
+        	if (is != null) {
+        		try {
+					is.close();
+				} catch (IOException e) {
+				}
+        	}
+        	
         }
+        
+        
 
-        tslDoc = XMLDocumentUtils.createDocument(is, false);
-        getAllDependencies(fullScriptPath, scriptTenant, scriptFolder, deps, tslDoc);
+       
+        getAllDependencies(script.getAbsolutePath(), scriptTenant, scriptFolder, deps, tslDoc);
     }
 
     protected void getAllDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) throws UserException, XPathExpressionException {

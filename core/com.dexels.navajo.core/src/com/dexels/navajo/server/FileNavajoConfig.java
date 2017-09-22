@@ -153,12 +153,11 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 		if(tenant==null) {
 			return false;
 		}
-		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, getScriptPath(),extension,true);
+		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, getScriptPath(),null ,true);
 		return qualifiedFile!=null;
 	}
 	
-    @Override
-    public String determineScriptExtension(String scriptName, String tenant) throws FileNotFoundException {
+    private String determineScriptExtension(String scriptName, String tenant) throws FileNotFoundException {
         
         if ((new File(getScriptPath(), scriptName + "_" + tenant + ".xml")).exists() ||
                 (new File(getScriptPath(), scriptName + ".xml")).exists() ) {
@@ -270,5 +269,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
         logger.warn("getDeplyoment not implemented in OSGi implementation");
         return null;
     }
+
+	
     
 }
