@@ -36,7 +36,6 @@ public abstract class TipiTypeParser implements Serializable {
 	public abstract Object parse(TipiComponent source, String expression,
 			TipiEvent event);
 
-
 	public Class<?> getReturnType() {
 		return myReturnType;
 	}

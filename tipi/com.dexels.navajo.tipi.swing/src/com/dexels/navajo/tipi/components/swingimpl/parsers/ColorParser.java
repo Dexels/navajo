@@ -42,4 +42,11 @@ public class ColorParser extends TipiTypeParser {
 		int in = Integer.parseInt(st, 16);
 		return new Color(in);
 	}
+
+	@Override
+	public boolean isPure() {
+		return true;
+	}
+	
+	
 }

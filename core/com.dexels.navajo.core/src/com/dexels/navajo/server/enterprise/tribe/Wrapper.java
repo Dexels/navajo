@@ -10,19 +10,16 @@ public class Wrapper implements Serializable {
 	 */
 	private static final long serialVersionUID = 1776008626104972375L;
 	private final String reference;
-	private final long created;
 	private long lastuse;
 	public int count;
 	
 	public Wrapper(String reference, long created) {
 		this.reference = reference;
-		this.created = this.lastuse = created;
 		count = 1;
 	}
 	
 	public Wrapper(String reference, long created, int c) {
 		this.reference = reference;
-		this.created = this.lastuse = created;
 		count = c;
 	}
 

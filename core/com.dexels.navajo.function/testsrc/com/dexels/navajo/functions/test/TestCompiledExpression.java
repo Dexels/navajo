@@ -9,7 +9,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.parser.compiled.api.CachedExpression;
+import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 
 public class TestCompiledExpression {
 
@@ -35,7 +35,7 @@ public class TestCompiledExpression {
 
 	@Test
 	public void parseFunction() throws TMLExpressionException {
-		Object o = CachedExpression.getInstance().evaluate("ToUpper('ble')", input, null, null, null, null, null,null,null);
+		Object o = ExpressionCache.getInstance().evaluate("ToUpper('ble')", input, null, null, null, null, null,null,null);
 		System.err.println(": "+o);
 		Assert.assertEquals("BLE", o);
 	}

@@ -29,12 +29,16 @@ public final class Condition {
 		// if (inMessage == null)
 		// throw new TMLExpressionException("Empty Navajo specified while evaluating
 		// condition");
-		Map<String,Object> params = new HashMap<>();
-		params.put(Expression.ACCESS, access);
-		Operand evaluate = Expression.evaluate(clause, inMessage, o, parent, paramParent, null, null, params); //valuate(clause, inMessage, o, parent, paramParent);
-		if(true) {
+		if(Expression.compileExpressions) {
+			Map<String,Object> params = new HashMap<>();
+			params.put(Expression.ACCESS, access);
+			Operand evaluate = Expression.evaluate(clause, inMessage, o, parent, paramParent, null, null, params); //valuate(clause, inMessage, o, parent, paramParent);
 			return (boolean) evaluate.value;
+			
 		}
+//		if(true) {
+//			return (boolean) evaluate.value;
+//		}
 		
 		try {
 			clause = clause.replace('\n', ' ');

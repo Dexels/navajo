@@ -367,7 +367,6 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
   }
 
   final public void PrimaryExpression() throws ParseException {
-  String name;
     if (jj_2_1(2147483647)) {
       DatePatternLiteral();
     } else {
@@ -954,7 +953,7 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
 
   final public void ExpressionLiteral() throws ParseException {
  Token t;
-    ASTExpressionLiteralNode jjtn001 = new ASTExpressionLiteralNode(JJTEXPRESIONLITERALNODE);
+    ASTExpressionLiteralNode jjtn001 = new ASTExpressionLiteralNode(JJTEXPRESSIONLITERALNODE);
     boolean jjtc001 = true;
     jjtree.openNodeScope(jjtn001);
     try {
@@ -1172,15 +1171,14 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
     finally { jj_save(0, xla); }
   }
 
-  private boolean jj_3R_57() {
-    if (jj_scan_token(AND)) return true;
-    if (jj_3R_56()) return true;
+  private boolean jj_3R_18() {
+    if (jj_scan_token(FALSE)) return true;
     return false;
   }
 
-  private boolean jj_3R_53() {
-    if (jj_scan_token(LIST_SEPARATOR)) return true;
-    if (jj_3R_44()) return true;
+  private boolean jj_3R_57() {
+    if (jj_scan_token(AND)) return true;
+    if (jj_3R_56()) return true;
     return false;
   }
 
@@ -1191,6 +1189,12 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
       xsp = jj_scanpos;
       if (jj_3R_57()) { jj_scanpos = xsp; break; }
     }
+    return false;
+  }
+
+  private boolean jj_3R_53() {
+    if (jj_scan_token(LIST_SEPARATOR)) return true;
+    if (jj_3R_44()) return true;
     return false;
   }
 
@@ -1220,13 +1224,13 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
     return false;
   }
 
-  private boolean jj_3R_17() {
-    if (jj_scan_token(TRUE)) return true;
+  private boolean jj_3R_44() {
+    if (jj_3R_52()) return true;
     return false;
   }
 
-  private boolean jj_3R_44() {
-    if (jj_3R_52()) return true;
+  private boolean jj_3R_17() {
+    if (jj_scan_token(TRUE)) return true;
     return false;
   }
 
@@ -1676,14 +1680,14 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
     return false;
   }
 
-  private boolean jj_3R_48() {
-    if (jj_scan_token(VALUE_OPTION)) return true;
-    return false;
-  }
-
   private boolean jj_3R_68() {
     if (jj_scan_token(43)) return true;
     if (jj_3R_60()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_48() {
+    if (jj_scan_token(VALUE_OPTION)) return true;
     return false;
   }
 
@@ -1754,11 +1758,6 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
       xsp = jj_scanpos;
       if (jj_3R_59()) { jj_scanpos = xsp; break; }
     }
-    return false;
-  }
-
-  private boolean jj_3R_18() {
-    if (jj_scan_token(FALSE)) return true;
     return false;
   }
 
@@ -1889,7 +1888,9 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
     throw generateParseException();
   }
 
-  static private final class LookaheadSuccess extends java.lang.Error { }
+  static private final class LookaheadSuccess extends java.lang.Error {
+
+	private static final long serialVersionUID = -2660757457501350018L; }
   final private LookaheadSuccess jj_ls = new LookaheadSuccess();
   private boolean jj_scan_token(int kind) {
     if (jj_scanpos == jj_lastpos) {

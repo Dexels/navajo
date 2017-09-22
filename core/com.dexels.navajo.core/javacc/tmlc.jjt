@@ -14,9 +14,6 @@ options {
 
 PARSER_BEGIN(CompiledParser)
 package com.dexels.navajo.parser.compiled;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.mapping.*;
-import java.util.Map;
 
 public class CompiledParser {
 
@@ -208,7 +205,6 @@ void RelationalExpression() #void:
 
 void PrimaryExpression() #void:
 {
-  String name;
 }
 {
   LOOKAHEAD(Literal()"#") DatePatternLiteral() | Literal() | "(" Expression() ")"

@@ -45,20 +45,4 @@ public final class ASTAndNode extends SimpleNode {
 			}
 		};
 	}
-	
-	private Object interpret(Object a, Object b) {
-		if(a==null) {
-        		return Boolean.FALSE;
-        }
-		Boolean ba = (Boolean)a;
-        if (!(ba.booleanValue())) {
-			return a;
-		}
-        if(b==null) {
-        		return Boolean.FALSE;
-        }
-        Boolean bb = (Boolean)b;
-        return Boolean.valueOf(ba.booleanValue() && bb.booleanValue());
-	}
-
 }

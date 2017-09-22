@@ -6,6 +6,7 @@ import com.dexels.navajo.server.enterprise.tribe.TopicEvent;
 
 public class SimpleTopicEvent implements TopicEvent {
 
+	private static final long serialVersionUID = -1683345185876275324L;
 	private final Serializable myMessage;
 	
 	public SimpleTopicEvent(Serializable msg) {

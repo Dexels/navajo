@@ -30,7 +30,7 @@ public interface CompiledParserTreeConstants
   public int JJTFLOATCONSTANTNODE = 24;
   public int JJTINTEGERCONSTANTNODE = 25;
   public int JJTSTRINGCONSTANTNODE = 26;
-  public int JJTEXPRESIONLITERALNODE = 27;
+  public int JJTEXPRESSIONLITERALNODE = 27;
   public int JJTTMLNODE = 28;
   public int JJTTIPINODE = 29;
   public int JJTMAPPABLENODE = 30;
@@ -64,10 +64,10 @@ public interface CompiledParserTreeConstants
     "FloatConstantNode",
     "IntegerConstantNode",
     "StringConstantNode",
-    "ExpresionLiteralNode",
+    "ExpressionLiteralNode",
     "TmlNode",
     "TipiNode",
     "MappableNode",
   };
 }
-/* JavaCC - OriginalChecksum=123056da837cd190e84f433ff171887c (do not edit this line) */
+/* JavaCC - OriginalChecksum=d4cf72b80c57a9f37fb6921f5165c9ca (do not edit this line) */

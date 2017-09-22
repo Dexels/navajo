@@ -16,7 +16,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ContextExpression;
 import com.dexels.navajo.parser.compiled.ParseException;
-import com.dexels.navajo.parser.compiled.api.CachedExpression;
+import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 import com.dexels.navajo.script.api.SystemException;
 
 public class TestCompiledExpression {
@@ -43,8 +43,8 @@ public class TestCompiledExpression {
 	}
 	@Test
 	public void parseIntAddition() throws ParseException, TMLExpressionException {
-        ContextExpression ss =  CachedExpression.getInstance().parse("1+1");
-        ContextExpression ss2 =  CachedExpression.getInstance().parse("1+1");
+        ContextExpression ss =  ExpressionCache.getInstance().parse("1+1");
+        ContextExpression ss2 =  ExpressionCache.getInstance().parse("1+1");
         System.err.println("ss: "+ss.isLiteral());
         System.err.println("ss2: "+ss2.isLiteral());
         System.err.println("Result: "+ss.apply(null, null, null, null, null, null,null,null));
@@ -91,18 +91,18 @@ public class TestCompiledExpression {
 	
 	@Test
 	public void parseExpressionLiteral() throws ParseException, TMLExpressionException {
-		Object o = CachedExpression.getInstance().evaluate("FORALL( '/TestArrayMessageMessage', `?[Property]`)", input, null, null, null, null, null,null,null);
+		Object o = ExpressionCache.getInstance().evaluate("FORALL( '/TestArrayMessageMessage', `?[Property]`)", input, null, null, null, null, null,null,null);
         System.err.println("ss: "+o);
 //        System.err.println("Result: "+ss.apply(input, null, null, null, null, null, null,null));
 	}
 	@Test
 	public void parseExpressionWithParam() throws ParseException, TMLExpressionException {
 //		Object o = CachedExpression.getInstance().evaluate("?[/@ClubId] AND Trim([/@ClubId]) != ''", input, null, null, null, null, null, null,null);
-		Object o = CachedExpression.getInstance().evaluate("?[/@Param]", input, null, null, null, null, null,null,null);
+		Object o = ExpressionCache.getInstance().evaluate("?[/@Param]", input, null, null, null, null, null,null,null);
 		Assert.assertEquals(true, o);
-		Object o2 = CachedExpression.getInstance().evaluate("?[/@Paramzz]", input, null, null, null, null, null,null,null);
+		Object o2 = ExpressionCache.getInstance().evaluate("?[/@Paramzz]", input, null, null, null, null, null,null,null);
 		Assert.assertFalse((Boolean)o2);
-		Object o3 = CachedExpression.getInstance().evaluate("?[/@Param] AND [/@Param] != ''", input, null, null, null, null, null,null,null);
+		Object o3 = ExpressionCache.getInstance().evaluate("?[/@Param] AND [/@Param] != ''", input, null, null, null, null, null,null,null);
 		Assert.assertTrue((Boolean)o3);
 		System.err.println("ss: "+o3);
 //        System.err.println("Result: "+ss.apply(input, null, null, null, null, null, null,null));
@@ -126,11 +126,10 @@ public class TestCompiledExpression {
 		compiledTime = (now-before);
 		System.err.println("Compiled parsing after warm-up: "+compiledTime);
 		Expression.dumpStats();
-		Expression.forceInterpreter = true;
 		
 
 		before = System.currentTimeMillis();
-		Expression.forceInterpreter = true;
+		Expression.compileExpressions = true;
 		for (int i = 0; i < 100000; i++) {
 			Object o3 = Expression.evaluate("?[/@Param] AND [/@Param] != ''", input);
 		}

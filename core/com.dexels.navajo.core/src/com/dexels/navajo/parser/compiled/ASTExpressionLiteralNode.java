@@ -2,7 +2,7 @@
 
 package com.dexels.navajo.parser.compiled;
 
-import com.dexels.navajo.parser.compiled.api.CachedExpression;
+import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 
 public final class ASTExpressionLiteralNode extends SimpleNode {
 
@@ -17,7 +17,7 @@ public final class ASTExpressionLiteralNode extends SimpleNode {
 	public ContextExpression interpretToLambda() {
 		// TODO is this ok?!
         String value = val.substring(1, val.length() - 1);
-        return CachedExpression.getInstance().parse(value);
+        return ExpressionCache.getInstance().parse(value);
 
 	}
 }

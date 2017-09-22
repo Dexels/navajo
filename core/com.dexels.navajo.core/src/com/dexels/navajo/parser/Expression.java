@@ -19,7 +19,7 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.mapping.MappingUtils;
-import com.dexels.navajo.parser.compiled.api.CachedExpression;
+import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 import com.dexels.navajo.parser.internal.ParseException;
 import com.dexels.navajo.parser.internal.TMLParser;
@@ -34,17 +34,21 @@ public final class Expression {
 	public static String ACCESS = "ACCESS";
 
 	private static CachedExpressionEvaluator evaluator = new CachedExpressionEvaluator();
-	public static boolean forceInterpreter = false;
-	
+	public static boolean compileExpressions = false;
+	static {
+		String env = System.getenv("COMPILED_EXPRESSIONS");
+		compileExpressions = env!=null && !"false".equals(env);
+		
+	}
 	public static void dumpStats() {
-		CachedExpression.getInstance().printStats();
+		ExpressionCache.getInstance().printStats();
 	}
 	
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
 			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params)
 			throws TMLExpressionException, SystemException {
-		Access a = params==null?null: (Access) params.get(ACCESS);
-		if(!forceInterpreter) {
+//		Access a = params==null?null: (Access) params.get(ACCESS);
+		if(compileExpressions) {
 			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,tl,params);
 		}
 		
@@ -54,7 +58,6 @@ public final class Expression {
 			return new Operand(null, "", "");
 		}
 		if ((clause.length() > 0 && clause.charAt(0) == '=') && clause.endsWith(";")) {
-
 			clause = clause.substring(1, clause.length() - 1);
 		}
 		try {

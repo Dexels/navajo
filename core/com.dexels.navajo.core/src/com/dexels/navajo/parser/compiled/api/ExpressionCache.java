@@ -22,9 +22,9 @@ import com.dexels.navajo.tipilink.TipiLink;
 
 import io.reactivex.Observable;
 
-public class CachedExpression {
+public class ExpressionCache {
 
-	private static CachedExpression instance;
+	private static ExpressionCache instance;
 
 	private final ConcurrentMap<String, ContextExpression> expressionCache = new ConcurrentHashMap<>();
 	private final ConcurrentMap<String, Object> expressionValueCache = new ConcurrentHashMap<>();
@@ -32,9 +32,9 @@ public class CachedExpression {
 	private final AtomicLong hitCount = new AtomicLong();
 	private final AtomicLong pureHitCount = new AtomicLong();
 	private final AtomicLong parsedCount = new AtomicLong();
-	private final static Logger logger = LoggerFactory.getLogger(CachedExpression.class);
+	private final static Logger logger = LoggerFactory.getLogger(ExpressionCache.class);
 
-	CachedExpression() {
+	ExpressionCache() {
 		try {
 			Observable.interval(1, TimeUnit.MINUTES)
 				.doOnError(e->logger.error("Error printing stats: ", e))
@@ -105,9 +105,9 @@ public class CachedExpression {
 		logger.info("Function cache stats. Value hit: {} expression hit: {} parse count: {} cached expression size: {} cached value size: {}",pureHitCount.get(),hitCount.get(), parsedCount.get(),this.expressionCache.size(),this.expressionValueCache.size());
 	}
 	
-	public static CachedExpression getInstance() {
+	public static ExpressionCache getInstance() {
 		if(instance==null) {
-			instance = new CachedExpression();
+			instance = new ExpressionCache();
 		}
 		return instance;
 	}

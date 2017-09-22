@@ -93,6 +93,7 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void registerFunction(BundleContext bundleContext,FunctionFactoryInterface fi,
 			String functionName, FunctionDefinition fd, ExtensionDefinition extensionDef) {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
