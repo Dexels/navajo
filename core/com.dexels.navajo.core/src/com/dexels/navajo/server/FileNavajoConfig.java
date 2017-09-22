@@ -157,19 +157,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 		return qualifiedFile!=null;
 	}
 	
-    private String determineScriptExtension(String scriptName, String tenant) throws FileNotFoundException {
-        
-        if ((new File(getScriptPath(), scriptName + "_" + tenant + ".xml")).exists() ||
-                (new File(getScriptPath(), scriptName + ".xml")).exists() ) {
-            return ".xml";
-        }
-        
-        if ((new File(getScriptPath(), scriptName + "_" + tenant + ".scala")).exists() ||
-                (new File(getScriptPath(), scriptName + ".scala")).exists() ) {
-            return ".scala";
-        }
-        throw new FileNotFoundException("Script not found: "+scriptName);
-    }
+
 	
 	
 	private File getTenantSpecificFile(String rpcName, String tenant, String parent, String extension, boolean checkIfExists) {
