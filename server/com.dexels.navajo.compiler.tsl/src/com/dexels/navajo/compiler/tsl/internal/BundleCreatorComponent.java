@@ -6,8 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -334,57 +332,8 @@ public class BundleCreatorComponent implements BundleCreator {
         lockmap.remove(script + context);
     }
 
-    private boolean isDirectory(String script, File scriptFolder, File f) throws IOException {
-        if ("".equals(script)) {
-            return true;
-        }
-        final boolean equalsCanonical = f.getCanonicalPath().equals(scriptFolder.getCanonicalFile() + File.separator + script);
-        final boolean isDir = f.isDirectory();
-        return isDir && equalsCanonical;
-    }
 
-    private void compileAllIn(File baseDir, List<String> failures, List<String> success, List<String> skipped, boolean force,
-            boolean keepIntermediate) throws Exception {
-        File scriptPath = new File(navajoIOConfig.getScriptPath());
-
-        Iterator<File> it = FileUtils.iterateFiles(baseDir, new String[] { "xml", "scala" }, true);
-        while (it.hasNext()) {
-            File file = it.next();
-            String relative = getRelative(file, scriptPath);
-
-            // logger.info("File: "+relative);
-            String withoutEx = relative.substring(0, relative.lastIndexOf('.'));
-            try {
-                createBundle(withoutEx, failures, success, skipped, force, keepIntermediate);
-            } catch (Exception e) {
-                logger.warn("Error compiling script: " + relative, e);
-                failures.add("Error compiling script: " + relative);
-                reportCompilationError(relative, e);
-            }
-        }
-    }
-
-    @Override
-    public void installBundles(String scriptPath, List<String> failures, List<String> success, List<String> skipped,
-            boolean force, String extension) throws Exception {
-        File outputFolder = new File(navajoIOConfig.getCompiledScriptPath());
-        File f = new File(outputFolder, scriptPath);
-        String tenant = tenantFromScriptPath(scriptPath);
-        File jarFile = navajoIOConfig.getApplicableBundleForScript(scriptPath, tenant, extension);
-
-        if (jarFile != null && jarFile.exists()) {
-            installBundle(scriptPath, failures, success, skipped, force, extension);
-        } else {
-            if (f.isDirectory()) {
-                installBundles(f, failures, success, skipped, force, extension);
-            } else {
-                logger.error("Jar not found: " + scriptPath + " full path: " + jarFile);
-                return;
-            }
-        }
-
-    }
-
+  
     @SuppressWarnings("unchecked")
     @Override
     public void uninstallBundle(String scriptName) {
@@ -440,27 +389,9 @@ public class BundleCreatorComponent implements BundleCreator {
         }
     }
 
-    private void installBundles(File baseDir, List<String> failures, List<String> success, List<String> skipped, boolean force,
-            String scriptExtension) throws Exception {
-        final String extension = "jar";
-        File compiledScriptPath = new File(navajoIOConfig.getCompiledScriptPath());
-        Iterator<File> it = FileUtils.iterateFiles(baseDir, new String[] { extension }, true);
-        while (it.hasNext()) {
-            File file = it.next();
-            String relative = getRelative(file, compiledScriptPath);
-            if (!relative.endsWith(extension)) {
-                logger.warn("Odd: " + relative);
-            }
-            // logger.info("File: "+relative);
-            String withoutEx = relative.substring(0, relative.lastIndexOf('.'));
-            installBundle(withoutEx, failures, success, skipped, force, scriptExtension);
-
-        }
-    }
-
+ 
     @Override
-    public void installBundle(String scriptPath, List<String> failures, List<String> success, List<String> skipped, boolean force,
-            String extension) {
+    public void installBundle(String scriptPath, List<String> failures, List<String> success, List<String> skipped, boolean force) {
         
         ReentrantLock lockObject = getLock(scriptPath, "install");
         try {

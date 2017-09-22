@@ -35,9 +35,7 @@ public interface BundleCreator {
 	public Date getScriptModificationDate(String scriptPath, String tenant,String extension) throws FileNotFoundException;
 	public Date getCompiledModificationDate(String scriptPath, String extension);
 
-//	public void installBundles(File baseDir, List<String> failures, List<String> success) throws Exception;
-	public void installBundles(String scriptPath,List<String> failures,List<String> success, List<String> skipped, boolean force,String extension) throws Exception;
-	public void installBundle(String scriptPath, List<String> failures, List<String> success, List<String> skipped, boolean force,String extension);
+	public void installBundle(String scriptPath, List<String> failures, List<String> success, List<String> skipped, boolean force);
 
 	public void verifyScript(String script, List<String> failed, List<String> success);
 

@@ -65,7 +65,7 @@ public class CompileServlet extends HttpServlet {
 			logger.info("Compiling java complete. took: {}ms. Succeeded: {} failed: {} skipped: {}", compileDuration, success.size(),failures.size(), skipped.size());
 			logger.warn("Failed compiling: {}", failures);
 			
-		    bundleCreator.installBundles(script,failures, success, skipped, true, null);
+		    bundleCreator.installBundle(script,failures, success, skipped, true);
 			tsInstall = System.currentTimeMillis() - ts1;
 			logger.info("Installing bundles took {}ms", tsInstall);
 			

@@ -306,7 +306,7 @@ public class EntityManager {
                 for (String script : entitiesToCompile) {
                     try {
                         bundleCreator.createBundle(script, failures, success, skipped, true, false);
-                        bundleCreator.installBundle(script, failures, success, skipped, true, null);
+                        bundleCreator.installBundle(script, failures, success, skipped, true);
                         if (!skipped.isEmpty()) {
                             logger.info("Script compilation skipped: " + script);
                         }
