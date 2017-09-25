@@ -9,10 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.dexels.navajo.adapter.sqlmap.SQLMapHelper;
+import com.dexels.replication.api.ReplicationMessage;
+import com.dexels.replication.factory.ReplicationFactory;
 
-public class SQLResult {
+class SQLResult {
 	
 	private Map<String,Object> values = new HashMap<>();
+	private Map<String,String> types = new HashMap<>();
 	private List<String> order = new ArrayList<>();
 
 	public SQLResult(ResultSet rs) throws Exception {
@@ -24,58 +27,31 @@ public class SQLResult {
 			int type = meta.getColumnType(i);
 			Object value = null;
 			value = SQLMapHelper.getColumnValue(rs, type, i);
-			addValue(param.toUpperCase(), value);
+			String typeString = SQLMapHelper.getType(i);
+			addValue(param.toUpperCase(), typeString, value);
 		}
 	}
 	
-    private final void addValue(String name, Object o) {
+    private final void addValue(String name, String type, Object o) {
         values.put(name, o);
+        types.put(name, type);
         order.add(name);
-      }
+    }
 	
     public List<String> columnNames() {
-    	return Collections.unmodifiableList(order);
+    		return Collections.unmodifiableList(order);
     }
+    
     public final Object columnValue(int index) {
-    	return values.get(order.get(index));
-
+    		return values.get(order.get(index));
     }
+    
     public final Object columnValue(String name) {
-    	return values.get(name);
+    		return values.get(name);
 	}
 
-    
-//	public final String getColumnName(final Integer index) throws SQLException {
-//		try {
-//			return parent.getColumnName(index);
-//		} catch (UserException e) {
-//			throw new SQLException(e);
-//		}
-//	}
-//
-//	public final Object getColumnValue(final Integer index) throws SQLException {
-//		try {
-//			return parent.getColumnValue(index);
-//		} catch (UserException e) {
-//			throw new SQLException(e);
-//		}
-//	}
-//
-//	public final Object getColumnValue(final String columnName) {
-//		try {
-//			return parent.getColumnValue(columnName);
-//		} catch (UserException e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//	}
-//
-//	public final String getType(final String columnName) throws SQLException {
-//		try {
-//			return parent.getType(columnName);
-//		} catch (UserException e) {
-//			throw new SQLException(e);
-//		}
-//
-//	}
+    public ReplicationMessage toMessage() {
+    		// TODO replace with correct call
+    		return ReplicationFactory.fromMap(null, values, types);
+    }
 }

@@ -1,35 +1,27 @@
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.navajo.adapters.stream.SQL;
 import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
-import com.github.davidmoten.rx.jdbc.Database;
-
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
-import io.reactivex.Flowable;
 
 public class TestSQL {
 
-	@Test @Ignore
-	public void testBackpressure() {
-		RxJavaInterop.toV2Flowable(Database
-		.fromDataSource(resolveDataSource("dummy","something"))
-		.select("select * from ORGANIZATION")
-		.get(SQL::resultSet))
-		.map(rs->rs.columnValue("NAME"))
-		.zipWith(Flowable.interval(100, TimeUnit.MILLISECONDS), (rs,i)->{
-			return rs;
-		});
-//		. (s->System.err.println("res: "+s));
-		
+	@Test
+	public void testSQL() {
+		SQL.query("dummy", "tenant", "select * from ORGANIZATION")
+			.doOnNext(e->System.err.println("||:: "+e))
+			.map(rs->Optional.ofNullable(rs.columnValue("NAME")))
+			.filter(e->e.isPresent())
+			.blockingForEach(e->{
+				System.err.println(":: "+e.get());
+			});
 	}
 	
 	

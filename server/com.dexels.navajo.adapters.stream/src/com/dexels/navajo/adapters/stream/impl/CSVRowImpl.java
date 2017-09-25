@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.dexels.navajo.adapters.stream.Row;
-import com.dexels.navajo.document.stream.api.Msg;
-import com.dexels.navajo.document.stream.api.Prop;
+import com.dexels.replication.api.ReplicationMessage;
+import com.dexels.replication.factory.ReplicationFactory;
 
 public class CSVRowImpl implements Row {
 
@@ -63,12 +63,13 @@ public class CSVRowImpl implements Row {
 		return new CSVRowImpl(this,name,(String)value);
 	}
 
-	public Msg toElement() {
-		List<Prop> properties = new ArrayList<>();
-		int index = 0;
+	public ReplicationMessage toElement() {
+		Map<String,Object> values = new HashMap<>();
+		Map<String,String> types = new HashMap<>();
 		for (String name : columnNames) {
-			properties.add(Prop.create(name, get(index++)));
+			types.put(name, "string");
+			values.put(name, get(name));
 		}
- 		return Msg.createElement(properties);
+ 		return ReplicationFactory.fromMap(null, values, types);
 	}
 }

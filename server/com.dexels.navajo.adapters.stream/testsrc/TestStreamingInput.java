@@ -20,14 +20,22 @@ public class TestStreamingInput  {
 		File tempFile = File.createTempFile("simpleresponse", ".xml");
 		tempFile.deleteOnExit();
 		FileOutputStream out = new FileOutputStream(tempFile);
+//		SQL.query("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
+//		.doOnNext(m->System.err.println("Message: "+m))
+//		.doOnComplete(()->System.err.println("Done!"))
+//		.compose(StreamDocument.toArray("Organizations"))
+
 		SQL.query("dummy","sometenant", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
-			.map(SQL::defaultSqlResultToMsg)
+//		SQL.query("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
 			.doOnNext(m->System.err.println("Message: "+m))
-			.flatMap(m->m.streamFlowable())
-			.compose(StreamDocument.inArray("Organizations"))
-			.compose(StreamDocument.inNavajo("dummu", "username", "password"))
+
+			
+//			.compose(m->StreamDocument.toArray("Organizations"))
+
+			//			.doOnComplete(()->System.err.println("Done!"))
+			.compose(StreamDocument.toArray("Organizations"))
+			.compose(StreamDocument.inNavajo("dummy", "username", "password"))
 			.lift(StreamDocument.serialize())
-			.doOnComplete(()->System.err.println("Done query method"))
 			.subscribe(new Subscriber<byte[]>() {
 
 				@Override
@@ -60,8 +68,18 @@ public class TestStreamingInput  {
 					s.request(Long.MAX_VALUE);
 				}
 			});
-		
 	}
+	
+	
+	
+//	SQL.query("dummy","sometenant", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
+//	.doOnNext(m->System.err.println("Message: "+m))
+//	.compose(m->StreamDocument.toArray("Organizations"))
+//	.compose(StreamDocument.inNavajo("dummu", "username", "password"))
+//	.lift(StreamDocument.serialize())
+//	.doOnComplete(()->System.err.println("Done query method"))
+//	.subscribe(new Subscriber<byte[]>() {
+//
 	
 	@Test @Ignore
 	public void testSingleQuery() throws IOException {
@@ -70,12 +88,13 @@ public class TestStreamingInput  {
 		tempFile.deleteOnExit();
 		FileOutputStream out = new FileOutputStream(tempFile);
 
-		SQL.queryToMessage("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
+		SQL.query("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
 			.doOnNext(m->System.err.println("Message: "+m))
 			.doOnComplete(()->System.err.println("Done!"))
-			.flatMap(m->m.streamFlowable())
-			.compose(StreamDocument.inArray("Organizations"))
-			.compose(StreamDocument.inNavajo("dummu", "username", "password"))
+			.compose(StreamDocument.toArray("Organizations"))
+//			.flatMap(m->m.streamFlowable())
+//			.compose(StreamDocument.inArray("Organizations"))
+			.compose(StreamDocument.inNavajo("dummy", "username", "password"))
 			.lift(StreamDocument.serialize())
 			.subscribe(new Subscriber<byte[]>() {
 

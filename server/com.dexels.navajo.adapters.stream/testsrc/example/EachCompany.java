@@ -1,14 +1,17 @@
 package example;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 import com.dexels.navajo.adapters.stream.CSV;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.Prop;
+import com.dexels.replication.api.ReplicationMessage;
 import com.github.davidmoten.rx2.Bytes;
 
 import hu.akarnokd.rxjava2.string.StringFlowable;
+import io.reactivex.Observable;
 
 
 public class EachCompany  {
@@ -36,19 +39,21 @@ public class EachCompany  {
 	}
 	
 	public static void csvExample() {
-		Bytes.from(EachCompany.class.getClassLoader().getResourceAsStream("com/dexels/navajo/adapters/stream/sqlmap/example/example.csv"))
+		Observable<ReplicationMessage> dd = Bytes.from(EachCompany.class.getClassLoader().getResourceAsStream("com/dexels/navajo/adapters/stream/sqlmap/example/example.csv"))
 			.lift(StreamDocument.decode("UTF-8"))
 			.compose(StringFlowable.split("\r"))
 			.toObservable()
 			.lift(CSV.rows(","))
 			.map(r->r.toElement())
-			.map(msg->msg.with(Prop.create("Oempaloempa", true))
+		
+			.map(msg->msg.with("Oempaloempa", true,"boolean")
 						.without("category")
-						.without(new String[]{"category","numEmps","fundedDate"})
-						.with(Prop.create("DoekoeType",msg.value("raisedCurrency")))
-			)
+						.without(Arrays.asList(new String[]{"category","numEmps","fundedDate"}))
+						.with("DoekoeType",msg.columnValue("raisedCurrency"),"string")
+			);
+		
 //		.take(30)
-		.subscribe(msg->System.err.println("MSG: "+msg));
+//		.subscribe(msg->System.err.println("MSG: "+msg));
 //		.flatMap(msg->
 //			temperatureInCity((String)msg.value("city"))
 //				.map(temperature->msg.with(Prop.create("Weather", DecimalFormat.getInstance().format(temperature) )))

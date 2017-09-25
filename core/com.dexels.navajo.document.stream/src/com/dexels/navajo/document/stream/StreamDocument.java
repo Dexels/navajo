@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
@@ -27,7 +28,10 @@ import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
@@ -48,6 +52,7 @@ import io.reactivex.FlowableTransformer;
 import io.reactivex.ObservableOperator;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import rx.Single;
 import rx.functions.Func1;
 
 public class StreamDocument {
@@ -1676,5 +1681,29 @@ public class StreamDocument {
 			}
 		};
 	}
-	
+
+	public static Message replicationToMessage(ReplicationMessage msg, String name, boolean isArrayElement) {
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		Message m = NavajoFactory.getInstance().createMessage(n, name, isArrayElement ? Message.MSG_TYPE_ARRAY_ELEMENT : Message.MSG_TYPE_SIMPLE);
+		List<Property> pp = msg.columnNames()
+			.stream()
+			.map(e->{
+				String type = msg.columnType(e);
+				Object value = msg.columnValue(e);
+				Property p = NavajoFactory.getInstance().createProperty(n, name, type, "", 0, "", Property.DIR_OUT);
+				p.setAnyValue(value);
+				return p;
+			})
+			.collect(Collectors.toList());
+		pp.stream().forEach(p->m.addProperty(p));
+		msg.subMessageListMap().forEach((msgName,submessages)->{
+			Message subArray = NavajoFactory.getInstance().createMessage(n, msgName,  Message.MSG_TYPE_ARRAY_ELEMENT);
+			submessages.forEach(repl->{
+				subArray.addElement(replicationToMessage(repl, msgName, true));
+			});
+			m.addMessage(subArray);
+		});
+		msg.subMessageMap().forEach((msgName,subMessage)->m.addMessage(replicationToMessage(subMessage, msgName, false)));
+		return m;
+	}
 }
