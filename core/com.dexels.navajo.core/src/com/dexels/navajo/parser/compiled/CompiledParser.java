@@ -1888,7 +1888,8 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
     throw generateParseException();
   }
 
-  static private final class LookaheadSuccess extends java.lang.Error { }
+  static private final class LookaheadSuccess extends java.lang.Error {
+	private static final long serialVersionUID = -2660757457501350018L; }
   final private LookaheadSuccess jj_ls = new LookaheadSuccess();
   private boolean jj_scan_token(int kind) {
     if (jj_scanpos == jj_lastpos) {

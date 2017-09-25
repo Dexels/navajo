@@ -2,8 +2,8 @@
 package com.dexels.navajo.parser.compiled;
 
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
@@ -46,8 +46,8 @@ public final class ASTLTNode extends SimpleNode {
 
 	public final Object interpret(Object a, Object b) {
 
-        if (a instanceof java.util.ArrayList) { // Compare all elements in the list.
-            ArrayList list = (ArrayList) a;
+        if (a instanceof List) { // Compare all elements in the list.
+            List list = (List) a;
             boolean result = true;
 
             for (int i = 0; i < list.size(); i++) {
