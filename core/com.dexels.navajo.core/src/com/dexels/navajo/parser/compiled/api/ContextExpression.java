@@ -1,4 +1,4 @@
-package com.dexels.navajo.parser.compiled;
+package com.dexels.navajo.parser.compiled.api;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;

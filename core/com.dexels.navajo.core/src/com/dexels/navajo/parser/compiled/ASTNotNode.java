@@ -3,6 +3,7 @@
 package com.dexels.navajo.parser.compiled;
 
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.parser.compiled.api.ContextExpression;
 
 public final class ASTNotNode extends SimpleNode {
     public ASTNotNode(int id) {

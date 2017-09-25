@@ -2,6 +2,7 @@
 
 package com.dexels.navajo.parser.compiled;
 
+import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 
 public final class ASTExpressionLiteralNode extends SimpleNode {

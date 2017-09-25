@@ -3,6 +3,7 @@
 package com.dexels.navajo.parser.compiled;
 
 import com.dexels.navajo.parser.Utils;
+import com.dexels.navajo.parser.compiled.api.ContextExpression;
 
 public final class ASTNENode extends SimpleNode {
     public ASTNENode(int id) {

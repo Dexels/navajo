@@ -48,15 +48,16 @@ public final class Expression {
 			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params)
 			throws TMLExpressionException, SystemException {
 //		Access a = params==null?null: (Access) params.get(ACCESS);
+		if (clause.trim().equals("")) {
+			return new Operand(null, "", "");
+		}
 		if(compileExpressions) {
 			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,tl,params);
 		}
 		
 		Object aap = null;
 
-		if (clause.trim().equals("")) {
-			return new Operand(null, "", "");
-		}
+
 		if ((clause.length() > 0 && clause.charAt(0) == '=') && clause.endsWith(";")) {
 			clause = clause.substring(1, clause.length() - 1);
 		}

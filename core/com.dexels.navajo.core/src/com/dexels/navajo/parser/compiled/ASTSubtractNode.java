@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
+import com.dexels.navajo.parser.compiled.api.ContextExpression;
 
 @SuppressWarnings({"unchecked","rawtypes"})
 public final class ASTSubtractNode extends SimpleNode {

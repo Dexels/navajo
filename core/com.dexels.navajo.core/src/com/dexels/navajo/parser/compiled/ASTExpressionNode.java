@@ -2,7 +2,7 @@
 
 package com.dexels.navajo.parser.compiled;
 
-
+import com.dexels.navajo.parser.compiled.api.ContextExpression;
 
 public final class ASTExpressionNode extends SimpleNode {
     public ASTExpressionNode(int id) {

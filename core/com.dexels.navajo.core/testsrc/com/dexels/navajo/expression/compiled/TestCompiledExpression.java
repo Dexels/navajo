@@ -14,8 +14,8 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.CompiledParser;
-import com.dexels.navajo.parser.compiled.ContextExpression;
 import com.dexels.navajo.parser.compiled.ParseException;
+import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 import com.dexels.navajo.script.api.SystemException;
 

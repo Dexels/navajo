@@ -43,7 +43,6 @@ public abstract class FunctionInterface {
 	public abstract String remarks();
 
 	private Access access;
-	@SuppressWarnings("unused")
 //	private Map<String, Object> params;
 
 	private final Class[] getMyReturnType() {

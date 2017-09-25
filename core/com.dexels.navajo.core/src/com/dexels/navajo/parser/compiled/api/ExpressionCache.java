@@ -14,7 +14,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.CompiledParser;
-import com.dexels.navajo.parser.compiled.ContextExpression;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;

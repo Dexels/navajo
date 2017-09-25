@@ -5,6 +5,7 @@ package com.dexels.navajo.parser.compiled;
 import java.util.ArrayList;
 
 import com.dexels.navajo.parser.Utils;
+import com.dexels.navajo.parser.compiled.api.ContextExpression;
 
 @SuppressWarnings({"unchecked","rawtypes"})
 public final class ASTAddNode extends SimpleNode {
