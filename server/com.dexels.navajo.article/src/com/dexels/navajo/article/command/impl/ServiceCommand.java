@@ -112,10 +112,11 @@ public class ServiceCommand implements ArticleCommand {
 	    Map<String, Object> extraParams = new HashMap<String, Object>();
 	    if (runtime.getToken() != null && runtime.getToken().getUser() != null) {
 	        extraParams.put("USERID", runtime.getToken().getUser().getUserId());
+	        extraParams.put("USERNAME", runtime.getToken().getUser().getUsername());
 	    } else {
 	        extraParams.put("USERID", -1);
+	        extraParams.put("USERNAME", runtime.getUsername());
 	    }
-        extraParams.put("USERNAME", runtime.getUsername());
         extraParams.put("TENANT", runtime.getInstance());
         extraParams.put("PERSONID", "");
         extraParams.put("DOMAIN", "");
