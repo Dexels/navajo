@@ -117,6 +117,21 @@ public class GrusProviderImpl implements GrusProvider {
 	}
 
 	@Override
+	public Map<String,Object> getInstanceDataSourceSettings(String instance, String name) throws UserException {
+        DataSource dataSourceInstance = null;
+        dataSourceInstance = getInstanceDataSource(instance, name);
+
+        Map<String, Object> settings = settingsMap.get(dataSourceInstance);
+        if (settings == null && dataSourceInstance == null) {
+            settings = defaultSettingsMap.get(name);
+            if(settings==null) {
+            		throw new UserException(-1, "Could not find settings for tenant-less datasource: "+name+" available (tenant-less) datasources: "+defaultSettingsMap.keySet());
+            }
+        }
+        return settings;
+	}
+	
+	@Override
 	public DataSource getInstanceDataSource(String instance, String name) {
 		if (instance != null) {
 			DataSource dataSource = getInstanceDataSources(instance).get(name);

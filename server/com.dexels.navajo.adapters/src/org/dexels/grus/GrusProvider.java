@@ -1,5 +1,7 @@
 package org.dexels.grus;
 
+import java.util.Map;
+
 import javax.sql.DataSource;
 
 import com.dexels.navajo.script.api.UserException;
@@ -14,4 +16,5 @@ public interface GrusProvider {
 	public GrusConnection requestConnection(long id);
 	public void release(GrusConnection grusDataSource);
 	public DataSource getInstanceDataSource(String instance, String name);
+	public Map<String, Object> getInstanceDataSourceSettings(String instance, String name) throws UserException;
 }
