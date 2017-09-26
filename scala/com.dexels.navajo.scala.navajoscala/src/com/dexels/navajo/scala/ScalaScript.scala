@@ -84,9 +84,10 @@ abstract class ScalaScript extends CompiledScript {
     f.setInMessage(myAccess.getInDoc)
     f.setCurrentMessage(currentInMsg)
 		f.setAccess(myAccess)
+		
     f.reset()
 		
-		params.foreach(_ => f.insertOperand(_))
+		params.foreach(param => f.insertOperand(param))
 		f.evaluateWithTypeChecking();
 		
   }

@@ -88,7 +88,9 @@ public class ScalaCompiler extends ScriptCompiler {
         Global.Run compiler = g.new Run();
         
         ListBuffer<String> files = new ListBuffer<String>();
-        String file = navajoIOConfig.getScriptPath() + File.separator + script + ".scala";
+        File scriptFolderFile = new File(navajoIOConfig.getRootPath(),this.getRelativeScriptPath());
+        File scriptFile = new File(scriptFolderFile,  packagePath + File.separator + script + this.getScriptExtension());
+        String file = scriptFile.getAbsolutePath();
 
         files.$plus$eq(file);
          
