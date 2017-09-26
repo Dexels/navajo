@@ -83,11 +83,10 @@ abstract class ScalaScript extends CompiledScript {
   def callNavajoFunction(f: FunctionInterface, params: Any*) = {
     f.setInMessage(myAccess.getInDoc)
     f.setCurrentMessage(currentInMsg)
-		f.setAccess(myAccess);
-		f.setParams(null);
-		f.reset();
+		f.setAccess(myAccess)
+    f.reset()
 		
-		params.foreach(param => f.insertOperand(param))
+		params.foreach(_ => f.insertOperand(_))
 		f.evaluateWithTypeChecking();
 		
   }

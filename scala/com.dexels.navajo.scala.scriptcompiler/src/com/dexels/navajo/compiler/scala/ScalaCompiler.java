@@ -23,6 +23,7 @@ import scala.tools.nsc.reporters.ConsoleReporter;
 import scala.tools.reflect.ReflectGlobal;
 
 public class ScalaCompiler extends ScriptCompiler {
+	private static final String SCRIPT_PATH = "scala";
     private static String SCRIPT_EXTENSION = ".scala";
     private ClassLoader navajoScriptClassLoader;
     
@@ -134,4 +135,11 @@ public class ScalaCompiler extends ScriptCompiler {
 	public Set<String> getRequiredBundles() {
 		return new HashSet<String>(Arrays.asList(standardReqBundles));
 	}
+
+
+
+    @Override
+    public String getRelativeScriptPath() {
+        return SCRIPT_PATH;
+    }
 }
