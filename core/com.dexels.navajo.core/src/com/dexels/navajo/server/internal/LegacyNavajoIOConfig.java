@@ -1,7 +1,6 @@
 package com.dexels.navajo.server.internal;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.FileNavajoConfig;

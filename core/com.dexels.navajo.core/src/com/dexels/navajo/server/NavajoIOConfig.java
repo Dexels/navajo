@@ -45,17 +45,15 @@ public interface NavajoIOConfig {
 	 * @return
 	 * @throws FileNotFoundException 
 	 */
+	@Deprecated
 	public Date getScriptModificationDate(String rpcName, String tenant,String extension) throws FileNotFoundException;
 
+	@Deprecated
 	public File getApplicableScriptFile(String rpcName, String tenant, String extension) throws FileNotFoundException;
+	
+	@Deprecated
 	public File getApplicableBundleForScript(String rpcName, String tenant, String extension) ;
 
-	//	public Date getBundleModificationDate(String scriptPath) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
-	
     @Deprecated
     public String getClassPath();
 
