@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -166,20 +167,15 @@ public class BundleCreatorComponent implements BundleCreator {
     		 File scriptFolder = new File(navajoIOConfig.getRootPath(), compiler.getRelativeScriptPath());
     	     File f = new File(scriptFolder, rpcName + compiler.getScriptExtension());
     	     
-    	     if (!f.exists()) {
-    	    	 logger.info("Skipping {} for compiler {}", rpcName, compiler.getClass().getSimpleName());
-    	    	 continue;
-    	     }
-    	     
-    	     // Look for other tenant-specific files
+    	  // Look for other tenant-specific files
              AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getBaseName(rpcName) + "_*" + compiler.getScriptExtension());
              File dir = new File(navajoIOConfig.getScriptPath(), FilenameUtils.getPath(rpcName)); 
              Collection<File> files = FileUtils.listFiles(dir, fileFilter, null);
              
-    	     createBundleForScript(f, rpcName,  rpcName, files.size() > 0, failures, success, skipped, keepIntermediate);
-    	        
-    	     
-             
+    	     if (f.exists()) {
+        	     createBundleForScript(f, rpcName,  rpcName, files.size() > 0, failures, success, skipped, keepIntermediate);
+    	     }
+
              for (File ascript : files) {
                  String pathRelative = getRelative(scriptFolder, ascript );
                  String[] splitted =  pathRelative.split("\\.");
