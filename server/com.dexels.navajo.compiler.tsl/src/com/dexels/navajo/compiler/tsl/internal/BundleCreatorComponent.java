@@ -169,8 +169,11 @@ public class BundleCreatorComponent implements BundleCreator {
     	     
     	  // Look for other tenant-specific files
              AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getBaseName(rpcName) + "_*" + compiler.getScriptExtension());
-             File dir = new File(navajoIOConfig.getScriptPath(), FilenameUtils.getPath(rpcName)); 
-             Collection<File> files = FileUtils.listFiles(dir, fileFilter, null);
+             File dir = new File(scriptFolder, FilenameUtils.getPath(rpcName)); 
+             Collection<File> files = Collections.<File>emptySet();
+             if (dir.exists()) {
+            	 files = FileUtils.listFiles(dir, fileFilter, null);
+             }
              
     	     if (f.exists()) {
         	     createBundleForScript(f, rpcName,  rpcName, files.size() > 0, failures, success, skipped, keepIntermediate);
@@ -199,34 +202,37 @@ public class BundleCreatorComponent implements BundleCreator {
             return;
         }
 
-        Set<String> newTenants = new HashSet<>();
+       
+        if (scriptFile.getAbsolutePath().endsWith(".xml")) {
+        	 Set<String> newTenants = new HashSet<>();
+        	 depanalyzer.addDependencies(script, scriptFile);
+             List<Dependency> dependencies = depanalyzer.getDependencies(script, Dependency.INCLUDE_DEPENDENCY);
 
-        depanalyzer.addDependencies(script, scriptFile);
-        List<Dependency> dependencies = depanalyzer.getDependencies(script, Dependency.INCLUDE_DEPENDENCY);
+             if (!hasTenantSpecificFile && dependencies != null) {
+                 // We are not tenant-specific, but check whether we include any tenant-specific files.
+                 // If so, compile all versions as if we are tenant-specific (forceTenant)
+                 for (Dependency d : dependencies) {
+                     if (d.isTentantSpecificDependee()) {
+                         newTenants.add(d.getTentantDependee());
+                     }
+                 }
+                 for(String newTenant : newTenants) {
+                     compileAndCreateBundle(script, scriptFile, newTenant, hasTenantSpecificFile,
+                             true, keepIntermediate, success, skipped, failures);
+                 }
+                 
+                 
+             }
 
-        if (!hasTenantSpecificFile && dependencies != null) {
-            // We are not tenant-specific, but check whether we include any tenant-specific files.
-            // If so, compile all versions as if we are tenant-specific (forceTenant)
-            for (Dependency d : dependencies) {
-                if (d.isTentantSpecificDependee()) {
-                    newTenants.add(d.getTentantDependee());
-                }
-            }
-            for(String newTenant : newTenants) {
-                compileAndCreateBundle(script, scriptFile, newTenant, hasTenantSpecificFile,
-                        true, keepIntermediate, success, skipped, failures);
-            }
-            
-            
+             if (!hasTenantSpecificFile) {
+                 // We are not tenant-specific, but check whether we used to have any includes that
+                 // were tenant-specific, that furthermore no longer exist in the new version.
+                 // If so, those must be removed.
+                 uninstallObsoleteTenantScript(rpcName, newTenants);
+             }
+
         }
-
-        if (!hasTenantSpecificFile) {
-            // We are not tenant-specific, but check whether we used to have any includes that
-            // were tenant-specific, that furthermore no longer exist in the new version.
-            // If so, those must be removed.
-            uninstallObsoleteTenantScript(rpcName, newTenants);
-        }
-
+       
         compileAndCreateBundle(script, scriptFile, scriptTenant, hasTenantSpecificFile, false, keepIntermediate,
                 success, skipped, failures);
     }
@@ -297,7 +303,7 @@ public class BundleCreatorComponent implements BundleCreator {
                 javaCompiler.compileJava(myScript);
             }
             javaCompiler.compileJava(myScript + "Factory");
-            createBundleJar(myScript, scriptTenant, keepIntermediate, hasTenantSpecificFile);
+            createBundleJar(myScript,scriptPath, scriptTenant, keepIntermediate, hasTenantSpecificFile);
             success.add(myScript);
         } catch (SkipCompilationException e) {
             logger.debug("Script fragment: {} ignored: {}", script, e);
@@ -476,30 +482,30 @@ public class BundleCreatorComponent implements BundleCreator {
         return relative;
     }
 
-    private File createBundleJar(String scriptPath, String tenant, boolean keepIntermediateFiles, boolean useTenantSpecificFile) throws IOException {
+    private File createBundleJar(String scriptName, File scriptPath, String tenant, boolean keepIntermediateFiles, boolean useTenantSpecificFile) throws IOException {
         String packagePath = null;
         String script = null;
-        if (scriptPath.indexOf('/') >= 0) {
-            packagePath = scriptPath.substring(0, scriptPath.lastIndexOf('/'));
-            script = scriptPath.substring(scriptPath.lastIndexOf('/') + 1);
+        if (scriptName.indexOf('/') >= 0) {
+            packagePath = scriptName.substring(0, scriptName.lastIndexOf('/'));
+            script = scriptName.substring(scriptName.lastIndexOf('/') + 1);
         } else {
             packagePath = "";
-            script = scriptPath;
+            script = scriptName;
         }
 
         String fixOffset = packagePath.equals("") ? "defaultPackage" : "";
         File compiledScriptPath = new File(navajoIOConfig.getCompiledScriptPath());
         File outPath = new File(compiledScriptPath, fixOffset);
 
-        File java = new File(compiledScriptPath, scriptPath + ".java");
-        File factoryJavaFile = new File(compiledScriptPath, scriptPath + "Factory.java");
-        File classFile = new File(outPath, scriptPath + ".class");
-        File factoryClassFile = new File(outPath, scriptPath + "Factory.class");
-        File manifestFile = new File(compiledScriptPath, scriptPath + ".MF");
-        File dsFile = new File(compiledScriptPath, scriptPath + ".xml");
+        File java = new File(compiledScriptPath, scriptName + ".java");
+        File factoryJavaFile = new File(compiledScriptPath, scriptName + "Factory.java");
+        File classFile = new File(outPath, scriptName + ".class");
+        File factoryClassFile = new File(outPath, scriptName + "Factory.class");
+        File manifestFile = new File(compiledScriptPath, scriptName + ".MF");
+        File dsFile = new File(compiledScriptPath, scriptName + ".xml");
         File entityFile = new File(compiledScriptPath, packagePath + File.separator + "entity.xml");
 
-        File bundleDir = new File(compiledScriptPath, scriptPath);
+        File bundleDir = new File(compiledScriptPath, scriptName);
         if (!bundleDir.exists()) {
             bundleDir.mkdirs();
         }
@@ -528,7 +534,7 @@ public class BundleCreatorComponent implements BundleCreator {
         File factoryClassFileInPlace = new File(bundlePackageDir, script + "Factory.class");
 
         // Scala compiled files are already in the right location
-        if (!scriptPath.endsWith(".scala")) {
+        if (!scriptPath.getPath().endsWith(".scala")) {
             FileUtils.copyFile(classFile, classFileInPlace);
         }
 
@@ -540,7 +546,7 @@ public class BundleCreatorComponent implements BundleCreator {
         }
 
         FileUtils.copyFile(dsFile, osgiinfScript);
-        File jarFile = new File(navajoIOConfig.getCompiledScriptPath(), scriptPath + ".jar");
+        File jarFile = new File(navajoIOConfig.getCompiledScriptPath(), scriptName + ".jar");
 
         addFolderToJar(bundleDir, null, jarFile, bundleDir.getAbsolutePath() + "/");
         if (!keepIntermediateFiles) {
