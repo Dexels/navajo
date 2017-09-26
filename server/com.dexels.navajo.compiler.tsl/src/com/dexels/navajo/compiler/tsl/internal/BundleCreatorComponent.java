@@ -475,7 +475,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
     }
 
-    private String getRelative(File path, File base) {
+    private String getRelative(File base, File path) {
         String relative = base.toURI().relativize(path.toURI()).getPath();
         return relative;
     }
