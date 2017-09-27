@@ -25,8 +25,10 @@ import org.eclipse.jetty.continuation.ContinuationSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
@@ -77,10 +79,13 @@ public class EntityContinuationRunner implements TmlRunnable {
             logger.warn("Non-initial continuation!");
             abort("Internal server error");
         }
+        
+        requestNavajo = NavajoFactory.getInstance().createNavajo();
+        Header h = NavajoFactory.getInstance().createHeader(requestNavajo, request.getPathInfo(), null,"", -1);
+        requestNavajo.addHeader(h);
 
         attributes = new HashMap<String, Object>();
-        attributes.put("queueName", QUEUE_NAME);
-        
+
         contentEncoding = request.getHeader("Content-Encoding");
         acceptEncoding = request.getHeader("Accept-Encoding");
     }

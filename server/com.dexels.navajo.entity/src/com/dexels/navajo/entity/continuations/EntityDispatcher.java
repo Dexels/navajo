@@ -108,7 +108,7 @@ public class EntityDispatcher {
                 throw new EntityException(EntityException.BAD_REQUEST);
             }
 
-            logger.info("Entity request {} ({}, {})", entityName, method, ip);
+            logger.debug("Entity request {} ({}, {})", entityName, method, ip);
             String queryString = runner.getHttpRequest().getQueryString();
             boolean debug = queryString != null && queryString.contains("developer=true");
 
@@ -289,7 +289,10 @@ public class EntityDispatcher {
     private Navajo handleException(Throwable ex, HttpServletResponse response) {
         Navajo result = null;
         if (ex instanceof EntityException) {
-            logger.warn("EntityException in handling entity request: {}. Going to try to handle it nicely.", ex.getMessage());
+        	EntityException entityEx = (EntityException) ex;
+        	if (entityEx.getCode() != EntityException.NOT_MODIFIED) {
+        		logger.warn("EntityException in handling entity request: {}. Going to try to handle it nicely.", ex.getMessage());
+        	}
         } else {
             logger.error("Exception in handling entity request. Going to try to handle it nicely.", ex);
 
@@ -346,7 +349,7 @@ public class EntityDispatcher {
         }
 
         if (!SUPPORTED_OUTPUT.contains(mimeResult)) {
-            logger.info("No supported output format requested - using default output: {}", DEFAULT_OUTPUT_FORMAT);
+            logger.debug("No supported output format requested - using default output: {}", DEFAULT_OUTPUT_FORMAT);
             mimeResult = DEFAULT_OUTPUT_FORMAT;
         }
         return mimeResult;
