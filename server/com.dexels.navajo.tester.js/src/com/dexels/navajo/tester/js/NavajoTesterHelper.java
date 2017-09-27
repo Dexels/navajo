@@ -53,6 +53,10 @@ public class NavajoTesterHelper {
         File scriptsPath = new File(navajoConfig.getScriptPath());
         NavajoFileSystemFolder result = new NavajoFileSystemFolder(scriptsPath);
         addContentsTo(result);
+        
+        NavajoFileSystemFolder scalaDir = new NavajoFileSystemFolder(new File(navajoConfig.getRootPath(), "scala"));
+        addContentsTo(scalaDir);
+        result.addEntry(scalaDir);
 
         return result;
     }
@@ -60,6 +64,9 @@ public class NavajoTesterHelper {
     private void addContentsTo(NavajoFileSystemFolder folder) {
         
         File currentPath = new File(folder.getPath());
+        if (!currentPath.exists()) {
+        	return;
+        }
         Collection<File> files = FileUtils.listFiles(currentPath, null, false);
  
         for (File f : files) {

@@ -5,6 +5,9 @@ import java.io.File;
 import org.apache.commons.io.FilenameUtils;
 
 public class NavajoFileSystemScript implements NavajoFileSystemEntry {
+	public static String PATH_TSL = "sportlink" + File.separator + "scripts";
+	public static String PATH_SCALA = "sportlink" + File.separator + "scala";
+	
     private String name;
     private String script;
     private String path;
@@ -13,8 +16,15 @@ public class NavajoFileSystemScript implements NavajoFileSystemEntry {
        
         this.path = file.getAbsolutePath();
         this.name =  FilenameUtils.getBaseName(path);
-       
-        script = path.split("scripts")[1];
+        
+        if (path.contains(PATH_TSL)) {
+        	 script = path.split(PATH_TSL)[1];
+        } else if (path.contains(PATH_SCALA)) {
+        	 script = path.split(PATH_SCALA)[1];
+        } else {
+        	//unsupported path!
+        }
+
         script =  script.substring(1, script.lastIndexOf(FilenameUtils.getExtension(path)) -1);
         script = script.replace("\\", "/");
     }
