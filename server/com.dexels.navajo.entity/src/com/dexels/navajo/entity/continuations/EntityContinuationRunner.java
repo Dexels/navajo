@@ -79,9 +79,11 @@ public class EntityContinuationRunner implements TmlRunnable {
             logger.warn("Non-initial continuation!");
             abort("Internal server error");
         }
-        
+        String entity = "invalid";
+        if (request.getPathInfo() != null) 
+        	entity = request.getPathInfo().substring(1);
         requestNavajo = NavajoFactory.getInstance().createNavajo();
-        Header h = NavajoFactory.getInstance().createHeader(requestNavajo, request.getPathInfo(), null,"", -1);
+        Header h = NavajoFactory.getInstance().createHeader(requestNavajo, entity, null,"", -1);
         requestNavajo.addHeader(h);
 
         attributes = new HashMap<String, Object>();
