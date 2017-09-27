@@ -61,8 +61,12 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	
 	@Override
 	public void start(BundleContext bc) throws Exception {
-		super.start(bc);
-		NavajoClientFactory.setDefaultClient(new JavaNetNavajoClientImpl());
+		try {
+			super.start(bc);
+			NavajoClientFactory.setDefaultClient(new JavaNetNavajoClientImpl());
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
 	}
 //	
 	
