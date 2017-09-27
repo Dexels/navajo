@@ -39,10 +39,6 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 
     public void activate() {
         this.executor = Executors.newFixedThreadPool(1);
-        
-        if ("true".equals(System.getenv("DEVELOP_MODE"))) {
-            keepIntermediateFiles = true;
-        }
     }
 
     public void deactivate() {
