@@ -84,8 +84,12 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 			for (Scope scope : this.token.getScopes()) {
 				this.suppliedScopes.add(scope.getId());
 			}
+			if (this.token.getUser() != null) {
+				this.userAttributes = this.token.getUser().getAttributes();
+			} else {
+				this.userAttributes = this.token.getAttributes();
+			}
 			
-			this.userAttributes = this.token.getAttributes();
 		} else {
 			
 			this.userAttributes = new HashMap<String, Object>();
