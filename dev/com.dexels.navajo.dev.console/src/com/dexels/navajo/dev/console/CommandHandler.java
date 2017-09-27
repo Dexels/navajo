@@ -68,10 +68,6 @@ public class CommandHandler {
 		CompileCommand c = new CompileCommand();
 		c.setBundleCreator(bundleCreator);
 		registerCommand(c,"compile");
-
-		CheckCommand check = new CheckCommand();
-		check.setBundleCreator(bundleCreator);
-		registerCommand(check,"check");
 	
 		LoadCommand load = new LoadCommand();
 		load.setBundleCreator(bundleCreator);
@@ -85,10 +81,6 @@ public class CommandHandler {
 
 		ScriptListCommand script = new ScriptListCommand(bundleContext);
 		registerCommand(script,"scripts");
-		
-		VerifyCommand verify = new VerifyCommand();
-		verify.setBundleCreator(bundleCreator);
-		registerCommand(verify,"verify");
 		
 		CallCommand cc = new CallCommand();
 		cc.setLocalClient(localClient);
