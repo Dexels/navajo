@@ -21,13 +21,12 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.scala-tools</groupId>
-				<artifactId>maven-scala-plugin</artifactId>
-				<version>2.15.2</version>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>scala-maven-plugin</artifactId>
+				<version>3.3.1</version>
 				<executions>
 					<execution>
 						<goals>
-							<goal>add-source</goal>
 							<goal>compile</goal>
 							<goal>testCompile</goal>
 						</goals>
@@ -37,10 +36,5 @@
 		</plugins>
 	</build>
 	<repositories>
-    <repository>
-       <id>scala eclipse toolchain osgi</id>
-       <layout>p2</layout>
-       <url>http://download.scala-ide.org/sdk/helium/e38/scala211/stable/site</url>
-    </repository>
   </repositories>
 </project>
