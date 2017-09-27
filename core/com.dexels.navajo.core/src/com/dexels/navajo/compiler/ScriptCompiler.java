@@ -1,5 +1,6 @@
 package com.dexels.navajo.compiler;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -37,39 +38,41 @@ public abstract class ScriptCompiler {
     protected ExpressionEvaluator expressionEvaluator;
     protected NavajoIOConfig navajoIOConfig = null;
 
-    public void compile(String scriptPath, String tenant, boolean hasTenantSpecificFile, boolean forceTenant)
+    public void compile(File scriptPath, String tenant, boolean hasTenantSpecificFile, boolean forceTenant)
             throws Exception {
         List<Dependency> dependencies = new ArrayList<>();
-        String script = null;
+        File scriptsMap = new File(navajoIOConfig.getRootPath(), getRelativeScriptPath());
+        String script = getRelative(scriptsMap, scriptPath);
+        String scriptName = null;
         String packagePath = null;
-        if (scriptPath.indexOf('/') >= 0) {
-            packagePath = scriptPath.substring(0, scriptPath.lastIndexOf('/'));
-            script = scriptPath.substring(scriptPath.lastIndexOf('/') + 1);
+        if (script.indexOf('/') >= 0) {
+            packagePath = script.substring(0, script.lastIndexOf('/'));
+            scriptName = script.substring(script.lastIndexOf('/') + 1);
         } else {
             packagePath = "";
-            script = scriptPath;
+            scriptName = script;
         }
         
         Set<String> packages;
         try {
-            packages = compileScript(script, packagePath, dependencies, tenant, hasTenantSpecificFile, forceTenant);
+            packages = compileScript(scriptPath, scriptName, packagePath, dependencies, tenant, hasTenantSpecificFile, forceTenant);
         } catch (Throwable t) {
-            logger.error("Exception on compiling script {}!", script, t);
+            logger.error("Exception on compiling script {}!", scriptName, t);
             return;
         }
         
         // Before generating OSGi stuff, check forceTenant
         if (forceTenant) {
-            script += "_" + tenant;
+            scriptName += "_" + tenant;
         }
         
         Set<String> dependentResources = processDependencies(dependencies);
-        generateFactoryClass(script, packagePath, dependentResources);
+        generateFactoryClass(scriptName, packagePath, dependentResources);
 
-        generateManifest(script, "1.0.0", packagePath, script, packages);
-        String compiledDate = generateDs(packagePath, script, dependencies, dependentResources);
+        generateManifest(scriptName, "1.0.0", packagePath, scriptName, packages);
+        String compiledDate = generateDs(packagePath, scriptName, dependencies, dependentResources);
         if (packagePath.startsWith("entity")) {
-            generateEntityDs(packagePath, script, compiledDate, dependencies, dependentResources);
+            generateEntityDs(packagePath, scriptName, compiledDate, dependencies, dependentResources);
         }
 
     }
@@ -205,6 +208,11 @@ public abstract class ScriptCompiler {
         w.print("\r\n");
         w.flush();
         w.close();
+    }
+    
+    private String getRelative(File base, File path) {
+        String relative = base.toURI().relativize(path.toURI()).getPath();
+        return relative;
     }
     
     private String formatCompilationDate() {
@@ -435,9 +443,10 @@ public abstract class ScriptCompiler {
 
     /**
      * Takes care of any script-language specific compilation. Returns a set of required packages
+     * @param scriptPath TODO
      */
-    protected abstract Set<String> compileScript(String script, String packagePath, List<Dependency> dependencies, String tenant,
-            boolean hasTenantSpecificFile, boolean forceTenant) throws Exception;
+    protected abstract Set<String> compileScript(File scriptPath, String script, String packagePath, List<Dependency> dependencies,
+            String tenant, boolean hasTenantSpecificFile, boolean forceTenant) throws Exception;
 
     /**
      * @return A boolean to indicate whether the script has been compiled to a
@@ -460,5 +469,10 @@ public abstract class ScriptCompiler {
      * @return Returns the required OSGi bundles
      */
     public abstract Set<String> getRequiredBundles();
+    
+    /**
+     * @return Returns whether this compiler supports TSL style depdenencies
+     */
+    public abstract boolean supportTslDependencies();
 
 }

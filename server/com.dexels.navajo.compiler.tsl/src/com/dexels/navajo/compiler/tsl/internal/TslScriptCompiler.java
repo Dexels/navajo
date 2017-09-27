@@ -1,5 +1,6 @@
 package com.dexels.navajo.compiler.tsl.internal;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -43,8 +44,8 @@ public class TslScriptCompiler extends ScriptCompiler {
 
  
     @Override
-    public Set<String> compileScript(String script, String packagePath, List<Dependency> dependencies, String tenant,
-            boolean hasTenantSpecificFile, boolean forceTenant) throws Exception {
+    public Set<String> compileScript(File scriptPath, String script, String packagePath, List<Dependency> dependencies,
+            String tenant, boolean hasTenantSpecificFile, boolean forceTenant) throws Exception {
 
         final Set<String> packages = new HashSet<String>();
         for (String pkg : standardPackages) {
@@ -95,6 +96,7 @@ public class TslScriptCompiler extends ScriptCompiler {
         return true;
     }
 
+    
     @Override
     public String getScriptExtension() {
         return SCRIPT_EXTENSION;
@@ -109,6 +111,11 @@ public class TslScriptCompiler extends ScriptCompiler {
 	public Set<String> getRequiredBundles() {
 		return Collections.<String>emptySet();
 
+	}
+
+	@Override
+	public boolean supportTslDependencies() {
+		return true;
 	}
 
 }
