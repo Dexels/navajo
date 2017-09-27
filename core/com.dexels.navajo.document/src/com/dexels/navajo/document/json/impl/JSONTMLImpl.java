@@ -424,9 +424,13 @@ public class JSONTMLImpl implements JSONTML {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 
         Message parent = NavajoFactory.getInstance().createMessage(n,(topLevelMessageName != null ? topLevelMessageName : "Request"));
-        n.addMessage(parent);
         
+        boolean first = true;
         while (jp.nextToken() != null) {
+        	if (first) {
+        		n.addMessage(parent);
+        		first = false;
+        	}
             parse(n, parent, jp);
         }
 		return n;
