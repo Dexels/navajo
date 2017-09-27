@@ -58,7 +58,7 @@ public class ScalaCompiler extends ScriptCompiler {
     
 
     @Override
-    protected Set<String> compileScript(String script, String packagePath, List<Dependency> dependencies, String tenant,
+    protected Set<String> compileScript(File scriptFile, String script, String packagePath, List<Dependency> dependencies, String tenant,
             boolean hasTenantSpecificFile, boolean forceTenant) throws Exception {
     	final Set<String> packages = new HashSet<>();
     	
@@ -88,8 +88,6 @@ public class ScalaCompiler extends ScriptCompiler {
         Global.Run compiler = g.new Run();
         
         ListBuffer<String> files = new ListBuffer<String>();
-        File scriptFolderFile = new File(navajoIOConfig.getRootPath(),this.getRelativeScriptPath());
-        File scriptFile = new File(scriptFolderFile,  packagePath + File.separator + script + this.getScriptExtension());
         String file = scriptFile.getAbsolutePath();
 
         files.$plus$eq(file);
@@ -144,4 +142,10 @@ public class ScalaCompiler extends ScriptCompiler {
     public String getRelativeScriptPath() {
         return SCRIPT_PATH;
     }
+
+
+	@Override
+	public boolean supportTslDependencies() {
+		return false;
+	}
 }
