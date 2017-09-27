@@ -391,6 +391,9 @@ public class SQLMapHelper {
 		case Types.DATE:
 			return "DATE";
 
+		case Types.CHAR:
+			return "CHAR";
+
 		case Types.VARCHAR:
 			return "VARCHAR";
 
@@ -422,7 +425,7 @@ public class SQLMapHelper {
 			return "REAL";
 
 		case Types.SMALLINT:
-			return "SMALLINT";
+			return "INTEGER";
 
 		case Types.BLOB:
 			return "BLOB";
@@ -437,8 +440,64 @@ public class SQLMapHelper {
 			return "JAVA_OBJECT";
 
 		case Types.TINYINT:
-			return "TINYINT";
+			return "INTEGER";
 
+		default:
+			return "UNSUPPORTED: " + i;
+		}
+	}
+	
+	
+	/**
+	 * Returns the Type
+	 * @param i
+	 * @return String
+	 */
+	public static String getSimplefiedType(int i, int scale) {
+		switch (i) {
+		case Types.SQLXML:
+		case Types.CLOB:
+		case Types.NCLOB:
+		case Types.BINARY:
+		case Types.BLOB:
+		case Types.VARBINARY:
+		case Types.LONGVARBINARY:
+			return "binary";
+		case Types.INTEGER:
+		case Types.BIGINT:
+		case Types.SMALLINT:
+		case Types.TINYINT:
+			return "integer";
+		case Types.LONGNVARCHAR:
+		case Types.LONGVARCHAR:
+		case Types.NCHAR:
+		case Types.NVARCHAR:
+		case Types.CHAR:
+		case Types.VARCHAR:
+			return "string";
+		case Types.NUMERIC:
+			if (scale <= 0) {
+				return "integer";
+			} else {
+				return "double";
+			}
+		case Types.DECIMAL:
+		case Types.FLOAT:
+		case Types.DOUBLE:
+			return "double";
+		case -101:
+			return "clocktime";
+		case Types.DATE:
+			return "date";
+		case Types.TIMESTAMP:
+		case Types.TIMESTAMP_WITH_TIMEZONE:
+			return "timestamp";
+		case Types.TIME:
+		case Types.TIME_WITH_TIMEZONE:
+			return "time";
+		case Types.BOOLEAN:
+		case Types.BIT:
+			return "boolean";
 		default:
 			return "UNSUPPORTED: " + i;
 		}
