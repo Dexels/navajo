@@ -29,6 +29,17 @@ class NavajoDocument(val wrapped: Navajo = null) {
     }
     return p.value
   }
+  
+  def propertyValueString(name: String) : String = {
+    propertyValue(name).asInstanceOf[String]
+  }
+  def propertyValueInt(name: String) : Int = {
+    propertyValue(name).asInstanceOf[Int]
+  }
+  def propertyValueBoolean(name: String) : Boolean = {
+    propertyValue(name).asInstanceOf[Boolean]
+  }
+  
 
   def rpcUser: String = {
     wrapped.getHeader().getRPCUser()
