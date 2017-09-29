@@ -14,6 +14,7 @@ import com.dexels.navajo.server.DispatcherFactory
 import scala.runtime
 import com.dexels.navajo.parser.FunctionInterface
 import com.dexels.navajo.scala.document.ScalaMessage
+import com.dexels.navajo.document.json.conversion.JsonTmlFactory
 
 abstract class ScalaScript(val inMessage:ScalaMessage = new ScalaMessage, val outMessage:ScalaMessage = new ScalaMessage) extends CompiledScript {
   var runtime: NavajoRuntime = null
@@ -40,6 +41,9 @@ abstract class ScalaScript(val inMessage:ScalaMessage = new ScalaMessage, val ou
       }
     }
     run()
+    val result = JsonTmlFactory.getInstance().toFlatNavajo("out",outMessage.parent)
+    myAccess.getOutputDoc.addMessage(result.getMessage("out"))
+    
   }
 
   def run(): Unit = throw new RuntimeException("Please override run()!")

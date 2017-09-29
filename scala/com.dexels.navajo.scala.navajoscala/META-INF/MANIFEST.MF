@@ -10,6 +10,7 @@ Bundle-Vendor: Dexels
 Bundle-ClassPath: .
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document,
+ com.dexels.navajo.document.json.conversion,
  com.dexels.navajo.document.types,
  com.dexels.navajo.mapping,
  com.dexels.navajo.parser,
