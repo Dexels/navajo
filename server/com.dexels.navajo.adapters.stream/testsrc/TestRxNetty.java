@@ -11,7 +11,6 @@ import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.netty.protocol.http.client.HttpClient;
 import io.reactivex.schedulers.Schedulers;
 
@@ -38,6 +37,7 @@ public class TestRxNetty {
 	    .doOnCompleted(()->System.err.println("All data received"))
 	    .toBlocking()
 	    .subscribe();
+	
 	}
 	
 }
