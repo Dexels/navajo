@@ -92,7 +92,19 @@ abstract class ScalaScript(val inMessage:ScalaMessage = new ScalaMessage, val ou
 		
     f.reset()
 		
-		params.foreach(param => f.insertOperand(param))
+		params.foreach(param => {
+		  param match  {
+		    case s : Option[Any] =>  {
+		      if (s.isDefined) {
+		        f.insertOperand(s.get)
+		      } else {
+		        f.insertOperand(null)
+		      }
+		    }
+		    case _ =>  f.insertOperand(param)
+		  }
+		})
+		
 		f.evaluateWithTypeChecking();
 		
   }

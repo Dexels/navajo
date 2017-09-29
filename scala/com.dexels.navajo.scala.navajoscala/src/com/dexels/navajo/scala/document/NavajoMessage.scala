@@ -88,9 +88,9 @@ class NavajoMessage(val parent: Message) {
   /* Property methods */
   
   def getString(key : String) : Option[String] = {
-    val prop = parent.getProperty(name)
+    val prop = parent.getProperty(key)
     if (prop != null) {
-      Some(prop.getValue.asInstanceOf[String])
+      return Some(prop.getValue.asInstanceOf[String])
     }
     None
   }
@@ -98,20 +98,20 @@ class NavajoMessage(val parent: Message) {
   def getInt(key : String) : Option[Int] = {
     val prop = parent.getProperty(key)
     if (prop != null) {
-      prop.getTypedValue match {
-        case value : Int => Some(value)
-        case value : _ => Some(value)
+      val value : Any =  prop.getTypedValue
+      value match {
+        case value : Integer => return Some(value)
+        case value : String => return Some(value.toInt)
+        case _ =>  new RuntimeException("Invalid integer: ")
       }
-        
-      Some(prop.getValue.asInstanceOf[Int])
     }
     None
   }
   
   def getBoolean(key : String) : Option[Boolean] = {
-    val prop = parent.getProperty(name)
+    val prop = parent.getProperty(key)
     if (prop != null) {
-      Some(prop.getValue.asInstanceOf[Boolean])
+      return Some(prop.getValue.asInstanceOf[Boolean])
     }
     None
   }
@@ -127,33 +127,33 @@ class NavajoMessage(val parent: Message) {
   }
   
   def put(key : String) = {
-    val prop = parent.getProperty(name)
+    val prop = parent.getProperty(key)
     if (prop != null) {
       prop.setAnyValue(null)
     } else {
-       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), name, Property.STRING_PROPERTY, null, 0, null, Property.DIR_IN)
+       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), key, Property.STRING_PROPERTY, null, 0, null, Property.DIR_IN)
        parent.addProperty(p)
     }
     this
   }
   
   def put(key : String, value : String) = {
-    val prop = parent.getProperty(name)
+    val prop = parent.getProperty(key)
     if (prop != null) {
       prop.setAnyValue(value)
     } else {
-       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), name, Property.STRING_PROPERTY, value, 0, null, Property.DIR_IN)
+       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), key, Property.STRING_PROPERTY, value, 0, null, Property.DIR_IN)
        parent.addProperty(p)
     }
     this
   }
   
   def put(key : String, value : Int) = {
-    val prop = parent.getProperty(name)
+    val prop = parent.getProperty(key)
     if (prop != null) {
       prop.setAnyValue(value)
     } else {
-       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), name, Property.INTEGER_PROPERTY, null, 0, null, Property.DIR_IN)
+       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), key, Property.INTEGER_PROPERTY, null, 0, null, Property.DIR_IN)
        p.setAnyValue(value)
        parent.addProperty(p)
     }
@@ -161,11 +161,11 @@ class NavajoMessage(val parent: Message) {
   }
   
   def put(key : String, value : Boolean) = {
-    val prop = parent.getProperty(name)
+    val prop = parent.getProperty(key)
     if (prop != null) {
       prop.setAnyValue(value)
     } else {
-       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), name, Property.BOOLEAN_PROPERTY, null, 0, null, Property.DIR_IN)
+       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), key, Property.BOOLEAN_PROPERTY, null, 0, null, Property.DIR_IN)
        p.setAnyValue(value)
        parent.addProperty(p)
     }
@@ -173,12 +173,17 @@ class NavajoMessage(val parent: Message) {
   }
   
   def put(key : String, value : Any) = {
-    val prop = parent.getProperty(name)
+    val prop = parent.getProperty(key)
     if (prop != null) {
       prop.setAnyValue(value)
     } else {
-       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), name, Property.STRING_PROPERTY, null, 0, null, Property.DIR_IN)
-       p.setAnyValue(value)
+       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), key, Property.STRING_PROPERTY, null, 0, null, Property.DIR_IN)
+       value match {
+         case v : Option[Any] => {
+            if (v.isDefined) p.setAnyValue(v.get) 
+         }
+         case _ =>  p.setAnyValue(value)
+       }
        parent.addProperty(p)
     }
     this
