@@ -12,35 +12,7 @@ class NavajoDocument(val wrapped: Navajo = null) {
     null
   }
 
-  def property(name: String): NavajoProperty = {
-    val prop = wrapped.getProperty(name)
-    if (prop == null) {
-      //wrapped.write(System.err)
-      //throw new NullPointerException("No property found: " + name);
-      return null
-    }
-    return new NavajoProperty(prop)
-  }
-
-  def propertyValue(name: String): Any = {
-    val p = property(name)
-    if (p == null) {
-      return null
-    }
-    return p.value
-  }
   
-  def propertyValueString(name: String) : String = {
-    propertyValue(name).asInstanceOf[String]
-  }
-  def propertyValueInt(name: String) : Int = {
-    propertyValue(name).asInstanceOf[Int]
-  }
-  def propertyValueBoolean(name: String) : Boolean = {
-    propertyValue(name).asInstanceOf[Boolean]
-  }
-  
-
   def rpcUser: String = {
     wrapped.getHeader().getRPCUser()
   }
@@ -69,15 +41,13 @@ class NavajoDocument(val wrapped: Navajo = null) {
   }
   
 
-  def withMessage(m1: NavajoMessage)(f: (NavajoMessage) => Unit) = {
-
+  def withMessage(messageName: String, f: (NavajoMessage) => Unit) = {
+    val msg = message(messageName)
+    if (msg != null) {
+      f(msg)
+    }
   }
 
-  def withMessage(m1: NavajoMessage, m2: NavajoMessage)(f: (NavajoMessage, NavajoMessage) => Unit) = {
-
-  }
-  def withMessage(m1: NavajoMessage, m2: NavajoMessage, m3: NavajoMessage)(f: (NavajoMessage, NavajoMessage, NavajoMessage) => Unit) = {
-
-  }
+ 
 
 }
