@@ -13,7 +13,6 @@ import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
 import com.github.davidmoten.rx2.Bytes;
 
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
 public class TestHttp {
