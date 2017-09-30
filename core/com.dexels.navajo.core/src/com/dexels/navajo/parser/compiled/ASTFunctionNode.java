@@ -3,6 +3,7 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -52,7 +53,7 @@ public final class ASTFunctionNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException {
 				FunctionInterface f = getFunction();
 				f.setInMessage(doc);
 				f.setCurrentMessage(parentMsg);

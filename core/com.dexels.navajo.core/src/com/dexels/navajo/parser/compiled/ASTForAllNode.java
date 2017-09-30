@@ -3,6 +3,7 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +53,7 @@ public final class ASTForAllNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException {
 				ContextExpression a = jjtGetChild(0).interpretToLambda();
 				ContextExpression b = jjtGetChild(1).interpretToLambda();
 				return interpret(doc,parentMsg,parentParamMsg,parentSel,mapNode,tipiLink,access,immutableMessage, a,b);
@@ -69,7 +70,7 @@ public final class ASTForAllNode extends SimpleNode {
      * @throws TMLExpressionException
      */
     public final Object interpret(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage, ContextExpression a,ContextExpression b) throws TMLExpressionException {
+			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, ContextExpression a,ContextExpression b) throws TMLExpressionException {
 
         boolean matchAll = true;
 

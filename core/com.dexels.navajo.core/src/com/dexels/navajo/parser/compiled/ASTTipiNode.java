@@ -2,6 +2,8 @@
 
 package com.dexels.navajo.parser.compiled;
 
+import java.util.Optional;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
@@ -32,7 +34,7 @@ public ContextExpression interpretToLambda() {
 		
 		@Override
 		public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-				 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
+				 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException {
 		      try {
 				return tipiLink.evaluateExpression(val);
 			} catch (Exception e) {

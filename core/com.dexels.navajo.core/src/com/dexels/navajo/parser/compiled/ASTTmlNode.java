@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -55,7 +56,7 @@ public final class ASTTmlNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) {
+					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) {
 //				System.err.println(" exists: "+exists+" selectionOopt: "+parentSel+" selectionOption: "+selectionOption);
 				List<Property> match = null;
 				List<Object> resultList = new ArrayList<Object>();

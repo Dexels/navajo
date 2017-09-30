@@ -5,6 +5,7 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -45,7 +46,7 @@ public final class ASTListNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException {
 				List<Object> result = new ArrayList<>();
 				for (ContextExpression contextExpression : exprs) {
 					result.add(contextExpression.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage));

@@ -3,6 +3,7 @@ package com.dexels.navajo.parser.compiled;
 
 
 import java.util.Date;
+import java.util.Optional;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -25,7 +26,7 @@ public final class ASTTodayNode extends SimpleNode {
 
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg,
-					Selection parentSel,  MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) {
+					Selection parentSel,  MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) {
 				return new Date();
 			}
 

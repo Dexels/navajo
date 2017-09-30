@@ -53,7 +53,7 @@ public class ExpressionCache {
 			printStats();
 			return cachedValue;
 		}
-		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage.orElse(null));
+		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage);
 		
 	}
 	
@@ -87,7 +87,7 @@ public class ExpressionCache {
 						
 						@Override
 						public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-								 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
+								 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException {
 							return result;
 						}
 					};
