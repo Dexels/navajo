@@ -125,6 +125,11 @@ public final class ASTTmlNode extends SimpleNode {
 		            singleMatch = true;
 
 		        try {
+		        		if(immutableMessage.isPresent()) {
+		        			ReplicationMessage rm = immutableMessage.get();
+		        			return rm.columnValue(text);
+		        			
+		        		}
 		            if (parentMsg == null && !isParam) {
 		                if (text.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
 		                	if(doc==null) {

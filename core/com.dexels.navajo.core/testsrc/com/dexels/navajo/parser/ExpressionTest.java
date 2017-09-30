@@ -3,6 +3,11 @@ package com.dexels.navajo.parser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,13 +21,19 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
+import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.script.api.SystemException;
+import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.replication.api.ReplicationMessage;
+import com.dexels.replication.api.ReplicationMessage.Operation;
+import com.dexels.replication.factory.ReplicationFactory;
 
 public class ExpressionTest {
 
 	private Navajo testDoc;
 	private Message topMessage;
 	private Selection testSelection;
+	private ReplicationMessage immutableMessage;
 
 
 	@Before
@@ -52,6 +63,15 @@ public class ExpressionTest {
 					"MyProp2", "string", "aap" + i, 0, "", "in");
 			a1.addProperty(p2);
 		}
+		
+		Map<String,Object> values = new HashMap<>();
+		Map<String,String> types = new HashMap<>();
+		values.put("SomeString", "Tralala");
+		types.put("SomeString", "string");
+		values.put("SomeInteger", 3);
+		types.put("SomeInteger", "integer");
+		immutableMessage = ReplicationFactory.createReplicationMessage(null, 0, Operation.NONE, Collections.EMPTY_LIST, types, values, Collections.emptyMap(), Collections.emptyMap(),Optional.empty());
+
 	}
 	@Test
 	public void testExpression() throws Exception {
@@ -220,5 +240,16 @@ public class ExpressionTest {
 		Expression.compileExpressions = false;
 		Operand o = Expression.evaluate("[custom|name]", testDoc,null,topMessage,testSelection,null);
 		assertEquals("option1", o.value);
+	}
+	
+	
+//	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
+//			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ReplicationMessage> immutableMessage)
+
+	@Test
+	public void testExpressionWithImmutableMessage() throws Exception {
+		Expression.compileExpressions = true;
+		Operand o = Expression.evaluate("[SomeInteger]", testDoc,(MappableTreeNode)null,topMessage,(Message)null,(Selection)null,(TipiLink)null,Collections.emptyMap() ,Optional.of(immutableMessage));
+		assertEquals(3, o.value);
 	}
 }

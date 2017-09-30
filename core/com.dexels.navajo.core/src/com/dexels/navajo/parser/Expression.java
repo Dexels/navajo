@@ -29,6 +29,7 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.script.api.SystemException;
 //import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.replication.api.ReplicationMessage;
 
 public final class Expression {
 
@@ -46,14 +47,14 @@ public final class Expression {
 	}
 	
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
-			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params)
+			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ReplicationMessage> immutableMessage)
 			throws TMLExpressionException, SystemException {
 //		Access a = params==null?null: (Access) params.get(ACCESS);
 		if (clause.trim().equals("")) {
 			return new Operand(null, "", "");
 		}
 		if(compileExpressions) {
-			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,sel,tl,params,Optional.empty());
+			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,sel,tl,params,immutableMessage);
 		}
 		
 		Object aap = null;
@@ -99,6 +100,11 @@ public final class Expression {
 
 	}
 
+	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
+			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params)
+			throws TMLExpressionException, SystemException {
+		return evaluate(clause, inMessage, o, parent, paramParent, sel, tl, params, Optional.empty());
+	}
 	@Deprecated
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
 			Message paramParent, Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
