@@ -7,6 +7,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.parser.Expression;
@@ -27,10 +28,10 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 
 	@Override
 	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent,
-			Message currentParam, Object tipiLink, Map<String,Object> params) throws NavajoException {
+			Message currentParam, Selection selection, Object tipiLink, Map<String,Object> params) throws NavajoException {
 		ExpressionCache ce = ExpressionCache.getInstance();
 		Access access = params == null? null : (Access)params.get(Expression.ACCESS);
-		Object val =ce.evaluate(clause, inMessage, parent, currentParam, null, null, (MappableTreeNode)mappableTreeNode, (TipiLink) tipiLink, access);
+		Object val =ce.evaluate(clause, inMessage, parent, currentParam, selection, null, (MappableTreeNode)mappableTreeNode, (TipiLink) tipiLink, access);
 		String type = MappingUtils.determineNavajoType(val);
 		return new Operand(val, type, "");
 	}

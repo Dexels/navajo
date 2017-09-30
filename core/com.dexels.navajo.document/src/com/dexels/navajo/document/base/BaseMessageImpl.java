@@ -359,7 +359,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             // ignore
             return;
         }
-
         if (oldProperty == null) {
             propertyList.add(q);
             propertyMap.put(p.getName(), p);
@@ -368,7 +367,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             this.removeProperty(oldProperty);
             propertyList.add(q);
             propertyMap.put(p.getName(), p);
-            p.setParent(this);
         }
         // #TODO: MAYBE THIS IS NOT CORRRECT FOR FINANCIAL FORMS IN SLC...
         // initPropertyFromDefinition(q);
@@ -890,6 +888,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
         for (Property current : getAllProperties()) {
             Property copy = current.copy(n);
+
             cp.addProperty(copy);
         }
         return cp;
@@ -1638,8 +1637,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             return new ArrayList<Message>(messageList);
         }
     }
-    
-    
+
     @Override
     public void merge(Message incoming, boolean preferThis) {
         if (this.isArrayMessage() && incoming.isArrayMessage() && incoming.getDefinitionMessage() != null) {
@@ -2032,5 +2030,15 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			return;
 		}
 		super.printElement(sw, indent);
+	}
+
+	@Override
+	public void setValue(String propertyName, Object value) {
+		Property p = getProperty(propertyName);
+		if(p==null) {
+			p = NavajoFactory.getInstance().createProperty(getRootDoc(), propertyName, Property.STRING_PROPERTY, "", 0, "", Property.DIR_OUT);
+			addProperty(p);;
+		}
+		p.setAnyValue(value);
 	}
 }

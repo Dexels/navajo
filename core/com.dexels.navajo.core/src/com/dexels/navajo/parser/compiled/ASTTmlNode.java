@@ -29,13 +29,12 @@ import com.dexels.navajo.util.Util;
  * @author Arjen Schoneveld
  * @version $Id$
  */
-@SuppressWarnings({"unchecked","rawtypes"})
 public final class ASTTmlNode extends SimpleNode {
     String val = "";
-    Navajo doc = null;
-    Message parentMsg = null;
-    Message parentParamMsg = null;
-    Selection parentSel = null;
+//    Navajo doc = null;
+//    Message parentMsg = null;
+//    Message parentParamMsg = null;
+//    Selection parentSel = null;
     String option = "";
     String selectionOption = "";
     boolean exists = false;
@@ -56,36 +55,47 @@ public final class ASTTmlNode extends SimpleNode {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					String selectionOpt, MappableTreeNode mapNode, TipiLink tipiLink, Access access) {
-//				System.err.println("Val: "+val+" exists: "+exists);
-				List match = null;
-		        ArrayList resultList = new ArrayList();
+//				System.err.println(" exists: "+exists+" selectionOopt: "+parentSel+" selectionOption: "+selectionOption);
+				List<Property> match = null;
+				List<Object> resultList = new ArrayList<Object>();
 		        boolean singleMatch = true;
 		       // boolean selectionProp = false;
-		        String text = val;
+		        String parts[] = val.split("\\|");
 		        
+		        String text = parts.length > 1 ? parts[1] : val;
+		        String document = parts.length > 1 ? parts[0].substring(1) : null;
+//		        System.err.println("Document: "+document);
+//		        if(document.)
 		        boolean isParam = false;
-		        String selectionOption = selectionOpt == null ? "" :selectionOpt;
+//		        String selectionOption = selectionOpt == null ? "" :selectionOpt;
 		        Property prop = null;
 //		        System.err.println("Interpreting TMLNODE... val= "+val);
 		        
-		        if (parentSel != null) {
-		            String dum = text;
-		            if (dum.length() > 1) 
-		              dum = dum.substring(1, text.length());
-		            if (dum.equals("name") ||  selectionOption.equals("name")) {
-		              return parentSel.getName();
-		            }
-		            else if (dum.equals("value") || selectionOption.equals("value")) {
-		              return parentSel.getValue();
-		            } else if (dum.equals("selected") || selectionOption.equals("selected")) {
-		              return Boolean.valueOf(parentSel.isSelected());
-		            }
-		        }
+				if (parentSel != null) {
+					String dum = text;
+					if (dum.length() > 1) {
+						if(dum.startsWith("[")) {
+							dum = dum.substring(1, text.length());
+						}
+					}
+					if (dum.equals("name") || selectionOption.equals("name")) {
+						return parentSel.getName();
+					} else if (dum.equals("value") || selectionOption.equals("value")) {
+						return parentSel.getValue();
+					} else if (dum.equals("selected") || selectionOption.equals("selected")) {
+						return Boolean.valueOf(parentSel.isSelected());
+					}
+				}
 
 		        if (!exists) {
-		            text = text.substring(1, text.length());
+					if(text.startsWith("[")) {
+			            text = text.substring(1, text.length());
+					}
 		        }  else {
-		            text = text.substring(2, text.length());
+					if(text.startsWith("[")) {
+			            text = text.substring(2, text.length());
+					}
+//		            text = text.substring(2, text.length());
 		        }
 		        if (text.length() > 0 && text.charAt(0) == '@') { // relative param property.
 		        		isParam = true;
@@ -146,7 +156,7 @@ public final class ASTTmlNode extends SimpleNode {
 
 		                }
 		                else {
-		                    match = new ArrayList();
+		                    match = new ArrayList<>();
 		                    match.add((!isParam ? parentMsg.getProperty(text) : parentParamMsg.getProperty(text)));
 		                }
 //		                System.err.println("# of matches: "+match.size());
@@ -234,11 +244,11 @@ public final class ASTTmlNode extends SimpleNode {
 		            if (type.equals(Property.SELECTION_PROPERTY)) {
 		                if (!prop.getCardinality().equals("+")) { // Uni-selection property.
 		                    try {
-		                        ArrayList list = prop.getAllSelectedSelections();
+		                        ArrayList<Selection> list = prop.getAllSelectedSelections();
 
 		                        if (list.size() > 0) {
 		                            Selection sel = (Selection) list.get(0);
-		                            System.err.println(">>"+sel+"<<>>"+selectionOption+"<<");
+//		                            System.err.println(">>"+sel+"<<>>"+selectionOption+"<<");
 		                            resultList.add((selectionOption.equals("name") ? sel.getName() : sel.getValue()));
 		                        } else {
 		                          return null;
@@ -248,8 +258,8 @@ public final class ASTTmlNode extends SimpleNode {
 		                    }
 		                } else { // Multi-selection property.
 		                    try {
-		                        ArrayList list = prop.getAllSelectedSelections();
-		                        ArrayList result = new ArrayList();
+		                        List<Selection> list = prop.getAllSelectedSelections();
+		                        List<Object> result = new ArrayList<Object>();
 		                        for (int i = 0; i < list.size(); i++) {
 		                            Selection sel = (Selection) list.get(i);
 		                            Object o = (selectionOption.equals("name")) ? sel.getName() : sel.getValue();

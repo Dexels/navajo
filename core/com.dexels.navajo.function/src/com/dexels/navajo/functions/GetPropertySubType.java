@@ -1,5 +1,6 @@
 package com.dexels.navajo.functions;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -55,8 +56,9 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 		   if (!(o instanceof String)) {
 			     throw new TMLExpressionException(this, "String argument expected");
 			   }
+			   Message curMsg = getCurrentMessage();
 			   String propertyName = (String) o;
-			   Property p = (currentMessage != null ? currentMessage.getProperty(propertyName) : this.getNavajo().getProperty(propertyName));
+			   Property p = (curMsg != null ? curMsg.getProperty(propertyName) : this.getNavajo().getProperty(propertyName));
 			   if (p == null) {
 			     throw new TMLExpressionException(this, "Property " + propertyName + " not found");
 			   }

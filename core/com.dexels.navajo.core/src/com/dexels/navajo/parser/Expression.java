@@ -52,7 +52,7 @@ public final class Expression {
 			return new Operand(null, "", "");
 		}
 		if(compileExpressions) {
-			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,tl,params);
+			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,sel,tl,params);
 		}
 		
 		Object aap = null;

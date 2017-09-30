@@ -31,7 +31,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 	Object propertyValue = getOperand(1);
 
 	if(getOperands().size()==2) {
-		in = currentMessage;
+		in = getCurrentMessage();
 		if(in==null) {
 			throw new TMLExpressionException("Can not FindElement: No supplied message and no currentMessage");
 		}

@@ -18,6 +18,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
 
@@ -50,12 +51,12 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 	@Override
 	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent)
 			throws NavajoException {
-		return evaluate(clause, inMessage, mappableTreeNode, parent, null,null,null);
+		return evaluate(clause, inMessage, mappableTreeNode, parent, null,null,null,null);
 	}
 
 	@Override
-	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent,
-			Message currentParam,Object tipiLink, Map<String,Object> params) throws NavajoException {
+	public Operand evaluate(String clause,  Navajo inMessage, Object mappableTreeNode, Message parent,
+			Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params) throws NavajoException {
 		if (parent != null) {
 			// System.err.println("Inmessage info: "+parent.getIndex()+" type:
 			// "+parent.getType()+" name: "+parent.getName());
@@ -63,7 +64,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 		}
 		try {
 			return Expression.evaluate(clause, inMessage, (MappableTreeNode) mappableTreeNode, parent, currentParam,
-					null, (TipiLink)tipiLink, params);
+					selection, (TipiLink)tipiLink, params);
 		} catch (Throwable ex) {
 
 			throw NavajoFactory.getInstance()

@@ -60,7 +60,7 @@ public class SQL {
 				System.err.println("CREATING DATASOURCE!");
 				ds = new oracle.jdbc.pool.OracleDataSource();
 			    ds.setDriverType("thin");
-			    ds.setServerName("10.0.0.1");
+			    ds.setServerName("localhost");
 			    ds.setDatabaseName("AARDBEI");
 			    ds.setPortNumber(1521);
 			    ds.setUser("username");
@@ -77,7 +77,7 @@ public class SQL {
 	        Map<String,Object> props = new HashMap<>();
 	        props.put("type", "mysql");
 	        props.put("name", "authentication");
-	        props.put("url", "jdbc:mysql://10.0.0.1/competition");
+	        props.put("url", "jdbc:mysql://localhost/competition");
 	        props.put("user", "username");
 	        props.put("password", "password");
 //	        dsc.activate(props);
@@ -101,7 +101,7 @@ public class SQL {
 		if(connection!=null) {
 			return connection;
 		}
-		Pool<Connection> resolved = Pools.nonBlocking().connectionProvider(new ConnectionProviderFromDataSource(ds)).build();
+		Pool<Connection> resolved = Pools.nonBlocking().maxPoolSize(20).connectionProvider(new ConnectionProviderFromDataSource(ds)).build();
 		resolvedPools.put(ds, resolved);
 		return resolved;
 	}
@@ -109,6 +109,7 @@ public class SQL {
 	
 	public static Flowable<ReplicationMessage> query(String datasource, String tenant, String query, Object... params) {
 //		ConnectionProviderFromDataSource d;
+		System.err.println("# of params: "+params.length);
 		DataSource ds = resolveDataSource(datasource, tenant);
 		Pool<Connection> pool =  getPoolForDataSource(ds);
 
@@ -116,6 +117,7 @@ public class SQL {
 			.select(query)
 			.parameterList(Arrays.asList(params))
 			.get(SQL::resultSet);
+//			.doOnNext(e->System.err.println("Querying with thread: "+Thread.currentThread()));
 	}
 	
 

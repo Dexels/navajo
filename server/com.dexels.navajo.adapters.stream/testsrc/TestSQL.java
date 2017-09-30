@@ -10,6 +10,7 @@ import java.util.function.Function;
 
 import javax.sql.DataSource;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,22 +28,30 @@ import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 import io.reactivex.Single;
 import io.reactivex.functions.BiFunction;
+import io.reactivex.schedulers.Schedulers;
 
 public class TestSQL {
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(TestSQL.class);
 
+	private final Map<String,BiFunction<Message, Message, Message>> reduceFunctions = new HashMap<>();
+	
+	@Before
+	public void setup() {
+	}
 	@Test
 	public void testSQL() {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;
 		AtomicInteger count = new AtomicInteger();
 		SQL.query("dummy", "tenant", "select * from ORGANIZATION")
+//			.subscribeOn(Schedulers.io())
 			.map(msg->msg.without(Arrays.asList("SHORTNAME,UPDATEBY,REMARKS".split(","))))
 //			.doOnNext(e->System.err.println(new String(ReplicationFactory.getInstance().serialize(e))))
+//			.observeOn(Schedulers.io())
 			.map(msg->StreamDocument.replicationToMessage(msg, "Organization", true))
-			.flatMapSingle(e->getOrganizationAttributes(e),false,5)
+			.flatMapSingle(e->getOrganizationAttributes(e),false,15)
 //			.map(e->set("'ORGANIZATIONID'","ToLower([ORGANIZATIONID])"))
 //			.map(e->delete("LASTUPDATE").apply(e))
 			.map(e->rename("ORGANIZATIONID","ID").apply(e))
@@ -58,7 +67,7 @@ public class TestSQL {
 			.lift(StreamDocument.serialize())
 			
 			.blockingForEach(e->{
-				System.err.println(":: "+new String(e));
+//				System.err.println(":: "+new String(e));
 				count.incrementAndGet();
 			});
 		System.err.println("Total: "+count.get());
@@ -72,9 +81,11 @@ public class TestSQL {
 
 	public Single<Message> getOrganizationAttributes(Message msg) throws TMLExpressionException, SystemException {
 		return SQL.query("dummy", "tenant", "select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?", msg.getProperty("ORGANIZATIONID").getValue())
-			.doOnNext(e->System.err.println(new String(ReplicationFactory.getInstance().serialize(e))))
+			.observeOn(Schedulers.io())
+			.subscribeOn(Schedulers.io())
+//			.doOnNext(e->System.err.println(new String(ReplicationFactory.getInstance().serialize(e))))
 			.map(m->StreamDocument.replicationToMessage(m, "Organization", false))
-			.reduce(msg, this.reduce());
+			.reduce(msg, set("[ATTRIBNAME]", "[ATTRIBVALUE]"));
 			
 	}
 
@@ -86,34 +97,35 @@ public class TestSQL {
 //		return res;
 //	});
 //
-	
-	public BiFunction<Message,Message,Message> reduce() throws TMLExpressionException, SystemException {
-		return set("[item|ATTRIBNAME]", "[item|ATTRIBVALUE]");
-	}
+//	public BiFunction<Message,Message,Message> reduce() throws TMLExpressionException, SystemException {
+//		return set("[ATTRIBNAME]", "[ATTRIBVALUE]");
+//	}
+
 	public static ReplicationMessage empty() {
 		return ReplicationFactory.createReplicationMessage(null, System.currentTimeMillis(), ReplicationMessage.Operation.NONE, Collections.emptyList(), Collections.emptyMap(), Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Optional.of(()->{}));
 	}
 	
 	
-	public BiFunction<Message,Message,Message> set(String keyExpression, String valueExpression) throws TMLExpressionException, SystemException {
+	public BiFunction<Message,Message,Message> set(String... params) throws TMLExpressionException, SystemException {
 		return (reduc,item)->{
 			try {
-				String key = (String)evaluate(keyExpression,e->item);
-//				System.err.println("Key: "+key);
-				Object value = evaluate(valueExpression, e->item);
-//				System.err.println("Value: "+value);
+				String keyExpression = params[0];
+				String valueExpression = params[1];
+				String key = (String)evaluate(keyExpression,item);
+				Object value = evaluate(valueExpression, item);
 				reduc.setValue(key,value);
 			} catch (Throwable e) {
 				logger.error("Error: ", e);
 			}
 			return reduc;
 		};
-//		return in;
 	}
+	
+	
 
-	private Object evaluate(String valueExpression, Function<String, Message> m) throws SystemException {
+	private Object evaluate(String valueExpression, Message m) throws SystemException {
 //		System.err.println("Evaluating: "+valueExpression);
-		return Expression.evaluate(valueExpression, s->null, null, m,null,null,null,null).value;
+		return Expression.evaluate(valueExpression, null, null, m,null,null,null,null).value;
 	}
 	
 	public Message getMessage(String prefix, Message core) {
@@ -148,10 +160,9 @@ public class TestSQL {
         Map<String,Object> props = new HashMap<>();
         props.put("type", "mysql");
         props.put("name", "authentication");
-        props.put("url", "jdbc:mysql://10.0.0.1/competition");
-        props.put("user", "authentication");
-        props.put("password", "authentication");
-//	        dsc.activate(props);
+        props.put("url", "jdbc:mysql://localhost/competition");
+        props.put("user", "username");
+        props.put("password", "password");
         Properties p = new Properties();
         p.putAll(props);
         try {

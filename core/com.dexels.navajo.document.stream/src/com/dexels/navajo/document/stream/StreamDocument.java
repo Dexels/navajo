@@ -63,6 +63,9 @@ public class StreamDocument {
 
 	private StreamDocument() {}
 
+	public static Flowable<NavajoStreamEvent> streamMessage(Message message) {
+		return NavajoDomStreamer.streamMessage(message);
+	}
 	public static ObservableOperator<NavajoStreamEvent, Navajo> domStream() {
 		return new ObservableOperator<NavajoStreamEvent,Navajo>() {
 

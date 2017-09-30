@@ -73,7 +73,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		ExpressionEvaluator expressionEvaluator = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 		o = expressionEvaluator.evaluate(expression, inDoc,
-				getCurrentTreeNode(), top, getTopParamStackMessage(),null,null);
+				getCurrentTreeNode(), top, getTopParamStackMessage(),null,null,null);
 		// } catch (Throwable e) {
 		// log("Error evaluating expression: "+expression);
 		// e.printStackTrace(getLogger());

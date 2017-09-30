@@ -45,7 +45,7 @@ public class GetPropertyAttribute extends FunctionInterface {
 	public Object getAttribute(String propertyName, String attribute) throws com.dexels.navajo.parser.TMLExpressionException {
 
 
-		Property p = (currentMessage != null ? currentMessage.getProperty(propertyName) : this.getNavajo().getProperty(propertyName));
+		Property p = (getCurrentMessage() != null ? getCurrentMessage().getProperty(propertyName) : this.getNavajo().getProperty(propertyName));
 		if (p == null) {
 			throw new TMLExpressionException(this, "Property " + propertyName + " not found");
 		}

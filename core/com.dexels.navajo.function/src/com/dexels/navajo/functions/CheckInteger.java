@@ -1,5 +1,6 @@
 package com.dexels.navajo.functions;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.FunctionInterface;
 
@@ -48,8 +49,9 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 //      if (o2 instanceof Boolean) {
 //        force = ((Boolean) o2).booleanValue();
 //      }
+    	  final Message curMsg = getCurrentMessage();
       String propertyName = (String) o;
-      Property p = (currentMessage != null ? currentMessage.getProperty(propertyName) : this.getNavajo().getProperty(propertyName));
+      Property p = (curMsg != null ? curMsg.getProperty(propertyName) : this.getNavajo().getProperty(propertyName));
       if (p != null) {
         o = p.getValue();
       }

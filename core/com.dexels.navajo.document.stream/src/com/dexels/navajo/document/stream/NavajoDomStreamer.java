@@ -74,12 +74,20 @@ public class NavajoDomStreamer {
 //		subscribe.onCompleted();
 		return result;
 	}
-	
+	public static Flowable<NavajoStreamEvent> streamMessage(Message message) {
+		List<NavajoStreamEvent> result = new ArrayList<>();
+		Navajo output = NavajoFactory.getInstance().createNavajo();
+		emitMessage(message,result,output);
+		return Flowable.fromIterable(result);
+		
+	}
 	
 	// TODO extract async and piggyback attributes
 	private static NavajoStreamEvent header(Header h) {
 		return Events.started(new NavajoHead(h.getRPCName(), h.getRPCUser(), h.getRPCPassword(), h.getHeaderAttributes(),Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap()));
 	}
+	
+
 	private static void emitMessage(Message message,List<NavajoStreamEvent> list, Navajo outputNavajo) {
 //		String path = getPath(message);
 		String name = message.getName();
