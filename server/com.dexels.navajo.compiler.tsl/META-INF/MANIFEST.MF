@@ -16,6 +16,7 @@ Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
  com.dexels.navajo.server.test,
+ com.dexels.replication.api;version="9.1.0",
  javax.lang.model,
  javax.lang.model.element,
  javax.lang.model.type,
@@ -55,5 +56,5 @@ Export-Package: com.dexels.navajo.compiler.tsl,com.dexels.navajo.compi
  pl",com.dexels.osgicompiler,com.dexels.osgicompiler.internal;uses:="j
  avax.tools,com.dexels.osgicompiler,org.osgi.framework",navajotsl;uses
  :="org.osgi.framework"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy

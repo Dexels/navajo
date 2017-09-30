@@ -16,6 +16,7 @@ import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.replication.api.ReplicationMessage;
 
 public final class ASTForAllNode extends SimpleNode {
 
@@ -51,10 +52,10 @@ public final class ASTForAllNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
 				ContextExpression a = jjtGetChild(0).interpretToLambda();
 				ContextExpression b = jjtGetChild(1).interpretToLambda();
-				return interpret(doc,parentMsg,parentParamMsg,parentSel,selectionOption,mapNode,tipiLink,access, a,b);
+				return interpret(doc,parentMsg,parentParamMsg,parentSel,mapNode,tipiLink,access,immutableMessage, a,b);
 			}
 		};
 	}
@@ -68,7 +69,7 @@ public final class ASTForAllNode extends SimpleNode {
      * @throws TMLExpressionException
      */
     public final Object interpret(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-			String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access, ContextExpression a,ContextExpression b) throws TMLExpressionException {
+			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage, ContextExpression a,ContextExpression b) throws TMLExpressionException {
 
         boolean matchAll = true;
 
@@ -77,7 +78,7 @@ public final class ASTForAllNode extends SimpleNode {
         else
             matchAll = false;
 
-        String msgList = (String) a.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode, tipiLink, access);
+        String msgList = (String) a.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage);
         System.err.println("MsgList: "+msgList);
         try {
             List<Message> list = null;
@@ -99,7 +100,7 @@ public final class ASTForAllNode extends SimpleNode {
 
 //                String expr = (String) b;
 
-                Object apply = b.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode, tipiLink, access);
+                Object apply = b.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage);
                 System.err.println(">><> "+apply);
 				boolean result = (Boolean)apply;
 

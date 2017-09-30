@@ -9,6 +9,7 @@ import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.replication.api.ReplicationMessage;
 
 public final class ASTOrNode extends SimpleNode {
     public ASTOrNode(int id) {
@@ -27,8 +28,8 @@ public final class ASTOrNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode,tipiLink,access);
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
+		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage);
 		        Boolean ba = (Boolean) a;
 		        if(a==null) {
 		        		ba = Boolean.FALSE;
@@ -36,7 +37,7 @@ public final class ASTOrNode extends SimpleNode {
 		        if (ba.booleanValue())
 		            return Boolean.TRUE;
 
-		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode,tipiLink,access);
+		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage);
 		        Boolean bb = (Boolean) b;
 		        if(b==null) {
 		        		b = Boolean.FALSE;

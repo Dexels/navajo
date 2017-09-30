@@ -9,6 +9,7 @@ import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.replication.api.ReplicationMessage;
 
 public final class ASTAndNode extends SimpleNode {
     public ASTAndNode(int id) {
@@ -23,8 +24,8 @@ public final class ASTAndNode extends SimpleNode {
 		return new ContextExpression() {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode,tipiLink,access);
+					MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
+		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage);
 				if(a==null) {
 		        		return Boolean.FALSE;
 		        }
@@ -32,7 +33,7 @@ public final class ASTAndNode extends SimpleNode {
 		        if (!(ba.booleanValue())) {
 					return Boolean.FALSE;
 				}
-		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode,tipiLink,access);
+		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access, immutableMessage);
 		        if(b==null) {
 		        		return Boolean.FALSE;
 		        }

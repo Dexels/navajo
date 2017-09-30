@@ -10,9 +10,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Stack;
-
-import navajorhino.Version;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContinuationPending;
@@ -39,6 +38,8 @@ import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.MappingException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.DispatcherFactory;
+
+import navajorhino.Version;
 
 public abstract class ScriptEnvironment implements Serializable {
 
@@ -319,7 +320,7 @@ public abstract class ScriptEnvironment implements Serializable {
 	public Object navajoEvaluate(String expression, Navajo n)
 			throws NavajoException {
 		Operand o = NavajoFactory.getInstance().getExpressionEvaluator()
-				.evaluate(expression, n);
+				.evaluate(expression, n,Optional.empty());
 		if (o == null) {
 			return null;
 		}
@@ -328,7 +329,7 @@ public abstract class ScriptEnvironment implements Serializable {
 
 	public Object navajoEvaluate(String expression) throws NavajoException {
 		Operand o = NavajoFactory.getInstance().getExpressionEvaluator()
-				.evaluate(expression, access.getInDoc());
+				.evaluate(expression, access.getInDoc(),Optional.empty());
 
 		if (o == null) {
 			return null;
@@ -519,7 +520,7 @@ public abstract class ScriptEnvironment implements Serializable {
 		if(sr==null || sr.length==0) {
 			return null;
 		}
-		Class<?> c = Version.getDefaultContext().getService(sr[0]);
+		Class<?> c = (Class<?>) Version.getDefaultContext().getService(sr[0]);
 		return c;
 	}
 

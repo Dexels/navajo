@@ -10,6 +10,7 @@ package com.dexels.navajo.parser;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Message;
@@ -52,7 +53,7 @@ public final class Expression {
 			return new Operand(null, "", "");
 		}
 		if(compileExpressions) {
-			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,sel,tl,params);
+			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,sel,tl,params,Optional.empty());
 		}
 		
 		Object aap = null;

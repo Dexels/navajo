@@ -31,9 +31,9 @@ public class CompareEvaluators {
     	
     	String expr = "-1 * ToMoney( ( ToDouble(1000) / ( 100 + ( ToDouble(ToPercentage(0.2)) * 100 ) ) ) * ( 100 * ToDouble(ToPercentage(0.3)) ) )";
     	NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
-    	Operand o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(expr, null);
+    	Operand o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(expr, null,null);
     	NavajoFactory.getInstance().setExpressionEvaluator(new CachedExpressionEvaluator());
-    	Operand o2 = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(expr, null);
+    	Operand o2 = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(expr, null,null);
     	System.err.println("o: "+o.value+" o2: "+o2.value);
     	Assert.assertEquals(o.value, o2.value);
     	//    	ToDouble td = new ToDouble();

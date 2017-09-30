@@ -9,6 +9,7 @@ import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.replication.api.ReplicationMessage;
 
 
 public final class ASTStringConstantNode extends SimpleNode {
@@ -30,7 +31,7 @@ public final class ASTStringConstantNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
 		        String s = val.substring(1, val.length() - 1);
 		        String t = s.replaceAll("\\\\'","'");
 		        return t;

@@ -16,6 +16,7 @@ Export-Package: com.dexels.navajo.document;version="2.2.1",com.dexels.
  ument.types;version="2.2.1",com.dexels.navajo.persistence;version="2.
  2.1",org.dexels.utils;version="2.2.1"
 Import-Package: com.dexels.navajo.version,
+ com.dexels.replication.api;version="9.1.0",
  com.fasterxml.jackson.annotation;version="2.6.3",
  com.fasterxml.jackson.core;version="2.6.3",
  com.fasterxml.jackson.databind;version="2.6.3",

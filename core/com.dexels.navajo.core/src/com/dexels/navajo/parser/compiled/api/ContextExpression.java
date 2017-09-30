@@ -7,8 +7,9 @@ import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.replication.api.ReplicationMessage;
 
 public interface ContextExpression {
-	public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel, String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException;
+	public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel, MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException;
 	public boolean isLiteral();
 }

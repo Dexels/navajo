@@ -1,6 +1,7 @@
 package com.dexels.navajo.parser.compiled.api;
 
 import java.io.StringReader;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +19,7 @@ import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.Observable;
 
@@ -44,14 +46,14 @@ public class ExpressionCache {
 	}
 
 	public Object evaluate(String expression,Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-			String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) {
+			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) {
 		Object cachedValue = expressionValueCache.get(expression);
 		if(cachedValue!=null) {
 			pureHitCount.incrementAndGet();
 			printStats();
 			return cachedValue;
 		}
-		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode, tipiLink,access);
+		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage.orElse(null));
 		
 	}
 	
@@ -85,7 +87,7 @@ public class ExpressionCache {
 						
 						@Override
 						public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-								String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
+								 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
 							return result;
 						}
 					};

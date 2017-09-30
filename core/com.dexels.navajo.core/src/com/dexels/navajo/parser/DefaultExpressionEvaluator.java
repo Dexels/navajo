@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.replication.api.ReplicationMessage;
 
 /**
  * <p>
@@ -49,14 +51,14 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 	}
 
 	@Override
-	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent)
+	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ReplicationMessage> immutableMessage)
 			throws NavajoException {
-		return evaluate(clause, inMessage, mappableTreeNode, parent, null,null,null,null);
+		return evaluate(clause, inMessage, mappableTreeNode, parent, null,null,null,null,immutableMessage);
 	}
 
 	@Override
 	public Operand evaluate(String clause,  Navajo inMessage, Object mappableTreeNode, Message parent,
-			Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params) throws NavajoException {
+			Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params, Optional<ReplicationMessage> immutableMessage) throws NavajoException {
 		if (parent != null) {
 			// System.err.println("Inmessage info: "+parent.getIndex()+" type:
 			// "+parent.getType()+" name: "+parent.getName());
@@ -73,7 +75,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 	}
 
 	@Override
-	public Operand evaluate(String clause, Navajo inMessage) throws NavajoException {
+	public Operand evaluate(String clause, Navajo inMessage, Optional<ReplicationMessage> immutableMessage) throws NavajoException {
 		try {
 			return Expression.evaluate(clause, inMessage);
 		} catch (Throwable ex) {

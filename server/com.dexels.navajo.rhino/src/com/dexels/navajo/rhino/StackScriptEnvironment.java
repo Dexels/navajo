@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Stack;
 
 import com.dexels.navajo.document.ExpressionEvaluator;
@@ -73,7 +74,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		ExpressionEvaluator expressionEvaluator = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 		o = expressionEvaluator.evaluate(expression, inDoc,
-				getCurrentTreeNode(), top, getTopParamStackMessage(),null,null,null);
+				getCurrentTreeNode(), top, getTopParamStackMessage(),null,null,null,Optional.empty());
 		// } catch (Throwable e) {
 		// log("Error evaluating expression: "+expression);
 		// e.printStackTrace(getLogger());

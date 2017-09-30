@@ -1,7 +1,9 @@
 package com.dexels.navajo.document;
 
+import com.dexels.replication.api.ReplicationMessage;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -13,9 +15,9 @@ import java.util.Map;
  */
 
 public interface ExpressionEvaluator {
-  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException;
-  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params) throws NavajoException;
-  public Operand evaluate(String clause, Navajo inMessage) throws NavajoException;
+  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ReplicationMessage> immutableMessage) throws NavajoException;
+  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params, Optional<ReplicationMessage> immutableMessage) throws NavajoException;
+  public Operand evaluate(String clause, Navajo inMessage, Optional<ReplicationMessage> immutableMessage) throws NavajoException;
   public Map<Property,List<Property>> createDependencyMap(Navajo n) throws NavajoException;
   public List<Property> processRefreshQueue(Map<Property,List<Property>> depMap) throws NavajoException;
 }

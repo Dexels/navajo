@@ -533,7 +533,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 					throw NavajoFactory.getInstance().createNavajoException("Can only evaluate expression type properties!");
 				}
 				try {
-					o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(getValue(), getRootDoc(), null, getParentMessage());
+					o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(getValue(), getRootDoc(), null, getParentMessage(),null);
 					evaluatedType = o.type;
 					return o.value;
 				} catch (Throwable e) {

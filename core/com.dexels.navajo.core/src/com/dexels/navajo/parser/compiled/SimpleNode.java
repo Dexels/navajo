@@ -13,6 +13,7 @@ import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.replication.api.ReplicationMessage;
 
 public abstract class SimpleNode implements Node {
     protected Node parent;
@@ -109,9 +110,9 @@ public abstract class SimpleNode implements Node {
 		return new ContextExpression() {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode,tipiLink,access);
-		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode,tipiLink,access);
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
+		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage);
+		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage);
 				return func.apply(a, b);
 			}
 
@@ -128,8 +129,8 @@ public abstract class SimpleNode implements Node {
 		return new ContextExpression() {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode, tipiLink, access);
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
+		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage);
 				return func.apply(a);
 			}
 

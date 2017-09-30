@@ -19,6 +19,7 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
 import com.dexels.navajo.util.Util;
+import com.dexels.replication.api.ReplicationMessage;
 
 /**
  *
@@ -54,7 +55,7 @@ public final class ASTTmlNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					String selectionOpt, MappableTreeNode mapNode, TipiLink tipiLink, Access access) {
+					MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) {
 //				System.err.println(" exists: "+exists+" selectionOopt: "+parentSel+" selectionOption: "+selectionOption);
 				List<Property> match = null;
 				List<Object> resultList = new ArrayList<Object>();

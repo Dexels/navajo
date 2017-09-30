@@ -14,6 +14,7 @@ import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.replication.api.ReplicationMessage;
 
 public final class ASTListNode extends SimpleNode {
 
@@ -44,10 +45,10 @@ public final class ASTListNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
 				List<Object> result = new ArrayList<>();
 				for (ContextExpression contextExpression : exprs) {
-					result.add(contextExpression.apply(doc, parentMsg, parentParamMsg, parentSel, selectionOption, mapNode, tipiLink, access));
+					result.add(contextExpression.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage));
 				}
 				return result;
 			}

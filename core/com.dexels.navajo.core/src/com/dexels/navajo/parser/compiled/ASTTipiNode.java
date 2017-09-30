@@ -10,6 +10,7 @@ import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.replication.api.ReplicationMessage;
 
 public final class ASTTipiNode extends SimpleNode {
 
@@ -31,7 +32,7 @@ public ContextExpression interpretToLambda() {
 		
 		@Override
 		public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-				String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) throws TMLExpressionException {
+				 MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) throws TMLExpressionException {
 		      try {
 				return tipiLink.evaluateExpression(val);
 			} catch (Exception e) {

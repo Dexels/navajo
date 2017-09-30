@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.script.api.CompiledScriptFactory;
 import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
+import com.dexels.replication.api.ReplicationMessage;
 
 public class TslCompilerComponent implements ScriptCompiler {
 
@@ -103,7 +105,7 @@ public class TslCompilerComponent implements ScriptCompiler {
                     logger.info("It's an aadapter field. with multiple: " + adapterFieldDep.hasMultipleDependencies() + " type: "
                             + d.getClass());
                     logger.info("id: " + adapterFieldDep.getId());
-                    Operand op = expressionEvaluator.evaluate(adapterFieldDep.getId(), null);
+                    Operand op = expressionEvaluator.evaluate(adapterFieldDep.getId(),null, Optional.<ReplicationMessage>empty());
                     if (op != null && op.value instanceof String) {
                         logger.debug("Succeeded evaluation of id: " + ((String) op.value));
                         dependentResources.add((String) op.value);

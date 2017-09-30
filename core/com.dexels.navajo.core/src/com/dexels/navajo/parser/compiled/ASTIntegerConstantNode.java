@@ -8,6 +8,7 @@ import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.replication.api.ReplicationMessage;
 
 public final class ASTIntegerConstantNode extends SimpleNode {
 
@@ -32,7 +33,7 @@ public final class ASTIntegerConstantNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg,
-					Selection parentSel, String selectionOption, MappableTreeNode mapNode, TipiLink tipiLink, Access access) {
+					Selection parentSel,  MappableTreeNode mapNode, TipiLink tipiLink, Access access, ReplicationMessage immutableMessage) {
 				return interpret();
 			}
 		};

@@ -58,10 +58,10 @@ public class ExpressionTest {
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
-		Operand o = ee.evaluate("1+1", null);
+		Operand o = ee.evaluate("1+1", null, null);
 		assertEquals(2, o.value);
 
-		o = ee.evaluate("TODAY + 0#0#2#0#0#0", null);
+		o = ee.evaluate("TODAY + 0#0#2#0#0#0", null, null);
 		System.err.println(o.value);
 
 		Navajo testDoc = NavajoFactory.getInstance().createNavajo();
@@ -84,11 +84,11 @@ public class ExpressionTest {
 
 		o = ee.evaluate(
 				"'hallo:' + [/MyTop/MyArrayMessage@MyProp=noot1/MyProp2]",
-				testDoc);
+				testDoc, null);
 
 		assertEquals("hallo:aap1", o.value);
 
-		o = ee.evaluate("'hallo:' + [/MyTop/MyArrayMessage@2/MyProp2]", testDoc);
+		o = ee.evaluate("'hallo:' + [/MyTop/MyArrayMessage@2/MyProp2]", testDoc, null);
 
 		assertEquals("hallo:aap2", o.value);
 
@@ -105,7 +105,7 @@ public class ExpressionTest {
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
-		Operand o = ee.evaluate("'ø'+'æ'", null);
+		Operand o = ee.evaluate("'ø'+'æ'", null, null);
 		assertEquals("øæ", o.value);
 	}
 
@@ -114,7 +114,7 @@ public class ExpressionTest {
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
-		Operand o = ee.evaluate("1\n+\n1", null);
+		Operand o = ee.evaluate("1\n+\n1", null, null);
 		assertEquals(2, o.value);
 	}
 
@@ -123,7 +123,7 @@ public class ExpressionTest {
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
-		Operand o = ee.evaluate("'aap\nnoot'", null);
+		Operand o = ee.evaluate("'aap\nnoot'", null, null);
 		assertEquals("aap\nnoot", o.value);
 	}
 	
@@ -132,7 +132,7 @@ public class ExpressionTest {
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
-		Operand o = ee.evaluate("'àáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżž'+'àáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżž'", null);
+		Operand o = ee.evaluate("'àáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżž'+'àáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżž'", null,null);
 		assertEquals("àáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżžàáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżž", o.value);
 	}
 	
