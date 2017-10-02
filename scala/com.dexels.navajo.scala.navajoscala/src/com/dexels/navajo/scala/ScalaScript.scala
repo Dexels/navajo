@@ -16,7 +16,7 @@ import com.dexels.navajo.parser.FunctionInterface
 import com.dexels.navajo.scala.document.ScalaMessage
 import com.dexels.navajo.document.json.conversion.JsonTmlFactory
 
-abstract class ScalaScript(val inMessage:ScalaMessage = new ScalaMessage, val outMessage:ScalaMessage = new ScalaMessage) extends CompiledScript {
+abstract class ScalaScript() extends CompiledScript {
   var runtime: NavajoRuntime = null
   val validations = new ListBuffer[NavajoRuntime => Boolean]
 
@@ -41,17 +41,15 @@ abstract class ScalaScript(val inMessage:ScalaMessage = new ScalaMessage, val ou
       }
     }
     run()
-    val result = JsonTmlFactory.getInstance().toFlatNavajo("out",outMessage.parent)
-    myAccess.getOutputDoc.addMessage(result.getMessage("out"))
     
   }
 
   def run(): Unit = throw new RuntimeException("Please override run()!")
 
-  def navajoInput = new NavajoDocument(myAccess.getInDoc)
-  def navajoOutput = new NavajoDocument(myAccess.getOutputDoc)
+  def input = new NavajoDocument(myAccess.getInDoc)
+  def output = new NavajoDocument(myAccess.getOutputDoc)
   def access = myAccess
-  def newMessage = new ScalaMessage
+
 
   def callScript(script: String)(withResult: NavajoDocument => Unit) {
     val in = NavajoFactory.create()
@@ -66,8 +64,7 @@ abstract class ScalaScript(val inMessage:ScalaMessage = new ScalaMessage, val ou
     in.wrapped.addHeader(header.wrapped);
     val outdoc = new NavajoDocument(DispatcherFactory.getInstance.handle(in.wrapped,access.getTenant, true));
     if (outdoc.message("error") != null) {
-      navajoOutput.addMessage(outdoc.message("error"))
-     
+      output.addMessage(outdoc.message("error"))
     } else {
        withResult(outdoc);
     }
