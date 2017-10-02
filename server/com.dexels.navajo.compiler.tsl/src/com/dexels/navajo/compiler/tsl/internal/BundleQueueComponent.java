@@ -22,7 +22,7 @@ import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 
 public class BundleQueueComponent implements EventHandler, BundleQueue {
-
+	private static final String SCALA_FOLDER = "scala" + File.separator;
     private static final String SCRIPTS_FOLDER = "scripts" + File.separator;
     private static final List<String> SUPPORTED_EXTENSIONS = Arrays.asList(".xml", ".scala");
     private BundleCreator bundleCreator = null;
@@ -112,21 +112,23 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
     public void handleEvent(Event e) {
         try {
 
-            checkForChangedScripts(e);
-            checkForRemovedScripts(e);
+            checkForChangedScripts(e, SCRIPTS_FOLDER);
+            checkForRemovedScripts(e, SCRIPTS_FOLDER);
+            checkForRemovedScripts(e, SCALA_FOLDER);
+            checkForChangedScripts(e, SCALA_FOLDER);
         } catch (Exception e1) {
             logger.error("Exception on handling event: {}", e);
         }
 
     }
 
-    private void checkForRemovedScripts(Event e) {
-        List<String> deletedScripts = RepositoryEventParser.filterDeleted(e, SCRIPTS_FOLDER);
+    private void checkForRemovedScripts(Event e, String folder) {
+        List<String> deletedScripts = RepositoryEventParser.filterDeleted(e, folder);
         for (String deletedScript : deletedScripts) {
             // Replace windows backslashes with normal ones
             deletedScript = deletedScript.replace("\\", "/");
             // Uninstall bundle
-            String stripped = deletedScript.substring(SCRIPTS_FOLDER.length());
+            String stripped = deletedScript.substring(folder.length());
             int dotIndex = stripped.lastIndexOf(".");
             if (dotIndex < 0) {
                 logger.info("Scripts need an extension, and {} has none. Ignoring.");
@@ -146,16 +148,16 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
         }
     }
 
-    private void checkForChangedScripts(Event e) {
+    private void checkForChangedScripts(Event e, String folder) {
         RepositoryInstance ri = (RepositoryInstance) e.getProperty("repository");
-        Set<String> changedScripts = new HashSet<String>(RepositoryEventParser.filterChanged(e, SCRIPTS_FOLDER));
+        Set<String> changedScripts = new HashSet<String>(RepositoryEventParser.filterChanged(e, folder));
         for (String changedScript : changedScripts) {
             // Replace windows backslashes with normal ones
             changedScript = changedScript.replace("\\", "/");
             try {
                 File location = new File(ri.getRepositoryFolder(), changedScript);
                 if (location.isFile()) {
-                    String stripped = changedScript.substring(SCRIPTS_FOLDER.length());
+                    String stripped = changedScript.substring(folder.length());
                     int dotIndex = stripped.lastIndexOf(".");
                     if (dotIndex < 0) {
                         logger.info("Scripts need an extension, and {} has none. Ignoring update.", stripped);

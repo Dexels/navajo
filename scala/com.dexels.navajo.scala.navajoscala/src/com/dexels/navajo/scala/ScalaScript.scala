@@ -68,9 +68,10 @@ abstract class ScalaScript() extends CompiledScript {
     } else {
        withResult(outdoc);
     }
-   
   }
 
+  def createMessage(name: String) = NavajoFactory.createMessage(NavajoFactory.create, name)
+  
 
 
   def callRemoteScript(resource: String, input: NavajoDocument)(withResult: NavajoDocument => Unit) {

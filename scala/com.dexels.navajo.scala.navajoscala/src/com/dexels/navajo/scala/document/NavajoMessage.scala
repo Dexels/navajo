@@ -2,6 +2,7 @@ package com.dexels.navajo.scala.document
 
 import com.dexels.navajo.document.Message
 import com.dexels.navajo.document.Property
+import java.util.Date
 
 class NavajoMessage(val parent: Message) {
 
@@ -31,8 +32,8 @@ class NavajoMessage(val parent: Message) {
     new NavajoMessage(parent.addMessage(message.parent))
   }
 
-  def addMessage(): NavajoMessage = {
-    val message = NavajoFactory.createMessage(rootDoc, this.name)
+  def addMessage(message : NavajoMessage ): NavajoMessage = {
+    message.parent.setRootDoc(parent.getRootDoc)
     parent.addElement(message.parent)
     return message
   }
@@ -49,7 +50,10 @@ class NavajoMessage(val parent: Message) {
     new NavajoMessage(parent.addMessage(message.parent))
   }
 
-  def each(f: NavajoMessage => Unit) = {
+  def each(f: NavajoMessage => Unit) : Unit = {
+    if (parent == null) {
+      return;
+    }
     val it = parent.getAllMessages().iterator();
     while (it.hasNext()) {
       f(new NavajoMessage(it.next()));
@@ -90,7 +94,15 @@ class NavajoMessage(val parent: Message) {
   def getString(key : String) : Option[String] = {
     val prop = parent.getProperty(key)
     if (prop != null) {
-      return Some(prop.getValue.asInstanceOf[String])
+      return Some(prop.getTypedValue.asInstanceOf[String])
+    }
+    None
+  }
+  
+  def getDate(key : String) : Option[Date] = {
+    val prop = parent.getProperty(key)
+    if (prop != null) {
+      return Some(prop.getTypedValue.asInstanceOf[Date])
     }
     None
   }
@@ -111,20 +123,31 @@ class NavajoMessage(val parent: Message) {
   def getBoolean(key : String) : Option[Boolean] = {
     val prop = parent.getProperty(key)
     if (prop != null) {
-      return Some(prop.getValue.asInstanceOf[Boolean])
+       val value : Any =  prop.getTypedValue
+        value match {
+          case value : Boolean => return Some(value)
+          case value : String => {
+            value match {
+              case "1" => return Some(true)
+              case _ => return Some(false)
+            }
+          }
+          case _ =>  new RuntimeException("Invalid boolean: ")
+        }
     }
     None
   }
   
   
   def put(key : String, value : Option[Any]) : NavajoMessage = {
-    if (value.isDefined) {
+    if (value != null && value.isDefined) {
       put(key, value.get)
     } else {
       put(key)
     }
     this
   }
+  
   
   def put(key : String) = {
     val prop = parent.getProperty(key)
