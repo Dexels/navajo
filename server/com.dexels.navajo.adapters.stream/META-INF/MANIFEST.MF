@@ -52,7 +52,8 @@ Import-Package: com.dexels.navajo.adapter.sqlmap,
  rx.schedulers;version="1.1.5",
  rx.subjects;version="1.1.5",
  rx.subscriptions;version="1.1.5"
-Export-Package: com.dexels.navajo.adapters.stream
+Export-Package: com.dexels.navajo.adapters.stream,
+ hu.akarnokd.rxjava2.debug
 Bundle-ClassPath: .,
  lib/rxjava2-jdbc-0.1-RC6-SNAPSHOT.jar,
  lib/rxjava2-extensions-0.17.5.jar,

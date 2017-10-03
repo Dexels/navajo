@@ -42,7 +42,7 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 	@Override
 	public Operand evaluate(String clause, Navajo inMessage, Optional<ReplicationMessage> immutableMessage) throws NavajoException {
 		ExpressionCache ce = ExpressionCache.getInstance();
-		Object val =ce.evaluate(clause, inMessage, null, null, null, null, null, null, null);
+		Object val =ce.evaluate(clause, inMessage, null, null, null, null, null, null, Optional.empty());
 		String type = MappingUtils.determineNavajoType(val);
 		return new Operand(val, type, "");
 	}

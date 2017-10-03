@@ -32,21 +32,6 @@ public class SQL {
 	private static Map<DataSource,Pool<Connection>> resolvedPools = new HashMap<>();
 	
 	private static DataSource testDataSource = null;
-//	public static Map<String,Object> resolveDataSource(String dataSourceName, String tenant) throws UserException {
-//		
-//		if(dataSourceName.equals("dummy")) {
-//			MySqlDataSourceComponent dsc = new MySqlDataSourceComponent();
-//	        Map<String,Object> props = new HashMap<>();
-//	        props.put("type", "mysql");
-//	        props.put("name", "authentication");
-//	        props.put("url", "jdbc:mysql://10.0.0.1/competition");
-//	        props.put("user", "authentication");
-//	        props.put("password", "authentication");
-//	        return props;
-//		}
-//		logger.info("Resolving datasource {} for tenant {}",dataSourceName,tenant);
-//		return GrusProviderFactory.getInstance().getInstanceDataSourceSettings(tenant, dataSourceName);
-//	}
 	
 	public static DataSource resolveDataSource(String dataSourceName, String tenant) {
 		
@@ -71,25 +56,6 @@ public class SQL {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-
-			
-			MySqlDataSourceComponent dsc = new MySqlDataSourceComponent();
-	        Map<String,Object> props = new HashMap<>();
-	        props.put("type", "mysql");
-	        props.put("name", "authentication");
-	        props.put("url", "jdbc:mysql://localhost/competition");
-	        props.put("user", "username");
-	        props.put("password", "password");
-//	        dsc.activate(props);
-	        Properties p = new Properties();
-	        p.putAll(props);
-	        try {
-	        		testDataSource = dsc.createDataSource(p);
-				return testDataSource;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} 
-	        return null;
 		}
 		logger.info("Resolving datasource {} for tenant {}",dataSourceName,tenant);
 		DataSource source = GrusProviderFactory.getInstance().getInstanceDataSource(tenant, dataSourceName);
@@ -108,8 +74,6 @@ public class SQL {
 	
 	
 	public static Flowable<ReplicationMessage> query(String datasource, String tenant, String query, Object... params) {
-//		ConnectionProviderFromDataSource d;
-		System.err.println("# of params: "+params.length);
 		DataSource ds = resolveDataSource(datasource, tenant);
 		Pool<Connection> pool =  getPoolForDataSource(ds);
 
@@ -117,7 +81,6 @@ public class SQL {
 			.select(query)
 			.parameterList(Arrays.asList(params))
 			.get(SQL::resultSet);
-//			.doOnNext(e->System.err.println("Querying with thread: "+Thread.currentThread()));
 	}
 	
 

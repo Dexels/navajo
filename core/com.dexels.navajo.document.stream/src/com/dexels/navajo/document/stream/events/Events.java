@@ -24,7 +24,6 @@ public class Events {
 	}
 
 	public static NavajoStreamEvent messageStarted(String name, Map<String,? extends Object> messageAttributes) {
-
 		return new NavajoStreamEvent(name,NavajoEventTypes.MESSAGE_STARTED,null,messageAttributes);
 	}
 	

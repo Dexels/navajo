@@ -1320,7 +1320,6 @@ public class StreamDocument {
 
 					@Override
 					public void onNext(byte[] data) {
-						System.err.println("Offering bytes: "+data.length);
 						inflater.setInput(data);
 						Iterable<byte[]> output = new Iterable<byte[]>(){
 
@@ -1335,7 +1334,6 @@ public class StreamDocument {
 											boolean needsInput = inflater.needsInput();
 											
 											try {
-//												System.err.println("NeedsInput: "+needsInput+" first: "+first+" bytes: "+new String(data));
 												read = inflater.inflate(buffer);
 												boolean hasMore = (first || needsInput) && read > 0;
 												first = false;
@@ -1513,12 +1511,13 @@ public class StreamDocument {
 		};
 	}
 
-	public static FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> inMessage(String name) {
-		return new FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent>() {
+	public static FlowableTransformer<ReplicationMessage, NavajoStreamEvent> toMessage(String name) {
+		return new FlowableTransformer<ReplicationMessage, NavajoStreamEvent>() {
 
 			@Override
-			public Flowable<NavajoStreamEvent> apply(Flowable<NavajoStreamEvent> in) {
-	        	return in.startWith(Flowable.just(Events.messageStarted(name,null)))
+			public Flowable<NavajoStreamEvent> apply(Flowable<ReplicationMessage> in) {
+	        	return in.concatMap(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,true))
+	        			.startWith(Flowable.just(Events.messageStarted(name,null)))
 	        	.concatWith(Flowable.just(Events.message(Msg.create(), name,null)));
 			}
 		};

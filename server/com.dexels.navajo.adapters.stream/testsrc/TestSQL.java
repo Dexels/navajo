@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapters.stream.SQL;
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.parser.Expression;
@@ -50,12 +51,12 @@ public class TestSQL {
 			.map(msg->msg.without(Arrays.asList("SHORTNAME,UPDATEBY,REMARKS".split(","))))
 //			.doOnNext(e->System.err.println(new String(ReplicationFactory.getInstance().serialize(e))))
 //			.observeOn(Schedulers.io())
-			.map(msg->StreamDocument.replicationToMessage(msg, "Organization", true))
+//			.map(msg->StreamDocument.replicationToMessage(msg, "Organization", true))
 			.flatMapSingle(e->getOrganizationAttributes(e),false,15)
 //			.map(e->set("'ORGANIZATIONID'","ToLower([ORGANIZATIONID])"))
 //			.map(e->delete("LASTUPDATE").apply(e))
 			.map(e->rename("ORGANIZATIONID","ID").apply(e))
-			.map(msg->StreamDocument.messageToReplication(msg))
+//			.map(msg->StreamDocument.messageToReplication(msg))
 			.flatMap(msg->StreamDocument.replicationMessageToStreamEvents("Organization", msg, false))
 			
 			//			.concatMap(msg->StreamDocument.replicationMessageToStreamEvents("Organization", msg, true))
@@ -79,12 +80,12 @@ public class TestSQL {
 //	}
 //	
 
-	public Single<Message> getOrganizationAttributes(Message msg) throws TMLExpressionException, SystemException {
-		return SQL.query("dummy", "tenant", "select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?", msg.getProperty("ORGANIZATIONID").getValue())
+	public Single<ReplicationMessage> getOrganizationAttributes(ReplicationMessage msg) throws TMLExpressionException, SystemException {
+		return SQL.query("dummy", "tenant", "select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?", msg.columnValue("ORGANIZATIONID"))
 			.observeOn(Schedulers.io())
 			.subscribeOn(Schedulers.io())
 //			.doOnNext(e->System.err.println(new String(ReplicationFactory.getInstance().serialize(e))))
-			.map(m->StreamDocument.replicationToMessage(m, "Organization", false))
+//			.map(m->StreamDocument.replicationToMessage(m, "Organization", false))
 			.reduce(msg, set("[ATTRIBNAME]", "[ATTRIBVALUE]"));
 			
 	}
@@ -106,26 +107,23 @@ public class TestSQL {
 	}
 	
 	
-	public BiFunction<Message,Message,Message> set(String... params) throws TMLExpressionException, SystemException {
+	public BiFunction<ReplicationMessage,ReplicationMessage,ReplicationMessage> set(String... params) throws TMLExpressionException, SystemException {
 		return (reduc,item)->{
-			try {
-				String keyExpression = params[0];
-				String valueExpression = params[1];
-				String key = (String)evaluate(keyExpression,item);
-				Object value = evaluate(valueExpression, item);
-				reduc.setValue(key,value);
-			} catch (Throwable e) {
-				logger.error("Error: ", e);
-			}
-			return reduc;
+			String keyExpression = params[0];
+			String valueExpression = params[1];
+			String key = (String)evaluate(keyExpression,item).value;
+			Operand evaluated = evaluate(valueExpression, item);
+			Object value = evaluated.value;
+			String valueType = evaluated.type;
+			return reduc.with(key,value,valueType);
 		};
 	}
 	
 	
 
-	private Object evaluate(String valueExpression, Message m) throws SystemException {
+	private Operand evaluate(String valueExpression, ReplicationMessage m) throws SystemException {
 //		System.err.println("Evaluating: "+valueExpression);
-		return Expression.evaluate(valueExpression, null, null, m,null,null,null,null).value;
+		return Expression.evaluate(valueExpression, null, null, null,null,null,null,null,Optional.of(m));
 	}
 	
 	public Message getMessage(String prefix, Message core) {
@@ -142,16 +140,12 @@ public class TestSQL {
 		};
 	}
 
-	public Function<Message,Message> rename(String key, String to) throws TMLExpressionException, SystemException {
+	public Function<ReplicationMessage,ReplicationMessage> rename(String key, String to) throws TMLExpressionException, SystemException {
 		return in->{
-			Property p = in.getProperty(key);
-			if(p!=null) {
-				in.removeProperty(p);
-			}
-			p.setName(to);
-			in.addProperty(p);
-//			in.getProperty(key).setAnyValue(Expression.evaluate(valueExpression, null, null, in).value);
-			return in;
+			Object value = in.columnValue(key);
+			String type = in.columnType(key);
+			return in.without(key)
+					.with(key, value, type);
 		};
 	}
 	
