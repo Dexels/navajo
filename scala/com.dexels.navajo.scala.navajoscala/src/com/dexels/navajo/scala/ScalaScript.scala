@@ -106,5 +106,9 @@ abstract class ScalaScript() extends CompiledScript {
 		f.evaluateWithTypeChecking();
 		
   }
+  
+  def global(key: String) : String = input.message("__globals__").getString(key).getOrElse(null)
+  def aaa(key: String) : String = input.message("__aaa__").getString(key).getOrElse(null)
+
 
 }

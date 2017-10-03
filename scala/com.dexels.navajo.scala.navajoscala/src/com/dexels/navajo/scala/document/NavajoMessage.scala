@@ -93,7 +93,7 @@ class NavajoMessage(val parent: Message) {
   
   def getString(key : String) : Option[String] = {
     val prop = parent.getProperty(key)
-    if (prop != null) {
+    if (prop != null && prop.getValue != null) {
       return Some(prop.getTypedValue.asInstanceOf[String])
     }
     None
@@ -101,7 +101,7 @@ class NavajoMessage(val parent: Message) {
   
   def getDate(key : String) : Option[Date] = {
     val prop = parent.getProperty(key)
-    if (prop != null) {
+    if (prop != null && prop.getValue != null) {
       return Some(prop.getTypedValue.asInstanceOf[Date])
     }
     None

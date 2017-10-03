@@ -35,9 +35,14 @@ public class ScalaCompiler extends ScriptCompiler {
             "com.dexels.navajo.parser", "com.dexels.navajo.loader", "org.osgi.framework",
             "com.dexels.navajo.entity;resolution:=optional", "com.dexels.navajo.entity.impl;resolution:=optional",
             "com.dexels.navajo.server.resource;resolution:=optional" };
-    String[] standardReqBundles = new String[] { "org.scala-lang.scala-library;bundle-version=\"2.11.2\", com.sportlink.adapters"};
+    String[] standardReqBundles = new String[] { "org.scala-lang.scala-library;bundle-version=\"2.11.2\"",
+    		 "com.dexels.navajo.mongo",
+    		 "com.dexels.navajo.adapters",
+    		 "com.dexels.navajo.enterprise.adapters",
+    		 "com.sportlink.adapters",
+    		 "com.sportlink.financial.adapters"};
     
- 
+
     private final static Logger logger = LoggerFactory.getLogger(ScalaCompiler.class);
 
     public void activate(Map<String, Object> osgisettings) {
