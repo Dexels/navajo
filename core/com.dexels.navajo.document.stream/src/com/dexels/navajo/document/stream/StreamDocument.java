@@ -8,14 +8,15 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
-import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
@@ -44,6 +45,7 @@ import com.dexels.navajo.document.stream.xml.ObservableNavajoParser;
 import com.dexels.navajo.document.stream.xml.XMLEvent;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.replication.api.ReplicationMessage;
+import com.dexels.replication.factory.ReplicationFactory;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;
@@ -52,7 +54,6 @@ import io.reactivex.FlowableTransformer;
 import io.reactivex.ObservableOperator;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import rx.Single;
 import rx.functions.Func1;
 
 public class StreamDocument {
@@ -1492,7 +1493,7 @@ public class StreamDocument {
 			@Override
 			public Flowable<NavajoStreamEvent> apply(Flowable<NavajoStreamEvent> in) {
 	        	return in.startWith(Flowable.just(Events.arrayStarted(name,Collections.emptyMap())))
-	        	.concatWith(Flowable.just(Events.arrayDone(name)));
+	        			.concatWith(Flowable.just(Events.arrayDone(name)));
 			}
 		};
 	}
@@ -1685,17 +1686,19 @@ public class StreamDocument {
 	public static Message replicationToMessage(ReplicationMessage msg, String name, boolean isArrayElement) {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message m = NavajoFactory.getInstance().createMessage(n, name, isArrayElement ? Message.MSG_TYPE_ARRAY_ELEMENT : Message.MSG_TYPE_SIMPLE);
+//		System.err.println(">> "+msg.toFlatString(new JSONReplicationMessageParserImpl()));
 		List<Property> pp = msg.columnNames()
 			.stream()
 			.map(e->{
 				String type = msg.columnType(e);
 				Object value = msg.columnValue(e);
-				Property p = NavajoFactory.getInstance().createProperty(n, name, type, "", 0, "", Property.DIR_OUT);
+				Property p = NavajoFactory.getInstance().createProperty(n, e, type, "", 0, "", Property.DIR_OUT);
 				p.setAnyValue(value);
 				return p;
 			})
 			.collect(Collectors.toList());
 		pp.stream().forEach(p->m.addProperty(p));
+		
 		msg.subMessageListMap().forEach((msgName,submessages)->{
 			Message subArray = NavajoFactory.getInstance().createMessage(n, msgName,  Message.MSG_TYPE_ARRAY_ELEMENT);
 			submessages.forEach(repl->{
@@ -1705,5 +1708,38 @@ public class StreamDocument {
 		});
 		msg.subMessageMap().forEach((msgName,subMessage)->m.addMessage(replicationToMessage(subMessage, msgName, false)));
 		return m;
+	}
+	
+	private static Map.Entry<String,List<ReplicationMessage>> arrayMessageToReplicationList(Message msg) {
+		return new AbstractMap.SimpleEntry<String,List<ReplicationMessage>>(msg.getName(), msg.getAllMessages().stream()
+			.map(StreamDocument::messageToReplication)
+			.collect(Collectors.toList()));
+	}
+	private static Map.Entry<String,ReplicationMessage> messageToReplicationEntry(Message msg) {
+		return new AbstractMap.SimpleEntry<String,ReplicationMessage>(msg.getName(), messageToReplication(msg));
+	}	
+	public static ReplicationMessage messageToReplication(Message msg) {
+		Map<String,Object> values = new HashMap<>();
+		Map<String,String> types = new HashMap<>();
+		msg.getProperties().forEach((name,prop)->{
+//			values.put(name, p)
+			String type = prop.getType();
+			Object value = prop.getTypedValue();
+			values.put(name, value);
+			types.put(name, type);
+		});
+		Map<String,List<ReplicationMessage>> arrayMessages = msg.getAllMessages()
+				.stream()
+				.filter(m->m.isArrayMessage())
+				.map(StreamDocument::arrayMessageToReplicationList)
+				.collect(Collectors.toMap(e->e.getKey(), e->e.getValue()));
+		Map<String,ReplicationMessage> subMessageMap =  msg.getAllMessages().stream()
+				.filter(m->!m.isArrayMessage())
+				.map(StreamDocument::messageToReplicationEntry)
+				.collect(Collectors.toMap(e->e.getKey(), e->e.getValue()));
+//		List<Message> simpleMessages = msg.getAllMessages().stream().filter(m->!m.isArrayMessage()).collect(Collectors.toList());
+		return ReplicationFactory.fromMap(null, values, types)
+				.withAllSubMessageLists(arrayMessages)
+				.withAllSubMessage(subMessageMap);
 	}
 }

@@ -14,6 +14,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.conversion.JsonTmlFactory;
+import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
@@ -32,6 +33,28 @@ public class TestRun {
 		Message standings = nn.getMessage("Pool").getMessage("standings");
 		Assert.assertEquals(14,standings.getArraySize());
 		nn.write(System.err);
+	}
+	
+	@Test
+	public void testClocktimeReplicationToTML()  {
+		ReplicationMessage msg = ReplicationFactory.getInstance().parseStream(getClass().getResourceAsStream("calendarday.json"));
+		Navajo nn =  JsonTmlFactory.getInstance().toFlatNavajo("CalendarDay",msg);
+		nn.write(System.err);
+		Message calendarday = nn.getMessage("CalendarDay");
+		System.err.println(">> "+calendarday.getProperty("starttime").getValue());
+		ClockTime ct = (ClockTime) calendarday.getProperty("starttime").getTypedValue();
+		Assert.assertFalse(ct.isEmpty());
+		int hours = ct.getHours();
+		Assert.assertEquals(17, hours);
+		System.err.println("Clocktime: "+hours);
+		
+//		ReplicationMessage rm2 =  protoBufParser.parseBytes(bb);
+//		Assert.assertEquals(7, rm2.values().size());
+//		
+//		final Date columnValue2 = (Date) rm2.columnValue("starttime");
+//		Assert.assertTrue(Math.abs(c.getTime().getTime() - columnValue2.getTime())<1000);
+//
+//		Assert.assertEquals(14,standings.getArraySize());
 	}
 	
 	   @Test

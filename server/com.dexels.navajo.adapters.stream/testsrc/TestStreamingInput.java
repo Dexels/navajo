@@ -25,7 +25,7 @@ public class TestStreamingInput  {
 //		.doOnComplete(()->System.err.println("Done!"))
 //		.compose(StreamDocument.toArray("Organizations"))
 
-		SQL.query("dummy","sometenant", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
+		SQL.query("dummy","sometenant", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'", new Object[]{})
 //		SQL.query("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
 			.doOnNext(m->System.err.println("Message: "+m))
 
@@ -88,7 +88,7 @@ public class TestStreamingInput  {
 		tempFile.deleteOnExit();
 		FileOutputStream out = new FileOutputStream(tempFile);
 
-		SQL.query("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
+		SQL.query("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'",new Object[] {})
 			.doOnNext(m->System.err.println("Message: "+m))
 			.doOnComplete(()->System.err.println("Done!"))
 			.compose(StreamDocument.toArray("Organizations"))

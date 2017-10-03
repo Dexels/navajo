@@ -25,9 +25,10 @@ class SQLResult {
 		for (int i = 1; i < (columns + 1); i++) {
 			String param = meta.getColumnLabel(i);
 			int type = meta.getColumnType(i);
+			int scale = meta.getScale(i);
 			Object value = null;
 			value = SQLMapHelper.getColumnValue(rs, type, i);
-			String typeString = SQLMapHelper.getType(i);
+			String typeString = SQLMapHelper.getSimplefiedType(type,scale);
 			addValue(param.toUpperCase(), typeString, value);
 		}
 	}

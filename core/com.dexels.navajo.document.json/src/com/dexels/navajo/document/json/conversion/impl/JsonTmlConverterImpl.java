@@ -14,6 +14,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.conversion.JsonTmlConverter;
+import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.replication.api.ReplicationMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -42,8 +43,17 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 			Object value = message.columnValue(columnName);
 			Property colProp = NavajoFactory.getInstance().createProperty(rootNavajo, columnName, 
 					type, null, 0, "", Property.DIR_OUT);
-			colProp.setAnyValue(value);
-			colProp.setType(type);
+			switch (type) {
+			case Property.CLOCKTIME_PROPERTY:
+				ClockTime ct = new ClockTime((Date)value);
+				colProp.setAnyValue(ct);
+				break;
+
+			default:
+				colProp.setAnyValue(value);
+				colProp.setType(type);
+				break;
+			}
 			cV.addProperty(colProp);
 		}
 		for (Entry<String,List<ReplicationMessage>> e : message.subMessageListMap().entrySet()) {
