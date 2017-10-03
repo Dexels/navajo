@@ -1,0 +1,38 @@
+{
+      "Timestamp": 1492241707806,
+      "Operation": "MERGE",
+      "PrimaryKeys": [
+        "calendardayid"
+      ],
+      "Columns": {
+        "activityid": {
+          "Type": "integer",
+          "Value": 3423
+        },
+        "calendarid": {
+          "Type": "integer",
+          "Value": 1249234230
+        },
+        "calendardayid": {
+          "Type": "integer",
+          "Value": 1213
+        },
+        "endtime": {
+          "Type": "clocktime",
+          "Value": "18:00:00"
+        },
+        "starttime": {
+          "Type": "clocktime",
+          "Value": "17:00:00"
+        },
+        "calendardate": {
+          "Type": "date",
+          "Value": "2017-03-15 00:00:00.00"
+        },
+        "startdatetime": {
+          "Type": "date",
+          "Value": "2017-03-15 17:00:00.00"
+        }
+      },
+      "SubMessage": {}
+    }
