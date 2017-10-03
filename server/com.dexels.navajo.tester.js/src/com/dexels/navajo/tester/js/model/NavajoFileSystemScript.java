@@ -1,6 +1,7 @@
 package com.dexels.navajo.tester.js.model;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -18,9 +19,11 @@ public class NavajoFileSystemScript implements NavajoFileSystemEntry {
         this.name =  FilenameUtils.getBaseName(path);
         
         if (path.contains(PATH_TSL)) {
-        	 script = path.split(PATH_TSL)[1];
+        	String pattern = Pattern.quote(PATH_TSL);
+        	script = path.split(pattern)[1];
         } else if (path.contains(PATH_SCALA)) {
-        	 script = path.split(PATH_SCALA)[1];
+        	String pattern = Pattern.quote(PATH_SCALA);
+        	 script = path.split(pattern)[1];
         } else {
         	//unsupported path!
         }
