@@ -102,7 +102,7 @@ public class TestSQL {
 //				System.err.println("Key: "+key);
 				Object value = evaluate(valueExpression, e->item);
 //				System.err.println("Value: "+value);
-				reduc.setValue(key,value);
+//				reduc.setValue(key,value);
 			} catch (Throwable e) {
 				logger.error("Error: ", e);
 			}
@@ -113,7 +113,7 @@ public class TestSQL {
 
 	private Object evaluate(String valueExpression, Function<String, Message> m) throws SystemException {
 //		System.err.println("Evaluating: "+valueExpression);
-		return Expression.evaluate(valueExpression, s->null, null, m,null,null,null,null).value;
+		return Expression.evaluate(valueExpression, null).value;
 	}
 	
 	public Message getMessage(String prefix, Message core) {
@@ -141,24 +141,5 @@ public class TestSQL {
 //			in.getProperty(key).setAnyValue(Expression.evaluate(valueExpression, null, null, in).value);
 			return in;
 		};
-	}
-	
-	public static DataSource resolveDataSource(String dataSourceName, String tenant) {
-		MySqlDataSourceComponent dsc = new MySqlDataSourceComponent();
-        Map<String,Object> props = new HashMap<>();
-        props.put("type", "mysql");
-        props.put("name", "authentication");
-        props.put("url", "jdbc:mysql://10.0.0.1/competition");
-        props.put("user", "authentication");
-        props.put("password", "authentication");
-//	        dsc.activate(props);
-        Properties p = new Properties();
-        p.putAll(props);
-        try {
-			return dsc.createDataSource(p);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} 
-		return dsc;
 	}
 }
