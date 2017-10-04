@@ -70,7 +70,7 @@ public abstract class ScriptCompiler {
         Set<String> dependentResources = processDependencies(dependencies);
         generateFactoryClass(scriptName, packagePath, dependentResources);
 
-        generateManifest(scriptName, "1.0.0", packagePath, scriptName, packages);
+        generateManifest(script, "1.0.0", packagePath, scriptName, packages);
         String compiledDate = generateDs(packagePath, scriptName, dependencies, dependentResources);
         if (packagePath.startsWith("entity")) {
             generateEntityDs(packagePath, scriptName, compiledDate, dependencies, dependentResources);
@@ -155,8 +155,9 @@ public abstract class ScriptCompiler {
 
     }
     
-    private void generateManifest(String description, String version, String packagePath, String script, Set<String> packages) throws IOException {
-        String symbolicName = "navajo.script." + description;
+    private void generateManifest(String fullScript, String version, String packagePath, String script, Set<String> packages) throws IOException {
+    	String description = fullScript.replace('/',  '.');
+    	String symbolicName = "navajo.script." + description;
         PrintWriter w = new PrintWriter(
                 navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, script, ".MF"));
         
