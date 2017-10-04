@@ -157,6 +157,7 @@ public class BundleCreatorComponent implements BundleCreator {
     private void createBundleNoLocking(String rpcName, List<String> failures, List<String> success, List<String> skipped,
             boolean force, boolean keepIntermediate) throws Exception {
 
+    	boolean matchedScript = false;
     	removeOldCompiledScriptFiles(rpcName);
     	for (ScriptCompiler compiler : compilers.values()) {
     		
@@ -173,10 +174,12 @@ public class BundleCreatorComponent implements BundleCreator {
              }
              
     	     if (f.exists()) {
+    	    	 matchedScript = true;
         	     createBundleForScript(rpcName, rpcName,  f, files.size() > 0, failures, success, skipped, keepIntermediate);
     	     }
 
              for (File ascript : files) {
+            	 matchedScript = true;
                  String pathRelative = getRelative(scriptFolder, ascript );
                  String[] splitted =  pathRelative.split("\\.");
                  String tenantScriptName = splitted[0].replace('\\', '/');
@@ -185,8 +188,10 @@ public class BundleCreatorComponent implements BundleCreator {
              }
              
     	}
-       
-
+    	
+    	if (!matchedScript) {
+    		throw new FileNotFoundException("Unable to find script for " + rpcName);
+    	}
     }
 
 	private void createBundleForScript(String script, String rpcName, File scriptFile, boolean hasTenantSpecificFile,
@@ -439,13 +444,14 @@ public class BundleCreatorComponent implements BundleCreator {
         
         // Look for other tenant-specific jar files
         AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getBaseName(rpcName) + "_*.jar");
+        if (!compiledPath.exists() || !compiledPath.isDirectory()) {
+        	logger.warn("CompiledPath is not a directory? {} This is going to crash...", compiledPath);
+        }
         
         Collection<File> files = FileUtils.listFiles(compiledPath, fileFilter, null);
         if (jarFile.exists()) {
             files.add(jarFile);
         }
-        
-        
 
         for (File bundleFile : files) {
             
@@ -751,7 +757,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
         return null;
     }
-
+    
     private synchronized void updateCachedCompiledScript(String rpcName, String realTenant, CompiledScriptFactory csf) {
         Map<String,CompiledScriptFactory> subMap = scriptsMap.get(rpcName);
         if (subMap == null) {
