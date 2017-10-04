@@ -443,20 +443,14 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	}
 
 	@Override
-	public boolean hasTenantScriptFile(String rpcName, String tenant,String extension) {
-		return navajoIOConfig.hasTenantScriptFile(rpcName, tenant,extension);
+	public boolean hasTenantScriptFile(String rpcName, String tenant,String scriptPath) {
+		return navajoIOConfig.hasTenantScriptFile(rpcName, tenant,scriptPath);
 	}
 
 	@Override
 	public InputStream getScript(String name, String tenant,String extension) throws IOException {
 		return navajoIOConfig.getScript(name, tenant,extension);
 	}
-
-
-    @Override
-    public String determineScriptExtension(String scriptName, String tenant) throws FileNotFoundException {
-        return navajoIOConfig.determineScriptExtension(scriptName, tenant);
-    }
 
     @Override 
     public boolean useLegacyDateMode() {
@@ -476,5 +470,5 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
     public String getDeployment() {
         return navajoIOConfig.getDeployment();
     }
-	
+
 }

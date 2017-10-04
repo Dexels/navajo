@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.sql.DataSource;
 
 import javax.sql.DataSource;
 
@@ -17,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapters.stream.internal.ConnectionProviderFromDataSource;
+import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
 import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.Flowable;
@@ -30,6 +34,7 @@ public class SQL {
 	private static Map<DataSource,Pool<Connection>> resolvedPools = new HashMap<>();
 	
 	private static DataSource testDataSource = null;
+
 	
 	public static DataSource resolveDataSource(String dataSourceName, String tenant) {
 		
@@ -52,6 +57,26 @@ public class SQL {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
+		}
+		
+		if(dataSourceName.equals("dummymysql")) {
+			MySqlDataSourceComponent dsc = new MySqlDataSourceComponent();
+	        Map<String,Object> props = new HashMap<>();
+	        props.put("type", "mysql");
+	        props.put("name", "authentication");
+	        props.put("url", "jdbc:mysql://localhost/competition");
+	        props.put("user", "username");
+	        props.put("password", "password");
+//	        dsc.activate(props);
+	        Properties p = new Properties();
+	        p.putAll(props);
+	        try {
+	        		testDataSource = dsc.createDataSource(p);
+				return testDataSource;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} 
+	        return null;
 		}
 		logger.info("Resolving datasource {} for tenant {}",dataSourceName,tenant);
 		DataSource source = GrusProviderFactory.getInstance().getInstanceDataSource(tenant, dataSourceName);

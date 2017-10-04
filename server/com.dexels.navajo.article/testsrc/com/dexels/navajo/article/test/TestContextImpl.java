@@ -130,7 +130,7 @@ public abstract class TestContextImpl extends BaseContextImpl {
 			}
 
 			@Override
-			public boolean hasTenantScriptFile(String rpcName, String tenant,String extension) {
+			public boolean hasTenantScriptFile(String rpcName, String tenant,String scriptPath) {
 				return false;
 			}
 
@@ -140,10 +140,6 @@ public abstract class TestContextImpl extends BaseContextImpl {
 				return null;
 			}
 
-            @Override
-            public String determineScriptExtension(String scriptName, String tenant) {
-                return ".xml";
-            }
 
             @Override
             public String getDeployment() {

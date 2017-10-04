@@ -37,7 +37,6 @@ public class LoadCommand extends ConsoleCommand {
 			
 //			, @Descriptor(value ="The current tenant to assume, will use 'default' if unspecified") @Parameter(absentValue="default", names = {"-t","--tenant"}) String tenant
 			String tenant = "default";
-			final String extension = ".xml";
 			System.out.println("Installing path: "+script+" for tenant: "+tenant);
 			if(script.equals("/")) {
 				script = "";
@@ -46,7 +45,7 @@ public class LoadCommand extends ConsoleCommand {
 			List<String> failed = new ArrayList<String>();
 			List<String> skipped = new ArrayList<String>();
 //			this.bundleCreator.installAllBundles("",script,);
-			this.bundleCreator.installBundles(script,failed, success, skipped,force,extension);
+			this.bundleCreator.installBundle(script,failed, success, skipped,force);
 			for (String fail : failed) {
 				System.out.println("Installation error: "+fail);
 			}

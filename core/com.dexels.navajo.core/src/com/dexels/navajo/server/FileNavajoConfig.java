@@ -149,28 +149,15 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 	/**
 	 * Name does not include tenant suffix
 	 */
-	public boolean hasTenantScriptFile(String rpcName, String tenant, String extension) {
+	public boolean hasTenantScriptFile(String rpcName, String tenant, String scriptPath) {
 		if(tenant==null) {
 			return false;
 		}
-		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, getScriptPath(),extension,true);
+		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, getScriptPath(),null ,true);
 		return qualifiedFile!=null;
 	}
 	
-    @Override
-    public String determineScriptExtension(String scriptName, String tenant) throws FileNotFoundException {
-        
-        if ((new File(getScriptPath(), scriptName + "_" + tenant + ".xml")).exists() ||
-                (new File(getScriptPath(), scriptName + ".xml")).exists() ) {
-            return ".xml";
-        }
-        
-        if ((new File(getScriptPath(), scriptName + "_" + tenant + ".scala")).exists() ||
-                (new File(getScriptPath(), scriptName + ".scala")).exists() ) {
-            return ".scala";
-        }
-        throw new FileNotFoundException("Script not found: "+scriptName);
-    }
+
 	
 	
 	private File getTenantSpecificFile(String rpcName, String tenant, String parent, String extension, boolean checkIfExists) {
@@ -270,5 +257,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
         logger.warn("getDeplyoment not implemented in OSGi implementation");
         return null;
     }
+
+	
     
 }

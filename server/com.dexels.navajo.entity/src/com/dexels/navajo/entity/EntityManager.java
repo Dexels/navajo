@@ -211,7 +211,7 @@ public class EntityManager {
 
         logger.info("getOnDemand of entity {}", entityPath);
         try {
-            CompiledScriptInterface onDemandScriptService = bundleCreator.getOnDemandScriptService(rpcName, null, false, null);
+            CompiledScriptInterface onDemandScriptService = bundleCreator.getOnDemandScriptService(rpcName, null);
 
             // Also compile all dependencies of this entity
             for (int i = 0; i < onDemandScriptService.getDependencies().length; i++) {
@@ -305,8 +305,8 @@ public class EntityManager {
             while (running == true) {
                 for (String script : entitiesToCompile) {
                     try {
-                        bundleCreator.createBundle(script, failures, success, skipped, true, false, null);
-                        bundleCreator.installBundle(script, failures, success, skipped, true, null);
+                        bundleCreator.createBundle(script, failures, success, skipped, true, false);
+                        bundleCreator.installBundle(script, failures, success, skipped, true);
                         if (!skipped.isEmpty()) {
                             logger.info("Script compilation skipped: " + script);
                         }

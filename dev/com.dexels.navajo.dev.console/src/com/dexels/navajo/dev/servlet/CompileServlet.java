@@ -59,13 +59,13 @@ public class CompileServlet extends HttpServlet {
 				script = "";
 			}
 //			System.err.println("Force: "+force);
-			bundleCreator.createBundle(script,failures,success,skipped,force, keepIntermediateFiles,null);
+			bundleCreator.createBundle(script,failures,success,skipped, force,keepIntermediateFiles);
 			long ts1 = System.currentTimeMillis();
 			compileDuration = ts1 - tsStart;
 			logger.info("Compiling java complete. took: {}ms. Succeeded: {} failed: {} skipped: {}", compileDuration, success.size(),failures.size(), skipped.size());
 			logger.warn("Failed compiling: {}", failures);
 			
-		    bundleCreator.installBundles(script,failures, success, skipped, true, null);
+		    bundleCreator.installBundle(script,failures, success, skipped, true);
 			tsInstall = System.currentTimeMillis() - ts1;
 			logger.info("Installing bundles took {}ms", tsInstall);
 			
