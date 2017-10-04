@@ -1,7 +1,7 @@
 package com.dexels.navajo.expression.compiled;
 
 import java.io.StringReader;
-import java.util.stream.IntStream;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -62,8 +62,8 @@ public class TestCompiledExpression {
 		cp.Expression();
         ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda();
         System.err.println("tml: "+ss.isLiteral());
-        System.err.println("TMLVALUE: "+ss.apply(input, null, null, null, null, null,null,null));
-        Assert.assertEquals("TestValue", ss.apply(input, null, null, null, null, null,null,null));
+        System.err.println("TMLVALUE: "+ss.apply(input, null, null, null, null, null,null,Optional.empty()));
+        Assert.assertEquals("TestValue", ss.apply(input, null, null, null, null, null,null,Optional.empty()));
         Assert.assertFalse(ss.isLiteral());
 	}
 
@@ -91,18 +91,18 @@ public class TestCompiledExpression {
 	
 	@Test
 	public void parseExpressionLiteral() throws ParseException, TMLExpressionException {
-		Object o = ExpressionCache.getInstance().evaluate("FORALL( '/TestArrayMessageMessage', `?[Property]`)", input, null, null, null, null, null,null,null);
+		Object o = ExpressionCache.getInstance().evaluate("FORALL( '/TestArrayMessageMessage', `?[Property]`)", input, null, null, null, null, null,null,Optional.empty());
         System.err.println("ss: "+o);
 //        System.err.println("Result: "+ss.apply(input, null, null, null, null, null, null,null));
 	}
 	@Test
 	public void parseExpressionWithParam() throws ParseException, TMLExpressionException {
 //		Object o = CachedExpression.getInstance().evaluate("?[/@ClubId] AND Trim([/@ClubId]) != ''", input, null, null, null, null, null, null,null);
-		Object o = ExpressionCache.getInstance().evaluate("?[/@Param]", input, null, null, null, null, null,null,null);
+		Object o = ExpressionCache.getInstance().evaluate("?[/@Param]", input, null, null, null, null, null,null,Optional.empty());
 		Assert.assertEquals(true, o);
-		Object o2 = ExpressionCache.getInstance().evaluate("?[/@Paramzz]", input, null, null, null, null, null,null,null);
+		Object o2 = ExpressionCache.getInstance().evaluate("?[/@Paramzz]", input, null, null, null, null, null,null,Optional.empty());
 		Assert.assertFalse((Boolean)o2);
-		Object o3 = ExpressionCache.getInstance().evaluate("?[/@Param] AND [/@Param] != ''", input, null, null, null, null, null,null,null);
+		Object o3 = ExpressionCache.getInstance().evaluate("?[/@Param] AND [/@Param] != ''", input, null, null, null, null, null,null,Optional.empty());
 		Assert.assertTrue((Boolean)o3);
 		System.err.println("ss: "+o3);
 //        System.err.println("Result: "+ss.apply(input, null, null, null, null, null, null,null));

@@ -254,7 +254,7 @@ public class ReactiveScriptParser {
 				String valueExpression = params[1];
 				String destinationKey = params[2];
 //				System.err.println("BiFunction: "+keyExpression+" value: "+valueExpression+" to: "+destinationKey);
-//				String key = (String)evaluate(keyExpression,context,Optional.of(item)).value;
+				String key = (String)evaluate(keyExpression,context,Optional.of(item)).value;
 				String destinationKeyEvaluated = (String)evaluate(destinationKey,context,Optional.of(item)).value;
 				Operand valueOperand = evaluate(valueExpression, context, Optional.of(item));
 				Object value = valueOperand.value;

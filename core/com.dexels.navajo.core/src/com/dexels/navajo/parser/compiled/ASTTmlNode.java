@@ -94,7 +94,7 @@ public final class ASTTmlNode extends SimpleNode {
 			            text = text.substring(1, text.length());
 					}
 		        }  else {
-					if(text.startsWith("[")) {
+					if(text.startsWith("?[")) {
 			            text = text.substring(2, text.length());
 					}
 //		            text = text.substring(2, text.length());
