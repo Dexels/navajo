@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -18,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapters.stream.internal.ConnectionProviderFromDataSource;
-import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
 import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.Flowable;
@@ -42,7 +40,6 @@ public class SQL {
 
 		    OracleDataSource ds;
 			try {
-				System.err.println("CREATING DATASOURCE!");
 				ds = new oracle.jdbc.pool.OracleDataSource();
 			    ds.setDriverType("thin");
 			    ds.setServerName("localhost");
@@ -53,7 +50,6 @@ public class SQL {
 	        		testDataSource = ds;
 				return testDataSource;
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
