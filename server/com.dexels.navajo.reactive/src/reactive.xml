@@ -1,0 +1,16 @@
+<reactive array="Organization">
+	<source.sql datasource="dummy">
+		<param name="query">select * from ORGANIZATION WHERE ROWNUM &lt;=3</param>
+		<transform.delete key="SHORTNAME,UPDATEBY,REMARKS"/>
+		<transform.mergeSingle>
+			<source.sql datasource="dummy" single="OrganizationAttribute">
+				<param name="query">select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?  AND ROWNUM &lt;=3</param>
+				<param>[ORGANIZATIONID]</param>
+				<transform.reduce>
+					<set key="'ATTRIBNAME'" value="[ATTRIBVALUE]" to="[ATTRIBNAME]"/>
+				</transform.reduce>
+			</source.sql>
+			<transform.copyAll to="'Attributes'"/>
+		</transform.mergeSingle>
+	</source.sql>
+</reactive>
