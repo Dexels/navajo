@@ -1,6 +1,5 @@
 package com.dexels.navajo.adapters.stream;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -10,16 +9,11 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import javax.sql.DataSource;
-
 import org.davidmoten.rx.jdbc.Database;
-import org.davidmoten.rx.jdbc.pool.Pools;
-import org.davidmoten.rx.pool.Pool;
 import org.dexels.grus.GrusProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.adapters.stream.internal.ConnectionProviderFromDataSource;
 import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
 import com.dexels.replication.api.ReplicationMessage;
 
@@ -31,8 +25,6 @@ public class SQL {
 	
 	private final static Logger logger = LoggerFactory.getLogger(SQL.class);
 
-	private static Map<DataSource,Pool<Connection>> resolvedPools = new HashMap<>();
-	
 	private static DataSource testDataSource = null;
 
 	
@@ -48,10 +40,10 @@ public class SQL {
 				ds = new oracle.jdbc.pool.OracleDataSource();
 			    ds.setDriverType("thin");
 			    ds.setServerName("localhost");
-			    ds.setDatabaseName("AARDBEI");
+			    ds.setDatabaseName("SLTEST01");
 			    ds.setPortNumber(1521);
-			    ds.setUser("username");
-			    ds.setPassword("password");
+			    ds.setUser("blib");
+			    ds.setPassword("blob");
 	        		testDataSource = ds;
 				return testDataSource;
 			} catch (SQLException e1) {
@@ -83,22 +75,11 @@ public class SQL {
 		return source;
 	}
 	
-	private static Pool<Connection> getPoolForDataSource(DataSource ds) {
-		Pool<Connection> connection = resolvedPools.get(ds);
-		if(connection!=null) {
-			return connection;
-		}
-		Pool<Connection> resolved = Pools.nonBlocking().maxPoolSize(20).connectionProvider(new ConnectionProviderFromDataSource(ds)).build();
-		resolvedPools.put(ds, resolved);
-		return resolved;
-	}
-	
-	
 	public static Flowable<ReplicationMessage> query(String datasource, String tenant, String query, Object... params) {
 		DataSource ds = resolveDataSource(datasource, tenant);
-		Pool<Connection> pool =  getPoolForDataSource(ds);
+//		Pool<Connection> pool =  getPoolForDataSource(ds);
 
-		return Database.from(pool)
+		return Database.fromBlocking(ds)
 			.select(query)
 			.parameterList(Arrays.asList(params))
 			.get(SQL::resultSet);
