@@ -50,7 +50,7 @@ public class ExpressionCache {
 		Object cachedValue = expressionValueCache.get(expression);
 		if(cachedValue!=null) {
 			pureHitCount.incrementAndGet();
-			printStats();
+//			printStats();
 			return cachedValue;
 		}
 		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage);

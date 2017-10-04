@@ -42,9 +42,6 @@ public final class Expression {
 		compileExpressions = env!=null && !"false".equals(env);
 		
 	}
-	public static void dumpStats() {
-		ExpressionCache.getInstance().printStats();
-	}
 	
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
 			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ReplicationMessage> immutableMessage)

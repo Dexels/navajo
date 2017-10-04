@@ -117,7 +117,8 @@ public class TestCompiledExpression {
 		long now = System.currentTimeMillis();
 		long compiledTime = (now-before);
 		System.err.println("Compiled Parsing: "+compiledTime);
-		Expression.dumpStats();
+//		Expression.dumpStats();
+		ExpressionCache.getInstance().printStats();
 		before = System.currentTimeMillis();
 		for (int i = 0; i < 10000; i++) {
 			Object o3 = Expression.evaluate("?[/@Param] AND [/@Param] != ''", input);
@@ -125,7 +126,7 @@ public class TestCompiledExpression {
 		now = System.currentTimeMillis();
 		compiledTime = (now-before);
 		System.err.println("Compiled parsing after warm-up: "+compiledTime);
-		Expression.dumpStats();
+		ExpressionCache.getInstance().printStats();
 		
 
 		before = System.currentTimeMillis();
