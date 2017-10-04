@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Vector;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -51,8 +52,6 @@ public class ReactiveScriptParser {
 				.map(elt->parseSource(elt,streamScriptContext))
 				.collect(Collectors.toList());
 
-		System.err.println("XML: \n"+x);
-		System.err.println("Source: "+r);
 		String array = x.getStringAttribute("array");
 		boolean isArray = array!=null;
 		String simple = x.getStringAttribute("simple");
@@ -85,26 +84,35 @@ public class ReactiveScriptParser {
 		List<XMLElement> children = x.getChildren();
 		String type = x.getName();
 		
-		Map<String,String> namedParameters = new HashMap<>();
-		List<String> unnamedParameters = new ArrayList<>();
+		Map<String,Function<Optional<ReplicationMessage>,Object>> namedParameters = new HashMap<>();
+		List<Function<Optional<ReplicationMessage>,Object>> unnamedParameters = new ArrayList<>();
 		x.enumerateAttributeNames().forEachRemaining(e->{
-			namedParameters.put(e, x.getStringAttribute(e));
+			namedParameters.put(e, msg->x.getStringAttribute(e));
 		});
 		List<FlowableTransformer<ReplicationMessage, ReplicationMessage>> maps = new ArrayList<>();
 		for (XMLElement possibleParam : children) {
 			String elementName = possibleParam.getName();
-			if(elementName.equals("param")) {
+			if(elementName.equals("param") || elementName.equals("evalparam")) {
+				boolean evaluate = elementName.equals("evalparam");
 				String name = possibleParam.getStringAttribute("name");
 				String content = possibleParam.getContent();
 				if(content==null || "".equals(content)) {
 					continue;
 				}
 				if(name==null) {
-					unnamedParameters.add(content);
+					if (evaluate) {
+						unnamedParameters.add(msg->evaluate((String)content, context, msg).value);
+					} else {
+						unnamedParameters.add(msg->content);
+					}
 				} else {
-					namedParameters.put(name, content);
+					if(evaluate) {
+						namedParameters.put(name, msg->evaluate((String)content, context, msg).value);
+					} else {
+						namedParameters.put(name, msg->content);
+					}
 				}
-			} else if(elementName.startsWith("transform.")) {
+			} else {
 				maps.add(parseTransformations(possibleParam,context));
 			}
 		}
@@ -116,11 +124,7 @@ public class ReactiveScriptParser {
 	
 //	private Function<Flowable<ReplicationMessage>, Flowable<ReplicationMessage>> parseTransformations(XMLElement x,StreamScriptContext context) {
 	private  FlowableTransformer<ReplicationMessage, ReplicationMessage> parseTransformations(XMLElement x,StreamScriptContext context) {
-		String[] parts = x.getName().split("\\.");
-		if(parts.length!=2) {
-			throw new RuntimeException("Transformer format error");
-		}
-		String type = parts[1];
+		String type = x.getName(); //.split("\\.");
 		switch (type) {
 			case "delete":
 				String deleteKey = x.getStringAttribute("key");
@@ -170,8 +174,8 @@ public class ReactiveScriptParser {
 	}
 
 
-	private ReactiveSource createSource(String type, Map<String, String> namedParameters,
-			List<String> unnamedParameters, List<FlowableTransformer<ReplicationMessage, ReplicationMessage>> rest) {
+	private ReactiveSource createSource(String type, Map<String, Function<Optional<ReplicationMessage>, Object>> namedParameters,
+			List<Function<Optional<ReplicationMessage>, Object>> unnamedParameters, List<FlowableTransformer<ReplicationMessage, ReplicationMessage>> rest) {
 		switch (type) {
 			case "sql":
 				return new SQLReactiveSource(namedParameters, unnamedParameters,rest);
@@ -182,11 +186,11 @@ public class ReactiveScriptParser {
 	}
 	
 	private BiFunction<ReplicationMessage,ReplicationMessage,ReplicationMessage> xmlSet(StreamScriptContext context, XMLElement xe) {
-		String[] typeSplit = xe.getName().split("\\.");
-		if(typeSplit.length!=2) {
-			throw new RuntimeException("Syntax error in transformer definition: "+xe.getName());
-		}
-		switch (typeSplit[1]) {
+//		String[] typeSplit = xe.getName().split("\\.");
+//		if(typeSplit.length!=2) {
+//			throw new RuntimeException("Syntax error in transformer definition: "+xe.getName());
+//		}
+		switch (xe.getName()) {
 			case "set":
 				String key = xe.getStringAttribute("key");
 				String value = xe.getStringAttribute("value");

@@ -42,7 +42,7 @@ public class TestSQL {
 	@Before
 	public void setup() {
 	}
-	@Test @Ignore
+	@Test
 	public void testSQL() {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;

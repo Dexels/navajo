@@ -26,14 +26,14 @@ public class TestScript {
 	@Before
 	public void setup() {
 		input = NavajoFactory.getInstance().createNavajo();
-		RxJavaAssemblyTracking.enable();
+//		RxJavaAssemblyTracking.enable();
 		context = new StreamScriptContext("tenant", "service", "username", "password", Collections.emptyMap());
 		context.setNavajo(input);
 		Expression.compileExpressions = true;
 	}
-	@Test @Ignore
+	@Test
 	public void testSQL() {
-		SQL.query("dummy", "KNVB", "select * from organization")
+		SQL.query("dummy", "KNVB", "select * from organization where rownum < 500")
 			.flatMap(msg->StreamDocument.replicationMessageToStreamEvents("Organization", msg, true))
 			.compose(StreamDocument.inArray("Organization"))
 			.compose(StreamDocument.inNavajo("ProcessGetOrg", "", ""))
@@ -41,7 +41,7 @@ public class TestScript {
 		
 		.blockingForEach(e->System.err.print(new String(e)));
 	}
-	@Test @Ignore
+	@Test
 	public void testSimpleScript() throws IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("simplereactive.xml")) {
 			ReactiveScriptParser rsp = new ReactiveScriptParser();
@@ -51,7 +51,7 @@ public class TestScript {
 		}
 	}
 	
-	@Test @Ignore
+	@Test
 	public void testScript() throws IOException {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactive.xml")) {
