@@ -53,7 +53,7 @@ public class TestSQL {
 //			.doOnNext(e->System.err.println(new String(ReplicationFactory.getInstance().serialize(e))))
 //			.observeOn(Schedulers.io())
 //			.map(msg->StreamDocument.replicationToMessage(msg, "Organization", true))
-			.flatMapSingle(e->getOrganizationAttributes(e),false,15)
+			.flatMapSingle(e->getOrganizationAttributes(e))
 //			.map(e->set("'ORGANIZATIONID'","ToLower([ORGANIZATIONID])"))
 //			.map(e->delete("LASTUPDATE").apply(e))
 			.map(e->rename("ORGANIZATIONID","ID").apply(e))

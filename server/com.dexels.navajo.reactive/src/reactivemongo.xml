@@ -1,0 +1,16 @@
+<reactive streamInput="/path">
+	<source.mongo resource="dummyaaa" collection="Club" operation="aggregate" array="Organization">
+		<param name="query">[{"$unwind":"$applications"},{"$match":{"applications.type":"VOETBALNL","activated":true,"applications.publicuserid":{"$ne":""}}},{"$project":{"UserId":"$userid","username":"$username"}},{"$sort":{"userid":1}}]</param>
+	</source.mongo>
+ 	<source.mongo resource="dummy" collection="Club" operation="find" array="AlsoOrganization">
+		<param name="query">{shortname:{$regex : "berg*"}}</param>
+		<param name="projection">{_id:1}</param>
+		<mergeSingle>
+			<source.mongo resource="dummy" collection="Club" operation="find" single="OrganizationSub">
+				<param name="query">{_id:"?"}</param>
+				<param.eval>[_id]</param.eval>
+			</source.mongo>
+			<copyAll to="'OrganizationSub'"/>
+		</mergeSingle>
+	</source.mongo>
+</reactive>

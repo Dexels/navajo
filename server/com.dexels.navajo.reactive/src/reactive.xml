@@ -1,11 +1,11 @@
-<reactive array="Organization">
-	<source.sql datasource="dummy">
-		<param name="query">select * from ORGANIZATION WHERE ROWNUM &lt;=3</param>
+<reactive>
+	<source.sql resource="dummy"  array="Organization">
+		<param name="query">select * from ORGANIZATION WHERE ROWNUM &lt;=20</param>
 		<delete key="SHORTNAME,UPDATEBY,REMARKS"/>
 		<mergeSingle>
-			<source.sql datasource="dummy" single="OrganizationAttribute">
-				<param name="query">select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?  AND ROWNUM &lt;=3</param>
-				<evalparam>[ORGANIZATIONID]</evalparam>
+			<source.sql resource="dummy" single="OrganizationAttribute">
+				<param name="query">select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?</param>
+				<param.eval>[ORGANIZATIONID]</param.eval>
 				<reduce>
 					<set key="'ATTRIBNAME'" value="ToLower([ATTRIBVALUE])" to="[ATTRIBNAME]"/>
 				</reduce>

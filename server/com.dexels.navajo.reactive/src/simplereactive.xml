@@ -1,5 +1,5 @@
-<reactive array="Organization">
-	<source.sql datasource="dummy" >
+<reactive >
+	<source.sql resource="dummy" array="Organization">
 		<param name="query">select * from ORGANIZATION WHERE ROWNUM &lt;=10</param>
 		<transform.delete key="SHORTNAME,UPDATEBY,REMARKS"/>
 	</source.sql>
