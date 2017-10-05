@@ -14,20 +14,21 @@ import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
 public class SQLReactiveSource implements ReactiveSource {
 
-	private final List<Function<Optional<ReplicationMessage>, Object>> unnamedParameters;
+	private final List<BiFunction<StreamScriptContext,Optional<ReplicationMessage>, Object>> unnamedParameters;
 //	private final String datasource;
 //	private final String query;
-	private final List<FlowableTransformer<ReplicationMessage, ReplicationMessage>> transformations;
+	private final List<Function<StreamScriptContext,FlowableTransformer<ReplicationMessage, ReplicationMessage>>> transformations;
 	
 	private final static Logger logger = LoggerFactory.getLogger(SQLReactiveSource.class);
-	private final Map<String, Function<Optional<ReplicationMessage>, Object>> namedParameters;
+	private final Map<String, BiFunction<StreamScriptContext,Optional<ReplicationMessage>, Object>> namedParameters;
 	
-	public SQLReactiveSource(Map<String, Function<Optional<ReplicationMessage>, Object>> namedParameters,
-			List<Function<Optional<ReplicationMessage>, Object>> unnamedParameters, List<FlowableTransformer<ReplicationMessage, ReplicationMessage>> rest) {
+	public SQLReactiveSource(Map<String, BiFunction<StreamScriptContext,Optional<ReplicationMessage>, Object>> namedParameters,
+			List<BiFunction<StreamScriptContext,Optional<ReplicationMessage>, Object>> unnamedParameters, List<Function<StreamScriptContext,FlowableTransformer<ReplicationMessage, ReplicationMessage>>> rest) {
 		this.namedParameters = namedParameters;
 		this.unnamedParameters = unnamedParameters;
 		this.transformations = rest;
@@ -37,9 +38,9 @@ public class SQLReactiveSource implements ReactiveSource {
 		Flowable<ReplicationMessage> flow;
 		try {
 			flow = executeImmutable(context, current);
-			for (FlowableTransformer<ReplicationMessage, ReplicationMessage> transformation : transformations) {
+			for (Function<StreamScriptContext,FlowableTransformer<ReplicationMessage, ReplicationMessage>> transformation : transformations) {
 				try {
-					flow = flow.compose(transformation);
+					flow = flow.compose(transformation.apply(context));
 				} catch (Exception e) {
 					return Flowable.error(e);
 				}
@@ -51,19 +52,19 @@ public class SQLReactiveSource implements ReactiveSource {
 	}
 	
 	public Flowable<ReplicationMessage> executeImmutable(StreamScriptContext context,Optional<ReplicationMessage> current) throws Exception {
-		Object[] params = evaluateParams(context.getInput(), current);
-		String datasource = (String) namedParameters.get("datasource").apply(current);
-		String query = (String) namedParameters.get("query").apply(current);
+		Object[] params = evaluateParams(context, current);
+		String datasource = (String) namedParameters.get("datasource").apply(context,current);
+		String query = (String) namedParameters.get("query").apply(context,current);
 
 		return SQL.query(datasource, context.tenant, query, params);
 	}
 
-	private Object[] evaluateParams(Optional<Navajo> in, Optional<ReplicationMessage> immutable) {
-		final Navajo input = in.orElse(null);
+	private Object[] evaluateParams(StreamScriptContext context, Optional<ReplicationMessage> immutable) {
+		final Navajo input = context.getInput().orElse(null);
 		
 		return unnamedParameters.stream().map(e->{
 			try {
-				return e.apply(immutable);
+				return e.apply(context,immutable);
 			} catch (Exception e1) {
 				logger.error("Error: ", e1);
 			}
