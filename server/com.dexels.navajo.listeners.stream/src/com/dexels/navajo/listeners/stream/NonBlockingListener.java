@@ -38,6 +38,7 @@ import com.dexels.navajo.script.api.LocalClient;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import nl.codemonkey.reactiveservlet.Servlets;
 
@@ -120,43 +121,47 @@ public class NonBlockingListener extends HttpServlet {
 	
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		AsyncContext ac = request.startAsync();
-		ac.setTimeout(3600000);
-		StreamScriptContext context = determineContextFromRequest(request);
-		String requestEncoding = (String) context.attributes.get("Content-Encoding");
-		String responseEncoding = decideEncoding(request.getHeader("Accept-Encoding"));
-		System.err.println("Tenant determined: "+context.tenant+" service: "+context.service);
-
-
-		boolean isGet = "GET".equals(request.getMethod());
 		try {
-			authenticate(context, (String)context.attributes.get("Authorization"));
-		} catch (Exception e1) {
-			errorMessage(context.service, context.username, -1, e1.getMessage())
-			.lift(StreamDocument.serialize())
-			.compose(StreamDocument.compress(responseEncoding))
-			.subscribe(Servlets.createSubscriber(ac));
-			return;
-		}
+			boolean isGet = "GET".equals(request.getMethod());
+			AsyncContext ac = request.startAsync();
+			ac.setTimeout(3600000);
+			StreamScriptContext context = determineContextFromRequest(request);
+			String requestEncoding = (String) context.attributes.get("Content-Encoding");
+			String responseEncoding = decideEncoding(request.getHeader("Accept-Encoding"));
+			System.err.println("Tenant determined: "+context.tenant+" service: "+context.service);
 
-		Flowable<NavajoStreamEvent> input = isGet ? emptyDocument(context) : 
-			Servlets.createFlowable(ac, 1000)
-			.observeOn(Schedulers.io(),false,10)
-			.compose(StreamDocument.decompress2(requestEncoding))
-			.lift(XML.parseFlowable(10))
-			.flatMap(e->e)
-			.lift(StreamDocument.parse())
-			.concatMap(e->e);
-		
-		processStreamingScript(request,input)
-			.lift(StreamDocument.filterMessageIgnore())
-			.lift(StreamDocument.serialize())
-			.compose(StreamDocument.compress(responseEncoding))
-			.subscribe(Servlets.createSubscriber(ac));
+			try {
+				authenticate(context, (String)context.attributes.get("Authorization"));
+			} catch (Exception e1) {
+				errorMessage(context.service, context.username, -1, e1.getMessage())
+				.lift(StreamDocument.serialize())
+				.compose(StreamDocument.compress(responseEncoding))
+				.subscribe(Servlets.createSubscriber(ac));
+				return;
+			}
+			Flowable<NavajoStreamEvent> input = isGet ? emptyDocument(context) : 
+				Servlets.createFlowable(ac, 1000)
+				.observeOn(Schedulers.io(),false,10)
+				.compose(StreamDocument.decompress2(requestEncoding))
+				.lift(XML.parseFlowable(10))
+				.flatMap(e->e)
+				.lift(StreamDocument.parse())
+				.concatMap(e->e);
+			
+			context.setInputFlowable(input);
+
+			processStreamingScript(request,input)
+				.lift(StreamDocument.filterMessageIgnore())
+				.lift(StreamDocument.serialize())
+				.compose(StreamDocument.compress(responseEncoding))
+				.subscribe(Servlets.createSubscriber(ac));
+		} catch (Exception e1) {
+			throw new IOException("Servlet problem", e1);
+		}
 
 	}
 
-	private Flowable<NavajoStreamEvent> processStreamingScript(HttpServletRequest request,Flowable<NavajoStreamEvent> eventStream) throws IOException {
+	private Flowable<NavajoStreamEvent> processStreamingScript(HttpServletRequest request,Flowable<NavajoStreamEvent> eventStream) throws Exception {
 		StreamScriptContext context = determineContextFromRequest(request);
 
 		System.err.println("Tenant determined: "+context.tenant+" service: "+context.service);
@@ -274,7 +279,7 @@ public class NonBlockingListener extends HttpServlet {
 		}
 	}
 
-	private static StreamScriptContext determineContextFromRequest(final HttpServletRequest req) {
+	private static StreamScriptContext  determineContextFromRequest(final HttpServletRequest req) {
 		String username = req.getHeader("X-Navajo-Username");
 		String password = req.getHeader("X-Navajo-Password");
 		String tenant = determineTenantFromRequest(req);
