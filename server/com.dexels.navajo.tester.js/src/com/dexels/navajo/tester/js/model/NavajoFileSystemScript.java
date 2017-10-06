@@ -4,8 +4,12 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NavajoFileSystemScript implements NavajoFileSystemEntry {
+    private final static Logger logger = LoggerFactory.getLogger(NavajoFileSystemScript.class);
+
 	public static String PATH_TSL = "sportlink" + File.separator + "scripts";
 	public static String PATH_SCALA = "sportlink" + File.separator + "scala";
 	
@@ -25,7 +29,8 @@ public class NavajoFileSystemScript implements NavajoFileSystemEntry {
         	String pattern = Pattern.quote(PATH_SCALA);
         	 script = path.split(pattern)[1];
         } else {
-        	//unsupported path!
+        	logger.warn("Unsupported path: {}", path);
+        	script = path;
         }
 
         script =  script.substring(1, script.lastIndexOf(FilenameUtils.getExtension(path)) -1);
