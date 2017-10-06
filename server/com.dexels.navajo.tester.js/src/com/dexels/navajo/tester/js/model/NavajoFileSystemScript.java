@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 public class NavajoFileSystemScript implements NavajoFileSystemEntry {
     private final static Logger logger = LoggerFactory.getLogger(NavajoFileSystemScript.class);
 
-	public static String PATH_TSL = "sportlink" + File.separator + "scripts";
-	public static String PATH_SCALA = "sportlink" + File.separator + "scala";
+	public static String PATH_TSL = File.separator + "scripts" + File.separator;
+	public static String PATH_SCALA = File.separator + "scala" + File.separator;
 	
     private String name;
     private String script;
