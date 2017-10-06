@@ -679,13 +679,21 @@ public class BundleCreatorComponent implements BundleCreator {
     }
     
     private File getApplicableScriptFile(String rpcName, String tenant)  {
-    	for (String extension : compilers.keySet()) {
-			try {
-				File scriptFile = navajoIOConfig.getApplicableScriptFile(rpcName, tenant, extension);
-				return scriptFile;
-			} catch (FileNotFoundException e) {
-				// doesn't exist, no biggie;
-			}
+    	for (ScriptCompiler compiler : compilers.values()) {
+    		 File scriptFolder = new File(navajoIOConfig.getRootPath(), compiler.getRelativeScriptPath());
+    		 if (tenant != null) {
+    			 String tenantFilename = rpcName + "_" + tenant + compiler.getScriptExtension();
+        	     File f = new File(scriptFolder, tenantFilename);
+        	     if (f.exists()) {
+        	    	 return f;
+        	     } 
+    		 }
+    		
+    	     String filename = rpcName +compiler.getScriptExtension();
+    	     File f = new File(scriptFolder, filename);
+    	     if (f.exists()) {
+    	    	 return f;
+    	     }
     	}
 		return null;
 	}
