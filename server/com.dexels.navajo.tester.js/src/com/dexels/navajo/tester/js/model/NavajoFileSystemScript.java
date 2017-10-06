@@ -27,13 +27,13 @@ public class NavajoFileSystemScript implements NavajoFileSystemEntry {
         	script = path.split(pattern)[1];
         } else if (path.contains(PATH_SCALA)) {
         	String pattern = Pattern.quote(PATH_SCALA);
-        	 script = path.split(pattern)[1];
+        	script = path.split(pattern)[1];
         } else {
         	logger.warn("Unsupported path: {}", path);
         	script = path;
         }
 
-        script =  script.substring(1, script.lastIndexOf(FilenameUtils.getExtension(path)) -1);
+        script =  script.substring(0, script.lastIndexOf(FilenameUtils.getExtension(path)) -1);
         script = script.replace("\\", "/");
     }
 
