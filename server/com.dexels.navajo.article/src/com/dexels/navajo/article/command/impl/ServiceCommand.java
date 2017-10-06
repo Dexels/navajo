@@ -102,7 +102,7 @@ public class ServiceCommand implements ArticleCommand {
 		n.addHeader(h);
         h.setHeaderAttribute("application", "article");
 		final Navajo result = performCall(runtime, name, n, runtime.getInstance());
-		statLogger.info("Finished {} ({}) in {}ms", h.getHeaderAttribute("accessId"), name,
+		statLogger.info("Finished {} ({}) in {}ms", h.getHeaderAttribute("parentaccessid"), name,
                  (System.currentTimeMillis() - startedAt));
 		runtime.pushNavajo(name, result);
 		return null;
