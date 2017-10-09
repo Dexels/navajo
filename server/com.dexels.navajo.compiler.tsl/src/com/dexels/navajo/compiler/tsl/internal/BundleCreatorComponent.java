@@ -71,7 +71,7 @@ public class BundleCreatorComponent implements BundleCreator {
         compilers.remove(sc.getScriptExtension());
     }
     
-    public void addScalaScriptCompiler(ScriptCompiler sc) {
+    public void setScalaScriptCompiler(ScriptCompiler sc) {
         compilers.put(sc.getScriptExtension(), sc);
     }
     

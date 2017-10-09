@@ -130,7 +130,10 @@ public class ExpressionCache {
 	}
 	
 	private synchronized static void createInstance() {
-		instance = new ExpressionCache();
+		if(instance==null) {
+			instance = new ExpressionCache();
+		}
+		
 	}
 	
 }
