@@ -63,11 +63,19 @@ public class BundleCreatorComponent implements BundleCreator {
     private BundleContext bundleContext;
     private DependencyAnalyzer depanalyzer;
 
-    public void addScriptCompiler(ScriptCompiler sc) {
+    public void setTslScriptCompiler(ScriptCompiler sc) {
         compilers.put(sc.getScriptExtension(), sc);
     }
     
-    public void removeScriptCompiler(ScriptCompiler sc) {
+    public void removeTslScriptCompiler(ScriptCompiler sc) {
+        compilers.remove(sc.getScriptExtension());
+    }
+    
+    public void addScalaScriptCompiler(ScriptCompiler sc) {
+        compilers.put(sc.getScriptExtension(), sc);
+    }
+    
+    public void removeScalaScriptCompiler(ScriptCompiler sc) {
         compilers.remove(sc.getScriptExtension());
     }
     public void setJavaCompiler(JavaCompiler javaCompiler) {
@@ -160,8 +168,6 @@ public class BundleCreatorComponent implements BundleCreator {
     	boolean matchedScript = false;
     	removeOldCompiledScriptFiles(rpcName);
     	for (ScriptCompiler compiler : compilers.values()) {
-    		
-    		
     		 File scriptFolder = new File(navajoIOConfig.getRootPath(), compiler.getRelativeScriptPath());
     	     File f = new File(scriptFolder, rpcName + compiler.getScriptExtension());
     	     
