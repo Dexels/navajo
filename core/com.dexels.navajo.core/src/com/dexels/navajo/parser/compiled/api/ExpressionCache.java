@@ -36,7 +36,7 @@ public class ExpressionCache {
 	private final AtomicLong hitCount = new AtomicLong();
 	private final AtomicLong pureHitCount = new AtomicLong();
 	private final AtomicLong parsedCount = new AtomicLong();
-
+	
 	public ExpressionCache() {
 		expressionCache = CacheBuilder.from(DEFAULT_CACHE_SPEC).build(new CacheLoader<String, Optional<ContextExpression>>() {
 			public Optional<ContextExpression> load(String key) {
@@ -124,9 +124,13 @@ public class ExpressionCache {
 	
 	public static ExpressionCache getInstance() {
 		if(instance==null) {
-			instance = new ExpressionCache();
+			createInstance();
 		}
 		return instance;
+	}
+	
+	private synchronized static void createInstance() {
+		instance = new ExpressionCache();
 	}
 	
 }
