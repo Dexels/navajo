@@ -204,7 +204,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			List<String> failures, List<String> success, List<String> skipped, boolean keepIntermediate)
 			throws Exception {
       
-        String scriptTenant = tenantFromScriptPath(scriptFile.getAbsolutePath());
+        String scriptTenant = tenantFromScriptPath(script);
 
         if (!scriptFile.exists()) {
             logger.error("Script or  folder not found: " + script + " full path: " + scriptFile.getAbsolutePath());
