@@ -1,4 +1,4 @@
-package com.dexels.navajo.document.stream.xml;
+package com.dexels.navajo.document.stream.io;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -98,7 +98,10 @@ public abstract class BaseFlowableOperator<R,T> implements FlowableOperator<R,T>
 	    }
 	}				    
 
-	public void operatorNext(T input,Function<T,R> f,Subscriber<? super R> child) {
+	protected void offer(R item) {
+		queue.offer(item);
+	}
+	protected void operatorNext(T input,Function<T,R> f,Subscriber<? super R> child) {
 		R result = f.apply(input);
 		if (result==null) {
 			subscription.request(1);
@@ -108,22 +111,22 @@ public abstract class BaseFlowableOperator<R,T> implements FlowableOperator<R,T>
         drain(child);						
 	}
 
-	public void operatorComplete(Subscriber<? super R> child) {
+	protected void operatorComplete(Subscriber<? super R> child) {
         done = true;
         drain(child);						
 	}
 
-	public void operatorError(Throwable t,Subscriber<? super R> child) {
+	protected void operatorError(Throwable t,Subscriber<? super R> child) {
         error = t;
         done = true;
         drain(child);						
 	}
 	
-	public void operatorRequest(long n) {
+	protected void operatorRequest(long n) {
 		subscription.request(n);
 	}
 		
-	public void operatorSubscribe(Subscription s,Subscriber<? super R> child) {
+	protected void operatorSubscribe(Subscription s,Subscriber<? super R> child) {
 		subscription = s;
 		child.onSubscribe(new Subscription() {
 			

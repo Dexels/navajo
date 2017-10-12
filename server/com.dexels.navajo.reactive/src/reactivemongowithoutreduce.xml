@@ -1,0 +1,9 @@
+<reactive streamInput="/path">
+ 	<source.mongo.msg resource="dummyaaa" collection="LegacyUser" operation="find" outputarray="AlsoOrganization">
+		<param name="query">{}</param>
+		<msg.csv.binary outputBinary="CSVBinary" useHeaders="true" columns="username,publicuserid" labels="Name,Shortname" delimiter=";">
+			<parameval name="writeHeaders">false</parameval>
+		</msg.csv.binary>
+		<binary.filestore.msg path="test.csv"/>
+	</source.mongo.msg>
+</reactive>

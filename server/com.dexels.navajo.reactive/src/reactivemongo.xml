@@ -1,16 +1,17 @@
 <reactive streamInput="/path">
-	<source.mongo resource="dummyaaa" collection="Club" operation="aggregate" array="Organization">
-		<param name="query">[{"$unwind":"$applications"},{"$match":{"applications.type":"VOETBALNL","activated":true,"applications.publicuserid":{"$ne":""}}},{"$project":{"UserId":"$userid","username":"$username"}},{"$sort":{"userid":1}}]</param>
-	</source.mongo>
- 	<source.mongo resource="dummy" collection="Club" operation="find" array="AlsoOrganization">
+ 	<source.mongo.msg resource="dummy" collection="Club" operation="find" outputarray="AlsoOrganization">
 		<param name="query">{shortname:{$regex : "berg*"}}</param>
-		<param name="projection">{_id:1}</param>
-		<mergeSingle>
-			<source.mongo resource="dummy" collection="Club" operation="find" single="OrganizationSub">
+		<msg.joinsingle.msg >
+			<source.mongo.msg resource="dummy" collection="Club" operation="find" single="OrganizationSub">
 				<param name="query">{_id:"?"}</param>
 				<param.eval>[_id]</param.eval>
-			</source.mongo>
+			</source.mongo.msg>
 			<copyAll to="'OrganizationSub'"/>
-		</mergeSingle>
-	</source.mongo>
+		</msg.joinsingle.msg>
+		<msg.csv.binary outputBinary="CSVBinary" useHeaders="true">
+			<param.eval>"Name"</param.eval>
+			<param.eval>"ShortName"</param.eval>
+		</msg.csv.binary>		
+		<binary.sftp.msg host="127.0.0.1" username="bla" password="bla" file="test.csv" inputBinary="CSVBinary" single="Result"/>
+	</source.mongo.msg>
 </reactive>

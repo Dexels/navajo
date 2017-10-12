@@ -1,0 +1,29 @@
+{  
+   "Timestamp":1478177651654,
+   "Operation":"NONE",
+   "PrimaryKeys":[  
+      "personid"
+   ],
+   "Columns":{  
+      "profession":{  
+         "Type":"string"
+      },
+      "personid":{  
+         "Type":"string",
+         "Value":"DEFGH"
+      },
+      "dateofbirth":{  
+         "Type":"date",
+         "Value":"1949-03-21 12:00:00.000"
+      },
+      "firstname":{  
+         "Type":"string",
+         "Value":"Yuri"
+      },
+      "nationality":{  
+         "Type":"string",
+         "Value":"NL"
+
+      }
+	}
+}

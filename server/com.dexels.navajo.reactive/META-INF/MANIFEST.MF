@@ -11,6 +11,7 @@ Import-Package: com.dexels.navajo.adapters.stream,
  com.dexels.navajo.document.stream;version="1.0.16",
  com.dexels.navajo.document.stream.api,
  com.dexels.navajo.document.stream.events;version="1.0.16",
+ com.dexels.navajo.document.stream.io,
  com.dexels.navajo.document.types;version="2.2.1",
  com.dexels.navajo.mongo.stream,
  com.dexels.navajo.parser,
@@ -26,3 +27,4 @@ Import-Package: com.dexels.navajo.adapters.stream,
  org.junit;version="4.10.0",
  org.reactivestreams;version="1.0.0.release",
  org.slf4j;version="1.7.21"
+Export-Package: com.dexels.navajo.reactive.api

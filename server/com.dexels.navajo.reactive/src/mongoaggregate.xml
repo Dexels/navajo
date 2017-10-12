@@ -1,0 +1,28 @@
+<reactive streamInput="/path">
+	<source.mongo resource="dummyaaa" collection="User" operation="aggregate" array="Users">
+		<param name="query">[
+				{"$unwind":"$applications"},
+				{"$match":{"applications.type":"VOETBALNL","activated":true,"applications.publicuserid":{"$ne":""}}},
+				{"$project":{"UserId":"$userid","username":"$username"}},{"$sort":{"userid":1}}
+				]
+		</param>
+ 		<mergeSingle>
+			<source.mongo resource="dummy" collection="Person" operation="find">
+				<param name="query">{"UnionMembership.relationstart":{"$lte":ISODate()},"UnionMembership.relationend":{"$gte":ISODate()},"Communication.Email":"?"}</param>
+				<param.eval>[username]</param.eval>
+			</source.mongo>
+			<copyAll to="'Person'"/>
+		</mergeSingle>
+		<mergeSingle>
+			<source.mongo resource="dummyexternalstore" collection="AccountAttribute" operation="find">
+				<param name="query">{"UserId":"?"}</param>
+				<param.eval>[UserId]</param.eval>
+				<reduce>
+					<set key="'Key'" value="[Value]" to="[Key]"/>
+				</reduce>
+			</source.mongo>
+			<copyAll to="'Attribute'"/>
+		</mergeSingle>
+		
+	</source.mongo>
+</reactive>

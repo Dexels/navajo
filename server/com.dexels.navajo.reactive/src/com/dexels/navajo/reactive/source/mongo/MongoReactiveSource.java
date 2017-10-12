@@ -1,4 +1,4 @@
-package com.dexels.navajo.reactive.mongo;
+package com.dexels.navajo.reactive.source.mongo;
 
 import static com.dexels.navajo.document.Property.BINARY_PROPERTY;
 import static com.dexels.navajo.document.Property.BOOLEAN_PROPERTY;
@@ -46,65 +46,55 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.mongo.stream.MongoSupplier;
+import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
+import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.replication.api.ReplicationMessage;
 import com.mongodb.reactivestreams.client.MongoCollection;
 
 import io.reactivex.Flowable;
-import io.reactivex.FlowableTransformer;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Function;
 public class MongoReactiveSource implements ReactiveSource {
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(MongoReactiveSource.class);
 
 	
-	private final Map<String, BiFunction<StreamScriptContext,Optional<ReplicationMessage>, Operand>> namedParameters;
-	private final List<BiFunction<StreamScriptContext,Optional<ReplicationMessage>, Operand>> unnamedParameters;
-	private final List<Function<StreamScriptContext,FlowableTransformer<ReplicationMessage, ReplicationMessage>>> transformations;
-	private final String outputName;
-	private final boolean isOutputArray;
+//	private final Map<String, BiFunction<StreamScriptContext,Optional<ReplicationMessage>, Operand>> namedParameters;
+//	private final List<BiFunction<StreamScriptContext,Optional<ReplicationMessage>, Operand>> unnamedParameters;
     protected static final String PLACEHOLDER = "?";
+    private final ReactiveParameters parameters;
+
+
+	private final List<ReactiveTransformer> transformers;
+
 
 	public MongoReactiveSource(
-			Map<String, BiFunction<StreamScriptContext, Optional<ReplicationMessage>, Operand>> namedParameters
-			, List<BiFunction<StreamScriptContext, Optional<ReplicationMessage>, Operand>> unnamedParameters
-			, List<Function<StreamScriptContext,FlowableTransformer<ReplicationMessage, ReplicationMessage>>> rest
-			, String outputName, boolean isOutputArray) {
-		this.namedParameters = namedParameters;
-		this.unnamedParameters = unnamedParameters;
-		this.transformations = rest;
-		this.outputName = outputName;
-		this.isOutputArray = isOutputArray;
+			ReactiveParameters parameters, List<ReactiveTransformer> transformers) {
+		this.parameters = parameters;
+		this.transformers = transformers;
 	}
 
 	// aggregate find
 	@Override
-	public Flowable<ReplicationMessage> execute(StreamScriptContext context, Optional<ReplicationMessage> current) {
+	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ReplicationMessage> current) {
 		try {
-			String name = (String) namedParameters.get("resource").apply(context, current).value;
-			String collection = (String) namedParameters.get("collection").apply(context, current).value;
-			String query = (String) namedParameters.get("query").apply(context, current).value;
-			String operation = (String) namedParameters.get("operation").apply(context, current).value;
-			BiFunction<StreamScriptContext, Optional<ReplicationMessage>, Operand> projectionGetter = namedParameters.get("projection");
+			Map<String,Operand> pp = parameters.resolveNamed(context, current);
 			
-			Optional<String> projection = projectionGetter == null ? Optional.empty() : Optional.of((String)projectionGetter.apply(context, current).value);
-			BsonValue doc = BsonDocument.parse(query);
+			String name = (String) pp.get("resource").value;
+			String collection = (String) pp.get("collection").value;
+			String query = (String) pp.get("query").value;
+			String operation = (String) pp.get("operation").value;
+			Optional<Operand> projectionString = Optional.ofNullable(pp.get("projection"));
+			Optional<String> projection = projectionString.isPresent() ? Optional.ofNullable((String)projectionString.get().value) : Optional.empty();
+			BsonValue doc = query.startsWith("[")?BsonArray.parse(query):BsonDocument.parse(query);
 			java.util.function.Function<MongoCollection<BsonDocument>, Publisher<BsonDocument>> resolvedOperation = null;
-			traverse(this.unnamedParameters.stream().map(e->{
-				try {
-					return e.apply(context,current);
-				} catch (Exception e1) {
-					logger.error("Error: ", e1);
-					return new Operand(null, "string", null);
-				}
-			}).collect(Collectors.toList()), doc);
-			System.err.println("DOC: "+doc);
+			traverse(parameters.resolveUnnamed(context, current),doc);
+
 			switch (operation) {
 			case "find":
 				if (projection.isPresent()) {
@@ -116,36 +106,21 @@ public class MongoReactiveSource implements ReactiveSource {
 			case "aggregate":
 				BsonArray arr = (BsonArray)doc;
 				List<BsonDocument> vc = arr.stream().map(e->(BsonDocument)e).collect(Collectors.toList());
-				
 				resolvedOperation = d->d.aggregate(vc,BsonDocument.class);
+				break;
 			default:
 				throw new UnsupportedOperationException("Unknown mongo operation: "+operation);
 			}
-			Flowable<ReplicationMessage> flow = MongoSupplier.getInstance().query(context, name, collection,
-					resolvedOperation);
-
-			for (Function<StreamScriptContext, FlowableTransformer<ReplicationMessage, ReplicationMessage>> transformation : transformations) {
-				try {
-					flow = flow.compose(transformation.apply(context));
-				} catch (Exception e) {
-					return Flowable.error(e);
-				}
-
-			} 
+			Flowable<DataItem> flow = MongoSupplier.getInstance().query(context, name, collection,
+					resolvedOperation).map(e->DataItem.of(e));
+			
+			for (ReactiveTransformer reactiveTransformer : transformers) {
+				flow = flow.compose(reactiveTransformer.execute(context, current));
+			}
 			return flow;
 		} catch (Exception e) {
 			return Flowable.error(e);
 		}
-	}
-
-	@Override
-	public String getOutputName() {
-		return outputName;
-	}
-
-	@Override
-	public boolean isOutputArray() {
-		return isOutputArray;
 	}
 
 	protected void traverse(List<Operand> params, BsonValue o) {
@@ -163,6 +138,7 @@ public class MongoReactiveSource implements ReactiveSource {
         		for (BsonValue bsonValue : ba) {
         			traverseSub(params, bsonValue);
 			}
+        		return;
         }
         if(! (vl instanceof BsonDocument)) {
         		throw new UnsupportedOperationException("Traversal only works in arrays or documents");
