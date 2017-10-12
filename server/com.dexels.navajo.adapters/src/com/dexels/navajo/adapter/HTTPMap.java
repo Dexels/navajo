@@ -24,10 +24,13 @@
  */
 package com.dexels.navajo.adapter;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
@@ -233,8 +236,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 			}
 			
 			
-			HttpURLConnection con = null;
-			con = (HttpURLConnection) u.openConnection();
+			HttpURLConnection con = createConnectionWithProxy(u);
 			con.setConnectTimeout(connectTimeOut);
 			if ( readTimeOut != -1 ) {
 				con.setReadTimeout(readTimeOut);
@@ -319,6 +321,28 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 	}
 	
 	
+
+	private HttpURLConnection createConnectionWithProxy(URL u) throws IOException {
+    		String protocol = u.getProtocol();
+    		switch(protocol) {
+    		case "http":
+    			String httpProxyHost = System.getenv("httpProxyHost");
+    			String httpProxyPort =  System.getenv("httpProxyPort");
+    			if(httpProxyHost!=null && httpProxyPort!=null) {
+    				Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(httpProxyHost, Integer.parseInt(httpProxyPort)));
+    				return (HttpURLConnection) u.openConnection(proxy);
+    			}
+    		case "https":
+    			String httpsProxyHost = System.getenv("httpsProxyHost");
+    			String httpsProxyPort =  System.getenv("httpsProxyPort");
+    			if(httpsProxyHost!=null && httpsProxyPort!=null) {
+    				Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(httpsProxyHost, Integer.parseInt(httpsProxyPort)));
+    				return (HttpURLConnection) u.openConnection(proxy);
+    			}
+    		} 
+		return (HttpURLConnection) u.openConnection();
+	}
+
 	protected void increaseInstanceCount() {
 		instances++;
 	}

@@ -63,11 +63,19 @@ public class BundleCreatorComponent implements BundleCreator {
     private BundleContext bundleContext;
     private DependencyAnalyzer depanalyzer;
 
-    public void addScriptCompiler(ScriptCompiler sc) {
+    public void setTslScriptCompiler(ScriptCompiler sc) {
         compilers.put(sc.getScriptExtension(), sc);
     }
     
-    public void removeScriptCompiler(ScriptCompiler sc) {
+    public void removeTslScriptCompiler(ScriptCompiler sc) {
+        compilers.remove(sc.getScriptExtension());
+    }
+    
+    public void setScalaScriptCompiler(ScriptCompiler sc) {
+        compilers.put(sc.getScriptExtension(), sc);
+    }
+    
+    public void removeScalaScriptCompiler(ScriptCompiler sc) {
         compilers.remove(sc.getScriptExtension());
     }
     public void setJavaCompiler(JavaCompiler javaCompiler) {
@@ -160,8 +168,6 @@ public class BundleCreatorComponent implements BundleCreator {
     	boolean matchedScript = false;
     	removeOldCompiledScriptFiles(rpcName);
     	for (ScriptCompiler compiler : compilers.values()) {
-    		
-    		
     		 File scriptFolder = new File(navajoIOConfig.getRootPath(), compiler.getRelativeScriptPath());
     	     File f = new File(scriptFolder, rpcName + compiler.getScriptExtension());
     	     
@@ -198,7 +204,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			List<String> failures, List<String> success, List<String> skipped, boolean keepIntermediate)
 			throws Exception {
       
-        String scriptTenant = tenantFromScriptPath(scriptFile.getAbsolutePath());
+        String scriptTenant = tenantFromScriptPath(script);
 
         if (!scriptFile.exists()) {
             logger.error("Script or  folder not found: " + script + " full path: " + scriptFile.getAbsolutePath());
@@ -679,13 +685,21 @@ public class BundleCreatorComponent implements BundleCreator {
     }
     
     private File getApplicableScriptFile(String rpcName, String tenant)  {
-    	for (String extension : compilers.keySet()) {
-			try {
-				File scriptFile = navajoIOConfig.getApplicableScriptFile(rpcName, tenant, extension);
-				return scriptFile;
-			} catch (FileNotFoundException e) {
-				// doesn't exist, no biggie;
-			}
+    	for (ScriptCompiler compiler : compilers.values()) {
+    		 File scriptFolder = new File(navajoIOConfig.getRootPath(), compiler.getRelativeScriptPath());
+    		 if (tenant != null) {
+    			 String tenantFilename = rpcName + "_" + tenant + compiler.getScriptExtension();
+        	     File f = new File(scriptFolder, tenantFilename);
+        	     if (f.exists()) {
+        	    	 return f;
+        	     } 
+    		 }
+    		
+    	     String filename = rpcName +compiler.getScriptExtension();
+    	     File f = new File(scriptFolder, filename);
+    	     if (f.exists()) {
+    	    	 return f;
+    	     }
     	}
 		return null;
 	}

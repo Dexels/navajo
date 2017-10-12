@@ -34,7 +34,6 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.mapping.DependentResource;
 import com.dexels.navajo.mapping.GenericDependentResource;
 import com.dexels.navajo.mapping.HasDependentResources;
@@ -73,7 +72,7 @@ import com.dexels.navajo.util.AuditLog;
  * @version $Id$
  */
 
-public class NavajoMap extends AsyncMappable implements Mappable, HasDependentResources, TmlRunnable, NavajoResponseHandler {
+public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, NavajoResponseHandler {
 
     public String doSend;
     public Binary navajo;
@@ -180,8 +179,8 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     private NavajoMapResponseListener myResponseListener = null;
     private String id;
 
-    private List<String> deletedProperties = new ArrayList<String>();
-    private List<String> deletedMessages = new ArrayList<String>();
+    private List<String> deletedProperties = new ArrayList<>();
+    private List<String> deletedMessages = new ArrayList<>();
     private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
     private static final long MAX_WAITTIME = 600000; // 10 min
 
@@ -223,7 +222,6 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
         this.access = access;
         this.config = DispatcherFactory.getInstance().getNavajoConfig();
         this.inMessage = access.getInDoc();
-        killOnFinnish = true;
         try {
             outDoc = NavajoFactory.getInstance().createNavajo();
         } catch (Exception e) {
@@ -898,7 +896,6 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
             else {
                 try {
                     inDoc = null;
-                    isFinished = false;
                     serviceFinished = false;
                     if (block) {
                         this.run();
@@ -1341,26 +1338,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
         performOrderBy = b;
     }
 
-    @Override
-    public void afterRequest() throws UserException {
-        if (method == null)
-            throw new UserException(-1, "AsyncProxyMap: specify a method");
-    }
 
-    @Override
-    public void afterResponse() {
-        access.setOutputDoc(inDoc);
-    }
-
-    @Override
-    public int getPercReady() {
-        return 0;
-    }
-
-    @Override
-    public void beforeResponse(Access access) {
-        access.setOutputDoc(inDoc);
-    }
 
     public void continueAfterRun() throws UserException, ConditionErrorException, AuthorizationException {
         try {
@@ -1495,7 +1473,6 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
         } finally {
             serviceFinished = true;
             serviceCalled = true;
-            setIsFinished();
         }
 
     }
@@ -1754,19 +1731,16 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
 
     @Override
     public boolean isAborted() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean isCommitted() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public void setCommitted(boolean b) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -1774,7 +1748,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
         myException = e;
     }
 
-    @Override
+    
     public Exception getException() {
         return myException;
     }
@@ -1925,6 +1899,5 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
     public void setLowPriority(boolean lowPriority) {
         this.lowPriority = lowPriority;
     }
-    
 
 }

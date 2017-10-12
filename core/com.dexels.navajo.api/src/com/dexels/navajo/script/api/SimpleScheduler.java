@@ -2,9 +2,13 @@ package com.dexels.navajo.script.api;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 
 public class SimpleScheduler implements Scheduler {
+    private final static Logger logger = LoggerFactory.getLogger(SimpleScheduler.class);
 
 	private final RequestQueue normalPool;
 	
@@ -60,7 +64,8 @@ public class SimpleScheduler implements Scheduler {
         if (queueid.equals("normalPool")) {
             return normalPool;
         }
-        return null;
+        logger.info("Cannot find queue {} - returning normal", queueid);
+        return normalPool;
     }
 
     @Override

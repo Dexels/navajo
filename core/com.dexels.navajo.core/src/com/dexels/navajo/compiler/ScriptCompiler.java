@@ -67,11 +67,23 @@ public abstract class ScriptCompiler {
         if (forceTenant) {
             scriptName += "_" + tenant;
         }
+        String scriptString = null;
+        if ("".equals(packagePath)) {
+            scriptString = script.replaceAll("_", "|");
+            if (forceTenant) {
+                scriptString = (script + "_" + tenant).replaceAll("_", "|");
+            }
+        } else {
+            scriptString = packagePath + "/" + script.replaceAll("_", "|");
+            if (forceTenant) {
+                scriptString = packagePath + "/" + (script + "_" + tenant).replaceAll("_", "|");
+            }
+        }
         
         Set<String> dependentResources = processDependencies(dependencies);
         generateFactoryClass(scriptName, packagePath, dependentResources);
 
-        generateManifest(script, "1.0.0", packagePath, scriptName, packages);
+        generateManifest(scriptString, "1.0.0", packagePath, scriptName, packages);
         String compiledDate = generateDs(packagePath, scriptName, dependencies, dependentResources);
         if (packagePath.startsWith("entity")) {
             generateEntityDs(packagePath, scriptName, compiledDate, dependencies, dependentResources);

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function git_num_files {
-  expr `git status --porcelain 2>/dev/null| wc -l`
+  expr `git status --porcelain 2>/dev/null| grep -v '??' |wc -l`
 }
 
 function prettysleep {

@@ -1,0 +1,36 @@
+Bundle-Name: Navajo Scala Connections
+Bundle-SymbolicName: com.dexels.navajo.scala.navajoscala
+Bundle-Description: 
+Bundle-ManifestVersion: 2
+Bundle-Version: 0.1.1.qualifier
+Include-Resource: lib
+Export-Package: com.dexels.navajo.scala,
+ com.dexels.navajo.scala.document
+Bundle-Vendor: Dexels
+Bundle-ClassPath: .
+Import-Package: com.dexels.navajo.client,
+ com.dexels.navajo.document,
+ com.dexels.navajo.document.json.conversion,
+ com.dexels.navajo.document.types,
+ com.dexels.navajo.mapping,
+ com.dexels.navajo.parser,
+ com.dexels.navajo.script.api,
+ com.dexels.navajo.server,
+ com.dexels.replication.api;version="9.1.0",
+ com.dexels.replication.factory;version="1.1.0",
+ org.junit;version="4.8.2";resolution:=optional,
+ org.slf4j;version="1.7.5",
+ scala;version="2.11.2",
+ scala.collection;version="2.11.2",
+ scala.collection.concurrent;version="2.11.2",
+ scala.collection.convert;version="2.11.2",
+ scala.collection.generic;version="2.11.2",
+ scala.collection.immutable;version="2.11.2",
+ scala.collection.mutable;version="2.11.2",
+ scala.collection.parallel;version="2.11.2",
+ scala.collection.parallel.immutable;version="2.11.2",
+ scala.collection.parallel.mutable;version="2.11.2",
+ scala.collection.script;version="2.11.2",
+ scala.reflect,
+ scala.runtime
+Service-Component: OSGI-INF/script.xml

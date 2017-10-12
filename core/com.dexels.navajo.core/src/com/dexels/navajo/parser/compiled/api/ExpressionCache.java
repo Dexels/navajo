@@ -2,8 +2,6 @@ package com.dexels.navajo.parser.compiled.api;
 
 import java.io.StringReader;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -20,22 +18,40 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
 import com.dexels.replication.api.ReplicationMessage;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 import io.reactivex.Observable;
 
 public class ExpressionCache {
+	private final static Logger logger = LoggerFactory.getLogger(ExpressionCache.class);
+    private static final String DEFAULT_CACHE_SPEC = "maximumSize=20000";
 
 	private static ExpressionCache instance;
 
-	private final ConcurrentMap<String, ContextExpression> expressionCache = new ConcurrentHashMap<>();
-	private final ConcurrentMap<String, Object> expressionValueCache = new ConcurrentHashMap<>();
-	
+    private final LoadingCache<String, Optional<ContextExpression>> expressionCache;
+    private final LoadingCache<String, Optional<Object>> expressionValueCache;
+
 	private final AtomicLong hitCount = new AtomicLong();
 	private final AtomicLong pureHitCount = new AtomicLong();
 	private final AtomicLong parsedCount = new AtomicLong();
-	private final static Logger logger = LoggerFactory.getLogger(ExpressionCache.class);
-
-	ExpressionCache() {
+	
+	public ExpressionCache() {
+		expressionCache = CacheBuilder.from(DEFAULT_CACHE_SPEC).build(new CacheLoader<String, Optional<ContextExpression>>() {
+			public Optional<ContextExpression> load(String key) {
+				// Return empty optional and let the application handle it.
+				return Optional.empty();
+			}
+		});
+		
+		expressionValueCache = CacheBuilder.from(DEFAULT_CACHE_SPEC).build(new CacheLoader<String, Optional<Object>>() {
+			public Optional<Object> load(String key) {
+				// Return empty optional and let the application handle it.
+				return Optional.empty();
+			}
+		});
+		
 		try {
 			Observable.interval(1, TimeUnit.MINUTES)
 				.doOnError(e->logger.error("Error printing stats: ", e))
@@ -47,22 +63,22 @@ public class ExpressionCache {
 
 	public Object evaluate(String expression,Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) {
-		Object cachedValue = expressionValueCache.get(expression);
-		if(cachedValue!=null) {
+		Optional<Object> cachedValue = expressionValueCache.getUnchecked(expression);
+		if(cachedValue.isPresent()) {
 			pureHitCount.incrementAndGet();
 //			printStats();
-			return cachedValue;
+			return cachedValue.get();
 		}
 		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage);
 		
 	}
 	
 	public ContextExpression parse(String expression) {
-		ContextExpression cachedParsedExpression = expressionCache.get(expression);
-		if(cachedParsedExpression!=null) {
+		Optional<ContextExpression> cachedParsedExpression = expressionCache.getUnchecked(expression);
+		if(cachedParsedExpression.isPresent()) {
 //			System.err.println("Found cached expression: "+expression);
 			hitCount.incrementAndGet();
-			return cachedParsedExpression;
+			return cachedParsedExpression.get();
 		}
 		CompiledParser cp;
 		try {
@@ -74,9 +90,9 @@ public class ExpressionCache {
 	        parsedCount.incrementAndGet();
 	        if(parsed.isLiteral()) {
 	        		Object result = parsed.apply(null, null, null, null, null, null, null,null);
-	        		expressionCache.put(expression,parsed);
+	        		expressionCache.put(expression, Optional.ofNullable(parsed));
 	        		if(result!=null) {
-		        		expressionValueCache.put(expression, result);
+		        		expressionValueCache.put(expression,  Optional.of(result));
 	        		}
 	        		return new ContextExpression() {
 						
@@ -92,7 +108,7 @@ public class ExpressionCache {
 						}
 					};
 	        } else {
-	        		expressionCache.put(expression,parsed);
+	        		expressionCache.put(expression, Optional.ofNullable(parsed));
 	        		return parsed;
 	        }
 	        
@@ -108,9 +124,16 @@ public class ExpressionCache {
 	
 	public static ExpressionCache getInstance() {
 		if(instance==null) {
-			instance = new ExpressionCache();
+			createInstance();
 		}
 		return instance;
+	}
+	
+	private synchronized static void createInstance() {
+		if(instance==null) {
+			instance = new ExpressionCache();
+		}
+		
 	}
 	
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" enabled="true" immediate="true" name="navajo.enterprise.compiler.scala">
+   <implementation class="com.dexels.navajo.compiler.scala.ScalaCompiler"/>
+   <reference bind="setNavajoConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfigInterface" policy="dynamic" unbind="clearNavajoConfig"/>
+   <reference bind="setClassLoader" cardinality="1..1" interface="java.lang.ClassLoader" name="ClassLoader" policy="dynamic" target="(type=navajoScriptClassLoader)" unbind="clearClassLoader"/>
+   
+   <service>
+      <provide interface="com.dexels.navajo.compiler.ScriptCompiler"/>
+      <provide interface="com.dexels.navajo.compiler.scala.ScalaCompiler"/>
+   </service>
+</scr:component>

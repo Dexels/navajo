@@ -45,8 +45,11 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 					type, null, 0, "", Property.DIR_OUT);
 			switch (type) {
 			case Property.CLOCKTIME_PROPERTY:
-				ClockTime ct = new ClockTime((Date)value);
-				colProp.setAnyValue(ct);
+				if (value != null) {
+					ClockTime ct = new ClockTime((Date)value);
+					colProp.setAnyValue(ct);
+				}
+				colProp.setType(type);
 				break;
 
 			default:

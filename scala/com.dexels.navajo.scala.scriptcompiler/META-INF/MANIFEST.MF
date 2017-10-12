@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: com.dexels.navajo.scala.scriptcompiler
+Bundle-Version: 0.1.1.qualifier
+Bundle-Vendor: DEXELS
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ClassPath: .
+Service-Component: OSGI-INF/scalacompiler.xml,
+ OSGI-INF/scalacompiler.config.xml
+Import-Package: com.dexels.navajo.compiler,
+ com.dexels.navajo.compiler.tsl.custom,
+ com.dexels.navajo.repository.api;version="6.0.0",
+ com.dexels.navajo.script.api;version="1.0.0",
+ com.dexels.navajo.server,
+ org.osgi.framework;version="1.8.0",
+ org.osgi.service.cm,
+ org.slf4j;version="1.4.3",
+ scala.reflect.internal.util;version="2.11.2.v20140721-095018-73fb460c1c",
+ scala.tools.nsc;version="2.11.2.v20140721-095018-73fb460c1c",
+ scala.tools.nsc.reporters;version="2.11.2.v20140721-095018-73fb460c1c",
+ scala.tools.nsc.settings;version="2.11.2.v20140721-095018-73fb460c1c",
+ scala.tools.reflect;version="2.11.2.v20140721-095018-73fb460c1c"
+Require-Bundle: org.scala-lang.scala-library;bundle-version="2.11.2"
+
