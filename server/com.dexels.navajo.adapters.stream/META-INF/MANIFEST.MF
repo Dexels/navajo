@@ -18,7 +18,6 @@ Import-Package: com.dexels.navajo.adapter.sqlmap,
  com.dexels.replication.api;version="9.1.0",
  com.dexels.replication.factory;version="1.1.0",
  com.dexels.replication.impl.json;version="2.0.0",
- com.github.davidmoten.rx2;version="0.1.12",
  com.mysql.jdbc;version="5.1.34",
  hu.akarnokd.rxjava.interop;version="0.10.2",
  io.netty.buffer;version="4.1.4",
@@ -55,8 +54,8 @@ Import-Package: com.dexels.navajo.adapter.sqlmap,
 Export-Package: com.dexels.navajo.adapters.stream,
  hu.akarnokd.rxjava2.debug
 Bundle-ClassPath: .,
- lib/rxjava2-jdbc-0.1-RC6-SNAPSHOT.jar,
  lib/rxjava2-extensions-0.17.5.jar,
  lib/guava-mini-0.1.1.jar,
- lib/rxjava2-extras-0.1.15-SNAPSHOT.jar
+ lib/rxjava2-extras-0.1.15-SNAPSHOT.jar,
+ lib/rxjava2-jdbc-0.1-RC8.jar
 Require-Bundle: com.oracle.jdbc.driver;bundle-version="11.2.31"

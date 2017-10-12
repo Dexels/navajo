@@ -3,6 +3,9 @@ package com.dexels.navajo.reactive;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -16,6 +19,11 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.mongo.stream.MongoSupplier;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.reactive.source.mongo.MongoReactiveSourceFactory;
+import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
+import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
+import com.dexels.navajo.reactive.transformer.filestore.FileStoreTransformerFactory;
+import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 
@@ -26,13 +34,32 @@ import io.reactivex.Observable;
 public class TestScript {
 
 	private ReactiveScriptParser reactiveScriptParser;
+//	private ReplicationMessage person1;
+//	private ReplicationMessage person2;
 
 	@Before
 	public void setup() {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;
 		reactiveScriptParser = new ReactiveScriptParser();
+		Map<String,Object> sqlSettings = new HashMap<>();
+		sqlSettings.put("name", "sql");
+		reactiveScriptParser.addReactiveSourceFactory(new SQLReactiveSourceFactory(),sqlSettings);
+		Map<String,Object> mongoSettings = new HashMap<>();
+		mongoSettings.put("name", "mongo");
+		reactiveScriptParser.addReactiveSourceFactory(new MongoReactiveSourceFactory(),mongoSettings);
 
+		Map<String,Object> csvSettings = new HashMap<>();
+		csvSettings.put("name", "csv");
+		reactiveScriptParser.addReactiveTransformerFactory(new CSVTransformerFactory(),csvSettings);
+
+		Map<String,Object> fileStoreSettings = new HashMap<>();
+		fileStoreSettings.put("name", "filestore");
+		reactiveScriptParser.addReactiveTransformerFactory(new FileStoreTransformerFactory(),fileStoreSettings);
+		
+		Map<String,Object> mergeSingleSettings = new HashMap<>();
+		mergeSingleSettings.put("name", "mergeSingle");
+		reactiveScriptParser.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),mergeSingleSettings);
 		MongoSupplier ms = new MongoSupplier();
 		ms.activate();
 	}
@@ -45,7 +72,7 @@ public class TestScript {
 		return context;
 	}
 	
-	@Test @Ignore
+	@Test 
 	public void testSQL() {
 		SQL.query("dummy", "KNVB", "select * from organization where rownum < 500")
 			.flatMap(msg->StreamDocument.replicationMessageToStreamEvents("Organization", msg, true))
@@ -65,7 +92,7 @@ public class TestScript {
 		}
 	}
 	
-	@Test @Ignore
+	@Test 
 	public void testScript() throws IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactive.xml")) {
 			StreamScriptContext myContext = createContext("AdvancedReactiveSql");
@@ -74,16 +101,30 @@ public class TestScript {
 				.blockingForEach(e->System.err.print(new String(e)));
 		}
 	}
-	
 	@Test @Ignore
 	public void testMongoScript() throws IOException {
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactivemongo.xml")) {
+		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactivemongowithoutreduce.xml")) {
 			StreamScriptContext myContext = createContext("SimpleReactiveMongoDb");
 			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));
-//				.scan(0L, (a,l)->a+l.length)
-//				.blockingForEach(e->System.err.println("Bytes: "+e));
 		}
 	}
+	
+	@Test
+	public void testMongoScriptAggregate() throws IOException {
+		AtomicLong l = new AtomicLong();
+		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("mongoaggregate.xml")) {
+			StreamScriptContext myContext = createContext("SimpleReactiveMongoDb");
+			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
+				.lift(StreamDocument.serialize())
+				.blockingForEach(e->{
+					System.err.print(new String(e));
+					l.addAndGet(e.length);
+				});
+		}
+		System.err.println("Result: "+l.get());
+	}
 }
+
+

@@ -1,33 +1,48 @@
 package com.dexels.navajo.reactive;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Vector;
 import java.util.stream.Collectors;
 
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.reactive.api.ReactiveMapper;
+import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveScript;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
-import com.dexels.navajo.reactive.mongo.MongoReactiveSourceFactory;
-import com.dexels.navajo.reactive.sql.SQLReactiveSourceFactory;
+import com.dexels.navajo.reactive.api.ReactiveTransformer;
+import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
+import com.dexels.navajo.reactive.mappers.CopyMessage;
+import com.dexels.navajo.reactive.mappers.Delete;
+import com.dexels.navajo.reactive.mappers.Rename;
+import com.dexels.navajo.reactive.mappers.SetSingle;
+import com.dexels.navajo.reactive.source.mongo.MongoReactiveSourceFactory;
+import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
+import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
+import com.dexels.navajo.reactive.transformer.filestore.FileStoreTransformerFactory;
+import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
+import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;
@@ -36,75 +51,124 @@ import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Function3;
 
 public class ReactiveScriptParser {
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveScriptParser.class);
 
-	private Map<String,ReactiveSourceFactory> factories = new HashMap<>();
+	private final Map<String,ReactiveSourceFactory> factories = new HashMap<>();
+	private final Map<String,ReactiveTransformerFactory> reactiveOperatorFactory = new HashMap<>();
+	private final Map<String,ReactiveMapper> reactiveMapper = new HashMap<>();
+	
+
 	public ReactiveScriptParser() {
-		registerReactiveFactory("sql", new SQLReactiveSourceFactory());
-		registerReactiveFactory("mongo", new MongoReactiveSourceFactory());
+		reactiveMapper.put("set", new SetSingle());
+		reactiveMapper.put("toSubMessage", new CopyMessage());
+		reactiveMapper.put("delete", new Delete());
+		reactiveMapper.put("rename", new Rename());
 	}
 	
-	private void registerReactiveFactory(String name, ReactiveSourceFactory factory) {
-		factories.put(name, factory);
+	public void addReactiveSourceFactory(ReactiveSourceFactory factory, Map<String,Object> settings) {
+		factories.put((String) settings.get("name"), factory);
 	}
 
+	public void removeReactiveSourceFactory(ReactiveSourceFactory factory, Map<String,Object> settings) {
+		String name = (String) settings.remove("name");
+		factories.remove(name);
+	}
+
+	
+	public void addReactiveTransformerFactory(ReactiveTransformerFactory factory, Map<String,Object> settings) {
+		reactiveOperatorFactory.put((String) settings.get("name"), factory);
+	}
+
+	public void removeReactiveTransformerFactory(ReactiveTransformerFactory factory, Map<String,Object> settings) {
+		reactiveOperatorFactory.remove((String) settings.get("name"));
+	}
+	
 	public ReactiveScript parse(String serviceName, InputStream in) throws UnsupportedEncodingException, IOException {
 		XMLElement x = new CaseSensitiveXMLElement();
 		x.parseFromStream(in);
-		List<ReactiveSource> r =x.getChildren()
-				.stream()
-				.filter(xe->xe.getName().startsWith("source."))
-				.map(elt->parseSource(elt))
-				.collect(Collectors.toList());
+		String array = x.getStringAttribute("array");
+		String simple = x.getStringAttribute("simple");
+		boolean isArray = array!=null;
+		if(array==null && simple == null) {
+			throw new RuntimeException("Script should supply either a array or a simple top level message name");
+		}
+//		, String toplevelMessage
+		List<ReactiveSource> r = parseRoot(x);
 
-//		String array = x.getStringAttribute("array");
-//		boolean isArray = array!=null;
-//		String simple = x.getStringAttribute("simple");
-//		if(array==null && simple == null) {
-//			throw new NullPointerException("Should supply either an array or a simple");
-//		}
-//		FlowableTransformer<ReplicationMessage, NavajoStreamEvent> transformation = parseTransformation(isArray?array:simple,isArray);
-		
-		//		apply(ReplicationMessage)
 		return new ReactiveScript() {
 			
 			@Override
 			public Flowable<NavajoStreamEvent> execute(StreamScriptContext context) {
 				return Flowable.fromIterable(r)
-					.concatMap(r->r.execute(context, Optional.empty()).compose(parseTransformation(r.getOutputName(), r.isOutputArray()))
-							)
+					.concatMap(r->r.execute(context, Optional.empty())
+					.compose(parseTransformation(isArray ? array : simple, isArray)))
 					.compose(StreamDocument.inNavajo(context.service, context.username, ""));
 			}
 		};
 	}
 	
-	private FlowableTransformer<ReplicationMessage, NavajoStreamEvent> parseTransformation(String name, boolean isArray) {
+	private FlowableTransformer<DataItem, NavajoStreamEvent> parseTransformation(String name, boolean isArray) {
 		if(isArray) {
-			return StreamDocument.toArray(name);
+			return flow->flow.map(item->item.message()).compose(StreamDocument.toArray(name));
 		} else {
-			return StreamDocument.toMessage(name);
+			return flow->flow.map(item->item.message()).compose(StreamDocument.toMessage(name));
 		}
 	}
 
-	private ReactiveSource parseSource(XMLElement x) {
-		List<XMLElement> children = x.getChildren();
-		String type = x.getName();
+	private List<ReactiveSource> parseRoot(XMLElement x) {
+		List<ReactiveSource> r =x.getChildren()
+				.stream()
+				.map(xx->{
+					try {
+						return parseSource(xx,
+								operatorName->{ 
+									ReactiveSourceFactory src = this.factories.get(operatorName);
+									if(src==null) {
+										throw new RuntimeException("Missing source for factory: "+operatorName);
+									}
+									
+									return src;},
+								operatorName->{
+									ReactiveTransformerFactory transformer = this.reactiveOperatorFactory.get(operatorName);
+									if(transformer==null) {
+										throw new RuntimeException("Missing transformer for factory: "+operatorName);
+									}
+									return transformer;
+								},
+								operatorName->{
+									ReactiveMapper mpr = this.reactiveMapper.get(operatorName);
+									if(mpr==null) {
+										throw new RuntimeException("Missing mapper for factory: "+operatorName);
+									}
+									return mpr;
+								}
+								
+							);
+					} catch (Exception e) {
+						logger.error("Major source parsing issue. This is not going to end well.", e);
+					}
+					return null;
+				})
+				.collect(Collectors.toList());
 		
+		return r;
+	}
+
+	public static ReactiveParameters parseParamsFromChildren(XMLElement x) {
+		List<XMLElement> children = x.getChildren();
 		Map<String,BiFunction<StreamScriptContext,Optional<ReplicationMessage>,Operand>> namedParameters = new HashMap<>();
 		List<BiFunction<StreamScriptContext,Optional<ReplicationMessage>,Operand>> unnamedParameters = new ArrayList<>();
 		x.enumerateAttributeNames().forEachRemaining(e->{
-			namedParameters.put(e, (context,msg)->new Operand(x.getStringAttribute(e),"string",null));
+			namedParameters.put(e, (context,msg)->new Operand(x.getStringAttribute(e),Property.STRING_PROPERTY,null));
 		});
-		List<Function<StreamScriptContext,FlowableTransformer<ReplicationMessage, ReplicationMessage>>> maps = new ArrayList<>();
 		for (XMLElement possibleParam : children) {
 			String elementName = possibleParam.getName();
 			if(elementName.startsWith("param")) {
-				boolean evaluate = elementName.endsWith(".eval");
+				boolean evaluate = elementName.endsWith("eval");
 				String name = possibleParam.getStringAttribute("name");
 				String content = possibleParam.getContent();
 				if(content==null || "".equals(content)) {
@@ -118,238 +182,107 @@ public class ReactiveScriptParser {
 					}
 				} else {
 					if(evaluate) {
-						namedParameters.put(name, (context,msg)->evaluate((String)content, context, msg));
+						BiFunction<StreamScriptContext, Optional<ReplicationMessage>, Operand> value = (context,msg)->evaluate((String)content, context, msg);
+						namedParameters.put(name, value);
 					} else {
 						namedParameters.put(name, (context,msg)->new Operand(content,"string",null));
 					}
 				}
 			} else {
-				maps.add(parseTransformations(possibleParam));
+				logger.info("Ignoring non-parameter: "+possibleParam.getName());
 			}
 		}
+		return ReactiveParameters.of(namedParameters, unnamedParameters);
+	}
+	
+	private static ReactiveSource parseSource(XMLElement x, Function<String,ReactiveSourceFactory> sourceFactorySupplier,Function<String,ReactiveTransformerFactory> factorySupplier,Function<String, ReactiveMapper> mapperSupplier) throws Exception  {
+		String type = x.getName();
 		String[] typeSplit = type.split("\\.");
-		System.err.println("# of post processors: "+maps.size());
-
-		// todo: use named parameters
-		String array = x.getStringAttribute("array");
-		boolean isArray = array!=null;
-		String name = isArray? array : x.getStringAttribute("simple");
-
-		ReactiveSource src = createSource(typeSplit[1],namedParameters,unnamedParameters,maps,name,isArray);
+		ReactiveParameters params = parseParamsFromChildren(x);
+		List<ReactiveTransformer> factories = parseTransformationsFromChildren(x,sourceFactorySupplier, factorySupplier,mapperSupplier);
+		ReactiveSource src = createSource(typeSplit[1],params,factories,sourceFactorySupplier);
 		return src;
 	}
 
-//	private Function<Flowable<ReplicationMessage>, Flowable<ReplicationMessage>> parseTransformations(XMLElement x,StreamScriptContext context) {
-	private  Function<StreamScriptContext,FlowableTransformer<ReplicationMessage, ReplicationMessage>> parseTransformations(XMLElement x) {
-		String type = x.getName(); //.split("\\.");
-		switch (type) {
-			case "delete":
-				String deleteKey = x.getStringAttribute("key");
-				return context->l->l.map(delete(context,deleteKey));
-			case "rename":
-				String key = x.getStringAttribute("key");
-				String to = x.getStringAttribute("to");
-				return context->l->l.map(rename(context,key, to));
-			case "set":
-				String setKey = x.getStringAttribute("key");
-				String evalkey = x.getStringAttribute("key.eval");
-				String value = x.getStringAttribute("value");
-				String finalvalue = value==null?value = x.getContent():value;
-				boolean eval = evalkey!=null;
-				return context->l->l.map(setSingle(context,eval?evalkey:setKey,eval,finalvalue));
-			case "mergeSingle":
-				return createSingleMerge(x);
-//				XMLElement reducer = x.getChildByTagName("reduce");
-//				List<XMLElement> reductors = reducer.getChildren();
-			case "reduce":
-//				parseReducer(x).
+	private static List<ReactiveTransformer> parseTransformationsFromChildren(XMLElement parent, Function<String,ReactiveSourceFactory> sourceFactorySupplier,Function<String,ReactiveTransformerFactory> factorySupplier, Function<String, ReactiveMapper> mapperSupplier) throws Exception {
+		List<ReactiveTransformer> result = new ArrayList<>();
+		List<XMLElement> children = parent.getChildren();
+		for (XMLElement possibleParam : children) {
+			String type = possibleParam.getName();
+			String[] typeParts = type.split("\\.");
+			
+			if(!type.startsWith("param") && !type.startsWith("source")) {
+				// so it's a transformer
 				
-				return reduce(parseReducer(x));
-//				parseReducer(x)
-//				return context->l->l.reduce(
-//						parseReducer(x)
-//						);
-			default:
-				return new Function<StreamScriptContext,FlowableTransformer<ReplicationMessage, ReplicationMessage>>() {
-
-					@Override
-					public FlowableTransformer<ReplicationMessage, ReplicationMessage> apply(StreamScriptContext arg0)
-							throws Exception {
-						return e->e;
-					}
-
-					};
+				parseTransformerElement(result, possibleParam, typeParts,sourceFactorySupplier,factorySupplier,mapperSupplier);
+			}
 		}
+
+		return result;
 	}
 
-	private Function<StreamScriptContext,FlowableTransformer<ReplicationMessage, ReplicationMessage>> createSingleMerge(XMLElement x) {
-		Vector<XMLElement> children = x.getChildren();
-		if(children.size()!=2) {
-			throw new RuntimeException("mergeSingle should have two children");
+	private static void parseTransformerElement(List<ReactiveTransformer> result, XMLElement xml,String[] typeParts,Function<String,ReactiveSourceFactory> sourceSupplier, Function<String,ReactiveTransformerFactory> factorySupplier, Function<String, ReactiveMapper> mapperSupplier) throws Exception {
+		if(typeParts.length == 3) {
+			String baseType = typeParts[0];
+			String operatorName = typeParts[1];
+			String newBaseType = typeParts[2];
+			ReactiveTransformerFactory transformerFactory = factorySupplier.apply(operatorName); 
+			result.add(transformerFactory.build(xml,sourceSupplier,factorySupplier,mapperSupplier));
 		}
-		XMLElement source = children.get(0);
-		ReactiveSource sourceInstance = parseSource(source);
-		XMLElement reduce = children.get(1);
-		Function3<StreamScriptContext,ReplicationMessage,ReplicationMessage,ReplicationMessage> mergeFunction = xmlSet(reduce);
-		//eeeek
-		return context->flow->flow.concatMap(element->{
-			return sourceInstance.execute(context, Optional.of(element)).map(elt->mergeFunction.apply(context,element, elt));
-		});
+		
 	}
 
-
-	private ReactiveSource createSource(String type, Map<String
-			, BiFunction<StreamScriptContext,Optional<ReplicationMessage>, Operand>> namedParameters
-			, List<BiFunction<StreamScriptContext,Optional<ReplicationMessage>, Operand>> unnamedParameters
-			, List<Function<StreamScriptContext,FlowableTransformer<ReplicationMessage, ReplicationMessage>>> rest
-			, String outputName, boolean isOutputArray) {
-			return factories.get(type).build(namedParameters, unnamedParameters, rest,outputName,isOutputArray);
-	}
-	
-	private Function3<StreamScriptContext,ReplicationMessage,ReplicationMessage,ReplicationMessage> xmlSet(XMLElement xe) {
-		switch (xe.getName()) {
-			case "set":
-				String key = xe.getStringAttribute("key");
-				String value = xe.getStringAttribute("value");
-				String to = xe.getStringAttribute("to");
-				return set(key,value,to);
-			case "copyAll":
-				String copyTo = xe.getStringAttribute("to");
-				return copyAll(copyTo);
-				
+	public static Optional<ReactiveSource> findSubSource(XMLElement possibleParam,Function<String,ReactiveSourceFactory> sourceSupplier,Function<String,ReactiveTransformerFactory> factorySupplier,Function<String, ReactiveMapper> mapperSupplier) throws Exception {
+		Optional<XMLElement> xe = possibleParam.getChildren()
+				.stream()
+				.filter(x->x.getName().startsWith("source."))
+				.findFirst();
+		if(!xe.isPresent()) {
+			return Optional.empty();
 		}
-		logger.info("Found an unknown mutator: {}",xe.getName());
-		return (c,x,y)->x;
-	}
-	private Function3<StreamScriptContext,ReplicationMessage,ReplicationMessage,ReplicationMessage> set(String... params) {
-		return (context,reduc,item)->{
-			try {
-				String keyExpression = params[0];
-				String valueExpression = params[1];
-				String key = (String)evaluate(keyExpression,context,Optional.of(item)).value;
-				Operand valueOperand = evaluate(valueExpression,context, Optional.of(item));
-				Object value = valueOperand.value;
-				reduc.with(key,value,valueOperand.type);
-			} catch (Throwable e) {
-				logger.error("Error: ", e);
-			}
-			return reduc;
-		};
-	}
-	
-	private Function3<StreamScriptContext,ReplicationMessage,ReplicationMessage,ReplicationMessage> copyAll(String... params) {
-		return (context,reduc,item)->{
-			try {
-				String to = params[0];
-				Operand toOperand = evaluate(to,context, Optional.of(item));
-				Object value = toOperand.value;
-				return reduc.withSubMessage((String)value, item);
-			} catch (Throwable e) {
-				logger.error("Error: ", e);
-			}
-			return reduc;
-		};
+		return Optional.of(parseSource(xe.get(),sourceSupplier, factorySupplier,mapperSupplier));
+		
 	}
 
-	private Function<ReplicationMessage,ReplicationMessage> setSingle(StreamScriptContext context, String keySetter, boolean evaluate, String valueExpression)  {
-		return (item)->{
-			try {
-//				String keyExpression = params[0];
-//				String valueExpression = params[1];
-				String key = evaluate ? (String)evaluate(keySetter,context,Optional.of(item)).value : keySetter;
-				Operand valueOperand = evaluate(valueExpression,context, Optional.of(item));
-				Object value = valueOperand.value;
-				return item.with(key,value,valueOperand.type);
-			} catch (Throwable e) {
-				logger.error("Error: ", e);
-			}
-			return item;
-		};
+	private static ReactiveSource createSource(String type, ReactiveParameters params,
+			List<ReactiveTransformer> transformations,Function<String,ReactiveSourceFactory> sourceFactorySupplier) throws Exception {
+			ReactiveSourceFactory reactiveSourceFactory = sourceFactorySupplier.apply(type);
+			return reactiveSourceFactory.build(type,params,transformations);
 	}
 
-	private Function3<StreamScriptContext,ReplicationMessage,ReplicationMessage,ReplicationMessage> setReduce(String... params)  {
-		return (context,acc,item)->{
-			try {
-//				String keyExpression = params[0];
-				String valueExpression = params[1];
-				String destinationKey = params[2];
-//				System.err.println("BiFunction: "+keyExpression+" value: "+valueExpression+" to: "+destinationKey);
-//				String key = (String)evaluate(keyExpression,context,Optional.of(item)).value;
-				String destinationKeyEvaluated = (String)evaluate(destinationKey,context,Optional.of(item)).value;
-				Operand valueOperand = evaluate(valueExpression, context, Optional.of(item));
-				Object value = valueOperand.value;
-				return acc.with(destinationKeyEvaluated,value,valueOperand.type);
-			} catch (Throwable e) {
-				logger.error("Error: ", e);
-			}
-			return item;
-		};
-	}
-	
-	public Function<ReplicationMessage,ReplicationMessage> rename(StreamScriptContext context, String key, String to)  {
-		return in->{
-			Object value = in.columnValue(key);
-			String type = in.columnType(key);
-			return in.without(key)
-					.with(key, value, type);
-		};
-	}
-	
-	
-	private Function<ReplicationMessage,ReplicationMessage> delete(StreamScriptContext context, String key) {
-		System.err.println("Delete keys: "+key);
-		return in->in.without(Arrays.asList(key.split(",")));
-	}
-	
 
-	private Operand evaluate(String expression, StreamScriptContext context, Optional<ReplicationMessage> m) throws SystemException {
-//		System.err.println("Evaluating: "+valueExpression);
+	private static Operand evaluate(String expression, StreamScriptContext context, Optional<ReplicationMessage> m) throws SystemException {
 		return Expression.evaluate(expression, context.getInput().orElse(null), null, null,null,null,null,null,m);
 	}
-	
-	
-	private Function<StreamScriptContext,BiFunction<ReplicationMessage,ReplicationMessage,ReplicationMessage>> parseReducer(XMLElement x) {
-			List<Function3<StreamScriptContext,ReplicationMessage,ReplicationMessage,ReplicationMessage>> functions = x.getChildren().stream().map(mutator->{
-				String key = mutator.getStringAttribute("key");
-				String value = mutator.getStringAttribute("value");
-				String to = mutator.getStringAttribute("to");
-				return setReduce(key,value,to);
-			}).collect(Collectors.toList());
-			
 
-			return context->new BiFunction<ReplicationMessage,ReplicationMessage,ReplicationMessage>(){
-
-				@Override
-				public ReplicationMessage apply(ReplicationMessage acc, ReplicationMessage item) throws Exception {
-					ReplicationMessage current = acc;
-
-					for (Function3<StreamScriptContext,ReplicationMessage,ReplicationMessage,ReplicationMessage> biFunction : functions) {
-						current = biFunction.apply(context,current, item);
-					}
-					return current;
-				}};
-	}
-	
-	public Function<StreamScriptContext,FlowableTransformer<ReplicationMessage, ReplicationMessage>> reduce(Function<StreamScriptContext,BiFunction<ReplicationMessage,ReplicationMessage,ReplicationMessage>> func) {
-		return context->new FlowableTransformer<ReplicationMessage, ReplicationMessage>() {
-
-			@Override
-			public Flowable<ReplicationMessage> apply(Flowable<ReplicationMessage> in) {
-	        	BiFunction<ReplicationMessage, ReplicationMessage, ReplicationMessage> apply;
-				try {
-					apply = func.apply(context);
-					return in.reduce(empty(),apply)
-		        			.toFlowable();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return in;
-			}
-		};
-	}
-
-	private static ReplicationMessage empty() {
+	public static ReplicationMessage empty() {
 		return ReplicationFactory.createReplicationMessage(null, System.currentTimeMillis(), ReplicationMessage.Operation.NONE, Collections.emptyList(), Collections.emptyMap(), Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Optional.of(()->{}));
 	}
 	
+
+	public static Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> parseMapperList (List<XMLElement> elements, Function<String, ReactiveMapper> mapperSupplier) {
+
+//		Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>
+		List<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> funcList = elements.stream()
+				.filter(x->!x.getName().startsWith("param"))
+				.filter(x->x.getName().split(".").length!=3)
+				.map(xml->{
+			try {
+				return mapperSupplier.apply(xml.getName()).execute(xml);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}).collect(Collectors.toList());
+	
+		return context->(item,optional)->{
+			DataItem current = item;
+			for (Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> function : funcList) {
+				current = function.apply(context).apply(current, optional);
+			}
+			return current;
+		};
+		
+	}
+
+
 }

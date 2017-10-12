@@ -7,7 +7,7 @@ import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.stream.xml.BaseFlowableOperator;
+import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
 import com.fasterxml.jackson.core.JsonFactory;
 
 import io.reactivex.Flowable;

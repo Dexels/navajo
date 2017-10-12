@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.reactive.scriptparser">
+   <implementation class="com.dexels.navajo.reactive.ReactiveScriptParser"/>
+   <reference bind="addReactiveSourceFactory" cardinality="0..n" interface="com.dexels.navajo.reactive.api.ReactiveSourceFactory" name="ReactiveSourceFactory" policy="dynamic" unbind="removeReactiveSourceFactory"/>
+   <reference bind="addReactiveTransformerFactory" cardinality="0..n" interface="com.dexels.navajo.reactive.api.ReactiveTransformerFactory" name="ReactiveTransformerFactory" policy="dynamic" unbind="removeReactiveTransformerFactory"/>
+   <service>
+      <provide interface="com.dexels.navajo.reactive.ReactiveScriptParser"/>
+   </service>
+</scr:component>

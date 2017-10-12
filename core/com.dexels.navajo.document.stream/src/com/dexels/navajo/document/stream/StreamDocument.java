@@ -40,7 +40,7 @@ import com.dexels.navajo.document.stream.base.BackpressureAdministrator;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
-import com.dexels.navajo.document.stream.xml.BaseFlowableOperator;
+import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
 import com.dexels.navajo.document.stream.xml.ObservableNavajoParser;
 import com.dexels.navajo.document.stream.xml.XMLEvent;
 import com.dexels.navajo.document.types.Binary;
@@ -1512,6 +1512,7 @@ public class StreamDocument {
 	}
 
 	public static FlowableTransformer<ReplicationMessage, NavajoStreamEvent> toMessage(String name) {
+		System.err.println("Name: "+name);
 		return new FlowableTransformer<ReplicationMessage, NavajoStreamEvent>() {
 
 			@Override

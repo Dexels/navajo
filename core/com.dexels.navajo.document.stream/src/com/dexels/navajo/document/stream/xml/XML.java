@@ -10,6 +10,7 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import com.dexels.navajo.document.stream.impl.SaxXmlFeeder;
+import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;

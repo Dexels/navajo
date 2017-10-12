@@ -33,12 +33,16 @@ public class StreamScriptContext {
 		this.inputFlowable = inputFlowable;
 	}
 
+	public Flowable<NavajoStreamEvent> inputFlowable() {
+		return inputFlowable;
+	}
 
 	public Optional<Navajo> getInput() {
 		if(this.input != null) {
 			return Optional.of(this.input);
 		} else {
 			this.input = inputFlowable.toObservable().lift(StreamDocument.collect()).firstElement().blockingGet();
+			this.inputFlowable = null;
 			return Optional.of(this.input);
 		}
 	}
