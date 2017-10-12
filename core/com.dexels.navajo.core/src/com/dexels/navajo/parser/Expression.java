@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -20,26 +23,28 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.mapping.MappingUtils;
-import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 import com.dexels.navajo.parser.internal.ParseException;
 import com.dexels.navajo.parser.internal.TMLParser;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.script.api.SystemException;
-//import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.tipilink.TipiLink;
 import com.dexels.replication.api.ReplicationMessage;
 
 public final class Expression {
-
+    private final static Logger logger = LoggerFactory.getLogger(Expression.class);
 	public static String ACCESS = "ACCESS";
 
 	private static CachedExpressionEvaluator evaluator = new CachedExpressionEvaluator();
-	public static boolean compileExpressions = false;
+	public static boolean compileExpressions = true; // Enabled by default
+	
 	static {
 		String env = System.getenv("COMPILED_EXPRESSIONS");
-		compileExpressions = env!=null && !"false".equals(env);
+		if (env != null) {
+		    compileExpressions = "true".equalsIgnoreCase(env);
+		}
+		logger.info("Compile expressions: {}", compileExpressions);
 		
 	}
 	
