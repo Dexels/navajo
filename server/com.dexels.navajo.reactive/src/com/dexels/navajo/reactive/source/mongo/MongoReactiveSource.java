@@ -55,6 +55,7 @@ import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.replication.api.ReplicationMessage;
+import com.dexels.replication.factory.ReplicationFactory;
 import com.mongodb.reactivestreams.client.MongoCollection;
 
 import io.reactivex.Flowable;
@@ -85,6 +86,7 @@ public class MongoReactiveSource implements ReactiveSource {
 		try {
 			Map<String,Operand> pp = parameters.resolveNamed(context, current);
 			
+			boolean debug = pp.containsKey("debug");
 			String name = (String) pp.get("resource").value;
 			String collection = (String) pp.get("collection").value;
 			String query = (String) pp.get("query").value;
@@ -114,8 +116,11 @@ public class MongoReactiveSource implements ReactiveSource {
 			Flowable<DataItem> flow = MongoSupplier.getInstance().query(context, name, collection,
 					resolvedOperation).map(e->DataItem.of(e));
 			
+			if(debug) {
+				flow = flow.doOnNext(di->System.err.println("Item: "+ReplicationFactory.getInstance().describe(di.message())));
+			}
 			for (ReactiveTransformer reactiveTransformer : transformers) {
-				flow = flow.compose(reactiveTransformer.execute(context, current));
+				flow = flow.compose(reactiveTransformer.execute(context));
 			}
 			return flow;
 		} catch (Exception e) {
@@ -158,7 +163,6 @@ public class MongoReactiveSource implements ReactiveSource {
                 Operand replace = params.remove(0);
                 BsonValue bv = createBsonFromOperand(replace);
                 o.put(ss,bv);
-                logger.debug("Set parameter {} at {}", replace, ss);
                 
             } else if (value instanceof List) {
                 List<Object> l = (List<Object>) value;

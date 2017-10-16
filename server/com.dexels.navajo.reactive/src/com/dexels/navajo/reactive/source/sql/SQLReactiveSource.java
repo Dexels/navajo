@@ -36,7 +36,7 @@ public class SQLReactiveSource implements ReactiveSource {
 		String query = (String) paramMap.get("query").value;
 		Flowable<DataItem> flow = SQL.query(datasource, context.tenant, query, params).map(d->DataItem.of(d));
 		for (ReactiveTransformer trans : transformers) {
-			flow = flow.compose(trans.execute(context, current));
+			flow = flow.compose(trans.execute(context));
 		}
 		return flow;
 	}

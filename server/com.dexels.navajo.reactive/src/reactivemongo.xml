@@ -1,5 +1,5 @@
-<reactive streamInput="/path">
- 	<source.mongo.msg resource="dummy" collection="Club" operation="find" outputarray="AlsoOrganization">
+<reactive streamInput="/path" array="AlsoOrganization">
+ 	<source.mongo.msg resource="dummy" collection="Club" operation="find">
 		<param name="query">{shortname:{$regex : "berg*"}}</param>
 		<msg.joinsingle.msg >
 			<source.mongo.msg resource="dummy" collection="Club" operation="find" single="OrganizationSub">

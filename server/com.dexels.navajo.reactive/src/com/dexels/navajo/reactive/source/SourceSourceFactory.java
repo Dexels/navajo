@@ -10,7 +10,7 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 public class SourceSourceFactory implements ReactiveSourceFactory {
 
 	@Override
-	public ReactiveSource build(ReactiveParameters params, List<ReactiveTransformer> transformers) {
+	public ReactiveSource build(String type, ReactiveParameters params, List<ReactiveTransformer> transformers) {
 		return new SourceSource();
 	}
 }

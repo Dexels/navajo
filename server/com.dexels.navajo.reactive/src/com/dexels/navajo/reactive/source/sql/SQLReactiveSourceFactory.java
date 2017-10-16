@@ -14,7 +14,7 @@ public class SQLReactiveSourceFactory implements ReactiveSourceFactory {
 	}
 
 	@Override
-	public ReactiveSource build(ReactiveParameters parameters, List<ReactiveTransformer> transformers) {
+	public ReactiveSource build(String type, ReactiveParameters parameters, List<ReactiveTransformer> transformers) {
 		return new SQLReactiveSource(parameters, transformers);
 	}
 

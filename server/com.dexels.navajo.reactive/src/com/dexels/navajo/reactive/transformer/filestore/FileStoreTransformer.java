@@ -19,7 +19,6 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
-import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;
 
 import io.reactivex.FlowableOperator;
@@ -37,9 +36,8 @@ public class FileStoreTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context,
-			Optional<ReplicationMessage> current) {
-		Map<String,Operand> resolved = parameters.resolveNamed(context, current);
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
+		Map<String,Operand> resolved = parameters.resolveNamed(context, Optional.empty());
 		String path = (String) resolved.get("path").value;
 		return flow->flow.lift(flowableFile(path));
 	}

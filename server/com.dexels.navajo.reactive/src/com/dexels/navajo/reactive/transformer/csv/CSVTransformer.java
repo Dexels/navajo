@@ -25,9 +25,9 @@ public class CSVTransformer implements ReactiveTransformer {
 
 	private ReactiveParameters parameters;
 	
-	private static FlowableTransformer<DataItem, DataItem> createTransformer(List<String> columns,
-			List<String> labels, boolean writeHeaders, String delimiter) {
-		return flow -> flow.lift(flowableCSV(columns, labels, writeHeaders, delimiter));
+	private FlowableTransformer<DataItem, DataItem> createTransformer(StreamScriptContext context) {
+		
+		return flow -> flow.lift(flowableCSV(context));
 	}
 	
 	public CSVTransformer(ReactiveParameters parameters) {
@@ -35,8 +35,7 @@ public class CSVTransformer implements ReactiveTransformer {
 		
 	}
 
-	public static FlowableOperator<DataItem, DataItem> flowableCSV(List<String> columns, List<String> labels,
-			boolean writeHeaders, String delimiter) {
+	public FlowableOperator<DataItem, DataItem> flowableCSV(StreamScriptContext context) {
 
 		return new BaseFlowableOperator<DataItem, DataItem>(10) {
 
@@ -60,6 +59,16 @@ public class CSVTransformer implements ReactiveTransformer {
 					@Override
 					public void onNext(DataItem msg) {
 						// TODO use labels
+
+						Map<String,Operand> resolved = parameters.resolveNamed(context, Optional.of(msg.message()));
+						String columnString = (String) resolved.get("columns") .value;
+						List<String> columns = Arrays.asList(columnString.split(","));
+						String labelString = (String) resolved.get("labels").value;
+						List<String> labels = Arrays.asList(labelString.split(","));
+						boolean writeHeaders = (boolean) resolved.get("writeHeaders").value;
+						String delimiter = (String) resolved.get("delimiter").value;						
+						
+						
 						operatorNext(msg, m->{
 							ReplicationMessage dd = m.message();
 							String line = columns.stream().map(column -> "" + dd.columnValue(column))
@@ -78,16 +87,15 @@ public class CSVTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context,
-			Optional<ReplicationMessage> current) {
-		Map<String,Operand> resolved = parameters.resolveNamed(context, current);
-		String columnString = (String) resolved.get("columns") .value;
-		List<String> columns = Arrays.asList(columnString.split(","));
-		String labelString = (String) resolved.get("labels").value;
-		List<String> labels = Arrays.asList(labelString.split(","));
-		boolean writeHeaders = (boolean) resolved.get("writeHeaders").value;
-		String delimiter = (String) resolved.get("delimiter").value;
-		return createTransformer(columns,labels,writeHeaders,delimiter);
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
+//		Map<String,Operand> resolved = parameters.resolveNamed(context, current);
+//		String columnString = (String) resolved.get("columns") .value;
+//		List<String> columns = Arrays.asList(columnString.split(","));
+//		String labelString = (String) resolved.get("labels").value;
+//		List<String> labels = Arrays.asList(labelString.split(","));
+//		boolean writeHeaders = (boolean) resolved.get("writeHeaders").value;
+//		String delimiter = (String) resolved.get("delimiter").value;
+		return createTransformer(context);
 	}
 
 }

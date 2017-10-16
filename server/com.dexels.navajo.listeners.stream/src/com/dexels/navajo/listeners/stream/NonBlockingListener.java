@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
@@ -20,6 +21,7 @@ import org.slf4j.MDC;
 
 import com.dexels.navajo.authentication.api.AuthenticationMethodBuilder;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
@@ -30,6 +32,7 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.xml.XML;
+import com.dexels.navajo.reactive.ReactiveScriptEnvironment;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.FatalException;
@@ -38,7 +41,6 @@ import com.dexels.navajo.script.api.LocalClient;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import nl.codemonkey.reactiveservlet.Servlets;
 
@@ -52,6 +54,8 @@ public class NonBlockingListener extends HttpServlet {
 	private final static Logger logger = LoggerFactory.getLogger(NonBlockingListener.class);
 
 	private AuthenticationMethodBuilder authMethodBuilder;
+
+	private ReactiveScriptEnvironment reactiveScriptEnvironment;
 	
 	public LocalClient getLocalClient() {
 		return localClient;
@@ -72,7 +76,15 @@ public class NonBlockingListener extends HttpServlet {
     public void clearAuthenticationMethodBuilder(AuthenticationMethodBuilder eventAdmin) {
         this.authMethodBuilder = null;
     }
+    
+    public void setReactiveScriptEnvironment(ReactiveScriptEnvironment env) {
+    		this.reactiveScriptEnvironment = env;
+    }
 
+    public void clearReactiveScriptEnvironment(ReactiveScriptEnvironment env) {
+		this.reactiveScriptEnvironment = null;
+    }
+    
 	public void addScript(Script script,Map<String,Object> settings) {
 		String name = (String) settings.get("navajo.scriptName");
 		if(name!=null) {
@@ -109,7 +121,8 @@ public class NonBlockingListener extends HttpServlet {
 	}
 	
 	private static Map<String, Object> extractHeaders(HttpServletRequest req) {
-		Map<String, Object> attributes = new HashMap<>();
+		Map<String, Object> attributes = 
+			    new TreeMap<String, Object>(String.CASE_INSENSITIVE_ORDER);
 		Enumeration<String> en = req.getHeaderNames();
 		while (en.hasMoreElements()) {
 			String headerName = en.nextElement();
@@ -131,8 +144,9 @@ public class NonBlockingListener extends HttpServlet {
 			System.err.println("Tenant determined: "+context.tenant+" service: "+context.service);
 
 			try {
-				authenticate(context, (String)context.attributes.get("Authorization"));
+				authenticate(context,(String)context.attributes.get("x-navajo-password"), (String)context.attributes.get("Authorization"),context.tenant);
 			} catch (Exception e1) {
+				logger.error("Authentication problem: ",e1);
 				errorMessage(context.service, context.username, -1, e1.getMessage())
 				.lift(StreamDocument.serialize())
 				.compose(StreamDocument.compress(responseEncoding))
@@ -149,7 +163,17 @@ public class NonBlockingListener extends HttpServlet {
 				.concatMap(e->e);
 			
 			context.setInputFlowable(input);
-
+			
+			if(reactiveScriptEnvironment.isReactiveScript(context.service)) {
+				reactiveScriptEnvironment.run(context)
+//				processStreamingScript(request,input)
+					.lift(StreamDocument.filterMessageIgnore())
+					.lift(StreamDocument.serialize())
+					.compose(StreamDocument.compress(responseEncoding))
+					.subscribe(Servlets.createSubscriber(ac));
+				return;
+			}
+			
 			processStreamingScript(request,input)
 				.lift(StreamDocument.filterMessageIgnore())
 				.lift(StreamDocument.serialize())
@@ -189,8 +213,11 @@ public class NonBlockingListener extends HttpServlet {
 	}
 	
 
-	public void authenticate(StreamScriptContext context, String authHeader) throws AuthorizationException {
+	public void authenticate(StreamScriptContext context, String password, String authHeader, String tenant) throws AuthorizationException {
 		Access a = new Access(-1,-1,context.username,context.service,"stream","ip","hostname",null,false,"access");
+		a.setTenant(tenant);
+		a.setInDoc(NavajoFactory.getInstance().createNavajo());
+		a.rpcPwd = password;
 		authMethodBuilder.getInstanceForRequest(authHeader).process(a);
 	}
 

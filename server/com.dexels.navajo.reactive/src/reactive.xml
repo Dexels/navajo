@@ -1,16 +1,21 @@
-<reactive>
-	<source.sql resource="dummy"  array="Organization">
+<reactive array="Organization">
+	<source.sql resource="dummy">
 		<param name="query">select * from ORGANIZATION WHERE ROWNUM &lt;=20</param>
-		<delete key="SHORTNAME,UPDATEBY,REMARKS"/>
-		<mergeSingle>
+		<msg.mergeSingle.msg>
 			<source.sql resource="dummy" single="OrganizationAttribute">
-				<param name="query">select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?</param>
-				<param.eval>[ORGANIZATIONID]</param.eval>
-				<reduce>
-					<set key="'ATTRIBNAME'" value="ToLower([ATTRIBVALUE])" to="[ATTRIBNAME]"/>
-				</reduce>
+			<param name="query">select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?</param>
+			<parameval>[ORGANIZATIONID]</parameval>
+			<reducer>
+				<set>
+					<parameval name="to">[ATTRIBNAME]</parameval>
+					<parameval name="value">[ATTRIBVALUE]</parameval>
+				</set>
+			</reducer>
+			<joiner>
+				<delete name="SHORTNAME,UPDATEBY,REMARKS"/>
+				<toSubMessage name="Attributes"/>
+			</joiner>
 			</source.sql>
-			<copyAll to="'Attributes'"/>
-		</mergeSingle>
+		</msg.mergeSingle.msg>
 	</source.sql>
 </reactive>

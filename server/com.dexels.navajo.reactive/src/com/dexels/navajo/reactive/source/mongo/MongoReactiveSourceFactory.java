@@ -11,9 +11,12 @@ public class MongoReactiveSourceFactory implements ReactiveSourceFactory {
 
 	public MongoReactiveSourceFactory() {
 	}
+	
+	public void activate() {
+	}
 
 	@Override
-	public ReactiveSource build(
+	public ReactiveSource build(String type, 
 			ReactiveParameters params, List<ReactiveTransformer> transformers) {
 		return new MongoReactiveSource(params, transformers);
 	}

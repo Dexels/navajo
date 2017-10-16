@@ -39,11 +39,11 @@ public class SQL {
 			try {
 				ds = new oracle.jdbc.pool.OracleDataSource();
 			    ds.setDriverType("thin");
-			    ds.setServerName("ble");
-			    ds.setDatabaseName("bla");
+			    ds.setServerName("134.213.98.122");
+			    ds.setDatabaseName("SLTEST01");
 			    ds.setPortNumber(1521);
-			    ds.setUser("blo");
-			    ds.setPassword("blb");
+			    ds.setUser("knvbkern");
+			    ds.setPassword("knvb");
 	        		testDataSource = ds;
 				return testDataSource;
 			} catch (SQLException e1) {
