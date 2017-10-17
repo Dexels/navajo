@@ -4,6 +4,7 @@ import java.security.KeyStore;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -48,6 +49,7 @@ public abstract class NavajoClient implements ClientInterface{
     protected SSLSocketFactory socketFactory;
     protected KeyStore keyStore;
 
+	private boolean markDescriptions = System.getProperty("MARK_DESCRIPTIONS")!=null;
 
     
     @Override
@@ -162,7 +164,9 @@ public abstract class NavajoClient implements ClientInterface{
                 long timeStamp = System.currentTimeMillis();
 
                 n = doTransaction(out, allowCompression, retries, 0);
-                
+                if(markDescriptions) {
+                    addParagraphToAllPropertyDescriptions(n,null);
+                }
                 if (n.getHeader() != null) {
                     n.getHeader().setHeaderAttribute("sourceScript", callingService);
                     clientTime = (System.currentTimeMillis() - timeStamp);
@@ -193,6 +197,22 @@ public abstract class NavajoClient implements ClientInterface{
             }
         }
     }
+    
+    public static void addParagraphToAllPropertyDescriptions(Navajo n, Message current) {
+    		if(current != null) {
+    			for(Property p : current.getAllProperties()) {
+    				String desc = p.getDescription();
+    				if(desc!=null) {
+    					p.setDescription("§"+desc+"§");
+    				}
+    			}
+    		}
+    		List<Message> p = current == null ? n.getAllMessages() : current.getAllMessages(); 
+    		for (Message message : p) {
+    			addParagraphToAllPropertyDescriptions(n, message);
+		}
+    }
+
     
     protected Navajo doTransaction(Navajo d, boolean useCompression, int retries, int exceptions) throws ClientException {
         throw new UnsupportedOperationException();

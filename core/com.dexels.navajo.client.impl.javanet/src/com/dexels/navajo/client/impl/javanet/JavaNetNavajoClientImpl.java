@@ -37,6 +37,8 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 
 	public static final int CONNECT_TIMEOUT = 10000;
 
+	private boolean markDescriptions = System.getProperty("MARK_DESCRIPTIONS")!=null;
+
 	@Override
 	protected Navajo doTransaction(Navajo inputNavajo, boolean useCompression, int retries, int exceptionCount)
 			throws ClientException {
@@ -68,6 +70,12 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 			postNavajo(inputNavajo, useCompression, con);
 
 			resultNavajo = readResponse(useCompression, con);
+//			if(System.getProperty("MARK_DESCRIPTIONS")
+
+			if(this.markDescriptions ) {
+				NavajoClient.addParagraphToAllPropertyDescriptions(resultNavajo, null);
+				
+			}
 		} catch (Throwable t) {
 			resultNavajo = handleException(t, getCurrentHost());
 		}
