@@ -307,9 +307,9 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
 
             String consoleOutput = myAccess.getConsoleOutput();
             if (consoleOutput != null && !consoleOutput.trim().equals("")) {
-                System.err.println(" --------- BEGIN NAVAJO CONSOLE OUTPUT ---------");
+                System.err.println(" --------- NAVAJO CONSOLE OUTPUT: " + getScriptName());
                 System.err.println(consoleOutput);
-                System.err.println("--------- END NAVAJO CONSOLE OUTPUT ---------");
+                System.err.println("--------- NAVAJO CONSOLE OUTPUT");
                 
             }
         }

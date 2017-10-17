@@ -18,7 +18,7 @@ import com.dexels.navajo.document.json.conversion.JsonTmlFactory
 
 abstract class ScalaScript() extends CompiledScript {
   var runtime: NavajoRuntime = null
-  val validations = new ListBuffer[NavajoRuntime => Boolean]
+  val validations = new ListBuffer[NavajoDocument => Boolean]
 
   override def finalBlock(a: Access) {
 
@@ -28,7 +28,7 @@ abstract class ScalaScript() extends CompiledScript {
     //runtime.input.property("")
   }
 
-  def addValidation(validation: NavajoRuntime => Boolean) {
+  def addValidation(validation: NavajoDocument => Boolean) {
     validations.append(validation)
   }
 
@@ -36,7 +36,7 @@ abstract class ScalaScript() extends CompiledScript {
     myAccess = a
     runtime = new NavajoRuntime(a)
     for (e <- validations) {
-      if (!e.apply(runtime)) {
+      if (!e.apply(input)) {
         print("VALIDATION ERRRRR")
       }
     }

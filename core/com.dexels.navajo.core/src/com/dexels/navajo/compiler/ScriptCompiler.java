@@ -58,9 +58,9 @@ public abstract class ScriptCompiler {
         Set<String> packages;
         try {
             packages = compileScript(scriptPath, scriptName, packagePath, dependencies, tenant, hasTenantSpecificFile, forceTenant);
-        } catch (Throwable t) {
-            logger.error("Exception on compiling script {}!", scriptName, t);
-            return;
+        } catch (Exception e) {
+            logger.error("Exception on compiling script {}!", scriptName, e);
+            throw e;
         }
         
         // Before generating OSGi stuff, check forceTenant
