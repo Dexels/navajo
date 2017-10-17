@@ -13,6 +13,7 @@
 		<module>../../com.dexels.navajo.listeners.continuations</module>
 		<module>../../com.dexels.navajo.adapters.stream</module>
 		<module>../../com.dexels.navajo.listeners.stream</module>
+		<module>../../com.dexels.navajo.reactive</module>
 		<!--<module>../../com.dexels.navajo.proxy</module>-->
 		<module>../../com.dexels.navajo.queuemanager</module>
 		<module>../../com.dexels.navajo.rhino</module>

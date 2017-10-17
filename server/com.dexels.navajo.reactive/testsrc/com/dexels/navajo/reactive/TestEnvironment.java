@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.navajo.document.Navajo;
@@ -35,7 +36,7 @@ public class TestEnvironment {
 		ms.activate();
 	}
 
-	@Test
+	@Test @Ignore
 	public void testEnv() throws IOException {
 		File root = new File("testscripts");
 		ReactiveScriptEnvironment env = new ReactiveScriptEnvironment(root);
