@@ -13,7 +13,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.navajo.mongo.stream.MongoSupplier;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
@@ -32,8 +31,8 @@ public class TestEnvironment {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;
 //		reactiveScriptParser = new ReactiveScriptParser();
-		MongoSupplier ms = new MongoSupplier();
-		ms.activate();
+//		MongoSupplier ms = new MongoSupplier();
+//		ms.activate();
 	}
 
 	@Test @Ignore

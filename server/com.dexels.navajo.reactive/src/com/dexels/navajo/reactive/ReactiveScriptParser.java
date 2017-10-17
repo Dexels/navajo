@@ -1,6 +1,5 @@
 package com.dexels.navajo.reactive;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -12,8 +11,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,12 +34,6 @@ import com.dexels.navajo.reactive.mappers.CopyMessage;
 import com.dexels.navajo.reactive.mappers.Delete;
 import com.dexels.navajo.reactive.mappers.Rename;
 import com.dexels.navajo.reactive.mappers.SetSingle;
-import com.dexels.navajo.reactive.source.mongo.MongoReactiveSourceFactory;
-import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
-import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
-import com.dexels.navajo.reactive.transformer.filestore.FileStoreTransformerFactory;
-import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
-import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;

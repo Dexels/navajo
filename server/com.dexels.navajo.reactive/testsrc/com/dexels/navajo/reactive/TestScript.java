@@ -17,9 +17,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.navajo.mongo.stream.MongoSupplier;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.reactive.source.mongo.MongoReactiveSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
 import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
 import com.dexels.navajo.reactive.transformer.filestore.FileStoreTransformerFactory;
@@ -45,9 +43,9 @@ public class TestScript {
 		Map<String,Object> sqlSettings = new HashMap<>();
 		sqlSettings.put("name", "sql");
 		reactiveScriptParser.addReactiveSourceFactory(new SQLReactiveSourceFactory(),sqlSettings);
-		Map<String,Object> mongoSettings = new HashMap<>();
-		mongoSettings.put("name", "mongo");
-		reactiveScriptParser.addReactiveSourceFactory(new MongoReactiveSourceFactory(),mongoSettings);
+//		Map<String,Object> mongoSettings = new HashMap<>();
+//		mongoSettings.put("name", "mongo");
+//		reactiveScriptParser.addReactiveSourceFactory(new MongoReactiveSourceFactory(),mongoSettings);
 
 		Map<String,Object> csvSettings = new HashMap<>();
 		csvSettings.put("name", "csv");
@@ -60,8 +58,8 @@ public class TestScript {
 		Map<String,Object> mergeSingleSettings = new HashMap<>();
 		mergeSingleSettings.put("name", "mergeSingle");
 		reactiveScriptParser.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),mergeSingleSettings);
-		MongoSupplier ms = new MongoSupplier();
-		ms.activate();
+//		MongoSupplier ms = new MongoSupplier();
+//		ms.activate();
 	}
 	
 	public StreamScriptContext createContext(String serviceName) {
@@ -72,7 +70,7 @@ public class TestScript {
 		return context;
 	}
 	
-	@Test 
+	@Test  @Ignore
 	public void testSQL() {
 		SQL.query("dummy", "KNVB", "select * from organization where rownum < 500")
 			.flatMap(msg->StreamDocument.replicationMessageToStreamEvents("Organization", msg, true))
@@ -92,7 +90,7 @@ public class TestScript {
 		}
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testScript() throws IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactive.xml")) {
 			StreamScriptContext myContext = createContext("AdvancedReactiveSql");
@@ -111,7 +109,7 @@ public class TestScript {
 		}
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testMongoScriptAggregate() throws IOException {
 		AtomicLong l = new AtomicLong();
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("mongoaggregate.xml")) {
