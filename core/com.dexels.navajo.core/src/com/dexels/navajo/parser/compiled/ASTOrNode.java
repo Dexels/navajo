@@ -42,7 +42,7 @@ public final class ASTOrNode extends SimpleNode {
 		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage);
 		        Boolean bb = (Boolean) b;
 		        if(b==null) {
-		        		b = Boolean.FALSE;
+		        		bb = Boolean.FALSE;
 		        }
 
 		        return Boolean.valueOf(ba.booleanValue() || bb.booleanValue());
