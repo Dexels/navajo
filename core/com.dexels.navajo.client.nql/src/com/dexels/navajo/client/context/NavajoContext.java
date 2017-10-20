@@ -77,6 +77,15 @@ public abstract class NavajoContext implements ClientContext {
 		if(old!=null) {
 			myInverseNavajoMap.remove(old);
 		}
+
+		if (n == null ) {
+		    logger.warn("Null navajo response for {}! Ignoring response", service);
+		    return;
+		} 
+		if (n.getMessage("error") != null || n.getMessage("AuthenticationError") != null || n.getMessage("AuthorizationError") != null)  {
+		    logger.warn("Navajo contains an error for {}! Ignoring response", service);
+            return;
+		}
 		myNavajoMap.put(service, n);
 		myInverseNavajoMap.put(n, service);
 		
