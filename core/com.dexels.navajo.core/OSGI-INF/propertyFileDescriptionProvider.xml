@@ -2,7 +2,11 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="navajo.descriptionprovider.property">
    <implementation class="com.dexels.navajo.server.descriptionprovider.impl.PropertyFileDescriptionProvider"/>
    <service>
+      <provide interface="org.osgi.service.event.EventHandler" />
       <provide interface="com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface"/>
    </service>
    <reference bind="setNavajoIOConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoIOConfig" name="NavajoIOConfig" policy="dynamic" unbind="clearNavajoIOConfig"/>
+   <property name="event.topics" type="String">
+		repository/change
+	</property>
 </scr:component>

@@ -35,7 +35,8 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 	public void updatePropertyDescriptions(Navajo in, Navajo out, String tenant) throws NavajoException {
 		String locale = in.getHeader().getHeaderAttribute("locale");
 		if (locale==null) {
-			return;
+			//return;
+		    locale = "NL";
 		}
 		Header outHeader = out.getHeader();
 		Header inHeader = in.getHeader();

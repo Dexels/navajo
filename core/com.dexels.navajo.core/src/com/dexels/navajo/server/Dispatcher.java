@@ -141,7 +141,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     private NavajoConfigInterface navajoConfig;
 
     private EventAdmin eventAdmin;
+    private final Map<String, DescriptionProviderInterface> desciptionProviders = new HashMap<>();
 
+    
     private String keyStore;
     private String keyPassword;
 
@@ -1206,15 +1208,19 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
 
     private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage, String tenant) {
-        final DescriptionProviderInterface descriptionProvider = navajoConfig.getDescriptionProvider();
-        if (descriptionProvider == null) {
-            return;
+//        final DescriptionProviderInterface descriptionProvider = navajoConfig.getDescriptionProvider();
+//        if (descriptionProvider == null) {
+//            return;
+//        }
+        
+        for (DescriptionProviderInterface dpi : desciptionProviders.values()) {
+            try {
+                dpi.updatePropertyDescriptions(inMessage, outMessage,tenant);
+            } catch (NavajoException e) {
+                logger.error("Error updating descriptions in {}", dpi.getClass().getName(), e);
+            }
         }
-        try {
-            descriptionProvider.updatePropertyDescriptions(inMessage, outMessage,tenant);
-        } catch (NavajoException e) {
-            logger.error("Error: ", e);
-        }
+      
     }
 
     /**
@@ -1557,6 +1563,15 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
     public void clearAuthenticationMethodBuilder(AuthenticationMethodBuilder eventAdmin) {
         this.authMethodBuilder = null;
+    }
+    
+    public void addDescriptionProvider(DescriptionProviderInterface dpi) {
+        desciptionProviders.put(dpi.getClass().getName(), dpi);
+
+    }
+    
+    public void removeDescriptionProvider(DescriptionProviderInterface dpi) {
+        desciptionProviders.remove(dpi.getClass().getName());
     }
 
 }
