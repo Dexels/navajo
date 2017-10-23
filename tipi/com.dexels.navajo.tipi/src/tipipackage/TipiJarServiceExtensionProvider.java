@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.imageio.spi.ServiceRegistry;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,8 +28,8 @@ public class TipiJarServiceExtensionProvider extends TipiManualExtensionRegistry
 	private List<TipiExtension> listExtensions() {
 		List<TipiExtension> extensionList = new LinkedList<TipiExtension>();
 		try {
-			Iterator<TipiExtension> iter = ServiceRegistry
-					.lookupProviders(TipiExtension.class);
+		    
+			Iterator<TipiExtension> iter = java.util.ServiceLoader.load(TipiExtension.class).iterator();
 			while (iter.hasNext()) {
 				TipiExtension tipiExtension = iter.next();
 				extensionList.add(tipiExtension);
