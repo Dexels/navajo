@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.imageio.spi.ServiceRegistry;
-
 import navajo.ExtensionDefinition;
 import navajocore.Version;
 
@@ -133,7 +131,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 		
 		try {
 			// TODO Detect OSGi mode
-			Iterator<?> iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader),myClassLoader);
+			Iterator<?> iter = java.util.ServiceLoader.load(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), myClassLoader).iterator();
 			while(iter.hasNext()) {
 				ExtensionDefinition ed = (ExtensionDefinition) iter.next();
 				readDefinitionFile(fuds, ed);
