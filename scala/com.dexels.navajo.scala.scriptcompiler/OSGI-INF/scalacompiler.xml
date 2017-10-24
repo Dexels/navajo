@@ -8,4 +8,7 @@
       <provide interface="com.dexels.navajo.compiler.ScriptCompiler"/>
       <provide interface="com.dexels.navajo.compiler.scala.ScalaCompiler"/>
    </service>
+   
+   <property name="compiler.type" type="String" value="scala"/>
+   
 </scr:component>
