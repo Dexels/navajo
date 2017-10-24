@@ -152,4 +152,4 @@ Import-Package: com.dexels.navajo.authentication.api,
  org.slf4j,
  org.w3c.dom
 Service-Component: OSGI-INF/*.xml
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
