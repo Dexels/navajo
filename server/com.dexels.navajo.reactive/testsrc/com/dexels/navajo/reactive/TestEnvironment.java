@@ -3,6 +3,7 @@ package com.dexels.navajo.reactive;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -47,7 +48,7 @@ public class TestEnvironment {
 
 	public StreamScriptContext createContext(String serviceName) {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
-		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, "username", "password", Collections.emptyMap());
+		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.empty(), Optional.empty(), Collections.emptyMap(),Optional.empty());
 		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
 		context.setInputFlowable(inStream);
 		return context;

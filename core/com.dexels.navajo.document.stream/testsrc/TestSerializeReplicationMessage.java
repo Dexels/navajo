@@ -1,3 +1,5 @@
+import java.util.Optional;
+
 import org.junit.Test;
 
 import com.dexels.navajo.document.stream.StreamDocument;
@@ -13,7 +15,7 @@ public class TestSerializeReplicationMessage {
 		ReplicationMessage m = parser.parseStream(this.getClass().getClassLoader().getResourceAsStream("person.json"));
 		
 		StreamDocument.replicationMessageToStreamEvents("Person", m, false)
-			.compose(StreamDocument.inNavajo("TestService", "user", "pass"))
+			.compose(StreamDocument.inNavajo("TestService",  Optional.empty(),  Optional.empty()))
 			.lift(StreamDocument.serialize())
 			.lift(StreamDocument.decode("UTF-8"))
 			.blockingForEach(e->{

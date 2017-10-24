@@ -10,4 +10,5 @@ import io.reactivex.Flowable;
 
 public interface ReactiveSource {
 	public Flowable<DataItem> execute(StreamScriptContext context,Optional<ReplicationMessage> current);
+	public DataItem.Type dataType();
 }

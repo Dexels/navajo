@@ -1,4 +1,4 @@
-package com.dexels.navajo.reactive.source;
+package com.dexels.navajo.reactive.source.single;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +13,15 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class SourceSourceFactory implements ReactiveSourceFactory {
+public class SingleSourceFactory implements ReactiveSourceFactory {
+
+	public SingleSourceFactory() {
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
-	public ReactiveSource build(String type, ReactiveParameters params, List<ReactiveTransformer> transformers, Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> function) {
-		return new SourceSource();
+	public ReactiveSource build(String type, ReactiveParameters params, List<ReactiveTransformer> transformers, Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> datamapper) {
+		return new SingleSource(params,transformers,datamapper);
 	}
+
 }

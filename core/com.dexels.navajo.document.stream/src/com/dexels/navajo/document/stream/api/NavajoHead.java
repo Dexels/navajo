@@ -6,18 +6,19 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 public class NavajoHead {
 	
 	private final String name;
-	private final String username;
-	private final String password;
+	private final Optional<String> username;
+	private final Optional<String> password;
 	private final Map<String, String> attributes;
 	private final Map<String, String> transactionAttributes;
 	private final Map<String, String> piggybackAttributes;
 	private final Map<String, String> asyncAttributes;
 
-	public NavajoHead(String name, String username, String password, Map<String,String> attributes,Map<String,String> transactionAttributes,Map<String,String> piggybackAttributes, Map<String,String> asyncAttributes) {
+	public NavajoHead(String name, Optional<String> username, Optional<String> password, Map<String,String> attributes,Map<String,String> transactionAttributes,Map<String,String> piggybackAttributes, Map<String,String> asyncAttributes) {
 		this.name = name;
 		this.username = username;
 		this.password = password;
@@ -32,29 +33,29 @@ public class NavajoHead {
 
 	}
 	public static NavajoHead createDummy() {
-		return createSimple("dummy", "dummy", "dummy");
+		return createSimple("dummy", Optional.of("dummy"), Optional.of("dummy"));
 //		return new NavajoHead("dummy","dummy","dummy",Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap());
 	}	
 	
-	public static NavajoHead createSimple(String name, String username, String password) {
+	public static NavajoHead createSimple(String name, Optional<String> username, Optional<String> password) {
 		return new NavajoHead(name,username,password,Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap());
 	}	
 	public static NavajoHead create(Map<String, String> headerAttributes, Map<String, String> transactionAttributes,
 			Map<String, String> piggybackAttriutes, Map<String, String> asyncAttributes) {
 		// TODO deal with other header content, like piggyback or async
 
-		return new NavajoHead(transactionAttributes.get("rpc_name"),transactionAttributes.get("rpc_usr"),transactionAttributes.get("rpc_pwd"),headerAttributes,transactionAttributes,piggybackAttriutes,asyncAttributes);
+		return new NavajoHead(transactionAttributes.get("rpc_name"),Optional.ofNullable(transactionAttributes.get("rpc_usr")),Optional.ofNullable(transactionAttributes.get("rpc_pwd")),headerAttributes,transactionAttributes,piggybackAttriutes,asyncAttributes);
 	}
 	
 	public String name() {
 		return name;
 	}
 	
-	public String username() {
+	public Optional<String> username() {
 		return username;
 	}
 	
-	public String password() {
+	public Optional<String> password() {
 		return password;
 	}
 
@@ -67,11 +68,11 @@ public class NavajoHead {
 		if(name!=null) {
 			augmentedTransaction.put("rpc_name",name);
 		}
-		if(username!=null) {
-			augmentedTransaction.put("rpc_usr",username);
+		if(username.isPresent()) {
+			augmentedTransaction.put("rpc_usr",username.get());
 		}
-		if(password!=null) {
-			augmentedTransaction.put("rpc_pwd",password);
+		if(password.isPresent()) {
+			augmentedTransaction.put("rpc_pwd",password.get());
 		}
 		startElement(w, "header", indentsize, 1,this.attributes,false);
 		startElement(w, "transaction", indentsize, 2, augmentedTransaction,true);

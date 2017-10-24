@@ -1095,11 +1095,15 @@ public class StreamDocument {
 	    return new String(hexChars);
 	}
 	
-	public static FlowableTransformer<byte[], byte[]> compress(String encoding) {
+	public static FlowableTransformer<byte[], byte[]> compress(Optional<String> encodingDefinition) {
 		return new FlowableTransformer<byte[], byte[]>(){
 
 			@Override
 			public Publisher<byte[]> apply(Flowable<byte[]> f) {
+				if(!encodingDefinition.isPresent()) {
+					return f;
+				}
+				String encoding = encodingDefinition.get();
 				if("jzlib".equals(encoding) || "deflate".equals(encoding) || "inflate".equals(encoding)) {
 					return f.lift(deflate2()).concatMap(e->e);
 				}
@@ -1517,14 +1521,12 @@ public class StreamDocument {
 
 			@Override
 			public Flowable<NavajoStreamEvent> apply(Flowable<ReplicationMessage> in) {
-	        	return in.concatMap(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,true))
-	        			.startWith(Flowable.just(Events.messageStarted(name,null)))
-	        	.concatWith(Flowable.just(Events.message(Msg.create(), name,null)));
+	        	return in.concatMap(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,false));
 			}
 		};
 	}
 
-	public static FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> inNavajo(String name, String username, String password) {
+	public static FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> inNavajo(String name, Optional<String> username, Optional<String> password) {
 		return new FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent>() {
 
 			@Override

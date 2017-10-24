@@ -95,18 +95,19 @@ public class ReactiveScriptParser {
 			@Override
 			public Flowable<NavajoStreamEvent> execute(StreamScriptContext context) {
 				return Flowable.fromIterable(r)
-					.concatMap(r->r.execute(context, Optional.empty())
-					.compose(parseTransformation(isArray ? array : simple, isArray)))
-					.compose(StreamDocument.inNavajo(context.service, context.username, ""));
+					.concatMap(r->r.execute(context, Optional.empty()).map(item->item.message())
+					.compose(parseTransformation(isArray ? array : simple, isArray))
+					)
+					.compose(StreamDocument.inNavajo(context.service, context.username, Optional.empty()));
 			}
 		};
 	}
 	
-	private FlowableTransformer<DataItem, NavajoStreamEvent> parseTransformation(String name, boolean isArray) {
+	private FlowableTransformer<ReplicationMessage, NavajoStreamEvent> parseTransformation(String name, boolean isArray) {
 		if(isArray) {
-			return flow->flow.map(item->item.message()).compose(StreamDocument.toArray(name));
+			return flow->flow.compose(StreamDocument.toArray(name));
 		} else {
-			return flow->flow.map(item->item.message()).compose(StreamDocument.toMessage(name));
+			return flow->flow.compose(StreamDocument.toMessage(name));
 		}
 	}
 
@@ -121,8 +122,8 @@ public class ReactiveScriptParser {
 									if(src==null) {
 										throw new RuntimeException("Missing source for factory: "+operatorName);
 									}
-									
-									return src;},
+									return src;
+								},
 								operatorName->{
 									ReactiveTransformerFactory transformer = this.reactiveOperatorFactory.get(operatorName);
 									if(transformer==null) {
@@ -140,9 +141,8 @@ public class ReactiveScriptParser {
 								
 							);
 					} catch (Exception e) {
-						logger.error("Major source parsing issue. This is not going to end well.", e);
+						throw new RuntimeException("Major source parsing issue. This is not going to end well.", e);
 					}
-					return null;
 				})
 				.collect(Collectors.toList());
 		
@@ -188,10 +188,10 @@ public class ReactiveScriptParser {
 	
 	private static ReactiveSource parseSource(XMLElement x, Function<String,ReactiveSourceFactory> sourceFactorySupplier,Function<String,ReactiveTransformerFactory> factorySupplier,Function<String, ReactiveMapper> mapperSupplier) throws Exception  {
 		String type = x.getName();
+		System.err.println("Type of source: "+type);
 		String[] typeSplit = type.split("\\.");
 		ReactiveParameters params = parseParamsFromChildren(x);
-		List<ReactiveTransformer> factories = parseTransformationsFromChildren(x,sourceFactorySupplier, factorySupplier,mapperSupplier);
-		ReactiveSource src = createSource(typeSplit[1],params,factories,sourceFactorySupplier);
+		ReactiveSource src = createSource(x,typeSplit[1],params,sourceFactorySupplier, factorySupplier, mapperSupplier,parseMapperList(x.getChildren(), mapperSupplier));
 		return src;
 	}
 
@@ -218,7 +218,11 @@ public class ReactiveScriptParser {
 			String operatorName = typeParts[1];
 			String newBaseType = typeParts[2];
 			ReactiveTransformerFactory transformerFactory = factorySupplier.apply(operatorName); 
-			result.add(transformerFactory.build(xml,sourceSupplier,factorySupplier,mapperSupplier));
+			ReactiveTransformer transformer = transformerFactory.build(xml,sourceSupplier,factorySupplier,mapperSupplier);
+			String in = transformer.inType().name().toLowerCase();
+			String out = transformer.outType().name().toLowerCase();
+			System.err.println("CHAIN: "+in+" / "+baseType+" ---> "+newBaseType+" / "+out);
+			result.add(transformer);
 		}
 		
 	}
@@ -235,10 +239,14 @@ public class ReactiveScriptParser {
 		
 	}
 
-	private static ReactiveSource createSource(String type, ReactiveParameters params,
-			List<ReactiveTransformer> transformations,Function<String,ReactiveSourceFactory> sourceFactorySupplier) throws Exception {
-			ReactiveSourceFactory reactiveSourceFactory = sourceFactorySupplier.apply(type);
-			return reactiveSourceFactory.build(type,params,transformations);
+	private static ReactiveSource createSource(XMLElement x, String type, ReactiveParameters params,
+		Function<String,ReactiveSourceFactory> sourceFactorySupplier,
+		Function<String,ReactiveTransformerFactory> factorySupplier, Function<String, ReactiveMapper> mapperSupplier,
+		Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> dataMapper) throws Exception {
+
+		List<ReactiveTransformer> factories = parseTransformationsFromChildren(x,sourceFactorySupplier, factorySupplier,mapperSupplier);
+		ReactiveSourceFactory reactiveSourceFactory = sourceFactorySupplier.apply(type);
+			return reactiveSourceFactory.build(type,params,factories,dataMapper);
 	}
 
 
@@ -256,9 +264,10 @@ public class ReactiveScriptParser {
 //		Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>
 		List<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> funcList = elements.stream()
 				.filter(x->!x.getName().startsWith("param"))
-				.filter(x->x.getName().split(".").length!=3)
+				.filter(x->x.getName().split("\\.").length!=3)
 				.map(xml->{
-			try {
+					System.err.println("Element: "+xml);
+					try {
 				return mapperSupplier.apply(xml.getName()).execute(xml);
 			} catch (Exception e) {
 				throw new RuntimeException(e);

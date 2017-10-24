@@ -1,5 +1,6 @@
 package com.dexels.navajo.reactive.transformer.filestore;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -52,7 +54,9 @@ public class FileStoreTransformer implements ReactiveTransformer {
 			@Override
 			public Subscriber<DataItem> apply(Subscriber<? super DataItem> downstream) throws Exception {
 				try {
-					FileOutputStream output = new FileOutputStream(path);
+					File filePath = new File(path);
+					FileOutputStream output = new FileOutputStream(filePath);
+					logger.info("Writing file to: "+filePath.getAbsolutePath());
 					return new  Subscriber<DataItem>() {
 
 						@Override
@@ -108,5 +112,15 @@ public class FileStoreTransformer implements ReactiveTransformer {
 			}
 
 		};
+	}
+
+	@Override
+	public Type inType() {
+		return Type.DATA;
+	}
+
+	@Override
+	public Type outType() {
+		return Type.MESSAGE;
 	}
 }

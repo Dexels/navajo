@@ -12,6 +12,7 @@ import org.reactivestreams.Subscription;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -42,6 +43,16 @@ public class CSVTransformer implements ReactiveTransformer {
 			@Override
 			public Subscriber<? super DataItem> apply(Subscriber<? super DataItem> downstream)
 					throws Exception {
+				
+
+				Map<String,Operand> resolved = parameters.resolveNamed(context, Optional.empty());
+				String columnString = (String) resolved.get("columns") .value;
+				List<String> columns = Arrays.asList(columnString.split(","));
+				String labelString = (String) resolved.get("labels").value;
+				List<String> labels = Arrays.asList(labelString.split(","));
+				boolean writeHeaders = (boolean) resolved.get("writeHeaders").value;
+				String delimiter = (String) resolved.get("delimiter").value;						
+				
 				return new Subscriber<DataItem>() {
 
 					@Override
@@ -60,14 +71,6 @@ public class CSVTransformer implements ReactiveTransformer {
 					public void onNext(DataItem msg) {
 						// TODO use labels
 
-						Map<String,Operand> resolved = parameters.resolveNamed(context, Optional.of(msg.message()));
-						String columnString = (String) resolved.get("columns") .value;
-						List<String> columns = Arrays.asList(columnString.split(","));
-						String labelString = (String) resolved.get("labels").value;
-						List<String> labels = Arrays.asList(labelString.split(","));
-						boolean writeHeaders = (boolean) resolved.get("writeHeaders").value;
-						String delimiter = (String) resolved.get("delimiter").value;						
-						
 						
 						operatorNext(msg, m->{
 							ReplicationMessage dd = m.message();
@@ -96,6 +99,16 @@ public class CSVTransformer implements ReactiveTransformer {
 //		boolean writeHeaders = (boolean) resolved.get("writeHeaders").value;
 //		String delimiter = (String) resolved.get("delimiter").value;
 		return createTransformer(context);
+	}
+
+	@Override
+	public Type inType() {
+		return Type.MESSAGE;
+	}
+
+	@Override
+	public Type outType() {
+		return Type.DATA;
 	}
 
 }

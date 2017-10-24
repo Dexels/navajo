@@ -183,7 +183,7 @@ public class NavajoStreamCollector {
 	}
 
 	private void createHeader(NavajoHead head) {
-		Header h = NavajoFactory.getInstance().createHeader(assemble, head.name(), head.username(), head.password(), -1);
+		Header h = NavajoFactory.getInstance().createHeader(assemble, head.name(), head.username().orElse(null), head.password().orElse(null), -1);
 		assemble.addHeader(h);
 	}
 

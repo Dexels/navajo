@@ -2,9 +2,11 @@ package com.dexels.navajo.reactive;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Before;
@@ -14,11 +16,15 @@ import org.junit.Test;
 import com.dexels.navajo.adapters.stream.SQL;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.StreamDocument;
+import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
+import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
 import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
 import com.dexels.navajo.reactive.transformer.filestore.FileStoreTransformerFactory;
 import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
@@ -43,7 +49,12 @@ public class TestScript {
 		Map<String,Object> sqlSettings = new HashMap<>();
 		sqlSettings.put("name", "sql");
 		reactiveScriptParser.addReactiveSourceFactory(new SQLReactiveSourceFactory(),sqlSettings);
-//		Map<String,Object> mongoSettings = new HashMap<>();
+
+		Map<String,Object> sourceSettings = new HashMap<>();
+		sourceSettings.put("name", "single");
+		reactiveScriptParser.addReactiveSourceFactory(new SingleSourceFactory(),sourceSettings);
+
+		//		Map<String,Object> mongoSettings = new HashMap<>();
 //		mongoSettings.put("name", "mongo");
 //		reactiveScriptParser.addReactiveSourceFactory(new MongoReactiveSourceFactory(),mongoSettings);
 
@@ -58,13 +69,21 @@ public class TestScript {
 		Map<String,Object> mergeSingleSettings = new HashMap<>();
 		mergeSingleSettings.put("name", "mergeSingle");
 		reactiveScriptParser.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),mergeSingleSettings);
-//		MongoSupplier ms = new MongoSupplier();
+
+		Map<String,Object> callSettings = new HashMap<>();
+		callSettings.put("name", "call");
+		reactiveScriptParser.addReactiveTransformerFactory(new CallTransformerFactory(),callSettings);
+
+		//		MongoSupplier ms = new MongoSupplier();
 //		ms.activate();
 	}
-	
-	public StreamScriptContext createContext(String serviceName) {
+
+	public StreamScriptContext createContext(String serviceName, Optional<ReactiveScriptRunner> runner) {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
-		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, "username", "password", Collections.emptyMap());
+		return createContext(serviceName, input,runner);
+	}
+	public StreamScriptContext createContext(String serviceName,Navajo input, Optional<ReactiveScriptRunner> runner) {
+		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.of("username"), Optional.of("password"), Collections.emptyMap(),runner);
 		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
 		context.setInputFlowable(inStream);
 		return context;
@@ -75,7 +94,7 @@ public class TestScript {
 		SQL.query("dummy", "KNVB", "select * from organization where rownum < 500")
 			.flatMap(msg->StreamDocument.replicationMessageToStreamEvents("Organization", msg, true))
 			.compose(StreamDocument.inArray("Organization"))
-			.compose(StreamDocument.inNavajo("ProcessGetOrg", "", ""))
+			.compose(StreamDocument.inNavajo("ProcessGetOrg", Optional.empty(), Optional.empty()))
 			.lift(StreamDocument.serialize())
 		
 		.blockingForEach(e->System.err.print(new String(e)));
@@ -83,7 +102,7 @@ public class TestScript {
 	@Test @Ignore
 	public void testSimpleScript() throws IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("simplereactive.xml")) {
-			StreamScriptContext myContext = createContext("SimpleReactiveSql");
+			StreamScriptContext myContext = createContext("SimpleReactiveSql",Optional.empty());
 			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));
@@ -93,7 +112,7 @@ public class TestScript {
 	@Test @Ignore
 	public void testScript() throws IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactive.xml")) {
-			StreamScriptContext myContext = createContext("AdvancedReactiveSql");
+			StreamScriptContext myContext = createContext("AdvancedReactiveSql",Optional.empty());
 			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));
@@ -102,7 +121,7 @@ public class TestScript {
 	@Test @Ignore
 	public void testMongoScript() throws IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactivemongowithoutreduce.xml")) {
-			StreamScriptContext myContext = createContext("SimpleReactiveMongoDb");
+			StreamScriptContext myContext = createContext("SimpleReactiveMongoDb",Optional.empty());
 			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));
@@ -113,7 +132,7 @@ public class TestScript {
 	public void testMongoScriptAggregate() throws IOException {
 		AtomicLong l = new AtomicLong();
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("mongoaggregate.xml")) {
-			StreamScriptContext myContext = createContext("SimpleReactiveMongoDb");
+			StreamScriptContext myContext = createContext("SimpleReactiveMongoDb",Optional.empty());
 			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->{
@@ -122,6 +141,29 @@ public class TestScript {
 				});
 		}
 		System.err.println("Result: "+l.get());
+	}
+	
+
+	@Test @Ignore
+	public void testSingle() throws UnsupportedEncodingException, IOException {
+		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("single.xml")) {
+			StreamScriptContext myContext = createContext("Single",Optional.of((context,service,input)->input));
+			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
+				.lift(StreamDocument.serialize())
+				.blockingForEach(e->System.err.print(new String(e)));
+		}
+	}
+	
+	@Test @Ignore
+	public void testCallTransformer() throws UnsupportedEncodingException, IOException {
+		Navajo inputNavajo = NavajoFactory.getInstance().createNavajo();
+		inputNavajo.addMessage(NavajoFactory.getInstance().createMessage(inputNavajo, "Club")).addProperty(NavajoFactory.getInstance().createProperty(inputNavajo, "Club", Property.STRING_PROPERTY, "BBFW06E", 20, "", Property.DIR_IN));
+		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("single.xml")) {
+			StreamScriptContext myContext = createContext("Single",Optional.of((context,service,input)->input));
+			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
+				.lift(StreamDocument.serialize())
+				.blockingForEach(e->System.err.print(new String(e)));
+		}
 	}
 }
 
