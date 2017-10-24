@@ -688,4 +688,27 @@
 		<tagname>sequencedInsertMap</tagname>
 		<object>com.dexels.navajo.adapter.SequencedInsertMap</object>
 	</map>
+    <!-- Property Map -->
+    <map>
+        <tagname>property</tagname>
+        <object>com.dexels.navajo.adapter.PropertyMap</object>
+        <values>
+            <value name="name" required="true" direction="in"/>
+            <value name="description" required="true" direction="in"/>
+            <value name="direction" required="true" direction="in"/>
+            <value name="type" required="true" direction="in"/>
+            <value name="currentValue" required="false" direction="in"/>
+            <value name="length" required="false" direction="in"/>
+            <value name="multiple" required="false" direction="in"/>
+            <value name="subtype" required="false" direction="in"/>
+            <value name="removeExisting" required="false" direction="in"/>
+        </values>
+        <methods>
+            <method name="addOption">
+                <param name="name"     field="optionName" required="true"/>
+                <param name="value"    field="optionValue" required="true"/>
+                <param name="selected" field="optionSelected" required="true"/>
+            </method>
+        </methods>
+    </map>
 </adapterdef>
