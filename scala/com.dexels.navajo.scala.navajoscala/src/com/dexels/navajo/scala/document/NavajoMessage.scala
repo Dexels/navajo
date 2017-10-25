@@ -99,6 +99,8 @@ class NavajoMessage(val parent: Message) {
     None
   }
   
+  
+  
   def getDate(key : String) : Option[Date] = {
     val prop = parent.getProperty(key)
     if (prop != null && prop.getValue != null) {
@@ -138,6 +140,24 @@ class NavajoMessage(val parent: Message) {
     None
   }
   
+  def getSelectedValue(key : String) : Option[String] = {
+    val prop = parent.getProperty(key)
+    if (prop != null && prop.getValue != null) {
+      if (prop.getType().equals(Property.SELECTION_PROPERTY)) {
+        return Some(prop.getSelected.getValue())
+      }
+    }
+    None
+  }
+  def getSelectedName(key : String) : Option[String] = {
+    val prop = parent.getProperty(key)
+    if (prop != null && prop.getValue != null) {
+      if (prop.getType().equals(Property.SELECTION_PROPERTY)) {
+        return Some(prop.getSelected.getName())
+      }
+    }
+    None
+  }
   
   def put(key : String, value : Option[Any]) : NavajoMessage = {
     if (value != null && value.isDefined) {
