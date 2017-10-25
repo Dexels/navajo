@@ -142,7 +142,7 @@ class NavajoMessage(val parent: Message) {
   
   def getSelectedValue(key : String) : Option[String] = {
     val prop = parent.getProperty(key)
-    if (prop != null && prop.getValue != null) {
+    if (prop != null) {
       if (prop.getType().equals(Property.SELECTION_PROPERTY)) {
         return Some(prop.getSelected.getValue())
       }
@@ -151,7 +151,7 @@ class NavajoMessage(val parent: Message) {
   }
   def getSelectedName(key : String) : Option[String] = {
     val prop = parent.getProperty(key)
-    if (prop != null && prop.getValue != null) {
+    if (prop != null) {
       if (prop.getType().equals(Property.SELECTION_PROPERTY)) {
         return Some(prop.getSelected.getName())
       }
