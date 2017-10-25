@@ -19,7 +19,7 @@ public class NavajoStreamEvent {
 		this.type = type;
 		this.path = path;
 		this.body = body;
-		this.attributes = Collections.unmodifiableMap(attributes);
+		this.attributes = attributes == null? Collections.emptyMap() : Collections.unmodifiableMap(attributes);
 	}
 
 	public String toString() {

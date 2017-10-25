@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class TestStreamingInput  {
 
 			//			.doOnComplete(()->System.err.println("Done!"))
 			.compose(StreamDocument.toArray("Organizations"))
-			.compose(StreamDocument.inNavajo("dummy", "username", "password"))
+			.compose(StreamDocument.inNavajo("dummy",  Optional.empty(),  Optional.empty()))
 			.lift(StreamDocument.serialize())
 			.subscribe(new Subscriber<byte[]>() {
 
@@ -94,7 +95,7 @@ public class TestStreamingInput  {
 			.compose(StreamDocument.toArray("Organizations"))
 //			.flatMap(m->m.streamFlowable())
 //			.compose(StreamDocument.inArray("Organizations"))
-			.compose(StreamDocument.inNavajo("dummy", "username", "password"))
+			.compose(StreamDocument.inNavajo("dummy",  Optional.empty(),  Optional.empty()))
 			.lift(StreamDocument.serialize())
 			.subscribe(new Subscriber<byte[]>() {
 

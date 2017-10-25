@@ -7,4 +7,6 @@ import io.reactivex.FlowableTransformer;
 
 public interface ReactiveTransformer {
 	public FlowableTransformer<DataItem,DataItem> execute(StreamScriptContext context);
+	public DataItem.Type inType();
+	public DataItem.Type outType();
 }

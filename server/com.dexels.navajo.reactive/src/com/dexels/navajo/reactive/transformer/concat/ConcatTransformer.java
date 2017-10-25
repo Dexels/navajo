@@ -1,6 +1,7 @@
 package com.dexels.navajo.reactive.transformer.concat;
 
 import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 
@@ -14,8 +15,17 @@ public class ConcatTransformer implements ReactiveTransformer {
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Type inType() {
+		return Type.EVENT;
+	}
+
+	@Override
+	public Type outType() {
+		return Type.EVENT;
 	}
 
 }

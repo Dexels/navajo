@@ -84,7 +84,7 @@ public class NavajoDomStreamer {
 	
 	// TODO extract async and piggyback attributes
 	private static NavajoStreamEvent header(Header h) {
-		return Events.started(new NavajoHead(h.getRPCName(), h.getRPCUser(), h.getRPCPassword(), h.getHeaderAttributes(),Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap()));
+		return Events.started(new NavajoHead(h.getRPCName(), Optional.ofNullable(h.getRPCUser()),Optional.ofNullable( h.getRPCPassword()), h.getHeaderAttributes(),Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap()));
 	}
 	
 

@@ -4,15 +4,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.reactive.api.ReactiveScript;
@@ -21,7 +24,7 @@ import com.dexels.navajo.server.NavajoConfigInterface;
 
 import io.reactivex.Flowable;
 
-public class ReactiveScriptEnvironment  implements EventHandler {
+public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptRunner {
 
 	private static final String REACTIVE_FOLDER = "reactive" + File.separator;
 	private ReactiveScriptParser scriptParser = null;
@@ -59,13 +62,17 @@ public class ReactiveScriptEnvironment  implements EventHandler {
 		this.scriptParser = null;
 	}
 	
-	
-
 	public boolean isReactiveScript(String service) {
 		return resolveFile(service).exists();
 	}
-
-	public Flowable<NavajoStreamEvent> run(StreamScriptContext context) throws IOException {
+	
+	@Override
+	public Flowable<NavajoStreamEvent> run(StreamScriptContext parent, String service, Flowable<NavajoStreamEvent> input) {
+		StreamScriptContext context = createContext(parent,service, input);
+		return run(context);
+	}
+	
+	public Flowable<NavajoStreamEvent> run(StreamScriptContext context) {
 		ReactiveScript rs = scripts.get(context.service);
 		if(rs!=null) {
 			return rs.execute(context);
@@ -74,6 +81,8 @@ public class ReactiveScriptEnvironment  implements EventHandler {
 		
 		try(InputStream is = new FileInputStream(sf)) {
 			rs = installScript(context.service, is);
+		} catch (IOException ioe) {
+			return Flowable.error(new RuntimeException("Can't seem to find script: "+context.service));
 		}
 		if(rs==null) {
 			return Flowable.error(new RuntimeException("Can't seem to find script: "+context.service));
@@ -112,4 +121,11 @@ public class ReactiveScriptEnvironment  implements EventHandler {
 		}
 	}
 
+//
+
+	
+	private StreamScriptContext createContext(StreamScriptContext context, String service, Flowable<NavajoStreamEvent> input) {
+		// TODO Maybe link contexts together?
+		return new StreamScriptContext(context.tenant, service, Optional.empty(), Optional.empty(), Collections.emptyMap(), Optional.of(this));
+	}
 }

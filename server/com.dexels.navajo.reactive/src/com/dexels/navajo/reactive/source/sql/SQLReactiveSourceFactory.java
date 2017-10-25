@@ -1,11 +1,17 @@
 package com.dexels.navajo.reactive.source.sql;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
+
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 
 public class SQLReactiveSourceFactory implements ReactiveSourceFactory {
 
@@ -14,8 +20,8 @@ public class SQLReactiveSourceFactory implements ReactiveSourceFactory {
 	}
 
 	@Override
-	public ReactiveSource build(String type, ReactiveParameters parameters, List<ReactiveTransformer> transformers) {
-		return new SQLReactiveSource(parameters, transformers);
+	public ReactiveSource build(String type, ReactiveParameters parameters, List<ReactiveTransformer> transformers, Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> dataMapper) {
+		return new SQLReactiveSource(parameters, transformers, dataMapper);
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.dexels.navajo.reactive.mappers;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import com.dexels.navajo.document.Operand;
@@ -28,8 +29,12 @@ public class SetSingle implements ReactiveMapper {
 			// will use the second message as input, if not present, will use the source message
 			ReplicationMessage s = second.orElse(item).message();
 			Map<String,Operand> named = r.resolveNamed(context, Optional.of(s));
-			Operand resolvedValue = named.get("value");
-			return DataItem.of(item.message().with((String)named.get("to").value, resolvedValue.value, resolvedValue.type));
+			for (Entry<String,Operand> elt : named.entrySet()) {
+				s = s.with(elt.getKey(), elt.getValue().value, elt.getValue().type);
+			}
+			
+//			Operand resolvedValue = named.get("value");
+			return DataItem.of(s);
 		};
 	
 	}

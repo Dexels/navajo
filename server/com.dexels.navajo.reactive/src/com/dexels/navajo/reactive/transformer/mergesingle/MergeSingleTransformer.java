@@ -3,6 +3,7 @@ package com.dexels.navajo.reactive.transformer.mergesingle;
 import java.util.Optional;
 
 import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -41,6 +42,16 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 		},false,10);
 				
 				
+	}
+
+	@Override
+	public Type inType() {
+		return Type.MESSAGE;
+	}
+
+	@Override
+	public Type outType() {
+		return Type.MESSAGE;
 	}
 
 }
