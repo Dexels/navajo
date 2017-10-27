@@ -343,6 +343,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public final void addProperty(Property q, boolean preferExistingPropertyValue) {
+        if (this.getType().equals(Message.MSG_TYPE_ARRAY)) {
+            logger.warn("Adding property {} to array instead of array_element!", q.getName());
+        }
         if (q == null) {
             throw new NullPointerException("Message: can not add null property");
         }
