@@ -214,13 +214,15 @@ class NavajoMessage(val parent: Message) {
     }
     this
   }
-  
-  def put(key : String, value : Any) = {
+
+  def put(key: String, value: Any, direction: String = Property.DIR_IN, description: String = null) = {
     val prop = parent.getProperty(key)
     if (prop != null) {
       prop.setAnyValue(value)
+      prop.setDirection(direction)
+      prop.setDescription(description)
     } else {
-       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), key, Property.STRING_PROPERTY, null, 0, null, Property.DIR_IN)
+       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), key, Property.STRING_PROPERTY, null, 0, description, direction)
        value match {
          case v : Option[Any] => {
             if (v.isDefined) p.setAnyValue(v.get) 
