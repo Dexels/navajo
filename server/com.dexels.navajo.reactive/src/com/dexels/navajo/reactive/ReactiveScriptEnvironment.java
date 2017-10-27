@@ -36,6 +36,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 
 	private NavajoConfigInterface navajoConfig;
 
+	private ReactiveScriptRunner parentRunnerEnvironment;
 	private final File testRoot;
 	
 	public ReactiveScriptEnvironment() {
@@ -62,20 +63,36 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		this.scriptParser = null;
 	}
 	
-	public boolean isReactiveScript(String service) {
+    public void setReactiveScriptEnvironment(ReactiveScriptRunner env) {
+		this.parentRunnerEnvironment = env;
+	}
+	
+	public void clearReactiveScriptEnvironment(ReactiveScriptRunner env) {
+		this.parentRunnerEnvironment = null;
+	}
+		
+	public boolean acceptsScript(String service) {
 		return resolveFile(service).exists();
 	}
 	
 	@Override
 	public Flowable<NavajoStreamEvent> run(StreamScriptContext parent, String service, Flowable<NavajoStreamEvent> input) {
-		StreamScriptContext context = createContext(parent,service, input);
-		return run(context);
+//		StreamScriptContext context = createContext(parent,service, input);
+		return run(parent.withService(service).withInput(input));
 	}
 	
+	
 	public Flowable<NavajoStreamEvent> run(StreamScriptContext context) {
+		// Do this check first, so we can 'override' scripts for testing
 		ReactiveScript rs = scripts.get(context.service);
 		if(rs!=null) {
 			return rs.execute(context);
+		}
+		if(!acceptsScript(context.service)) {
+			if(parentRunnerEnvironment==null) {
+				throw new NullPointerException("This environment does not accept script: "+context.service+", and there is no parent."); 
+			}
+			return parentRunnerEnvironment.run(context, context.service, context.inputFlowable());
 		}
 		File sf = resolveFile(context.service);
 		
@@ -96,7 +113,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		return new File(f,serviceName+".xml");
 	}
 	
-	private ReactiveScript installScript(String serviceName, InputStream in) throws IOException {
+	public ReactiveScript installScript(String serviceName, InputStream in) throws IOException {
 		ReactiveScript parsed = scriptParser.parse(serviceName, in);
 		scripts.put(serviceName, parsed);
 		return parsed;
@@ -121,11 +138,4 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		}
 	}
 
-//
-
-	
-	private StreamScriptContext createContext(StreamScriptContext context, String service, Flowable<NavajoStreamEvent> input) {
-		// TODO Maybe link contexts together?
-		return new StreamScriptContext(context.tenant, service, Optional.empty(), Optional.empty(), Collections.emptyMap(), Optional.of(this));
-	}
 }

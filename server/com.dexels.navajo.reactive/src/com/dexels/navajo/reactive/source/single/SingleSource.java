@@ -1,5 +1,6 @@
 package com.dexels.navajo.reactive.source.single;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -8,6 +9,8 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.document.stream.events.Events;
+import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
@@ -38,8 +41,15 @@ public class SingleSource implements ReactiveSource {
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ReplicationMessage> current) {
 		Map<String,Operand> resolvedParams = this.params.resolveNamed(context, current);
 		boolean debug = resolvedParams.containsKey("debug");
+		Operand countOperand = resolvedParams.get("count");
+		int count = countOperand == null ? 1 :(Integer) countOperand.value;
 		try {
-			Flowable<DataItem> flow = Flowable.just(dataMapper.apply(context).apply(DataItem.of(ReactiveScriptParser.empty()), Optional.empty()));
+//			(dataMapper.apply(context).apply(DataItem.of(ReactiveScriptParser.empty().with("index", i, "integer")), Optional.empty())
+			Flowable<DataItem> flow =  count > 1 ?
+						Flowable.range(0, count)
+							.map(i->dataMapper.apply(context).apply(DataItem.of(ReactiveScriptParser.empty()), Optional.of(DataItem.of(ReactiveScriptParser.empty().with("index", i, "integer")))))
+							
+					: Flowable.just(dataMapper.apply(context).apply(DataItem.of(ReactiveScriptParser.empty()), Optional.empty()));
 			if(debug) {
 				flow = flow.doOnNext(di->System.err.println("Item: "+ReplicationFactory.getInstance().describe(di.message())));
 			}

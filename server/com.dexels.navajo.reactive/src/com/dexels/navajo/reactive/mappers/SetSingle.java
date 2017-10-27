@@ -28,9 +28,15 @@ public class SetSingle implements ReactiveMapper {
 		return context->(item,second)->{
 			// will use the second message as input, if not present, will use the source message
 			ReplicationMessage s = second.orElse(item).message();
+			
 			Map<String,Operand> named = r.resolveNamed(context, Optional.of(s));
+			// hmmm. Not beautiful
+			s = s.without("index");
+
 			for (Entry<String,Operand> elt : named.entrySet()) {
 				s = s.with(elt.getKey(), elt.getValue().value, elt.getValue().type);
+
+//				s = s.with(elt.getKey(), elt.getValue().value, elt.getValue().type);
 			}
 			
 //			Operand resolvedValue = named.get("value");

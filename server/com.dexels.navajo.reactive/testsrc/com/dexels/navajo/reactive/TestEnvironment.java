@@ -2,11 +2,11 @@ package com.dexels.navajo.reactive;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.navajo.document.Navajo;
@@ -15,6 +15,8 @@ import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
+import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 
@@ -24,6 +26,8 @@ import io.reactivex.Observable;
 
 public class TestEnvironment {
 
+	private ReactiveScriptEnvironment env;
+
 	public TestEnvironment() {
 	}
 
@@ -31,16 +35,21 @@ public class TestEnvironment {
 	public void setup() {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;
-//		reactiveScriptParser = new ReactiveScriptParser();
-//		MongoSupplier ms = new MongoSupplier();
-//		ms.activate();
+		File root = new File("testscripts");
+		env = new ReactiveScriptEnvironment(root);
+		ReactiveScriptParser rsp = new ReactiveScriptParser();
+		rsp.addReactiveSourceFactory(new SingleSourceFactory(), "single");
+		rsp.addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "stream");
+		env.setReactiveScriptParser(rsp);
+//		rsp.addReactiveSourceFactory("", settings);
 	}
 
-	@Test @Ignore
+	@Test 
 	public void testEnv() throws IOException {
-		File root = new File("testscripts");
-		ReactiveScriptEnvironment env = new ReactiveScriptEnvironment(root);
-		env.run(createContext("mongoaggregate"))
+		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("singlesimple.xml")) {
+			env.installScript("singlesimple", in);
+		}
+		env.run(createContext("singlesimple"))
 			.lift(StreamDocument.serialize())
 			.blockingForEach(e->System.err.print(new String(e)));
 
@@ -48,9 +57,8 @@ public class TestEnvironment {
 
 	public StreamScriptContext createContext(String serviceName) {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
-		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.empty(), Optional.empty(), Collections.emptyMap(),Optional.empty());
 		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
-		context.setInputFlowable(inStream);
+		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.empty(), Optional.empty(), Collections.emptyMap(),Optional.of(inStream),Optional.empty());
 		return context;
 	}
 

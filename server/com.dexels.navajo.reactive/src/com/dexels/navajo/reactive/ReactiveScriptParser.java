@@ -39,7 +39,6 @@ import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;
 
 import io.reactivex.Flowable;
-import io.reactivex.FlowableTransformer;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
@@ -60,6 +59,10 @@ public class ReactiveScriptParser {
 		reactiveMapper.put("rename", new Rename());
 	}
 	
+	public void addReactiveSourceFactory(ReactiveSourceFactory factory, String name) {
+		factories.put(name, factory);
+	}
+
 	public void addReactiveSourceFactory(ReactiveSourceFactory factory, Map<String,Object> settings) {
 		factories.put((String) settings.get("name"), factory);
 	}
@@ -69,6 +72,9 @@ public class ReactiveScriptParser {
 		factories.remove(name);
 	}
 
+	public void addReactiveTransformerFactory(ReactiveTransformerFactory factory, String name) {
+		reactiveOperatorFactory.put(name, factory);
+	}
 	
 	public void addReactiveTransformerFactory(ReactiveTransformerFactory factory, Map<String,Object> settings) {
 		reactiveOperatorFactory.put((String) settings.get("name"), factory);
@@ -81,13 +87,6 @@ public class ReactiveScriptParser {
 	public ReactiveScript parse(String serviceName, InputStream in) throws UnsupportedEncodingException, IOException {
 		XMLElement x = new CaseSensitiveXMLElement();
 		x.parseFromStream(in);
-		String array = x.getStringAttribute("array");
-		String simple = x.getStringAttribute("simple");
-		boolean isArray = array!=null;
-		if(array==null && simple == null) {
-			throw new RuntimeException("Script should supply either a array or a simple top level message name");
-		}
-//		, String toplevelMessage
 		List<ReactiveSource> r = parseRoot(x);
 
 		return new ReactiveScript() {
@@ -95,20 +94,11 @@ public class ReactiveScriptParser {
 			@Override
 			public Flowable<NavajoStreamEvent> execute(StreamScriptContext context) {
 				return Flowable.fromIterable(r)
-					.concatMap(r->r.execute(context, Optional.empty()).map(item->item.message())
-					.compose(parseTransformation(isArray ? array : simple, isArray))
+					.concatMap(r->r.execute(context, Optional.empty()).map(item->item.event())
 					)
 					.compose(StreamDocument.inNavajo(context.service, context.username, Optional.empty()));
 			}
 		};
-	}
-	
-	private FlowableTransformer<ReplicationMessage, NavajoStreamEvent> parseTransformation(String name, boolean isArray) {
-		if(isArray) {
-			return flow->flow.compose(StreamDocument.toArray(name));
-		} else {
-			return flow->flow.compose(StreamDocument.toMessage(name));
-		}
 	}
 
 	private List<ReactiveSource> parseRoot(XMLElement x) {
@@ -246,7 +236,8 @@ public class ReactiveScriptParser {
 
 		List<ReactiveTransformer> factories = parseTransformationsFromChildren(x,sourceFactorySupplier, factorySupplier,mapperSupplier);
 		ReactiveSourceFactory reactiveSourceFactory = sourceFactorySupplier.apply(type);
-			return reactiveSourceFactory.build(type,params,factories,dataMapper);
+//		reactiveSourceFactory.
+		return reactiveSourceFactory.build(type,params,factories,dataMapper);
 	}
 
 

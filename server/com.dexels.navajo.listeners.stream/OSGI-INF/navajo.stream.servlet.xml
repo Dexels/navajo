@@ -11,5 +11,5 @@
    <property name="servletName" type="String" value="stream-postman"/>
    <property name="servlet-name" type="String" value="stream-postman"/>
    <reference bind="setAuthenticationMethodBuilder" cardinality="1..1" interface="com.dexels.navajo.authentication.api.AuthenticationMethodBuilder" name="AuthenticationMethodBuilder" policy="dynamic" unbind="clearAuthenticationMethodBuilder"/>
-   <reference bind="setReactiveScriptEnvironment" cardinality="1..1" interface="com.dexels.navajo.reactive.ReactiveScriptEnvironment" name="ReactiveScriptEnvironment" policy="dynamic" unbind="clearReactiveScriptEnvironment"/>
+   <reference bind="setReactiveScriptEnvironment" cardinality="1..1" interface="com.dexels.navajo.document.stream.api.ReactiveScriptRunner" name="ReactiveScriptEnvironment" policy="dynamic" unbind="clearReactiveScriptEnvironment" target="(name=reactive)"/>
 </scr:component>

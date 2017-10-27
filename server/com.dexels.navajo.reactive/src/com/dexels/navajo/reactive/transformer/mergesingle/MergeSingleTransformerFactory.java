@@ -56,22 +56,7 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 			subSource = Optional.empty();
 		}
 		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(xml);
-//		public MergeSingleTransformer(ReactiveParameters parameters,ReactiveSource source,  Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>> reducer, Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>> joiner) {
 
 		return new MergeSingleTransformer(parameters, subSource.get(), reducermapper,joinermapper);
 	}
-
-	private static Function<StreamScriptContext,BiFunction<ReplicationMessage,ReplicationMessage,ReplicationMessage>> parseReducer(XMLElement xml) {
-		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(xml);
-		
-		return context->(acc,item)->{
-			// TODO only resolve the required params?
-			Map<String,Operand> resolvedParams = parameters.resolveNamed(context, Optional.of(item));
-			Operand value = resolvedParams.get("value");
-			ReplicationMessage composed = acc.with((String)resolvedParams.get("to").value, value.value, value.type);
-			System.err.println("COMPOSED: "+ReplicationFactory.getInstance().describe(composed));
-			return composed;
-		};
-	}
-	
 }

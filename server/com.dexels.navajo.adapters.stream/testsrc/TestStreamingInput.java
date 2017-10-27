@@ -34,7 +34,7 @@ public class TestStreamingInput  {
 //			.compose(m->StreamDocument.toArray("Organizations"))
 
 			//			.doOnComplete(()->System.err.println("Done!"))
-			.compose(StreamDocument.toArray("Organizations"))
+			.compose(StreamDocument.toMessageEvent("Organizations",true))
 			.compose(StreamDocument.inNavajo("dummy",  Optional.empty(),  Optional.empty()))
 			.lift(StreamDocument.serialize())
 			.subscribe(new Subscriber<byte[]>() {
@@ -92,7 +92,7 @@ public class TestStreamingInput  {
 		SQL.query("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'",new Object[] {})
 			.doOnNext(m->System.err.println("Message: "+m))
 			.doOnComplete(()->System.err.println("Done!"))
-			.compose(StreamDocument.toArray("Organizations"))
+			.compose(StreamDocument.toMessageEvent("Organizations",true))
 //			.flatMap(m->m.streamFlowable())
 //			.compose(StreamDocument.inArray("Organizations"))
 			.compose(StreamDocument.inNavajo("dummy",  Optional.empty(),  Optional.empty()))
