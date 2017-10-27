@@ -64,14 +64,14 @@ public class DataItem {
 
 	public ReplicationMessage message() {
 		if(this.msg==null) {
-			throw new NullPointerException("DataItem without message, can't request message");
+			throw new NullPointerException("DataItem without message, can't request message of dataitem of type: "+this.type);
 		}
 		return this.msg;
 	}
 
 	public NavajoStreamEvent event() {
 		if(this.streamEvent==null) {
-			throw new NullPointerException("DataItem without streamEvent, can't request message");
+			throw new NullPointerException("DataItem without streamEvent, can't request messageof dataitem of type: "+this.type);
 		}
 
 		return this.streamEvent;
@@ -79,7 +79,7 @@ public class DataItem {
 	
 	public byte[] data() {
 		if(this.streamEvent==null) {
-			throw new NullPointerException("DataItem without data, can't request data");
+			throw new NullPointerException("DataItem without data, can't request data of dataitem of type: "+this.type);
 		}
 		return data;
 	}

@@ -32,13 +32,5 @@ Import-Package: com.dexels.navajo.adapters.stream,
  org.slf4j;version="1.7.21"
 Export-Package: com.dexels.navajo.reactive,
  com.dexels.navajo.reactive.api
-Service-Component: OSGI-INF/navajo.reactive.environment.xml,
- OSGI-INF/navajo.reactive.source.sql.xml,
- OSGI-INF/navajo.reactive.source.single.xml,
- OSGI-INF/navajo.reactive.source.mongo.xml,
- OSGI-INF/navajo.reactive.transformer.call.xml,
- OSGI-INF/navajo.reactive.transformer.csv.xml,
- OSGI-INF/navajo.reactive.transformer.filestore.xml,
- OSGI-INF/navajo.reactive.transformer.mergesingle.xml,
- OSGI-INF/navajo.reactive.scriptparser.xml
+Service-Component: OSGI-INF/*
 Bundle-ActivationPolicy: lazy

@@ -83,9 +83,8 @@ public class TestScript {
 		return createContext(serviceName, input,runner);
 	}
 	public StreamScriptContext createContext(String serviceName,Navajo input, Optional<ReactiveScriptRunner> runner) {
-		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.of("username"), Optional.of("password"), Collections.emptyMap(),runner);
 		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
-		context.setInputFlowable(inStream);
+		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.of("username"), Optional.of("password"), Collections.emptyMap(), Optional.of(inStream),runner);
 		return context;
 	}
 	
@@ -144,11 +143,12 @@ public class TestScript {
 	}
 	
 
-	@Test @Ignore
+	@Test
 	public void testSingle() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("single.xml")) {
-			StreamScriptContext myContext = createContext("Single",Optional.of((context,service,input)->input));
-			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
+			StreamScriptContext myContext = createContext("Single",Optional.empty());
+			reactiveScriptParser.parse(myContext.service, in)
+				.execute(myContext)
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));
 		}
@@ -159,7 +159,7 @@ public class TestScript {
 		Navajo inputNavajo = NavajoFactory.getInstance().createNavajo();
 		inputNavajo.addMessage(NavajoFactory.getInstance().createMessage(inputNavajo, "Club")).addProperty(NavajoFactory.getInstance().createProperty(inputNavajo, "Club", Property.STRING_PROPERTY, "BBFW06E", 20, "", Property.DIR_IN));
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("single.xml")) {
-			StreamScriptContext myContext = createContext("Single",Optional.of((context,service,input)->input));
+			StreamScriptContext myContext = createContext("Single",Optional.empty());
 			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));

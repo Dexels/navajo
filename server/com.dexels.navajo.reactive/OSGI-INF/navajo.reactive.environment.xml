@@ -2,12 +2,14 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.reactive.environment">
    <implementation class="com.dexels.navajo.reactive.ReactiveScriptEnvironment"/>
    <service>
-      <provide interface="com.dexels.navajo.reactive.ReactiveScriptEnvironment"/>
+      <provide interface="com.dexels.navajo.document.stream.api.ReactiveScriptRunner"/>
 	  <provide interface="org.osgi.service.event.EventHandler" />
    </service>
    	<property name="event.topics" type="String">
 		repository/change
 	</property>
-   <reference bind="setNavajoConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfigInterface" policy="dynamic" unbind="clearNavajoConfig"/>
    <reference bind="setReactiveScriptParser" cardinality="1..1" interface="com.dexels.navajo.reactive.ReactiveScriptParser" name="ReactiveScriptParser" policy="dynamic" unbind="clearReactiveScriptParser"/>
+   <reference bind="setReactiveScriptEnvironment" cardinality="1..1" interface="com.dexels.navajo.document.stream.api.ReactiveScriptRunner" name="ReactiveScriptEnvironment" policy="dynamic" unbind="clearReactiveScriptEnvironment" target="(name=legacy)"/>
+   <reference bind="setNavajoConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfigInterface" policy="dynamic" unbind="clearNavajoConfig"/>
+   <property name="name" type="String" value="reactive"/>
 </scr:component>

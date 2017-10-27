@@ -1503,12 +1503,16 @@ public class StreamDocument {
 		};
 	}
 
-	public static FlowableTransformer<ReplicationMessage, NavajoStreamEvent> toArray(String name) {
+	public static FlowableTransformer<ReplicationMessage, NavajoStreamEvent> toMessageEvent(String name, boolean isArray) {
 		return new FlowableTransformer<ReplicationMessage, NavajoStreamEvent>() {
 
 			@Override
 			public Flowable<NavajoStreamEvent> apply(Flowable<ReplicationMessage> in) {
-				return in.concatMap(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,true))
+				Flowable<NavajoStreamEvent> events = in.concatMap(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,isArray));
+				if(!isArray) {
+					return events;
+				}
+				return events
 						.startWith(Flowable.just(Events.arrayStarted(name,Collections.emptyMap())))
 						.concatWith(Flowable.just(Events.arrayDone(name)));
 			}
