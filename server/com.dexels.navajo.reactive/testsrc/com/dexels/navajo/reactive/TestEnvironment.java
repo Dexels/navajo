@@ -49,7 +49,8 @@ public class TestEnvironment {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("singlesimple.xml")) {
 			env.installScript("singlesimple", in);
 		}
-		env.run(createContext("singlesimple"))
+		env.run("singlesimple").execute(createContext("singlesimple"))
+			.map(di->di.event())
 			.lift(StreamDocument.serialize())
 			.blockingForEach(e->System.err.print(new String(e)));
 

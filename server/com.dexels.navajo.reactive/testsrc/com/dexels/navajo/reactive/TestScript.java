@@ -103,6 +103,7 @@ public class TestScript {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("simplereactive.xml")) {
 			StreamScriptContext myContext = createContext("SimpleReactiveSql",Optional.empty());
 			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
+				.map(di->di.event())
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));
 		}
@@ -113,6 +114,7 @@ public class TestScript {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactive.xml")) {
 			StreamScriptContext myContext = createContext("AdvancedReactiveSql",Optional.empty());
 			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
+				.map(di->di.event())
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));
 		}
@@ -122,6 +124,7 @@ public class TestScript {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactivemongowithoutreduce.xml")) {
 			StreamScriptContext myContext = createContext("SimpleReactiveMongoDb",Optional.empty());
 			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
+				.map(di->di.event())
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));
 		}
@@ -133,6 +136,7 @@ public class TestScript {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("mongoaggregate.xml")) {
 			StreamScriptContext myContext = createContext("SimpleReactiveMongoDb",Optional.empty());
 			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
+				.map(di->di.event())
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->{
 					System.err.print(new String(e));
@@ -149,6 +153,7 @@ public class TestScript {
 			StreamScriptContext myContext = createContext("Single",Optional.empty());
 			reactiveScriptParser.parse(myContext.service, in)
 				.execute(myContext)
+				.map(di->di.event())
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));
 		}
@@ -161,6 +166,7 @@ public class TestScript {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("single.xml")) {
 			StreamScriptContext myContext = createContext("Single",Optional.empty());
 			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
+				.map(di->di.event())
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));
 		}

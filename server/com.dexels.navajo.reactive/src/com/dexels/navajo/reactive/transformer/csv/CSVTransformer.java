@@ -74,7 +74,6 @@ public class CSVTransformer implements ReactiveTransformer {
 						
 						operatorNext(msg, m->{
 							ReplicationMessage dd = m.message();
-							System.err.println("MMM: "+dd);
 							String line = columns.stream().map(column -> "" + dd.columnValue(column))
 									.collect(Collectors.joining(delimiter, "", "\n"));
 								return DataItem.of(line.getBytes(Charset.forName("UTF-8")));

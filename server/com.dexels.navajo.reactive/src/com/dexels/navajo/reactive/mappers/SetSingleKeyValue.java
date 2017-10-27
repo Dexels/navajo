@@ -10,13 +10,14 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveMapper;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
+import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class Rename implements ReactiveMapper {
+public class SetSingleKeyValue implements ReactiveMapper {
 
-	public Rename() {
+	public SetSingleKeyValue() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -24,10 +25,13 @@ public class Rename implements ReactiveMapper {
 	public Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> execute(XMLElement xml) {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(xml);
 		return context->(item,second)->{
-			Map<String,Operand> named = r.resolveNamed(context, Optional.of(item.message()));
-			Operand value = named.get("value");
-			String to = (String)named.get("to").value;
-			return DataItem.of(item.message().without((String)value.value ).with(to, value.value, value.type));
+			// will use the second message as input, if not present, will use the source message
+			ReplicationMessage s = second.orElse(item).message();
+			Map<String,Operand> named = r.resolveNamed(context, Optional.of(s));
+			Operand resolvedValue = named.get("value");
+			return DataItem.of(item.message().with((String)named.get("to").value, resolvedValue.value, resolvedValue.type));
 		};
 	
-	}}
+	}
+
+}

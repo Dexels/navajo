@@ -1,6 +1,5 @@
 package com.dexels.navajo.reactive.source.single;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -9,8 +8,6 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.document.stream.events.Events;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
@@ -27,11 +24,13 @@ public class SingleSource implements ReactiveSource {
 	private final ReactiveParameters params;
 	private final List<ReactiveTransformer> transformers;
 	private Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> dataMapper;
+	private Type finalType;
 //	private final Function<DataItem,DataItem> transformationFunction;
-	public SingleSource(ReactiveParameters params, List<ReactiveTransformer> transformers, Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> dataMapper) {
+	public SingleSource(ReactiveParameters params, List<ReactiveTransformer> transformers, Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> dataMapper, DataItem.Type finalType) {
 		this.params = params;
 		this.transformers = transformers;
 		this.dataMapper = dataMapper;
+		this.finalType = finalType;
 //		this.transformationFunction = item->{
 //			return item;
 //		};
@@ -65,6 +64,11 @@ public class SingleSource implements ReactiveSource {
 	@Override
 	public Type dataType() {
 		return Type.MESSAGE;
+	}
+
+	@Override
+	public Type finalType() {
+		return finalType;
 	}
 
 }

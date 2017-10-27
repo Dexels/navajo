@@ -2,23 +2,23 @@ package com.dexels.navajo.reactive;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.navajo.reactive.api.ReactiveScript;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
@@ -75,36 +75,31 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		return resolveFile(service).exists();
 	}
 	
+	
 	@Override
-	public Flowable<NavajoStreamEvent> run(StreamScriptContext parent, String service, Flowable<NavajoStreamEvent> input) {
-//		StreamScriptContext context = createContext(parent,service, input);
-		return run(parent.withService(service).withInput(input));
-	}
-	
-	
-	public Flowable<NavajoStreamEvent> run(StreamScriptContext context) {
+	public ReactiveScript run(String service) throws IOException {
 		// Do this check first, so we can 'override' scripts for testing
-		ReactiveScript rs = scripts.get(context.service);
+		ReactiveScript rs = scripts.get(service);
 		if(rs!=null) {
-			return rs.execute(context);
+			return rs;
 		}
-		if(!acceptsScript(context.service)) {
+		if(!acceptsScript(service)) {
 			if(parentRunnerEnvironment==null) {
-				throw new NullPointerException("This environment does not accept script: "+context.service+", and there is no parent."); 
+				throw new NullPointerException("This environment does not accept script: "+service+", and there is no parent."); 
 			}
-			return parentRunnerEnvironment.run(context, context.service, context.inputFlowable());
+			return parentRunnerEnvironment.run(service);
 		}
-		File sf = resolveFile(context.service);
+		File sf = resolveFile(service);
 		
 		try(InputStream is = new FileInputStream(sf)) {
-			rs = installScript(context.service, is);
-		} catch (IOException ioe) {
-			return Flowable.error(new RuntimeException("Can't seem to find script: "+context.service));
+			rs = installScript(service, is);
+//		} catch (IOException ioe) {
+//			return Flowable.error(new RuntimeException("Can't seem to find script: "+context.service));
 		}
-		if(rs==null) {
-			return Flowable.error(new RuntimeException("Can't seem to find script: "+context.service));
-		}
-		return rs.execute(context);
+//		if(rs==null) {
+//			return Flowable.error(new RuntimeException("Can't seem to find script: "+context.service));
+//		}
+		return rs;
 	}
 
 	private File resolveFile(String serviceName) {
@@ -114,6 +109,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	}
 	
 	public ReactiveScript installScript(String serviceName, InputStream in) throws IOException {
+
 		ReactiveScript parsed = scriptParser.parse(serviceName, in);
 		scripts.put(serviceName, parsed);
 		return parsed;

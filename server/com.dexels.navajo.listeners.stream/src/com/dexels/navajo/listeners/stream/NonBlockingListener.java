@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.authentication.api.AuthenticationMethodBuilder;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
@@ -33,14 +35,12 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.xml.XML;
-import com.dexels.navajo.reactive.ReactiveScriptEnvironment;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.LocalClient;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import nl.codemonkey.reactiveservlet.Servlets;
@@ -107,17 +107,21 @@ public class NonBlockingListener extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			AsyncContext ac = request.startAsync();
-			ac.setTimeout(1000);
+			ac.setTimeout(10000000);
 			StreamScriptContext context = determineContextFromRequest(ac);
 			Optional<String> responseEncoding = decideEncoding(request.getHeader("Accept-Encoding"));
 
+			String raw = request.getHeader("X-Navajo-Raw");
+			if(raw!=null) {
+				response.setContentType(raw);
+			}
 			Subscriber<byte[]> responseSubscriber = Servlets.createSubscriber(ac);
 //			responseSubscriber.
 			ac.addListener(new AsyncListener() {
 				
 				@Override
 				public void onTimeout(AsyncEvent ae) throws IOException {
-					System.err.println("TimeOut");
+//					System.err.println("TimeOut");
 					Throwable throwable = ae.getThrowable();
 					if(throwable!=null) {
 						System.err.println("Throwable found");
@@ -166,27 +170,59 @@ public class NonBlockingListener extends HttpServlet {
 //			context.setInputFlowable(input);
 			
 			// TODO Cache file exists result + Flush on change
-			Function<? super Throwable,? extends Publisher<? extends NavajoStreamEvent>> cc = e->{
+			Function<? super Throwable,? extends Publisher<? extends DataItem>> cc = e->{
 				logger.error("Error detected: {}",e);
-				return errorMessage(context,Optional.of(e), e.getMessage());
-			}; 
-			runScript(context)
-				.onErrorResumeNext(cc)
-				.doOnCancel(()->{
-					System.err.println("CANCEL DETECTED!");
-				})
-				.lift(StreamDocument.filterMessageIgnore())
-				.lift(StreamDocument.serialize())
-				.compose(StreamDocument.compress(responseEncoding))
-				.subscribe(responseSubscriber);
+				return errorMessage(context,Optional.of(e), e.getMessage()).map(DataItem::of);
+			};
+			ReactiveScript rs = runScript(context);
+			System.err.println("DataType: "+rs.dataType());
+			
+			switch(rs.dataType()) {
+			case DATA:
+				rs.execute(context)
+					.map(di->di.data())
+					.compose(StreamDocument.compress(responseEncoding))
+					.subscribe(responseSubscriber);
+				break;
+			case EVENT:
+			case EMPTY:
+			case LIST:
+			case MESSAGE:
+			default:
+				rs.execute(context)
+					.onErrorResumeNext(cc)
+					.map(di->di.event())
+					.compose(StreamDocument.inNavajo(context.service, context.username, Optional.empty()))
+					.lift(StreamDocument.filterMessageIgnore())
+					.lift(StreamDocument.serialize())
+					.compose(StreamDocument.compress(responseEncoding))
+					.subscribe(responseSubscriber);
+			
+			}
+//			if(raw!=null) {
+//				rs.execute(context)
+//				.onErrorResumeNext(cc)
+//				.map(di->di.data())
+//				.compose(StreamDocument.compress(responseEncoding))
+//				.subscribe(responseSubscriber);
+//			} else {
+//				rs.execute(context)
+//					.onErrorResumeNext(cc)
+//					.map(di->di.event())
+//					.compose(StreamDocument.inNavajo(context.service, context.username, Optional.empty()))
+//					.lift(StreamDocument.filterMessageIgnore())
+//					.lift(StreamDocument.serialize())
+//					.compose(StreamDocument.compress(responseEncoding))
+//					.subscribe(responseSubscriber);
+//			}
 
 		} catch (Exception e1) {
 			throw new IOException("Servlet problem", e1);
 		}
 	}
 
-	private Flowable<NavajoStreamEvent> runScript(StreamScriptContext context) {
-		return reactiveScriptEnvironment.run(context,context.service,context.inputFlowable());
+	private ReactiveScript runScript(StreamScriptContext context) throws IOException {
+		return reactiveScriptEnvironment.run(context.service);
 
 	}
 

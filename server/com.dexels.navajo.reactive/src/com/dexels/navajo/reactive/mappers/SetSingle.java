@@ -35,11 +35,7 @@ public class SetSingle implements ReactiveMapper {
 
 			for (Entry<String,Operand> elt : named.entrySet()) {
 				s = s.with(elt.getKey(), elt.getValue().value, elt.getValue().type);
-
-//				s = s.with(elt.getKey(), elt.getValue().value, elt.getValue().type);
 			}
-			
-//			Operand resolvedValue = named.get("value");
 			return DataItem.of(s);
 		};
 	

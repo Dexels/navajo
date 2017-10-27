@@ -11,6 +11,12 @@ import com.dexels.replication.api.ReplicationMessage;
 import io.reactivex.Flowable;
 
 public class SourceSource implements ReactiveSource {
+	
+	private Type finalType;
+
+	public SourceSource(DataItem.Type finalType) {
+		this.finalType = finalType;
+	}
 
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ReplicationMessage> current) {
@@ -20,6 +26,11 @@ public class SourceSource implements ReactiveSource {
 	@Override
 	public Type dataType() {
 		return Type.EVENT;
+	}
+
+	@Override
+	public Type finalType() {
+		return finalType;
 	}
 
 }
