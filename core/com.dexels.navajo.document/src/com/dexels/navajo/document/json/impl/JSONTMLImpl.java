@@ -203,10 +203,13 @@ public class JSONTMLImpl implements JSONTML {
 			jg.writeStartArray();
 		}
 
-		List<Property> properties = m.getAllProperties();
-		for ( Property p : properties) {
-			format(jg, p);
+		if (!m.isArrayMessage()) {
+		    List<Property> properties = m.getAllProperties();
+	        for ( Property p : properties) {
+	            format(jg, p);
+	        }
 		}
+		
 
 		List<Message> messages = new ArrayList<Message>();
 		if (m.isArrayMessage()) {
