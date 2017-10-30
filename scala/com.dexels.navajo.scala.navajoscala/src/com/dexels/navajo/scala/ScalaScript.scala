@@ -51,12 +51,17 @@ abstract class ScalaScript() extends CompiledScript {
       myAccess.setExitCode(Access.EXIT_VALIDATION_ERR)
       output.addMessage(conditionErrMsg)
       return;
-    } 
-    
-    
-    
-    run()
-    myAccess.setExitCode(Access.EXIT_OK)
+    }
+
+    try {
+      run()
+      myAccess.setExitCode(Access.EXIT_OK)
+    } catch {
+      case e: Exception => {
+        myAccess.setExitCode(Access.EXIT_EXCEPTION)
+
+      }
+    }
     
   }
 
