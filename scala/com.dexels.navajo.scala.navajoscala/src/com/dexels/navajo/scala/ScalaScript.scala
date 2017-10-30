@@ -15,6 +15,7 @@ import scala.runtime
 import com.dexels.navajo.parser.FunctionInterface
 import com.dexels.navajo.scala.document.ScalaMessage
 import com.dexels.navajo.document.json.conversion.JsonTmlFactory
+import com.dexels.navajo.document.base.BaseMessageImpl
 
 abstract class ScalaScript() extends CompiledScript {
   var runtime: NavajoRuntime = null
@@ -35,12 +36,27 @@ abstract class ScalaScript() extends CompiledScript {
   override def execute(a: Access) {
     myAccess = a
     runtime = new NavajoRuntime(a)
+    val conditionErrMsg = createMessage("ConditionErrors");
+    conditionErrMsg.parent.setType("array")
+
     for (e <- validations) {
       if (!e.apply(input)) {
-        print("VALIDATION ERRRRR")
+        conditionErrMsg.addMessage(msg => 
+          msg.put("Id", "-1").put("Description", "-1")
+        )
       }
     }
+    if (conditionErrMsg.parent.getElements().size() > 0) {
+      // we have validations
+      myAccess.setExitCode(Access.EXIT_VALIDATION_ERR)
+      output.addMessage(conditionErrMsg)
+      return;
+    } 
+    
+    
+    
     run()
+    myAccess.setExitCode(Access.EXIT_OK)
     
   }
 
