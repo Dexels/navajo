@@ -16,20 +16,21 @@ import com.dexels.navajo.parser.FunctionInterface
 import com.dexels.navajo.scala.document.ScalaMessage
 import com.dexels.navajo.document.json.conversion.JsonTmlFactory
 import com.dexels.navajo.document.base.BaseMessageImpl
+import com.dexels.navajo.scala.document.ValidationError
 
 abstract class ScalaScript() extends CompiledScript {
   var runtime: NavajoRuntime = null
-  val validations = new ListBuffer[NavajoDocument => Boolean]
+  val validations = new ListBuffer[NavajoDocument => Any]
 
   override def finalBlock(a: Access) {
 
   }
 
   override def setValidations() {
-    //runtime.input.property("")
+
   }
 
-  def addValidation(validation: NavajoDocument => Boolean) {
+  def addValidation(validation: NavajoDocument => Any) {
     validations.append(validation)
   }
 
@@ -40,10 +41,11 @@ abstract class ScalaScript() extends CompiledScript {
     conditionErrMsg.parent.setType("array")
 
     for (e <- validations) {
-      if (!e.apply(input)) {
-        conditionErrMsg.addMessage(msg => 
-          msg.put("Id", "-1").put("Description", "-1")
-        )
+       e.apply(input) match {
+		    case t : ValidationError =>  conditionErrMsg.addMessage(
+		        msg => msg.put("Id", t.code).put("Description", t.description)
+	        )
+		    case _=> // nothing
       }
     }
     if (conditionErrMsg.parent.getElements().size() > 0) {
