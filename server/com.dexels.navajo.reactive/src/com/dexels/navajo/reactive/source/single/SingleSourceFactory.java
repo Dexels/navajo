@@ -3,9 +3,12 @@ package com.dexels.navajo.reactive.source.single;
 import java.util.List;
 import java.util.Optional;
 
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.reactive.ReactiveScriptParser;
+import com.dexels.navajo.reactive.api.ReactiveMapper;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
@@ -20,8 +23,11 @@ public class SingleSourceFactory implements ReactiveSourceFactory {
 	}
 
 	@Override
-	public ReactiveSource build(String type, ReactiveParameters params, List<ReactiveTransformer> transformers, Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> datamapper, DataItem.Type finalType) {
-		return new SingleSource(params,transformers,datamapper,finalType);
+	public ReactiveSource build(String type, XMLElement x, ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType,Function<String, ReactiveMapper> mapperSupplier) {
+		XMLElement mapElement = x.getChildByTagName("map");
+		Optional<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> mapMapper = mapElement==null? Optional.empty() : Optional.of(ReactiveScriptParser.parseMapperList(mapElement.getChildren(), mapperSupplier));
+
+		return new SingleSource(params,transformers,finalType,mapMapper);
 	}
 
 	@Override

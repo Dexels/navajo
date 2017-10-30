@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -16,7 +13,6 @@ import org.junit.Test;
 import com.dexels.navajo.adapters.stream.SQL;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -28,6 +24,7 @@ import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
 import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
 import com.dexels.navajo.reactive.transformer.filestore.FileStoreTransformerFactory;
 import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
+import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 
@@ -46,36 +43,13 @@ public class TestScript {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;
 		reactiveScriptParser = new ReactiveScriptParser();
-		Map<String,Object> sqlSettings = new HashMap<>();
-		sqlSettings.put("name", "sql");
-		reactiveScriptParser.addReactiveSourceFactory(new SQLReactiveSourceFactory(),sqlSettings);
-
-		Map<String,Object> sourceSettings = new HashMap<>();
-		sourceSettings.put("name", "single");
-		reactiveScriptParser.addReactiveSourceFactory(new SingleSourceFactory(),sourceSettings);
-
-		//		Map<String,Object> mongoSettings = new HashMap<>();
-//		mongoSettings.put("name", "mongo");
-//		reactiveScriptParser.addReactiveSourceFactory(new MongoReactiveSourceFactory(),mongoSettings);
-
-		Map<String,Object> csvSettings = new HashMap<>();
-		csvSettings.put("name", "csv");
-		reactiveScriptParser.addReactiveTransformerFactory(new CSVTransformerFactory(),csvSettings);
-
-		Map<String,Object> fileStoreSettings = new HashMap<>();
-		fileStoreSettings.put("name", "filestore");
-		reactiveScriptParser.addReactiveTransformerFactory(new FileStoreTransformerFactory(),fileStoreSettings);
-		
-		Map<String,Object> mergeSingleSettings = new HashMap<>();
-		mergeSingleSettings.put("name", "mergeSingle");
-		reactiveScriptParser.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),mergeSingleSettings);
-
-		Map<String,Object> callSettings = new HashMap<>();
-		callSettings.put("name", "call");
-		reactiveScriptParser.addReactiveTransformerFactory(new CallTransformerFactory(),callSettings);
-
-		//		MongoSupplier ms = new MongoSupplier();
-//		ms.activate();
+		reactiveScriptParser.addReactiveSourceFactory(new SQLReactiveSourceFactory(),"sql");
+		reactiveScriptParser.addReactiveSourceFactory(new SingleSourceFactory(),"single");
+		reactiveScriptParser.addReactiveTransformerFactory(new CSVTransformerFactory(),"csv");
+		reactiveScriptParser.addReactiveTransformerFactory(new FileStoreTransformerFactory(),"filestore");
+		reactiveScriptParser.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"mergeSingle");
+		reactiveScriptParser.addReactiveTransformerFactory(new CallTransformerFactory(),"call");
+		reactiveScriptParser.addReactiveTransformerFactory(new StreamMessageTransformerFactory(),"stream");
 	}
 
 	public StreamScriptContext createContext(String serviceName, Optional<ReactiveScriptRunner> runner) {
@@ -109,7 +83,7 @@ public class TestScript {
 		}
 	}
 	
-	@Test @Ignore
+	@Test 
 	public void testScript() throws IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactive.xml")) {
 			StreamScriptContext myContext = createContext("AdvancedReactiveSql",Optional.empty());
@@ -118,32 +92,6 @@ public class TestScript {
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));
 		}
-	}
-	@Test @Ignore
-	public void testMongoScript() throws IOException {
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactivemongowithoutreduce.xml")) {
-			StreamScriptContext myContext = createContext("SimpleReactiveMongoDb",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
-				.map(di->di.event())
-				.lift(StreamDocument.serialize())
-				.blockingForEach(e->System.err.print(new String(e)));
-		}
-	}
-	
-	@Test @Ignore
-	public void testMongoScriptAggregate() throws IOException {
-		AtomicLong l = new AtomicLong();
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("mongoaggregate.xml")) {
-			StreamScriptContext myContext = createContext("SimpleReactiveMongoDb",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
-				.map(di->di.event())
-				.lift(StreamDocument.serialize())
-				.blockingForEach(e->{
-					System.err.print(new String(e));
-					l.addAndGet(e.length);
-				});
-		}
-		System.err.println("Result: "+l.get());
 	}
 	
 
@@ -159,18 +107,8 @@ public class TestScript {
 		}
 	}
 	
-	@Test @Ignore
-	public void testCallTransformer() throws UnsupportedEncodingException, IOException {
-		Navajo inputNavajo = NavajoFactory.getInstance().createNavajo();
-		inputNavajo.addMessage(NavajoFactory.getInstance().createMessage(inputNavajo, "Club")).addProperty(NavajoFactory.getInstance().createProperty(inputNavajo, "Club", Property.STRING_PROPERTY, "BBFW06E", 20, "", Property.DIR_IN));
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("single.xml")) {
-			StreamScriptContext myContext = createContext("Single",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
-				.map(di->di.event())
-				.lift(StreamDocument.serialize())
-				.blockingForEach(e->System.err.print(new String(e)));
-		}
-	}
+
+
 }
 
 

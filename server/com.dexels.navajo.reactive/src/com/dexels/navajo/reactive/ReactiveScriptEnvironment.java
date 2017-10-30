@@ -2,7 +2,6 @@ package com.dexels.navajo.reactive;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -14,15 +13,10 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
-import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.server.NavajoConfigInterface;
-
-import io.reactivex.Flowable;
 
 public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptRunner {
 
