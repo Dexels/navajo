@@ -29,20 +29,20 @@ abstract class ScalaScript(var printRequest: Boolean = false, var printResponse:
   def addValidation(validation: NavajoDocument => Any) {
     validations.append(validation)
   }
+  
+  
 
   override def execute(a: Access) {
     myAccess = a
     runtime = new NavajoRuntime(a)
-
-    if (printRequest) println(a.getInDoc().write(Console.err))
 
     if (processValidations()) {
       return ;
     }
 
     try {
+      dumpRequest()
       run()
-      if (printResponse) println(a.getOutputDoc().write(Console.err))
       myAccess.setExitCode(Access.EXIT_OK)
 
     } catch {
@@ -50,6 +50,8 @@ abstract class ScalaScript(var printRequest: Boolean = false, var printResponse:
         myAccess.setExitCode(Access.EXIT_EXCEPTION)
         throw e
       }
+    } finally {
+      dumpResponse()
     }
   }
 
@@ -133,6 +135,20 @@ abstract class ScalaScript(var printRequest: Boolean = false, var printResponse:
   def global(key: String): String = input.message("__globals__").getString(key).getOrElse(null)
   def aaa(key: String): String = input.message("__aaa__").getString(key).getOrElse(null)
 
+  
+  override def getScriptDebugMode() = {
+    if (printRequest && printResponse) {
+      "request,response"
+    } else if (printRequest) {
+      "request"
+    } else if (printResponse) {
+      "response" 
+    } else {
+      ""
+    }
+  }
+  
+  
   override def finalBlock(a: Access) {
 
   }
