@@ -26,10 +26,9 @@ public class CopyMessageList implements ReactiveMapper {
 	public Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> execute(XMLElement xml) {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(xml);
 		return context->(item,second)->{
-			DataItem s = second.orElse(item);
-			List<ReplicationMessage> l = s.msgList();
-			Map<String,Operand> named = r.resolveNamed(context, Optional.empty());
-			
+//			DataItem s = second.get();
+			List<ReplicationMessage> l = item.msgList();
+			Map<String,Operand> named = r.resolveNamed(context, item, second);
 			return DataItem.of(item.message().withSubMessages((String)named.get("name").value, l));
 		};
 	

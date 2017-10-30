@@ -23,7 +23,7 @@ public class StreamMessageTransformer implements ReactiveTransformer {
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		Map<String,Operand> params = parameters.resolveNamed(context, Optional.empty());
+		Map<String,Operand> params = parameters.resolveNamed(context, Optional.empty(), Optional.empty());
 		String messageName = (String) params.get("messageName").value;
 		boolean isArray = (boolean) params.get("isArray").value;
 		return flow->flow.map(di->di.message()).concatMap(msg->StreamDocument.replicationMessageToStreamEvents(messageName, msg, isArray)).compose(StreamDocument.inArray(messageName)).map(DataItem::of);

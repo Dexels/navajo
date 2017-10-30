@@ -40,7 +40,7 @@ public class SingleSource implements ReactiveSource {
 
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ReplicationMessage> current) {
-		Map<String,Operand> resolvedParams = this.params.resolveNamed(context, current);
+		Map<String,Operand> resolvedParams = this.params.resolveNamed(context, current, Optional.empty());
 		boolean debug = resolvedParams.containsKey("debug");
 		Operand countOperand = resolvedParams.get("count");
 		int count = countOperand == null ? 1 :(Integer) countOperand.value;

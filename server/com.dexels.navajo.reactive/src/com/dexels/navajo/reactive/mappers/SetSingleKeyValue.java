@@ -26,8 +26,7 @@ public class SetSingleKeyValue implements ReactiveMapper {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(xml);
 		return context->(item,second)->{
 			// will use the second message as input, if not present, will use the source message
-			ReplicationMessage s = second.orElse(item).message();
-			Map<String,Operand> named = r.resolveNamed(context, Optional.of(s));
+			Map<String,Operand> named = r.resolveNamed(context, item,second);
 			Operand resolvedValue = named.get("value");
 			return DataItem.of(item.message().with((String)named.get("to").value, resolvedValue.value, resolvedValue.type));
 		};

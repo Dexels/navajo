@@ -39,7 +39,7 @@ public class FileStoreTransformer implements ReactiveTransformer {
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		Map<String,Operand> resolved = parameters.resolveNamed(context, Optional.empty());
+		Map<String,Operand> resolved = parameters.resolveNamed(context, Optional.empty(), Optional.empty());
 		String path = (String) resolved.get("path").value;
 		return flow->flow.lift(flowableFile(path));
 	}

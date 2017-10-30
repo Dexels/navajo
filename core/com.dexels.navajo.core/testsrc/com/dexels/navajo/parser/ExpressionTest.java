@@ -34,6 +34,7 @@ public class ExpressionTest {
 	private Message topMessage;
 	private Selection testSelection;
 	private ReplicationMessage immutableMessage;
+	private ReplicationMessage paramMessage;
 
 
 	@Before
@@ -70,7 +71,16 @@ public class ExpressionTest {
 		types.put("SomeString", "string");
 		values.put("SomeInteger", 3);
 		types.put("SomeInteger", "integer");
-		immutableMessage = ReplicationFactory.createReplicationMessage(null, 0, Operation.NONE, Collections.EMPTY_LIST, types, values, Collections.emptyMap(), Collections.emptyMap(),Optional.empty());
+		immutableMessage = ReplicationFactory.createReplicationMessage(null, 0, Operation.NONE, Collections.emptyList(), types, values, Collections.emptyMap(), Collections.emptyMap(),Optional.empty());
+		
+		Map<String,Object> valueparams = new HashMap<>();
+		Map<String,String> typeparams = new HashMap<>();
+		valueparams.put("SomeString", "Tralala2");
+		typeparams.put("SomeString", "string");
+		valueparams.put("SomeInteger", 4);
+		typeparams.put("SomeInteger", "integer");
+		paramMessage = ReplicationFactory.createReplicationMessage(null, 0, Operation.NONE, Collections.emptyList(), typeparams, valueparams, Collections.emptyMap(), Collections.emptyMap(),Optional.empty());
+
 
 	}
 	@Test
@@ -78,10 +88,10 @@ public class ExpressionTest {
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
-		Operand o = ee.evaluate("1+1", null, null);
+		Operand o = ee.evaluate("1+1", null, null,null);
 		assertEquals(2, o.value);
 
-		o = ee.evaluate("TODAY + 0#0#2#0#0#0", null, null);
+		o = ee.evaluate("TODAY + 0#0#2#0#0#0", null, null,null);
 		System.err.println(o.value);
 
 		Navajo testDoc = NavajoFactory.getInstance().createNavajo();
@@ -104,11 +114,11 @@ public class ExpressionTest {
 
 		o = ee.evaluate(
 				"'hallo:' + [/MyTop/MyArrayMessage@MyProp=noot1/MyProp2]",
-				testDoc, null);
+				testDoc, null,null);
 
 		assertEquals("hallo:aap1", o.value);
 
-		o = ee.evaluate("'hallo:' + [/MyTop/MyArrayMessage@2/MyProp2]", testDoc, null);
+		o = ee.evaluate("'hallo:' + [/MyTop/MyArrayMessage@2/MyProp2]", testDoc, null,null);
 
 		assertEquals("hallo:aap2", o.value);
 
@@ -125,7 +135,7 @@ public class ExpressionTest {
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
-		Operand o = ee.evaluate("'ø'+'æ'", null, null);
+		Operand o = ee.evaluate("'ø'+'æ'", null, null,null);
 		assertEquals("øæ", o.value);
 	}
 
@@ -134,7 +144,7 @@ public class ExpressionTest {
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
-		Operand o = ee.evaluate("1\n+\n1", null, null);
+		Operand o = ee.evaluate("1\n+\n1", null, null,null);
 		assertEquals(2, o.value);
 	}
 
@@ -143,7 +153,7 @@ public class ExpressionTest {
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
-		Operand o = ee.evaluate("'aap\nnoot'", null, null);
+		Operand o = ee.evaluate("'aap\nnoot'", null, null,null);
 		assertEquals("aap\nnoot", o.value);
 	}
 	
@@ -152,7 +162,7 @@ public class ExpressionTest {
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
-		Operand o = ee.evaluate("'àáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżž'+'àáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżž'", null,null);
+		Operand o = ee.evaluate("'àáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżž'+'àáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżž'", null,null,null);
 		assertEquals("àáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżžàáâãäåāăąæßçćĉċčèéêëēĕėęěĝğġģĥħìíîïĩīĭıįĵķĸĺļľŀłñńņňŋòóôöõøōŏőœŕŗřśŝşšţťŧùúûüũůūŭűųŵýÿŷźżž", o.value);
 	}
 	
@@ -242,14 +252,18 @@ public class ExpressionTest {
 		assertEquals("option1", o.value);
 	}
 	
-	
-//	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
-//			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ReplicationMessage> immutableMessage)
-
 	@Test
 	public void testExpressionWithImmutableMessage() throws Exception {
 		Expression.compileExpressions = true;
-		Operand o = Expression.evaluate("[SomeInteger]", testDoc,(MappableTreeNode)null,topMessage,(Message)null,(Selection)null,(TipiLink)null,Collections.emptyMap() ,Optional.of(immutableMessage));
+		Operand o = Expression.evaluate("[SomeInteger]", testDoc,(MappableTreeNode)null,topMessage,(Message)null,(Selection)null,(TipiLink)null,Collections.emptyMap() ,Optional.of(immutableMessage),Optional.of(paramMessage));
 		assertEquals(3, o.value);
 	}
+
+	@Test
+	public void testExpressionWithImmutableParamMessage() throws Exception {
+		Expression.compileExpressions = true;
+		Operand o = Expression.evaluate("[@SomeInteger]", testDoc,(MappableTreeNode)null,topMessage,(Message)null,(Selection)null,(TipiLink)null,Collections.emptyMap() ,Optional.of(immutableMessage),Optional.of(paramMessage));
+		assertEquals(4, o.value);
+	}
+
 }

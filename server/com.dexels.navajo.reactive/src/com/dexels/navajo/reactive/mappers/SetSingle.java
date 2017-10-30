@@ -29,7 +29,7 @@ public class SetSingle implements ReactiveMapper {
 			// will use the second message as input, if not present, will use the source message
 			ReplicationMessage s = second.orElse(item).message();
 			
-			Map<String,Operand> named = r.resolveNamed(context, Optional.of(s));
+			Map<String,Operand> named = r.resolveNamed(context, item,second);
 			// hmmm. Not beautiful
 			s = s.without("index");
 

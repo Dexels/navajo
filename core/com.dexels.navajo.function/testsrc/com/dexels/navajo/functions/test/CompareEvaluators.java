@@ -20,6 +20,7 @@ public class CompareEvaluators {
 	public CompareEvaluators() {
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testEvaluator() throws Exception {
    	 Locale.setDefault(Locale.GERMAN);
@@ -31,17 +32,17 @@ public class CompareEvaluators {
     	
     	String expr = "-1 * ToMoney( ( ToDouble(1000) / ( 100 + ( ToDouble(ToPercentage(0.2)) * 100 ) ) ) * ( 100 * ToDouble(ToPercentage(0.3)) ) )";
     	NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
-    	Operand o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(expr, null,null);
+    	Operand o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(expr, null,null,null);
     	NavajoFactory.getInstance().setExpressionEvaluator(new CachedExpressionEvaluator());
-    	Operand o2 = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(expr, null,null);
+    	Operand o2 = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(expr, null,null,null);
     	System.err.println("o: "+o.value+" o2: "+o2.value);
     	Assert.assertEquals(o.value, o2.value);
     	//    	ToDouble td = new ToDouble();
     	td.reset();
     	td.insertOperand(m);
     	System.err.println(td.evaluate()+"");
-    	Class[] s =td.getReturnType();
-    	for (Class class1 : s) {
+    	Class<? extends Object>[] s =td.getReturnType();
+    	for (Class<? extends Object> class1 : s) {
 			System.err.println("typw: "+class1);
 		}
     }

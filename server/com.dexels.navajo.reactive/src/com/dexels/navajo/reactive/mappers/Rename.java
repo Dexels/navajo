@@ -24,7 +24,7 @@ public class Rename implements ReactiveMapper {
 	public Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> execute(XMLElement xml) {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(xml);
 		return context->(item,second)->{
-			Map<String,Operand> named = r.resolveNamed(context, Optional.of(item.message()));
+			Map<String,Operand> named = r.resolveNamed(context, item,second);
 			Operand value = named.get("value");
 			String to = (String)named.get("to").value;
 			return DataItem.of(item.message().without((String)value.value ).with(to, value.value, value.type));

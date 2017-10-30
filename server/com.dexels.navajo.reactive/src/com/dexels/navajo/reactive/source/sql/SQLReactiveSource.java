@@ -35,7 +35,7 @@ public class SQLReactiveSource implements ReactiveSource {
 	
 	private Flowable<DataItem> executeImmutable(StreamScriptContext context,Optional<ReplicationMessage> current)  {
 		Object[] params = evaluateParams(context, current);
-		Map<String,Operand> paramMap = parameters.resolveNamed(context, current);
+		Map<String,Operand> paramMap = parameters.resolveNamed(context, current, Optional.empty());
 		String datasource = (String) paramMap.get("resource").value;
 		String query = (String) paramMap.get("query").value;
 		Flowable<DataItem> flow = SQL.query(datasource, context.tenant, query, params).map(d->DataItem.of(d));
@@ -46,7 +46,7 @@ public class SQLReactiveSource implements ReactiveSource {
 	}
 
 	private Object[] evaluateParams(StreamScriptContext context, Optional<ReplicationMessage> immutable) {
-		return parameters.resolveUnnamed(context, immutable).stream().map(e->e.value).toArray();
+		return parameters.resolveUnnamed(context, immutable, Optional.empty()).stream().map(e->e.value).toArray();
 	}
 
 	@Override

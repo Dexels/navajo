@@ -45,7 +45,7 @@ public class CSVTransformer implements ReactiveTransformer {
 					throws Exception {
 				
 
-				Map<String,Operand> resolved = parameters.resolveNamed(context, Optional.empty());
+				Map<String,Operand> resolved = parameters.resolveNamed(context, Optional.empty(), Optional.empty());
 				String columnString = (String) resolved.get("columns") .value;
 				List<String> columns = Arrays.asList(columnString.split(","));
 				String labelString = (String) resolved.get("labels").value;

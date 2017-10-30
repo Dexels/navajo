@@ -10,10 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.replication.api.ReplicationMessage;
 
-import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function3;
 
 public class ReactiveParameters {
 	
@@ -21,17 +22,17 @@ public class ReactiveParameters {
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveParameters.class);
 
 
-	public final Map<String,BiFunction<StreamScriptContext,Optional<ReplicationMessage>,Operand>> named;
-	public final List<BiFunction<StreamScriptContext,Optional<ReplicationMessage>,Operand>> unnamed;
-	private ReactiveParameters(Map<String,BiFunction<StreamScriptContext,Optional<ReplicationMessage>,Operand>> namedParameters,List<BiFunction<StreamScriptContext,Optional<ReplicationMessage>,Operand>> unnamedParameters) {
+	public final Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> named;
+	public final List<Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> unnamed;
+	private ReactiveParameters(Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> unnamedParameters) {
 		this.named = namedParameters;
 		this.unnamed = unnamedParameters;
 	}
 
-	public List<Operand> resolveUnnamed(StreamScriptContext context ,Optional<ReplicationMessage> currentMessage) {
+	public List<Operand> resolveUnnamed(StreamScriptContext context ,Optional<ReplicationMessage> currentMessage,Optional<ReplicationMessage> paramMessage) {
 		return unnamed.stream().map(e->{
 			try {
-				return e.apply(context, currentMessage);
+				return e.apply(context, currentMessage,paramMessage);
 			} catch (Exception e1) {
 				logger.error("Error applying param function: ", e1);
 				return new Operand(null,"string",null);
@@ -39,12 +40,24 @@ public class ReactiveParameters {
 		}).collect(Collectors.toList());
 	}
 	
-	public Map<String,Operand> resolveNamed(StreamScriptContext context ,Optional<ReplicationMessage> currentMessage) {
+	public List<Operand> resolveUnnamed(StreamScriptContext context ,DataItem currentMessage,Optional<DataItem> paramMessage) {
+		return unnamed.stream().map(e->{
+			try {
+				Optional<ReplicationMessage> param = paramMessage.isPresent() ? Optional.of(paramMessage.get().message()) : Optional.empty();
+				return e.apply(context,  Optional.of(currentMessage.message()),param);
+			} catch (Exception e1) {
+				logger.error("Error applying param function: ", e1);
+				return new Operand(null,"string",null);
+			}
+		}).collect(Collectors.toList());
+	}
+	
+	public Map<String,Operand> resolveNamed(StreamScriptContext context ,Optional<ReplicationMessage> currentMessage,Optional<ReplicationMessage> paramMessage) {
 		Map<String,Operand> result = new HashMap<>();
 		named.entrySet().forEach(e->{
 			Operand applied;
 			try {
-				applied = e.getValue().apply(context, currentMessage);
+				applied = e.getValue().apply(context, currentMessage,paramMessage);
 				result.put(e.getKey(), applied);
 			} catch (Exception e1) {
 				logger.error("Error applying param function for named param: "+e.getKey()+" will put null.", e1);
@@ -53,7 +66,25 @@ public class ReactiveParameters {
 		});
 		return result;
 	}
-	public static ReactiveParameters of(Map<String,BiFunction<StreamScriptContext,Optional<ReplicationMessage>,Operand>> namedParameters,List<BiFunction<StreamScriptContext,Optional<ReplicationMessage>,Operand>> unnamedParameters) {
+
+	public Map<String,Operand> resolveNamed(StreamScriptContext context ,DataItem currentMessage,Optional<DataItem> paramMessage) {
+		Map<String,Operand> result = new HashMap<>();
+		named.entrySet().forEach(e->{
+			Operand applied;
+			try {
+				Optional<ReplicationMessage> param = paramMessage.isPresent() ? Optional.of(paramMessage.get().message()) : Optional.empty();
+				applied = e.getValue().apply(context, Optional.of(currentMessage.message()),param);
+				result.put(e.getKey(), applied);
+			} catch (Exception e1) {
+				logger.error("Error applying param function for named param: "+e.getKey()+" will put null.", e1);
+				result.put(e.getKey(), null);
+			}
+		});
+		return result;
+	}
+
+	
+	public static ReactiveParameters of(Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> unnamedParameters) {
 		return new ReactiveParameters(namedParameters, unnamedParameters);
 	}
 

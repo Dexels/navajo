@@ -62,14 +62,14 @@ public class ExpressionCache {
 	}
 
 	public Object evaluate(String expression,Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) {
+			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) {
 		Optional<Object> cachedValue = expressionValueCache.getUnchecked(expression);
 		if(cachedValue.isPresent()) {
 			pureHitCount.incrementAndGet();
 //			printStats();
 			return cachedValue.get();
 		}
-		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage);
+		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage,paramMessage);
 		
 	}
 	
@@ -89,7 +89,7 @@ public class ExpressionCache {
 	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda();
 	        parsedCount.incrementAndGet();
 	        if(parsed.isLiteral()) {
-	        		Object result = parsed.apply(null, null, null, null, null, null, null,null);
+	        		Object result = parsed.apply(null, null, null, null, null, null, null,null,null);
 	        		expressionCache.put(expression, Optional.ofNullable(parsed));
 	        		if(result!=null) {
 		        		expressionValueCache.put(expression,  Optional.of(result));
@@ -103,7 +103,7 @@ public class ExpressionCache {
 						
 						@Override
 						public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-								 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException {
+								 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws TMLExpressionException {
 							return result;
 						}
 					};

@@ -11,7 +11,6 @@ import java.util.function.Function;
 import javax.sql.DataSource;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +27,7 @@ import com.dexels.navajo.script.api.SystemException;
 import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
+
 import io.reactivex.Single;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
@@ -124,7 +124,7 @@ public class TestSQL {
 
 	private Operand evaluate(String valueExpression, ReplicationMessage m) throws SystemException {
 //		System.err.println("Evaluating: "+valueExpression);
-		return Expression.evaluate(valueExpression, null, null, null,null,null,null,null,Optional.of(m));
+		return Expression.evaluate(valueExpression, null, null, null,null,null,null,null,Optional.of(m),Optional.empty());
 	}
 	
 	public Message getMessage(String prefix, Message core) {

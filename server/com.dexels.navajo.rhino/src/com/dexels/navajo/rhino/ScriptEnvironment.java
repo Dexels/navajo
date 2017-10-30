@@ -320,7 +320,7 @@ public abstract class ScriptEnvironment implements Serializable {
 	public Object navajoEvaluate(String expression, Navajo n)
 			throws NavajoException {
 		Operand o = NavajoFactory.getInstance().getExpressionEvaluator()
-				.evaluate(expression, n,Optional.empty());
+				.evaluate(expression, n,Optional.empty(),Optional.empty());
 		if (o == null) {
 			return null;
 		}
@@ -329,7 +329,7 @@ public abstract class ScriptEnvironment implements Serializable {
 
 	public Object navajoEvaluate(String expression) throws NavajoException {
 		Operand o = NavajoFactory.getInstance().getExpressionEvaluator()
-				.evaluate(expression, access.getInDoc(),Optional.empty());
+				.evaluate(expression, access.getInDoc(),Optional.empty(),Optional.empty());
 
 		if (o == null) {
 			return null;

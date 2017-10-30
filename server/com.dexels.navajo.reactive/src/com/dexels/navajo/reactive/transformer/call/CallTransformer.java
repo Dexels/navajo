@@ -28,7 +28,7 @@ public class CallTransformer implements ReactiveTransformer {
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
 
-		Map<String,Operand> params = parameters.resolveNamed(context, Optional.empty());
+		Map<String,Operand> params = parameters.resolveNamed(context, Optional.empty(), Optional.empty());
 		String messageName = (String) params.get("messageName").value;
 		boolean isArray = (boolean) params.get("isArray").value;
 		String service = (String) params.get("service").value;
@@ -39,7 +39,6 @@ public class CallTransformer implements ReactiveTransformer {
 			{
 			Flowable<Flowable<NavajoStreamEvent>> stream = flow.map(di->di.message())
 					.map(msg->StreamDocument.replicationMessageToStreamEvents(messageName, msg, isArray));
-				
 			if (parallel==0) {
 				return stream.concatMap(str->context.runner().run(service).execute(context.withService(service).withInput(str)));
 			} else {

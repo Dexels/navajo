@@ -26,8 +26,8 @@ public final class ASTAndNode extends SimpleNode {
 		return new ContextExpression() {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage);
+					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws TMLExpressionException {
+		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
 				if(a==null) {
 		        		return Boolean.FALSE;
 		        }
@@ -35,7 +35,7 @@ public final class ASTAndNode extends SimpleNode {
 		        if (!(ba.booleanValue())) {
 					return Boolean.FALSE;
 				}
-		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access, immutableMessage);
+		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access, immutableMessage,paramMessage);
 		        if(b==null) {
 		        		return Boolean.FALSE;
 		        }

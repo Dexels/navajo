@@ -20,10 +20,10 @@ import com.dexels.replication.api.ReplicationMessage;
 public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implements ExpressionEvaluator {
 
 	@Override
-	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ReplicationMessage> immutableMessage)
+	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage)
 			throws NavajoException {
 		ExpressionCache ce = ExpressionCache.getInstance();
-		Object val =ce.evaluate(clause, inMessage, parent, null, null, (MappableTreeNode)mappableTreeNode, null,null,immutableMessage);
+		Object val =ce.evaluate(clause, inMessage, parent, null, null, (MappableTreeNode)mappableTreeNode, null,null,immutableMessage,paramMessage);
 //		ce.evaluate(expression, doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage)
 		String type = MappingUtils.determineNavajoType(val);
 		return new Operand(val, type, "");
@@ -31,18 +31,18 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 
 	@Override
 	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent,
-			Message currentParam, Selection selection, Object tipiLink, Map<String,Object> params, Optional<ReplicationMessage> immutableMessage) throws NavajoException {
+			Message currentParam, Selection selection, Object tipiLink, Map<String,Object> params, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws NavajoException {
 		ExpressionCache ce = ExpressionCache.getInstance();
 		Access access = params == null? null : (Access)params.get(Expression.ACCESS);
-		Object val =ce.evaluate(clause, inMessage, parent, currentParam, selection, (MappableTreeNode)mappableTreeNode, (TipiLink) tipiLink, access,immutableMessage);
+		Object val =ce.evaluate(clause, inMessage, parent, currentParam, selection, (MappableTreeNode)mappableTreeNode, (TipiLink) tipiLink, access,immutableMessage,paramMessage);
 		String type = MappingUtils.determineNavajoType(val);
 		return new Operand(val, type, "");
 	}
 
 	@Override
-	public Operand evaluate(String clause, Navajo inMessage, Optional<ReplicationMessage> immutableMessage) throws NavajoException {
+	public Operand evaluate(String clause, Navajo inMessage, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws NavajoException {
 		ExpressionCache ce = ExpressionCache.getInstance();
-		Object val =ce.evaluate(clause, inMessage, null, null, null, null, null, null, Optional.empty());
+		Object val =ce.evaluate(clause, inMessage, null, null, null, null, null, null, immutableMessage,paramMessage);
 		String type = MappingUtils.determineNavajoType(val);
 		return new Operand(val, type, "");
 	}

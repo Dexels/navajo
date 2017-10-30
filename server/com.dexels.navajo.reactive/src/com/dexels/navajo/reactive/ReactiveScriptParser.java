@@ -41,6 +41,7 @@ import com.dexels.replication.factory.ReplicationFactory;
 import io.reactivex.Flowable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
 
 public class ReactiveScriptParser {
 
@@ -158,15 +159,15 @@ public class ReactiveScriptParser {
 
 	public static ReactiveParameters parseParamsFromChildren(XMLElement x) {
 		List<XMLElement> children = x.getChildren();
-		Map<String,BiFunction<StreamScriptContext,Optional<ReplicationMessage>,Operand>> namedParameters = new HashMap<>();
-		List<BiFunction<StreamScriptContext,Optional<ReplicationMessage>,Operand>> unnamedParameters = new ArrayList<>();
+		Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> namedParameters = new HashMap<>();
+		List<Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> unnamedParameters = new ArrayList<>();
 		x.enumerateAttributeNames().forEachRemaining(e->{
 			if(e.endsWith(".eval")) {
 				String name = e.substring(0, e.length()-".eval".length());
-				BiFunction<StreamScriptContext, Optional<ReplicationMessage>, Operand> value = (context,msg)->evaluate((String)x.getStringAttribute(e), context, msg);
+				Function3<StreamScriptContext,Optional<ReplicationMessage>, Optional<ReplicationMessage>, Operand> value = (context,msg,param)->evaluate((String)x.getStringAttribute(e), context, msg,param);
 				namedParameters.put(name, value);
 			} else {
-				namedParameters.put(e, (context,msg)->new Operand(x.getStringAttribute(e),Property.STRING_PROPERTY,null));
+				namedParameters.put(e, (context,msg,param)->new Operand(x.getStringAttribute(e),Property.STRING_PROPERTY,null));
 				
 			}
 		}
@@ -182,16 +183,16 @@ public class ReactiveScriptParser {
 				}
 				if(name==null) {
 					if (evaluate) {
-						unnamedParameters.add((context,msg)->evaluate((String)content, context, msg));
+						unnamedParameters.add((context,msg,param)->evaluate((String)content, context, msg,param));
 					} else {
-						unnamedParameters.add((context,msg)->new Operand(content,"string",null));
+						unnamedParameters.add((context,msg,param)->new Operand(content,"string",null));
 					}
 				} else {
 					if(evaluate) {
-						BiFunction<StreamScriptContext, Optional<ReplicationMessage>, Operand> value = (context,msg)->evaluate((String)content, context, msg);
+						Function3<StreamScriptContext, Optional<ReplicationMessage>,Optional<ReplicationMessage>, Operand> value = (context,msg,param)->evaluate((String)content, context, msg,param);
 						namedParameters.put(name, value);
 					} else {
-						namedParameters.put(name, (context,msg)->new Operand(content,"string",null));
+						namedParameters.put(name, (context,msg,param)->new Operand(content,"string",null));
 					}
 				}
 			} else {
@@ -282,8 +283,8 @@ public class ReactiveScriptParser {
 		return current;
 	}
 	
-	private static Operand evaluate(String expression, StreamScriptContext context, Optional<ReplicationMessage> m) throws SystemException {
-		return Expression.evaluate(expression, context.getInput().orElse(null), null, null,null,null,null,null,m);
+	private static Operand evaluate(String expression, StreamScriptContext context, Optional<ReplicationMessage> m, Optional<ReplicationMessage> param) throws SystemException {
+		return Expression.evaluate(expression, context.getInput().orElse(null), null, null,null,null,null,null,m,param);
 	}
 
 	public static ReplicationMessage empty() {

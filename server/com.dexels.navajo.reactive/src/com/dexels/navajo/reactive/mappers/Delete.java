@@ -26,7 +26,7 @@ public class Delete implements ReactiveMapper {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(xml);
 		return context->(item,second)->{
 			// second ignored here
-			Map<String,Operand> named = r.resolveNamed(context, Optional.of(item.message()));
+			Map<String,Operand> named = r.resolveNamed(context,item,second);
 			String name = (String)named.get("name").value;	
 			return DataItem.of(item.message().without(Arrays.asList(name.split(","))));
 		};
