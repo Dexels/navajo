@@ -23,14 +23,16 @@ public class SingleSource implements ReactiveSource {
 
 	private final ReactiveParameters params;
 	private final List<ReactiveTransformer> transformers;
-	private Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> dataMapper;
+//	private Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> dataMapper;
 	private Type finalType;
 //	private final Function<DataItem,DataItem> transformationFunction;
-	public SingleSource(ReactiveParameters params, List<ReactiveTransformer> transformers, Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> dataMapper, DataItem.Type finalType) {
+	private final Optional<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> mapMapper;
+	
+	public SingleSource(ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType,Optional<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> mapMapper) {
 		this.params = params;
 		this.transformers = transformers;
-		this.dataMapper = dataMapper;
 		this.finalType = finalType;
+		this.mapMapper = mapMapper;
 //		this.transformationFunction = item->{
 //			return item;
 //		};
@@ -43,12 +45,16 @@ public class SingleSource implements ReactiveSource {
 		Operand countOperand = resolvedParams.get("count");
 		int count = countOperand == null ? 1 :(Integer) countOperand.value;
 		try {
+			if(!mapMapper.isPresent()) {
+				throw new RuntimeException("No datamapper, this will end badly!");
+			}
+			
 //			(dataMapper.apply(context).apply(DataItem.of(ReactiveScriptParser.empty().with("index", i, "integer")), Optional.empty())
 			Flowable<DataItem> flow =  count > 1 ?
 						Flowable.range(0, count)
-							.map(i->dataMapper.apply(context).apply(DataItem.of(ReactiveScriptParser.empty()), Optional.of(DataItem.of(ReactiveScriptParser.empty().with("index", i, "integer")))))
+							.map(i->mapMapper.get().apply(context).apply(DataItem.of(ReactiveScriptParser.empty()), Optional.of(DataItem.of(ReactiveScriptParser.empty().with("index", i, "integer")))))
 							
-					: Flowable.just(dataMapper.apply(context).apply(DataItem.of(ReactiveScriptParser.empty()), Optional.empty()));
+					: Flowable.just(mapMapper.get().apply(context).apply(DataItem.of(ReactiveScriptParser.empty()), Optional.empty()));
 			if(debug) {
 				flow = flow.doOnNext(di->System.err.println("Item: "+ReplicationFactory.getInstance().describe(di.message())));
 			}

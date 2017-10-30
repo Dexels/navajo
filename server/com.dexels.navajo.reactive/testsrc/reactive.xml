@@ -1,4 +1,4 @@
-<reactive array="Organization">
+<reactive>
 	<source.sql resource="dummy">
 		<param name="query">select * from ORGANIZATION WHERE ROWNUM &lt;=20</param>
 		<msg.mergeSingle.msg>
@@ -17,5 +17,8 @@
 			</joiner>
 			</source.sql>
 		</msg.mergeSingle.msg>
+		<msg.stream.event messageName="Organization">
+			<parameval name="isArray">true</parameval>
+		</msg.stream.event>
 	</source.sql>
 </reactive>

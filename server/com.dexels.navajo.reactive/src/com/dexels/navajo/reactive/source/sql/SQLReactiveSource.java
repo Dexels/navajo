@@ -15,8 +15,6 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.Flowable;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Function;
 
 public class SQLReactiveSource implements ReactiveSource {
 	
@@ -24,7 +22,7 @@ public class SQLReactiveSource implements ReactiveSource {
 	private final List<ReactiveTransformer> transformers;
 	private Type finalType;
 	
-	public SQLReactiveSource(ReactiveParameters params, List<ReactiveTransformer> transformers, Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> dataMapper, DataItem.Type finalType) {
+	public SQLReactiveSource(ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType) {
 		this.parameters = params;
 		this.transformers = transformers;
 		this.finalType = finalType;

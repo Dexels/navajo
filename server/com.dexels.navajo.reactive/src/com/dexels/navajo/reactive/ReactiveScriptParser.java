@@ -161,8 +161,16 @@ public class ReactiveScriptParser {
 		Map<String,BiFunction<StreamScriptContext,Optional<ReplicationMessage>,Operand>> namedParameters = new HashMap<>();
 		List<BiFunction<StreamScriptContext,Optional<ReplicationMessage>,Operand>> unnamedParameters = new ArrayList<>();
 		x.enumerateAttributeNames().forEachRemaining(e->{
-			namedParameters.put(e, (context,msg)->new Operand(x.getStringAttribute(e),Property.STRING_PROPERTY,null));
-		});
+			if(e.endsWith(".eval")) {
+				String name = e.substring(0, e.length()-".eval".length());
+				BiFunction<StreamScriptContext, Optional<ReplicationMessage>, Operand> value = (context,msg)->evaluate((String)x.getStringAttribute(e), context, msg);
+				namedParameters.put(name, value);
+			} else {
+				namedParameters.put(e, (context,msg)->new Operand(x.getStringAttribute(e),Property.STRING_PROPERTY,null));
+				
+			}
+		}
+		);
 		for (XMLElement possibleParam : children) {
 			String elementName = possibleParam.getName();
 			if(elementName.startsWith("param")) {
@@ -198,7 +206,7 @@ public class ReactiveScriptParser {
 		System.err.println("Type of source: "+type);
 		String[] typeSplit = type.split("\\.");
 		ReactiveParameters params = parseParamsFromChildren(x);
-		ReactiveSource src = createSource(x,typeSplit[1],params,sourceFactorySupplier, factorySupplier, mapperSupplier,parseMapperList(x.getChildren(), mapperSupplier));
+		ReactiveSource src = createSource(x,typeSplit[1],params,sourceFactorySupplier, factorySupplier, mapperSupplier);
 		return src;
 	}
 
@@ -248,14 +256,13 @@ public class ReactiveScriptParser {
 
 	private static ReactiveSource createSource(XMLElement x, String type, ReactiveParameters params,
 		Function<String,ReactiveSourceFactory> sourceFactorySupplier,
-		Function<String,ReactiveTransformerFactory> factorySupplier, Function<String, ReactiveMapper> mapperSupplier,
-		Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> dataMapper) throws Exception {
+		Function<String,ReactiveTransformerFactory> factorySupplier, Function<String, ReactiveMapper> mapperSupplier) throws Exception {
 
 		List<ReactiveTransformer> factories = parseTransformationsFromChildren(x,sourceFactorySupplier, factorySupplier,mapperSupplier);
 		ReactiveSourceFactory reactiveSourceFactory = sourceFactorySupplier.apply(type);
 //		reactiveSourceFactory.
 		Type fn = finalType(reactiveSourceFactory, factories);
-		ReactiveSource build = reactiveSourceFactory.build(type,params,factories,dataMapper,fn);
+		ReactiveSource build = reactiveSourceFactory.build(type,x,params,factories,fn,mapperSupplier);
 		System.err.println("Source type: "+build.dataType());
 		for (ReactiveTransformer reactiveTransformer : factories) {
 			System.err.println("Transformer type: "+reactiveTransformer.outType());
@@ -291,7 +298,7 @@ public class ReactiveScriptParser {
 				.filter(x->!x.getName().startsWith("param"))
 				.filter(x->x.getName().split("\\.").length!=3)
 				.map(xml->{
-					System.err.println("Element: "+xml);
+					System.err.println("Assuming this is a mapper element: "+xml);
 					try {
 				return mapperSupplier.apply(xml.getName()).execute(xml);
 			} catch (Exception e) {

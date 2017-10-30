@@ -1,16 +1,14 @@
 package com.dexels.navajo.reactive.api;
 
 import java.util.List;
-import java.util.Optional;
 
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
-import com.dexels.navajo.document.stream.api.StreamScriptContext;
 
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
 public interface ReactiveSourceFactory {
-	public ReactiveSource build(String type, ReactiveParameters params, List<ReactiveTransformer> transformers, Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> function, DataItem.Type finalType);
+	public ReactiveSource build(String type,XMLElement x, ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType,Function<String, ReactiveMapper> mapperSupplier);
 	public Type sourceType();
 }

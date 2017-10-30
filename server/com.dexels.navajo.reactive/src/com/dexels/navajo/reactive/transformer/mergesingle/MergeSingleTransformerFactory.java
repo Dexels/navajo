@@ -1,24 +1,19 @@
 package com.dexels.navajo.reactive.transformer.mergesingle;
 
-import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveMapper;
-import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
-import com.dexels.replication.api.ReplicationMessage;
-import com.dexels.replication.factory.ReplicationFactory;
 
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
@@ -55,8 +50,9 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 			logger.error("Error: ", e);
 			subSource = Optional.empty();
 		}
-		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(xml);
-
-		return new MergeSingleTransformer(parameters, subSource.get(), reducermapper,joinermapper);
+		if(!subSource.isPresent()) {
+			throw new NullPointerException("Missing sub source in xml: "+xml);
+		}
+		return new MergeSingleTransformer(subSource.get(), reducermapper,joinermapper);
 	}
 }
