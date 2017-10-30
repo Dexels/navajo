@@ -7,6 +7,7 @@ bin/
 core/com.dexels.navajo.core/sharedstore/
 server/com.dexels.navajo.integration/navajo/logs/
 .DS_Store
+.tmpBin/
 *.war
 *.jar
 .cache-main
