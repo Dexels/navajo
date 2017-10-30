@@ -59,7 +59,7 @@ abstract class ScalaScript() extends CompiledScript {
     } catch {
       case e: Exception => {
         myAccess.setExitCode(Access.EXIT_EXCEPTION)
-
+        throw e
       }
     }
     
