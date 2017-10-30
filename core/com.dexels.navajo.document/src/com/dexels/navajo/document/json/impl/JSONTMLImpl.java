@@ -188,7 +188,7 @@ public class JSONTMLImpl implements JSONTML {
     }
 
 	private void format(JsonGenerator jg, Message m, boolean arrayElement) throws Exception {
-	    if (m.getMode().equals(Message.MSG_MODE_IGNORE)) {
+	    if (m.getMode()!=null && m.getMode().equals(Message.MSG_MODE_IGNORE)) {
             return;
         }
 		if (!arrayElement && !m.getName().equals(TOP_LEVEL_MSG) ) {

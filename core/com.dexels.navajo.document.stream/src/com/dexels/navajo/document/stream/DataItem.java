@@ -78,8 +78,8 @@ public class DataItem {
 	}
 	
 	public byte[] data() {
-		if(this.streamEvent==null) {
-			throw new NullPointerException("DataItem without data, can't request data of dataitem of type: "+this.type);
+		if(this.data==null) {
+			throw new NullPointerException("DataItem without data, can't request data of dataitem of type: "+this.type+" item: "+toString());
 		}
 		return data;
 	}

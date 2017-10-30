@@ -32,12 +32,18 @@ public class CallTransformer implements ReactiveTransformer {
 		String messageName = (String) params.get("messageName").value;
 		boolean isArray = (boolean) params.get("isArray").value;
 		String service = (String) params.get("service").value;
+		Integer parallel = (Integer) params.get("parallel").value;
 		return flow->
 			{
-			Flowable<NavajoStreamEvent> stream = flow.map(di->di.message()).concatMap(msg->StreamDocument.replicationMessageToStreamEvents(messageName, msg, isArray))
-				;
-			
-			return context.runner().run(context,service,stream).doOnNext(e->System.err.println("EVENT: "+e)).map(DataItem::of);
+			Flowable<Flowable<NavajoStreamEvent>> stream = flow.map(di->di.message())
+					.map(msg->StreamDocument.replicationMessageToStreamEvents(messageName, msg, isArray));
+				
+			if (parallel==null) {
+				return stream.concatMap(str->context.runner().run(service).execute(context.withService(service).withInput(str)));
+			} else {
+				return stream.flatMap(str->context.runner().run(service).execute(context.withService(service).withInput(str)),parallel);
+			}
+//			return context.runner().run(context,service,stream);
 		};
 	}
 

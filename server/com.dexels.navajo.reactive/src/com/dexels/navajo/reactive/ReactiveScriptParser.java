@@ -19,13 +19,12 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
-import com.dexels.navajo.document.stream.StreamDocument;
+import com.dexels.navajo.document.stream.DataItem.Type;
+import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.reactive.api.ReactiveMapper;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
-import com.dexels.navajo.reactive.api.ReactiveScript;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
@@ -34,6 +33,7 @@ import com.dexels.navajo.reactive.mappers.CopyMessage;
 import com.dexels.navajo.reactive.mappers.Delete;
 import com.dexels.navajo.reactive.mappers.Rename;
 import com.dexels.navajo.reactive.mappers.SetSingle;
+import com.dexels.navajo.reactive.mappers.SetSingleKeyValue;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;
@@ -54,6 +54,7 @@ public class ReactiveScriptParser {
 
 	public ReactiveScriptParser() {
 		reactiveMapper.put("set", new SetSingle());
+		reactiveMapper.put("setkv", new SetSingleKeyValue());
 		reactiveMapper.put("toSubMessage", new CopyMessage());
 		reactiveMapper.put("delete", new Delete());
 		reactiveMapper.put("rename", new Rename());
@@ -88,15 +89,31 @@ public class ReactiveScriptParser {
 		XMLElement x = new CaseSensitiveXMLElement();
 		x.parseFromStream(in);
 		List<ReactiveSource> r = parseRoot(x);
-
+		Type scriptType = null;
+		for (ReactiveSource reactiveSource : r) {
+			if(scriptType!=null) {
+				if(reactiveSource.dataType()!=scriptType) {
+					throw new IOException("Can't parse script for service: "+serviceName+" as there are different source types.");
+				}
+			} else {
+				scriptType = reactiveSource.finalType();
+			}
+			;
+		}
+		
+		final Type finalType = scriptType;
+		
 		return new ReactiveScript() {
 			
 			@Override
-			public Flowable<NavajoStreamEvent> execute(StreamScriptContext context) {
+			public Flowable<DataItem> execute(StreamScriptContext context) {
 				return Flowable.fromIterable(r)
-					.concatMap(r->r.execute(context, Optional.empty()).map(item->item.event())
-					)
-					.compose(StreamDocument.inNavajo(context.service, context.username, Optional.empty()));
+					.concatMap(r->r.execute(context, Optional.empty()));
+			}
+
+			@Override
+			public Type dataType() {
+				return finalType;
 			}
 		};
 	}
@@ -237,10 +254,27 @@ public class ReactiveScriptParser {
 		List<ReactiveTransformer> factories = parseTransformationsFromChildren(x,sourceFactorySupplier, factorySupplier,mapperSupplier);
 		ReactiveSourceFactory reactiveSourceFactory = sourceFactorySupplier.apply(type);
 //		reactiveSourceFactory.
-		return reactiveSourceFactory.build(type,params,factories,dataMapper);
+		Type fn = finalType(reactiveSourceFactory, factories);
+		ReactiveSource build = reactiveSourceFactory.build(type,params,factories,dataMapper,fn);
+		System.err.println("Source type: "+build.dataType());
+		for (ReactiveTransformer reactiveTransformer : factories) {
+			System.err.println("Transformer type: "+reactiveTransformer.outType());
+		}
+		return build;
 	}
 
 
+	private static Type finalType(ReactiveSourceFactory source, List<ReactiveTransformer> transformers) {
+		Type current = source.sourceType();
+		for (ReactiveTransformer reactiveTransformer : transformers) {
+			if(current != reactiveTransformer.inType()) {
+				throw new ClassCastException("Type mismatch: Last type in pipeline: "+current+" next part expects: "+reactiveTransformer.inType());
+			}
+			current = reactiveTransformer.outType();
+		}
+		return current;
+	}
+	
 	private static Operand evaluate(String expression, StreamScriptContext context, Optional<ReplicationMessage> m) throws SystemException {
 		return Expression.evaluate(expression, context.getInput().orElse(null), null, null,null,null,null,null,m);
 	}

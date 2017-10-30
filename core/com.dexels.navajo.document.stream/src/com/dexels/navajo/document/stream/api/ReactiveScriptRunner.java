@@ -1,12 +1,11 @@
 package com.dexels.navajo.document.stream.api;
 
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
+import java.io.IOException;
 
-import io.reactivex.Flowable;
+import com.dexels.navajo.document.stream.ReactiveScript;
 
 public interface ReactiveScriptRunner {
-	public Flowable<NavajoStreamEvent> run(StreamScriptContext context, String service, Flowable<NavajoStreamEvent> input);
-//	public StreamScriptContext createContext(StreamScriptContext context, String service, Flowable<NavajoStreamEvent> input);
+	public ReactiveScript run(String service) throws IOException;
 	public boolean acceptsScript(String service);
 
 }

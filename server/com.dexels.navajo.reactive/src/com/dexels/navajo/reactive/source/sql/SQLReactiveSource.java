@@ -22,10 +22,12 @@ public class SQLReactiveSource implements ReactiveSource {
 	
 	private final ReactiveParameters parameters;
 	private final List<ReactiveTransformer> transformers;
+	private Type finalType;
 	
-	public SQLReactiveSource(ReactiveParameters params, List<ReactiveTransformer> transformers, Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> dataMapper) {
+	public SQLReactiveSource(ReactiveParameters params, List<ReactiveTransformer> transformers, Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> dataMapper, DataItem.Type finalType) {
 		this.parameters = params;
 		this.transformers = transformers;
+		this.finalType = finalType;
 	}
 
 	@Override
@@ -52,6 +54,11 @@ public class SQLReactiveSource implements ReactiveSource {
 	@Override
 	public Type dataType() {
 		return Type.MESSAGE;
+	}
+
+	@Override
+	public Type finalType() {
+		return finalType;
 	}
 
 }

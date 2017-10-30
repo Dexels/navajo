@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.DataItem.Type;
+import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.Prop;
@@ -47,10 +50,21 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 	
 
 	@Override
-	public Flowable<NavajoStreamEvent> run(StreamScriptContext context, String service,
-			Flowable<NavajoStreamEvent> input) {
-		
-		return runLegacy(input.compose(StreamDocument.inNavajo(service, context.username, context.password)), context);
+	public ReactiveScript run(String service) {
+		return new ReactiveScript() {
+			
+			@Override
+			public Flowable<DataItem> execute(StreamScriptContext context) {
+				return runLegacy(context.inputFlowable().compose(StreamDocument.inNavajo(service, context.username, context.password)), context).map(DataItem::of);			
+				
+			}
+			
+			@Override
+			public Type dataType() {
+				return Type.EVENT;
+			}
+		};
+//		
 	}
 
 	@Override
@@ -63,7 +77,6 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 			StreamScriptContext context) {
 		return eventStream
 				.lift(StreamDocument.collectFlowable())
-				.doOnNext(e->System.err.println("COLLECTED: "))
 				.flatMap(inputNav->executeLegacy(context, inputNav));
 	}
 	
@@ -72,7 +85,6 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 		Navajo result;
 		try {
 			result = execute(context, in);
-			result.write(System.err);
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
 			return errorMessage(context.service,context.username,101,"Could not resolve script: "+context.service);
