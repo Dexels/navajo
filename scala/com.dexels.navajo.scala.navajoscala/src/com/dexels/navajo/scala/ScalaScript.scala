@@ -16,7 +16,7 @@ import com.dexels.navajo.parser.FunctionInterface
 import com.dexels.navajo.scala.document.ScalaMessage
 import com.dexels.navajo.document.json.conversion.JsonTmlFactory
 import com.dexels.navajo.document.base.BaseMessageImpl
-import com.dexels.navajo.scala.document.ValidationError
+import com.dexels.navajo.scala.document.Validation
 
 abstract class ScalaScript(var printRequest: Boolean = false, var printResponse: Boolean = false) extends CompiledScript {
   var runtime: NavajoRuntime = null
@@ -63,7 +63,7 @@ abstract class ScalaScript(var printRequest: Boolean = false, var printResponse:
 
     for (e <- validations) {
       e.apply(input) match {
-        case t: ValidationError => conditionErrMsg.addMessage(
+        case t: Validation => conditionErrMsg.addMessage(
           msg => msg.put("Id", t.code).put("Description", t.description))
         case _ => // nothing
       }
