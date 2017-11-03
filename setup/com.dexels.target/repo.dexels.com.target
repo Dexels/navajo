@@ -19,8 +19,8 @@
 <repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.20.v20170531/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.10.24.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.10.24"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.10.25.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.10.25"/>
 </location>
 </locations>
 <includeBundles>
