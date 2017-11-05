@@ -49,8 +49,8 @@ public class TipiReloadNavajo extends TipiAction {
 			if (service.value instanceof String) {
 				serviceName = (String) service.value;
 
-				service.value = myContext.getNavajo(serviceName);
-				actualNavajo = (Navajo) service.value;
+//				service.value = myContext.getNavajo(serviceName);
+				actualNavajo = (Navajo) myContext.getNavajo(serviceName);
 				myContext.loadNavajo(actualNavajo, serviceName);
 			} else {
 				if (service.value instanceof Navajo) {

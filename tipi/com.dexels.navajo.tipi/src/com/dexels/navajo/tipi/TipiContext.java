@@ -1967,7 +1967,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                 String s = (String) o.value;
                 if (s.length() > 1) {
                     if (s.charAt(0) == '\'' && s.charAt(s.length() - 1) == '\'') {
-                        o.value = s.substring(1, s.length() - 2);
+                        String trimmed = s.substring(1, s.length() - 2);
+                        return new Operand(trimmed,Property.STRING_PROPERTY,null);
                     }
                 }
             }
