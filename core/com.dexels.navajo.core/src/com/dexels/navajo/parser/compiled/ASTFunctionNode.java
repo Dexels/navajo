@@ -48,6 +48,9 @@ public final class ASTFunctionNode extends SimpleNode {
 			
 			@Override
 			public boolean isLiteral() {
+				if(getFunction()==null) {
+					throw new NullPointerException("Function: "+functionName+" can not be resolved!");
+				}
 				return getFunction().isPure() && l.stream().allMatch(e->e.isLiteral());
 			}
 			
