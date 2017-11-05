@@ -10,6 +10,7 @@ import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveMapper;
+import com.dexels.navajo.reactive.api.ReactiveReducer;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
@@ -31,21 +32,21 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 	}
 
 	@Override
-	public ReactiveTransformer build(XMLElement xml,Function<String,ReactiveSourceFactory> sourceSupplier, Function<String,ReactiveTransformerFactory> factorySupplier, Function<String,ReactiveMapper> mapperSupplier) {
+	public ReactiveTransformer build(String relativePath, XMLElement xml, Function<String, ReactiveSourceFactory> sourceSupplier,
+			Function<String, ReactiveTransformerFactory> factorySupplier,
+			Function<String, ReactiveReducer> reducerSupplier, Function<String, ReactiveMapper> mapperSupplier) {
 //		, Optional<Function<StreamScriptContext, BiFunction<ReplicationMessage, ReplicationMessage, ReplicationMessage>>> reducer) {
-		XMLElement reduceElement = xml.getElementByTagName("reducer");
-//		if(reduceElement==null) {
-//			throw new RuntimeException("Missing reduce element for xml: "+xml);
-//		}
-		XMLElement joinerElement = xml.getElementByTagName("joiner");
+		XMLElement reduceElement = xml.getChildByTagName("reducer");
+		XMLElement joinerElement = xml.getChildByTagName("joiner");
 		if(joinerElement==null) {
 			throw new RuntimeException("Missing joiner element for xml: "+xml);
 		}
-		Optional<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> reducermapper = reduceElement==null? Optional.empty() : Optional.of(ReactiveScriptParser.parseMapperList(reduceElement.getChildren(), mapperSupplier));
-		Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> joinermapper = ReactiveScriptParser.parseMapperList(joinerElement.getChildren(), mapperSupplier);
+		Optional<Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>>> reducermapper = reduceElement==null? Optional.empty() : Optional.of(ReactiveScriptParser.parseReducerList(relativePath, reduceElement.getChildren(), reducerSupplier));
+		Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, joinerElement.getChildren(), reducerSupplier);
 		Optional<ReactiveSource> subSource;
 		try {
-			subSource = ReactiveScriptParser.findSubSource(xml, sourceSupplier, factorySupplier,mapperSupplier);
+			System.err.println("looking for sub source: "+xml);
+			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, sourceSupplier, factorySupplier,reducerSupplier, mapperSupplier);
 		} catch (Exception e) {
 			logger.error("Error: ", e);
 			subSource = Optional.empty();
@@ -54,5 +55,8 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 			throw new NullPointerException("Missing sub source in xml: "+xml);
 		}
 		return new MergeSingleTransformer(subSource.get(), reducermapper,joinermapper);
+//		public MergeSingleTransformer(ReactiveSource source,  Optional<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> reducer, Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> joiner) {
+
 	}
+
 }

@@ -1,15 +1,16 @@
 package com.dexels.navajo.reactive.transformer.call;
 
-import java.util.Map;
 import java.util.Optional;
 
-import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
+import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
+import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 
 import io.reactivex.Flowable;
@@ -19,22 +20,25 @@ public class CallTransformer implements ReactiveTransformer {
 
 
 	private final ReactiveParameters parameters;
-
-	public CallTransformer(ReactiveParameters parameters) {
+	private final ParameterValidator validator;
+	private XMLElement sourceElement;
+	private String sourcePath;
+	
+	public CallTransformer(ReactiveParameters parameters, ParameterValidator validator, XMLElement sourceElement, String sourcePath) {
 		this.parameters = parameters;
-		
+		this.validator = validator;
+		this.sourceElement = sourceElement;
+		this.sourcePath = sourcePath;
 	}
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
+		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), Optional.empty(),validator, sourceElement, sourcePath);
 
-		Map<String,Operand> params = parameters.resolveNamed(context, Optional.empty(), Optional.empty());
-		String messageName = (String) params.get("messageName").value;
-		boolean isArray = (boolean) params.get("isArray").value;
-		String service = (String) params.get("service").value;
-		Operand parallelOperand = params.get("parallel");
-		
-		int parallel = parallelOperand!=null && parallelOperand.value!=null ?  (Integer) parallelOperand.value : 0;
+		final int parallel =  resolved.paramInteger("parallel", 0);
+		final String service =  resolved.paramString("service");
+		final String messageName =  resolved.paramString("messageName");
+		final boolean isArray =  resolved.paramBoolean("isArray");
 		return flow->
 			{
 			Flowable<Flowable<NavajoStreamEvent>> stream = flow.map(di->di.message())

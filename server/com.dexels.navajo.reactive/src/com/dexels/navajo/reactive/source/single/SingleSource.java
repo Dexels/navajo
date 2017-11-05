@@ -1,15 +1,21 @@
 package com.dexels.navajo.reactive.source.single;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
+import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
+import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.replication.api.ReplicationMessage;
@@ -19,42 +25,37 @@ import io.reactivex.Flowable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class SingleSource implements ReactiveSource {
+public class SingleSource implements ReactiveSource, ParameterValidator {
 
 	private final ReactiveParameters params;
 	private final List<ReactiveTransformer> transformers;
-//	private Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> dataMapper;
 	private Type finalType;
-//	private final Function<DataItem,DataItem> transformationFunction;
-	private final Optional<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> mapMapper;
+	private final Optional<Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>>> mapMapper;
+	private final XMLElement sourceElement;
+	private final String sourcePath;
 	
-	public SingleSource(ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType,Optional<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> mapMapper) {
+	public SingleSource(ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType,Optional<Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>>> mapMapper, XMLElement sourceElement, String sourcePath) {
 		this.params = params;
 		this.transformers = transformers;
 		this.finalType = finalType;
 		this.mapMapper = mapMapper;
-//		this.transformationFunction = item->{
-//			return item;
-//		};
+		this.sourceElement = sourceElement;
+		this.sourcePath = sourcePath;
 	}
 
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ReplicationMessage> current) {
-		Map<String,Operand> resolvedParams = this.params.resolveNamed(context, current, Optional.empty());
-		boolean debug = resolvedParams.containsKey("debug");
-		Operand countOperand = resolvedParams.get("count");
-		int count = countOperand == null ? 1 :(Integer) countOperand.value;
+		ReactiveResolvedParameters parameters = this.params.resolveNamed(context, current, Optional.empty(), this, sourceElement, sourcePath);
+		boolean debug = parameters.paramBoolean("debug", false);
+		int count =  parameters.paramInteger("count", 1);
 		try {
 			if(!mapMapper.isPresent()) {
 				throw new RuntimeException("No datamapper, this will end badly!");
 			}
-			
-//			(dataMapper.apply(context).apply(DataItem.of(ReactiveScriptParser.empty().with("index", i, "integer")), Optional.empty())
 			Flowable<DataItem> flow =  count > 1 ?
-						Flowable.range(0, count)
-							.map(i->mapMapper.get().apply(context).apply(DataItem.of(ReactiveScriptParser.empty()), Optional.of(DataItem.of(ReactiveScriptParser.empty().with("index", i, "integer")))))
-							
-					: Flowable.just(mapMapper.get().apply(context).apply(DataItem.of(ReactiveScriptParser.empty()), Optional.empty()));
+					Flowable.range(0, count)
+						.map(i->mapMapper.get().apply(context).apply(DataItem.of(ReactiveScriptParser.empty()), DataItem.of(ReactiveScriptParser.empty().with("index", i, "integer"))))
+					: Flowable.just(mapMapper.get().apply(context).apply(DataItem.of(ReactiveScriptParser.empty()), DataItem.of(ReactiveScriptParser.empty())));
 			if(debug) {
 				flow = flow.doOnNext(di->System.err.println("Item: "+ReplicationFactory.getInstance().describe(di.message())));
 			}
@@ -75,6 +76,25 @@ public class SingleSource implements ReactiveSource {
 	@Override
 	public Type finalType() {
 		return finalType;
+	}
+	
+	
+	@Override
+	public Optional<List<String>> allowedParameters() {
+		return Optional.of(Arrays.asList(new String[]{"count","debug"}));
+	}
+
+	@Override
+	public Optional<List<String>> requiredParameters() {
+		return Optional.of(Collections.emptyList());
+	}
+
+	@Override
+	public Optional<Map<String, String>> parameterTypes() {
+		Map<String,String> r = new HashMap<>();
+		r.put("count", Property.INTEGER_PROPERTY);
+		r.put("debug", Property.BOOLEAN_PROPERTY);
+		return Optional.of(Collections.unmodifiableMap(r));
 	}
 
 }

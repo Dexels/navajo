@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -28,11 +29,11 @@ public class SQL {
 	private static DataSource testDataSource = null;
 
 	
-	public static DataSource resolveDataSource(String dataSourceName, String tenant) {
+	public static Optional<DataSource> resolveDataSource(String dataSourceName, String tenant) {
 		
 		if(dataSourceName.equals("dummy")) {
 			if(testDataSource!=null) {
-				return testDataSource;
+				return Optional.of(testDataSource);
 			}
 
 		    OracleDataSource ds;
@@ -45,7 +46,7 @@ public class SQL {
 			    ds.setUser("knvbkern");
 			    ds.setPassword("knvb");
 	        		testDataSource = ds;
-				return testDataSource;
+				return Optional.of(testDataSource);
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
@@ -64,7 +65,7 @@ public class SQL {
 	        p.putAll(props);
 	        try {
 	        		testDataSource = dsc.createDataSource(p);
-				return testDataSource;
+				return Optional.of(testDataSource);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} 
@@ -72,14 +73,16 @@ public class SQL {
 		}
 		logger.info("Resolving datasource {} for tenant {}",dataSourceName,tenant);
 		DataSource source = GrusProviderFactory.getInstance().getInstanceDataSource(tenant, dataSourceName);
-		return source;
+		return Optional.of(source);
 	}
 	
 	public static Flowable<ReplicationMessage> query(String datasource, String tenant, String query, Object... params) {
-		DataSource ds = resolveDataSource(datasource, tenant);
+		Optional<DataSource> ds = resolveDataSource(datasource, tenant);
 //		Pool<Connection> pool =  getPoolForDataSource(ds);
-
-		return Database.fromBlocking(ds)
+		if(!ds.isPresent()) {
+			return Flowable.error(new NullPointerException("Datasource missing for datasource: "+datasource+" with tenant: "+tenant));
+		}
+		return Database.fromBlocking(ds.get())
 			.select(query)
 			.parameterList(Arrays.asList(params))
 			.get(SQL::resultSet);

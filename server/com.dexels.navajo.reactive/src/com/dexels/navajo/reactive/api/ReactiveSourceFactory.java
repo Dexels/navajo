@@ -9,6 +9,7 @@ import com.dexels.navajo.document.stream.DataItem.Type;
 import io.reactivex.functions.Function;
 
 public interface ReactiveSourceFactory {
-	public ReactiveSource build(String type,XMLElement x, ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType,Function<String, ReactiveMapper> mapperSupplier);
+	public ReactiveSource build(String relativePath, String type, XMLElement x, ReactiveParameters params, List<ReactiveTransformer> transformers, 
+			DataItem.Type finalType,Function<String, ReactiveReducer> reducerSupplier,Function<String, ReactiveMapper> mapperSupplier);
 	public Type sourceType();
 }

@@ -2,7 +2,7 @@
 	<source.single count.eval="50">
 		<map>
 			<set aap="noot" mies="wim">
-				<parameval name="nummer">[index]</parameval>
+				<parameval name="nummer">[@index]</parameval>
 			</set>
 		</map>
 		<msg.stream.event messageName="Bla" isArray.eval="true"/>

@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.replication.api.ReplicationMessage;
@@ -24,9 +25,14 @@ public class ReactiveParameters {
 
 	public final Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> named;
 	public final List<Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> unnamed;
-	private ReactiveParameters(Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> unnamedParameters) {
+
+	private final Map<String, Function3<StreamScriptContext,Optional<ReplicationMessage>, Optional<ReplicationMessage>, Operand> > defaultExpressions;
+
+	private ReactiveParameters(Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> unnamedParameters, Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>, Optional<ReplicationMessage>, Operand> > defaultExpressions) {
 		this.named = namedParameters;
 		this.unnamed = unnamedParameters;
+		this.defaultExpressions = defaultExpressions;
+
 	}
 
 	public List<Operand> resolveUnnamed(StreamScriptContext context ,Optional<ReplicationMessage> currentMessage,Optional<ReplicationMessage> paramMessage) {
@@ -51,8 +57,13 @@ public class ReactiveParameters {
 			}
 		}).collect(Collectors.toList());
 	}
+
+	public ReactiveResolvedParameters resolveNamed(StreamScriptContext context ,Optional<ReplicationMessage> currentMessage,Optional<ReplicationMessage> paramMessage, ParameterValidator validator, XMLElement sourceElement, String sourcePath) {
+		return new ReactiveResolvedParameters(context, named, currentMessage, paramMessage,validator, sourceElement, sourcePath,defaultExpressions);
+	}
 	
-	public Map<String,Operand> resolveNamed(StreamScriptContext context ,Optional<ReplicationMessage> currentMessage,Optional<ReplicationMessage> paramMessage) {
+	@Deprecated
+	private Map<String,Operand> resolveNamedOld(StreamScriptContext context ,Optional<ReplicationMessage> currentMessage,Optional<ReplicationMessage> paramMessage) {
 		Map<String,Operand> result = new HashMap<>();
 		named.entrySet().forEach(e->{
 			Operand applied;
@@ -67,25 +78,15 @@ public class ReactiveParameters {
 		return result;
 	}
 
+	@Deprecated
 	public Map<String,Operand> resolveNamed(StreamScriptContext context ,DataItem currentMessage,Optional<DataItem> paramMessage) {
-		Map<String,Operand> result = new HashMap<>();
-		named.entrySet().forEach(e->{
-			Operand applied;
-			try {
-				Optional<ReplicationMessage> param = paramMessage.isPresent() ? Optional.of(paramMessage.get().message()) : Optional.empty();
-				applied = e.getValue().apply(context, Optional.of(currentMessage.message()),param);
-				result.put(e.getKey(), applied);
-			} catch (Exception e1) {
-				logger.error("Error applying param function for named param: "+e.getKey()+" will put null.", e1);
-				result.put(e.getKey(), null);
-			}
-		});
-		return result;
+		Optional<ReplicationMessage> param = paramMessage.isPresent() ? Optional.of(paramMessage.get().message()) : Optional.empty();
+		Optional<ReplicationMessage> current = Optional.of(currentMessage.message());
+		return resolveNamedOld(context, current, param);
 	}
-
 	
-	public static ReactiveParameters of(Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> unnamedParameters) {
-		return new ReactiveParameters(namedParameters, unnamedParameters);
+	public static ReactiveParameters of(Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> unnamedParameters, Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>, Optional<ReplicationMessage>, Operand> > defaultExpressions) {
+		return new ReactiveParameters(namedParameters, unnamedParameters,defaultExpressions);
 	}
 
 	

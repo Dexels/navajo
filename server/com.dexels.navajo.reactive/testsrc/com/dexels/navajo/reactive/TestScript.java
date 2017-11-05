@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.navajo.adapters.stream.SQL;
@@ -24,6 +23,7 @@ import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
 import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
 import com.dexels.navajo.reactive.transformer.filestore.FileStoreTransformerFactory;
 import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
+import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
@@ -50,6 +50,7 @@ public class TestScript {
 		reactiveScriptParser.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"mergeSingle");
 		reactiveScriptParser.addReactiveTransformerFactory(new CallTransformerFactory(),"call");
 		reactiveScriptParser.addReactiveTransformerFactory(new StreamMessageTransformerFactory(),"stream");
+		reactiveScriptParser.addReactiveTransformerFactory(new SingleMessageTransformerFactory(),"single");
 	}
 
 	public StreamScriptContext createContext(String serviceName, Optional<ReactiveScriptRunner> runner) {
@@ -62,7 +63,7 @@ public class TestScript {
 		return context;
 	}
 	
-	@Test  @Ignore
+	@Test
 	public void testSQL() {
 		SQL.query("dummy", "KNVB", "select * from organization where rownum < 500")
 			.flatMap(msg->StreamDocument.replicationMessageToStreamEvents("Organization", msg, true))
@@ -72,11 +73,11 @@ public class TestScript {
 		
 		.blockingForEach(e->System.err.print(new String(e)));
 	}
-	@Test @Ignore
+	@Test
 	public void testSimpleScript() throws IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("simplereactive.xml")) {
 			StreamScriptContext myContext = createContext("SimpleReactiveSql",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
+			reactiveScriptParser.parse(myContext.service, in, "serviceName").execute(myContext)
 				.map(di->di.event())
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));
@@ -87,7 +88,7 @@ public class TestScript {
 	public void testScript() throws IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactive.xml")) {
 			StreamScriptContext myContext = createContext("AdvancedReactiveSql",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in).execute(myContext)
+			reactiveScriptParser.parse(myContext.service, in,"serviceName").execute(myContext)
 				.map(di->di.event())
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));
@@ -99,7 +100,7 @@ public class TestScript {
 	public void testSingle() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("single.xml")) {
 			StreamScriptContext myContext = createContext("Single",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in)
+			reactiveScriptParser.parse(myContext.service, in,"serviceName")
 				.execute(myContext)
 				.map(di->di.event())
 				.lift(StreamDocument.serialize())

@@ -16,6 +16,9 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
+import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
+import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
+import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
@@ -39,7 +42,10 @@ public class TestEnvironment {
 		env = new ReactiveScriptEnvironment(root);
 		ReactiveScriptParser rsp = new ReactiveScriptParser();
 		rsp.addReactiveSourceFactory(new SingleSourceFactory(), "single");
+		rsp.addReactiveSourceFactory(new SQLReactiveSourceFactory(), "sql");
 		rsp.addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "stream");
+		rsp.addReactiveTransformerFactory(new SingleMessageTransformerFactory(), "single");
+		rsp.addReactiveTransformerFactory(new MergeSingleTransformerFactory(), "mergeSingle");
 		env.setReactiveScriptParser(rsp);
 //		rsp.addReactiveSourceFactory("", settings);
 	}
@@ -47,7 +53,7 @@ public class TestEnvironment {
 	@Test 
 	public void testEnv() throws IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("singlesimple.xml")) {
-			env.installScript("singlesimple", in);
+			env.installScript("singlesimple", in,"serviceName");
 		}
 		env.run("singlesimple").execute(createContext("singlesimple"))
 			.map(di->di.event())
@@ -55,6 +61,31 @@ public class TestEnvironment {
 			.blockingForEach(e->System.err.print(new String(e)));
 
 	}
+
+	@Test 
+	public void testSingleMerge() throws IOException {
+		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactive.xml")) {
+			env.installScript("singlemerge", in,"serviceName");
+		}
+		env.run("singlemerge").execute(createContext("singlemerge"))
+			.map(di->di.event())
+			.lift(StreamDocument.serialize())
+			.blockingForEach(e->System.err.print(new String(e)));
+
+	}
+	
+	@Test 
+	public void testSqlDump() throws IOException {
+		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("sql.xml")) {
+			env.installScript("sql", in,"serviceName");
+		}
+		env.run("sql").execute(createContext("sql"))
+			.map(di->di.event())
+			.lift(StreamDocument.serialize())
+			.blockingForEach(e->System.err.print(new String(e)));
+
+	}
+
 
 	public StreamScriptContext createContext(String serviceName) {
 		Navajo input = NavajoFactory.getInstance().createNavajo();

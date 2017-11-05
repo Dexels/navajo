@@ -86,7 +86,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		File sf = resolveFile(service);
 		
 		try(InputStream is = new FileInputStream(sf)) {
-			rs = installScript(service, is);
+			rs = installScript(service, is,service+".xml");
 //		} catch (IOException ioe) {
 //			return Flowable.error(new RuntimeException("Can't seem to find script: "+context.service));
 		}
@@ -102,9 +102,8 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		return new File(f,serviceName+".xml");
 	}
 	
-	public ReactiveScript installScript(String serviceName, InputStream in) throws IOException {
-
-		ReactiveScript parsed = scriptParser.parse(serviceName, in);
+	ReactiveScript installScript(String serviceName, InputStream in, String relativeScriptPath) throws IOException {
+		ReactiveScript parsed = scriptParser.parse(serviceName, in,relativeScriptPath);
 		scripts.put(serviceName, parsed);
 		return parsed;
 	}

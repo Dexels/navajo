@@ -1,44 +1,51 @@
 package com.dexels.navajo.reactive.source.sql;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import com.dexels.navajo.adapters.stream.SQL;
-import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
+import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.Flowable;
 
-public class SQLReactiveSource implements ReactiveSource {
+public class SQLReactiveSource implements ReactiveSource, ParameterValidator {
 	
 	private final ReactiveParameters parameters;
 	private final List<ReactiveTransformer> transformers;
-	private Type finalType;
+	private final Type finalType;
+	private final XMLElement sourceElement;
+	private final String sourcePath;
 	
-	public SQLReactiveSource(ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType) {
+	public SQLReactiveSource(ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType, XMLElement sourceElement, String sourcePath) {
 		this.parameters = params;
 		this.transformers = transformers;
 		this.finalType = finalType;
+		this.sourceElement = sourceElement;
+		this.sourcePath = sourcePath;
 	}
 
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context,Optional<ReplicationMessage> current) {
-		return executeImmutable(context, current);
-	}
-	
-	private Flowable<DataItem> executeImmutable(StreamScriptContext context,Optional<ReplicationMessage> current)  {
-		Object[] params = evaluateParams(context, current);
-		Map<String,Operand> paramMap = parameters.resolveNamed(context, current, Optional.empty());
-		String datasource = (String) paramMap.get("resource").value;
-		String query = (String) paramMap.get("query").value;
-		Flowable<DataItem> flow = SQL.query(datasource, context.tenant, query, params).map(d->DataItem.of(d));
+		Object[] unnamedParams = evaluateParams(context, current);
+		ReactiveResolvedParameters params = parameters.resolveNamed(context, current, Optional.empty(), this, sourceElement, sourcePath);
+//		Map<String,Operand> paramMap = parameters.resolveNamedOld(context, current, Optional.empty());
+		String datasource = params.paramString("resource");
+		String query = params.paramString("query");
+		Flowable<DataItem> flow = SQL.query(datasource, context.tenant, query, unnamedParams).map(d->DataItem.of(d));
 		for (ReactiveTransformer trans : transformers) {
 			flow = flow.compose(trans.execute(context));
 		}
@@ -57,6 +64,24 @@ public class SQLReactiveSource implements ReactiveSource {
 	@Override
 	public Type finalType() {
 		return finalType;
+	}
+
+	@Override
+	public Optional<List<String>> allowedParameters() {
+		return Optional.of(Arrays.asList(new String[]{"resource","query"}));
+	}
+
+	@Override
+	public Optional<List<String>> requiredParameters() {
+		return Optional.of(Arrays.asList(new String[]{"resource","query"}));
+	}
+
+	@Override
+	public Optional<Map<String, String>> parameterTypes() {
+		Map<String,String> r = new HashMap<>();
+		r.put("resource", Property.STRING_PROPERTY);
+		r.put("query", Property.STRING_PROPERTY);
+		return Optional.of(Collections.unmodifiableMap(r));
 	}
 
 }
