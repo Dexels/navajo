@@ -29,65 +29,56 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
 
     @Override
     public void updatePropertyDescriptions(Navajo in, Navajo out, Access access) {
-        try {
-            String locale = in.getHeader().getHeaderAttribute("locale");
-            if (locale==null) {
-                //return;
-                
-                
-                // TODO AFDF
-                in.getHeader().setHeaderAttribute("locale", "NL");
-            }
-            
-            ResourceBundle properties = cachedProperties.get(getCacheKey(in, access));
-            if (properties == null) {
-                try {
-                    properties = this.getResourceBundle(in, access);
-                } catch (IOException e) {
-                    logger.error("Exception getting resources", e);
-                    return;
-                }
-            }
-            if (properties == null) {
-                // no properties!
-                return;
-            }
-            
-            for (Message message : out.getAllMessages()) {
-                updateMessage(properties, message, access);
-            }
-        } catch (Throwable t) {
-            logger.error("Exception in handling property descriptions", t);
+        String locale = in.getHeader().getHeaderAttribute("locale");
+        if (locale==null) {
+            return;
         }
-        
+        for (Message message : out.getAllMessages()) {
+            updateMessage(in, message, access);
+        }
 
     }
 
-    private void updateMessage(ResourceBundle properties, Message m, Access access) {
+    private void updateMessage(Navajo in, Message m, Access access) {
         for (Message submsg : m.getAllMessages()) {
-            updateMessage(properties, submsg, access);
+            updateMessage(in, submsg, access);
         }
         for (Property prop : m.getAllProperties()) {
-            updateProperty(properties, prop, access);
+            updateProperty(in, prop, access);
         }
     }
 
-    public void updateProperty(ResourceBundle properties, Property property, Access access) {
-        if (properties.containsKey(getFqdnPropertyLookupKey(property, access.getRpcName()))) {
-            String entry = properties.getString(getFqdnPropertyLookupKey(property, access.getRpcName()));
-            if (entry != null) {
-                property.setDescription(entry);
+    public void updateProperty(Navajo in, Property property, Access access) {
+        ResourceBundle properties = cachedProperties.get(getCacheKey(in, access));
+        if (properties == null) {
+            try {
+                properties = this.getResourceBundle(in, access);
+            } catch (IOException e) {
+                logger.error("Exception getting resources", e);
                 return;
             }
+        }
+       
+        
+                
+        String entry = properties.getString(getFqdnPropertyLookupKey(property, access.getRpcName()));
+        if (entry != null) {
+            property.setDescription(entry);
+            return;
+        }
+        entry = properties.getString(getMessagePropertyLookupKey(property));
+        if (entry != null) {
+            property.setDescription(entry);
+            return;
         }
         
-        if (properties.containsKey(getPropertyLookupKey(property))) {
-            String entry = properties.getString(getPropertyLookupKey(property));
-            if (entry != null) {
-                property.setDescription(entry);
-                return;
-            }
+        entry = properties.getString(getPropertyLookupKey(property));
+        if (entry != null) {
+            property.setDescription(entry);
+            return;
         }
+
+
     }
 
 
@@ -108,11 +99,11 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
         String locale = in.getHeader().getHeaderAttribute("locale");
         String sublocale = in.getHeader().getHeaderAttribute("sublocale");
 
-        String props = resourceBundle.getResource(null, "description", access.getTenant(), sublocale, locale);
+        String props = resourceBundle.getResource(null, "properties", access.getTenant(), sublocale, locale);
         InputStream stream = new ByteArrayInputStream(props.getBytes(StandardCharsets.UTF_8));
         PropertyResourceBundle p = new PropertyResourceBundle(stream);
         cachedProperties.put(getCacheKey(in, access), p);
-        return p;
+        return null;
     }
 
     // A property can be reached by either the property name,
@@ -120,6 +111,10 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
     // webservice + message path + property name
     private String getPropertyLookupKey(Property property) {
         return property.getName();
+    }
+
+    private String getMessagePropertyLookupKey(Property property) {
+        return property.getFullPropertyName();
     }
 
     private String getFqdnPropertyLookupKey(Property property, String service) {
