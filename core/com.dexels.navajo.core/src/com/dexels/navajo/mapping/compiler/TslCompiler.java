@@ -155,11 +155,22 @@ public class TslCompiler {
 			str = "(String) userDefinedRules.get(\"" + str.substring(1) + "\")";
 			return str;
 		} else {
-			StringBuffer result = new StringBuffer(str.length());
+			StringBuilder result = new StringBuilder(str.length());
 			for (int i = 0; i < str.length(); i++) {
 				char c = str.charAt(i);
 				if (c == '"') {
-					result.append("\\\"");
+				    // Check if already escaped
+				    boolean escaped = false;
+				    if (i != 0) {
+                        if (str.charAt(i-1) == '\\') {
+                            escaped = true;
+                        }
+				    }
+				    if (escaped) {
+				        result.append(c); // No need to escape again
+				    } else {
+				        result.append("\\\"");
+				    }
 				} else if (c == '\n') {
 					result.append(' ');
 				} else if (c == '\r') {
