@@ -51,23 +51,18 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
         }
     }
 
-    public void updateProperty(Navajo in, Property element, Access a) {
+    public void updateProperty(Navajo in, Property property, Access access) {
         String locale = in.getHeader().getHeaderAttribute("locale");
         if (locale==null) {
             return;
             //locale = "NL";
         }
+        String sublocale = in.getHeader().getHeaderAttribute("sublocale");
         
+        Properties p = this.getProperties();
         
-     
-
-
-        update(Access a, element);
-    }
-
-    private void update(String service, Property property) {
-        resourceBundle.getResource(null, "properties", union, subunion, locale)
-        String entry = p.getProperty(getFqdnPropertyLookupKey(property, service));
+                
+        p.getProperty(getFqdnPropertyLookupKey(property, access.getRpcName()));
         if (entry != null) {
             property.setDescription(entry);
             return;
@@ -83,6 +78,19 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
             property.setDescription(entry);
             return;
         }
+
+
+    }
+
+
+    
+    private Properties getProperties() {
+        if (cachedProperties.get() ) {
+            
+        }
+        String entry = resourceBundle.getResource(null, "properties", access.getTenant(), sublocale, locale);
+
+        return null;
     }
 
     // A property can be reached by either the property name,
