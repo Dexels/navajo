@@ -436,7 +436,7 @@ public class TslCompiler {
 				// //System.out.println("op.value = " + v);
 				exact = true;
 				if (v instanceof String) {
-					call = "\"" + v + "\"";
+					call = replaceQuotes((String) v);
 				} else if (v instanceof Integer) {
 					call = "new Integer(" + v + ")";
 				} else if (v instanceof Long) {
@@ -601,7 +601,7 @@ public class TslCompiler {
 			result.append(optimizeExpresssion(ident, value, className,
 					objectName));
 		} else {
-			result.append(printIdent(ident) + "sValue = \"" + value + "\";\n");
+			result.append(printIdent(ident) + "sValue = " + replaceQuotes(value) + ";\n");
 		}
 
 		// Check dependencies.
