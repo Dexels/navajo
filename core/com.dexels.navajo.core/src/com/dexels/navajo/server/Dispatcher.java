@@ -1164,7 +1164,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 access.setFinished();
 
                 // Translate property descriptions.
-                updatePropertyDescriptions(inMessage, outMessage, access.getTenant());
+                updatePropertyDescriptions(inMessage, outMessage, access);
                 access.storeStatistics(h);
 
                 // Call Navajoresponse event.
@@ -1207,7 +1207,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         
     }
 
-    private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage, String tenant) {
+    private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage, Access access) {
 //        final DescriptionProviderInterface descriptionProvider = navajoConfig.getDescriptionProvider();
 //        if (descriptionProvider == null) {
 //            return;
@@ -1215,7 +1215,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         
         for (DescriptionProviderInterface dpi : desciptionProviders.values()) {
             try {
-                dpi.updatePropertyDescriptions(inMessage, outMessage,tenant);
+                dpi.updatePropertyDescriptions(inMessage, outMessage, access);
             } catch (NavajoException e) {
                 logger.error("Error updating descriptions in {}", dpi.getClass().getName(), e);
             }

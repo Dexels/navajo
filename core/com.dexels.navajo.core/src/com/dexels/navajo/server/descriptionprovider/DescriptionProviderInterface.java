@@ -3,10 +3,11 @@ package com.dexels.navajo.server.descriptionprovider;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.script.api.Access;
 
 public interface DescriptionProviderInterface {
 
-	public void updatePropertyDescriptions(Navajo in, Navajo out, String tenant) throws NavajoException;
+	public void updatePropertyDescriptions(Navajo in, Navajo out, Access access) throws NavajoException;
 //	public Message dumpCacheMessage(Navajo n) throws NavajoException;
 	public int getCacheSize();
 	public void flushCache();
