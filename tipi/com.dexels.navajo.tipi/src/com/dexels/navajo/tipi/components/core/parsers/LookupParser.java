@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.locale.LocaleListener;
 
 public class LookupParser extends BaseTipiParser {
 
@@ -24,10 +25,24 @@ public class LookupParser extends BaseTipiParser {
     private static final long serialVersionUID = 5584565910100210484L;
     private static Map<String, ResourceBundle> cache = new HashMap<>();
     private static ResourceBundle globalBundle = null;
+    private static TipiContext context;
+
+    public LookupParser() {
+        
+    }
+    public LookupParser(TipiContext context) {
+        LookupParser.context = context;
+        context.getApplicationInstance().addLocaleListener(new LocaleListener() {
+
+            @Override
+            public void localeChanged(TipiContext context, String language, String region) {
+                clearCache();
+            }
+        });
+    }
 
     @Override
     public Object parse(TipiComponent tc, String expression, TipiEvent event) {
-        TipiContext context = event.getContext();
         String loc = resolveInclude(context, getHomeDefinitionName(tc));
         loc = "texts" + File.separator + loc.substring(0, loc.indexOf(".xml"));
 
@@ -190,6 +205,11 @@ public class LookupParser extends BaseTipiParser {
             return new Vector<String>(data.keySet()).elements();
         }
 
+    }
+
+    public void clearCache() {
+        cache.clear();
+        globalBundle = null;
     }
 
 }
