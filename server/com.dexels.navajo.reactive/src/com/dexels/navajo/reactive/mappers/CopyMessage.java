@@ -14,13 +14,13 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
-import com.dexels.navajo.reactive.api.ReactiveReducer;
+import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class CopyMessage implements ReactiveReducer, ParameterValidator {
+public class CopyMessage implements ReactiveMerger, ParameterValidator {
 
 	public CopyMessage() {
 	}

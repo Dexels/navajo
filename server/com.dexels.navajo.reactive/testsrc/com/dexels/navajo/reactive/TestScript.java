@@ -19,6 +19,7 @@ import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
+import com.dexels.navajo.reactive.stored.InputStreamSourceFactory;
 import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
 import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
 import com.dexels.navajo.reactive.transformer.filestore.FileStoreTransformerFactory;
@@ -45,6 +46,7 @@ public class TestScript {
 		reactiveScriptParser = new ReactiveScriptParser();
 		reactiveScriptParser.addReactiveSourceFactory(new SQLReactiveSourceFactory(),"sql");
 		reactiveScriptParser.addReactiveSourceFactory(new SingleSourceFactory(),"single");
+		reactiveScriptParser.addReactiveSourceFactory(new InputStreamSourceFactory(),"inputstream");
 		reactiveScriptParser.addReactiveTransformerFactory(new CSVTransformerFactory(),"csv");
 		reactiveScriptParser.addReactiveTransformerFactory(new FileStoreTransformerFactory(),"filestore");
 		reactiveScriptParser.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"mergeSingle");

@@ -10,7 +10,7 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveMapper;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
-import com.dexels.navajo.reactive.api.ReactiveReducer;
+import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
@@ -25,7 +25,7 @@ public class SingleSourceFactory implements ReactiveSourceFactory {
 
 	@Override
 	public ReactiveSource build(String relativePath, String type, XMLElement x, ReactiveParameters params,
-			List<ReactiveTransformer> transformers, Type finalType, Function<String, ReactiveReducer> reducerSupplier,
+			List<ReactiveTransformer> transformers, Type finalType, Function<String, ReactiveMerger> reducerSupplier,
 			Function<String, ReactiveMapper> mapperSupplier
 			) {
 		XMLElement mapElement = x.getChildByTagName("map");

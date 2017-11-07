@@ -12,14 +12,14 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
-import com.dexels.navajo.reactive.api.ReactiveReducer;
+import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class SetSingle implements ReactiveReducer, ParameterValidator {
+public class SetSingle implements ReactiveMerger, ParameterValidator {
 
 	public SetSingle() {
 	}
@@ -33,7 +33,6 @@ public class SetSingle implements ReactiveReducer, ParameterValidator {
 			ReactiveResolvedParameters parms = r.resolveNamed(context, Optional.of(s), Optional.of(params.message()), this, xml, relativePath);
 			
 			for (Entry<String,Operand> elt : parms.resolveAllParams().entrySet()) {
-				System.err.println("<<<><<< "+elt.getKey());
 				s = s.with(elt.getKey(), elt.getValue().value, elt.getValue().type);
 			}
 			return DataItem.of(s);

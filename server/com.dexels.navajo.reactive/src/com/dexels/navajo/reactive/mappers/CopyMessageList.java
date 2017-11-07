@@ -14,14 +14,14 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
-import com.dexels.navajo.reactive.api.ReactiveReducer;
+import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class CopyMessageList implements ReactiveReducer, ParameterValidator {
+public class CopyMessageList implements ReactiveMerger, ParameterValidator {
 
 	public CopyMessageList() {
 		// TODO Auto-generated constructor stub

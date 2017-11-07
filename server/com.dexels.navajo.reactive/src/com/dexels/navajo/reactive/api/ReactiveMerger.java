@@ -7,6 +7,6 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public interface ReactiveReducer {
+public interface ReactiveMerger {
 	public Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>> execute(String relativePath, XMLElement xml);
 }

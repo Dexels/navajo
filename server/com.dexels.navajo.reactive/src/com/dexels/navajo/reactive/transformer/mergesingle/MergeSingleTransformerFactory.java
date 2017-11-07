@@ -10,7 +10,8 @@ import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveMapper;
-import com.dexels.navajo.reactive.api.ReactiveReducer;
+import com.dexels.navajo.reactive.api.ReactiveMerger;
+import com.dexels.navajo.reactive.api.ReactiveParseException;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
@@ -34,7 +35,7 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 	@Override
 	public ReactiveTransformer build(String relativePath, XMLElement xml, Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
-			Function<String, ReactiveReducer> reducerSupplier, Function<String, ReactiveMapper> mapperSupplier) {
+			Function<String, ReactiveMerger> reducerSupplier, Function<String, ReactiveMapper> mapperSupplier) {
 //		, Optional<Function<StreamScriptContext, BiFunction<ReplicationMessage, ReplicationMessage, ReplicationMessage>>> reducer) {
 		XMLElement reduceElement = xml.getChildByTagName("reducer");
 		XMLElement joinerElement = xml.getChildByTagName("joiner");
@@ -45,11 +46,9 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 		Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, joinerElement.getChildren(), reducerSupplier);
 		Optional<ReactiveSource> subSource;
 		try {
-			System.err.println("looking for sub source: "+xml);
 			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, sourceSupplier, factorySupplier,reducerSupplier, mapperSupplier);
 		} catch (Exception e) {
-			logger.error("Error: ", e);
-			subSource = Optional.empty();
+			throw new ReactiveParseException("Unable to parse sub source in xml: "+xml,e);
 		}
 		if(!subSource.isPresent()) {
 			throw new NullPointerException("Missing sub source in xml: "+xml);

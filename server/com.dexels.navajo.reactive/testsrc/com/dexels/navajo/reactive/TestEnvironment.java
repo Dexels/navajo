@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.navajo.document.Navajo;
@@ -17,11 +18,18 @@ import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
+import com.dexels.navajo.reactive.stored.InputStreamSourceFactory;
+import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
+import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
+import com.dexels.navajo.reactive.transformer.filestore.FileStoreTransformerFactory;
 import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
 import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
+import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
+import com.dexels.replication.impl.json.ReplicationJSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -37,56 +45,74 @@ public class TestEnvironment {
 	@Before
 	public void setup() {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
-		Expression.compileExpressions = true;
 		File root = new File("testscripts");
 		env = new ReactiveScriptEnvironment(root);
-		ReactiveScriptParser rsp = new ReactiveScriptParser();
-		rsp.addReactiveSourceFactory(new SingleSourceFactory(), "single");
-		rsp.addReactiveSourceFactory(new SQLReactiveSourceFactory(), "sql");
-		rsp.addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "stream");
-		rsp.addReactiveTransformerFactory(new SingleMessageTransformerFactory(), "single");
-		rsp.addReactiveTransformerFactory(new MergeSingleTransformerFactory(), "mergeSingle");
-		env.setReactiveScriptParser(rsp);
+		ReactiveScriptParser reactiveScriptParser = new ReactiveScriptParser();
+		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
+		Expression.compileExpressions = true;
+		reactiveScriptParser = new ReactiveScriptParser();
+		reactiveScriptParser.addReactiveSourceFactory(new SQLReactiveSourceFactory(),"sql");
+		reactiveScriptParser.addReactiveSourceFactory(new SingleSourceFactory(),"single");
+		reactiveScriptParser.addReactiveSourceFactory(new InputStreamSourceFactory(),"inputstream");
+		reactiveScriptParser.addReactiveTransformerFactory(new CSVTransformerFactory(),"csv");
+		reactiveScriptParser.addReactiveTransformerFactory(new FileStoreTransformerFactory(),"filestore");
+		reactiveScriptParser.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"mergeSingle");
+		reactiveScriptParser.addReactiveTransformerFactory(new CallTransformerFactory(),"call");
+		reactiveScriptParser.addReactiveTransformerFactory(new StreamMessageTransformerFactory(),"stream");
+		reactiveScriptParser.addReactiveTransformerFactory(new SingleMessageTransformerFactory(),"single");
+		env.setReactiveScriptParser(reactiveScriptParser);
 //		rsp.addReactiveSourceFactory("", settings);
 	}
 
 	@Test 
 	public void testEnv() throws IOException {
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("singlesimple.xml")) {
-			env.installScript("singlesimple", in,"serviceName");
-		}
-		env.run("singlesimple").execute(createContext("singlesimple"))
-			.map(di->di.event())
+		runScript("singlesimple")
 			.lift(StreamDocument.serialize())
 			.blockingForEach(e->System.err.print(new String(e)));
+
 
 	}
 
-	@Test 
+	@Test @Ignore
 	public void testSingleMerge() throws IOException {
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactive.xml")) {
-			env.installScript("singlemerge", in,"serviceName");
-		}
-		env.run("singlemerge").execute(createContext("singlemerge"))
-			.map(di->di.event())
+		runScript("reactive")
 			.lift(StreamDocument.serialize())
 			.blockingForEach(e->System.err.print(new String(e)));
-
 	}
 	
 	@Test 
 	public void testSqlDump() throws IOException {
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("sql.xml")) {
-			env.installScript("sql", in,"serviceName");
-		}
-		env.run("sql").execute(createContext("sql"))
-			.map(di->di.event())
+		runScript("sql")
 			.lift(StreamDocument.serialize())
 			.blockingForEach(e->System.err.print(new String(e)));
-
 	}
 
 
+	
+	@Test 
+	public void testInputStream() throws IOException {
+		runScript("inputstream")
+		.lift(StreamDocument.serialize())
+		.blockingForEach(e->System.err.print(new String(e)));
+	}
+
+	@Test 
+	public void testParseJSON() throws IOException {
+		InputStream is = getClass().getClassLoader().getResourceAsStream("person.json");
+		ReplicationMessage rm = ReplicationJSON.parseReplicationMessage(is, new ObjectMapper());
+		System.err.println(ReplicationFactory.getInstance().describe(rm));
+		
+	}
+
+	private Flowable<NavajoStreamEvent> runScript(String name) {
+		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream(name+".xml")) {
+				env.installScript(name, in,"serviceName");
+				return env.run(name).execute(createContext(name))
+						.map(di->di.event());
+		} catch (IOException e1) {
+			return Flowable.error(e1);
+		}
+	}
 	public StreamScriptContext createContext(String serviceName) {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
 		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);

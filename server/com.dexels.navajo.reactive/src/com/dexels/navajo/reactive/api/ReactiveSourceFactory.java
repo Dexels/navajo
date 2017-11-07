@@ -10,6 +10,6 @@ import io.reactivex.functions.Function;
 
 public interface ReactiveSourceFactory {
 	public ReactiveSource build(String relativePath, String type, XMLElement x, ReactiveParameters params, List<ReactiveTransformer> transformers, 
-			DataItem.Type finalType,Function<String, ReactiveReducer> reducerSupplier,Function<String, ReactiveMapper> mapperSupplier);
+			DataItem.Type finalType,Function<String, ReactiveMerger> reducerSupplier,Function<String, ReactiveMapper> mapperSupplier);
 	public Type sourceType();
 }

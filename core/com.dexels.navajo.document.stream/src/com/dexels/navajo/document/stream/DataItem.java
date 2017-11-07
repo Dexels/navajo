@@ -85,6 +85,9 @@ public class DataItem {
 	}
 
 	public List<ReplicationMessage> msgList() {
+		if(this.msgList==null) {
+			throw new NullPointerException("DataItem without msgList, can't request msgList of dataitem of type: "+this.type+" item: "+toString());
+		}
 		return msgList;
 	}
 

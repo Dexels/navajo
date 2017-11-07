@@ -10,7 +10,7 @@ public interface ReactiveTransformerFactory {
 			XMLElement xml,
 			Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
-			Function<String, ReactiveReducer> reducerSupplier,
+			Function<String, ReactiveMerger> reducerSupplier,
 			Function<String, ReactiveMapper> mapperSupplier
 			);
 }
