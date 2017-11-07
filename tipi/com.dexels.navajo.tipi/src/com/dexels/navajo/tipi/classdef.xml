@@ -230,9 +230,9 @@
 	</description>
    </tipi-parser>
    
-    <tipi-parser name="locale" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.LocaleParser">
+    <tipi-parser name="lookup" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.LookupParser">
     <description>
-       aaaap
+       Looks up string in properties file
     </description>
    </tipi-parser>
    
