@@ -43,19 +43,25 @@ public class LookupParser extends BaseTipiParser {
 
     @Override
     public Object parse(TipiComponent tc, String expression, TipiEvent event) {
-        String loc = resolveInclude(context, getHomeDefinitionName(tc));
-        loc = "texts" + File.separator + loc.substring(0, loc.indexOf(".xml"));
+        String homeDefName = getHomeDefinitionName(tc);
+        try {
+            String loc = resolveInclude(context, homeDefName);
+            loc = "texts" + File.separator + loc.substring(0, loc.indexOf(".xml"));
 
-        String result = lookupResourceBundle(context, loc, expression);
-        if (result != null)
-            return result;
+            String result = lookupResourceBundle(context, loc, expression);
+            if (result != null)
+                return result;
 
-        result = lookupGlobalResourceBundle(context, expression);
-        if (result != null)
-            return result;
+            result = lookupGlobalResourceBundle(context, expression);
+            if (result != null)
+                return result;
 
-        logger.warn("Missing translateion for {} in {}", expression, loc);
-        return null;
+        } catch (Throwable t) {
+            logger.error("Error performing lookup for {}", homeDefName, t);
+        }
+       
+        logger.warn("Missing translation for {} in {}", expression, homeDefName);
+        return "";
     }
 
     private String lookupGlobalResourceBundle(TipiContext context, String expression) {
