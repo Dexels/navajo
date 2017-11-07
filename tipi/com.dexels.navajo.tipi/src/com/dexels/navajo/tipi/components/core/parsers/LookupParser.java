@@ -77,12 +77,7 @@ public class LookupParser extends BaseTipiParser {
     private String lookupResourceBundle(TipiContext context, String loc, String expression) {
         ResourceBundle b = cache.get(loc);
         if (b == null) {
-            try {
-                b = getResourceBundle(context, loc);
-            } catch (IOException e) {
-                logger.error("Exception retrieving properties!");
-                return null;
-            }
+            b = getResourceBundle(context, loc);
             cache.put(loc, b);
         }
         if (b.containsKey(expression)) {
@@ -105,42 +100,53 @@ public class LookupParser extends BaseTipiParser {
         }
     }
 
-    private ResourceBundle getResourceBundle(TipiContext context, String baseLocation) throws IOException {
+    private ResourceBundle getResourceBundle(TipiContext context, String baseLocation) {
         String filename = baseLocation + PROPERTIES_EXTENSION;
         String localefilename = baseLocation + "_" + context.getApplicationInstance().getLocaleCode() + PROPERTIES_EXTENSION;
 
         TipiResourceBundle result = new TipiResourceBundle();
-
-        InputStream s = context.getGenericResourceStream(filename);
-        if (s != null) {
-            ResourceBundle defaultBundle = new PropertyResourceBundle(s);
-            s.close();
-            for (String key : defaultBundle.keySet()) {
-                result.put(key, defaultBundle.getObject(key));
-            }
+        try {
+            InputStream s = context.getGenericResourceStream(filename);
+            if (s != null) {
+                ResourceBundle defaultBundle = new PropertyResourceBundle(s);
+                s.close();
+                for (String key : defaultBundle.keySet()) {
+                    result.put(key, defaultBundle.getObject(key));
+                }
+            } 
+        } catch (IOException e) {
+            logger.debug("Exception retrieving properties for {}!", filename, e);
         }
-
-        s = context.getGenericResourceStream(localefilename);
-        if (s != null) {
-            ResourceBundle localeBundle = new PropertyResourceBundle(s);
-            s.close();
-            for (String key : localeBundle.keySet()) {
-                result.put(key, localeBundle.getObject(key));
+        
+        try {
+            InputStream s = context.getGenericResourceStream(localefilename);
+            if (s != null) {
+                ResourceBundle localeBundle = new PropertyResourceBundle(s);
+                s.close();
+                for (String key : localeBundle.keySet()) {
+                    result.put(key, localeBundle.getObject(key));
+                }
             }
-        }
-
+        } catch (IOException e) {
+            logger.debug("Exception retrieving properties for {}!", localefilename, e);
+        }  
+        
         if (context.getApplicationInstance().getSubLocaleCode() != null && !context.getApplicationInstance().getSubLocaleCode().isEmpty()) {
             String sublocalefilename = baseLocation + "_" + context.getApplicationInstance().getLocaleCode() + "_"
                     + context.getApplicationInstance().getSubLocaleCode().toLowerCase() + PROPERTIES_EXTENSION;
-
-            s = context.getGenericResourceStream(sublocalefilename);
-            if (s != null) {
-                ResourceBundle sublocaleBundle = new PropertyResourceBundle(s);
-                s.close();
-                for (String key : sublocaleBundle.keySet()) {
-                    result.put(key, sublocaleBundle.getObject(key));
+            try {
+                InputStream s = context.getGenericResourceStream(sublocalefilename);
+                if (s != null) {
+                    ResourceBundle sublocaleBundle = new PropertyResourceBundle(s);
+                    s.close();
+                    for (String key : sublocaleBundle.keySet()) {
+                        result.put(key, sublocaleBundle.getObject(key));
+                    }
                 }
-            }
+            } catch (IOException e) {
+                logger.debug("Exception retrieving properties for {}!", sublocalefilename, e);
+            } 
+            
         }
         return result;
     }
