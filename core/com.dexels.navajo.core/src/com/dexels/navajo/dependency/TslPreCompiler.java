@@ -441,13 +441,13 @@ public class TslPreCompiler {
         // Check if exists
         boolean isBroken = true;
         String navajoScriptFile = navajoScriptFilePartial + ".xml";
-        if (new File(navajoScriptFile).exists() && isExpression) {
+        if (new File(navajoScriptFile).exists() || isExpression) {
             isBroken = false;
         }
         if (isBroken) {
             // Try scala
             navajoScriptFile = navajoScriptFilePartial + ".scala";
-            if (new File(navajoScriptFile).exists() && isExpression) {
+            if (new File(navajoScriptFile).exists()) {
                 isBroken = false;
             }
         }
