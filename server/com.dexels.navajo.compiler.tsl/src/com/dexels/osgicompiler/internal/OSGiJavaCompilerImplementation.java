@@ -152,9 +152,7 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 				} catch (IOException e) {
 					logger.error("Compilation problem: ", e);
 				}
-
 			}
-
 		};
 		StringWriter swe = new StringWriter();
 		ArrayList<String> options = new ArrayList<String>();
