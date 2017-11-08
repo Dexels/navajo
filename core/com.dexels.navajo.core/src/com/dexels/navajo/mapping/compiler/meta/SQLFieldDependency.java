@@ -75,10 +75,14 @@ public class SQLFieldDependency extends AdapterFieldDependency {
 	}
 	
 	private Set<String> findTablesAndViews(String query) {
-		HashSet<String> sps = new HashSet<String>();
-
-		query = query.toLowerCase();
+		HashSet<String> sps = new HashSet<>();
+		query = query.toLowerCase().trim();
+		if (query.startsWith("{") || query.startsWith("[")) {
+            // not a SQL query most likely..
+		    return sps;
+        }
 		
+	
 		int [] from = findKeyword("from", query);
 		
 		while ( from[0] != -1 ) {
@@ -106,6 +110,7 @@ public class SQLFieldDependency extends AdapterFieldDependency {
 				qualifiedname = ( qualifiedname.indexOf(" ") != -1 ? qualifiedname.split(" ")[0] : qualifiedname );
 				qualifiedname = qualifiedname.replaceAll("\\(", "");
 				qualifiedname = qualifiedname.replaceAll("\\)", "");
+				qualifiedname = qualifiedname.replaceAll("\"", "\'");
 				qualifiedname = qualifiedname.trim();
 				if ( !qualifiedname.equals("select")) {
 					sps.add(qualifiedname);
