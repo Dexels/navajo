@@ -138,7 +138,7 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 					}
 
 				} else {
-					inraw = in;
+					inraw = con.getInputStream();
 				}
 			}
 			if (inraw != null) {
@@ -215,6 +215,7 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 		con.setRequestProperty("X-Navajo-Username", header.getRPCUser());
 		con.setRequestProperty("X-Navajo-Password", header.getRPCPassword());
 		con.setRequestProperty("X-Navajo-Service", header.getRPCName());
+		con.setRequestProperty("X-Navajo-Debug", "true");
 		for (String key : httpHeaders.keySet()) {
 			con.setRequestProperty(key, httpHeaders.get(key));
 		}
