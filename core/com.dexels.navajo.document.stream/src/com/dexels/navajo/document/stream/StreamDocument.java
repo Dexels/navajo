@@ -1078,9 +1078,15 @@ public class StreamDocument {
 					return f
 							.doOnNext(bb->System.err.println("Decompressing: "+encoding+" bytes: "+bytesToHex(bb)))
 							.lift(inflate2()).concatMap(e->e);
+				} else if("gzip".equals(encoding)) {
+					return f
+							.doOnNext(bb->System.err.println("Decompressing: "+encoding+" bytes: "+bytesToHex(bb)))
+							.lift(gunzip()).concatMap(e->e);
+					
+				} else {
+					return f;
 				}
 				// TODO gzip
-				return f;
 			}};
 	}
 	
@@ -1268,6 +1274,112 @@ public class StreamDocument {
 			}
 		};
 	}
+	
+	
+	public static FlowableOperator<Flowable<byte[]>, byte[]> gunzip() {
+		Inflater inflater = new Inflater(true);
+		return new BaseFlowableOperator<Flowable<byte[]>, byte[]>(10) {
+
+			@Override
+			public Subscriber<? super byte[]> apply(Subscriber<? super Flowable<byte[]>> child) throws Exception {
+				return new Subscriber<byte[]>(){
+
+					final int COMPRESSION_BUFFER_SIZE = 16384;
+					byte[] buffer = new byte[COMPRESSION_BUFFER_SIZE];
+
+					@Override
+					public void onComplete() {
+						inflater.finished();
+						Iterable<byte[]> output = new Iterable<byte[]>(){
+
+							@Override
+							public Iterator<byte[]> iterator() {
+								return new Iterator<byte[]>(){
+									int read;
+									boolean first = true;
+
+									@Override
+									public boolean hasNext() {
+										boolean needsInput = inflater.needsInput();
+										
+										try {
+											System.err.println("Needs input: "+needsInput);
+											read = inflater.inflate(buffer);
+											boolean hasMore = (first || needsInput) && read > 0;
+											first = false;
+											return hasMore;
+										} catch (DataFormatException e) {
+											e.printStackTrace();
+											child.onError(e);
+											return false;
+										}
+									}
+
+									@Override
+									public byte[] next() {
+										return Arrays.copyOfRange(buffer, 0, read);
+									}};
+							}};
+						queue.offer(Flowable.fromIterable(output));						
+						operatorComplete(child);
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						operatorError(t,child);
+						
+					}
+
+					@Override
+					public void onNext(byte[] data) {
+						inflater.setInput(data);
+						Iterable<byte[]> output = new Iterable<byte[]>(){
+
+								@Override
+								public Iterator<byte[]> iterator() {
+									return new Iterator<byte[]>(){
+										int read;
+										boolean first = true;
+
+										@Override
+										public boolean hasNext() {
+											boolean needsInput = inflater.needsInput();
+											
+											try {
+												read = inflater.inflate(buffer);
+												boolean hasMore = (first || needsInput) && read > 0;
+												first = false;
+												return hasMore;
+											} catch (DataFormatException e) {
+												e.printStackTrace();
+												child.onError(e);
+												return false;
+											}
+										}
+
+										@Override
+										public byte[] next() {
+											return Arrays.copyOfRange(buffer, 0, read);
+										}};
+								}};
+							queue.offer(Flowable.fromIterable(output));
+							drain(child);
+					}
+
+					@Override
+					public void onSubscribe(Subscription s) {
+						operatorSubscribe(s, child);
+						
+					}
+
+
+				};
+			}
+		};
+				
+	}
+	
+	
 	public static FlowableOperator<Flowable<byte[]>, byte[]> inflate2() {
 		Inflater inflater = new Inflater();
 		return new BaseFlowableOperator<Flowable<byte[]>, byte[]>(10) {

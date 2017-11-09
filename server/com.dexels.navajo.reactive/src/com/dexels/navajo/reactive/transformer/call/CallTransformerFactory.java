@@ -36,7 +36,7 @@ public class CallTransformerFactory implements ReactiveTransformerFactory, Param
 
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"messageName","isArray","service","parallel"}));
+		return Optional.of(Arrays.asList(new String[]{"messageName","isArray","service","parallel","debug"}));
 	}
 
 	@Override
@@ -51,6 +51,7 @@ public class CallTransformerFactory implements ReactiveTransformerFactory, Param
 		r.put("service", Property.STRING_PROPERTY);
 		r.put("parallel", Property.INTEGER_PROPERTY);
 		r.put("isArray", Property.BOOLEAN_PROPERTY);
+		r.put("debug", Property.BOOLEAN_PROPERTY);
 		return Optional.of(r);
 	}
 

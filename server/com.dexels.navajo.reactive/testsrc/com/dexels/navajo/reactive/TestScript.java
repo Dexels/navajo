@@ -59,6 +59,7 @@ public class TestScript {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
 		return createContext(serviceName, input,runner);
 	}
+	
 	public StreamScriptContext createContext(String serviceName,Navajo input, Optional<ReactiveScriptRunner> runner) {
 		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
 		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.of("username"), Optional.of("password"), Collections.emptyMap(), Optional.of(inStream),runner);

@@ -81,6 +81,13 @@ public class TestEnvironment {
 	}
 	
 	@Test 
+	public void testSingle() throws IOException {
+		runScript("single")
+			.lift(StreamDocument.serialize())
+			.blockingForEach(e->System.err.print(new String(e)));
+	}
+	
+	@Test 
 	public void testSqlDump() throws IOException {
 		runScript("sql")
 			.lift(StreamDocument.serialize())
@@ -95,6 +102,12 @@ public class TestEnvironment {
 		.lift(StreamDocument.serialize())
 		.blockingForEach(e->System.err.print(new String(e)));
 	}
+	
+	@Test 
+	public void testCSVStream() throws IOException {
+		runScriptBinary("csv")
+			.blockingForEach(e->System.err.print(new String(e)));
+	}
 
 	@Test 
 	public void testParseJSON() throws IOException {
@@ -107,12 +120,23 @@ public class TestEnvironment {
 	private Flowable<NavajoStreamEvent> runScript(String name) {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream(name+".xml")) {
 				env.installScript(name, in,"serviceName");
-				return env.run(name).execute(createContext(name))
+				return env.run(name,true).execute(createContext(name))
 						.map(di->di.event());
 		} catch (IOException e1) {
 			return Flowable.error(e1);
 		}
 	}
+	
+	private Flowable<byte[]> runScriptBinary(String name) {
+		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream(name+".xml")) {
+				env.installScript(name, in,"serviceName");
+				return env.run(name,true).execute(createContext(name))
+						.map(di->di.data());
+		} catch (IOException e1) {
+			return Flowable.error(e1);
+		}
+	}
+	
 	public StreamScriptContext createContext(String serviceName) {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
 		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);

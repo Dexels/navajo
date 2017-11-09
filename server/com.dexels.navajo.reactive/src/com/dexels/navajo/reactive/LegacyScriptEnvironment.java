@@ -50,12 +50,12 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 	
 
 	@Override
-	public ReactiveScript run(String service) {
+	public ReactiveScript run(String service, boolean debug) {
 		return new ReactiveScript() {
 			
 			@Override
 			public Flowable<DataItem> execute(StreamScriptContext context) {
-				return runLegacy(context.inputFlowable().compose(StreamDocument.inNavajo(service, context.username, context.password)), context).map(DataItem::of);			
+				return runLegacy(context.inputFlowable().compose(StreamDocument.inNavajo(service, context.username, context.password)), context,debug).map(DataItem::of);			
 				
 			}
 			
@@ -74,9 +74,16 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 
 
 	private Flowable<NavajoStreamEvent> runLegacy(Flowable<NavajoStreamEvent> eventStream,
-			StreamScriptContext context) {
+			StreamScriptContext context, boolean debug) {
 		return eventStream
 				.lift(StreamDocument.collectFlowable())
+				.doOnNext(nav->{
+					if(debug) {
+						logger.warn("======== DEBUG REQUEST============");
+						nav.write(System.err);
+						logger.warn("=== END OF DEBUG REQUEST============");
+					}
+				})
 				.flatMap(inputNav->executeLegacy(context, inputNav));
 	}
 	

@@ -92,6 +92,9 @@ public class ReactiveScriptParser {
 	}
 	
 	ReactiveScript parse(String serviceName, InputStream in, String relativePath) throws UnsupportedEncodingException, IOException {
+		if(in==null) {
+			throw new IOException("Missing service: "+serviceName+" identified by script: "+relativePath);
+		}
 		XMLElement x = new CaseSensitiveXMLElement();
 		x.parseFromStream(in);
 		List<ReactiveSource> r = parseRoot(x,relativePath);
