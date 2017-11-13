@@ -69,6 +69,7 @@ public class NavajoDomStreamer {
 		for (Message message : all) {
 			emitMessage(message,result,output);
 		}
+		result.stream().map(e->e.type()).forEach(e->System.err.println("e: "+e.name()));
 		result.add(done(navajo.getAllMethods().stream().map(e->new Method(e.getName())).collect(Collectors.toList())));
 //		subscribe.onNext(done());
 //		subscribe.onCompleted();

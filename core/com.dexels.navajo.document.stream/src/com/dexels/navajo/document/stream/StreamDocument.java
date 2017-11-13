@@ -3,6 +3,7 @@ package com.dexels.navajo.document.stream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
@@ -19,8 +20,10 @@ import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+import java.util.zip.CRC32;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 
 import org.reactivestreams.Publisher;
@@ -1107,13 +1110,17 @@ public class StreamDocument {
 			@Override
 			public Publisher<byte[]> apply(Flowable<byte[]> f) {
 				if(!encodingDefinition.isPresent()) {
+					logger.info("Not compressing response: No encoding header found");
 					return f;
 				}
 				String encoding = encodingDefinition.get();
+				logger.info("Compressing response: Encoding header: "+encoding);
 				if("jzlib".equals(encoding) || "deflate".equals(encoding) || "inflate".equals(encoding)) {
 					return f.lift(deflate2()).concatMap(e->e);
 				}
-				// TODO gzip
+				if("gzip".equals(encoding)) {
+					return f.lift(gzip()).concatMap(e->e);
+				}				// TODO gzip
 				return f;
 			}};
 	}
@@ -1189,7 +1196,52 @@ public class StreamDocument {
 //		};
 //	}
 
+	public static FlowableOperator<Flowable<byte[]>, byte[]> gzip() {
+		return genericCompress("gzip");
+	}
+
+	
 	public static FlowableOperator<Flowable<byte[]>, byte[]> deflate2() {
+		return genericCompress("deflate");
+	}
+
+    private static byte[] writeHeader()  {
+        final String filename = null; // parameters.getFilename();
+        final String comment = null; // parameters.getComment();
+        final int FNAME = 1 << 3;
+
+        /** Header flag indicating a comment follows the header */
+        final int FCOMMENT = 1 << 4;
+        
+        final ByteBuffer buffer = ByteBuffer.allocate(10);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        buffer.putShort((short) GZIPInputStream.GZIP_MAGIC);
+        buffer.put((byte) Deflater.DEFLATED); // compression method (8: deflate)
+        buffer.put((byte) ((filename != null ? FNAME : 0) | (comment != null ? FCOMMENT : 0))); // flags
+        buffer.putInt((int) (System.currentTimeMillis() / 1000));
+        
+        // extra flags
+//        final int compressionLevel = Deflater.DEFAULT_COMPRESSION;
+//        
+        buffer.put((byte)255);
+        
+        return buffer.array();
+        
+    }
+
+    private static byte[] writeTrailer(int crcValue, int totalIn) {
+        final ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        buffer.putInt(crcValue);
+        buffer.putInt(totalIn);
+        return buffer.array();
+    }
+	public static FlowableOperator<Flowable<byte[]>, byte[]> genericCompress(String type) {
+		Deflater deflater = type.equals("gzip") ? new Deflater(Deflater.DEFAULT_COMPRESSION, true) : new Deflater();
+		final CRC32 crc = new CRC32();
+		if(type.equals("gzip")) {
+			deflater.setInput(writeHeader());
+		}
 		return new BaseFlowableOperator<Flowable<byte[]>, byte[]>(10) {
 
 			@Override
@@ -1197,14 +1249,16 @@ public class StreamDocument {
 				
 				
 				return new Subscriber<byte[]>() {
-					Deflater deflater = new Deflater();
 					final int COMPRESSION_BUFFER_SIZE = 16384;
 
 					@Override
 					public void onComplete() {
+						byte[] suffix = writeTrailer((int) crc.getValue(), deflater.getTotalIn());
+
 						deflater.finish();
+						
 						byte[] buffer = new byte[COMPRESSION_BUFFER_SIZE];
-						queue.offer(Flowable.fromIterable(new Iterable<byte[]>(){
+						Flowable<byte[]> flowable = Flowable.fromIterable(new Iterable<byte[]>(){
 
 								@Override
 								public Iterator<byte[]> iterator() {				
@@ -1226,7 +1280,12 @@ public class StreamDocument {
 										}
 									};
 								}
-						}));
+						});
+						if("gzip".equals(type)) {
+							queue.offer(flowable.concatWith(Flowable.just(suffix)));
+						} else {
+							queue.offer(flowable);
+						}
 						operatorComplete(child);
 					}
 
@@ -1238,6 +1297,7 @@ public class StreamDocument {
 					@Override
 					public void onNext(byte[] dataIn) {
 						deflater.setInput(dataIn);
+						crc.update(dataIn);
 						byte[] buffer = new byte[COMPRESSION_BUFFER_SIZE];
 						operatorNext(dataIn, data->{
 							return Flowable.fromIterable(new Iterable<byte[]>(){
@@ -1269,6 +1329,9 @@ public class StreamDocument {
 					@Override
 					public void onSubscribe(Subscription s) {
 						operatorSubscribe(s, child);
+						if("gzip".equals(type)) {
+							offer(Flowable.just(writeHeader()));
+						}
 					}
 				};
 			}
@@ -1332,6 +1395,7 @@ public class StreamDocument {
 
 					@Override
 					public void onNext(byte[] data) {
+						System.err.println("# of data: "+data.length);
 						inflater.setInput(data);
 						Iterable<byte[]> output = new Iterable<byte[]>(){
 
