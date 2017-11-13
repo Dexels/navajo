@@ -229,6 +229,14 @@
 		(This could be implemented easily, if necessary)
 	</description>
    </tipi-parser>
+   
+    <tipi-parser name="lookup" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.LookupParser">
+    <description>
+       Looks up string in properties file
+    </description>
+   </tipi-parser>
+   
+   
    <tipi-parser name="attributeref" type="com.dexels.navajo.tipi.internal.AttributeRef" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeRefParser">
 	<description>
 		Reference an attribute of a certain component.

@@ -59,6 +59,7 @@ import com.dexels.navajo.tipi.components.core.ThreadActivityListener;
 import com.dexels.navajo.tipi.components.core.TipiSupportOverlayPane;
 import com.dexels.navajo.tipi.components.core.TipiThread;
 import com.dexels.navajo.tipi.components.core.TipiThreadPool;
+import com.dexels.navajo.tipi.components.core.parsers.LookupParser;
 import com.dexels.navajo.tipi.connectors.HttpNavajoConnector;
 import com.dexels.navajo.tipi.connectors.TipiConnector;
 import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
@@ -223,6 +224,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
     private transient ScriptEngineManager scriptManager;
     
+    private LookupParser parser; 
     
 
     public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
@@ -324,6 +326,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         eHandler = new BaseTipiErrorHandler();
         eHandler.setContext(this);
         
+        parser = new LookupParser(this); // Register as locale changed listener
         
         MDC.put("sessionToken", SessionTokenFactory.getSessionTokenProvider().getSessionToken());
         if (systemPropertyMap.get("DTAP") != null) {
@@ -566,6 +569,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         }
         navajoCacheMap = new HashMap<String, CachedNavajo>();
         
+        // Clear cached locales
+        parser.clearCache();
         resetErrorHandler();
     }
 

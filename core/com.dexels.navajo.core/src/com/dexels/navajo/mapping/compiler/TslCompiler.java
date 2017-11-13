@@ -149,27 +149,42 @@ public class TslCompiler {
 		return this.navajoIOConfig;
 	}
 
+	
+	private String replaceQuotesValue(String str) {
+	    StringBuilder result = new StringBuilder(str.length());
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (c == '"') {
+                // Check if already escaped
+                boolean escaped = false;
+                if (i != 0) {
+                    if (str.charAt(i-1) == '\\') {
+                        escaped = true;
+                    }
+                }
+                if (escaped) {
+                    result.append(c); // No need to escape again
+                } else {
+                    result.append("\\\"");
+                }
+            } else if (c == '\n') {
+                result.append(' ');
+            } else if (c == '\r') {
+                result.append(' ');
+            } else {
+                result.append(c);
+            }
+        }
+        return "\"" + result.toString() + "\"";
+	}
+	
 	private String replaceQuotes(String str) {
-
 		if (str.length() > 0 && str.charAt(0) == '#') {
 			str = "(String) userDefinedRules.get(\"" + str.substring(1) + "\")";
 			return str;
-		} else {
-			StringBuffer result = new StringBuffer(str.length());
-			for (int i = 0; i < str.length(); i++) {
-				char c = str.charAt(i);
-				if (c == '"') {
-					result.append("\\\"");
-				} else if (c == '\n') {
-					result.append(' ');
-				} else if (c == '\r') {
-					result.append(' ');
-				} else {
-					result.append(c);
-				}
-			}
-			return "\"" + result.toString() + "\"";
 		}
+		return replaceQuotesValue(str);
+		
 	}
 
 	private String removeNewLines(String str) {
@@ -436,7 +451,7 @@ public class TslCompiler {
 				// //System.out.println("op.value = " + v);
 				exact = true;
 				if (v instanceof String) {
-					call = "\"" + v + "\"";
+					call = replaceQuotesValue((String) v);
 				} else if (v instanceof Integer) {
 					call = "new Integer(" + v + ")";
 				} else if (v instanceof Long) {
@@ -601,7 +616,7 @@ public class TslCompiler {
 			result.append(optimizeExpresssion(ident, value, className,
 					objectName));
 		} else {
-			result.append(printIdent(ident) + "sValue = \"" + value + "\";\n");
+			result.append(printIdent(ident) + "sValue = " + replaceQuotesValue(value) + ";\n");
 		}
 
 		// Check dependencies.

@@ -23,11 +23,11 @@ import scala.tools.nsc.reporters.ConsoleReporter;
 import scala.tools.reflect.ReflectGlobal;
 
 public class ScalaCompiler extends ScriptCompiler {
-	private static final String SCRIPT_PATH = "scala";
-    private static String SCRIPT_EXTENSION = ".scala";
+	private static final String SCRIPT_PATH = "scripts";
+    private static String SCRIPTEXTENSION = ".scala";
     private ClassLoader navajoScriptClassLoader;
     
-    Set<String> whitelist = new HashSet<String>();
+    Set<String> whitelist = new HashSet<>();
     
     String[] standardPackages = new String[] {"com.dexels.navajo.document", "com.dexels.navajo.document.types",
             "com.dexels.navajo.script.api", "com.dexels.navajo.server", "com.dexels.navajo.mapping",
@@ -92,7 +92,7 @@ public class ScalaCompiler extends ScriptCompiler {
         ReflectGlobal g = new ReflectGlobal(settings, reporter, prc);
         Global.Run compiler = g.new Run();
         
-        ListBuffer<String> files = new ListBuffer<String>();
+        ListBuffer<String> files = new ListBuffer<>();
         String file = scriptFile.getAbsolutePath();
 
         files.$plus$eq(file);
@@ -115,7 +115,7 @@ public class ScalaCompiler extends ScriptCompiler {
 
     @Override
     public String getScriptExtension() {
-        return SCRIPT_EXTENSION;
+        return SCRIPTEXTENSION;
     }
 
     public void setNavajoConfig(NavajoIOConfig config) {

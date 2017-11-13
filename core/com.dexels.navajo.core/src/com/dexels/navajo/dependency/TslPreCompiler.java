@@ -31,7 +31,7 @@ import com.dexels.navajo.server.InputStreamReader;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class TslPreCompiler {
-    private final static Logger logger = LoggerFactory.getLogger(TslPreCompiler.class);
+    private static final  Logger logger = LoggerFactory.getLogger(TslPreCompiler.class);
     private NavajoIOConfig navajoIOConfig = null;
     private final InputStreamReader inputStreamReader = new FileInputStreamReader();
 
@@ -75,9 +75,7 @@ public class TslPreCompiler {
         	
         }
         
-        
 
-       
         getAllDependencies(script.getAbsolutePath(), scriptTenant, scriptFolder, deps, tslDoc);
     }
 
@@ -437,13 +435,21 @@ public class TslPreCompiler {
                 return;
             }
         }
-
-        String navajoScriptFile = scriptFolder + File.separator + cleanScript + ".xml";
+        
+        String navajoScriptFilePartial = scriptFolder + File.separator + cleanScript;
 
         // Check if exists
-        boolean isBroken = false;
-        if (!new File(navajoScriptFile).exists() && !isExpression) {
-            isBroken = true;
+        boolean isBroken = true;
+        String navajoScriptFile = navajoScriptFilePartial + ".xml";
+        if (new File(navajoScriptFile).exists() || isExpression) {
+            isBroken = false;
+        }
+        if (isBroken) {
+            // Try scala
+            navajoScriptFile = navajoScriptFilePartial + ".scala";
+            if (new File(navajoScriptFile).exists()) {
+                isBroken = false;
+            }
         }
 
         deps.add(new Dependency(scriptFile, navajoScriptFile, type, linenr, isBroken));

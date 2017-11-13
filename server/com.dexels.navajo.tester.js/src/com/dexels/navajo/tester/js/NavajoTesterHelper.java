@@ -21,7 +21,7 @@ import com.dexels.navajo.tester.js.model.NavajoFileSystemScript;
 public class NavajoTesterHelper {
     private static final List<String> SUPPORTED_EXTENSIONS = Arrays.asList(".xml", ".scala");
 
-    private final static Logger logger = LoggerFactory.getLogger(NavajoTesterHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(NavajoTesterHelper.class);
     private NavajoConfigInterface navajoConfig;
     
     public void setNavajoConfig(NavajoConfigInterface nci) {
@@ -53,11 +53,6 @@ public class NavajoTesterHelper {
         File scriptsPath = new File(navajoConfig.getScriptPath());
         NavajoFileSystemFolder result = new NavajoFileSystemFolder(scriptsPath);
         addContentsTo(result);
-        
-        NavajoFileSystemFolder scalaDir = new NavajoFileSystemFolder(new File(navajoConfig.getRootPath(), "scala"));
-        addContentsTo(scalaDir);
-        result.addEntry(scalaDir);
-
         return result;
     }
     

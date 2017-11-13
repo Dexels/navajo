@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.navajo.client.ClientException;
