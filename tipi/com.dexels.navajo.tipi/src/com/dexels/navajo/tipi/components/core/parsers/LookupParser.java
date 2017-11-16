@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -46,7 +45,7 @@ public class LookupParser extends BaseTipiParser {
         String homeDefName = getHomeDefinitionName(tc);
         try {
             String loc = resolveInclude(context, homeDefName);
-            loc = "texts" + File.separator + loc.substring(0, loc.indexOf(".xml"));
+            loc = "texts/" + loc.substring(0, loc.indexOf(".xml"));
 
             String result = lookupResourceBundle(context, loc, expression);
             if (result != null)
@@ -157,8 +156,8 @@ public class LookupParser extends BaseTipiParser {
         }
         TipiResourceBundle result = new TipiResourceBundle();
 
-        String filename = "texts" + File.separator + "main" + PROPERTIES_EXTENSION;
-        String localefilename = "texts" + File.separator + "main_" + context.getApplicationInstance().getLocaleCode()
+        String filename = "texts/main" + PROPERTIES_EXTENSION;
+        String localefilename = "texts/main_" + context.getApplicationInstance().getLocaleCode()
                 + PROPERTIES_EXTENSION;
 
         try {
@@ -182,7 +181,7 @@ public class LookupParser extends BaseTipiParser {
 
             if (context.getApplicationInstance().getSubLocaleCode() != null
                     && !context.getApplicationInstance().getSubLocaleCode().isEmpty()) {
-                String sublocalefilename = "texts" + File.separator + "main_" + context.getApplicationInstance().getLocaleCode() + "_"
+                String sublocalefilename = "texts/main_" + context.getApplicationInstance().getLocaleCode() + "_"
                         + context.getApplicationInstance().getSubLocaleCode().toLowerCase() + PROPERTIES_EXTENSION;
                 s = context.getGenericResourceStream(sublocalefilename);
                 if (s != null) {
