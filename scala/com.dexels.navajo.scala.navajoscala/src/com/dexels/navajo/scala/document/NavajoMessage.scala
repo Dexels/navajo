@@ -3,6 +3,8 @@ package com.dexels.navajo.scala.document
 import com.dexels.navajo.document.Message
 import com.dexels.navajo.document.Property
 import java.util.Date
+import collection.JavaConverters._
+
 
 class NavajoMessage(val parent: Message) {
 
@@ -82,6 +84,12 @@ class NavajoMessage(val parent: Message) {
         matchCondition(outer, inner)
       }
     }
+  }
+  
+  def sort(sort: (NavajoMessage, NavajoMessage) => Boolean)(f: NavajoMessage => Unit) {
+    parent.getElements.asScala
+      .sortWith((a, b) => sort(new NavajoMessage(a), new NavajoMessage(b)))
+      .foreach(m => f(new NavajoMessage(m)))
   }
 
   def one(f: NavajoMessage => Unit) = {
