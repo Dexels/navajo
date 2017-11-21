@@ -94,7 +94,8 @@ class NavajoMessage(val parent: Message) {
   }
   
     // Sort the messages
-  def sort(orderBy:String, msg1 : NavajoMessage, msg2: NavajoMessage)(f: NavajoMessage => Unit) : Unit = {
+  def sort(orderBy:String)(f: NavajoMessage => Unit) : Unit = {
+    
     this.sort((msg1, msg2) => {
        var result : Boolean = true
        val st = new StringTokenizer(orderBy, ",")
@@ -112,7 +113,6 @@ class NavajoMessage(val parent: Message) {
           val myResult = if (asc) prop1.get.compareTo(prop2) < 1 else  prop1.get.compareTo(prop2) > -1
           result = result && myResult
         }
-        
       }
       result
     })(f)
