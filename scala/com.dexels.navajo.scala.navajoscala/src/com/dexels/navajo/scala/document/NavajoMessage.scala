@@ -4,6 +4,7 @@ import com.dexels.navajo.document.Message
 import com.dexels.navajo.document.Property
 import java.util.Date
 import collection.JavaConverters._
+import java.util.StringTokenizer
 
 
 class NavajoMessage(val parent: Message) {
@@ -86,11 +87,37 @@ class NavajoMessage(val parent: Message) {
     }
   }
   
-  def sort(sort: (NavajoMessage, NavajoMessage) => Boolean)(f: NavajoMessage => Unit) {
+  def sort(sort: (NavajoMessage, NavajoMessage) => Boolean)(f: NavajoMessage => Unit) : Unit = {
     parent.getElements.asScala
       .sortWith((a, b) => sort(new NavajoMessage(a), new NavajoMessage(b)))
       .foreach(m => f(new NavajoMessage(m)))
   }
+  
+    // Sort the messages
+  def sort(orderBy:String, msg1 : NavajoMessage, msg2: NavajoMessage)(f: NavajoMessage => Unit) : Unit = {
+    this.sort((msg1, msg2) => {
+       var result : Boolean = true
+       val st = new StringTokenizer(orderBy, ",")
+       while (st.hasMoreElements()) {
+        var elem = st.nextToken();
+        var asc = true;
+        if (elem.contains(" ")) {
+          val splitted = elem.split(" ")
+          elem = splitted(0)
+          asc = !splitted(1).equals("DESC")
+        }
+        val prop1 = msg1.property(elem)
+        val prop2 = msg2.property(elem).getOrElse(null)
+        if (prop1.isDefined) {
+          val myResult = if (asc) prop1.get.compareTo(prop2) < 1 else  prop1.get.compareTo(prop2) > -1
+          result = result && myResult
+        }
+        
+      }
+      result
+    })(f)
+  }
+  
 
   def one(f: NavajoMessage => Unit) = {
     f(this)
