@@ -99,7 +99,7 @@ class NavajoMessage(val parent: Message) {
     this.sort((msg1, msg2) => {
        var result : Boolean = true
        val st = new StringTokenizer(orderBy, ",")
-       while (st.hasMoreElements()) {
+       while (st.hasMoreElements() && result) {
         var elem = st.nextToken();
         var asc = true;
         if (elem.contains(" ")) {
@@ -110,7 +110,7 @@ class NavajoMessage(val parent: Message) {
         val prop1 = msg1.property(elem)
         val prop2 = msg2.property(elem).getOrElse(null)
         if (prop1.isDefined) {
-          val myResult = if (asc) prop1.get.compareTo(prop2) < 1 else  prop1.get.compareTo(prop2) > -1
+          val myResult = if (asc) prop1.get.compareTo(prop2) < 0 else  prop1.get.compareTo(prop2) > 0
           result = result && myResult
         }
       }
