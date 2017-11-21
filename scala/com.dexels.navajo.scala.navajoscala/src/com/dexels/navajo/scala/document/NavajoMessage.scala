@@ -13,11 +13,11 @@ class NavajoMessage(val parent: Message) {
     new NavajoDocument(parent.getRootDoc())
   }
   def message(name: String): NavajoMessage = {
-    return new NavajoMessage(parent.getMessage(name));
+    new NavajoMessage(parent.getMessage(name));
   }
 
   def message(index: Int): NavajoMessage = {
-    return new NavajoMessage(parent.getMessage(index));
+    new NavajoMessage(parent.getMessage(index));
   }
 
   def name: String = {
@@ -26,7 +26,7 @@ class NavajoMessage(val parent: Message) {
 
   def name(n: String): NavajoMessage = {
     parent.setName(n)
-    return this
+    this
   }
 
   def addMessage(name: String): NavajoMessage = {
@@ -91,6 +91,13 @@ class NavajoMessage(val parent: Message) {
     parent.getElements.asScala
       .sortWith((a, b) => sort(new NavajoMessage(a), new NavajoMessage(b)))
       .foreach(m => f(new NavajoMessage(m)))
+  }
+  
+  def filter(f: NavajoMessage => Boolean) = {
+    parent.getElements.forEach(m => if (!f(new NavajoMessage(m))) {
+      parent.removeMessage(m)
+    })
+    this
   }
   
     // Sort the messages
