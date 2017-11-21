@@ -98,7 +98,6 @@ class NavajoMessage(val parent: Message) {
   
   
   /* Property methods */
-  
   def getString(key : String) : Option[String] = {
     val prop = parent.getProperty(key)
     if (prop != null && prop.getValue != null) {
@@ -241,17 +240,19 @@ class NavajoMessage(val parent: Message) {
     }
     this
   }
+  
+  def nrChildren : Integer = parent.getAllMessages.size()
 
-//  def property(name: String): NavajoProperty = {
-//
-//    val prop = parent.getProperty(name)
-//    if (prop == null) {
-//      parent.write(System.err)
-//      //throw new NullPointerException("No property found: " + name);
-//      return null
-//    }
-//    new NavajoProperty(prop)
-//  }
+  def property(name: String): Option[NavajoProperty] = {
+
+    val prop = parent.getProperty(name)
+    if (prop == null) {
+      None
+    } else {
+      Some(new NavajoProperty(prop))
+    }
+  }
+  
 //
 //  def propertyValue(name: String): Any = {
 //    val p = property(name)
@@ -262,15 +263,4 @@ class NavajoMessage(val parent: Message) {
 //  }
 
 
-
-//  def addProperty(name: String): NavajoProperty = {
-//    val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), name, Property.STRING_PROPERTY, null, 0, null, Property.DIR_IN)
-//    parent.addProperty(p)
-//    return new NavajoProperty(p)
-//  }
-
-//  def addProperty(p: NavajoProperty): NavajoProperty = {
-//    parent.addProperty(p.parent)
-//    return p;
-//  }
 }
