@@ -11,10 +11,7 @@ import java.util.function.Function;
 import javax.sql.DataSource;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapters.stream.SQL;
 import com.dexels.navajo.document.Message;
@@ -36,9 +33,7 @@ import io.reactivex.schedulers.Schedulers;
 public class TestSQL {
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(TestSQL.class);
-
-	private final Map<String,BiFunction<Message, Message, Message>> reduceFunctions = new HashMap<>();
+//	private final Map<String,BiFunction<Message, Message, Message>> reduceFunctions = new HashMap<>();
 	
 	@Before
 	public void setup() {

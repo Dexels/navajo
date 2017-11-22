@@ -17,6 +17,7 @@ import com.bbn.openmap.layer.shape.ESRIPoly.ESRIFloatPoly;
 import com.bbn.openmap.layer.shape.ESRIPolygonRecord;
 import com.bbn.openmap.layer.shape.ESRIRecord;
 import com.bbn.openmap.layer.shape.ShapeFile;
+import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -34,9 +35,10 @@ public class RDShapeImport {
 		try {
 			NavajoClientFactory.resetClient();
 			NavajoClientFactory.createClient();
-			NavajoClientFactory.getClient().setServerUrl("penelope1.dexels.com/sportlink/test/knvb/Postman");
-			NavajoClientFactory.getClient().setUsername("ROOT");
-			NavajoClientFactory.getClient().setPassword("R20T");
+
+			NavajoClientFactory.getClient().setServerUrls(new String[] {TestConfig.NAVAJO_TEST_SERVER.getValue()});
+			NavajoClientFactory.getClient().setUsername(TestConfig.NAVAJO_TEST_USER.getValue());
+			NavajoClientFactory.getClient().setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
 			
 			File shapeFile = new File(prefix + ".shp");
 			db = new DbfFile(new BinaryFile(new File(prefix + ".dbf")));
