@@ -3,6 +3,9 @@ package com.dexels.navajo.scala.document
 import com.dexels.navajo.document.Message
 import com.dexels.navajo.document.Property
 import java.util.Date
+import collection.JavaConverters._
+import java.util.StringTokenizer
+
 
 class NavajoMessage(val parent: Message) {
 
@@ -10,11 +13,11 @@ class NavajoMessage(val parent: Message) {
     new NavajoDocument(parent.getRootDoc())
   }
   def message(name: String): NavajoMessage = {
-    return new NavajoMessage(parent.getMessage(name));
+    new NavajoMessage(parent.getMessage(name));
   }
 
   def message(index: Int): NavajoMessage = {
-    return new NavajoMessage(parent.getMessage(index));
+    new NavajoMessage(parent.getMessage(index));
   }
 
   def name: String = {
@@ -23,7 +26,7 @@ class NavajoMessage(val parent: Message) {
 
   def name(n: String): NavajoMessage = {
     parent.setName(n)
-    return this
+    this
   }
 
   def addMessage(name: String): NavajoMessage = {
@@ -83,6 +86,45 @@ class NavajoMessage(val parent: Message) {
       }
     }
   }
+  
+  def sort(sort: (NavajoMessage, NavajoMessage) => Boolean)(f: NavajoMessage => Unit) : Unit = {
+    parent.getElements.asScala
+      .sortWith((a, b) => sort(new NavajoMessage(a), new NavajoMessage(b)))
+      .foreach(m => f(new NavajoMessage(m)))
+  }
+  
+  def filter(f: NavajoMessage => Boolean) = {
+    parent.getElements.forEach(m => if (!f(new NavajoMessage(m))) {
+      parent.removeMessage(m)
+    })
+    this
+  }
+  
+    // Sort the messages
+  def sort(orderBy:String)(f: NavajoMessage => Unit) : Unit = {
+    
+    this.sort((msg1, msg2) => {
+       var result : Boolean = true
+       val st = new StringTokenizer(orderBy, ",")
+       while (st.hasMoreElements() && result) {
+        var elem = st.nextToken();
+        var asc = true;
+        if (elem.contains(" ")) {
+          val splitted = elem.split(" ")
+          elem = splitted(0)
+          asc = !splitted(1).equals("DESC")
+        }
+        val prop1 = msg1.property(elem)
+        val prop2 = msg2.property(elem).getOrElse(null)
+        if (prop1.isDefined) {
+          val myResult = if (asc) prop1.get.compareTo(prop2) < 0 else  prop1.get.compareTo(prop2) > 0
+          result = result && myResult
+        }
+      }
+      result
+    })(f)
+  }
+  
 
   def one(f: NavajoMessage => Unit) = {
     f(this)
@@ -90,7 +132,6 @@ class NavajoMessage(val parent: Message) {
   
   
   /* Property methods */
-  
   def getString(key : String) : Option[String] = {
     val prop = parent.getProperty(key)
     if (prop != null && prop.getValue != null) {
@@ -233,17 +274,19 @@ class NavajoMessage(val parent: Message) {
     }
     this
   }
+  
+  def nrChildren : Integer = parent.getAllMessages.size()
 
-//  def property(name: String): NavajoProperty = {
-//
-//    val prop = parent.getProperty(name)
-//    if (prop == null) {
-//      parent.write(System.err)
-//      //throw new NullPointerException("No property found: " + name);
-//      return null
-//    }
-//    new NavajoProperty(prop)
-//  }
+  def property(name: String): Option[NavajoProperty] = {
+
+    val prop = parent.getProperty(name)
+    if (prop == null) {
+      None
+    } else {
+      Some(new NavajoProperty(prop))
+    }
+  }
+  
 //
 //  def propertyValue(name: String): Any = {
 //    val p = property(name)
@@ -254,15 +297,4 @@ class NavajoMessage(val parent: Message) {
 //  }
 
 
-
-//  def addProperty(name: String): NavajoProperty = {
-//    val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), name, Property.STRING_PROPERTY, null, 0, null, Property.DIR_IN)
-//    parent.addProperty(p)
-//    return new NavajoProperty(p)
-//  }
-
-//  def addProperty(p: NavajoProperty): NavajoProperty = {
-//    parent.addProperty(p.parent)
-//    return p;
-//  }
 }

@@ -2,7 +2,7 @@ package com.dexels.navajo.scala.document
 
 import com.dexels.navajo.document.Property
 
-class NavajoProperty(val parent: Property) {
+class NavajoProperty(val parent: Property) extends Comparable[NavajoProperty] {
 
   def value() = {
     parent.getTypedValue()
@@ -66,5 +66,10 @@ class NavajoProperty(val parent: Property) {
     parent.setLength(o)
     return this
   }
+
+  def compareTo(p2: NavajoProperty): Int = {
+    return parent.compareTo(p2.parent)
+  }
+  
 
 }
