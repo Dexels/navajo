@@ -1,7 +1,10 @@
 package com.dexels.navajo.parser.compiled.api;
 
 import java.io.StringReader;
+import java.util.Date;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -22,7 +25,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-import io.reactivex.Observable;
 
 public class ExpressionCache {
 	private final static Logger logger = LoggerFactory.getLogger(ExpressionCache.class);
@@ -53,9 +55,18 @@ public class ExpressionCache {
 		});
 		
 		try {
-			Observable.interval(1, TimeUnit.MINUTES)
-				.doOnError(e->logger.error("Error printing stats: ", e))
-				.forEach(l->printStats());
+	        Timer time = new Timer(); // Instantiate Timer Object
+
+	        // Start running the task on Monday at 15:40:00, period is set to 8 hours
+	        // if you want to run the task immediately, set the 2nd parameter to 0
+	        time.schedule(new TimerTask() {
+
+				@Override
+				public void run() {
+					printStats();
+				}}, new Date(), TimeUnit.MINUTES.toMillis(1));
+		
+
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
 		}
