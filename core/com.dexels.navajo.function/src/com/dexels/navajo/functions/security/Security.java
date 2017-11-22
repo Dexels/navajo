@@ -11,8 +11,8 @@ import org.dexels.utils.Base64;
 import com.dexels.navajo.document.types.Binary;
 
 public class Security {
-
-	private static final String ALGO = "AES";
+	private static final String KEY_ALGO = "AES";
+	private static final String ALGO = "AES/ECB/PKCS5Padding";
 	private byte[] keyValue = null;
 
 	public Security(String secret) {
@@ -71,7 +71,7 @@ public class Security {
 	}
 	
 	public Key generateKey() throws Exception {
-		Key key = new SecretKeySpec(keyValue, ALGO);
+		Key key = new SecretKeySpec(keyValue, KEY_ALGO);
 		return key;
 	}
 	
