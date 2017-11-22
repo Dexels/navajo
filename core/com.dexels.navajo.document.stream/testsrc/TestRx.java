@@ -1,18 +1,20 @@
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.zip.GZIPInputStream;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -131,8 +133,7 @@ public class TestRx {
 		
 		System.err.println("Uncompressed file at: "+uncompressed.getAbsolutePath());
 		Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_with_binary.xml"),8192)
-			.lift(StreamDocument.deflate2())
-			.concatMap(e->e)
+			.compose(StreamCompress.deflate())
 			.subscribe(StreamDocument.dumpToFile(compressed.getAbsolutePath()));
 		System.err.println("Compressed file at: "+compressed.getAbsolutePath());
 		
@@ -161,16 +162,14 @@ public class TestRx {
 		ByteArrayOutputStream baos_compressed = new ByteArrayOutputStream();
 		
 		byte[] compressed = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("TestBinaries.class"))
-				.lift(StreamDocument.deflate2())
+				.compose(StreamCompress.deflate())
 				.doOnError(e->e.printStackTrace())
-				.concatMap(e->e)
 				.reduce(baos_compressed, (byteout,bytes)->{byteout.write(bytes); return byteout;})
 			.blockingGet()
 			.toByteArray();
 		ByteArrayOutputStream baos_reinflate = new ByteArrayOutputStream();
 		byte[] reflated = Flowable.<byte[]>just(compressed)
-				.lift(StreamCompress.inflate2())
-				.concatMap(r->r)
+				.compose(StreamCompress.inflate())
 				.reduce(baos_reinflate, (byteout,bytes)->{try {
 					System.err.println("Bytes decompressed: "+bytes.length);
 					byteout.write(bytes);
@@ -180,7 +179,6 @@ public class TestRx {
 			.toByteArray();
 		System.err.println("original: "+original.length);
 		System.err.println("deflated: "+compressed.length);
-
 		System.err.println("reinflated: "+reflated.length);
 		Assert.assertArrayEquals(original, reflated);
 		
@@ -202,16 +200,14 @@ public class TestRx {
 		ByteArrayOutputStream baos_compressed = new ByteArrayOutputStream();
 		
 		byte[] compressed = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("TestBinaries.class"))
-				.lift(StreamCompress.gzip())
+				.compose(StreamCompress.gzip())
 				.doOnError(e->e.printStackTrace())
-				.concatMap(e->e)
 				.reduce(baos_compressed, (byteout,bytes)->{byteout.write(bytes); return byteout;})
 			.blockingGet()
 			.toByteArray();
 		ByteArrayOutputStream baos_reinflate = new ByteArrayOutputStream();
 		byte[] reflated = Flowable.<byte[]>just(compressed)
-				.lift(StreamCompress.gunzip())
-				.concatMap(r->r)
+				.compose(StreamCompress.gunzip())
 				.reduce(baos_reinflate, (byteout,bytes)->{try {
 					System.err.println("Bytes decompressed: "+bytes.length);
 					byteout.write(bytes);
@@ -226,39 +222,42 @@ public class TestRx {
 		Assert.assertArrayEquals(original, reflated);
 	}
 
+
 	@Test
-	public void testGunzipTrustedFile() throws FileNotFoundException, IOException {
-		File gunzipped = new File("gunzipped");
-		try(FileOutputStream fos = new FileOutputStream(gunzipped)) {
-			Bytes.from(new File("gzippedpage.gz"))
-			.lift(StreamCompress.gunzip())
-			.concatMap(e->e)
-			.blockingForEach(bytes->fos.write(bytes));
-		}
+	public void testGzipOnly() throws IOException {
+		ByteArrayOutputStream baos_compressed = new ByteArrayOutputStream();
+
+		byte[] compressed = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("TestBinaries.class"))
+			.compose(StreamCompress.gzip())
+			.doOnError(e->e.printStackTrace())
+			.reduce(baos_compressed, (byteout,bytes)->{byteout.write(bytes); return byteout;})
+			.blockingGet()
+			.toByteArray();
+		System.err.println("Compressed: "+compressed.length);
+		GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(compressed));
+		ByteArrayOutputStream baos_decompressed = new ByteArrayOutputStream();
+		copyResource(baos_decompressed, gis);
+		Assert.assertArrayEquals(Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("TestBinaries.class")).blockingFirst(), baos_decompressed.toByteArray());
 	}
 	
-	@Test @Ignore
-	//TODO, can't get it to work
-	public void testGunzipTrustedFileInSingleBytes() throws FileNotFoundException, IOException {
-		File gunzipped = new File("gunzipped");
-		List<byte[]> events = new ArrayList<>();
-		try(FileOutputStream fos = new FileOutputStream(gunzipped)) {
-			try(FileInputStream fis = new FileInputStream("gzippedpage.gz")) {
-				int read = 0;
-				do {
-					byte[] buffer = new byte[1];
-					read = fis.read(buffer);
-					events.add(Arrays.copyOf(buffer, 1));
-				} while (read>0);
-				System.err.println("# of events: "+events.size());
-				Flowable.fromIterable(events)
-					.lift(StreamCompress.gunzip())
-					.concatMap(e->e)
-					.doOnNext(e->System.err.println("Uncompressed bytes: "+e.length))
-					.blockingForEach(bytes->fos.write(bytes));
-			}
-		}
+	@Test
+	public void testGzipBig() throws IOException {
+		ByteArrayOutputStream baos_compressed = new ByteArrayOutputStream();
+		AtomicInteger size = new AtomicInteger();
+		byte[] compressed = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("randomfile"))
+			.doOnNext(e->size.addAndGet(e.length))
+			.compose(StreamCompress.gzip())
+			.doOnError(e->e.printStackTrace())
+			.reduce(baos_compressed, (byteout,bytes)->{byteout.write(bytes); return byteout;})
+			.blockingGet()
+			.toByteArray();
+		GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(compressed));
+		ByteArrayOutputStream baos_decompressed = new ByteArrayOutputStream();
+		copyResource(baos_decompressed, gis);
+		Assert.assertEquals(size.get(), baos_decompressed.size());
 	}
+	
+
 	
 	@Test 
 	public void testBackpressure() {
@@ -307,4 +306,29 @@ public class TestRx {
 		} catch (InterruptedException e1) {
 		}
 	}
+
+	private static final void copyResource(OutputStream out, InputStream in) throws IOException {
+		BufferedInputStream bin = new BufferedInputStream(in);
+		BufferedOutputStream bout = new BufferedOutputStream(out);
+		byte[] buffer = new byte[1024];
+		int read = -1;
+		boolean ready = false;
+		while (!ready) {
+			read = bin.read(buffer);
+			if (read > -1) {
+				bout.write(buffer, 0, read);
+			}
+			if (read <= -1) {
+				ready = true;
+			}
+		}
+		try {
+			bin.close();
+			bout.flush();
+			bout.close();
+		} catch (IOException e) {
+
+		}
+	}
+
 }

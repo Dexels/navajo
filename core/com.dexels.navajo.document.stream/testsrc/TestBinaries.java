@@ -1,12 +1,18 @@
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.stream.StreamCompress;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.document.types.Binary;
 import com.github.davidmoten.rx2.Bytes;
+
+import io.reactivex.schedulers.Schedulers;
+
 
 public class TestBinaries {
 
@@ -15,20 +21,25 @@ public class TestBinaries {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_with_binary.xml"))
 			.lift(XML.parseFlowable(5))
-			.flatMap(e->e)
+			.observeOn(Schedulers.io())
+			.concatMap(e->e)
 			.lift(StreamDocument.parse())
-			.doOnNext(e->System.err.println("Event: "+e.toString()))
-			.flatMap(e->e)
+			.observeOn(Schedulers.io())
+			.concatMap(e->e)
 			.lift(StreamDocument.serialize())
+			.observeOn(Schedulers.io())
+			.compose(StreamCompress.deflate())
+			.observeOn(Schedulers.io())
+			.compose(StreamCompress.inflate())
 			.blockingForEach(b -> {
 					try {
 						baos.write(b);
-						System.err.println("e> "+new String(b));
 					} catch (Exception e) {
 					}
 				});
-		System.err.println("RESULT:\n"+new String(baos.toByteArray()));
+		System.err.println("Length: "+baos.toByteArray().length);
 		Assert.assertTrue(baos.toByteArray().length>5000);
+		NavajoFactory.getInstance().createNavajo(new ByteArrayInputStream(baos.toByteArray()));
 	}
 	
 	@Test  
