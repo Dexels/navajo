@@ -23,6 +23,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.InflaterInputStream;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -59,7 +61,7 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
 
     public ApacheNavajoClientImpl() {
         RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(0).build();
-        httpclient = HttpClients.custom().setDefaultRequestConfig(config).build();
+        httpclient = HttpClients.custom().disableAutomaticRetries().disableContentCompression().setDefaultRequestConfig(config).build();
     }
 
     
@@ -89,19 +91,20 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
 
             NavajoRequestEntity reqEntity = new NavajoRequestEntity(d, useCompression, forceGzip);
             httppost.setEntity(reqEntity);
+//            httppost.s
             CloseableHttpResponse response = httpclient.execute(httppost);
             
             try {
                 if (response.getStatusLine().getStatusCode() >= 400) {
                     throw new IOException(response.getStatusLine().getReasonPhrase());
                 }
-                HttpEntity responseEntity = response.getEntity();
-                n = NavajoFactory.getInstance().createNavajo(responseEntity.getContent());
+                n = parseResponse(response);
             } finally {
                 response.close();
             }
         } catch (Throwable t) {
             // Check if we should attempt a retry. 
+        		logger.error("Problem: ",t);
             if (retryRequest(t, retries)) {
                 try {
                     Thread.sleep((exceptionCount+1) * SLEEPTIME_PER_EXCEPTION);
@@ -120,6 +123,26 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
         }
         return n;
     }
+
+
+
+	private Navajo parseResponse(CloseableHttpResponse response) throws IOException {
+		org.apache.http.Header encoding = response.getFirstHeader("Content-Encoding");
+		HttpEntity responseEntity = response.getEntity();
+		if(encoding!=null) {
+			if("gzip".equals(encoding.getValue())) {
+				GZIPInputStream gis = new GZIPInputStream(responseEntity.getContent());
+				return NavajoFactory.getInstance().createNavajo(gis);
+				
+			} else if("jzlib".equals(encoding.getValue()) || "deflate".equals(encoding.getValue())) {
+				InflaterInputStream inf = new InflaterInputStream(responseEntity.getContent());
+				return NavajoFactory.getInstance().createNavajo(inf);
+			} else {
+				return NavajoFactory.getInstance().createNavajo(responseEntity.getContent());
+			}
+		}
+		return NavajoFactory.getInstance().createNavajo(responseEntity.getContent());
+	}
     
 
     
@@ -171,6 +194,7 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
             logger.error("Error: ", exception);
              throw new ClientException(-1, -1, exception.getMessage(), exception);
         }
+        exception.printStackTrace();
         
         Navajo n = null;
         if (exception instanceof java.net.UnknownHostException | exception instanceof org.apache.http.conn.HttpHostConnectException) {
@@ -213,6 +237,10 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
     private void appendHeaderToHttp(HttpPost httppost, Header header) {
         httppost.setHeader("X-Navajo-RpcName", header.getRPCName());
         httppost.setHeader("X-Navajo-RpcUser", header.getRPCUser());
+        httppost.setHeader("X-Navajo-Username", header.getRPCUser());
+        httppost.setHeader("X-Navajo-Service", header.getRPCName());
+        httppost.setHeader("X-Navajo-Password", header.getRPCPassword());
+        
         for (String key : httpHeaders.keySet()) {
         	httppost.setHeader(key, httpHeaders.get(key));
         }

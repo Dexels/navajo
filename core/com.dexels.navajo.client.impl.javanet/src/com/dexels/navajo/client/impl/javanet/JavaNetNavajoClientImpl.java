@@ -3,7 +3,10 @@ package com.dexels.navajo.client.impl.javanet;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,8 +17,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyStore;
 import java.util.Base64;
+import java.util.UUID;
+import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.InflaterInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +32,6 @@ import com.dexels.navajo.client.NavajoClient;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.jcraft.jzlib.DeflaterOutputStream;
-import com.jcraft.jzlib.InflaterInputStream;
 
 public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInterface, Serializable {
 
@@ -43,6 +47,8 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 	protected Navajo doTransaction(Navajo inputNavajo, boolean useCompression, int retries, int exceptionCount)
 			throws ClientException {
 		Navajo resultNavajo = null;
+		
+//		useCompression = false;
 		
 		String service = inputNavajo.getHeader().getRPCName();
 		
@@ -63,14 +69,20 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 
 			con.setRequestProperty("Connection", "Keep-Alive");
 
-			if (!forceGzip) {
-				con.setChunkedStreamingMode(1024);
-				con.setRequestProperty("Transfer-Encoding", "chunked");
+			if(useCompression) {
+				if (!forceGzip) {
+					con.setChunkedStreamingMode(1024);
+					con.setRequestProperty("Transfer-Encoding", "chunked");
+					con.setRequestProperty("Accept-Encoding", "deflate");
+				} else {
+					con.setRequestProperty("Content-Encoding", "gzip");
+
+				}
 			}
 
 			postNavajo(inputNavajo, useCompression, con);
-
-			resultNavajo = readResponse(useCompression, con);
+			System.err.println("Use gzip? "+forceGzip+" use compression: "+useCompression);
+			resultNavajo = readResponse(service,useCompression, con);
 //			if(System.getProperty("MARK_DESCRIPTIONS")
 
 			if(this.markDescriptions ) {
@@ -121,27 +133,53 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 
 	}
 
-	private Navajo readResponse(boolean useCompression, HttpURLConnection con) throws IOException {
+	private Navajo readResponse(String service, boolean useCompression, HttpURLConnection con) throws IOException {
 		// Check for errors.
 		InputStream in = null;
 		Navajo res = null;
 		try {
+			System.err.println("Response fields: "+con.getHeaderFields());
+			ByteArrayOutputStream cachedout = new ByteArrayOutputStream();
+			
+			InputStream inr = con.getInputStream();
 			InputStream inraw = null;
+			copyResource(cachedout, inr);
+			byte[] array = cachedout.toByteArray();
+//--------------------
+			String dumpedFileName = "response_"+service+UUID.randomUUID().toString();
+			File dumpedFile = new File(dumpedFileName);
+			dumpedFile.getParentFile().mkdirs();
+			System.err.println("Dumped file at: "+dumpedFile.getAbsolutePath());
+			FileOutputStream dumped = new FileOutputStream(dumpedFile);
+			dumped.write(array);
+			dumped.close();
+//--------------------
+			ByteArrayInputStream incached = new ByteArrayInputStream(array);
 			if (con.getResponseCode() >= 400) {
 				throw new IOException(readErrorStream(con));
 			} else {
 				if (useCompression) {
 					if (forceGzip) {
-						inraw = new GZIPInputStream(con.getInputStream());
+						inraw = new GZIPInputStream(incached);
 					} else {
-						inraw = new InflaterInputStream(con.getInputStream());
+						String responseEncoding = con.getHeaderField("Content-Encoding");
+						if (useCompression && ("jzlib".equals(responseEncoding) || "deflate".equals(responseEncoding))) {
+							
+							inraw = new InflaterInputStream(incached);
+						} else {
+							inraw = incached;
+						}
 					}
 
 				} else {
-					inraw = con.getInputStream();
+					inraw = incached;
 				}
 			}
 			if (inraw != null) {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				copyResource(baos, inraw);
+				byte[] data = baos.toByteArray();
+				inraw = new ByteArrayInputStream(data);
 				res = NavajoFactory.getInstance().createNavajo(inraw);
 			}
 		} finally {
@@ -215,7 +253,7 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 		con.setRequestProperty("X-Navajo-Username", header.getRPCUser());
 		con.setRequestProperty("X-Navajo-Password", header.getRPCPassword());
 		con.setRequestProperty("X-Navajo-Service", header.getRPCName());
-		con.setRequestProperty("X-Navajo-Debug", "true");
+//		con.setRequestProperty("X-Navajo-Debug", "true");
 		for (String key : httpHeaders.keySet()) {
 			con.setRequestProperty(key, httpHeaders.get(key));
 		}
