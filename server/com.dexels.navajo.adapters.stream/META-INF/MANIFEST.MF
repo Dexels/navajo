@@ -5,7 +5,8 @@ Bundle-SymbolicName: com.dexels.navajo.adapters.stream
 Bundle-Version: 1.0.14.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: com.dexels.navajo.adapter.sqlmap,
+Import-Package: com.dexels.config.runtime,
+ com.dexels.navajo.adapter.sqlmap,
  com.dexels.navajo.document,
  com.dexels.navajo.document.stream;version="1.0.0",
  com.dexels.navajo.document.stream.api,

@@ -38,12 +38,12 @@ public class TestSQL {
 	@Before
 	public void setup() {
 	}
-	@Test(timeout=5000) 
+	@Test(timeout=15000) 
 	public void testSQL() {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;
 		AtomicInteger count = new AtomicInteger();
-		SQL.query("dummy", "tenant", "select * from ORGANIZATION")
+		SQL.query("dummy", "tenant", "select * from ORGANIZATION WHERE ROWNUM <50")
 //			.subscribeOn(Schedulers.io())
 			.map(msg->msg.without(Arrays.asList("SHORTNAME,UPDATEBY,REMARKS".split(","))))
 //			.doOnNext(e->System.err.println(new String(ReplicationFactory.getInstance().serialize(e))))

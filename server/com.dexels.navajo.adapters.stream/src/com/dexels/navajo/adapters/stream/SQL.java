@@ -14,7 +14,7 @@ import org.davidmoten.rx.jdbc.Database;
 import org.dexels.grus.GrusProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
 import com.dexels.replication.api.ReplicationMessage;
 
@@ -39,12 +39,7 @@ public class SQL {
 		    OracleDataSource ds;
 			try {
 				ds = new oracle.jdbc.pool.OracleDataSource();
-			    ds.setDriverType("thin");
-			    ds.setServerName("134.213.98.122");
-			    ds.setDatabaseName("SLTEST01");
-			    ds.setPortNumber(1521);
-			    ds.setUser("knvbkern");
-			    ds.setPassword("knvb");
+			    ds.setURL(TestConfig.ORACLE_DUMMY_URL.getValue());
 	        		testDataSource = ds;
 				return Optional.of(testDataSource);
 			} catch (SQLException e1) {

@@ -1,5 +1,6 @@
 package com.dexels.navajo.document.stream.api;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,6 +21,10 @@ public class StreamScriptContext {
 	public final Map<String, Object> attributes;
 	private final Optional<ReactiveScriptRunner> runner;
 
+	public StreamScriptContext(String tenant, String service) {
+		this(tenant,service,Optional.empty(),Optional.empty(),Collections.emptyMap(),Optional.empty(),Optional.empty());
+	}
+	
 	public StreamScriptContext(String tenant, String service, Optional<String> username, Optional<String> password, Map<String,Object> attributes,Optional<Flowable<NavajoStreamEvent>> input, Optional<ReactiveScriptRunner> runner) {
 		this.tenant = tenant;
 		this.service = service;

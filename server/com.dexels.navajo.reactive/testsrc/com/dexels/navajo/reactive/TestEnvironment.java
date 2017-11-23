@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.navajo.document.Navajo;
@@ -73,7 +72,7 @@ public class TestEnvironment {
 
 	}
 
-	@Test @Ignore
+	@Test 
 	public void testSingleMerge() throws IOException {
 		runScript("reactive")
 			.lift(StreamDocument.serialize())

@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -39,9 +36,6 @@ public class InputStreamSource implements ReactiveSource, ParameterValidator {
 	private final XMLElement sourceElement;
 	private final Type finalType;
 	private final List<ReactiveTransformer> transformers;
-
-	
-	private final static Logger logger = LoggerFactory.getLogger(InputStreamSource.class);
 
 	
 	public InputStreamSource(ReactiveParameters params, String relativePath, XMLElement x,DataItem.Type finalType,List<ReactiveTransformer> transformers) {
@@ -74,49 +68,7 @@ public class InputStreamSource implements ReactiveSource, ParameterValidator {
 			return flow;
 		} catch (IOException e1) {
 			return Flowable.error(e1);
-		}
-		
-		
-//		Flowable<DataItem> flow = Flowable.fromIterable(()->node).map(e->ReplicationJSON.parseJSON(e)).map(DataItem::of);
-				
-		
-//		MappingIterator<ObjectNode> iterator = objectMapper.readerFor(ObjectNode.class).readValues(fis);
-//		while (iterator.hasMoreValues()) {
-//		   ObjectNode value = iterator.nextValue();
-//		   ReplicationJSON.parseJSON(value);
-//		}
-		
-			// TODO parse individual...
-//			Flowable<DataItem> flow = Flowable.fromIterable( ()->new Iterator<ReplicationMessage>() {
-//				ReplicationMessage current = null;
-//				@Override
-//				public boolean hasNext() {
-//					try {
-//						System.err.println("HASNEXT");
-//						current = ReplicationJSON.parseReplicationMessage(fis, objectMapper);
-//						return current!=null;
-//					} catch (IOException e) {
-//						logger.error("Error: ", e);
-//					}
-//					try {
-//						fis.close();
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					return false;
-//				}
-//
-//				@Override
-//				public ReplicationMessage next() {
-//					System.err.println("NEXT");
-//					ReplicationMessage r = current;
-//					current = null;
-//					return r;
-//				}}).map(DataItem::of);
-//			
-			
-			
+		}	
 
 	}
 

@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class TestMailMap {
 
-	@Test 
+	@Test @Ignore
 	public void test() {
 
 		MailMap m = new MailMap();
