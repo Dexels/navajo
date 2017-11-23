@@ -1,4 +1,4 @@
-package com.dexels.navajo.client;
+package com.dexels.navajo.client.impl.apache.test;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Navajo;
 
 /**

@@ -1,4 +1,4 @@
-package com.dexels.navajo.client;
+package com.dexels.navajo.client.impl.apache.test;
 
 
 
@@ -6,6 +6,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.dexels.navajo.client.ClientInterface;
+import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.impl.apache.ApacheNavajoClientImpl;
 import com.dexels.navajo.document.Navajo;
 

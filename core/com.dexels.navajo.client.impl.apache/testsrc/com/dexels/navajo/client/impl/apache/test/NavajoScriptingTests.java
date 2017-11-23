@@ -1,4 +1,4 @@
-package com.dexels.navajo.client;
+package com.dexels.navajo.client.impl.apache.test;
 
 import java.util.Calendar;
 import java.util.List;
