@@ -45,13 +45,25 @@ class NavajoMessage(val parent: Message) {
     val message = NavajoFactory.createMessage(rootDoc, this.name)
     parent.addElement(message.parent)
     f(message)
-    return message
+    message
   }
   
   def addArrayMessage(name: String): NavajoMessage = {
     val message = NavajoFactory.createArrayMessage(rootDoc, name)
     new NavajoMessage(parent.addMessage(message.parent))
   }
+  
+  def removeMessage(name: String) : NavajoMessage = {
+    parent.removeMessage(parent.getMessage(name))
+    this
+  }
+  
+  def removeMessage(message: NavajoMessage) : NavajoMessage = {
+    parent.removeMessage(message.parent)
+    this
+  }
+  
+  
 
   def each(f: NavajoMessage => Unit) : Unit = {
     if (parent == null) {
