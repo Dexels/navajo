@@ -4,6 +4,8 @@ import com.dexels.navajo.document.Property
 
 class NavajoProperty(val parent: Property) extends Comparable[NavajoProperty] {
 
+  def name = parent.getName
+  
   def value() = {
     parent.getTypedValue()
   }

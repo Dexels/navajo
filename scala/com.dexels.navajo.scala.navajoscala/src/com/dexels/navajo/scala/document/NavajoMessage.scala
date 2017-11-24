@@ -112,7 +112,6 @@ class NavajoMessage(val parent: Message) {
   
     // Sort the messages
   def sort(orderBy:String)(f: NavajoMessage => Unit) : Unit = {
-    
     this.sort((msg1, msg2) => {
        var result : Boolean = true
        val st = new StringTokenizer(orderBy, ",")
