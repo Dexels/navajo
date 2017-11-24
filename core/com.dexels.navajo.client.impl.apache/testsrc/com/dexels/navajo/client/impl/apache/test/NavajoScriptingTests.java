@@ -13,7 +13,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 
 // the script is missing
-@Ignore
+
 public class NavajoScriptingTests extends BasicClientTest {
 
 	Navajo input = null;
@@ -23,14 +23,14 @@ public class NavajoScriptingTests extends BasicClientTest {
 		input = myClient.doSimpleSend(null, "tests/InitProperties");
 	}
 
-	@Test
+	@Test @Ignore
 	public void testBasic() throws Exception {
 
 		Assert.assertNotNull(input.getMessage("TestProperties"));
 
 	}
 
-	@Test
+	@Test @Ignore
 	public void testDateProperty() throws Exception {
 
 		// Date
@@ -58,7 +58,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 	}
 
-	@Test
+	@Test @Ignore
 	public void testIntegerProperty() throws Exception {
 
 		// Integer
@@ -81,7 +81,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 				.getTypedValue(), null);
 	}
 
-	@Test
+	@Test @Ignore
 	public void testBooleanProperty() throws Exception {
 
 		// Boolean
@@ -104,7 +104,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 				.getTypedValue(), null);
 	}
 
-	@Test
+	@Test @Ignore
 	public void testFloatProperty() throws Exception {
 
 		// Float
@@ -127,7 +127,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 				.getTypedValue(), null);
 	}
 
-	@Test
+	@Test @Ignore
 	public void testMoneyProperty() throws Exception {
 
 		// Money
@@ -149,7 +149,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 				.getTypedValue(), null);
 	}
 
-	@Test
+	@Test @Ignore
 	public void testStringProperty() throws Exception {
 
 		// String
@@ -168,7 +168,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 	}
 
-	@Test
+	@Test @Ignore
 	public void testClocktimeProperty() throws Exception {
 
 		// Clocktime
@@ -191,7 +191,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 	}
 
-	@Test
+	@Test @Ignore
 	public void testBinaryProperty() throws Exception {
 
 		// Binary
@@ -209,7 +209,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 	}
 
-	@Test
+	@Test @Ignore
 	public void testSelectionProperty() throws Exception {
 
 		// Selections
@@ -248,7 +248,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 	}
 
-	@Test
+	@Test @Ignore
 	public void testArrayMessage() throws Exception {
 
 		Message fl = input.getMessage("TestProperties/Array");
@@ -284,7 +284,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 		}
 	}
 
-	@Test
+	@Test @Ignore
 	public void testPropertyExpressions() throws Exception {
 
 		Navajo result = myClient.doSimpleSend(input,
@@ -297,7 +297,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 	}
 
-	@Test
+	@Test @Ignore
 	public void testPropertyTypes() throws Exception {
 
 		myClient.doSimpleSend(input, "tests/ProcessTestProperties");
@@ -311,7 +311,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 	}
 
-	@Test
+	@Test @Ignore
 	public void testNavajoMap() throws Exception {
 
 		Navajo result = myClient.doSimpleSend(input, "tests/InitNavajoMapTest");
@@ -324,7 +324,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 	}
 
-	@Test
+	@Test @Ignore
 	public void testNavajoMap2() throws Exception {
 
 		Navajo result = myClient
@@ -338,7 +338,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 
 	}
 
-	@Test
+	@Test @Ignore
 	public void testNavajoMapNewStyle() throws Exception {
 
 		Navajo result = myClient.doSimpleSend(input,
