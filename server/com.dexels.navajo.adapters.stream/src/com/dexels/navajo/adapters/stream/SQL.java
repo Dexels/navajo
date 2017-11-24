@@ -79,7 +79,7 @@ public class SQL {
 		}
 		return Database.fromBlocking(ds.get())
 			.select(query)
-			.parameterList(Arrays.asList(params))
+			.parameters(Arrays.asList(params))
 			.get(SQL::resultSet);
 	}
 	

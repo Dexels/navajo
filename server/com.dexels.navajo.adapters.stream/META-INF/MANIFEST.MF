@@ -57,6 +57,6 @@ Export-Package: com.dexels.navajo.adapters.stream,
 Bundle-ClassPath: .,
  lib/rxjava2-extensions-0.17.5.jar,
  lib/guava-mini-0.1.1.jar,
- lib/rxjava2-extras-0.1.15-SNAPSHOT.jar,
- lib/rxjava2-jdbc-0.1-RC8.jar
+ lib/rxjava2-extras-0.1.16.jar,
+ lib/rxjava2-jdbc-0.1-RC19.jar
 Require-Bundle: com.oracle.jdbc.driver;bundle-version="11.2.31"
