@@ -2,14 +2,12 @@
 	<source.sql resource="dummy">
 		<param name="query">select * from ORGANIZATION WHERE ORGANIZATIONID='BBBD11T' AND ROWNUM &lt;=1</param>
 		<msg.single.msg>
-			<dump path="/Users/frank/main.json" />
 		</msg.single.msg>
 		<msg.mergeSingle.msg>
 			<source.sql resource="dummy">
 				<param name="query">select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?</param>
 				<parameval>[ORGANIZATIONID]</parameval>
 				<msg.single.msg>
-					<dump path="/Users/frank/attribute.json" />
 				</msg.single.msg>
 			</source.sql>
 			<reducer>
@@ -20,7 +18,6 @@
 				<set>
 					<parameval debug="true" name="Count">[@Count]+1</parameval>
 				</set>
-				<dump path="/Users/frank/reduced.json" />
 			</reducer>
 			<joiner>
 				<!-- <toSubMessage name="Attributes"/> -->
@@ -32,7 +29,6 @@
 			</joiner>
 		</msg.mergeSingle.msg>
 		<msg.single.msg>
-			<dump path="/Users/frank/total.json" />
 		</msg.single.msg>
 		<msg.stream.event messageName="Club">
 			<parameval name="isArray">true</parameval>
