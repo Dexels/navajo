@@ -3,7 +3,6 @@ package com.dexels.navajo.client.impl.javanet;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,10 +43,6 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 	protected Navajo doTransaction(Navajo inputNavajo, boolean useCompression, int retries, int exceptionCount)
 			throws ClientException {
 		Navajo resultNavajo = null;
-		
-//		useCompression = false;
-		
-		String service = inputNavajo.getHeader().getRPCName();
 		
 		HttpURLConnection con = null;
 		try {
