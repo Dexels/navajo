@@ -4,7 +4,7 @@ import java.util.zip.InflaterInputStream;
 
 import org.junit.Test;
 
-import com.dexels.navajo.document.stream.StreamDocument;
+import com.dexels.navajo.document.stream.StreamCompress;
 import com.github.davidmoten.rx2.Bytes;
 
 public class TestDeflatedFiles {
@@ -27,8 +27,7 @@ public class TestDeflatedFiles {
 	@Test
 	public void testReactiveInflation() {
 		Bytes.from(TestDeflatedFiles.class.getClassLoader().getResourceAsStream("file2.xml.deflated"),100)
-			.lift(StreamDocument.inflate2())
-			.concatMap(e->e)
+			.compose(StreamCompress.deflate())
 			.blockingForEach(b->System.err.println(">data: "+b.length));
 	}
 }

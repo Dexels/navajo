@@ -16,8 +16,9 @@ import java.util.Optional;
 
 public interface ExpressionEvaluator {
   public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ReplicationMessage> immutableMessage) throws NavajoException;
-  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params, Optional<ReplicationMessage> immutableMessage) throws NavajoException;
-  public Operand evaluate(String clause, Navajo inMessage, Optional<ReplicationMessage> immutableMessage) throws NavajoException;
+  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws NavajoException;
+  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws NavajoException;
+  public Operand evaluate(String clause, Navajo inMessage, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws NavajoException;
   public Map<Property,List<Property>> createDependencyMap(Navajo n) throws NavajoException;
   public List<Property> processRefreshQueue(Map<Property,List<Property>> depMap) throws NavajoException;
 }

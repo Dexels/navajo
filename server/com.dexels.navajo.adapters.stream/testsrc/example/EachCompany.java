@@ -6,12 +6,9 @@ import java.util.Arrays;
 import com.dexels.navajo.adapters.stream.CSV;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.stream.StreamDocument;
-import com.dexels.navajo.document.stream.api.Prop;
-import com.dexels.replication.api.ReplicationMessage;
 import com.github.davidmoten.rx2.Bytes;
 
 import hu.akarnokd.rxjava2.string.StringFlowable;
-import io.reactivex.Observable;
 
 
 public class EachCompany  {
@@ -39,7 +36,7 @@ public class EachCompany  {
 	}
 	
 	public static void csvExample() {
-		Observable<ReplicationMessage> dd = Bytes.from(EachCompany.class.getClassLoader().getResourceAsStream("com/dexels/navajo/adapters/stream/sqlmap/example/example.csv"))
+		Bytes.from(EachCompany.class.getClassLoader().getResourceAsStream("com/dexels/navajo/adapters/stream/sqlmap/example/example.csv"))
 			.lift(StreamDocument.decode("UTF-8"))
 			.compose(StringFlowable.split("\r"))
 			.toObservable()

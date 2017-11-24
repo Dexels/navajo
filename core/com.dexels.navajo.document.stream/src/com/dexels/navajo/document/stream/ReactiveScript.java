@@ -1,8 +1,6 @@
 package com.dexels.navajo.document.stream;
 
-import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
 import io.reactivex.Flowable;
 

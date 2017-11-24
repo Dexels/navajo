@@ -47,16 +47,23 @@ public final class Expression {
 		logger.info("Compile expressions: {}", compileExpressions);
 		
 	}
+
+	
+	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException, SystemException {
+		return evaluate(clause, inMessage, o, null, null, sel, tl, params, immutableMessage, Optional.empty());
+	}
+
+	
 	
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
-			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ReplicationMessage> immutableMessage)
+			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage)
 			throws TMLExpressionException, SystemException {
 //		Access a = params==null?null: (Access) params.get(ACCESS);
 		if (clause.trim().equals("")) {
 			return new Operand(null, "", "");
 		}
 		if(compileExpressions) {
-			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,sel,tl,params,immutableMessage);
+			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,sel,tl,params,immutableMessage,paramMessage);
 		}
 		
 		Object aap = null;
@@ -105,7 +112,7 @@ public final class Expression {
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
 			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params)
 			throws TMLExpressionException, SystemException {
-		return evaluate(clause, inMessage, o, parent, paramParent, sel, tl, params, Optional.empty());
+		return evaluate(clause, inMessage, o, parent, paramParent, sel, tl, params, Optional.empty(),Optional.empty());
 	}
 	@Deprecated
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
@@ -131,7 +138,7 @@ public final class Expression {
 
 	public final static Operand evaluate(String clause, Navajo inMessage)
 			throws TMLExpressionException, SystemException {
-		return evaluate(clause, inMessage, null, null, null, null, null, null);
+		return evaluate(clause, inMessage, null, null, null, null, null, null,Optional.empty(),Optional.empty());
 	}
 
 	public final static Message match(String matchString, Navajo inMessage, MappableTreeNode o, Message parent)

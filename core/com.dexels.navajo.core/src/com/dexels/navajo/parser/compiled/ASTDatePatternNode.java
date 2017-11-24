@@ -39,13 +39,13 @@ public final class ASTDatePatternNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException {
-		        int yearT = ((Integer) y.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage)).intValue();
-		        int monthT = ((Integer)m.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage)).intValue();
-		        int dayT = ((Integer) d.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage)).intValue();
-		        int hourT = ((Integer) h.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage)).intValue();
-		        int minT = ((Integer) min.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage)).intValue();
-		        int secT = ((Integer) s.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage)).intValue();
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws TMLExpressionException {
+		        int yearT = ((Integer) y.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage)).intValue();
+		        int monthT = ((Integer)m.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage)).intValue();
+		        int dayT = ((Integer) d.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage)).intValue();
+		        int hourT = ((Integer) h.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage)).intValue();
+		        int minT = ((Integer) min.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage)).intValue();
+		        int secT = ((Integer) s.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage)).intValue();
 		        return new DatePattern(yearT, monthT, dayT, hourT, minT, secT, true);
 			}
 		};

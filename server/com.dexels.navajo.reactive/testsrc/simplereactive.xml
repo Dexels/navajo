@@ -1,6 +1,9 @@
 <reactive >
-	<source.sql resource="dummy" array="Organization">
+	<source.sql resource="dummy">
 		<param name="query">select * from ORGANIZATION WHERE ROWNUM &lt;=10</param>
-		<transform.delete key="SHORTNAME,UPDATEBY,REMARKS"/>
+		<msg.single.event>
+			<delete name="SHORTNAME,UPDATEBY,REMARKS"/>
+		</msg.single.event>
+		<msg.stream.event messageName="Bla" isArray.eval="true"/>		
 	</source.sql>
 </reactive>

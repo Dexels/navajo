@@ -1,9 +1,8 @@
 <reactive simple="One">
-	<source.single>
-		<set aap="noot" mies="wim"/>
-		<message.call.event messageName="SomeInput" service="club/InitUpdateClub">
-		<parameval name="isArray">false</parameval>
-		</message.call.event>
-		
+	<source.single count.eval="1">
+		<map>
+			<set aap="noot" mies="wim"/>
+		</map>
+		<msg.stream.event messageName="Bla" isArray.eval="true"/>
 	</source.single>
 </reactive>

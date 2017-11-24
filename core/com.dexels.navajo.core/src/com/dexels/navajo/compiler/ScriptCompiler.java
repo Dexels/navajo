@@ -101,7 +101,7 @@ public abstract class ScriptCompiler {
                     logger.info("ID: {}. It's an aadapter field. with multiple: {} type {}", adapterFieldDep.getId(),
                             adapterFieldDep.hasMultipleDependencies(), adapterFieldDep.getClass());
                     
-                    Operand op = expressionEvaluator.evaluate(adapterFieldDep.getId(), null,Optional.empty());
+                    Operand op = expressionEvaluator.evaluate(adapterFieldDep.getId(), null,Optional.empty(),Optional.empty());
                     if (op != null && op.value instanceof String) {
                         logger.debug("Succeeded evaluation of id: " + ((String) op.value));
                         dependentResources.add((String) op.value);

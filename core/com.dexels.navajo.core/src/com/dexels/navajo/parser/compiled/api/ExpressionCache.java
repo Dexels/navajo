@@ -1,7 +1,10 @@
 package com.dexels.navajo.parser.compiled.api;
 
 import java.io.StringReader;
+import java.util.Date;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -22,7 +25,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-import io.reactivex.Observable;
 
 public class ExpressionCache {
 	private final static Logger logger = LoggerFactory.getLogger(ExpressionCache.class);
@@ -53,23 +55,32 @@ public class ExpressionCache {
 		});
 		
 		try {
-			Observable.interval(1, TimeUnit.MINUTES)
-				.doOnError(e->logger.error("Error printing stats: ", e))
-				.forEach(l->printStats());
+	        Timer time = new Timer(); // Instantiate Timer Object
+
+	        // Start running the task on Monday at 15:40:00, period is set to 8 hours
+	        // if you want to run the task immediately, set the 2nd parameter to 0
+	        time.schedule(new TimerTask() {
+
+				@Override
+				public void run() {
+					printStats();
+				}}, new Date(), TimeUnit.MINUTES.toMillis(1));
+		
+
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
 		}
 	}
 
 	public Object evaluate(String expression,Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) {
+			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) {
 		Optional<Object> cachedValue = expressionValueCache.getUnchecked(expression);
 		if(cachedValue.isPresent()) {
 			pureHitCount.incrementAndGet();
 //			printStats();
 			return cachedValue.get();
 		}
-		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage);
+		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage,paramMessage);
 		
 	}
 	
@@ -89,7 +100,7 @@ public class ExpressionCache {
 	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda();
 	        parsedCount.incrementAndGet();
 	        if(parsed.isLiteral()) {
-	        		Object result = parsed.apply(null, null, null, null, null, null, null,null);
+	        		Object result = parsed.apply(null, null, null, null, null, null, null,null,null);
 	        		expressionCache.put(expression, Optional.ofNullable(parsed));
 	        		if(result!=null) {
 		        		expressionValueCache.put(expression,  Optional.of(result));
@@ -103,7 +114,7 @@ public class ExpressionCache {
 						
 						@Override
 						public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-								 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException {
+								 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws TMLExpressionException {
 							return result;
 						}
 					};

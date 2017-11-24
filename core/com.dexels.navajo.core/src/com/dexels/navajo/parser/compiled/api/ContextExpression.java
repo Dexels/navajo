@@ -12,6 +12,6 @@ import com.dexels.navajo.tipilink.TipiLink;
 import com.dexels.replication.api.ReplicationMessage;
 
 public interface ContextExpression {
-	public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel, MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException;
+	public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel, MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws TMLExpressionException;
 	public boolean isLiteral();
 }

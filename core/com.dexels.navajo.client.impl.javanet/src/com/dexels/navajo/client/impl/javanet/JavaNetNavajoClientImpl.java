@@ -14,8 +14,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyStore;
 import java.util.Base64;
+import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.InflaterInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +28,6 @@ import com.dexels.navajo.client.NavajoClient;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.jcraft.jzlib.DeflaterOutputStream;
-import com.jcraft.jzlib.InflaterInputStream;
 
 public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInterface, Serializable {
 
@@ -43,7 +43,6 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 	protected Navajo doTransaction(Navajo inputNavajo, boolean useCompression, int retries, int exceptionCount)
 			throws ClientException {
 		Navajo resultNavajo = null;
-		
 		
 		HttpURLConnection con = null;
 		try {
@@ -62,13 +61,19 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 
 			con.setRequestProperty("Connection", "Keep-Alive");
 
-			if (!forceGzip) {
-				con.setChunkedStreamingMode(1024);
-				con.setRequestProperty("Transfer-Encoding", "chunked");
+			if(useCompression) {
+				if (!forceGzip) {
+					con.setChunkedStreamingMode(1024);
+					con.setRequestProperty("Transfer-Encoding", "chunked");
+					con.setRequestProperty("Accept-Encoding", "deflate");
+				} else {
+					con.setRequestProperty("Content-Encoding", "gzip");
+
+				}
 			}
 
 			postNavajo(inputNavajo, useCompression, con);
-
+			System.err.println("Use gzip? "+forceGzip+" use compression: "+useCompression);
 			resultNavajo = readResponse(useCompression, con);
 //			if(System.getProperty("MARK_DESCRIPTIONS")
 
@@ -125,19 +130,26 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 		InputStream in = null;
 		Navajo res = null;
 		try {
+			InputStream inr = con.getInputStream();
 			InputStream inraw = null;
 			if (con.getResponseCode() >= 400) {
 				throw new IOException(readErrorStream(con));
 			} else {
 				if (useCompression) {
 					if (forceGzip) {
-						inraw = new GZIPInputStream(con.getInputStream());
+						inraw = new GZIPInputStream(inr);
 					} else {
-						inraw = new InflaterInputStream(con.getInputStream());
+						String responseEncoding = con.getHeaderField("Content-Encoding");
+						if (useCompression && ("jzlib".equals(responseEncoding) || "deflate".equals(responseEncoding))) {
+							
+							inraw = new InflaterInputStream(inr);
+						} else {
+							inraw = inr;
+						}
 					}
 
 				} else {
-					inraw = in;
+					inraw = inr;
 				}
 			}
 			if (inraw != null) {
@@ -211,6 +223,10 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 	private void appendHeaderToHttp(HttpURLConnection con, Header header) {
 		con.setRequestProperty("X-Navajo-RpcName", header.getRPCName());
 		con.setRequestProperty("X-Navajo-RpcUser", header.getRPCUser());
+		con.setRequestProperty("X-Navajo-Username", header.getRPCUser());
+		con.setRequestProperty("X-Navajo-Password", header.getRPCPassword());
+		con.setRequestProperty("X-Navajo-Service", header.getRPCName());
+//		con.setRequestProperty("X-Navajo-Debug", "true");
 		for (String key : httpHeaders.keySet()) {
 			con.setRequestProperty(key, httpHeaders.get(key));
 		}

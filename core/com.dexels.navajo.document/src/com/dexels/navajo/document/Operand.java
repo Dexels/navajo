@@ -11,9 +11,9 @@ package com.dexels.navajo.document;
 
 public class Operand {
 	
-  public String type;
-  public String option;
-  public Object value;
+  public final String type;
+  public final String option;
+  public final Object value;
 
   /**
    * Store a new Operand.

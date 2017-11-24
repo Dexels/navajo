@@ -51,14 +51,19 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 	}
 
 	@Override
-	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ReplicationMessage> immutableMessage)
+	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage)
 			throws NavajoException {
-		return evaluate(clause, inMessage, mappableTreeNode, parent, null,null,null,null,immutableMessage);
+		return evaluate(clause, inMessage, mappableTreeNode, parent, null,null,null,null,immutableMessage,paramMessage);
 	}
 
 	@Override
+	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ReplicationMessage> immutableMessage) throws NavajoException {
+		return evaluate(clause, inMessage, mappableTreeNode, parent, null, null, null, null, immutableMessage, Optional.empty());
+	}
+	
+	@Override
 	public Operand evaluate(String clause,  Navajo inMessage, Object mappableTreeNode, Message parent,
-			Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params, Optional<ReplicationMessage> immutableMessage) throws NavajoException {
+			Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws NavajoException {
 		if (parent != null) {
 			// System.err.println("Inmessage info: "+parent.getIndex()+" type:
 			// "+parent.getType()+" name: "+parent.getName());
@@ -75,7 +80,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 	}
 
 	@Override
-	public Operand evaluate(String clause, Navajo inMessage, Optional<ReplicationMessage> immutableMessage) throws NavajoException {
+	public Operand evaluate(String clause, Navajo inMessage, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws NavajoException {
 		try {
 			return Expression.evaluate(clause, inMessage);
 		} catch (Throwable ex) {

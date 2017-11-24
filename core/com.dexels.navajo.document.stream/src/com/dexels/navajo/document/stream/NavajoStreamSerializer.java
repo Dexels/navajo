@@ -43,7 +43,8 @@ public class NavajoStreamSerializer {
 		} catch (IOException e) {
 			logger.error("Error: ", e);
 		}
-		return baos.toByteArray();
+		byte[] byteArray = baos.toByteArray();
+		return byteArray;
 	}
 	@SuppressWarnings("unchecked")
 	private void processNavajoEvent(NavajoStreamEvent event,Writer w) {
@@ -54,6 +55,8 @@ public class NavajoStreamSerializer {
 					messageIgnoreStack.push("ignore".equals(event.attribute("mode")));
 					if(!messageIgnoreStack.contains(true)) {
 						printStartTag(w, INDENT * (tagDepth+1),true,"message",createMessageAttributes("name=\""+name+"\"",event.attributes()));
+					} else {
+						logger.info("Message IGNORE!");
 					}
 					tagDepth++;
 					messageNameStack.push(name);
@@ -80,14 +83,11 @@ public class NavajoStreamSerializer {
 						tagDepth++;
 					}
 					int ind = index.getAndIncrement();
-//					arrayCounter.put(pth, ++index);
 					messageNameStack.push("@"+ind);
-	//				startPath(mstart, this.tagStack, outputStreamWriter);
 					break;
 				case MESSAGE:
 				case MESSAGE_DEFINITION:
 				case ARRAY_ELEMENT:
-//					Message m = (Message) event.body();
 					messageNameStack.pop();
 					Msg msgBody = event.message();
 					List<Prop> properties = msgBody.properties();
@@ -97,19 +97,11 @@ public class NavajoStreamSerializer {
 						}
 						printEndTag(w, INDENT * tagDepth, "message");
 					}
-					
-					//					printStartTag(w, INDENT * (tagStack.size()+1),true,"message",new String[]{"name="+name,"type=\"definition\""});
-
-//					m.printBody(w,INDENT * (tagStack.size()));
-//					m.printCloseTag(w, INDENT * tagStack.size());
 					messageIgnoreStack.pop();
-
 					tagDepth--;
 					break;
 				case ARRAY_STARTED:
 					messageIgnoreStack.push("ignore".equals(event.attribute("mode")));
-
-	//				Message arr = (Message) event.getBody();
 					if(!messageIgnoreStack.contains(true)) {
 						printStartTag(w, INDENT * (tagDepth+1),true,"message","name=\""+name+"\" type=\"array\"");
 					}
@@ -158,7 +150,8 @@ public class NavajoStreamSerializer {
 					tagDepth++;
 					break;
 				case BINARY_CONTENT:
-					w.write((String)event.body());
+					String body = (String)event.body();
+					w.write(body);
 					tagDepth++;
 					break;
 				case BINARY_DONE:

@@ -493,11 +493,4 @@ public abstract class AbstractKMLMap {
 	public void setUseLOD(boolean useLOD) {
 		this.useLOD = useLOD;
 	}
-
-	public static void main(String [] args) {
-		
-		String url = "http://localhost:9090/PostmanLegacy?service=competition/poolassignment/PoolIcon&amp;username=ROOT&amp;password=R20T&amp;PoolIcon/PoolName=02&amp;dataPath=/PoolIcon/Icon";
-		
-		System.err.println(url.replaceAll("&amp;", "&"));
-	}
 }
