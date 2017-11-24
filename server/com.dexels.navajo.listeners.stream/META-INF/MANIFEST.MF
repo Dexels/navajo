@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: RxJava Reactive Stream Listener
 Bundle-SymbolicName: com.dexels.navajo.listeners.stream
-Bundle-Version: 2.0.0
+Bundle-Version: 2.0.1.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.navajo.authentication.api,
@@ -27,7 +27,7 @@ Import-Package: com.dexels.navajo.authentication.api,
  org.reactivestreams;version="1.0.0.release",
  org.slf4j;version="1.7.0"
 Service-Component: OSGI-INF/*
-Export-Package: com.dexels.navajo.listeners.stream;version="2.0.0"
+Export-Package: com.dexels.navajo.listeners.stream;version="2.0.1"
 Bundle-ClassPath: .,
  lib/reactive-servlet.jar,
  lib/rxjava2-extras-0.1.16.jar
