@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.impl.apache.ApacheNavajoClientImpl;
@@ -19,19 +20,23 @@ import com.dexels.navajo.document.Navajo;
  */
 public class BasicClientTest {
 
-	protected ClientInterface myClient;
+	protected static ClientInterface myClient;
 
 
 	@BeforeClass
 	public static void setup() {
-		ClientInterface ci = new ApacheNavajoClientImpl();
-		NavajoClientFactory.setDefaultClient(ci);
+		myClient = new ApacheNavajoClientImpl();
+		myClient.setAllowCompression(true);
+//		myClient.setForceGzip(true);
+		myClient.setServerUrls(new String[] {TestConfig.NAVAJO_TEST_SERVER.getValue()});
+		myClient.setUsername(TestConfig.NAVAJO_TEST_USER.getValue());
+		myClient.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
+		NavajoClientFactory.setDefaultClient(myClient);
+
 	}
 	
 	@Before
 	public void getClient() {
-		myClient = NavajoClientFactory.getClient();
-
 	}
 	/**
 	 * @throws java.lang.Exception
@@ -50,11 +55,11 @@ public class BasicClientTest {
 //		System.err.println("=======================================================================================");
 //		myClient.setUsername("noot");
 //		myClient.setPassword("aap");
-		myClient = NavajoClientFactory.getClient();
-		myClient.setAllowCompression(false);
-		myClient.setUsername("ROOT");
-		myClient.setPassword("ROOT");
-		myClient.setServerUrl("http://localhost:9090/stream/KNVB");
+//		myClient = NavajoClientFactory.getClient();
+//		myClient.setAllowCompression(false);
+//		myClient.setUsername("ROOT");
+//		myClient.setPassword("ROOT");
+//		myClient.setServerUrl("http://localhost:9090/stream/KNVB");
 		long total = 0;
 		long start = System.currentTimeMillis();
 		Navajo reply = myClient.doSimpleSend(null, "club/InitSearchClubs");

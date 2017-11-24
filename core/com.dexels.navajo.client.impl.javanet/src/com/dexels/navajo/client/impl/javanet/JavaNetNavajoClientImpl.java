@@ -145,15 +145,6 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 			InputStream inraw = null;
 			copyResource(cachedout, inr);
 			byte[] array = cachedout.toByteArray();
-//--------------------
-			String dumpedFileName = "response_"+service+UUID.randomUUID().toString();
-			File dumpedFile = new File(dumpedFileName);
-			dumpedFile.getParentFile().mkdirs();
-			System.err.println("Dumped file at: "+dumpedFile.getAbsolutePath());
-			FileOutputStream dumped = new FileOutputStream(dumpedFile);
-			dumped.write(array);
-			dumped.close();
-//--------------------
 			ByteArrayInputStream incached = new ByteArrayInputStream(array);
 			if (con.getResponseCode() >= 400) {
 				throw new IOException(readErrorStream(con));

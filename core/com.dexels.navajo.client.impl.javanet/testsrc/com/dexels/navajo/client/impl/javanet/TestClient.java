@@ -1,5 +1,6 @@
 package com.dexels.navajo.client.impl.javanet;
 
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,6 +13,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 
 import org.junit.Assert;
@@ -36,10 +38,10 @@ public class TestClient {
 		cl.setServerUrls(new String[] {TestConfig.NAVAJO_TEST_SERVER.getValue()});
 		cl.setUsername(TestConfig.NAVAJO_TEST_USER.getValue());
 		cl.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
-		
 		Navajo nc = NavajoFactory.getInstance().createNavajo();
 		Navajo result = cl.doSimpleSend(nc, "single");
 		result.write(System.err);;
+		Assert.assertTrue(result.getErrorDescription()==null);
 	}
 	
 	@Test 
@@ -50,7 +52,6 @@ public class TestClient {
 		cl.setServerUrls(new String[] {TestConfig.NAVAJO_TEST_SERVER.getValue()});
 		cl.setUsername(TestConfig.NAVAJO_TEST_USER.getValue());
 		cl.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
-
 		Navajo nc = NavajoFactory.getInstance().createNavajo();
 		Navajo result = cl.doSimpleSend(nc, "club/InitUpdateClub");
 		result.getMessage("Club").getProperty("ClubIdentifier").setAnyValue("BBFX31R");
@@ -59,52 +60,25 @@ public class TestClient {
 	}
 	
 	@Test 
-	public void testClientBigDirect() throws IOException {
-		NavajoClient cl = new JavaNetNavajoClientImpl();
-		cl.setAllowCompression(true);
-//		cl.setForceGzip(true);
-		cl.setServerUrls(new String[] {TestConfig.NAVAJO_TEST_SERVER.getValue()});
-		cl.setUsername(TestConfig.NAVAJO_TEST_USER.getValue());
-		cl.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
-		Navajo nc = NavajoFactory.getInstance().createNavajo();
-		Navajo result = cl.doSimpleSend(nc, "club/InitUpdateClub");
-		result.getMessage("Club").getProperty("ClubIdentifier").setAnyValue("BBFX31R");
-
-		Map<String,String> headers = new HashMap<String, String>();
-		headers.put("X-Navajo-Username", TestConfig.NAVAJO_TEST_USER.getValue());
-		headers.put("X-Navajo-Password", TestConfig.NAVAJO_TEST_PASS.getValue());
-		headers.put("X-Navajo-Service", "single");
-		headers.put("Accept-Encoding", "jzlib");
-
-		String url = TestConfig.NAVAJO_TEST_SERVER.getValue();
-//		Navajo nc = NavajoFactory.getInstance().createNavajo();
-		StringWriter sw = new StringWriter();
-		result.write(sw);
-		byte[] res = sendPOST(url, sw.toString().getBytes(), headers);
-		System.err.println("RESULT: "+new String(res));
-
-	}
-
-	@Test 
 	public void testDirect() throws IOException {
 		Map<String,String> headers = new HashMap<String, String>();
 		headers.put("X-Navajo-Username", TestConfig.NAVAJO_TEST_USER.getValue());
 		headers.put("X-Navajo-Password", TestConfig.NAVAJO_TEST_PASS.getValue());
 		headers.put("X-Navajo-Service", "single");
 		headers.put("Accept-Encoding", "jzlib");
-		
+
 		String url = TestConfig.NAVAJO_TEST_SERVER.getValue();
 		Navajo nc = NavajoFactory.getInstance().createNavajo();
 		StringWriter sw = new StringWriter();
 		nc.write(sw);
 		byte[] res = sendPOST(url, sw.toString().getBytes(), headers);
-		Assert.assertTrue(res.length>1000);
 		System.err.println("RESULT: "+new String(res));
 	}
 	private static byte[] sendPOST(String url, byte[] data,Map<String,String> headers) throws IOException {
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("POST");
+//		con.setRequestProperty("User-Agent", USER_AGENT);
 
 		for (Entry<String, String> e : headers.entrySet()) {
 			con.setRequestProperty(e.getKey(), e.getValue());
@@ -119,11 +93,26 @@ public class TestClient {
 
 		int responseCode = con.getResponseCode();
 		System.out.println("POST Response Code :: " + responseCode);
-
+		con.getHeaderFields().forEach((k,v)->System.err.println("Key: "+k+" value(s): "+v));
+		String encoding = con.getHeaderField("Content-Encoding");
+		if(encoding==null) {
+			encoding = "";
+		}
 		if (responseCode == HttpURLConnection.HTTP_OK) { //success
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			copyResource(baos,new InflaterInputStream(con.getInputStream()));
+//			copyResource(baos,con.getInputStream());
+			switch(encoding) {
+			case "deflate":
+			case "jzlib":
+				copyResource(baos,new InflaterInputStream(con.getInputStream()));
+			case "gzip":
+				copyResource(baos,new GZIPInputStream(con.getInputStream()));
+			default:
+				copyResource(baos,con.getInputStream());
+			}
+			
 			return baos.toByteArray();
+//			return con.getInputStream();
 		} else {
 			System.out.println("POST request not worked");
 			return null;
@@ -153,5 +142,10 @@ public class TestClient {
 
 		}
 	}	
+	
+	@Test
+	public void testEnv() {
+		System.err.println("Environments: "+System.getenv());
+	}
 
 }
