@@ -10,7 +10,6 @@ import org.junit.Test;
 import com.dexels.navajo.adapters.stream.HTTP;
 import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
-import com.github.davidmoten.rx2.Bytes;
 
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
@@ -49,37 +48,6 @@ public class TestHttp {
 //			.blockingForEach(e->System.err.println(e));
 //		Thread.sleep(40000);
 	}
-
-	@Test @Ignore
-	public void testBigPost() throws MalformedURLException, InterruptedException {
-//		String url = "https://repo.dexels.com/nexus/service/local/repositories/central/content/org/apache/tika/tika-bundle/1.6/tika-bundle-1.6.jar";
-//		String url = "http://spiritus.dexels.com:9090/nexus/content/repositories/obr2/.meta/obr.xml";
-		String url = "http://localhost:8080/reactive-servlet/reactive";
-		AtomicLong readCount = new AtomicLong(0);
-		Flowable<byte[]> input = Bytes.from(new File("/Users/frank/git/reactive-servlet/rxjava-extras-0.8.0.8.jar"))
-				.doOnNext(c->{
-					long r = readCount.addAndGet(c.length);
-					System.err.println("Read "+r);
-				})
-				.doOnComplete(()->{System.err.println("input done");});
-		AtomicLong count = new AtomicLong(0);
-		long l = HTTP.post(url,input,Collections.emptyMap())
-//			.lift(XML.parseFlowable(10))
-//			.flatMap(x->x)
-				.observeOn(Schedulers.io())
-				.doOnNext(c->{
-					long r = count.addAndGet(c.length);
-					System.err.println("Data: "+r);
-				})
-//			.lift(NavajoStreamOperatorsNew.parse())
-//			.zipWith(timer, (a,b)->a)
-			.count().blockingGet();
-		System.err.println(">> "+l);
-//			.blockingForEach(e->System.err.println(e));
-//		Thread.sleep(40000);
-	}
-	
-
 	
 	@Test @Ignore
 	public void testBackPressure() throws InterruptedException {

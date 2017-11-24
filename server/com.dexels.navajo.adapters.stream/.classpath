@@ -7,6 +7,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="testsrc"/>
 	<classpathentry kind="lib" path="lib/rxjava2-jdbc-0.1-RC19.jar"/>
-	<classpathentry kind="lib" path="lib/rxjava2-extras-0.1.16.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

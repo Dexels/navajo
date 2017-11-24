@@ -1,15 +1,8 @@
 package example;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 
-import com.dexels.navajo.adapters.stream.CSV;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.stream.StreamDocument;
-import com.github.davidmoten.rx2.Bytes;
-
-import hu.akarnokd.rxjava2.string.StringFlowable;
-
 
 public class EachCompany  {
 
@@ -36,18 +29,18 @@ public class EachCompany  {
 	}
 	
 	public static void csvExample() {
-		Bytes.from(EachCompany.class.getClassLoader().getResourceAsStream("com/dexels/navajo/adapters/stream/sqlmap/example/example.csv"))
-			.lift(StreamDocument.decode("UTF-8"))
-			.compose(StringFlowable.split("\r"))
-			.toObservable()
-			.lift(CSV.rows(","))
-			.map(r->r.toElement())
-		
-			.map(msg->msg.with("Oempaloempa", true,"boolean")
-						.without("category")
-						.without(Arrays.asList(new String[]{"category","numEmps","fundedDate"}))
-						.with("DoekoeType",msg.columnValue("raisedCurrency"),"string")
-			);
+//		Bytes.from(EachCompany.class.getClassLoader().getResourceAsStream("com/dexels/navajo/adapters/stream/sqlmap/example/example.csv"))
+//			.lift(StreamDocument.decode("UTF-8"))
+//			.compose(StringFlowable.split("\r"))
+//			.toObservable()
+//			.lift(CSV.rows(","))
+//			.map(r->r.toElement())
+//		
+//			.map(msg->msg.with("Oempaloempa", true,"boolean")
+//						.without("category")
+//						.without(Arrays.asList(new String[]{"category","numEmps","fundedDate"}))
+//						.with("DoekoeType",msg.columnValue("raisedCurrency"),"string")
+//			);
 		
 //		.take(30)
 //		.subscribe(msg->System.err.println("MSG: "+msg));
