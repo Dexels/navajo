@@ -5,8 +5,6 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,7 +15,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyStore;
 import java.util.Base64;
-import java.util.UUID;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -82,7 +79,7 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 
 			postNavajo(inputNavajo, useCompression, con);
 			System.err.println("Use gzip? "+forceGzip+" use compression: "+useCompression);
-			resultNavajo = readResponse(service,useCompression, con);
+			resultNavajo = readResponse(useCompression, con);
 //			if(System.getProperty("MARK_DESCRIPTIONS")
 
 			if(this.markDescriptions ) {
@@ -133,44 +130,34 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 
 	}
 
-	private Navajo readResponse(String service, boolean useCompression, HttpURLConnection con) throws IOException {
+	private Navajo readResponse(boolean useCompression, HttpURLConnection con) throws IOException {
 		// Check for errors.
 		InputStream in = null;
 		Navajo res = null;
 		try {
-			System.err.println("Response fields: "+con.getHeaderFields());
-			ByteArrayOutputStream cachedout = new ByteArrayOutputStream();
-			
 			InputStream inr = con.getInputStream();
 			InputStream inraw = null;
-			copyResource(cachedout, inr);
-			byte[] array = cachedout.toByteArray();
-			ByteArrayInputStream incached = new ByteArrayInputStream(array);
 			if (con.getResponseCode() >= 400) {
 				throw new IOException(readErrorStream(con));
 			} else {
 				if (useCompression) {
 					if (forceGzip) {
-						inraw = new GZIPInputStream(incached);
+						inraw = new GZIPInputStream(inr);
 					} else {
 						String responseEncoding = con.getHeaderField("Content-Encoding");
 						if (useCompression && ("jzlib".equals(responseEncoding) || "deflate".equals(responseEncoding))) {
 							
-							inraw = new InflaterInputStream(incached);
+							inraw = new InflaterInputStream(inr);
 						} else {
-							inraw = incached;
+							inraw = inr;
 						}
 					}
 
 				} else {
-					inraw = incached;
+					inraw = inr;
 				}
 			}
 			if (inraw != null) {
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				copyResource(baos, inraw);
-				byte[] data = baos.toByteArray();
-				inraw = new ByteArrayInputStream(data);
 				res = NavajoFactory.getInstance().createNavajo(inraw);
 			}
 		} finally {
