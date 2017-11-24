@@ -63,8 +63,6 @@ class NavajoMessage(val parent: Message) {
     this
   }
   
-  
-
   def each(f: NavajoMessage => Unit) : Unit = {
     if (parent == null) {
       return;
@@ -285,6 +283,13 @@ class NavajoMessage(val parent: Message) {
        parent.addProperty(p)
     }
     this
+  }
+  
+  def eachProperty(f: NavajoProperty => Unit) : Unit = {
+    if (parent == null) {
+      return;
+    }
+    parent.getAllProperties().asScala.foreach(p => f(new NavajoProperty(p)))
   }
   
   def nrChildren : Integer = parent.getAllMessages.size()
