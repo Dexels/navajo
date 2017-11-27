@@ -587,7 +587,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl implements TipiSuppor
 		}
 	}
 
-	private synchronized Rectangle getDialogBounds() {
+	private Rectangle getDialogBounds() {
 		return myBounds;
 	}
 
