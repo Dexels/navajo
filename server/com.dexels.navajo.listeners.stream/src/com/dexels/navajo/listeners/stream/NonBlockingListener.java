@@ -119,7 +119,6 @@ public class NonBlockingListener extends HttpServlet {
 				
 				@Override
 				public void onStartAsync(AsyncEvent ae) throws IOException {
-					System.err.println("Start ASYNC");
 					
 				}
 				
@@ -137,7 +136,7 @@ public class NonBlockingListener extends HttpServlet {
 				
 				@Override
 				public void onComplete(AsyncEvent ae) throws IOException {
-					System.err.println("COMPLETE: "+ae);
+//					System.err.println("COMPLETE: "+ae);
 				}
 			});
 			try {
@@ -146,11 +145,11 @@ public class NonBlockingListener extends HttpServlet {
 				logger.error("Authentication problem: ",e1);
 				errorMessage(context, Optional.of(e1), e1.getMessage())
 					.lift(StreamDocument.serialize())
-					.doOnSubscribe(e->StreamDocument.removeFile("uncompresseddump"+context.service))
-					.doOnNext(StreamDocument.appendToFile("uncompresseddump"+context.service))
+//					.doOnSubscribe(e->StreamDocument.removeFile("uncompresseddump"+context.service))
+//					.doOnNext(StreamDocument.appendToFile("uncompresseddump"+context.service))
 					.compose(StreamCompress.compress(responseEncoding))
-					.doOnSubscribe(e->StreamDocument.removeFile("compresseddump_"+context.service+".compressed"))
-					.doOnNext(StreamDocument.appendToFile("compresseddump_"+context.service+".compressed"))
+//					.doOnSubscribe(e->StreamDocument.removeFile("compresseddump_"+context.service+".compressed"))
+//					.doOnNext(StreamDocument.appendToFile("compresseddump_"+context.service+".compressed"))
 					.subscribe(responseSubscriber);	
 				return;
 			}
