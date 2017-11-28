@@ -99,7 +99,6 @@ public class NonBlockingListener extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		AsyncContext ac = request.startAsync();
 		try {
-			System.err.println("REQUEST HEADERS: "+extractHeaders(request));
 			ac.setTimeout(10000000);
 			StreamScriptContext context = determineContextFromRequest(ac);
 			Optional<String> responseEncoding = decideEncoding(request.getHeader("Accept-Encoding"));
@@ -164,7 +163,6 @@ public class NonBlockingListener extends HttpServlet {
 			boolean debug = debugString != null;
 			
 			ReactiveScript rs = runScript(context,debug);
-			System.err.println("DataType: "+rs.dataType());
 			if(responseEncoding.isPresent()) {
 				response.addHeader("Content-Encoding", responseEncoding.get());
 			}
