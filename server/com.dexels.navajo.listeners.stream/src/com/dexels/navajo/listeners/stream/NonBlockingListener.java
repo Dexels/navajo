@@ -183,11 +183,11 @@ public class NonBlockingListener extends HttpServlet {
 					.compose(StreamDocument.inNavajo(context.service, context.username, Optional.empty()))
 					.lift(StreamDocument.filterMessageIgnore())
 					.lift(StreamDocument.serialize())
-					.doOnNext(StreamDocument.appendToFile("/Users/frank/dumps/uncompresseddump"+context.service))
-					.doOnSubscribe(e->StreamDocument.removeFile("/Users/frank/dumps/uncompresseddump"+context.service))
+//					.doOnNext(StreamDocument.appendToFile("/Users/frank/dumps/uncompresseddump"+context.service))
+//					.doOnSubscribe(e->StreamDocument.removeFile("/Users/frank/dumps/uncompresseddump"+context.service))
 					.compose(StreamCompress.compress(responseEncoding))
-					.doOnSubscribe(e->StreamDocument.removeFile("/Users/frank/dumps/compresseddump_"+context.service+".compressed"))
-					.doOnNext(StreamDocument.appendToFile("/Users/frank/dumps/compresseddump_"+context.service+".compressed"))
+//					.doOnSubscribe(e->StreamDocument.removeFile("/Users/frank/dumps/compresseddump_"+context.service+".compressed"))
+//					.doOnNext(StreamDocument.appendToFile("/Users/frank/dumps/compresseddump_"+context.service+".compressed"))
 					.subscribe(responseSubscriber);
 			}
 		} catch (Exception e1) {
