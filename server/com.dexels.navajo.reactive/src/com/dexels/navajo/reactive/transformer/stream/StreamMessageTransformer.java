@@ -36,8 +36,15 @@ public class StreamMessageTransformer implements ReactiveTransformer, ParameterV
 		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), Optional.empty(), this,sourceElement,sourcePath);
 		String messageName = resolved.paramString("messageName");
 		boolean isArray = resolved.paramBoolean("isArray");
-		return flow->
-			flow.map(di->di.message()).concatMap(msg->StreamDocument.replicationMessageToStreamEvents(messageName, msg, isArray)).compose(StreamDocument.inArray(messageName)).map(DataItem::of);
+		// TODO remove duplication
+		return flow->flow.map(di->di.message()).compose(StreamDocument.toMessageEvent(messageName,isArray)).map(DataItem::of);
+//		if (isArray) {
+//			return flow->
+//				flow.map(di->di.message()).concatMap(msg->StreamDocument.replicationMessageToStreamEvents(messageName, msg, isArray)).compose(StreamDocument.inArray(messageName)).map(DataItem::of);
+//		} else {
+//			return flow->flow.take(1).
+//					map(di->di.message()).concatMap(msg->StreamDocument.replicationMessageToStreamEvents(messageName, msg, isArray)).map(DataItem::of);
+//		}
 	}
 
 	@Override

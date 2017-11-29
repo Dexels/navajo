@@ -956,6 +956,9 @@ public class StreamDocument {
 
 			@Override
 			public Flowable<NavajoStreamEvent> apply(Flowable<ReplicationMessage> in) {
+				if(!isArray) {
+					in = in.take(1);
+				}
 				Flowable<NavajoStreamEvent> events = in.concatMap(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,isArray));
 				if(!isArray) {
 					return events;

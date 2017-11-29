@@ -34,6 +34,7 @@ import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.mappers.CopyMessage;
 import com.dexels.navajo.reactive.mappers.Delete;
 import com.dexels.navajo.reactive.mappers.JsonFileAppender;
+import com.dexels.navajo.reactive.mappers.Rename;
 import com.dexels.navajo.reactive.mappers.SetSingle;
 import com.dexels.navajo.reactive.mappers.SetSingleKeyValue;
 import com.dexels.navajo.script.api.SystemException;
@@ -61,7 +62,7 @@ public class ReactiveScriptParser {
 		reactiveReducer.put("setkv", new SetSingleKeyValue());
 		reactiveReducer.put("toSubMessage", new CopyMessage());
 		reactiveMapping.put("delete", new Delete());
-//		reactiveMapping.put("rename", new Rename());
+		reactiveMapping.put("rename", new Rename());
 		reactiveMapping.put("dump", new JsonFileAppender());
 		
 	}
@@ -101,8 +102,8 @@ public class ReactiveScriptParser {
 		Type scriptType = null;
 		for (ReactiveSource reactiveSource : r) {
 			if(scriptType!=null) {
-				if(reactiveSource.dataType()!=scriptType) {
-					throw new IOException("Can't parse script for service: "+serviceName+" as there are different source types.");
+				if(reactiveSource.finalType()!=scriptType) {
+					throw new IOException("Can't parse script for service: "+serviceName+" as there are different source types: "+reactiveSource.finalType()+" and: "+scriptType);
 				}
 			} else {
 				scriptType = reactiveSource.finalType();
@@ -174,7 +175,7 @@ public class ReactiveScriptParser {
 								}								
 							);
 					} catch (Exception e) {
-						throw new RuntimeException("Major source parsing issue. This is not going to end well.", e);
+						throw new RuntimeException("Major source parsing issue.", e);
 					}
 				})
 				.collect(Collectors.toList());

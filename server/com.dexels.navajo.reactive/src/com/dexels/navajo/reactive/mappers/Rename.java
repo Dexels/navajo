@@ -16,6 +16,7 @@ import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMapper;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
+import com.dexels.replication.factory.ReplicationFactory;
 
 import io.reactivex.functions.Function;
 
@@ -35,7 +36,10 @@ public class Rename implements ReactiveMapper, ParameterValidator {
 			String fromKey = parms.paramString("from");
 			Object oldValue = item.message().columnValue(fromKey);
 			String oldType = item.message().columnType(fromKey);
-			return DataItem.of(item.message().without(fromKey ).with(parms.paramString("to"),oldValue, oldType));
+			DataItem result = DataItem.of(item.message().without(fromKey ).with(parms.paramString("to"),oldValue, oldType));
+			String ss = ReplicationFactory.getInstance().describe(result.message());
+			System.err.println("EE: "+ss);
+			return result;
 		};
 	
 	}
