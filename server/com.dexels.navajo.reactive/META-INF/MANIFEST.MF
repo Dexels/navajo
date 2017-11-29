@@ -5,7 +5,8 @@ Bundle-SymbolicName: com.dexels.navajo.reactive
 Bundle-Version: 2.0.5.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: com.dexels.navajo.adapters.stream,
+Import-Package: com.dexels.config.runtime;resolution:=optional,
+ com.dexels.navajo.adapters.stream,
  com.dexels.navajo.document;version="2.2.1",
  com.dexels.navajo.document.nanoimpl;version="2.2.1",
  com.dexels.navajo.document.stream;version="1.0.16",
