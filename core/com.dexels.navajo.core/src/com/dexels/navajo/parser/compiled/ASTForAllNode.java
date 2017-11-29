@@ -80,7 +80,6 @@ public final class ASTForAllNode extends SimpleNode {
             matchAll = false;
 
         String msgList = (String) a.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage);
-        System.err.println("MsgList: "+msgList);
         try {
             List<Message> list = null;
 
@@ -102,7 +101,6 @@ public final class ASTForAllNode extends SimpleNode {
 //                String expr = (String) b;
 
                 Object apply = b.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage);
-                System.err.println(">><> "+apply);
 				boolean result = (Boolean)apply;
 
                 if ((!(result)) && matchAll)
