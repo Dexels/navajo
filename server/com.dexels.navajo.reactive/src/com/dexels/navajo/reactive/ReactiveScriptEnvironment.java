@@ -111,12 +111,9 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	@Override
 	public void handleEvent(Event e) {
 		List<String> changed = RepositoryEventParser.filterChanged(e, REACTIVE_FOLDER);
-		System.err.println("Changed: "+changed);
 		for (String path : changed) {
 			if(path.startsWith(REACTIVE_FOLDER) && path.endsWith(".xml")) {
-				System.err.println("Match!");
 				String actual = path.substring(REACTIVE_FOLDER.length(), path.length() - ".xml".length());
-				System.err.println("Actual: "+actual);
 				ReactiveScript rr =  scripts.get(actual);
 				if(rr!=null) {
 					logger.info("Flushing changed script: {}",actual);

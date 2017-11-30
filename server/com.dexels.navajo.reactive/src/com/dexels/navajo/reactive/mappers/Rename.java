@@ -38,7 +38,6 @@ public class Rename implements ReactiveMapper, ParameterValidator {
 			String oldType = item.message().columnType(fromKey);
 			DataItem result = DataItem.of(item.message().without(fromKey ).with(parms.paramString("to"),oldValue, oldType));
 			String ss = ReplicationFactory.getInstance().describe(result.message());
-			System.err.println("EE: "+ss);
 			return result;
 		};
 	

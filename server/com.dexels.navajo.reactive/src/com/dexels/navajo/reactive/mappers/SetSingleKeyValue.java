@@ -32,15 +32,11 @@ public class SetSingleKeyValue implements ReactiveMerger, ParameterValidator {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
 		return context->(acc,item)->{
 			// will use the second message as input, if not present, will use the source message
-//			System.err.println(">item>> "+new String(item.message().toBytes(new JSONReplicationMessageParserImpl())));
-//			System.err.println(">>acc>> "+new String(acc.message().toBytes(new JSONReplicationMessageParserImpl())));
 			ReplicationMessage s = item.message();
 			ReactiveResolvedParameters parms = r.resolveNamed(context, Optional.of(s), Optional.of(item.message()), this, xml, relativePath);
 			Operand resolvedValue = parms.resolveAllParams().get("value");
 			String toValue = parms.paramString("to");
 //			String json = new String(item.message().toBytes(new JSONReplicationMessageParserImpl()));
-//			System.err.println("JSON DOC: \n"+json);
-//			System.err.println("To Value: "+toValue+" -> "+resolvedValue.type+" val: "+resolvedValue.value);
 			return DataItem.of(acc.message().with(toValue, resolvedValue.value, resolvedValue.type));
 		};
 	

@@ -56,14 +56,12 @@ public class JSONToIterable {
 
 					private JSONEvent getNextToken() {
 						if(currentEvent!=null) {
-							System.err.println("Current event: "+currentEvent);
 							return currentEvent;
 						}
 						try {
 							JsonToken jt = parser.nextToken();
 							currentEvent = jt == null? null : new JSONEvent(jt,parser.getCurrentName(), parser.getText());
 //							currentEvent = new JSONEvent(jt,parser.getCurrentValue());
-							System.err.println("Creating Current event: "+currentEvent);
 						} catch (IOException e) {
 							logger.error("Error parsing, storing exception: ", e);
 							error = e;
@@ -97,9 +95,9 @@ public class JSONToIterable {
 						}
 						JSONEvent result;
 						result = getNextToken();
-						if(result==null) {
-							System.err.println("whoops");
-						}
+//						if(result==null) {
+//							System.err.println("whoops");
+//						}
 						currentEvent = null;
 						return result;
 					}};

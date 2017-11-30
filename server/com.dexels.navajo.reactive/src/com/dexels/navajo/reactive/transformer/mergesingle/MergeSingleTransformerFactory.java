@@ -2,9 +2,6 @@ package com.dexels.navajo.reactive.transformer.mergesingle;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -23,13 +20,10 @@ import io.reactivex.functions.Function;
 public class MergeSingleTransformerFactory implements ReactiveTransformerFactory {
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(MergeSingleTransformerFactory.class);
-
 	public MergeSingleTransformerFactory() {
 	}
 	
 	public void activate() {
-		System.err.println("Activate mergesingle");
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package com.dexels.navajo.reactive.stored;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,17 +50,12 @@ public class InputStreamSource implements ReactiveSource, ParameterValidator {
 		ReactiveResolvedParameters rsp = parameters.resolveNamed(context, current, Optional.empty(), this, sourceElement, relativePath);
 		
 		ObjectMapper objectMapper = new ObjectMapper().configure(JsonParser.Feature.AUTO_CLOSE_SOURCE,false); //.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE,false);
-//		String path = rsp.paramString("path","");
 		String cp = rsp.paramString("classpath","");
-//		!"".equals(path)? new FileInputStream(path):
-		System.err.println("CP : "+cp);
-		URL resource = getClass().getClassLoader().getResource(cp);
-		System.err.println("ResourceURL: "+resource);
 		final InputStream fis =  getClass().getClassLoader().getResourceAsStream(cp);
 		Iterator<ObjectNode> node;
 		try {
 			node = objectMapper.readerFor(ObjectNode.class).readValues(fis);
-			Flowable<DataItem> flow = Flowable.fromIterable(()->node).map(on->DataItem.of(ReplicationJSON.parseJSON(on))).doOnNext(e->System.err.println("ITEM!"));
+			Flowable<DataItem> flow = Flowable.fromIterable(()->node).map(on->DataItem.of(ReplicationJSON.parseJSON(on)));
 			for (ReactiveTransformer trans : transformers) {
 				flow = flow.compose(trans.execute(context));
 			}

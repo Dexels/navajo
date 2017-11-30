@@ -98,7 +98,6 @@ public class XML {
 					public void onComplete() {
 						feeder.endOfInput();
 						child.onComplete();
-						System.err.println("Completing!!!!");
 					}
 
 					@Override
@@ -114,15 +113,7 @@ public class XML {
 						try {
 							List<XMLEvent> x = StreamSupport.stream(feeder.parse(buffer).spliterator(), false)
 					                .collect(Collectors.toList());
-							System.err.println("# of elements: "+x.size());
-							for (XMLEvent xmlEvent : x) {
-								System.err.println("Element: "+xmlEvent);
-							}
-							fromIterable = Observable
-									.fromIterable(x)
-									.doOnComplete(()->System.err.println("BLEB"))
-//									.doOnNext(y->System.err.println("Requested: "+y))
-									.doOnSubscribe(s->System.err.println("Subscr"));
+							fromIterable = Observable.fromIterable(x);
 							child.onNext(fromIterable);
 						} catch (XMLStreamException e) {
 							child.onError(e);
@@ -133,7 +124,6 @@ public class XML {
 
 					@Override
 					public void onSubscribe(Disposable d) {
-						System.err.println("SUBSCRIBED!!!");
 					}
 					
 

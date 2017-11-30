@@ -23,7 +23,6 @@ public class BackpressureAdministrator implements Subscription {
 
 	public void registerIncoming(int i) {
 		incoming += i;
-		System.err.println("Incoming total: "+incoming);
 	}
 
 	public void initialize() {
@@ -39,7 +38,6 @@ public class BackpressureAdministrator implements Subscription {
 	}
 	@Override
 	public void request(long n) {
-		System.err.println("Request received by: "+this.operatorName+" : "+n);
 		BackpressureHelper.add(requested, n);
 		if(n==Long.MAX_VALUE) {
 			downstreamSubsciption.request(Long.MAX_VALUE);
@@ -50,7 +48,6 @@ public class BackpressureAdministrator implements Subscription {
 	
 
 	public long amountToRequest(long emitted,long requested) {
-//		System.err.println("Request: emitted: "+emitted+" requested: "+requested);
 		if(requested == Long.MAX_VALUE) {
 			return 0;
 		}
@@ -63,7 +60,7 @@ public class BackpressureAdministrator implements Subscription {
 	public void requestIfNeeded() {
 		// locking incorrect I think
 		long req = amountToRequest(incoming, requested.get());
-		System.err.println("Request name: "+this.operatorName+" incoming: "+incoming+" requested: "+requested.get()+" requesting more: "+req);
+//		System.err.println("Request name: "+this.operatorName+" incoming: "+incoming+" requested: "+requested.get()+" requesting more: "+req);
 		if(req>0) {
 			downstreamSubsciption.request(req);
 			requested.addAndGet(req);
@@ -80,7 +77,7 @@ public class BackpressureAdministrator implements Subscription {
 	public void registerEmission(int i) {
 //		System.err.println("WHOOP!");
 //		emitted+=i;
-		System.err.println("Emitted new items: "+i+" name: "+this.operatorName+" requested: "+requested.get()+" incoming: "+incoming);
+//		System.err.println("Emitted new items: "+i+" name: "+this.operatorName+" requested: "+requested.get()+" incoming: "+incoming);
 	}
 
 }

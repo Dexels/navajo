@@ -37,7 +37,7 @@ public class ParseSubscriber implements FlowableSubscriber<byte[]> {
 //		}		
 		
 		// TODO check for additional events? TEST
-		System.err.println("Done!");
+//		System.err.println("Done!");
 		child.onComplete();
 //		drain();
 	}

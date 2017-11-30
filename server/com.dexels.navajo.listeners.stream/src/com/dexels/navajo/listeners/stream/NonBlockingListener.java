@@ -32,7 +32,6 @@ import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.script.api.Access;
@@ -42,7 +41,6 @@ import com.github.davidmoten.rx2.Bytes;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import nl.codemonkey.reactiveservlet.Servlets;
 
@@ -118,10 +116,7 @@ public class NonBlockingListener extends HttpServlet {
 				public void onTimeout(AsyncEvent ae) throws IOException {
 					Throwable throwable = ae.getThrowable();
 					if(throwable!=null) {
-						System.err.println("Throwable found");
 						responseSubscriber.onError(throwable);						
-					} else {
-						System.err.println("Throwable not found");
 					}
 				}
 				
@@ -132,19 +127,15 @@ public class NonBlockingListener extends HttpServlet {
 				
 				@Override
 				public void onError(AsyncEvent ae) throws IOException {
-					System.err.println("Error: "+ae);
 					Throwable throwable = ae.getThrowable();
 					if(throwable!=null) {
-						System.err.println("Throwable found");
-						responseSubscriber.onError(throwable);						
-					} else {
-						System.err.println("Throwable not found");
+						responseSubscriber.onError(throwable);
+						logger.error("Error in Async Listener: ", throwable);
 					}
 				}
 				
 				@Override
 				public void onComplete(AsyncEvent ae) throws IOException {
-//					System.err.println("COMPLETE: "+ae);
 				}
 			});
 			try {
@@ -190,8 +181,6 @@ public class NonBlockingListener extends HttpServlet {
 //					.doOnNext(StreamDocument.appendToFile("/Users/frank/dumps/uncompresseddump"+context.service))
 //					.doOnSubscribe(e->StreamDocument.removeFile("/Users/frank/dumps/uncompresseddump"+context.service))
 					.compose(StreamCompress.compress(responseEncoding))
-					.doOnError(e->System.err.println("WHOOPS!"))
-					.doOnCancel(()->System.err.println("Cancel detected!"))
 					.onErrorResumeNext(new Function<Throwable, Publisher<? extends byte[]>>() {
 						@Override
 						public Publisher<? extends byte[]> apply(Throwable e1) throws Exception {
@@ -287,14 +276,11 @@ public class NonBlockingListener extends HttpServlet {
 
 	
 		Flowable<NavajoStreamEvent> input = getBlockingInput(req)
-//			.doOnNext(compressed->System.err.println("EE: "+new String(compressed)))
 			.compose(StreamCompress.decompress(Optional.ofNullable(requestEncoding)))
 			.lift(XML.parseFlowable(10))
-//			.doOnNext(event->System.err.println("XML EVENT: "+event))
 			.concatMap(e->e)
 			.lift(StreamDocument.parse())
 			.concatMap(e->e);
-//			.doOnNext(event->System.err.println("INPUT EVENT: "+event));
 		
 		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),attributes,Optional.of(input),Optional.of(this.reactiveScriptEnvironment));
 	}

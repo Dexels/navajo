@@ -23,8 +23,6 @@ public class InputStreamSourceFactory implements ReactiveSourceFactory {
 	public ReactiveSource build(String relativePath, String type, XMLElement x, ReactiveParameters params,
 			List<ReactiveTransformer> transformers, Type finalType, Function<String, ReactiveMerger> reducerSupplier,
 			Function<String, ReactiveMapper> mapperSupplier) {
-		System.err.println("final: "+finalType);
-		
 		return new InputStreamSource(params,relativePath,x,finalType,transformers);
 	}
 

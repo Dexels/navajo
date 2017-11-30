@@ -46,11 +46,8 @@ public class NAVADOC {
 						switch(event.type()) {
 						case MESSAGE_STARTED:
 							pathStack.push(event.path());
-//							System.err.println("Stack: "+pathStack);
 							break;
 						case ARRAY_ELEMENT_STARTED:
-//							pathStack.push(event.path());
-//							System.err.println("Stack: "+pathStack);
 							break;
 						case MESSAGE:
 							if(matches(messagePath,pathStack)) {
@@ -63,16 +60,13 @@ public class NAVADOC {
 						case ARRAY_ELEMENT:
 							if(matches(messagePath,pathStack)) {
 								Msg transformed = operation.call((Msg) event.body());
-//								System.err.println("Transformed: "+transformed);
 								outbound.onNext(Events.arrayElement(transformed,event.attributes()));
 								return;
 							}
-//							pathStack.pop();
 							break;
 							// TODO Support these?
 						case ARRAY_STARTED:
 							pathStack.push(event.path());
-//							System.err.println("Stack: "+pathStack);
 							break;
 						case ARRAY_DONE:
 							pathStack.pop();
