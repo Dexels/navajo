@@ -71,8 +71,20 @@ public class TipiGenericChart extends TipiSwingDataComponentImpl {
 	         
 	      boolean hasMultipleSeries = seriesSet.size() > 1;
 	      
-	      String xAxisTitle = stats.getMessage(0).getProperty(category).getDescription();
-	      String yAxisTitle = stats.getMessage(0).getProperty(value).getDescription();
+	      String xAxisTitle = "";
+	      String yAxisTitle = "";
+	      if (stats.getArraySize() != 0) {
+		      if (stats.getMessage(0).getProperty(category).getDescription() != null) {
+		    	  xAxisTitle = stats.getMessage(0).getProperty(category).getDescription();
+		      } else {
+		    	  xAxisTitle = stats.getMessage(0).getProperty(category).getValue();
+		      }
+		      if (stats.getMessage(0).getProperty(value).getDescription() != null) {
+		    	  yAxisTitle = stats.getMessage(0).getProperty(value).getDescription();
+		      } else {
+			      yAxisTitle = stats.getMessage(0).getProperty(value).getValue();
+		      }
+	      }
 	      
 	      JFreeChart f = null;
 	      if ( type.equals("bar")) {
