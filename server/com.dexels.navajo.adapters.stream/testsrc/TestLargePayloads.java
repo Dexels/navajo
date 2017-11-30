@@ -1,3 +1,6 @@
+import java.nio.charset.Charset;
+import java.util.concurrent.atomic.AtomicLong;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.logging.LogLevel;
 import io.reactivex.netty.protocol.http.client.HttpClient;
@@ -5,9 +8,6 @@ import io.reactivex.netty.protocol.http.server.HttpServer;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
-
-import java.nio.charset.Charset;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class TestLargePayloads {
   private static AtomicLong clientWrote = new AtomicLong(0);

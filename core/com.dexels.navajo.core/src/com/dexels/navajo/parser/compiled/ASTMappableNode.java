@@ -47,7 +47,7 @@ public final class ASTMappableNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws TMLExpressionException {
 		        if (mapNode == null) {
 		            throw new TMLExpressionException("No known mapobject");
 		        }
@@ -61,7 +61,7 @@ public final class ASTMappableNode extends SimpleNode {
 		            objects = new ArrayList();
 		        }
 		        for (int i = 0; i < args; i++) {
-		            Object a = jjtGetChild(i).interpretToLambda().apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage);
+		            Object a = jjtGetChild(i).interpretToLambda().apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
 		            if(objects!=null) {
 		                objects.add(a);
 		            }

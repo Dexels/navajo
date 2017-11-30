@@ -1,21 +1,38 @@
 <reactive array="Organization">
 	<source.sql resource="dummy">
-		<param name="query">select * from ORGANIZATION WHERE ROWNUM &lt;=20</param>
+		<param name="query">select * from ORGANIZATION WHERE ORGANIZATIONID='BBBD11T' AND ROWNUM &lt;=1</param>
+		<msg.single.msg>
+		</msg.single.msg>
 		<msg.mergeSingle.msg>
-			<source.sql resource="dummy" single="OrganizationAttribute">
-			<param name="query">select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?</param>
-			<parameval>[ORGANIZATIONID]</parameval>
+			<source.sql resource="dummy">
+				<param name="query">select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?</param>
+				<parameval>[ORGANIZATIONID]</parameval>
+				<msg.single.msg>
+				</msg.single.msg>
+			</source.sql>
 			<reducer>
-				<set>
+				<setkv>
 					<parameval name="to">[ATTRIBNAME]</parameval>
 					<parameval name="value">[ATTRIBVALUE]</parameval>
+				</setkv>
+				<set>
+					<parameval debug="true" name="Count">[@Count]+1</parameval>
 				</set>
 			</reducer>
 			<joiner>
-				<delete name="SHORTNAME,UPDATEBY,REMARKS"/>
-				<toSubMessage name="Attributes"/>
+				<!-- <toSubMessage name="Attributes"/> -->
+				<set>
+					<parameval debug="true" name="Mix">[SHORTNAME]+'-'+[TYPEOFORGANIZATION]+'-'+[@STOCKINGCOLORS]
+					</parameval>
+				</set>
+				<delete name="REMARKS,UPDATEBY,LASTUPDATE" />
 			</joiner>
-			</source.sql>
 		</msg.mergeSingle.msg>
+		<msg.single.msg>
+		</msg.single.msg>
+		<msg.stream.event messageName="Club">
+			<parameval name="isArray">true</parameval>
+		</msg.stream.event>
+
 	</source.sql>
 </reactive>

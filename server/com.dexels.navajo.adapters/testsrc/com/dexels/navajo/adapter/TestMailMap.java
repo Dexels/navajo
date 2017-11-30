@@ -11,13 +11,13 @@ public class TestMailMap {
 	public void test() {
 
 		MailMap m = new MailMap();
-		m.setSmtpUser("user");
-		m.setSmtpPass("***");
-		m.setMailServer("smtp.mail.org");
-		m.setSubject("test1");
-		m.setSender("sombody@mydomain.com");
+//		m.setSmtpUser("Secretaris-BBJS05L");
+//		m.setSmtpPass("***");
+		m.setMailServer("localhost");
+		m.setSubject("test2");
+		m.setSender("somebody@club.knkv.nl");
 		m.setText("boomshakalakka");
-		m.setRecipients("somebody@somewhere.com");
+		m.setRecipients("NCX26G8@club.knkv.nl");
 		boolean b = m.send();
 		assertTrue(b);
 	}

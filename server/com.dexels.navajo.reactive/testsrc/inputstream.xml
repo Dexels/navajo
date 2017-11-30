@@ -1,0 +1,5 @@
+<reactive>
+	<source.inputstream classpath="3persons.json">
+		<msg.stream.event messageName="Person" isArray.eval="false"/>
+	</source.inputstream>
+</reactive>

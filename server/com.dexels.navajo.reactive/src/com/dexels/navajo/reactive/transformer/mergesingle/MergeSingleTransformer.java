@@ -6,7 +6,6 @@ import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
-import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 
@@ -17,14 +16,12 @@ import io.reactivex.functions.Function;
 
 public class MergeSingleTransformer implements ReactiveTransformer {
 
-	private ReactiveParameters parameters;
 	private final ReactiveSource source;
 //	private final Function<StreamScriptContext, BiFunction<ReplicationMessage, ReplicationMessage, ReplicationMessage>> reducer;
-	private final Optional<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> reducer;
-	private final Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> joiner;
+	private final Optional<Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>>> reducer;
+	private final Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>> joiner;
 
-	public MergeSingleTransformer(ReactiveParameters parameters,ReactiveSource source,  Optional<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> reducer, Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> joiner) {
-		this.parameters = parameters;
+	public MergeSingleTransformer(ReactiveSource source,  Optional<Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>>> reducer, Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>> joiner) {
 		this.source = source;
 		this.reducer = reducer;
 		this.joiner = joiner;
@@ -35,10 +32,10 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 		return flow->flow.flatMap(item->{
 			Flowable<DataItem> sourceStream = source.execute(context,  Optional.of(item.message()));
 			if(reducer.isPresent()) {
-				sourceStream = sourceStream.reduce(DataItem.of(ReactiveScriptParser.empty()), (a,i)->reducer.get().apply(context).apply(a, Optional.of(i))).toFlowable();
+				sourceStream = sourceStream.reduce(DataItem.of(ReactiveScriptParser.empty()), (a,i)->reducer.get().apply(context).apply(a, i)).toFlowable();
 			}
 			return sourceStream
-				.map(reducedItem->joiner.apply(context).apply(item,Optional.of(reducedItem)));
+				.map(reducedItem->joiner.apply(context).apply(item,reducedItem));
 		},false,10);
 				
 				

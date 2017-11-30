@@ -1,5 +1,6 @@
 package com.dexels.navajo.document.stream;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -9,21 +10,15 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 import java.util.AbstractMap;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-import java.util.zip.DataFormatException;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
 
-import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
@@ -54,6 +49,7 @@ import io.reactivex.FlowableTransformer;
 import io.reactivex.ObservableOperator;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import rx.functions.Func1;
 
 public class StreamDocument {
@@ -91,7 +87,8 @@ public class StreamDocument {
 
 					@Override
 					public void onNext(Navajo n) {
-						for (NavajoStreamEvent event : NavajoDomStreamer.processNavajo(n)) {
+						List<NavajoStreamEvent> eventList = NavajoDomStreamer.processNavajo(n);
+						for (NavajoStreamEvent event : eventList) {
 							child.onNext(event);
 						}
 					}
@@ -258,9 +255,7 @@ public class StreamDocument {
 							} catch (IOException e) {
 								operatorError(e, child);
 							}
-//							child.onNext(result);
 						}
-//						child.onComplete();
 						operatorComplete(child);
 					}
 
@@ -460,46 +455,9 @@ public class StreamDocument {
 			}
 		};
 	}
-	
-	
-//	public static FlowableOperator<byte[], NavajoStreamEvent> serialize() {
-//		return new BaseFlowableOperator<byte[], NavajoStreamEvent>(100) {
-//			@Override
-//			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super byte[]> child) throws Exception {
-//				return new Subscriber<NavajoStreamEvent>() {
-//					
-//					Subscription subscription = null;
-//					private final NavajoStreamSerializer serializer = new NavajoStreamSerializer();
-//
-//					@Override
-//					public void onComplete() {
-//						child.onComplete();
-//					}
-///
-//					@Override
-//					public void onError(Throwable e) {
-//						child.onError(e);
-//					}
-//
-//					@Override
-//					public void onNext(NavajoStreamEvent event) {
-//						byte[] serialized = serializer.serialize(event);
-//						System.err.println("Propagating bytes with size: "+serialized.length);
-//						child.onNext(serialized);
-//						subscription.request(1);
-//					}
-//
-//					@Override
-//					public void onSubscribe(Subscription s) {
-//						subscription = s;
-//						s.request(1);
-//					}};
-//			}
-//		};
-//	}
 
 	public static FlowableOperator<byte[], NavajoStreamEvent> serialize() {
-		return new BaseFlowableOperator<byte[],NavajoStreamEvent>(32000) {
+		return new BaseFlowableOperator<byte[],NavajoStreamEvent>(2) {
 			private final NavajoStreamSerializer collector = new NavajoStreamSerializer();
 
 			@Override
@@ -697,84 +655,6 @@ public class StreamDocument {
 			}
 		};
 	}
-	
-	public static FlowableOperator<String,NavajoStreamEvent> observeBinaryold(final String path) {
-		return new FlowableOperator<String,NavajoStreamEvent>(){
-			@Override
-			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super String> child) {
-				return new Subscriber<NavajoStreamEvent>() {
-
-					private final Stack<String> pathStack = new Stack<>();
-					private BackpressureAdministrator backpressureAdmin;
-					
-					@Override
-					public void onSubscribe(Subscription s) {
-				        this.backpressureAdmin = new BackpressureAdministrator("observeBinary",Long.MAX_VALUE, s);
-						child.onSubscribe(backpressureAdmin);
-						backpressureAdmin.initialize();					}
-					
-					@Override
-					public void onComplete() {
-						child.onComplete();
-					}
-
-					@Override
-					public void onError(Throwable e) {
-						child.onError(e);
-					}
-
-					@Override
-					public void onNext(NavajoStreamEvent event) {
-						switch(event.type()) {
-						case MESSAGE_STARTED:
-							pathStack.push(event.path());
-							break;
-						case ARRAY_ELEMENT_STARTED:
-							break;
-						case MESSAGE:
-							pathStack.pop();
-							break;
-						case ARRAY_ELEMENT:
-							break;
-							// TODO Support these?
-						case ARRAY_STARTED:
-							pathStack.push(event.path());
-							break;
-						case ARRAY_DONE:
-							pathStack.pop();
-							break;
-						case BINARY_STARTED:
-							pathStack.push(event.path());
-							break;
-						case BINARY_DONE:
-							if(matches(path,pathStack)) {
-								child.onComplete();
-							}
-							pathStack.pop();
-							break;
-						case BINARY_CONTENT:
-							if(matches(path,pathStack)) {
-								child.onNext((String) event.body());
-								backpressureAdmin.registerEmission(1);
-								backpressureAdmin.requestIfNeeded();
-								return;
-							}
-						default:
-							break;
-						}
-						backpressureAdmin.consumedEvent();
-						backpressureAdmin.requestIfNeeded();
-					}
-
-					private boolean matches(String path, Stack<String> pathStack) {
-						String joined = String.join("/", pathStack);
-						return path.equals(joined);
-					}
-				};
-			}};
-	}
-
-
 	public static FlowableOperator<NavajoStreamEvent,NavajoStreamEvent> messageWithPath(final String messagePath, final Func1<Msg,Msg> operation, boolean filterOthers) {
 		return new BaseFlowableOperator<NavajoStreamEvent,NavajoStreamEvent>(1) {
 
@@ -871,99 +751,6 @@ public class StreamDocument {
 		};
 	}
 	
-	public static FlowableOperator<String, byte[]> decodeNew(String encodingName) {
-		
-		final CharsetDecoder charsetDecoder = Charset.forName(encodingName).newDecoder();
-		return new BaseFlowableOperator<String,byte[]>(10) {
-
-            private ByteBuffer leftOver = null;
-			private BackpressureAdministrator backpressureAdmin;
-
-			@Override
-			public Subscriber<? super byte[]> apply(Subscriber<? super String> child) throws Exception {
-				return new Subscriber<byte[]>() {
-
-					@Override
-					public void onComplete() {
-						operatorComplete(child);
-					}
-
-					@Override
-					public void onError(Throwable t) {
-						operatorError(t, child);
-					}
-
-					@Override
-					public void onNext(byte[] v) {
-						operatorNext(v, data->{
-							return "";
-						}, child);
-					}
-
-					
-	                public void process(byte[] next, ByteBuffer last, boolean endOfInput) throws CharacterCodingException {
-	                    ByteBuffer bb;
-	                    if (last != null) {
-	                        if (next != null) {
-	                            // merge leftover in front of the next bytes
-	                            bb = ByteBuffer.allocate(last.remaining() + next.length);
-	                            bb.put(last);
-	                            bb.put(next);
-	                            bb.flip();
-	                        }
-	                        else { // next == null
-	                            bb = last;
-	                        }
-	                    }
-	                    else { // last == null
-	                        if (next != null) {
-	                            bb = ByteBuffer.wrap(next);
-	                        }
-	                        else { // next == null
-	                            return;
-	                        }
-	                    }
-
-	                    CharBuffer cb = CharBuffer.allocate((int) (bb.limit() * charsetDecoder.averageCharsPerByte()));
-	                    CoderResult cr = charsetDecoder.decode(bb, cb, endOfInput);
-	                    cb.flip();
-
-	                    if (cr.isError()) {
-//	                        try {
-	                            cr.throwException();
-//	                        }
-//	                        catch (CharacterCodingException e) {
-//	                            child.onError(e);
-//	                            return false;
-//	                        }
-	                    }
-
-	                    if (bb.remaining() > 0) {
-	                        leftOver = bb;
-	                    }
-	                    else {
-	                        leftOver = null;
-	                    }
-
-	                    String string = cb.toString();
-	                    if (!string.isEmpty()) {
-	                        child.onNext(string);
-	                        backpressureAdmin.registerEmission(1);
-	                        backpressureAdmin.requestIfNeeded();
-	                    } else {
-	                        backpressureAdmin.requestIfNeeded();
-	                    }
-	                    return;
-	                }
-	                
-					@Override
-					public void onSubscribe(Subscription s) {
-						operatorSubscribe(s, child);
-					}
-				};
-			}
-		};
-	}
 	public static FlowableOperator<String, byte[]> decode(String encodingName) {
 		
 		final CharsetDecoder charsetDecoder = Charset.forName(encodingName).newDecoder();
@@ -1068,371 +855,35 @@ public class StreamDocument {
 			}
 		};
 	}
-
-	public static FlowableTransformer<byte[], byte[]> decompress2(String encoding) {
-		return new FlowableTransformer<byte[], byte[]>(){
-
-			@Override
-			public Publisher<byte[]> apply(Flowable<byte[]> f) {
-				if("jzlib".equals(encoding) || "deflate".equals(encoding) || "inflate".equals(encoding)) {
-					return f
-							.doOnNext(bb->System.err.println("Decompressing: "+encoding+" bytes: "+bytesToHex(bb)))
-							.lift(inflate2()).concatMap(e->e);
-				}
-				// TODO gzip
-				return f;
-			}};
-	}
+	public static void removeFile(final String path) {
+		File f = new File(path);
+		if(f.exists()) {
+			f.delete();
+		}
+ 	}
 	
-	private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
-	public static String bytesToHex(byte[] bytes) {
-	    char[] hexChars = new char[bytes.length * 2];
-	    for ( int j = 0; j < bytes.length; j++ ) {
-	        int v = bytes[j] & 0xFF;
-	        hexChars[j * 2] = hexArray[v >>> 4];
-	        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-	    }
-	    return new String(hexChars);
-	}
-	
-	public static FlowableTransformer<byte[], byte[]> compress(Optional<String> encodingDefinition) {
-		return new FlowableTransformer<byte[], byte[]>(){
-
-			@Override
-			public Publisher<byte[]> apply(Flowable<byte[]> f) {
-				if(!encodingDefinition.isPresent()) {
-					return f;
-				}
-				String encoding = encodingDefinition.get();
-				if("jzlib".equals(encoding) || "deflate".equals(encoding) || "inflate".equals(encoding)) {
-					return f.lift(deflate2()).concatMap(e->e);
-				}
-				// TODO gzip
-				return f;
-			}};
-	}
-	
-//	public static FlowableOperator<byte[], byte[]> compress(String encoding) {
-//		if(encoding==null) {
-//			return identity();
-//		}
-//		
-//		if("jzlib".equals(encoding) || "deflate".equals(encoding)) {
-//			return deflate();
-//		}
-//		// TODO gzip
-//		return identity();
-//	}
-
-//	public static FlowableOperator<byte[], byte[]> deflate() {
-//		return new FlowableOperator<byte[], byte[]>() {
-//			Deflater deflater = new Deflater();
-//			private static final int COMPRESSION_BUFFER_SIZE = 16384;
-//
-//			@Override
-//			public Subscriber<? super byte[]> apply(Subscriber<? super byte[]> child) {
-//				return new Op(child);
-//			}
-//
-//			final class Op implements FlowableSubscriber<byte[]> {
-//				final Subscriber<? super byte[]> child;
-//
-//				private BackpressureAdministrator backpressureAdmin;
-//
-//				public Op(Subscriber<? super byte[]> child) {
-//					this.child = child;
-//				}
-//
-//				@Override
-//				public void onSubscribe(Subscription s) {
-//			        this.backpressureAdmin = new BackpressureAdministrator("deflate",1, s);
-//					child.onSubscribe(backpressureAdmin);
-//					backpressureAdmin.initialize();
-//				}
-//
-//				@Override
-//				public void onNext(byte[] in) {
-//					deflater.setInput(in);
-//					byte[] buffer = new byte[COMPRESSION_BUFFER_SIZE];
-//					int read;
-//					while(true) {
-//						read = deflater.deflate(buffer,0,buffer.length,Deflater.NO_FLUSH);
-//						if(read>0) {
-//							byte[] copied = Arrays.copyOfRange(buffer, 0, read);
-//							child.onNext(copied);
-//							backpressureAdmin.registerEmission(1);
-//						} else {
-//							break;
-//						}
-//					}
-//					
-//				}
-//
-//				@Override
-//				public void onError(Throwable e) {
-//					child.onError(e);
-//				}
-//
-//				@Override
-//				public void onComplete() {
-//					deflater.finish();
-//					onNext(new byte[]{});
-//					child.onComplete();
-//				}
-//			}
-//		};
-//	}
-
-	public static FlowableOperator<Flowable<byte[]>, byte[]> deflate2() {
-		return new BaseFlowableOperator<Flowable<byte[]>, byte[]>(10) {
-
-			@Override
-			public Subscriber<? super byte[]> apply(Subscriber<? super Flowable<byte[]>> child) throws Exception {
-				
-				
-				return new Subscriber<byte[]>() {
-					Deflater deflater = new Deflater();
-					final int COMPRESSION_BUFFER_SIZE = 16384;
-
-					@Override
-					public void onComplete() {
-						deflater.finish();
-						byte[] buffer = new byte[COMPRESSION_BUFFER_SIZE];
-						queue.offer(Flowable.fromIterable(new Iterable<byte[]>(){
-
-								@Override
-								public Iterator<byte[]> iterator() {				
-									return new Iterator<byte[]>() {
-										int read;
-										boolean first = true;
-										@Override
-										public boolean hasNext() {
-											read = deflater.deflate(buffer,0,buffer.length,Deflater.FULL_FLUSH);
-											boolean needsInput = deflater.needsInput();
-											boolean hasMore = (first || needsInput) && read > 0;
-											first = false;
-											return hasMore;
-										}
-
-										@Override
-										public byte[] next() {
-											return Arrays.copyOfRange(buffer, 0, read);
-										}
-									};
-								}
-						}));
-						operatorComplete(child);
-					}
-
-					@Override
-					public void onError(Throwable t) {
-						operatorError(t, child);
-					}
-
-					@Override
-					public void onNext(byte[] dataIn) {
-						deflater.setInput(dataIn);
-						byte[] buffer = new byte[COMPRESSION_BUFFER_SIZE];
-						operatorNext(dataIn, data->{
-							return Flowable.fromIterable(new Iterable<byte[]>(){
-
-								@Override
-								public Iterator<byte[]> iterator() {				
-									return new Iterator<byte[]>() {
-										int read;
-										boolean first = true;
-										@Override
-										public boolean hasNext() {
-											read = deflater.deflate(buffer,0,buffer.length,Deflater.FULL_FLUSH);
-											boolean needsInput = deflater.needsInput();
-											boolean hasMore = (first || needsInput) && read > 0;
-											first = false;
-											return hasMore;
-										}
-
-										@Override
-										public byte[] next() {
-											return Arrays.copyOfRange(buffer, 0, read);
-										}
-									};
-								}
-							});
-						}, child);
-					}
-
-					@Override
-					public void onSubscribe(Subscription s) {
-						operatorSubscribe(s, child);
-					}
-				};
+	/**
+	 * Not very fast, as stream gets opened and closed all the time
+	 * @param path
+	 * @return
+	 */
+	public static Consumer<byte[]> appendToFile(final String path) {
+		return b->{
+			File appendTo = new File(path);
+			
+			if(appendTo.isAbsolute() && !appendTo.getParentFile().exists()) {
+				appendTo.getParentFile().mkdirs();
 			}
+//			System.err.println("Appending to: "+appendTo.getAbsolutePath());
+			try(FileOutputStream out = new FileOutputStream(appendTo,true)) {
+				out.write(b);
+			} catch (IOException e) {
+				logger.error("Error dumping data to file: ", path);
+			}
+			
 		};
 	}
-	public static FlowableOperator<Flowable<byte[]>, byte[]> inflate2() {
-		Inflater inflater = new Inflater();
-		return new BaseFlowableOperator<Flowable<byte[]>, byte[]>(10) {
-
-			@Override
-			public Subscriber<? super byte[]> apply(Subscriber<? super Flowable<byte[]>> child) throws Exception {
-				return new Subscriber<byte[]>(){
-
-					final int COMPRESSION_BUFFER_SIZE = 16384;
-					byte[] buffer = new byte[COMPRESSION_BUFFER_SIZE];
-
-					@Override
-					public void onComplete() {
-						inflater.finished();
-						Iterable<byte[]> output = new Iterable<byte[]>(){
-
-							@Override
-							public Iterator<byte[]> iterator() {
-								return new Iterator<byte[]>(){
-									int read;
-									boolean first = true;
-
-									@Override
-									public boolean hasNext() {
-										boolean needsInput = inflater.needsInput();
-										
-										try {
-											System.err.println("Needs input: "+needsInput);
-											read = inflater.inflate(buffer);
-											boolean hasMore = (first || needsInput) && read > 0;
-											first = false;
-											return hasMore;
-										} catch (DataFormatException e) {
-											e.printStackTrace();
-											child.onError(e);
-											return false;
-										}
-									}
-
-									@Override
-									public byte[] next() {
-										return Arrays.copyOfRange(buffer, 0, read);
-									}};
-							}};
-						queue.offer(Flowable.fromIterable(output));						
-						operatorComplete(child);
-					}
-
-					@Override
-					public void onError(Throwable t) {
-						operatorError(t,child);
-						
-					}
-
-					@Override
-					public void onNext(byte[] data) {
-						inflater.setInput(data);
-						Iterable<byte[]> output = new Iterable<byte[]>(){
-
-								@Override
-								public Iterator<byte[]> iterator() {
-									return new Iterator<byte[]>(){
-										int read;
-										boolean first = true;
-
-										@Override
-										public boolean hasNext() {
-											boolean needsInput = inflater.needsInput();
-											
-											try {
-												read = inflater.inflate(buffer);
-												boolean hasMore = (first || needsInput) && read > 0;
-												first = false;
-												return hasMore;
-											} catch (DataFormatException e) {
-												e.printStackTrace();
-												child.onError(e);
-												return false;
-											}
-										}
-
-										@Override
-										public byte[] next() {
-											return Arrays.copyOfRange(buffer, 0, read);
-										}};
-								}};
-							queue.offer(Flowable.fromIterable(output));
-							drain(child);
-					}
-
-					@Override
-					public void onSubscribe(Subscription s) {
-						operatorSubscribe(s, child);
-						
-					}
-
-
-				};
-			}
-		};
-				
-	}
 	
-//	public static FlowableOperator<byte[], byte[]> inflate() {
-//		return new FlowableOperator<byte[], byte[]>() {
-//			Inflater inflater = new Inflater();
-//			private static final int COMPRESSION_BUFFER_SIZE = 16384;
-//
-//			@Override
-//			public Subscriber<? super byte[]> apply(Subscriber<? super byte[]> child) {
-//				return new Op(child);
-//			}
-//
-//			final class Op implements FlowableSubscriber<byte[]> {
-//				final Subscriber<? super byte[]> child;
-//				private BackpressureAdministrator backpressureAdmin;
-//
-//				public Op(Subscriber<? super byte[]> child) {
-//					this.child = child;
-//				}
-//
-//				@Override
-//				public void onSubscribe(Subscription s) {
-//			        this.backpressureAdmin = new BackpressureAdministrator("inflate",1, s);
-//					child.onSubscribe(backpressureAdmin);
-//					backpressureAdmin.initialize();			
-//				}
-//
-//				@Override
-//				public void onNext(byte[] v) {
-//					inflater.setInput(v);
-//					byte[] buffer = new byte[COMPRESSION_BUFFER_SIZE];
-//					int read;
-//					try {
-//						while(!inflater.needsInput()) {
-//							read = inflater.inflate(buffer);
-//							if(read>0) {
-//								child.onNext(Arrays.copyOfRange(buffer, 0, read));
-//							}
-//							backpressureAdmin.registerEmission(1);
-//						}
-//					} catch (DataFormatException e) {
-//						child.onError(e);
-//					}
-//				}
-//
-//				@Override
-//				public void onError(Throwable e) {
-//					child.onError(e);
-//				}
-//
-//				@Override
-//				public void onComplete() {
-//					int remaining = inflater.getRemaining();
-//					if(remaining>0) {
-//						byte[] rm = new byte[remaining];
-//						child.onNext(rm);
-//					}
-//					child.onComplete();
-//				}
-//			}
-//		};
-//	}
-
-
 	public static Subscriber<byte[]> dumpToFile(final String path) {
 		return new Subscriber<byte[]>() {
 			
@@ -1441,7 +892,6 @@ public class StreamDocument {
 			
 			@Override
 			public void onComplete() {
-				System.err.println("filedump done");
 				if(out!=null) {
 					try {
 						out.flush();
@@ -1469,7 +919,6 @@ public class StreamDocument {
 
 			@Override
 			public void onNext(byte[] b) {
-				System.err.println("filedump: "+b.length);
 				try {
 					if(out==null) {
 						out =  new FileOutputStream(path);
@@ -1485,7 +934,6 @@ public class StreamDocument {
 
 			@Override
 			public void onSubscribe(Subscription s) {
-				System.err.println("Subscribing filedump");
 				this.subscription = s;
 				s.request(1);
 			}
@@ -1508,6 +956,9 @@ public class StreamDocument {
 
 			@Override
 			public Flowable<NavajoStreamEvent> apply(Flowable<ReplicationMessage> in) {
+				if(!isArray) {
+					in = in.take(1);
+				}
 				Flowable<NavajoStreamEvent> events = in.concatMap(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,isArray));
 				if(!isArray) {
 					return events;
@@ -1520,12 +971,11 @@ public class StreamDocument {
 	}
 
 	public static FlowableTransformer<ReplicationMessage, NavajoStreamEvent> toMessage(String name) {
-		System.err.println("Name: "+name);
 		return new FlowableTransformer<ReplicationMessage, NavajoStreamEvent>() {
 
 			@Override
 			public Flowable<NavajoStreamEvent> apply(Flowable<ReplicationMessage> in) {
-	        	return in.concatMap(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,false));
+				return in.concatMap(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,false));
 			}
 		};
 	}
@@ -1695,7 +1145,6 @@ public class StreamDocument {
 	public static Message replicationToMessage(ReplicationMessage msg, String name, boolean isArrayElement) {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message m = NavajoFactory.getInstance().createMessage(n, name, isArrayElement ? Message.MSG_TYPE_ARRAY_ELEMENT : Message.MSG_TYPE_SIMPLE);
-//		System.err.println(">> "+msg.toFlatString(new JSONReplicationMessageParserImpl()));
 		List<Property> pp = msg.columnNames()
 			.stream()
 			.map(e->{

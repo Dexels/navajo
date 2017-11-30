@@ -26,9 +26,9 @@ import com.dexels.navajo.authentication.api.AuthenticationMethodBuilder;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveScript;
+import com.dexels.navajo.document.stream.StreamCompress;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.Msg;
-import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -38,11 +38,12 @@ import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.LocalClient;
+import com.github.davidmoten.rx2.Bytes;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 import nl.codemonkey.reactiveservlet.Servlets;
 
 public class NonBlockingListener extends HttpServlet {
@@ -84,13 +85,6 @@ public class NonBlockingListener extends HttpServlet {
 		this.reactiveScriptEnvironment = null;
     }
 
-	private static Flowable<NavajoStreamEvent> emptyDocument(StreamScriptContext context) {
-		return Flowable.just(
-				Events.started(NavajoHead.createSimple(context.service, context.username, context.password))
-				, Events.done()
-				);
-	}
-	
 	private static Map<String, Object> extractHeaders(HttpServletRequest req) {
 		Map<String, Object> attributes = 
 			    new TreeMap<String, Object>(String.CASE_INSENSITIVE_ORDER);
@@ -103,25 +97,25 @@ public class NonBlockingListener extends HttpServlet {
 		return Collections.unmodifiableMap(attributes);
 	}
 	
+	private void handleInitialError(HttpServletResponse response, Throwable error,StreamScriptContext context) {
+		try {
+			response.sendError(502,error.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		AsyncContext ac = request.startAsync();
+		StreamScriptContext context = determineContextFromRequest(ac);
+		Optional<String> responseEncoding = decideEncoding(request.getHeader("Accept-Encoding"));
+		Subscriber<byte[]> responseSubscriber = Servlets.createSubscriber(ac,(resp,error)->handleInitialError(resp, error, context));
 		try {
-			AsyncContext ac = request.startAsync();
 			ac.setTimeout(10000000);
-			StreamScriptContext context = determineContextFromRequest(ac);
-			Optional<String> responseEncoding = decideEncoding(request.getHeader("Accept-Encoding"));
-
-			String raw = request.getHeader("X-Navajo-Raw");
-			if(raw!=null) {
-				response.setContentType(raw);
-			}
-			Subscriber<byte[]> responseSubscriber = Servlets.createSubscriber(ac);
-//			responseSubscriber.
 			ac.addListener(new AsyncListener() {
 				
 				@Override
 				public void onTimeout(AsyncEvent ae) throws IOException {
-//					System.err.println("TimeOut");
 					Throwable throwable = ae.getThrowable();
 					if(throwable!=null) {
 						System.err.println("Throwable found");
@@ -133,7 +127,6 @@ public class NonBlockingListener extends HttpServlet {
 				
 				@Override
 				public void onStartAsync(AsyncEvent ae) throws IOException {
-					System.err.println("Start ASYNC");
 					
 				}
 				
@@ -147,41 +140,40 @@ public class NonBlockingListener extends HttpServlet {
 					} else {
 						System.err.println("Throwable not found");
 					}
-					
 				}
 				
 				@Override
 				public void onComplete(AsyncEvent ae) throws IOException {
-					System.err.println("COMPLETE: "+ae);
+//					System.err.println("COMPLETE: "+ae);
 				}
 			});
 			try {
 				authenticate(context,(String)context.attributes.get("x-navajo-password"), (String)context.attributes.get("Authorization"),context.tenant);
 			} catch (Exception e1) {
 				logger.error("Authentication problem: ",e1);
-				errorMessage(context, Optional.of(e1), e1.getMessage())
+				errorMessage(true,context, Optional.of(e1), e1.getMessage())
 					.lift(StreamDocument.serialize())
-					.compose(StreamDocument.compress(responseEncoding))
+					.compose(StreamCompress.compress(responseEncoding))
 					.subscribe(responseSubscriber);	
 				return;
 			}
-			
-
-//			context.setInputFlowable(input);
-			
 			// TODO Cache file exists result + Flush on change
 			Function<? super Throwable,? extends Publisher<? extends DataItem>> cc = e->{
 				logger.error("Error detected: {}",e);
-				return errorMessage(context,Optional.of(e), e.getMessage()).map(DataItem::of);
+				return errorMessage(true,context,Optional.of(e), e.getMessage()).map(DataItem::of);
 			};
-			ReactiveScript rs = runScript(context);
-			System.err.println("DataType: "+rs.dataType());
+			String debugString = request.getHeader("X-Navajo-Debug");
+			boolean debug = debugString != null;
 			
+			ReactiveScript rs = runScript(context,debug);
+			if(responseEncoding.isPresent()) {
+				response.addHeader("Content-Encoding", responseEncoding.get());
+			}
 			switch(rs.dataType()) {
 			case DATA:
 				rs.execute(context)
 					.map(di->di.data())
-					.compose(StreamDocument.compress(responseEncoding))
+					.compose(StreamCompress.compress(responseEncoding))
 					.subscribe(responseSubscriber);
 				break;
 			case EVENT:
@@ -195,34 +187,38 @@ public class NonBlockingListener extends HttpServlet {
 					.compose(StreamDocument.inNavajo(context.service, context.username, Optional.empty()))
 					.lift(StreamDocument.filterMessageIgnore())
 					.lift(StreamDocument.serialize())
-					.compose(StreamDocument.compress(responseEncoding))
+//					.doOnNext(StreamDocument.appendToFile("/Users/frank/dumps/uncompresseddump"+context.service))
+//					.doOnSubscribe(e->StreamDocument.removeFile("/Users/frank/dumps/uncompresseddump"+context.service))
+					.compose(StreamCompress.compress(responseEncoding))
+					.doOnError(e->System.err.println("WHOOPS!"))
+					.doOnCancel(()->System.err.println("Cancel detected!"))
+					.onErrorResumeNext(new Function<Throwable, Publisher<? extends byte[]>>() {
+						@Override
+						public Publisher<? extends byte[]> apply(Throwable e1) throws Exception {
+							return errorMessage(false,context, Optional.of(e1), e1.getMessage())
+							.lift(StreamDocument.serialize())
+							.compose(StreamCompress.compress(responseEncoding));
+						}
+					})
 					.subscribe(responseSubscriber);
-			
 			}
-//			if(raw!=null) {
-//				rs.execute(context)
-//				.onErrorResumeNext(cc)
-//				.map(di->di.data())
-//				.compose(StreamDocument.compress(responseEncoding))
-//				.subscribe(responseSubscriber);
-//			} else {
-//				rs.execute(context)
-//					.onErrorResumeNext(cc)
-//					.map(di->di.event())
-//					.compose(StreamDocument.inNavajo(context.service, context.username, Optional.empty()))
-//					.lift(StreamDocument.filterMessageIgnore())
-//					.lift(StreamDocument.serialize())
-//					.compose(StreamDocument.compress(responseEncoding))
-//					.subscribe(responseSubscriber);
-//			}
-
-		} catch (Exception e1) {
-			throw new IOException("Servlet problem", e1);
+		} catch (Throwable e1) {
+			logger.error("Error: ", e1);
+			errorMessage(true, context, Optional.of(e1), e1.getMessage())
+			.lift(StreamDocument.serialize())
+			.compose(StreamCompress.compress(responseEncoding))
+			.subscribe(responseSubscriber);	
+//			ac.complete();
+//			request.getInputStream().close();
+//			response.setStatus(501);
+//			response.getOutputStream().close();
+//			throw new ServletException("Servlet problem", e1);
 		}
 	}
 
-	private ReactiveScript runScript(StreamScriptContext context) throws IOException {
-		return reactiveScriptEnvironment.run(context.service);
+
+	private ReactiveScript runScript(StreamScriptContext context, boolean debug) throws IOException {
+		return reactiveScriptEnvironment.run(context.service, debug);
 
 	}
 
@@ -234,17 +230,21 @@ public class NonBlockingListener extends HttpServlet {
 		authMethodBuilder.getInstanceForRequest(authHeader).process(a);
 	}
 
-	private static Flowable<NavajoStreamEvent> errorMessage(StreamScriptContext context, Optional<Throwable> throwable, String message) {
+	private static Flowable<NavajoStreamEvent> errorMessage(boolean wrapNavajo, StreamScriptContext context, Optional<Throwable> throwable, String message) {
 
 		String service = context.service;
-		return Msg.create("error")
+		Flowable<NavajoStreamEvent> result = Msg.create("error")
 				.with(Prop.create("code",-1))
 				.with(Prop.create("description", message))
 				.with(Prop.create("service", service))
 				.with(Prop.create("exception", throwable.isPresent()?throwable.get().getMessage():""))
 				.stream()
+//				.concatWith(Observable.just(Events.done()))
 				.toFlowable(BackpressureStrategy.BUFFER);
-//				.compose(StreamDocument.inNavajo(service, username, Optional.empty()));
+		if(wrapNavajo) {
+			result = result.compose(StreamDocument.inNavajo(context.service, context.username,Optional.of("")));
+		}
+		return result;
 	}
 	
 	public static Optional<String> decideEncoding(String accept) {
@@ -262,7 +262,10 @@ public class NonBlockingListener extends HttpServlet {
 		if (acceptedEncodings.contains("jzlib")) {
 			return Optional.of("jzlib");
 		}
-		return null;
+		if (acceptedEncodings.contains("gzip")) {
+			return Optional.of("gzip");
+		}
+		return Optional.empty();
 	}
 
 	private StreamScriptContext  determineContextFromRequest(AsyncContext ac) throws IOException {
@@ -272,26 +275,38 @@ public class NonBlockingListener extends HttpServlet {
 		String username = (String) attributes.get("X-Navajo-Username");
 		String password = (String) attributes.get("X-Navajo-Password");
 		String serviceHeader = (String) attributes.get("X-Navajo-Service");
+
 		boolean isGet = "GET".equals(req.getMethod());
+		if(serviceHeader == null) {
+			throw new NullPointerException("Missing service header. Streaming Endpoint requires a 'X-Navajo-Service' header");
+		}
 		if(isGet) {
 			return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),attributes,Optional.of(Flowable.<NavajoStreamEvent>empty().compose(StreamDocument.inNavajo(serviceHeader, Optional.of(username), Optional.of(password)))), Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment));
 		}
 		String requestEncoding = (String) attributes.get("Content-Encoding");
 
-		
-		Flowable<NavajoStreamEvent> input = Servlets.createFlowable(ac, 1000)
-			.observeOn(Schedulers.io(),false,10)
-			.compose(StreamDocument.decompress2(requestEncoding))
+	
+		Flowable<NavajoStreamEvent> input = getBlockingInput(req)
+//			.doOnNext(compressed->System.err.println("EE: "+new String(compressed)))
+			.compose(StreamCompress.decompress(Optional.ofNullable(requestEncoding)))
 			.lift(XML.parseFlowable(10))
-			.flatMap(e->e)
+//			.doOnNext(event->System.err.println("XML EVENT: "+event))
+			.concatMap(e->e)
 			.lift(StreamDocument.parse())
 			.concatMap(e->e);
-		
+//			.doOnNext(event->System.err.println("INPUT EVENT: "+event));
 		
 		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),attributes,Optional.of(input),Optional.of(this.reactiveScriptEnvironment));
 	}
 
-
+	private Flowable<byte[]> getBlockingInput(HttpServletRequest request) {
+		try {
+			return Bytes.from(request.getInputStream());
+		} catch (IOException e) {
+			return Flowable.error(e);
+		}
+	}
+	
 	// warn: Duplicated code
 	private static String determineTenantFromRequest(final HttpServletRequest req) {
 		String requestInstance = req.getHeader("X-Navajo-Instance");

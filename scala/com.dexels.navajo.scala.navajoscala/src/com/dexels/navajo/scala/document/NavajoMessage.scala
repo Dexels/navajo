@@ -45,14 +45,24 @@ class NavajoMessage(val parent: Message) {
     val message = NavajoFactory.createMessage(rootDoc, this.name)
     parent.addElement(message.parent)
     f(message)
-    return message
+    message
   }
   
   def addArrayMessage(name: String): NavajoMessage = {
     val message = NavajoFactory.createArrayMessage(rootDoc, name)
     new NavajoMessage(parent.addMessage(message.parent))
   }
-
+  
+  def removeMessage(name: String) : NavajoMessage = {
+    parent.removeMessage(parent.getMessage(name))
+    this
+  }
+  
+  def removeMessage(message: NavajoMessage) : NavajoMessage = {
+    parent.removeMessage(message.parent)
+    this
+  }
+  
   def each(f: NavajoMessage => Unit) : Unit = {
     if (parent == null) {
       return;
@@ -102,7 +112,6 @@ class NavajoMessage(val parent: Message) {
   
     // Sort the messages
   def sort(orderBy:String)(f: NavajoMessage => Unit) : Unit = {
-    
     this.sort((msg1, msg2) => {
        var result : Boolean = true
        val st = new StringTokenizer(orderBy, ",")
@@ -273,6 +282,13 @@ class NavajoMessage(val parent: Message) {
        parent.addProperty(p)
     }
     this
+  }
+  
+  def eachProperty(f: NavajoProperty => Unit) : Unit = {
+    if (parent == null) {
+      return;
+    }
+    parent.getAllProperties().asScala.foreach(p => f(new NavajoProperty(p)))
   }
   
   def nrChildren : Integer = parent.getAllMessages.size()

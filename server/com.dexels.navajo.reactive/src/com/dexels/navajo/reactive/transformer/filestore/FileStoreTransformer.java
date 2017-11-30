@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -14,33 +16,42 @@ import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
+import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
+import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.replication.factory.ReplicationFactory;
 
 import io.reactivex.FlowableOperator;
 import io.reactivex.FlowableTransformer;
 
-public class FileStoreTransformer implements ReactiveTransformer {
+public class FileStoreTransformer implements ReactiveTransformer, ParameterValidator {
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(FileStoreTransformer.class);
 
 	private final ReactiveParameters parameters;
+
+	private XMLElement sourceElement;
+
+	private String sourcePath;
 	
-	public FileStoreTransformer(ReactiveParameters parameters) {
+	public FileStoreTransformer(ReactiveParameters parameters, XMLElement sourceElement, String sourcePath) {
 		this.parameters = parameters;
+		this.sourceElement = sourceElement;
+		this.sourcePath = sourcePath;
 	}
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		Map<String,Operand> resolved = parameters.resolveNamed(context, Optional.empty());
-		String path = (String) resolved.get("path").value;
+		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), Optional.empty(), this, sourceElement, sourcePath);
+		String path = parms.paramString("path");
 		return flow->flow.lift(flowableFile(path));
 	}
 
@@ -123,4 +134,22 @@ public class FileStoreTransformer implements ReactiveTransformer {
 	public Type outType() {
 		return Type.MESSAGE;
 	}
+
+	@Override
+	public Optional<List<String>> allowedParameters() {
+		return Optional.of(Arrays.asList(new String[]{"path"}));
+	}
+
+	@Override
+	public Optional<List<String>> requiredParameters() {
+		return Optional.of(Arrays.asList(new String[]{"path"}));
+	}
+
+	@Override
+	public Optional<Map<String, String>> parameterTypes() {
+		Map<String,String> r = new HashMap<String, String>();
+		r.put("path", Property.STRING_PROPERTY);
+		return Optional.of(r);
+	}
+	
 }

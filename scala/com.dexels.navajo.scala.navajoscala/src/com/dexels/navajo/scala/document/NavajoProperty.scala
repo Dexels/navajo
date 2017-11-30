@@ -4,9 +4,10 @@ import com.dexels.navajo.document.Property
 
 class NavajoProperty(val parent: Property) extends Comparable[NavajoProperty] {
 
-  def value() = {
-    parent.getTypedValue()
-  }
+  def name() = parent.getName()
+  
+  def value() = parent.getTypedValue()
+  
 
   def value(o: Any): NavajoProperty = {
     parent.setAnyValue(o)
@@ -19,7 +20,7 @@ class NavajoProperty(val parent: Property) extends Comparable[NavajoProperty] {
 
   def propertyType(propertyType: String): NavajoProperty = {
     parent.setType(propertyType)
-    return this
+    this
   }
 
   def description(): String = {
@@ -28,7 +29,7 @@ class NavajoProperty(val parent: Property) extends Comparable[NavajoProperty] {
 
   def description(o: String): NavajoProperty = {
     parent.setDescription(o)
-    return this
+    this
   }
 
   def cardinality(): String = {
@@ -37,7 +38,7 @@ class NavajoProperty(val parent: Property) extends Comparable[NavajoProperty] {
 
   def cardinality(o: String): NavajoProperty = {
     parent.setCardinality(o)
-    return this
+    this
   }
 
   def direction(): String = {
@@ -46,7 +47,7 @@ class NavajoProperty(val parent: Property) extends Comparable[NavajoProperty] {
 
   def direction(o: String): NavajoProperty = {
     parent.setDirection(o)
-    return this
+    this
   }
 
   def subtype(): String = {
@@ -55,7 +56,7 @@ class NavajoProperty(val parent: Property) extends Comparable[NavajoProperty] {
 
   def subtype(o: String): NavajoProperty = {
     parent.setSubType(o)
-    return this
+    this
   }
 
   def length(): Int = {
@@ -64,7 +65,7 @@ class NavajoProperty(val parent: Property) extends Comparable[NavajoProperty] {
 
   def length(o: Int): NavajoProperty = {
     parent.setLength(o)
-    return this
+    this
   }
 
   def compareTo(p2: NavajoProperty): Int = {

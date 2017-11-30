@@ -351,6 +351,9 @@ public class MailMap implements MailMapInterface, Mappable,
 		if(smtpUser!=null && !"".equals(smtpUser)) {
 			return smtpUser;
 		}
+		if(myNavajo==null) {
+			return null;
+		}
 		Property mailUserProperty = myNavajo.getProperty("__globals__/MailUser");
 		if(mailUserProperty!=null) {
 			return mailUserProperty.getValue();

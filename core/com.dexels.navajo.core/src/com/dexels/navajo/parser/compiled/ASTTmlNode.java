@@ -56,7 +56,7 @@ public final class ASTTmlNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) {
+					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) {
 //				System.err.println(" exists: "+exists+" selectionOopt: "+parentSel+" selectionOption: "+selectionOption);
 				List<Property> match = null;
 				List<Object> resultList = new ArrayList<Object>();
@@ -65,7 +65,7 @@ public final class ASTTmlNode extends SimpleNode {
 		        String parts[] = val.split("\\|");
 		        
 		        String text = parts.length > 1 ? parts[1] : val;
-		        String document = parts.length > 1 ? parts[0].substring(1) : null;
+//		        String document = parts.length > 1 ? parts[0].substring(1) : null;
 //		        System.err.println("Document: "+document);
 //		        if(document.)
 		        boolean isParam = false;
@@ -125,9 +125,13 @@ public final class ASTTmlNode extends SimpleNode {
 		            singleMatch = true;
 
 		        try {
-		        		if(immutableMessage.isPresent()) {
+		        		if(!isParam && immutableMessage!=null && immutableMessage.isPresent()) {
 		        			ReplicationMessage rm = immutableMessage.get();
-		        			return rm.columnValue(text);
+		        			return parseImmutablePath(text, rm);
+		        		}
+		        		if(isParam && paramMessage!=null && paramMessage.isPresent()) {
+		        			ReplicationMessage rm = paramMessage.get();
+		        			return parseImmutablePath(text, rm);
 		        			
 		        		}
 		            if (parentMsg == null && !isParam) {
@@ -353,6 +357,10 @@ public final class ASTTmlNode extends SimpleNode {
 		            throw new RuntimeException("Property does not exist: " + text);
 		        else
 		            return Boolean.valueOf(false);
+			}
+
+			private Object parseImmutablePath(String text, ReplicationMessage rm) {
+				return rm.columnValue(text);
 			}
 		};
 	}

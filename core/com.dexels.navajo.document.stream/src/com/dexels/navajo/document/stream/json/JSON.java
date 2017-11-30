@@ -99,7 +99,7 @@ public class JSON {
 						if(disposable.isDisposed()) {
 							return;
 						}
-						Observable<JSONEvent> e = Observable.fromIterable(parser.endOfInput());
+//						Observable<JSONEvent> e = Observable.fromIterable(parser.endOfInput());
 //						disposable.dispose();
 //						in.onNext(e);
 						in.onComplete();

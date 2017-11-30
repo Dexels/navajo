@@ -20,6 +20,7 @@ import javax.naming.directory.InitialDirContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
@@ -110,10 +111,10 @@ public class Base2LdapAdapter implements Mappable {
 	public static void main(String[] args) throws NamingException, ClientException, NavajoException {
 
 		ClientInterface cc = NavajoClientFactory.createClient();
-		cc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
-		cc.setUsername("ROOT");
-		cc.setPassword("R20T");
-
+		cc.setServerUrls(new String[] {TestConfig.NAVAJO_TEST_SERVER.getValue()});
+		cc.setUsername(TestConfig.NAVAJO_TEST_USER.getValue());
+		cc.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
+		
 		Base2LdapAdapter bla = new Base2LdapAdapter();
 		if (bla.initialDir == null) {
 			bla.startup();

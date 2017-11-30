@@ -111,9 +111,9 @@ public abstract class SimpleNode implements Node {
 		return new ContextExpression() {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage);
-		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage);
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws TMLExpressionException {
+		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
+		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
 				return func.apply(a, b);
 			}
 
@@ -130,8 +130,8 @@ public abstract class SimpleNode implements Node {
 		return new ContextExpression() {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage);
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws TMLExpressionException {
+		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
 				return func.apply(a);
 			}
 

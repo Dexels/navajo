@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Functions
 Bundle-SymbolicName: com.dexels.navajo.function
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.4.25.qualifier
+Bundle-Version: 3.4.27.qualifier
 Bundle-Activator: navajofunctions.Version
 Navajo-Name: Function
 Navajo-Extension: com/dexels/navajo/functions/functions.xml
@@ -23,6 +23,7 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.server.test,
  com.dexels.navajo.sharedstore,
  com.dexels.navajo.version,
+ com.dexels.replication.api;version="9.1.0",
  com.dexels.resourcebundle;version="2.0.0",
  javax.crypto,
  javax.crypto.spec,

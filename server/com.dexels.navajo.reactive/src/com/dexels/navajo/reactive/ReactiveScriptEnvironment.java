@@ -2,7 +2,6 @@ package com.dexels.navajo.reactive;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -14,15 +13,10 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
-import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.server.NavajoConfigInterface;
-
-import io.reactivex.Flowable;
 
 public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptRunner {
 
@@ -77,7 +71,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	
 	
 	@Override
-	public ReactiveScript run(String service) throws IOException {
+	public ReactiveScript run(String service, boolean debug) throws IOException {
 		// Do this check first, so we can 'override' scripts for testing
 		ReactiveScript rs = scripts.get(service);
 		if(rs!=null) {
@@ -87,12 +81,12 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			if(parentRunnerEnvironment==null) {
 				throw new NullPointerException("This environment does not accept script: "+service+", and there is no parent."); 
 			}
-			return parentRunnerEnvironment.run(service);
+			return parentRunnerEnvironment.run(service,debug);
 		}
 		File sf = resolveFile(service);
 		
 		try(InputStream is = new FileInputStream(sf)) {
-			rs = installScript(service, is);
+			rs = installScript(service, is,service+".xml");
 //		} catch (IOException ioe) {
 //			return Flowable.error(new RuntimeException("Can't seem to find script: "+context.service));
 		}
@@ -108,9 +102,8 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		return new File(f,serviceName+".xml");
 	}
 	
-	public ReactiveScript installScript(String serviceName, InputStream in) throws IOException {
-
-		ReactiveScript parsed = scriptParser.parse(serviceName, in);
+	ReactiveScript installScript(String serviceName, InputStream in, String relativeScriptPath) throws IOException {
+		ReactiveScript parsed = scriptParser.parse(serviceName, in,relativeScriptPath);
 		scripts.put(serviceName, parsed);
 		return parsed;
 	}

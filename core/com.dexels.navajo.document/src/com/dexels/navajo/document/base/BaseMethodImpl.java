@@ -133,7 +133,7 @@ public class BaseMethodImpl extends BaseNode implements Method {
             if (req.getFilter() != null && !req.getFilter().equals("") && req.getMessage().equals(message.getName())) {
                 ExpressionEvaluator expr = NavajoFactory.getInstance().getExpressionEvaluator();
                 try {
-                    Operand o = expr.evaluate(req.getFilter(), getRootDoc(), null, message, null);
+                    Operand o = expr.evaluate(req.getFilter(), getRootDoc(), null, message, null,null);
                     if (o.value instanceof Boolean) {
                         return ((Boolean) o.value).booleanValue();
                     }

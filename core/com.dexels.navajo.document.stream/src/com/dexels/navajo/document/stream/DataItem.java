@@ -71,7 +71,7 @@ public class DataItem {
 
 	public NavajoStreamEvent event() {
 		if(this.streamEvent==null) {
-			throw new NullPointerException("DataItem without streamEvent, can't request messageof dataitem of type: "+this.type);
+			throw new NullPointerException("DataItem without streamEvent, can't request event of dataitem of type: "+this.type);
 		}
 
 		return this.streamEvent;
@@ -85,6 +85,9 @@ public class DataItem {
 	}
 
 	public List<ReplicationMessage> msgList() {
+		if(this.msgList==null) {
+			throw new NullPointerException("DataItem without msgList, can't request msgList of dataitem of type: "+this.type+" item: "+toString());
+		}
 		return msgList;
 	}
 
