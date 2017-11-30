@@ -47,7 +47,6 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 	public void clearLocalClient(LocalClient localClient) {
 		this.localClient = null;
 	}
-	
 
 	@Override
 	public ReactiveScript run(String service, boolean debug) {

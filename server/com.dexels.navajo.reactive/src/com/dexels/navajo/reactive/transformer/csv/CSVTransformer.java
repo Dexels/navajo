@@ -53,13 +53,12 @@ public class CSVTransformer implements ReactiveTransformer, ParameterValidator {
 			public Subscriber<? super DataItem> apply(Subscriber<? super DataItem> downstream)
 					throws Exception {
 				
-//				Map<String,Operand> resolved = parameters.resolveNamedOld(context, Optional.empty(), Optional.empty());
+				// TODO use labels and writeHeaders
 				String columnString = resolved.paramString("columns");
 				List<String> columns = Arrays.asList(columnString.split(","));
-				String labelString = resolved.paramString("labels", "");
-				List<String> labels = Arrays.asList(labelString.split(","));
-				boolean writeHeaders = !"".equals(labelString);
-//				boolean writeHeaders = resolved.paramString("delimiter", ""); // (String) resolved.get("delimiter").value;						
+//				String labelString = resolved.paramString("labels", "");
+//				List<String> labels = Arrays.asList(labelString.split(","));
+//				boolean writeHeaders = !"".equals(labelString);
 				String delimiter = resolved.paramString("delimiter"); // (String) resolved.get("delimiter").value;						
 				
 				return new Subscriber<DataItem>() {
