@@ -15,6 +15,7 @@ public class DataItem {
 	public final Type type;
 	public enum Type {
 		MESSAGE,
+		SINGLEMESSAGE,
 		EVENT,
 		DATA,
 		LIST,

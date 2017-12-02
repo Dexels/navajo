@@ -31,7 +31,7 @@ import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
-import com.dexels.navajo.reactive.mappers.CopyMessage;
+import com.dexels.navajo.reactive.mappers.ToSubMessage;
 import com.dexels.navajo.reactive.mappers.Delete;
 import com.dexels.navajo.reactive.mappers.JsonFileAppender;
 import com.dexels.navajo.reactive.mappers.Rename;
@@ -60,7 +60,7 @@ public class ReactiveScriptParser {
 	public ReactiveScriptParser() {
 		reactiveReducer.put("set", new SetSingle());
 		reactiveReducer.put("setkv", new SetSingleKeyValue());
-		reactiveReducer.put("toSubMessage", new CopyMessage());
+		reactiveReducer.put("toSubMessage", new ToSubMessage());
 		reactiveMapping.put("delete", new Delete());
 		reactiveMapping.put("rename", new Rename());
 		reactiveMapping.put("dump", new JsonFileAppender());
@@ -349,8 +349,6 @@ public class ReactiveScriptParser {
 	
 
 	public static Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>> parseReducerList (String relativePath, List<XMLElement> elements, Function<String, ReactiveMerger> reducerSupplier) {
-
-//		Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>
 		List<Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>>> funcList = elements.stream()
 				.filter(x->!x.getName().startsWith("param"))
 				.filter(x->x.getName().split("\\.").length!=3)
@@ -363,7 +361,6 @@ public class ReactiveScriptParser {
 						throw new RuntimeException(e);
 					}
 			}).collect(Collectors.toList());
-	
 		return context->(item,optional)->{
 			DataItem current = item;
 			for (Function<StreamScriptContext, BiFunction<DataItem, DataItem, DataItem>> function : funcList) {

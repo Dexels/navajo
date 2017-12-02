@@ -14,6 +14,8 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.replication.api.ReplicationMessage;
+import com.dexels.replication.api.ReplicationMessageParser;
+import com.dexels.replication.factory.ReplicationFactory;
 
 import io.reactivex.functions.Function3;
 
@@ -59,6 +61,7 @@ public class ReactiveParameters {
 	}
 
 	public ReactiveResolvedParameters resolveNamed(StreamScriptContext context ,Optional<ReplicationMessage> currentMessage,Optional<ReplicationMessage> paramMessage, ParameterValidator validator, XMLElement sourceElement, String sourcePath) {
+
 		return new ReactiveResolvedParameters(context, named, currentMessage, paramMessage,validator, sourceElement, sourcePath,defaultExpressions);
 	}
 	

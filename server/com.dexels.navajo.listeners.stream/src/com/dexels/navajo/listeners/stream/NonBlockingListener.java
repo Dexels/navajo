@@ -178,8 +178,6 @@ public class NonBlockingListener extends HttpServlet {
 					.compose(StreamDocument.inNavajo(context.service, context.username, Optional.empty()))
 					.lift(StreamDocument.filterMessageIgnore())
 					.lift(StreamDocument.serialize())
-//					.doOnNext(StreamDocument.appendToFile("/Users/frank/dumps/uncompresseddump"+context.service))
-//					.doOnSubscribe(e->StreamDocument.removeFile("/Users/frank/dumps/uncompresseddump"+context.service))
 					.compose(StreamCompress.compress(responseEncoding))
 					.onErrorResumeNext(new Function<Throwable, Publisher<? extends byte[]>>() {
 						@Override

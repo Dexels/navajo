@@ -7,18 +7,16 @@
 			<source.sql resource="dummy">
 				<param name="query">select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?</param>
 				<parameval>[ORGANIZATIONID]</parameval>
-				<msg.single.msg>
-				</msg.single.msg>
+				<msg.reduce.singlemessage>
+					<setkv>
+						<parameval name="to">[ATTRIBNAME]</parameval>
+						<parameval name="value">[ATTRIBVALUE]</parameval>
+					</setkv>
+					<set>
+						<parameval debug="true" name="Count">[@Count]+1</parameval>
+					</set>
+				</msg.reduce.singlemessage>
 			</source.sql>
-			<reducer>
-				<setkv>
-					<parameval name="to">[ATTRIBNAME]</parameval>
-					<parameval name="value">[ATTRIBVALUE]</parameval>
-				</setkv>
-				<set>
-					<parameval debug="true" name="Count">[@Count]+1</parameval>
-				</set>
-			</reducer>
 			<joiner>
 				<!-- <toSubMessage name="Attributes"/> -->
 				<set>
@@ -28,11 +26,8 @@
 				<delete name="REMARKS,UPDATEBY,LASTUPDATE" />
 			</joiner>
 		</msg.mergeSingle.msg>
-		<msg.single.msg>
-		</msg.single.msg>
 		<msg.stream.event messageName="Club">
 			<parameval name="isArray">true</parameval>
 		</msg.stream.event>
-
 	</source.sql>
 </reactive>

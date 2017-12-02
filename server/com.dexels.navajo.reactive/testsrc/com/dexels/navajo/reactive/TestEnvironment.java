@@ -22,6 +22,7 @@ import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
 import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
 import com.dexels.navajo.reactive.transformer.filestore.FileStoreTransformerFactory;
 import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
+import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
 import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
 import com.dexels.replication.api.ReplicationMessage;
@@ -59,6 +60,7 @@ public class TestEnvironment {
 		reactiveScriptParser.addReactiveTransformerFactory(new CallTransformerFactory(),"call");
 		reactiveScriptParser.addReactiveTransformerFactory(new StreamMessageTransformerFactory(),"stream");
 		reactiveScriptParser.addReactiveTransformerFactory(new SingleMessageTransformerFactory(),"single");
+		reactiveScriptParser.addReactiveTransformerFactory(new ReduceTransformerFactory(),"reduce");
 		env.setReactiveScriptParser(reactiveScriptParser);
 //		rsp.addReactiveSourceFactory("", settings);
 	}

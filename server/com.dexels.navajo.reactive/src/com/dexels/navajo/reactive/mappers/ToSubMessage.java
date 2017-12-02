@@ -20,9 +20,9 @@ import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class CopyMessage implements ReactiveMerger, ParameterValidator {
+public class ToSubMessage implements ReactiveMerger, ParameterValidator {
 
-	public CopyMessage() {
+	public ToSubMessage() {
 	}
 
 	@Override

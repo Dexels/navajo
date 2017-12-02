@@ -18,25 +18,21 @@ import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.replication.api.ReplicationMessage;
+import com.dexels.replication.factory.ReplicationFactory;
 
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
 public class SetSingleKeyValue implements ReactiveMerger, ParameterValidator {
 
-	public SetSingleKeyValue() {
-	}
-
 	@Override
 	public Function<StreamScriptContext, BiFunction<DataItem, DataItem, DataItem>> execute(String relativePath, XMLElement xml) {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
 		return context->(acc,item)->{
-			// will use the second message as input, if not present, will use the source message
-			ReplicationMessage s = item.message();
-			ReactiveResolvedParameters parms = r.resolveNamed(context, Optional.of(s), Optional.of(item.message()), this, xml, relativePath);
+			ReplicationMessage s = acc.message();
+			ReactiveResolvedParameters parms = r.resolveNamed(context, Optional.of(item.message()),Optional.of(s), this, xml, relativePath);
 			Operand resolvedValue = parms.resolveAllParams().get("value");
 			String toValue = parms.paramString("to");
-//			String json = new String(item.message().toBytes(new JSONReplicationMessageParserImpl()));
 			return DataItem.of(acc.message().with(toValue, resolvedValue.value, resolvedValue.type));
 		};
 	
