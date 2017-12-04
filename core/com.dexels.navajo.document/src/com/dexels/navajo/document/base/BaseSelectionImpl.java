@@ -109,7 +109,14 @@ public final String toString() {
   }
 
 
+    @Override
+    public final boolean equals(Object o)
+    {
+        Object oValue = o instanceof Selection ? ((Selection) o).getValue() : null;
+        logger.info("Entering BaseSelectionImpl.equals with Object: " + o + " with value : " + oValue + ", our value is " + this.getValue());
+        super.equals(o);
 
+    }
 
 
 
