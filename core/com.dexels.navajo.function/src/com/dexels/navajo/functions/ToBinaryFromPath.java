@@ -34,9 +34,9 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 		Binary b = new Binary(u);
 		return b;
 	 } catch (MalformedURLException e) {
-		throw new TMLExpressionException("Bad url in function ToBinaryFromPath: "+s);
+		throw new TMLExpressionException("Bad url in function ToBinaryFromPath: "+s, e);
 	} catch (IOException e) {
-		throw new TMLExpressionException("Error opening url in function ToBinaryFromPath: "+s);
+		throw new TMLExpressionException("Error opening url in function ToBinaryFromPath: "+s, e);
 	}
   }
 
