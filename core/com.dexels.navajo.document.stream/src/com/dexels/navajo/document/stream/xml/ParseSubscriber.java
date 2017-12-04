@@ -31,15 +31,7 @@ public class ParseSubscriber implements FlowableSubscriber<byte[]> {
 	@Override
 	public void onComplete() {
 		feeder.endOfInput();
-//		Iterable<XMLEvent> it = feeder.parse(new byte[]{});
-//		for (XMLEvent xmlEvent : it) {
-//	        queue.offer(xmlEvent);
-//		}		
-		
-		// TODO check for additional events? TEST
-//		System.err.println("Done!");
 		child.onComplete();
-//		drain();
 	}
 
 	@Override

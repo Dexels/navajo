@@ -5,15 +5,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class GeoPolygon extends GeoElement {
-	// private List<GeoEdge> myEdges = new ArrayList<GeoEdge>();
-	// private List<GeoEdge> myOutlineEdges = new ArrayList<GeoEdge>();
+
 	private List<GeoPoint> myStartPoints = new LinkedList<GeoPoint>();
-	// private GeoEdge myInitialOutlineEdge;
-	// private GeoPoint lastPoint = null;
+	private final static Logger logger = LoggerFactory.getLogger(GeoPolygon.class);
 
 	private static int idCounter = 0;
 
@@ -68,20 +69,10 @@ public class GeoPolygon extends GeoElement {
 		List<GeoPoint> thisp = getPoints();
 		List<GeoPoint> otherP = p.getPoints();
 		if (thisp.size() == otherP.size()) {
-			System.err.println("SIZES EQUAL");
 		} else {
 			return false;
 		}
 		for (int i = 0; i < thisp.size(); i++) {
-			// if(thisp.get(i).equals(otherP.get(i))) {
-			// System.err.println("eq!");
-			// } else {
-			// System.err.println("Element # "+i+" not equal");
-			// System.err.println("Element: "+thisp.get(i).getCoordinates()+" -
-			// "+otherP.get(i).getCoordinates());
-			// return false;
-			// }
-
 			if (otherP.contains(thisp.get(i))) {
 				// whatever
 			} else {
@@ -131,7 +122,7 @@ public class GeoPolygon extends GeoElement {
 	public GeoPoint getNextPoint(GeoPoint p) {
 		int i = getPoints().indexOf(p);
 		if (i < 0) {
-			System.err.println("Not found in poly: " + getId());
+			logger.warn("Not found in poly: " + getId());
 			return null;
 		}
 		if (i == getPoints().size() - 1) {
@@ -180,11 +171,8 @@ public class GeoPolygon extends GeoElement {
 	}
 
 	public boolean hasPoint(GeoPoint p) {
-		// System.err.println("Checking point: " + p + " in poly: " +
-		// getPoints());
 		for (GeoPoint gp : myStartPoints) {
 			boolean equals = gp.equals(p);
-			// System.err.println(gp + " equals " + p + " ? " + equals);
 			if (equals) {
 				return true;
 			}
@@ -277,59 +265,14 @@ public class GeoPolygon extends GeoElement {
 		if (rmin == 0) {
 			double left = isLeft(p.get(n - 1), p.get(0), p.get(1));
 			boolean result = left < 0;
-//			System.err.println("Left: "+left+" result: "+result);
-//			System.err.println("Pim: " + p.get(n - 1).createPlaceMark("Pim"));
-//			System.err.println("Pam " + p.get(0).createPlaceMark("Pam"));
-//			System.err.println("Pet: " + p.get(1).createPlaceMark("Pet"));
-//			System.err.println("Poly: \n" + createPlaceMark());
-
 			return result;
 		} else {
-//			System.err.println("Aap: " + p.get(rmin - 1).createPlaceMark("Aap"));
-//			System.err.println("Noot: " + p.get(rmin).createPlaceMark("Noot"));
-//			System.err.println("Mies: " + p.get(rmin + 1).createPlaceMark("Mies"));
 			double left = isLeft(p.get(rmin - 1), p.get(rmin), p.get(rmin + 1));
 
 			boolean result = left < 0;
-
-//			System.err.println("Left: "+left+" result: "+result);
 			return result;
 		}
 	}
-
-	// private boolean isClockwise(List<GeoPoint> p) throws GeoException {
-	// int i, j, k;
-	// int count = 0;
-	// double z;
-	// int n = p.size();
-	// double totalz = 0;
-	// if (n < 3)
-	// throw new GeoException("WTf? < 3 poly points?");
-	//
-	// for (i = 0; i < n; i++) {
-	// j = (i + 1) % n;
-	// k = (i + 2) % n;
-	//
-	// z = (p.get(j).lon - p.get(i).lon) * (p.get(k).lat - p.get(j).lat);
-	// z -= (p.get(j).lat - p.get(i).lat) * (p.get(k).lon - p.get(j).lon);
-	// if (z < 0) {
-	// count--;
-	// } else if (z > 0) {
-	// count++;
-	// }
-	// totalz += z;
-	// }
-	// if (count < 0 && totalz > 0) {
-	// }
-	// if (totalz > 0) {
-	// return (false);
-	// } else if (totalz < 0) {
-	// return (true);
-	// } else {
-	// throw new GeoException("WTf? No comprendo?");
-	//
-	// }
-	// }
 
 	private double isLeft(GeoPoint P0, GeoPoint P1, GeoPoint P2) {
 		return ((P1.lon - P0.lon) * (P2.lat - P0.lat) - (P2.lon - P0.lon) * (P1.lat - P0.lat));

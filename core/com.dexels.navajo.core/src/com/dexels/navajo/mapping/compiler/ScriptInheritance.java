@@ -373,35 +373,4 @@ public class ScriptInheritance {
 		
 		return new java.io.ByteArrayInputStream(s.toString().getBytes());
 	}
-	
-	public static void main(String [] args) throws Exception {
-		
-//		System.err.println("hasinject: " + containsInject("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/competition/ProcessQueryFacilityOccupation.xml"));
-//		System.err.println("hasinject: " + containsInject("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/PageableService.xml"));
-		
-		
-		InputStream is = ScriptInheritance.inherit(
-				new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/vla/accounting/journaltransactions/ProcessSearchTransactionItemsAccounting.xml"),
-				"/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/", new ArrayList<String>());
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
-		String line = null;
-//		while ( ( line = br.readLine() ) != null ) {
-//			System.err.println(line);
-//		}
-//		StringWriter writer = new StringWriter();
-//			
-//		BufferedReader br2 = new BufferedReader(new FileReader("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/PageableService.xml"));
-//		XMLElement subScript = new CaseSensitiveXMLElement();
-//		subScript.parseFromReader(br2);
-//		br2.close();
-//				
-//		XMLElement result = ti.doInject(subScript);
-//	
-//		writer = new StringWriter();
-//		result.write(writer);
-//		System.err.println("AFTER INHERITANCE:");
-//		System.err.println(writer.toString());
-		
-	}
 }

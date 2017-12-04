@@ -19,7 +19,6 @@ public class GetRemoteObjectRequest extends Request {
 	@Override
 	public Answer getAnswer() {
 		Object o = RemoteReference.getObject(guid);
-		System.err.println("in getAnswer(): GETTING OBJECT FOR GUID: " + guid + ", o = " + o);
 		return new GetRemoteObjectAnswer(this, o);
 	}
 

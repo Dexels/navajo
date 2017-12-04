@@ -933,25 +933,4 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 		  return result;
 	  }
   }
-  
-  public static void main(String [] args) throws Exception {
-//	  Navajo n = NavajoFactory.getInstance().createNavajo();
-//	  setProperty(false, null, "/Aap/Aap@0/NootProp", "Apenoot", "string", "", "in", "", 20, n, null, false);
-//	  setProperty(false, null, "/Aap/Aap@0/Allemaal", "Beestjes", "string", "", "in", "", 20, n, null, false);
-//	  
-//	  setProperty(false, null, "/Kibbeling/NemoProp", "Is gek", "string", "", "in", "", 20, n, null, false);
-//	  setProperty(false, null, "/Kibbeling/Kibbeling/WalvisProp", "Moby", "string", "", "in", "", 20, n, null, false);
-//	  
-//	  setProperty(false, null, "/Worstebroodje/@0/Worst/Hema", "Moby", "string", "", "in", "", 20, n, null, false);
-//	  setProperty(false, null, "/Worstebroodje/@0/Worst/CenA", "Moby", "string", "", "in", "", 20, n, null, false);
-//	  
-//	 
-//	  n.write(System.err);
-	  
-	  
-//	 System.err.println(createPackageName("include/SelectedGlobals.xml".replaceAll("\\.xml", "")));
-//	  SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-//	  System.err.println(sdf.format(new Date()));
-	  
-  }
 }

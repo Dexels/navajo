@@ -1,5 +1,8 @@
 package com.dexels.navajo.client.async.legacy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.document.Header;
@@ -30,6 +33,9 @@ public class ServerAsyncRunner
   private final AsyncRegistry registry;
 //  private int serverIndex = 0;
   private final static int MAX_POLLING_INTERVAL = 30000;
+
+  
+private final static Logger logger = LoggerFactory.getLogger(ServerAsyncRunner.class);
 
 
   /**
@@ -69,7 +75,7 @@ public class ServerAsyncRunner
       prev_time = System.currentTimeMillis();
       while (isIterating()) {
         if (kill) {
-          System.err.println("Kill called in ServerAsyncRunner...");
+          logger.warn("Kill called in ServerAsyncRunner...");
           myResult.getHeader().setCallBackInterrupt("kill");
           setIterating(false);
         }
@@ -79,14 +85,14 @@ public class ServerAsyncRunner
           Navajo temp = doSimpleSend(myNavajo, myMethod);
 
           if (temp.getMessage("ConditionErrors") != null) {
-            System.err.println("Had ConditionErrors in Asyncsend.. ");
+        	  	logger.warn("Had ConditionErrors in Asyncsend.. ");
             killServerAsyncSend();
             continue;
           }
 
           Header head = temp.getHeader();
           if (head == null) {
-            System.err.println("Received no header. returning and killing thread");
+        	  	logger.warn("Received no header. returning and killing thread");
             throw new ClientException( -1, -1, "No async header!");
           }
           if (isFinished(temp)) {
@@ -105,7 +111,7 @@ public class ServerAsyncRunner
             }
           }
           checkPollingInterval(head.getCallBackProgress());
-          System.err.println("Start sleep");
+          logger.debug("Start sleep");
           try {
             if (myPollingInterval > MAX_POLLING_INTERVAL) {
               myPollingInterval = MAX_POLLING_INTERVAL;
@@ -113,14 +119,14 @@ public class ServerAsyncRunner
             sleep(myPollingInterval);
           }
           catch (InterruptedException ex1) {
-            System.err.println("Interrupted. Continuing with next iteration.");
+        	  	logger.debug("Interrupted. Continuing with next iteration.");
           }
-          System.err.println("End sleep");
+          logger.debug("End sleep");
         }
       }
     }
     catch (ClientException ex) {
-      System.err.println("oooops");
+    	logger.debug("oooops");
       myListener.handleException(ex);
       return;
     }
@@ -139,7 +145,6 @@ public class ServerAsyncRunner
     if (dif > 0) {
       eta = (100 - current_progress) * (time_dif / dif);
     }
-    System.err.println("Previous progress: " + prev_progress + ", Current progress: " + current_progress + ", myPollingInterval: " + myPollingInterval + ", ETA: " + eta);
     if (dif < 1) {
       myPollingInterval = 2 * myPollingInterval;
       prev_progress = current_progress;
@@ -151,13 +156,11 @@ public class ServerAsyncRunner
       return;
     }
     if (dif > 20) {
-      System.err.println("dif > 20, should speed up polling?");
       if (myPollingInterval > 2500) {
         myPollingInterval = (int) (myPollingInterval / 1.5);
       }
     }
     if (eta < myPollingInterval) {
-      System.err.println("ETA is smaller than polling interval, decreasing interval");
       myPollingInterval = (int) (eta / 2.0);
     }
     prev_progress = current_progress;

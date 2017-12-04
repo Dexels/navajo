@@ -531,37 +531,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	 * @param k
 	 * @throws EntityException
 	 */
-//	private boolean checkForMongo(Message inputEntity, Navajo currentEntity) throws EntityException {
-//		if ( hasExtraMessageMongo() && 
-//				( inputEntity.getProperty("_id") == null || inputEntity.getProperty("_id").getValue().equals("") ) ) {
-//			// Fetch _id
-//			Navajo result = null;
-//			if ( currentEntity == null ) {
-//				result = getCurrentEntity(inputEntity.getRootDoc());
-//			} else {
-//				result = currentEntity;
-//			}
-//			//System.err.println("In checkForMongo, current entity:");
-//			Property id = null;
-//			if ( result != null ) {
-//				id = result.getProperty(inputEntity.getName() + "/_id");
-//			} else if ( result == null && myEntityMap != null ) {
-//				try {
-//					id = myEntityMap.getPropertyObject(inputEntity.getName() + "/_id");
-//				} catch (UserException e) {
-//					throw new EntityException(EntityException.SERVER_ERROR, e.getMessage());
-//				}
-//			} else {
-//				throw new EntityException(EntityException.SERVER_ERROR, "Problem while trying to update Mongo backed entity: empty result from get.");
-//			}
-//			if ( id != null ) {
-//				inputEntity.addProperty(id.copy(inputEntity.getRootDoc()));
-//			} else {
-//				throw new EntityException(EntityException.SERVER_ERROR, "Could not fetch _id for Mongo backed entity.");
-//			}
-//		}
-//		return ( inputEntity.getProperty("_id") != null );
-//	}
+
 
     private boolean hasExtraMessageMongo() {
         return myOperation.getExtraMessage() != null && myOperation.getExtraMessage().getName().equals("__Mongo__");

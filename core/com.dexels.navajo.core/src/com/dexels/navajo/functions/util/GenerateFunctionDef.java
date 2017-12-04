@@ -123,24 +123,4 @@ public class GenerateFunctionDef {
 		
 		return def;
 	}
-
-	@SuppressWarnings("unchecked")
-	public static void main(String [] args) throws Exception {
-		
-		CaseSensitiveXMLElement functions = new CaseSensitiveXMLElement("functiondef");
-		
-		Class<FunctionInterface> [] all = getClasses("com.dexels.navajo.functions");
-		for (int i = 0; i < all.length; i++) {
-			System.err.println(all[i]);
-			if (FunctionInterface.class.isAssignableFrom(all[i]) ) {
-				XMLElement def = generateFunctionDefinition(all[i]);
-				functions.addChild(def);
-			}
-		}
-		StringWriter sw = new StringWriter();
-		functions.write(sw);
-		sw.close();
-		System.err.println(sw.toString());
-		
-	}
 }

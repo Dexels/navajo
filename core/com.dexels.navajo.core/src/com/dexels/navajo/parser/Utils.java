@@ -319,19 +319,10 @@ public final class Utils extends Exception {
 		} else if ((a instanceof Boolean && b instanceof Boolean)) {
 			Boolean ba = (Boolean) a;
 			Boolean bb = (Boolean) b;
-			// System.err.println("ba = " + ba.booleanValue() + ", bb = " +
-			// bb.booleanValue());
 			return new Integer((ba.booleanValue() ? 1 : 0) + (bb.booleanValue() ? 1 : 0));
 		} else
 			throw new TMLExpressionException("Addition: Unknown type");
 	}
-
-	// private final static boolean isEqualWithEmpty(Object a, Object b) throws
-	// TMLExpressionException {
-	// Object valueA;
-	// Object valueB;
-	// getActualValue(a);
-	// }
 
 	/**
 	 * Fix money==null issue
@@ -418,16 +409,5 @@ public final class Utils extends Exception {
 			return isEqual(a, b);
 		}
 
-	}
-
-	public static void main(String[] args) throws Exception {
-		StopwatchTime sw1 = new StopwatchTime("00:10:00:000");
-		StopwatchTime sw2 = new StopwatchTime("00:07:00:000");
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.MONTH, 6);
-		int a = c.get(Calendar.DST_OFFSET);
-		System.err.println("DST = " + a);
-		Object o = Utils.subtract(sw1, sw2);
-		System.err.println("o = " + o);
 	}
 }

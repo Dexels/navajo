@@ -270,7 +270,6 @@ public class TestBinary {
 		
 		int i = 0;
 		for (byte[] e : b1.getDataAsIterable(128)) {
-//			System.err.println("Data: "+new String(e));
 			i++;
 		}
 		Assert.assertEquals(93, i);

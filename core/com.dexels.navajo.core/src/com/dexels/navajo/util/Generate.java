@@ -81,9 +81,7 @@ public class Generate {
             newMessage = parent.getMessage(parentName);
           }
 
-          //System.err.println("FOUND newMessage: " + parentName + ", TYPE is: " + type);
           if (newMessage == null && type.equals(Message.MSG_TYPE_ARRAY)) {
-        	//System.err.println("CREATING ARRAY MESSAGE");
         	newMessage = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createMessage(result, parentName, Message.MSG_TYPE_ARRAY);
             Message newSubMessage = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createMessage(result, parentName);
             newMessage.addMessage(newSubMessage);
@@ -174,9 +172,6 @@ public class Generate {
       }
 
       for (int i = 0; i < list.getLength(); i++) {
-
-            //System.err.println("list.item("+i+") = " + list.item(i).getNodeName());
-
             if (list.item(i).getNodeName().equals("expression")) {
 
               @SuppressWarnings("unused")
@@ -289,7 +284,7 @@ public class Generate {
 
   public Navajo getInputPart(Navajo result, InputStream is) {
 	  
-	  System.err.println("IN GETINPUTPART");
+	  logger.info("IN GETINPUTPART");
 	  try {
 		  //Document wsdl = XMLDocumentUtils.createDocument();
 		  if ( result == null ) {
@@ -312,12 +307,8 @@ public class Generate {
 					  generateInputPart(null, result, list.item(i));
 			  } else if (list.item(i).getNodeName().equals("include")) {
 				  // Parse include also.
-				  System.err.println("TO DO: PARSE INCLUDE FILE FOR INPUT PROPERTIES");
-//				  Element e = (Element) list.item(i);
-//				  String includeFile = e.getAttribute("script");
-//				  InputStream is2 = Dispatcher.getInstance().getNavajoConfig().getScript(includeFile);
-//				  getInputPart(result, is2);
-//				  is2.close();
+				  logger.info("TO DO: PARSE INCLUDE FILE FOR INPUT PROPERTIES");
+
 			  }
 		  }
 		  
@@ -353,43 +344,4 @@ public class Generate {
 		  return NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createNavajo();
 	  }
   }
-
-//  @SuppressWarnings({  "deprecation", "unused" })
-//  public static void main(String args[]) throws Exception {
-//
-//      Generate gen = new Generate();
-//
-//    
-//      
-//      // Determine input messages:
-//      FileInputStream fis = new FileInputStream("/home/arjen/projecten/NavajoStandardEdition/scripts/holiday/ProcessHolidayRequest.xml");
-//      Navajo inputDoc = gen.getInputPart(null, fis);
-//      fis.close();
-//      List<Message> msgs = inputDoc.getAllMessages();
-//      Set<String> inputMessages = new HashSet<String>();
-//      for (int i = 0; i < msgs.size(); i++) {
-//        inputMessages.add(((Message) msgs.get(i)).getName());
-//      }
-//      //inputDoc.write(System.err);
-//      fis = new FileInputStream("/home/arjen/projecten/NavajoStandardEdition/scripts/holiday/ProcessHolidayRequest.xml");
-//      Navajo outputDoc = gen.getOutputPart(fis);
-//      fis.close();
-//     
-//      System.out.println(outputDoc.toString());
-//
-//      javax.xml.parsers.DocumentBuilderFactory builderFactory  = DocumentBuilderFactory.newInstance();
-//      javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
-//      
-//      Document dIn = builder.parse(new StringBufferInputStream(inputDoc.toString()));
-//      
-//      Document dOut = builder.parse(new StringBufferInputStream(outputDoc.toString()));
-//      
-//      System.err.println("INPUT XML:");
-//      inputDoc.write(System.err);
-//      
-//      System.err.println("OUTPUT XML:");
-//      outputDoc.write(System.err);
-//      
-//
-//  }
 }

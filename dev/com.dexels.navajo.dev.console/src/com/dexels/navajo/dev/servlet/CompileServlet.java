@@ -58,7 +58,6 @@ public class CompileServlet extends HttpServlet {
 			if(script.equals("/")) {
 				script = "";
 			}
-//			System.err.println("Force: "+force);
 			bundleCreator.createBundle(script,failures,success,skipped, force,keepIntermediateFiles);
 			long ts1 = System.currentTimeMillis();
 			compileDuration = ts1 - tsStart;

@@ -59,20 +59,16 @@ public class NavajoDomStreamer {
 		List<NavajoStreamEvent> result = new ArrayList<>();
 		Navajo output = NavajoFactory.getInstance().createNavajo();
 		List<Message> all = navajo.getAllMessages();
-//		subscribe.onNext( started());
 		Header h = navajo.getHeader();
 		if(h!=null) {
 			result.add(header(h));
 		} else {
-			System.err.println("Unexpected case: Deal with tml without header?");
+			logger.warn("Unexpected case: Deal with tml without header?");
 		}
 		for (Message message : all) {
 			emitMessage(message,result,output);
 		}
-//		result.stream().map(e->e.type()).forEach(e->System.err.println("e: "+e.name()));
 		result.add(done(navajo.getAllMethods().stream().map(e->new Method(e.getName())).collect(Collectors.toList())));
-//		subscribe.onNext(done());
-//		subscribe.onCompleted();
 		return result;
 	}
 	public static Flowable<NavajoStreamEvent> streamMessage(Message message) {
@@ -84,6 +80,7 @@ public class NavajoDomStreamer {
 	}
 	
 	// TODO extract async and piggyback attributes
+	// TODO extract locale header
 	private static NavajoStreamEvent header(Header h) {
 		return Events.started(new NavajoHead(h.getRPCName(), Optional.ofNullable(h.getRPCUser()),Optional.ofNullable( h.getRPCPassword()), h.getHeaderAttributes(),Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap()));
 	}

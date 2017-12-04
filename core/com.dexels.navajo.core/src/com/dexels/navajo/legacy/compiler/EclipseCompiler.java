@@ -111,8 +111,6 @@ public class EclipseCompiler implements JavaCompiler {
 
     @Override
 	public boolean compile(ArrayList elements) {
-//        System.err.println("Compiling: "+elements.size()+" elements");
-//        System.err.println("Classpath: "+classpath.replace(';', '\n'));
         try {
             if (compilerClass==null) {
                 if( loader==null )
@@ -147,12 +145,7 @@ public class EclipseCompiler implements JavaCompiler {
       for (int i = 0; i < elements.size(); i++) {
         newArgs[i+args.length] = (String)elements.get(i);
     }
-//    PrintWriter w = new PrintWriter(out);
       compile.invoke(null, new Object[] {newArgs});
-//      w.close();
-//      errWriter.close();
-//      System.err.println("ERR: "+err.toString());
-      
       
       return true;
        }
@@ -199,17 +192,7 @@ public class EclipseCompiler implements JavaCompiler {
                         source
                     };
             }
-//            System.err.println("Arguments:");
-//            for (int i = 0; i < args.length; i++) {
-//                System.err.println(">"+args[i]+"<");
-//            }
-//            PrintWriter w = new PrintWriter(out);
             compile.invoke(null, new Object[] {args});
-//            w.close();
-//            errWriter.close();
-//            System.err.println("ERR: "+err.toString());
-            
-            
             return true;
         }
         catch (ClassNotFoundException ex) {

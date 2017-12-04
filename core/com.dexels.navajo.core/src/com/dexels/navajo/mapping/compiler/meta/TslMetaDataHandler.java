@@ -49,10 +49,6 @@ public class TslMetaDataHandler implements MetaDataListener {
     
     @Override
 	public void scriptCalls(String source, String dest, String[] requires) {
-//        System.err.println("Script: "+source +" calls scriptL "+dest);
-//        for (int i = 0; i < requires.length; i++) {
-//            System.err.println("Required: "+requires[i]);
-//        }
         scriptList.add(source);
         addToMap(callsScriptMap,source, dest);
         addToMap(calledByScriptMap, dest, source);
@@ -60,7 +56,6 @@ public class TslMetaDataHandler implements MetaDataListener {
 
     @Override
 	public void scriptIncludes(String source, String dest) {
-//        System.err.println("Script: "+source+" includes: "+dest);
         scriptList.add(source);
         addToMap(includesScriptMap,source, dest);
         addToMap(includedByScriptMap, dest, source);
@@ -68,7 +63,6 @@ public class TslMetaDataHandler implements MetaDataListener {
 
     @Override
 	public void scriptUsesAdapter(String source, String adapterName) {
-//        System.err.println("Script: "+source +" uses adapter: "+adapterName);
         scriptList.add(source);
         addToMap(usesAdapter,source, adapterName);
         addToMap(adapterIsUsedByScript, adapterName, source);
@@ -76,12 +70,11 @@ public class TslMetaDataHandler implements MetaDataListener {
 
     @Override
 	public void scriptUsesField(String source, String adapterName, String fieldName) {
-//        System.err.println("Script: "+source +" with adapter: "+adapterName+" uses field: "+fieldName);
     }
 
     @Override
 	public void resetMetaData() {
-        System.err.println("reset");
+        logger.info("reset");
     }
     
     private void addToMap(Map<String,TreeSet<String>> m, String key, String value) {

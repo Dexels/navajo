@@ -157,7 +157,6 @@ public class GenericHandler extends ServiceHandler {
     
     private final Object[] getScriptPathServiceNameAndScriptFile(String rpcName, boolean betaUser) throws Exception {
     	String scriptPath = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
-    	//System.err.println("Looking for script: "+rpcName);
     	int strip = rpcName.lastIndexOf("/");
         String pathPrefix = "";
         String serviceName = rpcName;
@@ -195,7 +194,6 @@ public class GenericHandler extends ServiceHandler {
        	//-------------------------------
        	String sp = "scripts/";
        	File scrPath = new File(DispatcherFactory.getInstance().getNavajoConfig().getContextRoot(),sp);
-       	//System.err.println("Proposed script path: "+scrPath.getAbsolutePath()+" exists? "+scrPath.exists());
        	scriptFile = new File(scrPath + rpcName + "_" + applicationGroup + ".xml");
        	if (scriptFile.exists()) {
        		serviceName += "_" + applicationGroup;
@@ -241,8 +239,6 @@ public class GenericHandler extends ServiceHandler {
 		}
     	
     	
-   	System.err.println("Found JSR223 based script! (" + rpcName + ")" ); // Or a non existing script
-		// jsr 223 script.
 		File currentScriptDir = new File(DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() + "/" + pathPrefix);
 		final String servName = serviceName;
 		File[] scripts = currentScriptDir.listFiles(new FilenameFilter() {
@@ -256,10 +252,10 @@ public class GenericHandler extends ServiceHandler {
 		}
 		
 		if (scripts.length > 1) {
-			System.err.println("Warning, multiple candidates. Assuming the first: " + scripts[0].getName());
+			logger.warn("Warning, multiple candidates. Assuming the first: " + scripts[0].getName());
 		}
 		if(scripts.length==0) {
-			System.err.println("Not found. dir: "+currentScriptDir.getAbsolutePath());
+			logger.warn("Not found. dir: "+currentScriptDir.getAbsolutePath());
 			return null;
 		}
 		String classFileName = null;
@@ -373,7 +369,6 @@ public class GenericHandler extends ServiceHandler {
 
     				if ( checkScriptRecompile(scriptFile, sourceFile) || hasDirtyDepedencies(a, className) ) {
 
-    					//System.err.println(">>>> RECOMPILING TSL..........");
     					synchronized (mutex1) { // Check for outdated compiled script Java source.
 
     						if ( checkScriptRecompile(scriptFile, sourceFile) || hasDirtyDepedencies(a, className) ) {
@@ -404,14 +399,10 @@ public class GenericHandler extends ServiceHandler {
     				// Maybe the jave file exists in the script path.
     				if ( !sourceFile.exists() ) { // There is no java file present.
     					AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, "SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....", Level.WARNING, a.accessID);
-    					//System.out.println("SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....");
     				} else {
     					// Compile java file using normal java compiler.
-    					//System.err.println("DOING PLAIN JAVA...");
     					if(sourceFile.getName().endsWith("java")) {
        					compilerErrors.append(recompileJava(a, sourceFileName, sourceFile, className, targetFile,serviceName));
-    					} else {
-    						// interpreted script. Nothing to do
     					}
     				}
     			}
@@ -535,8 +526,6 @@ public class GenericHandler extends ServiceHandler {
 
 				if ( checkJavaRecompile(sourceFile, targetFile) ) {
 
-					//System.err.println(">>>> RECOMPILING JAVA..........");
-					
 					NavajoClassSupplier loader = null;
 					if ( ( loader = loadedClasses.get(className) ) != null) {
 						// Get previous version of CompiledScript.

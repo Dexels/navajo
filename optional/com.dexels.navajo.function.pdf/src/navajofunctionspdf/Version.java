@@ -46,13 +46,4 @@ public class Version extends AbstractCoreExtension {
 		registerAll(extensionDef);
 	}
 
-
-	public static void main(String [] args) {
-		Version v = new Version();
-		System.err.println(v.toString());
-		com.dexels.navajo.version.AbstractVersion [] d = v.getIncludePackages();
-		for (int i = 0; i < d.length; i++) {
-			System.err.println("\t"+d[i].toString());
-		}
-	}
 }

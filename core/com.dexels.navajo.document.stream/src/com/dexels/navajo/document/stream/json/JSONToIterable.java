@@ -95,9 +95,6 @@ public class JSONToIterable {
 						}
 						JSONEvent result;
 						result = getNextToken();
-//						if(result==null) {
-//							System.err.println("whoops");
-//						}
 						currentEvent = null;
 						return result;
 					}};

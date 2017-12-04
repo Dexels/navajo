@@ -98,7 +98,6 @@ public class CopyDependencies extends Task {
 		}
 		Path dest = Paths.get(destination).resolve(artifact+"-"+version+"."+type);
 		
-//		System.err.println("Copying from: "+resolved.toString()+" to "+dest);
 		Files.copy(resolved, dest);
 		
 	}

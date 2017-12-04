@@ -6,9 +6,6 @@ import java.util.Set;
 public class PackageReportingClassLoader extends ClassLoader {
 	private Set<PackageListener> packageListeners = new HashSet<PackageListener>();
 
-	// private final static Logger logger = LoggerFactory
-	// .getLogger(PackageReportingClassLoader.class);
-
 	public PackageReportingClassLoader(ClassLoader parent) {
 		super(parent);
 	}
@@ -16,7 +13,6 @@ public class PackageReportingClassLoader extends ClassLoader {
 	@Override
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
 		String packageName = getPackageName(name);
-//		System.err.println("Package: " + name);
 		reportPackageName(packageName);
 		return super.findClass(name);
 	}
@@ -28,8 +24,6 @@ public class PackageReportingClassLoader extends ClassLoader {
 	}
 
 	private String getPackageName(String name) {
-		// logger.info(">>>>< "+name);
-
 		String packageName = null;
 		if (name.indexOf(".") > 0) {
 			packageName = name.substring(0, name.lastIndexOf("."));

@@ -2,6 +2,9 @@ package com.dexels.navajo.functions;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -28,6 +31,9 @@ import com.dexels.navajo.script.api.SystemException;
 public class SumProperties
     extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(SumProperties.class);
+
   @Override
 public String remarks() {
     return "Sums all properties in an array message";
@@ -40,7 +46,7 @@ public Object evaluate() throws com.dexels.navajo.parser.
     if (getOperands().size() < 2) {
       for (int i = 0; i < getOperands().size(); i++) {
         Object o = getOperands().get(i);
-        System.err.println("Operand # " + i + " is: " + o.toString() + " - " +
+        logger.info("Operand # " + i + " is: " + o.toString() + " - " +
                            o.getClass());
       }
       throw new TMLExpressionException(this,
@@ -95,7 +101,7 @@ public Object evaluate() throws com.dexels.navajo.parser.
             	if ("".equals(o)) {
 					// ignore
 				} else {
-					System.err.println("Only numbers are supported a sum. Not strings. Value:  "+o);
+					logger.error("Only numbers are supported a sum. Not strings. Value:  "+o);
 		              throw new TMLExpressionException(this,
 		                      "Only numbers are supported a sum. Not strings. Value:  "+o +
 		                                                   (o.getClass().toString()));

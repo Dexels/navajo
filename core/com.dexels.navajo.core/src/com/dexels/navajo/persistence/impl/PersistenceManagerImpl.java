@@ -394,15 +394,6 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 		this.serviceKeyValues = serviceKeyValues;
 	}
 	
-	public static void main ( String [] args ) throws Exception {
-		
-		String service = "vla.competition.ProcessGetCompetitionWeek";
-		PersistenceManagerImpl pi = new PersistenceManagerImpl();
-		
-		System.err.println(pi.getServicePath(service));
-		
-	}
-
 	@Override
 	public Persistable get(Constructor c, String key, long expirationInterval,
 			boolean persist) throws Exception {

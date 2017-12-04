@@ -330,35 +330,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         // System.gc();
     }
 
-    /**
-     * Update the Navajo repository that is used for
-     * authentication/authorization.
-     *
-     * @param repositoryClass
-     *            the fully specified classname of the repository.
-     *
-     * @throws java.lang.ClassNotFoundException
-     *             deprecated! This will never work in OSGi (although you can
-     *             easily do it in OSGi) I also seriously doubt if it ever
-     *             worked well in J2EE
-     */
-    // public synchronized final void updateRepository(String repositoryClass)
-    // throws
-    // java.lang.ClassNotFoundException {
-    // doClearCache();
-    // Repository newRepository = RepositoryFactoryImpl.getRepository( (
-    // NavajoClassLoader) navajoConfig.
-    // getClassloader(), repositoryClass, navajoConfig);
-    // System.err.println("New repository = " + newRepository);
-    // if (newRepository == null) {
-    // throw new ClassNotFoundException("Could not find repository class: " +
-    // repositoryClass);
-    // }
-    // else {
-    // navajoConfig.setRepository(newRepository);
-    // }
-    // }
-
     /*
      * Get the (singleton) NavajoConfig object reference.
      * 
@@ -413,7 +384,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         WorkerInterface integ = null;
         Navajo out = null;
         if (access == null) {
-            System.err.println("Null access!!!");
+            logger.warn("Null access!!!");
             return null;
         }
 
@@ -887,7 +858,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 try {
 
                     if (navajoConfig == null) {
-                        System.err.println("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
                         throw new FatalException("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
                     }
                     if (instance == null) {
@@ -966,7 +936,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
             String fullLog = inMessage.getHeader().getHeaderAttribute("fullLog");
             if ("true".equals(fullLog)) {
-                System.err.println("Full debug detected. Accesshash: " + access.hashCode());
+                logger.info("Full debug detected. Accesshash: " + access.hashCode());
                 access.setDebugAll(true);
             }
 
@@ -1062,7 +1032,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
             }
         } catch (NavajoDoneException e) {
-            System.err.println("NavajoDone caught in dispatcher. Need to prevent finalize block!");
             preventFinalize = true;
             throw e;
 
@@ -1330,7 +1299,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         while (iter.hasNext() && !found) {
             a = iter.next();
             if (a.accessID.equals(id)) {
-                System.err.println("FOUND ACCESS OBJECT!!!");
                 found = true;
             }
         }
@@ -1549,7 +1517,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
     @Override
     public void setHealth(String resourceId, int h) {
-        System.err.println("Dispatcher.setHealth(" + resourceId + "," + h + ")");
         health = h;
     }
 

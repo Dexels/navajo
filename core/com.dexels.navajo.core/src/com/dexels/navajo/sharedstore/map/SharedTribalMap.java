@@ -137,7 +137,6 @@ public class SharedTribalMap<K,V> extends HashMap {
 		}
 		
 		try {
-			//System.err.println(Dispatcher.getInstance().getApplicationId() + ": before putlocal(" + key + ")");
 			Object o = putLocal(key, value);
 
 			SharedTribalElement ste = new SharedTribalElement(getId(), key, value);
@@ -161,7 +160,6 @@ public class SharedTribalMap<K,V> extends HashMap {
 			ssl = SharedStoreFactory.getInstance().lock("", getLockName(key) , SharedStoreInterface.READ_WRITE_LOCK, true);
 		}
 		try {
-			//System.err.println(Dispatcher.getInstance().getApplicationId() + ": id: " + ", containsKey(" + key + ") = " + super.containsKey(key) + ", hash = " + this.hashCode());
 			return super.containsKey(key);
 		} finally {
 			if ( tribalSafe && ssl != null ) {
@@ -204,7 +202,6 @@ public class SharedTribalMap<K,V> extends HashMap {
 	protected Object putLocal(Object key, Object value) {
 		synchronized (semaphoreLocal) {
 			Object o = super.put(key, value);
-			//System.err.println(Dispatcher.getInstance().getApplicationId() + ": " + id + ": in PutLocal(" + key + ", " + value + "), containsKey = " + containsKey(key) + ", hash = " + this.hashCode());
 			insertCount++;
 			return o;
 		}
@@ -234,7 +231,6 @@ public class SharedTribalMap<K,V> extends HashMap {
 	
 	protected Object removeLocal(Object key) {
 		synchronized (semaphoreLocal) {
-			//System.err.println(Dispatcher.getInstance().getApplicationId() + ": " + id + ": in removeLocal(" + key + ")");
 			Object o = super.remove(key);
 			semaphoreLocal.notifyAll();
 			if ( o != null ) {

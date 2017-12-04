@@ -874,7 +874,6 @@ public class StreamDocument {
 			if(appendTo.isAbsolute() && !appendTo.getParentFile().exists()) {
 				appendTo.getParentFile().mkdirs();
 			}
-//			System.err.println("Appending to: "+appendTo.getAbsolutePath());
 			try(FileOutputStream out = new FileOutputStream(appendTo,true)) {
 				out.write(b);
 			} catch (IOException e) {

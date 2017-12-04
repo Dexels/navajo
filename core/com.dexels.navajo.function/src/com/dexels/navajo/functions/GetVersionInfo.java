@@ -50,10 +50,8 @@ public final class GetVersionInfo extends FunctionInterface {
 			
 			Class<AbstractVersion> c = null;
 			if (DispatcherFactory.getInstance().getNavajoConfig().getClassloader() ==null) {
-				System.err.println("GetVersionInfo: Using system classloader");
 				c = (Class<AbstractVersion>) Class.forName(packageName+".Version");
 			} else {
-				System.err.println("GetVersionInfo: Using Navajo classloader");
 				c = (Class<AbstractVersion>) DispatcherFactory.getInstance().getNavajoConfig().getClassloader().getClass(packageName+".Version");
 			}
 //			return "DUMMY FUNCTION, FIX ME!";

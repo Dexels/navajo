@@ -3,10 +3,15 @@ package com.dexels.navajo.geo.element;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class GeoPointStore {
 
 	private static GeoPointStore myInstance;
 	private List<GeoPoint> myPoints = new ArrayList<GeoPoint>();
+
+	private final static Logger logger = LoggerFactory.getLogger(GeoPointStore.class);
 
 	private boolean normalizingEnabled = true;
 
@@ -57,7 +62,7 @@ public class GeoPointStore {
 		myPoints.add(q);
 		long m = (System.currentTimeMillis()-l);
 		if(m>100) {
-			System.err.println("getPoint: "+m+" # of points in store: "+myPoints.size());
+			logger.info("getPoint: "+m+" # of points in store: "+myPoints.size());
 		}
 		return q;
 	}

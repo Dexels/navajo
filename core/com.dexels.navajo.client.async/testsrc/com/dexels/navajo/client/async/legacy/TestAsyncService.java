@@ -49,7 +49,6 @@ public class TestAsyncService {
 				@Override
 				public void receiveServerAsync(Navajo n, String method, String serverId,
 						String clientId) {
-					System.err.println("Receive server async: " + method + ", serverId = " + serverId + ", clientId = " + clientId);
 					try {
 						n.write(System.err);
 					} catch (NavajoException e) {

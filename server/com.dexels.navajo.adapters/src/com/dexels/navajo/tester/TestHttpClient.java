@@ -98,12 +98,12 @@ public class TestHttpClient extends Thread implements NavajoResponseHandler {
 			 String serverTime = ( response != null ? response.getHeader().getHeaderAttribute("serverTime") : null );
 			 if ( result == null || result.indexOf(assertString) == -1 ) {
 				 if ( result != null && result.indexOf(assertString) == -1 ) {
-					 System.err.println(result);
+					 logger.info(result);
 					
 				 }
-				 System.err.println(this + "," + i + ", Failed, " + ( end - start ) + ", " + serverTime + ", "+ ( ++failedCount) );
+				 logger.info(this + "," + i + ", Failed, " + ( end - start ) + ", " + serverTime + ", "+ ( ++failedCount) );
 			 } else {
-				 System.err.println(this + "," + i + ", Success, " +  ( end - start ) + ", " + serverTime + ", " + failedCount );
+				 logger.info(this + "," + i + ", Success, " +  ( end - start ) + ", " + serverTime + ", " + failedCount );
 			 }
 			 double sleepTime;
 			 if(sleep!=null) {
@@ -111,7 +111,6 @@ public class TestHttpClient extends Thread implements NavajoResponseHandler {
 			 } else {
 				 sleepTime = (minTime - ( end - start ));
 			 }
-			 //System.err.println("sleepTime: " + sleepTime);
 			 if ( sleepTime > 0 ) {
 				 Thread.sleep((long) sleepTime);
 				 end = System.currentTimeMillis();
@@ -129,7 +128,6 @@ public class TestHttpClient extends Thread implements NavajoResponseHandler {
 		
 		
 		if ( args.length < 5 ) {
-			System.err.println("Usage: TestHttpClient -postman [Postman URL] -iterations [Aantal iteraties] -rate [Max rate] -sleep [Sleep time] -request [Request File] -assertString [String]");
 			System.exit(1);
 		}
 		

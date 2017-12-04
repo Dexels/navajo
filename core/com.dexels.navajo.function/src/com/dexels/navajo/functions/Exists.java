@@ -68,7 +68,6 @@ public class Exists extends FunctionInterface {
 						"Empty or non existing array message: " +
 						messagePath);
 			}
-//			System.err.println("Forall expression: "+expression);
 			
 			for (int i = 0; i < arrayMsg.size(); i++) {
 				Message current = arrayMsg.get(i);
@@ -84,7 +83,6 @@ public class Exists extends FunctionInterface {
 						if (result.value==null) {
 							throw new TMLExpressionException(this,"Error evaluating expression: "+expression+" in message: "+current.getFullMessageName());
 						}
-//						System.err.println("Result: "+result.value);
 						
 						String res2 =""+result.value;
 						Operand result2 = Expression.evaluate(res2, doc, null, current);
@@ -94,7 +92,6 @@ public class Exists extends FunctionInterface {
 						if (result2.value==null) {
 							throw new TMLExpressionException(this,"Error evaluating expression: "+res2+" in message: "+current.getFullMessageName());
 						}
-//						System.err.println("Result: "+result2.value);
 						
 						
 						

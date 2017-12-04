@@ -103,7 +103,6 @@ public class MapDefinition {
 	}
 
 	private void generateFieldCode(XMLElement child, XMLElement mout, String filename, boolean isMethod) throws Exception {
-		//System.err.println("In generateFieldCode: " + child);
 		// First process children...
 		if ( child.getChildren().size() > 0 && !child.getFirstChild().getName().equals("value") ) {
 			Vector<XMLElement> vc = child.getChildren();
@@ -192,8 +191,6 @@ public class MapDefinition {
 		
 		XMLElement map = null;
 		
-		//System.err.println("IN GENERATECODE FOR : " + in.getName() + ", tagname is: " + tagName + ", linenr: " + in.getLineNr());
-		//System.err.println("In generateCode: " + in);
 		if ( in.getName().equals("map."+tagName)  ) {
 			map = new TSLElement(in, "map");
 			map.setAttribute("object", objectName);
@@ -210,9 +207,7 @@ public class MapDefinition {
 			while ( auto.hasNext() )  {
 				ValueDefinition pd = auto.next();
 				if ( pd.getRequired().equals("automatic") ) {
-					//System.err.println("AUTOMATIC!!!!!!!!!!" + pd.getName());
 					pd.generateCode(in, pd.getValue(), false, null, map, true, filename);
-					//out.addChild(pdx);
 				} else if ( pd.getRequired().equals("true") ) {
 					required.add(pd.getName());
 				}
@@ -222,9 +217,7 @@ public class MapDefinition {
 			while ( attributes.hasNext() ) {
 				String attribName =  attributes.next();
 				String attribValue = (String) in.getAttribute(attribName);
-				//System.err.println("Looking up: " + attribName);
 				ValueDefinition vd = getValueDefinition(attribName);
-				//System.err.println("Found vd: " + vd);
 				if ( vd != null ) {
 					vd.generateCode(in, attribValue, false, null, map, true, filename);
 					required.remove(attribName);

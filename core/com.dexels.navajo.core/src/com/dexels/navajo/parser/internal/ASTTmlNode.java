@@ -60,8 +60,6 @@ public final class ASTTmlNode extends SimpleNode {
 		boolean isParam = false;
 
 		Property prop = null;
-		// System.err.println("Interpreting TMLNODE... val= "+val);
-
 		if (parentSel != null) {
 			String dum = val;
 			if (dum.length() > 1)
@@ -129,8 +127,6 @@ public final class ASTTmlNode extends SimpleNode {
 				} else
 					throw new TMLExpressionException("No parent message present for param: " + val);
 			} else {
-				// System.err.println("Looking for properties: "+val+" parentMessage:
-				// "+parentMsg.getFullMessageName());
 
 				if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
 					match = (!isParam ? parentMsg.getProperties(val) : parentParamMsg.getProperties(val));
@@ -141,7 +137,6 @@ public final class ASTTmlNode extends SimpleNode {
 					match = new ArrayList();
 					match.add((!isParam ? parentMsg.getProperty(val) : parentParamMsg.getProperty(val)));
 				}
-				// System.err.println("# of matches: "+match.size());
 			}
 		} catch (NavajoException te) {
 			throw new TMLExpressionException(te.getMessage(), te);

@@ -77,7 +77,6 @@ public class ExpressionCache {
 		Optional<Object> cachedValue = expressionValueCache.getUnchecked(expression);
 		if(cachedValue.isPresent()) {
 			pureHitCount.incrementAndGet();
-//			printStats();
 			return cachedValue.get();
 		}
 		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage,paramMessage);
@@ -87,7 +86,6 @@ public class ExpressionCache {
 	public ContextExpression parse(String expression) {
 		Optional<ContextExpression> cachedParsedExpression = expressionCache.getUnchecked(expression);
 		if(cachedParsedExpression.isPresent()) {
-//			System.err.println("Found cached expression: "+expression);
 			hitCount.incrementAndGet();
 			return cachedParsedExpression.get();
 		}

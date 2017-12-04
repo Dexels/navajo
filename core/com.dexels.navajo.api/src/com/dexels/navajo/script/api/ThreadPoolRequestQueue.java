@@ -5,8 +5,14 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class ThreadPoolRequestQueue extends RequestQueue {
+
+	
+	private final static Logger logger = LoggerFactory.getLogger(ThreadPoolRequestQueue.class);
 
 	private final ThreadPoolExecutor tpe;
 	
@@ -79,13 +85,13 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 	public void shutDownQueue() {
 		List<Runnable> awaiting = tpe.shutdownNow();
 		if(awaiting==null) {
-			System.err.println("Nothing left");
+			logger.info("Shutting down: Nothing left");
 			return;
 		}
 		for (Runnable runnable : awaiting) {
 			TmlRunnable tr = (TmlRunnable)runnable;
 			tr.abort("Aborting: Queue shutting down");
-			System.err.println("Aborting task!");
+			logger.info("Aborting task!");
 		}
 	}
 
@@ -93,7 +99,7 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 	public int flushQueue() {
 		List<Runnable> list = new ArrayList<Runnable>();
 		int size = tpe.getQueue().drainTo(list);
-		System.err.println("Drained " + size + " items. List size: " + list.size());
+		logger.info("Drained " + size + " items. List size: " + list.size());
 		return size;
 	}
 

@@ -153,7 +153,6 @@ public class ElasticSearchComponent implements ElasticSearchService {
 //		String id = node.get(this.id_property).asText();
 		HttpPut httpPut = new HttpPut(assembleURI(id));
 		HttpEntity he = new ByteArrayEntity(requestBytes);
-		System.err.println("Request:\n"+new String(requestBytes));
 		httpPut.setEntity(he);
 		CloseableHttpResponse response1 = httpclient.execute(httpPut);
 		//HttpEntity respe = response1.getEntity();

@@ -24,10 +24,8 @@ public abstract class GetUrlBase extends FunctionInterface {
         try {
         	HttpURLConnection uc = (HttpURLConnection)u.openConnection();
         	uc.setConnectTimeout(1000);
-//        	System.err.println(uc.getHeaderFields());
         	uc.setRequestMethod("HEAD");
             Date d = new Date(uc.getLastModified());
-//			flushConnection(uc);
            return d;
         } catch (IOException e) {
         	logger.warn("getUrlTime failed.", e);

@@ -239,7 +239,7 @@ public class ReactiveScriptParser {
 	
 	private static ReactiveSource parseSource(String relativePath, XMLElement x, Function<String,ReactiveSourceFactory> sourceFactorySupplier,Function<String,ReactiveTransformerFactory> factorySupplier,Function<String, ReactiveMerger> reducerSupplier,Function<String, ReactiveMapper> mapperSupplier) throws Exception  {
 		String type = x.getName();
-		System.err.println("Type of source: "+type);
+		logger.info("Type of source: "+type);
 		String[] typeSplit = type.split("\\.");
 		ReactiveSource src = createSource(relativePath, x,typeSplit[1],sourceFactorySupplier, factorySupplier, reducerSupplier,mapperSupplier);
 		return src;
@@ -272,7 +272,7 @@ public class ReactiveScriptParser {
 			ReactiveTransformer transformer = transformerFactory.build(relativePath, xml,sourceSupplier,factorySupplier,reducerSupplier, mapperSupplier);
 			String in = transformer.inType().name().toLowerCase();
 			String out = transformer.outType().name().toLowerCase();
-			System.err.println("CHAIN: "+in+" / "+baseType+" ---> "+newBaseType+" / "+out);
+			logger.info("CHAIN: "+in+" / "+baseType+" ---> "+newBaseType+" / "+out);
 			result.add(transformer);
 		}
 		
@@ -307,9 +307,9 @@ public class ReactiveScriptParser {
 
 		Type fn = finalType(reactiveSourceFactory, factories);
 		ReactiveSource build = reactiveSourceFactory.build(relativePath, type,x,params,factories,fn,reducerSupplier, mapperSupplier);
-		System.err.println("Source type: "+build.dataType());
+		logger.info("Source type: "+build.dataType());
 		for (ReactiveTransformer reactiveTransformer : factories) {
-			System.err.println("Transformer type: "+reactiveTransformer.outType());
+			logger.info("Transformer type: "+reactiveTransformer.outType());
 		}
 		return build;
 	}
@@ -353,7 +353,7 @@ public class ReactiveScriptParser {
 				.filter(x->!x.getName().startsWith("param"))
 				.filter(x->x.getName().split("\\.").length!=3)
 				.map(xml->{
-					System.err.println("Assuming this is a reducer element: "+xml);
+					logger.info("Assuming this is a reducer element: "+xml);
 					try {
 						ReactiveMerger reducer = reducerSupplier.apply(xml.getName());
 						return reducer.execute(relativePath, xml);
@@ -378,7 +378,7 @@ public class ReactiveScriptParser {
 				.filter(x->!x.getName().startsWith("param"))
 				.filter(x->x.getName().split("\\.").length!=3)
 				.map(xml->{
-					System.err.println("Assuming this is a mapper element: "+xml);
+					logger.info("Assuming this is a mapper element: "+xml);
 					try {
 				return mapperSupplier.apply(xml.getName()).execute(relativePath, xml);
 			} catch (Exception e) {

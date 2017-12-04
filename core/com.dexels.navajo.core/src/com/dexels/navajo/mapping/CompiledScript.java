@@ -569,20 +569,15 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     private final ConditionData[] getValidationRules(Access access) throws Exception {
         Navajo inMessage = access.getInDoc();
         if (conditionArray != null) {
-            // System.err.println("CHECKING CONDITIONS......, conditionArray = "
-            // + conditionArray.length);
             List<ConditionData> conditions = new ArrayList<ConditionData>();
             for (int i = 0; i < conditionArray.length; i++) {
                 boolean check = (conditionArray[i].equals("") ? true : Condition.evaluate(conditionArray[i], inMessage,
                         access));
-                // System.err.println("check = " + check);
                 if (check) {
                     ConditionData cd = new ConditionData();
                     cd.id = codeArray[i];
                     cd.comment = (descriptionArray != null ? descriptionArray[i] : "empty");
                     cd.condition = ruleArray[i];
-                    // System.err.println("id = " + cd.id + ", rule = " +
-                    // cd.condition);
                     conditions.add(cd);
                 }
             }

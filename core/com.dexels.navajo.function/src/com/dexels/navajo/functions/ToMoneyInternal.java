@@ -51,15 +51,6 @@ public String usage() {
     tm.insertOperand(new Money(3.4));
     
     System.out.println("result = " + tm.evaluate());
-
-    // Using expressions.
-//    String expression = "ToMoney(1024.50) + 500 - 5.7 + ToMoney(1)/2";
-//    Operand o = Expression.evaluate(expression, null);
-//    System.out.println("o = " + o.value);
-//    System.out.println("type = " + o.type);
-//
-//    System.err.println("ToMoney('') = " + Expression.evaluate("ToMoney('')", null).value);
-
   }
 
 }

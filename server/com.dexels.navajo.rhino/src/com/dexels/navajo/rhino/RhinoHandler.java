@@ -30,7 +30,6 @@ public class RhinoHandler extends ServiceHandler {
 	public Navajo doService() throws NavajoException, UserException,
 			SystemException, AuthorizationException, NavajoDoneException {
 
-		// System.err.println("Rhino: Handler");
 		CompiledScript cso;
 		try {
 			cso = compileScript(access, new StringBuffer());
@@ -38,7 +37,6 @@ public class RhinoHandler extends ServiceHandler {
 			cso.run(access);
 			return access.getOutputDoc();
 		} catch (NavajoDoneException e1) {
-			// e1.printStackTrace();
 			logger.info("NavajoDone caught in handler. Rethrowing");
 			throw e1;
 		} catch (Throwable e) {

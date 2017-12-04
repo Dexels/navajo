@@ -113,7 +113,7 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 		eps.server="knvb-test.sportlink.com/navajo";
 //		String construct = 
 		URI u = new URI(eps.getEntityFromServer());
-		System.err.println("u: "+u);
+		logger.info("u: "+u);
 	}
 	
 	private String getApplicationAttribute(String key,ServletConfig config) {

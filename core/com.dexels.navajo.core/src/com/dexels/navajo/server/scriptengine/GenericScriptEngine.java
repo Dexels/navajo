@@ -42,7 +42,6 @@ public class GenericScriptEngine extends JavaPlugin {
 		}
       int dotPos = scriptFile.getName().lastIndexOf(".");
       String extension = scriptFile.getName().substring(dotPos+1);
-//      System.err.println("Scriptfile: "+scriptFile.getName()+"ext: "+extension);
       
       ScriptEngineManager sem = new ScriptEngineManager(); //DispatcherFactory.getScriptEngineManager();
       

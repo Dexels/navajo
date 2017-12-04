@@ -40,20 +40,17 @@ public class DummyStatisticsRunner implements StatisticsRunnerInterface, NavajoL
 	@Override
 	public void onNavajoEvent(NavajoEvent ne) {
 		if ( ne instanceof AuditLogEvent ) {
-			//System.err.println("DummyStatisticsRunner: " + ne);
 		}
 		ne = null;
 	}
 
 	@Override
 	public int getAuditLevel() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void setAuditLevel(int l) {
-		// TODO Auto-generated method stub
 		
 	}
 

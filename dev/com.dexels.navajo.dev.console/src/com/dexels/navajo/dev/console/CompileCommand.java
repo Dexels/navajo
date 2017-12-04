@@ -42,7 +42,6 @@ public class CompileCommand extends ConsoleCommand {
 			if(script.equals("/")) {
 				script = "";
 			}
-//			System.err.println("Force: "+force);
 			List<String> success = new ArrayList<String>();
 			List<String> failures = new ArrayList<String>();
 			List<String> skipped = new ArrayList<String>();

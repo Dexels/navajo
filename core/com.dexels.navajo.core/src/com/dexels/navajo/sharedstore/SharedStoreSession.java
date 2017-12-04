@@ -233,15 +233,5 @@ public class SharedStoreSession {
 		bout.flush();
 		bout.close();
 	}
-	
-	public static void main(String [] args) throws Exception {
 
-		String path = "";
-		String parent = "aap.workflow";
-
-		SharedStoreSession sss = new SharedStoreSession(null);
-		System.err.println(sss.getLevelParent(parent, path));
-		
-		System.err.println(parent.matches(".*workflow"));
-	}
 }

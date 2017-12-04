@@ -56,19 +56,13 @@ public class DispatcherFactory {
 			return instance;
 		}
 		URL configurationUrl;
-//		System.err.println("Extremeskool configuration detected.");
 		String absRootPath = rootPath.getAbsolutePath();
 		if(!absRootPath.endsWith("/")) {
 			absRootPath = absRootPath+ "/";
 		}
-//		System.err.println("Rootpath: "+absRootPath);
-//		System.err.println("ServerXML: "+serverXmlPath);
-		
 		try {
-//			URL rootUrl = rootPath.toURI().toURL();
 			File serverXMLFile = new File(rootPath,serverXmlPath);
 			configurationUrl = serverXMLFile.toURI().toURL();
-//			configurationUrl = new URL(rootUrl, serverXmlPath);
 		} catch (MalformedURLException e) {
 			throw NavajoFactory.getInstance().createNavajoException(e);
 		}
@@ -113,7 +107,6 @@ public class DispatcherFactory {
 
 		URL configurationUrl;
 		if(serverXmlPath==null) {
-			System.err.println("Old skool configuration detected.");
 			// old skool, the passed url is the configurationUrl (from web.xml):
 			try {
 				configurationUrl = new URL(rootPath);
@@ -123,7 +116,6 @@ public class DispatcherFactory {
 			}
 		} else {
 			// new-style: rootUrl is the root of the installation, serverXmlPath is the relative path to the server.xml file
-			System.err.println("Newskool configuration detected.");
 			try {
 				File f = new File(rootPath);
 				URL rootUrl = f.toURI().toURL();

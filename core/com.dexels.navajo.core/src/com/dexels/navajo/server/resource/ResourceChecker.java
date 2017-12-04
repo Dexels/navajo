@@ -63,12 +63,12 @@ public class ResourceChecker {
 			a.rpcName = webservice;
 			this.myCompiledScript = gh.compileScript(a, compilerErrors);
 			if ( myCompiledScript == null ) {
-				System.err.println("ResourceChecker: Could not find compiledscript for: " + webservice);
+				logger.warn("ResourceChecker: Could not find compiledscript for: " + webservice);
 			} else {
 				init();
 			}
 		} catch (Throwable t) {
-			System.err.println("ResourceChecker: Could not find compiledscript for: " + webservice + " (" + t.getMessage() + ")");
+			logger.error("ResourceChecker: Could not find compiledscript for: " + webservice + " (" + t.getMessage() + ")",t);
 		}
 	}
 	
@@ -76,7 +76,7 @@ public class ResourceChecker {
 	public final void init() {
 
 		if ( myCompiledScript.getDependentObjects() == null ) {
-			System.err.println("ResourceChecker: Could not find dependent objects for: " + myCompiledScript.getClass());
+			logger.warn("ResourceChecker: Could not find dependent objects for: " + myCompiledScript.getClass());
 			return;
 		}
 		Iterator<Dependency> dependencies = myCompiledScript.getDependentObjects().iterator();
@@ -89,7 +89,6 @@ public class ResourceChecker {
 						Class c = Class.forName(afd.getJavaClass(), true, myCompiledScript.getClass().getClassLoader());
 						Method m = c.getMethod("getResourceManager", new Class[]{String.class});
 						if ( m != null ) {
-							//System.err.println("Found method getResourceManager() for " + afd.getJavaClass());
 							managedResources.put(afd, m);
 						}
 					} catch (Throwable e) {  }
@@ -201,7 +200,7 @@ public class ResourceChecker {
 					}
 				}
 			} catch (Exception e1) { 
-				System.err.println("Could not check avail of: " + afd.getType() + ", msg: " + e1.getMessage()); 
+				logger.error("Could not check avail of: " + afd.getType() + ", msg: " + e1.getMessage()); 
 			}
 		}
 
@@ -212,14 +211,10 @@ public class ResourceChecker {
 		String [] ids = new String[unavailableIds.size()];
 		ids = unavailableIds.toArray(ids);
 		ServiceAvailability sa = new ServiceAvailability(webservice, available, finalHealth, maxWaitingTime, ids);
-		//System.err.println("First order health of " + webservice + " is: " + finalHealth);
 		checkedServices.add(webservice);
 		
 		// Check dependecies
 		ServiceAvailability dependencyHealth = checkScriptDependencies(checkedServices);
-//		if ( dependencyHealth != null ) {
-//			System.err.println("Found child dep with health: " + dependencyHealth.getHealth());
-//		}
 		if ( dependencyHealth != null && ( dependencyHealth.getHealth() > sa.getHealth() || !dependencyHealth.isAvailable() ) ) {
 			return dependencyHealth;
 		} else {

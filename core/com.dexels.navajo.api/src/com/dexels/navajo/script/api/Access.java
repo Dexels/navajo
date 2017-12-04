@@ -812,11 +812,6 @@ public final class Access implements java.io.Serializable, Mappable {
     }
 
     public String getRequestUrl() {
-        if (requestUrl == null) {
-            String hardCoded = "http://spiritus.dexels.nl:9080/JsSportlink/Comet";
-            System.err.println("\n\n\nWARNING HARDCODED URL:" + hardCoded + "!!!!\n\n");
-            return hardCoded;
-        }
         return requestUrl;
     }
 

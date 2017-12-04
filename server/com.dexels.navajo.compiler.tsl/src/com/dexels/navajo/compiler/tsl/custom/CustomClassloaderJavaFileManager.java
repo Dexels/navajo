@@ -266,7 +266,6 @@ public class CustomClassloaderJavaFileManager extends
 				}
 				Iterable<String> pkgs = getAffectedPackages(bw);
 				for (String pkg : pkgs) {
-					// System.err.println("Registering package: "+pkg+" for bundle: "+bundle.getSymbolicName());
 					CustomJavaFileFolder cjf = getNode(pkg);
 					cjf.linkBundle(bundle);
 				}

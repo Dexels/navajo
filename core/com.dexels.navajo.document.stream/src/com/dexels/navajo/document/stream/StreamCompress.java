@@ -486,7 +486,6 @@ public class StreamCompress {
 						if(first.get() && CompressionType.GZIP == type) {
 							byte[] joinedData;
 							if(!stashedData.isEmpty()) {
-								System.err.println("Examining stashed data");
 								int totalSize = stashedData.stream().map(b->b.length).collect(Collectors.summingInt(i->i));
 								joinedData = new byte[totalSize];
 								int count = 0;

@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.BinaryDigest;
@@ -37,6 +40,9 @@ public class SwiftReactiveImpl implements BinaryStore {
 	private URL endpointURL;
 
 	
+	private final static Logger logger = LoggerFactory.getLogger(SwiftReactiveImpl.class);
+
+	
 	@Override
 	public Binary resolve(BinaryDigest digest) {
 		String path = "/v1/"+tenantId+"/"+container+"/"+digestToPath(digest);
@@ -64,16 +70,16 @@ public class SwiftReactiveImpl implements BinaryStore {
 				.doOnError(e->e.printStackTrace())
 				.toBlocking()
 				.first();
-		System.err.println("Result: "+result);
+		logger.info("Result: "+result);
 	}
 
 	@Override
 	public void store(Binary b) {
 		String path = "/v1/"+tenantId+"/"+container+"/"+digestToPath(b.getDigest());
 		Map<String, String> result = requestWithBinaryBody(path,HttpMethod.PUT,b,1024).toBlocking().first();
-		System.err.println("Result: "+result);
+		logger.info("Result: "+result);
 		String code = result.get("code");
-		System.err.println("Code: "+code);
+		logger.info("Code: "+code);
 	}
 
 	@Override
@@ -105,7 +111,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 		this.container = container;
 		this.tenantId = findTenantId(authNode).get();
         this.accessToken = getAuthToken(authNode);
-        System.err.println("Swift endpoint: "+swiftEndpoint.get());
+        logger.info("Swift endpoint: "+swiftEndpoint.get());
         this.client = createClientFromURL(swiftEndpoint.get());
         ensureContainerExists();
 	}
@@ -116,7 +122,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 			.createRequest(method, path)
 		    .addHeader("X-Auth-Token", accessToken)
 			.asObservable()
-			.doOnNext(e->System.err.println("Some kind of response: "+e))
+			.doOnNext(e->logger.info("Some kind of response: "+e))
 			.map(this::responseHeaders);
 	}
 
@@ -191,7 +197,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 		for (JsonNode jsonNode : services) {
 			ObjectNode e = (ObjectNode)jsonNode;
 			if("object-store".equals( e.get("type").asText())) {
-				System.err.println("FOUND!");
+				logger.info("FOUND!");
 				return Optional.of(((ArrayNode)e.get("endpoints")).get(0).get(internal?"internalURL":"publicURL").asText());
 			}
 		}
@@ -203,7 +209,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 		for (JsonNode jsonNode : services) {
 			ObjectNode e = (ObjectNode)jsonNode;
 			if("object-store".equals( e.get("type").asText())) {
-				System.err.println("FOUND!");
+				logger.info("FOUND!");
 				return Optional.of(((ArrayNode)e.get("endpoints")).get(0).get("tenantId").asText());
 			}
 		}
@@ -221,13 +227,12 @@ public class SwiftReactiveImpl implements BinaryStore {
 		passwordCredentials.put("apiKey", apiKey);
 		auth.set("RAX-KSKEY:apiKeyCredentials", passwordCredentials);
 		node.set("auth", auth);
-//		System.err.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node));
 
         ObjectNode authNode = authClient 
         	.createPost("/v2.0/tokens")
 		    .addHeader("Content-Type", "application/json")
 		    .writeStringContent(Observable.just(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node)))
-		    .doOnNext(re->System.err.println(":: "+re.toString()))
+		    .doOnNext(re->logger.info(":: "+re.toString()))
 		    .concatMapEager(resp->resp.getContent().map(a->a.toString(Charset.defaultCharset())))
 		    .reduce(new StringBuffer(),(sb,s)->sb.append(s))
         	.map(sb->extractKey(sb.toString()))
@@ -285,7 +290,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 						for (String name : response.getHeaderNames()) {
 							headers.put(name, response.getHeader(name));
 						}
-						System.err.println("Code: "+headers.get("code")+" all headers: "+headers+" status: "+response.getStatus());
+						logger.info("Code: "+headers.get("code")+" all headers: "+headers+" status: "+response.getStatus());
 						int cc = response.getStatus().code();
 						if(cc>=400) {
 							out.onError(new RuntimeException("Error code in HTTP: "+cc+" headers: "+headers));

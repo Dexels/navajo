@@ -87,21 +87,18 @@ public class SQLFieldDependency extends AdapterFieldDependency {
 		
 		while ( from[0] != -1 ) {
 			query = query.substring(from[0] + from[1]);
-			//System.err.println("query = " + query);
 			// Find WHERE OR EOQ (End Of Query)
 			String subQuery = query;
 			int bracket = query.indexOf(")");
 			if ( bracket != -1 ) {
-				//System.err.println("bracket = " + bracket);
 				subQuery = query.substring(0, bracket);
 				
 			}
-			int [] where = findKeyword("where", subQuery); //subQuery.indexOf(" where ");
+			int [] where = findKeyword("where", subQuery); 
 		
 			if ( where[0] != -1 ) {
 				subQuery = subQuery.substring(0, where[0]);
 			} 
-			//System.err.println("subQuery = " + subQuery);
 			// Tokenize colons
 			String [] objects = subQuery.split(",");
 			for ( int i = 0; i < objects.length; i++ ) {
@@ -117,7 +114,6 @@ public class SQLFieldDependency extends AdapterFieldDependency {
 				}
 			}
 			from = findKeyword("from", query);
-			//System.err.println("from = " + from);
 		}
 		
 		return sps;
@@ -136,7 +132,6 @@ public class SQLFieldDependency extends AdapterFieldDependency {
 			// Find first occurence of (.
 			char [] chars = query.toCharArray();
 			int index = 0;
-			//System.err.println(chars.length);
 			while ( index < chars.length && chars[index] != '(' ) {
 				if ( chars[index] != ' ' ) {
 					spName.append(chars[index]);
@@ -148,7 +143,6 @@ public class SQLFieldDependency extends AdapterFieldDependency {
 				sps.add(spName.toString());
 			}
 			call = query.indexOf("call");
-			//System.err.println("call = " + call);
 		}
 		
 		return sps;

@@ -41,7 +41,6 @@ public class TestAdapter implements Mappable {
 				SharedTribalMap.registerMap(stm, true);	
 			}
 			
-			System.err.println("SharedTribalMap( " + id + "), key = " + key + ", value = " + value);
 			stm.put(key, new RemoteReference( value ) );
 		}
 	}

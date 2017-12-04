@@ -1,6 +1,13 @@
 package com.dexels.navajo.geo.tools;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FacilityMarker {
+	
+	
+	private final static Logger logger = LoggerFactory.getLogger(FacilityMarker.class);
+
 	private double distance = -1;
 	private int index = -1;
 	private int maxCount = -1;
@@ -35,14 +42,14 @@ public class FacilityMarker {
 	public void setHalffield(boolean b){
 		if(currentField != null){
 			currentField.setIsHalfField(b);
-			System.err.println("Half field set: "  + currentField.getId());
+			logger.info("Half field set: "  + currentField.getId());
 		}
 	}
 	
 	public void setQuarterfield(boolean b){
 		if(currentField != null){
 			currentField.setIsQuarterField(b);
-			System.err.println("Querter field set: "  + currentField.getId());
+			logger.info("Querter field set: "  + currentField.getId());
 		}
 	}
 	
@@ -51,14 +58,14 @@ public class FacilityMarker {
 	}
 
 	public void setIndex(int index) {
-		System.err.println("Set index called with index: " + index + ", doing magic ======================================");
+		logger.info("Set index called with index: " + index + ", doing magic ======================================");
 		this.index = index;
 		double bearing = (double)getIndex() / (double)getMaxCount() * 360+1;
 		currentSubfacility = current.moveTo( getDistance(), bearing);
-		System.err.println("MoveTo done, creating field object");
+		logger.info("MoveTo done, creating field object");
 		currentField = new Field(currentSubfacility,bearing);
 		currentField.setId(getId()+"/"+index);
-		System.err.println("Set index: " + index + " pos: " + currentSubfacility.getCoordinates() + ", done ===============");
+		logger.info("Set index: " + index + " pos: " + currentSubfacility.getCoordinates() + ", done ===============");
 	}
 
 
@@ -67,14 +74,14 @@ public class FacilityMarker {
 			current = new LatLon(coordinates);		
 			currentField = new Field(current,0);
 			currentField.setId(getId()+"/"+index);
-			System.err.println("Field:  " + currentField.getId() + " pos: " + current.getCoordinates());
+			logger.info("Field:  " + currentField.getId() + " pos: " + current.getCoordinates());
 		}
 	}
 	
 	public void setBearing(String bearing){
 		if(bearing != null && !"".equals(bearing) && currentField != null){
 			currentField.setBearing(Double.parseDouble(bearing));
-			System.err.println("Bearing set: "  + bearing);
+			logger.info("Bearing set: "  + bearing);
 		}
 	}
 

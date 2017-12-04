@@ -2,9 +2,15 @@ package com.dexels.navajo.geo.color;
 
 import java.awt.Color;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.geo.GeoColorizer;
 
 public class HueGeoColorizer implements GeoColorizer {
+
+	
+	private final static Logger logger = LoggerFactory.getLogger(HueGeoColorizer.class);
 
 	@Override
 	public String createGeoColorString(double value, double min, double max) {
@@ -43,7 +49,7 @@ public class HueGeoColorizer implements GeoColorizer {
 		}
 		
 		String color = opacity+blueString+greenString+redString;
-		System.err.println("Color: "+color);
+		logger.info("Color: "+color);
 		return color;
 	}
 }

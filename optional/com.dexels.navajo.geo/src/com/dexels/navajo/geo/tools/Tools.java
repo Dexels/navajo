@@ -1,5 +1,8 @@
 package com.dexels.navajo.geo.tools;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Tools {
 
 	public Tools(){
@@ -7,26 +10,9 @@ public class Tools {
 	}
 	
 	private static final double EARTHRADIUS = 6365;
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// nijenrodeweg
-//		52.327340
-//		 4.857465
 	
-//		hilton:
-	//		 52.351484
-//			  4.872136
-//		Tools t = new Tools();
-		
-		System.err.println("Dist = "+distFrom(52.327340, 4.857465, 52.351484, 4.872136));
-//		double[] res = move(52.327340, 4.857465, 2.68, 20);
-//		System.err.println("lat: "+res[0]+" lon: "+res[1]);
-		double[] res = go(52.327340, 4.857465, 2.87, 21);
-		System.err.println("aalat: "+res[0]+" lon: "+res[1]);
-	}
+	private final static Logger logger = LoggerFactory.getLogger(Tools.class);
+
 	
 	public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
 	    double dLat = Math.toRadians(lat2-lat1);
@@ -64,27 +50,17 @@ public class Tools {
 	                               Math.cos(dist)-Math.sin(lat1)*Math.sin(lat2));
 	  lon2 = (lon2+3*Math.PI)%(2*Math.PI) - Math.PI;  // normalise to -180...+180
 
-//	  if (Math. isNaN(lat2) || isNaN(lon2)) return null;
-	  //System.err.println(">>>>>Lat: "+Math.toDegrees(lat2)+" lon: "+Math.toDegrees(lon2) );
 	  return new double[]{Math.toDegrees(lat2), Math.toDegrees(lon2)};
 	}
 
 	public LatLon move(LatLon base, double dist, double brng) {
 		brng = brng % 360.0;
-		System.err.println("Calculating: "+base.getCoordinates()+" distance: "+dist+" bearing: "+brng);
+		logger.info("Calculating: "+base.getCoordinates()+" distance: "+dist+" bearing: "+brng);
 		double[] arrayPos = go(base.getLat(),base.getLon(),dist,brng);
-		//System.err.println(">>>>>Lat: "+arrayPos[0]+" lon: "+arrayPos[1] );		
 		LatLon result = new LatLon(arrayPos);
-		System.err.println("Result: "+result.getCoordinates());
+		logger.info("Result: "+result.getCoordinates());
 //		Thread.dumpStack();
 		return result;
 	}
-	
-//	public double[] placeObject(LatLon, double distance, int max, int index) {
-//		double fraction = 360 / max;
-//		double brng = index * fraction;
-//		double[] pos = go(lat,lon,distance,brng);
-//		return new double[]{pos[0],pos[1],brng};
-//	}
 	
 }

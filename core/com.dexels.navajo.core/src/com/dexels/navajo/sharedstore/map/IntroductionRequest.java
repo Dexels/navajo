@@ -55,7 +55,6 @@ public class IntroductionRequest extends Request {
 				Object key = iter.next();
 				RemoteReference value = RemoteReference.createRemoteReference( (RemoteReference) stm.get(key) );
 				if ( value != null ) {
-					System.err.println("PUTTING REMOTE REFERENCE IN MAP, ref = " + value.getRef());
 					copy.putLocal( key, value );
 				}
 			}

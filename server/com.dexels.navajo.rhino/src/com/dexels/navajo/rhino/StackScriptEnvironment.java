@@ -37,7 +37,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	private Message currentParamMessage = null;
 
 	public StackScriptEnvironment() {
-		// System.err.println("New navajo context");
 		if (NavajoFactory.getInstance().getExpressionEvaluator() == null) {
 			NavajoFactory.getInstance().setExpressionEvaluator(
 					new DefaultExpressionEvaluator());
@@ -53,36 +52,23 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	}
 
 	public void blockDebug() {
-		System.err.println("So something insignificant");
 	}
 
 	@Override
 	public Object navajoEvaluate(String expression) throws NavajoException {
-		// if (getCurrentTreeNode()==null) {
-		// System.err.println("Evaluating navajo: "+expression+" without tree");
-		// } else {
-		// System.err.println("Evaluating navajo: "+expression+" with top: "+getCurrentTreeNode().getMyMap().getClass());
-		//
-		// }
 		Operand o = null;
 		Navajo inDoc = getAccess().getInDoc();
 		Message top = null;
 		if (!inputMessageStack.isEmpty()) {
 			top = inputMessageStack.peek();
 		}
-		// try {
 		ExpressionEvaluator expressionEvaluator = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 		o = expressionEvaluator.evaluate(expression, inDoc,
 				getCurrentTreeNode(), top, getTopParamStackMessage(),null,null,null,Optional.empty(),Optional.empty());
-		// } catch (Throwable e) {
-		// log("Error evaluating expression: "+expression);
-		// e.printStackTrace(getLogger());
-		// }
 		if (o == null) {
 			return null;
 		}
-		// System.err.println(":: "+expression+" evaluated to: "+o.value);
 		return o.value;
 	}
 
@@ -130,15 +116,12 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		Object map = treeTop.getMyMap();
 		String fieldSetter = "set" + fieldName.substring(0, 1).toUpperCase()
 				+ fieldName.substring(1);
-		// System.err.println("Assumming setter name: "+fieldSetter);
 		Class<? extends Object> mapClass = map.getClass();
-//		Class[] mapClassList = mapClass.getClasses();
 
 		Class<?> t = mapClass;
 
 		int emergencyCounter = 0;
 		while (t != null && !t.equals(Object.class) && emergencyCounter < 10) {
-			// System.err.println("Attempting class: "+t);
 			boolean found = setValueForClass(value, map, fieldSetter, t);
 			if (found) {
 				return;
@@ -147,8 +130,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 			t = mapClass.getSuperclass();
 			emergencyCounter++;
 		}
-		// for (Class t : mapClassList) {
-		// }
 
 		log("WARNING SETTER FOR FIELD: " + fieldName + " failed");
 	}
@@ -232,7 +213,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 			log(">>> EMPTY");
 		} else {
 			for (MappableTreeNode m : treeNodeStack) {
-				System.err.println("M: " + m.getMapName());
+				logger.info("M: " + m.getMapName());
 			}
 		}
 	}
@@ -244,7 +225,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		Class fieldType = null; 
 		if (isArrayMapRef(fieldName)) {
 			fieldType = map.getClass().getField(fieldName).getType().getComponentType();
-			System.err.println("IN CREATEMAPREFSOBJECT (ARRAY): " + fieldType + ", COUNT=" + count);
+			logger.debug("IN CREATEMAPREFSOBJECT (ARRAY): " + fieldType + ", COUNT=" + count);
 			Object fieldArrayObject = Array.newInstance(fieldType, count);
 			for ( int i = 0; i < count; i++) {
 				Object fieldObject = fieldType.newInstance();
@@ -254,7 +235,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		} else {
 			fieldType = map.getClass().getField(fieldName).getType();
 			Object fieldObject = fieldType.newInstance();
-			System.err.println("IN CREATEMAPREFSOBJECT: " + fieldType + ", COUNT="+count);
+			logger.info("IN CREATEMAPREFSOBJECT: " + fieldType + ", COUNT="+count);
 			return fieldObject;
 			
 		}
@@ -374,20 +355,20 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		Object o = myElementStack.peek();
 		if (o instanceof Navajo) {
 			Navajo n = (Navajo) o;
-			System.err.println("Navajo on top:");
+			logger.info("Navajo on top:");
 			n.write(System.err);
 		} else if (o instanceof Message) {
 			System.err.println("Message on top: "
 					+ ((Message) o).getFullMessageName());
 		} else if (o instanceof Property) {
-				System.err.println("Property on top: "
+			logger.info("Property on top: "
 						+ ((Property) o).getFullPropertyName());
 
 		} else {
 			if (o != null) {
-				System.err.println("Other object:" + o.getClass());
+				logger.info("Other object:" + o.getClass());
 			} else {
-				System.err.println("Null object on stack!");
+				logger.info("Null object on stack!");
 			}
 		}
 
@@ -436,7 +417,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	}
 
 	public void popNavajo() {
-		System.err.println("navajo");
 
 		myElementStack.pop();
 
@@ -448,14 +428,13 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 
 	}
 	public void pushNavajo(Navajo m) {
-		System.err.println("pushnavajo");
 
 		myElementStack.push(m);
 	}
 
 	public Message getMessage() {
 		if (myElementStack.isEmpty()) {
-			System.err.println("Empty stack!");
+			logger.error("Empty stack!");
 			return null;
 		}
 		return (Message) getTopmostElement(Message.class);
@@ -503,11 +482,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		String path2 = path.replaceAll("@", Message.MSG_PARAMETERS_BLOCK + "/");
 		Message result = getAccess().getInDoc().getMessage(path2);
 		if (result == null) {
-			System.err.println("Can't find message: " + path2);
-			System.err.println("In doc:");
-			getAccess().getInDoc().write(System.err);
-
-			getAccess().getOutputDoc().write(System.err);
+			logger.error("Can't find message: " + path2);
 		}
 		return result;
 	}
@@ -622,7 +597,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 			Property p = ((Navajo) oo).getProperty(path);
 			p.setAnyValue(value);
 		}
-		System.err.println("Odd stack problem");
+		logger.info("Odd stack problem");
 	}
 
 	public void setValue(Object value) {
@@ -675,18 +650,13 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	}
 
 	public Message addElement() throws NavajoException {
-		// System.err.println("######## TOPMOST: "+getMessage().getFullMessageName());
-		// getMessage().write(System.err);
 		Message e = super.addElement(getMessage());
-		// System.err.println("Element added: "+getMessage().getFullMessageName());
-		// getMessage().write(System.err);
 		pushElement(e);
 		return e;
 	}
 
 	public Property addProperty(String name, Object value, Map<String,String> attributes)
 			throws NavajoException, MappingException {
-		// System.err.println("Adding property: "+name+" to message: "+getMessage().getName());
 		if (getMessage() == null) {
 			log("No message, can not add property!");
 			log(dumpStack());
@@ -779,25 +749,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		Method m = NavajoFactory.getInstance().createMethod(
 				getAccess().getOutputDoc(), name, null);
 		getAccess().getOutputDoc().addMethod(m);
-		// System.err.println("Adding method with name: "+name);
-		// trapContinuation(m, new ContinuationHandler() {
-		//
-		// @Override
-		// public void run() {
-		//
-		// System.err.println("Finished sleeping.");
-		// new Thread(){
-		// public void run() {
-		// try {
-		// Thread.sleep(5000);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// resumeScript();
-		// }
-		// }.start();
-		// }
-		// });
 		return m;
 	}
 

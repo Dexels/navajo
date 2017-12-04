@@ -108,7 +108,7 @@ public class RhinoRunner {
 							// TODO do I need to skip this if the thread has
 							// been freed? There is no point notifying, but I
 							// _think_ it is harmless.
-							System.err.println("Notifying for scriptFinished");
+							logger.debug("Notifying for scriptFinished");
 							getScriptEnvironment().notify();
 						}
 					}
@@ -217,7 +217,6 @@ public class RhinoRunner {
 					Object o = e.getValue();
 					logger.error("ScriptStack: \n{}",e.getScriptStackTrace());
 					//				o = Context.jsToJava(o, Object.class);
-					System.err.println("o: " + o);
 					if(o instanceof Throwable) {
 						logger.error("Exception:", (Throwable)o);
 					}

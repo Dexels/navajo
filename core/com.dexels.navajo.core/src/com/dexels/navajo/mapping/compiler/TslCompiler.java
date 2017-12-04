@@ -472,8 +472,6 @@ public class TslCompiler {
 				exact = false;
 			} catch (TMLExpressionException pe) {
 				exact = false;
-				// System.err.println("TMLExpressionException, COULD NOT OPTIMIZE EXPRESSION: "
-				// + clause);
 			} catch (SystemException se) {
 				exact = false;
 				if (clause.length() == 0 || clause.charAt(0) != '#') {
@@ -483,8 +481,6 @@ public class TslCompiler {
 				}
 			} catch (Throwable e) {
 				exact = false;
-				// System.err.println("Throwable, COULD NOT OPTIMIZE EXPRESSION: "
-				// + clause);
 			}
 		}
 
@@ -850,8 +846,6 @@ public class TslCompiler {
 				refOriginal = refOriginal.replaceAll("\\$", "");
 			}
 
-			// System.err.println("refOriginal = " + refOriginal);
-
 			if ( !isMappedMessage && refOriginal.indexOf("/") != -1) {
 				ref = refOriginal.substring(refOriginal.lastIndexOf('/') + 1,
 						refOriginal.length());
@@ -861,12 +855,7 @@ public class TslCompiler {
 				ref = refOriginal;
 			}
 
-			forceArray = type.equals(Message.MSG_TYPE_ARRAY); // (
-																// nextElt.getAttribute("forcearray")
-																// != null &&
-																// !nextElt.getAttribute("forcearray").equals("")
-																// );
-			// System.err.println("forceArray =  " + forceArray);
+			forceArray = type.equals(Message.MSG_TYPE_ARRAY); 
 			filter = nextElt.getAttribute("filter");
 			if (filter != null) {
 				filter = filter.replace('\r', ' ');
@@ -894,11 +883,7 @@ public class TslCompiler {
 				addDependency("dependentObjects.add( new JavaDependency( -1, \""
 						+ className + "\"));\n", "JAVA" + className);
 
-				// System.out.println("in MessageNode(), new contextClass = " +
-				// contextClass);
-
 				if (DomainObjectMapper.class.isAssignableFrom(contextClass)) {
-					// System.err.println("Got a parent DomainObjectMapper...");
 					isArrayAttr = forceArray;
 					type = Message.MSG_TYPE_ARRAY;
 				} else {
@@ -916,8 +901,6 @@ public class TslCompiler {
 			}
 			
 		}
-		// //System.out.println("isArrayAttr = " + isArrayAttr);
-
 		// Create the message(s). Multiple messages are created if count > 1.
 		result.append(printIdent(ident)
 				+ "count = "
@@ -1359,7 +1342,6 @@ public class TslCompiler {
 			}
 
 			contextClass = contextClassStack.pop();
-			// System.err.println("802: popped: " + contextClass);
 
 			result.append(printIdent(ident + 2)
 					+ "MappingUtils.callStoreMethod(currentMap.myObject);\n");
@@ -2175,9 +2157,6 @@ public class TslCompiler {
 
 			contextClassStack.push(contextClass);
 
-			/**
-			 * ADDED:
-			 */
 			Class localContextClass = null;
 			try {
 				if (mapPath != null) {
@@ -2202,12 +2181,8 @@ public class TslCompiler {
 			 * END.
 			 */
 
-			// String type = MappingUtils.getFieldType(contextClass, attribute);
 			boolean isArray = MappingUtils.isArrayAttribute(localContextClass,
 					attribute);
-
-			// System.err.println("TYPE FOR " + attribute + " IS: " + type +
-			// ", ARRAY = " + isArray);
 
 			try {
 				contextClass = Class.forName(type, false, loader);
@@ -2217,12 +2192,6 @@ public class TslCompiler {
 
 			addDependency("dependentObjects.add( new JavaDependency( -1, \""
 					+ type + "\"));\n", "JAVA" + type);
-
-			// if (!isArray && !MappingUtils.isMappable(contextClass,
-			// attribute,loader)) {
-			// throw new TslCompileException(-1, "Not a mappable field: " +
-			// attribute, 0, 0);
-			// }
 
 			if (isArray) {
 				String subObjectsName = "subObject" + subObjectCounter;
@@ -2268,9 +2237,6 @@ public class TslCompiler {
 						+ "currentSelection = (Selection) " + messageListName
 						+ ".get(" + loopCounterName + ");\n");
 
-				// if
-				// CONDITION.EVALUATE()!!!!!!!!!!!! {
-				// If filter is specified, evaluate filter first:
 				if (!filter.equals("")) {
 					result.append(printIdent(ident + 4)
 							+ "if (inSelectionRef || Condition.evaluate("
@@ -2445,8 +2411,6 @@ public class TslCompiler {
 
 			}
 			contextClass = contextClassStack.pop();
-			// System.err.println("JUST POPPED CONTEXTCLASS: " + contextClass);
-			// System.err.println(contextClassStack);
 		}
 		result.append(printIdent(ident) + "}\n");
 		return result.toString();
@@ -2475,11 +2439,6 @@ public class TslCompiler {
 	 */
 	private Class locateContextClass(String mapPath, int offset) throws Exception {
 
-		// System.err.println("Count element: "+count);
-		// System.err.println("in locateContextClass(" + mapPath + ")");
-		// System.err.println("STACK: "+contextClassStack);
-		// System.err.println("STACK: "+contextClass);
-
 		StringTokenizer st = new StringTokenizer(mapPath, "/");
 
 		int count = 0;
@@ -2493,13 +2452,10 @@ public class TslCompiler {
 		if (count == 0) {
 			return contextClass;
 		}
-		// System.err.println("Count element: "+count);
-		// System.err.println("STACK: "+contextClassStack);
 		if ( contextClassStack.size() - count - offset < 0 ) {
 			throw new Exception("Could not resolve field: " + mapPath);
 		}
 		Class m = contextClassStack.get(contextClassStack.size() - count - offset);
-		// System.err.println("Mappable: "+m);
 		return m;
 	}
 
@@ -2921,7 +2877,6 @@ public class TslCompiler {
 		}
 		if (!contextClassStack.isEmpty()) {
 			contextClass = contextClassStack.pop();
-			// System.err.println("1798: popped: " + contextClass);
 		} else {
 			contextClass = null;
 		}
@@ -2955,8 +2910,6 @@ public class TslCompiler {
 					+ "missing or empty script attribute): "
 							+ n);
 		}
-
-		// System.err.println("INCLUDING SCRIPT " + script + " @ NODE " + n);
 
 		// Construct scriptName:
 		// First try if applicationGroup specific script exists.
@@ -3003,7 +2956,6 @@ public class TslCompiler {
 			nextNode = n;
 		}
 
-		// System.err.println("nextNode = " + nextNode + ", n = " + n);
 		if (nextNode == null) {
 			throw new IllegalStateException("Unexpected null nextNode");
 		}
@@ -3024,15 +2976,6 @@ public class TslCompiler {
 			String objectName, List<Dependency> deps, String tenant)
 			throws Exception {
 		StringBuffer result = new StringBuffer();
-		/*
-		 * if (n instanceof Element) {
-		 * System.err.println("in compile(), node name = " + n.getNodeName() +
-		 * ", attribute name = " + ((Element) n).getAttribute("name")); } else {
-		 * System.err.println("in compile(), node not of type element " +
-		 * n.getNodeName()); }
-		 */
-		// System.err.println("in compile(), className = " + className +
-		// ", objectName = " + objectName);
 
 		if (n.getNodeName().equals("include")) {
 			includeNode(scriptPath, n, n.getParentNode().getOwnerDocument(),
@@ -3277,9 +3220,6 @@ public class TslCompiler {
 
 		NodeList list = d.getElementsByTagName("validations");
 
-		// System.err.println("validations nodes: " + list.getLength());
-		// boolean valid = true;
-		// ArrayList conditions = new ArrayList();
 		for (int i = 0; i < list.getLength(); i++) {
 			NodeList rules = list.item(i).getChildNodes();
 			for (int j = 0; j < rules.getLength(); j++) {
@@ -3301,7 +3241,6 @@ public class TslCompiler {
 								"Validation syntax error: value attribute missing or empty");
 					}
 					value = value.replaceAll("\r", "");
-					// System.err.println(value);
 					// Check if condition evaluates to true, for evaluating
 					// validation ;)
 					hasValidations = true;
@@ -3482,16 +3421,12 @@ public class TslCompiler {
 
 			// First resolve includes.
 			NodeList includes = tslDoc.getElementsByTagName("include");
-			// System.err.println("FOUND " + includes.getLength() +
-			// " INCLUDES");
 			Node[] includeArray = new Node[includes.getLength()];
 			for (int i = 0; i < includes.getLength(); i++) {
 				includeArray[i] = includes.item(i);
 			}
 
 			for (int i = 0; i < includeArray.length; i++) {
-				// System.err.println("ABOUT TO RESOLVE INCLUDE: " +
-				// includeArray[i]);
 				includeNode(scriptPath, includeArray[i], tslDoc, tenant, deps);
 			}
 			generateSetScriptDebug(debugLevel, result);
@@ -3514,8 +3449,6 @@ public class TslCompiler {
 
 			NodeList children = tslDoc.getElementsByTagName("tsl").item(0)
 					.getChildNodes();
-			// System.err.println("FOUND " + children.getLength() +
-			// " CHILDREN");
 			for (int i = 0; i < children.getLength(); i++) {
 
 				String str = compile(0, children.item(i), "", "", deps, tenant);
@@ -3726,7 +3659,6 @@ public class TslCompiler {
 			throw ex;
 		} catch (Throwable ex) {
 			logger.error("Error compiling script: " + script, ex);
-			// System.err.println("delete javaFile: "+javaFile.toString());
 			// Isn't this what 'finally' is for?
 			File f = new File(javaFile);
 			if (f.exists()) {
@@ -3754,22 +3686,15 @@ public class TslCompiler {
 				} else {
 					bareScript = script;
 				}
-
-				// System.err.println("About to compile script: "+bareScript);
-				// System.err.println("Using package path: "+packagePath);
 				Writer w = navajoIOConfig.getOutputWriter(output, packagePath,
 						script, ".java");
 
 				tslCompiler.compileScript(bareScript, input, output,
 						packagePath, w, deps, tenant, hasTenantSpecificScript, false);
-
-				// //System.out.println("CREATED JAVA FILE FOR SCRIPT: " +
-				// script);
 			} catch (Exception ex) {
-				System.err.println("Error compiling script: " + script);
+				logger.error("Error compiling script: " + script);
 				return;
 			}
-			// }
 
 			StringBuffer classPath = new StringBuffer();
 			classPath.append(System.getProperty("java.class.path"));
@@ -3780,27 +3705,8 @@ public class TslCompiler {
 					classPath.append(extraclasspath[i]);
 				}
 			}
-
-			// System.out.println("in NavajoCompiler(): new classPath = " +
-			// classPath);
-
-			// JavaCompiler compiler = new SunJavaCompiler();
-			//
-			// compiler.setClasspath(classPath.toString());
-			// compiler.setOutputDir(output);
-			// compiler.setClassDebugInfo(true);
-			//
-			// System.err.println("Navajo output: "+output+" ");
-			// System.err.println("Script: "+script);
-			// compiler.setEncoding("UTF8");
-			// compiler.setMsgOutput(System.out);
-			// compiler.compile(output + "/" + script + ".java");
-			//
-			//
 			JavaCompiler compiler = new SunJavaCompiler();
-			// StringBuffer javaBuffer = new StringBuffer();
 
-			// System.err.println("JavaBuffer: "+javaBuffer.toString());
 			compiler.setClasspath(classPath.toString());
 			compiler.setOutputDir(output);
 			compiler.setClassDebugInfo(true);
@@ -3808,10 +3714,7 @@ public class TslCompiler {
 			compiler.setMsgOutput(System.out);
 			StringWriter myWriter = new StringWriter();
 			compiler.setOutputWriter(myWriter);
-			// System.err.println("\n\nCLASSPATH: " + classPath.toString());
 			compiler.compile(output + "/" + script + ".java");
-
-			// System.out.println("COMPILED JAVA FILE INTO CLASS FILE");
 		} catch (Exception e) {
 			logger.error("Error: ", e);
 			System.exit(1);
@@ -3822,7 +3725,7 @@ public class TslCompiler {
 			File outputPath, String offsetPath, NavajoClassLoader classLoader,
 			NavajoIOConfig navajoConfig, String tenant,
 			boolean hasTenantSpecificScript) {
-		System.err.println("Entering compiledirectory: " + currentDir
+		logger.info("Entering compiledirectory: " + currentDir
 				+ " output: " + outputPath + " offset: " + offsetPath);
 		ArrayList<String> files = new ArrayList<String>();
 		File[] scripts = null;
@@ -3832,7 +3735,7 @@ public class TslCompiler {
 			for (int i = 0; i < scripts.length; i++) {
 				File current = scripts[i];
 				if (current.isDirectory()) {
-					System.err.println("Entering directory: "
+					logger.info("Entering directory: "
 							+ current.getName());
 					ArrayList<String> subDir = compileDirectoryToJava(
 							currentDir, outputPath,
@@ -3845,10 +3748,7 @@ public class TslCompiler {
 					if (current.getName().endsWith(".xml")) {
 						String name = current.getName().substring(0,
 								current.getName().indexOf("."));
-						// System.err.println("Compiling: "+name+" dir: "+ new
-						// File(currentDir,offsetPath).toString()+" outdir: "+new
-						// File(outputPath,offsetPath));
-						System.err.println("Compiling: " + name);
+						logger.debug("Compiling: " + name);
 						File outp = new File(outputPath, offsetPath);
 						if (!outp.exists()) {
 							outp.mkdirs();
@@ -3896,22 +3796,17 @@ public class TslCompiler {
 		ArrayList<String> javaFiles = compileDirectoryToJava(currentDir,
 				outputPath, offsetPath, classLoader, navajoConfig, tenant,
 				hasTenantSpecificScript);
-		System.err.println("javaFiles: " + javaFiles);
+		logger.info("javaFiles: " + javaFiles);
 		JavaCompiler compiler = new SunJavaCompiler();
-		// StringBuffer javaBuffer = new StringBuffer();
-
-		// System.err.println("JavaBuffer: "+javaBuffer.toString());
 		compiler.setClasspath(classPath.toString());
 		compiler.setOutputDir(outputPath.toString());
 		compiler.setClassDebugInfo(true);
 		compiler.setEncoding("UTF8");
 		compiler.setMsgOutput(System.out);
-		System.err.println("\n\nCLASSPATH: " + classPath.toString());
+		logger.debug("\n\nCLASSPATH: " + classPath.toString());
 		for (int i = 0; i < javaFiles.size(); i++) {
 			compiler.compile(javaFiles.get(i));
-			System.err.println("Compiled: " + javaFiles.get(i));
-			// javaBuffer.append((String)javaFiles.get(i));
-			// javaBuffer.append(" ");
+			logger.debug("Compiled: " + javaFiles.get(i));
 		}
 
 	}
@@ -3932,7 +3827,7 @@ public class TslCompiler {
 		final LegacyNavajoIOConfig legacyNavajoIOConfig = new LegacyNavajoIOConfig();
 		TslCompiler compiler = new TslCompiler(null, legacyNavajoIOConfig);
 		List<Dependency> deps = new ArrayList<Dependency>();
-		System.err.println("Entering compiledirectory: " + currentDir
+		logger.info("Entering compiledirectory: " + currentDir
 				+ " output: " + outputPath + " offset: " + offsetPath);
 
 		File[] scripts = null;
@@ -3942,7 +3837,7 @@ public class TslCompiler {
 			for (int i = 0; i < scripts.length; i++) {
 				File current = scripts[i];
 				if (current.isDirectory()) {
-					System.err.println("Entering directory: "
+					logger.debug("Entering directory: "
 							+ current.getName());
 					compileDirectory(currentDir, outputPath,
 							offsetPath.equals("") ? current.getName()
@@ -3952,10 +3847,7 @@ public class TslCompiler {
 					if (current.getName().endsWith(".xml")) {
 						String name = current.getName().substring(0,
 								current.getName().indexOf("."));
-						// System.err.println("Compiling: "+name+" dir: "+ new
-						// File(currentDir,offsetPath).toString()+" outdir: "+new
-						// File(outputPath,offsetPath));
-						System.err.println("Compiling: " + name);
+						logger.debug("Compiling: " + name);
 						File outp = new File(outputPath, offsetPath);
 						if (!outp.exists()) {
 							outp.mkdirs();

@@ -121,7 +121,6 @@ public abstract class FunctionFactoryInterface implements Serializable {
 
 	public  FunctionDefinition getAdapterDefinition(String name, ExtensionDefinition ed)  {
 		Map<String, FunctionDefinition> configMap = getAdapterConfig(ed);
-//		System.err.println("Looking for: "+name+" configmap: "+configMap.keySet());
 		return configMap.get(name);
 	}
 

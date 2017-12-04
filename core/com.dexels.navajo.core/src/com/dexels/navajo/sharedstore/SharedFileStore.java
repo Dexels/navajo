@@ -206,11 +206,9 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 	 * return no lock exists.
 	 */
 	private final boolean lockExists(SharedStoreLock ssl) {
-		//System.err.println("Check if lock exists: " + ssl);
 		File [] files = sharedStore.listFiles(new LockFiles(ssl.parent, ssl.name));
 		if ( files != null && files.length > 0 ) {
 			// Check age of lock.
-//			for (int i = 0; i < files.length; i++) {
 
 				if ( ( System.currentTimeMillis() - files[0].lastModified() ) > ssl.getLockTimeOut() ) {
 					files[0].delete();
@@ -218,9 +216,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 				} else {
 					return true;
 				}
-//			}
 		} 
-		//System.err.println("\nLOCK " + ssl + " DOES NOT EXIST");
 		return false;
 	}
 	
@@ -441,7 +437,6 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 					if ( !lockExists(ssl) ) {
 						try {
 							writeLock(ssl);
-							//System.err.println("WROTE LOCK, RETURNING LOCK FOR " + ssl.parent + "/" + ssl.name + " TO " + ssl.owner );
 							return ssl;
 						} catch (Exception e) {
 							logger.error("Error: ", e);
@@ -453,7 +448,6 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 						}
 					}
 				} while ( block);
-				//System.err.println("LOCK COULD NOT BE OBTAINED FOR: " + parent + "/" + name + " to " + ssl.owner);
 			}
 		}
 
@@ -474,7 +468,6 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 		} else {
 			synchronized (lockSemaphore) {
 				if ( lock != null ) {
-					//System.err.println("RELEASING LOCK " + lock.parent + "/" + lock.name + " FOR " + lock.owner);
 					File f = new File(sharedStore, constructLockName(lock));
 					f.delete();
 				}
@@ -508,7 +501,6 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 		SharedStoreLock ssl = null;
 		try {
 			if (requireLock) {
-//				System.err.println("Waiting for lock....");
 				ssl = lock(parent, name, SharedFileStore.READ_WRITE_LOCK, true);
 			}
 			long start = System.currentTimeMillis();

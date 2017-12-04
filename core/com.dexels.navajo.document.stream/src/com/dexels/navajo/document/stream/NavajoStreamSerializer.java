@@ -76,7 +76,7 @@ public class NavajoStreamSerializer {
 					AtomicInteger index = counterStack.peek();
 	
 					if(index==null) {
-						System.err.println("no current index for path: "+pth);
+						logger.error("no current index for path: "+pth);
 					}
 					if(!"ignore".equals(event.attribute("mode"))) {
 						printStartTag(w, INDENT * (tagDepth+1),true,"message",createMessageAttributes("name=\""+arrayName+"\" index=\""+index+"\" type=\"array_element\"",event.attributes()));

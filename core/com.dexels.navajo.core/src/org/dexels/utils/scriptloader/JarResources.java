@@ -214,11 +214,7 @@ public final class JarResources {
                 	logger.error("Error: ", e);
                 }
             }
-
         }
-
-//        System.err.println("Size of JarResources " + jarFile.getAbsolutePath() + " : " + totalSize);
-        
     }
 
     /**

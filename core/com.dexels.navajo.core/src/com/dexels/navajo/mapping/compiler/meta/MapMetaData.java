@@ -78,7 +78,6 @@ public class MapMetaData {
 				}
 				while(iter.hasNext()) {
 					ExtensionDefinition ed = (ExtensionDefinition) iter.next();
-					//System.err.println("FOUND POSSIBLE ADAPTER EXTENSION: " + ed);
 					
 					BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream(),"UTF-8"));
 
@@ -89,7 +88,6 @@ public class MapMetaData {
 				
 					if ( config.getName().equals("adapterdef")) {
 						Vector<XMLElement> allmaps = config.getElementsByTagName("map");
-						//System.err.println("Found " + allmaps.size() + " map definitions");
 						for ( int i = 0; i < allmaps.size(); i++ ) {
 							XMLElement map = allmaps.get(i);
 							addMapDefinition(map);
@@ -142,7 +140,6 @@ public class MapMetaData {
 	}
 	
 	protected String getFileName(XMLElement e) {
-		//System.err.println(">>>>>>>>> e = " + e.getFirstChild());
 		return (String) e.getFirstChild().getAttribute("filename");
 	}
 
@@ -200,7 +197,6 @@ public class MapMetaData {
 			String value = tslAttributes.get(name);
 			result.setAttribute(name, value);
 		}
-//		System.err.println("TSL COMPILATION:\n"+result);
 		result.write(sw);
 	}
 	
@@ -215,21 +211,5 @@ public class MapMetaData {
 			AuditLog.log("", "Something went wrong while in determination of metascript status of script: " + fullScriptPath + "(" + e.getMessage() + ")", Level.WARNING);
 			return false;
 		}
-		
-	}
-	
-	public static void main(String [] args) throws Exception {
-		
-		new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
-		MapMetaData mmd = MapMetaData.getInstance();
-		//System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
-		
-		String result = mmd.parse("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/InitTest.xml");
-		
-		FileWriter fw = new FileWriter("/home/arjen/@.xml");
-	
-		fw.write(result);
-		fw.close();
-		
 	}
 }

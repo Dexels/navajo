@@ -96,7 +96,6 @@ public class LegacyLogbackConfigurator {
 	}
 	
 	public void deactivate() {
-		System.err.println("deactivating");
 	}
 
 }

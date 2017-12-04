@@ -105,7 +105,6 @@ public class RhinoQueueManagerImpl implements QueueManager {
 			}
 			cache.put(in.getServiceName(), pr);
 		} else {
-			//System.err.println("Returning cached response");			
 		}
         if(!QueueResponse.ACCEPT.equals(pr.getResponse())) {
         	NavajoSchedulingException navajoSchedulingException = new NavajoSchedulingException(NavajoSchedulingException.REQUEST_REFUSED, "Scheduling refused!");
@@ -134,7 +133,6 @@ public class RhinoQueueManagerImpl implements QueueManager {
 			FileReader fr = new FileReader(scriptFile);
 			// not interested in the result
 			NavajoScopeManager.getInstance().runScript(scriptFile.getName(), fr, params);
-			//System.err.println("Result: "+result);
 			fr.close();
 			
 		} catch (IOException e) {
@@ -182,7 +180,6 @@ public class RhinoQueueManagerImpl implements QueueManager {
 			throw new NavajoSchedulingException(NavajoSchedulingException.SCRIPT_PROBLEM,"Error reading script",e);
 		} finally {
 			//long res = System.currentTimeMillis() - begin;
-			//System.err.println("Queue selection took: "+res+" millis.");
 //			NavajoQueueScopeManager.getInstance().releaseScope(engine);
 			if(fr!=null) {
 				try {

@@ -128,7 +128,7 @@ public class GeoPolygonGroup extends GeoElement {
 					}
 				}
 			}
-			System.err.println("Distinct points found");
+//			System.err.println("Distinct points found");
 			currentPoints.clear();
 			currentPoints.addAll(newPoints);
 			for (GeoPoint geoPoint2 : newPoints) {
@@ -137,10 +137,10 @@ public class GeoPolygonGroup extends GeoElement {
 			// polyCount++;
 		}
 
-		System.err.println("Starting outline");
+//		System.err.println("Starting outline");
 		createOutlinePoly();
 		long currentTime2 = System.currentTimeMillis();
-		System.err.println("Normalize took: " + (currentTime2 - currentTime));
+//		System.err.println("Normalize took: " + (currentTime2 - currentTime));
 		// dumpMe("polyGroupComplete.kml");
 
 		// System.err.println("Distinct points: " + allDistinctPoints.size());

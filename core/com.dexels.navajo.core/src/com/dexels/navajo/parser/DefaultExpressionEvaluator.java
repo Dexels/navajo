@@ -64,11 +64,6 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 	@Override
 	public Operand evaluate(String clause,  Navajo inMessage, Object mappableTreeNode, Message parent,
 			Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws NavajoException {
-		if (parent != null) {
-			// System.err.println("Inmessage info: "+parent.getIndex()+" type:
-			// "+parent.getType()+" name: "+parent.getName());
-
-		}
 		try {
 			return Expression.evaluate(clause, inMessage, (MappableTreeNode) mappableTreeNode, parent, currentParam,
 					selection, (TipiLink)tipiLink, params);
@@ -116,7 +111,6 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 	}
 
 	private final List<Property> getExpressionDependencies(Navajo n, Property p) throws NavajoException {
-		// System.err.println("Type: " + p.getType() + " value: " + p.getValue());
 		if (!p.getType().equals(Property.EXPRESSION_PROPERTY)) {
 			throw new UnsupportedOperationException();
 		}
@@ -237,7 +231,6 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 
 		Navajo first = null;
 		while (dependencyMap.size() > 0) {
-			boolean found = false;
 			for (Iterator<Property> iter = propKeys.iterator(); iter.hasNext();) {
 				Property item = iter.next();
 				if (first == null) {
@@ -248,7 +241,6 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 						queue.add(item);
 					}
 					dependencyMap.remove(item);
-					found = true;
 					break;
 				}
 
@@ -259,7 +251,6 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 						queue.add(item);
 					}
 					dependencyMap.remove(item);
-					found = true;
 					break;
 				}
 				if (!containsExpressions(deps)) {
@@ -267,7 +258,6 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 						queue.add(item);
 					}
 					dependencyMap.remove(item);
-					found = true;
 					break;
 				}
 
@@ -276,23 +266,15 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 						queue.add(item);
 					}
 					dependencyMap.remove(item);
-					found = true;
 					break;
 				}
 
 				try {
 					addExpressionToQueue(item, dependencyMap, queue);
-					found = true;
 					break;
 				} catch (ExpressionDependencyException ex1) {
 					logger.info("Did not succeed adding. Continuing", ex1);
 				}
-				// for (int i = 0; i < deps.size(); i++) {
-				//
-				// }
-			}
-			if (!found) {
-				// System.err.println("Arrrr shiver me timbers");
 			}
 		}
 

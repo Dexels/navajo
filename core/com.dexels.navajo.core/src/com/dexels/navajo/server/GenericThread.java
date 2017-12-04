@@ -81,7 +81,6 @@ public class GenericThread implements Runnable, Mappable {
 	}
 	
 	public void finishThread() {
-		//System.err.println("Finishing GenericThread: " + myId);
 		if ( threadPool != null ) {
 			threadPool.remove(threadId);
 		}

@@ -81,7 +81,6 @@ public class AddDependenciesToPom extends Task {
 		XMLElement deps = xe.getChildByTagName("dependencies");
 		String[] lines = bootrepo.split(",");
 		for (String line : lines) {
-//			System.err.println("line: "+line);
 			String[] proto = line.split(":");
 			if(!proto[0].equals("mvn")) {
 				throw new IllegalArgumentException("Only mvn url are supported, not: "+proto[0]);
@@ -90,7 +89,6 @@ public class AddDependenciesToPom extends Task {
 			String type = parts.length>3? parts[3] : "jar";
 			String classifier = parts.length>4? parts[4] : null;
 			deps.addChild(appendDependency(parts[0],parts[1],parts[2],type,classifier));
-//			System.err.println("PRO: "+proto[1]);
 		}
 
 	}

@@ -36,15 +36,7 @@ public class ParseSubscriber2 implements Subscription, FlowableSubscriber<byte[]
 	@Override
 	public void onComplete() {
 		feeder.endOfInput();
-//		Iterable<XMLEvent> it = feeder.parse(new byte[]{});
-//		for (XMLEvent xmlEvent : it) {
-//	        queue.offer(xmlEvent);
-//		}		
-		
-		// TODO check for additional events? TEST
-		System.err.println("Done!");
 		child.onComplete();
-//		drain();
 	}
 
 	@Override
@@ -69,9 +61,6 @@ public class ParseSubscriber2 implements Subscription, FlowableSubscriber<byte[]
 		}
 		if(count==0 && !(requested.get()==Long.MAX_VALUE)) {
 			parentSubscription.request(1);
-			
-			
-//			System.err.println(">>(e) PARENT REQUESTING> "+1);
 		} else {
 			requestIfNeeded();
 		}
@@ -93,7 +82,6 @@ public class ParseSubscriber2 implements Subscription, FlowableSubscriber<byte[]
 	}
 	
 	public long amountToRequest(long emitted,long requested) {
-//		System.err.println("Request: emitted: "+emitted+" requested: "+requested);
 		if(requested == Long.MAX_VALUE) {
 			return 0;
 		}

@@ -50,16 +50,6 @@ public class UserDaemon extends GenericThread {
 	}
 
 	protected static void startup() {
-		// Read XML config with user services.
-		/*
-		 * <message name="daemons"> <message name="daemons"> <property
-		 * name="ClassName" type="string"/> <property name="SleepTime"
-		 * type="integer"/> </message> </message>
-		 */
-
-		// System.err.println("\n\n************************************ IN USER DAEMON STARTUP ************************************");
-		// Thread.dumpStack();
-		// System.err.println("************************************************************************************************\n\n");
 		Navajo services = null;
 		try {
 			services = DispatcherFactory.getInstance().getNavajoConfig()

@@ -3,6 +3,9 @@ package com.dexels.navajo.functions;
 import java.util.HashSet;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -24,6 +27,9 @@ import com.dexels.navajo.script.api.SystemException;
 
 public class CheckUniqueness extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(CheckUniqueness.class);
+
   @Override
 public String remarks() {
     return "Checks whether properties in an array message have unique values";
@@ -34,7 +40,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
     if (getOperands().size() < 2) {
       for (int i = 0; i < getOperands().size(); i++) {
         Object o = getOperands().get(i);
-        System.err.println("Operand # " + i + " is: " + o.toString() + " - " +
+        logger.debug("Operand # " + i + " is: " + o.toString() + " - " +
                            o.getClass());
       }
       throw new TMLExpressionException(this,

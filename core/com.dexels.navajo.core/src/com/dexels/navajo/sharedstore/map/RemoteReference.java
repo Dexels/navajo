@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.util.Util;
 
@@ -27,6 +30,12 @@ public class RemoteReference implements Serializable {
 	/**
 	 * 
 	 */
+	
+	
+	
+	private final static Logger logger = LoggerFactory.getLogger(RemoteReference.class);
+
+	
 	private static final long serialVersionUID = -1993331465315897328L;
 	
 	private Object myObject;
@@ -61,7 +70,6 @@ public class RemoteReference implements Serializable {
 	public RemoteReference(Object o) {
 		myObject = o;
 		guid = Util.getRandomGuid();
-		System.err.println("IN myObjectRegistry(), GUID = " + guid + ", O = " + o);
 		myObjectRegistry.put(guid, o );
 		host = TribeManagerFactory.getInstance().getMyMembership().getAddress();
 	}
@@ -136,7 +144,7 @@ public class RemoteReference implements Serializable {
 	public void finalize() {
 		if ( myObject != null) {
 			myObjectRegistry.remove(guid);
-			System.err.println("finalize() of RemoteReference " + guid + " callled, registry size: " + myObjectRegistry.size());
+			logger.info("finalize() of RemoteReference " + guid + " callled, registry size: " + myObjectRegistry.size());
 		}
 	}
 

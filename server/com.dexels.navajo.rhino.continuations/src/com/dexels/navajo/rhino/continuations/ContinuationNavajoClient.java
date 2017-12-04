@@ -32,7 +32,6 @@ public class ContinuationNavajoClient {
 			NavajoResponseHandler nrh = new NavajoResponseHandler() {
 				@Override
 				public void onResponse(Navajo n) {
-					System.err.println("Result received");
 					se.callFinished(service, n);
 					se.continueScript(continuation, n);
 				}
@@ -49,7 +48,6 @@ public class ContinuationNavajoClient {
 			};
 			logger.info("Calling server: " + getClient().getServer());
 			getClient().callService(n, service, nrh);
-			// System.err.println("Freezing!");
 			throw (cp);
 		} finally {
 			Context.exit();

@@ -549,13 +549,11 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 
 	@Override
 	public void setFastPoolSize(int pool) {
-		System.err.println("Setting fastpool threads to: " + pool);
-		//setPoolSize(pool, fastPool);
+		logger.info("Setting fastpool threads to: " + pool);
 	}
 
 	@Override
 	public void setSlowPoolSize(int pool) {
-		//setPoolSize(pool, slowPool);
 	}
 	
 	@Override
@@ -585,18 +583,15 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 
 	@Override
 	public void setNormalPoolSize(int pool) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void setPriorityPoolSize(int pool) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void setSystemPoolSize(int pool) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -687,19 +682,4 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	    }
         return queueMap.get(queueid);
     }
-
-	
-	public static void main(String [] args) {
-		
-		long start = System.currentTimeMillis();
-		double total = Runtime.getRuntime().maxMemory()/1024.0/1024.0;
-		 double free = Runtime.getRuntime().freeMemory()/1024.0/1024.0;
-		 System.err.println("Duration: " + (System.currentTimeMillis() - start));
-		 
-		 System.err.println("total: " + total);
-		 System.err.println("free: " + free);
-	}
-
-
-    
 }

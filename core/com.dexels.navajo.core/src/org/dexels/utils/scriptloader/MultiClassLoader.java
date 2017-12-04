@@ -73,52 +73,25 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
     public synchronized Class<?> loadClass(byte [] classBytes, String className,
             boolean resolveIt, boolean useCache) throws ClassNotFoundException {
         Class<?>   result;
- 
-        //System.err.println(this.hashCode() + ": in loadClass(), className " + className);
-       
-//        result = (Class) classes.get(className);
-//        if (result != null) {
-//        	System.err.println(this.hashCode() + ": Found " + className + " in cache!");
-//          return result;
-//        }
+
 
         if (classBytes == null) {
 
-            // --- Try with Class.forName
-//            try {
-//            	System.err.println(this.hashCode() + ": Try with Class.forname: " + getParent().hashCode());
-//                result = Class.forName(className);
-//                //classes.put(className, result);
-//                return result;
-//            } catch (ClassNotFoundException e) {
-//                //System.out.println("Not found with Class.forName");
-//            }
-
-            // ----- Check with the primordial class loader
-
             try {
-                //System.err.println(this.hashCode() + ":Attempting to load class "+className+" from parent classloader");
                 result = Class.forName(className, true, getParent()); //super.findSystemClass(className);
-                //classes.put(className, result);
-                //monitor(">> returning system class (in CLASSPATH).");
 
                 return result;
 
             } catch (ClassNotFoundException e) {
-              //System.err.println("Did not succeed");
-                //monitor(">> Not a system class.");
             }
             throw new ClassNotFoundException();
         } else {
-            //monitor("Found class in jar");
         }
 
-        // ----- Define it (parse the class file)
 
         result = defineClass(className, classBytes, 0, classBytes.length);
 
         if (result == null) {
-            //System.out.println("ClassFormatError");
             throw new ClassFormatError();
         }
 
@@ -128,9 +101,6 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
         //monitor("resolved class");
 
         // Done
-//        classes.put(className, result);
-//        System.err.println("Putting " + className + " in cache!!!");
-        //monitor(">> Returning newly loaded class.");
 
         return result;
 

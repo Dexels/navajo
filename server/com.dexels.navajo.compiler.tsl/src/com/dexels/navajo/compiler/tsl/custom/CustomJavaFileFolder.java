@@ -29,17 +29,6 @@ public class CustomJavaFileFolder {
 
 	public CustomJavaFileFolder(String packageName) {
 		this.packageName = packageName;
-//		List<Bundle> foundInBundles = new ArrayList<Bundle>();
-////		System.err.println("Package: "+packageName+" has been found in: "+foundInBundles);
-//		if (foundInBundles.size() > 1) {
-//			logger.warn("Split package detected: " + packageName);
-//			for (Bundle bundle : foundInBundles) {
-//				logger.warn("Found in bundle: " + bundle.getSymbolicName()
-//						+ " version: " + bundle.getVersion() + " location: "
-//						+ bundle.getLocation() + " modified at: "
-//						+ new Date(bundle.getLastModified()));
-//			}
-//		}
 	}
 
 	public Collection<JavaFileObject> getEntries() {
@@ -69,8 +58,6 @@ public class CustomJavaFileFolder {
 
 	private void enumerateWiring(String packageName,
 			List<JavaFileObject> result, Bundle b) {
-		// List<CustomJavaFileObject> resultList = new
-		// ArrayList<CustomJavaFileObject>();
 		String packageNameDot = packageName.replaceAll("/", ".");
 		if (b.getSymbolicName().startsWith("navajo.script")) {
 			// ignore script bundles
@@ -78,28 +65,21 @@ public class CustomJavaFileFolder {
 		}
 		BundleWiring bw = b.adapt(BundleWiring.class);
 		if (bw == null) {
-			// logger.debug("Can not retrieve entries for bundle: "+b.getSymbolicName()+" id: "+b.getBundleId()+" as it doesn't seem to be resolved.");
 			return ;
 		}
 		boolean foundExportedPackage = false;
 		List<BundleCapability> sss = bw.getCapabilities("osgi.wiring.package");
-		// System.err.println("WIRES of bundle: "+b.getSymbolicName()+" # of wires: "+sss.size());
 		for (BundleCapability bundleWire : sss) {
-			// System.err.println("wire: "+bundleWire.getAttributes());
 			String exported = (String) bundleWire.getAttributes().get(
 					"osgi.wiring.package");
 			if (packageNameDot.equals(exported)) {
-				// System.err.println(">>>>> FOUND: "+exported);
 				foundExportedPackage = true;
 			}
-			// System.err.println("exp: "+exported+" pack: "+packageNameDot);
 		}
 
 		if (!foundExportedPackage) {
-			// System.err.println("Package: "+packageNameDot+" is not found in package "+b.getSymbolicName());
 			return;
 		}
-		// System.err.println("Package: "+packageNameDot+" IS found in package "+b.getSymbolicName());
 		Collection<String> cc = bw.listResources(packageName, null,
 				BundleWiring.LISTRESOURCES_LOCAL);
 		for (String resource : cc) {
@@ -114,11 +94,7 @@ public class CustomJavaFileFolder {
 							resource, uri, u, Kind.CLASS);
 					result.add(customJavaFileObject);
 					contentMap.put(resource, customJavaFileObject);
-					// } catch (FileNotFoundException e) {
-					// final CustomJavaFileObject customJavaFileObject = new
-					// CustomJavaFileObject(resource, uri,(URL)null,Kind.CLASS);
-					// result.add(customJavaFileObject);
-					// }
+
 				} catch (Exception e1) {
 					logger.warn("URI failed for URL: " + u + " ignoring.");
 				}
@@ -149,7 +125,6 @@ public class CustomJavaFileFolder {
 	}
 
 	public void linkBundle(Bundle bundle) {
-//		System.err.println("Bundle linked: "+bundle.getSymbolicName());
 		List<JavaFileObject> bundleElements = findAll(bundle);
 		elements.put(bundle,bundleElements);
 

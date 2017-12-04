@@ -50,7 +50,6 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
       String expression = (String) getOperand(0);
 
       try {
-        //System.err.println("Evaluating " + expression + " against Navajo " + currentNavajo + ", and message " + currentMessage);
         result = Expression.evaluate(expression, currentNavajo, null, currentMessage,null,null,null,null);
       }
       catch (SystemException ex) {

@@ -140,7 +140,6 @@ public abstract class NavajoClient implements ClientInterface{
             }
             // ALWAY SET REQUEST ID AT THIS POINT.
             if (header.getRequestId() != null && header.getRequestId().equals("42")) {
-                System.err.println("ENCOUNTERED TEST!!!");
             } else {
                 header.setRequestId(Guid.create());
             }

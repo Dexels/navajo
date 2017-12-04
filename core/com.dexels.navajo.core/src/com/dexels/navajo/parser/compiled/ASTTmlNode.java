@@ -57,22 +57,13 @@ public final class ASTTmlNode extends SimpleNode {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) {
-//				System.err.println(" exists: "+exists+" selectionOopt: "+parentSel+" selectionOption: "+selectionOption);
 				List<Property> match = null;
 				List<Object> resultList = new ArrayList<Object>();
 		        boolean singleMatch = true;
-		       // boolean selectionProp = false;
 		        String parts[] = val.split("\\|");
-		        
 		        String text = parts.length > 1 ? parts[1] : val;
-//		        String document = parts.length > 1 ? parts[0].substring(1) : null;
-//		        System.err.println("Document: "+document);
-//		        if(document.)
 		        boolean isParam = false;
-//		        String selectionOption = selectionOpt == null ? "" :selectionOpt;
 		        Property prop = null;
-//		        System.err.println("Interpreting TMLNODE... val= "+val);
-		        
 				if (parentSel != null) {
 					String dum = text;
 					if (dum.length() > 1) {
@@ -97,7 +88,6 @@ public final class ASTTmlNode extends SimpleNode {
 					if(text.startsWith("?[")) {
 			            text = text.substring(2, text.length());
 					}
-//		            text = text.substring(2, text.length());
 		        }
 		        if (text.length() > 0 && text.charAt(0) == '@') { // relative param property.
 		        		isParam = true;
@@ -158,8 +148,6 @@ public final class ASTTmlNode extends SimpleNode {
 		                else
 		                    throw new RuntimeException("No parent message present for param: " + text);
 		            } else {
-		                //System.err.println("Looking for properties: "+val+" parentMessage: "+parentMsg.getFullMessageName());
-
 		                if (text.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
 		                  match = (!isParam ? parentMsg.getProperties(text) : parentParamMsg.getProperties(text));
 		                  if (match.size() > 1)
@@ -170,7 +158,6 @@ public final class ASTTmlNode extends SimpleNode {
 		                    match = new ArrayList<>();
 		                    match.add((!isParam ? parentMsg.getProperty(text) : parentParamMsg.getProperty(text)));
 		                }
-//		                System.err.println("# of matches: "+match.size());
 		            }
 		        } catch (NavajoException te) {
 		            throw new RuntimeException(te.getMessage(),te);
@@ -259,7 +246,6 @@ public final class ASTTmlNode extends SimpleNode {
 
 		                        if (list.size() > 0) {
 		                            Selection sel = (Selection) list.get(0);
-//		                            System.err.println(">>"+sel+"<<>>"+selectionOption+"<<");
 		                            resultList.add((selectionOption.equals("name") ? sel.getName() : sel.getValue()));
 		                        } else {
 		                          return null;

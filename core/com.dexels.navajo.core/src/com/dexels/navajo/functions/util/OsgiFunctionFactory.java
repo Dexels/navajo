@@ -58,7 +58,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass, null);
 			if(refs==null) {
-				System.err.println("Service enumeration failed class: "+interfaceClass);
+				logger.warn("Service enumeration failed class: "+interfaceClass);
 				return null;
 			}
 			for (ServiceReference serviceReference : refs) {
@@ -84,7 +84,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass, null);
 			if(refs==null) {
-				System.err.println("Service enumeration failed class: "+interfaceClass);
+				logger.warn("Service enumeration failed class: "+interfaceClass);
 				return null;
 			}
 			for (ServiceReference serviceReference : refs) {

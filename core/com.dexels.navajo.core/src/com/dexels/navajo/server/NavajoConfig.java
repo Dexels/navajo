@@ -139,7 +139,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     		String r = ( body.getProperty("paths/root") != null ? body.getProperty("paths/root").getValue() : null);
     		// in Old Skool situation, passed rootPath is null.
     		if(externalRootPath==null) {
-    			System.err.println("Old skool configuration (null rootPath), get path from serverXml: "+r);
     			if ( r == null ) {
     				throw new SystemException(-1, "Server root was not specified, try defining root in server.xml");
     			}
@@ -229,14 +228,12 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 				if (descriptionProviderClass!=null) {
 					try {
 					Class<? extends DescriptionProviderInterface> cc = (Class<? extends DescriptionProviderInterface>) Class.forName(descriptionProviderClass);
-					System.err.println("Descriptionprovider is: " + descriptionProviderClass);
 					if (cc!=null) {
-//						System.err.println("Setting description provider. config hash: "+hashCode());
 						if (myDescriptionProvider==null) {
 							myDescriptionProvider = cc.newInstance();
 							myDescriptionProvider.setDescriptionConfigMessage(descriptionMessage);
 						} else {
-							System.err.println("Warning: Resetting description provider.");
+							logger.warn("Warning: Resetting description provider.");
 						}
 					}
 					} catch (Throwable e) {
@@ -271,25 +268,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     		
     		enableStatisticsRunner = (body.getProperty("parameters/enable_statistics") == null ||
     				body.getProperty("parameters/enable_statistics").getValue().equals("true"));
-    		
-	
-    		//System.err.println("USing repository = " + repository);
-//    		Message maintenance = body.getMessage("maintenance-services");
-//    		
-//    		if ( maintenance != null ) {
-//    			List<Property> propertyList = maintenance.getAllProperties();
-//    			for (int i = 0; i < propertyList.size(); i++) {
-//    				Property prop = propertyList.get(i);
-//    				properties.put(prop.getName(), scriptPath + prop.getValue());
-//    			}
-//    		}
-    		
-//    		Message security = body.getMessage("security");
-//    		if (security != null) {
-//    			Property matchCn = security.getProperty("match_cn");
-//    			if (matchCn != null)
-//    				DispatcherFactory.getInstance().matchCN = matchCn.getValue().equals("true");
-//    		}
     		
     		Property s = body.getProperty("parameters/async_timeout");
     		asyncTimeout = 3600 * 1000; // default 1 hour.
@@ -336,14 +314,11 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     			}
     		}
     		catch (Throwable e) {
-    			//System.out.println("No beta user specified");
     			betaUser = "_beta";
     		}
-    		//System.err.println("Betauser suffix is: " + betaUser);
     		
     		s = body.getProperty("parameters/compile_scripts");
     		if (s != null) {
-    			//System.out.println("s.getValue() = " + s.getValue());
     			compileScripts = (s.getValue().equals("true"));
     		}
     		else {
@@ -382,7 +357,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     	try {
 			TaskRunnerFactory.getInstance();
 		} catch (RuntimeException e) {
-			System.err.println("No taskrunner found.");
+			logger.warn("No taskrunner found.");
 		}  
     }
     
@@ -646,7 +621,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 
     @Override
 	public DescriptionProviderInterface getDescriptionProvider() {
-//		System.err.println("Getting description provider. Config hash: "+hashCode());
 		return myDescriptionProvider;
 	}
 	

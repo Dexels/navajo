@@ -30,7 +30,6 @@ public class MergePDF extends FunctionInterface {
 		try {
 			File tempFile = File.createTempFile("pdfmerge", "pdf");
 			String fileName = tempFile.getCanonicalPath();
-			System.err.println(fileName);
 			
 			merger.setDestinationFileName(fileName);
 			

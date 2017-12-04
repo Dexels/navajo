@@ -425,11 +425,9 @@ public class Base64 {
 		 */
 		public void write(char[] pData, int pOffset, int pLen) throws IOException {
 		    boolean finished = false;
-//            System.err.println("WRITE: >"+new String(pData)+"<");
             for (int i = 0;  i < pLen && !finished;  i++) {
 				char c = pData[pOffset++];
 				if (Character.isWhitespace(c)) {
-//                    System.err.println("Whitespace: >"+c+"<");
 					continue;
 				}
 				if (c == '=') {

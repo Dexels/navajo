@@ -100,10 +100,6 @@ public class ValueDefinition {
 			                       String condition, XMLElement out, boolean append, String filename) throws Exception {
 		
 		// Case I: <field><expression/></field> construct.
-//		System.err.println("CurrentIn: " + currentIn.getName());
-//		System.err.println("First child: " + currentIn.getFirstChild());
-//		System.err.println("Map: " + map);
-//		System.err.println("direction: " + direction );
 		if ( ( direction.equals("in") || direction.equals("automatic") ) && map == null) { 
 			XMLElement field = new TSLElement(currentIn, "field");
 			field.setAttribute("name", ( this.getClass().getName().equals("com.dexels.navajo.mapping.compiler.meta.ValueDefinition") ? name : ((ParameterDefinition) this).getField() ) );
@@ -113,7 +109,6 @@ public class ValueDefinition {
 			XMLElement expression = new TSLElement(currentIn, "expression");
 			field.addChild(expression);
 			expression.setAttribute("xml:space", "preserve");
-			//System.err.println("setterValue = " + setterValue + ", textNode = " + textNode);
 			// Case Ia: stringliteral, create construct <expression>[STRING CONTENT]<expression>
 			if ( textNode && (setterValue.length() == 0 || setterValue.charAt(0) != '{') ) {
 				expression.setContent(setterValue);
@@ -122,14 +117,7 @@ public class ValueDefinition {
 			//                 if string type surrounded by {} or any other type, assume normal expression, 
 			//                      use <expression><value>[EXPRESSION]</value></expression> construct.
 			else {
-				//if ( type.equals("string") && !setterValue.startsWith("{") && setterValue.indexOf("'") != -1) {
-				//	throw new MetaCompileException(filename, currentIn, "Invalid ' character for string type: " + setterValue);
-				//}
-				//if ( type.equals("string") && !setterValue.startsWith("{") ) {
-				//	setterValue = "'" + setterValue + "'";
-				//}
 				if ( setterValue.length() > 0 && setterValue.charAt(0) == '{' ) {  // Force expression.
-					//System.err.println("FOUND ESCAPED EXPRESSION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 					setterValue = setterValue.replace('{', ' ');
 					setterValue = setterValue.replace('}', ' ');
 				}

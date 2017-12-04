@@ -54,7 +54,6 @@ public class GetLockRequest extends Request {
 		this.name = name;
 		this.lockType = lockType;
 		this.block = block;
-		//System.err.println("TRYING TO GET LOCK FOR: " + parent + "/" + name + " (type = " + lockType + ", block = " + block + ")");
 	}
 	
 	@Override

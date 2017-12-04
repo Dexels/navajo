@@ -73,9 +73,7 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 			}
 
 			postNavajo(inputNavajo, useCompression, con);
-			System.err.println("Use gzip? "+forceGzip+" use compression: "+useCompression);
 			resultNavajo = readResponse(useCompression, con);
-//			if(System.getProperty("MARK_DESCRIPTIONS")
 
 			if(this.markDescriptions ) {
 				NavajoClient.addParagraphToAllPropertyDescriptions(resultNavajo, null);

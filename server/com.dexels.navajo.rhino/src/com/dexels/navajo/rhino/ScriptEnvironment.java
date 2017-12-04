@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
@@ -126,17 +127,21 @@ public abstract class ScriptEnvironment implements Serializable {
 
 	public void dump(Navajo n) {
 		if (n == null) {
-			System.err.println("[Null navajo]");
+			logger.info("[Null navajo]");
 		} else {
-			n.write(System.err);
+			StringWriter sw = new StringWriter();
+			n.write(sw);
+			logger.info("Dump: "+sw.toString());
 		}
 	}
 
 	public void dump(Message m) {
 		if (m == null) {
-			System.err.println("[Null message]");
+			logger.info("[Null message]");
 		} else {
-			m.write(System.err);
+			StringWriter sw = new StringWriter();
+			m.write(sw);
+			logger.info("Dump: "+sw.toString());
 		}
 	}
 
@@ -418,7 +423,7 @@ public abstract class ScriptEnvironment implements Serializable {
 			ObjectInputStream ois = new ObjectInputStream(
 					new ByteArrayInputStream(data));
 			Object oo = ois.readObject();
-			System.err.println("Reserialize successful!");
+			logger.debug("Reserialize successful!");
 			return oo;
 		} catch (IOException e) {
 			logger.error("Error: ", e);
@@ -483,7 +488,6 @@ public abstract class ScriptEnvironment implements Serializable {
 		try {
 			
 			if("com.dexels.navajo.adapter.SQLMap".equals(className) && navajorhino.Version.getDefaultContext()!=null ) {
-				System.err.println("REPLACE!");
 				className = "com.dexels.navajo.adapter.JDBCMap";
 			}
 			// Note, the ClassLoader is not actually used by OSGi
@@ -530,7 +534,7 @@ public abstract class ScriptEnvironment implements Serializable {
 	}
 	
 	public void scheduleCallback(Function f) {
-		System.err.println("Schedulecallback!!!!!");
+		logger.info("Schedulecallback!!!!!");
 
 		f.call(getCurrentContext(), createSubScope(globalScope), null,
 				new Object[] {});

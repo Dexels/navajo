@@ -1,6 +1,5 @@
 package com.dexels.navajo.compiler.tsl.internal;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -10,7 +9,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -22,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.server.NavajoIOConfig;
-import com.dexels.navajo.server.test.TestNavajoConfig;
 
 public class AutoCompiler {
 	
@@ -142,14 +139,11 @@ public class AutoCompiler {
 		 // replace extension
 		 if(comp.endsWith(".xml")) {
 			 String cleanPath = comp.substring(0,comp.length()-".xml".length());
-//			 String jarPathString = cleanPath+".jar";
 			 Path jarPath = compiledPath.resolve(cleanPath+".jar");
-//			 Path jarPath = Paths.get(jarPathString);
 			 boolean needRecompile = false;
 			 if(jarPath.toFile().exists()) {
 				 FileTime jarLastMod = Files.getLastModifiedTime(jarPath);
 				 needRecompile = lastModifiedTime.compareTo(jarLastMod) >0;
-//				 System.err.println("Needs recompile: "+needRecompile);
 			 } else {
 				 needRecompile = true;
 			 }
@@ -164,10 +158,7 @@ public class AutoCompiler {
 					logger.warn("Bundle creation problem for bundle: "+cleanPath,e);
 				}
 			 }
-		 } else {
-//			 System.err.println("skipping: "+comp);
 		 }
-
 	}
 
 	public void setNavajoIOConfig(NavajoIOConfig navajoIOConfig) {
@@ -178,13 +169,6 @@ public class AutoCompiler {
 		this.navajoIOConfig = null;
 	}
 
-	
-//	public void setBundleQueue(BundleQueue queue) throws Exception {
-//		this.bundleQueue = queue;
-//	}
-//	public void clearBundleQueue(BundleQueue queue) {
-//		this.bundleQueue = null;
-//	}
 
 	public void setBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = bundleCreator;
@@ -193,15 +177,5 @@ public class AutoCompiler {
 	public void clearBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = null;
 	}
-	
 
-	public static void main(String[] args) throws Exception {
-		AutoCompiler ac = new AutoCompiler();
-		NavajoIOConfig nc = new TestNavajoConfig(new File("/Users/frank/git/sportlink.restructure"));
-		ac.setNavajoIOConfig(nc);
-//		ac.setBundleCreator(new BundleCreator());
-		ac.activate(new HashMap<String, Object>());
-		ac.scan();
-//		ac.scan(Paths.get("/Users/frank/git/sportlink.restructure/scripts"),Paths.get("/Users/frank/git/sportlink.restructure/classes"));
-	}
 }

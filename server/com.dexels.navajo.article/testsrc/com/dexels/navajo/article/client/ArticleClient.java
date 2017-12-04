@@ -47,7 +47,6 @@ public class ArticleClient {
 	public ArticleClient() throws IOException {
 		base = new URL(baseurl);
 		meta = (ObjectNode)getJSONFromURL("list");
-		System.err.println("# of articles: "+meta.size());
 	}
 	
 	private Iterator<String> getArticleNames() {
@@ -97,7 +96,6 @@ public class ArticleClient {
 		ArrayNode an = (ArrayNode) getJSONFromURL(article);
 		Set<String> result = new HashSet<String>();
 		log(an);
-		System.err.println("article: "+article+" key: "+key);
 		for (JsonNode jsonNode : an) {
 
 			checkResult(article,jsonNode);
@@ -114,14 +112,12 @@ public class ArticleClient {
 		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 		StringWriter sw = new StringWriter();
 		writer.writeValue(sw, an);
-		System.err.println(sw.toString());
 	}
 	
 	private void testAll() throws IOException {
 		Iterator<String> names = getArticleNames();
 		while (names.hasNext()) {
 			String c = names.next();
-			System.err.println(">> "+c);
 			testArticle(c);
 			
 		}
@@ -160,21 +156,6 @@ public class ArticleClient {
 			}
 		}
 	}
-	
-
-//	private List<Map<String,String>> flatten(Map<String,Set<String>> res) {
-//		return flatten(res,new HashSet<String>());
-//	}
-//	
-//	private List<Map<String,String>> flatten(Map<String,Set<String>> res, Set<String> fixed) {
-//		List<Map<String,String>> result = new LinkedList<Map<String,String>>();
-//		Map<String,String> current = new HashMap<String, String>();
-//		Set<String> params = res.keySet();
-//		for (String param : params) {
-//			Set<String> options = res.get(param);
-//		}
-//		return result;
-//	}
 
 	protected void checkResult(String article, JsonNode articleResult) throws IOException,
 			JsonGenerationException, JsonMappingException {
@@ -193,19 +174,10 @@ public class ArticleClient {
 				String argumentName = arg.get("name").asText();
 				if(source!=null) {
 					Set<String> ss = getParameterValues(source.asText(), sourcekey.asText());
-					System.err.println("source possibilities: "+ss);
 					result.put(argumentName, ss);
 				}
 			}
 			return result;
 		}
-	}
-	public static void main(String[] args) throws IOException, InterruptedException {
-		ArticleClient ac = new ArticleClient();
-		ac.testAll();
-		ac.executor.shutdown();
-		ac.executor.awaitTermination(1, TimeUnit.HOURS);
-		long time = System.currentTimeMillis() - ac.started;
-		System.err.println("time: "+(time)+" count: "+ac.count+" speed: "+(1.0*ac.count/time*1000)+" transactions / s");
 	}
 }

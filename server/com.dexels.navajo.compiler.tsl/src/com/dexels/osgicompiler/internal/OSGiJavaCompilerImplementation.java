@@ -165,7 +165,6 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 			throw new CompilationException(sw.toString());
 		}
 		
-//		System.err.println(">>>>>>>>>> "+swe);
 		CustomJavaFileObject jfo = (CustomJavaFileObject) customJavaFileManager
 				.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, className,
 						Kind.CLASS);
