@@ -112,13 +112,28 @@ public final String toString() {
     @Override
     public final boolean equals(Object o)
     {
-        Object oValue = o instanceof Selection ? ((Selection) o).getValue() : null;
-        logger.info("Entering BaseSelectionImpl.equals with Object: " + o + " with value : " + oValue + ", our value is " + this.getValue());
-        return super.equals(o);
+    	boolean superEquals = super.equals(o);
+    	boolean newEquals = this.newEquals(o);
+    	if (superEquals != newEquals)
+    	{
+	        Object oValue = o instanceof Selection ? ((Selection) o).getValue() : null;
+	        logger.info("SKYLLA: Suggested equals function for BaseSelectionImpl returns " + newEquals + ", super.equals returns " + superEquals + ". We are: " + this + ", comparing Object: " + o + " having value : " + oValue + ", with our value " + this.getValue());
+    	}
+        return superEquals;
 
     }
 
-
+    // Suggested imeplemention for equals (replace the above logging version by this when ok)
+    public final boolean newEquals(Object o)
+    {
+    	return o instanceof Selection ? this.compareTo((Selection) o ) == 0 : false;
+    }
+    /* Suggested implementation for hashCode, to go along with the equals code above
+    @Override
+    public final int hashCode() {
+    	return getValue() == null ? -1 : getValue().hashCode();
+    }
+*/
 
   
   @Override
