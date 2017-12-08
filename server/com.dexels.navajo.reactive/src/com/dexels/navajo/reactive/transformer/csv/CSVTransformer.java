@@ -3,9 +3,11 @@ package com.dexels.navajo.reactive.transformer.csv;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.reactivestreams.Subscriber;
@@ -110,8 +112,8 @@ public class CSVTransformer implements ReactiveTransformer, ParameterValidator {
 	}
 
 	@Override
-	public Type inType() {
-		return Type.MESSAGE;
+	public Set<Type> inType() {
+		return new HashSet<>(Arrays.asList(new Type[] {Type.MESSAGE,Type.SINGLEMESSAGE})) ;
 	}
 
 	@Override

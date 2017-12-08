@@ -31,12 +31,12 @@ import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
-import com.dexels.navajo.reactive.mappers.ToSubMessage;
 import com.dexels.navajo.reactive.mappers.Delete;
 import com.dexels.navajo.reactive.mappers.JsonFileAppender;
 import com.dexels.navajo.reactive.mappers.Rename;
 import com.dexels.navajo.reactive.mappers.SetSingle;
 import com.dexels.navajo.reactive.mappers.SetSingleKeyValue;
+import com.dexels.navajo.reactive.mappers.ToSubMessage;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;
@@ -270,7 +270,7 @@ public class ReactiveScriptParser {
 			String newBaseType = typeParts[2];
 			ReactiveTransformerFactory transformerFactory = factorySupplier.apply(operatorName); 
 			ReactiveTransformer transformer = transformerFactory.build(relativePath, xml,sourceSupplier,factorySupplier,reducerSupplier, mapperSupplier);
-			String in = transformer.inType().name().toLowerCase();
+			String in = transformer.inType().toString();
 			String out = transformer.outType().name().toLowerCase();
 			logger.info("CHAIN: "+in+" / "+baseType+" ---> "+newBaseType+" / "+out);
 			result.add(transformer);
@@ -318,7 +318,8 @@ public class ReactiveScriptParser {
 	private static Type finalType(ReactiveSourceFactory source, List<ReactiveTransformer> transformers) {
 		Type current = source.sourceType();
 		for (ReactiveTransformer reactiveTransformer : transformers) {
-			if(current != reactiveTransformer.inType()) {
+			System.err.println("Checking if allowed in types: "+reactiveTransformer.inType()+" contains: "+current.name());
+			if(!reactiveTransformer.inType().contains(current)) {
 				throw new ClassCastException("Type mismatch: Last type in pipeline: "+current+" next part expects: "+reactiveTransformer.inType());
 			}
 			current = reactiveTransformer.outType();

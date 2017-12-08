@@ -1,6 +1,9 @@
 package com.dexels.navajo.reactive.transformer.mergesingle;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
@@ -43,9 +46,10 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public Type inType() {
-		return Type.MESSAGE;
+	public Set<Type> inType() {
+		return new HashSet<>(Arrays.asList(new Type[] {Type.MESSAGE,Type.SINGLEMESSAGE})) ;
 	}
+
 
 	@Override
 	public Type outType() {

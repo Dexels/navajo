@@ -1,10 +1,13 @@
 package com.dexels.navajo.reactive.transformer.stream;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -48,8 +51,8 @@ public class StreamMessageTransformer implements ReactiveTransformer, ParameterV
 	}
 
 	@Override
-	public Type inType() {
-		return Type.MESSAGE;
+	public Set<Type> inType() {
+		return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new Type[]{Type.SINGLEMESSAGE,Type.MESSAGE}))); // Type.SINGLEMESSAGE;
 	}
 
 	@Override

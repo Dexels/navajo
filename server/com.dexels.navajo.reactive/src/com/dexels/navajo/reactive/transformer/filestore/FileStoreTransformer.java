@@ -6,9 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.reactivestreams.Subscriber;
@@ -126,8 +128,8 @@ public class FileStoreTransformer implements ReactiveTransformer, ParameterValid
 	}
 
 	@Override
-	public Type inType() {
-		return Type.DATA;
+	public Set<Type> inType() {
+		return new HashSet<>(Arrays.asList(new Type[] {Type.DATA})) ;
 	}
 
 	@Override

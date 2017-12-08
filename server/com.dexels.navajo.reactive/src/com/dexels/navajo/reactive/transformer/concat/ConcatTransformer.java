@@ -1,5 +1,9 @@
 package com.dexels.navajo.reactive.transformer.concat;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -19,8 +23,8 @@ public class ConcatTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public Type inType() {
-		return Type.EVENT;
+	public Set<Type> inType() {
+		return new HashSet<>(Arrays.asList(new Type[] {Type.EVENT})) ;
 	}
 
 	@Override

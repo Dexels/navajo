@@ -1,5 +1,9 @@
 package com.dexels.navajo.reactive.transformer.single;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -23,9 +27,10 @@ public class SingleMessageTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public Type inType() {
-		return Type.MESSAGE;
+	public Set<Type> inType() {
+		return new HashSet<>(Arrays.asList(new Type[] {Type.MESSAGE,Type.SINGLEMESSAGE})) ;
 	}
+
 
 	@Override
 	public Type outType() {
