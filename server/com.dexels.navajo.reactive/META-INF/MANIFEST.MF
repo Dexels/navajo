@@ -6,6 +6,8 @@ Bundle-Version: 2.0.11.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.config.runtime;resolution:=optional,
+ com.dexels.immutable.api;version="1.0.0",
+ com.dexels.immutable.factory;version="1.0.0",
  com.dexels.navajo.adapters.stream,
  com.dexels.navajo.document;version="2.2.1",
  com.dexels.navajo.document.nanoimpl;version="2.2.1",

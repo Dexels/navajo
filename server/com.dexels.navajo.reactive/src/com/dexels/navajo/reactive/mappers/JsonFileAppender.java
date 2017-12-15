@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.dexels.immutable.api.ImmutableMessageParser;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -30,12 +32,13 @@ public class JsonFileAppender implements ReactiveMapper, ParameterValidator {
 	@Override
 	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(String relativePath, XMLElement xml) {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
-		JSONReplicationMessageParserImpl parser = new JSONReplicationMessageParserImpl();
+		ImmutableMessageParser parser = ImmutableFactory.createParser();
 		return context -> {
 			ReactiveResolvedParameters named = r.resolveNamed(context, Optional.empty(), Optional.empty(), this,xml,relativePath);
 			String  path = named.paramString("path");
 			return (item) -> {
 				FileOutputStream fw = new FileOutputStream(path,true);
+				// TODO Fix
 				byte[] data = parser.serialize(item.message());
 				fw.write(data);
 				fw.write("\n".getBytes(Charset.forName("UTF-8")));

@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -24,7 +25,6 @@ import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.tipilink.TipiLink;
-import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.api.ReplicationMessage.Operation;
 import com.dexels.replication.factory.ReplicationFactory;
 
@@ -33,8 +33,8 @@ public class ExpressionTest {
 	private Navajo testDoc;
 	private Message topMessage;
 	private Selection testSelection;
-	private ReplicationMessage immutableMessage;
-	private ReplicationMessage paramMessage;
+	private ImmutableMessage immutableMessage;
+	private ImmutableMessage paramMessage;
 
 
 	@Before
@@ -71,7 +71,7 @@ public class ExpressionTest {
 		types.put("SomeString", "string");
 		values.put("SomeInteger", 3);
 		types.put("SomeInteger", "integer");
-		immutableMessage = ReplicationFactory.createReplicationMessage(null, 0, Operation.NONE, Collections.emptyList(), types, values, Collections.emptyMap(), Collections.emptyMap(),Optional.empty());
+		immutableMessage = ReplicationFactory.createReplicationMessage(null, 0, Operation.NONE, Collections.emptyList(), types, values, Collections.emptyMap(), Collections.emptyMap(),Optional.empty()).message();
 		
 		Map<String,Object> valueparams = new HashMap<>();
 		Map<String,String> typeparams = new HashMap<>();
@@ -79,7 +79,7 @@ public class ExpressionTest {
 		typeparams.put("SomeString", "string");
 		valueparams.put("SomeInteger", 4);
 		typeparams.put("SomeInteger", "integer");
-		paramMessage = ReplicationFactory.createReplicationMessage(null, 0, Operation.NONE, Collections.emptyList(), typeparams, valueparams, Collections.emptyMap(), Collections.emptyMap(),Optional.empty());
+		paramMessage = ReplicationFactory.createReplicationMessage(null, 0, Operation.NONE, Collections.emptyList(), typeparams, valueparams, Collections.emptyMap(), Collections.emptyMap(),Optional.empty()).message();
 
 
 	}

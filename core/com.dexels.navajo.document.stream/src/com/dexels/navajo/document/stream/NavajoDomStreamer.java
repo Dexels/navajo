@@ -37,7 +37,7 @@ import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.types.Binary;
 
 import io.reactivex.Flowable;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class NavajoDomStreamer {
 
@@ -48,7 +48,7 @@ public class NavajoDomStreamer {
 //		this.observableOutputStream.getObservable().subscribe(this);
 	}
 	public static Observable<NavajoStreamEvent> feed(final Navajo navajo) {
-		return Observable.from(processNavajo(navajo));
+		return Observable.fromIterable(processNavajo(navajo));
 	}
 	
 	public static Flowable<NavajoStreamEvent> feedFlowable(final Navajo navajo) {

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -47,7 +48,7 @@ public class CSVTransformer implements ReactiveTransformer, ParameterValidator {
 	}
 
 	public FlowableOperator<DataItem, DataItem> flowableCSV(StreamScriptContext context) {
-		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.<ReplicationMessage>empty(), Optional.empty(), this, sourceElement, sourcePath);
+		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.<ImmutableMessage>empty(), Optional.empty(), this, sourceElement, sourcePath);
 
 		return new BaseFlowableOperator<DataItem, DataItem>(10) {
 
@@ -83,7 +84,7 @@ public class CSVTransformer implements ReactiveTransformer, ParameterValidator {
 
 						
 						operatorNext(msg, m->{
-							ReplicationMessage dd = m.message();
+							ImmutableMessage dd = m.message();
 							String line = columns.stream().map(column -> "" + dd.columnValue(column))
 									.collect(Collectors.joining(delimiter, "", "\n"));
 								return DataItem.of(line.getBytes(Charset.forName("UTF-8")));

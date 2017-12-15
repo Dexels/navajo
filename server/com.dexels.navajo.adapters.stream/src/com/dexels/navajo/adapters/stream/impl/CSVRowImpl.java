@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.adapters.stream.Row;
-import com.dexels.replication.api.ReplicationMessage;
-import com.dexels.replication.factory.ReplicationFactory;
 
 public class CSVRowImpl implements Row {
 
@@ -63,13 +63,13 @@ public class CSVRowImpl implements Row {
 		return new CSVRowImpl(this,name,(String)value);
 	}
 
-	public ReplicationMessage toElement() {
+	public ImmutableMessage toElement() {
 		Map<String,Object> values = new HashMap<>();
 		Map<String,String> types = new HashMap<>();
 		for (String name : columnNames) {
 			types.put(name, "string");
 			values.put(name, get(name));
 		}
- 		return ReplicationFactory.fromMap(null, values, types);
+ 		return ImmutableFactory.create(values, types);
 	}
 }

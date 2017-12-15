@@ -11,7 +11,8 @@ Export-Package: com.dexels.navajo.rhino,
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .,
  lib/js.jar
-Import-Package: com.dexels.navajo.client,
+Import-Package: com.dexels.immutable.api;version="1.0.0",
+ com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.nanoimpl;version="2.2.0",

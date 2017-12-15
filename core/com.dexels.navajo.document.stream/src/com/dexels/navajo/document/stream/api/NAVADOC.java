@@ -2,37 +2,50 @@ package com.dexels.navajo.document.stream.api;
 
 import java.util.Stack;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
-import rx.Observable.Operator;
-import rx.Subscriber;
-import rx.functions.Func1;
+import io.reactivex.FlowableOperator;
+import io.reactivex.functions.Function;
+
 
 public class NAVADOC {
 	
 	
 
 	
-	public static Operator<NavajoStreamEvent,NavajoStreamEvent> setPropertyValue(final String messagePath, String property, Object value) {
+	public static FlowableOperator<NavajoStreamEvent,NavajoStreamEvent> setPropertyValue(final String messagePath, String property, Object value) {
 		return messageWithPath(messagePath, msg->msg.withValue(property, value),false);
 	}
 	
-	public static Operator<NavajoStreamEvent,NavajoStreamEvent> messageWithPath(final String messagePath) {
+	public static FlowableOperator<NavajoStreamEvent,NavajoStreamEvent> messageWithPath(final String messagePath) {
 		return messageWithPath(messagePath,m->m,true);
 	}
 
-	public static Operator<NavajoStreamEvent,NavajoStreamEvent> messageWithPath(final String messagePath, final Func1<Msg,Msg> operation, boolean filter) {
-		return new Operator<NavajoStreamEvent,NavajoStreamEvent>(){
+	public static FlowableOperator<NavajoStreamEvent,NavajoStreamEvent> messageWithPath(final String messagePath, final Function<Msg,Msg> operation, boolean filter) {
+
+
+//		@Override
+//		public org.reactivestreams.Subscriber<? super NavajoStreamEvent> apply(
+//				org.reactivestreams.Subscriber<? super NavajoStreamEvent> arg0) throws Exception {
+//			// TODO Auto-generated method stub
+//			return null;
+//		}
+		
+		return new FlowableOperator<NavajoStreamEvent,NavajoStreamEvent>(){
 			@Override
-			public Subscriber<? super NavajoStreamEvent> call(Subscriber<? super NavajoStreamEvent> outbound) {
+			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super NavajoStreamEvent> outbound) {
 				return new Subscriber<NavajoStreamEvent>() {
 
 					private final Stack<String> pathStack = new Stack<>();
+					private Subscription subscription;
 					
 					@Override
-					public void onCompleted() {
-						outbound.onCompleted();
+					public void onComplete() {
+						outbound.onComplete();
 					}
 
 					@Override
@@ -51,16 +64,26 @@ public class NAVADOC {
 							break;
 						case MESSAGE:
 							if(matches(messagePath,pathStack)) {
-								Msg transformed = operation.call((Msg) event.body());
-								outbound.onNext(Events.message(transformed, event.path(), event.attributes()));
+								Msg transformed;
+								try {
+									transformed = operation.apply((Msg) event.body());
+									outbound.onNext(Events.message(transformed, event.path(), event.attributes()));
+								} catch (Exception e) {
+									outbound.onError(e);
+								}
 								return;
 							}
 							pathStack.pop();
 							break;
 						case ARRAY_ELEMENT:
 							if(matches(messagePath,pathStack)) {
-								Msg transformed = operation.call((Msg) event.body());
-								outbound.onNext(Events.arrayElement(transformed,event.attributes()));
+								Msg transformed;
+								try {
+									transformed = operation.apply((Msg) event.body());
+									outbound.onNext(Events.arrayElement(transformed,event.attributes()));
+								} catch (Exception e) {
+									outbound.onError(e);
+								}
 								return;
 							}
 							break;
@@ -84,22 +107,27 @@ public class NAVADOC {
 						String joined = String.join("/", pathStack);
 						return path.equals(joined);
 					}
+
+					@Override
+					public void onSubscribe(Subscription s) {
+						this.subscription = s;
+					}
 				};
 			}
 		};
 	}
 
-	public static Operator<String,NavajoStreamEvent> observeBinary(final String path) {
-		return new Operator<String,NavajoStreamEvent>(){
+	public static FlowableOperator<String,NavajoStreamEvent> observeBinary(final String path) {
+		return new FlowableOperator<String,NavajoStreamEvent>(){
 			@Override
-			public Subscriber<? super NavajoStreamEvent> call(Subscriber<? super String> outbound) {
+			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super String> outbound) {
 				return new Subscriber<NavajoStreamEvent>() {
 
 					private final Stack<String> pathStack = new Stack<>();
 					
 					@Override
-					public void onCompleted() {
-						outbound.onCompleted();
+					public void onComplete() {
+						outbound.onComplete();
 					}
 
 					@Override
@@ -134,7 +162,7 @@ public class NAVADOC {
 							break;
 						case BINARY_DONE:
 							if(matches(path,pathStack)) {
-								outbound.onCompleted();
+								outbound.onComplete();
 							}
 							pathStack.pop();
 							break;
@@ -151,8 +179,14 @@ public class NAVADOC {
 						String joined = String.join("/", pathStack);
 						return path.equals(joined);
 					}
+
+					@Override
+					public void onSubscribe(Subscription arg0) {
+					}
 				};
-			}};
+			}
+
+		};
 	}
 
 	

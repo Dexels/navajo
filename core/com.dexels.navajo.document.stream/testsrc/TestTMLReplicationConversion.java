@@ -19,8 +19,7 @@ public class TestTMLReplicationConversion {
 		ReplicationMessage rm = ReplicationFactory.fromMap(null, Collections.emptyMap(), Collections.emptyMap());
 		rm = rm.with("Monkey", "Koko", "string");
 		Navajo n = NavajoFactory.getInstance().createNavajo();
-		n.addMessage(StreamDocument.replicationToMessage(rm,"Message",false));
+		n.addMessage(StreamDocument.replicationToMessage(rm.message(),"Message",false));
 		n.write(System.err);
 	}
-
 }

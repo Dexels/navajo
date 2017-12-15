@@ -91,7 +91,8 @@ Export-Package: com.dexels.navajo.tipi;version="1.1.42";
    com.dexels.navajo.tipi.tipixml",
  tipipackage;version="1.1.42";uses:="com.dexels.navajo.version,org.osgi.framework,tipi"
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.navajo.client;version="1.0.0",
+Import-Package: com.dexels.immutable.api;version="1.0.0",
+ com.dexels.navajo.client;version="1.0.0",
  com.dexels.navajo.client.sessiontoken,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
@@ -105,7 +106,6 @@ Import-Package: com.dexels.navajo.client;version="1.0.0",
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.tipilink,
  com.dexels.navajo.version;version="1.1.0",
- com.dexels.replication.api;version="9.1.0",
  javax.imageio.spi,
  javax.script,
  navajo;version="1.1.0",

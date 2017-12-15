@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -43,7 +44,7 @@ public class TestJsonConversion {
 //		mapper.writerWithDefaultPrettyPrinter().writeValue(System.err, on);
 //		System.err.println("After:\n");
 //		mapper.writerWithDefaultPrettyPrinter().writeValue(System.err, n);
-		Optional<List<ReplicationMessage>> r = rmsg.subMessages("Standings");
+		Optional<List<ImmutableMessage>> r = rmsg.subMessages("Standings");
 //		System.err.println("Present? "+r.isPresent());
 		Assert.assertTrue(r.isPresent());
 		Assert.assertEquals(12, r.get().size());

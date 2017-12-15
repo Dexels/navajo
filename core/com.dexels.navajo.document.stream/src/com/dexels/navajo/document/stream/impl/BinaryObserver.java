@@ -12,16 +12,17 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.dexels.utils.Base64;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.Binary;
 
-import rx.Observable.Operator;
-import rx.Subscriber;
+import io.reactivex.FlowableOperator;
 
-public class BinaryObserver implements Operator<Binary,String>{
+public class BinaryObserver implements FlowableOperator<Binary,String>{
 
 	private OutputStream fos;
 	private Writer w;
@@ -34,7 +35,7 @@ public class BinaryObserver implements Operator<Binary,String>{
 	
 	private final static Logger logger = LoggerFactory.getLogger(BinaryObserver.class);
 
-	public static Operator<Binary,String> collect() {
+	public static FlowableOperator<Binary,String> collect() {
 		return new BinaryObserver();
 	}
 
@@ -49,11 +50,11 @@ public class BinaryObserver implements Operator<Binary,String>{
 
 	}
 	@Override
-	public Subscriber<? super String> call(Subscriber<? super Binary> outgoing) {
+	public Subscriber<? super String> apply(Subscriber<? super Binary> outgoing) {
 		return new Subscriber<String>() {
 
 			@Override
-			public void onCompleted() {
+			public void onComplete() {
 				try {
 					w.flush();
 					w.close();
@@ -68,7 +69,7 @@ public class BinaryObserver implements Operator<Binary,String>{
 			    	binary.setDigest(digest);
 //			    	binary.setMimeType();
 					outgoing.onNext(binary);
-			    	outgoing.onCompleted();
+			    	outgoing.onComplete();
 				} catch (Throwable e) {
 					outgoing.onError(e);
 				}
@@ -88,6 +89,10 @@ public class BinaryObserver implements Operator<Binary,String>{
 				} catch (IOException e) {
 					outgoing.onError(e);
 				}
+			}
+
+			@Override
+			public void onSubscribe(Subscription s) {
 			}
 		};
 	}

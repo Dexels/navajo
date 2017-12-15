@@ -23,7 +23,8 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -39,8 +40,6 @@ import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
 import com.dexels.navajo.document.stream.xml.ObservableNavajoParser;
 import com.dexels.navajo.document.stream.xml.XMLEvent;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.replication.api.ReplicationMessage;
-import com.dexels.replication.factory.ReplicationFactory;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;
@@ -50,7 +49,7 @@ import io.reactivex.ObservableOperator;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import rx.functions.Func1;
+import io.reactivex.functions.Function;
 
 public class StreamDocument {
 
@@ -655,7 +654,7 @@ public class StreamDocument {
 			}
 		};
 	}
-	public static FlowableOperator<NavajoStreamEvent,NavajoStreamEvent> messageWithPath(final String messagePath, final Func1<Msg,Msg> operation, boolean filterOthers) {
+	public static FlowableOperator<NavajoStreamEvent,NavajoStreamEvent> messageWithPath(final String messagePath, final Function<Msg,Msg> operation, boolean filterOthers) {
 		return new BaseFlowableOperator<NavajoStreamEvent,NavajoStreamEvent>(1) {
 
 			@Override
@@ -687,10 +686,15 @@ public class StreamDocument {
 							break;
 						case MESSAGE:
 							if(matches(messagePath,pathStack)) {
-								Msg transformed = operation.call((Msg) event.body());
-								operatorNext(event, e->{
-									return Events.message(transformed, event.path(), event.attributes());
-								}, child);
+								Msg transformed;
+								try {
+									transformed = operation.apply((Msg) event.body());
+									operatorNext(event, e->{
+										return Events.message(transformed, event.path(), event.attributes());
+									}, child);
+								} catch (Exception e1) {
+									logger.error("Unexpected error: ", e1);
+								}
 								return;
 //							} else {
 //								operatorRequest(1);
@@ -699,11 +703,17 @@ public class StreamDocument {
 							break;
 						case ARRAY_ELEMENT:
 							if(matches(messagePath,pathStack)) {
-								Msg transformed = operation.call((Msg) event.body());
+								Msg transformed;
+								try {
+									transformed = operation.apply((Msg) event.body());
+									operatorNext(event, e->{
+										return Events.arrayElement(transformed,event.attributes());
+									}, child);
+								} catch (Exception e1) {
+									logger.error("Very unexpected exception: ", e1);
+									e1.printStackTrace();
+								}
 
-								operatorNext(event, e->{
-									return Events.arrayElement(transformed,event.attributes());
-								}, child);
 								
 //								child.onNext(Events.arrayElement(transformed,event.attributes()));
 //								backpressureAdmin.registerEmission(1);
@@ -950,11 +960,11 @@ public class StreamDocument {
 		};
 	}
 
-	public static FlowableTransformer<ReplicationMessage, NavajoStreamEvent> toMessageEvent(String name, boolean isArray) {
-		return new FlowableTransformer<ReplicationMessage, NavajoStreamEvent>() {
+	public static FlowableTransformer<ImmutableMessage, NavajoStreamEvent> toMessageEvent(String name, boolean isArray) {
+		return new FlowableTransformer<ImmutableMessage, NavajoStreamEvent>() {
 
 			@Override
-			public Flowable<NavajoStreamEvent> apply(Flowable<ReplicationMessage> in) {
+			public Flowable<NavajoStreamEvent> apply(Flowable<ImmutableMessage> in) {
 				if(!isArray) {
 					in = in.take(1);
 				}
@@ -969,11 +979,11 @@ public class StreamDocument {
 		};
 	}
 
-	public static FlowableTransformer<ReplicationMessage, NavajoStreamEvent> toMessage(String name) {
-		return new FlowableTransformer<ReplicationMessage, NavajoStreamEvent>() {
+	public static FlowableTransformer<ImmutableMessage, NavajoStreamEvent> toMessage(String name) {
+		return new FlowableTransformer<ImmutableMessage, NavajoStreamEvent>() {
 
 			@Override
-			public Flowable<NavajoStreamEvent> apply(Flowable<ReplicationMessage> in) {
+			public Flowable<NavajoStreamEvent> apply(Flowable<ImmutableMessage> in) {
 				return in.concatMap(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,false));
 			}
 		};
@@ -993,7 +1003,7 @@ public class StreamDocument {
 		};
 	}
 	
-	public static Flowable<NavajoStreamEvent> replicationMessageToStreamEvents(String name, ReplicationMessage msg,boolean isArrayElement) {
+	public static Flowable<NavajoStreamEvent> replicationMessageToStreamEvents(String name, ImmutableMessage msg,boolean isArrayElement) {
 		
 		Flowable<NavajoStreamEvent> subm = Flowable.fromIterable(
 				msg.subMessageMap()
@@ -1016,7 +1026,7 @@ public class StreamDocument {
 
 	}
 
-	private static Flowable<NavajoStreamEvent> streamReplicationMessageList(String name, List<ReplicationMessage> l) {
+	private static Flowable<NavajoStreamEvent> streamReplicationMessageList(String name, List<ImmutableMessage> l) {
 		if(l.isEmpty()) {
 			return Flowable.empty();
 		}
@@ -1028,7 +1038,7 @@ public class StreamDocument {
 		;
 	}
 	
-	public static Msg replicationToMsg(ReplicationMessage rpl, boolean isArrayMessage) {
+	public static Msg replicationToMsg(ImmutableMessage rpl, boolean isArrayMessage) {
 		Map<String,String> types = rpl.types();
 		List<Prop> properties = rpl.values()
 			.entrySet()
@@ -1141,7 +1151,7 @@ public class StreamDocument {
 		};
 	}
 
-	public static Message replicationToMessage(ReplicationMessage msg, String name, boolean isArrayElement) {
+	public static Message replicationToMessage(ImmutableMessage msg, String name, boolean isArrayElement) {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message m = NavajoFactory.getInstance().createMessage(n, name, isArrayElement ? Message.MSG_TYPE_ARRAY_ELEMENT : Message.MSG_TYPE_SIMPLE);
 		List<Property> pp = msg.columnNames()
@@ -1167,15 +1177,15 @@ public class StreamDocument {
 		return m;
 	}
 	
-	private static Map.Entry<String,List<ReplicationMessage>> arrayMessageToReplicationList(Message msg) {
-		return new AbstractMap.SimpleEntry<String,List<ReplicationMessage>>(msg.getName(), msg.getAllMessages().stream()
+	private static Map.Entry<String,List<ImmutableMessage>> arrayMessageToReplicationList(Message msg) {
+		return new AbstractMap.SimpleEntry<String,List<ImmutableMessage>>(msg.getName(), msg.getAllMessages().stream()
 			.map(StreamDocument::messageToReplication)
 			.collect(Collectors.toList()));
 	}
-	private static Map.Entry<String,ReplicationMessage> messageToReplicationEntry(Message msg) {
-		return new AbstractMap.SimpleEntry<String,ReplicationMessage>(msg.getName(), messageToReplication(msg));
+	private static Map.Entry<String,ImmutableMessage> messageToReplicationEntry(Message msg) {
+		return new AbstractMap.SimpleEntry<String,ImmutableMessage>(msg.getName(), messageToReplication(msg));
 	}	
-	public static ReplicationMessage messageToReplication(Message msg) {
+	public static ImmutableMessage messageToReplication(Message msg) {
 		Map<String,Object> values = new HashMap<>();
 		Map<String,String> types = new HashMap<>();
 		msg.getProperties().forEach((name,prop)->{
@@ -1185,17 +1195,17 @@ public class StreamDocument {
 			values.put(name, value);
 			types.put(name, type);
 		});
-		Map<String,List<ReplicationMessage>> arrayMessages = msg.getAllMessages()
+		Map<String,List<ImmutableMessage>> arrayMessages = msg.getAllMessages()
 				.stream()
 				.filter(m->m.isArrayMessage())
 				.map(StreamDocument::arrayMessageToReplicationList)
 				.collect(Collectors.toMap(e->e.getKey(), e->e.getValue()));
-		Map<String,ReplicationMessage> subMessageMap =  msg.getAllMessages().stream()
+		Map<String,ImmutableMessage> subMessageMap =  msg.getAllMessages().stream()
 				.filter(m->!m.isArrayMessage())
 				.map(StreamDocument::messageToReplicationEntry)
 				.collect(Collectors.toMap(e->e.getKey(), e->e.getValue()));
 //		List<Message> simpleMessages = msg.getAllMessages().stream().filter(m->!m.isArrayMessage()).collect(Collectors.toList());
-		return ReplicationFactory.fromMap(null, values, types)
+		return ImmutableFactory.create(values, types)
 				.withAllSubMessageLists(arrayMessages)
 				.withAllSubMessage(subMessageMap);
 	}

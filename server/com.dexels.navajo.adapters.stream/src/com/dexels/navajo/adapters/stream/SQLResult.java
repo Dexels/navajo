@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.adapter.sqlmap.SQLMapHelper;
-import com.dexels.replication.api.ReplicationMessage;
-import com.dexels.replication.factory.ReplicationFactory;
 
 class SQLResult {
 	
@@ -51,8 +51,7 @@ class SQLResult {
     		return values.get(name);
 	}
 
-    public ReplicationMessage toMessage() {
-    		// TODO replace with correct call
-    		return ReplicationFactory.fromMap(null, values, types);
+    public ImmutableMessage toMessage() {
+    		return ImmutableFactory.create(values, types);
     }
 }

@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -19,20 +20,20 @@ import io.reactivex.functions.Function3;
 
 public class ReactiveResolvedParameters {
 
-	public final Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> named;
+	public final Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> named;
 	Map<String,Operand> result = new HashMap<>();
 	
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveResolvedParameters.class);
 	private final StreamScriptContext context;
 	private boolean allResolved = false;
-	private final Optional<ReplicationMessage> currentMessage;
-	private final Optional<ReplicationMessage> paramMessage;
+	private final Optional<ImmutableMessage> currentMessage;
+	private final Optional<ImmutableMessage> paramMessage;
 	private final Optional<Map<String,String>> expectedTypes;
 	private final XMLElement sourceElement;
 	private final String sourcePath;
-	private final Map<String, Function3<StreamScriptContext,Optional<ReplicationMessage>, Optional<ReplicationMessage>, Operand> > defaultExpressions;
+	private final Map<String, Function3<StreamScriptContext,Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> > defaultExpressions;
 	
-	public ReactiveResolvedParameters(StreamScriptContext context, Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> named,Optional<ReplicationMessage> currentMessage,Optional<ReplicationMessage> paramMessage, ParameterValidator validator, XMLElement sourceElement, String sourcePath,Map<String, Function3<StreamScriptContext,Optional<ReplicationMessage>, Optional<ReplicationMessage>, Operand> > defaultExpressions) {
+	public ReactiveResolvedParameters(StreamScriptContext context, Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> named,Optional<ImmutableMessage> currentMessage,Optional<ImmutableMessage> paramMessage, ParameterValidator validator, XMLElement sourceElement, String sourcePath,Map<String, Function3<StreamScriptContext,Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> > defaultExpressions) {
 		this.named = named;
 		this.context = context;
 		this.currentMessage = currentMessage;
@@ -76,7 +77,7 @@ public class ReactiveResolvedParameters {
 			return Optional.of(result.get(key));
 		}
 		Optional<String> expectedType = expectedTypes.isPresent() ? Optional.ofNullable(expectedTypes.get().get(key)) : Optional.empty();
-		Function3<StreamScriptContext, Optional<ReplicationMessage>, Optional<ReplicationMessage>, Operand> function = named.get(key);
+		Function3<StreamScriptContext, Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> function = named.get(key);
 		if(function==null) {
 			return Optional.empty();
 		}
@@ -86,7 +87,7 @@ public class ReactiveResolvedParameters {
 
 	private Object getCheckedValue(String expectedType, String key, Optional<Operand> res, Optional<Object> defaultValue) {
 		if(!res.isPresent()) {
-			Function3<StreamScriptContext,Optional<ReplicationMessage>, Optional<ReplicationMessage>, Operand> def = defaultExpressions.get(key);
+			Function3<StreamScriptContext,Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> def = defaultExpressions.get(key);
 			if(def!=null) {
 				try {
 					Operand defaultOperand = def.apply(context, currentMessage, paramMessage);
@@ -146,7 +147,7 @@ public class ReactiveResolvedParameters {
 	}
 	
 
-	private Operand resolveParam(String key,Optional<String> expectedType, Function3<StreamScriptContext, Optional<ReplicationMessage>, Optional<ReplicationMessage>, Operand> function) {
+	private Operand resolveParam(String key,Optional<String> expectedType, Function3<StreamScriptContext, Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> function) {
 		Operand applied;
 		try {
 			applied = function.apply(context, currentMessage,paramMessage);

@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
@@ -38,8 +40,6 @@ import com.dexels.navajo.reactive.mappers.SetSingle;
 import com.dexels.navajo.reactive.mappers.SetSingleKeyValue;
 import com.dexels.navajo.reactive.mappers.ToSubMessage;
 import com.dexels.navajo.script.api.SystemException;
-import com.dexels.replication.api.ReplicationMessage;
-import com.dexels.replication.factory.ReplicationFactory;
 
 import io.reactivex.Flowable;
 import io.reactivex.functions.BiFunction;
@@ -76,7 +76,7 @@ public class ReactiveScriptParser {
 	}
 
 	public void removeReactiveSourceFactory(ReactiveSourceFactory factory, Map<String,Object> settings) {
-		String name = (String) settings.remove("name");
+		String name = (String) settings.get("name");
 		factories.remove(name);
 	}
 
@@ -185,13 +185,13 @@ public class ReactiveScriptParser {
 
 	public static ReactiveParameters parseParamsFromChildren(String relativePath, XMLElement x) {
 		List<XMLElement> children = x.getChildren();
-		Map<String,Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> namedParameters = new HashMap<>();
-		Map<String,	Function3<StreamScriptContext,Optional<ReplicationMessage>, Optional<ReplicationMessage>, Operand>> defaultExpressions = new HashMap<>();
-		List<Function3<StreamScriptContext,Optional<ReplicationMessage>,Optional<ReplicationMessage>,Operand>> unnamedParameters = new ArrayList<>();
+		Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> namedParameters = new HashMap<>();
+		Map<String,	Function3<StreamScriptContext,Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand>> defaultExpressions = new HashMap<>();
+		List<Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> unnamedParameters = new ArrayList<>();
 		x.enumerateAttributeNames().forEachRemaining(e->{
 			if(e.endsWith(".eval")) {
 				String name = e.substring(0, e.length()-".eval".length());
-				Function3<StreamScriptContext,Optional<ReplicationMessage>, Optional<ReplicationMessage>, Operand> value = (context,msg,param)->evaluate((String)x.getStringAttribute(e), context, msg,param,false);
+				Function3<StreamScriptContext,Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> value = (context,msg,param)->evaluate((String)x.getStringAttribute(e), context, msg,param,false);
 				namedParameters.put(name, value);
 			} else {
 				namedParameters.put(e, (context,msg,param)->new Operand(x.getStringAttribute(e),Property.STRING_PROPERTY,null));
@@ -222,9 +222,7 @@ public class ReactiveScriptParser {
 					
 				} else {
 					if(evaluate) {
-//						Function3<StreamScriptContext,Optional<ReplicationMessage>, Optional<ReplicationMessage>, Operand> value = (context,msg,param)->evaluate((String)x.getStringAttribute(e), context, msg,param);
-
-						Function3<StreamScriptContext, Optional<ReplicationMessage>,Optional<ReplicationMessage>, Operand> value = (context,msg,param)->evaluate((String)content, context, msg,param,debug);
+						Function3<StreamScriptContext, Optional<ImmutableMessage>,Optional<ImmutableMessage>, Operand> value = (context,msg,param)->evaluate((String)content, context, msg,param,debug);
 						namedParameters.put(name, value);
 					} else {
 						namedParameters.put(name, (context,msg,param)->new Operand(content,"string",null));
@@ -327,14 +325,14 @@ public class ReactiveScriptParser {
 		return current;
 	}
 	
-	private static Operand evaluate(String expression, StreamScriptContext context, Optional<ReplicationMessage> m, Optional<ReplicationMessage> param, boolean debug) throws SystemException {
+	private static Operand evaluate(String expression, StreamScriptContext context, Optional<ImmutableMessage> m, Optional<ImmutableMessage> param, boolean debug) throws SystemException {
 		if(debug) {
 			logger.info("Evaluating expression: {}",expression);
 			if(m.isPresent()) {
-				logger.info("With message: "+m.get().toFlatString(ReplicationFactory.getInstance()));
+				logger.info("With message: "+m.get().toFlatString(ImmutableFactory.getInstance()));
 			}
 			if(param.isPresent()) {
-				logger.info("With param message: "+param.get().toFlatString(ReplicationFactory.getInstance()));
+				logger.info("With param message: "+param.get().toFlatString(ImmutableFactory.getInstance()));
 			}
 		}
 		Operand result = Expression.evaluate(expression, context.getInput().orElse(null), null, null,null,null,null,null,m,param);
@@ -344,8 +342,9 @@ public class ReactiveScriptParser {
 		return result;
 	}
 
-	public static ReplicationMessage empty() {
-		return ReplicationFactory.createReplicationMessage(null, System.currentTimeMillis(), ReplicationMessage.Operation.NONE, Collections.emptyList(), Collections.emptyMap(), Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Optional.of(()->{}));
+	public static ImmutableMessage empty() {
+		return ImmutableFactory.create(Collections.emptyMap(), Collections.emptyMap());
+//		return ReplicationFactory.createReplicationMessage(null, System.currentTimeMillis(), ReplicationMessage.Operation.NONE, Collections.emptyList(), Collections.emptyMap(), Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Optional.of(()->{}));
 	}
 	
 

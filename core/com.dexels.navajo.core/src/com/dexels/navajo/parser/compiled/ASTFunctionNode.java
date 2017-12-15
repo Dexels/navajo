@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
@@ -18,7 +19,6 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.tipilink.TipiLink;
 import com.dexels.navajo.version.AbstractVersion;
-import com.dexels.replication.api.ReplicationMessage;
 
 
 public final class ASTFunctionNode extends SimpleNode {
@@ -56,7 +56,7 @@ public final class ASTFunctionNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 				FunctionInterface f = getFunction();
 				f.setInMessage(doc);
 				f.setCurrentMessage(parentMsg);

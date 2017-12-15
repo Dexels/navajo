@@ -15,8 +15,8 @@ import org.dexels.grus.GrusProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.dexels.config.runtime.TestConfig;
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
-import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.Flowable;
 import oracle.jdbc.pool.OracleDataSource;
@@ -71,7 +71,7 @@ public class SQL {
 		return Optional.of(source);
 	}
 	
-	public static Flowable<ReplicationMessage> query(String datasource, String tenant, String query, Object... params) {
+	public static Flowable<ImmutableMessage> query(String datasource, String tenant, String query, Object... params) {
 		Optional<DataSource> ds = resolveDataSource(datasource, tenant);
 //		Pool<Connection> pool =  getPoolForDataSource(ds);
 		if(!ds.isPresent()) {
@@ -85,13 +85,13 @@ public class SQL {
 	
 
 
-	public static ReplicationMessage defaultSqlResultToMsg(SQLResult result) {
+	public static ImmutableMessage defaultSqlResultToMsg(SQLResult result) {
 		return result.toMessage();
 	}
 	
 	
 	
-	public static ReplicationMessage resultSet(ResultSet rs)  {
+	public static ImmutableMessage resultSet(ResultSet rs)  {
 			try {
 				return new SQLResult(rs).toMessage();
 			} catch (Exception e) {

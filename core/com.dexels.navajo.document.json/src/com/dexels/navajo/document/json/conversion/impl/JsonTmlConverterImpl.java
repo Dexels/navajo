@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -28,7 +28,7 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 	
 
 	@Override
-	public Navajo toFlatNavajo(String name,ReplicationMessage message) {
+	public Navajo toFlatNavajo(String name,ImmutableMessage message) {
 		Navajo rootNavajo = NavajoFactory.getInstance().createNavajo();
 		Message root = toMessage(name, message, rootNavajo);
 		rootNavajo.addMessage(root);
@@ -36,7 +36,7 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 	}
 
 	@Override
-	public Message toMessage(String messageName, ReplicationMessage message, Navajo rootNavajo) {
+	public Message toMessage(String messageName, ImmutableMessage message, Navajo rootNavajo) {
 		Message cV =  NavajoFactory.getInstance().createMessage(rootNavajo, messageName);
 		for (String columnName : message.columnNames()) {
 			String type = message.columnType(columnName);
@@ -59,15 +59,15 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 			}
 			cV.addProperty(colProp);
 		}
-		for (Entry<String,List<ReplicationMessage>> e : message.subMessageListMap().entrySet()) {
+		for (Entry<String,List<ImmutableMessage>> e : message.subMessageListMap().entrySet()) {
 			Message subArrayMessage =  NavajoFactory.getInstance().createMessage(rootNavajo, e.getKey(),Message.MSG_TYPE_ARRAY);
 			cV.addMessage(subArrayMessage);
-			for (ReplicationMessage elt : e.getValue()) {
+			for (ImmutableMessage elt : e.getValue()) {
 				Message msgElt =  toMessage(e.getKey(), elt, rootNavajo);
 				subArrayMessage.addElement(msgElt);
 			}
 		} 
-		for (Entry<String,ReplicationMessage> e : message.subMessageMap().entrySet()) {
+		for (Entry<String,ImmutableMessage> e : message.subMessageMap().entrySet()) {
 			Message msgElt =  toMessage(e.getKey(), e.getValue(), rootNavajo);
 			cV.addMessage(msgElt);
 		}

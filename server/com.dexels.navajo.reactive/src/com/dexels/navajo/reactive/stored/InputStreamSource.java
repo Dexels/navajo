@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -20,7 +21,6 @@ import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
-import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.impl.json.ReplicationJSON;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,7 +46,7 @@ public class InputStreamSource implements ReactiveSource, ParameterValidator {
 	}
 
 	@Override
-	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ReplicationMessage> current) {
+	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
 		ReactiveResolvedParameters rsp = parameters.resolveNamed(context, current, Optional.empty(), this, sourceElement, relativePath);
 		
 		ObjectMapper objectMapper = new ObjectMapper().configure(JsonParser.Feature.AUTO_CLOSE_SOURCE,false); //.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE,false);
@@ -55,7 +55,7 @@ public class InputStreamSource implements ReactiveSource, ParameterValidator {
 		Iterator<ObjectNode> node;
 		try {
 			node = objectMapper.readerFor(ObjectNode.class).readValues(fis);
-			Flowable<DataItem> flow = Flowable.fromIterable(()->node).map(on->DataItem.of(ReplicationJSON.parseJSON(on)));
+			Flowable<DataItem> flow = Flowable.fromIterable(()->node).map(on->DataItem.of(ReplicationJSON.parseJSON(on).message()));
 			for (ReactiveTransformer trans : transformers) {
 				flow = flow.compose(trans.execute(context));
 			}

@@ -12,7 +12,8 @@ import javax.sql.DataSource;
 
 import org.junit.Before;
 import org.junit.Test;
-
+import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.adapters.stream.SQL;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Operand;
@@ -22,9 +23,6 @@ import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
 import com.dexels.navajo.script.api.SystemException;
-import com.dexels.replication.api.ReplicationMessage;
-import com.dexels.replication.factory.ReplicationFactory;
-import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 
 import io.reactivex.Single;
 import io.reactivex.functions.BiFunction;
@@ -40,12 +38,12 @@ public class TestSQL {
 	}
 	@Test(timeout=15000) 
 	public void testSQL() {
-		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
+//		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;
 		AtomicInteger count = new AtomicInteger();
 		SQL.query("dummy", "tenant", "select * from ORGANIZATION WHERE ROWNUM <50")
-//			.subscribeOn(Schedulers.io())
 			.map(msg->msg.without(Arrays.asList("SHORTNAME,UPDATEBY,REMARKS".split(","))))
+			
 //			.doOnNext(e->System.err.println(new String(ReplicationFactory.getInstance().serialize(e))))
 //			.observeOn(Schedulers.io())
 //			.map(msg->StreamDocument.replicationToMessage(msg, "Organization", true))
@@ -77,14 +75,11 @@ public class TestSQL {
 //	}
 //	
 
-	public Single<ReplicationMessage> getOrganizationAttributes(ReplicationMessage msg) throws TMLExpressionException, SystemException {
+	public Single<ImmutableMessage> getOrganizationAttributes(ImmutableMessage msg) throws TMLExpressionException, SystemException {
 		return SQL.query("dummy", "tenant", "select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?", msg.columnValue("ORGANIZATIONID"))
 			.observeOn(Schedulers.io())
 			.subscribeOn(Schedulers.io())
-//			.doOnNext(e->System.err.println(new String(ReplicationFactory.getInstance().serialize(e))))
-//			.map(m->StreamDocument.replicationToMessage(m, "Organization", false))
 			.reduce(msg, set("[ATTRIBNAME]", "[ATTRIBVALUE]"));
-			
 	}
 
 //	.reduce(msg, (e,r)->{
@@ -99,12 +94,13 @@ public class TestSQL {
 //		return set("[ATTRIBNAME]", "[ATTRIBVALUE]");
 //	}
 
-	public static ReplicationMessage empty() {
-		return ReplicationFactory.createReplicationMessage(null, System.currentTimeMillis(), ReplicationMessage.Operation.NONE, Collections.emptyList(), Collections.emptyMap(), Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Optional.of(()->{}));
+	public static ImmutableMessage empty() {
+		return ImmutableFactory.create(Collections.emptyMap(), Collections.emptyMap());
+//		return ReplicationFactory.createReplicationMessage(null, System.currentTimeMillis(), ReplicationMessage.Operation.NONE, Collections.emptyList(), Collections.emptyMap(), Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Optional.of(()->{}));
 	}
 	
 	
-	public BiFunction<ReplicationMessage,ReplicationMessage,ReplicationMessage> set(String... params) throws TMLExpressionException, SystemException {
+	public BiFunction<ImmutableMessage,ImmutableMessage,ImmutableMessage> set(String... params) throws TMLExpressionException, SystemException {
 		return (reduc,item)->{
 			String keyExpression = params[0];
 			String valueExpression = params[1];
@@ -118,7 +114,7 @@ public class TestSQL {
 	
 	
 
-	private Operand evaluate(String valueExpression, ReplicationMessage m) throws SystemException {
+	private Operand evaluate(String valueExpression, ImmutableMessage m) throws SystemException {
 //		System.err.println("Evaluating: "+valueExpression);
 		return Expression.evaluate(valueExpression, null, null, null,null,null,null,null,Optional.of(m),Optional.empty());
 	}
@@ -137,7 +133,7 @@ public class TestSQL {
 		};
 	}
 
-	public Function<ReplicationMessage,ReplicationMessage> rename(String key, String to) throws TMLExpressionException, SystemException {
+	public Function<ImmutableMessage,ImmutableMessage> rename(String key, String to) throws TMLExpressionException, SystemException {
 		return in->{
 			Object value = in.columnValue(key);
 			String type = in.columnType(key);

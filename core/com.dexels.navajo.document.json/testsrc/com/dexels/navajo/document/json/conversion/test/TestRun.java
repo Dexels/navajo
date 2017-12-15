@@ -10,12 +10,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.conversion.JsonTmlFactory;
 import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 
@@ -28,7 +28,7 @@ public class TestRun {
 	
 	@Test
 	public void testReplicationToTML()  {
-		ReplicationMessage msg = ReplicationFactory.getInstance().parseStream(getClass().getResourceAsStream("test.json"));
+		ImmutableMessage msg = ReplicationFactory.getInstance().parseStream(getClass().getResourceAsStream("test.json")).message();
 		Navajo nn =  JsonTmlFactory.getInstance().toFlatNavajo("Pool",msg);
 		Message standings = nn.getMessage("Pool").getMessage("standings");
 		Assert.assertEquals(14,standings.getArraySize());
@@ -37,7 +37,7 @@ public class TestRun {
 	
 	@Test
 	public void testClocktimeReplicationToTML()  {
-		ReplicationMessage msg = ReplicationFactory.getInstance().parseStream(getClass().getResourceAsStream("calendarday.json"));
+		ImmutableMessage msg = ReplicationFactory.getInstance().parseStream(getClass().getResourceAsStream("calendarday.json")).message();
 		Navajo nn =  JsonTmlFactory.getInstance().toFlatNavajo("CalendarDay",msg);
 		nn.write(System.err);
 		Message calendarday = nn.getMessage("CalendarDay");
@@ -59,7 +59,7 @@ public class TestRun {
 	
 	   @Test
     public void testTimestamp()  {
-	        ReplicationMessage msg = ReplicationFactory.getInstance().parseStream(getClass().getResourceAsStream("test3.json"));
+		    ImmutableMessage msg = ReplicationFactory.getInstance().parseStream(getClass().getResourceAsStream("test3.json")).message();
 	        Navajo nn =  JsonTmlFactory.getInstance().toFlatNavajo("Match",msg);
 	        Message match = nn.getMessage("Match");
 	        assertNotNull( match.getProperty("matchtime"));

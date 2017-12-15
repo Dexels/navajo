@@ -11,6 +11,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
@@ -22,7 +23,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
-import com.dexels.replication.api.ReplicationMessage;
 
 /**
  * <p>
@@ -51,19 +51,19 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 	}
 
 	@Override
-	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage)
+	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage)
 			throws NavajoException {
 		return evaluate(clause, inMessage, mappableTreeNode, parent, null,null,null,null,immutableMessage,paramMessage);
 	}
 
 	@Override
-	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ReplicationMessage> immutableMessage) throws NavajoException {
+	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ImmutableMessage> immutableMessage) throws NavajoException {
 		return evaluate(clause, inMessage, mappableTreeNode, parent, null, null, null, null, immutableMessage, Optional.empty());
 	}
 	
 	@Override
 	public Operand evaluate(String clause,  Navajo inMessage, Object mappableTreeNode, Message parent,
-			Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws NavajoException {
+			Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws NavajoException {
 		try {
 			return Expression.evaluate(clause, inMessage, (MappableTreeNode) mappableTreeNode, parent, currentParam,
 					selection, (TipiLink)tipiLink, params);
@@ -75,7 +75,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 	}
 
 	@Override
-	public Operand evaluate(String clause, Navajo inMessage, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws NavajoException {
+	public Operand evaluate(String clause, Navajo inMessage, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws NavajoException {
 		try {
 			return Expression.evaluate(clause, inMessage);
 		} catch (Throwable ex) {
@@ -331,4 +331,5 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 		}
 		return false;
 	}
+
 }

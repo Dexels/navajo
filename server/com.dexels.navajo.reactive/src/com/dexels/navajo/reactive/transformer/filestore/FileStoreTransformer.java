@@ -18,6 +18,7 @@ import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -28,7 +29,6 @@ import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
-import com.dexels.replication.factory.ReplicationFactory;
 
 import io.reactivex.FlowableOperator;
 import io.reactivex.FlowableTransformer;
@@ -89,7 +89,7 @@ public class FileStoreTransformer implements ReactiveTransformer, ParameterValid
 								logger.error("Error closing output file: "+path, e);
 								downstream.onError(e);
 							}
-							offer(DataItem.of(ReplicationFactory.fromMap(null, values, types)));
+							offer(DataItem.of(ImmutableFactory.create(values, types)));
 							operatorComplete(downstream);
 //							downstream.onNext(ReplicationFactory.fromMap(null, values, types));
 							downstream.onComplete();

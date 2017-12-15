@@ -10,13 +10,11 @@ public class BackpressureAdministrator implements Subscription {
 
 	private final long initialRequest;
 	private final Subscription downstreamSubsciption;
-	private final String operatorName;
 	private long incoming = 0;
 	private final AtomicLong requested = new AtomicLong();
 
 	public BackpressureAdministrator(String operatorName, long initialRequest, Subscription downstreamSubscription) {
 		this.initialRequest = initialRequest;
-		this.operatorName = operatorName;
 		this.downstreamSubsciption = downstreamSubscription;
 	}
 	

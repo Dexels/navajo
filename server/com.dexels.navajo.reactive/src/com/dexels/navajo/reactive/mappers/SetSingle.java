@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -14,7 +15,6 @@ import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
-import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
@@ -29,7 +29,7 @@ public class SetSingle implements ReactiveMerger, ParameterValidator {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
 		return context->(item,params)->{
 			// will use the second message as input, if not present, will use the source message
-			ReplicationMessage s = item.message();
+			ImmutableMessage s = item.message();
 			ReactiveResolvedParameters parms = r.resolveNamed(context, Optional.of(s), Optional.of(params.message()), this, xml, relativePath);
 			
 			for (Entry<String,Operand> elt : parms.resolveAllParams().entrySet()) {

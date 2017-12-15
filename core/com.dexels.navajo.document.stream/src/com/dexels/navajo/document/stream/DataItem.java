@@ -2,16 +2,16 @@ package com.dexels.navajo.document.stream;
 
 import java.util.List;
 
+import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.replication.api.ReplicationMessage;
-import com.dexels.replication.factory.ReplicationFactory;
 
 public class DataItem {
 
-	private final ReplicationMessage msg;
+	private final ImmutableMessage msg;
 	private final byte[] data;
 	private final NavajoStreamEvent streamEvent;
-	private final List<ReplicationMessage> msgList;
+	private final List<ImmutableMessage> msgList;
 	public final Type type;
 	public enum Type {
 		MESSAGE,
@@ -30,7 +30,7 @@ public class DataItem {
 		this.type = Type.EMPTY;
 	}
 	
-	public DataItem(ReplicationMessage msg) {
+	public DataItem(ImmutableMessage msg) {
 		this.msg = msg;
 		this.data = null;
 		this.streamEvent = null;
@@ -54,7 +54,7 @@ public class DataItem {
 		this.type = Type.EVENT;
 	}
 	
-	public DataItem(List<ReplicationMessage> msgList) {
+	public DataItem(List<ImmutableMessage> msgList) {
 		this.msg = null;
 		this.data = null;
 		this.streamEvent = null;
@@ -63,7 +63,7 @@ public class DataItem {
 	}
 	
 
-	public ReplicationMessage message() {
+	public ImmutableMessage message() {
 		if(this.msg==null) {
 			throw new NullPointerException("DataItem without message, can't request message of dataitem of type: "+this.type);
 		}
@@ -85,7 +85,7 @@ public class DataItem {
 		return data;
 	}
 
-	public List<ReplicationMessage> msgList() {
+	public List<ImmutableMessage> msgList() {
 		if(this.msgList==null) {
 			throw new NullPointerException("DataItem without msgList, can't request msgList of dataitem of type: "+this.type+" item: "+toString());
 		}
@@ -96,7 +96,7 @@ public class DataItem {
 		return new DataItem();
 	}
 
-	public static DataItem of(ReplicationMessage repl) {
+	public static DataItem of(ImmutableMessage repl) {
 		return new DataItem(repl);
 	}
 	public static DataItem of(byte[] data) {
@@ -107,7 +107,7 @@ public class DataItem {
 		return new DataItem(event);
 	}
 
-	public static DataItem of(List<ReplicationMessage> msgList) {
+	public static DataItem of(List<ImmutableMessage> msgList) {
 		return new DataItem(msgList);
 	}
 	
@@ -119,7 +119,7 @@ public class DataItem {
 		} else if(msgList!=null) {
 			return "msglist: "+msgList;		
 		} else {
-			return msg.toFlatString(ReplicationFactory.getInstance());
+			return msg.toFlatString(ImmutableFactory.getInstance());
 		}
 	}
 }

@@ -15,7 +15,7 @@ import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -49,14 +49,14 @@ public final class Expression {
 	}
 
 	
-	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ReplicationMessage> immutableMessage) throws TMLExpressionException, SystemException {
+	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ImmutableMessage> immutableMessage) throws TMLExpressionException, SystemException {
 		return evaluate(clause, inMessage, o, null, null, sel, tl, params, immutableMessage, Optional.empty());
 	}
 
 	
 	
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
-			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage)
+			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage)
 			throws TMLExpressionException, SystemException {
 //		Access a = params==null?null: (Access) params.get(ACCESS);
 		if (clause.trim().equals("")) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2413">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2461">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.jgit.feature.group" version="4.9.1.201712030800-r"/>
@@ -19,8 +19,8 @@
             <repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.22.v20171030"/>
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <unit id="com.dexels.thirdparty.feature.feature.group" version="1.11.0.RELEASE"/>
-            <repository location="http://repo.dexels.com/eclipse/3rdparty_1.11.0"/>
+            <unit id="com.dexels.thirdparty.feature.feature.group" version="1.11.8.RELEASE"/>
+            <repository location="http://repo.dexels.com/eclipse/3rdparty_1.11.8"/>
         </location>
     </locations>
     <includeBundles>
@@ -30,8 +30,11 @@
         <plugin id="com.dexels.appstore.core"/>
         <plugin id="com.dexels.appstore.server"/>
         <plugin id="com.dexels.hazelcast"/>
+        <plugin id="com.dexels.immutable.api"/>
+        <plugin id="com.dexels.immutable.impl"/>
         <plugin id="com.dexels.index.api"/>
         <plugin id="com.dexels.kafka.impl"/>
+        <plugin id="com.dexels.kafka.impl.rx2"/>
         <plugin id="com.dexels.log4j.httpappender"/>
         <plugin id="com.dexels.log4j.server"/>
         <plugin id="com.dexels.logback.redis"/>
@@ -40,7 +43,7 @@
         <plugin id="com.dexels.oauth.impl"/>
         <plugin id="com.dexels.oauth.web"/>
         <plugin id="com.dexels.osgi.bundlesync"/>
-        <plugin id="com.dexels.pubsub.api"/>
+        <plugin id="com.dexels.pubsub.rx2.api"/>
         <plugin id="com.dexels.replication.api"/>
         <plugin id="com.dexels.replication.impl"/>
         <plugin id="com.dexels.replication.impl.json"/>

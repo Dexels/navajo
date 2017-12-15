@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.StreamDocument;
@@ -44,11 +45,11 @@ public class TestEnvironment {
 
 	@Before
 	public void setup() {
-		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
+//		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		File root = new File("testscripts");
 		env = new ReactiveScriptEnvironment(root);
 		ReactiveScriptParser reactiveScriptParser = new ReactiveScriptParser();
-		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
+//		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;
 		reactiveScriptParser = new ReactiveScriptParser();
 		reactiveScriptParser.addReactiveSourceFactory(new SQLReactiveSourceFactory(),"sql");
@@ -113,6 +114,7 @@ public class TestEnvironment {
 	@Test 
 	public void testParseJSON() throws IOException {
 		InputStream is = getClass().getClassLoader().getResourceAsStream("person.json");
+		ImmutableFactory.setInstance(new JSON);
 		ReplicationMessage rm = ReplicationJSON.parseReplicationMessage(is, new ObjectMapper());
 		System.err.println(ReplicationFactory.getInstance().describe(rm));
 		

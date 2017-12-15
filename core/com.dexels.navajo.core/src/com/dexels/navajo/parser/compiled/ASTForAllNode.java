@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -17,7 +18,6 @@ import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
-import com.dexels.replication.api.ReplicationMessage;
 
 public final class ASTForAllNode extends SimpleNode {
 
@@ -53,7 +53,7 @@ public final class ASTForAllNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 				ContextExpression a = jjtGetChild(0).interpretToLambda();
 				ContextExpression b = jjtGetChild(1).interpretToLambda();
 				return interpret(doc,parentMsg,parentParamMsg,parentSel,mapNode,tipiLink,access,immutableMessage,paramMessage, a,b);
@@ -70,7 +70,7 @@ public final class ASTForAllNode extends SimpleNode {
      * @throws TMLExpressionException
      */
     public final Object interpret(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage, ContextExpression a,ContextExpression b) throws TMLExpressionException {
+			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage, ContextExpression a,ContextExpression b) throws TMLExpressionException {
 
         boolean matchAll = true;
 

@@ -1,9 +1,10 @@
 package com.dexels.navajo.document;
 
-import com.dexels.replication.api.ReplicationMessage;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import com.dexels.immutable.api.ImmutableMessage;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -15,10 +16,10 @@ import java.util.Optional;
  */
 
 public interface ExpressionEvaluator {
-  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ReplicationMessage> immutableMessage) throws NavajoException;
-  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws NavajoException;
-  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws NavajoException;
-  public Operand evaluate(String clause, Navajo inMessage, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) throws NavajoException;
+  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ImmutableMessage> immutableMessage) throws NavajoException;
+  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws NavajoException;
+  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Message currentParam,Selection selection, Object tipiLink, Map<String,Object> params, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws NavajoException;
+  public Operand evaluate(String clause, Navajo inMessage, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws NavajoException;
   public Map<Property,List<Property>> createDependencyMap(Navajo n) throws NavajoException;
   public List<Property> processRefreshQueue(Map<Property,List<Property>> depMap) throws NavajoException;
 }

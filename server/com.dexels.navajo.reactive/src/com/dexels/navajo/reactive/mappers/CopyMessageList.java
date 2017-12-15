@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -16,7 +17,6 @@ import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
-import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
@@ -24,7 +24,6 @@ import io.reactivex.functions.Function;
 public class CopyMessageList implements ReactiveMerger, ParameterValidator {
 
 	public CopyMessageList() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -33,7 +32,7 @@ public class CopyMessageList implements ReactiveMerger, ParameterValidator {
 		return context->(item,second)->{
 			ReactiveResolvedParameters resolved = r.resolveNamed(context, Optional.of(item.message()),Optional.empty(), this,xml,relativePath);
 			
-			List<ReplicationMessage> l = second.msgList();
+			List<ImmutableMessage> l = second.msgList();
 //			Map<String,Operand> named = r.resolveNamed(context, item, Optional.of(second));
 			return DataItem.of(item.message().withSubMessages(resolved.paramString("name"), l));
 		};

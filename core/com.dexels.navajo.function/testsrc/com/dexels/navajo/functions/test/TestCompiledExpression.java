@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -13,7 +14,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
-import com.dexels.replication.api.ReplicationMessage;
 
 public class TestCompiledExpression {
 
@@ -40,7 +40,7 @@ public class TestCompiledExpression {
 	@Test
 	public void parseFunction() throws TMLExpressionException {
 
-		Object o = ExpressionCache.getInstance().evaluate("ToUpper('ble')", input,(Message)null, (Message)null, (Selection)null, null, null,null,Optional.<ReplicationMessage>empty(),Optional.<ReplicationMessage>empty());
+		Object o = ExpressionCache.getInstance().evaluate("ToUpper('ble')", input,(Message)null, (Message)null, (Selection)null, null, null,null,Optional.<ImmutableMessage>empty(),Optional.<ImmutableMessage>empty());
 		System.err.println(": "+o);
 		Assert.assertEquals("BLE", o);
 	}

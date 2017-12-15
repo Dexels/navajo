@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -20,7 +21,6 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
 import com.dexels.navajo.util.Util;
-import com.dexels.replication.api.ReplicationMessage;
 
 /**
  *
@@ -56,7 +56,7 @@ public final class ASTTmlNode extends SimpleNode {
 			
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ReplicationMessage> immutableMessage, Optional<ReplicationMessage> paramMessage) {
+					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 				List<Property> match = null;
 				List<Object> resultList = new ArrayList<Object>();
 		        boolean singleMatch = true;
@@ -116,11 +116,11 @@ public final class ASTTmlNode extends SimpleNode {
 
 		        try {
 		        		if(!isParam && immutableMessage!=null && immutableMessage.isPresent()) {
-		        			ReplicationMessage rm = immutableMessage.get();
+		        			ImmutableMessage rm = immutableMessage.get();
 		        			return parseImmutablePath(text, rm);
 		        		}
 		        		if(isParam && paramMessage!=null && paramMessage.isPresent()) {
-		        			ReplicationMessage rm = paramMessage.get();
+		        			ImmutableMessage rm = paramMessage.get();
 		        			return parseImmutablePath(text, rm);
 		        			
 		        		}
@@ -345,7 +345,8 @@ public final class ASTTmlNode extends SimpleNode {
 		            return Boolean.valueOf(false);
 			}
 
-			private Object parseImmutablePath(String text, ReplicationMessage rm) {
+			// TODO support actual path parser
+			private Object parseImmutablePath(String text, ImmutableMessage rm) {
 				return rm.columnValue(text);
 			}
 		};
