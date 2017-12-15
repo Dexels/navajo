@@ -20,7 +20,6 @@ import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMapper;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
-import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 
 import io.reactivex.functions.Function;
 

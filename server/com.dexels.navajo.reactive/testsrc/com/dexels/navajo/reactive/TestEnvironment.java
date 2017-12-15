@@ -27,8 +27,6 @@ import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
 import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
 import com.dexels.replication.api.ReplicationMessage;
-import com.dexels.replication.factory.ReplicationFactory;
-import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 import com.dexels.replication.impl.json.ReplicationJSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -114,9 +112,9 @@ public class TestEnvironment {
 	@Test 
 	public void testParseJSON() throws IOException {
 		InputStream is = getClass().getClassLoader().getResourceAsStream("person.json");
-		ImmutableFactory.setInstance(new JSON);
+		ImmutableFactory.setInstance(ImmutableFactory.createParser());
 		ReplicationMessage rm = ReplicationJSON.parseReplicationMessage(is, new ObjectMapper());
-		System.err.println(ReplicationFactory.getInstance().describe(rm));
+		System.err.println(ImmutableFactory.getInstance().describe(rm.message()));
 		
 	}
 

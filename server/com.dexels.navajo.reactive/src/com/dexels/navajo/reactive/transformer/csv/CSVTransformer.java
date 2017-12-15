@@ -24,7 +24,6 @@ import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
-import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.FlowableOperator;
 import io.reactivex.FlowableTransformer;

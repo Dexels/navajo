@@ -22,14 +22,13 @@ public class ReduceTransformer implements ReactiveTransformer {
 
 	private Function<StreamScriptContext, BiFunction<DataItem, DataItem, DataItem>> reducers;
 
-	private final ReactiveParameters parameters;
+//	private final ReactiveParameters parameters;
 	
 	private final static Logger logger = LoggerFactory.getLogger(ReduceTransformer.class);
 
 	
 	public ReduceTransformer(Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>> reducers,ReactiveParameters parameters) {
 		this.reducers = reducers;
-		this.parameters = parameters;
 	}
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {

@@ -56,7 +56,8 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
 Export-Package: com.dexels.navajo.adapters.stream,
  hu.akarnokd.rxjava2.debug
 Bundle-ClassPath: .,
- lib/rxjava2-extensions-0.17.5.jar,
  lib/guava-mini-0.1.1.jar,
- lib/rxjava2-jdbc-0.1-RC19.jar
+ lib/rxjava-extras-0.8.0.11.jar,
+ lib/rxjava2-extensions-0.17.5.jar,
+ lib/rxjava2-jdbc-0.1-RC23.jar
 Require-Bundle: com.oracle.jdbc.driver;bundle-version="11.2.31"

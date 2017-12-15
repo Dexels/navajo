@@ -14,7 +14,6 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.replication.api.ReplicationMessage;
 
 import io.reactivex.functions.Function3;
 
