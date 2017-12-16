@@ -1,22 +1,23 @@
 package com.dexels.navajo.scala.document
 
 import com.dexels.replication.api.ReplicationMessage
-import com.dexels.replication.impl.ReplicationMessageImpl
 import com.dexels.replication.factory.ReplicationFactory
 import java.util.Collections
+import com.dexels.immutable.api.ImmutableMessage
+import com.dexels.immutable.factory.ImmutableFactory
 
 
-class ScalaMessage(val parent: ReplicationMessage) {
+class ScalaMessage(val parent: ImmutableMessage) {
 
   def this() {
-    this(ReplicationFactory.fromMap(null, Collections.emptyMap(), Collections.emptyMap()))
+    this(ImmutableFactory.empty());
   }
   
   /* Getters */
   def get(key : String) : ScalaMessage = {
     val optionalMsg = parent.subMessage(key)
     optionalMsg.get match {
-      case msg : ReplicationMessage => new ScalaMessage(optionalMsg.get)
+      case msg : ImmutableMessage => new ScalaMessage(optionalMsg.get)
       case _ => null
     }
   }
