@@ -21,19 +21,9 @@ public class TestStreamingInput  {
 		File tempFile = File.createTempFile("simpleresponse", ".xml");
 		tempFile.deleteOnExit();
 		FileOutputStream out = new FileOutputStream(tempFile);
-//		SQL.query("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
-//		.doOnNext(m->System.err.println("Message: "+m))
-//		.doOnComplete(()->System.err.println("Done!"))
-//		.compose(StreamDocument.toArray("Organizations"))
 
 		SQL.query("dummy","sometenant", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'", new Object[]{})
-//		SQL.query("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
 			.doOnNext(m->System.err.println("Message: "+m))
-
-			
-//			.compose(m->StreamDocument.toArray("Organizations"))
-
-			//			.doOnComplete(()->System.err.println("Done!"))
 			.compose(StreamDocument.toMessageEvent("Organizations",true))
 			.compose(StreamDocument.inNavajo("dummy",  Optional.empty(),  Optional.empty()))
 			.lift(StreamDocument.serialize())
@@ -57,7 +47,6 @@ public class TestStreamingInput  {
 				@Override
 				public void onNext(byte[] b) {
 					try {
-						System.err.println("Item: "+new String(b));
 						out.write(b);
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -71,17 +60,7 @@ public class TestStreamingInput  {
 			});
 	}
 	
-	
-	
-//	SQL.query("dummy","sometenant", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
-//	.doOnNext(m->System.err.println("Message: "+m))
-//	.compose(m->StreamDocument.toArray("Organizations"))
-//	.compose(StreamDocument.inNavajo("dummu", "username", "password"))
-//	.lift(StreamDocument.serialize())
-//	.doOnComplete(()->System.err.println("Done query method"))
-//	.subscribe(new Subscriber<byte[]>() {
-//
-	
+
 	@Test @Ignore
 	public void testSingleQuery() throws IOException {
 
@@ -93,8 +72,6 @@ public class TestStreamingInput  {
 			.doOnNext(m->System.err.println("Message: "+m))
 			.doOnComplete(()->System.err.println("Done!"))
 			.compose(StreamDocument.toMessageEvent("Organizations",true))
-//			.flatMap(m->m.streamFlowable())
-//			.compose(StreamDocument.inArray("Organizations"))
 			.compose(StreamDocument.inNavajo("dummy",  Optional.empty(),  Optional.empty()))
 			.lift(StreamDocument.serialize())
 			.subscribe(new Subscriber<byte[]>() {

@@ -16,7 +16,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class TestHttp {
 
-	@Test @Ignore
+	@Test 
 	public void testHttpGet() throws MalformedURLException {
 		
 		String weather = HTTP.get("http://api.openweathermap.org/data/2.5/weather?q=Amsterdam&APPID=c9a22840a45f9da6f235c718475c4f08&mode=xml")
@@ -33,27 +33,20 @@ public class TestHttp {
 	}
 
 
-	@Test @Ignore
+	@Test
 	public void testBiggerDownload() throws MalformedURLException, InterruptedException {
-		String url = "https://repo.dexels.com/nexus/service/local/repositories/central/content/org/apache/tika/tika-bundle/1.6/tika-bundle-1.6.jar";
-//		String url = "http://spiritus.dexels.com:9090/nexus/content/repositories/obr2/.meta/obr.xml";
+//		String url = "https://repo.dexels.com/nexus/service/local/repositories/central/content/org/apache/tika/tika-bundle/1.6/tika-bundle-1.6.jar";
+		String url = "http://spiritus.dexels.com:9090/nexus/content/repositories/obr2/.meta/obr.xml";
 //		String url = "http://localhost:8080/clubs.xml";
 		long l = HTTP.get(url)
 			.lift(XML.parseFlowable(10))
 			.flatMap(x->x)
-//			.lift(NavajoStreamOperatorsNew.parse())
-//			.zipWith(timer, (a,b)->a)
 			.count().blockingGet();
 		System.err.println(">> "+l);
-//			.blockingForEach(e->System.err.println(e));
-//		Thread.sleep(40000);
 	}
 	
-	@Test @Ignore
+	@Test
 	public void testBackPressure() throws InterruptedException {
-//		String xml1 = "<tag><ble";
-//		String xml2 = "bla/></tag>";
-		
 		System.setProperty("rx2.buffer-size", "10");
 		Flowable<Long> timer = Flowable.interval(100, TimeUnit.MILLISECONDS);
 		String[] xmls = new String[]{"<tag a=\"b\"><ble b=\"c\"> ","beeb</ble>","<blub/></tag>"};
@@ -66,14 +59,5 @@ public class TestHttp {
 				.zipWith(timer, (a,b)->a)
 				.doOnComplete(()->System.err.println("done"))
 				.blockingForEach(e->System.err.println(e));
-		
-//			Thread.sleep(1000);
-				
-//		HTTP.get(url)
-//			.lift(XML2.parse())
-////			.lift(NavajoStreamOperatorsNew.parse())
-//			.zipWith(timer, (a,b)->a)
-//			.subscribe(e->System.err.println(e));
-//		Thread.sleep(40000);
 	}
 }

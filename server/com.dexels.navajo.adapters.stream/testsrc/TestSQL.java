@@ -38,42 +38,20 @@ public class TestSQL {
 	}
 	@Test(timeout=15000) 
 	public void testSQL() {
-//		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;
 		AtomicInteger count = new AtomicInteger();
 		SQL.query("dummy", "tenant", "select * from ORGANIZATION WHERE ROWNUM <50")
 			.map(msg->msg.without(Arrays.asList("SHORTNAME,UPDATEBY,REMARKS".split(","))))
-			
-//			.doOnNext(e->System.err.println(new String(ReplicationFactory.getInstance().serialize(e))))
-//			.observeOn(Schedulers.io())
-//			.map(msg->StreamDocument.replicationToMessage(msg, "Organization", true))
 			.flatMapSingle(e->getOrganizationAttributes(e))
-//			.map(e->set("'ORGANIZATIONID'","ToLower([ORGANIZATIONID])"))
-//			.map(e->delete("LASTUPDATE").apply(e))
 			.map(e->rename("ORGANIZATIONID","ID").apply(e))
-//			.map(msg->StreamDocument.messageToReplication(msg))
 			.flatMap(msg->StreamDocument.replicationMessageToStreamEvents("Organization", msg, false))
-			
-			//			.concatMap(msg->StreamDocument.replicationMessageToStreamEvents("Organization", msg, true))
-			
 			.compose(StreamDocument.inArray("Organization"))
-			
-//			.map(msg->StreamDocument.s(msg))
-//			.
 			.lift(StreamDocument.serialize())
-			
 			.blockingForEach(e->{
-//				System.err.println(":: "+new String(e));
 				count.incrementAndGet();
 			});
 		System.err.println("Total: "+count.get());
 	}
-	
-//	private ReplicationMessage repl(ReplicationMessage m) {
-//		Message mm = StreamDocument.replicationToMessage(m, "", true);
-//		return (ReplicationMessage)(Expression.evaluate("Without('Remarks')", null, null, m).value));
-//	}
-//	
 
 	public Single<ImmutableMessage> getOrganizationAttributes(ImmutableMessage msg) throws TMLExpressionException, SystemException {
 		return SQL.query("dummy", "tenant", "select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?", msg.columnValue("ORGANIZATIONID"))
@@ -82,21 +60,8 @@ public class TestSQL {
 			.reduce(msg, set("[ATTRIBNAME]", "[ATTRIBVALUE]"));
 	}
 
-//	.reduce(msg, (e,r)->{
-//		set("[item:ATTRIBNAME]", "")
-//		String attribute = (String) r.columnValue("ATTRIBNAME");
-//		Object value = r.columnValue("ATTRIBVALUE");
-//		ReplicationMessage res = e.with(attribute, value, r.columnType("ATTRIBVALUE")); 
-//		return res;
-//	});
-//
-//	public BiFunction<Message,Message,Message> reduce() throws TMLExpressionException, SystemException {
-//		return set("[ATTRIBNAME]", "[ATTRIBVALUE]");
-//	}
-
 	public static ImmutableMessage empty() {
 		return ImmutableFactory.create(Collections.emptyMap(), Collections.emptyMap());
-//		return ReplicationFactory.createReplicationMessage(null, System.currentTimeMillis(), ReplicationMessage.Operation.NONE, Collections.emptyList(), Collections.emptyMap(), Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Optional.of(()->{}));
 	}
 	
 	
@@ -115,7 +80,6 @@ public class TestSQL {
 	
 
 	private Operand evaluate(String valueExpression, ImmutableMessage m) throws SystemException {
-//		System.err.println("Evaluating: "+valueExpression);
 		return Expression.evaluate(valueExpression, null, null, null,null,null,null,null,Optional.of(m),Optional.empty());
 	}
 	
