@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2466">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2471">
     <locations>
-        <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.jgit.feature.group" version="4.9.1.201712030800-r"/>
-            <unit id="org.eclipse.jgit.http.apache.feature.group" version="4.9.1.201712030800-r"/>
-            <unit id="org.eclipse.jgit.lfs.feature.group" version="4.9.1.201712030800-r"/>
-            <repository location="http://download.eclipse.org/egit/updates/"/>
-        </location>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
             <unit id="org.eclipse.equinox.sdk.feature.group" version="3.11.0.v20150602-1417"/>
@@ -21,6 +15,12 @@
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="com.dexels.thirdparty.feature.feature.group" version="1.11.10.RELEASE"/>
             <repository location="http://repo.dexels.com/eclipse/3rdparty_1.11.10"/>
+        </location>
+        <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+            <unit id="org.eclipse.jgit.feature.group" version="4.9.2.201712150930-r"/>
+            <unit id="org.eclipse.jgit.http.apache.feature.group" version="4.9.2.201712150930-r"/>
+            <unit id="org.eclipse.jgit.lfs.feature.group" version="4.9.2.201712150930-r"/>
+            <repository location="http://download.eclipse.org/egit/updates/"/>
         </location>
     </locations>
     <includeBundles>
@@ -223,6 +223,8 @@
         <plugin id="org.eclipse.jgit"/>
         <plugin id="org.eclipse.jgit.archive"/>
         <plugin id="org.eclipse.jgit.http.apache"/>
+        <plugin id="org.eclipse.jgit.lfs"/>
+        <plugin id="org.eclipse.jgit.lfs.server"/>
         <plugin id="org.eclipse.osgi"/>
         <plugin id="org.eclipse.osgi.services"/>
         <plugin id="org.eclipse.osgi.util"/>
