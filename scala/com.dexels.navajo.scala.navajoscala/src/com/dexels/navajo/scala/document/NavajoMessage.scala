@@ -5,7 +5,7 @@ import com.dexels.navajo.document.Property
 import java.util.Date
 import collection.JavaConverters._
 import java.util.StringTokenizer
-
+import scala.collection.JavaConverters._
 
 class NavajoMessage(val parent: Message) {
 
@@ -186,6 +186,15 @@ class NavajoMessage(val parent: Message) {
           }
           case _ =>  new RuntimeException("Invalid boolean: ")
         }
+    }
+    None
+  }
+  
+  def getList(key : String) : Option[List[String]] = {
+    val prop = parent.getProperty(key)
+    if (prop != null) {
+       val value  =  prop.getTypedValue.asInstanceOf[java.util.List[String]].asScala.toList
+       return Some(value)
     }
     None
   }
