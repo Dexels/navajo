@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.navajo.document.types.Binary;
@@ -19,7 +20,7 @@ public class TestSwift {
 	
 	private static SwiftReactiveImpl osi;
 
-	@BeforeClass
+//	@BeforeClass
 	public static void setup() throws IOException {
 		osi = new SwiftReactiveImpl();
 		Map<String,Object> settings = new HashMap<>();
@@ -38,13 +39,13 @@ public class TestSwift {
 		instance.addBinaryStore(osi, settings);
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testCreateContainer() throws IOException {
 		osi.createContainer();
 	}
 
 	
-	@Test
+	@Test @Ignore
 	public void test() throws IOException {
 
 		Binary b1 = new Binary(getClass().getResourceAsStream("logo.gif"));
@@ -70,14 +71,14 @@ public class TestSwift {
 //		}
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testStoreURLBasedBinary() throws IOException {
 		URL u = new URL("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
 		Binary b = new Binary(u,true);	
 		osi.store(b);
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testFactory() throws IOException {
 //		BinaryStore os = BinaryStoreFactory.getInstance().getBinaryStore("testresource", "Generic");
 		Map<String,String> meta = new HashMap<String,String>();
@@ -95,7 +96,7 @@ public class TestSwift {
 //		os.get("test/factory");
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testNullMime() throws IOException {
 		Map<String,String> meta = new HashMap<String,String>();
 		meta.put("aap", "noot");
@@ -105,7 +106,7 @@ public class TestSwift {
 //		osi.set("test/factory",null, b, meta);
 	}	
 	
-	@Test 
+	@Test @Ignore
 	public void testBrokenMime() throws IOException {
 		Map<String,String> meta = new HashMap<String,String>();
 		meta.put("aap", "noot");
