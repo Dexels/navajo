@@ -4,7 +4,7 @@ Bundle-Name: Navajo Console commands
 Bundle-SymbolicName: com.dexels.navajo.dev.console
 Bundle-Version: 3.0.37.qualifier
 Bundle-Vendor: DEXELS
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.context;version="1.0.0",
  com.dexels.navajo.client.nql,

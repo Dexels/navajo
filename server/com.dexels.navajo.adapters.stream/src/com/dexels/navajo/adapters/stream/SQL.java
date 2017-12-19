@@ -14,6 +14,7 @@ import org.davidmoten.rx.jdbc.Database;
 import org.dexels.grus.GrusProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.dexels.config.runtime.TestConfig;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;

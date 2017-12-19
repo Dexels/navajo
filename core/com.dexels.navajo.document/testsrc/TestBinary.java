@@ -146,7 +146,7 @@ public class TestBinary {
 	public void testBinarySerialize() throws IOException, ClassNotFoundException {
 		NavajoFactory.getInstance().setSandboxMode(true);
 		Binary binary_x = new Binary(getClass().getResourceAsStream("binary1.txt"));
-		long l = binary_x.getLength();
+		binary_x.getLength();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(baos);
 		oos.writeObject(binary_x);
@@ -269,9 +269,13 @@ public class TestBinary {
 		Binary b1 = new Binary(u,false);
 		
 		int i = 0;
+		int size = 0;
 		for (byte[] e : b1.getDataAsIterable(128)) {
 			i++;
+			size += e.length;
 		}
+		System.err.println(">>> "+size);
+		Assert.assertEquals(5969, size);
 		Assert.assertEquals(93, i);
 	}
 

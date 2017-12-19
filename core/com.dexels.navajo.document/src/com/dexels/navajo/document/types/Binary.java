@@ -842,7 +842,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 		};
     }
     
-    public FileChannel getDataAsChannel() {
+    @SuppressWarnings("resource")
+	public FileChannel getDataAsChannel() {
     
 //    	if (NavajoFactory.getInstance().isSandboxMode()) {
 //		ByteArrayInputStream bais = new ByteArrayInputStream(NavajoFactory.getInstance().getHandle(dataFile.getName()));

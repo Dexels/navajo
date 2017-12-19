@@ -1,10 +1,6 @@
-import java.io.File;
 import java.net.MalformedURLException;
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.navajo.adapters.stream.HTTP;
@@ -12,7 +8,6 @@ import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
 
 import io.reactivex.Flowable;
-import io.reactivex.schedulers.Schedulers;
 
 public class TestHttp {
 

@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.adapters.stream.SQL;
