@@ -24,11 +24,32 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
     private static final Logger logger = LoggerFactory.getLogger(PropertyFileDescriptionProvider.class);
 
     private ResourceBundleStore resourceBundle;
+    private boolean enabled = true;
 
     private Map<String, ResourceBundle> cachedProperties = new HashMap<>();
 
+
+    public void activate(Map<String, Object> settings) throws IOException {
+        if (settings.containsKey("enabled")) {
+            String en = (String) settings.get("enabled");
+            if ("false".equalsIgnoreCase(en)) {
+                enabled = false;
+                logger.warn("PropertyFileDescriptionProvider disabled!");
+            }
+        }
+        if (enabled) logger.info("Activating PropertyFileDescriptionProvider");
+
+    }
+
+    public void deactivate() {
+        logger.info("Deactivating PropertyFileDescriptionProvider");
+    }
+
+    
     @Override
     public void updatePropertyDescriptions(Navajo in, Navajo out, Access access) {
+        if (!enabled) return;
+        
         try {
             String locale = in.getHeader().getHeaderAttribute("locale");
             if (locale==null) {
@@ -48,11 +69,7 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
                     return;
                 }
             }
-            if (properties == null) {
-                // no properties!
-                return;
-            }
-            
+
             for (Message message : out.getAllMessages()) {
                 updateMessage(properties, message, access);
             }
@@ -123,15 +140,6 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
 
     private String getFqdnPropertyLookupKey(Property property, String service) {
         return service + ":" + property.getFullPropertyName();
-    }
-
-    public void activate() throws IOException {
-        logger.info("Activating PropertyFileDescriptionProvider");
-
-    }
-
-    public void deactivate() {
-        logger.info("Deactivating PropertyFileDescriptionProvider");
     }
 
     public void setResourceBundle(ResourceBundleStore rb) {
