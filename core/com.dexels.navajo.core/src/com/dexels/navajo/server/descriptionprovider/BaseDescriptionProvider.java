@@ -32,10 +32,11 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 
 
 	@Override
-	public void updatePropertyDescriptions(Navajo in, Navajo out, String tenant) throws NavajoException {
+	public void updatePropertyDescriptions(Navajo in, Navajo out, Access access) throws NavajoException {
 		String locale = in.getHeader().getHeaderAttribute("locale");
 		if (locale==null) {
 			return;
+		    //locale = "NL";
 		}
 		Header outHeader = out.getHeader();
 		Header inHeader = in.getHeader();
@@ -50,7 +51,7 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 		List<Message> a = out.getAllMessages();
 		for (Iterator<Message> iter = a.iterator(); iter.hasNext();) {
 			Message element =  iter.next();
-			updateMessage(in,element,locale,tenant);
+			updateMessage(in,element,locale, access.getTenant());
 		}
 	}
 

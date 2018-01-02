@@ -4,5 +4,5 @@
    <service>
       <provide interface="com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface"/>
    </service>
-   <reference bind="setNavajoIOConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoIOConfig" name="NavajoIOConfig" policy="dynamic" unbind="clearNavajoIOConfig"/>
+   <reference bind="setResourceBundle" cardinality="1..1" interface="com.dexels.resourcebundle.ResourceBundleStore" name="ResourceBundle" policy="dynamic" unbind="clearResourceBundle"/>
 </scr:component>

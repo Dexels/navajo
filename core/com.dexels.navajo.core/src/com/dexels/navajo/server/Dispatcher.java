@@ -141,7 +141,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     private NavajoConfigInterface navajoConfig;
 
     private EventAdmin eventAdmin;
+    private final Map<String, DescriptionProviderInterface> desciptionProviders = new HashMap<>();
 
+    
     private String keyStore;
     private String keyPassword;
 
@@ -1162,7 +1164,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 access.setFinished();
 
                 // Translate property descriptions.
-                updatePropertyDescriptions(inMessage, outMessage, access.getTenant());
+                updatePropertyDescriptions(inMessage, outMessage, access);
                 access.storeStatistics(h);
 
                 // Call Navajoresponse event.
@@ -1205,16 +1207,30 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         
     }
 
-    private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage, String tenant) {
-        final DescriptionProviderInterface descriptionProvider = navajoConfig.getDescriptionProvider();
-        if (descriptionProvider == null) {
+    private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage, Access access) {
+        if (desciptionProviders.size() == 0) {
+            // Non-osgi fallback
+            final DescriptionProviderInterface descriptionProvider = navajoConfig.getDescriptionProvider();
+            if (descriptionProvider == null) {
+                return;
+            }
+            try {
+                descriptionProvider.updatePropertyDescriptions(inMessage, outMessage, access);
+            } catch (NavajoException e) {
+                logger.error("Error updating descriptions in {}", descriptionProvider.getClass().getName(), e);
+            }
             return;
         }
-        try {
-            descriptionProvider.updatePropertyDescriptions(inMessage, outMessage,tenant);
-        } catch (NavajoException e) {
-            logger.error("Error: ", e);
+
+        
+        for (DescriptionProviderInterface dpi : desciptionProviders.values()) {
+            try {
+                dpi.updatePropertyDescriptions(inMessage, outMessage, access);
+            } catch (NavajoException e) {
+                logger.error("Error updating descriptions in {}", dpi.getClass().getName(), e);
+            }
         }
+      
     }
 
     /**
@@ -1557,6 +1573,15 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
     public void clearAuthenticationMethodBuilder(AuthenticationMethodBuilder eventAdmin) {
         this.authMethodBuilder = null;
+    }
+    
+    public void addDescriptionProvider(DescriptionProviderInterface dpi) {
+        desciptionProviders.put(dpi.getClass().getName(), dpi);
+
+    }
+    
+    public void removeDescriptionProvider(DescriptionProviderInterface dpi) {
+        desciptionProviders.remove(dpi.getClass().getName());
     }
 
 }
