@@ -24,7 +24,7 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
     private static final Logger logger = LoggerFactory.getLogger(PropertyFileDescriptionProvider.class);
 
     private ResourceBundleStore resourceBundle;
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     private Map<String, ResourceBundle> cachedProperties = new HashMap<>();
 
@@ -32,12 +32,11 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
     public void activate(Map<String, Object> settings) throws IOException {
         if (settings.containsKey("enabled")) {
             String en = (String) settings.get("enabled");
-            if ("false".equalsIgnoreCase(en)) {
-                enabled = false;
-                logger.warn("PropertyFileDescriptionProvider disabled!");
+            if ("true".equalsIgnoreCase(en)) {
+                enabled = true;
             }
         }
-        if (enabled) logger.info("Activating PropertyFileDescriptionProvider");
+        logger.info("PropertyFileDescriptionProvider is enabled? {}", enabled);
 
     }
 
