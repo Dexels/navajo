@@ -58,7 +58,7 @@ public final class Size extends FunctionInterface {
           	return new Integer( ((Object[]) arg).length);
           } 
           
-        else if (!(arg instanceof ArrayList)) {
+        else if (!(arg instanceof List)) {
             throw new TMLExpressionException("Expected list argument for size() function.");
         }
         

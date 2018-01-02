@@ -1,7 +1,6 @@
 package com.dexels.navajo.functions;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.dexels.navajo.document.Operand;
@@ -31,7 +30,7 @@ public final class FormatStringList extends FunctionInterface {
 
         if (a instanceof String)
             return a;
-        if (!(a instanceof ArrayList))
+        if (!(a instanceof List))
             throw new TMLExpressionException("FormatStringList: invalid operand: " + a.getClass().getName());
         if (!(b instanceof String))
             throw new TMLExpressionException("FormatStringList: invalid operand: " + a.getClass().getName());
