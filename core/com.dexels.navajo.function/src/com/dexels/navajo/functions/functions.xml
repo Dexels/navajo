@@ -411,6 +411,11 @@
 		<input></input>
 		<result>string</result>
 	</function>
+    <function name="GetRequestLocale" class="com.dexels.navajo.functions.GetRequestLocale">
+        <description>Returns the locale of the Navajo request</description>
+        <input></input>
+        <result>string</result>
+    </function>
 	<function name="GetSelectedName" class="com.dexels.navajo.functions.GetSelectedName">
 		<description>Gets the name of a selected property</description>
 		<input />
