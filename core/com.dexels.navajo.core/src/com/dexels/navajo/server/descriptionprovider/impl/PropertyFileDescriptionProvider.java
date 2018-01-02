@@ -32,11 +32,11 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
         try {
             String locale = in.getHeader().getHeaderAttribute("locale");
             if (locale==null) {
-                //return;
+                return;
                 
                 
                 // TODO AFDF
-                in.getHeader().setHeaderAttribute("locale", "NL");
+//                in.getHeader().setHeaderAttribute("locale", "NL");
             }
             
             ResourceBundle properties = cachedProperties.get(getCacheKey(in, access));

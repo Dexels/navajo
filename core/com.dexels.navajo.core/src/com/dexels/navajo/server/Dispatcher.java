@@ -1208,10 +1208,20 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
 
     private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage, Access access) {
-//        final DescriptionProviderInterface descriptionProvider = navajoConfig.getDescriptionProvider();
-//        if (descriptionProvider == null) {
-//            return;
-//        }
+        if (desciptionProviders.size() == 0) {
+            // Non-osgi fallback
+            final DescriptionProviderInterface descriptionProvider = navajoConfig.getDescriptionProvider();
+            if (descriptionProvider == null) {
+                return;
+            }
+            try {
+                descriptionProvider.updatePropertyDescriptions(inMessage, outMessage, access);
+            } catch (NavajoException e) {
+                logger.error("Error updating descriptions in {}", descriptionProvider.getClass().getName(), e);
+            }
+            return;
+        }
+
         
         for (DescriptionProviderInterface dpi : desciptionProviders.values()) {
             try {
