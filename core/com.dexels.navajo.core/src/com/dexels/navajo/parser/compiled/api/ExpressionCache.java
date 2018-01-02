@@ -64,7 +64,7 @@ public class ExpressionCache {
 				@Override
 				public void run() {
 					printStats();
-				}}, new Date(), TimeUnit.MINUTES.toMillis(1));
+				}}, new Date(), TimeUnit.MINUTES.toMillis(5));
 		
 
 		} catch (Throwable e) {
