@@ -116,8 +116,7 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
     }
 
     // A property can be reached by either the property name,
-    // the message path + property name, or the
-    // webservice + message path + property name
+    // or the webservice + : + full property path
     private String getPropertyLookupKey(Property property) {
         return property.getName();
     }
