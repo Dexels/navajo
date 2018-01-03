@@ -13,6 +13,7 @@ public class Dependency {
     public static final int WORKFLOW_DEPENDENCY = 6;
     public static final int TIPI_DEPENDENCY = 7;
     public static final int ARTICLE_DEPENDENCY = 8;
+    public static final int JAVA_DEPENDENCY = 9;
     
     private int type;
     private String scriptFile;
@@ -78,6 +79,8 @@ public class Dependency {
             scriptFileRel = scriptFile.split("workflows")[1];
         } else if (type == TIPI_DEPENDENCY) {
             scriptFileRel = scriptFile.split("tipi")[1];
+        } else if (type == JAVA_DEPENDENCY) {
+            scriptFileRel = scriptFile.split("src")[1];
         } else if (type == ARTICLE_DEPENDENCY) {
             scriptFileRel = scriptFile.split("article")[1];
         } else if (type == TASK_DEPENDENCY) {
