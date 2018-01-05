@@ -158,7 +158,12 @@ class NavajoMessage(val parent: Message) {
   def getString(key : String) : Option[String] = {
     val prop = parent.getProperty(key)
     if (prop != null && prop.getValue != null) {
-      return Some(prop.getTypedValue.asInstanceOf[String])
+      val value : Any = prop.getTypedValue
+      value match {
+        case value : String => return Some(value)
+        case value : Integer => return Some(value.toString)
+        case _ =>  new RuntimeException("Invalid string: ")
+      }
     }
     None
   }
@@ -176,7 +181,7 @@ class NavajoMessage(val parent: Message) {
   def getInt(key : String) : Option[Int] = {
     val prop = parent.getProperty(key)
     if (prop != null) {
-      val value : Any =  prop.getTypedValue
+      val value : Any = prop.getTypedValue
       value match {
         case value : Integer => return Some(value)
         case value : String => return Some(value.toInt)
