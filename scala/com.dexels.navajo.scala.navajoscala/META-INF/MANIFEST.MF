@@ -8,7 +8,7 @@ Export-Package: com.dexels.navajo.scala,
  com.dexels.navajo.scala.document
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .
-Import-Package: com.dexels.immutable.api;version="2.0.0",
+Import-Package: com.dexels.immutable.api,
  com.dexels.immutable.factory;version="1.2.0",
  com.dexels.navajo.client,
  com.dexels.navajo.document,

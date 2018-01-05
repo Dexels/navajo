@@ -31,14 +31,28 @@ class NavajoMessage(val parent: Message) {
 
   def addMessage(name: String): NavajoMessage = {
     val message = NavajoFactory.createMessage(rootDoc, name)
-    message.parent.write(System.out);
     new NavajoMessage(parent.addMessage(message.parent))
   }
 
   def addMessage(message : NavajoMessage ): NavajoMessage = {
     message.parent.setRootDoc(parent.getRootDoc)
     parent.addElement(message.parent)
-    return message
+    message
+  }
+  
+  def copyMessage(message : NavajoMessage ): NavajoMessage = {
+    val newMessage = NavajoFactory.createMessage(rootDoc, message.name)
+    parent.addMessage(newMessage.parent)
+    
+    message.parent.getProperties.forEach( (key, value) => {
+       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), key, Property.STRING_PROPERTY, null, 0, null, Property.DIR_IN)
+       p.setAnyValue(value.getTypedValue)
+       newMessage.parent.addProperty(p)
+    })
+    message.parent.getMessages.forEach( (key, value) => {
+      newMessage.copyMessage(new NavajoMessage(value))
+    })
+    newMessage
   }
 
   def addMessage(f: NavajoMessage => Unit): NavajoMessage = {
