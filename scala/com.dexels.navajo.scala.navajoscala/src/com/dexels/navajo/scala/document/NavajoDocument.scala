@@ -31,10 +31,7 @@ class NavajoDocument(val wrapped: Navajo = null) {
   }
   
   def copyMessage(message: NavajoMessage): NavajoMessage = {
-    val newMessage = NavajoFactory.createMessage(this, message.name)
-    newMessage.copyMessage(message)
-    wrapped.addMessage(newMessage.parent)
-    newMessage
+    new NavajoMessage(message.parent.copy(this.wrapped))
   }
 
   def addArrayMessage(name: String): NavajoMessage = {

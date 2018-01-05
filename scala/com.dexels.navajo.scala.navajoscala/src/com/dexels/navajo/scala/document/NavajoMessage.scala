@@ -41,18 +41,7 @@ class NavajoMessage(val parent: Message) {
   }
   
   def copyMessage(message : NavajoMessage ): NavajoMessage = {
-    val newMessage = NavajoFactory.createMessage(rootDoc, message.name)
-    parent.addMessage(newMessage.parent)
-    
-    message.parent.getProperties.forEach( (key, value) => {
-       val p = com.dexels.navajo.document.NavajoFactory.getInstance().createProperty(parent.getRootDoc(), key, Property.STRING_PROPERTY, null, 0, null, Property.DIR_IN)
-       p.setAnyValue(value.getTypedValue)
-       newMessage.parent.addProperty(p)
-    })
-    message.parent.getMessages.forEach( (key, value) => {
-      newMessage.copyMessage(new NavajoMessage(value))
-    })
-    newMessage
+    addMessage(new NavajoMessage(message.parent.copy(this.parent.getRootDoc)))
   }
 
   def addMessage(f: NavajoMessage => Unit): NavajoMessage = {
