@@ -256,9 +256,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	public String getDbIdentifier() {
 		if ( this.myConnectionBroker != null ) {
 			return this.myConnectionBroker.getDbIdentifier();
-		} else {
-			return null;
+		} else if (gc != null){
+			return gc.getMyBroker().getDbIdentifier();
 		}
+		
+		return null;
 	}
 	
 	@Deprecated

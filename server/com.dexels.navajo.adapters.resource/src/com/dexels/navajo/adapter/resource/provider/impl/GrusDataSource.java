@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter.resource.provider.impl;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -11,6 +12,9 @@ import org.dexels.grus.GrusConnection;
 import org.dexels.grus.GrusProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.adapter.SQLMaintenanceMap;
+import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
 
 public class GrusDataSource implements GrusConnection {
 
@@ -53,6 +57,15 @@ public class GrusDataSource implements GrusConnection {
 		}
 		this.dbConnectionBroker = new DbConnectionBrokerWrapper(this, user, maxConns);   
 		this.connection = this.datasource.getConnection();
+		
+		if (connection != null && connection.getMetaData() != null) {
+		    String driverName = connection.getMetaData().getDriverName();
+		    if (driverName.startsWith("PostgreSQL")) {
+		        dbConnectionBroker.setDbIdentifier(SQLMapConstants.POSTGRESDB);
+		    }  else if (driverName.startsWith("Oracle")) {
+	            dbConnectionBroker.setDbIdentifier(SQLMapConstants.ORACLEDB);
+	        }
+		}
 		
 		this.settings = settings;
 	}

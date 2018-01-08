@@ -124,7 +124,7 @@ public class PostgreSQLJDBCDataSourceService implements DataSourceFactory {
         	//String url = "jdbc:postgres://hostname:432/dbname;collation=abc:PRIMARY";
         	String cleanURI = props.getProperty(JDBC_URL).substring(5);
         	URI uri = URI.create(cleanURI);
-        	String dbName = (uri.getPath().split(";")[0]).substring(0);
+        	String dbName = (uri.getPath().split(";")[0]).substring(1);
 
         	base.setServerName(uri.getHost());
         	base.setPortNumber(uri.getPort());
