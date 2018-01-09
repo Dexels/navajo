@@ -807,6 +807,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				// nextval('sequencename')
 				query = query.replaceAll("(\\w+)\\.nextval", "nextval(\'$1\')");
 			}
+			if (query.contains("sysdate")) {
+                // Replace sequencename.nextval with Postgresql format
+                // nextval('sequencename')
+                query = query.replaceAll("sysdate", "LOCALTIMESTAMP");
+            }
 
 		}
 		
@@ -976,7 +981,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
                     PreparedStatement stmt = null;
                     if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier())
                             || SQLMapConstants.ENTERPRISEDB.equals(this.getDbIdentifier())) {
-                        stmt = con.prepareStatement("SET SEARCH_PATH TO " + this.alternativeUsername + ", public");
+                        stmt = con.prepareStatement("SET SEARCH_PATH TO public,oracle," + this.alternativeUsername);
                     } else {
                         stmt = con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.alternativeUsername);
                     }
