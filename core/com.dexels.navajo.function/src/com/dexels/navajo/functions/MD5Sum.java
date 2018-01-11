@@ -10,6 +10,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.BinaryDigest;
 import com.dexels.navajo.parser.FunctionInterface;
 
 /**
@@ -48,6 +49,10 @@ public class MD5Sum extends FunctionInterface {
 		}
 		
 		byte[] array = md5.digest();
+		if (getOperand(1) != null && (boolean) getOperand(1)) {
+			// return hex representation
+			return new BinaryDigest(array).hex();
+		}
 		BigInteger bigInt = new BigInteger(1, array);
 		output = bigInt.toString(16);
 		
