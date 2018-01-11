@@ -11,7 +11,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.server.DispatcherFactory;
 
 /**
  * @author Jarno Posthumus
@@ -28,13 +27,8 @@ public class MD5Sum extends FunctionInterface {
 			return new Integer(0);
 		}
 		MessageDigest md5 = null;
-	
-		String key = 
-			 ( DispatcherFactory.getInstance() != null && DispatcherFactory.getInstance().getApplicationId() != null ? DispatcherFactory.getInstance().getApplicationId() : "FOR_TESTING" );
-		
 		try {
 			md5 = MessageDigest.getInstance("MD5");
-			md5.update(key.getBytes());
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
