@@ -26,6 +26,11 @@ public class MD5Sum extends FunctionInterface {
 		if (getOperand(0) == null) {
 			return new Integer(0);
 		}
+		if ( getOperand(0) instanceof Binary ) {
+			Binary binaryFile = (Binary) getOperand(0);	
+			return binaryFile.getHexDigest();
+		}
+		
 		MessageDigest md5 = null;
 		try {
 			md5 = MessageDigest.getInstance("MD5");
@@ -33,10 +38,7 @@ public class MD5Sum extends FunctionInterface {
 			throw new RuntimeException(e);
 		}
 		
-		if ( getOperand(0) instanceof Binary ) {
-			Binary binaryFile = (Binary) getOperand(0);	
-			md5.update(binaryFile.getData());
-		} else if ( getOperand(0) instanceof Message ) { 
+		if ( getOperand(0) instanceof Message ) { 
 			Message m = (Message) getOperand(0);
 			StringWriter sw = new StringWriter();
 			m.write(sw);
