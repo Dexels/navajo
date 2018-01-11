@@ -49,7 +49,7 @@ public class MD5Sum extends FunctionInterface {
 		}
 		
 		byte[] array = md5.digest();
-		if (getOperand(1) != null && (boolean) getOperand(1)) {
+		if (getOperands().size() > 1 && getOperand(1) instanceof Boolean && (boolean) getOperand(1)) {
 			// return hex representation
 			return new BinaryDigest(array).hex();
 		}
