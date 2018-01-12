@@ -40,6 +40,9 @@ public class RESTAdapter extends NavajoMap {
     public String headerKey = null;
     public String headerValue = null;
     
+    private int connectTimeOut = -1;
+    private int readTimeOut = -1;
+    
     private int messagesPerRequest;
     private String rawResult;
     private String dateFormat;
@@ -113,6 +116,14 @@ public class RESTAdapter extends NavajoMap {
         if (headerKey != null) {
             addHeader();
         }
+    }
+
+    public void setConnectTimeOut(int connectTimeOut) {
+        this.connectTimeOut = connectTimeOut;
+    }
+
+    public void setReadTimeOut(int readTimeOut) {
+        this.readTimeOut = readTimeOut;
     }
 
     @Deprecated
@@ -322,7 +333,13 @@ public class RESTAdapter extends NavajoMap {
             String encoded = Base64.encode(bytes, 0, bytes.length, 0, "");
             http.setHeaderKey("Authorization");
             http.setHeaderValue("Basic " + encoded);
-
+        }
+        
+        if (readTimeOut > 0) {
+            http.setReadTimeOut(readTimeOut);
+        }
+        if (connectTimeOut > 0) {
+            http.setConnectTimeOut(0);
         }
     }
 
