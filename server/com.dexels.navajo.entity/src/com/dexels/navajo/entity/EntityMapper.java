@@ -166,7 +166,7 @@ public class EntityMapper implements EventHandler {
 		if (folder.startsWith(File.separator)) {
 			folder = folder.substring(1);
 		}
-		return folder;
+		return folder.replaceAll("\\\\", "/");
 	}
 
 }
