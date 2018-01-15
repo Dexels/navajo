@@ -19,6 +19,8 @@ import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TestJsonConversion {
@@ -38,10 +40,10 @@ public class TestJsonConversion {
 		ObjectNode on = JsonTmlFactory.getInstance().toNode(m, "ble");
 		JSONReplicationMessageParserImpl parser = new JSONReplicationMessageParserImpl();
 		ReplicationMessage rmsg = parser.parseJson(on);
-//		ObjectMapper mapper  = new ObjectMapper();
+		ObjectMapper mapper  = new ObjectMapper();
 //		JsonNode n = rmsg.toJSON(mapper);
-//		System.err.println("Before:\n");
-//		mapper.writerWithDefaultPrettyPrinter().writeValue(System.err, on);
+		System.err.println("Before:\n");
+		mapper.writerWithDefaultPrettyPrinter().writeValue(System.err, on);
 //		System.err.println("After:\n");
 //		mapper.writerWithDefaultPrettyPrinter().writeValue(System.err, n);
 		Optional<List<ImmutableMessage>> r = rmsg.subMessages("Standings");

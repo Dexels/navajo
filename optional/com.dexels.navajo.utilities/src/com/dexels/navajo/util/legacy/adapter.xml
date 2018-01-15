@@ -1,6 +1,2 @@
 <adapterdef>
-	<map>
-		<tagname>scriptintrospection</tagname>
-		<object>com.dexels.navajo.util.legacy.ScriptIntrospection</object>
-	</map>
 </adapterdef>
