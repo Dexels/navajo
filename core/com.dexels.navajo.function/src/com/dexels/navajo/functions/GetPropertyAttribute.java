@@ -55,6 +55,9 @@ public class GetPropertyAttribute extends FunctionInterface {
 		if ( attribute.equals("type") ) {
 			return p.getType();
 		} 
+		if ( attribute.equals("cardinality") ) {
+			return p.getCardinality();
+		} 
 		try {
 			throw new TMLExpressionException(this, "attribute " + attribute + " not found for property " + p.getFullPropertyName());
 		} catch (NavajoException e) {
