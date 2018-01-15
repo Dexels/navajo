@@ -283,10 +283,11 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
      */
     @Override
     public void dumpRequest() {
+        String scriptName = getScriptName();
         if (debugRequest() &&  System.getenv("DEBUG_SCRIPTS") != null &&  System.getenv("DEBUG_SCRIPTS").equals("true") ) {
-            System.err.println(" --------- BEGIN NAVAJO REQUEST ---------");
+            System.err.println(" --------- BEGIN NAVAJO REQUEST --------- "  + scriptName);
             myAccess.getInDoc().write(System.err);
-            System.err.println("--------- END NAVAJO REQUEST ---------");
+            System.err.println("--------- END NAVAJO REQUEST --------- " + scriptName);
         }
     }
 
@@ -297,11 +298,12 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
      */
     @Override
     public void dumpResponse() {
+        String scriptName = getScriptName();
         if (System.getenv("DEBUG_SCRIPTS") != null &&  System.getenv("DEBUG_SCRIPTS").equals("true") ) {
             if (debugResponse()) {
-                System.err.println(" --------- BEGIN NAVAJO RESPONSE ---------");
+                System.err.println(" --------- BEGIN NAVAJO RESPONSE --------- "  + scriptName);
                 myAccess.getOutputDoc().write(System.err);
-                System.err.println("--------- END NAVAJO RESPONSE ---------");
+                System.err.println("--------- END NAVAJO RESPONSE --------- " + scriptName);
             }
            
 
