@@ -45,9 +45,10 @@ public class LookupParser extends BaseTipiParser {
         String homeDefName = getHomeDefinitionName(tc);
         try {
             String loc = resolveInclude(context, homeDefName);
+            
             loc = "texts/" + loc.substring(0, loc.indexOf(".xml"));
-
             String result = lookupResourceBundle(context, loc, expression);
+
             if (result != null)
                 return result;
 
@@ -86,7 +87,12 @@ public class LookupParser extends BaseTipiParser {
     }
 
     private String resolveInclude(TipiContext context, String definition) {
-        return context.resolveInclude(definition);
+        String res = context.resolveInclude(definition);
+        if (res == null) {
+            // Fallback
+            return definition + ".xml";
+        }
+        return res;
     }
 
     private String getHomeDefinitionName(TipiComponent tc) {
