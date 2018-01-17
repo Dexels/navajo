@@ -201,6 +201,11 @@ function hideLoginTable() {
 
 function runScript(script) {
     $('#scriptCustomInputView').hide();
+    if (script.indexOf('_') !== -1) {
+    	var tenant = script.substring(script.indexOf('_'));
+    	script = script.substring(0, script.indexOf('_'));
+    	window.alert('Stripping '+tenant+' part of script! Calling ' + script)
+    }
     $('#loadedScript').text(script);
     sessionStorage.script = script;
     $('html, body').animate({
