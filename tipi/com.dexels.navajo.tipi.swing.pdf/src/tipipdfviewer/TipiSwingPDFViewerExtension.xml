@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="swingpdfviewer" requiresMain="" project="TipiPDFViewer" version="0.9" title="Tipi PDF Viewer" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/swing/pdf/swingpdfclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="icepdf-core-6.2.2"/>
+		<jar path="icepdf-viewer-6.2.2"/>
+		
+	</jars>
+	<requires>
+		<require path="TipiSwing" id="TipiSwing"/>
+	</requires>
+	
+</extension>

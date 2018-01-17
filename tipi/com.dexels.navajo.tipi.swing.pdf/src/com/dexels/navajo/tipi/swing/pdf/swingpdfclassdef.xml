@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+    <tipiclass addtocontainer="true" class="TipiPDFViewer" layoutmanager="false" module="container" name="pdfviewer"
+        implements="basecomponent,datacomponent,swingcomponent,dragdrop" package="com.dexels.navajo.tipi.swing.pdf" childcount="0"
+        studio-icon="toolbar.gif" type="tipi">
+        <events>
+            <event name="onInstantiate" />
+        </events>
+        <values>
+         
+
+        </values>
+        <methods>
+          
+
+        </methods>
+    </tipiclass>
+</tid>
