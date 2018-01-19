@@ -29,7 +29,7 @@ public class TipiPDFViewer extends TipiSwingDataComponentImpl {
         NavajoSwingViewBuilder factory = new NavajoSwingViewBuilder(controller);
         viewerComponentPanel = factory.buildViewerPanel();
 
-        controller.openDocument("/home/chris/git/navajo/tipi/com.dexels.navajo.tipi.swing.pdf/src/resources/navajo3.pdf");
+        controller.openDocument("/home/chris/Documents/220401884.pdf");
         
     }
 
