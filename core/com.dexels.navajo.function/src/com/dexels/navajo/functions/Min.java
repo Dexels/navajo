@@ -71,7 +71,7 @@ public String usage() {
             }
             else
             {
-                if (((Date) a).compareTo((Date) b) < 1)
+                if (((Date) a).compareTo((Date) b) < 0)
                 {
                     return a;
                 }
