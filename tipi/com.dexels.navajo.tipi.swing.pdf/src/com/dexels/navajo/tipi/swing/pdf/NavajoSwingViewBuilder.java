@@ -14,15 +14,17 @@ public class NavajoSwingViewBuilder extends SwingViewBuilder{
     }
 
     @Override
-    public JToolBar buildAnnotationUtilityToolBar() {
-        return new JToolBar(); // Annotations is not supported
+    public JToolBar buildAnnotationlToolBar() {
+        return new JToolBar(); // Disable
     }
-
-    
 
     @Override
     public JToolBar buildUtilityToolBar(boolean embeddableComponent, PropertiesManager propertiesManager) {
-        return new JToolBar();
+        return new JToolBar(); // Disable
+    }
+    @Override
+    public JToolBar buildFormsToolBar() {
+        return new JToolBar(); // Disable
     }
 
   
