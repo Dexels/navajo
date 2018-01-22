@@ -16,6 +16,7 @@ import org.dexels.grus.GrusProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
 import com.dexels.navajo.script.api.UserException;
 
 public class GrusProviderImpl implements GrusProvider {
@@ -267,5 +268,29 @@ public class GrusProviderImpl implements GrusProvider {
 	public void deactivate() {
 		GrusProviderFactory.setInstance(null);
 	}
+
+    @Override
+    public String getDatabaseIdentifier(String instance, String name) throws UserException {
+        DataSource dataSourceInstance = null;
+        dataSourceInstance = getInstanceDataSource(instance, name);
+
+        Map<String, Object> settings = settingsMap.get(dataSourceInstance);
+
+        if (settings == null && dataSourceInstance == null) {
+            settings = defaultSettingsMap.get(name);
+            if(settings==null) {
+                throw new UserException(-1, "Could not find settings for tenant-less datasource: "+name+" available (tenant-less) datasources: "+defaultSettingsMap.keySet());
+            }
+        }
+        String componentName = (String) settings.get("component.name");
+        if (componentName.endsWith("oracle")) { 
+            return SQLMapConstants.ORACLEDB;
+        } else if (componentName.endsWith("mysql")) {
+            return SQLMapConstants.MYSQLDB;
+        }else if (componentName.endsWith("postgresql")) {
+            return SQLMapConstants.POSTGRESDB;
+        }
+        return null;
+    }
 
 }

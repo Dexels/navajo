@@ -253,15 +253,23 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * @return String
 	 */
 	@Override
-	public String getDbIdentifier() {
-		if ( this.myConnectionBroker != null ) {
-			return this.myConnectionBroker.getDbIdentifier();
-		} else if (gc != null){
-			return gc.getMyBroker().getDbIdentifier();
-		}
-		
-		return null;
-	}
+    public String getDbIdentifier() {
+        if (GrusProviderFactory.getInstance() != null) {
+            String instance = this.instance;
+            if (myAccess != null) {
+                instance = myAccess.getTenant();
+            }
+            try {
+                return GrusProviderFactory.getInstance().getDatabaseIdentifier(instance, datasource);
+            } catch (UserException e) {
+                logger.error("Exception in determining database identifier", e);
+            }
+        } else if (this.myConnectionBroker != null) {
+            // Non-osgi
+            return this.myConnectionBroker.getDbIdentifier();
+        }
+        return null;
+    }
 	
 	@Deprecated
 	private void createDataSource(Message body, NavajoConfigInterface config) throws Throwable {
