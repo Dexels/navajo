@@ -260,6 +260,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
                 instance = myAccess.getTenant();
             }
             try {
+                if (transactionContext != -1) {
+                    return GrusProviderFactory.getInstance().getDatabaseIdentifier(transactionContext);
+                } 
                 return GrusProviderFactory.getInstance().getDatabaseIdentifier(instance, datasource);
             } catch (UserException e) {
                 logger.error("Exception in determining database identifier", e);

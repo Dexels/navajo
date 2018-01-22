@@ -268,6 +268,12 @@ public class GrusProviderImpl implements GrusProvider {
 	public void deactivate() {
 		GrusProviderFactory.setInstance(null);
 	}
+	
+	@Override
+	public String getDatabaseIdentifier(long id) throws UserException {
+	    GrusConnection grusConnection = grusIds.get(id);
+	    return grusConnection.getMyBroker().getDbIdentifier();
+	}
 
     @Override
     public String getDatabaseIdentifier(String instance, String name) throws UserException {

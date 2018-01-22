@@ -1,10 +1,18 @@
 package com.dexels.navajo.adapter.functions;
 
+import org.dexels.grus.GrusProviderFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.script.api.UserException;
 
 public class GetSequenceValue extends FunctionInterface {
+    private final static Logger logger = LoggerFactory.getLogger(GetSequenceValue.class);
+
+   
     public GetSequenceValue() {}
     
     @Override
@@ -43,23 +51,12 @@ public class GetSequenceValue extends FunctionInterface {
         SingleValueQuery query = new SingleValueQuery();
         query.reset();
         query.setAccess(getAccess());
-        // Insert parameters
-        if (transactionContext != -1) {
-            query.insertOperand(transactionContext);
-            query.insertOperand("SELECT 1 FROM dual");
-        } else {
-            // Filter the sequence out
-            // Contains datasource specification
-            query.insertOperand((datasource != null ? datasource : "") + ":SELECT 1 FROM dual");
-        }
+     
 
-        query.evaluate();
-        String dbIdentifier = query.getDbIdentifier();
+        String dbIdentifier = getDbIdentifier(datasource, transactionContext);
         if (sequencename != null) {
-            if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier)) {
+            if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier) || SQLMapConstants.ENTERPRISEDB.equals(dbIdentifier)) {
                 sql = "SELECT nextval('" + sequencename + "')";
-            } else if (SQLMapConstants.ENTERPRISEDB.equals(dbIdentifier)) {
-                    sql = "SELECT nextval('" + sequencename + "')";
             } else {
             	sql = "SELECT " + sequencename + ".nextval FROM dual";
             }
@@ -76,5 +73,20 @@ public class GetSequenceValue extends FunctionInterface {
         query.insertOperand(sql);
         
         return query.evaluate();
+    }
+
+    private String getDbIdentifier(String datasource, Integer transactionContext) {
+        if (GrusProviderFactory.getInstance() != null) {
+            try {
+                if (transactionContext != null && transactionContext != -1 ) {
+                    return GrusProviderFactory.getInstance().getDatabaseIdentifier(transactionContext);
+                }
+                return GrusProviderFactory.getInstance().getDatabaseIdentifier(getAccess().getTenant(), datasource);
+            } catch (UserException e) {
+                logger.error("Exception in determining database identifier", e);
+            }
+        }
+        logger.warn("Unable to identifiy database identifier due to missing GrusFactoryProvider");
+        return null;
     }
 }

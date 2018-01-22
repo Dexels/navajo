@@ -17,7 +17,7 @@ import com.dexels.navajo.adapter.SQLMaintenanceMap;
 import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
 
 public class GrusDataSource implements GrusConnection {
-
+ 
 	private final DataSource datasource;
 	private final Map<String, Object> settings;
 	private DbConnectionBroker dbConnectionBroker;
@@ -57,6 +57,17 @@ public class GrusDataSource implements GrusConnection {
 		}
 		this.dbConnectionBroker = new DbConnectionBrokerWrapper(this, user, maxConns);   
 		this.connection = this.datasource.getConnection();
+		
+        if (connection != null && connection.getMetaData() != null) {
+            String driverName = connection.getMetaData().getDriverName();
+            if (driverName.startsWith("PostgreSQL")) {
+                dbConnectionBroker.setDbIdentifier(SQLMapConstants.POSTGRESDB);
+            } else if (driverName.startsWith("MySQL")) {
+                dbConnectionBroker.setDbIdentifier(SQLMapConstants.MYSQLDB);
+            } else if (driverName.startsWith("Oracle")) {
+                dbConnectionBroker.setDbIdentifier(SQLMapConstants.ORACLEDB);
+            }
+        }
 
 		this.settings = settings;
 	}
