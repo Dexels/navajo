@@ -805,7 +805,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				: '\"');
 
 		if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier())) {
-			if (query.contains("rownum")) {
+			if (query.toLowerCase().contains("rownum")) {
 				// Replace Oracle rownum construction with PostgreSQL compatible
 				// version
 				// Regex: case insensitive, "AND", one or more spaces, "ROWNUM",
@@ -813,15 +813,15 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				query = query.replaceAll("(?i)AND(\\s)+ROWNUM(\\s)+=(\\s)+(\\d+)",
 						"LIMIT $4 OFFSET 1");
 			}
-			if (query.contains("nextval")) {
+			if (query.toLowerCase().contains("nextval")) {
 				// Replace sequencename.nextval with Postgresql format
 				// nextval('sequencename')
-				query = query.replaceAll("(\\w+)\\.nextval", "nextval(\'$1\')");
+				query = query.replaceAll("(\\w+)\\.(?i)nextval", "nextval(\'$1\')");
 			}
-			if (query.contains("sysdate")) {
+			if (query.toLowerCase().contains("sysdate")) {
                 // Replace sequencename.nextval with Postgresql format
                 // nextval('sequencename')
-                query = query.replaceAll("sysdate", "LOCALTIMESTAMP");
+                query = query.replaceAll("(?i)sysdate", "LOCALTIMESTAMP");
             }
 
 		}
