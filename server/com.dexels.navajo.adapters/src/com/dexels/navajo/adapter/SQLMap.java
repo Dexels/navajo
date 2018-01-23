@@ -708,7 +708,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	@Override
 	public void setUpdate(final String newUpdate) throws UserException {
-		update = ora2pgQuery(newUpdate);
+		update = ora2pgQuery(newUpdate).trim();
 
 		if (debug) {
 			Access.writeToConsole(myAccess, "SQLMap(): update = " + update
@@ -991,7 +991,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
                     PreparedStatement stmt = null;
                     if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier())
                             || SQLMapConstants.ENTERPRISEDB.equals(this.getDbIdentifier())) {
-                        stmt = con.prepareStatement("SET SEARCH_PATH TO public,oracle," + this.alternativeUsername);
+                        stmt = con.prepareStatement("SET SEARCH_PATH TO " + this.alternativeUsername + ",public,oracle");
                     } else {
                         stmt = con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.alternativeUsername);
                     }
