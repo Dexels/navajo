@@ -708,7 +708,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	@Override
 	public void setUpdate(final String newUpdate) throws UserException {
-		update = newUpdate;
+		update = ora2pgQuery(newUpdate);
 
 		if (debug) {
 			Access.writeToConsole(myAccess, "SQLMap(): update = " + update
@@ -801,34 +801,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					"Use of semicolon in query fields is not allowed, maybe you meant to use an update field?");
 		}
 
-		query = newQuery.replace('"', (this.replaceQueryDoubleQuotes) ? '\''
-				: '\"');
+		String quotesQuery = newQuery.replace('"', (this.replaceQueryDoubleQuotes) ? '\'': '\"');
+		query = ora2pgQuery(quotesQuery);
 
-		if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier())) {
-			if (query.toLowerCase().contains("rownum")) {
-				// Replace Oracle rownum construction with PostgreSQL compatible
-				// version
-				// Regex: case insensitive, "AND", one or more spaces, "ROWNUM",
-				// one or more spaces, "=", one or more spaces, a number
-				query = query.replaceAll("(?i)AND(\\s)+ROWNUM(\\s)+=(\\s)+(\\d+)",
-						"LIMIT $4 OFFSET 1");
-			}
-			if (query.toLowerCase().contains("nextval")) {
-				// Replace sequencename.nextval with Postgresql format
-				// nextval('sequencename')
-				query = query.replaceAll("(\\w+)\\.(?i)nextval", "nextval(\'$1\')");
-			}
-			if (query.toLowerCase().contains("sysdate")) {
-                // Replace sequencename.nextval with Postgresql format
-                // nextval('sequencename')
-                query = query.replaceAll("(?i)sysdate", "LOCALTIMESTAMP");
-            }
-
-		}
-		
-			
-
-		
 		if (debug) {
 			Access.writeToConsole(myAccess, "SQLMap(): query = " + query + "\n");
 		}
@@ -837,6 +812,30 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		this.update = null;
 		parameters = new ArrayList();
 	}
+
+    private String ora2pgQuery(String aQuery) {
+        if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier())) {
+			if (aQuery.toLowerCase().contains("rownum")) {
+				// Replace Oracle rownum construction with PostgreSQL compatible
+				// version
+				// Regex: case insensitive, "AND", one or more spaces, "ROWNUM",
+				// one or more spaces, "=", one or more spaces, a number
+			    aQuery = aQuery.replaceAll("(?i)AND(\\s)+ROWNUM(\\s)+=(\\s)+(\\d+)",
+						"LIMIT $4 OFFSET 1");
+			}
+			if (aQuery.toLowerCase().contains(".nextval")) {
+				// Replace sequencename.nextval with Postgresql format
+				// nextval('sequencename')
+			    aQuery = aQuery.replaceAll("(\\w+)\\.(?i)nextval", "nextval(\'$1\')");
+			}
+			if (aQuery.toLowerCase().contains("sysdate")) {
+                // Replace sequencename.nextval with Postgresql format
+                // nextval('sequencename')
+			    aQuery = aQuery.replaceAll("(?i)sysdate", "LOCALTIMESTAMP");
+            }
+		}
+        return aQuery;
+    }
 
 	/**
 	 * Set multiple parameter using a single string. Parameters MUST be
