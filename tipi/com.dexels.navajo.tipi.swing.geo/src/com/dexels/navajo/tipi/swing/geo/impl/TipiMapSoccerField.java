@@ -66,17 +66,26 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
 
 
         drawFieldOverlay(g2d, map);
-                
-        //centerString(g2d, rect2, label, n);
-        g2d.setFont(new Font("SansSerif", Font.PLAIN, 12));
-//        drawCenteredString(label, rect2, g2d);
-
         g2d.dispose();
 
     }
 
     private void drawFieldOverlay(Graphics2D g2d, JXMapViewer map) {
         // do the drawing
+        Polygon p = getFieldPolygon(map);
+ 
+        Color myColour = getFieldColor();
+        g2d.setColor(myColour);
+        g2d.fillPolygon(p);
+        g2d.setColor(Color.WHITE);
+        g2d.drawPolygon(p);
+            
+        drawCenteredString(label, p, g2d);
+
+        return;
+    }
+
+    private Polygon getFieldPolygon(JXMapViewer map) {
         GeoPosition lefTopPos = travel(pos, getFieldHeight()/1.65, bearing-35);
         GeoPosition rightTopPos = travel(pos, getFieldHeight()/1.65, bearing+35);
         GeoPosition rightBottomPos = travel(pos, getFieldHeight()/1.65, bearing+215);
@@ -86,34 +95,10 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
         Point2D rightBottom =map.getTileFactory().geoToPixel(rightBottomPos, map.getZoom());
         Point2D leftBottom = map.getTileFactory().geoToPixel(leftBottomPos, map.getZoom());
 
-        
-      
         int xpoints[] = {(int)leftTop.getX(), (int)rightTop.getX(), (int)leftBottom.getX(), (int)rightBottom.getX()};
         int ypoints[] = {(int)leftTop.getY(), (int)rightTop.getY(), (int)leftBottom.getY(), (int)rightBottom.getY()};
         Polygon p = new Polygon(xpoints, ypoints, 4);
- 
-        Color myColour = getFieldColor();
-        g2d.setColor(myColour);
-        g2d.fillPolygon(p);
-        g2d.setColor(Color.WHITE);
-        g2d.drawPolygon(p);
-
-        Point2D centerPoint = map.getTileFactory().geoToPixel(pos, map.getZoom());
-        
-//        Color oldColor = g2d.getColor();
-//        g2d.setColor(Color.WHITE);
-//        g2d.drawString(label, (int) centerPoint.getX(),(int) centerPoint.getY());
-//        g2d.setColor(oldColor);
-          
-            
-        drawCenteredString(label, p, g2d);
-        // Draw border
-//        g2d.setColor(new Color(255, 255, 255, 200));
-//        g2d.setStroke(new BasicStroke(4));
-//        g2d.drawRect((int)rect2.getX(), (int) rect2.getY(), rect2.width, rect2.height);
-        
-//        g2d.setTransform(orig);
-        return;
+        return p;
     }
 
 
@@ -125,8 +110,7 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
 
         double a = Math.sin(dR) * Math.cos(lat1R);
         double lat2 = Math.asin(Math.sin(lat1R) * Math.cos(dR) + a * Math.cos(bR));
-        double lon2 = lon1R
-                + Math.atan2(Math.sin(bR) * a, Math.cos(dR) - Math.sin(lat1R) * Math.sin(lat2));
+        double lon2 = lon1R + Math.atan2(Math.sin(bR) * a, Math.cos(dR) - Math.sin(lat1R) * Math.sin(lat2));
         return new GeoPosition(Math.toDegrees(lat2), Math.toDegrees(lon2));
     }
 
@@ -142,6 +126,7 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
     }
 
     private void drawCenteredString(String s, Polygon p, Graphics g) {
+        g.setFont(new Font("SansSerif", Font.PLAIN, 12));
         FontMetrics fm = g.getFontMetrics();
         int x = (p.getBounds().width - fm.stringWidth(s)) / 2;
         int y = (fm.getAscent() + (p.getBounds().height- (fm.getAscent() + fm.getDescent())) / 2);
@@ -152,52 +137,4 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
       }
     
    
-    private int getX(int orig, int zoom) {
-        if (zoom == 0) {
-            return orig - 230;
-        }
-        if (zoom < 3) {
-            return orig - (215 / (zoom * 2));
-        }
-       
-        return orig - (160 / (zoom * 2));
-    }
-
-    private int getY(int orig, int zoom) {
-        if (zoom == 0) {
-            return orig - 260;
-        }
-        if (zoom < 3) {
-            return  orig - (300 / (zoom * 2));
-        }
-        return orig - (220 / (zoom * 2));
-    }
-
-    private int getWidth(int zoom) {
-//        System.out.println("zoom " + zoom);
-        if (zoom == 0) {
-            return 400;
-        }
-        if (zoom < 3) {
-            return  (400 / (zoom * 2));
-        }
-        if (zoom == 3) {
-            return (330 / (zoom * 2));
-        }
-        return (330 / (zoom * 3));
-
-    }
-
-    private int getLength(int zoom) {
-        if (zoom == 0) {
-            return 560;
-        }
-        if (zoom < 3) {
-            return (600 / (zoom * 2));
-        }
-        if (zoom == 3) {
-            return (450 / (zoom * 2));
-        }
-        return (450 / (zoom * 3));
-    }
 }
