@@ -5,7 +5,7 @@ import org.jxmapviewer.viewer.TileFactoryInfo;
 public class DexelsProxySteetMapTileFactoryInfo extends TileFactoryInfo {
 	final int max ;
 	public DexelsProxySteetMapTileFactoryInfo(int maxZoom) {
-		super(0,maxZoom,maxZoom,
+		super(5,maxZoom,maxZoom,
 		        256, true, true,
 		        "http://distel:8080/MapTileProxy/Tile",
 		        "x","y","z");

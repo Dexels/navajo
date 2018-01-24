@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
 
-    <tipiclass addtocontainer="true" childcount="*"
-        class="TipiMapComponent" layoutmanager="false" module="container"
-        name="map" package="com.dexels.navajo.tipi.swing.geo"
-        studio-icon="tabs.gif" type="component">
+    <tipiclass addtocontainer="true" childcount="*" class="TipiMapComponent" layoutmanager="false" module="container"
+        name="map" package="com.dexels.navajo.tipi.swing.geo" studio-icon="tabs.gif" type="component">
         <events>
             <event name="onInstantiate" />
             <event name="onClear" />
@@ -16,10 +14,9 @@
             </event>
         </events>
         <values>
-            <value direction="in" name="lon" type="float"
-                property="lon" />
-            <value direction="in" name="lat" type="float"
-                property="lat" />
+            <value direction="in" name="lon" type="float" property="lon" />
+            <value direction="in" name="lat" type="float" property="lat" />
+            <value direction="in" name="fieldsPath" type="string" property="fieldsPath" />
             <value direction="in" name="factory" type="string" />
             <value direction="in" name="messagePath" type="string" />
             <value direction="in" name="zoom" type="integer" />
@@ -30,4 +27,5 @@
 
         </methods>
     </tipiclass>
+
 </tid>

@@ -109,7 +109,7 @@ public class TipiSwingMapImpl extends JXMapKit {
 			allowEvents = true;
 			return;
 		} else if(factory.equals("openstreetmap")) {
-			setTileFactory(new DefaultTileFactory(new OpenStreetMapTileFactoryInfo(17)));
+			setTileFactory(new DefaultTileFactory(new OpenStreetMapTileFactoryInfo(19)));
 			// zoom and center is lost after switching:
 			setAllowZoom(allowZoom);
 			if(myCenter!=null) {

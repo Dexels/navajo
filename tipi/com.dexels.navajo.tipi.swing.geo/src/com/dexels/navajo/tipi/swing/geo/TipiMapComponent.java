@@ -29,10 +29,11 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
-import com.dexels.navajo.tipi.swing.geo.impl.FieldWaypointPainter;
+import com.dexels.navajo.tipi.swing.geo.impl.TipiMapSoccerField;
 import com.dexels.navajo.tipi.swing.geo.impl.TipiSwingMapImpl;
 
 public class TipiMapComponent extends TipiSwingDataComponentImpl {
@@ -52,6 +53,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	private Map<Component, GeoPosition> mapComponentSizes = new HashMap<Component, GeoPosition>();
 
 	private String messagePath = null;
+	private String fieldsPath = null;
 
 	private JPanel overlayPanel = null;
 	List<Painter<JXMapViewer>> painters = new ArrayList<>();
@@ -140,11 +142,12 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		mapComponents.clear();
 		overlayPanel.removeAll();
 
-		if (messagePath == null) {
-			return;
+		if (fieldsPath != null) {
+		    addFields(n.getMessage(fieldsPath));
 		}
-		
-		
+		if (messagePath == null) {
+		    return;
+		}
 		final Message m = n.getMessage(messagePath);
 		runSyncInEventThread(new Runnable() {
 
@@ -173,7 +176,27 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	}
 
-	protected void layoutChildren() {
+	private void addFields(Message fields) {
+	    runSyncInEventThread(new Runnable() {
+
+            @Override
+            public void run() {
+                List<Message> al = fields.getAllMessages();
+                
+
+                for (Message field : al) {
+                    TipiMapSoccerField fieldWaypointPainter = new TipiMapSoccerField(field);
+                    painters.add(fieldWaypointPainter);
+                    CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+                    myMapKit.getMainMap().setOverlayPainter(painter);
+                    
+                }
+            }
+	    });
+        
+    }
+
+    protected void layoutChildren() {
 		for (Component c : mapComponents.keySet()) {
 			positionComponent(c, mapComponents.get(c), mapComponentSizes.get(c));
 		}
@@ -226,6 +249,9 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 				if (name.equals("messagePath")) {
 					messagePath = (String) object;
 				}
+				if (name.equals("fieldsPath")) {
+				    fieldsPath = (String) object;
+                }
 			}
 		});
 
@@ -242,16 +268,11 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		StringTokenizer st = new StringTokenizer(con, ",");
 		String lat = st.nextToken();
 		String lon = st.nextToken();
-		String bearing = st.nextToken();
 		double lonF = Double.parseDouble(lon);
 		double latF = Double.parseDouble(lat);
-		double bearingF = Double.parseDouble(bearing);
 		
 		final GeoPosition gp = new GeoPosition(latF, lonF);
-		FieldWaypointPainter fieldWaypointPainter = new FieldWaypointPainter(gp, bearingF);
-		painters.add(fieldWaypointPainter);
-		CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
-		myMapKit.getMainMap().setOverlayPainter(painter);
+
 		
 		GeoPosition rightB = null;
 		mapComponents.put((Component) c, gp);
