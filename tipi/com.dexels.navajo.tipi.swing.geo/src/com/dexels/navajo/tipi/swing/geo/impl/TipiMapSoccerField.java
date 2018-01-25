@@ -10,11 +10,8 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -26,9 +23,7 @@ import org.jxmapviewer.painter.Painter;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.swing.geo.TipiMapComponent;
 
 public class TipiMapSoccerField implements Painter<JXMapViewer> {
     private final static Logger logger = LoggerFactory.getLogger(TipiMapSoccerField.class);
@@ -214,14 +209,14 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
         
         if (fieldUseImage != null) {
             Double xOffset = (map.getZoom() == 0) ? 30 : 20 / (map.getZoom()/1.5d);
-            Double yOffset = (map.getZoom() == 0) ? 75 : 30 / (map.getZoom()/2d);
+            Double yOffset = (map.getZoom() == 0) ? 75 : 30 / (map.getZoom()/3d);
             Double x = centerPoint.getX() + xOffset;
             Double y = centerPoint.getY() - yOffset;
             g2d.drawImage(fieldUseImage, x.intValue(), y.intValue(), null);
         }
         if (fieldTypeImage != null) {
             Double xOffset = (map.getZoom() == 0) ? 30 : 20 / (map.getZoom()/1.5d);
-            Double yOffset = (map.getZoom() == 0) ? 75 : 30 / (map.getZoom()/2d);
+            Double yOffset = (map.getZoom() == 0) ? 75 : 30 / (map.getZoom()/3d);
             Double x = centerPoint.getX() - xOffset;
             Double y = centerPoint.getY() - yOffset;
             g2d.drawImage(fieldTypeImage, x.intValue(), y.intValue(), null);

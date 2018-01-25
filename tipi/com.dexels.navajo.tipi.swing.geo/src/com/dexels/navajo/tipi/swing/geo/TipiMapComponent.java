@@ -29,14 +29,11 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
-import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.swing.geo.impl.TipiMapSoccerField;
 import com.dexels.navajo.tipi.swing.geo.impl.TipiSwingMapImpl;
-import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
@@ -44,10 +41,6 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	
 	private final static Logger logger = LoggerFactory.getLogger(TipiMapComponent.class);
 
-	String mapFactory;
-	int zoom;
-	int maxZoom = 10;
-	boolean allowZoom = true;
 	private JLayeredPane jp = new JLayeredPane();
 	private TipiSwingMapImpl myMapKit;
 	private final Map<Component, GeoPosition> mapComponents = new HashMap<Component, GeoPosition>();
@@ -59,7 +52,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	private JPanel overlayPanel = null;
 	List<Painter<JXMapViewer>> painters = new ArrayList<>();
-
+	
     @Override
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable(){
@@ -139,10 +132,9 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	@Override
 	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
+	    mapComponents.clear();
+        overlayPanel.removeAll();
 		super.loadData(n, method);
-		
-		mapComponents.clear();
-		overlayPanel.removeAll();
 		painters.clear();
 	    myMapKit.getMainMap().setOverlayPainter(new CompoundPainter<JXMapViewer>(painters));
 
@@ -209,26 +201,6 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		for (Component c : mapComponents.keySet()) {
 			positionComponent(c, mapComponents.get(c), mapComponentSizes.get(c));
 		}
-	}
-
-	public void setMapFactory(String mapFactory) {
-		this.mapFactory = mapFactory;
-	}
-
-	public void setZoom(int zoom) {
-		this.zoom = zoom;
-		// Prevent zooming when a limit has been set
-		if (zoom > maxZoom) {
-			zoom = maxZoom;
-		}
-		myMapKit.setZoom(zoom);
-	}
-	public void setMaxZoom(int maxZoom) {
-		this.maxZoom = maxZoom;
-	}
-	public void setAllowZoom(boolean z) {
-		this.allowZoom = z;
-		myMapKit.setAllowZoom(z);
 	}
 
 	@Override
