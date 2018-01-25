@@ -40,9 +40,8 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	private static final long serialVersionUID = 3180381518976209467L;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(TipiMapComponent.class);
-	// double lon,lat;
+	private final static Logger logger = LoggerFactory.getLogger(TipiMapComponent.class);
+
 	String mapFactory;
 	int zoom;
 	int maxZoom = 10;
@@ -54,6 +53,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	private String messagePath = null;
 	private String fieldsPath = null;
+    private String filterOptionsPath = null;
 
 	private JPanel overlayPanel = null;
 	List<Painter<JXMapViewer>> painters = new ArrayList<>();
@@ -143,7 +143,11 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		overlayPanel.removeAll();
 
 		if (fieldsPath != null) {
-		    addFields(n.getMessage(fieldsPath));
+		    Message filter = null;
+		    if (filterOptionsPath != null) {
+		        filter = n.getMessage(filterOptionsPath);
+		    }
+		    addFields(n.getMessage(fieldsPath), filter);
 		}
 		if (messagePath == null) {
 		    return;
@@ -176,7 +180,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	}
 
-	private void addFields(Message fields) {
+	private void addFields(Message fields, Message filter) {
 	    runSyncInEventThread(new Runnable() {
 
             @Override
@@ -185,7 +189,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
                 
 
                 for (Message field : al) {
-                    TipiMapSoccerField fieldWaypointPainter = new TipiMapSoccerField(field);
+                    TipiMapSoccerField fieldWaypointPainter = new TipiMapSoccerField(getContext(), field, filter);
                     painters.add(fieldWaypointPainter);
                     CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
                     myMapKit.getMainMap().setOverlayPainter(painter);
@@ -226,7 +230,8 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	protected void setComponentValue(final String name, final Object object) {
 		runSyncInEventThread(new Runnable() {
 
-			@Override
+
+            @Override
 			public void run() {
 
 				if (name.equals("zoom")) {
@@ -235,20 +240,16 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 				if (name.equals("allowZoom")) {
 					myMapKit.setAllowZoom((Boolean) object);
 				}
-				// if(name.equals("lat")) {
-				// Number n = (Number)object;
-				// myMapKit.setLat(n.doubleValue());
-				// }
-				// if(name.equals("lon")) {
-				// Number n = (Number)object;
-				// myMapKit.setLon(n.doubleValue());
-				// }
+
 				if (name.equals("factory")) {
 					myMapKit.setMapFactory((String) object);
 				}
 				if (name.equals("messagePath")) {
 					messagePath = (String) object;
 				}
+				if (name.equals("filterOptionsPath")) {
+				    filterOptionsPath = (String) object;
+                }
 				if (name.equals("fieldsPath")) {
 				    fieldsPath = (String) object;
                 }

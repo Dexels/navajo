@@ -16,7 +16,8 @@
         <values>
             <value direction="in" name="lon" type="float" property="lon" />
             <value direction="in" name="lat" type="float" property="lat" />
-            <value direction="in" name="fieldsPath" type="string" property="fieldsPath" />
+            <value direction="in" name="fieldsPath" type="string"/>
+            <value direction="in" name="filterOptionsPath" type="string"/>
             <value direction="in" name="factory" type="string" />
             <value direction="in" name="messagePath" type="string" />
             <value direction="in" name="zoom" type="integer" />
