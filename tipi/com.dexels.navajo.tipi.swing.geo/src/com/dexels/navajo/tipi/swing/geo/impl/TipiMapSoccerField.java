@@ -230,7 +230,7 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
         Font oldFont = g2d.getFont();
         g2d.setFont(labelFont);
         drawCenteredString(label, p, g2d, 0);
-        if (infoLabel != null) {
+        if (infoLabel != null && !infoLabel.equals("")) {
             g2d.setFont(infoFont);
             Double offset = (map.getZoom() == 0) ? 30 : 30d / map.getZoom();
             drawCenteredString(infoLabel, p, g2d, offset.intValue() );

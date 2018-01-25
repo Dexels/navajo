@@ -33,8 +33,10 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.swing.geo.impl.TipiMapSoccerField;
 import com.dexels.navajo.tipi.swing.geo.impl.TipiSwingMapImpl;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
@@ -58,7 +60,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	private JPanel overlayPanel = null;
 	List<Painter<JXMapViewer>> painters = new ArrayList<>();
 
-	@Override
+    @Override
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable(){
 
@@ -141,6 +143,8 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		
 		mapComponents.clear();
 		overlayPanel.removeAll();
+		painters.clear();
+	    myMapKit.getMainMap().setOverlayPainter(new CompoundPainter<JXMapViewer>(painters));
 
 		if (fieldsPath != null) {
 		    Message filter = null;
@@ -181,8 +185,9 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	}
 
 	private void addFields(Message fields, Message filter) {
+	   
+        
 	    runSyncInEventThread(new Runnable() {
-
             @Override
             public void run() {
                 List<Message> al = fields.getAllMessages();
