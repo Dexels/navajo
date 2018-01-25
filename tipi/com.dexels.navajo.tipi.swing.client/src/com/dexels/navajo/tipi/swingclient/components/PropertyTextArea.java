@@ -5,10 +5,13 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
+import javax.swing.border.Border;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +21,7 @@ import com.dexels.navajo.document.Property;
 public class PropertyTextArea extends JTextArea implements PropertyControlled {
 	private static final long serialVersionUID = 6952361729861228490L;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(PropertyTextArea.class);
+	private final static Logger logger = LoggerFactory.getLogger(PropertyTextArea.class);
 	private String textValue;
 	private Property initProperty = null;
 
@@ -50,6 +52,9 @@ public class PropertyTextArea extends JTextArea implements PropertyControlled {
 	@SuppressWarnings("deprecation")
 	public PropertyTextArea() {
 		setDocument(myDocument);
+		Border border = BorderFactory.createLineBorder(java.awt.Color.BLACK);
+		this.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+		
 		this.addFocusListener(new java.awt.event.FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
