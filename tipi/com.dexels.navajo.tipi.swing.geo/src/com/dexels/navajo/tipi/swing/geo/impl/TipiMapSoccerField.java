@@ -34,12 +34,14 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
     private final static Logger logger = LoggerFactory.getLogger(TipiMapSoccerField.class);
     
     private static final String FIELD_USE_MATCHES = "MATCHES";
+    private static final String FIELD_USE_TRAINING = "TRAINING";
     private static final String FIELD_USE_MATCHES_TRAINING = "MATCHES_TRAINING";
     private static final String FIELD_TYPE_PLAIN_GRASS = "PLAIN_GRASS";
     private static final String FIELD_TYPE_ARTIFICIAL_GRASS = "ARTIFICIAL_GRASS";
     private static final String FIELD_TYPE_WETERA = "WETERA";
 
     private static final String FIELD_USE_MATCH_ICON = "/icons/club-facility/fielduse_match_large.png";
+    private static final String FIELD_USE_TRAINING_ICON = "/icons/club-facility/fielduse_training_large.png";
     private static final String FIELD_USE_MATCH_TRAINING_ICON = "/icons/club-facility/fielduse_match_training_large.png";
     private static final String FIELD_TYPE_PLAIN_GRASS_ICON = "/icons/club-facility/fieldtype_naturalgrass_large.png";
     private static final String FIELD_TYPE_ARTIFICIAL_GRASS_ICON = "/icons/club-facility/fieldtype_artificialgrass_large.png";
@@ -96,7 +98,7 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
         this.fieldUse = field.getProperty("FieldUse").getSelected().getValue();
         this.fieldType = field.getProperty("FieldType").getSelected().getValue();
         
-        this.labelFont = new Font("SansSerif", Font.PLAIN, 14);
+        this.labelFont = new Font("SansSerif", Font.BOLD, 14);
         this.infoFont = new Font("SansSerif", Font.PLAIN, 12);
         
         setFilterValues(field, filter);
@@ -109,6 +111,9 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
         // Get icons
         if (filter.getProperty("FieldUse").getSelectionByValue(FIELD_USE_MATCHES).isSelected() && fieldUse.equals(FIELD_USE_MATCHES)) {
             fieldUseImage = getImage(FIELD_USE_MATCHES);
+        }
+        if (filter.getProperty("FieldUse").getSelectionByValue(FIELD_USE_TRAINING).isSelected() && fieldUse.equals(FIELD_USE_TRAINING)) {
+            fieldUseImage = getImage(FIELD_USE_TRAINING);
         }
         if (filter.getProperty("FieldUse").getSelectionByValue(FIELD_USE_MATCHES_TRAINING).isSelected()
                 && fieldUse.equals(FIELD_USE_MATCHES_TRAINING)) {
@@ -157,6 +162,8 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
         URL resourceURL = null;
         if (type.equals(FIELD_USE_MATCHES)) {
             resourceURL = context.getResourceURL(FIELD_USE_MATCH_ICON);
+        } else if (type.equals(FIELD_USE_TRAINING)){
+            resourceURL = context.getResourceURL(FIELD_USE_TRAINING_ICON);
         } else if (type.equals(FIELD_USE_MATCHES_TRAINING)){
             resourceURL = context.getResourceURL(FIELD_USE_MATCH_TRAINING_ICON);
         } else if (type.equals(FIELD_TYPE_PLAIN_GRASS)) {
@@ -206,15 +213,15 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
         
         
         if (fieldUseImage != null) {
-            Double xOffset = (map.getZoom() == 0) ? 30 : 30 / (map.getZoom()/1.5d);
-            Double yOffset = (map.getZoom() == 0) ? 75 : 40 / (map.getZoom()/2d);
+            Double xOffset = (map.getZoom() == 0) ? 30 : 20 / (map.getZoom()/1.5d);
+            Double yOffset = (map.getZoom() == 0) ? 75 : 30 / (map.getZoom()/2d);
             Double x = centerPoint.getX() + xOffset;
             Double y = centerPoint.getY() - yOffset;
             g2d.drawImage(fieldUseImage, x.intValue(), y.intValue(), null);
         }
         if (fieldTypeImage != null) {
-            Double xOffset = (map.getZoom() == 0) ? 30 : 30 / (map.getZoom()/1.5d);
-            Double yOffset = (map.getZoom() == 0) ? 75 : 40 / (map.getZoom()/2d);
+            Double xOffset = (map.getZoom() == 0) ? 30 : 20 / (map.getZoom()/1.5d);
+            Double yOffset = (map.getZoom() == 0) ? 75 : 30 / (map.getZoom()/2d);
             Double x = centerPoint.getX() - xOffset;
             Double y = centerPoint.getY() - yOffset;
             g2d.drawImage(fieldTypeImage, x.intValue(), y.intValue(), null);
@@ -233,13 +240,13 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
     }
 
     private Polygon getFieldPolygon(JXMapViewer map) {
-        GeoPosition lefTopPos = travel(pos, getFieldHeight()/1.65, bearing-35);
-        GeoPosition rightTopPos = travel(pos, getFieldHeight()/1.65, bearing+35);
-        GeoPosition rightBottomPos = travel(pos, getFieldHeight()/1.65, bearing+215);
-        GeoPosition leftBottomPos = travel(pos, getFieldHeight()/1.65, bearing-215);
+        GeoPosition lefTopPos = travel(pos, getFieldHeight() / 1.65, bearing - 35);
+        GeoPosition rightTopPos = travel(pos, getFieldHeight() / 1.65, bearing + 35);
+        GeoPosition rightBottomPos = travel(pos, getFieldHeight() / 1.65, bearing + 215);
+        GeoPosition leftBottomPos = travel(pos, getFieldHeight() / 1.65, bearing - 215);
         Point2D leftTop = map.getTileFactory().geoToPixel(lefTopPos, map.getZoom());
-        Point2D rightTop =map.getTileFactory().geoToPixel(rightTopPos, map.getZoom());
-        Point2D rightBottom =map.getTileFactory().geoToPixel(rightBottomPos, map.getZoom());
+        Point2D rightTop = map.getTileFactory().geoToPixel(rightTopPos, map.getZoom());
+        Point2D rightBottom = map.getTileFactory().geoToPixel(rightBottomPos, map.getZoom());
         Point2D leftBottom = map.getTileFactory().geoToPixel(leftBottomPos, map.getZoom());
 
         int xpoints[] = {(int)leftTop.getX(), (int)rightTop.getX(), (int)leftBottom.getX(), (int)rightBottom.getX()};
@@ -261,7 +268,10 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
         return new GeoPosition(Math.toDegrees(lat2), Math.toDegrees(lon2));
     }
 
-    private double getFieldHeight(){
+    private double getFieldHeight() {
+        if (isHalfField) {
+            return 59D;
+        }
         return 105D;
     }
 
