@@ -191,16 +191,31 @@ public class TipiElement extends ElementAdapter implements NodeList {
 	/**
 	 * A bit debatable
 	 */
-	public String getCSSClass() {
-		TipiComponent component = getComponent();
-		return (String) component.getValue("cssClass");
-	
-	}
+    public String getCSSClass() {
+        TipiComponent component = getComponent();
+        try {
+            return (String) component.getValue("cssClass");
+        } catch (UnsupportedOperationException uoe) {
+            // nothing wrong, cssClass is not a possible value for this
+            // TipiComponent
 
-	public String getCSSStyle() {
-		TipiComponent component = getComponent();
-		return (String) component.getValue("cssStyle");
-	}
+        }
+
+        return null;
+    }
+
+    public String getCSSStyle() {
+        TipiComponent component = getComponent();
+        try {
+            return (String) component.getValue("cssStyle");
+        } catch (UnsupportedOperationException uoe) {
+            // nothing wrong, cssClass is not a possible value for this
+            // TipiComponent
+
+        }
+        return null;
+
+    }
 
 	public boolean isPseudoInstanceOf(String s) {
 //		if ("disabled".equals(s)) {
