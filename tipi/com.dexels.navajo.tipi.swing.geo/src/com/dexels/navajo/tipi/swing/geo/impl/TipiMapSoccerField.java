@@ -53,16 +53,12 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
     private boolean antiAlias = true;
     private final GeoPosition pos;
     private String label;
+    private String infoLabel  = null;
+    
     private String fieldUse;
     private String fieldType;
-    private Integer lux;
-    private String fence;
-    private String dugOut;
     private Boolean isHalfField;
-    
-    private boolean showLux;
-    private boolean showDugout;
-    private boolean showFence;
+
 
     private Image fieldUseImage = null;
     private Image fieldTypeImage = null;
@@ -96,20 +92,18 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
 
         this.label = (String) field.getProperty("Name").getTypedValue();
         this.isHalfField = (Boolean) field.getProperty("IsHalfField").getTypedValue();
-        this.lux = (Integer) field.getProperty("LuxValueUsed").getTypedValue();
-        this.fence = (String) field.getProperty("Fence").getTypedValue();
-        this.dugOut = (String) field.getProperty("DugOut").getTypedValue();
+      
         this.fieldUse = field.getProperty("FieldUse").getSelected().getValue();
         this.fieldType = field.getProperty("FieldType").getSelected().getValue();
         
         this.labelFont = new Font("SansSerif", Font.PLAIN, 14);
         this.infoFont = new Font("SansSerif", Font.PLAIN, 12);
         
-        setFilterValues(filter);
+        setFilterValues(field, filter);
         
     }
 
-    private void setFilterValues(Message filter) {
+    private void setFilterValues(Message field, Message filter) {
         if (filter == null) return;
   
         // Get icons
@@ -132,10 +126,30 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
         if (filter.getProperty("FieldType").getSelectionByValue(FIELD_TYPE_WETERA).isSelected() && fieldType.equals(FIELD_TYPE_WETERA)) {
             fieldTypeImage = getImage(FIELD_TYPE_WETERA);
         }
+       
+      
         
-        this.showLux = filter.getProperty("FieldDetails").getSelectionByValue("LUX").isSelected();
-        this.showDugout = filter.getProperty("FieldDetails").getSelectionByValue("DUGOUT").isSelected();
-        this.showFence = filter.getProperty("FieldDetails").getSelectionByValue("FENCE").isSelected();
+        StringBuilder sb = new StringBuilder();
+        if (filter.getProperty("FieldDetails").getSelectionByValue("LUX").isSelected()) {
+            sb.append(filter.getProperty("FieldDetails").getSelectionByValue("LUX").getName());
+            sb.append(": ");
+            sb.append(field.getProperty("LuxValueUsed").getTypedValue().toString());
+            sb.append("\n");
+        }
+        if (filter.getProperty("FieldDetails").getSelectionByValue("DUGOUT").isSelected()) {
+            sb.append(filter.getProperty("FieldDetails").getSelectionByValue("DUGOUT").getName());
+            sb.append(": ");
+            sb.append(field.getProperty("DugOut").getTypedValue().toString());
+            sb.append("\n");
+        }
+        if (filter.getProperty("FieldDetails").getSelectionByValue("FENCE").isSelected()) {
+            sb.append(filter.getProperty("FieldDetails").getSelectionByValue("FENCE").getName());
+            sb.append(": ");
+            sb.append(field.getProperty("Fence").getTypedValue().toString());
+        }
+        infoLabel= sb.toString();
+        
+        
     }
     
     private Image getImage(String type) {
@@ -206,15 +220,15 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
             g2d.drawImage(fieldTypeImage, x.intValue(), y.intValue(), null);
         }
         
+        Font oldFont = g2d.getFont();
+        g2d.setFont(labelFont);
         drawCenteredString(label, p, g2d, 0);
-        
-        StringBuilder sb = new StringBuilder();
-        if (showLux) sb.append(lux);
-        if (showFence) sb.append(fence);
-        if (showDugout) sb.append(dugOut);
-        
-        int offset = (map.getZoom() == 0) ? 60 : 60 / map.getZoom();
-        drawCenteredString(sb.toString(), p, g2d, offset );
+        if (infoLabel != null) {
+            g2d.setFont(infoFont);
+            Double offset = (map.getZoom() == 0) ? 30 : 30d / map.getZoom();
+            drawCenteredString(infoLabel, p, g2d, offset.intValue() );
+        }
+        g2d.setFont(oldFont);
         return;
     }
 
@@ -259,13 +273,17 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
     }
 
     private void drawCenteredString(String s, Polygon p, Graphics g, int yOffset) {
-        g.setFont(labelFont);
         FontMetrics fm = g.getFontMetrics();
-        int x = (p.getBounds().width - fm.stringWidth(s)) / 2;
+        
         int y = (fm.getAscent() + (p.getBounds().height- (fm.getAscent() + fm.getDescent())) / 2);
         Color oldColor = g.getColor();
         g.setColor(Color.WHITE);
-        g.drawString(s, p.getBounds().x + x, p.getBounds().y+y + yOffset);
+        for (String line : s.split("\n")) {
+            int x = (p.getBounds().width - fm.stringWidth(line)) / 2;
+            g.drawString(line, p.getBounds().x + x, p.getBounds().y+y + yOffset);
+            y += g.getFontMetrics().getHeight();
+        }
+
         g.setColor(oldColor);
       }
     
