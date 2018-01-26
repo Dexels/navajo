@@ -242,84 +242,74 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		myMapKit.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
 		overlayPanel.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
 
-		String con = (String) constraints;
-		StringTokenizer st = new StringTokenizer(con, ",");
-		String lat = st.nextToken();
-		String lon = st.nextToken();
-		double lonF = Double.parseDouble(lon);
-		double latF = Double.parseDouble(lat);
-		
-		final GeoPosition gp = new GeoPosition(latF, lonF);
+		try {
+		    String con = (String) constraints;
+	        StringTokenizer st = new StringTokenizer(con, ",");
+	        String lat = st.nextToken();
+	        String lon = st.nextToken();
+	        double lonF = Double.parseDouble(lon);
+	        double latF = Double.parseDouble(lat);
+	        
+	        final GeoPosition gp = new GeoPosition(latF, lonF);
 
-		
-		GeoPosition rightB = null;
-		mapComponents.put((Component) c, gp);
-		overlayPanel.add((Component) c);
-		if (st.hasMoreTokens()) {
-			String latRightBottom = null;
-			String lonRightBottom = null;
-			double latRB;
-			double lonRB;
-			latRightBottom = st.nextToken();
-			lonRightBottom = st.nextToken();
+	        GeoPosition rightB = null;
+	        mapComponents.put((Component) c, gp);
+	        overlayPanel.add((Component) c);
+	        if (st.hasMoreTokens()) {
+	            String latRightBottom = null;
+	            String lonRightBottom = null;
+	            double latRB;
+	            double lonRB;
+	            latRightBottom = st.nextToken();
+	            lonRightBottom = st.nextToken();
 
-			if (latRightBottom.startsWith("+")) {
-				logger.debug("REL LAT:" + latRightBottom);
-				double rel = Double.parseDouble(latRightBottom.substring(1));
-				latRB = latF + rel;
-				logger.debug("REsults: " + latRB);
-			} else {
-				latRB = Double.parseDouble(latRightBottom);
-			}
+	            if (latRightBottom.startsWith("+")) {
+	                logger.debug("REL LAT:" + latRightBottom);
+	                double rel = Double.parseDouble(latRightBottom.substring(1));
+	                latRB = latF + rel;
+	                logger.debug("REsults: " + latRB);
+	            } else {
+	                latRB = Double.parseDouble(latRightBottom);
+	            }
 
-			if (lonRightBottom.startsWith("+")) {
-				logger.debug("REL LON:" + lonRightBottom);
-				double rel = Double.parseDouble(lonRightBottom.substring(1));
-				lonRB = lonF + rel;
-				logger.debug("REsults: " + lonRB);
-			} else {
-				lonRB = Double.parseDouble(lonRightBottom);
-			}
+	            if (lonRightBottom.startsWith("+")) {
+	                logger.debug("REL LON:" + lonRightBottom);
+	                double rel = Double.parseDouble(lonRightBottom.substring(1));
+	                lonRB = lonF + rel;
+	                logger.debug("REsults: " + lonRB);
+	            } else {
+	                lonRB = Double.parseDouble(lonRightBottom);
+	            }
 
-			// latRB = Double.parseDouble(latRightBottom);
-			rightB = new GeoPosition(latRB, lonRB);
+	            // latRB = Double.parseDouble(latRightBottom);
+	            rightB = new GeoPosition(latRB, lonRB);
+	        }
+	        if (rightB != null) {
+	            Dimension calcDimension = calcDimension(gp, rightB);
+	            ((JComponent) c).setPreferredSize(calcDimension);
+	            mapComponentSizes.put((Component) c, rightB);
+
+	        } else {
+	            if (c instanceof JComponent) {
+	                JComponent jc = (JComponent) c;
+	                logger.debug("Adding with default size: " + jc.getPreferredSize());
+	                jc.setSize(jc.getPreferredSize());
+	            } else {
+	                ((Component) c).setSize(100, 100);
+	            }
+	        }
+	        positionComponent(c, gp, rightB);
+	        final GeoPosition gg = rightB;
+	        SwingUtilities.invokeLater(new Runnable(){
+	            @Override
+	            public void run() {
+	                positionComponent(c, gp, gg);
+	            }});
+	        jp.repaint();
+	        logger.debug("leaving add");
+		} catch (Throwable t) {
+		    logger.error("Error adding subcomponent {}- will not be visible! Constraints: {}", c, constraints, t);
 		}
-		if (rightB != null) {
-			Dimension calcDimension = calcDimension(gp, rightB);
-			((JComponent) c).setPreferredSize(calcDimension);
-			mapComponentSizes.put((Component) c, rightB);
-
-		} else {
-			if (c instanceof JComponent) {
-				JComponent jc = (JComponent) c;
-				logger.debug("Adding with default size: " + jc.getPreferredSize());
-				jc.setSize(jc.getPreferredSize());
-			} else {
-				((Component) c).setSize(100, 100);
-			}
-		}
-		positionComponent(c, gp, rightB);
-		final GeoPosition gg = rightB;
-//		myMapKit.addPropertyChangeListener(new PropertyChangeListener() {
-//
-//			public void propertyChange(PropertyChangeEvent evt) {
-//				logger.info("aaaaprop: "+evt.getPropertyName());
-//				if (evt.getPropertyName().equals("ancestor")) {
-//					positionComponent(c, gp, gg);
-//				}
-//			}
-//		});
-
-		SwingUtilities.invokeLater(new Runnable(){
-
-			@Override
-			public void run() {
-				positionComponent(c, gp, gg);
-
-			}});
-		jp.repaint();
-		// layoutChildren();
-		logger.debug("leaving add");
 
 	}
 
