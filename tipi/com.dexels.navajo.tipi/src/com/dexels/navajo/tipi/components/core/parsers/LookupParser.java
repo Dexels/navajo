@@ -133,7 +133,7 @@ public class LookupParser extends BaseTipiParser {
                 }
             }
         } catch (IOException e) {
-            logger.debug("Exception retrieving properties for {}!", localefilename, e);
+            logger.debug("Lookup location not found: " + localefilename);
         }  
         
         if (context.getApplicationInstance().getSubLocaleCode() != null && !context.getApplicationInstance().getSubLocaleCode().isEmpty()) {
@@ -149,7 +149,7 @@ public class LookupParser extends BaseTipiParser {
                     }
                 }
             } catch (IOException e) {
-                logger.debug("Exception retrieving properties for {}!", sublocalefilename, e);
+                logger.debug("Lookup location not found: " + sublocalefilename);
             } 
             
         }
@@ -175,8 +175,13 @@ public class LookupParser extends BaseTipiParser {
                     result.put(key, defaultBundle.getObject(key));
                 }
             }
-
-            s = context.getGenericResourceStream(localefilename);
+        } catch (IOException e) {
+            logger.debug("Lookup location not found: " + filename);
+        }
+        
+       
+        try {
+            InputStream s = context.getGenericResourceStream(localefilename);
             if (s != null) {
                 ResourceBundle defaultBundle = new PropertyResourceBundle(s);
                 s.close();
@@ -184,12 +189,17 @@ public class LookupParser extends BaseTipiParser {
                     result.put(key, defaultBundle.getObject(key));
                 }
             }
+        } catch (IOException e) {
+            logger.debug("Lookup location not found: " + localefilename);
+        }
 
-            if (context.getApplicationInstance().getSubLocaleCode() != null
-                    && !context.getApplicationInstance().getSubLocaleCode().isEmpty()) {
-                String sublocalefilename = "texts/main_" + context.getApplicationInstance().getLocaleCode() + "_"
-                        + context.getApplicationInstance().getSubLocaleCode().toLowerCase() + PROPERTIES_EXTENSION;
-                s = context.getGenericResourceStream(sublocalefilename);
+        if (context.getApplicationInstance().getSubLocaleCode() != null
+                && !context.getApplicationInstance().getSubLocaleCode().isEmpty()) {
+            String sublocalefilename = "texts/main_" + context.getApplicationInstance().getLocaleCode() + "_"
+                    + context.getApplicationInstance().getSubLocaleCode().toLowerCase() + PROPERTIES_EXTENSION;
+            
+            try {
+                InputStream s = context.getGenericResourceStream(sublocalefilename);
                 if (s != null) {
                     ResourceBundle sublocaleBundle = new PropertyResourceBundle(s);
                     s.close();
@@ -197,10 +207,11 @@ public class LookupParser extends BaseTipiParser {
                         result.put(key, sublocaleBundle.getObject(key));
                     }
                 }
+            } catch (IOException e) {
+                logger.debug("Lookup location not found: " + localefilename);
             }
-        } catch (IOException e) {
-            logger.error("Exception reading global resource bundle file!", e);
         }
+  
 
         LookupParser.globalBundle = result;
     }
