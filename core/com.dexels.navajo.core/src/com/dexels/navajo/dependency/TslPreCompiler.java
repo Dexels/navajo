@@ -334,10 +334,17 @@ public class TslPreCompiler {
             }
             if (navajoScript.contains("@")) {
                 // Going to try to parse param ...
-                List<String> result = getParamValue(tslDoc, navajoScript);
-                for (String res : result) {
-                    addScriptDependency(scriptFile, scriptTenant, deps, res, scriptFolder, getLineNr(expression), Dependency.NAVAJO_DEPENDENCY);
+                try {
+                    List<String> result = getParamValue(tslDoc, navajoScript);
+                    for (String res : result) {
+                        addScriptDependency(scriptFile, scriptTenant, deps, res, scriptFolder, getLineNr(expression), Dependency.NAVAJO_DEPENDENCY);
+                    }
+                } catch (XPathExpressionException e) {
+                    // Unable to resolve param
+                    logger.debug("Unable to resolve param {} in script {}", navajoScript, scriptFile);
                 }
+                
+               
 
             } else if (navajoScript.startsWith("[/")) {
                 // The navajo script is retrieved from the Indoc or database
