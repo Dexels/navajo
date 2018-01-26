@@ -65,7 +65,13 @@ public class TipiToggleButton extends TipiSwingComponentImpl {
 					iAmEnabled = ((Boolean) object).booleanValue();
 				}
 				if (name.equals("selected")) {
-					myButton.setSelected(((Boolean) object).booleanValue());
+					if(object instanceof Boolean) {
+						myButton.setSelected(((Boolean) object).booleanValue());
+					} else if(object instanceof String) {
+						myButton.setSelected(Boolean.parseBoolean((String) object));
+					} else {
+						//
+					}
 				}
 				if (name.equals("buttongroup")) {
 					TipiButtonGroup group = (TipiButtonGroup) object;

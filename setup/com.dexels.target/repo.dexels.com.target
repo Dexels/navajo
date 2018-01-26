@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2479">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2484">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
@@ -13,14 +13,14 @@
             <repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.22.v20171030"/>
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <unit id="com.dexels.thirdparty.feature.feature.group" version="1.11.12.RELEASE"/>
-            <repository location="http://repo.dexels.com/eclipse/3rdparty_1.11.12"/>
-        </location>
-        <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.jgit.feature.group" version="4.10.0.201712302008-r"/>
             <unit id="org.eclipse.jgit.http.apache.feature.group" version="4.10.0.201712302008-r"/>
             <unit id="org.eclipse.jgit.lfs.feature.group" version="4.10.0.201712302008-r"/>
             <repository location="http://download.eclipse.org/egit/updates/"/>
+        </location>
+        <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+            <unit id="com.dexels.thirdparty.feature.feature.group" version="1.11.15.RELEASE"/>
+            <repository location="http://repo.dexels.com/eclipse/3rdparty_1.11.15"/>
         </location>
     </locations>
     <includeBundles>
