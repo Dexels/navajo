@@ -35,12 +35,12 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
     private static final String FIELD_TYPE_ARTIFICIAL_GRASS = "ARTIFICIAL_GRASS";
     private static final String FIELD_TYPE_WETERA = "WETERA";
 
-    private static final String FIELD_USE_MATCH_ICON = "/icons/club-facility/fielduse_match_large.png";
-    private static final String FIELD_USE_TRAINING_ICON = "/icons/club-facility/fielduse_training_large.png";
-    private static final String FIELD_USE_MATCH_TRAINING_ICON = "/icons/club-facility/fielduse_match_training_large.png";
-    private static final String FIELD_TYPE_PLAIN_GRASS_ICON = "/icons/club-facility/fieldtype_naturalgrass_large.png";
-    private static final String FIELD_TYPE_ARTIFICIAL_GRASS_ICON = "/icons/club-facility/fieldtype_artificialgrass_large.png";
-    private static final String FIELD_TYPE_WETERA_ICON = "/icons/club-facility/fieldtype_wetra_large.png";
+    private static final String FIELD_USE_MATCH_ICON = "icons/club-facility/fielduse_match_large.png";
+    private static final String FIELD_USE_TRAINING_ICON = "icons/club-facility/fielduse_training_large.png";
+    private static final String FIELD_USE_MATCH_TRAINING_ICON = "icons/club-facility/fielduse_match_training_large.png";
+    private static final String FIELD_TYPE_PLAIN_GRASS_ICON = "icons/club-facility/fieldtype_naturalgrass_large.png";
+    private static final String FIELD_TYPE_ARTIFICIAL_GRASS_ICON = "icons/club-facility/fieldtype_artificialgrass_large.png";
+    private static final String FIELD_TYPE_WETERA_ICON = "icons/club-facility/fieldtype_wetra_large.png";
     
     private static final int FIELD_TRANSPARANCY = 230;
     
