@@ -833,6 +833,10 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
                 // nextval('sequencename')
 			    aQuery = aQuery.replaceAll("(?i)sysdate", "LOCALTIMESTAMP");
             }
+			if (aQuery.toLowerCase().contains(" number(")) {
+                // Replace NUMBER with Postgresql format NUMERIC
+			    aQuery = aQuery.replaceAll("(?i) NUMBER", " NUMERIC");
+            }
 		}
         return aQuery;
     }
