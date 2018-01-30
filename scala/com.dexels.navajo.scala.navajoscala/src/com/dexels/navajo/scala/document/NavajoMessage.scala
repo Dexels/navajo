@@ -321,14 +321,6 @@ class NavajoMessage(val parent: Message) {
     }
   }
   
-//
-//  def propertyValue(name: String): Any = {
-//    val p = property(name)
-//    if (p == null) {
-//      return null
-//    }
-//    return p.value
-//  }
 
 
 }
