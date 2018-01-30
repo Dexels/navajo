@@ -5,8 +5,8 @@ import com.dexels.navajo.document.Property
 import java.util.Date
 import collection.JavaConverters._
 import java.util.StringTokenizer
-import scala.collection.JavaConverters._
 import com.dexels.navajo.document.Selection
+import java.util.ArrayList
 
 class NavajoMessage(val parent: Message) {
 
@@ -199,11 +199,22 @@ class NavajoMessage(val parent: Message) {
     None
   }
   
-  def getList(key : String) : Option[List[Selection]] = {
+  def getList(key : String) : Option[List[String]] = {
     val prop = parent.getProperty(key)
     if (prop != null) {
-       val value  =  prop.getTypedValue.asInstanceOf[java.util.List[Selection]].asScala.toList
-       return Some(value)
+       if (prop.getType().equals(Property.LIST_PROPERTY)) {
+          return Some(prop.getTypedValue.asInstanceOf[List[String]])
+       }
+    }
+    None
+  }
+  
+  def getSelections(key : String) : Option[List[Selection]] = {
+    val prop = parent.getProperty(key)
+    if (prop != null) {
+      if (prop.getType().equals(Property.SELECTION_PROPERTY)) {
+        return Some(prop.getAllSelections.asInstanceOf[List[Selection]])
+      }
     }
     None
   }
