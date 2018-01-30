@@ -257,7 +257,7 @@ public class EntityManager {
         this.bundleCreator = bundleCreator;
     }
 
-    public void clearBundleQueue(BundleCreator bundleCreator) {
+    public void clearBundleCreator(BundleCreator bundleCreator) {
         this.bundleCreator = null;
     }
 
