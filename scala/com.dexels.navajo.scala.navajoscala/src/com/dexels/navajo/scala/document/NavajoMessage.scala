@@ -212,8 +212,8 @@ class NavajoMessage(val parent: Message) {
   def getSelections(key : String) : Option[List[Selection]] = {
     val prop = parent.getProperty(key)
     if (prop != null) {
-      if (prop.getType().equals(Property.SELECTION_PROPERTY)) {
-        return Some(prop.getAllSelections.asInstanceOf[List[Selection]])
+      if (prop.getType().equals(Property.SELECTION_PROPERTY)) {        
+        return Some(prop.getAllSelections.asInstanceOf[java.util.ArrayList[Selection]].asScala.toList)
       }
     }
     None
