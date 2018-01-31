@@ -5,7 +5,13 @@ public class NavajoClusterLinkMessage {
     private final String msg;
     private final String topic;
     
-
+    /** Topic will be identical to message! */
+    public NavajoClusterLinkMessage(String topic, String msg) {
+        this.key = msg;
+        this.msg = msg;
+        this.topic = topic;
+    }
+    
     public NavajoClusterLinkMessage(String topic, String key, String msg) {
         this.key = key;
         this.msg = msg;
