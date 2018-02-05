@@ -203,7 +203,7 @@ class NavajoMessage(val parent: Message) {
     val prop = parent.getProperty(key)
     if (prop != null) {
        if (prop.getType().equals(Property.LIST_PROPERTY)) {
-          return Some(prop.getTypedValue.asInstanceOf[List[String]])
+          return Some(prop.getTypedValue.asInstanceOf[java.util.List[String]].asScala.toList)
        }
     }
     None
