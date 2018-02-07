@@ -166,11 +166,10 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void dump(TreeNode tn) {
 		// logger.debug("My node: "+tn.toString());
 		// logger.debug("#of children: "+tn.getChildCount());
-		Enumeration<TreeNode> children = tn.children();
+		Enumeration<? extends TreeNode> children = tn.children();
 		while (children.hasMoreElements()) {
 			TreeNode element = children.nextElement();
 			dump(element);
