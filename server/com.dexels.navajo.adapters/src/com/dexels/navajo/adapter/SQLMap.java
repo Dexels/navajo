@@ -820,8 +820,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				// version
 				// Regex: case insensitive, "AND", one or more spaces, "ROWNUM",
 				// one or more spaces, "=", one or more spaces, a number
-			    aQuery = aQuery.replaceAll("(?i)AND(\\s)+ROWNUM(\\s)+(<)?=(\\s)+(\\d+)",
-						" LIMIT $5 OFFSET 1");
+			    aQuery = aQuery.replaceAll("(?i)AND(\\s)+ROWNUM(\\s)+(<)?=(\\s)+(\\d+)", " LIMIT $5 OFFSET 1");
+			    aQuery = aQuery.replaceAll("(?i)WHERE(\\s)+ROWNUM(\\s)+(<)?=(\\s)+(\\d+)", " LIMIT $5 OFFSET 1");
 			}
 			if (aQuery.toLowerCase().contains(".nextval")) {
 				// Replace sequencename.nextval with Postgresql format
