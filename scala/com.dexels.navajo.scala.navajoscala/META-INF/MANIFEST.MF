@@ -2,7 +2,7 @@ Bundle-Name: Navajo Scala Connections
 Bundle-SymbolicName: com.dexels.navajo.scala.navajoscala
 Bundle-Description: 
 Bundle-ManifestVersion: 2
-Bundle-Version: 0.1.21.qualifier
+Bundle-Version: 0.1.23.qualifier
 Include-Resource: lib
 Export-Package: com.dexels.navajo.scala,
  com.dexels.navajo.scala.document

@@ -1,6 +1,9 @@
 package com.dexels.navajo.server.enterprise.cluster;
 
+
 public class NavajoClusterLinkMessage {
+    public static final String TOPIC_SEPARATOR = "-";
+
     private final String key;
     private final String msg;
     private final String topic;
@@ -20,6 +23,9 @@ public class NavajoClusterLinkMessage {
 
     public String getKey() {
         return key;
+    }
+    public String getPublicKey() {
+        return getTopic() + TOPIC_SEPARATOR + key;
     }
 
     public String getMsg() {
