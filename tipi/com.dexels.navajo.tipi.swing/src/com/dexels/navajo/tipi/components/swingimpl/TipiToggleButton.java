@@ -6,6 +6,9 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
@@ -29,6 +32,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
  */
 
 public class TipiToggleButton extends TipiSwingComponentImpl {
+    private final static Logger logger = LoggerFactory.getLogger(TipiToggleButton.class);
 	/**
 	 * 
 	 */
@@ -70,7 +74,7 @@ public class TipiToggleButton extends TipiSwingComponentImpl {
 					} else if(object instanceof String) {
 						myButton.setSelected(Boolean.parseBoolean((String) object));
 					} else {
-						//
+					    logger.warn("Unsupported type for 'selected' property: {} ", object.getClass());
 					}
 				}
 				if (name.equals("buttongroup")) {
