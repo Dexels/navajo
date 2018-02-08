@@ -104,6 +104,9 @@ public final class TipiWindow extends TipiSwingDataComponentImpl implements Tipi
 
 			@Override
 			public void internalFrameClosing(final InternalFrameEvent e) {
+			    // On closing the window, request the focus to myWindow. This should trigger 
+			    // any onFocusLost events for active inputs which might trigger other events or isDirty states
+                myWindow.requestFocusInWindow();
 				SwingUtilities.invokeLater(new Runnable() {
 
 					@Override
