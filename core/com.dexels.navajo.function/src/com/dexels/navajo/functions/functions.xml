@@ -132,6 +132,12 @@
 		<input>string|empty</input>
 		<result>string</result>
 	</function>
+	<function name="DateAppendClockTime class="com.dexels.navajo.functions.DateAppendClockTime">
+		<description>Adds a date object with a clocktime object or with a string representing the time in format hh:mm
+		</description>
+		<input>date,clocktime|string</input>
+		<result>date</result>
+	</function>
 	<function name="DateAdd" class="com.dexels.navajo.functions.DateAdd">
 		<description>Get a new Date object where the given field is increased
 			by a given amount. Possible fields are YEAR, MONTH, WEEK and DAY.
