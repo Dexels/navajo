@@ -31,13 +31,34 @@ public class TestSQLMapPostgres {
 
     @Test
     public void testPostgresQueryRowNum() throws UserException {
-        String query = "SELECT 1 FROM dual WHERE\n rownum            = 1";
+        String query = "SELECT 1 FROM dual WHERE  rownum            = 1";
+
+        map.setQuery(query);
+        System.out.println(map.getQuery());
+        assertTrue(map.getQuery().contains("LIMIT 1"));
+        assertFalse(map.getQuery().contains("rownum"));
+        assertFalse(map.getQuery().contains("WHERE   LIMIT"));
+    }
+    
+    @Test
+    public void testPostgresQueryRowNum2() throws UserException {
+        String query = "SELECT 1 FROM dual WHERE 1=1 AND  rownum            = 5";
+
+        map.setQuery(query);
+        assertTrue(map.getQuery().contains("LIMIT 5"));
+        assertFalse(map.getQuery().contains("rownum"));
+        assertFalse(map.getQuery().contains("AND   LIMIT"));
+    }
+    @Test
+    public void testPostgresQueryRowNum3() throws UserException {
+        String query = "SELECT 1 FROM dual WHERE 1=1 OR  rownum            = 1";
 
         map.setQuery(query);
         assertTrue(map.getQuery().contains("LIMIT"));
         assertFalse(map.getQuery().contains("rownum"));
+        assertFalse(map.getQuery().contains("AND   LIMIT"));
     }
-    
+
     @Test
     public void testPostgresQueryNextVal() throws UserException {
         String query = "    VALUES (  attribute_seq.nextval, ?, ?, ?, ? )";
