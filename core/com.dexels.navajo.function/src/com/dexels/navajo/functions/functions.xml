@@ -122,6 +122,16 @@
 		<input />
 		<result />
 	</function>
+	<function name="DateTime" class="com.dexels.navajo.functions.DateTime">
+		<description>Return the string representation of the current date, determining
+			the format by the pattern parameter that the user might sent.
+			Pattern can be empty or one of the accepted patterns of the class java.time.format.DateTimeFormatter.
+			Eg: 'dd-MM-yyyy HH:mm:ss'
+			Default: 'dd-MM-yyyy HH:mm:ss
+		</description>
+		<input>string|empty</input>
+		<result>string</result>
+	</function>
 	<function name="DateAdd" class="com.dexels.navajo.functions.DateAdd">
 		<description>Get a new Date object where the given field is increased
 			by a given amount. Possible fields are YEAR, MONTH, WEEK and DAY.
