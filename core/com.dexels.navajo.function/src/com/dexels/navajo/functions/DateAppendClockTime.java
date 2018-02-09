@@ -1,9 +1,7 @@
 package com.dexels.navajo.functions;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
 
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.parser.FunctionInterface;
@@ -11,59 +9,63 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class DateAppendClockTime extends FunctionInterface {
 
-    @Override
+	@Override
 	public String remarks() {
-        return "Returns a date object containing the current ClockTime";
-    }
+		return "Returns a date object that combines the two arguements that were provided";
+	}
 
-    @Override
+	@Override
 	public String usage() {
-        return "DateTime(Date date, ClockTime cTime | String timePattern)";
-    }
+		return "DateTime(Date date, ClockTime cTime)";
+	}
 
-    @SuppressWarnings("deprecation")
 	@Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-    	
-    		java.util.Date date;
-    		ClockTime cTime;
-    		
-		if(this.getOperands().size() != 2 ){
-			throw new TMLExpressionException(this, "error: arguements missing. Please provide a valid Date and a valid ClockTime/String object.");
-		}else {
-			if(!(this.getOperand(0) instanceof java.util.Date || this.getOperand(0) instanceof Date))
-				throw new TMLExpressionException(this, "error: arguement 0 must be a Date object. The object you supplied is invalid.");
-			date = (java.util.Date) this.getOperands().get(0); 
-			
-			if(!(this.getOperand(1) instanceof ClockTime || this.getOperand(1) instanceof String))
-				throw new TMLExpressionException(this, "error: argument 1 must be a ClockTime object or a String with format hh:mm. The object you supplied is invalid. ");
-			if(this.getOperand(1) instanceof String) {
-				String o = this.getOperand(1).toString();
-				if(!o.matches("(?:[0-1][1-9]|2[0-4]):[0-5]\\d")) {
-					throw new TMLExpressionException(this, "error: argument 1 must be a ClockTime object or a String with format hh:mm. The format you supplied is wrong.");
-				}
-				cTime = (ClockTime) new ClockTime(this.getOperand(1).toString());
-			}else
-				cTime = (ClockTime) this.getOperand(1);
+
+		// Arguments number check
+		if (this.getOperands().size() != 2) {
+			throw new TMLExpressionException(this,
+					"error: arguements missing. Please provide a valid Date and a valid ClockTime object.");
 		}
 
-		date.setSeconds(cTime.getSeconds());
-		date.setHours(cTime.getHours());
-		date.setMinutes(cTime.getMinutes());
-		
-		return date;
-    }
+		Object arg0 = this.getOperand(0);
+		Object arg1 = this.getOperand(1);
 
-    public static void main(String[] args) throws Exception {
-    		
-    		DateAppendClockTime d = new DateAppendClockTime();
-    		java.util.Date date = new java.util.Date();
-    		ClockTime cTime = new ClockTime("11:28");
-    		
-    		/* Test 1 :: Valid Parameters*/
-    		try {
-    			System.out.println(" ------ Running Valid Parameters case ------ ");
-			System.out.println("Sending date :: " + date);
+		// Arguments type checks
+		if (!(arg0 instanceof Date)) {
+			throw new TMLExpressionException(this,
+					"error: arguement 0 must be a Date object. The argument you supplied is : "
+							+ this.getOperand(0).getClass());
+		}
+
+		if (!(arg1 instanceof ClockTime)) {
+			throw new TMLExpressionException(this,
+					"error: argument 1 must be a ClockTime. The argument you supplied is : "
+							+ this.getOperand(1).getClass());
+		}
+
+		Date date = (Date) arg0;
+		ClockTime cTime = (ClockTime) arg1;
+		Calendar calendar = Calendar.getInstance();
+
+		calendar.setTime(date);
+		calendar.set(Calendar.SECOND, cTime.getSeconds());
+		calendar.set(Calendar.MINUTE, cTime.getMinutes());
+		calendar.set(Calendar.HOUR, cTime.getHours());
+
+		return calendar.getTime();
+	}
+
+	public static void main(String[] args) throws Exception {
+
+		DateAppendClockTime d = new DateAppendClockTime();
+		Date date = new java.util.Date();
+		ClockTime cTime = new ClockTime("11:28");
+
+		/* Test 1 :: Valid Parameters */
+		try {
+			System.out.println(" ------ Running Valid Parameters case ------ ");
+			System.out.println("Sending Date :: " + date);
 			System.out.println("Sending ClockTime :: " + cTime);
 			d.reset();
 			d.insertOperand(date);
@@ -72,46 +74,32 @@ public final class DateAppendClockTime extends FunctionInterface {
 			System.out.println("All good :) ");
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
-    		
-    		/* Test 1.2 :: Valid Parameters */
-    		try {
-    			System.out.println(" ------ Running Valid Parameters case ------ ");
-			System.out.println("Sending date :: " + date);
-			System.out.println("Sending String as Time :: " + "22:22");
+		}
+
+		/* Test 2 :: Invalid Parameters */
+		try {
+			System.out.println(" ------ Running invalid Parameters case ------ ");
+			System.out.println("Sending 0 arguments");
 			d.reset();
-			d.insertOperand(date);
-			d.insertOperand("22:22");
 			System.out.println(d.evaluate());
-			System.out.println("All good :) ");
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("All good :) ");
 		}
-    	
-    		/* Test 2 :: Invalid Parameters */
-    		try {
-    			System.out.println(" ------ Running invalid Parameters case ------ ");
-    			System.out.println("Sending 0 arguments");
-    			d.reset();
+
+		/* Test 2.2 :: Invalid Parameters */
+		try {
+			System.out.println(" ------ Running invalid Parameters case ------ ");
+			System.out.println("Sending Date :: " + date);
+			System.out.println("Sending time 22:99");
+			d.reset();
+			d.insertOperand(date);
+			d.insertOperand("22:99");
 			System.out.println(d.evaluate());
-    		} catch (Exception e) {
-    			e.printStackTrace();
-    			System.out.println("All good :) ");
-    		} 
-    		
-    		/* Test 2.2 :: Invalid Parameters */
-    		try {
-    			System.out.println(" ------ Running invalid Parameters case ------ ");
-    			System.out.println("Sending date :: " + date);
-    			System.out.println("Sending time 22:99");
-    			d.reset();
-    			d.insertOperand(date);
-    			d.insertOperand("22:99");
-			System.out.println(d.evaluate());
-    		} catch (Exception e) {
-    			e.printStackTrace();
-    			System.out.println("All good :) ");
-    		} 
-	    	
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("All good :) ");
+		}
+
+	}
 }
