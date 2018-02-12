@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -21,12 +20,12 @@ import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface
 import com.dexels.resourcebundle.ResourceBundleStore;
 
 public class PropertyFileDescriptionProvider extends BaseDescriptionProvider implements DescriptionProviderInterface {
+    private static final String FQDN_SEPARATOR = "|";
+
     private static final Logger logger = LoggerFactory.getLogger(PropertyFileDescriptionProvider.class);
 
     private ResourceBundleStore resourceBundle;
     private boolean enabled = false;
-
-    private Map<String, ResourceBundle> cachedProperties = new HashMap<>();
 
 
     public void activate(Map<String, Object> settings) throws IOException {
@@ -52,22 +51,19 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
         try {
             String locale = in.getHeader().getHeaderAttribute("locale");
             if (locale==null) {
-                return;
-                
-                
-                // TODO AFDF
+ return;
+
+                // TODO 
 //                in.getHeader().setHeaderAttribute("locale", "NL");
             }
-            
-            ResourceBundle properties = cachedProperties.get(getCacheKey(in, access));
-            if (properties == null) {
-                try {
-                    properties = this.getResourceBundle(in, access);
-                } catch (IOException e) {
-                    logger.error("Exception getting resources", e);
-                    return;
-                }
+            ResourceBundle properties;
+            try {
+            		properties = this.getResourceBundle(in, access);
+            } catch (IOException e) {
+                logger.error("Exception getting resources", e);
+                return;
             }
+            
 
             for (Message message : out.getAllMessages()) {
                 updateMessage(properties, message, access);
@@ -113,21 +109,16 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
         
     }
 
-    
-    private String getCacheKey(Navajo in, Access access) {
-        String locale = in.getHeader().getHeaderAttribute("locale");
-        String sublocale = in.getHeader().getHeaderAttribute("sublocale");
-        return access.getTenant() + locale + sublocale;
-    }
-
     private ResourceBundle getResourceBundle(Navajo in, Access access) throws IOException {
         String locale = in.getHeader().getHeaderAttribute("locale");
         String sublocale = in.getHeader().getHeaderAttribute("sublocale");
 
         String props = resourceBundle.getResource(null, "description", access.getTenant(), sublocale, locale);
-        InputStream stream = new ByteArrayInputStream(props.getBytes(StandardCharsets.UTF_8));
-        PropertyResourceBundle p = new PropertyResourceBundle(stream);
-        cachedProperties.put(getCacheKey(in, access), p);
+        PropertyResourceBundle p = null;
+        try (InputStream stream = new ByteArrayInputStream(props.getBytes(StandardCharsets.UTF_8))) {
+            p = new PropertyResourceBundle(stream);
+        }
+
         return p;
     }
 
@@ -138,7 +129,7 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
     }
 
     private String getFqdnPropertyLookupKey(Property property, String service) {
-        return service + ":" + property.getFullPropertyName();
+        return service + FQDN_SEPARATOR + property.getFullPropertyName();
     }
 
     public void setResourceBundle(ResourceBundleStore rb) {
