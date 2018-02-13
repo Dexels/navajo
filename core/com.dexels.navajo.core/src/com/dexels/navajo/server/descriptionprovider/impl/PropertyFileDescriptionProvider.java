@@ -35,7 +35,7 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
                 enabled = true;
             }
         }
-        logger.info("PropertyFileDescriptionProvider is enabled? {}", enabled);
+        logger.info("Starting PropertyFileDescriptionProvider; enabled: {}", enabled);
 
     }
 
@@ -51,10 +51,7 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
         try {
             String locale = in.getHeader().getHeaderAttribute("locale");
             if (locale==null) {
- return;
-
-                // TODO 
-//                in.getHeader().setHeaderAttribute("locale", "NL");
+                return;
             }
             ResourceBundle properties;
             try {
