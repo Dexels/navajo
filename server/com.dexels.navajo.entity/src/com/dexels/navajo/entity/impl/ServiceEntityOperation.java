@@ -516,8 +516,6 @@ public class ServiceEntityOperation implements EntityOperation {
 	}
 
 	private void validateInputMessage(Message message) throws EntityException {
-		logger.debug("------------ About my input message ------------");
-		logger.debug("Validating message :: " + message.getName());
 		for (Property x : message.getAllProperties()) {
 			// Check all non "" (empty) values.
 			// surround with try catch so that other errors are avoided ::
@@ -535,8 +533,6 @@ public class ServiceEntityOperation implements EntityOperation {
 					// If it's not null, we need to compare the returned type with the type that the
 					// message demands.
 					if (x.getTypedValue() != null) {
-						logger.debug("Key typed value class:: " + x.getTypedValue().getClass());
-
 						// Special types check
 						// Date check
 						if (!(x.getTypedValue() instanceof Date) && x.getType().toLowerCase().equals("date"))
@@ -553,15 +549,12 @@ public class ServiceEntityOperation implements EntityOperation {
 					}
 				}
 			} catch (Exception e) {
-				logger.debug("---------");
-				logger.debug(e.toString());
 				if (e.toString().contains("EntityException")) {
 					throw new EntityException(EntityException.BAD_REQUEST,
 							e.getMessage().replaceFirst("Invalid entity request : ", ""));
 				}
 			}
 		}
-		logger.debug("Validation Done");
 	}
 
 	private Navajo handleDelete(Navajo input, Message inputEntity) throws EntityException {
