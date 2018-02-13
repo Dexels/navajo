@@ -311,32 +311,26 @@ public class EntityApiDocListener extends HttpServlet  {
             // Print if the property matches the method, OR if we are a request,
             // if we are a key and this is a GET or DELETE operation.
             String propertyMethod = p.getMethod();
-			try {
-				if (propertyMethod.equals("")) {
-					propertyMethod = p.getParentMessage().getMethod();
-				}
-			} catch (Exception e) {
-				logger.debug("Adding inherited method for "+p.getName()+" failed"
-						+ ". Parrent not found. Leaving method empty.");
+		
+			if (propertyMethod.equals("")) {
+				propertyMethod = p.getParentMessage().getMethod();
 			}
-
-			// Create the path of the property:
-			String path = "";
-			try {
-				Message parent = p.getParentMessage();
-				while (parent != null) {
-					if (parent != null) {
-						path = parent.getName() + "/" + path;
-					}
-					parent = parent.getParentMessage();
-				}
-				// path = path.substring(1, path.length() - 1);
-			} catch (Exception e) {
-				logger.debug("Parrent not found for path building");
-			}
-
+			
             if (method.equals("response") && propertyMethod.equals(method)
                     || (method.equals("request") && (op.equals(Operation.GET) || op.equals(Operation.DELETE)) && Key.isKey(p.getKey()))) {
+                
+                // Create the path of the property:
+                String path = "";
+                Message parent = p.getParentMessage();
+                while (parent != null) {
+                    if (parent != null) {
+                        path = parent.getName() + "/" + path;
+                    }
+                    parent = parent.getParentMessage();
+                }
+                // path = path.substring(1, path.length() - 1);
+                
+                
                 String modelRow = getTemplate("operationmodelrow.template");
 				modelRow = modelRow.replace("{{NAME}}", path + p.getName());
 				modelRow = modelRow.replace("{{COMMENT}}", p.getDescription());
