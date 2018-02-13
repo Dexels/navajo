@@ -1,4 +1,4 @@
 <tr>
-	<td>{{NAME}}</th>
-    <td>{{COMMENT}}</th>
+	<td>{{NAME}}</td>
+    <td>{{COMMENT}}</td>
 </tr>

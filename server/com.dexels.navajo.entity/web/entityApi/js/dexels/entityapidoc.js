@@ -226,7 +226,6 @@ $(document).ready(function() {
         var parent = $(this).closest('.operation');
         if ($(this).hasClass('cancel')) {
             $(this).text("Try it out");
-            $(this).removeClass('cancel');
             
             parent.find('.call-entityinput').remove();
             parent.find('.shell-body').hide();
@@ -236,14 +235,17 @@ $(document).ready(function() {
             parent.find('.responsebody').show();
             parent.find('.requestinput').show();
             parent.children('.perform-call-entity').hide();
+            parent.find('.callentitybutton').hide();
+            
            
-             
+            $(this).removeClass('cancel');
         } else {
             $(this).text("Cancel");
             $(this).addClass('cancel');
             
             // Hide response
             parent.find('.responsebody').hide();
+            parent.find('.callentitybutton').show();
              
             // Add input to table
             var method = parent.find('a').attr('method') ;

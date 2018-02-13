@@ -155,7 +155,7 @@ public class EntityApiDocListener extends HttpServlet  {
         } else {
             result = result.replace("{{DESCRIPTION}}", operationDescription(method) + e.getMessage().getName());
         }
-        
+
         String modelBody =  printModel(e.getMessage(), method, "response");
         result = result.replace("{{OPRESPONSEMODEL}}", modelBody);
         
@@ -163,7 +163,6 @@ public class EntityApiDocListener extends HttpServlet  {
         responseBody = responseBody.replace("{{OP}}", method);
         responseBody = responseBody.replace("{{RESPONSE_XML}}", StringEscapeUtils.escapeHtml(writeEntityXml(n)));
         result = result.replace("{{OPRESPONSE}}", responseBody);
-        
         return result;
     }
     
@@ -227,10 +226,13 @@ public class EntityApiDocListener extends HttpServlet  {
 
     private String printRequestKeysDefinition(Entity e) throws ServletException {
         String result = "";
+		String rows = "";
+		String opmodeltemplate = getTemplate("operationrequestmodel.template");
+		Set<Property> properties;
         for (Key key : e.getKeys()) {
-            String rows = "";
-            String opmodeltemplate = getTemplate("operationrequestmodel.template");
-            Set<Property> properties = key.getKeyProperties();
+
+			rows = "";
+			properties = key.getKeyProperties();
            
             for (Property prop : properties) {
                 String modelRow = getTemplate("operationrequestmodelrow.template");
@@ -244,17 +246,19 @@ public class EntityApiDocListener extends HttpServlet  {
                 }
                 rows += modelRow;
             }
-            if (!rows.equals("")) {
-                String modelTable = opmodeltemplate.replace("{{MODEL_TABLE_ROWS}}", rows);
-                result += modelTable;
-            }           
+
+			result += rows;
         }
+
+		String modelTable = opmodeltemplate.replace("{{MODEL_TABLE_ROWS}}", result);
         if (result.equals("")) {
             result = getTemplate("operationrequestnoinput.template");
+		} else {
+			result = modelTable;
         }
-        
 
         result.replace("{{CLASS}}", "inputmodel");
+
         return result;
     }
     
@@ -262,6 +266,12 @@ public class EntityApiDocListener extends HttpServlet  {
         String rows = "";
         String opmodeltemplate = getTemplate("operationmodel.template");
 
+		for (Message subMessage : m.getAllMessages()) {
+			if (subMessage.getMethod().equals("")) {
+				logger.debug(" Implementing method inheritance for :: " + subMessage.getName());
+				m.getMessage(subMessage.getName()).setMethod(m.getMethod());
+			}
+		}
 
         String propertiesResult = printPropertiesForMessage(m, op, method);
         if (!propertiesResult.equals("")){
@@ -270,8 +280,7 @@ public class EntityApiDocListener extends HttpServlet  {
 
         // And other submessages
         for (Message submessage : m.getAllMessages()) {
-            
-            propertiesResult = printModel(submessage, op, method);
+			propertiesResult = printPropertiesForMessage(submessage, op, method);
             if (!propertiesResult.equals("")){
                 rows += propertiesResult;
             }
@@ -287,21 +296,50 @@ public class EntityApiDocListener extends HttpServlet  {
     private String printPropertiesForMessage(Message m, String op, String method) {
         // Check entity message
         String rows = "";
+		for (Message subMessage : m.getAllMessages()) {
+			if (subMessage.getMethod().equals("")) {
+				logger.debug(" Implementing method inheritance for :: " + subMessage.getName());
+				m.getMessage(subMessage.getName()).setMethod(m.getMethod());
+			}
+		}
+
         for (Property p : m.getAllProperties()) {
+        	
             if (p.getDescription().equals("")) {
                 continue;
             }
             // Print if the property matches the method, OR if we are a request,
             // if we are a key and this is a GET or DELETE operation.
             String propertyMethod = p.getMethod();
-            if (method == null) {
-                propertyMethod =  p.getParentMessage().getMethod();
-            }
+			try {
+				if (propertyMethod.equals("")) {
+					propertyMethod = p.getParentMessage().getMethod();
+				}
+			} catch (Exception e) {
+				logger.debug("Adding inherited method for "+p.getName()+" failed"
+						+ ". Parrent not found. Leaving method empty.");
+			}
+
+			// Create the path of the property:
+			String path = "";
+			try {
+				Message parent = p.getParentMessage();
+				while (parent != null) {
+					if (parent != null) {
+						path = parent.getName() + "/" + path;
+					}
+					parent = parent.getParentMessage();
+				}
+				// path = path.substring(1, path.length() - 1);
+			} catch (Exception e) {
+				logger.debug("Parrent not found for path building");
+			}
+
             if (method.equals("response") && propertyMethod.equals(method)
                     || (method.equals("request") && (op.equals(Operation.GET) || op.equals(Operation.DELETE)) && Key.isKey(p.getKey()))) {
                 String modelRow = getTemplate("operationmodelrow.template");
-                modelRow = modelRow.replace("{{NAME}}", p.getName());
-                modelRow = modelRow.replace("{{COMMENT}}", p.getDescription());
+				modelRow = modelRow.replace("{{NAME}}", path + p.getName());
+				modelRow = modelRow.replace("{{COMMENT}}", p.getDescription());
                 rows += modelRow;
             }
         }
