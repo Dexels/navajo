@@ -80,6 +80,11 @@ $(document).ready(function() {
         disable_search_threshold : 10,
         width : "150px"
     });
+    
+    $("#locale").chosen({
+        disable_search_threshold : 10,
+        width : "60px"
+    });
 
     $('#handlers').change(function() {
         sessionStorage.instance = $("#handlers :selected").text();
@@ -138,7 +143,12 @@ $(document).ready(function() {
                           <option value="KNBSB-MEMBERPORTAL" >KNBSB</option>                         
                           <option value="NBB-MEMBERPORTAL" >NBB</option>                                                  
                        </select>
-                       
+                       <select data-placeholder="Locale" id="locale">
+                          <option value="empty" selected="1">n/a</option>
+                          <option value="NL" >NL</option>
+                          <option value="EN" >EN</option>
+                          <option value="FR" >FR</option>                                        
+                       </select>
                      </div>
                      <input class="LoginButton" name="doLogin" type="submit" value="Login" />
                 </form>
