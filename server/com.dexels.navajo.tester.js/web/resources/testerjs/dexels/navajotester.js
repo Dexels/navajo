@@ -1,7 +1,7 @@
 "use strict";
 
 // Holds the input navajo document for the next RPC call
-var xml = $.parseXML('<tml documentImplementation="SAXP"><header><transaction rpc_usr="" rpc_name="" rpc_pwd=""/> </header></tml>');
+var xml = $.parseXML('<tml documentImplementation="SAXP"><header ><transaction rpc_usr="" rpc_name="" rpc_pwd="" /> </header></tml>');
 var serializer = new XMLSerializer();
 var editor;
 var titleloader;
@@ -170,10 +170,15 @@ function sortFileObject(element) {
 function processLoginForm(){
     hideLoginTable();
     sessionStorage.app = $("#applications :selected").val();
+   
     sessionStorage.instance = $( "#handlers option:selected" ).text()
     sessionStorage.user =     $('#navajousername').val();
     sessionStorage.password = $('#navajopassword').val();
 
+    var locale = $("#locale :selected").val();
+    if (locale !== "empty")
+    		sessionStorage.locale = locale;
+    
     if ($('.LoginButton').attr('value') === 'Run script' && sessionStorage.script && !loginTableVisible()) {
         runScript(sessionStorage.script);
     }
@@ -330,9 +335,15 @@ function prepareInputNavajo(script) {
 
     $transaction.attr('rpc_name', script);
     $transaction.attr('rpc_usr', sessionStorage.user);
-    $transaction.attr('rpc_pwd', sessionStorage.password)
+    $transaction.attr('rpc_pwd', sessionStorage.password);
+    
+    if (sessionStorage.locale) {
+    		$xml.find('tml header').attr('locale', sessionStorage.locale);
+    }
+   
+    
 
-     var $header = $xml.find('tml header ');
+    var $header = $xml.find('tml header ');
 
     if (sessionStorage.app === 'legacy') {
     	 $header.attr('application', null)
