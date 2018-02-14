@@ -588,20 +588,23 @@ public class HTMLEditorPane extends JPanel
     	Elements ps =  doc.select("p");
     	String htmlText = "";
     	
+    	// Why are we converting p's to 1 large div??
+    	// Disabled since other html (not contained in <p>) is lost!
+    	
     	// Conversion of <p> to one large div with <br>'s
-    	if (ps.size() > 0) { 
-    		for (Element p : ps ) {
-        	    b.append(p.html());
-        	    b.append("<br/>");
-        	    
-        	}
-    		String innerText = b.toString();
-    		// Trim last <br>
-    		htmlText = "<div>" + innerText.substring(0, innerText.length() - 5 );
-    		htmlText += "</div>";
-    	} else {
+//    	if (ps.size() > 0) { 
+//    		for (Element p : ps ) {
+//        	    b.append(p.html());
+//        	    b.append("<br/>");
+//        	    
+//        	}
+//    		String innerText = b.toString();
+//    		// Trim last <br>
+//    		htmlText = "<div>" + innerText.substring(0, innerText.length() - 5 );
+//    		htmlText += "</div>";
+//    	} else {
     		htmlText = text;
-    	}
+//    	}
     	
     	
     	String topText = removeInvalidTags(htmlText);
