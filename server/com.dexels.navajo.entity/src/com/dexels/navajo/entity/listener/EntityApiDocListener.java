@@ -266,13 +266,6 @@ public class EntityApiDocListener extends HttpServlet  {
         String rows = "";
         String opmodeltemplate = getTemplate("operationmodel.template");
 
-		for (Message subMessage : m.getAllMessages()) {
-			if (subMessage.getMethod().equals("")) {
-				logger.debug(" Implementing method inheritance for :: " + subMessage.getName());
-				m.getMessage(subMessage.getName()).setMethod(m.getMethod());
-			}
-		}
-
         String propertiesResult = printPropertiesForMessage(m, op, method);
         if (!propertiesResult.equals("")){
             rows += propertiesResult;
@@ -296,26 +289,22 @@ public class EntityApiDocListener extends HttpServlet  {
     private String printPropertiesForMessage(Message m, String op, String method) {
         // Check entity message
         String rows = "";
-		for (Message subMessage : m.getAllMessages()) {
-			if (subMessage.getMethod().equals("")) {
-				logger.debug(" Implementing method inheritance for :: " + subMessage.getName());
-				m.getMessage(subMessage.getName()).setMethod(m.getMethod());
-			}
-		}
-
         for (Property p : m.getAllProperties()) {
-        	
             if (p.getDescription().equals("")) {
                 continue;
             }
-            // Print if the property matches the method, OR if we are a request,
-            // if we are a key and this is a GET or DELETE operation.
+
             String propertyMethod = p.getMethod();
-		
 			if (propertyMethod.equals("")) {
-				propertyMethod = p.getParentMessage().getMethod();
+				Message parentMessage = p.getParentMessage();
+				while (parentMessage != null && !parentMessage.getMethod().equals("")) {
+					propertyMethod = parentMessage.getMethod();
+					parentMessage = parentMessage.getParentMessage();
+				}
 			}
 			
+            // Print if the property matches the method, OR if we are a request,
+            // if we are a key and this is a GET or DELETE operation.
             if (method.equals("response") && propertyMethod.equals(method)
                     || (method.equals("request") && (op.equals(Operation.GET) || op.equals(Operation.DELETE)) && Key.isKey(p.getKey()))) {
                 
@@ -323,17 +312,16 @@ public class EntityApiDocListener extends HttpServlet  {
                 String path = "";
                 Message parent = p.getParentMessage();
                 while (parent != null) {
-                    if (parent != null) {
+                    if (parent.getParentMessage() != null && !parent.getParentMessage().getName().equals("")) {
                         path = parent.getName() + "/" + path;
                     }
                     parent = parent.getParentMessage();
                 }
                 // path = path.substring(1, path.length() - 1);
-                
-                
+
                 String modelRow = getTemplate("operationmodelrow.template");
-				modelRow = modelRow.replace("{{NAME}}", path + p.getName());
-				modelRow = modelRow.replace("{{COMMENT}}", p.getDescription());
+                modelRow = modelRow.replace("{{NAME}}", "/" + path + p.getName());
+                modelRow = modelRow.replace("{{COMMENT}}", p.getDescription());
                 rows += modelRow;
             }
         }
