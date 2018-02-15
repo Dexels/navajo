@@ -1209,6 +1209,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             throw new UserException(-1, "getMessages can only be used for array messages");
         try {
             List<Message> all = msgPointer.getAllMessages(); // inDoc.getMessages(messagePointer);
+
             if ((all == null))
                 throw new UserException(-1, "Could not find messages: " + messagePointerString + " in response document");
             messages = new MessageMap[all.size()];
@@ -1221,6 +1222,75 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
         } catch (Exception e) {
             throw new UserException(-1, e.getMessage());
         }
+    }
+
+    /**
+     * Sets the order by message to true for serialization if ordering is needed
+     * 
+     * @param m
+     * 
+     */
+    private boolean checkIfOrderingIsNeeded(Message m) {
+        
+        if (m == null || m.getMessage(0) == null) {
+            return false;
+        }
+
+        boolean bnHasOrderBy = !m.getOrderBy().equals("");
+        // can be true only if an array_element message has an array submessage
+        boolean bArrayHasNestedArrays = false;
+
+        if (bnHasOrderBy) {
+            setPerformOrderBy(true);
+            return true;
+        }
+
+        for (Message subM : m.getAllMessages()) {
+            if (!bArrayHasNestedArrays) {
+                bArrayHasNestedArrays = arrayHasNestedArrays(subM);
+            }
+
+            if (bnHasOrderBy) {
+                return true;
+            } else {
+                // check if array. If array then check for nested arrays. If there are nested
+                // arrays continue with the recursion inside the array. If not then continue
+                // with the next message
+                 if (!bArrayHasNestedArrays) {
+                    continue;
+                 }
+                bnHasOrderBy = checkIfOrderingIsNeeded(subM);
+            }
+        }
+        
+        return bnHasOrderBy;
+    }
+
+    /**
+     * Checks if this array message has any array submessages
+     * 
+     * @return boolean
+     */
+    private boolean arrayHasNestedArrays(Message m) {
+        // TODO: Finish it.
+        if (m == null || m.getMessage(0) == null) {
+            return false;
+        }
+
+        boolean stopRecursion = m.getType().equals("array");
+        if (stopRecursion) {
+            return true;
+        }
+        // for each array_ellement check it's kids. If it has kids as submessages
+        // there's a possibility that one of them might be an array
+        for (Message subM : m.getAllMessages()) {
+            if(stopRecursion) {
+                return true;
+            }else {
+                stopRecursion = arrayHasNestedArrays(subM);
+            }
+        }
+        return stopRecursion;
     }
 
     /**
@@ -1464,6 +1534,18 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             }
 
             inDoc = DispatcherFactory.getInstance().handle(outDoc, tenant, skipAuth);
+
+            Navajo checker = inDoc.copy();
+
+            boolean stopRecursion = false;
+            for (Message m : checker.getAllMessages()) {
+                if (stopRecursion) {
+                    break;
+                } else {
+                    stopRecursion = checkIfOrderingIsNeeded(m);
+                }
+            }
+
             serviceFinished = true;
             serviceCalled = true;
 
