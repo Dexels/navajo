@@ -31,25 +31,48 @@
 	</div>
 
 	<div class="authdialog" id="setauth" style="display:none"/>
-		<h2 class="authdialog"> Authorize </h2>
-		
-	    <label class="authdialog" > Client id </label>
-	    <input class="authdialoginput" name="clientid" type="text" id="clientid"/>
-	    <label class="authdialog" > Scopes </label>
-	    <input class="authdialoginput"  name="oauthscopes" type="text" id="oauthscopes" />
-	   
-	    <button id="oauthflowbutton" class="oauthauthorize button">
-	    	<span>Authorize</span>
-	    </button>
-
-		<hr class="authdialog" />
-		
-		<label class="authdialog" > Bearer token </label> 
-		<input class="authdialoginput"  name="auth" type="text" id="bearertoken"/>
-		
-		<button id="bearerflowbutton" class="oauthauthorize button">
-	    	<span>Authorize</span>
-	    </button>
+		<table>
+		<tbody>
+		<tr>
+		<td>
+			<h2 class="authdialog"> Authorize OAuth </h2>
+		    <label class="authdialog" > Client id </label>
+		    <input class="authdialoginput" name="clientid" type="text" id="clientid"/>
+		    <label class="authdialog" > Scopes </label>
+		    <input class="authdialoginput"  name="oauthscopes" type="text" id="oauthscopes" />
+		    <button id="oauthflowbutton" class="oauthauthorize button">
+		    		<span>Authorize</span>
+		    </button>
+			
+			<hr class="authdialog" />
+			
+			<label class="authdialog" > Bearer token </label> 
+			<input class="authdialoginput"  name="auth" type="text" id="bearertoken"/>
+			<button id="bearerflowbutton" class="oauthauthorize button">
+		    		<span>Authorize</span>
+		    </button>
+	    <td>
+	    <td>
+	    		<h2 class="authdialog"> Authorize Basic Auth </h2>
+	    		
+	    		<label class="authdialog" > Username </label>
+		    <input class="authdialoginput" name="bauth_username" type="text" id="bauth_username"/>
+		    <label class="authdialog" > Password </label>
+		    <input class="authdialoginput"  name="bauth_password" type="text" id="bauth_password" />
+		    <label class="authdialog" > Tenant </label>
+		    <input class="authdialoginput"  name="bauth_tenant" type="text" id="bauth_tenant" />
+		    
+		    <button id="bauthflowbutton" class="oauthauthorize button">
+		    		<span>Authorize</span>
+		    </button>
+	    </td>
+	    <td>
+	    		<h2 class="authdialog"> Authorize Firebaze </h2>
+	    		<hr class="authdialog" />
+	    </td>
+	    </tr>
+	    </tbody>
+	    	</table>
 	</div>
 
     <H2> Operations </h2>
