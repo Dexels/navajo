@@ -31,25 +31,48 @@
 	</div>
 
 	<div class="authdialog" id="setauth" style="display:none"/>
-		<h2 class="authdialog"> Authorize </h2>
-		
-	    <label class="authdialog" > Client id </label>
-	    <input class="authdialoginput" name="clientid" type="text" id="clientid"/>
-	    <label class="authdialog" > Scopes </label>
-	    <input class="authdialoginput"  name="oauthscopes" type="text" id="oauthscopes" />
-	   
-	    <button id="oauthflowbutton" class="oauthauthorize button">
-	    	<span>Authorize</span>
-	    </button>
-
-		<hr class="authdialog" />
-		
-		<label class="authdialog" > Bearer token </label> 
-		<input class="authdialoginput"  name="auth" type="text" id="bearertoken"/>
-		
-		<button id="bearerflowbutton" class="oauthauthorize button">
-	    	<span>Authorize</span>
-	    </button>
+		<table>
+		<tr>
+		<th><h2 class="authdialog header-fixed"> Authorize OAuth </h2></th>
+		<th><h2 class="authdialog header-fixed" > Authorize Basic Auth </h2></th>
+		<th><h2 class="authdialog header-fixed"> Authorize Custom </h2></th>
+		</tr>
+		<tr>
+		<td>
+		    <label class="authdialog" > Client id </label>
+		    <input class="authdialoginput" name="clientid" type="text" id="clientid"/>
+		    <label class="authdialog" > Scopes </label>
+		    <input class="authdialoginput"  name="oauthscopes" type="text" id="oauthscopes" />
+		    <button id="oauthflowbutton" class="oauthauthorize button">
+		    		<span>Authorize</span>
+		    </button>
+			
+	    </td>
+	    <td>
+	    		<label class="authdialog" > Username </label>
+		    <input class="authdialoginput" name="bauth_username" type="text" id="bauth_username"/>
+		    <label class="authdialog" > Password </label>
+		    <input class="authdialoginput"  name="bauth_password" type="password" id="bauth_password" />
+		    <label class="authdialog" > Tenant </label>
+		    <input class="authdialoginput"  name="bauth_tenant" type="text" id="bauth_tenant" />
+		    
+		    <button id="bauthflowbutton" class="oauthauthorize button">
+		    		<span>Authorize</span>
+		    </button>
+	    </td>
+	    <td>
+	    		<label class="authdialog" > Athentication </label>
+		    <input class="authdialoginput" name="cauth_type" type="text" id="cauth_type" value="bearer"/>
+		    <label class="authdialog" > Tenant </label>
+		    <input class="authdialoginput"  name="cauth_tenant" type="text" id="cauth_tenant" />
+	    		<label class="authdialog" > Token </label> 
+			<input class="authdialoginput"  name="cauth_token" type="text" id="cauth_token"/>
+			<button id="customauthorizebutton" class="oauthauthorize button">
+		    		<span>Authorize</span>
+		    </button>
+	    </td> 
+	    </tr>
+	    	</table>
 	</div>
 
     <H2> Operations </h2>

@@ -366,7 +366,13 @@ li.operation pre {
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
 }
+table th{
+	padding:0 15px 0 15px;
+}
 
+table td{
+	padding:0 15px 0 15px;
+}
 
 label.authdialog {
 	display: block;
