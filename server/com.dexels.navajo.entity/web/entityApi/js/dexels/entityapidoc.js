@@ -29,8 +29,6 @@ function setupLoginDialog() {
         		if(sessionStorage.isLocalholst){
         			$('#bauth_tenant').val(tenant);
         			$('#cauth_tenant').val(tenant);
-        		}else{
-        			$('#cauth_tenant').hide() //if not on localhost tenant added automatically
         		}
         },
         onClose: function() {
@@ -194,10 +192,10 @@ $(document).ready(function() {
                 			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
                 		}else if(sessionStorage.authType == 'basic'){
                 			req.setRequestHeader("Authorization", 'Basic ' + btoa(sessionStorage.bauth_username + ":" + sessionStorage.bauth_password));
-                			if(sessionStorage.isLocalholst) req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
+                			req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
                 		}else{
                 			req.setRequestHeader('Authorization', sessionStorage.cauth_type + ' ' + sessionStorage.token);
-                			if(sessionStorage.isLocalholst) req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
+                			req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
                 		}
                     req.setRequestHeader('Accept', 'application/json'); 
                 },
@@ -231,10 +229,10 @@ $(document).ready(function() {
 	            			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
 	            		}else if(sessionStorage.authType == 'basic'){
 	            			req.setRequestHeader("Authorization", 'Basic ' + btoa(sessionStorage.bauth_username + ":" + sessionStorage.bauth_password));
-	            			if(sessionStorage.isLocalholst) req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant); //if we aren't on localhost, the framework adds the header on the reuquest
+	            			req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant); //if we aren't on localhost, the framework adds the header on the reuquest
 	            		}else{
 	            			req.setRequestHeader('Authorization', sessionStorage.cauth_type + ' ' + sessionStorage.token);
-	            			if(sessionStorage.isLocalholst) req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant); //if we aren't on localhost, the framework adds the header on the reuquest
+	            			req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant); //if we aren't on localhost, the framework adds the header on the reuquest
 	            		} 
                     req.setRequestHeader('Accept', 'application/json');
                     req.setRequestHeader('content-type', 'application/json');
@@ -274,10 +272,10 @@ $(document).ready(function() {
             		curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
 	    		}else if(sessionStorage.authType == 'basic'){
 	    			curl += ' -H "Authorization: Basic ' + btoa(sessionStorage.bauth_username + ':' + sessionStorage.bauth_password) + '"';
-	    			if(sessionStorage.isLocalholst) curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
+	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
 	    		}else{
 	    			curl += ' -H "Authorization: ' +sessionStorage.cauth_type + ' ' + sessionStorage.token +'"';
-	    			if(sessionStorage.isLocalholst) curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
+	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
 	    		}
             curl += ' -H "Accept: application/json" ';
             curl += '"' + encodeURI(url) + '"'
@@ -293,7 +291,7 @@ $(document).ready(function() {
 	    			curl += ' -H "Authorization: Basic ' + btoa(sessionStorage.bauth_username + ':' + sessionStorage.bauth_password) + '"';
 	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
 	    		}else{
-	    			curl += ' -H "Authorization: ' +sessionStorage.cauth_type + ' ' + sessionStorage.token +'"';
+	    			curl += ' -H "Authorization: ' + sessionStorage.cauth_type + ' ' + sessionStorage.token +'"';
 	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
 	    		}
             curl +=  ' -H "Accept: application/json" ';
