@@ -1241,7 +1241,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             // get definition message, or if absent, first array element
             // check that message with checkIfOrderingIsNeeded(), return
             // Developers should use the same ordering tag in their scripts.
-
             if (m.getDefinitionMessage() != null) {
                 if (!m.getDefinitionMessage().getOrderBy().equals("")) {
                     setPerformOrderBy(true);
@@ -1256,20 +1255,12 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 }
             }
 
-            // for (Message subM : m.getAllMessages()) {
-            // checkIfOrderingIsNeeded(subM);
-            // if (performOrderBy) {
-            // return;
-            // }
-            //
-            // }
         } else {
             for (Message subM : m.getAllMessages()) {
                 checkIfOrderingIsNeeded(subM);
                 if (performOrderBy) {
                     return;
                 }
-
             }
         }
     }
