@@ -1230,62 +1230,27 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
      * @param m
      * 
      */
-    private boolean checkIfOrderingIsNeeded(Message m) {
+    private void checkIfOrderingIsNeeded(Message m) {
         
         if (!m.getOrderBy().equals("")) {
             setPerformOrderBy(true);
-            return true;
+            return;
         }
-        
-        boolean bnHasOrderBy =  false;
-        // can be true only if an array_element message has an array submessage
-        boolean bArrayHasNestedArrays = false;
+                
+        if (m.getType().equals(Message.MSG_TYPE_ARRAY)) {
+            // get definition message, or if absent, first array element
+            // check that message with checkIfOrderingIsNeeded(), return
+        } else {
+            for (Message subM : m.getAllMessages()) {
+                checkIfOrderingIsNeeded(subM);
+                if (performOrderBy) {
+                    return;
+                }
 
-        for (Message subM : m.getAllMessages()) {
-            
-            if (!bArrayHasNestedArrays) {
-                bArrayHasNestedArrays = arrayHasNestedArrays(subM);
-            }
-
-            if (bnHasOrderBy) {
-                return true;
-            } else {
-                // check if array. If array then check for nested arrays. If there are nested
-                // arrays continue with the recursion inside the array. If not then continue
-                // with the next message
-                 if (!bArrayHasNestedArrays) {
-                    continue;
-                 }
-                bnHasOrderBy = checkIfOrderingIsNeeded(subM);
             }
         }
-        
-        return bnHasOrderBy;
     }
 
-    /**
-     * Checks if this array message has any array submessages
-     * 
-     * @return boolean
-     */
-    private boolean arrayHasNestedArrays(Message m) {
-        // TODO: Finish it.
-
-
-        if (m.getType().equals("array")) {
-            return true;
-        }
-        
-
-        // for each array_ellement check it's kids. If it has kids as submessages
-        // there's a possibility that one of them might be an array
-        for (Message subM : m.getAllMessages()) {
-            if(arrayHasNestedArrays(subM)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * Dummy methods to support introspection of studio!!!!!
@@ -1528,7 +1493,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             }
 
             inDoc = DispatcherFactory.getInstance().handle(outDoc, tenant, skipAuth);
-            checkIfOrderingIsNeeded();
+            checkSetPerformOrderBy();
             
          
 
@@ -1545,9 +1510,13 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     }
 
-    private void checkIfOrderingIsNeeded() {
+    private void checkSetPerformOrderBy() {
+        if (performOrderBy) return; // no need to check it
+        
         for (Message m : inDoc.getAllMessages()) {
-            if (checkIfOrderingIsNeeded(m)) {
+            checkIfOrderingIsNeeded(m);
+            if (performOrderBy) {
+                // No need to check fut
                 break;
             }
         }
