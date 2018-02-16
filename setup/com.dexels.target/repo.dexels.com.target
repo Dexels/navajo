@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2493">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2502">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
@@ -19,8 +19,8 @@
             <repository location="http://download.eclipse.org/egit/updates/"/>
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <unit id="com.dexels.thirdparty.feature.feature.group" version="1.11.17.RELEASE"/>
-            <repository location="http://repo.dexels.com/eclipse/3rdparty_1.11.17"/>
+            <unit id="com.dexels.thirdparty.feature.feature.group" version="1.11.18.RELEASE"/>
+            <repository location="http://repo.dexels.com/eclipse/3rdparty_1.11.18"/>
         </location>
     </locations>
     <includeBundles>
@@ -69,7 +69,7 @@
         <plugin id="com.google.protobuf"/>
         <plugin id="com.hazelcast"/>
         <plugin id="com.jcraft.jsch" version="0.1.53.v201508180515"/>
-        <plugin id="com.mysql.jdbc"/>
+        <plugin id="com.mysql.cj"/>
         <plugin id="com.nimbusds.nimbus-jose-jwt"/>
         <plugin id="com.oracle.jdbc.driver"/>
         <plugin id="com.springsource.javax.transaction"/>
