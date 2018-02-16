@@ -32,10 +32,13 @@
 
 	<div class="authdialog" id="setauth" style="display:none"/>
 		<table>
-		<tbody>
+		<tr>
+		<th><h2 class="authdialog header-fixed"> Authorize OAuth </h2></th>
+		<th><h2 class="authdialog header-fixed" > Authorize Basic Auth </h2></th>
+		<th><h2 class="authdialog header-fixed"> Authorize Firebaze </h2></th>
+		</tr>
 		<tr>
 		<td>
-			<h2 class="authdialog"> Authorize OAuth </h2>
 		    <label class="authdialog" > Client id </label>
 		    <input class="authdialoginput" name="clientid" type="text" id="clientid"/>
 		    <label class="authdialog" > Scopes </label>
@@ -51,10 +54,8 @@
 			<button id="bearerflowbutton" class="oauthauthorize button">
 		    		<span>Authorize</span>
 		    </button>
+	    </td>
 	    <td>
-	    <td>
-	    		<h2 class="authdialog"> Authorize Basic Auth </h2>
-	    		
 	    		<label class="authdialog" > Username </label>
 		    <input class="authdialoginput" name="bauth_username" type="text" id="bauth_username"/>
 		    <label class="authdialog" > Password </label>
@@ -67,11 +68,9 @@
 		    </button>
 	    </td>
 	    <td>
-	    		<h2 class="authdialog"> Authorize Firebaze </h2>
 	    		<hr class="authdialog" />
-	    </td>
+	    </td> 
 	    </tr>
-	    </tbody>
 	    	</table>
 	</div>
 

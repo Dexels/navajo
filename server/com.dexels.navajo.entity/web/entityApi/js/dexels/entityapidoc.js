@@ -15,8 +15,9 @@ function setupLoginDialog() {
         		sessionStorage.authType = ''
         			
         		// fill important paramenters
-        		// extract tenant from the url TODO
-        		$('#bauth_tenant').val('');
+        		// extract tenant from the url
+    			regex = /entityDocumentation\/(\w+)\//;
+        		$('#bauth_tenant').val(window.location.href.match(regex)[1].toUpperCase());
         },
         onClose: function() {
             //console.log('modal closed');
@@ -103,11 +104,9 @@ $(document).ready(function() {
     /* Clicking on the bauth authorize button should store username and password for all the upcoming reuqests
      */
     $(document).on('click', '#bauthflowbutton', function() {
-        
         var bauth_username = $('#bauth_username').val();
         var bauth_password = $('#bauth_password').val();
         var bauth_tenant = $('#bauth_tenant').val();
-        
         
         sessionStorage.bauth_username = bauth_username;
         sessionStorage.bauth_password = bauth_password;
