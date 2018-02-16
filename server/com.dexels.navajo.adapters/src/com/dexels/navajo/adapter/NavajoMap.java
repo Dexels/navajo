@@ -1240,6 +1240,29 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
         if (m.getType().equals(Message.MSG_TYPE_ARRAY)) {
             // get definition message, or if absent, first array element
             // check that message with checkIfOrderingIsNeeded(), return
+            // Developers should use the same ordering tag in their scripts.
+
+            if (m.getDefinitionMessage() != null) {
+                if (!m.getDefinitionMessage().getOrderBy().equals("")) {
+                    setPerformOrderBy(true);
+                    return;
+                }
+            } else {
+                // It's safe to assume that the messages have the same structure, which means
+                // that if one needs ordering all of them need.
+                if (!m.getMessage(0).getOrderBy().equals("")) {
+                    setPerformOrderBy(true);
+                    return;
+                }
+            }
+
+            // for (Message subM : m.getAllMessages()) {
+            // checkIfOrderingIsNeeded(subM);
+            // if (performOrderBy) {
+            // return;
+            // }
+            //
+            // }
         } else {
             for (Message subM : m.getAllMessages()) {
                 checkIfOrderingIsNeeded(subM);
@@ -1493,10 +1516,9 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             }
 
             inDoc = DispatcherFactory.getInstance().handle(outDoc, tenant, skipAuth);
+
             checkSetPerformOrderBy();
             
-         
-
             serviceFinished = true;
             serviceCalled = true;
 
@@ -1516,11 +1538,10 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
         for (Message m : inDoc.getAllMessages()) {
             checkIfOrderingIsNeeded(m);
             if (performOrderBy) {
-                // No need to check fut
+                // No need to check further.
                 break;
             }
         }
-        
     }
 
     public void setTrigger(String trigger) {
