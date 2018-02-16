@@ -1232,9 +1232,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
      */
     private void checkIfOrderingIsNeeded(Message m) {
         
-        if(m == null || m.getOrderBy() == null) {
-            return;
-        }
 
         if (!m.getOrderBy().equals("")) {
             setPerformOrderBy(true);
