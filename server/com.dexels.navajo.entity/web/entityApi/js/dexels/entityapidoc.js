@@ -125,7 +125,7 @@ $(document).ready(function() {
         
         sessionStorage.bauth_username = bauth_username;
         sessionStorage.bauth_password = bauth_password;
-        sessionStorage.tenant =  bauth_tenant;
+        sessionStorage.tenant =  bauth_tenant.toUpperCase();
         sessionStorage.authType = 'basic';
         
         modal.close();
@@ -139,7 +139,7 @@ $(document).ready(function() {
         
         sessionStorage.cauth_type = cauth_type.charAt(0).toUpperCase() + cauth_type.substring(1,cauth_type.length);
         sessionStorage.token = cauth_token;
-        sessionStorage.tenant =  cauth_tenant;
+        sessionStorage.tenant =  cauth_tenant.toUpperCase();
         sessionStorage.authType = 'custom';
         
         modal.close();
