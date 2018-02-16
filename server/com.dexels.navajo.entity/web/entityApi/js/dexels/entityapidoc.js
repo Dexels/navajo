@@ -16,16 +16,33 @@ function setupLoginDialog() {
         			
         		// fill important paramenters
         		// extract tenant from the url
-    			regex = /entityDocumentation\/(\w+)\//;
-        		$('#bauth_tenant').val(window.location.href.match(regex)[1].toUpperCase());
+        		// ONLY if it's local host in the url
+        		var url = window.location.href;
+        		var tenant = '';
+        		if(url.indexOf('localhost') != -2){
+        			var regex = /entityDocumentation\/(\w+)\//;
+        			tenant = url.match(regex)[1].toUpperCase();
+        			sessionStorage.isLocalholst = true;
+        		}else{
+        			sessionStorage.isLocalholst = false;
+        		}
+        		if(sessionStorage.isLocalholst){
+        			$('#bauth_tenant').val(tenant);
+        			$('#cauth_tenant').val(tenant);
+        		}else{
+        			$('#cauth_tenant').hide() //if not on localhost tenant added automatically
+        		}
         },
         onClose: function() {
             //console.log('modal closed');
         },
         beforeClose: function() {
-            if ($('#bearertoken').val()) {
-                sessionStorage.token = $('#bearertoken').val();
-            }
+//            if ($('#bearertoken').val()) {
+//                sessionStorage.token = $('#bearertoken').val();
+//            }
+//            if ($('#bearertoken').val()) {
+//                sessionStorage.token = $('#bearertoken').val();
+//            }
             return true; // close the modal
         }
     });
@@ -110,13 +127,25 @@ $(document).ready(function() {
         
         sessionStorage.bauth_username = bauth_username;
         sessionStorage.bauth_password = bauth_password;
-        sessionStorage.bauth_tenant =  bauth_tenant
+        sessionStorage.tenant =  bauth_tenant;
         sessionStorage.authType = 'basic';
         
         modal.close();
     });
     
-    
+    /* Custom authorization button handler */
+    $(document).on('click', '#customauthorizebutton', function() {
+        var cauth_type = $('#cauth_type').val();
+        var cauth_token = $('#cauth_token').val();
+        var cauth_tenant = $('#cauth_tenant').val();
+        
+        sessionStorage.cauth_type = cauth_type.charAt(0).toUpperCase() + cauth_type.substring(1,cauth_type.length);
+        sessionStorage.token = cauth_token;
+        sessionStorage.tenant =  cauth_tenant;
+        sessionStorage.authType = 'custom';
+        
+        modal.close();
+    });
     
     $(document).on('click', '#authbutton', function() {
         modal.open();
@@ -165,9 +194,10 @@ $(document).ready(function() {
                 			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
                 		}else if(sessionStorage.authType == 'basic'){
                 			req.setRequestHeader("Authorization", 'Basic ' + btoa(sessionStorage.bauth_username + ":" + sessionStorage.bauth_password));
-                			req.setRequestHeader("X-Navajo-Instance", sessionStorage.bauth_tenant)
+                			if(sessionStorage.isLocalholst) req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
                 		}else{
-                			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
+                			req.setRequestHeader('Authorization', sessionStorage.cauth_type + ' ' + sessionStorage.token);
+                			if(sessionStorage.isLocalholst) req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
                 		}
                     req.setRequestHeader('Accept', 'application/json'); 
                 },
@@ -201,9 +231,10 @@ $(document).ready(function() {
 	            			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
 	            		}else if(sessionStorage.authType == 'basic'){
 	            			req.setRequestHeader("Authorization", 'Basic ' + btoa(sessionStorage.bauth_username + ":" + sessionStorage.bauth_password));
-	            			req.setRequestHeader("X-Navajo-Instance", sessionStorage.bauth_tenant)
+	            			if(sessionStorage.isLocalholst) req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant); //if we aren't on localhost, the framework adds the header on the reuquest
 	            		}else{
-	            			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
+	            			req.setRequestHeader('Authorization', sessionStorage.cauth_type + ' ' + sessionStorage.token);
+	            			if(sessionStorage.isLocalholst) req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant); //if we aren't on localhost, the framework adds the header on the reuquest
 	            		} 
                     req.setRequestHeader('Accept', 'application/json');
                     req.setRequestHeader('content-type', 'application/json');
@@ -243,9 +274,10 @@ $(document).ready(function() {
             		curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
 	    		}else if(sessionStorage.authType == 'basic'){
 	    			curl += ' -H "Authorization: Basic ' + btoa(sessionStorage.bauth_username + ':' + sessionStorage.bauth_password) + '"';
-	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.bauth_tenant +'"';
+	    			if(sessionStorage.isLocalholst) curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
 	    		}else{
-	    			curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
+	    			curl += ' -H "Authorization: ' +sessionStorage.cauth_type + ' ' + sessionStorage.token +'"';
+	    			if(sessionStorage.isLocalholst) curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
 	    		}
             curl += ' -H "Accept: application/json" ';
             curl += '"' + encodeURI(url) + '"'
@@ -259,9 +291,10 @@ $(document).ready(function() {
 	        		curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
 	    		}else if(sessionStorage.authType == 'basic'){
 	    			curl += ' -H "Authorization: Basic ' + btoa(sessionStorage.bauth_username + ':' + sessionStorage.bauth_password) + '"';
-	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.bauth_tenant +'"';
+	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
 	    		}else{
-	    			curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
+	    			curl += ' -H "Authorization: ' +sessionStorage.cauth_type + ' ' + sessionStorage.token +'"';
+	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
 	    		}
             curl +=  ' -H "Accept: application/json" ';
             curl += '-d "';
