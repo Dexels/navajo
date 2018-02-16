@@ -1232,20 +1232,17 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
      */
     private boolean checkIfOrderingIsNeeded(Message m) {
         
-        if (m == null || m.getMessage(0) == null) {
-            return false;
-        }
-
-        boolean bnHasOrderBy = !m.getOrderBy().equals("");
-        // can be true only if an array_element message has an array submessage
-        boolean bArrayHasNestedArrays = false;
-
-        if (bnHasOrderBy) {
+        if (!m.getOrderBy().equals("")) {
             setPerformOrderBy(true);
             return true;
         }
+        
+        boolean bnHasOrderBy =  false;
+        // can be true only if an array_element message has an array submessage
+        boolean bArrayHasNestedArrays = false;
 
         for (Message subM : m.getAllMessages()) {
+            
             if (!bArrayHasNestedArrays) {
                 bArrayHasNestedArrays = arrayHasNestedArrays(subM);
             }
@@ -1273,24 +1270,21 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
      */
     private boolean arrayHasNestedArrays(Message m) {
         // TODO: Finish it.
-        if (m == null || m.getMessage(0) == null) {
-            return false;
-        }
 
-        boolean stopRecursion = m.getType().equals("array");
-        if (stopRecursion) {
+
+        if (m.getType().equals("array")) {
             return true;
         }
+        
+
         // for each array_ellement check it's kids. If it has kids as submessages
         // there's a possibility that one of them might be an array
         for (Message subM : m.getAllMessages()) {
-            if(stopRecursion) {
+            if(arrayHasNestedArrays(subM)) {
                 return true;
-            }else {
-                stopRecursion = arrayHasNestedArrays(subM);
             }
         }
-        return stopRecursion;
+        return false;
     }
 
     /**
@@ -1534,17 +1528,9 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             }
 
             inDoc = DispatcherFactory.getInstance().handle(outDoc, tenant, skipAuth);
-
-            Navajo checker = inDoc.copy();
-
-            boolean stopRecursion = false;
-            for (Message m : checker.getAllMessages()) {
-                if (stopRecursion) {
-                    break;
-                } else {
-                    stopRecursion = checkIfOrderingIsNeeded(m);
-                }
-            }
+            checkIfOrderingIsNeeded();
+            
+         
 
             serviceFinished = true;
             serviceCalled = true;
@@ -1557,6 +1543,15 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             serviceCalled = true;
         }
 
+    }
+
+    private void checkIfOrderingIsNeeded() {
+        for (Message m : inDoc.getAllMessages()) {
+            if (checkIfOrderingIsNeeded(m)) {
+                break;
+            }
+        }
+        
     }
 
     public void setTrigger(String trigger) {
