@@ -1,3 +1,4 @@
+
 var modal;
 
 var pretty_max_source_length = 80000;
@@ -11,7 +12,12 @@ function setupLoginDialog() {
         closeMethods: ['overlay', 'button', 'escape'],
         closeLabel: "Close",
         onOpen: function() {
-
+        		sessionStorage.authType = ''
+        			
+        		// fill important paramenters
+        		// extract tenant from the url
+    			regex = /entityDocumentation\/(\w+)\//;
+        		$('#bauth_tenant').val(window.location.href.match(regex)[1].toUpperCase());
         },
         onClose: function() {
             //console.log('modal closed');
@@ -89,7 +95,25 @@ $(document).ready(function() {
         }
         url += "&state=123abcdef";
         url += "&login_page_type=full";
+        
+        //http://localhost:9090/oauth?redirect_uri=http://localhost:9090/entityDocumentation/knvb/voetbalnl/website&response_type=token&client_id=Xsm3pXOVzh&state=123abcdef&login_page_type=full
+        sessionStorage.authType = 'oauth';
         window.location = url;
+    });
+    
+    /* Clicking on the bauth authorize button should store username and password for all the upcoming reuqests
+     */
+    $(document).on('click', '#bauthflowbutton', function() {
+        var bauth_username = $('#bauth_username').val();
+        var bauth_password = $('#bauth_password').val();
+        var bauth_tenant = $('#bauth_tenant').val();
+        
+        sessionStorage.bauth_username = bauth_username;
+        sessionStorage.bauth_password = bauth_password;
+        sessionStorage.bauth_tenant =  bauth_tenant
+        sessionStorage.authType = 'basic';
+        
+        modal.close();
     });
     
     
@@ -137,7 +161,14 @@ $(document).ready(function() {
             // Do request
             $.ajax({
                 beforeSend: function(req) {
-                    req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token); 
+                		if(sessionStorage.authType == 'oauth'){
+                			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
+                		}else if(sessionStorage.authType == 'basic'){
+                			req.setRequestHeader("Authorization", 'Basic ' + btoa(sessionStorage.bauth_username + ":" + sessionStorage.bauth_password));
+                			req.setRequestHeader("X-Navajo-Instance", sessionStorage.bauth_tenant)
+                		}else{
+                			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
+                		}
                     req.setRequestHeader('Accept', 'application/json'); 
                 },
                 dataType: 'json',
@@ -166,7 +197,14 @@ $(document).ready(function() {
             addSpinner();
             $.ajax({
                 beforeSend: function(req) {
-                    req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token); 
+	                	if(sessionStorage.authType == 'oauth'){
+	            			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
+	            		}else if(sessionStorage.authType == 'basic'){
+	            			req.setRequestHeader("Authorization", 'Basic ' + btoa(sessionStorage.bauth_username + ":" + sessionStorage.bauth_password));
+	            			req.setRequestHeader("X-Navajo-Instance", sessionStorage.bauth_tenant)
+	            		}else{
+	            			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
+	            		} 
                     req.setRequestHeader('Accept', 'application/json');
                     req.setRequestHeader('content-type', 'application/json');
                 },
@@ -201,7 +239,14 @@ $(document).ready(function() {
         function getCurlUrlGetDelete(method, url) {
             var curl=  'curl ';
             curl += '-X' + method;
-            curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
+            if(sessionStorage.authType == 'oauth'){
+            		curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
+	    		}else if(sessionStorage.authType == 'basic'){
+	    			curl += ' -H "Authorization: Basic ' + btoa(sessionStorage.bauth_username + ':' + sessionStorage.bauth_password) + '"';
+	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.bauth_tenant +'"';
+	    		}else{
+	    			curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
+	    		}
             curl += ' -H "Accept: application/json" ';
             curl += '"' + encodeURI(url) + '"'
             return curl;
@@ -210,7 +255,14 @@ $(document).ready(function() {
         function getCurlUrlPostPut(method, url, data) {
             var curl=  'curl ';
             curl += '-X' + method;
-            curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
+            if(sessionStorage.authType == 'oauth'){
+	        		curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
+	    		}else if(sessionStorage.authType == 'basic'){
+	    			curl += ' -H "Authorization: Basic ' + btoa(sessionStorage.bauth_username + ':' + sessionStorage.bauth_password) + '"';
+	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.bauth_tenant +'"';
+	    		}else{
+	    			curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
+	    		}
             curl +=  ' -H "Accept: application/json" ';
             curl += '-d "';
             curl += data.replace(new RegExp('\"', 'g'), '\\"').replace(new RegExp('\n', 'g'), '')
