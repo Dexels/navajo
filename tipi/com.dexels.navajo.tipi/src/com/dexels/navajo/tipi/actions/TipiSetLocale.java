@@ -45,7 +45,7 @@ public class TipiSetLocale extends TipiAction {
 		}
 		final String currentLocale = myContext.getApplicationInstance().getLocaleCode();
 		Boolean localeChanged = currentLocale==null || !currentLocale.equals("" + locale.value); 
-
+		myContext.clearLazyDefinitionCache();
 		myContext.getApplicationInstance().setLocaleCode("" + locale.value);
 		// check/change subLocale if given
 		if (hasParameter("subLocale"))
