@@ -647,7 +647,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		
 		if (getType().equals(Property.BOOLEAN_PROPERTY)) {
 			if (getValue() != null && !getValue().equals("")) {
-				return Boolean.valueOf(getValue().equals("true"));
+                return Boolean.valueOf(getValue().equalsIgnoreCase("true"));
 			} else {
 				return null;
 			}
