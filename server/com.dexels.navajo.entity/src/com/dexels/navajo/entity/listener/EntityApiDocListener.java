@@ -262,44 +262,7 @@ public class EntityApiDocListener extends HttpServlet  {
         result.replace("{{CLASS}}", "inputmodel");  
         
         return result;
-        
-        
-        
-//        String result = "";
-//        String rows = "";
-//        String opmodeltemplate = getTemplate("operationrequestmodel.template");
-//        Set<Property> properties;
-//        for (Key key : e.getKeys()) {
-//
-//            rows = "";
-//            properties = key.getKeyProperties();
-//
-//            for (Property prop : properties) {
-//                String modelRow = getTemplate("operationrequestmodelrow.template");
-//                modelRow = modelRow.replace("{{NAME}}", prop.getName());
-//                modelRow = modelRow.replace("{{TYPE}}", prop.getType());
-//                modelRow = modelRow.replace("{{COMMENT}}", prop.getDescription());
-//                if (prop.getKey().contains("optional")) {
-//                    modelRow = modelRow.replace("{{REQUIREDCLASS}}", "optional");
-//                } else {
-//                    modelRow = modelRow.replace("{{REQUIREDCLASS}}", "required");
-//                }
-//                rows += modelRow;
-//            }
-//
-//            result += rows;
-//        }
-//
-//        String modelTable = opmodeltemplate.replace("{{MODEL_TABLE_ROWS}}", result);
-//        if (result.equals("")) {
-//            result = getTemplate("operationrequestnoinput.template");
-//        } else {
-//            result = modelTable;
-//        }
-//
-//        result.replace("{{CLASS}}", "inputmodel");
-//
-//        return result;
+
     }
     
     private String printModel(Message m, String op, String method) {
@@ -310,14 +273,6 @@ public class EntityApiDocListener extends HttpServlet  {
         if (!propertiesResult.equals("")){
             rows += propertiesResult;
         }
-
-        // for (Message subMessage : m.getAllMessages()) {
-        // if (subMessage.getMethod().equals("")) {
-        // logger.debug(" Implementing method inheritance for :: " +
-        // subMessage.getName());
-        // m.getMessage(subMessage.getName()).setMethod(m.getMethod());
-        // }
-        // }
 
         // And other submessages
         for (Message submessage : m.getAllMessages()) {

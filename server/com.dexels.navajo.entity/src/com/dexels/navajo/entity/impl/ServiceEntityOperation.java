@@ -519,41 +519,35 @@ public class ServiceEntityOperation implements EntityOperation {
 		for (Property x : message.getAllProperties()) {
 			// Check all non "" (empty) values.
 			// surround with try catch so that other errors are avoided ::
-			// x.getTypedValue().getClass().toString().toLowerCase() :: null pointer
-			// exception at this point is super easy :S
-			// and you throw the error when the caught error is EntityException only :)
-			try {
-				if (!x.getValue().equals("")) {
-					// If it's null, it could not be converted, which means that wrong input was
-					// provided
-					if (x.getTypedValue() == null) {
+            if (!x.getValue().equals("")) {
+                // If it's null, it could not be converted, which means that wrong input was
+                // provided
+                if (x.getTypedValue() == null) {
+                    throw new EntityException(EntityException.BAD_REQUEST,
+                            "Invalid input value for " + x.getName() + ". Please provide a valid " + x.getType());
+                }
+                // If it's not null, we need to compare the returned type with the type that the
+                // message demands.
+                if (x.getTypedValue() != null) {
+                    // Special types check
+                    // Date check
+                    if (x.getType().equalsIgnoreCase(Property.DATE_PROPERTY) && !(x.getTypedValue() instanceof Date)) {
 						throw new EntityException(EntityException.BAD_REQUEST,
-								"Invalid input value for " + x.getName() + ". Please provide a valid " + x.getType());
-					}
-					// If it's not null, we need to compare the returned type with the type that the
-					// message demands.
-					if (x.getTypedValue() != null) {
-						// Special types check
-						// Date check
-						if (!(x.getTypedValue() instanceof Date) && x.getType().toLowerCase().equals("date"))
-							throw new EntityException(EntityException.BAD_REQUEST,
-									"Invalid input value for " + x.getName() + ".  Expected: " + x.getType()
-											+ " Provided: " + x.getTypedValue().getClass().toString().toLowerCase());
+                                "Invalid input value for " + x.getName() + ".  Expected: " + x.getType() + " Provided: "
+                                        + x.getTypedValue().getClass().toString());
+                    }
 
-						// True/False check
-						if ((x.getTypedValue() instanceof Boolean)
-								&& !x.getTypedValue().toString().toLowerCase().equals(x.getValue().toLowerCase())
-								&& x.getType().toLowerCase().equals("boolean"))
-							throw new EntityException(EntityException.BAD_REQUEST,
-									"Invalid input value for " + x.getName() + ". Expected true or false");
-					}
+                    // True/False check
+                    // We check whether the parsed value is the same as the one that returns from
+                    // the function getTypedValue (true or false string values)
+                    if (x.getType().equalsIgnoreCase(Property.BOOLEAN_PROPERTY)
+                            && (x.getTypedValue() instanceof Boolean)
+                            && !x.getTypedValue().toString().equalsIgnoreCase(x.getValue())) {
+                        throw new EntityException(EntityException.BAD_REQUEST,
+                                "Invalid input value for " + x.getName() + ". Expected true or false using lower case");
+                    }
 				}
-			} catch (Exception e) {
-				if (e.toString().contains("EntityException")) {
-					throw new EntityException(EntityException.BAD_REQUEST,
-							e.getMessage().replaceFirst("Invalid entity request : ", ""));
-				}
-			}
+            }
 		}
 	}
 
