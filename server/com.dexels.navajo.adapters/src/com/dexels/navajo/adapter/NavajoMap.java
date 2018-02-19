@@ -1232,6 +1232,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
      */
     private void checkIfOrderingIsNeeded(Message m) {
         
+
         if (!m.getOrderBy().equals("")) {
             setPerformOrderBy(true);
             return;
@@ -1249,7 +1250,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             } else {
                 // It's safe to assume that the messages have the same structure, which means
                 // that if one needs ordering all of them need.
-                if (!m.getMessage(0).getOrderBy().equals("")) {
+                if (m.getMessage(0) != null && !m.getMessage(0).getOrderBy().equals("")) {
                     setPerformOrderBy(true);
                     return;
                 }

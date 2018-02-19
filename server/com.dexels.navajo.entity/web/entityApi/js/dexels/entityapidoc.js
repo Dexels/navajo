@@ -125,6 +125,7 @@ $(document).ready(function() {
         
         sessionStorage.bauth_username = bauth_username;
         sessionStorage.bauth_password = bauth_password;
+        sessionStorage.token = btoa(bauth_username + ":" + bauth_password);
         sessionStorage.tenant =  bauth_tenant.toUpperCase();
         sessionStorage.authType = 'basic';
         

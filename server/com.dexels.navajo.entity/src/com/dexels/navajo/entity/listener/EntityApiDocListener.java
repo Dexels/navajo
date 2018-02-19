@@ -225,41 +225,44 @@ public class EntityApiDocListener extends HttpServlet  {
     }
 
     private String printRequestKeysDefinition(Entity e) throws ServletException {
+        
         String result = "";
-		String rows = "";
-		String opmodeltemplate = getTemplate("operationrequestmodel.template");
-		Set<Property> properties;
         for (Key key : e.getKeys()) {
 
-			rows = "";
-			properties = key.getKeyProperties();
-           
+            String rows = "";
+            String opmodeltemplate = getTemplate("operationrequestmodel.template");
+            Set<Property> properties = key.getKeyProperties();
+            
             for (Property prop : properties) {
                 String modelRow = getTemplate("operationrequestmodelrow.template");
+
                 modelRow = modelRow.replace("{{NAME}}", prop.getName());
                 modelRow = modelRow.replace("{{TYPE}}", prop.getType());
                 modelRow = modelRow.replace("{{COMMENT}}", prop.getDescription());
-                if (prop.getKey().contains("optional")) { 
+                if (prop.getKey().contains("optional")) {
                     modelRow = modelRow.replace("{{REQUIREDCLASS}}", "optional");
                 } else {
                     modelRow = modelRow.replace("{{REQUIREDCLASS}}", "required");
                 }
+
                 rows += modelRow;
             }
+            
+            if (!rows.equals("")) {
+                String modelTable = opmodeltemplate.replace("{{MODEL_TABLE_ROWS}}", rows);
+                result += modelTable;
+            }
 
-			result += rows;
         }
-
-		String modelTable = opmodeltemplate.replace("{{MODEL_TABLE_ROWS}}", result);
+        
         if (result.equals("")) {
             result = getTemplate("operationrequestnoinput.template");
-		} else {
-			result = modelTable;
         }
-
-        result.replace("{{CLASS}}", "inputmodel");
-
+        
+        result.replace("{{CLASS}}", "inputmodel");  
+        
         return result;
+
     }
     
     private String printModel(Message m, String op, String method) {
@@ -289,19 +292,20 @@ public class EntityApiDocListener extends HttpServlet  {
     private String printPropertiesForMessage(Message m, String op, String method) {
         // Check entity message
         String rows = "";
+
         for (Property p : m.getAllProperties()) {
             if (p.getDescription().equals("")) {
                 continue;
             }
 
             String propertyMethod = p.getMethod();
-			if (propertyMethod.equals("")) {
-				Message parentMessage = p.getParentMessage();
-				while (parentMessage != null && !parentMessage.getMethod().equals("")) {
-					propertyMethod = parentMessage.getMethod();
-					parentMessage = parentMessage.getParentMessage();
-				}
-			}
+            if (propertyMethod.equals("")) {
+                Message parentMessage = p.getParentMessage();
+                while (parentMessage != null && !parentMessage.getMethod().equals("") && propertyMethod.equals("")) {
+                    propertyMethod = parentMessage.getMethod();
+                    parentMessage = parentMessage.getParentMessage();
+                }
+            }
 			
             // Print if the property matches the method, OR if we are a request,
             // if we are a key and this is a GET or DELETE operation.
@@ -323,6 +327,7 @@ public class EntityApiDocListener extends HttpServlet  {
                 modelRow = modelRow.replace("{{NAME}}", "/" + path + p.getName());
                 modelRow = modelRow.replace("{{COMMENT}}", p.getDescription());
                 rows += modelRow;
+
             }
         }
 
