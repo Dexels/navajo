@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.internal.TipiEvent;
-import com.dexels.navajo.tipi.locale.LocaleListener;
 
 public class LookupParser extends BaseTipiParser {
 
@@ -31,13 +30,6 @@ public class LookupParser extends BaseTipiParser {
     }
     public LookupParser(TipiContext context) {
         LookupParser.context = context;
-        context.getApplicationInstance().addLocaleListener(new LocaleListener() {
-
-            @Override
-            public void localeChanged(TipiContext context, String language, String region) {
-                clearCache();
-            }
-        });
     }
 
     @Override
