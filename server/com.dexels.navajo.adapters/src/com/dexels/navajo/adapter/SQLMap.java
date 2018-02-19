@@ -23,7 +23,6 @@ import org.dexels.grus.DbConnectionBroker;
 import org.dexels.grus.GrusConnection;
 import org.dexels.grus.GrusProviderFactory;
 import org.dexels.grus.LegacyDbConnectionBroker;
-import org.dexels.grus.LegacyGrusConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -741,7 +740,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			getResultSet();
 		}
 		if ((resultSet == null) || (resultSet.length == 0)) {
-			throw new UserException(-1, "No records found");
+            // TODO: Here set the logger message that is needed.
+            logger.warn("No result set was returned for query : {}", getQuery());
+            throw new UserException(-1, "No records found ");
 		}
 
 		ResultSetMap rm = resultSet[resultSetIndex];
@@ -756,8 +757,17 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			getResultSet();
 		}
 		if ((resultSet == null) || (resultSet.length == 0)) {
-			throw new UserException(-1, "No records found");
+            // TODO: Here set the logger message that is needed.
+            logger.warn("No result set was returned for query : {}", getQuery());
+            throw new UserException(-1, "No records found");
 		}
+
+        System.out.println(index);
+
+        // System.out.println(resultSet.length);
+        // System.out.println(resultSet[0].getColumnName());
+
+        // System.out.println(resultSet[resultSetIndex].ge);
 
 		ResultSetMap rm = resultSet[resultSetIndex];
 		return rm.getColumnValue(index);
@@ -771,8 +781,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 		}
 		if ((resultSet == null) || (resultSet.length == 0)) {
-		    logger.debug("Column {} not found! Rowcount: {} query: {}", columnName, getRowCount(), getQuery() );
-			throw new UserException(-1, "No records found");
+            logger.warn("Column {} not found! Rowcount: {} query: {}", columnName, getRowCount(), getQuery());
+            throw new UserException(-1, "No records found. Query: " + getQuery());
 		}
 
 		ResultSetMap rm = resultSet[resultSetIndex];
