@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Optional;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -70,13 +71,18 @@ public class TestScript {
 	
 	@Test
 	public void testSQL() {
-		SQL.query("dummy", "KNVB", "select * from organization where rownum < 500")
+		long count = SQL.query("dummy", "KNVB", "select * from organization where rownum < 500")
 			.flatMap(msg->StreamDocument.replicationMessageToStreamEvents("Organization", msg, true))
 			.compose(StreamDocument.inArray("Organization"))
 			.compose(StreamDocument.inNavajo("ProcessGetOrg", Optional.empty(), Optional.empty()))
-			.lift(StreamDocument.serialize())
-		
-		.blockingForEach(e->System.err.print(new String(e)));
+			.map(e->e.type())
+			.doOnNext(e->System.err.println("Type: "+e))
+//			.lift(StreamDocument.serialize())
+			.count()
+			.blockingGet();
+		System.err.println("count: "+count);
+		Assert.assertEquals(1002, count);
+//		.blockingForEach(e->System.err.print(new String(e)));
 	}
 	@Test
 	public void testSimpleScript() throws IOException {

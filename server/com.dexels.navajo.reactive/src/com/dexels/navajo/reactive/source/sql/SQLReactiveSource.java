@@ -42,7 +42,6 @@ public class SQLReactiveSource implements ReactiveSource, ParameterValidator {
 	public Flowable<DataItem> execute(StreamScriptContext context,Optional<ImmutableMessage> current) {
 		Object[] unnamedParams = evaluateParams(context, current);
 		ReactiveResolvedParameters params = parameters.resolveNamed(context, current, Optional.empty(), this, sourceElement, sourcePath);
-//		Map<String,Operand> paramMap = parameters.resolveNamedOld(context, current, Optional.empty());
 		String datasource = params.paramString("resource");
 		String query = params.paramString("query");
 		Flowable<DataItem> flow = SQL.query(datasource, context.tenant, query, unnamedParams).map(d->DataItem.of(d));

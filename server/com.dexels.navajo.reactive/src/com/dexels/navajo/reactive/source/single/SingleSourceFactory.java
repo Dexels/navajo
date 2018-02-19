@@ -29,8 +29,6 @@ public class SingleSourceFactory implements ReactiveSourceFactory {
 			Function<String, ReactiveMapper> mapperSupplier
 			) {
 		XMLElement mapElement = x.getChildByTagName("map");
-//		Optional<Function<StreamScriptContext,Function<DataItem,DataItem>>> mapMapper = 
-//				mapElement==null? Optional.empty() : Optional.of(ReactiveScriptParser.parseMapperList(mapElement.getChildren(), mapperSupplier));
 
 		Optional<Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>>> reduceMapper = 
 				mapElement==null? Optional.empty() : Optional.of(ReactiveScriptParser.parseReducerList(relativePath, mapElement.getChildren(), reducerSupplier));
