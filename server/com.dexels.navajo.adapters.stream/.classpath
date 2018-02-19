@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/rxjava2-jdbc-0.1-RC19.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/guava-mini-0.1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/rxjava-extras-0.8.0.11.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/rxjava2-extensions-0.17.5.jar"/>
@@ -8,5 +7,7 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="testsrc"/>
+	<classpathentry kind="lib" path="lib/rxjava2-jdbc-0.1-RC32.jar"/>
+	<classpathentry kind="lib" path="lib/rxjava2-pool-0.1-RC32.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
