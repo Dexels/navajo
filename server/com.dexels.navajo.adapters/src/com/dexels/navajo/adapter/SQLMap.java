@@ -740,7 +740,6 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			getResultSet();
 		}
 		if ((resultSet == null) || (resultSet.length == 0)) {
-            // TODO: Here set the logger message that is needed.
             logger.warn("No result set was returned for query : {}", getQuery());
             throw new UserException(-1, "No records found ");
 		}
@@ -757,21 +756,12 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			getResultSet();
 		}
 		if ((resultSet == null) || (resultSet.length == 0)) {
-            // TODO: Here set the logger message that is needed.
             logger.warn("No result set was returned for query : {}", getQuery());
             throw new UserException(-1, "No records found");
 		}
 
-        System.out.println(index);
-
-        // System.out.println(resultSet.length);
-        // System.out.println(resultSet[0].getColumnName());
-
-        // System.out.println(resultSet[resultSetIndex].ge);
-
 		ResultSetMap rm = resultSet[resultSetIndex];
 		return rm.getColumnValue(index);
-
 	}
 
 	@Override
