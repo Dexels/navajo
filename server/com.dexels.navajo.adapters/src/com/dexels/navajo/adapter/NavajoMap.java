@@ -1293,7 +1293,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     private void addProperty(Property p) throws UserException {
 
         try {
-            Message msg = MappingUtils.getMessageObject(currentFullName, null, false, outDoc, false, "", -1);
+            Message msg = MappingUtils.getMessageObject(currentFullName, null, false, outDoc, true, "", -1);
             if (msg == null) {
                 throw new UserException(-1, "Could not create property " + currentFullName + ". Perhaps a missing message name?");
             }

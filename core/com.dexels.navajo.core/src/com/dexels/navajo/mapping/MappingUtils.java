@@ -182,6 +182,15 @@ public final class MappingUtils {
                 } else if (newMsg == null) {
 
                     if (arrayChild != -1) {
+                        if (array) {
+                            Message arrParent =  NavajoFactory.getInstance().createMessage(source, messageName, Message.MSG_TYPE_ARRAY);
+                            if (msg != null) {
+                                msg.addMessage(arrParent);
+                            } else {
+                                source.addMessage(arrParent);
+                            }
+                            msg = arrParent;
+                        }
                         if (msg != null) {
                             msg.setType("array");
                         } else {
@@ -191,7 +200,7 @@ public final class MappingUtils {
                         }
                     }
 
-                    newMsg = source.getNavajoFactory().createMessage(source, messageName, (array ? Message.MSG_TYPE_ARRAY : ""));
+                    newMsg = source.getNavajoFactory().createMessage(source, messageName, Message.MSG_TYPE_SIMPLE);
 
                     if (!mode.equals("")) {
                         newMsg.setMode(mode);
@@ -208,15 +217,7 @@ public final class MappingUtils {
             }
         }
 
-        if (array) {
-            if (newMsg == null) {
-                logger.error("Null message in getMessageObject: parent null? (findbug based fix)");
-                return null;
-            }
-
-            newMsg.setType(Message.MSG_TYPE_ARRAY);
-
-        }
+      
         return newMsg;
     }
 
