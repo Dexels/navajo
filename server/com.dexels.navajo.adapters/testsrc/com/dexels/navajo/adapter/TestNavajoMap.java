@@ -39,6 +39,8 @@ public class TestNavajoMap {
         if (map.outDoc.getMessage("parentMessage").getMessage("ArrayMessage").getMessage(0).getProperty("newProperty").getName()
                 .equals("newProperty")) {
             assertTrue(true);
+        } else {
+            assertTrue(false);
         }
     }
     
@@ -54,6 +56,8 @@ public class TestNavajoMap {
         if (map.outDoc.getMessage("parentMessage").getMessage("ArrayMessage").getMessage(0).getMessage("arrayMessageChild")
                 .getProperty("newProperty").getName().equals("newProperty")) {
             assertTrue(true);
+        } else {
+            assertTrue(false);
         }
     }
 
@@ -69,6 +73,8 @@ public class TestNavajoMap {
         if (map.outDoc.getMessage("ArrayMessage").getMessage(0).getProperty("newProperty").getName()
                 .equals("newProperty")) {
             assertTrue(true);
+        } else {
+            assertTrue(false);
         }
     }
     
@@ -83,6 +89,8 @@ public class TestNavajoMap {
         if (map.outDoc.getMessage("ArrayMessage").getMessage(0).getMessage("arrayMessageChild").getProperty("newProperty").getName()
                 .equals("newProperty")) {
             assertTrue(true);
+        } else {
+            assertTrue(false);
         }
     }
 
@@ -97,6 +105,39 @@ public class TestNavajoMap {
         if (map.outDoc.getMessage("ArrayMessageParrent").getMessage(0).getMessage("ArrayMessageChild").getMessage(0)
                 .getProperty("newProperty").getName().equals("newProperty")) {
             assertTrue(true);
+        } else {
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testSimplePropertyMessage() throws UserException {
+        String testCase = "/SimpleMessage/newProperty";
+        map.setOutDoc(n);
+        map.setPropertyName(testCase);
+        map.setPropertyType("integer");
+        map.setProperty(3);
+
+        if (map.outDoc.getMessage("SimpleMessage").getProperty("newProperty").getName().equals("newProperty")) {
+            assertTrue(true);
+        } else {
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testSimplePropertyNestedMessage() throws UserException {
+        String testCase = "/SimpleMessageParent/SimpleMessageChild/newProperty";
+        map.setOutDoc(n);
+        map.setPropertyName(testCase);
+        map.setPropertyType("integer");
+        map.setProperty(3);
+
+        if (map.outDoc.getMessage("SimpleMessageParent").getMessage("SimpleMessageChild").getProperty("newProperty").getName()
+                .equals("newProperty")) {
+            assertTrue(true);
+        } else {
+            assertTrue(false);
         }
     }
 
