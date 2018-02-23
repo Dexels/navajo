@@ -13,9 +13,9 @@ import com.dexels.navajo.script.api.UserException;
 
 public class CopyMessage implements Mappable {
 
-  private Navajo outputDoc;
-  private Navajo inDoc;
-  private Access myAccess;
+  protected Navajo outputDoc;
+  protected Navajo inDoc;
+  protected Access myAccess;
   public boolean useOutputDoc = true;
   public boolean useDefinitionMessage = false;
   
