@@ -200,12 +200,25 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		}
 	}
 
+    boolean anyCellEditableInColumn(int colNum) {
+
+        for (int i = 0; i < messageTable.getRowCount(); i++) {
+            if (messageTable.isCellEditable(i, colNum)) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
 	public void firePopupEvent(MouseEvent e) {
 		logger.debug("Popupevent fired!!!!");
 		stopCellEditing();
 		final int col = messageTable.getColumnModel().getColumnIndexAtX(
 				e.getX());
-        if (messageTable.isCellEditable(0, col)) {
+        // if at least one of the cells is editable then allow
+        if (anyCellEditableInColumn(col)) {
 			Object o = messageTable.getValueAt(0, col);
 			if (!Property.class.isInstance(o) && showColumnEditDialog) {
 				// we're in a propertyless column
