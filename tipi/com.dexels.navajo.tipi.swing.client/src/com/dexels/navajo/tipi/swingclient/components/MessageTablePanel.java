@@ -200,12 +200,25 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		}
 	}
 
+    boolean anyCellEditableInColumn(int colNum) {
+
+        for (int i = 0; i < messageTable.getRowCount(); i++) {
+            if (messageTable.isCellEditable(i, colNum)) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
 	public void firePopupEvent(MouseEvent e) {
 		logger.debug("Popupevent fired!!!!");
 		stopCellEditing();
 		final int col = messageTable.getColumnModel().getColumnIndexAtX(
 				e.getX());
-		if (messageTable.isCellEditable(0, col)) {
+        // if at least one of the cells is editable then allow
+        if (anyCellEditableInColumn(col)) {
 			Object o = messageTable.getValueAt(0, col);
 			if (!Property.class.isInstance(o) && showColumnEditDialog) {
 				// we're in a propertyless column
@@ -412,7 +425,11 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 			Object o = messageTable.getValueAt(i, column);
 			Property p = messages.get(i).getProperty(((Property) o).getName());
 			boolean oldValue = ((Boolean) p.getTypedValue()).booleanValue();
-			p.setValue(!oldValue);
+
+            if (!p.getDirection().equals(Property.DIR_OUT)) {
+                p.setValue(!oldValue);
+            }
+
 			messageTable.fireChangeEvents(p, oldValue, !oldValue);
 
 			try {
@@ -438,8 +455,10 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 			Property p = m.getProperty(((Property) o).getName());
 			if (((Boolean) p.getTypedValue()).booleanValue() != value) {
 				try {
-					Object oldValue = p.getTypedValue();
-					p.setValue(value);
+                    Object oldValue = p.getTypedValue();
+                    if (!p.getDirection().equals(Property.DIR_OUT)) {
+                        p.setValue(value);
+                    }
 					messageTable.fireChangeEvents(p, oldValue, value);
 					p.getParentMessage().refreshExpression();
 				} catch (NavajoException e) {
