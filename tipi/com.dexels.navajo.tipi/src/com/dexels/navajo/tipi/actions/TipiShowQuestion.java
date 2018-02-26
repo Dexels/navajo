@@ -26,7 +26,11 @@ public class TipiShowQuestion extends TipiAction {
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
-		final String[] options = { "Ja", "Nee" };
+	    
+	    String yesOption = (String) myContext.getLookupParser().parse(event.getComponent(), "Yes", event);
+	    String NoOption = (String)  myContext.getLookupParser().parse(event.getComponent(), "No", event);
+	    
+		final String[] options = { yesOption, NoOption };
 		Operand o = getEvaluatedParameter("text", event);
 		if (o == null) {
 			myContext.showInternalError("showQuestion requires 'text' param");
