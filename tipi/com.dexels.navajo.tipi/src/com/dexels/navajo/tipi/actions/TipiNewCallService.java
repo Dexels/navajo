@@ -228,11 +228,14 @@ public class TipiNewCallService extends TipiAction {
     }
 
     private void processResult(boolean breakOnError, String destination, String service, Navajo result, boolean cache) throws TipiException {
-
-        myContext.addNavajo(service, result);
-        if (cache) {
-            myContext.cacheNavajo(service, result);
+        if (myContext.getErrorHandler().hasErrors(result) == null) {
+            // Only add navajo if we have no errors!
+            myContext.addNavajo(service, result);
+            if (cache) {
+                myContext.cacheNavajo(service, result);
+            }
         }
+       
         // is this correct? It is a bit odd.
         if (result.getHeader() != null) {
             result.getHeader().setHeaderAttribute("sourceScript", result.getHeader().getRPCName());
