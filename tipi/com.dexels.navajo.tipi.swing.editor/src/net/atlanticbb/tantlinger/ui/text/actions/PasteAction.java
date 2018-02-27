@@ -111,11 +111,16 @@ public class PasteAction extends HTMLTextEditAction
 
 	                htmlcontent =  str.toString();
 	            } else {
-	                txt = content.getTransferData(new DataFlavor(String.class, "String")).toString();
-	            }   
+	                // Another try at this
+	                htmlcontent = content.getTransferData(new DataFlavor("text/html;class=java.lang.String;charset=UTF-8")).toString();
+	            }
+			      
 			} catch (UnsupportedFlavorException ex) {
-				txt = content.getTransferData(new DataFlavor(String.class, "String")).toString();
+				// fallback to text below
 			}
+			if (htmlcontent == null || "".equals(htmlcontent.trim())) {
+                txt = content.getTransferData(new DataFlavor(String.class, "String")).toString();
+            } 
         
 			if (htmlcontent != null) {
 				Whitelist list =  Whitelist.basic();
