@@ -104,10 +104,7 @@ public class PasteAction extends HTMLTextEditAction
 	                Object transferData = content.getTransferData(html);
 	                BufferedReader reader = new BufferedReader((InputStreamReader) transferData);
 	                StringBuffer str = new StringBuffer();
-	                char[] buf = new char[512];
-	                while (reader.read(buf) > 0) {
-	                    str.append(buf);
-	                }
+                    for (String line; (line = reader.readLine()) != null; str.append(line));
 
 	                htmlcontent =  str.toString();
 	            } else {
