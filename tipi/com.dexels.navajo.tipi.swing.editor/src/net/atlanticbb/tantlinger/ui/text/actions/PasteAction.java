@@ -126,7 +126,8 @@ public class PasteAction extends HTMLTextEditAction
 				Whitelist list =  Whitelist.basic();
 				list.addTags("table", "tr", "td" , "h1", "h2", "h3", "h4", "h5", "h6");
 				list.addAttributes("table", "width", "border", "align", "cellspacing", "bgcolor", "cellpadding");
-				htmlcontent = htmlcontent.substring(0,  htmlcontent.indexOf("</html>")); // ignore everything after html closing tag
+				int htmlEnd = htmlcontent.contains("</html>") ? htmlcontent.indexOf("</html>") : htmlcontent.length();
+				htmlcontent = htmlcontent.substring(0, htmlEnd); // ignore everything after html closing tag
 				String clean = Jsoup.clean(htmlcontent, list);
 				clean = optimizeHtmlPaste(clean);
 				StringReader reader = new StringReader(HTMLUtils.jEditorPaneizeHTML(clean));
