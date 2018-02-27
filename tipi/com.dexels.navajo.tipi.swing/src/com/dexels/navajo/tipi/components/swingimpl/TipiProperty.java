@@ -296,8 +296,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 		if ("onValueChanged".equals(eventType)) {
 			Object typedValue = p.getTypedValue();
 			if ((typedValue != null && typedValue.equals(oldValue)) || (typedValue == null && oldValue == null)) {
-				logger.debug("No real change. Beware:");
-				Thread.dumpStack();
+                logger.warn("No real change on onValueChanged event. Old value : {} - New value {}", oldValue, typedValue);
 			}
 			else
 			{
