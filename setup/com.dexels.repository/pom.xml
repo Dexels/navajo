@@ -271,7 +271,7 @@
 					</snapshots>
 					<id>repo_thirdparty</id>
 					<name>Dexels Central</name>
-					<url>https://repo.dexels.com/nexus/content/repositories/thirdparty/</url>
+					<url>http://repo.dexels.com/nexus/content/repositories/thirdparty/</url>
 					<layout>default</layout>
 				</repository>
 
@@ -314,7 +314,7 @@
 					</snapshots>
 					<id>central</id>
 					<name>Dexels Third party</name>
-					<url>https://repo.dexels.com/nexus/content/repositories/other/</url>
+					<url>http://repo.dexels.com/nexus/content/repositories/other/</url>
 					<layout>default</layout>
 				</repository>
 				<repository>
@@ -334,14 +334,14 @@
 					<id>dexels</id>
 					<name>Dexels Repository</name>
 					<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
-					<url>https://repo.dexels.com/nexus/content/repositories/maintenance_release/</url>
+					<url>http://repo.dexels.com/nexus/content/repositories/maintenance_release/</url>
 					<layout>default</layout>
 				</repository>
 				<snapshotRepository>
 					<uniqueVersion>true</uniqueVersion>
 					<id>dexels_snap</id>
 					<name>Dexels Snapshots</name>
-					<url>https://repo.dexels.com/nexus/content/repositories/maintenance_snapshot</url>
+					<url>http://repo.dexels.com/nexus/content/repositories/maintenance_snapshot</url>
 					<layout>default</layout>
 				</snapshotRepository>
 			</distributionManagement>
@@ -370,7 +370,7 @@
 					<uniqueVersion>true</uniqueVersion>
 					<id>dexels_snap_test</id>
 					<name>Dexels Snapshots</name>
-					<url>https://repo.dexels.com/nexus/content/repositories/navajo_test_snapshot/</url>
+					<url>http://repo.dexels.com/nexus/content/repositories/navajo_test_snapshot/</url>
 					<layout>default</layout>
 				</snapshotRepository>
 			</distributionManagement>
@@ -384,7 +384,7 @@
 					</snapshots>
 					<id>dexels_test_snap</id>
 					<name>Dexels Test Snap</name>
-					<url>https://repo.dexels.com/nexus/content/repositories/navajo_test_snapshot/</url>
+					<url>http://repo.dexels.com/nexus/content/repositories/navajo_test_snapshot/</url>
 					<layout>default</layout>
 				</repository>
 				<repository>
@@ -396,7 +396,7 @@
 					</snapshots>
 					<id>repo_thirdparty</id>
 					<name>Dexels Central</name>
-					<url>https://repo.dexels.com/nexus/content/repositories/thirdparty/</url>
+					<url>http://repo.dexels.com/nexus/content/repositories/thirdparty/</url>
 					<layout>default</layout>
 				</repository>
 			</repositories>
