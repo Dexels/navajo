@@ -27,8 +27,8 @@ public class TipiShowQuestion extends TipiAction {
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
 	    
-	    String yesOption = (String) myContext.getLookupParser().parse(event.getComponent(), "Yes", event);
-	    String NoOption = (String)  myContext.getLookupParser().parse(event.getComponent(), "No", event);
+	    String yesOption = (String) myContext.getLookupParser().lookup("Yes");
+	    String NoOption = (String)  myContext.getLookupParser().lookup("No");
 	    
 		final String[] options = { yesOption, NoOption };
 		Operand o = getEvaluatedParameter("text", event);
