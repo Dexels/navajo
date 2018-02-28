@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2507">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2522">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.11.0.v20150529-1857"/>
@@ -18,9 +18,10 @@
             <unit id="org.eclipse.jgit.lfs.feature.group" version="4.10.0.201712302008-r"/>
             <repository location="http://download.eclipse.org/egit/updates/"/>
         </location>
+        <location path="/Users/frank/git/navajo/server/com.dexels.navajo.reactive.subscriber/libdump" type="Directory"/>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <unit id="com.dexels.thirdparty.feature.feature.group" version="1.11.19.RELEASE"/>
-            <repository location="http://repo.dexels.com/eclipse/3rdparty_1.11.19"/>
+            <unit id="com.dexels.thirdparty.feature.feature.group" version="1.11.22.RELEASE"/>
+            <repository location="http://repo.dexels.com/eclipse/3rdparty_1.11.22"/>
         </location>
     </locations>
     <includeBundles>
@@ -33,7 +34,7 @@
         <plugin id="com.dexels.immutable.api"/>
         <plugin id="com.dexels.immutable.impl"/>
         <plugin id="com.dexels.index.api"/>
-        <plugin id="com.dexels.kafka.impl.rx2"/>
+        <plugin id="com.dexels.kafka.impl.rx2" version="4.0.3.201802271458"/>
         <plugin id="com.dexels.log4j.httpappender"/>
         <plugin id="com.dexels.log4j.server"/>
         <plugin id="com.dexels.logback.redis"/>
@@ -69,7 +70,7 @@
         <plugin id="com.google.protobuf"/>
         <plugin id="com.hazelcast"/>
         <plugin id="com.jcraft.jsch" version="0.1.53.v201508180515"/>
-        <plugin id="com.mysql.cj"/>
+        <plugin id="com.mysql.jdbc"/>
         <plugin id="com.nimbusds.nimbus-jose-jwt"/>
         <plugin id="com.oracle.jdbc.driver"/>
         <plugin id="com.springsource.javax.transaction"/>
@@ -122,8 +123,8 @@
         <plugin id="org.apache.felix.fileinstall"/>
         <plugin id="org.apache.felix.framework"/>
         <plugin id="org.apache.felix.gogo.command" version="1.0.2"/>
-        <plugin id="org.apache.felix.gogo.runtime" version="1.0.6"/>
         <plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
+        <plugin id="org.apache.felix.gogo.runtime" version="1.0.6"/>
         <plugin id="org.apache.felix.gogo.shell" version="1.0.0"/>
         <plugin id="org.apache.felix.inventory"/>
         <plugin id="org.apache.felix.log"/>
