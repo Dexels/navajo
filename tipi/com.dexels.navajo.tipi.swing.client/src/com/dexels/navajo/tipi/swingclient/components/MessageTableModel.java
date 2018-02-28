@@ -57,6 +57,7 @@ public class MessageTableModel extends AbstractTableModel {
 	private boolean readOnly = false;
 	private int subsractColumnCount = 1;
 	private boolean rowHeadersVisible = true;
+    private final List<MessageTableColumnDefinition> definedColumns = new ArrayList<>();
 
 	private final Map<String, String> myTypeMap = new HashMap<String, String>();
 
@@ -178,7 +179,9 @@ public class MessageTableModel extends AbstractTableModel {
 	public int addColumn(String id, String title, boolean editable) {
 		// logger.info("Adding column: " + id + ", " + editable +
 		// ", NEW VERSION BABY");
-		myColumnIds.add(id);
+	    definedColumns.add(new MessageTableColumnDefinition(id, title, editable));
+
+	    myColumnIds.add(id);
 		myColumnTitles.add(title);
 		if (!editableMap.containsKey(id)) { // EDITABLE IS DETERMINED BY THE
 											// FIRST
@@ -205,6 +208,8 @@ public class MessageTableModel extends AbstractTableModel {
 	}
 
 	public void removeAllColumns() {
+	    definedColumns.clear();
+
 		myColumnIds.clear();
 		myColumnTitles.clear();
 		// editableList.clear(); // REMOVED clear of editable, so we REMEMBER
@@ -543,5 +548,11 @@ public class MessageTableModel extends AbstractTableModel {
 	public void propertyChange(PropertyChangeEvent arg0) {
 
 	}
+	
+	   
+    
+    public List<MessageTableColumnDefinition> getColumnDefinitions() {
+        return definedColumns;
+    }
 
 }

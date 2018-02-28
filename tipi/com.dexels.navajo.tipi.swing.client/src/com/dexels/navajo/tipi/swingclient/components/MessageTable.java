@@ -1333,10 +1333,8 @@ public class MessageTable extends JTable implements CellEditorListener,
 		return mtm.addColumn(id, title, editable);
 	}
 
-	public final int addColumn(String id, String title, boolean editable,int size) {
-	    
-	    definedColumns.add(new MessageTableColumnDefinition(id, title, editable));
-
+(??)	public final int addColumn(String id, String title, boolean editable,
+(??)			int size) {
 		MessageTableModel mtm = getMessageModel();
 		int index = mtm.addColumn(id, title, editable);
 		setColumnWidth(index, size);
@@ -2253,6 +2251,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	public void setCurrentEditingComponent(Component doGetEditor) {
 		myCurrentEditingComponent = doGetEditor;
 	}
+
 
 	
 	   
