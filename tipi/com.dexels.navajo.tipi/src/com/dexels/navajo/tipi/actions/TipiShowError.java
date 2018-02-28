@@ -33,7 +33,14 @@ public class TipiShowError extends TipiAction {
 		} else {
 			result = oo.toString();
 		}
-		final String txt = (result).replaceAll("\n", " ");
-		myContext.showError(txt, "Info", event.getComponent());
+
+        final String txt = (result).replaceAll("\n", " ");
+
+        String title = (String) getEvaluatedParameterValue("title", event);
+        if (title == null) {
+            title = "Error";
+        }
+
+        myContext.showError(txt, title, event.getComponent());
 	}
 }

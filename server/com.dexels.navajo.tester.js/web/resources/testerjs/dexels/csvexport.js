@@ -10,13 +10,23 @@ function getCsvContent(divelement) {
         var $element = $(element);
         
         // If we have a definition message, this is put in the header row
-        $element.children('message[type="definition"]').each(function() {
-            var row = [];
-            $(this).children('property').each(function() {
-                row.push($(this).attr('name'));
-            });
-            csvData += row.join(";") + "\n"
-        });
+		$element.children('message[type="definition"]').each(function() {
+			var row = [];
+			$(this).children('property').each(function() {
+			row.push($(this).attr('name'));
+			});
+			csvData += row.join(";") + "\n"
+		});
+        
+        // Ignore the definition messaage and check the first message to create the header
+		//        function createHeader() {
+		//			var row = [];
+		//				$(this).children('property').each(function() {
+		//		        row.push($(this).attr('name'));
+		//		    });
+		//		    csvData += row.join(";") + "\n"
+		//		}
+		//		createHeader.call($element.children('message[type="array_element"]').first());
            
         // Loop over the array_elements
         $element.children('message[type="array_element"]').each(function() {
@@ -26,9 +36,10 @@ function getCsvContent(divelement) {
                 var proptype = $(this).attr('type')
                 if (proptype === 'selection') {
                     var hasselection = false;
-                    property.children('option').each(function() {
+                    
+                    $(this).children('option').each(function() {
                         var selected = $(this).attr('selected');
-                        if (selected) {
+                        if (selected == "1") {
                             row.push($(this).attr('name'));
                             hasselection = true;
                         }

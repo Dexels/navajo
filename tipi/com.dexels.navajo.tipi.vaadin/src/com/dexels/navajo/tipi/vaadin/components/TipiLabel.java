@@ -27,16 +27,19 @@ public class TipiLabel extends TipiVaadinComponentImpl {
 	  @Override
 	public void setComponentValue(final String name, final Object object) {
 		    super.setComponentValue(name, object);
-			Component v = getVaadinContainer();
+			Label l = (Label) getVaadinContainer();
 		        if (name.equals("text")) {
-		          v.setCaption( ""+ object);
+		            l.setCaption( ""+ object);
 		        }
 		        if ("icon".equals(name)) {
-	                v.setIcon( getResource(object));
+	                l.setIcon( getResource(object));
 		        }
+                if ("tooltip".equals(name)) {
+                    l.setDescription( object == null ? (String) null : object.toString());
+                }
 		        if("cssClass".equals(name)){
 		        
-		        	v.addStyleName(""+object);
+		        	l.addStyleName(""+object);
 		        }
 	  }
 

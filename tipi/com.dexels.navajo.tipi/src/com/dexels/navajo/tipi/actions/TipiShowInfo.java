@@ -43,7 +43,14 @@ public class TipiShowInfo extends TipiAction {
 	
 			result = oo.toString();
 		}
-		final String txt = result.replaceAll("\n", " ");
-		myContext.showInfo(txt, "", event.getComponent());
+
+        final String txt = result.replaceAll("\n", " ");
+
+        String title = (String) getEvaluatedParameterValue("title", event);
+        if (title == null) {
+            title = "Info";
+        }
+
+        myContext.showInfo(txt, title, event.getComponent());
 	}
 }

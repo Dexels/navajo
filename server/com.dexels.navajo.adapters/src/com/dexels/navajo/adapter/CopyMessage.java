@@ -13,9 +13,9 @@ import com.dexels.navajo.script.api.UserException;
 
 public class CopyMessage implements Mappable {
 
-  private Navajo outputDoc;
-  private Navajo inDoc;
-  private Access myAccess;
+  protected Navajo outputDoc;
+  protected Navajo inDoc;
+  protected Access myAccess;
   public boolean useOutputDoc = true;
   public boolean useDefinitionMessage = false;
   
@@ -31,7 +31,7 @@ public void load(Access access) throws MappableException, UserException {
   }
 
   private void copy(Message from, Message to) {
-	  
+
 	  // Copy scope.
 	  if ( from.getScope() != null && !from.getScope().equals("") ) {
 		  to.setScope(from.getScope());
@@ -89,8 +89,17 @@ public void store() throws MappableException, UserException {
     
     if ( copyMessageTo != null ) {
     	try {
+        String type = Message.MSG_TYPE_SIMPLE;
+        if (!from.getType().equals(Message.MSG_TYPE_DEFINITION)) {
+            type = from.getType();
+        }
+        // Solution to issue 411
+        // if the message does not exist in the indoc and if the type is array_element
+        if (!inDoc.getMessages().containsKey(copyMessageTo) && type.equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
+            type = Message.MSG_TYPE_SIMPLE;
+        }
     		to = MappingUtils.addMessage(outputDoc, myAccess.getCurrentOutMessage(), copyMessageTo, null, 
-    				1, ( !from.getType().equals(Message.MSG_TYPE_DEFINITION) ? from.getType() : Message.MSG_TYPE_SIMPLE ), "")[0];
+                        1, type, "")[0];
     	} catch (Exception e1) {
     		throw new UserException(-1, e1.getMessage(), e1);
     	}
@@ -105,7 +114,7 @@ public void store() throws MappableException, UserException {
    
   }
 
-  @Override
+    @Override
 public void kill() {
 
   }

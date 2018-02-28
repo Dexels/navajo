@@ -51,8 +51,8 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 	private Message myMessage = null;
 	private String myId;
 	private String subQuestionPath;
-	private String subQuestionInvalidText = "Subvraag incorrect";
-
+	private String subQuestionInvalidText = null;
+	
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiBaseQuestion.class);
@@ -242,6 +242,10 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 			}
 		}
 		if (invalidFound) {
+		    if (subQuestionInvalidText == null) {
+		        subQuestionInvalidText = (String) myContext.getLookupParser().parse(this.getHomeComponent(), "subQuestionInvalid", null);
+		    }
+		    
 			setValid(false, subQuestionInvalidText);
 		} else {
 			if (!isValid()) {

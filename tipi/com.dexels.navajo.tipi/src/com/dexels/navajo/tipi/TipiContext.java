@@ -3059,4 +3059,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         tipiEventStatistics.remove(component.getId()+eventname);
     }
 
+    public LookupParser getLookupParser() {
+        return parser;
+    }
 }

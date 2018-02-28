@@ -219,6 +219,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     @Override
     public void load(Access access) throws MappableException, UserException {
+
         this.access = access;
         this.config = DispatcherFactory.getInstance().getNavajoConfig();
         this.inMessage = access.getInDoc();
@@ -491,6 +492,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     }
 
     public void setPropertyName(String fullName) throws UserException {
+
         currentFullName = ((messagePointerString == null || messagePointerString.equals("")) ? fullName
                 : messagePointerString + "/" + ((fullName.length() > 0 && fullName.charAt(0) == '/' ? fullName.substring(1) : fullName)));
         String propName = MappingUtils.getStrippedPropertyName(fullName);
@@ -670,7 +672,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     protected Navajo prepareOutDoc() throws UserException {
         // If currentOutDoc flag was set, make sure to copy outdoc.
-
         if (this.useCurrentOutDoc || this.useCurrentMessages != null) {
             if (this.useCurrentOutDoc) {
                 if (this.outDoc != null) {
@@ -688,7 +689,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                     Message msg = null;
                     if ((msg = access.getOutputDoc().getMessage(msgName)) != null) {
                         if (this.outDoc.getMessage(msgName) != null) {
-                            this.outDoc.getMessage(msgName).merge(msg);
+                            this.outDoc.getMessage(msgName).merge(msg, true);
                         } else {
                             this.outDoc.addMessage(msg);
                         }
@@ -1292,7 +1293,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     private void addProperty(Property p) throws UserException {
 
         try {
-            Message msg = MappingUtils.getMessageObject(currentFullName, null, false, outDoc, false, "", -1);
+            Message msg = MappingUtils.getMessageObject(currentFullName, null, false, outDoc, true, "", -1);
             if (msg == null) {
                 throw new UserException(-1, "Could not create property " + currentFullName + ". Perhaps a missing message name?");
             }

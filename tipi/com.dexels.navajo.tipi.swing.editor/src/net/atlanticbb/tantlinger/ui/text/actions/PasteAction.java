@@ -104,24 +104,27 @@ public class PasteAction extends HTMLTextEditAction
 	                Object transferData = content.getTransferData(html);
 	                BufferedReader reader = new BufferedReader((InputStreamReader) transferData);
 	                StringBuffer str = new StringBuffer();
-	                char[] buf = new char[512];
-	                while (reader.read(buf) > 0) {
-	                    str.append(buf);
-	                }
+                    for (String line; (line = reader.readLine()) != null; str.append(line));
 
 	                htmlcontent =  str.toString();
 	            } else {
-	                txt = content.getTransferData(new DataFlavor(String.class, "String")).toString();
-	            }   
+	                // Another try at this
+	                htmlcontent = content.getTransferData(new DataFlavor("text/html;class=java.lang.String;charset=UTF-8")).toString();
+	            }
+			      
 			} catch (UnsupportedFlavorException ex) {
-				txt = content.getTransferData(new DataFlavor(String.class, "String")).toString();
+				// fallback to text below
 			}
+			if (htmlcontent == null || "".equals(htmlcontent.trim())) {
+                txt = content.getTransferData(new DataFlavor(String.class, "String")).toString();
+            } 
         
 			if (htmlcontent != null) {
 				Whitelist list =  Whitelist.basic();
 				list.addTags("table", "tr", "td" , "h1", "h2", "h3", "h4", "h5", "h6");
 				list.addAttributes("table", "width", "border", "align", "cellspacing", "bgcolor", "cellpadding");
-				htmlcontent = htmlcontent.substring(0,  htmlcontent.indexOf("</html>")); // ignore everything after html closing tag
+				int htmlEnd = htmlcontent.contains("</html>") ? htmlcontent.indexOf("</html>") : htmlcontent.length();
+				htmlcontent = htmlcontent.substring(0, htmlEnd); // ignore everything after html closing tag
 				String clean = Jsoup.clean(htmlcontent, list);
 				clean = optimizeHtmlPaste(clean);
 				StringReader reader = new StringReader(HTMLUtils.jEditorPaneizeHTML(clean));

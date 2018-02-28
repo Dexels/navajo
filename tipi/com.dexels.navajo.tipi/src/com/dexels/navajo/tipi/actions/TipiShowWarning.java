@@ -34,6 +34,12 @@ public class TipiShowWarning extends TipiAction {
 			result = oo.toString();
 		}
 		final String txt = (result).replaceAll("\n", " ");
-		myContext.showWarning(txt, "Info", event.getComponent());
+
+        String title = (String) getEvaluatedParameterValue("title", event);
+        if (title == null) {
+            title = "Warning";
+        }
+
+        myContext.showWarning(txt, title, event.getComponent());
 	}
 }

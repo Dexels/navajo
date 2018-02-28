@@ -52,6 +52,9 @@ public class TipiButton extends TipiVaadinComponentImpl {
 		        if ("icon".equals(name)) {
 	                v.setIcon( getResource(object));
 		        }
+                if ("tooltip".equals(name)) {
+                    v.setDescription( object == null ? (String) null : object.toString());
+                }
 		        if ("style".equals(name)) {
 //		        	BaseTheme.BUTTON_LINK;
 	                v.setStyleName((String)object);
