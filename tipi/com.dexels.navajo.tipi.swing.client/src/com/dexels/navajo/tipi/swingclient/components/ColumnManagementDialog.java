@@ -258,12 +258,7 @@ public class ColumnManagementDialog extends JDialog {
     }
 
     final void okButton_actionPerformed(ActionEvent e) {
-        int currentColumnCount = myTable.getColumnCount();
-        int min = (myTable.isShowingRowHeaders() ? 1 : 0);
-        for (int i = currentColumnCount - 1; i >= min; i--) {
-            String item = myTable.getMessageModel().getColumnId(i);
-            myTable.removeColumn(item);
-        }
+
         DefaultListModel vm = (DefaultListModel) visibleColumnList.getModel();
         Enumeration<?> m = vm.elements();
         myTable.removeAllColumns();
