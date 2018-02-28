@@ -12,8 +12,7 @@ import org.osgi.service.jdbc.DataSourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
-
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 public class MySqlDataSourceComponent implements DataSource {
 //	private ConnectionPoolDataSource connectionPoolDataSource;
