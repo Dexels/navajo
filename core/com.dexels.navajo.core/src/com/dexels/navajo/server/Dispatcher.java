@@ -1208,6 +1208,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
 
     private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage, Access access) {
+        if (inMessage.getHeader().getHeaderAttribute("enable-description-providers") == null) {
+            // Noop
+            return;
+        }
         if (desciptionProviders.size() == 0) {
             // Non-osgi fallback
             final DescriptionProviderInterface descriptionProvider = navajoConfig.getDescriptionProvider();
