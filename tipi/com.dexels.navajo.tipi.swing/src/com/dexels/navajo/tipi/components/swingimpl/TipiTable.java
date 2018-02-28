@@ -48,6 +48,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.base.NavajoExceptionImpl;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.QueryableComponent;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -268,7 +269,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
                 hasColumnsDefined = true;
                 columnList.add(child);
                 try {
-                    loadColumn(i, child, columnMessage, null);
+                    loadColumn(i, child, columnMessage);
                 } catch (NavajoException e) {
                     throw new TipiException("Error loading columns... ", e);
                 }
@@ -315,7 +316,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         });
     }
 
-    private void reloadColumns(Message m) throws NavajoException {
+    private void reloadColumns(Message q) throws NavajoException {
         mm.removeAllColumns();
         columnCondition.clear();
         List<Message> ss = columnMessage.getAllMessages();
@@ -325,107 +326,74 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         int i = 0;
 
         for (XMLElement child : columnList) {
-
-            loadColumn(i++, child, columnMessage, m);
+            loadColumn(i++, child, columnMessage);
         }
 
     }
 
-    private void loadColumn(int i, XMLElement child, Message columnArrayMessage, Message definitionMessage)
-            throws NavajoException {
+    private void loadColumn(int i, XMLElement child, Message columnArrayMessage)
+            throws NavajoException { 
         String name = (String) child.getAttribute("name");
         String editableString = (String) child.getAttribute("editable");
+        String defaultVisibleExp = (String) child.getAttribute("defaultVisible");
         String aggr = child.getStringAttribute("aggregate");
-        String condition = child.getStringAttribute("condition");
         String typehint = child.getStringAttribute("typeHint");
         int size = child.getIntAttribute("size", -1);
 
+        if (defaultVisibleExp == null) {
+            defaultVisibleExp = "false";
+        }
         // try to use the property (that this column points to) from the message
         // the table listens to
         // only if label is not specified (for backwards compatibility)
         String label = (String) child.getAttribute("label");
         if (label == null || label.trim().isEmpty()) {
-            if (definitionMessage != null && definitionMessage.isArrayMessage()) {
-                Message singleEntry = null;
-                if (definitionMessage.getDefinitionMessage() != null) {
-                    singleEntry = definitionMessage.getDefinitionMessage();
-                } else if (definitionMessage.getArraySize() > 0) {
-                    singleEntry = definitionMessage.getMessage(0);
-                }
-
-                if (singleEntry != null) {
-                    Property defProp = singleEntry.getProperty(name);
-                    if (defProp != null) {
-                        // it will be evaluated in a bit so it needs to be
-                        // formatted as a string literal in Navajo terms.
-                        label = "'" + defProp.getDescription() + "'";
-                    }
-                }
-            }
-        }
-        if (label == null) {
-            label = "''";
+            throw new NavajoExceptionImpl("Missing label for column " + name);
         }
 
-        Message columnMessage = NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(), "Columns",
-                Message.MSG_TYPE_ARRAY_ELEMENT);
+        Message columnMessage = NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(), "Columns", Message.MSG_TYPE_ARRAY_ELEMENT);
         columnArrayMessage.addMessage(columnMessage);
 
         addProperty(columnMessage, "Label", label, Property.STRING_PROPERTY);
         addProperty(columnMessage, "Name", name, Property.STRING_PROPERTY);
         addProperty(columnMessage, "Aggregate", aggr, Property.STRING_PROPERTY);
-        addProperty(columnMessage, "Condition", aggr, Property.STRING_PROPERTY);
+        addProperty(columnMessage, "defaultVisible", defaultVisibleExp, Property.STRING_PROPERTY);
         addProperty(columnMessage, "TypeHint", typehint, Property.STRING_PROPERTY);
         addProperty(columnMessage, "Size", size, Property.INTEGER_PROPERTY);
 
         boolean editable = "true".equals(editableString);
-        // logger.debug("Putting size for column # "+columnCount+"
-        // to: "+size);
-        columnSize.put(new Integer(i), new Integer(size));
-        // String sizeString = (String) child.getAttribute("size");
+      
+        columnSize.put(Integer.valueOf(i), Integer.valueOf(size));
+        
         String labelString = label;
-        // logger.debug("Label to evaluate: "+labelString);
-
         try {
             Operand evalLabel = this.getContext().evaluate(labelString, this, null, null);
             if (evalLabel != null) {
-
                 labelString = "" + evalLabel.value;
-                // logger.debug("Label evaluated to:
-                // "+labelString);
-
-            } else {
-                // logger.debug("Null evaluated label.");
             }
         } catch (Exception ex) {
-            logger.error("Error detected", ex);
-            // logger.debug("Exception while evaluating label:
-            // "+label);
+            logger.error("Error evaluating label! {}", labelString, ex);
         }
 
-        if (size != -1) {
-            // int size = Integer.parseInt(sizeString);
-            mm.addColumn(name, labelString, editable, size);
-        } else {
-            mm.addColumn(name, labelString, editable);
-        }
+        
+       
+        mm.addColumn(name, labelString, editable, size);
+       
         if (typehint != null) {
             mm.setTypeHint(name, typehint);
         }
+        
+       
         if (aggr != null) {
-            // logger.debug("Adding agr: "+aggr+" col: "+i);
-            // Thread.dumpStack();
             addAggregate(i, aggr);
         }
         mm.messageChanged();
-        addColumnVisiblityCondition(i, condition);
+        if (defaultVisibleExp != null) {
+            addColumnVisiblityCondition(i, defaultVisibleExp);
+        }
 
     }
 
-    // public void setColumnEditable(int columnIndex, boolean value) {
-    // mm.setColumnEditable(columnIndex,value);
-    // mm.fireDataChanged();
-    // }
 
     private void addProperty(Message m, String name, Object value, String type) throws NavajoException {
         Navajo n = m.getRootDoc();
@@ -1223,6 +1191,10 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
     @Override
     public Boolean containsDirtyPropertyComponents() {
         return false;
+    }
+    
+    public List<XMLElement> getColumnList() {
+        return columnList;
     }
 
 }

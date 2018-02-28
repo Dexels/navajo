@@ -661,8 +661,16 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		rebuildSort();
 	}
 
+	public final int addColumn(String id, String title, boolean editable, int size) {	    
+        if (size < 1) {
+            return messageTable.addColumn(id, title, editable, size);
+        }
+        return messageTable.addColumn(id, title, editable, size);
+    }
+	   
 	public final int addColumn(String id, String title, boolean editable) {
-		return messageTable.addColumn(id, title, editable);
+	    
+	    return addColumn(id, title, editable, -1);
 	}
 
 	public final void createColumnsFromDef(Message m) {
@@ -718,10 +726,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		return false;
 	}
 
-	public final int addColumn(String id, String title, boolean editable,
-			int size) {
-		return messageTable.addColumn(id, title, editable, size);
-	}
+
 
 	public final FilterPanel getFilterPanel() {
 		return filterPanel;
@@ -1175,5 +1180,6 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 	public Binary getTableReport(ClientInterface ci, String format, String orientation,int[] margins) throws NavajoException {
 		return messageTable.getTableReport(ci, format, orientation, margins);
 	}
+
 
 }

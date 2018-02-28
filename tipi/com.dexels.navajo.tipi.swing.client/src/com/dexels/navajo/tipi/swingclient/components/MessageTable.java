@@ -125,6 +125,9 @@ public class MessageTable extends JTable implements CellEditorListener,
 	private MessageTableFooter tableFooter = null;
 	protected final Map<Integer, Integer> columnSizeMap = new HashMap<Integer, Integer>();
 	private final Map<String, Property> cachedColumns = new HashMap<String, Property>();
+	private final List<MessageTableColumnDefinition> definedColumns = new ArrayList<>();
+
+	   
 	private final TableSorter mySorter;
 	private boolean refreshAfterEdit = false;
 	private EditRowDialog bd = null;
@@ -1325,12 +1328,15 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 
 	public final int addColumn(String id, String title, boolean editable) {
+	    definedColumns.add(new MessageTableColumnDefinition(id, title, editable));
 		MessageTableModel mtm = getMessageModel();
 		return mtm.addColumn(id, title, editable);
 	}
 
-	public final int addColumn(String id, String title, boolean editable,
-			int size) {
+	public final int addColumn(String id, String title, boolean editable,int size) {
+	    
+	    definedColumns.add(new MessageTableColumnDefinition(id, title, editable));
+
 		MessageTableModel mtm = getMessageModel();
 		int index = mtm.addColumn(id, title, editable);
 		setColumnWidth(index, size);
@@ -1367,6 +1373,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	}
 
 	public final void removeAllColumns() {
+	    definedColumns.clear();
 		getMessageModel().removeAllColumns();
 	}
 
@@ -1376,7 +1383,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 	public void removeListSelectionListener(ListSelectionListener l) {
 		getSelectionModel().removeListSelectionListener(l);
-	}
+	} 
 
 	public final void addCellEditorListener(CellEditorListener ce) {
 		myEditor.addCellEditorListener(ce);
@@ -2247,6 +2254,11 @@ public class MessageTable extends JTable implements CellEditorListener,
 		myCurrentEditingComponent = doGetEditor;
 	}
 
+	
+	   
+    public List<MessageTableColumnDefinition> getColumnDefinitions() {
+        return definedColumns;
+    }
 
 
 }

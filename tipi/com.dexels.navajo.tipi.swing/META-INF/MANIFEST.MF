@@ -13,6 +13,7 @@ Bundle-ClassPath: .
 Import-Package: com.dexels.navajo.client.stream;version="1.0.0",
  com.dexels.navajo.dnd,
  com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.base;version="2.2.1",
  com.dexels.navajo.document.metadata;version="2.2.0",
  com.dexels.navajo.document.notifier,
  com.dexels.navajo.document.types;version="2.2.0",

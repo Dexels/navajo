@@ -121,36 +121,24 @@ public class ColumnManagementDialog extends JDialog {
             logger.info("Null message table! ignoring");
             return;
         }
-
-        Message m = mt.getMessage();
-        Message first = m.getMessage(0);
-        List<Property> props = first.getAllProperties();
-
-        for (int i = 0; i < props.size(); i++) {
-            Property current = props.get(i);
-            String name = current.getDescription();
-            String id = current.getName();
+       
+//        Message m = mt.getMessage();
+//        Message first = m.getMessage(0);
+//        List<Property> props = first.getAllProperties();
+        List<MessageTableColumnDefinition> columnDefinitions = mt.getColumnDefinitions();
+        for (MessageTableColumnDefinition aColumn : columnDefinitions) {
 
             // Check if the column is allready showing and what his editability
             // is, then use that.
-            boolean tc = myTable.getMessageModel().isShowingColumn(id);
-            int index = myTable.getMessageModel().getColumnIndex(id);
-            if (tc && index >= 0) {
-                boolean editableNow = myTable.getMessageModel().isColumnEditable(index);
-                editableMap.put(id, Boolean.valueOf(editableNow));
-            } else {
-                if (current.isDirIn()) {
-                    editableMap.put(id, Boolean.TRUE);
-                } else {
-                    editableMap.put(id, Boolean.FALSE);
-                }
+            String name = aColumn.getTitle();
+            editableMap.put( aColumn.getId(), Boolean.TRUE);
+            
+            if (aColumn.getTitle() == null) {
+                name = aColumn.getId();
             }
-            if (name == null) {
-                name = id;
-            }
-            if (!isInIgnoreList(current.getName())) {
-                nameIdMap.put(id, name);
-                availableItems.add(id);
+            if (!isInIgnoreList(aColumn.getTitle())) {
+                nameIdMap.put( aColumn.getId(), name);
+                availableItems.add(aColumn.getId());
             }
         }
         fillEmUp();
