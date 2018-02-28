@@ -1293,40 +1293,21 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				remainCount = 0;
 				rowCount = 0;
 
-				try {
+			
+				while (rs.next()) {
 
-					while (rs.next()) {
-
-						if ((index >= startIndex) && ( index <= endIndex) ) {
-							ResultSetMap rm = getResultSetMap(meta, columns, rs);
-							dummy.add(rm);
-							viewCount++;
-						}
-						// else if (index >= startIndex) {
-						// remainCount++;
-						// }
-						rowCount++;
-						index++;
+					if ((index >= startIndex) && ( index <= endIndex) ) {
+						ResultSetMap rm = getResultSetMap(meta, columns, rs);
+						dummy.add(rm);
+						viewCount++;
 					}
-
-				} catch (Exception e) {
-					logger.error("Error: ", e);
-					/*************************************************
-					 * this is a bit of a kludge, for batch mode, we'll poke
-					 * ahead to see if we really do have a result set,
-					 * otherwise, just set it to null.
-					 *************************************************/
-
-					if (debug) {
-						Access.writeToConsole(myAccess, "batch mode did not provide a fully baked result set, sorry.\n");
-						Access.writeToConsole(myAccess, "SQL exception is '" + e.toString() + "'\n");
-						logger.info("Sql problem that might or might not be a an actual problem: ",e);
-					}
-					rs.close();
-					rs = null;
-					resetAll();
-
+					// else if (index >= startIndex) {
+					// remainCount++;
+					// }
+					rowCount++;
+					index++;
 				}
+
 				if (debug) {
 					Access.writeToConsole(myAccess, "GOT RESULTSET\n");
 				}
@@ -1337,6 +1318,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			logger.error("The following query failed: {}", this.getQuery());
 			AuditLog.log("SQLMap", sqle.getMessage(),sqle, Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access"));
 			throw new UserException(-1, sqle.getMessage(), sqle);
+		} catch (Exception sqle) {
+            AuditLog.log("SQLMap", sqle.getMessage(),sqle, Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access"));
+            throw new UserException(-1, sqle.getMessage(), sqle);
 		} finally {
 			if (rs != null) {
 				try {
