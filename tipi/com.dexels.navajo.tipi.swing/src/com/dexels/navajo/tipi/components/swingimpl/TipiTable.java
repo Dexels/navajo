@@ -89,6 +89,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
     private int selectedMessageIndex = -1;
     private List<XMLElement> columnList = new ArrayList<XMLElement>();
 
+    private boolean hasColumnsDefined = false;
+
     @Override
     public Object createContainer() {
         mm = new TipiMessageTablePanel(myContext, this);
@@ -259,9 +261,11 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         // int columnCount = 0;
 
         columnList.clear();
+        hasColumnsDefined = false;
         for (int i = 0; i < children.size(); i++) {
             XMLElement child = children.get(i);
             if (child.getName().equals("column")) {
+                hasColumnsDefined = true;
                 columnList.add(child);
                 try {
                     loadColumn(i, child, columnMessage, null);
