@@ -58,529 +58,476 @@ import com.dexels.navajo.document.Selection;
  */
 
 public class FilterPanel extends JPanel {
-	private static final long serialVersionUID = 4445177819384959544L;
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(FilterPanel.class);
-	
-	static ResourceBundle res = ResourceBundle
-			.getBundle("com.dexels.navajo.tipi.swingclient.components.filterpanelstrings");
-	private JPanel flipPanel = new JPanel();
-	private JPanel columnPanel = new JPanel();
-	private JComboBox columnSelectBox = new JComboBox();
-	private GenericPropertyComponent valueField = new GenericPropertyComponent();
-	private JButton addButton = new JButton();
-	private JButton clearButton = new JButton();
-	private String[] ignoreList;
-	private int filterCount = 0;
-	private String emailColumn;
-	JLabel filteredRowCountLabel = new JLabel();
-	private MessageTable myTable;
-	private JButton columnsButton = new JButton();
-	private JButton columnsSaveButton = new JButton();
-	private JButton excelButton = new JButton();
-	private JButton emailButton = new JButton();
+    private static final long serialVersionUID = 4445177819384959544L;
 
-	private HashMap<String, String> nameIdMap = new HashMap<String, String>();
-	JComboBox operatorBox = new JComboBox();
+    private final static Logger logger = LoggerFactory.getLogger(FilterPanel.class);
 
-	private boolean babyMode = false;
+    static ResourceBundle res = ResourceBundle.getBundle("com.dexels.navajo.tipi.swingclient.components.filterpanelstrings");
+    private JPanel flipPanel = new JPanel();
+    private JPanel columnPanel = new JPanel();
+    private JComboBox columnSelectBox = new JComboBox();
+    private GenericPropertyComponent valueField = new GenericPropertyComponent();
+    private JButton addButton = new JButton();
+    private JButton clearButton = new JButton();
+    private String[] ignoreList;
+    private int filterCount = 0;
+    private String emailColumn;
+    JLabel filteredRowCountLabel = new JLabel();
+    private MessageTable myTable;
+    private JButton columnsButton = new JButton();
+    private JButton columnsSaveButton = new JButton();
+    private JButton excelButton = new JButton();
+    private JButton emailButton = new JButton();
 
-	private Message referenceMessage = null;
-	GridBagLayout gridBagLayout1 = new GridBagLayout();
+    private HashMap<String, String> nameIdMap = new HashMap<String, String>();
+    JComboBox operatorBox = new JComboBox();
 
-	private String getMergedataFile() {
-		return System.getProperty("user.home")
-				+ System.getProperty("file.separator")
-				+ ((System.getProperty("os.name").toLowerCase()
-						.indexOf("windows") >= 0) ? "" : ".")
-				+ "sl-excel-export.csv";
-	}
+    private boolean babyMode = false;
 
-	public FilterPanel() {
-		try {
-			jbInit();
-		} catch (Exception ex) {
-			logger.error("Error: ", ex);
-		}
-		setupAdvancedFilter();
-	}
+    private Message referenceMessage = null;
+    GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-	void jbInit() throws Exception {
-		flipPanel.setPreferredSize(new Dimension(700, 35));
-		// columnPanel.setPreferredSize(new Dimension(150, 35));
-		this.setLayout(new BorderLayout());
-		columnsButton.setToolTipText(res.getString("changeColumnToolTip"));
-		columnsButton.setIcon(new ImageIcon(FilterPanel.class
-				.getResource("column_preferences.png")));
-		columnsButton.setMargin(new Insets(0, 0, 0, 0));
-		emailButton.setToolTipText("Email");
-		emailButton.setIcon(new ImageIcon(FilterPanel.class
-				.getResource("mail_small.png")));
-		emailButton.setMargin(new Insets(0, 0, 0, 0));
-		emailButton.setVisible(false);
+    private String getMergedataFile() {
+        return System.getProperty("user.home") + System.getProperty("file.separator")
+                + ((System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0) ? "" : ".") + "sl-excel-export.csv";
+    }
 
-		columnsSaveButton.setIcon(new ImageIcon(FilterPanel.class
-				.getResource("save.png")));
-		columnsSaveButton.setToolTipText(res.getString("saveToolTip"));
-		columnsSaveButton.setMargin(new Insets(0, 0, 0, 0));
-		columnsSaveButton.setVisible(false);
-		columnsSaveButton
-				.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						columnsSaveButton_actionPerformed(e);
-					}
-				});
+    public FilterPanel() {
+        try {
+            jbInit();
+        } catch (Exception ex) {
+            logger.error("Error: ", ex);
+        }
+        setupAdvancedFilter();
+    }
 
-		excelButton.setIcon(new ImageIcon(FilterPanel.class
-				.getResource("excel.png")));
-		excelButton.setToolTipText(res.getString("excelToolTip"));
-		excelButton.setMargin(new Insets(0, 0, 0, 0));
-		excelButton.setVisible(false);
-		excelButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Message data = null;
-				if (myTable != null) {
-					data = myTable.getMessageAsPresentedOnTheScreen(false);
-				}
-				if (data != null) {
-					BinaryOpenerFactory.getInstance().exportCsv(getMergedataFile(), data, ";");
-				}
-			}
-		});
+    void jbInit() throws Exception {
+        flipPanel.setPreferredSize(new Dimension(700, 35));
+        // columnPanel.setPreferredSize(new Dimension(150, 35));
+        this.setLayout(new BorderLayout());
+        columnsButton.setToolTipText(res.getString("changeColumnToolTip"));
+        columnsButton.setIcon(new ImageIcon(FilterPanel.class.getResource("column_preferences.png")));
+        columnsButton.setMargin(new Insets(0, 0, 0, 0));
+        emailButton.setToolTipText("Email");
+        emailButton.setIcon(new ImageIcon(FilterPanel.class.getResource("mail_small.png")));
+        emailButton.setMargin(new Insets(0, 0, 0, 0));
+        emailButton.setVisible(false);
 
-		emailButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				sendEmails();
-			}
-		});
+        columnsSaveButton.setIcon(new ImageIcon(FilterPanel.class.getResource("save.png")));
+        columnsSaveButton.setToolTipText(res.getString("saveToolTip"));
+        columnsSaveButton.setMargin(new Insets(0, 0, 0, 0));
+        columnsSaveButton.setVisible(false);
+        columnsSaveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                columnsSaveButton_actionPerformed(e);
+            }
+        });
 
-		columnSelectBox.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				columnSelectBox_actionPerformed(e);
-			}
-		});
-		addButton.setMargin(new Insets(0, 0, 0, 0));
-		clearButton.setMargin(new Insets(0, 0, 0, 0));
-		this.add(flipPanel, BorderLayout.CENTER);
-		this.add(columnPanel, BorderLayout.NORTH);
-		flipPanel.setLayout(gridBagLayout1);
-		columnPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		// valueField.setPreferredSize(new Dimension(80, 25));
-		// valueField.setText("");
-		addButton.setText("");
-		addButton.setIcon(new ImageIcon(FilterPanel.class
-				.getResource("add-filter.gif")));
-		addButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				addButton_actionPerformed(e);
-			}
-		});
-		clearButton.setText("");
-		clearButton.setIcon(new ImageIcon(FilterPanel.class
-				.getResource("clear-filter.gif")));
-		clearButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				clearButton_actionPerformed(e);
-			}
-		});
-		columnsButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				columnsButton_actionPerformed(e);
-			}
-		});
-		flipPanel.add(columnSelectBox, new GridBagConstraints(1, 0, 1, 1, 0.0,
-				0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-				new Insets(1, 1, 1, 1), 0, 0));
-		flipPanel.add(operatorBox, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-				new Insets(1, 1, 1, 1), 0, 0));
-		flipPanel.add(valueField, new GridBagConstraints(3, 0, 1, 1, 1.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-				new Insets(1, 1, 1, 1), 0, 0));
-		flipPanel.add(addButton, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
-						1, 1, 1, 1), 0, 0));
-		flipPanel.add(clearButton, new GridBagConstraints(5, 0, 1, 1, 0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
-						1, 1, 1, 1), 0, 0));
-		flipPanel.add(filteredRowCountLabel, new GridBagConstraints(6, 0, 1, 1,
-				0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-				new Insets(1, 1, 1, 1), 0, 0));
-		columnPanel.add(columnsSaveButton);
-		columnPanel.add(excelButton);
-		columnPanel.add(emailButton);
-		columnPanel.add(columnsButton);
-		// setVisible(false);
-	}
+        excelButton.setIcon(new ImageIcon(FilterPanel.class.getResource("excel.png")));
+        excelButton.setToolTipText(res.getString("excelToolTip"));
+        excelButton.setMargin(new Insets(0, 0, 0, 0));
+        excelButton.setVisible(false);
+        excelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Message data = null;
+                if (myTable != null) {
+                    data = myTable.getMessageAsPresentedOnTheScreen(false);
+                }
+                if (data != null) {
+                    BinaryOpenerFactory.getInstance().exportCsv(getMergedataFile(), data, ";");
+                }
+            }
+        });
 
-	public void doEmail() {
-		sendEmails();
-	}
+        emailButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                sendEmails();
+            }
+        });
 
-	public void doExcel() {
-		Message data = null;
-		if (myTable != null) {
-			data = myTable.getMessageAsPresentedOnTheScreen(false);
-		}
-		if (data != null) {
-			BinaryOpenerFactory.getInstance().exportCsv(getMergedataFile(), data, ";");
-		}
+        columnSelectBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                columnSelectBox_actionPerformed(e);
+            }
+        });
+        addButton.setMargin(new Insets(0, 0, 0, 0));
+        clearButton.setMargin(new Insets(0, 0, 0, 0));
+        this.add(flipPanel, BorderLayout.CENTER);
+        this.add(columnPanel, BorderLayout.NORTH);
+        flipPanel.setLayout(gridBagLayout1);
+        columnPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        // valueField.setPreferredSize(new Dimension(80, 25));
+        // valueField.setText("");
+        addButton.setText("");
+        addButton.setIcon(new ImageIcon(FilterPanel.class.getResource("add-filter.gif")));
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addButton_actionPerformed(e);
+            }
+        });
+        clearButton.setText("");
+        clearButton.setIcon(new ImageIcon(FilterPanel.class.getResource("clear-filter.gif")));
+        clearButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                clearButton_actionPerformed(e);
+            }
+        });
+        columnsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                columnsButton_actionPerformed(e);
+            }
+        });
+        flipPanel.add(columnSelectBox, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+                GridBagConstraints.HORIZONTAL, new Insets(1, 1, 1, 1), 0, 0));
+        flipPanel.add(operatorBox, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets(1, 1, 1, 1), 0, 0));
+        flipPanel.add(valueField, new GridBagConstraints(3, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets(1, 1, 1, 1), 0, 0));
+        flipPanel.add(addButton, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets(1, 1, 1, 1), 0, 0));
+        flipPanel.add(clearButton, new GridBagConstraints(5, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets(1, 1, 1, 1), 0, 0));
+        flipPanel.add(filteredRowCountLabel, new GridBagConstraints(6, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets(1, 1, 1, 1), 0, 0));
+        columnPanel.add(columnsSaveButton);
+        columnPanel.add(excelButton);
+        columnPanel.add(emailButton);
+        columnPanel.add(columnsButton);
+        // setVisible(false);
+    }
 
-	}
+    public void doEmail() {
+        sendEmails();
+    }
 
-	public void doSaveColumns() {
-		columnsSaveButton_actionPerformed(null);
+    public void doExcel() {
+        Message data = null;
+        if (myTable != null) {
+            data = myTable.getMessageAsPresentedOnTheScreen(false);
+        }
+        if (data != null) {
+            BinaryOpenerFactory.getInstance().exportCsv(getMergedataFile(), data, ";");
+        }
 
-	}
+    }
 
-	public void doChooseColumns() {
-		columnsButton_actionPerformed(null);
-	}
+    public void doSaveColumns() {
+        columnsSaveButton_actionPerformed(null);
 
-	private void sendEmails() {
-		Message data = myTable.getMessage();
-		try {
+    }
 
-			String separator = ",";
+    public void doChooseColumns() {
+        columnsButton_actionPerformed(null);
+    }
 
-/*			if (SwingClient.getUserInterface().showQuestionDialog("Outlook?")) {
-				separator = ";";
-			} */
+    private void sendEmails() {
+        Message data = myTable.getMessage();
+        try {
 
-			logger.info("Sending mail: " + emailColumn);
-			List<String> recepients = new ArrayList<String>();
-			for (int i = 0; i < data.getArraySize(); i++) {
-				String address = data.getMessage(i).getProperty(emailColumn)
-						.getValue();
-				logger.info("Got: " + address);
-				if (address != null && address.indexOf("@") > 0) {
-					logger.info("Adding: " + address);
-					recepients.add(address);
-				}
-			}
+            String separator = ",";
 
-			// mailto: is added by the BinaryOpener.
-			String mailString = "?bcc=";
+            /*
+             * if (SwingClient.getUserInterface().showQuestionDialog("Outlook?")) {
+             * separator = ";"; }
+             */
 
-			for (int j = 0; j < recepients.size(); j++) {
-				mailString = mailString + recepients.get(j) + separator;
-			}
-			mailString = mailString.substring(0, mailString.length() - 1);
-			logger.info("Calling openDoc: " + mailString);
-			BinaryOpenerFactory.getInstance().mail(mailString);
-		} catch (Exception e) {
-			logger.info("Could not send email: " + e.getMessage());
-		}
-	}
+            logger.info("Sending mail: " + emailColumn);
+            List<String> recepients = new ArrayList<String>();
+            for (int i = 0; i < data.getArraySize(); i++) {
+                String address = data.getMessage(i).getProperty(emailColumn).getValue();
+                logger.info("Got: " + address);
+                if (address != null && address.indexOf("@") > 0) {
+                    logger.info("Adding: " + address);
+                    recepients.add(address);
+                }
+            }
 
-	public void setMessageTable(MessageTable mt) {
-		myTable = mt;
-		loadColumns();
-	}
+            // mailto: is added by the BinaryOpener.
+            String mailString = "?bcc=";
 
-	public void setIgnoreList(String[] list) {
-		ignoreList = list;
-	}
+            for (int j = 0; j < recepients.size(); j++) {
+                mailString = mailString + recepients.get(j) + separator;
+            }
+            mailString = mailString.substring(0, mailString.length() - 1);
+            logger.info("Calling openDoc: " + mailString);
+            BinaryOpenerFactory.getInstance().mail(mailString);
+        } catch (Exception e) {
+            logger.info("Could not send email: " + e.getMessage());
+        }
+    }
 
-	public void loadColumns() {
-		referenceMessage = null;
-		nameIdMap.clear();
-		columnSelectBox.removeAllItems();
-		for (int i = 0; i < myTable.getMessageModel().getColumnCount(); i++) {
-			String name = myTable.getMessageModel().getColumnName(i);
-			String propId = myTable.getMessageModel().getColumnId(i);
-			columnSelectBox.addItem(name);
-			nameIdMap.put(name, propId);
-		}
-		if (myTable.getRowCount() == 0) {
-			return;
-		}
-		int referenceRow = 0;
-		if (myTable.getSelectedRow() > 0) {
-			referenceRow = myTable.getSelectedRow();
-		}
-		referenceMessage = myTable.getMessageRow(referenceRow);
-		if (referenceMessage != null
-				&& myTable.getMessageModel().getColumnCount() != 0) {
-			loadPanel();
-		}
-	}
+    public void setMessageTable(MessageTable mt) {
+        myTable = mt;
+        loadColumns();
+    }
 
-	void addButton_actionPerformed(ActionEvent e) {
-		String selected = (String) columnSelectBox.getSelectedItem();
-		if (selected != null) {
-			String propId = nameIdMap.get(selected);
-			if (propId != null) {
-				myTable.resetColorMap();
-				/** @todo Fix */
-				myTable.addPropertyFilter(propId, (Property) valueField
-						.getProperty().clone(), ((OperatorItem) operatorBox
-						.getSelectedItem()).value);
-				myTable.performFilters();
-				try {
-					myTable.loadColumnsNavajo();
-					myTable.resizeColumns(myTable.getMessage());
-				} catch (FileNotFoundException e1) {
-					logger.error("Error: ", e1);
-				}
-				myTable.getMessageModel().fireTableStructureChanged();
-				filterCount++;
-				setCountLabel(filterCount);
-				filteredRowCountLabel.setText(""
-						+ myTable.getMessageModel().getFilteredRecordCount()
-						+ " rijen");
-			}
-		}
-	}
+    public void setIgnoreList(String[] list) {
+        ignoreList = list;
+    }
 
-	void clearButton_actionPerformed(ActionEvent e) {
-		myTable.clearPropertyFilters();
-		filterCount = 0;
-		setCountLabel(filterCount);
-		myTable.getMessageModel().fireTableStructureChanged();
-		filteredRowCountLabel.setText("");
-	}
+    public void loadColumns() {
+        referenceMessage = null;
+        nameIdMap.clear();
+        columnSelectBox.removeAllItems();
+        for (int i = 0; i < myTable.getMessageModel().getColumnCount(); i++) {
+            String name = myTable.getMessageModel().getColumnName(i);
+            String propId = myTable.getMessageModel().getColumnId(i);
+            columnSelectBox.addItem(name);
+            nameIdMap.put(name, propId);
+        }
+        if (myTable.getRowCount() == 0) {
+            return;
+        }
+        int referenceRow = 0;
+        if (myTable.getSelectedRow() > 0) {
+            referenceRow = myTable.getSelectedRow();
+        }
+        referenceMessage = myTable.getMessageRow(referenceRow);
+        if (referenceMessage != null && myTable.getMessageModel().getColumnCount() != 0) {
+            loadPanel();
+        }
+    }
 
-	public void clearLabel() {
-		filterCount = 0;
-		setCountLabel(filterCount);
-		filteredRowCountLabel.setText("");
-	}
+    void addButton_actionPerformed(ActionEvent e) {
+        String selected = (String) columnSelectBox.getSelectedItem();
+        if (selected != null) {
+            String propId = nameIdMap.get(selected);
+            if (propId != null) {
+                myTable.resetColorMap();
+                /** @todo Fix */
+                myTable.addPropertyFilter(propId, (Property) valueField.getProperty().clone(),
+                        ((OperatorItem) operatorBox.getSelectedItem()).value);
+                myTable.performFilters();
+                try {
+                    myTable.loadColumnsNavajo();
+                    myTable.resizeColumns(myTable.getMessage());
+                } catch (FileNotFoundException e1) {
+                    logger.error("Error: ", e1);
+                }
+                myTable.getMessageModel().fireTableStructureChanged();
+                filterCount++;
+                setCountLabel(filterCount);
+                filteredRowCountLabel.setText("" + myTable.getMessageModel().getFilteredRecordCount() + " rijen");
+            }
+        }
+    }
 
-	private final void setCountLabel(int c) {
-		if (babyMode) {
-			if (c == 0) {
-				clearButton.setEnabled(false);
-				addButton.setEnabled(true);
-			} else {
-				addButton.setEnabled(false);
-				clearButton.setEnabled(true);
-			}
-			addButton.setText("");
-			clearButton.setText("");
-			return;
-		}
+    void clearButton_actionPerformed(ActionEvent e) {
+        myTable.clearPropertyFilters();
+        filterCount = 0;
+        setCountLabel(filterCount);
+        myTable.getMessageModel().fireTableStructureChanged();
+        filteredRowCountLabel.setText("");
+    }
 
-		if (c == 0) {
-			clearButton.setEnabled(false);
-			// clearButton.setText(res.getString("closeButtonText"));
-			clearButton.setText("");
-		} else {
-			// clearButton.setText(res.getString("closeButtonPrefix") + c +
-			// res.getString("closeButtonPostfix"));
-			clearButton.setText("" + c);
-			clearButton.setEnabled(true);
-		}
-	}
+    public void clearLabel() {
+        filterCount = 0;
+        setCountLabel(filterCount);
+        filteredRowCountLabel.setText("");
+    }
 
-	void columnsButton_actionPerformed(ActionEvent e) {
-		showColumnManagementDialog();
-		loadColumns();
-		// cmmd.show();
-		// myTable.resizeColumns();
-	}
+    private final void setCountLabel(int c) {
+        if (babyMode) {
+            if (c == 0) {
+                clearButton.setEnabled(false);
+                addButton.setEnabled(true);
+            } else {
+                addButton.setEnabled(false);
+                clearButton.setEnabled(true);
+            }
+            addButton.setText("");
+            clearButton.setText("");
+            return;
+        }
 
-	public void showColumnManagementDialog() {
-		ColumnManagementDialog cmmd = null;
-		if (Dialog.class.isInstance(getTopLevelAncestor())) {
-			cmmd = new ColumnManagementDialog((Dialog) getTopLevelAncestor());
-		} else if (Frame.class.isInstance(getTopLevelAncestor())) {
-			cmmd = new ColumnManagementDialog((Frame) getTopLevelAncestor());
-		}
-		if (cmmd != null) {
-			cmmd.setIgnoreList(ignoreList);
-			cmmd.setSize(500, 400);
-			cmmd.setMessageTable(myTable);
-			cmmd.setLocationRelativeTo(getTopLevelAncestor());
-			cmmd.setVisible(true);
-		}
-	}
+        if (c == 0) {
+            clearButton.setEnabled(false);
+            // clearButton.setText(res.getString("closeButtonText"));
+            clearButton.setText("");
+        } else {
+            // clearButton.setText(res.getString("closeButtonPrefix") + c +
+            // res.getString("closeButtonPostfix"));
+            clearButton.setText("" + c);
+            clearButton.setEnabled(true);
+        }
+    }
 
-	void columnsSaveButton_actionPerformed(ActionEvent e) {
-		logger.info("Saving the lot...");
-		// myTable.saveColunmns();
-		try {
-			// myTable.setColumnDefinitionSavePath("c:/vladb/columns.tml");
-			myTable.saveColumnsNavajo();
-		} catch (NavajoException ex) {
-			logger.error("Error: ", ex);
-		} catch (IOException ex) {
-			logger.error("Error: ", ex);
-		}
-	}
+    void columnsButton_actionPerformed(ActionEvent e) {
+        showColumnManagementDialog();
+        loadColumns();
+        // cmmd.show();
+        // myTable.resizeColumns();
+    }
 
-	public void setFiltersVisible(boolean value) {
-		flipPanel.setVisible(value);
-	}
+    public void showColumnManagementDialog() {
+        ColumnManagementDialog cmmd = null;
+        if (Dialog.class.isInstance(getTopLevelAncestor())) {
+            cmmd = new ColumnManagementDialog((Dialog) getTopLevelAncestor());
+        } else if (Frame.class.isInstance(getTopLevelAncestor())) {
+            cmmd = new ColumnManagementDialog((Frame) getTopLevelAncestor());
+        }
+        if (cmmd != null) {
+            cmmd.setIgnoreList(ignoreList);
+            cmmd.setSize(500, 400);
+            cmmd.setMessageTable(myTable);
+            cmmd.setLocationRelativeTo(getTopLevelAncestor());
+            cmmd.setVisible(true);
+        }
+    }
 
-	public void setColumnsVisible(boolean value) {
-		columnPanel.setVisible(value);
-	}
+    void columnsSaveButton_actionPerformed(ActionEvent e) {
+        logger.info("Saving the lot...");
+        // myTable.saveColunmns();
+        try {
+            // myTable.setColumnDefinitionSavePath("c:/vladb/columns.tml");
+            myTable.saveColumnsNavajo();
+        } catch (NavajoException ex) {
+            logger.error("Error: ", ex);
+        } catch (IOException ex) {
+            logger.error("Error: ", ex);
+        }
+    }
 
-	public void setColumnsButtonVisible(boolean value) {
-		columnsButton.setVisible(value);
-	}
+    public void setFiltersVisible(boolean value) {
+        flipPanel.setVisible(value);
+    }
 
-	public void setSaveColumnButtonVisible(boolean visible) {
-		columnsSaveButton.setVisible(visible);
-	}
+    public void setColumnsVisible(boolean value) {
+        columnPanel.setVisible(value);
+    }
 
-	public void setManageColumnButtonVisible(boolean visible) {
-		columnsButton.setVisible(visible);
-	}
+    public void setColumnsButtonVisible(boolean value) {
+        columnsButton.setVisible(value);
+    }
 
-	public void setExcelColumnButtonVisible(boolean visible) {
-		excelButton.setVisible(visible);
-	}
+    public void setSaveColumnButtonVisible(boolean visible) {
+        columnsSaveButton.setVisible(visible);
+    }
 
-	public void setEmailButtonVisible(boolean visible, String columnName) {
-		emailColumn = columnName;
-		emailButton.setVisible(visible);
-	}
+    public void setManageColumnButtonVisible(boolean visible) {
+        columnsButton.setVisible(visible);
+    }
 
-	void columnSelectBox_actionPerformed(ActionEvent e) {
-		if (myTable.getMessage() != null) {
-			loadPanel();
-		}
-	}
+    public void setExcelColumnButtonVisible(boolean visible) {
+        excelButton.setVisible(visible);
+    }
 
-	private final void loadPanel() {
-		if (referenceMessage != null) {
-			String prop = (String) columnSelectBox.getSelectedItem();
-			String id = nameIdMap.get(prop);
-			// valueField.setHardEnabled(true);
-			Property p;
-			if (referenceMessage.getProperty(id) != null) {
-				p = (Property) referenceMessage.getProperty(id).clone();
-				p.setDirection(Property.DIR_INOUT);
-				p.setValue("");
-			} else {
-				p = null;
-			}
+    public void setEmailButtonVisible(boolean visible, String columnName) {
+        emailColumn = columnName;
+        emailButton.setVisible(visible);
+    }
 
-			if (p != null && p.getType().equals(Property.SELECTION_PROPERTY)) {
-				try {
-					Message table = myTable.getMessage();
-					Set<Selection> s = new TreeSet<Selection>();
-					Navajo dumm = NavajoFactory.getInstance().createNavajo();
-					for (int i = 0; i < table.getArraySize(); i++) {
-						Message cur = table.getMessage(i);
-						Property selProp = cur.getProperty(id).copy(dumm);
-						ArrayList<Selection> sels = selProp.getAllSelections();
-						for (int j = 0; j < sels.size(); j++) {
-							Selection sel = sels.get(j);
-							s.add(sel);
-						}
-					}
-					Property q = NavajoFactory.getInstance().createProperty(
-							dumm, id, "1", id, "in");
-					Iterator<Selection> it = s.iterator();
-					while (it.hasNext()) {
-						Selection qs = it.next();
-						q.addSelection(qs);
-					}
-					valueField.setProperty(q);
-				} catch (Exception e) {
-					logger.error("Error: ",e);
-				}
-			} else {
-				valueField.setProperty(p);
-			}
-			valueField.revalidate();
-			valueField.doLayout();
-			valueField.repaint();
-		}
-	}
+    void columnSelectBox_actionPerformed(ActionEvent e) {
+        if (myTable.getMessage() != null) {
+            loadPanel();
+        }
+    }
 
-	public void setFilterMode(String mode) {
-		if (mode.equals("baby")) {
-			setupBabyFilter();
-		} else {
-			setupAdvancedFilter();
-		}
-		clearButton_actionPerformed(null);
-	}
+    private final void loadPanel() {
+        if (referenceMessage != null) {
+            String prop = (String) columnSelectBox.getSelectedItem();
+            String id = nameIdMap.get(prop);
+            // valueField.setHardEnabled(true);
+            Property p;
+            if (referenceMessage.getProperty(id) != null) {
+                p = (Property) referenceMessage.getProperty(id).clone();
+                p.setDirection(Property.DIR_INOUT);
+                p.setValue("");
+            } else {
+                p = null;
+            }
 
-	private final void setupBabyFilter() {
-		operatorBox
-				.setModel(new DefaultComboBoxModel(
-						new Object[] {
-								new OperatorItem(res
-										.getString("operatorEquals"), "=="),
+            if (p != null && p.getType().equals(Property.SELECTION_PROPERTY)) {
+                try {
+                    Message table = myTable.getMessage();
+                    Set<Selection> s = new TreeSet<Selection>();
+                    Navajo dumm = NavajoFactory.getInstance().createNavajo();
+                    for (int i = 0; i < table.getArraySize(); i++) {
+                        Message cur = table.getMessage(i);
+                        Property selProp = cur.getProperty(id).copy(dumm);
+                        ArrayList<Selection> sels = selProp.getAllSelections();
+                        for (int j = 0; j < sels.size(); j++) {
+                            Selection sel = sels.get(j);
+                            s.add(sel);
+                        }
+                    }
+                    Property q = NavajoFactory.getInstance().createProperty(dumm, id, "1", id, "in");
+                    Iterator<Selection> it = s.iterator();
+                    while (it.hasNext()) {
+                        Selection qs = it.next();
+                        q.addSelection(qs);
+                    }
+                    valueField.setProperty(q);
+                } catch (Exception e) {
+                    logger.error("Error: ", e);
+                }
+            } else {
+                valueField.setProperty(p);
+            }
+            valueField.revalidate();
+            valueField.doLayout();
+            valueField.repaint();
+        }
+    }
 
-								new OperatorItem(res
-										.getString("operatorContains"),
-										"contains"),
-								new OperatorItem(res
-										.getString("operatorGreater"), ">"),
-								new OperatorItem(res
-										.getString("operatorSmaller"), "<") }));
+    public void setFilterMode(String mode) {
+        if (mode.equals("baby")) {
+            setupBabyFilter();
+        } else {
+            setupAdvancedFilter();
+        }
+        clearButton_actionPerformed(null);
+    }
 
-		valueField.setPreferredSize(new Dimension(140, 20));
-		valueField.setLabelVisible(false);
-		babyMode = true;
+    private final void setupBabyFilter() {
+        operatorBox.setModel(new DefaultComboBoxModel(new Object[] { new OperatorItem(res.getString("operatorEquals"), "=="),
 
-	}
+                new OperatorItem(res.getString("operatorContains"), "contains"), new OperatorItem(res.getString("operatorGreater"), ">"),
+                new OperatorItem(res.getString("operatorSmaller"), "<") }));
 
-	private final void setupAdvancedFilter() {
-		operatorBox
-				.setModel(new DefaultComboBoxModel(
-						new Object[] {
-								new OperatorItem(res
-										.getString("operatorEquals"), "=="),
-								new OperatorItem(res
-										.getString("operatorNotEquals"), "!="),
-								new OperatorItem(res
-										.getString("operatorGreater"), ">"),
-								new OperatorItem(res
-										.getString("operatorSmaller"), "<"),
-								new OperatorItem(res
-										.getString("operatorSmallerEquals"),
-										"<="),
-								new OperatorItem(res
-										.getString("operatorGreaterEquals"),
-										">="),
-								new OperatorItem(res
-										.getString("operatorStartsWith"),
-										"startsWith"),
-								new OperatorItem(res
-										.getString("operatorEndsWith"),
-										"endsWith"),
-								new OperatorItem(res
-										.getString("operatorContains"),
-										"contains"),
-								new OperatorItem(
-										res.getString("operatorRegularExpression"),
-										"regularExpression") }));
-		valueField.setPreferredSize(new Dimension(140, 20));
-		valueField.setLabelVisible(false);
-		babyMode = false;
-	}
+        valueField.setPreferredSize(new Dimension(140, 20));
+        valueField.setLabelVisible(false);
+        babyMode = true;
+
+    }
+
+    private final void setupAdvancedFilter() {
+        operatorBox.setModel(new DefaultComboBoxModel(new Object[] { new OperatorItem(res.getString("operatorEquals"), "=="),
+                new OperatorItem(res.getString("operatorNotEquals"), "!="), new OperatorItem(res.getString("operatorGreater"), ">"),
+                new OperatorItem(res.getString("operatorSmaller"), "<"), new OperatorItem(res.getString("operatorSmallerEquals"), "<="),
+                new OperatorItem(res.getString("operatorGreaterEquals"), ">="),
+                new OperatorItem(res.getString("operatorStartsWith"), "startsWith"),
+                new OperatorItem(res.getString("operatorEndsWith"), "endsWith"),
+                new OperatorItem(res.getString("operatorContains"), "contains"),
+                new OperatorItem(res.getString("operatorRegularExpression"), "regularExpression") }));
+        valueField.setPreferredSize(new Dimension(140, 20));
+        valueField.setLabelVisible(false);
+        babyMode = false;
+    }
 
 }
 
 class OperatorItem {
-	public String name;
-	public String value;
+    public String name;
+    public String value;
 
-	public OperatorItem(String name, String value) {
-		this.name = name;
-		this.value = value;
-	}
+    public OperatorItem(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
 
-	public OperatorItem(String both) {
-		this.name = both;
-		this.value = both;
-	}
+    public OperatorItem(String both) {
+        this.name = both;
+        this.value = both;
+    }
 
-	@Override
-	public String toString() {
-		return name;
-	}
+    @Override
+    public String toString() {
+        return name;
+    }
 
-	public static void main(String[] args) {
-		Properties props = System.getProperties();
-		props.list(System.out);
-	}
+    public static void main(String[] args) {
+        Properties props = System.getProperties();
+        props.list(System.out);
+    }
 }

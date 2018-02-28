@@ -31,6 +31,14 @@ public class LookupParser extends BaseTipiParser {
     public LookupParser(TipiContext context) {
         LookupParser.context = context;
     }
+    
+    public String lookup(String key) {
+       String result = lookupGlobalResourceBundle(context, key);
+        if (result != null) return result;
+
+        logger.warn("Missing internal translation for {} ", key);
+        return "";
+    }
 
     @Override
     public Object parse(TipiComponent tc, String expression, TipiEvent event) {

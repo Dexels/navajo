@@ -27,6 +27,9 @@ import com.dexels.navajo.server.ConditionErrorException;
 
 public class RESTAdapter extends NavajoMap {
     private final static Logger logger = LoggerFactory.getLogger(RESTAdapter.class);
+    private static final int DEFAULT_CONNECT_TIMEOUT = 5000;
+    private static final int DEFAULT_READ_TIMEOUT = 60 * 1000; // 1 min
+    
     private JSONTML json;
     
     public boolean removeTopMessage = false;
@@ -40,8 +43,8 @@ public class RESTAdapter extends NavajoMap {
     public String headerKey = null;
     public String headerValue = null;
     
-    private int connectTimeOut = -1;
-    private int readTimeOut = -1;
+    private int connectTimeOut = DEFAULT_CONNECT_TIMEOUT;
+    private int readTimeOut = DEFAULT_READ_TIMEOUT;
     
     private int messagesPerRequest;
     private String rawResult;
@@ -334,13 +337,9 @@ public class RESTAdapter extends NavajoMap {
             http.setHeaderKey("Authorization");
             http.setHeaderValue("Basic " + encoded);
         }
+        http.setReadTimeOut(readTimeOut);
+        http.setConnectTimeOut(0);
         
-        if (readTimeOut > 0) {
-            http.setReadTimeOut(readTimeOut);
-        }
-        if (connectTimeOut > 0) {
-            http.setConnectTimeOut(0);
-        }
     }
 
     public String getUrl() {

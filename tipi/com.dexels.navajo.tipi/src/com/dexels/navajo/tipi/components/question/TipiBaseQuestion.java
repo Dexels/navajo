@@ -243,7 +243,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		}
 		if (invalidFound) {
 		    if (subQuestionInvalidText == null) {
-		        subQuestionInvalidText = (String) myContext.getLookupParser().parse(this.getHomeComponent(), "subQuestionInvalid", null);
+		        subQuestionInvalidText = (String) myContext.getLookupParser().lookup("subQuestionInvalid");
 		    }
 		    
 			setValid(false, subQuestionInvalidText);

@@ -47,6 +47,7 @@ public class TipiNewCallService extends TipiAction {
 
         getContext().getClient().setNavajoHeader(NavajoClient.LOCALE_HEADER_KEY, getContext().getApplicationInstance().getLocaleCode());
         getContext().getClient().setNavajoHeader(NavajoClient.SUBLOCALE_HEADER_KEY, getContext().getApplicationInstance().getSubLocaleCode());
+        getContext().getClient().setNavajoHeader("enable-description-providers", true);
 
         String service = (String) getEvaluatedParameterValue("service", event);
         Navajo input = (Navajo) getEvaluatedParameterValue("input", event);
