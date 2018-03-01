@@ -1,10 +1,9 @@
 <reactive>
 	<source.single count.eval="50">
-		<map>
-			<set aap="noot" mies="wim">
-				<parameval name="nummer">[@index]</parameval>
-			</set>
-		</map>
+		<msg.single.msg>
+			
+			<set mies.eval="[index]"/>
+		</msg.single.msg>
 		<msg.stream.event messageName="Bla" isArray.eval="true"/>
 	</source.single>
 </reactive>

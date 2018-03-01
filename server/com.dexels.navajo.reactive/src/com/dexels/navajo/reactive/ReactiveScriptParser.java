@@ -325,7 +325,6 @@ public class ReactiveScriptParser {
 
 	public static ImmutableMessage empty() {
 		return ImmutableFactory.create(Collections.emptyMap(), Collections.emptyMap());
-//		return ReplicationFactory.createReplicationMessage(null, System.currentTimeMillis(), ReplicationMessage.Operation.NONE, Collections.emptyList(), Collections.emptyMap(), Collections.emptyMap(),Collections.emptyMap(),Collections.emptyMap(),Optional.of(()->{}));
 	}
 	
 
@@ -351,31 +350,4 @@ public class ReactiveScriptParser {
 		};
 		
 	}
-	
-//	public static Function<StreamScriptContext,Function<DataItem,DataItem>> parseMapperList (String relativePath, Optional<List<XMLElement>> elements, Function<String, ReactiveMerger> mapperSupplier) {
-//
-////		Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>
-//		List<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> funcList = elements.orElse(Collections.emptyList()).stream()
-//				.filter(x->!x.getName().startsWith("param"))
-//				.filter(x->x.getName().split("\\.").length!=3)
-//				.map(xml->{
-//					logger.info("Assuming this is a mapper element: "+Optional.of(xml));
-//					try {
-//				return mapperSupplier.apply(xml.getName()).execute(relativePath, Optional.of(xml));
-//			} catch (Exception e) {
-//				throw new RuntimeException(e);
-//			}
-//		}).collect(Collectors.toList());
-//	
-//		return context->(item,second)->{
-//			DataItem current = item;
-//			for (Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> function : funcList) {
-//				current = function.apply(context).apply(current);
-//			}
-//			return current;
-//		};
-//		
-//	}
-
-
 }

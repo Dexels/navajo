@@ -82,6 +82,7 @@ public class TestEnvironment {
 	
 	@Test 
 	public void testSingle() throws IOException {
+		ImmutableFactory.setInstance(ImmutableFactory.createParser());
 		runScript("single")
 			.lift(StreamDocument.serialize())
 			.blockingForEach(e->System.err.print(new String(e)));
