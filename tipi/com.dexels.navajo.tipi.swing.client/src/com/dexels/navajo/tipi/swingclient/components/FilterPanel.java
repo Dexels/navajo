@@ -376,7 +376,6 @@ public class FilterPanel extends JPanel {
     }
 
     void columnsSaveButton_actionPerformed(ActionEvent e) {
-        logger.info("Saving the lot...");
         // myTable.saveColunmns();
         try {
             // myTable.setColumnDefinitionSavePath("c:/vladb/columns.tml");

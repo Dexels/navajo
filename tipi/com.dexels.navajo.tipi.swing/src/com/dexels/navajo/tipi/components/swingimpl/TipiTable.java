@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import javax.swing.JLabel;
@@ -76,7 +77,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
     private Map<String, List<ColumnAttribute>> columnAttributes = new HashMap<String, List<ColumnAttribute>>();
 
     private final Map<Integer, Integer> columnSize = new HashMap<Integer, Integer>();
-    private final List<String> columnCondition = new ArrayList<String>();
+    private final Map<String, String> columnConditions = new HashMap<>();
     private MessageTableFooterRenderer myFooterRenderer = null;
     private final List<ConditionalRemark> conditionalRemarks = new ArrayList<ConditionalRemark>();
     private final Map<Integer, Double> columnDividers = new HashMap<Integer, Double>();
@@ -208,7 +209,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
             public void run() {
                 mm.setFooterRenderer(null);
                 mm.removeAllColumns();
-                columnCondition.clear();
+                columnConditions.clear();
                 List<Message> ss = columnMessage.getAllMessages();
                 for (Message message : ss) {
                     columnMessage.removeMessage(message);
@@ -262,6 +263,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         // int columnCount = 0;
 
         columnList.clear();
+        mm.clearColumnDefinitions();
         hasColumnsDefined = false;
         for (int i = 0; i < children.size(); i++) {
             XMLElement child = children.get(i);
@@ -304,7 +306,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
                 int index = child.getIntAttribute("index");
                 // mm.addC
                 mm.addColumnDivider(index, (float) width);
-                columnDividers.put(new Integer(index), new Double(width));
+                columnDividers.put(Integer.valueOf(index), Double.valueOf(width));
             }
         }
         mm.setColumnAttributes(columnAttributes);
@@ -318,7 +320,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
     private void reloadColumns(Message q) throws NavajoException {
         mm.removeAllColumns();
-        columnCondition.clear();
+        columnConditions.clear();
+        mm.clearColumnDefinitions();
         List<Message> ss = columnMessage.getAllMessages();
         for (Message message : ss) {
             columnMessage.removeMessage(message);
@@ -378,7 +381,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         
        
         mm.addColumn(name, labelString, editable, size);
-       
+        mm.addColumnDefinition(name, labelString, editable);
         if (typehint != null) {
             mm.setTypeHint(name, typehint);
         }
@@ -389,7 +392,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         }
         mm.messageChanged();
         if (defaultVisibleExp != null) {
-            addColumnVisiblityCondition(i, defaultVisibleExp);
+            columnConditions.put(name, defaultVisibleExp);
         }
 
     }
@@ -402,9 +405,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         m.addProperty(p);
     }
 
-    private void addColumnVisiblityCondition(int i, String condition) {
-        columnCondition.add(condition);
-    }
 
     @Override
     public String[] getCustomChildTags() {
@@ -532,10 +532,9 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
     }
 
     protected void updateColumnVisibility() {
-        for (int index = columnCondition.size() - 1; index >= 0; index--) {
-            // for (int index: columnCondition.keySet()) {
-            try {
-                String condition = columnCondition.get(index);
+        for (Entry<String, String> e : columnConditions.entrySet()) {
+            if (mm.hasColumn(e.getKey())) {
+                String condition = e.getValue();
                 if (condition == null) {
                     continue;
                 }
@@ -543,13 +542,13 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
                 if (o == null) {
                     continue;
                 }
-                if (o.value instanceof Boolean) {
-                    setColumnVisible(index, ((Boolean) o.value).booleanValue());
+                if (o.value instanceof Boolean && !(Boolean)o.value) {
+                    mm.removeColumn(e.getKey());
                 }
-            } catch (Exception e) {
-                logger.error("Error detected", e);
             }
+            
         }
+       
         mm.createDefaultColumnsFromModel();
     }
 

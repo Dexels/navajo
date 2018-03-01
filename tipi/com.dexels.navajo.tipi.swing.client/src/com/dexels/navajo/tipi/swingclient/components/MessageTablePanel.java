@@ -929,6 +929,10 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		return messageTable.getSortingDirection();
 	}
 
+	public final Boolean hasColumn(String id) {
+        return messageTable.hasColumn(id);
+    }
+	
 	public final String getColumnId(int index) {
 		return messageTable.getColumnId(index);
 	}
@@ -1181,5 +1185,10 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		return messageTable.getTableReport(ci, format, orientation, margins);
 	}
 
-
+	public void clearColumnDefinitions() {
+        messageTable.clearColumnDefinitions();
+    }
+	public void addColumnDefinition(String id, String title, Boolean editable) {
+	    messageTable.addColumnDefinition(id, title, editable);
+    }
 }

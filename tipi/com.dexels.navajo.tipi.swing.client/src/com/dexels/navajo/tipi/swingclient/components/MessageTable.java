@@ -37,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -1282,16 +1283,19 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 	protected final void loadColumnsNavajo(Navajo n) {
 		Message cdef = n.getMessage("columndef");
+		
 		removeAllColumns();
 		for (int i = 0; i < cdef.getArraySize(); i++) {
 			Message m = cdef.getMessage(i);
 			String id = m.getProperty("id").getValue();
-			String name = m.getProperty("name").getValue();
-			String editable = m.getProperty("editable").getValue();
+			MessageTableColumnDefinition messageTableColumnDefinition = this.getColumnDefinitions().get(id);
+			if (messageTableColumnDefinition == null) {
+			    logger.debug("Skipping non-existing column {}", id);
+			    continue;
+			}
+			addColumn(id, messageTableColumnDefinition.getTitle(), messageTableColumnDefinition.isEditable());
 			
-			addColumn(id, name, "true".equals(editable));
-		}
-		
+		}		
 		createDefaultColumnsFromModel();
 
 		final int sortedColumn = Integer.parseInt(cdef.getProperty(
@@ -1333,8 +1337,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		return mtm.addColumn(id, title, editable);
 	}
 
-(??)	public final int addColumn(String id, String title, boolean editable,
-(??)			int size) {
+	public final int addColumn(String id, String title, boolean editable,int size) {
 		MessageTableModel mtm = getMessageModel();
 		int index = mtm.addColumn(id, title, editable);
 		setColumnWidth(index, size);
@@ -1842,8 +1845,13 @@ public class MessageTable extends JTable implements CellEditorListener,
 	public String getColumnId(int index) {
 		return myModel.getColumnId(index);
 	}
+	
 
-	@Override
+    public boolean hasColumn(String columnId) {
+	    return getMessageModel().getColumnIndex(columnId) > -1;
+    }
+
+    @Override
 	public String getColumnName(int index) {
 		if (index < getColumnCount()) {
 			return myModel.getColumnName(index);
@@ -2251,7 +2259,18 @@ public class MessageTable extends JTable implements CellEditorListener,
 	public void setCurrentEditingComponent(Component doGetEditor) {
 		myCurrentEditingComponent = doGetEditor;
 	}
+    
+    public void addColumnDefinition(String id, String title, Boolean editable) {
+        definedColumns.put(id, new MessageTableColumnDefinition(id, title, editable));
+    }
 
+    public void clearColumnDefinitions() {
+        definedColumns.clear();
+    }
+
+    public Map<String, MessageTableColumnDefinition> getColumnDefinitions() {
+        return definedColumns;
+    }
 
 	
 	   
