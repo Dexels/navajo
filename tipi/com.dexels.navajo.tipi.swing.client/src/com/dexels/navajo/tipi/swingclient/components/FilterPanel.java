@@ -261,8 +261,9 @@ public class FilterPanel extends JPanel {
         loadColumns();
     }
 
-    public void setIgnoreList(String[] list) {
-        ignoreList = list;
+    public void setIgnoreList(Set<String> list) {
+        
+        ignoreList = list.toArray(new String[list.size()]);;
     }
 
     public void loadColumns() {

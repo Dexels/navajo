@@ -24,9 +24,11 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.swing.JLabel;
@@ -90,8 +92,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
     // use with care. Here for threading probs
     private int selectedMessageIndex = -1;
     private List<XMLElement> columnList = new ArrayList<XMLElement>();
-
-    private boolean hasColumnsDefined = false;
+    private Set<String> ignoreList = new HashSet<>();
 
     @Override
     public Object createContainer() {
@@ -190,7 +191,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
             public Map<String, Object> getEventMap(KeyEvent e) {
                 Map<String, Object> hm = new HashMap<String, Object>();
-                hm.put("code", new Integer(e.getKeyCode()));
+                hm.put("code", Integer.valueOf(e.getKeyCode()));
                 hm.put("modifiers", KeyEvent.getKeyModifiersText(e.getModifiers()));
                 hm.put("key", KeyEvent.getKeyText(e.getKeyCode()));
                 return hm;
@@ -264,11 +265,9 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
         columnList.clear();
         mm.clearColumnDefinitions();
-        hasColumnsDefined = false;
         for (int i = 0; i < children.size(); i++) {
             XMLElement child = children.get(i);
             if (child.getName().equals("column")) {
-                hasColumnsDefined = true;
                 columnList.add(child);
                 try {
                     loadColumn(i, child, columnMessage);
@@ -321,6 +320,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
     private void reloadColumns(Message q) throws NavajoException {
         mm.removeAllColumns();
         columnConditions.clear();
+        ignoreList.clear();
         mm.clearColumnDefinitions();
         List<Message> ss = columnMessage.getAllMessages();
         for (Message message : ss) {
@@ -338,6 +338,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
             throws NavajoException { 
         String name = (String) child.getAttribute("name");
         String editableString = (String) child.getAttribute("editable");
+        String visibleExp = (String) child.getAttribute("visible");
         String defaultVisibleExp = (String) child.getAttribute("defaultVisible");
         String aggr = child.getStringAttribute("aggregate");
         String typehint = child.getStringAttribute("typeHint");
@@ -360,6 +361,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         addProperty(columnMessage, "Label", label, Property.STRING_PROPERTY);
         addProperty(columnMessage, "Name", name, Property.STRING_PROPERTY);
         addProperty(columnMessage, "Aggregate", aggr, Property.STRING_PROPERTY);
+        addProperty(columnMessage, "visible", visibleExp, Property.STRING_PROPERTY);
         addProperty(columnMessage, "defaultVisible", defaultVisibleExp, Property.STRING_PROPERTY);
         addProperty(columnMessage, "TypeHint", typehint, Property.STRING_PROPERTY);
         addProperty(columnMessage, "Size", size, Property.INTEGER_PROPERTY);
@@ -377,10 +379,20 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         } catch (Exception ex) {
             logger.error("Error evaluating label! {}", labelString, ex);
         }
-
         
-       
-        mm.addColumn(name, labelString, editable, size);
+        boolean defaultVisible = false;
+        try {
+            Operand evalVisible = this.getContext().evaluate(defaultVisibleExp, this, null, null);
+            if (evalVisible != null) {
+                defaultVisible = (Boolean) evalVisible.value;
+            }
+        } catch (Exception ex) {
+            logger.error("Error evaluating label! {}", labelString, ex);
+        }
+
+        if (defaultVisible) {
+            mm.addColumn(name, labelString, editable, size);
+        }
         mm.addColumnDefinition(name, labelString, editable);
         if (typehint != null) {
             mm.setTypeHint(name, typehint);
@@ -391,8 +403,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
             addAggregate(i, aggr);
         }
         mm.messageChanged();
-        if (defaultVisibleExp != null) {
-            columnConditions.put(name, defaultVisibleExp);
+        if (visibleExp != null) {
+            columnConditions.put(name, visibleExp);
         }
 
     }
@@ -419,7 +431,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         try {
             MessageTablePanel mm = (MessageTablePanel) getContainer();
             Map<String, Object> tempMap = new HashMap<String, Object>();
-            tempMap.put("selectedIndex", new Integer(mm.getSelectedRow()));
+            tempMap.put("selectedIndex", Integer.valueOf(mm.getSelectedRow()));
             tempMap.put("selectedMessage", mm.getSelectedMessage());
             performTipiEvent("onSelectionChanged", tempMap, false);
         } catch (TipiException ex) {
@@ -428,6 +440,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
     }
 
     volatile boolean busyWithOnActionPerformed = false;
+
 
     public void messageTableActionPerformed(ActionEvent ae) {
         MessageTablePanel mm = (MessageTablePanel) getContainer();
@@ -544,6 +557,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
                 }
                 if (o.value instanceof Boolean && !(Boolean)o.value) {
                     mm.removeColumn(e.getKey());
+                    addToIgnoreList(e.getKey());
                 }
             }
             
@@ -577,12 +591,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
                 if (name.equals("visible")) {
                     mm.setVisible(Boolean.valueOf(object.toString()).booleanValue());
                 }
-                if (name.equals("hideColumn")) {
-                    setColumnVisible(object.toString(), false);
-                }
-                if (name.equals("showColumn")) {
-                    setColumnVisible(object.toString(), true);
-                }
+
                 if (name.equals("columnsvisible")) {
                     setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
                 }
@@ -592,9 +601,10 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
                 if (name.equals("headervisible")) {
                     setHeaderVisible(Boolean.valueOf(object.toString()).booleanValue());
                 }
-                if (name.equals("ignoreList")) {
-                    setIgnoreList((List<String>) object);
-                }
+                // Deprecated now that only defined columns are visible
+//                if (name.equals("ignoreList")) {
+//                    setIgnoreList((List<String>) object);
+//                }
 
                 if (name.equals("readOnly")) {
                     mm.setReadOnly(Boolean.valueOf(object.toString()).booleanValue());
@@ -663,45 +673,15 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         super.setComponentValue(name, object);
     }
 
-    private void setIgnoreList(List<String> value) {
-        String[] l = new String[value.size()];
-        int i = 0;
-        for (String string : value) {
-            l[i++] = string;
-        }
-        mm.setIgnoreList(l);
+    
+    private void addToIgnoreList(String value) {
+        ignoreList.add(value);
+        mm.setIgnoreList(ignoreList);
     }
 
-    /**
-     * Uber deprecated, no idea why this is still here.
-     * 
-     * @deprecated
-     * @param name
-     * @param visible
-     */
-    @Deprecated
-    private final void setColumnVisible(String name, boolean visible) {
-        MessageTablePanel mm = (MessageTablePanel) getContainer();
-        if (visible) {
-            mm.addColumn(name, name, false);
-        } else {
-            if (name.equals("selected")) {
-                mm.removeColumn(mm.getSelectedColumn());
-            } else {
-                mm.removeColumn(name);
-            }
-        }
-    }
 
-    private final void setColumnVisible(int index, boolean visible) {
-        MessageTablePanel mm = (MessageTablePanel) getContainer();
-        // TableColumn tc = mm.getTable().getColumnModel().getColumn(index);
-        MessageTableModel m = mm.getTable().getMessageModel();
-        if (!visible) {
-            m.removeColumn(index);
-        }
-    }
 
+   
     public void setHeaderVisible(boolean b) {
         mm.setHeaderVisible(b);
     }

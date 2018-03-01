@@ -19,6 +19,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -1174,7 +1175,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		}
 	}
 
-	public void setIgnoreList(String[] ignoreList) {
+	public void setIgnoreList(Set<String> ignoreList) {
 		if (filterPanel != null) {
 			filterPanel.setIgnoreList(ignoreList);
 		}

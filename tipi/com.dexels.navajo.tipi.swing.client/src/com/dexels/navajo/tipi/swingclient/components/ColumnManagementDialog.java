@@ -23,9 +23,6 @@ import javax.swing.JScrollPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Property;
-
 class NameIdMap {
     HashMap<String, String> propertyNameIdMap = new HashMap<String, String>();
     HashMap<String, String> propertyIdNameMap = new HashMap<String, String>();
@@ -136,7 +133,7 @@ public class ColumnManagementDialog extends JDialog {
             if (aColumn.getTitle() == null) {
                 name = aColumn.getId();
             }
-            if (!isInIgnoreList(aColumn.getTitle())) {
+            if (!isInIgnoreList(aColumn.getId())) {
                 nameIdMap.put( aColumn.getId(), name);
                 availableItems.add(aColumn.getId());
             }
