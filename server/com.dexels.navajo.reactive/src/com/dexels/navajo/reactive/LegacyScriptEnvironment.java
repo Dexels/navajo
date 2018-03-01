@@ -143,4 +143,9 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 				.toFlowable(BackpressureStrategy.BUFFER)
 				.compose(StreamDocument.inNavajo(service, user, Optional.empty()));
 	}
+
+	@Override
+	public String deployment() {
+		return null;
+	}
 }

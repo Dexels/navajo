@@ -30,15 +30,15 @@ public class SingleSource implements ReactiveSource, ParameterValidator {
 	private final ReactiveParameters params;
 	private final List<ReactiveTransformer> transformers;
 	private Type finalType;
-	private final Optional<Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>>> mapMapper;
-	private final XMLElement sourceElement;
+//	private final Optional<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> mapMapper;
+	private final Optional<XMLElement> sourceElement;
 	private final String sourcePath;
 	
-	public SingleSource(ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType,Optional<Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>>> mapMapper, XMLElement sourceElement, String sourcePath) {
+	public SingleSource(ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType,Optional<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> mapMapper, Optional<XMLElement> sourceElement, String sourcePath) {
 		this.params = params;
 		this.transformers = transformers;
 		this.finalType = finalType;
-		this.mapMapper = mapMapper;
+//		this.mapMapper = mapMapper;
 		this.sourceElement = sourceElement;
 		this.sourcePath = sourcePath;
 	}
@@ -46,16 +46,13 @@ public class SingleSource implements ReactiveSource, ParameterValidator {
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
 		ReactiveResolvedParameters parameters = this.params.resolveNamed(context, current, Optional.empty(), this, sourceElement, sourcePath);
-		boolean debug = parameters.paramBoolean("debug", false);
-		int count =  parameters.paramInteger("count", 1);
+		boolean debug = parameters.paramBoolean("debug", ()->false);
+		int count =  parameters.paramInteger("count", ()->1);
 		try {
-			if(!mapMapper.isPresent()) {
-				throw new RuntimeException("No datamapper, this will end badly!");
-			}
 			Flowable<DataItem> flow =  count > 1 ?
 					Flowable.range(0, count)
-						.map(i->mapMapper.get().apply(context).apply(DataItem.of(ReactiveScriptParser.empty()), DataItem.of(ReactiveScriptParser.empty().with("index", i, "integer"))))
-					: Flowable.just(mapMapper.get().apply(context).apply(DataItem.of(ReactiveScriptParser.empty()), DataItem.of(ReactiveScriptParser.empty())));
+						.map(i->DataItem.of(ReactiveScriptParser.empty().with("index", i, "integer")))
+					: Flowable.just(DataItem.of(ReactiveScriptParser.empty()));
 			if(debug) {
 				flow = flow.doOnNext(di->System.err.println("Item: "+ImmutableFactory.getInstance().describe(di.message())));
 			}

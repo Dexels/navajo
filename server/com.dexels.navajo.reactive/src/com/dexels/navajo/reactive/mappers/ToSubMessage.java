@@ -26,11 +26,11 @@ public class ToSubMessage implements ReactiveMerger, ParameterValidator {
 	}
 
 	@Override
-	public Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>> execute(String relativePath, XMLElement xml) {
+	public Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> execute(String relativePath, Optional<XMLElement> xml) {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
 		return context->(item,second)->{
-			ReactiveResolvedParameters resolved = r.resolveNamed(context, Optional.of(item.message()),Optional.of( second.message()), this, xml, relativePath);
-			return DataItem.of(item.message().withSubMessage(resolved.paramString("name"), second.message()));
+			ReactiveResolvedParameters resolved = r.resolveNamed(context, Optional.of(item.message()),second.map(e->e.message()), this, xml, relativePath);
+			return DataItem.of(item.message().withSubMessage(resolved.paramString("name"), second.get().message()));
 		};
 	
 	}

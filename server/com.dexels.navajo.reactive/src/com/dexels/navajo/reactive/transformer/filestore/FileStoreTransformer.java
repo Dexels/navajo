@@ -40,11 +40,11 @@ public class FileStoreTransformer implements ReactiveTransformer, ParameterValid
 
 	private final ReactiveParameters parameters;
 
-	private XMLElement sourceElement;
+	private Optional<XMLElement> sourceElement;
 
 	private String sourcePath;
 	
-	public FileStoreTransformer(ReactiveParameters parameters, XMLElement sourceElement, String sourcePath) {
+	public FileStoreTransformer(ReactiveParameters parameters, Optional<XMLElement> sourceElement, String sourcePath) {
 		this.parameters = parameters;
 		this.sourceElement = sourceElement;
 		this.sourcePath = sourcePath;

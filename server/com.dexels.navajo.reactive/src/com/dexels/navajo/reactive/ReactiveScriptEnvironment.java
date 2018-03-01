@@ -13,6 +13,7 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
@@ -35,6 +36,12 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	
 	public ReactiveScriptEnvironment() {
 		this.testRoot = null;
+		ImmutableFactory.setInstance(ImmutableFactory.createParser());
+	}
+	
+	@Override
+	public String deployment() {
+		return navajoConfig.getDeployment();
 	}
 
 	public ReactiveScriptEnvironment(File testRoot) {

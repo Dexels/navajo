@@ -2,7 +2,6 @@ package com.dexels.navajo.reactive;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -105,22 +104,6 @@ public class TestScript {
 				.blockingForEach(e->System.err.print(new String(e)));
 		}
 	}
-	
-
-	@Test
-	public void testSingle() throws UnsupportedEncodingException, IOException {
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("single.xml")) {
-			StreamScriptContext myContext = createContext("Single",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in,"serviceName")
-				.execute(myContext)
-				.map(di->di.event())
-				.lift(StreamDocument.serialize())
-				.blockingForEach(e->System.err.print(new String(e)));
-		}
-	}
-	
-
-
 }
 
 

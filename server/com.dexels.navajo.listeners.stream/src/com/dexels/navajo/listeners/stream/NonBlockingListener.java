@@ -21,7 +21,7 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.authentication.api.AuthenticationMethodBuilder;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.DataItem;
@@ -160,6 +160,7 @@ public class NonBlockingListener extends HttpServlet {
 			if(responseEncoding.isPresent()) {
 				response.addHeader("Content-Encoding", responseEncoding.get());
 			}
+			ImmutableFactory e;
 			switch(rs.dataType()) {
 			case DATA:
 				rs.execute(context)
@@ -167,10 +168,18 @@ public class NonBlockingListener extends HttpServlet {
 					.compose(StreamCompress.compress(responseEncoding))
 					.subscribe(responseSubscriber);
 				break;
-			case EVENT:
+			case MESSAGE:
+				rs.execute(context)
+				.onErrorResumeNext(cc)
+				.map(di->di.message())
+				.map(msg->msg.toFlatString(ImmutableFactory.getInstance()).getBytes())
+				.doOnCancel(()->System.err.println("Cancel at toplevel"))
+				.subscribe(responseSubscriber);
+				
+				break;
 			case EMPTY:
 			case LIST:
-			case MESSAGE:
+			case EVENT:
 			default:
 				rs.execute(context)
 					.onErrorResumeNext(cc)
@@ -211,6 +220,9 @@ public class NonBlockingListener extends HttpServlet {
 
 	public void authenticate(StreamScriptContext context, String password, String authHeader, String tenant) throws AuthorizationException {
 		Access a = new Access(-1,-1,context.username.orElse(null),context.service,"stream","ip","hostname",null,false,"access");
+		if(tenant==null) {
+			throw new AuthorizationException(true, false, context.username.orElse(null), "Can not authenticate without tenant!");
+		}
 		a.setTenant(tenant);
 		a.setInDoc(NavajoFactory.getInstance().createNavajo());
 		a.rpcPwd = password;
@@ -267,6 +279,16 @@ public class NonBlockingListener extends HttpServlet {
 		if(serviceHeader == null) {
 			throw new NullPointerException("Missing service header. Streaming Endpoint requires a 'X-Navajo-Service' header");
 		}
+		if(username == null) {
+			throw new NullPointerException("Missing username header. Streaming Endpoint requires a 'X-Navajo-Username' header");
+		}
+		if(password == null) {
+			throw new NullPointerException("Missing username header. Streaming Endpoint requires a 'X-Navajo-Password' header");
+		}
+		if(tenant == null) {
+			throw new NullPointerException("Missing tenant header. Streaming Endpoint requires a tenant");
+		}
+
 		if(isGet) {
 			return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),attributes,Optional.of(Flowable.<NavajoStreamEvent>empty().compose(StreamDocument.inNavajo(serviceHeader, Optional.of(username), Optional.of(password)))), Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment));
 		}

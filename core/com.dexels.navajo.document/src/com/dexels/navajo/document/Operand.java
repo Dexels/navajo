@@ -31,4 +31,10 @@ public class Operand {
       this.option = option;
   }
 
+  public Operand(Object value, String type) {
+      this.value = value;
+      this.type = type;
+      this.option = null;
+  }
+
 }

@@ -1,8 +1,9 @@
 package com.dexels.navajo.reactive.transformer.stream;
 
+import java.util.Optional;
+
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
-import com.dexels.navajo.reactive.api.ReactiveMapper;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
@@ -17,9 +18,9 @@ public class StreamMessageTransformerFactory implements ReactiveTransformerFacto
 	}
 
 	@Override
-	public ReactiveTransformer build(String relativePath, XMLElement xml, Function<String, ReactiveSourceFactory> sourceSupplier,
+	public ReactiveTransformer build(String relativePath, Optional<XMLElement> xml, Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
-			Function<String, ReactiveMerger> reducerSupplier, Function<String, ReactiveMapper> mapperSupplier) {
+			Function<String, ReactiveMerger> reducerSupplier) {
 		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
 		return new StreamMessageTransformer(parameters,xml,relativePath);
 	}

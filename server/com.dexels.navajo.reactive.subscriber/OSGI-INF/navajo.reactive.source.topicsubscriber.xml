@@ -5,4 +5,6 @@
       <provide interface="com.dexels.navajo.reactive.api.ReactiveSourceFactory"/>
    </service>
    <property name="name" type="String" value="topicsubscriber"/>
+   <reference bind="setTopicSubscriber" cardinality="1..1" interface="com.dexels.pubsub.rx2.api.TopicSubscriber" name="TopicSubscriber" policy="dynamic" unbind="clearTopicSubscriber"/>
+   <reference bind="setOffsetQuery" cardinality="1..1" interface="com.dexels.kafka.api.OffsetQuery" name="OffsetQuery" policy="dynamic" unbind="clearOffsetQuery"/>
 </scr:component>

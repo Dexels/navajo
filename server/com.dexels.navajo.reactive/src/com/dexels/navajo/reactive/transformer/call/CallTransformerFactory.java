@@ -10,7 +10,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ParameterValidator;
-import com.dexels.navajo.reactive.api.ReactiveMapper;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
@@ -26,10 +25,9 @@ public class CallTransformerFactory implements ReactiveTransformerFactory, Param
 
 	@Override
 	public ReactiveTransformer build(String relativePath,
-			XMLElement xml, Function<String, ReactiveSourceFactory> sourceSupplier,
+			Optional<XMLElement> xml, Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
-			Function<String, ReactiveMerger> reducerSupplier,
-			Function<String, ReactiveMapper> mapperSupplier) {
+			Function<String, ReactiveMerger> reducerSupplier) {
 		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
 		return new CallTransformer(parameters,this,xml,relativePath);
 	}

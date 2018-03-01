@@ -1,31 +1,57 @@
 package com.dexels.navajo.reactive.transformer.single;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.reactive.api.ParameterValidator;
+import com.dexels.navajo.reactive.api.ReactiveParameters;
+import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 
 import io.reactivex.FlowableTransformer;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class SingleMessageTransformer implements ReactiveTransformer {
+public class SingleMessageTransformer implements ReactiveTransformer, ParameterValidator {
 
-	private Function<StreamScriptContext, Function<DataItem, DataItem>> joinerMapper;
+	private final Function<StreamScriptContext, BiFunction<DataItem,Optional<DataItem>, DataItem>> joinerMapper;
+	private final ReactiveParameters parameters;
+	private final Optional<XMLElement> source;
+	private final String path;
 	
-	public SingleMessageTransformer(Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper) {
+	public SingleMessageTransformer(ReactiveParameters parameters, Function<StreamScriptContext, BiFunction<DataItem,Optional<DataItem>, DataItem>> joinermapper, Optional<XMLElement> xml, String path) {
+		this.parameters = parameters;
 		this.joinerMapper = joinermapper;
+		this.source = xml;
+		this.path = path;
 	}
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		return flow->flow.map(item->joinerMapper.apply(context).apply(item));
+		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), Optional.empty(), this, source, path);
+		boolean debug = parms.paramBoolean("debug", ()->false);
+		
+		FlowableTransformer<DataItem, DataItem> transformer = debug ? 
+				   flow->flow.map(item->joinerMapper.apply(context).apply(item,Optional.empty())).doOnNext(this::debugMessage)
+				:  flow->flow.map(item->joinerMapper.apply(context).apply(item,Optional.empty()));
+		return transformer;
 //				.doOnNext(e->logger.info("ITEM: "+e.message().toFlatString(ReplicationFactory.getInstance())));
 	}
 
+	private void debugMessage(DataItem di) {
+		System.err.println("Message:DEBUG: "+di.message().flatValueMap(true, Collections.emptySet(), ""));
+	}
+	
 	@Override
 	public Set<Type> inType() {
 		return new HashSet<>(Arrays.asList(new Type[] {Type.MESSAGE,Type.SINGLEMESSAGE})) ;
@@ -35,6 +61,23 @@ public class SingleMessageTransformer implements ReactiveTransformer {
 	@Override
 	public Type outType() {
 		return Type.MESSAGE;
+	}
+
+	@Override
+	public Optional<List<String>> allowedParameters() {
+		return Optional.of(Arrays.asList(new String[]{"debug"}));
+	}
+
+	@Override
+	public Optional<List<String>> requiredParameters() {
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<Map<String, String>> parameterTypes() {
+		Map<String,String> res = new HashMap<>();
+		res.put("debug", "boolean");
+		return Optional.of(Collections.unmodifiableMap(res));
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.dexels.navajo.reactive.api;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,15 +27,11 @@ public class ReactiveParameters {
 	public final Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> named;
 	public final List<Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> unnamed;
 
-	private final Map<String, Function3<StreamScriptContext,Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> > defaultExpressions;
-
-	private ReactiveParameters(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> unnamedParameters, Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> > defaultExpressions) {
+	private ReactiveParameters(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> unnamedParameters) {
 		this.named = namedParameters;
 		this.unnamed = unnamedParameters;
-		this.defaultExpressions = defaultExpressions;
-
 	}
-
+	
 	public List<Operand> resolveUnnamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,Optional<ImmutableMessage> paramMessage) {
 		return unnamed.stream().map(e->{
 			try {
@@ -58,9 +55,8 @@ public class ReactiveParameters {
 		}).collect(Collectors.toList());
 	}
 
-	public ReactiveResolvedParameters resolveNamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,Optional<ImmutableMessage> paramMessage, ParameterValidator validator, XMLElement sourceElement, String sourcePath) {
-
-		return new ReactiveResolvedParameters(context, named, currentMessage, paramMessage,validator, sourceElement, sourcePath,defaultExpressions);
+	public ReactiveResolvedParameters resolveNamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,Optional<ImmutableMessage> paramMessage, ParameterValidator validator, Optional<XMLElement> sourceElement, String sourcePath) {
+		return new ReactiveResolvedParameters(context, named, currentMessage, paramMessage,validator, sourceElement, sourcePath);
 	}
 	
 	@Deprecated
@@ -85,10 +81,26 @@ public class ReactiveParameters {
 		Optional<ImmutableMessage> current = Optional.of(currentMessage.message());
 		return resolveNamedOld(context, current, param);
 	}
+
+	public ReactiveParameters withConstant(String key, Object value, String type) {
+		return with(key,(context,input,param)->new Operand(value,type,null));
+	}
+	public ReactiveParameters with(String key, Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand> namedParam) {
+		Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> extended = new HashMap<>(named);
+		extended.put(key, namedParam);
+		return ReactiveParameters.of(extended);
+	}
 	
-	public static ReactiveParameters of(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> unnamedParameters, Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> > defaultExpressions) {
-		return new ReactiveParameters(namedParameters, unnamedParameters,defaultExpressions);
+	public static ReactiveParameters of(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> unnamedParameters) {
+		return new ReactiveParameters(namedParameters, unnamedParameters);
 	}
 
+	public static ReactiveParameters of(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> namedParameters) {
+		return new ReactiveParameters(namedParameters, Collections.emptyList());
+	}
 	
+	public static ReactiveParameters empty() {
+		return ReactiveParameters.of(Collections.emptyMap());
+	}
+
 }

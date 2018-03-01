@@ -32,12 +32,12 @@ public class InputStreamSource implements ReactiveSource, ParameterValidator {
 
 	private final ReactiveParameters parameters;
 	private final String relativePath;
-	private final XMLElement sourceElement;
+	private final Optional<XMLElement> sourceElement;
 	private final Type finalType;
 	private final List<ReactiveTransformer> transformers;
 
 	
-	public InputStreamSource(ReactiveParameters params, String relativePath, XMLElement x,DataItem.Type finalType,List<ReactiveTransformer> transformers) {
+	public InputStreamSource(ReactiveParameters params, String relativePath, Optional<XMLElement> x,DataItem.Type finalType,List<ReactiveTransformer> transformers) {
 		this.parameters = params;
 		this.relativePath = relativePath;
 		this.sourceElement = x;
@@ -50,7 +50,7 @@ public class InputStreamSource implements ReactiveSource, ParameterValidator {
 		ReactiveResolvedParameters rsp = parameters.resolveNamed(context, current, Optional.empty(), this, sourceElement, relativePath);
 		
 		ObjectMapper objectMapper = new ObjectMapper().configure(JsonParser.Feature.AUTO_CLOSE_SOURCE,false); //.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE,false);
-		String cp = rsp.paramString("classpath","");
+		String cp = rsp.paramString("classpath",()->"");
 		final InputStream fis =  getClass().getClassLoader().getResourceAsStream(cp);
 		Iterator<ObjectNode> node;
 		try {

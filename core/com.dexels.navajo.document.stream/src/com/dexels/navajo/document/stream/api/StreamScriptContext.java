@@ -20,9 +20,12 @@ public class StreamScriptContext {
 	private Optional<Flowable<NavajoStreamEvent>> inputFlowable;
 	public final Map<String, Object> attributes;
 	private final Optional<ReactiveScriptRunner> runner;
+	private String deployment;
 
-	public StreamScriptContext(String tenant, String service) {
+	// mostly for testing
+	public StreamScriptContext(String tenant, String service, String deployment) {
 		this(tenant,service,Optional.empty(),Optional.empty(),Collections.emptyMap(),Optional.empty(),Optional.empty());
+		this.deployment = deployment;
 	}
 	
 	public StreamScriptContext(String tenant, String service, Optional<String> username, Optional<String> password, Map<String,Object> attributes,Optional<Flowable<NavajoStreamEvent>> input, Optional<ReactiveScriptRunner> runner) {
@@ -33,6 +36,7 @@ public class StreamScriptContext {
 		this.attributes = attributes;
 		this.inputFlowable = input;
 		this.runner = runner;
+		this.deployment = runner.map(r->r.deployment()).orElse("");
 	}
 
 
@@ -48,7 +52,10 @@ public class StreamScriptContext {
 	public ReactiveScriptRunner runner() {
 		return runner.orElseThrow(()->new RuntimeException("StreamScriptContext has no runner, so sub runners aren't allowed"));
 	}
-	
+
+	public String deployment() {
+		return deployment;
+	}
 	
 	public Flowable<NavajoStreamEvent> inputFlowable() {
 		return inputFlowable.orElse(Flowable.empty());

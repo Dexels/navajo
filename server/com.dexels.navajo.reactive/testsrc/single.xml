@@ -1,8 +1,10 @@
 <reactive simple="One">
-	<source.single count.eval="1">
-		<map>
-			<set aap="noot" mies="wim"/>
-		</map>
+	<source.single count.eval="5" debug.eval="true">
+		<msg.single.msg>
+			<set aap="noot" mies="wim" zus.eval="1+1" jet.eval="[index]"/>
+			<delete name="index"/>
+			<set upper.eval="ToUpper([mies])"/>
+		</msg.single.msg>
 		<msg.stream.event messageName="Bla" isArray.eval="true"/>
 	</source.single>
 </reactive>

@@ -27,12 +27,11 @@ public class CopyMessageList implements ReactiveMerger, ParameterValidator {
 	}
 
 	@Override
-	public Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>> execute(String relativePath, XMLElement xml) {
+	public Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> execute(String relativePath, Optional<XMLElement> xml) {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
 		return context->(item,second)->{
 			ReactiveResolvedParameters resolved = r.resolveNamed(context, Optional.of(item.message()),Optional.empty(), this,xml,relativePath);
-			
-			List<ImmutableMessage> l = second.msgList();
+			List<ImmutableMessage> l = second.get().msgList();
 //			Map<String,Operand> named = r.resolveNamed(context, item, Optional.of(second));
 			return DataItem.of(item.message().withSubMessages(resolved.paramString("name"), l));
 		};

@@ -2,6 +2,7 @@ package com.dexels.navajo.reactive.transformer.reduce;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -20,24 +21,24 @@ import io.reactivex.functions.Function;
 
 public class ReduceTransformer implements ReactiveTransformer {
 
-	private Function<StreamScriptContext, BiFunction<DataItem, DataItem, DataItem>> reducers;
+	private Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> reducers;
 
 //	private final ReactiveParameters parameters;
 	
 	private final static Logger logger = LoggerFactory.getLogger(ReduceTransformer.class);
 
 	
-	public ReduceTransformer(Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>> reducers,ReactiveParameters parameters) {
+	public ReduceTransformer(Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> reducers,ReactiveParameters parameters) {
 		this.reducers = reducers;
 	}
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
 		
 		return flow->{
-			BiFunction<DataItem, DataItem, DataItem> reducer;
+			BiFunction<DataItem, Optional<DataItem>, DataItem> reducer;
 			try {
 				reducer = reducers.apply(context);
-				return flow.reduce(DataItem.of(ReactiveScriptParser.empty()),reducer).toFlowable();
+				return flow.reduce(DataItem.of(ReactiveScriptParser.empty()),(item,other)->reducer.apply(item, Optional.of(other))).toFlowable();
 			} catch (Exception e) {
 				logger.error("Error: ", context);
 			}

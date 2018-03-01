@@ -25,10 +25,10 @@ import io.reactivex.FlowableTransformer;
 public class StreamMessageTransformer implements ReactiveTransformer, ParameterValidator {
 
 	private ReactiveParameters parameters;
-	private XMLElement sourceElement;
+	private Optional<XMLElement> sourceElement;
 	private String sourcePath;
 
-	public StreamMessageTransformer(ReactiveParameters parameters, XMLElement sourceElement, String sourcePath) {
+	public StreamMessageTransformer(ReactiveParameters parameters, Optional<XMLElement> sourceElement, String sourcePath) {
 		this.parameters = parameters;
 		this.sourceElement = sourceElement;
 		this.sourcePath = sourcePath;
@@ -40,7 +40,9 @@ public class StreamMessageTransformer implements ReactiveTransformer, ParameterV
 		String messageName = resolved.paramString("messageName");
 		boolean isArray = resolved.paramBoolean("isArray");
 		// TODO remove duplication
-		return flow->flow.map(di->di.message()).compose(StreamDocument.toMessageEvent(messageName,isArray)).map(DataItem::of);
+		return flow->flow.map(di->di.message())
+				.compose(StreamDocument.toMessageEvent(messageName,isArray))
+				.map(DataItem::of);
 //		if (isArray) {
 //			return flow->
 //				flow.map(di->di.message()).concatMap(msg->StreamDocument.replicationMessageToStreamEvents(messageName, msg, isArray)).compose(StreamDocument.inArray(messageName)).map(DataItem::of);

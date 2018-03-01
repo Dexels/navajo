@@ -27,10 +27,10 @@ public class SQLReactiveSource implements ReactiveSource, ParameterValidator {
 	private final ReactiveParameters parameters;
 	private final List<ReactiveTransformer> transformers;
 	private final Type finalType;
-	private final XMLElement sourceElement;
+	private final Optional<XMLElement> sourceElement;
 	private final String sourcePath;
 	
-	public SQLReactiveSource(ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType, XMLElement sourceElement, String sourcePath) {
+	public SQLReactiveSource(ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType, Optional<XMLElement> sourceElement, String sourcePath) {
 		this.parameters = params;
 		this.transformers = transformers;
 		this.finalType = finalType;

@@ -25,12 +25,12 @@ public class SetSingle implements ReactiveMerger, ParameterValidator {
 	}
 
 	@Override
-	public Function<StreamScriptContext,BiFunction<DataItem,DataItem,DataItem>> execute(String relativePath, XMLElement xml) {
+	public Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> execute(String relativePath, Optional<XMLElement> xml) {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
 		return context->(item,params)->{
 			// will use the second message as input, if not present, will use the source message
 			ImmutableMessage s = item.message();
-			ReactiveResolvedParameters parms = r.resolveNamed(context, Optional.of(s), Optional.of(params.message()), this, xml, relativePath);
+			ReactiveResolvedParameters parms = r.resolveNamed(context, Optional.of(s), params.map(p->p.message()), this, xml, relativePath);
 			
 			for (Entry<String,Operand> elt : parms.resolveAllParams().entrySet()) {
 				s = s.with(elt.getKey(), elt.getValue().value, elt.getValue().type);

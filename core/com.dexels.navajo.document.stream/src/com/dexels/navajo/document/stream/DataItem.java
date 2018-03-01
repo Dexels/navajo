@@ -72,7 +72,9 @@ public class DataItem {
 
 	public NavajoStreamEvent event() {
 		if(this.streamEvent==null) {
-			throw new NullPointerException("DataItem without streamEvent, can't request event of dataitem of type: "+this.type);
+			NullPointerException nullPointerException = new NullPointerException("DataItem without streamEvent, can't request event of dataitem of type: "+this.type);
+			nullPointerException.printStackTrace();
+			throw nullPointerException;
 		}
 
 		return this.streamEvent;

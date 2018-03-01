@@ -7,5 +7,5 @@ import com.dexels.navajo.document.stream.ReactiveScript;
 public interface ReactiveScriptRunner {
 	public ReactiveScript run(String service, boolean debug) throws IOException;
 	public boolean acceptsScript(String service);
-
+	public String deployment();
 }

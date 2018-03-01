@@ -362,7 +362,7 @@
 					<uniqueVersion>false</uniqueVersion>
 					<id>dexels_test</id>
 					<name>Dexels Repository</name>
-					<url>https://repo.dexels.com/nexus/content/repositories/navajo_test/</url>
+					<url>http://repo.dexels.com/nexus/content/repositories/navajo_test/</url>
 
 					<layout>default</layout>
 				</repository>

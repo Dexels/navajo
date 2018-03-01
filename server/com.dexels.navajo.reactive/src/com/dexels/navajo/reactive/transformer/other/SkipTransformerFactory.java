@@ -1,4 +1,4 @@
-package com.dexels.navajo.reactive.transformer.csv;
+package com.dexels.navajo.reactive.transformer.other;
 
 import java.util.Optional;
 
@@ -12,24 +12,20 @@ import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 
 import io.reactivex.functions.Function;
 
-public class CSVTransformerFactory implements ReactiveTransformerFactory {
+public class SkipTransformerFactory implements ReactiveTransformerFactory {
 
-	public CSVTransformerFactory() {
+	public SkipTransformerFactory() {
+		// TODO Auto-generated constructor stub
 	}
-
-
 
 	@Override
-	public ReactiveTransformer build(String relativePath, Optional<XMLElement> xml, Function<String, ReactiveSourceFactory> sourceSupplier,
+	public ReactiveTransformer build(String relativePath, Optional<XMLElement> xml,
+			Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier) {
-		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath,xml);
-		return new CSVTransformer(parameters,xml, relativePath);
+		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
+
+		return new TakeTransformer(parameters);
 	}
 
-
-
 }
-
-
-//writeHeaders,columns,labels,delimiter

@@ -25,11 +25,11 @@ import io.reactivex.functions.Function;
 public class SetSingleKeyValue implements ReactiveMerger, ParameterValidator {
 
 	@Override
-	public Function<StreamScriptContext, BiFunction<DataItem, DataItem, DataItem>> execute(String relativePath, XMLElement xml) {
+	public Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> execute(String relativePath, Optional<XMLElement> xml) {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
 		return context->(acc,item)->{
 			ImmutableMessage s = acc.message();
-			ReactiveResolvedParameters parms = r.resolveNamed(context, Optional.of(item.message()),Optional.of(s), this, xml, relativePath);
+			ReactiveResolvedParameters parms = r.resolveNamed(context, item.map(i->i.message()),Optional.of(s), this, xml, relativePath);
 			Operand resolvedValue = parms.resolveAllParams().get("value");
 			String toValue = parms.paramString("to");
 			return DataItem.of(acc.message().with(toValue, resolvedValue.value, resolvedValue.type));

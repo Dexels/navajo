@@ -31,7 +31,7 @@ public class TestHttp {
 	@Test
 	public void testBiggerDownload() throws MalformedURLException, InterruptedException {
 //		String url = "https://repo.dexels.com/nexus/service/local/repositories/central/content/org/apache/tika/tika-bundle/1.6/tika-bundle-1.6.jar";
-		String url = "http://spiritus.dexels.com:9090/nexus/content/repositories/obr2/.meta/obr.xml";
+		String url = "http://10.0.0.8:9090/nexus/content/repositories/obr2/.meta/obr.xml";
 //		String url = "http://localhost:8080/clubs.xml";
 		long l = HTTP.get(url)
 			.lift(XML.parseFlowable(10))

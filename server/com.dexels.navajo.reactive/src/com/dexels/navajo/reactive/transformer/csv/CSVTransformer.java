@@ -31,7 +31,7 @@ import io.reactivex.FlowableTransformer;
 public class CSVTransformer implements ReactiveTransformer, ParameterValidator {
 
 	private ReactiveParameters parameters;
-	private XMLElement sourceElement;
+	private Optional<XMLElement> sourceElement;
 	private String sourcePath;
 	
 	private FlowableTransformer<DataItem, DataItem> createTransformer(StreamScriptContext context) {
@@ -39,7 +39,7 @@ public class CSVTransformer implements ReactiveTransformer, ParameterValidator {
 		return flow -> flow.lift(flowableCSV(context));
 	}
 	
-	public CSVTransformer(ReactiveParameters parameters, XMLElement sourceElement, String sourcePath) {
+	public CSVTransformer(ReactiveParameters parameters, Optional<XMLElement> sourceElement, String sourcePath) {
 		this.parameters = parameters;
 		this.sourceElement = sourceElement;
 		this.sourcePath = sourcePath;
@@ -101,13 +101,6 @@ public class CSVTransformer implements ReactiveTransformer, ParameterValidator {
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-//		Map<String,Operand> resolved = parameters.resolveNamed(context, current);
-//		String columnString = (String) resolved.get("columns") .value;
-//		List<String> columns = Arrays.asList(columnString.split(","));
-//		String labelString = (String) resolved.get("labels").value;
-//		List<String> labels = Arrays.asList(labelString.split(","));
-//		boolean writeHeaders = (boolean) resolved.get("writeHeaders").value;
-//		String delimiter = (String) resolved.get("delimiter").value;
 		return createTransformer(context);
 	}
 

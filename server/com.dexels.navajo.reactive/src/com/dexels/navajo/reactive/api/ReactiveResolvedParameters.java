@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,18 +29,21 @@ public class ReactiveResolvedParameters {
 	private final Optional<ImmutableMessage> currentMessage;
 	private final Optional<ImmutableMessage> paramMessage;
 	private final Optional<Map<String,String>> expectedTypes;
-	private final XMLElement sourceElement;
+	private final Optional<XMLElement> sourceElement;
 	private final String sourcePath;
-	private final Map<String, Function3<StreamScriptContext,Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> > defaultExpressions;
 	
-	public ReactiveResolvedParameters(StreamScriptContext context, Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> named,Optional<ImmutableMessage> currentMessage,Optional<ImmutableMessage> paramMessage, ParameterValidator validator, XMLElement sourceElement, String sourcePath,Map<String, Function3<StreamScriptContext,Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> > defaultExpressions) {
+	public ReactiveResolvedParameters(StreamScriptContext context, Map<String,Function3<StreamScriptContext,
+			Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> named,
+			Optional<ImmutableMessage> currentMessage,
+			Optional<ImmutableMessage> paramMessage, ParameterValidator validator, 
+			Optional<XMLElement> sourceElement,
+			String sourcePath) {
 		this.named = named;
 		this.context = context;
 		this.currentMessage = currentMessage;
 		this.paramMessage = paramMessage;
 		this.sourceElement = sourceElement;
 		this.sourcePath = sourcePath;
-		this.defaultExpressions = defaultExpressions;
 		Optional<List<String>> allowed = validator.allowedParameters();
 		Optional<List<String>> required = validator.requiredParameters();
 
@@ -47,7 +51,7 @@ public class ReactiveResolvedParameters {
 			List<String> al = allowed.get();
 			named.entrySet().forEach(e->{
 				if(!al.contains(e.getKey())) {
-					throw new ReactiveParameterException("Parameter name: "+e.getKey()+" is not allowed for this entity. Allowed entities: "+al+" file: "+sourcePath+" line: "+sourceElement.getStartLineNr());
+					throw new ReactiveParameterException("Parameter name: "+e.getKey()+" is not allowed for this entity. Allowed entities: "+al+" file: "+sourcePath+" line: "+sourceElement.map(xml->""+xml.getStartLineNr()).orElse("<unknown>") );
 				}
 			});
 		}
@@ -55,15 +59,16 @@ public class ReactiveResolvedParameters {
 			List<String> req = required.get();
 			for (String requiredParam : req) {
 				if(!named.containsKey(requiredParam)) {
-					if(!defaultExpressions.containsKey(requiredParam)) {
-						throw new ReactiveParameterException("Missing parameter name: "+requiredParam+". Supplied params: "+named.keySet()+" file: "+sourcePath+" line: "+sourceElement.getStartLineNr());
-					}
+					throw new ReactiveParameterException("Missing parameter name: "+requiredParam+". Supplied params: "+named.keySet()+" file: "+sourcePath+" line: "+sourceElement.map(xml->""+xml.getStartLineNr()).orElse("<unknown>"));
 				}
 			}
 		}
 		expectedTypes = validator.parameterTypes();
 	}
 
+	public boolean hasKey(String key) {
+		return result.containsKey(key);
+	}
 	public Map<String,Operand> resolveAllParams() {
 		if(!allResolved) {
 			resolveNamed();
@@ -84,55 +89,67 @@ public class ReactiveResolvedParameters {
 	}
 	
 
-	private Object getCheckedValue(String expectedType, String key, Optional<Operand> res, Optional<Object> defaultValue) {
+	private Object getCheckedValue(String expectedType, String key, Optional<Operand> res, Optional<Callable<? extends Object>> defaultValue) {
 		if(!res.isPresent()) {
-			Function3<StreamScriptContext,Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> def = defaultExpressions.get(key);
-			if(def!=null) {
-				try {
-					Operand defaultOperand = def.apply(context, currentMessage, paramMessage);
-					if(!expectedType.equals(defaultOperand.type)) {
-						throw new ReactiveParameterException("Error evaluating default expression for key: "+key+" it is not of the expected type: "+expectedType+" but of type: "+defaultOperand.type+", which is demanded by the calling code"+" file: "+sourcePath+" line: "+sourceElement.getStartLineNr());
-					}
-					return defaultOperand.value;
-				} catch (Exception e) {
-					throw new ReactiveParameterException("Error evaluating default expression for key: "+key,e);
-
-				}
-			}
 			if(defaultValue.isPresent()) {
-				return defaultValue.get();
+				try {
+					return defaultValue.get().call();
+				} catch (Exception e) {
+					throw new ReactiveParameterException("Error evaluating required key: "+key+" it threw an exception.",e);
+				}
 			}
 			throw new ReactiveParameterException("Error evaluating required key: "+key+" it is missing.");
 		}
-		Operand result = res.get();
-		if(!expectedType.equals(result.type)) {
-			throw new ReactiveParameterException("Error evaluating key: "+key+" it is not of the expected type: "+expectedType+" but of type: "+result.type+", which is demanded by the calling code"+" file: "+sourcePath+" line: "+sourceElement.getStartLineNr());
-		}
-		return  result.value;
+		return typeCheckedOperand(key, expectedType).get();
 	}
 	
+	public Optional<Object> typeCheckedOperand(String key, String expectedType) {
+		Optional<Operand> res = paramValue(key);
+		if(res.isPresent()) {
+			Operand p = res.get();
+			if(expectedType.equals(p.type)) {
+				return Optional.of(p.value);
+			} else {
+				throw new ReactiveParameterException("Error evaluating key: "+key+" it is not of the expected type: "+expectedType+" but of type: "+p.type+", which is demanded by the calling code"+" file: "+sourcePath+" line: "+sourceElement.map(xml->""+xml.getStartLineNr()).orElse("<unknown>"));
+			}
+		} else {
+			return Optional.empty();
+		}
+	}
+	// Guarantees it's there, will fail otherwise
 	public String paramString(String key) {
 		return (String)getCheckedValue(Property.STRING_PROPERTY, key, paramValue(key), Optional.empty());
 	}
 
-	
-	public String paramString(String key,String defaultValue) {
+	public Optional<String> optionalString(String key) {
+		return typeCheckedOperand(key, Property.STRING_PROPERTY).map(e->(String)e);
+
+	}
+	public String paramString(String key,Callable<String> defaultValue) {
 		return (String)getCheckedValue(Property.STRING_PROPERTY, key, paramValue(key), Optional.of(defaultValue));
 	}
 
 	public int paramInteger(String key) {
 		return (Integer)getCheckedValue(Property.INTEGER_PROPERTY, key, paramValue(key), Optional.empty());
 	}
-	
-	public int paramInteger(String key, int defaultValue) {
+
+	public Optional<Integer> optionalInteger(String key) {
+		return typeCheckedOperand(key, Property.INTEGER_PROPERTY).map(e->(Integer)e);
+	}
+
+	public int paramInteger(String key, Callable<Integer> defaultValue) {
 		return (Integer)getCheckedValue(Property.INTEGER_PROPERTY, key, paramValue(key), Optional.of(defaultValue));
 	}
 	
 	public boolean paramBoolean(String key) {
 		return (Boolean)getCheckedValue(Property.BOOLEAN_PROPERTY, key, paramValue(key), Optional.empty());
 	}
-	
-	public boolean paramBoolean(String key, boolean defaultValue) {
+
+	public Optional<Boolean> optionalBoolean(String key) {
+		return typeCheckedOperand(key, Property.BOOLEAN_PROPERTY).map(e->(Boolean)e);
+	}
+
+	public boolean paramBoolean(String key, Callable<Boolean> defaultValue) {
 		return (Boolean)getCheckedValue(Property.BOOLEAN_PROPERTY, key, paramValue(key), Optional.of(defaultValue));
 	}
 	
@@ -153,7 +170,7 @@ public class ReactiveResolvedParameters {
 			result.put(key, applied);
 			
 			if(expectedType.isPresent() && !applied.type.equals(expectedType.get())) {
-				throw new ReactiveParameterException("Error evaluating key: "+key+" it is not of the expected type: "+expectedType.get()+" but of type: "+applied.type+" with value: "+applied.value+" path: "+sourcePath+" element: "+sourceElement+" -> "+ sourceElement.getStartLineNr());
+				throw new ReactiveParameterException("Error evaluating key: "+key+" it is not of the expected type: "+expectedType.get()+" but of type: "+applied.type+" with value: "+applied.value+" path: "+sourcePath+" element: "+sourceElement+" -> "+ sourceElement.map(xml->""+xml.getStartLineNr()).orElse("<unknown>"));
 			}
 			return applied;
 		} catch (Exception e1) {

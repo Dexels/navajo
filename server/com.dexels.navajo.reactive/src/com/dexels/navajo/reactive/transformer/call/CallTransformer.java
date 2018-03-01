@@ -24,10 +24,10 @@ public class CallTransformer implements ReactiveTransformer {
 
 	private final ReactiveParameters parameters;
 	private final ParameterValidator validator;
-	private XMLElement sourceElement;
+	private Optional<XMLElement> sourceElement;
 	private String sourcePath;
 	
-	public CallTransformer(ReactiveParameters parameters, ParameterValidator validator, XMLElement sourceElement, String sourcePath) {
+	public CallTransformer(ReactiveParameters parameters, ParameterValidator validator, Optional<XMLElement> sourceElement, String sourcePath) {
 		this.parameters = parameters;
 		this.validator = validator;
 		this.sourceElement = sourceElement;
@@ -38,10 +38,10 @@ public class CallTransformer implements ReactiveTransformer {
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
 		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), Optional.empty(),validator, sourceElement, sourcePath);
 
-		final int parallel =  resolved.paramInteger("parallel", 0);
+		final int parallel =  resolved.paramInteger("parallel", ()->0);
 		final String service =  resolved.paramString("service");
 		final String messageName =  resolved.paramString("messageName");
-		final boolean debug = resolved.paramBoolean("debug", false);
+		final boolean debug = resolved.paramBoolean("debug", ()->false);
 		final boolean isArray =  resolved.paramBoolean("isArray");
 		return flow->
 			{
@@ -55,7 +55,6 @@ public class CallTransformer implements ReactiveTransformer {
 			} else {
 				return stream.flatMap(str->context.runner().run(service,debug).execute(context.withService(service).withInput(str)),parallel);
 			}
-//			return context.runner().run(context,service,stream);
 		};
 	}
 
