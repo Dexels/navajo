@@ -519,7 +519,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		for (Property x : message.getAllProperties()) {
 			// Check all non "" (empty) values.
 			// surround with try catch so that other errors are avoided ::
-            if (!x.getValue().equals("")) {
+            if (x.getValue() != null && !"".equals(x.getValue())) {
                 // If it's null, it could not be converted, which means that wrong input was
                 // provided
                 if (x.getTypedValue() == null) {
