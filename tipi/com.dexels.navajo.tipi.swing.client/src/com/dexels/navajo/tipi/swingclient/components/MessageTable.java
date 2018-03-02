@@ -126,7 +126,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	private MessageTableFooter tableFooter = null;
 	protected final Map<Integer, Integer> columnSizeMap = new HashMap<Integer, Integer>();
 	private final Map<String, Property> cachedColumns = new HashMap<String, Property>();
-	private final List<MessageTableColumnDefinition> definedColumns = new ArrayList<>();
+(??)    private final Map<String, MessageTableColumnDefinition> definedColumns = new HashMap<>();
 
 	   
 	private final TableSorter mySorter;
