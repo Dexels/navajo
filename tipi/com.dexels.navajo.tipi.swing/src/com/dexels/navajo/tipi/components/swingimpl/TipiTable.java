@@ -766,13 +766,13 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
                         }
                     }
                 });
-                return new Integer(selectedMessageIndex);
+                return Integer.valueOf(selectedMessageIndex);
             }
             if (name.equals("rowCount")) {
-                return new Integer(mm.getRowCount());
+                return Integer.valueOf(mm.getRowCount());
             }
             if (name.equals("columnCount")) {
-                return new Integer(mm.getColumnCount());
+                return Integer.valueOf(mm.getColumnCount());
             }
             return super.getComponentValue(name);
         } else {
