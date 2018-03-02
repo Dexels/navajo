@@ -1518,105 +1518,95 @@ public class MessageTable extends JTable implements CellEditorListener,
 		return result;
 	}
 
-	public Message getMessageAsPresentedOnTheScreen(
-			boolean includeInvisibleColumns) {
-		if (myMessage == null) {
-			return null;
-		}
-		Navajo newNavajo = NavajoFactory.getInstance().createNavajo();
-		Message constructed = NavajoFactory.getInstance().createMessage(
-				newNavajo, myMessage.getName(), Message.MSG_TYPE_ARRAY);
-		for (int i = 0; i < getRowCount(); i++) {
-			Message elt = this.getMessageRow(i);
-			if (Message.MSG_DEFINITION.equals(elt.getType())) {
-				continue;
-			}
-			Message newRow = NavajoFactory.getInstance().createMessage(
-					newNavajo, constructed.getName(),
-					Message.MSG_TYPE_ARRAY_ELEMENT);
-			if (includeInvisibleColumns) {
-				List<Property> ps = elt.getAllProperties();
-				for (int j = 0; j < ps.size(); j++) {
-					Property p = ps.get(j);
+    public Message getMessageAsPresentedOnTheScreen(boolean includeInvisibleColumns) {
+        if (myMessage == null) {
+            return null;
+        }
+        Navajo newNavajo = NavajoFactory.getInstance().createNavajo();
+        Message constructed = NavajoFactory.getInstance().createMessage(newNavajo, myMessage.getName(), Message.MSG_TYPE_ARRAY);
+        for (int i = 0; i < getRowCount(); i++) {
+            Message elt = this.getMessageRow(i);
+            if (Message.MSG_DEFINITION.equals(elt.getType())) {
+                continue;
+            }
+            Message newRow = NavajoFactory.getInstance().createMessage(newNavajo, constructed.getName(), Message.MSG_TYPE_ARRAY_ELEMENT);
+            if (includeInvisibleColumns) {
+                List<Property> ps = elt.getAllProperties();
+                for (int j = 0; j < ps.size(); j++) {
+                    Property p = ps.get(j);
 
-					if (p != null) {
+                    if (p != null) {
 
-						Property q = null;
+                        Property q = null;
 
-						if (p.getType().equals(Property.SELECTION_PROPERTY)
-								&& p.getCardinality().equals("+")) {
-							try {
-								q = NavajoFactory.getInstance().createProperty(
-										newNavajo, p.getName(), "string", "",
-										255, p.getDescription(), "out");
-								List<Selection> sels = p
-										.getAllSelectedSelections();
-								String value = sels.get(0).getName();
-								for (int g = 1; g < sels.size(); g++) {
-									value = value + "/" + sels.get(g).getName();
-								}
-								q.setValue(value);
+                        if (p.getType().equals(Property.SELECTION_PROPERTY) && p.getCardinality().equals("+")) {
+                            try {
+                                q = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255,
+                                        p.getDescription(), "out");
+                                List<Selection> sels = p.getAllSelectedSelections();
+                                String value = sels.get(0).getName();
+                                for (int g = 1; g < sels.size(); g++) {
+                                    value = value + "/" + sels.get(g).getName();
+                                }
+                                q.setValue(value);
 
-							} catch (Exception e) {
-								logger.error("Error: ",e);
-							}
-						} else {
-							q = p.copy(newNavajo);
-							q.setAnyValue(p.getTypedValue());
-							try {
-								q.setType(p.getEvaluatedType());
-							} catch (NavajoException e) {
-								logger.error("Error: ",e);
-								q.setType(Property.STRING_PROPERTY);
-							}
-						}
+                            } catch (Exception e) {
+                                logger.error("Error: ", e);
+                            }
+                        } else {
+                            q = p.copy(newNavajo);
+                            q.setAnyValue(p.getTypedValue());
+                            try {
+                                q.setType(p.getEvaluatedType());
+                            } catch (NavajoException e) {
+                                logger.error("Error: ", e);
+                                q.setType(Property.STRING_PROPERTY);
+                            }
+                        }
 
-						newRow.addProperty(q);
-					}
-				}
-			} else {
-				for (int j = 0; j < getColumnCount(); j++) {
-					String prop = getColumnId(j);
-					Property p = elt.getProperty(prop);
-					if (p != null) {
-						Property q = null;
+                        newRow.addProperty(q);
+                    }
+                }
+            } else {
+                for (int j = 0; j < getColumnCount(); j++) {
+                    String prop = getColumnId(j);
+                    Property p = elt.getProperty(prop);
+                    if (p != null) {
+                        Property q = null;
 
-						if (p.getType().equals(Property.SELECTION_PROPERTY)
-								&& p.getCardinality().equals("+")) {
-							try {
-								q = NavajoFactory.getInstance().createProperty(
-										newNavajo, p.getName(), "string", "",
-										255, p.getDescription(), "out");
-								ArrayList<Selection> sels = p
-										.getAllSelectedSelections();
-								String value = sels.get(0).getName();
-								for (int g = 1; g < sels.size(); g++) {
-									value = value + "/" + sels.get(g).getName();
-								}
-								q.setValue(value);
+                        if (p.getType().equals(Property.SELECTION_PROPERTY) && p.getCardinality().equals("+")) {
+                            try {
+                                q = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255,
+                                        p.getDescription(), "out");
+                                ArrayList<Selection> sels = p.getAllSelectedSelections();
+                                String value = sels.get(0).getName();
+                                for (int g = 1; g < sels.size(); g++) {
+                                    value = value + "/" + sels.get(g).getName();
+                                }
+                                q.setValue(value);
 
-							} catch (Exception e) {
-								logger.error("Error: ",e);
-							}
-						} else {
-							q = p.copy(newNavajo);
-							q.setAnyValue(p.getTypedValue());
-							try {
-								q.setType(p.getEvaluatedType());
-							} catch (NavajoException e) {
-								logger.error("Error: ",e);
-								q.setType(Property.STRING_PROPERTY);
-							}
-						}
+                            } catch (Exception e) {
+                                logger.error("Error: ", e);
+                            }
+                        } else {
+                            q = p.copy(newNavajo);
+                            q.setAnyValue(p.getTypedValue());
+                            try {
+                                q.setType(p.getEvaluatedType());
+                            } catch (NavajoException e) {
+                                logger.error("Error: ", e);
+                                q.setType(Property.STRING_PROPERTY);
+                            }
+                        }
 
-						newRow.addProperty(q);
-					}
-				}
-			}
-			constructed.addElement(newRow);
-		}
-		return constructed;
-	}
+                        newRow.addProperty(q);
+                    }
+                }
+            }
+            constructed.addElement(newRow);
+        }
+        return constructed;
+    }
 
 
 	public final void addActionListener(ActionListener e) {
