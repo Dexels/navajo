@@ -1860,6 +1860,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                 for (int i = 0; i < getArraySize(); i++) {
                     String line = "";
                     Message current = getMessage(i);
+                    if (current.getType() == Message.MSG_TYPE_DEFINITION) {
+                        continue;
+                    }
                     List<Property> prop = current.getAllProperties();
                     for (int j = 0; j < prop.size(); j++) {
                         Property p = prop.get(j);

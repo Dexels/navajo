@@ -1524,12 +1524,17 @@ public class MessageTable extends JTable implements CellEditorListener,
         }
         Navajo newNavajo = NavajoFactory.getInstance().createNavajo();
         Message constructed = NavajoFactory.getInstance().createMessage(newNavajo, myMessage.getName(), Message.MSG_TYPE_ARRAY);
+        newNavajo.addMessage(constructed);
+        addMessageDefinitionAsPresentedOnTheScreen(constructed, includeInvisibleColumns);
         for (int i = 0; i < getRowCount(); i++) {
             Message elt = this.getMessageRow(i);
             if (Message.MSG_DEFINITION.equals(elt.getType())) {
                 continue;
             }
+ 
             Message newRow = NavajoFactory.getInstance().createMessage(newNavajo, constructed.getName(), Message.MSG_TYPE_ARRAY_ELEMENT);
+            
+            
             if (includeInvisibleColumns) {
                 List<Property> ps = elt.getAllProperties();
                 for (int j = 0; j < ps.size(); j++) {
@@ -1609,7 +1614,24 @@ public class MessageTable extends JTable implements CellEditorListener,
     }
 
 
-	public final void addActionListener(ActionListener e) {
+	private void addMessageDefinitionAsPresentedOnTheScreen(Message msg, boolean includeInvisibleColumns) {
+        Message definitionMsg = NavajoFactory.getInstance().createMessage(msg.getRootDoc(), msg.getName(), Message.MSG_TYPE_DEFINITION);
+
+        for (MessageTableColumnDefinition columnDef :this.getColumnDefinitions().values()) {
+            boolean visible = this.hasColumn(columnDef.getId());
+            if (!visible && !includeInvisibleColumns) {
+                // If this column is not visible and we are only interested in visible columns, skip
+                continue;
+            } 
+            Property p = NavajoFactory.getInstance().createProperty(msg.getRootDoc(), columnDef.getId(), null, columnDef.getTitle(), "out");
+            p.setType(Property.STRING_PROPERTY);
+            definitionMsg.addProperty(p);
+        }
+        msg.addElement(definitionMsg);
+        
+    }
+
+    public final void addActionListener(ActionListener e) {
 		actionListeners.add(e);
 	}
 

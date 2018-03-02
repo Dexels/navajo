@@ -199,6 +199,9 @@ public class TipiExportDialog extends TipiDialog {
 			}
 			for (int i = 0; i < subMsgs.size(); i++) {
 				Message current = subMsgs.get(i);
+				if (current.getType() == Message.MSG_TYPE_DEFINITION) {
+				    continue;
+				}
 				// ArrayList props = current.getAllProperties();
 				boolean new_line = true;
 				boolean line_complies_to_filter = false;
