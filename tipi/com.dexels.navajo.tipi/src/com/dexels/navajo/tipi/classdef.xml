@@ -235,6 +235,11 @@
        Looks up string in properties file
     </description>
    </tipi-parser>
+   <tipi-parser name="freeField" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.FreeFieldParser">
+    <description>
+       Looks up free field
+    </description>
+   </tipi-parser>
    
    
    <tipi-parser name="attributeref" type="com.dexels.navajo.tipi.internal.AttributeRef" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeRefParser">

@@ -52,6 +52,7 @@ import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 import com.dexels.navajo.tipi.actionmanager.IActionManager;
 import com.dexels.navajo.tipi.actionmanager.TipiActionManager;
 import com.dexels.navajo.tipi.actions.TipiInstantiateTipi;
+import com.dexels.navajo.tipi.actions.TipiNewCallService;
 import com.dexels.navajo.tipi.classdef.ClassManager;
 import com.dexels.navajo.tipi.classdef.IClassManager;
 import com.dexels.navajo.tipi.components.core.ShutdownListener;
@@ -59,6 +60,7 @@ import com.dexels.navajo.tipi.components.core.ThreadActivityListener;
 import com.dexels.navajo.tipi.components.core.TipiSupportOverlayPane;
 import com.dexels.navajo.tipi.components.core.TipiThread;
 import com.dexels.navajo.tipi.components.core.TipiThreadPool;
+import com.dexels.navajo.tipi.components.core.parsers.FreeFieldParser;
 import com.dexels.navajo.tipi.components.core.parsers.LookupParser;
 import com.dexels.navajo.tipi.connectors.HttpNavajoConnector;
 import com.dexels.navajo.tipi.connectors.TipiConnector;
@@ -206,7 +208,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     private List<TipiExtension> optionalExtensionList;
     private Map<String, TipiExtension> extensionMap = new HashMap<String, TipiExtension>();
     private final Map<Property, List<Property>> propertyLinkRegistry = new HashMap<Property, List<Property>>();
-
+    
+    private LookupParser parser;
+    private Map<String, String> freeFieldCache = new HashMap<>();
+    
     private final Map<String, TipiConnector> tipiConnectorMap = new HashMap<String, TipiConnector>();
     private TipiConnector defaultConnector;
     private boolean hasDebugger;
@@ -223,8 +228,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     protected final TipiApplicationInstance myApplication;
 
     private transient ScriptEngineManager scriptManager;
-    
-    private LookupParser parser; 
+ 
     
 
     public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
@@ -571,6 +575,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         
         // Clear cached locales
         parser.clearCache();
+        freeFieldCache.clear();
+        
         resetErrorHandler();
     }
 
@@ -3058,8 +3064,53 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
         tipiEventStatistics.remove(component.getId()+eventname);
     }
+    
+    
 
     public LookupParser getLookupParser() {
         return parser;
+    }
+
+    
+    public String getFreeField(String key) {
+        if (freeFieldCache.size() == 0) {
+            getFreeFields();
+        }
+        return freeFieldCache.get(key);
+    }
+
+    private void getFreeFields() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("service", FreeFieldParser.WEBSERVICE);
+        params.put("retries", 5);
+        
+        Navajo newNavajo = NavajoFactory.getInstance().createNavajo();
+        Header newHeader = NavajoFactory.getInstance().createHeader(newNavajo, FreeFieldParser.WEBSERVICE, null, null, -1);
+        newNavajo.addHeader(newHeader);
+        Message input = NavajoFactory.getInstance().createMessage(newNavajo, "Description");
+        Property locProp = NavajoFactory.getInstance().createProperty(newNavajo,  "Locale", Property.STRING_PROPERTY, getApplicationInstance().getLocaleCode(), 10, "", "");
+        Property objIdProp = NavajoFactory.getInstance().createProperty(newNavajo,  "ObjectId", Property.STRING_PROPERTY,  navajoUsername, 10, "", "");
+ 
+        input.addProperty(locProp);
+        input.addProperty(objIdProp);
+        
+        newNavajo.addMessage(input);
+      
+        params.put("input", newNavajo);
+        TipiNewCallService s = new TipiNewCallService();
+        s.loadParameters(params);
+        s.setContext(this);
+        try {
+            s.execute(null);
+        } catch (TipiBreakException | TipiException e) {
+            logger.error("Error calling webservice to fill description cache!", e);
+            return;
+        }
+        Navajo response = getNavajo(FreeFieldParser.WEBSERVICE);
+        
+        for (Message m : response.getMessage("Descriptions").getElements()) {
+            freeFieldCache.put((String) m.getProperty("Name").getTypedValue(), (String) m.getProperty("Description").getTypedValue());
+        }
+        
     }
 }
