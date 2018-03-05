@@ -3091,7 +3091,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         Property locProp = NavajoFactory.getInstance().createProperty(newNavajo,  "Locale", Property.STRING_PROPERTY, getApplicationInstance().getLocaleCode(), 10, "", "");
         Property sublocProp = NavajoFactory.getInstance().createProperty(newNavajo,  "LoSubLocalecale", Property.STRING_PROPERTY, getApplicationInstance().getSubLocaleCode(), 10, "", "");
         
-        Property objIdProp = NavajoFactory.getInstance().createProperty(newNavajo,  "ObjectId", Property.STRING_PROPERTY,  navajoUsername, 10, "", "");
+        Property objIdProp = NavajoFactory.getInstance().createProperty(newNavajo,  "ObjectId", Property.STRING_PROPERTY,  "#" + getGlobalValue("clubIdentifier"), 10, "", "");
  
         input.addProperty(locProp);
         input.addProperty(sublocProp);
