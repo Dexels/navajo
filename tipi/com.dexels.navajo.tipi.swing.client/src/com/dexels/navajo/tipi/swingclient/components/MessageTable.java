@@ -37,8 +37,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -126,7 +126,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	private MessageTableFooter tableFooter = null;
 	protected final Map<Integer, Integer> columnSizeMap = new HashMap<Integer, Integer>();
 	private final Map<String, Property> cachedColumns = new HashMap<String, Property>();
-(??)    private final Map<String, MessageTableColumnDefinition> definedColumns = new HashMap<>();
+    private final Map<String, MessageTableColumnDefinition> definedColumns = new LinkedHashMap<>();
 
 	   
 	private final TableSorter mySorter;
@@ -1332,7 +1332,6 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 
 	public final int addColumn(String id, String title, boolean editable) {
-	    definedColumns.add(new MessageTableColumnDefinition(id, title, editable));
 		MessageTableModel mtm = getMessageModel();
 		return mtm.addColumn(id, title, editable);
 	}
@@ -1374,7 +1373,6 @@ public class MessageTable extends JTable implements CellEditorListener,
 	}
 
 	public final void removeAllColumns() {
-	    definedColumns.clear();
 		getMessageModel().removeAllColumns();
 	}
 
@@ -2283,12 +2281,5 @@ public class MessageTable extends JTable implements CellEditorListener,
     public Map<String, MessageTableColumnDefinition> getColumnDefinitions() {
         return definedColumns;
     }
-
-	
-	   
-    public List<MessageTableColumnDefinition> getColumnDefinitions() {
-        return definedColumns;
-    }
-
 
 }

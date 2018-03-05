@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -122,7 +123,7 @@ public class ColumnManagementDialog extends JDialog {
 //        Message m = mt.getMessage();
 //        Message first = m.getMessage(0);
 //        List<Property> props = first.getAllProperties();
-        List<MessageTableColumnDefinition> columnDefinitions = mt.getColumnDefinitions();
+        Collection<MessageTableColumnDefinition> columnDefinitions = mt.getColumnDefinitions().values();
         for (MessageTableColumnDefinition aColumn : columnDefinitions) {
 
             // Check if the column is allready showing and what his editability
