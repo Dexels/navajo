@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -23,6 +22,9 @@ import javax.swing.JScrollPane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
 
 class NameIdMap {
     HashMap<String, String> propertyNameIdMap = new HashMap<String, String>();
@@ -124,6 +126,7 @@ public class ColumnManagementDialog extends JDialog {
 //        Message first = m.getMessage(0);
 //        List<Property> props = first.getAllProperties();
         Collection<MessageTableColumnDefinition> columnDefinitions = mt.getColumnDefinitions().values();
+
         for (MessageTableColumnDefinition aColumn : columnDefinitions) {
 
             // Check if the column is allready showing and what his editability
@@ -134,7 +137,7 @@ public class ColumnManagementDialog extends JDialog {
             if (aColumn.getTitle() == null) {
                 name = aColumn.getId();
             }
-            if (!isInIgnoreList(aColumn.getId())) {
+            if (!isInIgnoreList(aColumn.getTitle())) {
                 nameIdMap.put( aColumn.getId(), name);
                 availableItems.add(aColumn.getId());
             }
