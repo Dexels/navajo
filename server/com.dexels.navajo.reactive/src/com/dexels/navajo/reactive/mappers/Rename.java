@@ -17,7 +17,6 @@ import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
 public class Rename implements ReactiveMerger, ParameterValidator {
@@ -26,9 +25,9 @@ public class Rename implements ReactiveMerger, ParameterValidator {
 	}
 
 	@Override
-	public Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> execute(String relativePath, Optional<XMLElement> xml) {
+	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
-		return context->(item,other)->{
+		return context->(item)->{
 			ReactiveResolvedParameters parms = r.resolveNamed(context, Optional.of(item.message()), Optional.empty(), this, xml, relativePath);
 //			Map<String,Operand> named = r.resolveNamed(context, item,Optional.empty());
 //			Operand value = named.get("value");

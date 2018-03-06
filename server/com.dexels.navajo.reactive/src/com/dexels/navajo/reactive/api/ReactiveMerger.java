@@ -6,10 +6,12 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
 
 public interface ReactiveMerger {
-	public Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> execute(String relativePath, Optional<XMLElement> xml);
+	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml);
+	default public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params) {
+		return execute(params, "", Optional.empty());
+	}
 }

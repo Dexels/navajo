@@ -8,34 +8,32 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class CopyMessageList implements ReactiveMerger, ParameterValidator {
+public class StoreAsSubMessage implements ReactiveMerger, ParameterValidator {
 
-	public CopyMessageList() {
+	public StoreAsSubMessage() {
 	}
 
 	@Override
-	public Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> execute(String relativePath, Optional<XMLElement> xml) {
-		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
-		return context->(item,second)->{
-			ReactiveResolvedParameters resolved = r.resolveNamed(context, Optional.of(item.message()),Optional.empty(), this,xml,relativePath);
-			List<ImmutableMessage> l = second.get().msgList();
-//			Map<String,Operand> named = r.resolveNamed(context, item, Optional.of(second));
-			return DataItem.of(item.message().withSubMessages(resolved.paramString("name"), l));
+	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
+		return context->(item)->{
+			// will use the second message as input, if not present, will use the source message
+			ImmutableMessage s = item.message();
+			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s), item.stateMessage(), this, xml, relativePath);
+			String name = parms.paramString("name");
+			return DataItem.of(s, Optional.of( item.stateMessage().orElse(ImmutableFactory.empty()).withSubMessage(name, item.message())));
 		};
-	
 	}
 
 	
@@ -51,8 +49,8 @@ public class CopyMessageList implements ReactiveMerger, ParameterValidator {
 
 	@Override
 	public Optional<Map<String, String>> parameterTypes() {
-		Map<String,String> r = new HashMap<>();
-		r.put("name", Property.STRING_PROPERTY);
-		return Optional.of(Collections.unmodifiableMap(r));
+		Map<String,String> result = new HashMap<String, String>();
+		result.put("name", Property.STRING_PROPERTY);
+		return Optional.of(Collections.unmodifiableMap(result));
 	}
 }

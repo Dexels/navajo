@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.stream;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
@@ -9,6 +10,7 @@ import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 public class DataItem {
 
 	private final ImmutableMessage msg;
+	private final ImmutableMessage stateMsg;
 	private final byte[] data;
 	private final NavajoStreamEvent streamEvent;
 	private final List<ImmutableMessage> msgList;
@@ -22,47 +24,64 @@ public class DataItem {
 		EMPTY
 	}
 	
-	public DataItem() {
+	private DataItem() {
 		this.msg = null;
 		this.data = null;
 		this.streamEvent = null;
 		this.msgList = null;
 		this.type = Type.EMPTY;
+		this.stateMsg = null;
 	}
 	
-	public DataItem(ImmutableMessage msg) {
+	private DataItem(ImmutableMessage msg) {
 		this.msg = msg;
 		this.data = null;
 		this.streamEvent = null;
 		this.msgList = null;
 		this.type = Type.MESSAGE;
+		this.stateMsg = null;
 	}
 	
-	public DataItem(byte[] data) {
+	private DataItem(ImmutableMessage msg, Optional<ImmutableMessage> stateMessage) {
+		this.msg = msg;
+		this.data = null;
+		this.streamEvent = null;
+		this.msgList = null;
+		this.stateMsg = stateMessage.orElse(null);
+		this.type = Type.MESSAGE;
+	}
+
+	private DataItem(byte[] data) {
 		this.msg = null;
 		this.data = data;
 		this.streamEvent = null;
 		this.msgList = null;
 		this.type = Type.DATA;
+		this.stateMsg = null;
 	}
 
-	public DataItem(NavajoStreamEvent event) {
+	private DataItem(NavajoStreamEvent event) {
 		this.msg = null;
 		this.data = null;
 		this.streamEvent = event;
 		this.msgList = null;
 		this.type = Type.EVENT;
+		this.stateMsg = null;
 	}
 	
-	public DataItem(List<ImmutableMessage> msgList) {
+	private DataItem(List<ImmutableMessage> msgList) {
 		this.msg = null;
 		this.data = null;
 		this.streamEvent = null;
 		this.msgList = msgList;
 		this.type = Type.LIST;
+		this.stateMsg = null;
 	}
 	
 
+	public Optional<ImmutableMessage> stateMessage() {
+		return Optional.ofNullable(this.stateMsg);
+	}
 	public ImmutableMessage message() {
 		if(this.msg==null) {
 			throw new NullPointerException("DataItem without message, can't request message of dataitem of type: "+this.type);
@@ -101,6 +120,12 @@ public class DataItem {
 	public static DataItem of(ImmutableMessage repl) {
 		return new DataItem(repl);
 	}
+
+	public static DataItem of(ImmutableMessage repl, Optional<ImmutableMessage> stateMessage) {
+		return new DataItem(repl,stateMessage);
+	}
+
+	
 	public static DataItem of(byte[] data) {
 		return new DataItem(data);
 	}

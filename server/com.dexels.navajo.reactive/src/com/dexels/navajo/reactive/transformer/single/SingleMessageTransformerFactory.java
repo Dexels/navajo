@@ -12,7 +12,6 @@ import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
 public class SingleMessageTransformerFactory implements ReactiveTransformerFactory {
@@ -26,7 +25,7 @@ public class SingleMessageTransformerFactory implements ReactiveTransformerFacto
 			Function<String, ReactiveMerger> reducerSupplier
 			) {
 		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
-		Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, xml.map(x->x.getChildren()), reducerSupplier);
+		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, xml.map(x->x.getChildren()), reducerSupplier);
 		return new SingleMessageTransformer(parameters,joinermapper,xml,relativePath);
 	}
 

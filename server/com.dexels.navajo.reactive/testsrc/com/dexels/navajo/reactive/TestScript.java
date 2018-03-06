@@ -93,17 +93,7 @@ public class TestScript {
 				.blockingForEach(e->System.err.print(new String(e)));
 		}
 	}
-	
-	@Test 
-	public void testScript() throws IOException {
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactive.xml")) {
-			StreamScriptContext myContext = createContext("AdvancedReactiveSql",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in,"serviceName").execute(myContext)
-				.map(di->di.event())
-				.lift(StreamDocument.serialize())
-				.blockingForEach(e->System.err.print(new String(e)));
-		}
-	}
+
 }
 
 
