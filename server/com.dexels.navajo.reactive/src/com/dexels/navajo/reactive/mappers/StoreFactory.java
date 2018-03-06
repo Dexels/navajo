@@ -16,6 +16,7 @@ import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
+import com.dexels.navajo.reactive.transformer.call.CallTransformer;
 
 import io.reactivex.functions.Function;
 
@@ -31,7 +32,7 @@ public class StoreFactory implements ReactiveTransformerFactory, ParameterValida
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier) {
 		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
-		return new Store(parameters); //new Store();
+		return null; //new Store();
 	}
 
 	@Override
