@@ -13,7 +13,6 @@ import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
 public class ReduceTransformerFactory implements ReactiveTransformerFactory {
@@ -27,7 +26,7 @@ public class ReduceTransformerFactory implements ReactiveTransformerFactory {
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier) {
 
-		Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> reducermapper = ReactiveScriptParser.parseReducerList(relativePath, xml.map(e->(List<XMLElement>)e.getChildren()) , reducerSupplier);
+		Function<StreamScriptContext,Function<DataItem,DataItem>> reducermapper = ReactiveScriptParser.parseReducerList(relativePath, xml.map(e->(List<XMLElement>)e.getChildren()) , reducerSupplier);
 		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
 		return new ReduceTransformer(reducermapper,parameters);
 	}

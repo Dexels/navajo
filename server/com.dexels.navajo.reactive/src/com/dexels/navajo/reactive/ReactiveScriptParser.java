@@ -37,11 +37,11 @@ import com.dexels.navajo.reactive.mappers.JsonFileAppender;
 import com.dexels.navajo.reactive.mappers.Rename;
 import com.dexels.navajo.reactive.mappers.SetSingle;
 import com.dexels.navajo.reactive.mappers.SetSingleKeyValue;
+import com.dexels.navajo.reactive.mappers.StoreAsSubMessage;
 import com.dexels.navajo.reactive.mappers.ToSubMessage;
 import com.dexels.navajo.script.api.SystemException;
 
 import io.reactivex.Flowable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
 
@@ -61,6 +61,7 @@ public class ReactiveScriptParser {
 		reactiveReducer.put("delete", new Delete());
 		reactiveReducer.put("rename", new Rename());
 		reactiveReducer.put("dump", new JsonFileAppender());
+		reactiveReducer.put("store", new StoreAsSubMessage());
 		
 	}
 	
@@ -328,23 +329,24 @@ public class ReactiveScriptParser {
 	}
 	
 
-	public static Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> parseReducerList (String relativePath, Optional<List<XMLElement>> elements, Function<String, ReactiveMerger> reducerSupplier) {
-		List<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> funcList = elements.orElse(Collections.emptyList()).stream()
+	public static Function<StreamScriptContext,Function<DataItem,DataItem>> parseReducerList (String relativePath, Optional<List<XMLElement>> elements, Function<String, ReactiveMerger> reducerSupplier) {
+		List<Function<StreamScriptContext,Function<DataItem,DataItem>>> funcList = elements.orElse(Collections.emptyList()).stream()
 				.filter(x->!x.getName().startsWith("param"))
 				.filter(x->x.getName().split("\\.").length!=3)
 				.map(xml->{
 					logger.info("Assuming this is a reducer element: "+xml);
 					try {
 						ReactiveMerger reducer = reducerSupplier.apply(xml.getName());
-						return reducer.execute(relativePath, Optional.of(xml));
+						ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, Optional.of(xml));
+						return reducer.execute(r,relativePath, Optional.of(xml));
 					} catch (Exception e) {
 						throw new RuntimeException(e);
 					}
 			}).collect(Collectors.toList());
-		return context->(item,optional)->{
+		return context->(item)->{
 			DataItem current = item;
-			for (Function<StreamScriptContext, BiFunction<DataItem, Optional<DataItem>, DataItem>> function : funcList) {
-				current = function.apply(context).apply(current, optional);
+			for (Function<StreamScriptContext, Function<DataItem, DataItem>> function : funcList) {
+				current = function.apply(context).apply(current);
 			}
 			return current;
 		};

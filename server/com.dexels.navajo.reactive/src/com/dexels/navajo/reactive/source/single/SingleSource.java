@@ -22,8 +22,6 @@ import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 
 import io.reactivex.Flowable;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Function;
 
 public class SingleSource implements ReactiveSource, ParameterValidator {
 
@@ -34,11 +32,10 @@ public class SingleSource implements ReactiveSource, ParameterValidator {
 	private final Optional<XMLElement> sourceElement;
 	private final String sourcePath;
 	
-	public SingleSource(ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType,Optional<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> mapMapper, Optional<XMLElement> sourceElement, String sourcePath) {
+	public SingleSource(ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType, Optional<XMLElement> sourceElement, String sourcePath) {
 		this.params = params;
 		this.transformers = transformers;
 		this.finalType = finalType;
-//		this.mapMapper = mapMapper;
 		this.sourceElement = sourceElement;
 		this.sourcePath = sourcePath;
 	}

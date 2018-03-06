@@ -14,15 +14,14 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
 public class MergeSingleTransformer implements ReactiveTransformer {
 
 	private final ReactiveSource source;
-	private final Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> joiner;
+	private final Function<StreamScriptContext,Function<DataItem,DataItem>> joiner;
 
-	public MergeSingleTransformer(ReactiveSource source, Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> joiner, XMLElement xml) {
+	public MergeSingleTransformer(ReactiveSource source, Function<StreamScriptContext,Function<DataItem,DataItem>> joiner, XMLElement xml) {
 		this.source = source;
 		this.joiner = joiner;
 		if(!source.finalType().equals(DataItem.Type.SINGLEMESSAGE)) {
@@ -36,7 +35,7 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 		return flow->flow.flatMap(item->{
 			Flowable<DataItem> sourceStream = source.execute(context,  Optional.of(item.message()));
 			return sourceStream
-				.map(reducedItem->joiner.apply(context).apply(item,Optional.of(reducedItem)));
+				.map(reducedItem->joiner.apply(context).apply(item));
 		},false,10);
 				
 				

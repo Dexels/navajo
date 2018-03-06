@@ -13,7 +13,6 @@ import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
 public class MergeSingleTransformerFactory implements ReactiveTransformerFactory {
@@ -37,7 +36,7 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 		if(joinerElement==null) {
 			throw new RuntimeException("Missing joiner element for xml: "+xml);
 		}
-		Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, Optional.of(joinerElement.getChildren()), reducerSupplier);
+		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, Optional.of(joinerElement.getChildren()), reducerSupplier);
 		Optional<ReactiveSource> subSource;
 		try {
 			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, sourceSupplier, factorySupplier,reducerSupplier);

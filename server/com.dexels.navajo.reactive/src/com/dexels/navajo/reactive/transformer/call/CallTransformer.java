@@ -1,10 +1,14 @@
 package com.dexels.navajo.reactive.transformer.call;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
@@ -19,24 +23,22 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 
-public class CallTransformer implements ReactiveTransformer {
+public class CallTransformer implements ReactiveTransformer, ParameterValidator {
 
 
 	private final ReactiveParameters parameters;
-	private final ParameterValidator validator;
 	private Optional<XMLElement> sourceElement;
 	private String sourcePath;
 	
-	public CallTransformer(ReactiveParameters parameters, ParameterValidator validator, Optional<XMLElement> sourceElement, String sourcePath) {
+	public CallTransformer(ReactiveParameters parameters,Optional<XMLElement> sourceElement, String sourcePath) {
 		this.parameters = parameters;
-		this.validator = validator;
 		this.sourceElement = sourceElement;
 		this.sourcePath = sourcePath;
 	}
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), Optional.empty(),validator, sourceElement, sourcePath);
+		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), Optional.empty(),this, sourceElement, sourcePath);
 
 		final int parallel =  resolved.paramInteger("parallel", ()->0);
 		final String service =  resolved.paramString("service");
@@ -67,4 +69,26 @@ public class CallTransformer implements ReactiveTransformer {
 	public Type outType() {
 		return Type.EVENT;
 	}
+	
+	@Override
+	public Optional<List<String>> allowedParameters() {
+		return Optional.of(Arrays.asList(new String[]{"messageName","isArray","service","parallel","debug"}));
+	}
+
+	@Override
+	public Optional<List<String>> requiredParameters() {
+		return Optional.of(Arrays.asList(new String[]{"messageName","isArray","service"}));
+	}
+
+	@Override
+	public Optional<Map<String, String>> parameterTypes() {
+		Map<String,String> r = new HashMap<String, String>();
+		r.put("messageName", Property.STRING_PROPERTY);
+		r.put("service", Property.STRING_PROPERTY);
+		r.put("parallel", Property.INTEGER_PROPERTY);
+		r.put("isArray", Property.BOOLEAN_PROPERTY);
+		r.put("debug", Property.BOOLEAN_PROPERTY);
+		return Optional.of(r);
+	}
+
 }

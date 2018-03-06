@@ -18,7 +18,7 @@ import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 
 import io.reactivex.functions.Function;
 
-public class CallTransformerFactory implements ReactiveTransformerFactory, ParameterValidator {
+public class CallTransformerFactory implements ReactiveTransformerFactory {
 
 	public CallTransformerFactory() {
 	}
@@ -29,28 +29,8 @@ public class CallTransformerFactory implements ReactiveTransformerFactory, Param
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier) {
 		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
-		return new CallTransformer(parameters,this,xml,relativePath);
+		return new CallTransformer(parameters,xml,relativePath);
 	}
 
-	@Override
-	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"messageName","isArray","service","parallel","debug"}));
-	}
-
-	@Override
-	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[]{"messageName","isArray","service"}));
-	}
-
-	@Override
-	public Optional<Map<String, String>> parameterTypes() {
-		Map<String,String> r = new HashMap<String, String>();
-		r.put("messageName", Property.STRING_PROPERTY);
-		r.put("service", Property.STRING_PROPERTY);
-		r.put("parallel", Property.INTEGER_PROPERTY);
-		r.put("isArray", Property.BOOLEAN_PROPERTY);
-		r.put("debug", Property.BOOLEAN_PROPERTY);
-		return Optional.of(r);
-	}
 
 }
