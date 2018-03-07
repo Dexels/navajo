@@ -1,0 +1,11 @@
+<reactive simple="One">
+	<source.single debug.eval="true" count.eval="4">
+		<set aap="noot"/>
+		<msg.reduce.singlemessage>
+			<save count.eval="[@count]+1"/>
+		</msg.reduce.singlemessage>
+		<store name="blaaa"/>
+		<set bin.eval="[@count]+1" bin.default="0"/>	
+		<msg.stream.event messageName="Bla" isArray.eval="false"/>
+	</source.single>
+</reactive>
