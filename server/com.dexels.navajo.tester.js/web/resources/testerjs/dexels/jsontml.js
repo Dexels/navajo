@@ -3,9 +3,16 @@ function convertJsonToTml(jsonString) {
     var xmlString = '';
     $.each(jsonObj, function(key, value) {
         if (typeof value === "object") {
-            xmlString += '<message name="' + key + '">\n';
-            xmlString += jsonObjToTml(value);
-            xmlString += '</message>\n';
+        		if(Array.isArray(value)){
+        			console.log("It's an array :) ")
+        			xmlString += '<message name="' + key + '" type="array">\n';
+        			xmlString += jsonObjToTml(key,value,true);
+        			xmlString += '</message>\n';
+        		}else{
+	            xmlString += '<message name="' + key + '">\n';
+	            xmlString += jsonObjToTml(key,value,false);
+	            xmlString += '</message>\n';
+        		}
         } else {
             xmlString += '<property name="' + key + '" value="'+value+'" />\n'
         }
@@ -13,15 +20,33 @@ function convertJsonToTml(jsonString) {
     return formatXml(xmlString);
 }
 
-function jsonObjToTml(jsonObj) {
+function jsonObjToTml(parent,jsonObj,isParentArray) {
     var xmlString = '';
     $.each(jsonObj, function(key, value) {
         if (typeof value === 'undefined' || value === null) {
             xmlString += '<property name="' + key + '" />\n';
         } else if (typeof value === "object") {
-            xmlString += '<message name="' + key + '">\n';
-            xmlString += jsonObjToTml(value);
-            xmlString += '</message>\n';
+        		if(Array.isArray(value)){
+        			if(isParentArray){
+            		    xmlString += '<message name="' + parent + '" type="array_element">\n';
+                    xmlString += jsonObjToTml(key,value,false);
+                    xmlString += '</message>\n';
+            		}else{
+            			xmlString += '<message name="' + key + '">\n';
+                    xmlString += jsonObjToTml(key,value,true);
+                    xmlString += '</message>\n';
+            		}
+        		}else{
+        			if(isParentArray){
+            		    xmlString += '<message name="' + parent + '" type="array_element">\n';
+                    xmlString += jsonObjToTml(key,value,false);
+                    xmlString += '</message>\n';
+            		}else{
+            			xmlString += '<message name="' + key + '">\n';
+                    xmlString += jsonObjToTml(key,value,false);
+                    xmlString += '</message>\n';
+            		}
+        		}
         } else {
             xmlString += '<property name="' + key + '" ';
             if (isInt(value)) {
