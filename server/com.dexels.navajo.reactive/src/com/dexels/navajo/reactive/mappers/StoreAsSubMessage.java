@@ -32,7 +32,9 @@ public class StoreAsSubMessage implements ReactiveMerger, ParameterValidator {
 			ImmutableMessage s = item.message();
 			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s), item.stateMessage(), this, xml, relativePath);
 			String name = parms.paramString("name");
-			return DataItem.of(s, Optional.of( item.stateMessage().orElse(ImmutableFactory.empty()).withSubMessage(name, item.message())));
+			ImmutableMessage state = item.stateMessage().orElse(ImmutableFactory.empty());
+			ImmutableMessage assembled = item.message().withSubMessage(name, state);
+			return DataItem.of(assembled, item.stateMessage());
 		};
 	}
 

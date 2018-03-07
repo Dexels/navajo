@@ -44,7 +44,6 @@ public class SingleMessageTransformer implements ReactiveTransformer, ParameterV
 				   flow->flow.map(item->joinerMapper.apply(context).apply(item)).doOnNext(this::debugMessage)
 				:  flow->flow.map(item->joinerMapper.apply(context).apply(item));
 		return transformer;
-//				.doOnNext(e->logger.info("ITEM: "+e.message().toFlatString(ReplicationFactory.getInstance())));
 	}
 
 	private void debugMessage(DataItem di) {

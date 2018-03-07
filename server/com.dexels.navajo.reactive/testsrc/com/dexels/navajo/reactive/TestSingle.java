@@ -184,4 +184,31 @@ public class TestSingle {
 		}
 	}
 	
+	@Test
+	public void testStore() throws UnsupportedEncodingException, IOException {
+		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("teststore.xml")) {
+			StreamScriptContext myContext = createContext("storeTestScript",Optional.empty());
+			reactiveScriptParser.parse(myContext.service, in,"storeTestScript")
+				.execute(myContext)
+				.map(di->di.event())
+				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
+				.lift(StreamDocument.serialize())
+				.blockingForEach(e->System.err.print(new String(e)));
+		}
+	}
+	
+	@Test
+	public void testReduce() throws UnsupportedEncodingException, IOException {
+		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("testreduce.xml")) {
+			StreamScriptContext myContext = createContext("storeTestScript",Optional.empty());
+			reactiveScriptParser.parse(myContext.service, in,"storeTestScript")
+				.execute(myContext)
+				.map(di->di.event())
+				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
+				.lift(StreamDocument.serialize())
+				.blockingForEach(e->System.err.print(new String(e)));
+		}
+	}
+	
+	
 }

@@ -58,29 +58,6 @@ public class ReactiveParameters {
 	public ReactiveResolvedParameters resolveNamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,Optional<ImmutableMessage> paramMessage, ParameterValidator validator, Optional<XMLElement> sourceElement, String sourcePath) {
 		return new ReactiveResolvedParameters(context, named, currentMessage, paramMessage,validator, sourceElement, sourcePath);
 	}
-	
-	@Deprecated
-	private Map<String,Operand> resolveNamedOld(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,Optional<ImmutableMessage> paramMessage) {
-		Map<String,Operand> result = new HashMap<>();
-		named.entrySet().forEach(e->{
-			Operand applied;
-			try {
-				applied = e.getValue().apply(context, currentMessage,paramMessage);
-				result.put(e.getKey(), applied);
-			} catch (Exception e1) {
-				logger.error("Error applying param function for named param: "+e.getKey()+" will put null.", e1);
-				result.put(e.getKey(), null);
-			}
-		});
-		return result;
-	}
-
-	@Deprecated
-	public Map<String,Operand> resolveNamed(StreamScriptContext context ,DataItem currentMessage,Optional<DataItem> paramMessage) {
-		Optional<ImmutableMessage> param = paramMessage.isPresent() ? Optional.of(paramMessage.get().message()) : Optional.empty();
-		Optional<ImmutableMessage> current = Optional.of(currentMessage.message());
-		return resolveNamedOld(context, current, param);
-	}
 
 	public ReactiveParameters withConstant(String key, Object value, String type) {
 		return with(key,(context,input,param)->new Operand(value,type,null));

@@ -7,7 +7,11 @@
 			<source.sql resource="dummy">
 				<param name="query">select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?</param>
 				<parameval>[ORGANIZATIONID]</parameval>
+				<set>
+					<parameval debug="true" name="Count">0</parameval>
+				</set>
 				<msg.reduce.singlemessage>
+					<save to.eval="[ATTRIBNAME]" value.eval="[ATTRIBVALUE]"/>
 					<setkv>
 						<parameval name="to">[ATTRIBNAME]</parameval>
 						<parameval name="value">[ATTRIBVALUE]</parameval>
