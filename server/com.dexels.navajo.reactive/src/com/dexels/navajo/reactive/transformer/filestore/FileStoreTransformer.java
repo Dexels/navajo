@@ -52,7 +52,7 @@ public class FileStoreTransformer implements ReactiveTransformer, ParameterValid
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), Optional.empty(), this, sourceElement, sourcePath);
+		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), this, sourceElement, sourcePath);
 		String path = parms.paramString("path");
 		return flow->flow.lift(flowableFile(path));
 	}

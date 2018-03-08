@@ -25,7 +25,7 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 		this.source = source;
 		this.joiner = joiner;
 		if(!source.finalType().equals(DataItem.Type.SINGLEMESSAGE)) {
-			throw new IllegalArgumentException("Wrong type of sub source: "+source.finalType()+ ", reduce maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);
+			throw new IllegalArgumentException("Wrong type of sub source: "+source.finalType()+ ", reduce or first maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);
 		}
 		
 	}
@@ -35,7 +35,7 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 		return flow->flow.flatMap(item->{
 			Flowable<DataItem> sourceStream = source.execute(context,  Optional.of(item.message()));
 			return sourceStream
-				.map(reducedItem->joiner.apply(context).apply(item));
+				.map(reducedItem->joiner.apply(context).apply(DataItem.of(item.message(), reducedItem.message())));
 		},false,10);
 				
 				

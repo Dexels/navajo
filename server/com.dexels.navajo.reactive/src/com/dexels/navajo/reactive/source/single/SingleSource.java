@@ -42,7 +42,7 @@ public class SingleSource implements ReactiveSource, ParameterValidator {
 
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters parameters = this.params.resolveNamed(context, current, Optional.empty(), this, sourceElement, sourcePath);
+		ReactiveResolvedParameters parameters = this.params.resolveNamed(context, current, ImmutableFactory.empty(), this, sourceElement, sourcePath);
 		boolean debug = parameters.paramBoolean("debug", ()->false);
 		int count =  parameters.paramInteger("count", ()->1);
 		try {

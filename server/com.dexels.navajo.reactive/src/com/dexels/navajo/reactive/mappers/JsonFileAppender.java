@@ -31,7 +31,7 @@ public class JsonFileAppender implements ReactiveMerger, ParameterValidator {
 	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		ImmutableMessageParser parser = ImmutableFactory.createParser();
 		return context -> {
-			ReactiveResolvedParameters named = params.resolveNamed(context, Optional.empty(), Optional.empty(), this,xml,relativePath);
+			ReactiveResolvedParameters named = params.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), this,xml,relativePath);
 			String  path = named.paramString("path");
 			return (item) -> {
 				FileOutputStream fw = new FileOutputStream(path,true);

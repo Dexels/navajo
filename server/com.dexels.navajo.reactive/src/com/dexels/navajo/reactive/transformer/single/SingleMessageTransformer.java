@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
@@ -37,7 +38,7 @@ public class SingleMessageTransformer implements ReactiveTransformer, ParameterV
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), Optional.empty(), this, source, path);
+		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), this, source, path);
 		boolean debug = parms.paramBoolean("debug", ()->false);
 		
 		FlowableTransformer<DataItem, DataItem> transformer = debug ? 

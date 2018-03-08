@@ -20,22 +20,22 @@ import io.reactivex.functions.Function3;
 
 public class ReactiveResolvedParameters {
 
-	public final Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> named;
+	public final Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> named;
 	Map<String,Operand> result = new HashMap<>();
 	
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveResolvedParameters.class);
 	private final StreamScriptContext context;
 	private boolean allResolved = false;
 	private final Optional<ImmutableMessage> currentMessage;
-	private final Optional<ImmutableMessage> paramMessage;
+	private final ImmutableMessage paramMessage;
 	private final Optional<Map<String,String>> expectedTypes;
 	private final Optional<XMLElement> sourceElement;
 	private final String sourcePath;
 	
 	public ReactiveResolvedParameters(StreamScriptContext context, Map<String,Function3<StreamScriptContext,
-			Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> named,
+			Optional<ImmutableMessage>,ImmutableMessage,Operand>> named,
 			Optional<ImmutableMessage> currentMessage,
-			Optional<ImmutableMessage> paramMessage, ParameterValidator validator, 
+			ImmutableMessage paramMessage, ParameterValidator validator, 
 			Optional<XMLElement> sourceElement,
 			String sourcePath) {
 		this.named = named;
@@ -81,7 +81,7 @@ public class ReactiveResolvedParameters {
 			return Optional.of(result.get(key));
 		}
 		Optional<String> expectedType = expectedTypes.isPresent() ? Optional.ofNullable(expectedTypes.get().get(key)) : Optional.empty();
-		Function3<StreamScriptContext, Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> function = named.get(key);
+		Function3<StreamScriptContext, Optional<ImmutableMessage>, ImmutableMessage, Operand> function = named.get(key);
 		if(function==null) {
 			return Optional.empty();
 		}
@@ -195,7 +195,7 @@ public class ReactiveResolvedParameters {
 	}
 	
 
-	private Operand resolveParam(String key,Optional<String> expectedType, Function3<StreamScriptContext, Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> function) {
+	private Operand resolveParam(String key,Optional<String> expectedType, Function3<StreamScriptContext, Optional<ImmutableMessage>, ImmutableMessage, Operand> function) {
 		Operand applied;
 		try {
 			applied = function.apply(context, currentMessage,paramMessage);

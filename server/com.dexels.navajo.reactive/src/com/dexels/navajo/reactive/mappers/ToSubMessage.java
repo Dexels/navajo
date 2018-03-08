@@ -29,7 +29,7 @@ public class ToSubMessage implements ReactiveMerger, ParameterValidator {
 		return context->(item)->{
 			ReactiveResolvedParameters resolved = params.resolveNamed(context, Optional.of(item.message()),item.stateMessage(), this, xml, relativePath);
 			;
-			return DataItem.of(item.message().withSubMessage(resolved.paramString("name"), item.stateMessage().orElse(ImmutableFactory.empty())), item.stateMessage());
+			return DataItem.of(item.message().withSubMessage(resolved.paramString("name"), item.stateMessage()), item.stateMessage());
 		};
 	
 	}

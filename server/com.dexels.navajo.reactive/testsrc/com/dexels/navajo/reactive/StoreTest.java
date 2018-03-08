@@ -74,7 +74,7 @@ public class StoreTest {
 		Store storeMapper = new Store();
 		ReactiveParameters mapperParameter = ReactiveParameters.empty()
 				.with("value", (ctx,item,state)->{
-					Integer count = (Integer)state.orElse(ImmutableFactory.empty()).columnValue("count");
+					Integer count = (Integer)state.columnValue("count");
 					if(count == null) {
 						count = 0;
 					}
@@ -91,7 +91,7 @@ public class StoreTest {
 			.execute(context, Optional.empty())
 //			.map(e->e.message())
 			.blockingForEach(r->{
-				System.err.println(">>>> "+ImmutableFactory.getInstance().describe(r.message())+" state: "+ImmutableFactory.getInstance().describe(r.stateMessage().get()));
+				System.err.println(">>>> "+ImmutableFactory.getInstance().describe(r.message())+" state: "+ImmutableFactory.getInstance().describe(r.stateMessage()));
 			});
 	}
 }

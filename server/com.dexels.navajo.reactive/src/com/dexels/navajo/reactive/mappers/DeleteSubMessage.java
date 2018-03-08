@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -21,16 +19,19 @@ import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
 import io.reactivex.functions.Function;
 
-public class SetSingleKeyValue implements ReactiveMerger, ParameterValidator {
+public class DeleteSubMessage implements ReactiveMerger, ParameterValidator {
+
+	public DeleteSubMessage() {
+	}
 
 	@Override
-	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
+	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		return context->(item)->{
-			ImmutableMessage s = item.message();
-			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s),item.stateMessage(), this, xml, relativePath);
-			Operand resolvedValue = parms.resolveAllParams().get("value");
-			String toValue = parms.paramString("to");
-			return DataItem.of(item.message().with(toValue, resolvedValue.value, resolvedValue.type));
+			ReactiveResolvedParameters resolved = params.resolveNamed(context, Optional.of(item.message()),item.stateMessage(), this, xml, relativePath);
+			String name = resolved.paramString("name");	
+			// both singular and array submessages will be removed
+			// TODO this could be more efficient
+			return DataItem.of(item.message().withoutSubMessages(name).withoutSubMessage(name));
 		};
 	
 	}
@@ -38,19 +39,18 @@ public class SetSingleKeyValue implements ReactiveMerger, ParameterValidator {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"to","value"}));
+		return Optional.of(Arrays.asList(new String[]{"name"}));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[]{"to","value"}));
+		return Optional.of(Arrays.asList(new String[]{"name"}));
 	}
 
 	@Override
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String,String> r = new HashMap<>();
-		r.put("to", Property.STRING_PROPERTY);
+		r.put("name", Property.STRING_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
-
 }

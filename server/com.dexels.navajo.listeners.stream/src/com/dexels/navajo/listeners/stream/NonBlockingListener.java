@@ -160,7 +160,9 @@ public class NonBlockingListener extends HttpServlet {
 			if(responseEncoding.isPresent()) {
 				response.addHeader("Content-Encoding", responseEncoding.get());
 			}
-			ImmutableFactory e;
+			if(rs.binaryMimeType().isPresent()) {
+				response.addHeader("Content-Type", rs.binaryMimeType().get());
+			}
 			switch(rs.dataType()) {
 			case DATA:
 				rs.execute(context)

@@ -32,11 +32,11 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
 
 		
-		XMLElement joinerElement = xml.getChildByTagName("joiner");
-		if(joinerElement==null) {
-			throw new RuntimeException("Missing joiner element for xml: "+xml);
-		}
-		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, Optional.of(joinerElement.getChildren()), reducerSupplier);
+//		XMLElement joinerElement = xml.getChildByTagName("joiner");
+//		if(joinerElement==null) {
+//			throw new RuntimeException("Missing joiner element for xml: "+xml);
+//		}
+		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, Optional.of(xml.getChildren()), reducerSupplier);
 		Optional<ReactiveSource> subSource;
 		try {
 			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, sourceSupplier, factorySupplier,reducerSupplier);

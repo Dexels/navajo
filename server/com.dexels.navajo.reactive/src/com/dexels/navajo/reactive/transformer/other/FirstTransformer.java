@@ -2,7 +2,6 @@ package com.dexels.navajo.reactive.transformer.other;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -21,20 +19,18 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 
 import io.reactivex.FlowableTransformer;
 
-public class FilterTransformer implements ReactiveTransformer, ParameterValidator {
+public class FirstTransformer implements ReactiveTransformer, ParameterValidator {
 
 	private final ReactiveParameters parameters;
 
-	public FilterTransformer(ReactiveParameters parameters) {
+	public FirstTransformer(ReactiveParameters parameters) {
 		this.parameters = parameters;
 	}
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		return e->e.filter(item->{
-			ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.of(item.message()), ImmutableFactory.empty(), this, Optional.empty(), "");
-			return parms.paramBoolean("filter");
-		});
+		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), this, Optional.empty(), "");
+		return e->e.first(DataItem.of(ImmutableFactory.empty(),ImmutableFactory.empty())).toFlowable();
 	}
 
 	@Override
@@ -44,24 +40,22 @@ public class FilterTransformer implements ReactiveTransformer, ParameterValidato
 
 	@Override
 	public Type outType() {
-		return DataItem.Type.MESSAGE;
+		return DataItem.Type.SINGLEMESSAGE;
 	}
 
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[] {"filter"}));
+		return Optional.of(Collections.emptyList());
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[] {"filter"}));
+		return Optional.of(Collections.emptyList());
 	}
 
 	@Override
 	public Optional<Map<String, String>> parameterTypes() {
-		Map<String, String> r = new HashMap<>();
-		r.put("filter", Property.BOOLEAN_PROPERTY);
-		return Optional.of(Collections.unmodifiableMap(r));
+		return Optional.of(Collections.emptyMap());
 	}
 
 }

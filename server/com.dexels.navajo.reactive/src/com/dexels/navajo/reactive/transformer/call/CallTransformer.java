@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -38,7 +39,7 @@ public class CallTransformer implements ReactiveTransformer, ParameterValidator 
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), Optional.empty(),this, sourceElement, sourcePath);
+		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(),this, sourceElement, sourcePath);
 
 		final int parallel =  resolved.paramInteger("parallel", ()->0);
 		final String service =  resolved.paramString("service");

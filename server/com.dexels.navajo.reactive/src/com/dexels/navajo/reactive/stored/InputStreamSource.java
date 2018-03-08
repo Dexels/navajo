@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -47,7 +48,7 @@ public class InputStreamSource implements ReactiveSource, ParameterValidator {
 
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters rsp = parameters.resolveNamed(context, current, Optional.empty(), this, sourceElement, relativePath);
+		ReactiveResolvedParameters rsp = parameters.resolveNamed(context, current, ImmutableFactory.empty(), this, sourceElement, relativePath);
 		
 		ObjectMapper objectMapper = new ObjectMapper().configure(JsonParser.Feature.AUTO_CLOSE_SOURCE,false); //.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE,false);
 		String cp = rsp.paramString("classpath",()->"");
