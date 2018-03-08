@@ -35,12 +35,14 @@ import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.mappers.Delete;
+import com.dexels.navajo.reactive.mappers.DeleteSubMessage;
 import com.dexels.navajo.reactive.mappers.JsonFileAppender;
 import com.dexels.navajo.reactive.mappers.Rename;
 import com.dexels.navajo.reactive.mappers.SetSingle;
 import com.dexels.navajo.reactive.mappers.SetSingleKeyValue;
 import com.dexels.navajo.reactive.mappers.Store;
 import com.dexels.navajo.reactive.mappers.StoreAsSubMessage;
+import com.dexels.navajo.reactive.mappers.StoreSingle;
 import com.dexels.navajo.reactive.mappers.ToSubMessage;
 import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformer;
 import com.dexels.navajo.script.api.SystemException;
@@ -63,9 +65,11 @@ public class ReactiveScriptParser {
 		reactiveReducer.put("setkv", new SetSingleKeyValue());
 		reactiveReducer.put("toSubMessage", new ToSubMessage());
 		reactiveReducer.put("delete", new Delete());
+		reactiveReducer.put("deleteAll", new DeleteSubMessage());
 		reactiveReducer.put("rename", new Rename());
 		reactiveReducer.put("dump", new JsonFileAppender());
-		reactiveReducer.put("save", new Store());
+		reactiveReducer.put("saveall", new Store());
+		reactiveReducer.put("save", new StoreSingle());
 		reactiveReducer.put("store", new StoreAsSubMessage());
 		
 	}
@@ -101,6 +105,8 @@ public class ReactiveScriptParser {
 		}
 		XMLElement x = new CaseSensitiveXMLElement();
 		x.parseFromStream(in);
+		int parallel = x.getIntAttribute("parallel",1);
+		Optional<String> mime = Optional.ofNullable(x.getStringAttribute("mime"));
 		List<ReactiveSource> r = parseRoot(x,relativePath);
 		Type scriptType = null;
 		for (ReactiveSource reactiveSource : r) {
@@ -120,13 +126,23 @@ public class ReactiveScriptParser {
 			
 			@Override
 			public Flowable<DataItem> execute(StreamScriptContext context) {
-				return Flowable.fromIterable(r)
-					.concatMap(r->r.execute(context, Optional.empty()));
+				if(parallel > 1) {
+					return Flowable.fromIterable(r)
+							.concatMapEager(r->r.execute(context, Optional.empty()),parallel,1);
+				} else {
+					return Flowable.fromIterable(r)
+							.concatMap(r->r.execute(context, Optional.empty()));
+				}
 			}
 
 			@Override
 			public Type dataType() {
 				return finalType;
+			}
+
+			@Override
+			public Optional<String> binaryMimeType() {
+				return mime;
 			}
 		};
 	}
@@ -169,8 +185,8 @@ public class ReactiveScriptParser {
 	}
 
 	public static ReactiveParameters parseParamsFromChildren(String relativePath, Optional<XMLElement> sourceElement) {
-		Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> namedParameters = new HashMap<>();
-		List<Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> unnamedParameters = new ArrayList<>();
+		Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> namedParameters = new HashMap<>();
+		List<Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> unnamedParameters = new ArrayList<>();
 		if(!sourceElement.isPresent()) {
 			ReactiveParameters.of(namedParameters, unnamedParameters);
 		}
@@ -180,12 +196,12 @@ public class ReactiveScriptParser {
 			if(e.endsWith(".eval")) {
 				String name = e.substring(0, e.length()-".eval".length());
 				
-				Function3<StreamScriptContext,Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> value = (context,msg,param)->evaluate((String)x.getStringAttribute(e), context, msg,param,false);
+				Function3<StreamScriptContext,Optional<ImmutableMessage>, ImmutableMessage, Operand> value = (context,msg,param)->evaluate((String)x.getStringAttribute(e), context, msg,param,false);
 				namedParameters.put(name, value);
 				// todo implement default
 			} else if(e.endsWith(".default")) {
 				String name = e.substring(0, e.length()-".default".length());
-				Function3<StreamScriptContext,Optional<ImmutableMessage>, Optional<ImmutableMessage>, Operand> value = (context,msg,param)->evaluate((String)x.getStringAttribute(e), context, msg,param,false);
+				Function3<StreamScriptContext,Optional<ImmutableMessage>, ImmutableMessage, Operand> value = (context,msg,param)->evaluate((String)x.getStringAttribute(e), context, msg,param,false);
 				namedParameters.put(name, value);
 			} else {
 				namedParameters.put(e, (context,msg,param)->new Operand(x.getStringAttribute(e),Property.STRING_PROPERTY,null));
@@ -216,7 +232,7 @@ public class ReactiveScriptParser {
 					
 				} else {
 					if(evaluate) {
-						Function3<StreamScriptContext, Optional<ImmutableMessage>,Optional<ImmutableMessage>, Operand> value = (context,msg,param)->evaluate((String)content, context, msg,param,debug);
+						Function3<StreamScriptContext, Optional<ImmutableMessage>,ImmutableMessage, Operand> value = (context,msg,param)->evaluate((String)content, context, msg,param,debug);
 						namedParameters.put(name, value);
 					} else {
 						namedParameters.put(name, (context,msg,param)->new Operand(content,"string",null));
@@ -283,7 +299,7 @@ public class ReactiveScriptParser {
 				throw new ReactiveParseException("Illegal element at path: "+relativePath+" with name: "+String.join(".", typeParts)+" at line: "+xml.getStartLineNr());
 			}
 		} catch (Exception e) {
-			throw new ReactiveParseException("Unknown exception. element at path: "+relativePath+" with name: "+typeParts+" at line: "+xml.getStartLineNr(),e);
+			throw new ReactiveParseException("Unknown exception. element at path: "+relativePath+" with name: "+String.join(".", typeParts)+" at line: "+xml.getStartLineNr(),e);
 		}
 		
 	}
@@ -336,17 +352,15 @@ public class ReactiveScriptParser {
 		return current;
 	}
 	// TODO default eval
-	private static Operand evaluate(String expression, StreamScriptContext context, Optional<ImmutableMessage> m, Optional<ImmutableMessage> param, boolean debug) throws SystemException {
+	private static Operand evaluate(String expression, StreamScriptContext context, Optional<ImmutableMessage> m, ImmutableMessage param, boolean debug) throws SystemException {
 		if(debug) {
 			logger.info("Evaluating expression: {}",expression);
 			if(m.isPresent()) {
 				logger.info("With message: "+m.get().toFlatString(ImmutableFactory.getInstance()));
 			}
-			if(param.isPresent()) {
-				logger.info("With param message: "+param.get().toFlatString(ImmutableFactory.getInstance()));
-			}
+			logger.info("With param message: "+param.toFlatString(ImmutableFactory.getInstance()));
 		}
-		Operand result = Expression.evaluate(expression, context.getInput().orElse(null), null, null,null,null,null,null,m,param);
+		Operand result = Expression.evaluate(expression, context.getInput().orElse(null), null, null,null,null,null,null,m,Optional.of(param));
 		if(debug) {
 			logger.info("Result type: "+result.type+" value: "+result.value);
 		}
@@ -361,6 +375,7 @@ public class ReactiveScriptParser {
 	public static Function<StreamScriptContext,Function<DataItem,DataItem>> parseReducerList (String relativePath, Optional<List<XMLElement>> elements, Function<String, ReactiveMerger> reducerSupplier) {
 		List<Function<StreamScriptContext,Function<DataItem,DataItem>>> funcList = elements.orElse(Collections.emptyList()).stream()
 				.filter(x->!x.getName().startsWith("param"))
+				.filter(x->!x.getName().startsWith("source."))
 				.filter(x->x.getName().split("\\.").length!=3)
 				.map(xml->{
 					logger.info("Assuming this is a reducer element: "+xml);

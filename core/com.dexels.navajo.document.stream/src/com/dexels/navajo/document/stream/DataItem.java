@@ -42,12 +42,12 @@ public class DataItem {
 		this.stateMsg = null;
 	}
 	
-	private DataItem(ImmutableMessage msg, Optional<ImmutableMessage> stateMessage) {
+	private DataItem(ImmutableMessage msg, ImmutableMessage stateMessage) {
 		this.msg = msg;
 		this.data = null;
 		this.streamEvent = null;
 		this.msgList = null;
-		this.stateMsg = stateMessage.orElse(null);
+		this.stateMsg = stateMessage;
 		this.type = Type.MESSAGE;
 	}
 
@@ -79,8 +79,8 @@ public class DataItem {
 	}
 	
 
-	public Optional<ImmutableMessage> stateMessage() {
-		return Optional.ofNullable(this.stateMsg);
+	public ImmutableMessage stateMessage() {
+		return this.stateMsg == null ? ImmutableFactory.empty() : this.stateMsg;
 	}
 	public ImmutableMessage message() {
 		if(this.msg==null) {
@@ -121,7 +121,7 @@ public class DataItem {
 		return new DataItem(repl);
 	}
 
-	public static DataItem of(ImmutableMessage repl, Optional<ImmutableMessage> stateMessage) {
+	public static DataItem of(ImmutableMessage repl, ImmutableMessage stateMessage) {
 		return new DataItem(repl,stateMessage);
 	}
 

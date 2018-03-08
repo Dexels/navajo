@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -28,7 +29,7 @@ public class Rename implements ReactiveMerger, ParameterValidator {
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
 		return context->(item)->{
-			ReactiveResolvedParameters parms = r.resolveNamed(context, Optional.of(item.message()), Optional.empty(), this, xml, relativePath);
+			ReactiveResolvedParameters parms = r.resolveNamed(context, Optional.of(item.message()), ImmutableFactory.empty(), this, xml, relativePath);
 //			Map<String,Operand> named = r.resolveNamed(context, item,Optional.empty());
 //			Operand value = named.get("value");
 //			String to = (String)named.get("to").value;

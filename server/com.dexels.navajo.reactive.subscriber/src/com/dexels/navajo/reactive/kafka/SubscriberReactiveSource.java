@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.kafka.api.OffsetQuery;
 import com.dexels.kafka.factory.KafkaClientFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -68,7 +69,7 @@ public class SubscriberReactiveSource implements ReactiveSource, ParameterValida
 	}
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters resolvedParams = params.resolveNamed(context, current, Optional.empty(), this, sourceElement, relativePath);
+		ReactiveResolvedParameters resolvedParams = params.resolveNamed(context, current, ImmutableFactory.empty(), this, sourceElement, relativePath);
 		String tenant = context.tenant;
 		String topic = resolvedParams.paramString("topic");
 		String group = tenant+"-"+context.deployment()+"-"+UUID.randomUUID().toString();  //+ resolvedParams.paramString("group");

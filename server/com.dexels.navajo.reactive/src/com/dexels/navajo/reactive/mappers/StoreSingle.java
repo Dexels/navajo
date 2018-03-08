@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
@@ -21,20 +23,25 @@ import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
 import io.reactivex.functions.Function;
 
-public class SetSingleKeyValue implements ReactiveMerger, ParameterValidator {
+public class StoreSingle implements ReactiveMerger, ParameterValidator {
+
+	public StoreSingle() {
+	}
 
 	@Override
-	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
+	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		return context->(item)->{
+			// will use the second message as input, if not present, will use the source message
 			ImmutableMessage s = item.message();
-			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s),item.stateMessage(), this, xml, relativePath);
+			ImmutableMessage state = item.stateMessage();
+			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s),state , this, xml, relativePath);
 			Operand resolvedValue = parms.resolveAllParams().get("value");
 			String toValue = parms.paramString("to");
-			return DataItem.of(item.message().with(toValue, resolvedValue.value, resolvedValue.type));
+			ImmutableMessage di = item.stateMessage().with(toValue, resolvedValue.value,resolvedValue.type);
+			return DataItem.of(s,di);
 		};
 	
 	}
-
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
@@ -52,5 +59,4 @@ public class SetSingleKeyValue implements ReactiveMerger, ParameterValidator {
 		r.put("to", Property.STRING_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
-
 }

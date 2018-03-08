@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.adapters.stream.SQL;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -41,7 +42,7 @@ public class SQLReactiveSource implements ReactiveSource, ParameterValidator {
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context,Optional<ImmutableMessage> current) {
 		Object[] unnamedParams = evaluateParams(context, current);
-		ReactiveResolvedParameters params = parameters.resolveNamed(context, current, Optional.empty(), this, sourceElement, sourcePath);
+		ReactiveResolvedParameters params = parameters.resolveNamed(context, current, ImmutableFactory.empty(), this, sourceElement, sourcePath);
 		String datasource = params.paramString("resource");
 		String query = params.paramString("query");
 		Flowable<DataItem> flow = SQL.query(datasource, context.tenant, query, unnamedParams).map(d->DataItem.of(d));
@@ -52,7 +53,7 @@ public class SQLReactiveSource implements ReactiveSource, ParameterValidator {
 	}
 
 	private Object[] evaluateParams(StreamScriptContext context, Optional<ImmutableMessage> immutable) {
-		return parameters.resolveUnnamed(context, immutable, Optional.empty()).stream().map(e->e.value).toArray();
+		return parameters.resolveUnnamed(context, immutable, ImmutableFactory.empty()).stream().map(e->e.value).toArray();
 	}
 
 	@Override

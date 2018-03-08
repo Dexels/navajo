@@ -29,14 +29,15 @@ public class Store implements ReactiveMerger, ParameterValidator {
 		return context->(item)->{
 			// will use the second message as input, if not present, will use the source message
 			ImmutableMessage s = item.message();
-			ImmutableMessage state = item.stateMessage().orElse(ImmutableFactory.empty());
-			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s), Optional.of(state), this, xml, relativePath);
-			ImmutableMessage di = item.stateMessage().orElse(ImmutableFactory.empty());
+			ImmutableMessage state = item.stateMessage();
+			
+			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s),state , this, xml, relativePath);
+			ImmutableMessage di = item.stateMessage();
 			Set<Entry<String, Operand>> entrySet = parms.resolveAllParams().entrySet();
 			for (Entry<String, Operand> e : entrySet) {
 				di = di.with(e.getKey(), e.getValue().value, e.getValue().type);
 			}
-			return DataItem.of(s,Optional.of(di));
+			return DataItem.of(s,di);
 		};
 	
 	}
