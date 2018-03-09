@@ -338,7 +338,7 @@ public class RESTAdapter extends NavajoMap {
             http.setHeaderValue("Basic " + encoded);
         }
         http.setReadTimeOut(readTimeOut);
-        http.setConnectTimeOut(0);
+        http.setConnectTimeOut(connectTimeOut);
         
     }
 
