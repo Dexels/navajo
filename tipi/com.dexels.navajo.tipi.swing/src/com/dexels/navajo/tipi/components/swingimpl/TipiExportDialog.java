@@ -83,10 +83,9 @@ public class TipiExportDialog extends TipiDialog {
 		
 		proceed = myContext.getLookupParser().lookup("exportDialogueProceedButton");
         proceed2 = myContext.getLookupParser().lookup("exportDialogueProceed2Button");
-        back = myContext.getLookupParser().lookup("");
+        back = myContext.getLookupParser().lookup("exportDialogueBackButton");
         cancel = myContext.getLookupParser().lookup("exportDialogueCancelButton");
-        complete = myContext.getLookupParser().lookup("");
-
+        complete = myContext.getLookupParser().lookup("exportDialogueCompleteButton");
 
 		getSwingContainer().setLayout(gridBagLayout1);
         proceedButton.setText(proceed);
@@ -166,9 +165,9 @@ public class TipiExportDialog extends TipiDialog {
 		c.next(container);
 		current++;
 		if (current == 1) {
-			proceedButton.setText("Voltooien");
+            proceedButton.setText(complete);
 		} else {
-			proceedButton.setText("Verder >>");
+            proceedButton.setText(proceed2);
 		}
 	}
 
@@ -277,9 +276,9 @@ public class TipiExportDialog extends TipiDialog {
 			backButton.setEnabled(false);
 		}
 		if (current == 1) {
-			proceedButton.setText("Voltooien");
+            proceedButton.setText(complete);
 		} else {
-			proceedButton.setText("Verder");
+            proceedButton.setText(proceed);
 		}
 	}
 }
