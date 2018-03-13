@@ -45,6 +45,12 @@ public class TipiExportDialog extends TipiDialog {
 	private int current = 0;
 	private Message data;
 
+    private String proceed;
+    private String proceed2;
+    private String back;
+    private String cancel;
+    private String complete;
+
 	private JToolBar myBar = null;
 
 	public TipiExportDialog() {
@@ -74,6 +80,13 @@ public class TipiExportDialog extends TipiDialog {
 	private final void initialize() {
 		backButton.setEnabled(false);
 		container = new JPanel();
+		
+		proceed = myContext.getLookupParser().lookup("exportDialogueProceedButton");
+        proceed2 = myContext.getLookupParser().lookup("");
+        back = myContext.getLookupParser().lookup("");
+        cancel = myContext.getLookupParser().lookup("");
+        complete = myContext.getLookupParser().lookup("");
+
 
 		getSwingContainer().setLayout(gridBagLayout1);
 		proceedButton.setText("Verder");
