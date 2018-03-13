@@ -82,22 +82,22 @@ public class TipiExportDialog extends TipiDialog {
 		container = new JPanel();
 		
 		proceed = myContext.getLookupParser().lookup("exportDialogueProceedButton");
-        proceed2 = myContext.getLookupParser().lookup("");
+        proceed2 = myContext.getLookupParser().lookup("exportDialogueProceed2Button");
         back = myContext.getLookupParser().lookup("");
-        cancel = myContext.getLookupParser().lookup("");
+        cancel = myContext.getLookupParser().lookup("exportDialogueCancelButton");
         complete = myContext.getLookupParser().lookup("");
 
 
 		getSwingContainer().setLayout(gridBagLayout1);
-		proceedButton.setText("Verder");
+        proceedButton.setText(proceed);
 		proceedButton
 				.addActionListener(new TipiExportDialog_proceedButton_actionAdapter(
 						this));
-		cancelButton.setText("Annuleren");
+        cancelButton.setText(cancel);
 		cancelButton
 				.addActionListener(new TipiExportDialog_cancelButton_actionAdapter(
 						this));
-		backButton.setText("Terug");
+        backButton.setText(back);
 		backButton
 				.addActionListener(new TipiExportDialog_backButton_actionAdapter(
 						this));
