@@ -45,12 +45,6 @@ public class TipiExportDialog extends TipiDialog {
 	private int current = 0;
 	private Message data;
 
-    private String proceed;
-    private String proceed2;
-    private String back;
-    private String cancel;
-    private String complete;
-
 	private JToolBar myBar = null;
 
 	public TipiExportDialog() {
@@ -80,23 +74,17 @@ public class TipiExportDialog extends TipiDialog {
 	private final void initialize() {
 		backButton.setEnabled(false);
 		container = new JPanel();
-		
-		proceed = myContext.getLookupParser().lookup("exportDialogueProceedButton");
-        proceed2 = myContext.getLookupParser().lookup("exportDialogueProceed2Button");
-        back = myContext.getLookupParser().lookup("exportDialogueBackButton");
-        cancel = myContext.getLookupParser().lookup("exportDialogueCancelButton");
-        complete = myContext.getLookupParser().lookup("exportDialogueCompleteButton");
 
 		getSwingContainer().setLayout(gridBagLayout1);
-        proceedButton.setText(proceed);
+        proceedButton.setText(myContext.getLookupParser().lookup("exportDialogueProceedButton"));
 		proceedButton
 				.addActionListener(new TipiExportDialog_proceedButton_actionAdapter(
 						this));
-        cancelButton.setText(cancel);
+        cancelButton.setText(myContext.getLookupParser().lookup("exportDialogueCancelButton"));
 		cancelButton
 				.addActionListener(new TipiExportDialog_cancelButton_actionAdapter(
 						this));
-        backButton.setText(back);
+        backButton.setText(myContext.getLookupParser().lookup("exportDialogueBackButton"));
 		backButton
 				.addActionListener(new TipiExportDialog_backButton_actionAdapter(
 						this));
@@ -165,9 +153,9 @@ public class TipiExportDialog extends TipiDialog {
 		c.next(container);
 		current++;
 		if (current == 1) {
-            proceedButton.setText(complete);
+            proceedButton.setText(myContext.getLookupParser().lookup("exportDialogueCompleteButton"));
 		} else {
-            proceedButton.setText(proceed2);
+            proceedButton.setText(myContext.getLookupParser().lookup("exportDialogueProceed2Button"));
 		}
 	}
 
@@ -276,9 +264,9 @@ public class TipiExportDialog extends TipiDialog {
 			backButton.setEnabled(false);
 		}
 		if (current == 1) {
-            proceedButton.setText(complete);
+            proceedButton.setText(myContext.getLookupParser().lookup("exportDialogueCompleteButton"));
 		} else {
-            proceedButton.setText(proceed);
+            proceedButton.setText(myContext.getLookupParser().lookup("exportDialogueProceedButton"));
 		}
 	}
 }

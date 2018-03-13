@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -63,7 +62,6 @@ public class FilterPanel extends JPanel {
 
     private final static Logger logger = LoggerFactory.getLogger(FilterPanel.class);
 
-    static ResourceBundle res = ResourceBundle.getBundle("com.dexels.navajo.tipi.swingclient.components.filterpanelstrings");
     private JPanel flipPanel = new JPanel();
     private JPanel columnPanel = new JPanel();
     private JComboBox columnSelectBox = new JComboBox();

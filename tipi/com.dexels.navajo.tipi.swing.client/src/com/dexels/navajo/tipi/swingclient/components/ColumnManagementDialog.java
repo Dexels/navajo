@@ -23,8 +23,7 @@ import javax.swing.JScrollPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.components.core.parsers.LookupParser;
 
 class NameIdMap {
     HashMap<String, String> propertyNameIdMap = new HashMap<String, String>();
@@ -75,6 +74,8 @@ public class ColumnManagementDialog extends JDialog {
     private String[] ignoreList;
     private Container myToplevel;
     private HashMap<String, Boolean> editableMap = new HashMap<String, Boolean>();
+
+    private LookupParser parser;
 
     public ColumnManagementDialog(Dialog toplevel) {
         super(toplevel, true);
@@ -167,9 +168,12 @@ public class ColumnManagementDialog extends JDialog {
     }
 
     private final void jbInit() throws Exception {
+        
+        parser = new LookupParser();
+        
         availableColumnList.setModel(new DefaultListModel());
         visibleColumnList.setModel(new DefaultListModel());
-        this.setTitle("Toevoegen en verwijderen van kolommen");
+        this.setTitle(parser.lookup("columnManagementDialogTitle"));
         this.getContentPane().setSize(500, 400);
         setLocationRelativeTo(myToplevel);
         this.getContentPane().setLayout(gridBagLayout1);
@@ -178,12 +182,12 @@ public class ColumnManagementDialog extends JDialog {
         hideButton.addActionListener(new ColumnManagementDialog_hideButton_actionAdapter(this));
         showButton.setIcon(new ImageIcon(ColumnManagementDialog.class.getResource("arrow_right.gif")));
         showButton.addActionListener(new ColumnManagementDialog_showButton_actionAdapter(this));
-        jLabel1.setText("Beschikbare kolommen");
-        jLabel2.setText("Zichtbare kolommen");
-        okButton.setText("Ok");
+        jLabel1.setText(parser.lookup("columnManagementAvailableColumns"));
+        jLabel2.setText(parser.lookup("columnManagementVisibleColumns"));
+        okButton.setText(parser.lookup("columnManagementOk"));
         okButton.addActionListener(new ColumnManagementDialog_okButton_actionAdapter(this));
         cancelButton.setToolTipText("");
-        cancelButton.setText("Annuleren");
+        cancelButton.setText(parser.lookup("columnManagementCancel"));
         cancelButton.addActionListener(new ColumnManagementDialog_cancelButton_actionAdapter(this));
         jButton1.setText("jButton1");
         upButton.addActionListener(new ColumnManagementDialog_upButton_actionAdapter(this));
