@@ -2,8 +2,8 @@
 <?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2552">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <unit id="com.dexels.thirdparty.feature.feature.group" version="1.11.24.RELEASE"/>
-            <repository location="http://repo.dexels.com/eclipse/3rdparty_1.11.24"/>
+            <unit id="com.dexels.thirdparty.feature.feature.group" version="1.11.26.RELEASE"/>
+            <repository location="http://repo.dexels.com/eclipse/3rdparty_1.11.26"/>
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.3.22.201711021538"/>
