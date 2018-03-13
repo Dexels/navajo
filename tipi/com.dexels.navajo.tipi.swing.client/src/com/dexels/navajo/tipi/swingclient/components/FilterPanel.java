@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -63,7 +62,6 @@ public class FilterPanel extends JPanel {
 
     private final static Logger logger = LoggerFactory.getLogger(FilterPanel.class);
 
-    static ResourceBundle res = ResourceBundle.getBundle("com.dexels.navajo.tipi.swingclient.components.filterpanelstrings");
     private JPanel flipPanel = new JPanel();
     private JPanel columnPanel = new JPanel();
     private JComboBox columnSelectBox = new JComboBox();
@@ -107,7 +105,7 @@ public class FilterPanel extends JPanel {
         flipPanel.setPreferredSize(new Dimension(700, 35));
         // columnPanel.setPreferredSize(new Dimension(150, 35));
         this.setLayout(new BorderLayout());
-        columnsButton.setToolTipText(res.getString("changeColumnToolTip"));
+        columnsButton.setToolTipText(parser.lookup("changeColumnToolTip"));
         columnsButton.setIcon(new ImageIcon(FilterPanel.class.getResource("column_preferences.png")));
         columnsButton.setMargin(new Insets(0, 0, 0, 0));
         emailButton.setToolTipText("Email");
@@ -116,7 +114,7 @@ public class FilterPanel extends JPanel {
         emailButton.setVisible(false);
 
         columnsSaveButton.setIcon(new ImageIcon(FilterPanel.class.getResource("save.png")));
-        columnsSaveButton.setToolTipText(res.getString("saveToolTip"));
+        columnsSaveButton.setToolTipText(parser.lookup("saveToolTip"));
         columnsSaveButton.setMargin(new Insets(0, 0, 0, 0));
         columnsSaveButton.setVisible(false);
         columnsSaveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -126,7 +124,7 @@ public class FilterPanel extends JPanel {
         });
 
         excelButton.setIcon(new ImageIcon(FilterPanel.class.getResource("excel.png")));
-        excelButton.setToolTipText(res.getString("excelToolTip"));
+        excelButton.setToolTipText(parser.lookup("excelToolTip"));
         excelButton.setMargin(new Insets(0, 0, 0, 0));
         excelButton.setVisible(false);
         excelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -345,11 +343,11 @@ public class FilterPanel extends JPanel {
 
         if (c == 0) {
             clearButton.setEnabled(false);
-            // clearButton.setText(res.getString("closeButtonText"));
+            // clearButton.setText(parser.lookup("closeButtonText"));
             clearButton.setText("");
         } else {
-            // clearButton.setText(res.getString("closeButtonPrefix") + c +
-            // res.getString("closeButtonPostfix"));
+            // clearButton.setText(parser.lookup("closeButtonPrefix") + c +
+            // parser.lookup("closeButtonPostfix"));
             clearButton.setText("" + c);
             clearButton.setEnabled(true);
         }
@@ -482,10 +480,10 @@ public class FilterPanel extends JPanel {
     }
 
     private final void setupBabyFilter() {
-        operatorBox.setModel(new DefaultComboBoxModel(new Object[] { new OperatorItem(res.getString("operatorEquals"), "=="),
+        operatorBox.setModel(new DefaultComboBoxModel(new Object[] { new OperatorItem(parser.lookup("operatorEquals"), "=="),
 
-                new OperatorItem(res.getString("operatorContains"), "contains"), new OperatorItem(res.getString("operatorGreater"), ">"),
-                new OperatorItem(res.getString("operatorSmaller"), "<") }));
+                new OperatorItem(parser.lookup("operatorContains"), "contains"), new OperatorItem(parser.lookup("operatorGreater"), ">"),
+                new OperatorItem(parser.lookup("operatorSmaller"), "<") }));
 
         valueField.setPreferredSize(new Dimension(140, 20));
         valueField.setLabelVisible(false);
@@ -494,14 +492,14 @@ public class FilterPanel extends JPanel {
     }
 
     private final void setupAdvancedFilter() {
-        operatorBox.setModel(new DefaultComboBoxModel(new Object[] { new OperatorItem(res.getString("operatorEquals"), "=="),
-                new OperatorItem(res.getString("operatorNotEquals"), "!="), new OperatorItem(res.getString("operatorGreater"), ">"),
-                new OperatorItem(res.getString("operatorSmaller"), "<"), new OperatorItem(res.getString("operatorSmallerEquals"), "<="),
-                new OperatorItem(res.getString("operatorGreaterEquals"), ">="),
-                new OperatorItem(res.getString("operatorStartsWith"), "startsWith"),
-                new OperatorItem(res.getString("operatorEndsWith"), "endsWith"),
-                new OperatorItem(res.getString("operatorContains"), "contains"),
-                new OperatorItem(res.getString("operatorRegularExpression"), "regularExpression") }));
+        operatorBox.setModel(new DefaultComboBoxModel(new Object[] { new OperatorItem(parser.lookup("operatorEquals"), "=="),
+                new OperatorItem(parser.lookup("operatorNotEquals"), "!="), new OperatorItem(parser.lookup("operatorGreater"), ">"),
+                new OperatorItem(parser.lookup("operatorSmaller"), "<"), new OperatorItem(parser.lookup("operatorSmallerEquals"), "<="),
+                new OperatorItem(parser.lookup("operatorGreaterEquals"), ">="),
+                new OperatorItem(parser.lookup("operatorStartsWith"), "startsWith"),
+                new OperatorItem(parser.lookup("operatorEndsWith"), "endsWith"),
+                new OperatorItem(parser.lookup("operatorContains"), "contains"),
+                new OperatorItem(parser.lookup("operatorRegularExpression"), "regularExpression") }));
         valueField.setPreferredSize(new Dimension(140, 20));
         valueField.setLabelVisible(false);
         babyMode = false;

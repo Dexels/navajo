@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.components.core.parsers.LookupParser;
 
 
 public class TipiSwingExportSortingPanel extends JPanel {
@@ -44,6 +45,8 @@ public class TipiSwingExportSortingPanel extends JPanel {
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 	private Map<String, String> descIdMap = new HashMap<String, String>();
 	private Map<String, Property> descPropMap = new HashMap<String, Property>();
+
+    private LookupParser parser;
 
 	public TipiSwingExportSortingPanel() {
 		try {
@@ -87,11 +90,14 @@ public class TipiSwingExportSortingPanel extends JPanel {
 	}
 
 	private final void jbInit() throws Exception {
+
+        parser = new LookupParser();
+
 		availableColumnsList.setModel(new DefaultListModel<Object>());
 		exportedColumnsList.setModel(new DefaultListModel<Object>());
-		availableColumnsLabel.setText("Beschikbare kolommen");
+        availableColumnsLabel.setText(parser.lookup("TipiSwingExportSortingPanelAvailableColumns"));
 		this.setLayout(gridBagLayout1);
-		exportedColumnsLabel.setText("Te exporteren kolommen");
+        exportedColumnsLabel.setText(parser.lookup("TipiSwingExportSortingPanelToExportColumns"));
 		addButton
 				.addActionListener(new TipiExportSortingPanel_addButton_actionAdapter(
 						this));
@@ -102,19 +108,19 @@ public class TipiSwingExportSortingPanel extends JPanel {
 		sortUpButton.setText("");
 		sortUpButton
 				.setIcon(getIcon("com/dexels/navajo/tipi/components/swingimpl/swing/arrow_up.gif"));
-		sortUpButton.setToolTipText("Omhoog");
+        sortUpButton.setToolTipText(parser.lookup("TipiSwingExportSortingPanelUp"));
 		sortUpButton
 				.addActionListener(new TipiExportSortingPanel_sortUpButton_actionAdapter(
 						this));
-		sortDownButton.setToolTipText("omlaag");
+        sortDownButton.setToolTipText(parser.lookup("TipiSwingExportSortingPanelDown"));
 		sortDownButton.setText("");
 		sortDownButton
 				.setIcon(getIcon("com/dexels/navajo/tipi/components/swingimpl/swing/arrow_down.gif"));
 		sortDownButton
 				.addActionListener(new TipiExportSortingPanel_sortDownButton_actionAdapter(
 						this));
-		addButton.setToolTipText("Toevoegen");
-		removeButton.setToolTipText("Verwijderen");
+        addButton.setToolTipText(parser.lookup("TipiSwingExportSortingPanelAdd"));
+        removeButton.setToolTipText(parser.lookup("TipiSwingExportSortingPanelRemove"));
 		addButton.setText("");
 		addButton
 				.setIcon(getIcon("com/dexels/navajo/tipi/components/swingimpl/swing/arrow_right.gif"));

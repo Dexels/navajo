@@ -76,15 +76,15 @@ public class TipiExportDialog extends TipiDialog {
 		container = new JPanel();
 
 		getSwingContainer().setLayout(gridBagLayout1);
-		proceedButton.setText("Verder");
+        proceedButton.setText(myContext.getLookupParser().lookup("exportDialogueProceedButton"));
 		proceedButton
 				.addActionListener(new TipiExportDialog_proceedButton_actionAdapter(
 						this));
-		cancelButton.setText("Annuleren");
+        cancelButton.setText(myContext.getLookupParser().lookup("exportDialogueCancelButton"));
 		cancelButton
 				.addActionListener(new TipiExportDialog_cancelButton_actionAdapter(
 						this));
-		backButton.setText("Terug");
+        backButton.setText(myContext.getLookupParser().lookup("exportDialogueBackButton"));
 		backButton
 				.addActionListener(new TipiExportDialog_backButton_actionAdapter(
 						this));
@@ -153,9 +153,9 @@ public class TipiExportDialog extends TipiDialog {
 		c.next(container);
 		current++;
 		if (current == 1) {
-			proceedButton.setText("Voltooien");
+            proceedButton.setText(myContext.getLookupParser().lookup("exportDialogueCompleteButton"));
 		} else {
-			proceedButton.setText("Verder >>");
+            proceedButton.setText(myContext.getLookupParser().lookup("exportDialogueProceed2Button"));
 		}
 	}
 
@@ -264,9 +264,9 @@ public class TipiExportDialog extends TipiDialog {
 			backButton.setEnabled(false);
 		}
 		if (current == 1) {
-			proceedButton.setText("Voltooien");
+            proceedButton.setText(myContext.getLookupParser().lookup("exportDialogueCompleteButton"));
 		} else {
-			proceedButton.setText("Verder");
+            proceedButton.setText(myContext.getLookupParser().lookup("exportDialogueProceedButton"));
 		}
 	}
 }
