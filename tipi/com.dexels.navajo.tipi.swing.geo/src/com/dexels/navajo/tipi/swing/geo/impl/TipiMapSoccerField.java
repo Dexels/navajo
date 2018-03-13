@@ -133,7 +133,7 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
         if (filter.getProperty("FieldDetails").getSelectionByValue("LUX").isSelected()) {
             sb.append(filter.getProperty("FieldDetails").getSelectionByValue("LUX").getName());
             sb.append(": ");
-            sb.append(field.getProperty("LuxValueUsed").getTypedValue().toString());
+            sb.append(field.getProperty("LuxValueNew").getTypedValue().toString());
             sb.append("\n");
         }
         if (filter.getProperty("FieldDetails").getSelectionByValue("DUGOUT").isSelected()) {
