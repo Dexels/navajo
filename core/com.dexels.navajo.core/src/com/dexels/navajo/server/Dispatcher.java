@@ -398,7 +398,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 // Process client token:
                 String clientToken = h.getHeaderAttribute("clientToken");
                 if (clientToken != null) {
-                    access.setClientToken(clientToken);
+                    access.setClientToken(access.getClientToken() + " -- " + clientToken);
                 }
                 // Process client info:
                 String clientInfo = h.getHeaderAttribute("clientInfo");
