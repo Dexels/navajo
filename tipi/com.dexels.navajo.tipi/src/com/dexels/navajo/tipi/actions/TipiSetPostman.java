@@ -39,14 +39,24 @@ public class TipiSetPostman extends TipiAction {
 		final Operand serv = getEvaluatedParameter("server", event);
 		final Operand user = getEvaluatedParameter("username", event);
 		final Operand pass = getEvaluatedParameter("password", event);
+		final Operand token = getEvaluatedParameter("token", event);
 		
 		final Operand app = getEvaluatedParameter("application", event);
 		final Operand org = getEvaluatedParameter("organization", event);
 		// NavajoClientFactory.resetClient();
 		// NavajoClientFactory.createDefaultClient();
 		myContext.getClient().setServerUrl("" + serv.value);
-		myContext.getClient().setUsername("" + user.value);
-		myContext.getClient().setPassword("" + pass.value);
+		
+		if (token != null && token.value != null) {
+		    myContext.getClient().setHeader("Authorization", "Bearer " + token.value);
+		    
+		    // Clear username/password
+		    myContext.getClient().setUsername("_oauth_");
+            myContext.getClient().setPassword("");
+		} else {
+		    myContext.getClient().setUsername("" + user.value);
+		    myContext.getClient().setPassword("" + pass.value);
+		}
 		
         logger.info("Set username {} for Client {}", user.value,myContext.getClient().hashCode());
 

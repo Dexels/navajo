@@ -76,7 +76,8 @@
    <tipiaction name="setPostman" class="TipiSetPostman" package="com.dexels.navajo.tipi.actions">
       <param name="server" type="string" required="true" />
       <param name="username" type="string" required="true" />
-      <param name="password" type="string" required="true" />
+      <param name="password" type="string" required="false" />
+      <param name="token" type="string" required="false" />
    </tipiaction>
    <tipiaction name="injectMessage" class="TipiInjectMessage" package="com.dexels.navajo.tipi.actions">
       <param name="service" type="string" required="true" />
