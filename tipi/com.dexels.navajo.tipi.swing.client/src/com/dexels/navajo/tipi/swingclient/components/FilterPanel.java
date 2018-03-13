@@ -38,6 +38,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.tipi.components.core.parsers.LookupParser;
 
 /**
  * <p>
@@ -83,7 +84,7 @@ public class FilterPanel extends JPanel {
     JComboBox operatorBox = new JComboBox();
 
     private boolean babyMode = false;
-
+    private LookupParser parser;
     private Message referenceMessage = null;
     GridBagLayout gridBagLayout1 = new GridBagLayout();
 
@@ -102,6 +103,7 @@ public class FilterPanel extends JPanel {
     }
 
     void jbInit() throws Exception {
+        parser = new LookupParser();
         flipPanel.setPreferredSize(new Dimension(700, 35));
         // columnPanel.setPreferredSize(new Dimension(150, 35));
         this.setLayout(new BorderLayout());
