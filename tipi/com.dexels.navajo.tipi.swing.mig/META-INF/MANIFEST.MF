@@ -4,7 +4,7 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.18.qualifier
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
- com.dexels.navajo.tipi.swing;bundle-version="[1.0.41,2.0.0)"
+ com.dexels.navajo.tipi.swing;bundle-version="1.0.41"
 Bundle-ClassPath: .,
  lib/miglayout-3.6-swing.jar
 Bundle-Activator: tipiswingmig.TipiSwingMigExtension

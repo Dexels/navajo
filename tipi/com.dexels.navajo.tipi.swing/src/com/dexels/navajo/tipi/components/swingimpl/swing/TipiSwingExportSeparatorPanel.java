@@ -16,6 +16,7 @@ import javax.swing.border.TitledBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.tipi.components.core.parsers.LookupParser;
 
 public class TipiSwingExportSeparatorPanel extends JPanel {
 
@@ -37,6 +38,8 @@ public class TipiSwingExportSeparatorPanel extends JPanel {
 	ButtonGroup bg = new ButtonGroup();
 	JCheckBox includeTitles = new JCheckBox();
 
+    private LookupParser parser;
+
 	public TipiSwingExportSeparatorPanel() {
 		try {
 			jbInit();
@@ -46,6 +49,9 @@ public class TipiSwingExportSeparatorPanel extends JPanel {
 	}
 
 	private final void jbInit() throws Exception {
+
+        parser = new LookupParser();
+
 		this.setLayout(gridBagLayout2);
 		jPanel1.setBorder(titledBorder1);
 		jPanel1.setLayout(gridBagLayout1);
@@ -73,14 +79,14 @@ public class TipiSwingExportSeparatorPanel extends JPanel {
 		titledBorder1 = new TitledBorder(BorderFactory.createEtchedBorder(
 				Color.white, new Color(171, 171, 171)), "Scheidings teken");
 		commaOption.setSelected(true);
-		commaOption.setText("Komma");
-		tabOption.setText("Tab");
-		semicolonOption.setText("Puntkomma");
-		spaceOption.setText("Spatie");
-		otherOption.setText("Anders nl.");
+        commaOption.setText(parser.lookup("TipiSwingExportSeparatorPanelComma"));
+        tabOption.setText(parser.lookup("TipiSwingExportSeparatorPanelTab"));
+        semicolonOption.setText(parser.lookup("TipiSwingExportSeparatorPanelSemicolon"));
+        spaceOption.setText(parser.lookup("TipiSwingExportSeparatorPanelSpace"));
+        otherOption.setText(parser.lookup("TipiSwingExportSeparatorPanelOther"));
 		customSeparatorField.setText("");
 		includeTitles.setSelected(true);
-		includeTitles.setText("Kolomnamen op de eerste rij");
+        includeTitles.setText(parser.lookup("TipiSwingExportSeparatorPanelInclT"));
 		bg.add(commaOption);
 		bg.add(tabOption);
 		bg.add(semicolonOption);
