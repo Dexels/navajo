@@ -387,13 +387,26 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
                 defaultVisible = (Boolean) evalVisible.value;
             }
         } catch (Exception ex) {
-            logger.error("Error evaluating label! {}", labelString, ex);
+            logger.error("Error evaluating defaultVisibleExp! {}", defaultVisibleExp, ex);
         }
+        
+        boolean visible = true;
+        try {
+            Operand evalVisible = this.getContext().evaluate(visibleExp, this, null, null);
+            if (evalVisible != null) {
+                visible = (Boolean) evalVisible.value;
+            }
+        } catch (Exception ex) {
+            logger.error("Error evaluating visibleExp! {}", visibleExp, ex);
+        }
+        
 
         if (defaultVisible) {
             mm.addColumn(name, labelString, editable, size);
         }
-        mm.addColumnDefinition(name, labelString, editable);
+        if (visible ) {
+            mm.addColumnDefinition(name, labelString, editable);
+        }
         if (typehint != null) {
             mm.setTypeHint(name, typehint);
         }
