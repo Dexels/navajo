@@ -5,6 +5,21 @@ var pretty_max_source_length = 80000;
 
 
 function setupLoginDialog() {
+    // fill important paramenters
+    // extract tenant from the url
+    // ONLY if it's local host in the url
+    var url = window.location.href;
+    if(url.indexOf('localhost') > -1){
+        sessionStorage.isLocalHost = true;
+        var regex = /entityDocumentation\/(\w+)\//;
+        var tenant = url.match(regex)[1].toUpperCase();
+        $('#bauth_tenant').val(tenant);
+        $('#cauth_tenant').val(tenant);
+    } else{
+        sessionStorage.isLocalHost = false;
+        $('.tenantinput').hide();
+    }
+    
     // instantiate new modal
     modal= new tingle.modal({
         footer: true,
@@ -14,18 +29,7 @@ function setupLoginDialog() {
         onOpen: function() {
         		sessionStorage.authType = ''
         			
-        		// fill important paramenters
-        		// extract tenant from the url
-        		// ONLY if it's local host in the url
-        		var url = window.location.href;
-        		if(url.indexOf('localhost') > -1){
-        			var regex = /entityDocumentation\/(\w+)\//;
-        			var tenant = url.match(regex)[1].toUpperCase();
-        			$('#bauth_tenant').val(tenant);
-                 $('#cauth_tenant').val(tenant);
-        		} else{
-        		    $('.tenantinput').hide();
-        		}
+        		
         },
         onClose: function() {
             //console.log('modal closed');
@@ -255,19 +259,25 @@ $(document).ready(function() {
 
         }
         
+        function getCurlAuth() {
+            var response = '';
+            if(sessionStorage.authType == 'oauth'){
+                response += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
+            }else if(sessionStorage.authType == 'basic'){
+                response += ' -H "Authorization: Basic ' + btoa(sessionStorage.bauth_username + ':' + sessionStorage.bauth_password) + '"';
+                if (sessionStorage.isLocalHost) response += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
+            }else{
+                response += ' -H "Authorization: ' +sessionStorage.cauth_type + ' ' + sessionStorage.token +'"';
+                if (sessionStorage.isLocalHost) response += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
+            }
+            return response;
+        }
+        
         /* Helper functions */
         function getCurlUrlGetDelete(method, url) {
             var curl=  'curl ';
             curl += '-X' + method;
-            if(sessionStorage.authType == 'oauth'){
-            		curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
-	    		}else if(sessionStorage.authType == 'basic'){
-	    			curl += ' -H "Authorization: Basic ' + btoa(sessionStorage.bauth_username + ':' + sessionStorage.bauth_password) + '"';
-	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
-	    		}else{
-	    			curl += ' -H "Authorization: ' +sessionStorage.cauth_type + ' ' + sessionStorage.token +'"';
-	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
-	    		}
+            curl += getCurlAuth();
             curl += ' -H "Accept: application/json" ';
             curl += '"' + encodeURI(url) + '"'
             return curl;
@@ -276,15 +286,7 @@ $(document).ready(function() {
         function getCurlUrlPostPut(method, url, data) {
             var curl=  'curl ';
             curl += '-X' + method;
-            if(sessionStorage.authType == 'oauth'){
-	        		curl += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
-	    		}else if(sessionStorage.authType == 'basic'){
-	    			curl += ' -H "Authorization: Basic ' + btoa(sessionStorage.bauth_username + ':' + sessionStorage.bauth_password) + '"';
-	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
-	    		}else{
-	    			curl += ' -H "Authorization: ' + sessionStorage.cauth_type + ' ' + sessionStorage.token +'"';
-	    			curl += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
-	    		}
+            curl += getCurlAuth();
             curl +=  ' -H "Accept: application/json" ';
             curl += '-d "';
             curl += data.replace(new RegExp('\"', 'g'), '\\"').replace(new RegExp('\n', 'g'), '')
