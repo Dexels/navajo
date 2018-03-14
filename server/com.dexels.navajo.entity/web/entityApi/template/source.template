@@ -33,9 +33,9 @@
 	<div class="authdialog" id="setauth" style="display:none"/>
 		<table>
 		<tr>
-		<th><h2 class="authdialog header-fixed"> Authorize OAuth </h2></th>
-		<th><h2 class="authdialog header-fixed" > Authorize Basic Auth </h2></th>
-		<th><h2 class="authdialog header-fixed"> Authorize Custom </h2></th>
+		<th><h2 class="authdialog header-fixed"> OAuth </h2></th>
+		<th><h2 class="authdialog header-fixed" > Basic Auth </h2></th>
+		<th><h2 class="authdialog header-fixed"> Custom </h2></th>
 		</tr>
 		<tr>
 		<td>
@@ -53,18 +53,18 @@
 		    <input class="authdialoginput" name="bauth_username" type="text" id="bauth_username"/>
 		    <label class="authdialog" > Password </label>
 		    <input class="authdialoginput"  name="bauth_password" type="password" id="bauth_password" />
-		    <label class="authdialog" > Tenant </label>
-		    <input class="authdialoginput"  name="bauth_tenant" type="text" id="bauth_tenant" />
+		    <label class="authdialog tenantinput" > Tenant </label>
+		    <input class="authdialoginput tenantinput"  name="bauth_tenant" type="text" id="bauth_tenant" />
 		    
 		    <button id="bauthflowbutton" class="oauthauthorize button">
 		    		<span>Authorize</span>
 		    </button>
 	    </td>
 	    <td>
-	    		<label class="authdialog" > Athentication </label>
-		    <input class="authdialoginput" name="cauth_type" type="text" id="cauth_type" value="bearer"/>
-		    <label class="authdialog" > Tenant </label>
-		    <input class="authdialoginput"  name="cauth_tenant" type="text" id="cauth_tenant" />
+	    		<label class="authdialog" > Auth scheme </label>
+		    <input class="authdialoginput" name="cauth_type" type="text" id="cauth_type" value="Bearer"/>
+		    <label class="authdialog tenantinput" > Tenant </label>
+		    <input class="authdialoginput tenantinput"  name="cauth_tenant" type="text" id="cauth_tenant" />
 	    		<label class="authdialog" > Token </label> 
 			<input class="authdialoginput"  name="cauth_token" type="text" id="cauth_token"/>
 			<button id="customauthorizebutton" class="oauthauthorize button">

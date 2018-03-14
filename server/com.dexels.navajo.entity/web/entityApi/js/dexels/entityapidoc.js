@@ -18,29 +18,19 @@ function setupLoginDialog() {
         		// extract tenant from the url
         		// ONLY if it's local host in the url
         		var url = window.location.href;
-        		var tenant = '';
-        		if(url.indexOf('localhost') != -2){
+        		if(url.indexOf('localhost') > -1){
         			var regex = /entityDocumentation\/(\w+)\//;
-        			tenant = url.match(regex)[1].toUpperCase();
-        			sessionStorage.isLocalholst = true;
-        		}else{
-        			sessionStorage.isLocalholst = false;
-        		}
-        		if(sessionStorage.isLocalholst){
+        			var tenant = url.match(regex)[1].toUpperCase();
         			$('#bauth_tenant').val(tenant);
-        			$('#cauth_tenant').val(tenant);
+                 $('#cauth_tenant').val(tenant);
+        		} else{
+        		    $('.tenantinput').hide();
         		}
         },
         onClose: function() {
             //console.log('modal closed');
         },
         beforeClose: function() {
-//            if ($('#bearertoken').val()) {
-//                sessionStorage.token = $('#bearertoken').val();
-//            }
-//            if ($('#bearertoken').val()) {
-//                sessionStorage.token = $('#bearertoken').val();
-//            }
             return true; // close the modal
         }
     });
