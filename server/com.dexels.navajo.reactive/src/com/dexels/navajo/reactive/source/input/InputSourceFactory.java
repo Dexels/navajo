@@ -1,4 +1,4 @@
-package com.dexels.navajo.reactive.source;
+package com.dexels.navajo.reactive.source.input;
 
 import java.util.List;
 import java.util.Map;
@@ -16,13 +16,13 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 
 import io.reactivex.functions.Function;
 
-public class SourceSourceFactory implements ReactiveSourceFactory, ParameterValidator {
+public class InputSourceFactory implements ReactiveSourceFactory, ParameterValidator {
 
 	@Override
 	public ReactiveSource build(String relativePath,String type, Optional<XMLElement> x, ReactiveParameters params,
 			List<ReactiveTransformer> transformers, Type finalType, Function<String, ReactiveMerger> reducerSupplier
 			) {
-		return new SourceSource(finalType);
+		return new InputSource(finalType);
 	}
 	
 	@Override

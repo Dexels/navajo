@@ -1,11 +1,10 @@
 package com.dexels.navajo.document.stream;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
+
+import io.reactivex.Flowable;
 
 public class DataItem {
 
@@ -13,15 +12,18 @@ public class DataItem {
 	private final ImmutableMessage stateMsg;
 	private final byte[] data;
 	private final NavajoStreamEvent streamEvent;
-	private final List<ImmutableMessage> msgList;
+	private final Flowable<NavajoStreamEvent> eventStream;
+	private final Flowable<ImmutableMessage> msgList;
 	public final Type type;
 	public enum Type {
 		MESSAGE,
 		SINGLEMESSAGE,
 		EVENT,
+		EVENTSTREAM,
 		DATA,
-		LIST,
-		EMPTY
+		MSGSTREAM,
+		EMPTY,
+		ANY
 	}
 	
 	private DataItem() {
@@ -31,6 +33,7 @@ public class DataItem {
 		this.msgList = null;
 		this.type = Type.EMPTY;
 		this.stateMsg = null;
+		this.eventStream = null;
 	}
 	
 	private DataItem(ImmutableMessage msg) {
@@ -40,6 +43,7 @@ public class DataItem {
 		this.msgList = null;
 		this.type = Type.MESSAGE;
 		this.stateMsg = null;
+		this.eventStream = null;
 	}
 	
 	private DataItem(ImmutableMessage msg, ImmutableMessage stateMessage) {
@@ -49,6 +53,7 @@ public class DataItem {
 		this.msgList = null;
 		this.stateMsg = stateMessage;
 		this.type = Type.MESSAGE;
+		this.eventStream = null;
 	}
 
 	private DataItem(byte[] data) {
@@ -58,6 +63,7 @@ public class DataItem {
 		this.msgList = null;
 		this.type = Type.DATA;
 		this.stateMsg = null;
+		this.eventStream = null;
 	}
 
 	private DataItem(NavajoStreamEvent event) {
@@ -67,17 +73,36 @@ public class DataItem {
 		this.msgList = null;
 		this.type = Type.EVENT;
 		this.stateMsg = null;
+		this.eventStream = null;
 	}
 	
-	private DataItem(List<ImmutableMessage> msgList) {
+	// Ugly but can not make two identical constructors
+	private DataItem(Flowable<ImmutableMessage> msgList, Flowable<NavajoStreamEvent> event) {
 		this.msg = null;
 		this.data = null;
 		this.streamEvent = null;
 		this.msgList = msgList;
-		this.type = Type.LIST;
+		this.type = msgList == null? Type.EVENTSTREAM : Type.MSGSTREAM;
 		this.stateMsg = null;
+		this.eventStream = event;
+		if(msgList!=null && event!=null) {
+			throw new IllegalArgumentException("Can not both supply a msgList and an event stream");
+		}
 	}
 	
+	public Flowable<ImmutableMessage> messageStream() {
+		if(this.msgList==null) {
+			throw new NullPointerException("DataItem without messagestream, can't request messagestream of dataitem of type: "+this.type);
+		}
+		return this.msgList;
+	}
+	
+	public Flowable<NavajoStreamEvent> eventStream() {
+		if(this.eventStream==null) {
+			throw new NullPointerException("DataItem without event stream, can't request eventstream of dataitem of type: "+this.type);
+		}
+		return this.eventStream;
+	}
 
 	public ImmutableMessage stateMessage() {
 		return this.stateMsg == null ? ImmutableFactory.empty() : this.stateMsg;
@@ -106,7 +131,7 @@ public class DataItem {
 		return data;
 	}
 
-	public List<ImmutableMessage> msgList() {
+	public Flowable<ImmutableMessage> msgList() {
 		if(this.msgList==null) {
 			throw new NullPointerException("DataItem without msgList, can't request msgList of dataitem of type: "+this.type+" item: "+toString());
 		}
@@ -134,8 +159,12 @@ public class DataItem {
 		return new DataItem(event);
 	}
 
-	public static DataItem of(List<ImmutableMessage> msgList) {
-		return new DataItem(msgList);
+	public static DataItem ofEvent(Flowable<NavajoStreamEvent> event) {
+		return new DataItem(null,event);
+	}
+
+	public static DataItem of(Flowable<ImmutableMessage> msgList) {
+		return new DataItem(msgList,null);
 	}
 	
 	public String toString() {
@@ -147,6 +176,28 @@ public class DataItem {
 			return "msglist: "+msgList;		
 		} else {
 			return msg.toFlatString(ImmutableFactory.getInstance());
+		}
+	}
+	
+	public static Type parseType(String typeString) {
+		switch (typeString) {
+			case "msg":
+			case "message":
+				return Type.MESSAGE;
+			case "singlemessage":
+				return Type.SINGLEMESSAGE;
+			case "event":
+				return Type.EVENT;
+			case "eventstream":
+				return Type.EVENTSTREAM;
+			case "msgstream":
+				return Type.MSGSTREAM;
+			case "binary":
+				return Type.DATA;
+			case "empty":
+				return Type.EMPTY;
+		default:
+			throw new IllegalArgumentException("Can not parse typestring: "+typeString);
 		}
 	}
 }

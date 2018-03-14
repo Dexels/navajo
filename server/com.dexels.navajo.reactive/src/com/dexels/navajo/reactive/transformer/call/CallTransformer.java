@@ -41,7 +41,7 @@ public class CallTransformer implements ReactiveTransformer, ParameterValidator 
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
 		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(),this, sourceElement, sourcePath);
 
-		final int parallel =  resolved.paramInteger("parallel", ()->0);
+//		final int parallel =  resolved.paramInteger("parallel", ()->0);
 		final String service =  resolved.paramString("service");
 		final String messageName =  resolved.paramString("messageName");
 		final boolean debug = resolved.paramBoolean("debug", ()->false);
@@ -53,11 +53,7 @@ public class CallTransformer implements ReactiveTransformer, ParameterValidator 
 			if(debug) {
 				stream = stream.doOnNext(e->System.err.println(e));
 			}
-			if (parallel==0) {
-				return stream.concatMap(str->context.runner().run(service,debug).execute(context.withService(service).withInput(str)));
-			} else {
-				return stream.flatMap(str->context.runner().run(service,debug).execute(context.withService(service).withInput(str)),parallel);
-			}
+			return stream.map(str->context.runner().build(service,debug).execute(context.withService(service).withInput(str)).map(e->e.event())).map(e->DataItem.ofEvent(e));
 		};
 	}
 
@@ -68,12 +64,12 @@ public class CallTransformer implements ReactiveTransformer, ParameterValidator 
 
 	@Override
 	public Type outType() {
-		return Type.EVENT;
+		return Type.EVENTSTREAM;
 	}
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"messageName","isArray","service","parallel","debug"}));
+		return Optional.of(Arrays.asList(new String[]{"messageName","isArray","service","debug"}));
 	}
 
 	@Override
@@ -86,7 +82,7 @@ public class CallTransformer implements ReactiveTransformer, ParameterValidator 
 		Map<String,String> r = new HashMap<String, String>();
 		r.put("messageName", Property.STRING_PROPERTY);
 		r.put("service", Property.STRING_PROPERTY);
-		r.put("parallel", Property.INTEGER_PROPERTY);
+//		r.put("parallel", Property.INTEGER_PROPERTY);
 		r.put("isArray", Property.BOOLEAN_PROPERTY);
 		r.put("debug", Property.BOOLEAN_PROPERTY);
 		return Optional.of(r);

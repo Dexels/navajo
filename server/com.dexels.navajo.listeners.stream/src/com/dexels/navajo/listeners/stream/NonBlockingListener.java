@@ -156,7 +156,7 @@ public class NonBlockingListener extends HttpServlet {
 			String debugString = request.getHeader("X-Navajo-Debug");
 			boolean debug = debugString != null;
 			
-			ReactiveScript rs = runScript(context,debug);
+			ReactiveScript rs = buildScript(context,debug);
 			if(responseEncoding.isPresent()) {
 				response.addHeader("Content-Encoding", responseEncoding.get());
 			}
@@ -177,10 +177,23 @@ public class NonBlockingListener extends HttpServlet {
 				.map(msg->msg.toFlatString(ImmutableFactory.getInstance()).getBytes())
 				.doOnCancel(()->System.err.println("Cancel at toplevel"))
 				.subscribe(responseSubscriber);
-				
+				break;
+			case EVENTSTREAM:
+				rs.execute(context)
+				.onErrorResumeNext(cc)
+				.map(e->e.eventStream())
+				.concatMap(e->e)
+//				.map(di->di.message())
+//				.map(msg->msg.toFlatString(ImmutableFactory.getInstance()).getBytes())
+				.doOnCancel(()->System.err.println("Cancel at toplevel"))
+				.compose(StreamDocument.inNavajo(context.service, context.username, Optional.empty()))
+				.lift(StreamDocument.filterMessageIgnore())
+				.lift(StreamDocument.serialize())
+				.compose(StreamCompress.compress(responseEncoding))
+				.subscribe(responseSubscriber);
 				break;
 			case EMPTY:
-			case LIST:
+			case MSGSTREAM:
 			case EVENT:
 			default:
 				rs.execute(context)
@@ -215,8 +228,8 @@ public class NonBlockingListener extends HttpServlet {
 	}
 
 
-	private ReactiveScript runScript(StreamScriptContext context, boolean debug) throws IOException {
-		return reactiveScriptEnvironment.run(context.service, debug);
+	private ReactiveScript buildScript(StreamScriptContext context, boolean debug) throws IOException {
+		return reactiveScriptEnvironment.build(context.service, debug);
 
 	}
 
@@ -292,11 +305,11 @@ public class NonBlockingListener extends HttpServlet {
 		}
 
 		if(isGet) {
-			return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),attributes,Optional.of(Flowable.<NavajoStreamEvent>empty().compose(StreamDocument.inNavajo(serviceHeader, Optional.of(username), Optional.of(password)))), Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment));
+			return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),attributes,Optional.of(Flowable.<NavajoStreamEvent>empty().compose(StreamDocument.inNavajo(serviceHeader, Optional.of(username), Optional.of(password)))),Optional.empty(), Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment));
 		}
 		String requestEncoding = (String) attributes.get("Content-Encoding");
 
-	
+//		Flowable<NavajoStreamEvent> input = Servlets.createFlowable(ac, 1000)
 		Flowable<NavajoStreamEvent> input = getBlockingInput(req)
 			.compose(StreamCompress.decompress(Optional.ofNullable(requestEncoding)))
 			.lift(XML.parseFlowable(10))
@@ -304,7 +317,7 @@ public class NonBlockingListener extends HttpServlet {
 			.lift(StreamDocument.parse())
 			.concatMap(e->e);
 		
-		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),attributes,Optional.of(input),Optional.of(this.reactiveScriptEnvironment));
+		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),attributes,Optional.of(input),Optional.empty(), Optional.of(this.reactiveScriptEnvironment));
 	}
 
 	private Flowable<byte[]> getBlockingInput(HttpServletRequest request) {

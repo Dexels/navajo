@@ -20,7 +20,6 @@ import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
@@ -42,10 +41,6 @@ import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformerFac
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
-
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
 
 public class TestSingle {
 	
@@ -78,8 +73,8 @@ public class TestSingle {
 	}
 	
 	private StreamScriptContext createContext(String serviceName,Navajo input, Optional<ReactiveScriptRunner> runner) {
-		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
-		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.of("username"), Optional.of("password"), Collections.emptyMap(), Optional.of(inStream),runner);
+//		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
+		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.of("username"), Optional.of("password"), Collections.emptyMap(), Optional.empty(), Optional.of(input),runner);
 		return context;
 	}
 	
@@ -210,6 +205,20 @@ public class TestSingle {
 		}
 	}
 	
-	
+	@Test
+	public void testInputStream() throws UnsupportedEncodingException, IOException {
+		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("inputstream.xml")) {
+			StreamScriptContext myContext = createContext("storeTestScript",Optional.empty());
+			Navajo n = reactiveScriptParser.parse(myContext.service, in,"storeTestScript")
+				.execute(myContext)
+				.map(di->di.event())
+				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
+				.lift(StreamDocument.collectFlowable())
+				.firstOrError()
+				.blockingGet();
+			String firstName = (String) n.getMessage("Person").getProperty("firstname").getTypedValue();
+			Assert.assertEquals("Bertrand", firstName);
+		}
+	}
 	
 }

@@ -16,37 +16,46 @@ public class StreamScriptContext {
 	public final String service;
 	public final Optional<String> username;
 	public final Optional<String> password;
-	private Navajo input = null;
-	private Optional<Flowable<NavajoStreamEvent>> inputFlowable;
+	private final Optional<Flowable<NavajoStreamEvent>> inputFlowable;
+	private final Optional<Navajo> inputNavajo;
 	public final Map<String, Object> attributes;
 	private final Optional<ReactiveScriptRunner> runner;
 	private String deployment;
 
 	// mostly for testing
 	public StreamScriptContext(String tenant, String service, String deployment) {
-		this(tenant,service,Optional.empty(),Optional.empty(),Collections.emptyMap(),Optional.empty(),Optional.empty());
+		this(tenant,service,Optional.empty(),Optional.empty(),Collections.emptyMap(),Optional.empty(),Optional.empty(),Optional.empty());
 		this.deployment = deployment;
 	}
 	
-	public StreamScriptContext(String tenant, String service, Optional<String> username, Optional<String> password, Map<String,Object> attributes,Optional<Flowable<NavajoStreamEvent>> input, Optional<ReactiveScriptRunner> runner) {
+	public StreamScriptContext(String tenant, String service, Optional<String> username, Optional<String> password, Map<String,Object> attributes,Optional<Flowable<NavajoStreamEvent>> input, Optional<Navajo> inputNavajo, Optional<ReactiveScriptRunner> runner) {
 		this.tenant = tenant;
 		this.service = service;
 		this.username = username;
 		this.password = password;
 		this.attributes = attributes;
 		this.inputFlowable = input;
+		this.inputNavajo = inputNavajo;
 		this.runner = runner;
 		this.deployment = runner.map(r->r.deployment()).orElse("");
 	}
 
-
-
 	public StreamScriptContext withService(String service) {
-		return new StreamScriptContext(this.tenant, service, username, password, attributes, inputFlowable, runner);
+		return new StreamScriptContext(this.tenant, service, username, password, attributes, inputFlowable,inputNavajo, runner);
 	}
 	
 	public StreamScriptContext withInput(Flowable<NavajoStreamEvent> input) {
-		return new StreamScriptContext(this.tenant, service, username, password, attributes, Optional.of(input), runner);
+		if(inputNavajo.isPresent()) {
+			throw new IllegalArgumentException("Can not attach input flowable when there is a resolved input already");
+		}
+		return new StreamScriptContext(this.tenant, service, username, password, attributes, Optional.of(input),Optional.empty(), runner);
+	}
+
+	public StreamScriptContext withInputNavajo(Navajo input) {
+		if(inputFlowable.isPresent()) {
+			throw new IllegalArgumentException("Can not attach resolved input  when there is a input flowable");
+		}
+		return new StreamScriptContext(this.tenant, service, username, password, attributes, Optional.empty(),Optional.of(input), runner);
 	}
 
 	public ReactiveScriptRunner runner() {
@@ -62,12 +71,19 @@ public class StreamScriptContext {
 	}
 
 	public Optional<Navajo> getInput() {
-		if(this.input != null) {
-			return Optional.of(this.input);
-		} else {
-			this.input = inputFlowable.get().toObservable().lift(StreamDocument.collect()).firstElement().blockingGet();
-			this.inputFlowable = null;
-			return Optional.of(this.input);
-		}
+		return this.inputNavajo;
 	}
+	
+	public StreamScriptContext resolveInput() {
+		if(!inputFlowable.isPresent()) {
+			throw new IllegalArgumentException("Can not resolved input: No unresolved input present. Is it resolved already?");
+		}
+		if(inputNavajo.isPresent()) {
+			throw new IllegalArgumentException("Resolved input already present. Is it resolved already?");
+		}
+		Navajo inputNavajo = inputFlowable.get().toObservable().lift(StreamDocument.collect()).firstElement().blockingGet();
+
+		return new StreamScriptContext(this.tenant, service, username, password, attributes, Optional.empty(),Optional.of(inputNavajo), runner);
+	}
+
 }
