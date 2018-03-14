@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1524,6 +1525,24 @@ public class MessageTable extends JTable implements CellEditorListener,
 		Navajo newNavajo = NavajoFactory.getInstance().createNavajo();
 		Message constructed = NavajoFactory.getInstance().createMessage(
 				newNavajo, myMessage.getName(), Message.MSG_TYPE_ARRAY);
+		
+		// Add definition message
+		
+		
+        
+        Message def = NavajoFactory.getInstance().createMessage(newNavajo, myMessage.getName(), Message.MSG_TYPE_DEFINITION);
+        
+        Collection<MessageTableColumnDefinition> columnDefinitions = getColumnDefinitions().values();
+        for (MessageTableColumnDefinition columnDef : columnDefinitions) {
+            Property p = NavajoFactory.getInstance().createProperty(
+                    newNavajo, columnDef.getId(), "string", "",
+                    255, columnDef.getTitle(), "out");
+            if (includeInvisibleColumns || hasColumn(columnDef.getId()) ) {
+                def.addProperty(p);
+            }
+        }
+        constructed.addElement(def);
+		
 		for (int i = 0; i < getRowCount(); i++) {
 			Message elt = this.getMessageRow(i);
 			if (Message.MSG_DEFINITION.equals(elt.getType())) {
