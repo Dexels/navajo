@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +79,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	
 	
 	@Override
-	public ReactiveScript run(String service, boolean debug) throws IOException {
+	public ReactiveScript build(String service, boolean debug) throws IOException {
 		// Do this check first, so we can 'override' scripts for testing
 		ReactiveScript rs = scripts.get(service);
 		if(rs!=null) {
@@ -88,7 +89,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			if(parentRunnerEnvironment==null) {
 				throw new NullPointerException("This environment does not accept script: "+service+", and there is no parent."); 
 			}
-			return parentRunnerEnvironment.run(service,debug);
+			return parentRunnerEnvironment.build(service,debug);
 		}
 		File sf = resolveFile(service);
 		
@@ -110,7 +111,8 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	}
 	
 	ReactiveScript installScript(String serviceName, InputStream in, String relativeScriptPath) throws IOException {
-		ReactiveScript parsed = scriptParser.parse(serviceName, in,relativeScriptPath);
+		List<ReactiveParseProblem> problems = new ArrayList<>();
+		ReactiveScript parsed = scriptParser.parse(serviceName, in,relativeScriptPath,problems);
 		scripts.put(serviceName, parsed);
 		return parsed;
 	}

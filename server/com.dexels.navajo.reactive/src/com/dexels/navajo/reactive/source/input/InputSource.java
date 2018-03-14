@@ -1,4 +1,4 @@
-package com.dexels.navajo.reactive.source;
+package com.dexels.navajo.reactive.source.input;
 
 import java.util.Optional;
 
@@ -10,11 +10,11 @@ import com.dexels.navajo.reactive.api.ReactiveSource;
 
 import io.reactivex.Flowable;
 
-public class SourceSource implements ReactiveSource {
+public class InputSource implements ReactiveSource {
 	
 	private Type finalType;
 
-	public SourceSource(DataItem.Type finalType) {
+	public InputSource(DataItem.Type finalType) {
 		this.finalType = finalType;
 	}
 

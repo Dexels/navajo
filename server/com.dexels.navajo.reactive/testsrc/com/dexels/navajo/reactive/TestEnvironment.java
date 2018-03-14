@@ -23,6 +23,7 @@ import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
 import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
 import com.dexels.navajo.reactive.transformer.filestore.FileStoreTransformerFactory;
 import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
+import com.dexels.navajo.reactive.transformer.other.TakeTransformerFactory;
 import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
 import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
@@ -60,6 +61,7 @@ public class TestEnvironment {
 		reactiveScriptParser.addReactiveTransformerFactory(new StreamMessageTransformerFactory(),"stream");
 		reactiveScriptParser.addReactiveTransformerFactory(new SingleMessageTransformerFactory(),"single");
 		reactiveScriptParser.addReactiveTransformerFactory(new ReduceTransformerFactory(),"reduce");
+		reactiveScriptParser.addReactiveTransformerFactory(new TakeTransformerFactory(),"take");
 		env.setReactiveScriptParser(reactiveScriptParser);
 //		rsp.addReactiveSourceFactory("", settings);
 	}
@@ -122,7 +124,7 @@ public class TestEnvironment {
 	private Flowable<NavajoStreamEvent> runScript(String name) {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream(name+".xml")) {
 				env.installScript(name, in,"serviceName");
-				return env.run(name,true).execute(createContext(name))
+				return env.build(name,true).execute(createContext(name))
 						.map(di->di.event());
 		} catch (IOException e1) {
 			return Flowable.error(e1);
@@ -132,7 +134,7 @@ public class TestEnvironment {
 	private Flowable<byte[]> runScriptBinary(String name) {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream(name+".xml")) {
 				env.installScript(name, in,"serviceName");
-				return env.run(name,true).execute(createContext(name))
+				return env.build(name,true).execute(createContext(name))
 						.map(di->di.data());
 		} catch (IOException e1) {
 			return Flowable.error(e1);
@@ -142,7 +144,7 @@ public class TestEnvironment {
 	public StreamScriptContext createContext(String serviceName) {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
 		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
-		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.empty(), Optional.empty(), Collections.emptyMap(),Optional.of(inStream),Optional.empty());
+		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.empty(), Optional.empty(), Collections.emptyMap(),Optional.of(inStream),Optional.empty(),Optional.empty());
 		return context;
 	}
 

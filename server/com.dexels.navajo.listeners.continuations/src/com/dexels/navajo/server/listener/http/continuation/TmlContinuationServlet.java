@@ -30,7 +30,15 @@ public class TmlContinuationServlet extends HttpServlet implements
 	private LocalClient localClient;
 	private TmlScheduler tmlScheduler;
 
-	// private boolean jmxRegistered = false;
+	private HttpServlet reactiveHttpServlet;
+	
+	public void setReactiveServlet(HttpServlet servlet) {
+		this.reactiveHttpServlet = servlet;
+	}
+
+	public void clearReactiveServlet() {
+		this.reactiveHttpServlet = null;
+	}
 
 	public LocalClient getLocalClient() {
 		return localClient;

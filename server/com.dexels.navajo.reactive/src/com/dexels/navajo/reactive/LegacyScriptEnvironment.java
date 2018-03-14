@@ -49,7 +49,7 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 	}
 
 	@Override
-	public ReactiveScript run(String service, boolean debug) {
+	public ReactiveScript build(String service, boolean debug) {
 		return new ReactiveScript() {
 			
 			@Override
@@ -61,6 +61,16 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 			@Override
 			public Type dataType() {
 				return Type.EVENT;
+			}
+
+			@Override
+			public Optional<String> binaryMimeType() {
+				return Optional.empty();
+			}
+
+			@Override
+			public Optional<String> streamMessage() {
+				return Optional.empty();
 			}
 		};
 //		

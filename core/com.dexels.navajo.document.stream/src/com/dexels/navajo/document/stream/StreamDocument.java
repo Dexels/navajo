@@ -961,6 +961,19 @@ public class StreamDocument {
 		};
 	}
 
+	public static FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> inMessage(String name) {
+		return flow->flow.startWith(Events.messageStarted(name, Collections.emptyMap())).concatWith(Flowable.just(Events.message(Msg.create(), name, Collections.emptyMap())));
+	}
+
+	public static FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> inArrayElement(String name) {
+		return flow->flow.startWith(Events.arrayElementStarted(Collections.emptyMap())).concatWith(Flowable.just(Events.arrayElement(Msg.create(),Collections.emptyMap())));
+	}
+
+//	public static FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> inMessage(String name) {
+//		return flow->flow.startWith(Events.messageStarted(name, Collections.emptyMap())).concatWith(Flowable.just(Events.message(Msg.create(), name, Collections.emptyMap())));
+//	}
+
+
 	public static FlowableTransformer<ImmutableMessage, NavajoStreamEvent> toMessageEvent(String name, boolean isArray) {
 		return new FlowableTransformer<ImmutableMessage, NavajoStreamEvent>() {
 
