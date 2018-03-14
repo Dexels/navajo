@@ -10,13 +10,13 @@ function setupLoginDialog() {
     // ONLY if it's local host in the url
     var url = window.location.href;
     if(url.indexOf('localhost') > -1){
-        sessionStorage.isLocalHost = true;
+        sessionStorage.setItem('isLocalhost', '1');
         var regex = /entityDocumentation\/(\w+)\//;
         var tenant = url.match(regex)[1].toUpperCase();
         $('#bauth_tenant').val(tenant);
         $('#cauth_tenant').val(tenant);
     } else{
-        sessionStorage.isLocalHost = false;
+        sessionStorage.setItem('isLocalhost', 0);
         $('.tenantinput').hide();
     }
     
@@ -263,14 +263,14 @@ $(document).ready(function() {
             var response = '';
             if(sessionStorage.authType == 'oauth'){
                 response += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
-            }else if(sessionStorage.authType == 'basic'){
+            } else if(sessionStorage.authType == 'basic'){
                 response += ' -H "Authorization: Basic ' + btoa(sessionStorage.bauth_username + ':' + sessionStorage.bauth_password) + '"';
-                if (sessionStorage.isLocalHost) response += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
-            }else{
+                if (sessionStorage.isLocalhost == '1') response += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
+            } else {
                 response += ' -H "Authorization: ' +sessionStorage.cauth_type + ' ' + sessionStorage.token +'"';
-                if (sessionStorage.isLocalHost) response += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
+                if (sessionStorage.isLocalhost == '1') response += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
             }
-            return response;
+            return response + ' ';
         }
         
         /* Helper functions */
