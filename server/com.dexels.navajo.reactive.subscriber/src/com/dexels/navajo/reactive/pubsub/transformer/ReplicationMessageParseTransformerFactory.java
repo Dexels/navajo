@@ -12,6 +12,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.reactive.ReactiveParseProblem;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
+import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
@@ -25,7 +26,7 @@ public class ReplicationMessageParseTransformerFactory implements ReactiveTransf
 	FallbackReplicationMessageParser parser = new FallbackReplicationMessageParser(true);
 
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> xml,
+	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems,ReactiveParameters parameters, Optional<XMLElement> xml,
 			Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier) {

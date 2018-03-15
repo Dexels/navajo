@@ -10,29 +10,26 @@ import java.util.Optional;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.reactive.ReactiveParseProblem;
-import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
-import com.dexels.navajo.reactive.transformer.call.CallTransformer;
 
 import io.reactivex.functions.Function;
 
 public class StoreFactory implements ReactiveTransformerFactory, ParameterValidator {
 
 	public StoreFactory() {
-		// TODO Auto-generated constructor stub
 	}
 
+	// TODO fix, now broken. Do we need it?
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> xml,
+	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
 			Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier) {
-		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath,problems, xml);
 		return null; //new Store();
 	}
 

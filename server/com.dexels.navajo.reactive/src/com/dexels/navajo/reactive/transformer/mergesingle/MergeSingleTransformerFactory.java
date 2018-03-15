@@ -35,20 +35,13 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 	}
 
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> xmlElement, Function<String, ReactiveSourceFactory> sourceSupplier,
+	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
+			Optional<XMLElement> xmlElement, Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier) {
-		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, problems,xmlElement);
-
-		
-		//		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, xmlElement);
 		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
 
-		
-//		XMLElement joinerElement = xml.getChildByTagName("joiner");
-//		if(joinerElement==null) {
-//			throw new RuntimeException("Missing joiner element for xml: "+xml);
-//		}
+
 		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), reducerSupplier);
 		Optional<ReactiveSource> subSource;
 		try {
@@ -59,7 +52,11 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 		if(!subSource.isPresent()) {
 			throw new NullPointerException("Missing sub source in xml: "+xml);
 		}
-		return new MergeSingleTransformer(this,parameters,subSource.get(), joinermapper,xml);
+		ReactiveSource sub = subSource.get();
+		if(!sub.finalType().equals(DataItem.Type.SINGLEMESSAGE)) {
+			throw new IllegalArgumentException("Wrong type of sub source: "+sub.finalType()+ ", reduce or first maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);
+		}
+		return new MergeSingleTransformer(this,parameters,sub, joinermapper);
 	}
 	
 

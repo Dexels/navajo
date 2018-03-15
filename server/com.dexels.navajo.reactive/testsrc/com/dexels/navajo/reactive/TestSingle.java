@@ -108,7 +108,7 @@ public class TestSingle {
 				.withConstant("count", 5, Property.INTEGER_PROPERTY);
 		List<ReactiveParseProblem> problems = new ArrayList<>();
 
-		ReactiveTransformer takeTransformer = new TakeTransformerFactory().build(problems);
+		ReactiveTransformer takeTransformer = new TakeTransformerFactory().build(problems,transformerParameter);
 		int lastIndex = ssf.build("",parameters, problems,Arrays.asList(new ReactiveTransformer[] {takeTransformer}), DataItem.Type.MESSAGE)
 			.execute(context, Optional.empty())
 			.map(e->e.message())
@@ -138,7 +138,7 @@ public class TestSingle {
 
 //		new FilterTransformerFactory().build(
 		List<ReactiveParseProblem> problems = new ArrayList<>();
-		ReactiveTransformer filterTransformer = new FilterTransformerFactory().build(problems);
+		ReactiveTransformer filterTransformer = new FilterTransformerFactory().build(problems,transformerParameter);
 		long lastIndex = ssf.build("",parameters, problems, Arrays.asList(new ReactiveTransformer[] {filterTransformer}), DataItem.Type.MESSAGE)
 			.execute(context, Optional.empty())
 			.map(e->e.message())
@@ -161,7 +161,7 @@ public class TestSingle {
 				.withConstant("count", 5, Property.INTEGER_PROPERTY);
 
 		List<ReactiveParseProblem> problems = new ArrayList<>();
-		ReactiveTransformer skipTransformer = new SkipTransformerFactory().build(problems);
+		ReactiveTransformer skipTransformer = new SkipTransformerFactory().build(problems,transformerParameter);
 		
 		int lastIndex = ssf.build("",parameters, problems, Arrays.asList(new ReactiveTransformer[] {skipTransformer}), DataItem.Type.MESSAGE)
 			.execute(context, Optional.empty())

@@ -246,7 +246,9 @@ public class ReactiveScriptParser {
 			if(e.endsWith(".eval")) {
 				String name = e.substring(0, e.length()-".eval".length());
 				try {
-					ContextExpression ce = ExpressionCache.getInstance().parse(x.getStringAttribute(e));
+					List<String> probs = new ArrayList<>();
+					ContextExpression ce = ExpressionCache.getInstance().parse(probs,x.getStringAttribute(e));
+					probs.stream().forEach(elt->problems.add(ReactiveParseProblem.of(elt)));
 					Function3<StreamScriptContext,Optional<ImmutableMessage>, ImmutableMessage, Operand> value = (context,msg,param)->evaluateCompiledExpression(ce, context, Collections.emptyMap(), msg,Optional.of(param));
 					namedParameters.put(name, value);
 				} catch (TMLExpressionException ex) {
@@ -364,7 +366,9 @@ public class ReactiveScriptParser {
 			Function<String, ReactiveMerger> reducerSupplier, Optional<String> baseType, String operatorName,
 			Optional<String> newBaseType) throws Exception {
 		ReactiveTransformerFactory transformerFactory = factorySupplier.apply(operatorName); 
-		ReactiveTransformer transformer = transformerFactory.build(relativePath, problems, Optional.of(xml),sourceSupplier,factorySupplier,reducerSupplier);
+		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, problems,Optional.of(xml));
+
+		ReactiveTransformer transformer = transformerFactory.build(relativePath, problems, parameters, Optional.of(xml),sourceSupplier,factorySupplier,reducerSupplier);
 		Set<DataItem.Type> in = transformer.metadata().inType();
 		Type out = transformer.metadata().outType();
 		Type baseParsed = baseType.map(e->DataItem.parseType(e)).orElse(Type.ANY);
