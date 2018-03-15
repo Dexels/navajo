@@ -2,6 +2,8 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.dexels.navajo.parser.compiled;
 
+import java.util.List;
+
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 
 /* All AST nodes must implement this interface.  It provides basic
@@ -38,7 +40,7 @@ interface Node {
   /** Interpret method */
 //  public Object interpret(Navajo input) throws TMLExpressionException;
 
-ContextExpression interpretToLambda();
+ContextExpression interpretToLambda(List<String> problems);
 
 }
 /* JavaCC - OriginalChecksum=22197c64ec0b9502885f0a5dc1d3ddd7 (do not edit this line) */

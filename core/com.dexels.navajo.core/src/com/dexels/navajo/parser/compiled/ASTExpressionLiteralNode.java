@@ -2,6 +2,8 @@
 
 package com.dexels.navajo.parser.compiled;
 
+import java.util.List;
+
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 
@@ -15,10 +17,10 @@ public final class ASTExpressionLiteralNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda() {
+	public ContextExpression interpretToLambda(List<String> problems) {
 		// TODO is this ok?!
         String value = val.substring(1, val.length() - 1);
-        return ExpressionCache.getInstance().parse(value);
+        return ExpressionCache.getInstance().parse(problems,value);
 
 	}
 }

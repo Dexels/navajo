@@ -1,7 +1,9 @@
 package com.dexels.navajo.parser.compiled.api;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,6 +17,7 @@ import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
@@ -57,8 +60,6 @@ public class ExpressionCache {
 		try {
 	        Timer time = new Timer(); // Instantiate Timer Object
 
-	        // Start running the task on Monday at 15:40:00, period is set to 8 hours
-	        // if you want to run the task immediately, set the 2nd parameter to 0
 	        time.schedule(new TimerTask() {
 
 				@Override
@@ -79,11 +80,19 @@ public class ExpressionCache {
 			pureHitCount.incrementAndGet();
 			return cachedValue.get();
 		}
-		return parse(expression).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage,paramMessage);
+		List<String> problems = new ArrayList<>();
+		ContextExpression parse = parse(problems,expression);
+		if(!problems.isEmpty()) {
+			throw new TMLExpressionException(problems);
+		}
+		return parse.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage,paramMessage);
 		
 	}
 	
-	public ContextExpression parse(String expression) {
+	public ContextExpression parse(List<String> problems, String expression) {
+		return parse(problems, expression,true);
+	}
+	public ContextExpression parse(List<String> problems, String expression, boolean allowLiteralResolve) {
 		Optional<ContextExpression> cachedParsedExpression = expressionCache.getUnchecked(expression);
 		if(cachedParsedExpression.isPresent()) {
 			hitCount.incrementAndGet();
@@ -91,13 +100,12 @@ public class ExpressionCache {
 		}
 		CompiledParser cp;
 		try {
-			
 			StringReader sr = new StringReader(expression);
 			cp = new CompiledParser(sr);
 			cp.Expression();
-	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda();
+	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems);
 	        parsedCount.incrementAndGet();
-	        if(parsed.isLiteral()) {
+	        if(parsed.isLiteral() && allowLiteralResolve) {
 	        		Object result = parsed.apply(null, null, null, null, null, null, null,null,null);
 	        		expressionCache.put(expression, Optional.ofNullable(parsed));
 	        		if(result!=null) {
@@ -114,6 +122,11 @@ public class ExpressionCache {
 						public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 								 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 							return result;
+						}
+
+						@Override
+						public Optional<String> returnType() {
+							return Optional.of(MappingUtils.determineNavajoType(result));
 						}
 					};
 	        } else {

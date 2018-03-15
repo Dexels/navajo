@@ -46,7 +46,7 @@ public final class ASTTmlNode extends SimpleNode {
     }
 
     @Override
-	public final ContextExpression interpretToLambda() {
+	public final ContextExpression interpretToLambda(List<String> problems) {
 		return new ContextExpression() {
 	
 			@Override
@@ -348,6 +348,11 @@ public final class ASTTmlNode extends SimpleNode {
 			// TODO support actual path parser
 			private Object parseImmutablePath(String text, ImmutableMessage rm) {
 				return rm.columnValue(text);
+			}
+
+			@Override
+			public Optional<String> returnType() {
+				return Optional.empty();
 			}
 		};
 	}

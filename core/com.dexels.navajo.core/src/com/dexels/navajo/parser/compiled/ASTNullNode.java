@@ -2,6 +2,7 @@
 
 package com.dexels.navajo.parser.compiled;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
@@ -21,7 +22,7 @@ public final class ASTNullNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda() {
+	public ContextExpression interpretToLambda(List<String> problems) {
 		return new ContextExpression() {
 			
 			@Override
@@ -33,6 +34,11 @@ public final class ASTNullNode extends SimpleNode {
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 				return null;
+			}
+
+			@Override
+			public Optional<String> returnType() {
+				return Optional.empty();
 			}
 		};
 	}

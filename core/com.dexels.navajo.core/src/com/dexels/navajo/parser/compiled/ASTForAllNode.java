@@ -2,6 +2,7 @@
 
 package com.dexels.navajo.parser.compiled;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +44,7 @@ public final class ASTForAllNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda() {
+	public ContextExpression interpretToLambda(List<String> problems) {
 		return new ContextExpression() {
 			
 			@Override
@@ -54,9 +55,19 @@ public final class ASTForAllNode extends SimpleNode {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-				ContextExpression a = jjtGetChild(0).interpretToLambda();
-				ContextExpression b = jjtGetChild(1).interpretToLambda();
+				List<String> problems = new ArrayList<>();
+				ContextExpression a = jjtGetChild(0).interpretToLambda(problems);
+				ContextExpression b = jjtGetChild(1).interpretToLambda(problems);
+				
+				if(!problems.isEmpty()) {
+					throw new TMLExpressionException(problems);
+				}
 				return interpret(doc,parentMsg,parentParamMsg,parentSel,mapNode,tipiLink,access,immutableMessage,paramMessage, a,b);
+			}
+
+			@Override
+			public Optional<String> returnType() {
+				return Optional.empty();
 			}
 		};
 	}

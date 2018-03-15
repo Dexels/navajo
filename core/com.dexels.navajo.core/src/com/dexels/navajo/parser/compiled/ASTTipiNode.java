@@ -2,6 +2,7 @@
 
 package com.dexels.navajo.parser.compiled;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
@@ -24,7 +25,7 @@ public final class ASTTipiNode extends SimpleNode {
   }
 
 @Override
-public ContextExpression interpretToLambda() {
+public ContextExpression interpretToLambda(List<String> problems) {
 	return new ContextExpression() {
 		
 		@Override
@@ -40,6 +41,11 @@ public ContextExpression interpretToLambda() {
 			} catch (Exception e) {
 				throw new TMLExpressionException("Error evaluating tipiLink: "+val, e);
 			}
+		}
+
+		@Override
+		public Optional<String> returnType() {
+			return Optional.empty();
 		}
 	};
 }

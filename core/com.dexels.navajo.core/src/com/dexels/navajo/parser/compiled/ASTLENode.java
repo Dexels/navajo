@@ -4,7 +4,9 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
@@ -19,8 +21,8 @@ public final class ASTLENode extends SimpleNode {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda() {
-		return lazyBiFunction((a,b)->interpret(a, b));
+	public ContextExpression interpretToLambda(List<String> problems) {
+		return lazyBiFunction(problems, (a,b)->interpret(a, b),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
 	}
 	
     public final static Boolean compare(Object a, Object b) throws TMLExpressionException {
