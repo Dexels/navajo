@@ -29,13 +29,12 @@ public class ReduceTransformerFactory implements ReactiveTransformerFactory, Tra
 	}
 
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> xml,
+	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems,ReactiveParameters parameters, Optional<XMLElement> xml,
 			Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier) {
 
 		Function<StreamScriptContext,Function<DataItem,DataItem>> reducermapper = ReactiveScriptParser.parseReducerList(relativePath, problems,xml.map(e->(List<XMLElement>)e.getChildren()) , reducerSupplier);
-		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath,problems, xml);
 		return new ReduceTransformer(this, reducermapper,parameters);
 	}
 

@@ -1,9 +1,5 @@
 package com.dexels.navajo.reactive.api;
 
-import java.util.Optional;
-
-import com.dexels.navajo.document.nanoimpl.XMLElement;
-
 public class ReactiveParseException extends RuntimeException {
 
 	private static final long serialVersionUID = 6115559675419129641L;

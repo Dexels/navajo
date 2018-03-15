@@ -30,11 +30,11 @@ public class SingleMessageTransformerFactory implements ReactiveTransformerFacto
 	}
 
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> xml, Function<String, ReactiveSourceFactory> sourceSupplier,
+	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters,Optional<XMLElement> xml, 
+			Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier
 			) {
-		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, problems, xml);
 		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, problems, xml.map(x->x.getChildren()), reducerSupplier);
 		return new SingleMessageTransformer(this,parameters,joinermapper,xml,relativePath);
 	}

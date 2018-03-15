@@ -12,7 +12,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.reactive.ReactiveParseProblem;
-import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
@@ -27,11 +26,10 @@ public class FileStoreTransformerFactory implements ReactiveTransformerFactory, 
 	public FileStoreTransformerFactory() {} 
 
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> xml, 
+	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml, 
 			Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier) {
-		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath,problems, xml);
 		return new FileStoreTransformer(this, parameters,xml,relativePath);
 	}
 	

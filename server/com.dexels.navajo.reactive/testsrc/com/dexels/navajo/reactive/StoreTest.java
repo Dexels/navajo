@@ -81,7 +81,7 @@ public class StoreTest {
 //		new StoreAsSubMessage().execute(ReactiveParameters.empty()).
 		ReduceTransformerFactory fac = new ReduceTransformerFactory();
 		List<ReactiveParseProblem> problems = new ArrayList<>();
-		ReactiveTransformer storeTrans = fac.build(problems); //new ReduceTransformer(storeMapper.execute(mapperParameter),transformerParameter);
+		ReactiveTransformer storeTrans = fac.build(problems,transformerParameter); //new ReduceTransformer(storeMapper.execute(mapperParameter),transformerParameter);
 //		ReactiveTransformer copy =  new SingleMessageTransformer(ReactiveParameters.empty(), joinermapper, xml, path) new StoreAsSubMessage();
 		SingleSourceFactory ssf = new SingleSourceFactory();
 		ssf.build("",parameters, problems, Arrays.asList(new ReactiveTransformer[] {storeTrans}), DataItem.Type.MESSAGE)
