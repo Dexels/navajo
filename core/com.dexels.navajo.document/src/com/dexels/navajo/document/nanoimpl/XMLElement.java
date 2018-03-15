@@ -299,7 +299,7 @@ public class XMLElement implements java.io.Serializable {
 
 	private final Map<String,Integer> startOffsetMap = new HashMap<String,Integer>();
 	private final Map<String,Integer> endOffsetMap = new HashMap<String,Integer>();
-
+	private final Map<String,Integer> attributeLineNrMap = new HashMap<String,Integer>();
 	// private final Stack parseStack = new Stack();
 
 	/**
@@ -2526,6 +2526,7 @@ public class XMLElement implements java.io.Serializable {
 			buf.setLength(0);
 			this.scanString(buf);
 			int tend = offset;
+			elt.setAttributeLineNr(key, lineNr);
 			elt.setAttributeOffset(key, toffset - 1);
 			elt.setAttributeEndOffset(key, tend);
 			elt.setAttribute(key, buf);
@@ -2900,16 +2901,27 @@ public class XMLElement implements java.io.Serializable {
 		return res;
 	}
 
+	private void setAttributeLineNr(String attributeName, int value) {
+		attributeLineNrMap.put(attributeName, new Integer(value));
+	}
 
 
-	public void setAttributeOffset(String attributeName, int value) {
+	private void setAttributeOffset(String attributeName, int value) {
 		startOffsetMap.put(attributeName, new Integer(value));
 	}
 
 	public void setAttributeEndOffset(String attributeName, int value) {
 		endOffsetMap.put(attributeName, new Integer(value));
 	}
-
+	
+	public int getAttributeLineNr(String attributeName) {
+		// return ((Integer)startOffsetMap.get(attributeName)).intValue();
+		Integer ii = attributeLineNrMap.get(attributeName);
+		if (ii == null) {
+			return 0;
+		}
+		return ii.intValue();
+	}
 	public int getAttributeOffset(String attributeName) {
 		// return ((Integer)startOffsetMap.get(attributeName)).intValue();
 		Integer ii = startOffsetMap.get(attributeName);
