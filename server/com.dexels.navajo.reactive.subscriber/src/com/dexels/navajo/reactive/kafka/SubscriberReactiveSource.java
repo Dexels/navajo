@@ -25,17 +25,16 @@ import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
+import com.dexels.navajo.reactive.api.SourceMetadata;
 import com.dexels.pubsub.rx2.api.TopicSubscriber;
-import com.dexels.replication.api.ReplicationMessage;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.protobuf.FallbackReplicationMessageParser;
 
-import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 
 
-public class SubscriberReactiveSource implements ReactiveSource, ParameterValidator {
+public class SubscriberReactiveSource implements ReactiveSource {
 
 	private final Type finalType;
 	private final ReactiveParameters params;
@@ -45,11 +44,13 @@ public class SubscriberReactiveSource implements ReactiveSource, ParameterValida
 	private final List<ReactiveTransformer> transformers;
 	private final Optional<OffsetQuery> offsetQuery;
 	private final Map<String, Object> subscriberSettings;
+	private final SourceMetadata metadata;
 	
 // 	<source.kafka.message [resource="topicscubscriber"] topic="bla-bla" group="bla" from="bla-bla:0">
 
-	public SubscriberReactiveSource(TopicSubscriber topicSubscriber, Optional<OffsetQuery> offsetQuery, ReactiveParameters params, String relativePath, Optional<XMLElement> x, Type finalType,
+	public SubscriberReactiveSource(SourceMetadata metadata, TopicSubscriber topicSubscriber, Optional<OffsetQuery> offsetQuery, ReactiveParameters params, String relativePath, Optional<XMLElement> x, Type finalType,
 			List<ReactiveTransformer> transformers, Function<String, ReactiveMerger> reducerSupplier, Map<String, Object> subscriberSettings) {
+		this.metadata = metadata;
 		this.finalType = finalType;
 		this.params = params;
 		this.sourceElement = x;
@@ -69,7 +70,7 @@ public class SubscriberReactiveSource implements ReactiveSource, ParameterValida
 	}
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters resolvedParams = params.resolveNamed(context, current, ImmutableFactory.empty(), this, sourceElement, relativePath);
+		ReactiveResolvedParameters resolvedParams = params.resolveNamed(context, current, ImmutableFactory.empty(), metadata, sourceElement, relativePath);
 		String tenant = context.tenant;
 		String topic = resolvedParams.paramString("topic");
 		String group = tenant+"-"+context.deployment()+"-"+UUID.randomUUID().toString();  //+ resolvedParams.paramString("group");
@@ -128,39 +129,7 @@ public class SubscriberReactiveSource implements ReactiveSource, ParameterValida
 	}
 
 	@Override
-	public Type dataType() {
-		return Type.MESSAGE;
-	}
-
-	@Override
 	public Type finalType() {
 		return finalType;
 	}
-
-
-
-	@Override
-	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[] {"topic","from","to"}));
-	}
-
-
-
-	@Override
-	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[] {"topic"}));
-	}
-
-
-
-	@Override
-	public Optional<Map<String, String>> parameterTypes() {
-		Map<String,String> types = new HashMap<>();
-		types.put("topic", "string");
-		types.put("group", "string");
-		types.put("from", "string");
-		types.put("to", "string");
-		return Optional.of(Collections.unmodifiableMap(types));
-	}
-
 }

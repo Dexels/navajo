@@ -1,39 +1,31 @@
 package com.dexels.navajo.reactive.transformer.other;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem;
-import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
+import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.FlowableTransformer;
 
-public class InMessageTransformer implements ReactiveTransformer, ParameterValidator {
+public class InMessageTransformer implements ReactiveTransformer {
 
 	private final ReactiveParameters parameters;
+	private final TransformerMetadata metadata;
 
-	public InMessageTransformer(ReactiveParameters parameters) {
+	public InMessageTransformer(TransformerMetadata metadata, ReactiveParameters parameters) {
 		this.parameters = parameters;
+		this.metadata = metadata;
 	}
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), this, Optional.empty(), "");
+		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, Optional.empty(), "");
 		boolean isArray = parms.paramBoolean("isArrayElement");
 		String name = parms.paramString("name");
 //		e.
@@ -54,31 +46,7 @@ public class InMessageTransformer implements ReactiveTransformer, ParameterValid
 	}
 
 	@Override
-	public Set<Type> inType() {
-		return new HashSet<>(Arrays.asList(new Type[] {DataItem.Type.EVENTSTREAM}));
+	public TransformerMetadata metadata() {
+		return metadata;
 	}
-
-	@Override
-	public Type outType() {
-		return DataItem.Type.EVENTSTREAM;
-	}
-
-	@Override
-	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[] {"isArrayElement","name"}));
-	}
-
-	@Override
-	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[] {"isArrayElement","name"}));
-	}
-
-	@Override
-	public Optional<Map<String, String>> parameterTypes() {
-		Map<String, String> r = new HashMap<>();
-		r.put("isArrayElement", Property.BOOLEAN_PROPERTY);
-		r.put("name", Property.STRING_PROPERTY);
-		return Optional.of(Collections.unmodifiableMap(r));
-	}
-
 }

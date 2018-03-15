@@ -1,45 +1,39 @@
 package com.dexels.navajo.reactive.transformer.call;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
-import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
+import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 
-public class CallTransformer implements ReactiveTransformer, ParameterValidator {
+public class CallTransformer implements ReactiveTransformer {
 
 
 	private final ReactiveParameters parameters;
 	private Optional<XMLElement> sourceElement;
 	private String sourcePath;
+	private final TransformerMetadata metadata;
 	
-	public CallTransformer(ReactiveParameters parameters,Optional<XMLElement> sourceElement, String sourcePath) {
+	public CallTransformer(TransformerMetadata metadata, ReactiveParameters parameters,Optional<XMLElement> sourceElement, String sourcePath) {
 		this.parameters = parameters;
 		this.sourceElement = sourceElement;
 		this.sourcePath = sourcePath;
+		this.metadata = metadata;
 	}
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(),this, sourceElement, sourcePath);
+		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(),metadata, sourceElement, sourcePath);
 
 //		final int parallel =  resolved.paramInteger("parallel", ()->0);
 		final String service =  resolved.paramString("service");
@@ -58,34 +52,9 @@ public class CallTransformer implements ReactiveTransformer, ParameterValidator 
 	}
 
 	@Override
-	public Set<Type> inType() {
-		return new HashSet<>(Arrays.asList(new Type[] {Type.MESSAGE,Type.SINGLEMESSAGE})) ;
+	public TransformerMetadata metadata() {
+		return metadata;
 	}
 
-	@Override
-	public Type outType() {
-		return Type.EVENTSTREAM;
-	}
-	
-	@Override
-	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"messageName","isArray","service","debug"}));
-	}
-
-	@Override
-	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[]{"messageName","isArray","service"}));
-	}
-
-	@Override
-	public Optional<Map<String, String>> parameterTypes() {
-		Map<String,String> r = new HashMap<String, String>();
-		r.put("messageName", Property.STRING_PROPERTY);
-		r.put("service", Property.STRING_PROPERTY);
-//		r.put("parallel", Property.INTEGER_PROPERTY);
-		r.put("isArray", Property.BOOLEAN_PROPERTY);
-		r.put("debug", Property.BOOLEAN_PROPERTY);
-		return Optional.of(r);
-	}
 
 }

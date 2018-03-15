@@ -18,27 +18,30 @@ import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
+import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.FlowableTransformer;
 import io.reactivex.functions.Function;
 
-public class SingleMessageTransformer implements ReactiveTransformer, ParameterValidator {
+public class SingleMessageTransformer implements ReactiveTransformer {
 
 	private final Function<StreamScriptContext,Function<DataItem,DataItem>> joinerMapper;
 	private final ReactiveParameters parameters;
 	private final Optional<XMLElement> source;
 	private final String path;
+	private TransformerMetadata metadata;
 	
-	public SingleMessageTransformer(ReactiveParameters parameters, Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper, Optional<XMLElement> xml, String path) {
+	public SingleMessageTransformer(TransformerMetadata metadata, ReactiveParameters parameters, Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper, Optional<XMLElement> xml, String path) {
 		this.parameters = parameters;
 		this.joinerMapper = joinermapper;
 		this.source = xml;
 		this.path = path;
+		this.metadata = metadata;
 	}
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), this, source, path);
+		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, source, path);
 		boolean debug = parms.paramBoolean("debug", ()->false);
 		
 		FlowableTransformer<DataItem, DataItem> transformer = debug ? 
@@ -50,33 +53,10 @@ public class SingleMessageTransformer implements ReactiveTransformer, ParameterV
 	private void debugMessage(DataItem di) {
 		System.err.println("Message:DEBUG: "+di.message().flatValueMap(true, Collections.emptySet(), ""));
 	}
+
+	@Override
+	public TransformerMetadata metadata() {
+		return metadata;
+	}
 	
-	@Override
-	public Set<Type> inType() {
-		return new HashSet<>(Arrays.asList(new Type[] {Type.MESSAGE,Type.SINGLEMESSAGE})) ;
-	}
-
-
-	@Override
-	public Type outType() {
-		return Type.MESSAGE;
-	}
-
-	@Override
-	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"debug"}));
-	}
-
-	@Override
-	public Optional<List<String>> requiredParameters() {
-		return Optional.empty();
-	}
-
-	@Override
-	public Optional<Map<String, String>> parameterTypes() {
-		Map<String,String> res = new HashMap<>();
-		res.put("debug", "boolean");
-		return Optional.of(Collections.unmodifiableMap(res));
-	}
-
 }

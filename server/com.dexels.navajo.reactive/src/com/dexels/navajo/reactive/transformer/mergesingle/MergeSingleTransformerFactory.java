@@ -1,21 +1,31 @@
 package com.dexels.navajo.reactive.transformer.mergesingle;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.reactive.ReactiveParseProblem;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
+import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
+import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.functions.Function;
 
-public class MergeSingleTransformerFactory implements ReactiveTransformerFactory {
+public class MergeSingleTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	
 	public MergeSingleTransformerFactory() {
@@ -25,10 +35,13 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 	}
 
 	@Override
-	public ReactiveTransformer build(String relativePath, Optional<XMLElement> xmlElement, Function<String, ReactiveSourceFactory> sourceSupplier,
+	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> xmlElement, Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier) {
-//		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, xmlElement);
+		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, problems,xmlElement);
+
+		
+		//		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, xmlElement);
 		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
 
 		
@@ -36,17 +49,45 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 //		if(joinerElement==null) {
 //			throw new RuntimeException("Missing joiner element for xml: "+xml);
 //		}
-		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, Optional.of(xml.getChildren()), reducerSupplier);
+		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), reducerSupplier);
 		Optional<ReactiveSource> subSource;
 		try {
-			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, sourceSupplier, factorySupplier,reducerSupplier);
+			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems, sourceSupplier, factorySupplier,reducerSupplier);
 		} catch (Exception e) {
 			throw new ReactiveParseException("Unable to parse sub source in xml: "+xml,e);
 		}
 		if(!subSource.isPresent()) {
 			throw new NullPointerException("Missing sub source in xml: "+xml);
 		}
-		return new MergeSingleTransformer(subSource.get(), joinermapper,xml);
+		return new MergeSingleTransformer(this,parameters,subSource.get(), joinermapper,xml);
 	}
+	
+
+	@Override
+	public Set<Type> inType() {
+		return new HashSet<>(Arrays.asList(new Type[] {Type.MESSAGE,Type.SINGLEMESSAGE})) ;
+	}
+
+
+	@Override
+	public Type outType() {
+		return Type.MESSAGE;
+	}
+
+	@Override
+	public Optional<List<String>> allowedParameters() {
+		return Optional.of(Collections.emptyList());
+	}
+
+	@Override
+	public Optional<List<String>> requiredParameters() {
+		return Optional.of(Collections.emptyList());
+	}
+
+	@Override
+	public Optional<Map<String, String>> parameterTypes() {
+		return Optional.of(Collections.emptyMap());
+	}
+
 
 }

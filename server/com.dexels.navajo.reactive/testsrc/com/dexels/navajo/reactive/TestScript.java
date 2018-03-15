@@ -2,7 +2,9 @@ package com.dexels.navajo.reactive;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -82,7 +84,8 @@ public class TestScript {
 	public void testSimpleScript() throws IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("simplereactive.xml")) {
 			StreamScriptContext myContext = createContext("SimpleReactiveSql",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in, "serviceName").execute(myContext)
+			List<ReactiveParseProblem> problems = new ArrayList<>();
+			reactiveScriptParser.parse(myContext.service, in, "serviceName",problems).execute(myContext)
 				.map(di->di.event())
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));

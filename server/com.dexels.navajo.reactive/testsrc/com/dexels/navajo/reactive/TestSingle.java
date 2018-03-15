@@ -3,8 +3,10 @@ package com.dexels.navajo.reactive;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -86,8 +88,9 @@ public class TestSingle {
 		ReactiveParameters parameters = ReactiveParameters.empty()
 				.withConstant("debug", true, Property.BOOLEAN_PROPERTY)
 				.withConstant("count", 10, Property.INTEGER_PROPERTY);
+		List<ReactiveParseProblem> problems = new ArrayList<>();
 		StreamScriptContext context = createContext("Single",Optional.empty());
-		ssf.build("",parameters, Collections.emptyList(), DataItem.Type.MESSAGE)
+		ssf.build("",parameters, problems, Collections.emptyList(), DataItem.Type.MESSAGE)
 			.execute(context, Optional.empty())
 			.map(e->e.message())
 			.blockingForEach(e->System.err.println("S: "+e.toFlatString(ImmutableFactory.getInstance())));
@@ -103,9 +106,10 @@ public class TestSingle {
 		
 		ReactiveParameters transformerParameter = ReactiveParameters.empty()
 				.withConstant("count", 5, Property.INTEGER_PROPERTY);
+		List<ReactiveParseProblem> problems = new ArrayList<>();
 
-		ReactiveTransformer takeTransformer = new TakeTransformer(transformerParameter);
-		int lastIndex = ssf.build("",parameters, Arrays.asList(new ReactiveTransformer[] {takeTransformer}), DataItem.Type.MESSAGE)
+		ReactiveTransformer takeTransformer = new TakeTransformerFactory().build(problems);
+		int lastIndex = ssf.build("",parameters, problems,Arrays.asList(new ReactiveTransformer[] {takeTransformer}), DataItem.Type.MESSAGE)
 			.execute(context, Optional.empty())
 			.map(e->e.message())
 			.lastOrError()
@@ -132,8 +136,10 @@ public class TestSingle {
 					return new Operand( isEven,Property.BOOLEAN_PROPERTY);
 				});
 
-		ReactiveTransformer filterTransformer = new FilterTransformer(transformerParameter);
-		long lastIndex = ssf.build("",parameters, Arrays.asList(new ReactiveTransformer[] {filterTransformer}), DataItem.Type.MESSAGE)
+//		new FilterTransformerFactory().build(
+		List<ReactiveParseProblem> problems = new ArrayList<>();
+		ReactiveTransformer filterTransformer = new FilterTransformerFactory().build(problems);
+		long lastIndex = ssf.build("",parameters, problems, Arrays.asList(new ReactiveTransformer[] {filterTransformer}), DataItem.Type.MESSAGE)
 			.execute(context, Optional.empty())
 			.map(e->e.message())
 			.count()
@@ -154,8 +160,10 @@ public class TestSingle {
 		ReactiveParameters transformerParameter = ReactiveParameters.empty()
 				.withConstant("count", 5, Property.INTEGER_PROPERTY);
 
-		ReactiveTransformer skipTransformer = new SkipTransformer(transformerParameter);
-		int lastIndex = ssf.build("",parameters, Arrays.asList(new ReactiveTransformer[] {skipTransformer}), DataItem.Type.MESSAGE)
+		List<ReactiveParseProblem> problems = new ArrayList<>();
+		ReactiveTransformer skipTransformer = new SkipTransformerFactory().build(problems);
+		
+		int lastIndex = ssf.build("",parameters, problems, Arrays.asList(new ReactiveTransformer[] {skipTransformer}), DataItem.Type.MESSAGE)
 			.execute(context, Optional.empty())
 			.map(e->e.message())
 			.lastOrError()
@@ -170,7 +178,8 @@ public class TestSingle {
 	public void testSingle() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("single.xml")) {
 			StreamScriptContext myContext = createContext("Single",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in,"serviceName")
+			List<ReactiveParseProblem> problems = new ArrayList<>();
+			reactiveScriptParser.parse(myContext.service, in,"serviceName",problems)
 				.execute(myContext)
 				.map(di->di.event())
 				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
@@ -183,7 +192,8 @@ public class TestSingle {
 	public void testStore() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("teststore.xml")) {
 			StreamScriptContext myContext = createContext("storeTestScript",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in,"storeTestScript")
+			List<ReactiveParseProblem> problems = new ArrayList<>();
+			reactiveScriptParser.parse(myContext.service, in,"storeTestScript",problems)
 				.execute(myContext)
 				.map(di->di.event())
 				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
@@ -196,7 +206,8 @@ public class TestSingle {
 	public void testReduce() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("testreduce.xml")) {
 			StreamScriptContext myContext = createContext("storeTestScript",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in,"storeTestScript")
+			List<ReactiveParseProblem> problems = new ArrayList<>();
+			reactiveScriptParser.parse(myContext.service, in,"storeTestScript",problems)
 				.execute(myContext)
 				.map(di->di.event())
 				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
@@ -209,7 +220,8 @@ public class TestSingle {
 	public void testInputStream() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("inputstream.xml")) {
 			StreamScriptContext myContext = createContext("storeTestScript",Optional.empty());
-			Navajo n = reactiveScriptParser.parse(myContext.service, in,"storeTestScript")
+			List<ReactiveParseProblem> problems = new ArrayList<>();
+			Navajo n = reactiveScriptParser.parse(myContext.service, in,"storeTestScript",problems)
 				.execute(myContext)
 				.map(di->di.event())
 				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))

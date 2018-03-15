@@ -1,29 +1,36 @@
 package com.dexels.navajo.reactive.source.single;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
+import com.dexels.navajo.reactive.ReactiveParseProblem;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
+import com.dexels.navajo.reactive.api.SourceMetadata;
 
 import io.reactivex.functions.Function;
 
-public class SingleSourceFactory implements ReactiveSourceFactory {
+public class SingleSourceFactory implements ReactiveSourceFactory, SourceMetadata {
 
 	public SingleSourceFactory() {
 	}
 
 	@Override
-	public ReactiveSource build(String relativePath, String type, Optional<XMLElement> x, ReactiveParameters params,
+	public ReactiveSource build(String relativePath, String type, List<ReactiveParseProblem> problems, Optional<XMLElement> x, ReactiveParameters params,
 			List<ReactiveTransformer> transformers, Type finalType, Function<String, ReactiveMerger> reducerSupplier
 			) {
-		return new SingleSource(params,transformers,finalType,x, relativePath);
+		return new SingleSource(this,params,transformers,finalType,x, relativePath);
 	}
 
 	@Override
@@ -31,6 +38,23 @@ public class SingleSourceFactory implements ReactiveSourceFactory {
 		return DataItem.Type.MESSAGE;
 	}
 
+	
+	@Override
+	public Optional<List<String>> allowedParameters() {
+		return Optional.of(Arrays.asList(new String[]{"count","debug"}));
+	}
 
+	@Override
+	public Optional<List<String>> requiredParameters() {
+		return Optional.of(Collections.emptyList());
+	}
+
+	@Override
+	public Optional<Map<String, String>> parameterTypes() {
+		Map<String,String> r = new HashMap<>();
+		r.put("count", Property.INTEGER_PROPERTY);
+		r.put("debug", Property.BOOLEAN_PROPERTY);
+		return Optional.of(Collections.unmodifiableMap(r));
+	}
 
 }
