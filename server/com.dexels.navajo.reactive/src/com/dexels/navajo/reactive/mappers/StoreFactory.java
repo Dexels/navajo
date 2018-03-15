@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.reactive.ReactiveParseProblem;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
@@ -27,11 +28,11 @@ public class StoreFactory implements ReactiveTransformerFactory, ParameterValida
 	}
 
 	@Override
-	public ReactiveTransformer build(String relativePath, Optional<XMLElement> xml,
+	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> xml,
 			Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier) {
-		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
+		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath,problems, xml);
 		return null; //new Store();
 	}
 

@@ -24,11 +24,6 @@ public class InputSource implements ReactiveSource {
 	}
 
 	@Override
-	public Type dataType() {
-		return Type.EVENT;
-	}
-
-	@Override
 	public Type finalType() {
 		return finalType;
 	}

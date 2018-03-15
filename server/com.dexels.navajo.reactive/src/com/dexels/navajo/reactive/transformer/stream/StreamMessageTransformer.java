@@ -20,24 +20,27 @@ import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
+import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.FlowableTransformer;
 
-public class StreamMessageTransformer implements ReactiveTransformer, ParameterValidator {
+public class StreamMessageTransformer implements ReactiveTransformer {
 
 	private ReactiveParameters parameters;
 	private Optional<XMLElement> sourceElement;
 	private String sourcePath;
+	private final TransformerMetadata metadata;
 
-	public StreamMessageTransformer(ReactiveParameters parameters, Optional<XMLElement> sourceElement, String sourcePath) {
+	public StreamMessageTransformer(TransformerMetadata metadata, ReactiveParameters parameters, Optional<XMLElement> sourceElement, String sourcePath) {
 		this.parameters = parameters;
 		this.sourceElement = sourceElement;
 		this.sourcePath = sourcePath;
+		this.metadata = metadata;
 	}
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), this,sourceElement,sourcePath);
+		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata,sourceElement,sourcePath);
 		String messageName = resolved.paramString("messageName");
 		boolean isArray = resolved.paramBoolean("isArray");
 		// TODO remove duplication
@@ -54,31 +57,8 @@ public class StreamMessageTransformer implements ReactiveTransformer, ParameterV
 	}
 
 	@Override
-	public Set<Type> inType() {
-		return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new Type[]{Type.SINGLEMESSAGE,Type.MESSAGE}))); // Type.SINGLEMESSAGE;
-	}
-
-	@Override
-	public Type outType() {
-		return Type.EVENT;
-	}
-
-	@Override
-	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"messageName","isArray"}));
-	}
-
-	@Override
-	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[]{"messageName"}));
-	}
-
-	@Override
-	public Optional<Map<String, String>> parameterTypes() {
-		Map<String,String> r = new HashMap<String, String>();
-		r.put("messageName", Property.STRING_PROPERTY);
-		r.put("isArray", Property.BOOLEAN_PROPERTY);
-		return Optional.of(r);
+	public TransformerMetadata metadata() {
+		return metadata;
 	}
 
 }

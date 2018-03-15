@@ -13,6 +13,7 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
+import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.FlowableTransformer;
 import io.reactivex.functions.Function;
@@ -21,12 +22,15 @@ public class ReduceTransformer implements ReactiveTransformer {
 
 	private Function<StreamScriptContext, Function<DataItem, DataItem>> reducers;
 
+	private TransformerMetadata metadata;
+
 //	private final ReactiveParameters parameters;
 	
 	private final static Logger logger = LoggerFactory.getLogger(ReduceTransformer.class);
 
 	
-	public ReduceTransformer(Function<StreamScriptContext,Function<DataItem,DataItem>> reducers,ReactiveParameters parameters) {
+	public ReduceTransformer(TransformerMetadata metadata, Function<StreamScriptContext,Function<DataItem,DataItem>> reducers,ReactiveParameters parameters) {
+		this.metadata = metadata;
 		this.reducers = reducers;
 	}
 	@Override
@@ -45,13 +49,8 @@ public class ReduceTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public Set<Type> inType() {
-		return new HashSet<>(Arrays.asList(new Type[] {Type.MESSAGE})) ;
-	}
-
-	@Override
-	public Type outType() {
-		return Type.SINGLEMESSAGE;
+	public TransformerMetadata metadata() {
+		return metadata;
 	}
 
 }
