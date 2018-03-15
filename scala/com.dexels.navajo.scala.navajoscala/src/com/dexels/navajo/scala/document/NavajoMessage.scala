@@ -145,6 +145,14 @@ class NavajoMessage(val parent: Message) {
   
   
   /* Property methods */
+  
+  def getAny(key : String) : Option[Any] = {
+    val prop = parent.getProperty(key)
+    if (prop != null && prop.getValue != null) {
+      return Some(prop.getTypedValue)
+    }
+    None
+  }
   def getString(key : String) : Option[String] = {
     val prop = parent.getProperty(key)
     if (prop != null && prop.getValue != null) {
