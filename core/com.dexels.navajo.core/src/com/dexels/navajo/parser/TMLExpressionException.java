@@ -1,5 +1,8 @@
 package com.dexels.navajo.parser;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Title: Description: Copyright: Copyright (c) 2001 Company:
  * 
@@ -35,6 +38,10 @@ public class TMLExpressionException extends RuntimeException {
 		String usage = function.usage();
 		String remarks = function.remarks();
 		this.message = s + "\nUsage: " + usage + "\nRemarks: " + remarks;
+	}
+
+	public TMLExpressionException(List<String> problems) {
+		this(problems.stream().collect(Collectors.joining("\n")));
 	}
 
 	@Override

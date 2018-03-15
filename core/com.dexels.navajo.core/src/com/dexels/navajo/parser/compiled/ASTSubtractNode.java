@@ -3,7 +3,10 @@ package com.dexels.navajo.parser.compiled;
 
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
@@ -15,8 +18,8 @@ public final class ASTSubtractNode extends SimpleNode {
     }
     
 	@Override
-	public ContextExpression interpretToLambda() {
-		return lazyBiFunction((a,b)->interpret(a, b));
+	public ContextExpression interpretToLambda(List<String> problems) {
+		return lazyBiFunction(problems,(a,b)->interpret(a, b),equalOrEmptyTypes(),(a,b)->Optional.empty());
 	}
 
 

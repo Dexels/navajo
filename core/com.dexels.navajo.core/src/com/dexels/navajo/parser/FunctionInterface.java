@@ -11,6 +11,8 @@ package com.dexels.navajo.parser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import com.dexels.navajo.document.Message;
@@ -33,19 +35,19 @@ public abstract class FunctionInterface {
 
 	// Act as if these attributes are final, they can only be set once.
 	private static Object semahore = new Object();
-	private final static HashSet<Class<? extends FunctionInterface>> initialized = new HashSet<Class<? extends FunctionInterface>>();
+	private final static HashSet<Class<? extends FunctionInterface>> initialized = new HashSet<>();
 
-	private final static HashMap<Class<? extends FunctionInterface>, Class[][]> types = new HashMap<Class<? extends FunctionInterface>, Class[][]>();
-	private final static HashMap<Class<? extends FunctionInterface>, Class[]> returnType = new HashMap<Class<? extends FunctionInterface>, Class[]>();
+	private final static Map<Class<? extends FunctionInterface>, Class[][]> types = new HashMap<>();
+	private final static Map<Class<? extends FunctionInterface>, Optional<String>> returnType = new HashMap<>();
 	private Class[][] myinputtypes;
-	private Class[] myreturntypes;
+	private Optional<String> myreturntypes;
 
 	public abstract String remarks();
 
 	private Access access;
 //	private Map<String, Object> params;
 
-	private final Class[] getMyReturnType() {
+	private final Optional<String> getMyReturnType() {
 		return returnType.get(this.getClass());
 	}
 
@@ -77,7 +79,7 @@ public abstract class FunctionInterface {
 	public String usage() {
 		StringBuffer sb = new StringBuffer();
 
-		sb.append(genPipedParamMsg(getMyReturnType()));
+		sb.append(getMyReturnType());
 		sb.append(" " + this.getClass().getSimpleName() + "( ");
 		if (getMyInputParameters() != null) {
 			for (int i = 0; i < getMyInputParameters().length; i++) {
@@ -129,7 +131,7 @@ public abstract class FunctionInterface {
 
 			if (navajoReturnType != null) {
 				// Set returntype.
-				Class[] myreturnType = loadReturnType(navajoReturnType);
+				Optional<String> myreturnType = loadReturnType(navajoReturnType);
 				returnType.put(this.getClass(), myreturnType);
 			}
 
@@ -138,17 +140,14 @@ public abstract class FunctionInterface {
 		}
 	}
 
-	private Class[] loadReturnType(String[] navajoReturnType) {
-		NavajoFactory nf = NavajoFactory.getInstance();
-		Class[] myreturnType = new Class[navajoReturnType.length];
-		for (int i = 0; i < navajoReturnType.length; i++) {
-			if (navajoReturnType[i] == null || navajoReturnType[i].equalsIgnoreCase("empty")) {
-				myreturnType[i] = null;
-			} else {
-				myreturnType[i] = nf.getJavaType(navajoReturnType[i]);
-			}
+	private Optional<String> loadReturnType(String[] navajoReturnType) {
+		if(navajoReturnType==null) {
+			return Optional.empty(); 
 		}
-		return myreturnType;
+		if(navajoReturnType.length>1 || navajoReturnType.length ==0) {
+			return Optional.empty(); 
+		}
+		return Optional.of(navajoReturnType[0]);
 	}
 
 	private Class[][] loadInputTypes(String[][] navajotypes) {
@@ -189,37 +188,6 @@ public abstract class FunctionInterface {
 			}
 		}
 		return mytypes;
-	}
-
-	@SuppressWarnings({ "unchecked", "unused" })
-	private final void checkReturnType(Object o) throws TMLExpressionException {
-
-		Class[] myreturntype = null;
-
-		if (myreturntypes != null) {
-			myreturntype = myreturntypes;
-		} else {
-			myreturntype = returnType.get(this.getClass());
-		}
-
-		if (myreturntype == null) {
-			return;
-		}
-
-		boolean correct = false;
-
-		for (int i = 0; i < myreturntype.length; i++) {
-			if (o != null && myreturntype[i].isAssignableFrom(o.getClass())) {
-				correct = true;
-			} else if (o == null) {
-				correct = true;
-			}
-		}
-		if (!correct) {
-			NavajoFactory nf = NavajoFactory.getInstance();
-			throw new TMLExpressionException("Expected returntype " + genPipedParamMsg(myreturntype) + ", got: "
-					+ (o != null ? nf.getNavajoType(o.getClass()) : " empty") + " function: " + getClass().getName());
-		}
 	}
 
 	@SuppressWarnings({ "unchecked", "unused" })
@@ -320,7 +288,7 @@ public abstract class FunctionInterface {
 			return operandList.get(index);
 	}
 
-	public Class[] getReturnType() {
+	public Optional<String> getReturnType() {
 		return returnType.get(this.getClass());
 	}
 

@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.dexels.navajo.parser.compiled;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -103,11 +104,38 @@ public abstract class SimpleNode implements Node {
     /** Stack for calculations. */
     // protected static Object[] stack = new Object[1024];
     // protected static int top = -1;
+    protected BiFunction<Optional<String>, Optional<String>, Boolean> emptyOrType(String type) {
+		return (a,b)->{
+			if(!a.isPresent() || !b.isPresent()) {
+				return true;
+			}
+			return a.get().equals(type) && b.get().equals(type);
+		};
+    }
 
-	public ContextExpression lazyBiFunction(BiFunction<Object, Object, Object> func) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda();
-		ContextExpression expB = jjtGetChild(1).interpretToLambda();
+    protected BiFunction<Optional<String>, Optional<String>, Boolean> equalOrEmptyTypes() {
+    		return (a,b)->{
+    			if(!a.isPresent() || !b.isPresent()) {
+    				return true;
+    			}
+    			return a.get().equals(b.get());
+    		};
+    }
+    
+    public ContextExpression untypedLazyBiFunction(List<String> problems, BiFunction<Object, Object, Object> func) {
+    		return lazyBiFunction(problems, func, (a,b)->true, (a,b)->Optional.empty());
+	}
+    	public ContextExpression lazyBiFunction(List<String> problems, BiFunction<Object, Object, Object> func, BiFunction<Optional<String>, Optional<String>, Boolean> acceptTypes,  BiFunction<Optional<String>, Optional<String>, Optional<String>> returnTypeResolver) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems);
+		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems);
+		Optional<String> aType = expA.returnType();
+		Optional<String> bType = expB.returnType();
+		boolean inputTypesValid = acceptTypes.apply(aType, bType);
 		
+		if(!inputTypesValid) {
+			problems.add("Invalid input types in node: "+aType.orElse("unknown")+" and "+bType.orElse("unknown")+" in node type: "+this.getClass());
+		}
+		Optional<String> returnType = returnTypeResolver.apply(aType, bType);
 		return new ContextExpression() {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
@@ -121,12 +149,16 @@ public abstract class SimpleNode implements Node {
 			public boolean isLiteral() {
 				return expA.isLiteral() && expB.isLiteral();
 			}
+
+			@Override
+			public Optional<String> returnType() {
+				return returnType;
+			}
 		};
 	}
 	
-	public ContextExpression lazyFunction(Function<Object, Object> func) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda();
-		
+	public ContextExpression lazyFunction(List<String> problems, Function<Object, Object> func, Optional<String> requiredReturnType) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems);
 		return new ContextExpression() {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
@@ -139,7 +171,22 @@ public abstract class SimpleNode implements Node {
 			public boolean isLiteral() {
 				return expA.isLiteral();
 			}
+
+			@Override
+			public Optional<String> returnType() {
+				return requiredReturnType;
+			}
 		};
 	}
+	
+
+    protected void checkOrAdd(String message, List<String> problems, Optional<String> encounteredType, String requiredType) {
+    		if(!encounteredType.isPresent()) {
+    			return;
+    		}
+    		if(!encounteredType.get().equals(requiredType)) {
+    			problems.add(message);
+    		}
+    }
 }
 

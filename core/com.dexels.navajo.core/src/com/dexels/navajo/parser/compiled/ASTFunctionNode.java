@@ -30,34 +30,48 @@ public final class ASTFunctionNode extends SimpleNode {
 		super(id);
 	}
 	
-	@Override
-	public ContextExpression interpretToLambda() {
+	private FunctionInterface getFunction() {
+		ClassLoader cl = null;
+		if ( DispatcherFactory.getInstance() == null ) {
+			cl = getClass().getClassLoader();
+		} else  {
+			cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
+		} 
 
-		
-//		if(AbstractVersion.osgiActive()) {
-//			f = OSGiFunctionFactoryFactory.getFunctionInterface(functionName);
-//		} else {
-//			f = FunctionFactoryFactory.getInstance().getInstance(cl, functionName);
-//		}
+		FunctionInterface f = AbstractVersion.osgiActive() ? OSGiFunctionFactoryFactory.getFunctionInterface(functionName) :
+			FunctionFactoryFactory.getInstance().getInstance(cl, functionName);
+		return f;
+	}
+
+	private boolean typeCheckArgument(ContextExpression ce, Class enconteredType) {
+		return true;
+	}
+	@Override
+	public ContextExpression interpretToLambda(List<String> problems) {
+
+
 		List<ContextExpression> l = new LinkedList<>();
+		FunctionInterface f = getFunction();
+		if(f==null) {
+			throw new NullPointerException("Function: "+functionName+" can not be resolved!");
+		}
+
+		// TODO Type check input parameters
 		for (int i = 0; i < args; i++) {
-			ContextExpression a = jjtGetChild(i).interpretToLambda();
+			ContextExpression a = jjtGetChild(i).interpretToLambda(problems);
 			l.add(a);
 		}
 		return new ContextExpression() {
 			
 			@Override
 			public boolean isLiteral() {
-				if(getFunction()==null) {
-					throw new NullPointerException("Function: "+functionName+" can not be resolved!");
-				}
-				return getFunction().isPure() && l.stream().allMatch(e->e.isLiteral());
+				return f.isPure() && l.stream().allMatch(e->e.isLiteral());
 			}
 			
+//			List<String> problems
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-				FunctionInterface f = getFunction();
 				f.setInMessage(doc);
 				f.setCurrentMessage(parentMsg);
 				f.setAccess(access);
@@ -74,17 +88,9 @@ public final class ASTFunctionNode extends SimpleNode {
 				return f.evaluateWithTypeChecking();
 			}
 
-			private FunctionInterface getFunction() {
-				ClassLoader cl = null;
-				if ( DispatcherFactory.getInstance() == null ) {
-					cl = getClass().getClassLoader();
-				} else  {
-					cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
-				} 
-
-				FunctionInterface f = AbstractVersion.osgiActive() ? OSGiFunctionFactoryFactory.getFunctionInterface(functionName) :
-					FunctionFactoryFactory.getInstance().getInstance(cl, functionName);
-				return f;
+			@Override
+			public Optional<String> returnType() {
+				return f.getReturnType();
 			}
 		};
 	}

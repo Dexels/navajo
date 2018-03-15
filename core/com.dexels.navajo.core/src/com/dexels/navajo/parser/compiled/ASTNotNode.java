@@ -2,6 +2,10 @@
 
 package com.dexels.navajo.parser.compiled;
 
+import java.util.List;
+import java.util.Optional;
+
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 
@@ -10,8 +14,8 @@ public final class ASTNotNode extends SimpleNode {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda() {
-		return lazyFunction(a->interpret(a));
+	public ContextExpression interpretToLambda(List<String> problems) {
+		return lazyFunction(problems, a->interpret(a),Optional.of(Property.BOOLEAN_PROPERTY));
 	}
 
 	public final Object interpret(Object a) {
