@@ -27,6 +27,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLParseException;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
+import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.mapping.MappingUtils;
@@ -34,6 +35,7 @@ import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
+import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameterException;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -112,7 +114,8 @@ public class ReactiveScriptParser {
 		reactiveOperatorFactory.remove((String) settings.get("name"));
 	}
 	
-	ReactiveScript parse(String serviceName, InputStream in, String relativePath,List<ReactiveParseProblem> problems) throws UnsupportedEncodingException, IOException {
+	ReactiveScript parse(String serviceName, InputStream in, String relativePath) throws UnsupportedEncodingException, IOException {
+		List<ReactiveParseProblem> problems = new ArrayList<>();
 		if(in==null) {
 			throw new IOException("Missing service: "+serviceName+" identified by script: "+relativePath);
 		}
@@ -144,6 +147,9 @@ public class ReactiveScriptParser {
 		
 		final Type finalType = scriptType;
 		
+		if(!problems.isEmpty()) {
+			throw new ReactiveParseException("Parse problems in script: "+serviceName,problems);
+		}
 		return new ReactiveScript() {
 			
 			@Override
@@ -171,6 +177,11 @@ public class ReactiveScriptParser {
 			@Override
 			public Optional<String> streamMessage() {
 				return streamMessage;
+			}
+
+			@Override
+			public List<ReactiveParseProblem> problems() {
+				return problems;
 			}
 		};
 	}
@@ -234,7 +245,7 @@ public class ReactiveScriptParser {
 		return r;
 	}
 
-	public static ReactiveParameters parseParamsFromChildren(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> sourceElement) {
+	public static ReactiveParameters parseParamsFromChildren(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> sourceElement, ParameterValidator validator) {
 		Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> namedParameters = new HashMap<>();
 		List<Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> unnamedParameters = new ArrayList<>();
 		if(!sourceElement.isPresent()) {
@@ -243,12 +254,37 @@ public class ReactiveScriptParser {
 		XMLElement x = sourceElement.orElse(new XMLElement());
 		List<XMLElement> children = x.getChildren();
 		x.enumerateAttributeNames().forEachRemaining(e->{
+			Optional<Map<String, String>> parameterTypes = validator.parameterTypes();
 			if(e.endsWith(".eval")) {
 				String name = e.substring(0, e.length()-".eval".length());
+				if(validator.allowedParameters().isPresent()) {
+					List<String> val = validator.allowedParameters().get();
+					if(!val.contains(name)) {
+						int offstart = x.getAttributeOffset(e);
+						int offend = x.getAttributeEndOffset(e);
+						int offline = x.getAttributeLineNr(e);
+						problems.add(ReactiveParseProblem.of("Parameter: "+name+" is not allowed in element: "+relativePath).withRange(offline, offline, offstart, offend));
+					}
+				}
 				try {
 					List<String> probs = new ArrayList<>();
 					ContextExpression ce = ExpressionCache.getInstance().parse(probs,x.getStringAttribute(e));
 					probs.stream().forEach(elt->problems.add(ReactiveParseProblem.of(elt)));
+					
+					if(ce.returnType().isPresent() && parameterTypes.isPresent()) {
+						String ret = ce.returnType().get();
+						String type = parameterTypes.get().get(name);
+						if(type!=null) {
+							if(!type.equals(ret)) {
+								int offstart = x.getAttributeOffset(e);
+								int offend = x.getAttributeEndOffset(e);
+								int offline = x.getAttributeLineNr(e);
+								problems.add(ReactiveParseProblem.of("Parameter type mismatch for parameter: "+name+" the expression: "+x.getStringAttribute(e)+" evaluates to: "+ret+" while the parameter should be: "+type).withRange(offline, offline, offstart, offend));
+							}
+						}
+//						validator.
+					}
+					
 					Function3<StreamScriptContext,Optional<ImmutableMessage>, ImmutableMessage, Operand> value = (context,msg,param)->evaluateCompiledExpression(ce, context, Collections.emptyMap(), msg,Optional.of(param));
 					namedParameters.put(name, value);
 				} catch (TMLExpressionException ex) {
@@ -259,10 +295,23 @@ public class ReactiveScriptParser {
 				}
 				// todo implement default
 			} else if(e.endsWith(".default")) {
+				// deprecated?
 				String name = e.substring(0, e.length()-".default".length());
 				Function3<StreamScriptContext,Optional<ImmutableMessage>, ImmutableMessage, Operand> value = (context,msg,param)->evaluate((String)x.getStringAttribute(e), context, msg,param,false);
 				namedParameters.put(name, value);
 			} else {
+				if(parameterTypes.isPresent()) {
+					String type = parameterTypes.get().get(e);
+
+					if(type!=null) {
+						if(!type.equals(Property.STRING_PROPERTY)) {
+							int offstart = x.getAttributeOffset(e);
+							int offend = x.getAttributeEndOffset(e);
+							int offline = x.getAttributeLineNr(e);
+							problems.add(ReactiveParseProblem.of("Parameter type mismatch for parameter: "+e+" the string literal: "+x.getStringAttribute(e)+" while the parameter expects to be : "+type).withRange(offline, offline, offstart, offend));
+						}
+					}
+				}
 				namedParameters.put(e, (context,msg,param)->new Operand(x.getStringAttribute(e),Property.STRING_PROPERTY,null));
 				
 			}
@@ -291,9 +340,53 @@ public class ReactiveScriptParser {
 					
 				} else {
 					if(evaluate) {
-						Function3<StreamScriptContext, Optional<ImmutableMessage>,ImmutableMessage, Operand> value = (context,msg,param)->evaluate((String)content, context, msg,param,debug);
-						namedParameters.put(name, value);
+					
+						try {
+							List<String> probs = new ArrayList<>();
+							ContextExpression ce = ExpressionCache.getInstance().parse(probs,content);
+							probs.stream().forEach(elt->problems.add(ReactiveParseProblem.of(elt)));
+							if(ce.returnType().isPresent() && validator.parameterTypes().isPresent()) {
+								String ret = ce.returnType().get();
+								String type = validator.parameterTypes().get().get(name);
+								if(type!=null) {
+									if(!type.equals(ret)) {
+										int offstart = possibleParam.getStartOffset();
+										int offend = 0;
+										int offStartline = x.getLineNr();
+										int offEndline = x.getLineNr();
+										problems.add(ReactiveParseProblem.of("Parameter type mismatch for parameter: "+name+" the expression: "+content+" evaluates to: "+ret+" while the parameter should be: "+type).withRange(offStartline, offEndline, offstart, offend));
+									}
+								}
+//								validator.
+							}
+							
+							Function3<StreamScriptContext,Optional<ImmutableMessage>, ImmutableMessage, Operand> value = (context,msg,param)->evaluateCompiledExpression(ce, context, Collections.emptyMap(), msg,Optional.of(param));
+							namedParameters.put(name, value);
+						} catch (TMLExpressionException ex) {
+//							int attrStart = x.getAttributeOffset(e);
+//							int attrEnd = x.getAttributeEndOffset(e);
+//							int attrLine = x.getAttributeLineNr(e);
+							// TODO fix coordinates
+							problems.add(ReactiveParseProblem.of(ex.getMessage()));
+						}
+//						Function3<StreamScriptContext, Optional<ImmutableMessage>,ImmutableMessage, Operand> value = (context,msg,param)->evaluate((String)content, context, msg,param,debug);
+//						namedParameters.put(name, value);
 					} else {
+						if(validator.parameterTypes().isPresent()) {
+							String type = validator.parameterTypes().get().get(name);
+							if(type!=null) {
+								if(!type.equals(Property.STRING_PROPERTY)) {
+									int offstart = possibleParam.getStartOffset();
+									int offend = 0;
+									int offStartline = x.getLineNr();
+									int offEndline = x.getLineNr()+1;
+									problems.add(ReactiveParseProblem.of("Parameter type mismatch for parameter: "+name+" the string literal: "+content+" while the parameter should be: "+type).withRange(offStartline, offEndline, offstart, offend));
+								}
+							}
+//							validator.
+						}
+						
+						
 						namedParameters.put(name, (context,msg,param)->new Operand(content,"string",null));
 					}
 				}
@@ -366,7 +459,7 @@ public class ReactiveScriptParser {
 			Function<String, ReactiveMerger> reducerSupplier, Optional<String> baseType, String operatorName,
 			Optional<String> newBaseType) throws Exception {
 		ReactiveTransformerFactory transformerFactory = factorySupplier.apply(operatorName); 
-		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, problems,Optional.of(xml));
+		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, problems,Optional.of(xml),transformerFactory);
 
 		ReactiveTransformer transformer = transformerFactory.build(relativePath, problems, parameters, Optional.of(xml),sourceSupplier,factorySupplier,reducerSupplier);
 		Set<DataItem.Type> in = transformer.metadata().inType();
@@ -412,7 +505,7 @@ public class ReactiveScriptParser {
 			throw new NullPointerException(msg);
 		}
 //		reactiveSourceFactory.
-		ReactiveParameters params = parseParamsFromChildren(relativePath,problems, Optional.of(x));
+		ReactiveParameters params = parseParamsFromChildren(relativePath,problems, Optional.of(x),reactiveSourceFactory);
 
 		Type fn = finalType(reactiveSourceFactory, factories,problems);
 		ReactiveSource build = reactiveSourceFactory.build(relativePath, type,problems,Optional.of(x),params,factories,fn,reducerSupplier);
@@ -474,7 +567,7 @@ public class ReactiveScriptParser {
 					logger.info("Assuming this is a reducer element: "+xml);
 					try {
 						ReactiveMerger reducer = reducerSupplier.apply(xml.getName());
-						ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, problems, Optional.of(xml));
+						ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, problems, Optional.of(xml),reducer);
 						return reducer.execute(r,relativePath, Optional.of(xml));
 					} catch (Exception e) {
 						throw new RuntimeException(e);

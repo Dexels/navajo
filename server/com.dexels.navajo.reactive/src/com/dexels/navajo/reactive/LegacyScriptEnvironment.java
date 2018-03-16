@@ -1,6 +1,8 @@
 package com.dexels.navajo.reactive;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import org.slf4j.MDC;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
+import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.Msg;
@@ -71,6 +74,11 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 			@Override
 			public Optional<String> streamMessage() {
 				return Optional.empty();
+			}
+
+			@Override
+			public List<ReactiveParseProblem> problems() {
+				return Collections.emptyList();
 			}
 		};
 //		

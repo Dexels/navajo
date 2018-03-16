@@ -9,7 +9,7 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import io.reactivex.functions.Function;
 
 
-public interface ReactiveMerger {
+public interface ReactiveMerger extends ParameterValidator {
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml);
 	default public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params) {
 		return execute(params, "", Optional.empty());

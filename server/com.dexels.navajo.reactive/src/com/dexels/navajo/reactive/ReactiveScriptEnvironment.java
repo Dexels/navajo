@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.factory.ImmutableFactory;
+import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
@@ -111,8 +112,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	}
 	
 	ReactiveScript installScript(String serviceName, InputStream in, String relativeScriptPath) throws IOException {
-		List<ReactiveParseProblem> problems = new ArrayList<>();
-		ReactiveScript parsed = scriptParser.parse(serviceName, in,relativeScriptPath,problems);
+		ReactiveScript parsed = scriptParser.parse(serviceName, in,relativeScriptPath);
 		scripts.put(serviceName, parsed);
 		return parsed;
 	}

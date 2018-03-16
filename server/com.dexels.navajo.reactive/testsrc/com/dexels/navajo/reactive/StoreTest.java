@@ -18,13 +18,13 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.mappers.Store;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
-import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformer;
 import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
 
 public class StoreTest {
