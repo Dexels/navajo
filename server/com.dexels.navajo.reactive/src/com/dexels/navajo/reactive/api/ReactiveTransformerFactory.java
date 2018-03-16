@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.reactive.ReactiveParseProblem;
+import com.dexels.navajo.document.stream.ReactiveParseProblem;
 
 import io.reactivex.functions.Function;
 
-public interface ReactiveTransformerFactory {
+public interface ReactiveTransformerFactory extends TransformerMetadata {
 	public ReactiveTransformer build(
 			String relativePath,
 			List<ReactiveParseProblem> problems,

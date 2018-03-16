@@ -1,4 +1,4 @@
-package com.dexels.navajo.reactive;
+package com.dexels.navajo.document.stream;
 
 import java.util.Optional;
 
@@ -46,5 +46,14 @@ public class ReactiveParseProblem {
 
 	public static ReactiveParseProblem of(String message) {
 		return new ReactiveParseProblem(message);
+	}
+	
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(message+" at ");
+		sb.append(startLine.orElse(-1)+":"+startOffset.orElse(-1)+"->");
+		sb.append(endLine.orElse(-1)+":"+endOffset.orElse(-1));
+		return sb.toString();
 	}
 }

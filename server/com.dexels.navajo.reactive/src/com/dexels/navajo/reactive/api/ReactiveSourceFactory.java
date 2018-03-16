@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
-import com.dexels.navajo.reactive.ReactiveParseProblem;
+import com.dexels.navajo.document.stream.ReactiveParseProblem;
 
 import io.reactivex.functions.Function;
 

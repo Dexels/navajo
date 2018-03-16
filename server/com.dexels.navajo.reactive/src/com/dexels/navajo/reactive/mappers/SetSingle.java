@@ -10,14 +10,13 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
 import io.reactivex.functions.Function;
 
-public class SetSingle implements ReactiveMerger, ParameterValidator {
+public class SetSingle implements ReactiveMerger {
 
 	public SetSingle() {
 	}

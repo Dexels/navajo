@@ -1,0 +1,5 @@
+<source.single count.eval="'a'">
+ 	<set aap="noot" mies="wim" zus.eval="1+2" jet.eval="[index]"/>
+	<delete name="index"/>
+	<msg.stream.event messageName="Bla" isArray.eval="true+1"/>
+</source.single>

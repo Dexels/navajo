@@ -6,11 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.reactive.ReactiveParseProblem;
-import com.dexels.navajo.reactive.api.ParameterValidator;
+import com.dexels.navajo.document.stream.DataItem.Type;
+import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
@@ -19,7 +20,7 @@ import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 
 import io.reactivex.functions.Function;
 
-public class StoreFactory implements ReactiveTransformerFactory, ParameterValidator {
+public class StoreFactory implements ReactiveTransformerFactory {
 
 	public StoreFactory() {
 	}
@@ -49,6 +50,18 @@ public class StoreFactory implements ReactiveTransformerFactory, ParameterValida
 		result.put("name", Property.STRING_PROPERTY);
 		result.put("value", Property.INTEGER_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(result));
+	}
+
+	@Override
+	public Set<Type> inType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Type outType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

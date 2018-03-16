@@ -10,7 +10,7 @@ import java.util.Optional;
 import com.dexels.kafka.api.OffsetQuery;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem.Type;
-import com.dexels.navajo.reactive.ReactiveParseProblem;
+import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
