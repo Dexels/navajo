@@ -27,15 +27,10 @@ public class Rename implements ReactiveMerger {
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		return context->(item)->{
 			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(item.message()), ImmutableFactory.empty(), this, xml, relativePath);
-//			Map<String,Operand> named = r.resolveNamed(context, item,Optional.empty());
-//			Operand value = named.get("value");
-//			String to = (String)named.get("to").value;
 			String fromKey = parms.paramString("from");
 			Object oldValue = item.message().columnValue(fromKey);
 			String oldType = item.message().columnType(fromKey);
-			DataItem result = DataItem.of(item.message().without(fromKey ).with(parms.paramString("to"),oldValue, oldType));
-//			String ss = ReplicationFactory.getInstance().describe(result.message());
-			return result;
+			return DataItem.of(item.message().without(fromKey ).with(parms.paramString("to"),oldValue, oldType));
 		};
 	
 	}

@@ -34,7 +34,7 @@ public class TestSingle {
 
 	@Before
 	public void setup() {
-		TestSetup.setup();
+		reactiveScriptParser = TestSetup.setup();
 	}
 
 	

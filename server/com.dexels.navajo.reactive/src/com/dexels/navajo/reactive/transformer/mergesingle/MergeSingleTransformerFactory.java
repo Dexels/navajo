@@ -38,14 +38,17 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
 			Optional<XMLElement> xmlElement, Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
-			Function<String, ReactiveMerger> reducerSupplier) {
+			Function<String, ReactiveMerger> reducerSupplier,
+			Set<String> transformers,
+			Set<String> reducers
+			) {
 		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
 
 
 		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), reducerSupplier);
 		Optional<ReactiveSource> subSource;
 		try {
-			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems, sourceSupplier, factorySupplier,reducerSupplier);
+			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems, sourceSupplier, factorySupplier,reducerSupplier,transformers,reducers);
 		} catch (Exception e) {
 			throw new ReactiveParseException("Unable to parse sub source in xml: "+xml,e);
 		}

@@ -1,0 +1,3 @@
+<source.somethingweird count.eval="1">
+	<stream messageName="Bla" isArray.eval="true"/>
+</source.somethingweird>
