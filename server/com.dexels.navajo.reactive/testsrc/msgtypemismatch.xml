@@ -1,0 +1,4 @@
+<source.single count.eval="1">
+	<msg.stream.event messageName="Bla" isArray.eval="true"/>
+	<msg.stream.event messageName="Bla" isArray.eval="true"/>
+</source.single>

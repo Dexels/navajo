@@ -31,7 +31,9 @@ public class FirstTransformerFactory implements ReactiveTransformerFactory, Tran
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
 			Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
-			Function<String, ReactiveMerger> reducerSupplier) {
+			Function<String, ReactiveMerger> reducerSupplier,
+			Set<String> transformers,
+			Set<String> reducers) {
 		return new FirstTransformer(this);
 	}
 	

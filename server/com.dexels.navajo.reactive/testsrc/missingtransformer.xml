@@ -1,0 +1,3 @@
+<source.single count.eval="1">
+	<weirdtransformerormapper messageName="Bla" isArray.eval="true"/>
+</source.single>
