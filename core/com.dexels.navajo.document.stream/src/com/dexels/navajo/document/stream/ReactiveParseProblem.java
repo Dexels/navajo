@@ -43,7 +43,7 @@ public class ReactiveParseProblem {
 	}
 
 	public ReactiveParseProblem withTag(XMLElement tag) {
-		return new ReactiveParseProblem(message, startLine, endLine, startOffset, endOffset, relativePath, Optional.of(tag),cause);
+		return new ReactiveParseProblem(message, Optional.of(tag.getStartLineNr()), Optional.of(tag.getLineNr()), Optional.of(tag.getStartOffset()), Optional.of(tag.getOffset()), relativePath, Optional.of(tag),cause);
 	}
 
 	public ReactiveParseProblem withCause(Throwable cause) {
