@@ -2,8 +2,13 @@ package com.dexels.navajo.tipi.swing.functions;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import javax.swing.BorderFactory;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
@@ -152,25 +157,75 @@ public class CreateTitledBorder extends FunctionInterface {
 			}
 		}
 		
-		TitledBorder border = BorderFactory.createTitledBorder( typedBorder, title );
-		border.setTitlePosition(2); // default position is in the border
-		border.setTitleJustification(titleAlignment);
-//		TitledBorder border = BorderFactory.createTitledBorder( BorderFactory.createLineBorder(Color.darkGray, 1), title );
-		if (ss != null && ss instanceof String) {
-			String style = (String) ss;
-			Font titleFont = border.getTitleFont();
-			if (!style.contains("p")) {
-				if (style.contains("b")) {
-					border.setTitleFont(titleFont.deriveFont(Font.BOLD | titleFont.getStyle()));
-					titleFont = border.getTitleFont();
-				}
-				if (style.contains("i")) {
-					border.setTitleFont(titleFont.deriveFont(Font.ITALIC | titleFont.getStyle()));
-				}
-			} else {
-				border.setTitleFont(titleFont.deriveFont(Font.PLAIN));
-			}
+		TitledBorder border = null;
+        TitledBorder result = null;
+        if (!SwingUtilities.isEventDispatchThread()) {
+
+            Border typedBorderParse = typedBorder;
+            Object ssParse = ss;
+
+            FutureTask<TitledBorder> createrTast = new FutureTask<TitledBorder>(new Callable<TitledBorder>() {
+                @Override
+                public TitledBorder call() {
+                    TitledBorder border = BorderFactory.createTitledBorder(typedBorderParse, title);
+                    border.setTitlePosition(2); // default position is in the border
+                    border.setTitleJustification(titleAlignment);
+                    // TitledBorder border = BorderFactory.createTitledBorder(
+                    // BorderFactory.createLineBorder(Color.darkGray, 1), title );
+                    if (ssParse != null && ssParse instanceof String) {
+                        String style = (String) ssParse;
+                        Font titleFont = border.getTitleFont();
+                        if (!style.contains("p")) {
+                            if (style.contains("b")) {
+                                border.setTitleFont(titleFont.deriveFont(Font.BOLD | titleFont.getStyle()));
+                                titleFont = border.getTitleFont();
+                            }
+                            if (style.contains("i")) {
+                                border.setTitleFont(titleFont.deriveFont(Font.ITALIC | titleFont.getStyle()));
+                            }
+                        } else {
+                            border.setTitleFont(titleFont.deriveFont(Font.PLAIN));
+                        }
+                    }
+                    return border;
+                }
+            });
+
+            try {
+                SwingUtilities.invokeAndWait(createrTast);
+                try {
+                    result = createrTast.get();
+                } catch (InterruptedException e) {
+                    // If interrupted catch and return null :(
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    // If not executed catch and return null :(
+                    e.printStackTrace();
+                }
+            } catch (InvocationTargetException | InterruptedException e1) {
+                e1.printStackTrace();
+            }
+        } else {
+        		border = BorderFactory.createTitledBorder( typedBorder, title );
+        		border.setTitlePosition(2); // default position is in the border
+        		border.setTitleJustification(titleAlignment);
+        		if (ss != null && ss instanceof String) {
+        			String style = (String) ss;
+        			Font titleFont = border.getTitleFont();
+        			if (!style.contains("p")) {
+        				if (style.contains("b")) {
+        					border.setTitleFont(titleFont.deriveFont(Font.BOLD | titleFont.getStyle()));
+        					titleFont = border.getTitleFont();
+        				}
+        				if (style.contains("i")) {
+        					border.setTitleFont(titleFont.deriveFont(Font.ITALIC | titleFont.getStyle()));
+        				}
+        			} else {
+        				border.setTitleFont(titleFont.deriveFont(Font.PLAIN));
+        			}
+        		}
+            result = border;
 		}
-		return border;
+        return result;
 	}
 }
