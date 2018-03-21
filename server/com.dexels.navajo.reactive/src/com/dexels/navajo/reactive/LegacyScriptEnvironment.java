@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
@@ -57,7 +58,7 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 			
 			@Override
 			public Flowable<DataItem> execute(StreamScriptContext context) {
-				return runLegacy(context.inputFlowable().compose(StreamDocument.inNavajo(service, context.username, context.password)), context,debug).map(DataItem::of);			
+				return runLegacy(context.inputFlowable(), context,debug).map(DataItem::of);			
 				
 			}
 			
@@ -68,11 +69,6 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 
 			@Override
 			public Optional<String> binaryMimeType() {
-				return Optional.empty();
-			}
-
-			@Override
-			public Optional<String> streamMessage() {
 				return Optional.empty();
 			}
 
@@ -133,7 +129,6 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 				return callbackNavajo;
 
 			} else {
-				in.write(System.err);
 				in.getHeader().setRPCUser(context.username.get());
 				in.getHeader().setRPCPassword(context.password.get());
 				Navajo outDoc = getLocalClient().handleInternal(context.tenant, in, null, null);
@@ -155,7 +150,7 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 
 	private static Flowable<NavajoStreamEvent> errorMessage(String service, Optional<String> user, int code, String message) {
 		return Msg.create("error")
-				.with(Prop.create("code",code))
+				.with(Prop.create("code",""+code,Property.INTEGER_PROPERTY))
 				.with(Prop.create("description", message))
 				.stream()
 				.toFlowable(BackpressureStrategy.BUFFER)

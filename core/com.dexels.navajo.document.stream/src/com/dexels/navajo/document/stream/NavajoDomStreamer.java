@@ -44,8 +44,7 @@ public class NavajoDomStreamer {
 	
 	private final static Logger logger = LoggerFactory.getLogger(NavajoDomStreamer.class);
 
-	public NavajoDomStreamer() {
-//		this.observableOutputStream.getObservable().subscribe(this);
+	private NavajoDomStreamer() {
 	}
 	public static Observable<NavajoStreamEvent> feed(final Navajo navajo) {
 		return Observable.fromIterable(processNavajo(navajo));
@@ -125,8 +124,10 @@ public class NavajoDomStreamer {
 	private static void emitBinaryProperties(Message m, List<NavajoStreamEvent> list) {
 		// TODO Auto-generated method stub
 		for(Property p: m.getAllProperties()) {
+//			 <property subtype="extension=png,mime=image/png" length="12316" name="Logo" description="Clublogo" type="binary" direction="in">			
+//			<property name="Logo" type="binary">
 			if(Property.BINARY_PROPERTY.equals(p.getType())) {
-				list.add(Events.binaryStarted(p.getName()));
+				list.add(Events.binaryStarted(p.getName(),p.getLength(),Optional.ofNullable(p.getDescription()),Optional.ofNullable(p.getDirection()),Optional.ofNullable(p.getSubType())));
 				Binary b = (Binary) p.getTypedValue();
 				if(b!=null) {
 					try {
@@ -198,7 +199,7 @@ public class NavajoDomStreamer {
 			value = tmlProperty.getValue();
 		}
 		Optional<Direction> direction = "in".equals(tmlProperty.getDirection())?Optional.of(Direction.IN):"out".equals(tmlProperty.getDirection())?Optional.of(Direction.OUT):Optional.empty();
-		return Prop.create(tmlProperty.getName(),value,tmlProperty.getType(),selections,direction, tmlProperty.getDescription(),tmlProperty.getLength(),tmlProperty.getSubType(),Optional.ofNullable(tmlProperty.getCardinality()));
+		return Prop.create(tmlProperty.getName(),""+value,tmlProperty.getType(),selections,direction, tmlProperty.getDescription(),tmlProperty.getLength(),tmlProperty.getSubType(),Optional.ofNullable(tmlProperty.getCardinality()),null);
 	}
 	
 	 private static List<Select> selectFromTml(List<Selection> in) {

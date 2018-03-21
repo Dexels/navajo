@@ -70,4 +70,9 @@ public class InputStreamSource implements ReactiveSource {
 		return finalType;
 	}
 
+	@Override
+	public boolean streamInput() {
+		return false;
+	}
+
 }

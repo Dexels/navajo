@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.dexels.navajo.document.stream.NavajoStreamHandler;
 import com.dexels.navajo.document.stream.api.Method;
@@ -75,8 +76,8 @@ public class ObservableNavajoParser  {
 			}
 
 			@Override
-			public void binaryStarted(String name) {
-				list.add(Events.binaryStarted(name));
+			public void binaryStarted(String name, int length, Optional<String> description, Optional<String> direction, Optional<String> subtype) {
+				list.add(Events.binaryStarted(name,length,description,direction,subtype));
 			}
 
 			@Override

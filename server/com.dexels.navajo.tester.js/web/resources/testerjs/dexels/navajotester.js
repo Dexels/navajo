@@ -174,6 +174,7 @@ function processLoginForm(){
     sessionStorage.instance = $( "#handlers option:selected" ).text()
     sessionStorage.user =     $('#navajousername').val();
     sessionStorage.password = $('#navajopassword').val();
+    sessionStorage.reactive = $('#usereactive')[0].checked;
 
     var locale = $("#locale :selected").val();
     if (locale !== "empty")
@@ -238,20 +239,22 @@ function runScript(script) {
         }
 
         var navajoinput = prepareInputNavajo(script);
-
+        console.log('script: '+script)
         $.ajax({
         	beforeSend: function(req) {
         		startTitleLoader();
         		req.setRequestHeader('Authorization', null); // Safari fix
         		req.setRequestHeader('Content-Type', "text/xml;charset=utf-8");
+        		console.log('Reactive: '+sessionStorage.reactive);
         	},
         	complete: function() {stopTitleLoader();},
         	type: "POST",
             url: "/navajo/" + instance,
             data: navajoinput,
-            headers: {"X-Navajo-Tester": "true","X-Navajo-Username":sessionStorage.user,"X-Navajo-Password":sessionStorage.password},
+            headers: {"X-Navajo-Tester": "true","X-Navajo-Username":sessionStorage.user,"X-Navajo-Reactive":sessionStorage.reactive,"X-Navajo-Service":script,"X-Navajo-Password":sessionStorage.password},
             success: function(xmlObj) {
               replaceXml(script, xmlObj);
+              console.log(xmlObj)
               var stateObj = { script: script, xml:  serializer.serializeToString(xml) };
               history.pushState(stateObj, script, "tester.html?script="+script);
             },

@@ -1,0 +1,62 @@
+<tml>
+   <header>
+      <transaction rpc_pwd="ROOT" rpc_name="" rpc_usr=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="Item" type="array">
+      <message name="Item" index="0" type="array_element">
+         <property name="index" type="integer" value="0"/>
+         <property name="value" type="integer" value="0"/>
+         <property name="to" type="string" value="Some"/>
+      </message>
+      <message name="Item" index="1" type="array_element">
+         <property name="index" type="integer" value="1"/>
+         <property name="value" type="integer" value="1"/>
+         <property name="to" type="string" value="Some"/>
+      </message>
+      <message name="Item" index="2" type="array_element">
+         <property name="index" type="integer" value="2"/>
+         <property name="value" type="integer" value="2"/>
+         <property name="to" type="string" value="Some"/>
+      </message>
+      <message name="Item" index="3" type="array_element">
+         <property name="index" type="integer" value="3"/>
+         <property name="value" type="integer" value="3"/>
+         <property name="to" type="string" value="Some"/>
+      </message>
+      <message name="Item" index="4" type="array_element">
+         <property name="index" type="integer" value="4"/>
+         <property name="value" type="integer" value="4"/>
+         <property name="to" type="string" value="Some"/>
+      </message>
+      <message name="Item" index="5" type="array_element">
+         <property name="index" type="integer" value="5"/>
+         <property name="value" type="integer" value="5"/>
+         <property name="to" type="string" value="Some"/>
+      </message>
+      <message name="Item" index="6" type="array_element">
+         <property name="index" type="integer" value="6"/>
+         <property name="value" type="integer" value="6"/>
+         <property name="to" type="string" value="Some"/>
+      </message>
+      <message name="Item" index="7" type="array_element">
+         <property name="index" type="integer" value="7"/>
+         <property name="value" type="integer" value="7"/>
+         <property name="to" type="string" value="Some"/>
+      </message>
+      <message name="Item" index="8" type="array_element">
+         <property name="index" type="integer" value="8"/>
+         <property name="value" type="integer" value="8"/>
+         <property name="to" type="string" value="Some"/>
+      </message>
+      <message name="Item" index="9" type="array_element">
+         <property name="index" type="integer" value="9"/>
+         <property name="value" type="integer" value="9"/>
+         <property name="to" type="string" value="Some"/>
+      </message>
+   </message>
+   <methods>
+      <method name="input"/>
+   </methods>
+</tml>

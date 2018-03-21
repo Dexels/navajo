@@ -118,6 +118,9 @@ public abstract class SimpleNode implements Node {
     			if(!a.isPresent() || !b.isPresent()) {
     				return true;
     			}
+    			if(a.get().equals("any") || b.get().equals("any")) {
+    				return true;
+    			}
     			return a.get().equals(b.get());
     		};
     }

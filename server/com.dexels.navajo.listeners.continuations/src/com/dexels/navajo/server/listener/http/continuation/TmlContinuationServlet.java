@@ -71,6 +71,10 @@ public class TmlContinuationServlet extends HttpServlet implements
 	@Override
 	protected void service(final HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		if(req.getHeader("X-Navajo-Reactive")!=null && this.reactiveHttpServlet!=null) {
+			reactiveHttpServlet.service(req, resp);
+			return;
+		}
 		try {
 			LocalClient localClient = getLocalClient();
 			if ( localClient == null ) {

@@ -51,8 +51,16 @@ public class NavajoTesterHelper {
 
     public NavajoFileSystemFolder getAllScripts() {
         File scriptsPath = new File(navajoConfig.getScriptPath());
+        
+        File root = new File(navajoConfig.getRootPath());
+		File reactivePath = new File(root,"reactive");
+//		return new File(rootPath,"scripts").getAbsolutePath();
+
         NavajoFileSystemFolder result = new NavajoFileSystemFolder(scriptsPath);
+        NavajoFileSystemFolder reactiveFolder = new NavajoFileSystemFolder(reactivePath);
         addContentsTo(result);
+        addContentsTo(reactiveFolder);
+        result.addEntry(reactiveFolder);
         return result;
     }
     

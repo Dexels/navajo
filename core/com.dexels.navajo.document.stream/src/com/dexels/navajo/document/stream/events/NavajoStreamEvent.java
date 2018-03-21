@@ -4,6 +4,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
@@ -14,6 +18,10 @@ public class NavajoStreamEvent {
 	private final Map<String, Object> attributes;
 	private final String path;
 	private final Object body;
+	
+	
+	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamEvent.class);
+
 	
 	NavajoStreamEvent(String path, NavajoEventTypes type, Object body, Map<String,? extends Object> attributes) {
 		this.type = type;
@@ -67,6 +75,27 @@ public class NavajoStreamEvent {
 			return null;
 		}
 		return attributes.get(name);
+ 	}
+	
+	public Object attribute(String name, Callable<Object> defaultValue) {
+		if(attributes==null) {
+			try {
+				return defaultValue.call();
+			} catch (Exception e) {
+				logger.error("Error: ", e);
+				return null;
+			}
+		}
+		Object object = attributes.get(name);
+		if(object==null) {
+			try {
+				return defaultValue.call();
+			} catch (Exception e) {
+				logger.error("Error: ", e);
+				return null;
+			}
+		}
+		return object;
  	}
 	
 	public Map<String,Object> attributes() {

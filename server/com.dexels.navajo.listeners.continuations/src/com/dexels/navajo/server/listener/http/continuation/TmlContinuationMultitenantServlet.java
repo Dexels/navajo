@@ -32,6 +32,17 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 
 	// private boolean jmxRegistered = false;
 
+
+	private HttpServlet reactiveHttpServlet;
+	
+	public void setReactiveServlet(HttpServlet servlet) {
+		this.reactiveHttpServlet = servlet;
+	}
+
+	public void clearReactiveServlet() {
+		this.reactiveHttpServlet = null;
+	}
+	
 	public LocalClient getLocalClient() {
 		return localClient;
 	}
@@ -64,6 +75,10 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 	protected void service(final HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
+			if(useReactiveEndpoint(req)) {
+				reactiveHttpServlet.service(req, resp);
+				return;
+			}			
 			String instance = determineTenantFromRequest(req);
 			LocalClient localClient = getLocalClient();
 			if ( localClient == null ) {
@@ -80,6 +95,12 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 			}
 			logger.error("Servlet call failed dramatically", e);
 		}
+	}
+
+	private boolean useReactiveEndpoint(final HttpServletRequest req) {
+		String header = req.getHeader("X-Navajo-Reactive");
+		System.err.println("Header: "+header);
+		return header!=null && this.reactiveHttpServlet!=null && "true".equals(header);
 	}
 
 	private String determineTenantFromRequest(final HttpServletRequest req) {

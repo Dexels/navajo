@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Stack;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -60,7 +61,12 @@ public final class StreamSaxHandler implements XmlInputHandler {
         if (tag.equals("property")) {
         	String propType = h.get("type");
         	if("binary".equals(propType)) {
-        		handler.binaryStarted(h.get("name"));
+        		String lengthString = h.get("length");
+        		int length = lengthString == null ? 0 : Integer.parseInt(lengthString);
+        		Optional<String> description = Optional.ofNullable(h.get("description"));
+        		Optional<String> subtype = Optional.ofNullable(h.get("subtype"));
+        		Optional<String> direction = Optional.ofNullable(h.get("direction"));
+        		handler.binaryStarted(h.get("name"),length,description,direction,subtype);
         		return 1;
         	}
 //            String val = h.get("value");
