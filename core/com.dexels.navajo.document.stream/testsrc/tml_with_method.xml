@@ -1,0 +1,13 @@
+<tml>
+   <header>
+      <transaction rpc_name="SOMETHING" rpc_usr="XX"/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="SearchCriteria">
+      <property name="ShowDissolved" type="boolean" value="true" direction="out" cardinality="1"/>
+   </message>
+    <methods>
+        <method name="somemethod" />
+    </methods>
+</tml>

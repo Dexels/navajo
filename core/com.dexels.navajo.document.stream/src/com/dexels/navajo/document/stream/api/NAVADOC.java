@@ -17,7 +17,7 @@ public class NAVADOC {
 	
 
 	
-	public static FlowableOperator<NavajoStreamEvent,NavajoStreamEvent> setPropertyValue(final String messagePath, String property, Object value) {
+	public static FlowableOperator<NavajoStreamEvent,NavajoStreamEvent> setPropertyValue(final String messagePath, String property, String value) {
 		return messageWithPath(messagePath, msg->msg.withValue(property, value),false);
 	}
 	

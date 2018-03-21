@@ -2,6 +2,7 @@ package com.dexels.navajo.document.stream;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.dexels.navajo.document.stream.api.Method;
 import com.dexels.navajo.document.stream.api.NavajoHead;
@@ -18,7 +19,7 @@ public interface NavajoStreamHandler {
 	public void arrayDone(String name);
 	public void navajoStart(NavajoHead head);
 	public void navajoDone(List<Method> methods);
-	public void binaryStarted(String name);
+	public void binaryStarted(String name, int length, Optional<String> description, Optional<String> direction, Optional<String> subtype);
 	public void binaryContent(String name);
 	public void binaryDone();
 }

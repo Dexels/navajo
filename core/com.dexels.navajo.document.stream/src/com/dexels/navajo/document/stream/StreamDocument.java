@@ -30,6 +30,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.stream.api.Method;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
@@ -496,6 +497,74 @@ public class StreamDocument {
 		};
 	}
 
+	public static FlowableOperator<ImmutableMessage, NavajoStreamEvent> collectEventsToImmutable() {
+		return new BaseFlowableOperator<ImmutableMessage, NavajoStreamEvent>(10) {
+
+//			AtomicInteger depth = new AtomicInteger();
+//			List<NavajoStreamEvent> currentMessage = new ArrayList<>();
+			@Override
+			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super ImmutableMessage> child) throws Exception {
+				return new Subscriber<NavajoStreamEvent>() {
+					@Override
+					public void onComplete() {
+						operatorComplete(child);
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						operatorError(t, child);
+					}
+
+					@Override
+					public void onNext(NavajoStreamEvent event) {
+						
+//						if(type==NavajoEventTypes.MESSAGE) {
+//							Msg msgBody = (Msg)event.body();
+//							msgBody.toImmutableMessage();
+						switch(event.type()) {
+							case ARRAY_ELEMENT_STARTED:
+							case ARRAY_STARTED:
+							case MESSAGE_STARTED:
+							case MESSAGE_DEFINITION_STARTED:
+//								depth.incrementAndGet();
+//								currentMessage.add(event);
+								operatorRequest(1);
+								break;
+							case MESSAGE:
+							case ARRAY_ELEMENT:
+//								Map<String,Object> mm =  event.attributes();
+								Msg m = (Msg)event.body();
+								ImmutableMessage copy = m.toImmutableMessage();
+								operatorNext(event, e->copy, child);
+								break;
+								
+							case NAVAJO_DONE:
+							case NAVAJO_STARTED:
+							case BINARY_STARTED:
+							case BINARY_CONTENT:
+							case BINARY_DONE:
+							case ARRAY_DONE:
+							case MESSAGE_DEFINITION:
+//								currentMessage.add(event);
+								operatorRequest(1);
+								return;
+								
+							default:
+								throw new UnsupportedOperationException("Unknown event found in NAVADOC: "+event.type());
+							}
+//						}
+					}
+
+					@Override
+					public void onSubscribe(Subscription s) {
+						operatorSubscribe(s, child);
+					}
+						
+				};
+			}
+		};
+	}
+	
 	public static FlowableOperator<NavajoStreamEvent, NavajoStreamEvent> filterMessageIgnore() {
 		return new BaseFlowableOperator<NavajoStreamEvent, NavajoStreamEvent>(10) {
 
@@ -504,7 +573,6 @@ public class StreamDocument {
 			@Override
 			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super NavajoStreamEvent> child)
 					throws Exception {
-				// TODO Auto-generated method stub
 				return new Subscriber<NavajoStreamEvent>() {
 
 					@Override
@@ -573,7 +641,7 @@ public class StreamDocument {
 		};
 		}
 
-	public static FlowableOperator<NavajoStreamEvent,NavajoStreamEvent> setPropertyValue(final String messagePath, String property, Object value) {
+	public static FlowableOperator<NavajoStreamEvent,NavajoStreamEvent> setPropertyValue(final String messagePath, String property, String value) {
 		return messageWithPath(messagePath, msg->msg.withValue(property, value),false);
 	}
 	
@@ -697,8 +765,6 @@ public class StreamDocument {
 									logger.error("Unexpected error: ", e1);
 								}
 								return;
-//							} else {
-//								operatorRequest(1);
 							}
 							pathStack.pop();
 							break;
@@ -714,33 +780,21 @@ public class StreamDocument {
 									logger.error("Very unexpected exception: ", e1);
 									e1.printStackTrace();
 								}
-
-								
-//								child.onNext(Events.arrayElement(transformed,event.attributes()));
-//								backpressureAdmin.registerEmission(1);
-//								backpressureAdmin.requestIfNeeded();
 								return;
-//							} else {
-//								operatorRequest(1);
 							}
 							break;
 							// TODO Support these?
 						case ARRAY_STARTED:
 							pathStack.push(event.path());
-//							operatorRequest(1);
 							break;
 						case ARRAY_DONE:
 							pathStack.pop();
-//							operatorRequest(1);
 							break;
 						default:
 							break;
 						}
 						if(!filterOthers) {
 							operatorNext(event, e->e, child);
-//							child.onNext(event);
-//							backpressureAdmin.registerEmission(1);
-//							backpressureAdmin.requestIfNeeded();
 						} else {
 							operatorRequest(1);
 						}
@@ -1004,6 +1058,16 @@ public class StreamDocument {
 	}
 
 	public static FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> inNavajo(String name, Optional<String> username, Optional<String> password) {
+		return inNavajo(name, username, password, Collections.emptyList());
+	}
+	
+	public static FlowableTransformer<DataItem, DataItem> inNavajoDataItem(String name, Optional<String> username, Optional<String> password, List<String> methods) {
+		return flow->flow.startWith(Flowable.just(DataItem.of(Events.started(NavajoHead.createSimple(name, username, password)))))
+				.concatWith(Flowable.just(DataItem.of(Events.done(methods.stream().map(Method::new).collect(Collectors.toList())))));
+	}
+	
+	public static FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> inNavajo(String name, Optional<String> username, Optional<String> password, List<String> methods) {
+		
 		return new FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent>() {
 
 			@Override
@@ -1012,7 +1076,7 @@ public class StreamDocument {
 	        			.filter(e->e.type()!=NavajoEventTypes.NAVAJO_STARTED)
 	        			.filter(e->e.type()!=NavajoEventTypes.NAVAJO_DONE)
 	        			.startWith(Flowable.just(Events.started(NavajoHead.createSimple(name, username, password))))
-	        			.concatWith(Flowable.just(Events.done()));
+	        			.concatWith(Flowable.just(Events.done(methods.stream().map(Method::new).collect(Collectors.toList()))));
 			}
 		};
 	}
@@ -1057,7 +1121,8 @@ public class StreamDocument {
 		List<Prop> properties = rpl.values()
 			.entrySet()
 			.stream()
-			.map(e->Prop.create(e.getKey(), e.getValue(), types.get(e.getKey())))
+			.filter(e->e.getValue()!=null)
+			.map(e->Prop.create(e.getKey(), ""+e.getValue(), types.get(e.getKey())))
 			.collect(Collectors.toList());
 		return isArrayMessage ? Msg.createElement(properties) : Msg.create(properties);
 	}

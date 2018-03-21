@@ -58,5 +58,10 @@ public class SQLReactiveSource implements ReactiveSource {
 		return finalType;
 	}
 
+	@Override
+	public boolean streamInput() {
+		return false;
+	}
+
 
 }

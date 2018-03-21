@@ -11,7 +11,7 @@ public interface ReactiveScript {
 	public Flowable<DataItem> execute(StreamScriptContext context);
 	public DataItem.Type dataType();
 	public Optional<String> binaryMimeType();
-	public Optional<String> streamMessage();
+//	public Optional<String> streamMessage();
 	public List<ReactiveParseProblem> problems();
 	
 }

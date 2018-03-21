@@ -162,7 +162,10 @@ public class NonBlockingListener extends HttpServlet {
 			}
 			if(rs.binaryMimeType().isPresent()) {
 				response.addHeader("Content-Type", rs.binaryMimeType().get());
+			} else {
+				response.addHeader("Content-Type", "text/xml;charset=utf-8");
 			}
+
 			switch(rs.dataType()) {
 			case DATA:
 				rs.execute(context)
@@ -199,14 +202,14 @@ public class NonBlockingListener extends HttpServlet {
 				rs.execute(context)
 					.onErrorResumeNext(cc)
 					.map(di->di.event())
-					.compose(StreamDocument.inNavajo(context.service, context.username, Optional.empty()))
+//					.compose(StreamDocument.inNavajo(context.service, context.username, Optional.empty()))
 					.lift(StreamDocument.filterMessageIgnore())
 					.lift(StreamDocument.serialize())
 					.compose(StreamCompress.compress(responseEncoding))
 					.onErrorResumeNext(new Function<Throwable, Publisher<? extends byte[]>>() {
 						@Override
 						public Publisher<? extends byte[]> apply(Throwable e1) throws Exception {
-							return errorMessage(false,context, Optional.of(e1), e1.getMessage())
+							return errorMessage(true,context, Optional.of(e1), e1.getMessage())
 							.lift(StreamDocument.serialize())
 							.compose(StreamCompress.compress(responseEncoding));
 						}
@@ -248,7 +251,7 @@ public class NonBlockingListener extends HttpServlet {
 
 		String service = context.service;
 		Flowable<NavajoStreamEvent> result = Msg.create("error")
-				.with(Prop.create("code",-1))
+				.with(Prop.create("code","-1","integer" ))
 				.with(Prop.create("description", message))
 				.with(Prop.create("service", service))
 				.with(Prop.create("exception", throwable.isPresent()?throwable.get().getMessage():""))
@@ -282,7 +285,7 @@ public class NonBlockingListener extends HttpServlet {
 		return Optional.empty();
 	}
 
-	private StreamScriptContext  determineContextFromRequest(AsyncContext ac) throws IOException {
+	private StreamScriptContext determineContextFromRequest(AsyncContext ac) throws IOException {
 		final HttpServletRequest req = (HttpServletRequest) ac.getRequest();
 		Map<String, Object> attributes = extractHeaders(req);
 		String tenant = determineTenantFromRequest(req);
@@ -305,24 +308,35 @@ public class NonBlockingListener extends HttpServlet {
 		}
 
 		if(isGet) {
-			return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),attributes,Optional.of(Flowable.<NavajoStreamEvent>empty().compose(StreamDocument.inNavajo(serviceHeader, Optional.of(username), Optional.of(password)))),Optional.empty(), Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment));
+			return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),attributes,Optional.of(Flowable.<NavajoStreamEvent>empty().compose(StreamDocument.inNavajo(serviceHeader, Optional.of(username), Optional.of(password)))),Optional.empty(), Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment), Collections.emptyList());
 		}
 		String requestEncoding = (String) attributes.get("Content-Encoding");
 
 //		Flowable<NavajoStreamEvent> input = Servlets.createFlowable(ac, 1000)
 		Flowable<NavajoStreamEvent> input = getBlockingInput(req)
+				.doOnNext(e->System.err.println("Data: "+new String(e)))
+				.doOnComplete(()->{
+					System.err.println("Blocking input complete");
+				})
 			.compose(StreamCompress.decompress(Optional.ofNullable(requestEncoding)))
+			.doOnComplete(()->{
+				System.err.println("Input decompress complete");
+			})
 			.lift(XML.parseFlowable(10))
 			.concatMap(e->e)
 			.lift(StreamDocument.parse())
 			.concatMap(e->e);
 		
-		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),attributes,Optional.of(input),Optional.empty(), Optional.of(this.reactiveScriptEnvironment));
+		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),attributes,Optional.of(input),Optional.empty(), Optional.of(this.reactiveScriptEnvironment), Collections.emptyList());
 	}
 
 	private Flowable<byte[]> getBlockingInput(HttpServletRequest request) {
+		String requestEncoding = (String) request.getHeader("Content-Encoding");
+
+		System.err.println("Requestencoding: "+requestEncoding);
 		try {
-			return Bytes.from(request.getInputStream());
+			return Bytes.from(request.getInputStream())
+					.doOnComplete(()->System.err.println("COMPLETE input"));
 		} catch (IOException e) {
 			return Flowable.error(e);
 		}

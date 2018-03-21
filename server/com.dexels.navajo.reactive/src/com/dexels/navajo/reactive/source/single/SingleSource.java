@@ -23,7 +23,6 @@ public class SingleSource implements ReactiveSource {
 	private final ReactiveParameters params;
 	private final List<ReactiveTransformer> transformers;
 	private Type finalType;
-//	private final Optional<Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>>> mapMapper;
 	private final Optional<XMLElement> sourceElement;
 	private final String sourcePath;
 	private final SourceMetadata metadata;
@@ -62,6 +61,11 @@ public class SingleSource implements ReactiveSource {
 	@Override
 	public Type finalType() {
 		return finalType;
+	}
+
+	@Override
+	public boolean streamInput() {
+		return false;
 	}
 	
 }

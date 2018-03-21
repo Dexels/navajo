@@ -1,8 +1,10 @@
 package com.dexels.navajo.document.stream.events;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.dexels.navajo.document.stream.api.Method;
 import com.dexels.navajo.document.stream.api.Msg;
@@ -42,11 +44,6 @@ public class Events {
 	public static NavajoStreamEvent arrayDone(String name) {
 		return new NavajoStreamEvent(null,NavajoEventTypes.ARRAY_DONE,null,Collections.emptyMap());
 	}
-
-	public static NavajoStreamEvent done() {
-		return new NavajoStreamEvent(null,NavajoEventTypes.NAVAJO_DONE,Collections.emptyList(),Collections.emptyMap());
-	}
-
 	public static NavajoStreamEvent done(List<Method> methods) {
 		return new NavajoStreamEvent(null,NavajoEventTypes.NAVAJO_DONE,methods,Collections.emptyMap());
 	}
@@ -55,8 +52,21 @@ public class Events {
 		return new NavajoStreamEvent(null,NavajoEventTypes.NAVAJO_STARTED,head,Collections.emptyMap());
 	}
 
-	public static NavajoStreamEvent binaryStarted(String name) {
-		return new NavajoStreamEvent(name, NavajoEventTypes.BINARY_STARTED, null, Collections.emptyMap());
+//	list.add(Events.binaryStarted(p.getName(),p.getLength(),Optional.ofNullable(p.getDescription()),,Optional.ofNullable(p.getDirection())));
+
+	public static NavajoStreamEvent binaryStarted(String name, int length, Optional<String> description, Optional<String> direction, Optional<String> subtype) {
+		Map<String,Object> attributes = new HashMap<>();
+		if(description.isPresent()) {
+			attributes.put("description", description.get());
+		}
+		if(direction.isPresent()) {
+			attributes.put("direction", direction.get());
+		}
+		if(subtype.isPresent()) {
+			attributes.put("subtype", subtype.get());
+		}
+		attributes.put("length", length);
+		return new NavajoStreamEvent(name, NavajoEventTypes.BINARY_STARTED, null, attributes);
 	}
 
 	public static NavajoStreamEvent binaryContent(String data) {

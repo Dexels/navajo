@@ -130,9 +130,10 @@ public class NavajoStreamSerializer {
 //					h.printElement(w, INDENT);
 					break;				
 				case NAVAJO_DONE:
+
 					List<Method> methods = (List<Method>) event.body();
 					if(methods.size()>0) {
-						printStartTag(w, INDENT * (tagDepth+1),true,"method","name=\""+name+"\" type=\"array\"");
+						printStartTag(w, INDENT * (tagDepth+1),true,"methods","");
 						methods.forEach(e->{
 							try {
 								e.write(w, INDENT * (tagDepth+2));
@@ -140,13 +141,27 @@ public class NavajoStreamSerializer {
 								logger.error("Error: ", e1);
 							}
 						});
-						printEndTag(w, INDENT*(tagDepth+1), "method");
+						printEndTag(w, INDENT*(tagDepth+1), "methods");
 						
 					}
 					w.write("</tml>\n");
 					break;
 				case BINARY_STARTED:
-					printStartTag(w, INDENT * (tagDepth+1),true,"property","name=\""+event.path()+"\" type=\"binary\"");
+					int length = (Integer)event.attribute("length");
+					String description = (String)event.attribute("description");
+					String direction = (String)event.attribute("direction");
+					String subtype = (String)event.attribute("subtype");
+					StringBuilder sb = new StringBuilder("name=\""+event.path()+"\" type=\"binary\" length=\""+length+"\"");
+					if(description!=null) {
+						sb.append(" description=\""+description+"\"");
+					}
+					if(direction!=null) {
+						sb.append(" direction=\""+direction+"\"");
+					}
+					if(subtype!=null) {
+						sb.append(" subtype=\""+subtype+"\"");
+					}
+					printStartTag(w, INDENT * (tagDepth+1),true,"property",sb.toString());
 					tagDepth++;
 					break;
 				case BINARY_CONTENT:
@@ -199,7 +214,9 @@ public class NavajoStreamSerializer {
 		 }
 		 sw.write("<");
 		 sw.write(tag);
-		 sw.write(" ");
+		 if(!"".equals(attributes)) {
+			 sw.write(" ");
+		 }
 //		 for (String attribute : attributes) {
 			sw.write(attributes);
 //		}

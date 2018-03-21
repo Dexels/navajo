@@ -29,6 +29,7 @@ import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.ReactiveScript;
+import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.parser.Expression;
@@ -129,11 +130,14 @@ public class ReactiveScriptParser {
 		}
 //		parseParamsFromChildren("", sourceElement)
 		int parallel = x.getIntAttribute("parallel",1);
-		final Optional<String> streamMessage = Optional.ofNullable(x.getStringAttribute("streamMessage"));
+//		final Optional<String> streamMessage = Optional.ofNullable(x.getStringAttribute("streamMessage"));
 
+		final List<String> methods = Arrays.asList(x.getStringAttribute("methods","").split(","));
 		Optional<String> mime = Optional.ofNullable(x.getStringAttribute("mime"));
 		List<ReactiveSource> r = parseRoot(x,relativePath,problems);
 		Type scriptType = null;
+		
+		boolean hasInputSource = r.stream().anyMatch(e->e.streamInput());
 		for (ReactiveSource reactiveSource : r) {
 			if(scriptType!=null) {
 				if(reactiveSource.finalType()!=scriptType) {
@@ -146,7 +150,6 @@ public class ReactiveScriptParser {
 		}
 		
 		final Type finalType = scriptType;
-		
 		if(!problems.isEmpty()) {
 			throw new ReactiveParseException("Parse problems in script: "+serviceName,problems);
 		}
@@ -154,14 +157,19 @@ public class ReactiveScriptParser {
 			
 			@Override
 			public Flowable<DataItem> execute(StreamScriptContext context) {
-				StreamScriptContext resolvedContext = streamMessage.isPresent() ? context.resolveInput() : context;
-				if(parallel > 1) {
-					return Flowable.fromIterable(r)
-							.concatMapEager(r->r.execute(resolvedContext, Optional.empty()),parallel,1);
-				} else {
-					return Flowable.fromIterable(r)
-							.concatMap(r->r.execute(resolvedContext, Optional.empty()));
+				StreamScriptContext resolvedContext = !hasInputSource ? context.resolveInput() : context;
+				boolean isTml = finalType.equals(Type.EVENT);
+				
+				Flowable<DataItem> flow = parallel > 1 ?
+						Flowable.fromIterable(r)
+						.concatMapEager(r->r.execute(resolvedContext, Optional.empty()),parallel,1)
+					: 
+						Flowable.fromIterable(r)
+						.concatMap(r->r.execute(resolvedContext, Optional.empty()));
+				if(isTml) {
+					flow = flow.compose(StreamDocument.inNavajoDataItem(resolvedContext.service,resolvedContext.username,resolvedContext.password,methods));
 				}
+				return flow;
 			}
 
 			@Override
@@ -174,15 +182,16 @@ public class ReactiveScriptParser {
 				return mime;
 			}
 
-			@Override
-			public Optional<String> streamMessage() {
-				return streamMessage;
-			}
+//			@Override
+//			public Optional<String> streamMessage() {
+//				return streamMessage;
+//			}
 
 			@Override
 			public List<ReactiveParseProblem> problems() {
 				return problems;
 			}
+
 		};
 	}
 
@@ -209,11 +218,11 @@ public class ReactiveScriptParser {
 								problems,
 								operatorName->{ 
 									ReactiveSourceFactory src = this.factories.get(operatorName);
-//									if(src==null) {
-//										String msg = "Missing source for factory: "+operatorName;
-//										ReactiveParseProblem rpp = ReactiveParseProblem.of(msg).withTag(xx).withRelativePath(relativePath);
-//										problems.add(rpp);
-//									}
+									if(src==null) {
+										String msg = "Missing source for factory: "+operatorName+" available sources: "+factories.keySet();
+										ReactiveParseProblem rpp = ReactiveParseProblem.of(msg).withTag(xx).withRelativePath(relativePath);
+										problems.add(rpp);
+									}
 									return src;
 								},
 								operatorName->{
@@ -514,7 +523,11 @@ public class ReactiveScriptParser {
 		if(reactiveSourceFactory==null) {
 			String msg = "No factory for source type: "+type+" found.";
 			problems.add(ReactiveParseProblem.of(msg).withTag(x).withRelativePath(relativePath));
-			return sourceFactorySupplier.apply("single").build("", "single", problems, Optional.empty(), ReactiveParameters.empty(), Collections.emptyList(), DataItem.Type.MESSAGE, reducerSupplier);
+			ReactiveSourceFactory instance = sourceFactorySupplier.apply("single");
+			if(instance==null) {
+				logger.error("Single shouldn't be missing!");
+			}
+			return instance.build("", "single", problems, Optional.empty(), ReactiveParameters.empty(), Collections.emptyList(), DataItem.Type.MESSAGE, reducerSupplier);
 //			throw new NullPointerException(msg);
 		}
 //		reactiveSourceFactory.

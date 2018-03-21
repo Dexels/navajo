@@ -132,4 +132,10 @@ public class SubscriberReactiveSource implements ReactiveSource {
 	public Type finalType() {
 		return finalType;
 	}
+
+
+	@Override
+	public boolean streamInput() {
+		return false;
+	}
 }
