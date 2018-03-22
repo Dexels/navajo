@@ -22,6 +22,10 @@ public final class ASTAddNode extends SimpleNode {
 	
 	public final Object interpret(Object a,Object b) {
 
+        if (a == null || b == null) {
+            throw new NullPointerException();
+        }
+
         if (!(a instanceof ArrayList || b instanceof ArrayList)) {
             return Utils.add(a, b);
         } else if ((a instanceof ArrayList) && !(b instanceof ArrayList)) {

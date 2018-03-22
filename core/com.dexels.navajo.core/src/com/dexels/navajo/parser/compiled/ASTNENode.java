@@ -15,6 +15,11 @@ public final class ASTNENode extends SimpleNode {
 	}
 	
 	public final Object interpret(Object a, Object b) {
+
+        if (a == null || b == null) {
+            throw new NullPointerException();
+        }
+
         return Boolean.valueOf(!Utils.equals(a, b));
 
     }

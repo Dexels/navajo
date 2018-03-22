@@ -18,6 +18,11 @@ public final class ASTGTNode extends SimpleNode {
 	}
 
 	public final static Boolean compare(Object a, Object b) throws TMLExpressionException {
+
+        if (a == null || b == null) {
+            throw new NullPointerException();
+        }
+
 		if (a instanceof Integer && b instanceof Integer)
 			return Boolean.valueOf(((Integer) a).intValue() > ((Integer) b).intValue());
 		else if (a instanceof Integer && b instanceof Double)
