@@ -423,7 +423,12 @@ function getMyEntries(data, element) {
 $(document).on('click', '.script', function() {
     var oldScript =  $('#loadedScript').text();
     var stateObj = {script: oldScript,  xml:  serializer.serializeToString(xml) };
-    history.replaceState(stateObj, oldScript, "tester.html?script=" + oldScript);
+    try {
+    		history.replaceState(stateObj, oldScript, "tester.html?script=" + oldScript);
+    }
+    catch(err) {
+        console.log(err)
+    }
 
     var newScript = $(this).attr("id");
     // Remove all hoover divs and append the one to the current script
