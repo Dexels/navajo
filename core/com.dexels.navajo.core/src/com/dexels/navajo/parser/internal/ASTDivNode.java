@@ -17,10 +17,6 @@ public final class ASTDivNode extends SimpleNode {
 		Object a = this.jjtGetChild(0).interpret();
 		Object b = this.jjtGetChild(1).interpret();
 
-        if (a == null || b == null) {
-            throw new TMLExpressionException("Illegal arguement for div. Cannot div " + a + " / " + b + ". No null values are allowed.");
-        }
-
 		if (a instanceof String || b instanceof String)
 			throw new TMLExpressionException("Division not defined for strings");
 		if (a instanceof Integer && b instanceof Integer)
