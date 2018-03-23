@@ -12,7 +12,6 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
@@ -111,10 +110,14 @@ public class PropertyMap implements Mappable {
 				prop = NavajoFactory.getInstance().createProperty(outMessage, name, (multiple ? "+" : "1"), description, direction);
 				msg.addProperty(prop);
 			} else {
-				prop.setDescription(description);
 				prop.setDirection(direction);
 				prop.removeAllSelections();
 			}
+
+            if (description != null) {
+                prop.setDescription(description);
+            }
+
 			// continue with shared setters
             prop.setType(type);
 			if (length != null)
