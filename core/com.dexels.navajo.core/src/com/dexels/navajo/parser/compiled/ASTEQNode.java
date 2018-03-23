@@ -11,11 +11,6 @@ public final class ASTEQNode extends SimpleNode {
     }
 
 	public final Object interpret( Object a, Object b) throws TMLExpressionException {
-
-        if (a == null || b == null) {
-            throw new NullPointerException();
-        }
-
         return Boolean.valueOf(Utils.equals(a, b));
     }
 	@Override
