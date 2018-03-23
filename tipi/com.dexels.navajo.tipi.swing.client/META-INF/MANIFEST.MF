@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Swing Tipi Client
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.client
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.0.7.qualifier
+Bundle-Version: 2.0.8
 Bundle-Activator: tipiswingclient.Version
 Export-Package: com.dexels.navajo.dnd,com.dexels.navajo.swingclient.ui
  ,com.dexels.navajo.tipi.swingclient,com.dexels.navajo.tipi.swingclien
