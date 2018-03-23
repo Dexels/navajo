@@ -16,10 +16,6 @@ public final class ASTEQNode extends SimpleNode {
 		// System.out.println("Got first argument");
 		Object b = jjtGetChild(1).interpret();
 
-        if (a == null || b == null) {
-            throw new NullPointerException();
-        }
-
 		// System.out.println("Got second argument");
 
 		return Boolean.valueOf(Utils.equals(a, b));
