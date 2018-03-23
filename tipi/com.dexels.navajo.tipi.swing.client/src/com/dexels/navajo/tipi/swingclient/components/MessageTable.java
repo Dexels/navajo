@@ -1543,7 +1543,7 @@ public class MessageTable extends JTable implements CellEditorListener,
         // }
 
         // Create definition message according to the existing rows
-        boolean headerAdded = false;
+        boolean definitionAdded = false;
 
 		for (int i = 0; i < getRowCount(); i++) {
 			Message elt = this.getMessageRow(i);
@@ -1560,7 +1560,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 					if (p != null) {
 						Property q = null;
-                        if (!headerAdded) {
+                        if (!definitionAdded) {
                             Property pdef = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, "",
                                     "out");
                             def.addProperty(pdef);
@@ -1594,7 +1594,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 						}
 						newRow.addProperty(q);
 					}
-                    headerAdded = true;
+                    definitionAdded = true;
 				}
 			} else {
 				for (int j = 0; j < getColumnCount(); j++) {
@@ -1603,7 +1603,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 					if (p != null) {
 						Property q = null;
                         // Headers need special parsing. In the first loop parse the header row
-                        if (!headerAdded) {
+                        if (!definitionAdded) {
                             Property pdef = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, "",
                                     "out");
                             def.addProperty(pdef);
@@ -1639,12 +1639,12 @@ public class MessageTable extends JTable implements CellEditorListener,
 						newRow.addProperty(q);
 					}
 				}
-                headerAdded = true;
+                definitionAdded = true;
 			}
 			constructed.addElement(newRow);
 		}
 
-        constructed.addElement(def);
+        constructed.addMessage(def, true);// .addElement(def);
 
 		return constructed;
 	}
