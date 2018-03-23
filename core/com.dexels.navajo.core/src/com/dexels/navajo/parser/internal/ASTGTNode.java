@@ -20,7 +20,8 @@ public final class ASTGTNode extends SimpleNode {
 	public final static Boolean compare(Object a, Object b) throws TMLExpressionException {
 
         if (a == null || b == null) {
-            throw new NullPointerException();
+            throw new TMLExpressionException(
+                    "Illegal arguement for gt;. Cannot compare " + a + " > " + b + ". No null values are allowed.");
         }
 
 		if (a instanceof Integer && b instanceof Integer)

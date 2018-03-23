@@ -4,6 +4,7 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.ArrayList;
 
+import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 
@@ -23,7 +24,7 @@ public final class ASTAddNode extends SimpleNode {
 	public final Object interpret(Object a,Object b) {
 
         if (a == null || b == null) {
-            throw new NullPointerException();
+            throw new TMLExpressionException("Illegal arguement for add. Cannot add " + a + " + " + b + ". No null values are allowed.");
         }
 
         if (!(a instanceof ArrayList || b instanceof ArrayList)) {

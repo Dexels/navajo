@@ -26,7 +26,8 @@ public final class ASTGTNode extends SimpleNode {
     public final static Boolean compare(Object a, Object b) throws TMLExpressionException {
 
         if (a == null || b == null) {
-            throw new NullPointerException();
+            throw new TMLExpressionException(
+                    "Illegal arguement for gt;. Cannot compare " + a + " > " + b + ". No null values are allowed.");
         }
 
         if (a instanceof Integer && b instanceof Integer)
@@ -42,13 +43,17 @@ public final class ASTGTNode extends SimpleNode {
         else if (a instanceof Money || b instanceof Money)
             return Boolean.valueOf(Utils.getDoubleValue(a) > Utils.getDoubleValue(b));
         else if (a instanceof Percentage || b instanceof Percentage)
-              return Boolean.valueOf(Utils.getDoubleValue(a) > Utils.getDoubleValue(b));
+            return Boolean.valueOf(Utils.getDoubleValue(a) > Utils.getDoubleValue(b));
         else if (a instanceof ClockTime && b instanceof ClockTime)
-          return Boolean.valueOf(Utils.compareDates(a, b, ">"));
+            return Boolean.valueOf(Utils.compareDates(a, b, ">"));
+        else
+            // throw new TMLExpressionException("Illegal comparison for gt; " +
+            // a.getClass().getName() + " " + b.getClass().getName());
+            return Boolean.valueOf(false);
 
-
-        return Boolean.valueOf(false);
-//            throw new TMLExpressionException("Illegal comparison for gt; " + a.getClass().getName() + " " + b.getClass().getName());
+        // return Boolean.valueOf(false);
+        // throw new TMLExpressionException("Illegal comparison for gt; " +
+        // a.getClass().getName() + " " + b.getClass().getName());
     }
 
 	public final Object interpret(Object a, Object b) throws TMLExpressionException {

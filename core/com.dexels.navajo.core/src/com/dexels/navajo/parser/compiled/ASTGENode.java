@@ -26,7 +26,8 @@ public final class ASTGENode extends SimpleNode {
     public static final Boolean compare(Object a, Object b)  {
 
         if (a == null || b == null) {
-            throw new NullPointerException();
+            throw new TMLExpressionException(
+                    "Illegal arguement for ge;. Cannot compare " + a + " >= " + b + ". No null values are allowed.");
         }
 
         if (a instanceof Integer && b instanceof Integer)
@@ -41,16 +42,11 @@ public final class ASTGENode extends SimpleNode {
             return Boolean.valueOf(Utils.compareDates(a, b, ">="));
         else if (a instanceof Money || b instanceof Money)
             return Boolean.valueOf(Utils.getDoubleValue(a) >= Utils.getDoubleValue(b));
-          else if (a instanceof Percentage || b instanceof Percentage)
-              return Boolean.valueOf(Utils.getDoubleValue(a) >= Utils.getDoubleValue(b));
+        else if (a instanceof Percentage || b instanceof Percentage)
+            return Boolean.valueOf(Utils.getDoubleValue(a) >= Utils.getDoubleValue(b));
         else if (a instanceof ClockTime && b instanceof ClockTime)
-          return Boolean.valueOf(Utils.compareDates(a, b, ">="));
-        else if(a==null) {
-           throw new TMLExpressionException("Illegal comparison for ge, first argument null. ");
-      	  
-        } else if(b==null) {
-           throw new TMLExpressionException("Illegal comparison for ge, second argument null. ");
-        }
+            return Boolean.valueOf(Utils.compareDates(a, b, ">="));
+        else
             throw new TMLExpressionException("Illegal comparison for ge; " + a.getClass().getName() + " " + b.getClass().getName());
     }
 

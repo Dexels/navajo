@@ -14,7 +14,7 @@ public final class ASTDivNode extends SimpleNode {
 	public final Object interpret(Object a, Object b) throws TMLExpressionException {
 
         if (a == null || b == null) {
-            throw new NullPointerException();
+            throw new TMLExpressionException("Illegal arguement for div. Cannot div " + a + " / " + b + ". No null values are allowed.");
         }
 
         if (a instanceof String || b instanceof String)

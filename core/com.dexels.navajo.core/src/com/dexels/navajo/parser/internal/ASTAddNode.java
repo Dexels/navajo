@@ -22,7 +22,7 @@ public final class ASTAddNode extends SimpleNode {
 		Object b = jjtGetChild(1).interpret();
 
         if (a == null || b == null) {
-            throw new NullPointerException();
+            throw new TMLExpressionException("Illegal arguement for add. Cannot add " + a + " + " + b + ". No null values are allowed.");
         }
 
 		// System.out.println("Got second argument");
