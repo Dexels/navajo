@@ -507,7 +507,6 @@ public class StreamDocument {
 			@Override
 			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super ImmutableMessage> child) throws Exception {
 				return new Subscriber<NavajoStreamEvent>() {
-
 					Stack<String> pathStack = new Stack<>();
 					AtomicInteger arrayCounter = new AtomicInteger();
 					List<ImmutableMessage> currentArray  = new ArrayList<>();

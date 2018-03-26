@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1532,17 +1531,20 @@ public class MessageTable extends JTable implements CellEditorListener,
         
         Message def = NavajoFactory.getInstance().createMessage(newNavajo, myMessage.getName(), Message.MSG_TYPE_DEFINITION);
         
-        Collection<MessageTableColumnDefinition> columnDefinitions = getColumnDefinitions().values();
-        for (MessageTableColumnDefinition columnDef : columnDefinitions) {
-            Property p = NavajoFactory.getInstance().createProperty(
-                    newNavajo, columnDef.getId(), "string", "",
-                    255, columnDef.getTitle(), "out");
-            if (includeInvisibleColumns || hasColumn(columnDef.getId()) ) {
-                def.addProperty(p);
-            }
-        }
-        constructed.addElement(def);
-		
+        // Collection<MessageTableColumnDefinition> columnDefinitions =
+        // getColumnDefinitions().values();
+        // for (MessageTableColumnDefinition columnDef : columnDefinitions) {
+        // Property p = NavajoFactory.getInstance().createProperty(
+        // newNavajo, columnDef.getId(), "string", "",
+        // 255, columnDef.getTitle(), "out");
+        // if (includeInvisibleColumns || hasColumn(columnDef.getId()) ) {
+        // def.addProperty(p);
+        // }
+        // }
+
+        // Create definition message according to the existing rows
+        boolean definitionAdded = false;
+
 		for (int i = 0; i < getRowCount(); i++) {
 			Message elt = this.getMessageRow(i);
 			if (Message.MSG_DEFINITION.equals(elt.getType())) {
@@ -1557,9 +1559,12 @@ public class MessageTable extends JTable implements CellEditorListener,
 					Property p = ps.get(j);
 
 					if (p != null) {
-
 						Property q = null;
-
+                        if (!definitionAdded) {
+                            Property pdef = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, "",
+                                    "out");
+                            def.addProperty(pdef);
+                        }
 						if (p.getType().equals(Property.SELECTION_PROPERTY)
 								&& p.getCardinality().equals("+")) {
 							try {
@@ -1587,9 +1592,9 @@ public class MessageTable extends JTable implements CellEditorListener,
 								q.setType(Property.STRING_PROPERTY);
 							}
 						}
-
 						newRow.addProperty(q);
 					}
+                    definitionAdded = true;
 				}
 			} else {
 				for (int j = 0; j < getColumnCount(); j++) {
@@ -1597,7 +1602,12 @@ public class MessageTable extends JTable implements CellEditorListener,
 					Property p = elt.getProperty(prop);
 					if (p != null) {
 						Property q = null;
-
+                        // Headers need special parsing. In the first loop parse the header row
+                        if (!definitionAdded) {
+                            Property pdef = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, "",
+                                    "out");
+                            def.addProperty(pdef);
+                        }
 						if (p.getType().equals(Property.SELECTION_PROPERTY)
 								&& p.getCardinality().equals("+")) {
 							try {
@@ -1629,9 +1639,13 @@ public class MessageTable extends JTable implements CellEditorListener,
 						newRow.addProperty(q);
 					}
 				}
+                definitionAdded = true;
 			}
 			constructed.addElement(newRow);
 		}
+
+        constructed.addMessage(def, true);// .addElement(def);
+
 		return constructed;
 	}
 

@@ -19,6 +19,7 @@ public final class ASTNENode extends SimpleNode {
 	}
 	
 	public final Object interpret(Object a, Object b) {
+
         return Boolean.valueOf(!Utils.equals(a, b));
 
     }

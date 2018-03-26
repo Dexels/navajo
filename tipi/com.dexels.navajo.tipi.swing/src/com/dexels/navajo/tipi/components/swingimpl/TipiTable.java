@@ -64,7 +64,6 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiMessageTablePanel;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingColumnAttributeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.swingclient.components.ColumnAttribute;
-import com.dexels.navajo.tipi.swingclient.components.MessageTableModel;
 import com.dexels.navajo.tipi.swingclient.components.MessageTablePanel;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
@@ -345,7 +344,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         int size = child.getIntAttribute("size", -1);
 
         if (defaultVisibleExp == null) {
-            defaultVisibleExp = "false";
+            defaultVisibleExp = "true";
         }
         // try to use the property (that this column points to) from the message
         // the table listens to

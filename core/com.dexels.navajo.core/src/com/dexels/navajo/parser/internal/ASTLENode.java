@@ -18,6 +18,12 @@ public final class ASTLENode extends SimpleNode {
 	}
 
 	public final static Boolean compare(Object a, Object b) throws TMLExpressionException {
+
+        if (a == null || b == null) {
+            throw new TMLExpressionException(
+                    "Illegal arguement for le;. Cannot compare " + a + " <= " + b + ". No null values are allowed.");
+        }
+
 		if (a instanceof Integer && b instanceof Integer)
 			return Boolean.valueOf(((Integer) a).intValue() <= ((Integer) b).intValue());
 		else if (a instanceof Integer && b instanceof Double)
@@ -36,7 +42,7 @@ public final class ASTLENode extends SimpleNode {
 			return Boolean.valueOf(Utils.compareDates(a, b, "<="));
 		else
 			throw new TMLExpressionException(
-					"Illegal comparison for gt; " + a.getClass().getName() + " " + b.getClass().getName());
+                    "Illegal comparison for le; " + a.getClass().getName() + " " + b.getClass().getName());
 	}
 
 	@Override

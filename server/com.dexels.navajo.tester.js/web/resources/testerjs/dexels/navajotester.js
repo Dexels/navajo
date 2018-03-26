@@ -426,7 +426,12 @@ function getMyEntries(data, element) {
 $(document).on('click', '.script', function() {
     var oldScript =  $('#loadedScript').text();
     var stateObj = {script: oldScript,  xml:  serializer.serializeToString(xml) };
-    history.replaceState(stateObj, oldScript, "tester.html?script=" + oldScript);
+    try {
+    		history.replaceState(stateObj, oldScript, "tester.html?script=" + oldScript);
+    }
+    catch(err) {
+        console.log(err)
+    }
 
     var newScript = $(this).attr("id");
     // Remove all hoover divs and append the one to the current script
@@ -775,7 +780,17 @@ $(document).on('input propertychange', '.tmlinputtext', function(evt) {
     }
 });
 
-
+$(document).on('textarea change keyup paste', '.tmlinputtextarea', function(evt) {
+    // If it's the propertychange event, make sure it's the value that changed.
+    if (window.event && event.type == "propertychange" && event.propertyName != "value")
+        return;
+    var xpath = $(this).attr('id');
+    var element = $(xml).xpath(xpath)[0];
+    if (typeof element != 'undefined') {
+        var $element = $(element);
+        $element.attr('value',  $(this).val());
+    }
+});
 
 $(document).on('input change', '.tmlinputcheckbox', function(evt) {
     var xpath = $(this).attr('id');
