@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2552">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2604">
     <locations>
-        <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <unit id="com.dexels.thirdparty.feature.feature.group" version="1.11.26.RELEASE"/>
-            <repository location="http://repo.dexels.com/eclipse/3rdparty_1.11.26"/>
-        </location>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.3.22.201711021538"/>
             <repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.22.v20171030"/>
@@ -21,6 +17,11 @@
             <unit id="org.eclipse.equinox.server.core.feature.group" version="1.3.100.v20150529-1857"/>
             <unit id="org.eclipse.equinox.server.jetty.feature.group" version="1.2.0.v20150519-1816"/>
             <repository location="http://repo.dexels.com/eclipse/equinox_mars"/>
+        </location>
+        <location path="/Users/frank/git/navajo/server/com.dexels.navajo.listeners.continuations/targetplatform" type="Directory"/>
+        <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+            <unit id="com.dexels.thirdparty.feature.feature.group" version="1.11.31.RELEASE"/>
+            <repository location="http://repo.dexels.com/eclipse/3rdparty_1.11.31"/>
         </location>
     </locations>
     <includeBundles>
@@ -122,8 +123,8 @@
         <plugin id="org.apache.felix.fileinstall"/>
         <plugin id="org.apache.felix.framework"/>
         <plugin id="org.apache.felix.gogo.command" version="1.0.2"/>
-        <plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
         <plugin id="org.apache.felix.gogo.runtime" version="1.0.6"/>
+        <plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
         <plugin id="org.apache.felix.gogo.shell" version="1.0.0"/>
         <plugin id="org.apache.felix.inventory"/>
         <plugin id="org.apache.felix.log"/>
@@ -201,7 +202,7 @@
         <plugin id="org.eclipse.jetty.alpn.server"/>
         <plugin id="org.eclipse.jetty.annotations"/>
         <plugin id="org.eclipse.jetty.client"/>
-        <plugin id="org.eclipse.jetty.continuation" version="9.3.22.v20171030"/>
+        <plugin id="org.eclipse.jetty.continuation" version="9.4.8.v20171121"/>
         <plugin id="org.eclipse.jetty.http" version="9.3.22.v20171030"/>
         <plugin id="org.eclipse.jetty.http2.client"/>
         <plugin id="org.eclipse.jetty.http2.client.http"/>
@@ -274,6 +275,7 @@
         <plugin id="org.ops4j.pax.web.pax-web-api"/>
         <plugin id="org.ops4j.pax.web.pax-web-extender-whiteboard"/>
         <plugin id="org.ops4j.pax.web.pax-web-jetty"/>
+        <plugin id="org.ops4j.pax.web.pax-web-jetty-bundle" version="6.0.6"/>
         <plugin id="org.ops4j.pax.web.pax-web-runtime"/>
         <plugin id="org.ops4j.pax.web.pax-web-spi"/>
         <plugin id="org.postgresql.jdbc4"/>

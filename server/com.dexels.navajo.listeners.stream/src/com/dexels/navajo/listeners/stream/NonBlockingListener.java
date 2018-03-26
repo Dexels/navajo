@@ -314,7 +314,7 @@ public class NonBlockingListener extends HttpServlet {
 
 //		Flowable<NavajoStreamEvent> input = Servlets.createFlowable(ac, 1000)
 		Flowable<NavajoStreamEvent> input = getBlockingInput(req)
-				.doOnNext(e->System.err.println("Data: "+new String(e)))
+//				.doOnNext(e->System.err.println("Data: "+new String(e)))
 				.doOnComplete(()->{
 					System.err.println("Blocking input complete");
 				})

@@ -37,8 +37,6 @@ public class TestSingle {
 		reactiveScriptParser = TestSetup.setup();
 	}
 
-	
-
 	@Test
 	public void testSingleSource() throws UnsupportedEncodingException, IOException {
 		SingleSourceFactory ssf = new SingleSourceFactory();

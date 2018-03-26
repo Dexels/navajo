@@ -132,7 +132,9 @@ public class ReactiveScriptParser {
 		int parallel = x.getIntAttribute("parallel",1);
 //		final Optional<String> streamMessage = Optional.ofNullable(x.getStringAttribute("streamMessage"));
 
-		final List<String> methods = Arrays.asList(x.getStringAttribute("methods","").split(","));
+		String methodsString = x.getStringAttribute("methods","");
+		
+		final List<String> methods = methodsString.equals("") ? Collections.emptyList() : Arrays.asList(methodsString.split(","));
 		Optional<String> mime = Optional.ofNullable(x.getStringAttribute("mime"));
 		List<ReactiveSource> r = parseRoot(x,relativePath,problems);
 		Type scriptType = null;

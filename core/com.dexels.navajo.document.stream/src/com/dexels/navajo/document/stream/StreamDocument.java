@@ -10,6 +10,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.reactivestreams.Subscriber;
@@ -505,6 +507,12 @@ public class StreamDocument {
 			@Override
 			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super ImmutableMessage> child) throws Exception {
 				return new Subscriber<NavajoStreamEvent>() {
+
+					Stack<String> pathStack = new Stack<>();
+					AtomicInteger arrayCounter = new AtomicInteger();
+					List<ImmutableMessage> currentArray  = new ArrayList<>();
+					Map<String,ImmutableMessage> submessages = new HashMap<>();
+					Map<String,List<ImmutableMessage>> submessageLists = new HashMap<>();
 					@Override
 					public void onComplete() {
 						operatorComplete(child);
@@ -518,22 +526,22 @@ public class StreamDocument {
 					@Override
 					public void onNext(NavajoStreamEvent event) {
 						
-//						if(type==NavajoEventTypes.MESSAGE) {
-//							Msg msgBody = (Msg)event.body();
-//							msgBody.toImmutableMessage();
 						switch(event.type()) {
-							case ARRAY_ELEMENT_STARTED:
 							case ARRAY_STARTED:
+								arrayCounter.set(0);
+								currentArray.clear();
 							case MESSAGE_STARTED:
 							case MESSAGE_DEFINITION_STARTED:
-//								depth.incrementAndGet();
-//								currentMessage.add(event);
+								// TODO ignore definition messages?
+								pathStack.push(event.path());
+							case ARRAY_ELEMENT_STARTED:
+								
 								operatorRequest(1);
 								break;
 							case MESSAGE:
 							case ARRAY_ELEMENT:
-//								Map<String,Object> mm =  event.attributes();
 								Msg m = (Msg)event.body();
+								arrayCounter.incrementAndGet();
 								ImmutableMessage copy = m.toImmutableMessage();
 								operatorNext(event, e->copy, child);
 								break;
