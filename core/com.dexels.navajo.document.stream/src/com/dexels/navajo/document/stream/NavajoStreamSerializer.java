@@ -44,6 +44,7 @@ public class NavajoStreamSerializer {
 			logger.error("Error: ", e);
 		}
 		byte[] byteArray = baos.toByteArray();
+		System.err.println(">> "+ new String(byteArray));
 		return byteArray;
 	}
 	@SuppressWarnings("unchecked")

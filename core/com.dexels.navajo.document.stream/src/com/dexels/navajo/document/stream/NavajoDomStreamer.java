@@ -190,16 +190,18 @@ public class NavajoDomStreamer {
 		String type = tmlProperty.getType();
 		
 		List<Select> selections = selectFromTml(tmlProperty.getAllSelections());
-		Object value = null;
+		String value = null;
+		Binary binary = null;
 		if(Property.BINARY_PROPERTY.equals(type)) {
-			value = tmlProperty.getTypedValue();
+			value = null;
+			binary = (Binary) tmlProperty.getTypedValue();
 		} else if (Property.SELECTION_PROPERTY.equals(type)) {
 			value = null;
 		} else {
 			value = tmlProperty.getValue();
 		}
 		Optional<Direction> direction = "in".equals(tmlProperty.getDirection())?Optional.of(Direction.IN):"out".equals(tmlProperty.getDirection())?Optional.of(Direction.OUT):Optional.empty();
-		return Prop.create(tmlProperty.getName(),""+value,tmlProperty.getType(),selections,direction, tmlProperty.getDescription(),tmlProperty.getLength(),tmlProperty.getSubType(),Optional.ofNullable(tmlProperty.getCardinality()),null);
+		return Prop.create(tmlProperty.getName(),value,tmlProperty.getType(),selections,direction, tmlProperty.getDescription(),tmlProperty.getLength(),tmlProperty.getSubType(),Optional.ofNullable(tmlProperty.getCardinality()),binary);
 	}
 	
 	 private static List<Select> selectFromTml(List<Selection> in) {

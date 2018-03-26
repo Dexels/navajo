@@ -209,7 +209,9 @@ public class NavajoStreamCollector {
 			}
 		} else {
 			result = NavajoFactory.getInstance().createProperty(assemble, p.name(), p.type()==null?Property.STRING_PROPERTY:p.type(), null, p.length(), p.description(), p.direction().orElse(null));
-			result.setAnyValue(p.value());
+			if(p.value()!=null) {
+				result.setAnyValue(p.value());
+			}
 			if(p.type()!=null) {
 				result.setType(p.type());
 			}

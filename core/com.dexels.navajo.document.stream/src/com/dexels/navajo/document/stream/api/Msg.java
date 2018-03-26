@@ -51,7 +51,6 @@ public class Msg {
 		Map<String,String> types = new HashMap<>();
 		for (Prop prop : properties) {
 			String type = prop.type();
-			Object value = prop.value();
 			types.put(prop.name(), type);
 			switch (type) {
 			case "string":

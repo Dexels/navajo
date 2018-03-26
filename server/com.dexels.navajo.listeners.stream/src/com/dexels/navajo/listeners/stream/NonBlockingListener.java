@@ -312,8 +312,8 @@ public class NonBlockingListener extends HttpServlet {
 		}
 		String requestEncoding = (String) attributes.get("Content-Encoding");
 
-//		Flowable<NavajoStreamEvent> input = Servlets.createFlowable(ac, 1000)
-		Flowable<NavajoStreamEvent> input = getBlockingInput(req)
+		Flowable<NavajoStreamEvent> input = Servlets.createFlowable(ac, 1000)
+//		Flowable<NavajoStreamEvent> input = getBlockingInput(req)
 				.doOnComplete(()->{
 					System.err.println("Blocking input complete");
 				})

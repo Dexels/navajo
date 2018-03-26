@@ -89,7 +89,7 @@ public class StreamScriptContext {
 		if(inputNavajo.isPresent()) {
 			throw new IllegalArgumentException("Resolved input already present. Is it resolved already?");
 		}
-		Navajo inputNavajo = inputFlowable.get().toObservable().lift(StreamDocument.collect()).first(NavajoFactory.getInstance().createNavajo()).blockingGet();
+		Navajo inputNavajo = inputFlowable.get().toObservable().lift(StreamDocument.collectNew()).concatMap(e->e).first(NavajoFactory.getInstance().createNavajo()).blockingGet();
 
 		return new StreamScriptContext(this.tenant, service, username, password, attributes, Optional.empty(),Optional.of(inputNavajo), runner, methods);
 	}

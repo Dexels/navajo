@@ -49,8 +49,10 @@ import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;
 import io.reactivex.FlowableSubscriber;
 import io.reactivex.FlowableTransformer;
+import io.reactivex.Observable;
 import io.reactivex.ObservableOperator;
 import io.reactivex.Observer;
+import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -120,66 +122,114 @@ public class StreamDocument {
 			};
 	}
 
-	public static ObservableOperator<Navajo, NavajoStreamEvent> collect() {
-		return new ObservableOperator<Navajo,NavajoStreamEvent>() {
+	public static ObservableOperator<Observable<Navajo>, NavajoStreamEvent> collectNew() {
+		return new ObservableOperator<Observable<Navajo>,NavajoStreamEvent>() {
 
-			NavajoStreamCollector collector = new NavajoStreamCollector();
 			@Override
-			public Observer<? super NavajoStreamEvent> apply(Observer<? super Navajo> child) throws Exception {
-				return new Op(child);
-			}
-			final class Op implements Observer<NavajoStreamEvent>, Disposable {
-				final Observer<? super Navajo> child;
+			public Observer<? super NavajoStreamEvent> apply(Observer<? super Observable<Navajo>> child)
+					throws Exception {
+				return new Observer<NavajoStreamEvent>() {
+					NavajoStreamCollector collector = new NavajoStreamCollector();
 
-				Disposable parentSubscription;
+					private Disposable parentSubscription;
 
-				final AtomicBoolean isDisposed = new AtomicBoolean(false);
-				public Op(Observer<? super Navajo> child) {
-					this.child = child;
-				}
-				@Override
-				public void onSubscribe(Disposable s) {
-					this.parentSubscription = s;
-					child.onSubscribe(this);
-				}
-
-				@Override
-				public void onNext(NavajoStreamEvent v) {
-					try {
-						Optional<Navajo> result = collector.processNavajoEvent(v);
-						if(result.isPresent()) {
-							child.onNext(result.get());
-						}
-					} catch (IOException e) {
-						onError(e);
-						dispose();
+					@Override
+					public void onComplete() {
+						child.onComplete();
 					}
-				}
 
-				@Override
-				public void onError(Throwable e) {
-					child.onError(e);
-				}
+					@Override
+					public void onError(Throwable e) {
+						child.onError(e);
+					}
 
-				@Override
-				public void onComplete() {
-					child.onComplete();
-				}
+					@Override
+					public void onNext(NavajoStreamEvent event) {
+						try {
+							Optional<Navajo> n = collector.processNavajoEvent(event);
+							if (n.isPresent()) {
+								child.onNext(Observable.just(n.get()));
+							} else {
+								child.onNext(Observable.empty());
+							}
+						} catch (IOException e) {
+							child.onError(e);
+							parentSubscription.dispose();
+						}
+						
+					}
 
-				@Override
-				public void dispose() {
-					isDisposed.set(true);
-					parentSubscription.dispose();
-					
-				}
-				@Override
-				public boolean isDisposed() {
-					return isDisposed.get();
-				}
+					@Override
+					public void onSubscribe(Disposable d) {
+						this.parentSubscription = d;
+						child.onSubscribe(d);
+					};
+				};
 			}
+
+
 		};
 	}
-	
+//	public static ObservableOperator<Navajo, NavajoStreamEvent> collect() {
+//		return new ObservableOperator<Navajo,NavajoStreamEvent>() {
+//
+//			NavajoStreamCollector collector = new NavajoStreamCollector();
+//			@Override
+//			public Observer<? super NavajoStreamEvent> apply(Observer<? super Navajo> child) throws Exception {
+//				return new Op(child);
+//			}
+//			final class Op implements Observer<NavajoStreamEvent>, Disposable {
+//				final Observer<? super Navajo> child;
+//
+//				Disposable parentSubscription;
+//
+//				final AtomicBoolean isDisposed = new AtomicBoolean(false);
+//				public Op(Observer<? super Navajo> child) {
+//					this.child = child;
+//				}
+//				@Override
+//				public void onSubscribe(Disposable s) {
+//					this.parentSubscription = s;
+//					child.onSubscribe(this);
+//				}
+//
+//				@Override
+//				public void onNext(NavajoStreamEvent v) {
+//					try {
+//						Optional<Navajo> result = collector.processNavajoEvent(v);
+//						if(result.isPresent()) {
+//							child.onNext(result.get());
+//						}
+//					} catch (IOException e) {
+//						onError(e);
+//						dispose();
+//					}
+//				}
+//
+//				@Override
+//				public void onError(Throwable e) {
+//					child.onError(e);
+//				}
+//
+//				@Override
+//				public void onComplete() {
+//					child.onComplete();
+//				}
+//
+//				@Override
+//				public void dispose() {
+//					isDisposed.set(true);
+//					parentSubscription.dispose();
+//					
+//				}
+//				@Override
+//				public boolean isDisposed() {
+//					return isDisposed.get();
+//				}
+//			}
+//		};
+//	}
+//	
 	
 	public static FlowableOperator<Navajo, NavajoStreamEvent> collectFlowable() {
 		return new FlowableOperator<Navajo,NavajoStreamEvent>() {
