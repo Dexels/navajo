@@ -22,9 +22,9 @@ public final class ASTOrNode extends SimpleNode {
 	@Override
 	public ContextExpression interpretToLambda(List<String> problems) {
 		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems);
-		checkOrAdd("Or expression failed, first expression is not a boolean but a "+expA.returnType(), problems, expA.returnType(), Property.BOOLEAN_PROPERTY);
+		checkOrAdd("Or expression failed, first expression is not a boolean but a "+expA.returnType().orElse("<unknown>"), problems, expA.returnType(), Property.BOOLEAN_PROPERTY);
 		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems);
-		checkOrAdd("Or expression failed, second expression is not a boolean but a "+expB.returnType(), problems, expB.returnType(), Property.BOOLEAN_PROPERTY);
+		checkOrAdd("Or expression failed, second expression is not a boolean but a "+expB.returnType().orElse("<unknown>"), problems, expB.returnType(), Property.BOOLEAN_PROPERTY);
 		return new ContextExpression() {
 			
 			@Override
