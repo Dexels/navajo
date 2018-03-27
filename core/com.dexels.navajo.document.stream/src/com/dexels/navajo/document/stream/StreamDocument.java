@@ -51,6 +51,7 @@ import io.reactivex.FlowableSubscriber;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOperator;
+import io.reactivex.ObservableTransformer;
 import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
@@ -67,59 +68,14 @@ public class StreamDocument {
 	public static Flowable<NavajoStreamEvent> streamMessage(Message message) {
 		return NavajoDomStreamer.streamMessage(message);
 	}
-	public static ObservableOperator<NavajoStreamEvent, Navajo> domStream() {
-		return new ObservableOperator<NavajoStreamEvent,Navajo>() {
+	
+	
+	public static ObservableTransformer<Navajo,Observable<NavajoStreamEvent>> domStreamTransformer() {
+		return e->e.map(elt->{
+			List<NavajoStreamEvent> eventList = NavajoDomStreamer.processNavajo(elt);
+			return Observable.fromIterable(eventList);
 
-			@Override
-			public Observer<? super Navajo> apply(Observer<? super NavajoStreamEvent> child) throws Exception {
-					return new Op(child);
-			}
-			
-			final class Op implements Observer<Navajo>, Disposable {
-					final Observer<? super NavajoStreamEvent> child;
-
-					Disposable parentSubscription;
-
-					final AtomicBoolean isDisposed = new AtomicBoolean(false);
-					public Op(Observer<? super NavajoStreamEvent> child) {
-						this.child = child;
-					}
-					@Override
-					public void onSubscribe(Disposable s) {
-						this.parentSubscription = s;
-						child.onSubscribe(this);
-					}
-
-					@Override
-					public void onNext(Navajo n) {
-						List<NavajoStreamEvent> eventList = NavajoDomStreamer.processNavajo(n);
-						for (NavajoStreamEvent event : eventList) {
-							child.onNext(event);
-						}
-					}
-
-					@Override
-					public void onError(Throwable e) {
-						child.onError(e);
-					}
-
-					@Override
-					public void onComplete() {
-						child.onComplete();
-					}
-
-					@Override
-					public void dispose() {
-						isDisposed.set(true);
-						parentSubscription.dispose();
-						
-					}
-					@Override
-					public boolean isDisposed() {
-						return isDisposed.get();
-					}
-				}
-			};
+		});
 	}
 
 	public static ObservableOperator<Observable<Navajo>, NavajoStreamEvent> collectNew() {
@@ -170,66 +126,6 @@ public class StreamDocument {
 
 		};
 	}
-//	public static ObservableOperator<Navajo, NavajoStreamEvent> collect() {
-//		return new ObservableOperator<Navajo,NavajoStreamEvent>() {
-//
-//			NavajoStreamCollector collector = new NavajoStreamCollector();
-//			@Override
-//			public Observer<? super NavajoStreamEvent> apply(Observer<? super Navajo> child) throws Exception {
-//				return new Op(child);
-//			}
-//			final class Op implements Observer<NavajoStreamEvent>, Disposable {
-//				final Observer<? super Navajo> child;
-//
-//				Disposable parentSubscription;
-//
-//				final AtomicBoolean isDisposed = new AtomicBoolean(false);
-//				public Op(Observer<? super Navajo> child) {
-//					this.child = child;
-//				}
-//				@Override
-//				public void onSubscribe(Disposable s) {
-//					this.parentSubscription = s;
-//					child.onSubscribe(this);
-//				}
-//
-//				@Override
-//				public void onNext(NavajoStreamEvent v) {
-//					try {
-//						Optional<Navajo> result = collector.processNavajoEvent(v);
-//						if(result.isPresent()) {
-//							child.onNext(result.get());
-//						}
-//					} catch (IOException e) {
-//						onError(e);
-//						dispose();
-//					}
-//				}
-//
-//				@Override
-//				public void onError(Throwable e) {
-//					child.onError(e);
-//				}
-//
-//				@Override
-//				public void onComplete() {
-//					child.onComplete();
-//				}
-//
-//				@Override
-//				public void dispose() {
-//					isDisposed.set(true);
-//					parentSubscription.dispose();
-//					
-//				}
-//				@Override
-//				public boolean isDisposed() {
-//					return isDisposed.get();
-//				}
-//			}
-//		};
-//	}
-//	
 	
 	public static FlowableOperator<Navajo, NavajoStreamEvent> collectFlowable() {
 		return new FlowableOperator<Navajo,NavajoStreamEvent>() {
@@ -343,73 +239,6 @@ public class StreamDocument {
 						return result;
 					}	
 				};
-			}
-		};
-	}
-
-	public static FlowableOperator<Binary,String> gatherBinaryOld() {
-		return new FlowableOperator<Binary,String>() {
-
-
-			@Override
-			public Subscriber<? super String> apply(Subscriber<? super Binary> child) throws Exception {
-				return new Op(child);
-			}
-
-			final class Op implements FlowableSubscriber<String> {
-				final Subscriber<? super Binary> child;
-				Binary result = null;
-				private BackpressureAdministrator backpressureAdmin;
-
-				public Op(Subscriber<? super Binary> child) {
-					this.child = child;
-				}
-
-				@Override
-				public void onSubscribe(Subscription s) {
-			        this.backpressureAdmin = new BackpressureAdministrator("gatherBinary",Long.MAX_VALUE, s);
-					child.onSubscribe(backpressureAdmin);
-					backpressureAdmin.initialize();				}
-
-				@Override
-				public void onNext(String s) {
-					if(result==null) {
-						result = createBinary();
-					}
-					try {
-						result.pushContent(s);
-					} catch (IOException e) {
-						child.onError(e);
-					}			
-				}
-
-				@Override
-				public void onError(Throwable e) {
-					child.onError(e);
-				}
-
-				@Override
-				public void onComplete() {
-					try {
-						if(result!=null) {
-							result.finishPushContent();
-							child.onNext(result);
-						}
-						child.onComplete();
-					} catch (IOException e) {
-						child.onError(e);
-					}
-				}
-
-				private Binary createBinary() {
-					Binary result = new Binary();
-					try {
-						result.startPushRead();
-					} catch (IOException e1) {
-						logger.error("Error: ", e1);
-					}
-					return result;
-				}
 			}
 		};
 	}
@@ -552,8 +381,6 @@ public class StreamDocument {
 	public static FlowableOperator<ImmutableMessage, NavajoStreamEvent> collectEventsToImmutable() {
 		return new BaseFlowableOperator<ImmutableMessage, NavajoStreamEvent>(10) {
 
-//			AtomicInteger depth = new AtomicInteger();
-//			List<NavajoStreamEvent> currentMessage = new ArrayList<>();
 			@Override
 			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super ImmutableMessage> child) throws Exception {
 				return new Subscriber<NavajoStreamEvent>() {
@@ -621,6 +448,81 @@ public class StreamDocument {
 			}
 		};
 	}
+	
+	
+	public static FlowableOperator<ImmutableMessage, NavajoStreamEvent> collectEventsToImmutable2() {
+		return new BaseFlowableOperator<ImmutableMessage, NavajoStreamEvent>(10) {
+
+			@Override
+			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super ImmutableMessage> child) throws Exception {
+				return new Subscriber<NavajoStreamEvent>() {
+					Stack<String> pathStack = new Stack<>();
+					AtomicInteger arrayCounter = new AtomicInteger();
+					List<ImmutableMessage> currentArray  = new ArrayList<>();
+					Map<String,ImmutableMessage> submessages = new HashMap<>();
+					Map<String,List<ImmutableMessage>> submessageLists = new HashMap<>();
+					@Override
+					public void onComplete() {
+						operatorComplete(child);
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						operatorError(t, child);
+					}
+
+					@Override
+					public void onNext(NavajoStreamEvent event) {
+						
+						switch(event.type()) {
+							case ARRAY_STARTED:
+								arrayCounter.set(0);
+								currentArray.clear();
+							case MESSAGE_STARTED:
+							case MESSAGE_DEFINITION_STARTED:
+								// TODO ignore definition messages?
+								pathStack.push(event.path());
+							case ARRAY_ELEMENT_STARTED:
+								
+								operatorRequest(1);
+								break;
+							case MESSAGE:
+							case ARRAY_ELEMENT:
+								Msg m = (Msg)event.body();
+								arrayCounter.incrementAndGet();
+								ImmutableMessage copy = m.toImmutableMessage();
+								operatorNext(event, e->copy, child);
+								break;
+								
+							case NAVAJO_DONE:
+							case NAVAJO_STARTED:
+							case BINARY_STARTED:
+							case BINARY_CONTENT:
+							case BINARY_DONE:
+							case ARRAY_DONE:
+							case MESSAGE_DEFINITION:
+//								currentMessage.add(event);
+								operatorRequest(1);
+								return;
+								
+							default:
+								throw new UnsupportedOperationException("Unknown event found in NAVADOC: "+event.type());
+							}
+//						}
+					}
+
+					@Override
+					public void onSubscribe(Subscription s) {
+						operatorSubscribe(s, child);
+					}
+						
+				};
+			}
+		};
+	}
+
+	
+	
 	
 	public static FlowableOperator<NavajoStreamEvent, NavajoStreamEvent> filterMessageIgnore() {
 		return new BaseFlowableOperator<NavajoStreamEvent, NavajoStreamEvent>(10) {
@@ -763,8 +665,6 @@ public class StreamDocument {
 								break;
 							}
 						operatorRequest(1);
-//						backpressureAdmin.consumedEvent();
-//						backpressureAdmin.requestIfNeeded();						
 					}
 
 					@Override

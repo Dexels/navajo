@@ -138,6 +138,14 @@ public class NonBlockingListener extends HttpServlet {
 				public void onComplete(AsyncEvent ae) throws IOException {
 				}
 			});
+			String debugString = request.getHeader("X-Navajo-Debug");
+			boolean debug = debugString != null;
+			ReactiveScript rs = buildScript(context,debug);
+			if(rs.binaryMimeType().isPresent()) {
+				response.addHeader("Content-Type", rs.binaryMimeType().get());
+			} else {
+				response.addHeader("Content-Type", "text/xml;charset=utf-8");
+			}
 			try {
 				authenticate(context,(String)context.attributes.get("x-navajo-password"), (String)context.attributes.get("Authorization"),context.tenant);
 			} catch (Exception e1) {
@@ -153,18 +161,10 @@ public class NonBlockingListener extends HttpServlet {
 				logger.error("Error detected: {}",e);
 				return errorMessage(true,context,Optional.of(e), e.getMessage()).map(DataItem::of);
 			};
-			String debugString = request.getHeader("X-Navajo-Debug");
-			boolean debug = debugString != null;
-			
-			ReactiveScript rs = buildScript(context,debug);
 			if(responseEncoding.isPresent()) {
 				response.addHeader("Content-Encoding", responseEncoding.get());
 			}
-			if(rs.binaryMimeType().isPresent()) {
-				response.addHeader("Content-Type", rs.binaryMimeType().get());
-			} else {
-				response.addHeader("Content-Type", "text/xml;charset=utf-8");
-			}
+
 
 			switch(rs.dataType()) {
 			case DATA:
@@ -312,8 +312,8 @@ public class NonBlockingListener extends HttpServlet {
 		}
 		String requestEncoding = (String) attributes.get("Content-Encoding");
 
-		Flowable<NavajoStreamEvent> input = Servlets.createFlowable(ac, 1000)
-//		Flowable<NavajoStreamEvent> input = getBlockingInput(req)
+//		Flowable<NavajoStreamEvent> input = Servlets.createFlowable(ac, 10000)
+		Flowable<NavajoStreamEvent> input = getBlockingInput(req)
 				.doOnComplete(()->{
 					System.err.println("Blocking input complete");
 				})
@@ -330,12 +330,8 @@ public class NonBlockingListener extends HttpServlet {
 	}
 
 	private Flowable<byte[]> getBlockingInput(HttpServletRequest request) {
-		String requestEncoding = (String) request.getHeader("Content-Encoding");
-
-		System.err.println("Requestencoding: "+requestEncoding);
 		try {
-			return Bytes.from(request.getInputStream())
-					.doOnComplete(()->System.err.println("COMPLETE input"));
+			return Bytes.from(request.getInputStream());
 		} catch (IOException e) {
 			return Flowable.error(e);
 		}

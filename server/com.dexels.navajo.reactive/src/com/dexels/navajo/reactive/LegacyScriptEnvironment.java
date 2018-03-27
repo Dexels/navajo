@@ -110,7 +110,8 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 			return errorMessage(context.service,context.username,101,"Could not resolve script: "+context.service);
 		}
 		return Observable.just(result)
-			.lift(StreamDocument.domStream())
+			.compose(StreamDocument.domStreamTransformer())
+			.concatMap(elt->elt)
 			.toFlowable(BackpressureStrategy.BUFFER);
 	}
 	

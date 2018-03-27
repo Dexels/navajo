@@ -33,7 +33,8 @@ public class TestNavajoNonBlockingStreamReactive {
 				.createNavajo(getClass().getClassLoader().getResourceAsStream("tiny_tml.xml"));
 
 		Navajo result = Observable.just(baseTml)	
-			.lift(StreamDocument.domStream())
+			.compose(StreamDocument.domStreamTransformer())
+			.concatMap(e->e)
 			.lift(StreamDocument.collectNew())
 			.concatMap(e->e)
 //			.blockingLast();
@@ -95,7 +96,8 @@ public class TestNavajoNonBlockingStreamReactive {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		final Navajo baseTml = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("tml_with_binary.xml"));
 		Observable.just(baseTml)
-			.lift(StreamDocument.domStream())
+			.compose(StreamDocument.domStreamTransformer())
+			.concatMap(e->e)
 			.lift(StreamDocument.serializeObservable())
 			.doOnNext(b -> {
 				try {
@@ -134,7 +136,8 @@ public class TestNavajoNonBlockingStreamReactive {
 			.lift(StreamDocument.collectNew())
 			.concatMap(e->e)
 			.doOnNext(e->e.write(System.err))
-			.lift(StreamDocument.domStream())
+			.compose(StreamDocument.domStreamTransformer())
+			.concatMap(e->e)
 			.lift(StreamDocument.serializeObservable())
 				.blockingForEach(b -> {
 					try {
@@ -163,7 +166,8 @@ public class TestNavajoNonBlockingStreamReactive {
 			.lift(StreamDocument.collectNew())
 			.concatMap(e->e)
 			.doOnNext(n->System.err.println("><>>>2 "+n))
-			.lift(StreamDocument.domStream())
+			.compose(StreamDocument.domStreamTransformer())
+			.concatMap(e->e)
 			.doOnNext(n->System.err.println("><>>>3 "+n))
 			.toFlowable(BackpressureStrategy.BUFFER)
 			.lift(StreamDocument.serialize())
@@ -201,7 +205,8 @@ public class TestNavajoNonBlockingStreamReactive {
 		final Navajo navajo = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("tiny_tml.xml"));
 		
 		Observable.just(navajo)
-		.lift(StreamDocument.domStream())
+		.compose(StreamDocument.domStreamTransformer())
+		.concatMap(e->e)
 		.toFlowable(BackpressureStrategy.BUFFER)
 		.lift(StreamDocument.serialize())
 		.lift(XML.parseFlowable(5))

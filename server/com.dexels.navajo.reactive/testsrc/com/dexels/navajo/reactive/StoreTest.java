@@ -15,7 +15,6 @@ import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
@@ -23,7 +22,6 @@ import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
-import com.dexels.navajo.reactive.mappers.Store;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
 
@@ -65,18 +63,18 @@ public class StoreTest {
 		
 		ReactiveParameters transformerParameter = ReactiveParameters.empty();
 
-		Store storeMapper = new Store();
-		ReactiveParameters mapperParameter = ReactiveParameters.empty()
-				.with("value", (ctx,item,state)->{
-					Integer count = (Integer)state.columnValue("count");
-					if(count == null) {
-						count = 0;
-					}
-					count++;
-					System.err.println("Count: "+count);
-					return new Operand(count, Property.INTEGER_PROPERTY);
-				})
-				.withConstant("name", "count", Property.STRING_PROPERTY);
+//		Store storeMapper = new Store();
+//		ReactiveParameters mapperParameter = ReactiveParameters.empty()
+//				.with("value", (ctx,item,state)->{
+//					Integer count = (Integer)state.columnValue("count");
+//					if(count == null) {
+//						count = 0;
+//					}
+//					count++;
+//					System.err.println("Count: "+count);
+//					return new Operand(count, Property.INTEGER_PROPERTY);
+//				})
+//				.withConstant("name", "count", Property.STRING_PROPERTY);
 
 //		new StoreAsSubMessage().execute(ReactiveParameters.empty()).
 		ReduceTransformerFactory fac = new ReduceTransformerFactory();

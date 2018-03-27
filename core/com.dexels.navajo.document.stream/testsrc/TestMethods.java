@@ -19,7 +19,8 @@ public class TestMethods {
 			Navajo n = NavajoFactory.getInstance().createNavajo(is);
 //			List<NavajoStreamEvent> l =  NavajoDomStreamer.feed(n).toList().blockingGet();
 			Navajo nav =  Observable.just(n)
-			.lift(StreamDocument.domStream())
+			.compose(StreamDocument.domStreamTransformer())
+			.concatMap(e->e)
 			.doOnNext(e->System.err.println("Event: "+e))
 			.toFlowable(BackpressureStrategy.BUFFER)
 			.lift(StreamDocument.collectFlowable())

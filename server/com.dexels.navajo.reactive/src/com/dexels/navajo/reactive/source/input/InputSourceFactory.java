@@ -16,7 +16,6 @@ import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.SourceMetadata;
-import com.dexels.navajo.reactive.source.single.SingleSource;
 
 import io.reactivex.functions.Function;
 

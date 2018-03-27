@@ -143,7 +143,10 @@ public class TestEnvironment {
 	
 	public StreamScriptContext createContext(String serviceName) {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
-		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
+		Flowable<NavajoStreamEvent> inStream = Observable.just(input)
+				.compose(StreamDocument.domStreamTransformer())
+				.concatMap(e->e)
+				.toFlowable(BackpressureStrategy.BUFFER);
 		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.empty(), Optional.empty(), Collections.emptyMap(),Optional.of(inStream),Optional.empty(),Optional.empty(), Collections.emptyList());
 		return context;
 	}

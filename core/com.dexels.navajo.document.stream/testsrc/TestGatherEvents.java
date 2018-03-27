@@ -20,7 +20,8 @@ public class TestGatherEvents {
 			Navajo n = NavajoFactory.getInstance().createNavajo(is);
 //			List<NavajoStreamEvent> l =  NavajoDomStreamer.feed(n).toList().blockingGet();
 			long l =  Observable.just(n)
-					.lift(StreamDocument.domStream())
+					.compose(StreamDocument.domStreamTransformer())
+					.concatMap(e->e)
 					.toFlowable(BackpressureStrategy.BUFFER)
 					.lift(StreamDocument.collectEventsToImmutable())
 					.doOnNext(e->ImmutableFactory.createParser().describe(e))
