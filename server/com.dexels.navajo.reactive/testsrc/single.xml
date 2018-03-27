@@ -1,6 +1,6 @@
 <source.single count.eval="5" debug.eval="true">
 	<set aap="noot" mies="wim" zus.eval="1+2" jet.eval="[index]"/>
 	<delete name="index"/>
-	<set upper.eval="ToUpper([mies])"/>
+	<set upper.eval="[mies]"/>
 	<msg.stream.event messageName="Bla" isArray.eval="true"/>
 </source.single>
