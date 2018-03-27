@@ -83,11 +83,12 @@ public class StreamScriptContext {
 	}
 	
 	public StreamScriptContext resolveInput() {
+		if(inputNavajo.isPresent()) {
+			// nothing to do
+			return this;
+		}
 		if(!inputFlowable.isPresent()) {
 			throw new IllegalArgumentException("Can not resolved input: No unresolved input present. Is it resolved already?");
-		}
-		if(inputNavajo.isPresent()) {
-			throw new IllegalArgumentException("Resolved input already present. Is it resolved already?");
 		}
 		Navajo inputNavajo = inputFlowable.get().toObservable().lift(StreamDocument.collectNew()).concatMap(e->e).first(NavajoFactory.getInstance().createNavajo()).blockingGet();
 
