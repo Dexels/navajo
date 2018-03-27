@@ -10,6 +10,7 @@ import java.util.function.Function;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
@@ -113,6 +114,9 @@ public abstract class SimpleNode implements Node {
 		};
     }
 
+    protected boolean matchesType(Optional<String> encountered, String match) {
+    		return equalOrEmptyTypes().apply(encountered, Optional.of(match));
+    }
     protected BiFunction<Optional<String>, Optional<String>, Boolean> equalOrEmptyTypes() {
     		return (a,b)->{
             if (a == null || b == null) {
@@ -121,7 +125,7 @@ public abstract class SimpleNode implements Node {
     			if(!a.isPresent() || !b.isPresent()) {
     				return true;
     			}
-    			if(a.get().equals("any") || b.get().equals("any")) {
+    			if(a.get().equals(Property.ANY_PROPERTY) || b.get().equals(Property.ANY_PROPERTY)) {
     				return true;
     			}
     			return a.get().equals(b.get());
@@ -185,12 +189,8 @@ public abstract class SimpleNode implements Node {
 		};
 	}
 	
-
     protected void checkOrAdd(String message, List<String> problems, Optional<String> encounteredType, String requiredType) {
-    		if(!encounteredType.isPresent()) {
-    			return;
-    		}
-    		if(!encounteredType.get().equals(requiredType)) {
+    		if(!matchesType(encounteredType, requiredType)) {
     			problems.add(message);
     		}
     }

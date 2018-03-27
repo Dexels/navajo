@@ -60,7 +60,7 @@ public class TestCompiledExpression {
         Assert.assertTrue(ss2.isLiteral());
 
 	}
-	
+
 	@Test
 	public void testParseTml() throws ParseException, TMLExpressionException {
 		StringReader sr = new StringReader("[/TestMessage/TestProperty]");

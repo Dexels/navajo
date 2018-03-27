@@ -38,7 +38,7 @@ public abstract class FunctionInterface {
 	private final static HashSet<Class<? extends FunctionInterface>> initialized = new HashSet<>();
 
 	private final static Map<Class<? extends FunctionInterface>, Class[][]> types = new HashMap<>();
-	private final static Map<Class<? extends FunctionInterface>, Optional<String>> returnType = new HashMap<>();
+	private final static Map<Class<? extends FunctionInterface>, String> returnType = new HashMap<>();
 	private Class[][] myinputtypes;
 	private Optional<String> myreturntypes;
 
@@ -48,7 +48,7 @@ public abstract class FunctionInterface {
 //	private Map<String, Object> params;
 
 	private final Optional<String> getMyReturnType() {
-		return returnType.get(this.getClass());
+		return Optional.ofNullable(returnType.get(this.getClass()));
 	}
 
 	private final Class[][] getMyInputParameters() {
@@ -132,7 +132,9 @@ public abstract class FunctionInterface {
 			if (navajoReturnType != null) {
 				// Set returntype.
 				Optional<String> myreturnType = loadReturnType(navajoReturnType);
-				returnType.put(this.getClass(), myreturnType);
+				if(myreturnType.isPresent()) {
+					returnType.put(this.getClass(), myreturnType.get());
+				}
 			}
 
 			initialized.add(this.getClass());
@@ -289,7 +291,7 @@ public abstract class FunctionInterface {
 	}
 
 	public Optional<String> getReturnType() {
-		return returnType.get(this.getClass());
+		return Optional.ofNullable(returnType.get(this.getClass()));
 	}
 
 	public boolean isInitialized() {

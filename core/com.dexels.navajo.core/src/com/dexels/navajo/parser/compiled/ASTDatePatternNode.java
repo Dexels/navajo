@@ -58,8 +58,6 @@ public final class ASTDatePatternNode extends SimpleNode {
 
 			@Override
 			public Optional<String> returnType() {
-				
-				// TODO Auto-generated method stub
 				return Optional.of(Property.DATE_PATTERN_PROPERTY);
 			}
 		};

@@ -15,12 +15,11 @@ public final class ASTNotNode extends SimpleNode {
     }
 	@Override
 	public ContextExpression interpretToLambda(List<String> problems) {
+		
 		return lazyFunction(problems, a->interpret(a),Optional.of(Property.BOOLEAN_PROPERTY));
 	}
 
 	public final Object interpret(Object a) {
-
-        
         if (!(a instanceof Boolean)) {
             throw new TMLExpressionException("Not operator only allowed for Boolean values");
         } else {

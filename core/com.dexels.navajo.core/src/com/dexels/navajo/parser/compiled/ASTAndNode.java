@@ -25,15 +25,18 @@ public final class ASTAndNode extends SimpleNode {
 		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems);
 		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems);
 		Optional<String> expressionA = expA.returnType();
-        if (expressionA != null && expressionA.isPresent() && !expressionA.get().equals(Property.BOOLEAN_PROPERTY)
-                && !expressionA.get().equals("any")) {
-			problems.add("In AND expression the first expression is not a boolean but a "+expressionA.get());
-		}
+		checkOrAdd("In AND expression the first expression is not a boolean but a "+expressionA.get(), problems, expB.returnType(), Property.BOOLEAN_PROPERTY);
+//		
+//        if (expressionA != null && expressionA.isPresent() && !expressionA.get().equals(Property.BOOLEAN_PROPERTY)
+//                && !expressionA.get().equals(Property.ANY_PROPERTY)) {
+//			problems.add("In AND expression the first expression is not a boolean but a "+expressionA.get());
+//		}
 		Optional<String> expressionB = expB.returnType();
-        if (expressionB != null && expressionB.isPresent() && !expressionB.get().equals(Property.BOOLEAN_PROPERTY)
-                && !expressionB.get().equals("any")) {
-			problems.add("In AND expression the second expression is not a boolean but a "+expressionB.get());
-		}
+		checkOrAdd("In AND expression the second expression is not a boolean but a "+expressionB.get(), problems, expB.returnType(), Property.BOOLEAN_PROPERTY);
+//		if (expressionB != null && expressionB.isPresent() && !expressionB.get().equals(Property.BOOLEAN_PROPERTY)
+//                && !expressionB.get().equals(Property.ANY_PROPERTY)) {
+//			problems.add("In AND expression the second expression is not a boolean but a "+expressionB.get());
+//		}
 
 		return new ContextExpression() {
 			@Override
