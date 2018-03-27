@@ -115,6 +115,9 @@ public abstract class SimpleNode implements Node {
 
     protected BiFunction<Optional<String>, Optional<String>, Boolean> equalOrEmptyTypes() {
     		return (a,b)->{
+            if (a == null || b == null) {
+                return true;
+            }
     			if(!a.isPresent() || !b.isPresent()) {
     				return true;
     			}
