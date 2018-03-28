@@ -94,7 +94,7 @@ public final class ASTFunctionNode extends SimpleNode {
 
 			@Override
 			public Optional<String> returnType() {
-				return f.getReturnType();
+				return typeCheckInstance.getReturnType();
 			}
 		};
 	}
