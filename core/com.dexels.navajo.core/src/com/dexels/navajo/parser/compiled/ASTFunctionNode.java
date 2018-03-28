@@ -43,7 +43,8 @@ public final class ASTFunctionNode extends SimpleNode {
 		return f;
 	}
 
-	private boolean typeCheckArgument(ContextExpression ce, Class enconteredType) {
+	// TODO, connect to function type declaration
+	private boolean typeCheckArgument(ContextExpression ce, Class enconteredType,List<String> problems) {
 		return true;
 	}
 	@Override
@@ -51,8 +52,10 @@ public final class ASTFunctionNode extends SimpleNode {
 
 
 		List<ContextExpression> l = new LinkedList<>();
-		FunctionInterface f = getFunction();
-		if(f==null) {
+		
+		// BEWARE: Don't actually use this function object, as it might have threading conflicts
+		FunctionInterface typeCheckInstance = getFunction();
+		if(typeCheckInstance==null) {
 			throw new NullPointerException("Function: "+functionName+" can not be resolved!");
 		}
 
@@ -65,13 +68,14 @@ public final class ASTFunctionNode extends SimpleNode {
 			
 			@Override
 			public boolean isLiteral() {
-				return f.isPure() && l.stream().allMatch(e->e.isLiteral());
+				return typeCheckInstance.isPure() && l.stream().allMatch(e->e.isLiteral());
 			}
 			
 //			List<String> problems
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+				FunctionInterface f = getFunction();
 				f.setInMessage(doc);
 				f.setCurrentMessage(parentMsg);
 				f.setAccess(access);
