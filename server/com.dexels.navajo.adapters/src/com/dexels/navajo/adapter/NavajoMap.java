@@ -1502,6 +1502,12 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             h.setHeaderAttribute("parentaccessid", access.accessID);
             h.setHeaderAttribute("application", access.getApplication());
             h.setHeaderAttribute("organization", access.getOrganization());
+            if (access.getInDoc() != null && access.getInDoc().getHeader() != null
+                    && access.getInDoc().getHeader().getHeaderAttribute("locale") != null
+                    && access.getInDoc().getHeader().getHeaderAttribute("locale").equals("")) {
+                h.setHeaderAttribute("locale", access.getInDoc().getHeader().getHeaderAttribute("locale"));
+            }
+            // TODO: MAYBE ALL?
             String tenant = access.getTenant();
             boolean skipAuth = true;
             if (this.tenant != null && !this.tenant.equals("")) {
