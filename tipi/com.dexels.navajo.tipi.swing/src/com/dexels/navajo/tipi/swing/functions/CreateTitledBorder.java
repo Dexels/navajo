@@ -12,6 +12,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.tipi.components.swingimpl.layout.TipiRoundedBorder;
@@ -22,6 +25,8 @@ import com.dexels.navajo.tipi.components.swingimpl.layout.TipiTextBalloonBorder;
  * 
  */
 public class CreateTitledBorder extends FunctionInterface {
+    private final static Logger logger = LoggerFactory.getLogger(CreateTitledBorder.class);
+
 	private Color defaultLineColor = Color.BLACK;
 	private Color defaultShadowColor = Color.DARK_GRAY;
 	private int titleAlignment = TitledBorder.LEFT;
@@ -67,7 +72,7 @@ public class CreateTitledBorder extends FunctionInterface {
 		Color linecolor = this.defaultLineColor;
 		Color shadowcolor = this.defaultShadowColor;
 		String titlealignment = null;
-		Object ss = null;
+		final Object ss;
 		if (getOperands().size() >= 2) {
 			bordertype = (String)getOperand(1);
 		}
@@ -82,6 +87,8 @@ public class CreateTitledBorder extends FunctionInterface {
 		}
 		if (getOperands().size() >= 6) {
 			ss = getOperand(5);
+		} else {
+		    ss = null;
 		}
 		if (pp == null) {
 			return null;
@@ -157,75 +164,52 @@ public class CreateTitledBorder extends FunctionInterface {
 			}
 		}
 		
-		TitledBorder border = null;
         TitledBorder result = null;
         if (!SwingUtilities.isEventDispatchThread()) {
 
             Border typedBorderParse = typedBorder;
-            Object ssParse = ss;
 
             FutureTask<TitledBorder> createrTast = new FutureTask<TitledBorder>(new Callable<TitledBorder>() {
                 @Override
                 public TitledBorder call() {
-                    TitledBorder border = BorderFactory.createTitledBorder(typedBorderParse, title);
-                    border.setTitlePosition(2); // default position is in the border
-                    border.setTitleJustification(titleAlignment);
-                    // TitledBorder border = BorderFactory.createTitledBorder(
-                    // BorderFactory.createLineBorder(Color.darkGray, 1), title );
-                    if (ssParse != null && ssParse instanceof String) {
-                        String style = (String) ssParse;
-                        Font titleFont = border.getTitleFont();
-                        if (!style.contains("p")) {
-                            if (style.contains("b")) {
-                                border.setTitleFont(titleFont.deriveFont(Font.BOLD | titleFont.getStyle()));
-                                titleFont = border.getTitleFont();
-                            }
-                            if (style.contains("i")) {
-                                border.setTitleFont(titleFont.deriveFont(Font.ITALIC | titleFont.getStyle()));
-                            }
-                        } else {
-                            border.setTitleFont(titleFont.deriveFont(Font.PLAIN));
-                        }
-                    }
-                    return border;
+                    return createBorder(ss, title, typedBorderParse);
                 }
             });
 
             try {
                 SwingUtilities.invokeAndWait(createrTast);
-                try {
-                    result = createrTast.get();
-                } catch (InterruptedException e) {
-                    // If interrupted catch and return null :(
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    // If not executed catch and return null :(
-                    e.printStackTrace();
-                }
-            } catch (InvocationTargetException | InterruptedException e1) {
-                e1.printStackTrace();
+                result = createrTast.get();
+            } catch (InvocationTargetException | InterruptedException | ExecutionException e) {
+                logger.error("Exception on running task: - unable to create border!", e);
             }
         } else {
-        		border = BorderFactory.createTitledBorder( typedBorder, title );
-        		border.setTitlePosition(2); // default position is in the border
-        		border.setTitleJustification(titleAlignment);
-        		if (ss != null && ss instanceof String) {
-        			String style = (String) ss;
-        			Font titleFont = border.getTitleFont();
-        			if (!style.contains("p")) {
-        				if (style.contains("b")) {
-        					border.setTitleFont(titleFont.deriveFont(Font.BOLD | titleFont.getStyle()));
-        					titleFont = border.getTitleFont();
-        				}
-        				if (style.contains("i")) {
-        					border.setTitleFont(titleFont.deriveFont(Font.ITALIC | titleFont.getStyle()));
-        				}
-        			} else {
-        				border.setTitleFont(titleFont.deriveFont(Font.PLAIN));
-        			}
-        		}
-            result = border;
+        		result = createBorder(ss, title, typedBorder);
 		}
         return result;
 	}
+
+    private TitledBorder createBorder(Object ss, String title, Border typedBorder) {
+        TitledBorder border;
+        TitledBorder result;
+        border = BorderFactory.createTitledBorder( typedBorder, title );
+        border.setTitlePosition(2); // default position is in the border
+        border.setTitleJustification(titleAlignment);
+        if (ss != null && ss instanceof String) {
+        	String style = (String) ss;
+        	Font titleFont = border.getTitleFont();
+        	if (!style.contains("p")) {
+        		if (style.contains("b")) {
+        			border.setTitleFont(titleFont.deriveFont(Font.BOLD | titleFont.getStyle()));
+        			titleFont = border.getTitleFont();
+        		}
+        		if (style.contains("i")) {
+        			border.setTitleFont(titleFont.deriveFont(Font.ITALIC | titleFont.getStyle()));
+        		}
+        	} else {
+        		border.setTitleFont(titleFont.deriveFont(Font.PLAIN));
+        	}
+        }
+         result = border;
+        return result;
+    }
 }
