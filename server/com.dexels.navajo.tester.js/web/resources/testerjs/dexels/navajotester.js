@@ -252,11 +252,20 @@ function runScript(script) {
             url: "/navajo/" + instance,
             data: navajoinput,
             headers: {"X-Navajo-Tester": "true","X-Navajo-Username":sessionStorage.user,"X-Navajo-Reactive":sessionStorage.reactive,"X-Navajo-Service":script,"X-Navajo-Password":sessionStorage.password},
-            success: function(xmlObj) {
-              replaceXml(script, xmlObj);
-              console.log(xmlObj)
-              var stateObj = { script: script, xml:  serializer.serializeToString(xml) };
-              history.pushState(stateObj, script, "tester.html?script="+script);
+            success: function(result) {
+            	  if(result instanceof Node) {
+                      replaceXml(script, result);
+                      var stateObj = { script: script, xml:  serializer.serializeToString(result) };
+                      history.pushState(stateObj, script, "tester.html?script="+script);
+            	  } else {
+            		  console.log('weehee');
+                      var stateObj = { script: script, xml:  result };
+                      history.pushState(stateObj, script, "tester.html?script="+script);
+                      $('#HTMLview')[0].innerHTML = result;
+                      $('#scriptMainView').show();
+                      $('.overlay').hide();
+                      hourglassOff();
+            	  }
             },
             error: function(xhr, ajaxOptions, thrownError) {
               $('#HTMLview')[0].innerHTML = "Error on running script: <br/><br/>" + xhr.responseText;
