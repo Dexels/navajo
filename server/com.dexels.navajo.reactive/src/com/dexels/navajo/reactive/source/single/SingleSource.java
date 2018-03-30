@@ -2,6 +2,7 @@ package com.dexels.navajo.reactive.source.single;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
@@ -41,11 +42,19 @@ public class SingleSource implements ReactiveSource {
 		ReactiveResolvedParameters parameters = this.params.resolveNamed(context, current, ImmutableFactory.empty(), metadata, sourceElement, sourcePath);
 		boolean debug = parameters.paramBoolean("debug", ()->false);
 		int count =  parameters.paramInteger("count", ()->1);
+		int delay =  parameters.paramInteger("delay", ()->0);
+		System.err.println("DELAY: "+delay+" count: "+count);
 		try {
-			Flowable<DataItem> flow =  count > 1 ?
-					Flowable.range(0, count)
-						.map(i->DataItem.of(ReactiveScriptParser.empty().with("index", i, "integer")))
-					: Flowable.just(DataItem.of(ReactiveScriptParser.empty()));
+
+//			if(delay>0) {
+//				Flowable<Long> f = Flowable.interval(delay, TimeUnit.MILLISECONDS).take(count);
+//			} else {
+//				Flowable.range(0, count);
+//			}
+			
+			Flowable<Long> f = delay > 0 ? Flowable.interval(delay, TimeUnit.MILLISECONDS).take(count) : Flowable.rangeLong(0, count);
+			Flowable<DataItem> flow = f.map(i->DataItem.of(ReactiveScriptParser.empty().with("index", i.intValue(), "integer")));
+			
 			if(debug) {
 				flow = flow.doOnNext(di->System.err.println("Item: "+ImmutableFactory.getInstance().describe(di.message())));
 			}

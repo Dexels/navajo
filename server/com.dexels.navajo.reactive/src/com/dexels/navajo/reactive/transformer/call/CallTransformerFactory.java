@@ -37,18 +37,18 @@ public class CallTransformerFactory implements ReactiveTransformerFactory {
 	}
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"messageName","isArray","service","debug"}));
+		return Optional.of(Arrays.asList(new String[]{"isArray","service","debug"}));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[]{"messageName","isArray","service"}));
+		return Optional.of(Arrays.asList(new String[]{"isArray","service"}));
 	}
 
 	@Override
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String,String> r = new HashMap<String, String>();
-		r.put("messageName", Property.STRING_PROPERTY);
+//		r.put("messageName", Property.STRING_PROPERTY);
 		r.put("service", Property.STRING_PROPERTY);
 //		r.put("parallel", Property.INTEGER_PROPERTY);
 		r.put("isArray", Property.BOOLEAN_PROPERTY);
@@ -58,7 +58,7 @@ public class CallTransformerFactory implements ReactiveTransformerFactory {
 	
 	@Override
 	public Set<Type> inType() {
-		return new HashSet<>(Arrays.asList(new Type[] {Type.MESSAGE,Type.SINGLEMESSAGE})) ;
+		return new HashSet<>(Arrays.asList(new Type[] {Type.EVENT})) ;
 	}
 
 	@Override

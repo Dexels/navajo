@@ -176,7 +176,9 @@ public class TestSingle {
 				.execute(myContext)
 				.map(di->di.event())
 				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
-				.lift(StreamDocument.collectFlowable())
+				.toObservable()
+				.compose(StreamDocument.domStreamCollector())
+//				.lift(StreamDocument.collectNew())
 				.firstOrError()
 				.blockingGet();
 			String firstName = (String) n.getMessage("Person").getProperty("firstname").getTypedValue();

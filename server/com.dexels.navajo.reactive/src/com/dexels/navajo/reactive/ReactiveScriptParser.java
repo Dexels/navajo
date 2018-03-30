@@ -159,19 +159,25 @@ public class ReactiveScriptParser {
 			
 			@Override
 			public Flowable<DataItem> execute(StreamScriptContext context) {
-				StreamScriptContext resolvedContext = !hasInputSource ? context.resolveInput() : context;
+//				StreamScriptContext resolvedContext = !hasInputSource ? context.resolveInput() : context;
 				boolean isTml = finalType.equals(Type.EVENT);
 				
-				Flowable<DataItem> flow = parallel > 1 ?
-						Flowable.fromIterable(r)
-						.concatMapEager(r->r.execute(resolvedContext, Optional.empty()),parallel,1)
-					: 
-						Flowable.fromIterable(r)
-						.concatMap(r->r.execute(resolvedContext, Optional.empty()));
-				if(isTml) {
-					flow = flow.compose(StreamDocument.inNavajoDataItem(resolvedContext.service,resolvedContext.username,resolvedContext.password,methods));
+				Flowable<DataItem> flow;
+				try {
+					flow = parallel > 1 ?
+							Flowable.fromIterable(r)
+							.concatMapEager(r->r.execute(context, Optional.empty()),parallel,1)
+						: 
+							Flowable.fromIterable(r)
+							.concatMap(r->r.execute(context, Optional.empty()));
+					if(isTml) {
+						flow = flow.compose(StreamDocument.inNavajoDataItem(context.service,context.username,context.password,methods));
+					}
+					return flow;
+				} catch (Throwable e) {
+					logger.error("Error parsing: ", e);
+					return Flowable.error(e);
 				}
-				return flow;
 			}
 
 			@Override
@@ -567,7 +573,7 @@ public class ReactiveScriptParser {
 			}
 			logger.info("With param message: "+param.toFlatString(ImmutableFactory.getInstance()));
 		}
-		Operand result = Expression.evaluate(expression, context.getInput().orElse(null), null, null,null,null,null,null,m,Optional.of(param));
+		Operand result = Expression.evaluate(expression, context.getBlockingInput(), null, null,null,null,null,null,m,Optional.of(param));
 		if(debug) {
 			logger.info("Result type: "+result.type+" value: "+result.value);
 		}
@@ -575,7 +581,7 @@ public class ReactiveScriptParser {
 	}
 	
 	private static Operand evaluateCompiledExpression(ContextExpression ctx, StreamScriptContext context,Map<String,Object> params, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage)  {
-		Navajo inMessage = context.getInput().orElse(null);
+		Navajo inMessage = context.getBlockingInput();
 		Object val =ctx.apply(inMessage, null, null, null, null, null, null,immutableMessage,paramMessage);
 		String type = MappingUtils.determineNavajoType(val);
 		return new Operand(val, type, "");

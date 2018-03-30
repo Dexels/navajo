@@ -10,7 +10,9 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.StreamDocument;
 
 import io.reactivex.BackpressureStrategy;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 public class TestGatherEvents {
 
@@ -19,8 +21,10 @@ public class TestGatherEvents {
 		try (InputStream is = TestGatherEvents.class.getResourceAsStream("tml_events.xml")) {
 			Navajo n = NavajoFactory.getInstance().createNavajo(is);
 //			List<NavajoStreamEvent> l =  NavajoDomStreamer.feed(n).toList().blockingGet();
-			long l =  Observable.just(n)
+			long l =  Single.just(n)
 					.compose(StreamDocument.domStreamTransformer())
+					.toObservable()
+//					.map(e->e.)
 					.concatMap(e->e)
 					.toFlowable(BackpressureStrategy.BUFFER)
 					.lift(StreamDocument.collectEventsToImmutable())

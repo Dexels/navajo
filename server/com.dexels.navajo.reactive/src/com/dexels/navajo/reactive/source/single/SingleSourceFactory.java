@@ -41,7 +41,7 @@ public class SingleSourceFactory implements ReactiveSourceFactory, SourceMetadat
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"count","debug"}));
+		return Optional.of(Arrays.asList(new String[]{"count","debug","delay"}));
 	}
 
 	@Override
@@ -53,6 +53,7 @@ public class SingleSourceFactory implements ReactiveSourceFactory, SourceMetadat
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String,String> r = new HashMap<>();
 		r.put("count", Property.INTEGER_PROPERTY);
+		r.put("delay", Property.INTEGER_PROPERTY);
 		r.put("debug", Property.BOOLEAN_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}

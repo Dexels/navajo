@@ -10,9 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
+import com.dexels.navajo.document.stream.NavajoStreamCollector;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.StreamDocument;
@@ -27,6 +29,7 @@ import com.dexels.navajo.script.api.LocalClient;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 
@@ -58,13 +61,19 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 			
 			@Override
 			public Flowable<DataItem> execute(StreamScriptContext context) {
-				return runLegacy(context.inputFlowable(), context,debug).map(DataItem::of);			
+				try {
+					Flowable<DataItem> map = Flowable.just(DataItem.ofEventStream(runLegacy(context,debug)));
+					return map;
+				} catch (Exception e) {
+					logger.error("Error: ", e);
+					return Flowable.error(e);
+				}			
 				
 			}
 			
 			@Override
 			public Type dataType() {
-				return Type.EVENT;
+				return Type.EVENTSTREAM;
 			}
 
 			@Override
@@ -86,33 +95,58 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 	}
 
 
-	private Flowable<NavajoStreamEvent> runLegacy(Flowable<NavajoStreamEvent> eventStream,
-			StreamScriptContext context, boolean debug) {
-		return eventStream
-				.lift(StreamDocument.collectFlowable())
-				.doOnNext(nav->{
+	private Flowable<NavajoStreamEvent> runLegacy(StreamScriptContext context, boolean debug) {
+		Single<Navajo> in = context.getInput();
+		return in
+			.doOnSuccess(nav->
+				{
 					if(debug) {
 						logger.warn("======== DEBUG REQUEST============");
 						nav.write(System.err);
 						logger.warn("=== END OF DEBUG REQUEST============");
 					}
 				})
-				.flatMap(inputNav->executeLegacy(context, inputNav));
+		.map(inputNav->executeLegacy(context,inputNav))
+		.toFlowable()
+		.concatMap(e->e)
+		;
+//		.toObservable();
+		
+//		.toFlowable();
+//		;
+//		
+//		return eventStream.concatMap(e->e)
+//				)
+//				.lift(StreamDocument.collectNew())
+////				.firstOrError()
+//				.firstElement()
+//				
+//				
+//				.(nav->{
+//					if(debug) {
+//						logger.warn("======== DEBUG REQUEST============");
+//						nav.write(System.err);
+//						logger.warn("=== END OF DEBUG REQUEST============");
+//					}
+//				})
+//				.toFlowable(BackpressureStrategy.BUFFER)
+//				.flatMap(inputNav->executeLegacy(context, inputNav));
 	}
 	
 
-	private final Flowable<NavajoStreamEvent> executeLegacy(StreamScriptContext context,Navajo in) {
-		Navajo result;
-		try {
-			result = execute(context, in);
-		} catch (Throwable e) {
-			logger.error("Error: ", e);
-			return errorMessage(context.service,context.username,101,"Could not resolve script: "+context.service);
-		}
-		return Observable.just(result)
-			.compose(StreamDocument.domStreamTransformer())
-			.concatMap(elt->elt)
-			.toFlowable(BackpressureStrategy.BUFFER);
+	private final Flowable<NavajoStreamEvent> executeLegacy(StreamScriptContext context, Navajo input) {
+			try {
+				Navajo result = execute(context, input);
+				return Single.just(result)
+					.compose(StreamDocument.domStreamTransformer())
+					.toObservable()
+					.flatMap(e->e)
+					.toFlowable(BackpressureStrategy.BUFFER);
+			} catch (Throwable e) {
+				logger.error("Error: ", e);
+ 				return errorMessage(context.service,context.username,101,"Could not resolve script: "+context.service);
+			}
+			
 	}
 	
 	private final Navajo execute(StreamScriptContext context, Navajo in) throws IOException {

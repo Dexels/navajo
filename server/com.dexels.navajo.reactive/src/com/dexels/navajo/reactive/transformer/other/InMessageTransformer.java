@@ -35,12 +35,12 @@ public class InMessageTransformer implements ReactiveTransformer {
 					.compose(StreamDocument.inArrayElement(name))
 					.compose(StreamDocument.inArray(name))
 					)
-					.map(g->DataItem.ofEvent(g));
+					.map(g->DataItem.ofEventStream(g));
 		} else {
 			return e->e.map(f->f.eventStream()
 					.compose(StreamDocument.inMessage(name))
 					)
-					.map(g->DataItem.ofEvent(g));
+					.map(g->DataItem.ofEventStream(g));
 			
 		}
 	}

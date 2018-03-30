@@ -175,6 +175,10 @@ public class NavajoStreamCollector {
 		}
 	}
 	
+	public Navajo getNavajo() {
+		return assemble;
+	}
+	
 	private String currentPath() {
 		StringBuilder sb = new StringBuilder();
 		for (String path : tagStack) {

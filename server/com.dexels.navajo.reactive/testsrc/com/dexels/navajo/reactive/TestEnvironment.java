@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 public class TestEnvironment {
 
@@ -143,9 +144,10 @@ public class TestEnvironment {
 	
 	public StreamScriptContext createContext(String serviceName) {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
-		Flowable<NavajoStreamEvent> inStream = Observable.just(input)
+		Flowable<NavajoStreamEvent> inStream = Single.just(input)
 				.compose(StreamDocument.domStreamTransformer())
-				.concatMap(e->e)
+				.toObservable()
+				.flatMap(e->e)
 				.toFlowable(BackpressureStrategy.BUFFER);
 		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.empty(), Optional.empty(), Collections.emptyMap(),Optional.of(inStream),Optional.empty(),Optional.empty(), Collections.emptyList());
 		return context;

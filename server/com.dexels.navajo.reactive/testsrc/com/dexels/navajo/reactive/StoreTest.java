@@ -25,6 +25,9 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
 
+import io.reactivex.Maybe;
+import io.reactivex.Single;
+
 public class StoreTest {
 
 	public StoreTest() {
@@ -49,7 +52,7 @@ public class StoreTest {
 	
 	private StreamScriptContext createContext(String serviceName,Navajo input, Optional<ReactiveScriptRunner> runner) {
 //		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
-		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.of("username"), Optional.of("password"), Collections.emptyMap(), Optional.empty(),Optional.of(input), runner, Collections.emptyList());
+		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.of("username"), Optional.of("password"), Collections.emptyMap(), Optional.empty(),Optional.of(Maybe.just(input)), runner, Collections.emptyList());
 		return context;
 	}
 	

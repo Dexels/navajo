@@ -159,8 +159,8 @@ public class DataItem {
 		return new DataItem(event);
 	}
 
-	public static DataItem ofEvent(Flowable<NavajoStreamEvent> event) {
-		return new DataItem(null,event);
+	public static DataItem ofEventStream(Flowable<NavajoStreamEvent> eventStream) {
+		return new DataItem(null,eventStream);
 	}
 
 	public static DataItem of(Flowable<ImmutableMessage> msgList) {
