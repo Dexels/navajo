@@ -174,8 +174,10 @@ public class DataItem {
 			return "data: "+new String(data);
 		} else if(msgList!=null) {
 			return "msglist: "+msgList;		
-		} else {
+		} else if(msg!=null){
 			return msg.toFlatString(ImmutableFactory.getInstance());
+		} else {
+			return "dunno";
 		}
 	}
 	

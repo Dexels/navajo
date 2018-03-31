@@ -10,6 +10,9 @@ import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -38,6 +41,12 @@ public class NavajoStreamCollector {
 
 	private Binary currentBinary;
 	private Property currentProperty;
+	
+	
+	
+	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamCollector.class);
+
+	
 	public NavajoStreamCollector() {
 	}
 	// return # of emitted items, for handling the backpressure
@@ -194,8 +203,14 @@ public class NavajoStreamCollector {
 	private Property createBinaryProperty(String name, Binary value) {
 		Property result = this.binaryProperties.get(name);
 //		Property result = NavajoFactory.getInstance().createProperty(assemble, name, Property.BINARY_PROPERTY, null,0,"", Property.DIR_IN);
-		result.setAnyValue(value);
-		return result;
+		if(result==null) {
+			logger.error("Missing binary property with name "+name);
+		} else {
+			result.setAnyValue(value);
+			return result;
+		}
+		Property res = NavajoFactory.getInstance().createProperty(assemble, name, Property.BINARY_PROPERTY, null,0,"", Property.DIR_IN);
+		return res;
 	}
 
 	private void createHeader(NavajoHead head) {

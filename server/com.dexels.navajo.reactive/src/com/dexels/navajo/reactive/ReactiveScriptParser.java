@@ -152,6 +152,7 @@ public class ReactiveScriptParser {
 		}
 		
 		final Type finalType = scriptType;
+		logger.info("Final source type: "+finalType);
 		if(!problems.isEmpty()) {
 			throw new ReactiveParseException("Parse problems in script: "+serviceName,problems);
 		}
@@ -553,6 +554,7 @@ public class ReactiveScriptParser {
 
 	private static Type finalType(ReactiveSourceFactory source, List<ReactiveTransformer> transformers, List<ReactiveParseProblem> problems) {
 		Type current = source.sourceType();
+		logger.info("Determine source type: "+current);
 		for (ReactiveTransformer reactiveTransformer : transformers) {
 			System.err.println("Checking if allowed in types: "+reactiveTransformer.metadata().inType()+" contains: "+current.name()+" for transformer: "+reactiveTransformer.getClass().getName());
 			if(!reactiveTransformer.metadata().inType().contains(current)) {
@@ -561,6 +563,7 @@ public class ReactiveScriptParser {
 			}
 			current = reactiveTransformer.metadata().outType();
 		}
+		logger.info("Final type: "+current);
 		return current;
 	}
 	

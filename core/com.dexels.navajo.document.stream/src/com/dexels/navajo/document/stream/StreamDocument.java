@@ -997,11 +997,6 @@ public class StreamDocument {
 		return flow->flow.startWith(Events.arrayElementStarted(Collections.emptyMap())).concatWith(Flowable.just(Events.arrayElement(Msg.create(),Collections.emptyMap())));
 	}
 
-//	public static FlowableTransformer<NavajoStreamEvent, NavajoStreamEvent> inMessage(String name) {
-//		return flow->flow.startWith(Events.messageStarted(name, Collections.emptyMap())).concatWith(Flowable.just(Events.message(Msg.create(), name, Collections.emptyMap())));
-//	}
-
-
 	public static FlowableTransformer<ImmutableMessage, NavajoStreamEvent> toMessageEvent(String name, boolean isArray) {
 		return new FlowableTransformer<ImmutableMessage, NavajoStreamEvent>() {
 
@@ -1010,7 +1005,7 @@ public class StreamDocument {
 				if(!isArray) {
 					in = in.take(1);
 				}
-				Flowable<NavajoStreamEvent> events = in.concatMap(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,isArray));
+				Flowable<NavajoStreamEvent> events = in.concatMap(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,isArray) );
 				if(!isArray) {
 					return events;
 				}
@@ -1020,7 +1015,31 @@ public class StreamDocument {
 			}
 		};
 	}
+	
+	public static Flowable<NavajoStreamEvent> toMessageEventStream(String name, ImmutableMessage msg,  boolean isArray)  {
+		return StreamDocument.replicationMessageToStreamEvents(name, msg,isArray);
+	}
 
+//	public static FlowableTransformer<ImmutableMessage, Flowable<NavajoStreamEvent>> toMessageEventStream(String name, boolean isArray) {
+//			return flow->{
+//				if(!isArray) {
+//					flow = flow.take(1);
+//				}
+//				Flowable<Flowable<NavajoStreamEvent>> events = flow.map(msg->StreamDocument.replicationMessageToStreamEvents(name, msg,isArray)
+//						
+//						);
+//				if(!isArray) {
+//					return events;
+//				}
+//				return events
+//						.startWith(Flowable.just(Events.arrayStarted(name,Collections.emptyMap())))
+//						.concatWith(Flowable.just(Events.arrayDone(name)));
+//				
+//			};
+//				
+//		};
+//	}
+	
 	public static FlowableTransformer<ImmutableMessage, NavajoStreamEvent> toMessage(String name) {
 		return new FlowableTransformer<ImmutableMessage, NavajoStreamEvent>() {
 

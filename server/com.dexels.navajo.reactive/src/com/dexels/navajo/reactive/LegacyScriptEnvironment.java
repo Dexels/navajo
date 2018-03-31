@@ -22,6 +22,7 @@ import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
@@ -141,6 +142,8 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 					.compose(StreamDocument.domStreamTransformer())
 					.toObservable()
 					.flatMap(e->e)
+					.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED)
+					.doOnNext(e->System.err.println(">>>><<>>>> aap: "+e))
 					.toFlowable(BackpressureStrategy.BUFFER);
 			} catch (Throwable e) {
 				logger.error("Error: ", e);
