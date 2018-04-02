@@ -10,11 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
-import com.dexels.navajo.document.stream.NavajoStreamCollector;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.StreamDocument;
@@ -22,14 +20,12 @@ import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public class LegacyScriptEnvironment implements ReactiveScriptRunner {
@@ -197,6 +193,7 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 
 	@Override
 	public String deployment() {
+		// TODO
 		return null;
 	}
 }
