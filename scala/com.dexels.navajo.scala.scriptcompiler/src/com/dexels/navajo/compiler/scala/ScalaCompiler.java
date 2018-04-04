@@ -39,7 +39,10 @@ public class ScalaCompiler extends ScriptCompiler {
     		 "com.dexels.navajo.mongo",
     		 "com.dexels.navajo.adapters",
     		 "com.dexels.navajo.enterprise.adapters",
+    		 "com.dexels.replication.api",
+    		 "com.dexels.immutable.api",
     		 "com.sportlink.adapters",
+    		 "com.dexels.navajo.enterprise.pubsub",
     		 "com.sportlink.financial.adapters"};
     
 
