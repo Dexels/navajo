@@ -1,5 +1,6 @@
 package com.dexels.navajo.reactive.subscriber;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,10 +14,13 @@ import org.junit.Test;
 
 import com.dexels.kafka.factory.KafkaClientFactory;
 import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.DataItem.Type;
+import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
+import com.dexels.navajo.reactive.api.StandardTransformerMetadata;
 import com.dexels.navajo.reactive.kafka.SubscriberReactiveSourceFactory;
 import com.dexels.navajo.reactive.pubsub.transformer.ReplicationMessageParseTransformer;
 import com.dexels.pubsub.rx2.api.TopicSubscriber;
@@ -52,6 +56,7 @@ public class TestKafka {
 	@Test @Ignore
 	public void testKafka() {
 		Map<String,String> config = new HashMap<>();
+		List<ReactiveParseProblem> problems = new ArrayList<>();
 		config.put("wait", "1000");
 		FallbackReplicationMessageParser parser = new FallbackReplicationMessageParser(true);
 		ReplicationFactory.setInstance(parser);
@@ -63,7 +68,7 @@ public class TestKafka {
 		String service ="blo";
 		String deployment ="develop";
 		
-		ReactiveTransformer rt = new ReplicationMessageParseTransformer(parser);
+		ReactiveTransformer rt = new ReplicationMessageParseTransformer(StandardTransformerMetadata.noParams(Type.DATA, Type.MESSAGE), parser);
 		List<ReactiveTransformer> transformers = Arrays.asList(new ReactiveTransformer[]{rt});
 		
 		ReactiveParameters params = ReactiveParameters.empty()
@@ -72,7 +77,8 @@ public class TestKafka {
 //				.withConstant("from", "0:10", "string")
 				.withConstant("to", "0:1000", "string")
 				;
-		ReactiveSource rs = krsf.build("kafka", params, transformers, DataItem.Type.MESSAGE);
+
+		ReactiveSource rs = krsf.build("kafka", params,problems, transformers, DataItem.Type.MESSAGE);
 		StreamScriptContext ssc = new StreamScriptContext(tenant, service,deployment);
 		rs.execute(ssc, Optional.empty()).blockingForEach(item->{
 			System.err.println("Item: "+item.message().toDataMap());

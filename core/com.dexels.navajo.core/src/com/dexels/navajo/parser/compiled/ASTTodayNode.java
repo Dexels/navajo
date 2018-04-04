@@ -3,11 +3,13 @@ package com.dexels.navajo.parser.compiled;
 
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.script.api.Access;
@@ -21,7 +23,7 @@ public final class ASTTodayNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda() {
+	public ContextExpression interpretToLambda(List<String> problems) {
 		return new ContextExpression() {
 
 			@Override
@@ -33,6 +35,11 @@ public final class ASTTodayNode extends SimpleNode {
 			@Override
 			public boolean isLiteral() {
 				return false;
+			}
+
+			@Override
+			public Optional<String> returnType() {
+				return Optional.of(Property.DATE_PROPERTY);
 			}
 		};
 	}

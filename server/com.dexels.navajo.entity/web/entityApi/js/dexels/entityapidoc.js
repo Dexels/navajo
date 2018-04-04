@@ -190,7 +190,8 @@ $(document).ready(function() {
                 			req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
                 		}else{
                 			req.setRequestHeader('Authorization', sessionStorage.cauth_type + ' ' + sessionStorage.token);
-                			req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
+                			if(sessionStorage.tenant)
+                				req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
                 		}
                     req.setRequestHeader('Accept', 'application/json'); 
                 },
@@ -227,7 +228,8 @@ $(document).ready(function() {
 	            			req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant); //if we aren't on localhost, the framework adds the header on the reuquest
 	            		}else{
 	            			req.setRequestHeader('Authorization', sessionStorage.cauth_type + ' ' + sessionStorage.token);
-	            			req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant); //if we aren't on localhost, the framework adds the header on the reuquest
+	            			if(sessionStorage.tenant)
+	            				req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant); //if we aren't on localhost, the framework adds the header on the reuquest
 	            		} 
                     req.setRequestHeader('Accept', 'application/json');
                     req.setRequestHeader('content-type', 'application/json');
@@ -268,7 +270,7 @@ $(document).ready(function() {
                 if (sessionStorage.isLocalhost == '1') response += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
             } else {
                 response += ' -H "Authorization: ' +sessionStorage.cauth_type + ' ' + sessionStorage.token +'"';
-                if (sessionStorage.isLocalhost == '1') response += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
+                if (sessionStorage.isLocalhost == '1' && sessionStorage.tenant) response += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
             }
             return response + ' ';
         }

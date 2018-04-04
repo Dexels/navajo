@@ -24,15 +24,15 @@ public class ReactiveParameters {
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveParameters.class);
 
 
-	public final Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> named;
-	public final List<Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> unnamed;
+	public final Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> named;
+	public final List<Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> unnamed;
 
-	private ReactiveParameters(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> unnamedParameters) {
+	private ReactiveParameters(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> unnamedParameters) {
 		this.named = namedParameters;
 		this.unnamed = unnamedParameters;
 	}
 	
-	public List<Operand> resolveUnnamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,Optional<ImmutableMessage> paramMessage) {
+	public List<Operand> resolveUnnamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage) {
 		return unnamed.stream().map(e->{
 			try {
 				return e.apply(context, currentMessage,paramMessage);
@@ -43,11 +43,11 @@ public class ReactiveParameters {
 		}).collect(Collectors.toList());
 	}
 	
-	public List<Operand> resolveUnnamed(StreamScriptContext context ,DataItem currentMessage,Optional<DataItem> paramMessage) {
+	public List<Operand> resolveUnnamed(StreamScriptContext context ,DataItem currentMessage,DataItem paramMessage) {
 		return unnamed.stream().map(e->{
 			try {
-				Optional<ImmutableMessage> param = paramMessage.isPresent() ? Optional.of(paramMessage.get().message()) : Optional.empty();
-				return e.apply(context,  Optional.of(currentMessage.message()),param);
+//				Optional<ImmutableMessage> param = paramMessage.isPresent() ? Optional.of(paramMessage.get().message()) : Optional.empty();
+				return e.apply(context,  Optional.of(currentMessage.message()),paramMessage.stateMessage());
 			} catch (Exception e1) {
 				logger.error("Error applying param function: ", e1);
 				return new Operand(null,"string",null);
@@ -55,47 +55,24 @@ public class ReactiveParameters {
 		}).collect(Collectors.toList());
 	}
 
-	public ReactiveResolvedParameters resolveNamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,Optional<ImmutableMessage> paramMessage, ParameterValidator validator, Optional<XMLElement> sourceElement, String sourcePath) {
+	public ReactiveResolvedParameters resolveNamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage, ParameterValidator validator, Optional<XMLElement> sourceElement, String sourcePath) {
 		return new ReactiveResolvedParameters(context, named, currentMessage, paramMessage,validator, sourceElement, sourcePath);
-	}
-	
-	@Deprecated
-	private Map<String,Operand> resolveNamedOld(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,Optional<ImmutableMessage> paramMessage) {
-		Map<String,Operand> result = new HashMap<>();
-		named.entrySet().forEach(e->{
-			Operand applied;
-			try {
-				applied = e.getValue().apply(context, currentMessage,paramMessage);
-				result.put(e.getKey(), applied);
-			} catch (Exception e1) {
-				logger.error("Error applying param function for named param: "+e.getKey()+" will put null.", e1);
-				result.put(e.getKey(), null);
-			}
-		});
-		return result;
-	}
-
-	@Deprecated
-	public Map<String,Operand> resolveNamed(StreamScriptContext context ,DataItem currentMessage,Optional<DataItem> paramMessage) {
-		Optional<ImmutableMessage> param = paramMessage.isPresent() ? Optional.of(paramMessage.get().message()) : Optional.empty();
-		Optional<ImmutableMessage> current = Optional.of(currentMessage.message());
-		return resolveNamedOld(context, current, param);
 	}
 
 	public ReactiveParameters withConstant(String key, Object value, String type) {
 		return with(key,(context,input,param)->new Operand(value,type,null));
 	}
-	public ReactiveParameters with(String key, Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand> namedParam) {
-		Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> extended = new HashMap<>(named);
+	public ReactiveParameters with(String key, Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand> namedParam) {
+		Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> extended = new HashMap<>(named);
 		extended.put(key, namedParam);
 		return ReactiveParameters.of(extended);
 	}
 	
-	public static ReactiveParameters of(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> unnamedParameters) {
+	public static ReactiveParameters of(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> unnamedParameters) {
 		return new ReactiveParameters(namedParameters, unnamedParameters);
 	}
 
-	public static ReactiveParameters of(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,Optional<ImmutableMessage>,Operand>> namedParameters) {
+	public static ReactiveParameters of(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> namedParameters) {
 		return new ReactiveParameters(namedParameters, Collections.emptyList());
 	}
 	

@@ -37,7 +37,6 @@ public class TestHttp {
 			.lift(XML.parseFlowable(10))
 			.flatMap(x->x)
 			.count().blockingGet();
-		System.err.println(">> "+l);
 	}
 	
 	@Test

@@ -5,6 +5,7 @@
       <provide interface="javax.servlet.Servlet"/>
    </service>
    <property name="alias" type="String" value="/testerapi"/>
+   <property name="httpContext" type="String" value="tester"/>
    <property name="servletName" type="String" value="testerapi"/>
    <reference bind="setNavajoTesterHelper" cardinality="1..1" interface="com.dexels.navajo.tester.js.NavajoTesterHelper" name="NavajoTesterHelper" policy="dynamic"/>
 </scr:component>

@@ -42,7 +42,9 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String PROPERTY_METHOD = "method";
 
 
+  public static final String ANY_PROPERTY = "any";
 
+  
   public static final String STRING_PROPERTY = "string";
   public static final String INTEGER_PROPERTY = "integer";
   public static final String LONG_PROPERTY = "long";

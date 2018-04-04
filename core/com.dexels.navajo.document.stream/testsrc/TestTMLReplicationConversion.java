@@ -1,5 +1,6 @@
 import java.util.Collections;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.dexels.navajo.document.Navajo;
@@ -16,10 +17,11 @@ public class TestTMLReplicationConversion {
 	
 	@Test
 	public void testReplToMessage() {
-		ReplicationMessage rm = ReplicationFactory.fromMap(null, Collections.emptyMap(), Collections.emptyMap());
-		rm = rm.with("Monkey", "Koko", "string");
+		ReplicationMessage rm = ReplicationFactory.empty().with("Monkey", "Koko", "string");
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		n.addMessage(StreamDocument.replicationToMessage(rm.message(),"Message",false));
 		n.write(System.err);
+		String mn = (String) n.getMessage("Message").getProperty("Monkey").getTypedValue();
+		Assert.assertEquals("Koko", mn);
 	}
 }

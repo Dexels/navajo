@@ -31,9 +31,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class TestSQL {
 
-	
-//	private final Map<String,BiFunction<Message, Message, Message>> reduceFunctions = new HashMap<>();
-	
 	@Before
 	public void setup() {
 	}

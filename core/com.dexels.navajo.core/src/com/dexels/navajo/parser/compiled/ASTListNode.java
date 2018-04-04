@@ -10,6 +10,7 @@ import java.util.Optional;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
@@ -26,11 +27,11 @@ public final class ASTListNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda() {
+	public ContextExpression interpretToLambda(List<String> problems) {
 		final List<ContextExpression> exprs = new ArrayList<>();
 		boolean onlyImmutable = true;
 		for (int i = 0; i < jjtGetNumChildren(); i++) {
-			ContextExpression lmb = jjtGetChild(i).interpretToLambda();
+			ContextExpression lmb = jjtGetChild(i).interpretToLambda(problems);
 			exprs.add(lmb);
 			if(!onlyImmutable && !lmb.isLiteral()) {
 				onlyImmutable = false;
@@ -52,6 +53,11 @@ public final class ASTListNode extends SimpleNode {
 					result.add(contextExpression.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage));
 				}
 				return result;
+			}
+
+			@Override
+			public Optional<String> returnType() {
+				return Optional.of(Property.LIST_PROPERTY);
 			}
 		};
 	}

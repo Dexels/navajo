@@ -80,7 +80,7 @@ public class TestRx {
 			.doOnComplete(()->System.err.println("Pre-flatmap complete"))
 			.flatMap(e->e)
 			.doOnComplete(()->System.err.println("Post-flatmap complete"))
-			.doOnNext(e->System.err.println("Element encountered"))
+//			.doOnNext(e->System.err.println("Element encountered"))
 //			.subscribe(event->System.err.println("Event: "+event));
 			.blockingForEach(xml->System.err.println("XML: "+xml));
 	}	
@@ -104,7 +104,8 @@ public class TestRx {
 			
 	@Test 
 	public void testXML() {
-		Navajo result = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_with_binary.xml"), 128)
+		Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_with_binary.xml"), 128)
+			.doOnNext(b->System.err.println("Data:"+new String(b)))
 			.lift(XML.parseFlowable(10))
 			.doOnNext(e->System.err.println("Element encountered"))
 			.concatMap(e->e)
@@ -112,9 +113,13 @@ public class TestRx {
 			.concatMap(e->e)
 			.doOnNext(e->System.err.println("Event: "+e.toString()))
 			.toObservable()
-			.lift(StreamDocument.collect())
-			.firstOrError().blockingGet();
-		System.err.println("Result: "+result.toString());
+			.blockingForEach(e->{
+				System.err.println("EVENT: "+e);
+			});
+//			.doOnComplete(()->System.err.println("Done------------"))
+//			.lift(StreamDocument.collect())
+//			.firstOrError().blockingGet();
+//		System.err.println("Result: "+result.toString());
 	}
 	
 	

@@ -174,6 +174,7 @@ function processLoginForm(){
     sessionStorage.instance = $( "#handlers option:selected" ).text()
     sessionStorage.user =     $('#navajousername').val();
     sessionStorage.password = $('#navajopassword').val();
+    sessionStorage.reactive = $('#usereactive')[0].checked;
 
     var locale = $("#locale :selected").val();
     if (locale !== "empty")
@@ -238,22 +239,33 @@ function runScript(script) {
         }
 
         var navajoinput = prepareInputNavajo(script);
-
+        console.log('script: '+script)
         $.ajax({
         	beforeSend: function(req) {
         		startTitleLoader();
         		req.setRequestHeader('Authorization', null); // Safari fix
         		req.setRequestHeader('Content-Type', "text/xml;charset=utf-8");
+        		console.log('Reactive: '+sessionStorage.reactive);
         	},
         	complete: function() {stopTitleLoader();},
         	type: "POST",
             url: "/navajo/" + instance,
             data: navajoinput,
-            headers: {"X-Navajo-Tester": "true","X-Navajo-Username":sessionStorage.user,"X-Navajo-Password":sessionStorage.password},
-            success: function(xmlObj) {
-              replaceXml(script, xmlObj);
-              var stateObj = { script: script, xml:  serializer.serializeToString(xml) };
-              history.pushState(stateObj, script, "tester.html?script="+script);
+            headers: {"X-Navajo-Tester": "true","X-Navajo-Username":sessionStorage.user,"X-Navajo-Reactive":sessionStorage.reactive,"X-Navajo-Service":script,"X-Navajo-Password":sessionStorage.password},
+            success: function(result) {
+            	  if(result instanceof Node) {
+                      replaceXml(script, result);
+                      var stateObj = { script: script, xml:  serializer.serializeToString(result) };
+                      history.pushState(stateObj, script, "tester.html?script="+script);
+            	  } else {
+            		  console.log('weehee');
+                      var stateObj = { script: script, xml:  result };
+                      history.pushState(stateObj, script, "tester.html?script="+script);
+                      $('#HTMLview')[0].innerHTML = result;
+                      $('#scriptMainView').show();
+                      $('.overlay').hide();
+                      hourglassOff();
+            	  }
             },
             error: function(xhr, ajaxOptions, thrownError) {
               $('#HTMLview')[0].innerHTML = "Error on running script: <br/><br/>" + xhr.responseText;
@@ -423,7 +435,12 @@ function getMyEntries(data, element) {
 $(document).on('click', '.script', function() {
     var oldScript =  $('#loadedScript').text();
     var stateObj = {script: oldScript,  xml:  serializer.serializeToString(xml) };
-    history.replaceState(stateObj, oldScript, "tester.html?script=" + oldScript);
+    try {
+    		history.replaceState(stateObj, oldScript, "tester.html?script=" + oldScript);
+    }
+    catch(err) {
+        console.log(err)
+    }
 
     var newScript = $(this).attr("id");
     // Remove all hoover divs and append the one to the current script
@@ -772,7 +789,17 @@ $(document).on('input propertychange', '.tmlinputtext', function(evt) {
     }
 });
 
-
+$(document).on('textarea change keyup paste', '.tmlinputtextarea', function(evt) {
+    // If it's the propertychange event, make sure it's the value that changed.
+    if (window.event && event.type == "propertychange" && event.propertyName != "value")
+        return;
+    var xpath = $(this).attr('id');
+    var element = $(xml).xpath(xpath)[0];
+    if (typeof element != 'undefined') {
+        var $element = $(element);
+        $element.attr('value',  $(this).val());
+    }
+});
 
 $(document).on('input change', '.tmlinputcheckbox', function(evt) {
     var xpath = $(this).attr('id');

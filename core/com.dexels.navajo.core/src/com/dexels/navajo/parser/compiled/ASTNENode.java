@@ -2,6 +2,10 @@
 
 package com.dexels.navajo.parser.compiled;
 
+import java.util.List;
+import java.util.Optional;
+
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.Utils;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 
@@ -10,11 +14,12 @@ public final class ASTNENode extends SimpleNode {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda() {
-		return lazyBiFunction((a,b)->interpret(a, b));
+	public ContextExpression interpretToLambda(List<String> problems) {
+		return lazyBiFunction(problems, (a,b)->interpret(a, b),equalOrEmptyTypes(),(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
 	}
 	
 	public final Object interpret(Object a, Object b) {
+
         return Boolean.valueOf(!Utils.equals(a, b));
 
     }

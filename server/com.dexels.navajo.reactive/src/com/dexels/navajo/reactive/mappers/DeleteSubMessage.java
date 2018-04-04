@@ -7,33 +7,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.ReactiveScriptParser;
-import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class CopyMessageList implements ReactiveMerger, ParameterValidator {
+public class DeleteSubMessage implements ReactiveMerger {
 
-	public CopyMessageList() {
+	public DeleteSubMessage() {
 	}
 
 	@Override
-	public Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> execute(String relativePath, Optional<XMLElement> xml) {
-		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
-		return context->(item,second)->{
-			ReactiveResolvedParameters resolved = r.resolveNamed(context, Optional.of(item.message()),Optional.empty(), this,xml,relativePath);
-			List<ImmutableMessage> l = second.get().msgList();
-//			Map<String,Operand> named = r.resolveNamed(context, item, Optional.of(second));
-			return DataItem.of(item.message().withSubMessages(resolved.paramString("name"), l));
+	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath,Optional<XMLElement> xml) {
+		return context->(item)->{
+			ReactiveResolvedParameters resolved = params.resolveNamed(context, Optional.of(item.message()),item.stateMessage(), this, xml, relativePath);
+			String name = resolved.paramString("name");	
+			// both singular and array submessages will be removed
+			// TODO this could be more efficient
+			return DataItem.of(item.message().withoutSubMessages(name).withoutSubMessage(name));
 		};
 	
 	}

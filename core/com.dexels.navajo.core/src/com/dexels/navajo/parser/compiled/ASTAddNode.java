@@ -3,6 +3,7 @@ package com.dexels.navajo.parser.compiled;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.parser.Utils;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
@@ -16,8 +17,8 @@ public final class ASTAddNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda() {
-		return lazyBiFunction((a,b)->interpret(a, b));
+	public ContextExpression interpretToLambda(List<String> problems) {
+		return untypedLazyBiFunction(problems, (a,b)->interpret(a, b));
 	}
 	
 	public final Object interpret(Object a,Object b) {

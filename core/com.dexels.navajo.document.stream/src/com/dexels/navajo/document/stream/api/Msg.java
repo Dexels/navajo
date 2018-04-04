@@ -1,6 +1,8 @@
 package com.dexels.navajo.document.stream.api;
 
 import java.io.StringWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,6 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
@@ -20,6 +27,10 @@ public class Msg {
 	private final MessageType type;
 	private final List<Prop> properties = new ArrayList<>();
 	private final Map<String,Prop> propertiesByName = new HashMap<>();
+	
+	
+	private final static Logger logger = LoggerFactory.getLogger(Msg.class);
+
 	private enum MessageType {
 		SIMPLE,DEFINITION,ARRAY_ELEMENT
 	};
@@ -33,6 +44,63 @@ public class Msg {
 		}
 		sw.write("-----\n");
 		return sw.toString();
+	}
+	
+	public ImmutableMessage toImmutableMessage() {
+		Map<String,Object> values = new HashMap<>();
+		Map<String,String> types = new HashMap<>();
+		for (Prop prop : properties) {
+			String type = prop.type();
+			types.put(prop.name(), type);
+			switch (type) {
+			case "string":
+				values.put(prop.name(), prop.valueAsString());
+				break;
+			case "integer":
+				values.put(prop.name(), Integer.parseInt( prop.valueAsString()));
+				break;
+			case "long":
+				values.put(prop.name(), Long.parseLong(prop.valueAsString()));
+				break;
+			case "double":
+				values.put(prop.name(), Double.parseDouble(prop.valueAsString()));
+				break;
+			case "float":
+				values.put(prop.name(), Float.parseFloat(prop.valueAsString()));
+				break;
+			case "boolean":
+				values.put(prop.name(), Boolean.parseBoolean(prop.valueAsString()));
+				break;
+			case "binary_digest":
+				values.put(prop.name(), prop.valueAsString());
+				break;
+
+			case "date":
+				//"2011-10-03 15:01:06.00"
+				try {
+					values.put(prop.name(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS").parse( prop.valueAsString()));
+				} catch (ParseException e) {
+				    logger.warn("Cannot parse date {} = returning null", prop.value());
+					return null;
+				}
+			case "clocktime":
+                //"15:01:06"
+                try {
+                    values.put(prop.name(),new SimpleDateFormat("HH:mm:ss").parse( prop.valueAsString()));
+
+                } catch (ParseException e) {
+                    logger.warn("Cannot parse clocktime {} = returning null", prop.value());
+
+                    return null;
+                }
+			default:
+			    logger.warn("Unsupported type {}", type);
+				break;
+		}
+			System.err.println("Name: "+prop.name()+" -> "+prop.type()+" obje: "+prop.value().getClass());
+		}
+		// TODO
+		return ImmutableFactory.create(values, types);
 	}
 	
 	public Msg copy() {
@@ -87,7 +155,7 @@ public class Msg {
 		return property;
 	}
 
-	public Msg withValue(String propertyName, Object value) {
+	public Msg withValue(String propertyName, String value) {
 		return copy().with(property(propertyName).withValue(value));
 	}
 	public Msg withName(String messageName) {

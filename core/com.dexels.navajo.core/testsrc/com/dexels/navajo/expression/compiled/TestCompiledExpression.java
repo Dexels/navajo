@@ -1,6 +1,8 @@
 package com.dexels.navajo.expression.compiled;
 
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -43,8 +45,12 @@ public class TestCompiledExpression {
 	}
 	@Test
 	public void parseIntAddition() throws ParseException, TMLExpressionException {
-        ContextExpression ss =  ExpressionCache.getInstance().parse("1+1");
-        ContextExpression ss2 =  ExpressionCache.getInstance().parse("1+1");
+		List<String> problems = new ArrayList<>();
+        ContextExpression ss =  ExpressionCache.getInstance().parse(problems,"1+1");
+        ContextExpression ss2 =  ExpressionCache.getInstance().parse(problems,"1+1");
+        if(!problems.isEmpty()) {
+        		throw new TMLExpressionException(problems);
+        }
         System.err.println("ss: "+ss.isLiteral());
         System.err.println("ss2: "+ss2.isLiteral());
         System.err.println("Result: "+ss.apply(null, null, null, null, null, null,null,Optional.empty(),Optional.empty()));
@@ -54,13 +60,18 @@ public class TestCompiledExpression {
         Assert.assertTrue(ss2.isLiteral());
 
 	}
-	
+
 	@Test
 	public void testParseTml() throws ParseException, TMLExpressionException {
 		StringReader sr = new StringReader("[/TestMessage/TestProperty]");
 		CompiledParser cp = new CompiledParser(sr);
 		cp.Expression();
-        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda();
+		List<String> problems = new ArrayList<>();
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems);
+        if(!problems.isEmpty()) {
+    			throw new TMLExpressionException(problems);
+        }
+        
         System.err.println("tml: "+ss.isLiteral());
         System.err.println("TMLVALUE: "+ss.apply(input, null, null, null, null, null,null,Optional.empty(),Optional.empty()));
         Assert.assertEquals("TestValue", ss.apply(input, null, null, null, null, null,null,Optional.empty(),Optional.empty()));
@@ -108,6 +119,7 @@ public class TestCompiledExpression {
 //        System.err.println("Result: "+ss.apply(input, null, null, null, null, null, null,null));
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	public void parsePerformanceTest() throws TMLExpressionException, SystemException {
 		long before = System.currentTimeMillis();

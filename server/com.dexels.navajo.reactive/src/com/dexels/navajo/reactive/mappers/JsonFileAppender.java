@@ -15,28 +15,24 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.ReactiveScriptParser;
-import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class JsonFileAppender implements ReactiveMerger, ParameterValidator {
+public class JsonFileAppender implements ReactiveMerger {
 
 	public JsonFileAppender() {
 	}
 
 	@Override
-	public Function<StreamScriptContext, BiFunction<DataItem,Optional<DataItem>, DataItem>> execute(String relativePath, Optional<XMLElement> xml) {
-		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
+	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		ImmutableMessageParser parser = ImmutableFactory.createParser();
 		return context -> {
-			ReactiveResolvedParameters named = r.resolveNamed(context, Optional.empty(), Optional.empty(), this,xml,relativePath);
+			ReactiveResolvedParameters named = params.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), this,xml,relativePath);
 			String  path = named.paramString("path");
-			return (item,second) -> {
+			return (item) -> {
 				FileOutputStream fw = new FileOutputStream(path,true);
 				// TODO Fix
 				byte[] data = parser.serialize(item.message());

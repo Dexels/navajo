@@ -11,26 +11,23 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.ReactiveScriptParser;
-import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class ToSubMessage implements ReactiveMerger, ParameterValidator {
+public class ToSubMessage implements ReactiveMerger {
 
 	public ToSubMessage() {
 	}
 
 	@Override
-	public Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> execute(String relativePath, Optional<XMLElement> xml) {
-		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
-		return context->(item,second)->{
-			ReactiveResolvedParameters resolved = r.resolveNamed(context, Optional.of(item.message()),second.map(e->e.message()), this, xml, relativePath);
-			return DataItem.of(item.message().withSubMessage(resolved.paramString("name"), second.get().message()));
+	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
+		return context->(item)->{
+			ReactiveResolvedParameters resolved = params.resolveNamed(context, Optional.of(item.message()),item.stateMessage(), this, xml, relativePath);
+			;
+			return DataItem.of(item.message().withSubMessage(resolved.paramString("name"), item.stateMessage()), item.stateMessage());
 		};
 	
 	}

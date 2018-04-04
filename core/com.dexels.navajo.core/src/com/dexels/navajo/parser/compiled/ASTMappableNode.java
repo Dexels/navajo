@@ -4,6 +4,7 @@ package com.dexels.navajo.parser.compiled;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ public final class ASTMappableNode extends SimpleNode {
     
 
 	@Override
-	public ContextExpression interpretToLambda() {
+	public ContextExpression interpretToLambda(List<String> problems) {
 		return new ContextExpression() {
 			
 			@Override
@@ -61,12 +62,17 @@ public final class ASTMappableNode extends SimpleNode {
 		            objects = new ArrayList();
 		        }
 		        for (int i = 0; i < args; i++) {
-		            Object a = jjtGetChild(i).interpretToLambda().apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
+		        		List<String> problems = new ArrayList<>();
+		            Object a = jjtGetChild(i).interpretToLambda(problems).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
+		            if(!problems.isEmpty()) {
+		            		throw new TMLExpressionException(problems);
+		            }
 		            if(objects!=null) {
 		                objects.add(a);
 		            }
 		        }
 
+//		        List<String> problems
 		        if (objects != null) {
 		            parameterArray = new Object[objects.size()];
 		            parameterArray = objects.toArray(parameterArray);
@@ -97,6 +103,11 @@ public final class ASTMappableNode extends SimpleNode {
 		        } catch (Exception me) {
 		            throw new TMLExpressionException(me.getMessage(),me);
 		        }
+			}
+
+			@Override
+			public Optional<String> returnType() {
+				return Optional.empty();
 			}
 		};
 	}

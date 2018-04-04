@@ -11,6 +11,7 @@ public class NavajoFileSystemScript implements NavajoFileSystemEntry {
     private final static Logger logger = LoggerFactory.getLogger(NavajoFileSystemScript.class);
 
 	public static String PATH_TSL = File.separator + "scripts" + File.separator;
+	public static String PATH_REACTIVE = File.separator + "reactive" + File.separator;
 	public static String PATH_SCALA = File.separator + "scala" + File.separator;
 	
     private String name;
@@ -22,16 +23,19 @@ public class NavajoFileSystemScript implements NavajoFileSystemEntry {
         this.path = file.getAbsolutePath();
         this.name =  FilenameUtils.getBaseName(path);
         
-        if (path.contains(PATH_TSL)) {
-        	String pattern = Pattern.quote(PATH_TSL);
-        	script = path.split(pattern)[1];
-        } else if (path.contains(PATH_SCALA)) {
-        	String pattern = Pattern.quote(PATH_SCALA);
-        	script = path.split(pattern)[1];
-        } else {
-        	logger.warn("Unsupported path: {}", path);
-        	script = path;
-        }
+		if (path.contains(PATH_TSL)) {
+			String pattern = Pattern.quote(PATH_TSL);
+			script = path.split(pattern)[1];
+		} else if (path.contains(PATH_SCALA)) {
+			String pattern = Pattern.quote(PATH_SCALA);
+			script = path.split(pattern)[1];
+		} else if (path.contains(PATH_REACTIVE)) {
+			String pattern = Pattern.quote(PATH_REACTIVE);
+			script = path.split(pattern)[1];
+		} else {
+			logger.warn("Unsupported path: {}", path);
+			script = path;
+		}
 
         script =  script.substring(0, script.lastIndexOf(FilenameUtils.getExtension(path)) -1);
         script = script.replace("\\", "/");

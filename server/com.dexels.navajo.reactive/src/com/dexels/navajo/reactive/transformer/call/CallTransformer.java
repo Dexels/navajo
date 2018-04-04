@@ -1,70 +1,90 @@
 package com.dexels.navajo.reactive.transformer.call;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import java.io.IOException;
 import java.util.Optional;
-import java.util.Set;
 
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
-import com.dexels.navajo.document.stream.DataItem.Type;
-import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
+import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
+import io.reactivex.functions.Function;
 
 public class CallTransformer implements ReactiveTransformer {
 
 
 	private final ReactiveParameters parameters;
-	private final ParameterValidator validator;
 	private Optional<XMLElement> sourceElement;
 	private String sourcePath;
+	private final TransformerMetadata metadata;
 	
-	public CallTransformer(ReactiveParameters parameters, ParameterValidator validator, Optional<XMLElement> sourceElement, String sourcePath) {
+	public CallTransformer(TransformerMetadata metadata, ReactiveParameters parameters,Optional<XMLElement> sourceElement, String sourcePath) {
 		this.parameters = parameters;
-		this.validator = validator;
 		this.sourceElement = sourceElement;
 		this.sourcePath = sourcePath;
+		this.metadata = metadata;
 	}
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), Optional.empty(),validator, sourceElement, sourcePath);
+		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(),metadata, sourceElement, sourcePath);
 
-		final int parallel =  resolved.paramInteger("parallel", ()->0);
 		final String service =  resolved.paramString("service");
-		final String messageName =  resolved.paramString("messageName");
 		final boolean debug = resolved.paramBoolean("debug", ()->false);
-		final boolean isArray =  resolved.paramBoolean("isArray");
 		return flow->
 			{
-			Flowable<Flowable<NavajoStreamEvent>> stream = flow.map(di->di.message())
-					.map(msg->StreamDocument.replicationMessageToStreamEvents(messageName, msg, isArray));
 			if(debug) {
-				stream = stream.doOnNext(e->System.err.println(e));
+				flow = flow.doOnNext(e->System.err.println("calltransformerEvent: "+ e));
 			}
-			if (parallel==0) {
-				return stream.concatMap(str->context.runner().run(service,debug).execute(context.withService(service).withInput(str)));
-			} else {
-				return stream.flatMap(str->context.runner().run(service,debug).execute(context.withService(service).withInput(str)),parallel);
-			}
+			Flowable<Flowable<NavajoStreamEvent>> ff = flow.map(e->e.eventStream());
+			return ff.map(callService(context,service,debug)).concatMap(e->e);
+			
+//			return ff.map(fx->{
+//				StreamScriptContext ctx = context.withInput(fx)
+//						.withService(service)
+//						.withUsername(context.username)
+//						.withPassword(context.password);
+//				try {
+//					Flowable<DataItem> x = context.runner().build(service, debug).execute(ctx);
+//					return x;
+//				} catch (IOException e1) {
+//					e1.printStackTrace();
+//					return Flowable.error(e1);
+//				}
+//			});
+//					
+//					; //.concatMap(e->e);
 		};
 	}
 
+	private Function<Flowable<NavajoStreamEvent>,Flowable<DataItem>> callService(StreamScriptContext context, String service, boolean debug) {
+		return fx->{
+			
+			StreamScriptContext ctx = context.withInput(fx)
+					.withService(service)
+					.withUsername(context.username)
+					.withPassword(context.password);
+			try {
+				Flowable<DataItem> x = context.runner().build(service, debug).execute(ctx);
+				return x;
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				return Flowable.error(e1);
+			}			
+		};
+	}
+	
 	@Override
-	public Set<Type> inType() {
-		return new HashSet<>(Arrays.asList(new Type[] {Type.MESSAGE,Type.SINGLEMESSAGE})) ;
+	public TransformerMetadata metadata() {
+		return metadata;
 	}
 
-	@Override
-	public Type outType() {
-		return Type.EVENT;
-	}
+
 }

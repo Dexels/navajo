@@ -4,7 +4,7 @@ Bundle-Name: External parts of Listener
 Bundle-SymbolicName: com.dexels.navajo.listeners.external
 Bundle-Version: 2.2.9.qualifier
 Bundle-Vendor: DEXELS
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.dexels.navajo.listener.http.queuemanager.api,
  com.dexels.navajo.server.listener.http.impl,
  com.dexels.navajo.server.listener.http.standard

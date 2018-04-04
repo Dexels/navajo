@@ -78,7 +78,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	
 	
 	@Override
-	public ReactiveScript run(String service, boolean debug) throws IOException {
+	public ReactiveScript build(String service, boolean debug) throws IOException {
 		// Do this check first, so we can 'override' scripts for testing
 		ReactiveScript rs = scripts.get(service);
 		if(rs!=null) {
@@ -88,7 +88,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			if(parentRunnerEnvironment==null) {
 				throw new NullPointerException("This environment does not accept script: "+service+", and there is no parent."); 
 			}
-			return parentRunnerEnvironment.run(service,debug);
+			return parentRunnerEnvironment.build(service,debug);
 		}
 		File sf = resolveFile(service);
 		

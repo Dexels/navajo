@@ -108,14 +108,6 @@ public class EntityProxyServlet extends org.eclipse.jetty.proxy.ProxyServlet {
 		return null;
 	}
 	
-	public static void main(String[] args) throws URISyntaxException {
-		EntityProxyServlet eps = new EntityProxyServlet();
-		eps.server="knvb-test.sportlink.com/navajo";
-//		String construct = 
-		URI u = new URI(eps.getEntityFromServer());
-		logger.info("u: "+u);
-	}
-	
 	private String getApplicationAttribute(String key,ServletConfig config) {
 		ServletContext servletContext = config.getServletContext();
 		String value = null;

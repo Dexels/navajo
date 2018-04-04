@@ -10,6 +10,7 @@
 			<source.mongo resource="dummy" collection="Person" operation="find">
 				<param name="query">{"UnionMembership.relationstart":{"$lte":ISODate()},"UnionMembership.relationend":{"$gte":ISODate()},"Communication.Email":"?"}</param>
 				<parameval>[username]</parameval>
+				<msg.first.singlemessage/>				
 			</source.mongo>
 			<joiner>
 				<toSubMessage name="PersonData"/>

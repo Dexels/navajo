@@ -20,6 +20,7 @@ import com.github.davidmoten.rx2.Bytes;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 
 public class TestNavajoNonBlockingStreamReactive {
@@ -32,9 +33,12 @@ public class TestNavajoNonBlockingStreamReactive {
 		Navajo baseTml = NavajoFactory.getInstance()
 				.createNavajo(getClass().getClassLoader().getResourceAsStream("tiny_tml.xml"));
 
-		Navajo result = Observable.just(baseTml)	
-			.lift(StreamDocument.domStream())
-			.lift(StreamDocument.collect())
+		Navajo result = Single.just(baseTml)	
+			.compose(StreamDocument.domStreamTransformer())
+			.toObservable()
+			.concatMap(e->e)
+			.compose(StreamDocument.domStreamCollector())
+//			.concatMap(e->e)
 //			.blockingLast();
 			.blockingFirst();
 
@@ -93,8 +97,10 @@ public class TestNavajoNonBlockingStreamReactive {
 	public void testStreamParserAndSerializerWithBinaryUsingTml() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		final Navajo baseTml = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("tml_with_binary.xml"));
-		Observable.just(baseTml)
-			.lift(StreamDocument.domStream())
+		Single.just(baseTml)
+			.compose(StreamDocument.domStreamTransformer())
+			.toObservable()
+			.concatMap(e->e)
 			.lift(StreamDocument.serializeObservable())
 			.doOnNext(b -> {
 				try {
@@ -125,9 +131,18 @@ public class TestNavajoNonBlockingStreamReactive {
 			.lift(StreamDocument.parse())
 			.concatMap(e->e)
 			.toObservable()
-			.lift(StreamDocument.collect())
-			.doOnNext(n->n.write(System.err))
-			.lift(StreamDocument.domStream())
+			.doOnNext(n->{
+				System.err.println("N: "+n);
+				
+			}
+					)
+			.compose(StreamDocument.domStreamCollector())
+			.firstOrError()
+//			.concatMap(e->e)
+			.doOnSuccess(e->e.write(System.err))
+			.compose(StreamDocument.domStreamTransformer())
+			.toObservable()
+			.concatMap(e->e)
 			.lift(StreamDocument.serializeObservable())
 				.blockingForEach(b -> {
 					try {
@@ -136,7 +151,10 @@ public class TestNavajoNonBlockingStreamReactive {
 					}
 				});
 		byte[] original = getNavajoData("tml_with_selection.xml");
-		Assert.assertArrayEquals(original, baos.toByteArray());
+		byte[] result = baos.toByteArray();
+		System.err.println("original: "+new String(original));
+		System.err.println("result: "+new String(result));
+		Assert.assertArrayEquals(original, result);
 	}
 	
 	
@@ -150,18 +168,21 @@ public class TestNavajoNonBlockingStreamReactive {
 			.concatMap(e->e)
 			.doOnNext(n->System.err.println("><>>>1 "+n))
 			.toObservable()
-			.lift(StreamDocument.collect())
+			.compose(StreamDocument.domStreamCollector())
+//			.concatMap(e->e)
 			.doOnNext(n->System.err.println("><>>>2 "+n))
-			.lift(StreamDocument.domStream())
-			.doOnNext(n->System.err.println("><>>>3 "+n))
+			.firstOrError()
+			.compose(StreamDocument.domStreamTransformer())
+			.toObservable()
+			.concatMap(e->e)
+//			.doOnSuccess(n->System.err.println("><>>>3 "+n))
 			.toFlowable(BackpressureStrategy.BUFFER)
 			.lift(StreamDocument.serialize())
-				.blockingForEach(b -> {
+			.blockingForEach(b -> {
 					try {
 						baos.write(b);
 					} catch (Exception e) {
-					}
-				});
+				}});
 		byte[] original = getNavajoData("tml_with_date.xml");
 		Assert.assertArrayEquals(original, baos.toByteArray());
 	}
@@ -176,7 +197,8 @@ public class TestNavajoNonBlockingStreamReactive {
 		.concatMap(e->e)
 		.doOnNext(n->System.err.println("><>>>1 "+n))
 		.toObservable()
-		.lift(StreamDocument.collect())
+		.compose(StreamDocument.domStreamCollector())
+//		.concatMap(e->e)
 		.doOnNext(n->System.err.println("><>>>2 "+n))
 		.blockingFirst();
 		String rpc = navajo.getHeader().getRPCName();
@@ -188,8 +210,10 @@ public class TestNavajoNonBlockingStreamReactive {
 	public void testDomStreamerWithHeader() {
 		final Navajo navajo = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("tiny_tml.xml"));
 		
-		Observable.just(navajo)
-		.lift(StreamDocument.domStream())
+		Single.just(navajo)
+		.compose(StreamDocument.domStreamTransformer())
+		.toObservable()
+		.concatMap(e->e)
 		.toFlowable(BackpressureStrategy.BUFFER)
 		.lift(StreamDocument.serialize())
 		.lift(XML.parseFlowable(5))
@@ -198,7 +222,7 @@ public class TestNavajoNonBlockingStreamReactive {
 		.concatMap(e->e)
 		.doOnNext(n->System.err.println("><>>>1 "+n))
 		.toObservable()
-		.lift(StreamDocument.collect())
+		.compose(StreamDocument.domStreamCollector())
 		.blockingFirst();
 		
 		String rpc = navajo.getHeader().getRPCName();
@@ -216,9 +240,9 @@ public class TestNavajoNonBlockingStreamReactive {
 				.lift(StreamDocument.parse())
 				.concatMap(e->e)
 				.lift(StreamDocument.filterMessageIgnore())
-				
 				.toObservable()
-				.lift(StreamDocument.collect())
+				.compose(StreamDocument.domStreamCollector())
+//				.concatMap(e->e)
 				.blockingFirst();
 
 			Message ignored = navajo.getMessage("Message");

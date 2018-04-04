@@ -1,5 +1,7 @@
 package com.dexels.navajo.functions.test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -13,6 +15,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 
 public class TestCompiledExpression {
@@ -44,4 +47,14 @@ public class TestCompiledExpression {
 		System.err.println(": "+o);
 		Assert.assertEquals("BLE", o);
 	}
+	
+
+	@Test
+	public void testFunctionType() {
+		ExpressionCache ce = ExpressionCache.getInstance();
+		List<String> problems = new ArrayList<>();
+		ContextExpression cx = ce.parse(problems,"ToUpper([whatever])");
+		Assert.assertEquals(Property.STRING_PROPERTY, cx.returnType().get());
+	}
+
 }

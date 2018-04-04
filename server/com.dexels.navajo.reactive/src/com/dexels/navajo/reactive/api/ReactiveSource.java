@@ -11,8 +11,7 @@ import io.reactivex.functions.Function;
 
 public interface ReactiveSource {
 	public Flowable<DataItem> execute(StreamScriptContext context,Optional<ImmutableMessage> current);
-	public DataItem.Type dataType();
 	public DataItem.Type finalType();
-	
+	public boolean streamInput();
 	public final Function<String, ReactiveMerger> emptyReducerSupplier = (e->null);
 }

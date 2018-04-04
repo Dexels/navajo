@@ -8,6 +8,10 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -15,6 +19,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.stream.api.Method;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.NavajoHead;
 import com.dexels.navajo.document.stream.api.Prop;
@@ -27,17 +32,20 @@ public class NavajoStreamCollector {
 
 	private Navajo assemble = NavajoFactory.getInstance().createNavajo();
 	
-//	private final Map<String,Message> deferredMessages = new HashMap<>();
-//	private final List<Stack<String>> deferredPaths = new ArrayList<>();
 	private final Map<String,AtomicInteger> arrayCounts = new HashMap<>();
 	
 	private final Stack<Message> messageStack = new Stack<Message>();
-	
 	private Stack<String> tagStack = new Stack<>();
-	
 	private final Map<String,Binary> pushBinaries = new HashMap<>();
+	private final Map<String,Property> binaryProperties = new HashMap<>();
 
 	private Binary currentBinary;
+	private Property currentProperty;
+	
+	
+	
+	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamCollector.class);
+
 	
 	public NavajoStreamCollector() {
 	}
@@ -73,10 +81,12 @@ public class NavajoStreamCollector {
 			for (Prop e : msgProps) {
 				msgParent.addProperty(createTmlProperty(e));
 			}
+//			pushBinaries
 			for(Entry<String,Binary> e : pushBinaries.entrySet()) {
 				msgParent.addProperty(createBinaryProperty(e.getKey(),e.getValue()));
 			}
 			pushBinaries.clear();
+			binaryProperties.clear();
 			return Optional.empty();
 		case ARRAY_STARTED:
 			tagStack.push(n.path());
@@ -141,12 +151,22 @@ public class NavajoStreamCollector {
 			//			deferredMessages.get(stripIndex(n.path())).setDefinitionMessage((Message) n.body());
 			return Optional.empty();
 		case NAVAJO_DONE:
+			@SuppressWarnings("unchecked")
+			List<Method> methodList = (List<Method>) n.body();
+			methodList.stream().map(m->NavajoFactory.getInstance().createMethod(assemble, m.name, "")).forEach(e->assemble.addMethod(e));
 			return Optional.of(assemble);
 		case BINARY_STARTED:
 			String name = n.path();
+			n.attribute("direction");
 			this.currentBinary = new Binary();
 			this.currentBinary.startPushRead();
 			this.pushBinaries.put(name, currentBinary);
+			int length = (Integer) n.attribute("length",()->-1); 
+			String description = (String) n.attribute("description",()->""); 
+			String direction = (String) n.attribute("direction",()->"");
+			String subtype = (String) n.attribute("subtype",()->"");
+			this.currentProperty = NavajoFactory.getInstance().createProperty(assemble, name, Property.BINARY_PROPERTY, "", length, description, direction); 
+			this.currentProperty.setSubType(subtype);
 			return Optional.empty();
 			
 		case BINARY_CONTENT:
@@ -164,6 +184,10 @@ public class NavajoStreamCollector {
 		}
 	}
 	
+	public Navajo getNavajo() {
+		return assemble;
+	}
+	
 	private String currentPath() {
 		StringBuilder sb = new StringBuilder();
 		for (String path : tagStack) {
@@ -177,9 +201,16 @@ public class NavajoStreamCollector {
 		return sb.toString();
 	}
 	private Property createBinaryProperty(String name, Binary value) {
-		Property result = NavajoFactory.getInstance().createProperty(assemble, name, Property.BINARY_PROPERTY, null,0,"", Property.DIR_IN);
-		result.setAnyValue(value);
-		return result;
+		Property result = this.binaryProperties.get(name);
+//		Property result = NavajoFactory.getInstance().createProperty(assemble, name, Property.BINARY_PROPERTY, null,0,"", Property.DIR_IN);
+		if(result==null) {
+			logger.error("Missing binary property with name "+name);
+		} else {
+			result.setAnyValue(value);
+			return result;
+		}
+		Property res = NavajoFactory.getInstance().createProperty(assemble, name, Property.BINARY_PROPERTY, null,0,"", Property.DIR_IN);
+		return res;
 	}
 
 	private void createHeader(NavajoHead head) {
@@ -197,7 +228,9 @@ public class NavajoStreamCollector {
 			}
 		} else {
 			result = NavajoFactory.getInstance().createProperty(assemble, p.name(), p.type()==null?Property.STRING_PROPERTY:p.type(), null, p.length(), p.description(), p.direction().orElse(null));
-			result.setAnyValue(p.value());
+			if(p.value()!=null) {
+				result.setAnyValue(p.value());
+			}
 			if(p.type()!=null) {
 				result.setType(p.type());
 			}

@@ -10,27 +10,23 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.ReactiveScriptParser;
-import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class SetSingle implements ReactiveMerger, ParameterValidator {
+public class SetSingle implements ReactiveMerger {
 
 	public SetSingle() {
 	}
 
 	@Override
-	public Function<StreamScriptContext,BiFunction<DataItem,Optional<DataItem>,DataItem>> execute(String relativePath, Optional<XMLElement> xml) {
-		ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, xml);
-		return context->(item,params)->{
+	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
+		return context->(item)->{
 			// will use the second message as input, if not present, will use the source message
 			ImmutableMessage s = item.message();
-			ReactiveResolvedParameters parms = r.resolveNamed(context, Optional.of(s), params.map(p->p.message()), this, xml, relativePath);
+			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s), item.stateMessage(), this, xml, relativePath);
 			
 			for (Entry<String,Operand> elt : parms.resolveAllParams().entrySet()) {
 				s = s.with(elt.getKey(), elt.getValue().value, elt.getValue().type);

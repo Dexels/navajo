@@ -15,7 +15,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
@@ -30,15 +29,11 @@ import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFac
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
+import io.reactivex.Maybe;
 
 public class TestScript {
 
 	private ReactiveScriptParser reactiveScriptParser;
-//	private ReplicationMessage person1;
-//	private ReplicationMessage person2;
 
 	@Before
 	public void setup() {
@@ -63,8 +58,8 @@ public class TestScript {
 	}
 	
 	public StreamScriptContext createContext(String serviceName,Navajo input, Optional<ReactiveScriptRunner> runner) {
-		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
-		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.of("username"), Optional.of("password"), Collections.emptyMap(), Optional.of(inStream),runner);
+//		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
+		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.of("username"), Optional.of("password"), Collections.emptyMap(), Optional.empty(),Optional.of(Maybe.just(input)),runner, Collections.emptyList());
 		return context;
 	}
 	
@@ -93,17 +88,7 @@ public class TestScript {
 				.blockingForEach(e->System.err.print(new String(e)));
 		}
 	}
-	
-	@Test 
-	public void testScript() throws IOException {
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("reactive.xml")) {
-			StreamScriptContext myContext = createContext("AdvancedReactiveSql",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in,"serviceName").execute(myContext)
-				.map(di->di.event())
-				.lift(StreamDocument.serialize())
-				.blockingForEach(e->System.err.print(new String(e)));
-		}
-	}
+
 }
 
 
