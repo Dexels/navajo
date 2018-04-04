@@ -1524,23 +1524,11 @@ public class MessageTable extends JTable implements CellEditorListener,
 		Navajo newNavajo = NavajoFactory.getInstance().createNavajo();
 		Message constructed = NavajoFactory.getInstance().createMessage(
 				newNavajo, myMessage.getName(), Message.MSG_TYPE_ARRAY);
+		newNavajo.addMessage(constructed);
 		
 		// Add definition message
-		
-		
-        
         Message def = NavajoFactory.getInstance().createMessage(newNavajo, myMessage.getName(), Message.MSG_TYPE_DEFINITION);
-        
-        // Collection<MessageTableColumnDefinition> columnDefinitions =
-        // getColumnDefinitions().values();
-        // for (MessageTableColumnDefinition columnDef : columnDefinitions) {
-        // Property p = NavajoFactory.getInstance().createProperty(
-        // newNavajo, columnDef.getId(), "string", "",
-        // 255, columnDef.getTitle(), "out");
-        // if (includeInvisibleColumns || hasColumn(columnDef.getId()) ) {
-        // def.addProperty(p);
-        // }
-        // }
+        constructed.addMessage(def);
 
         // Create definition message according to the existing rows
         boolean definitionAdded = false;
@@ -1553,98 +1541,71 @@ public class MessageTable extends JTable implements CellEditorListener,
 			Message newRow = NavajoFactory.getInstance().createMessage(
 					newNavajo, constructed.getName(),
 					Message.MSG_TYPE_ARRAY_ELEMENT);
-			if (includeInvisibleColumns) {
-				List<Property> ps = elt.getAllProperties();
-				for (int j = 0; j < ps.size(); j++) {
-					Property p = ps.get(j);
+			
+			
+			for (int propCounter=0; propCounter<elt.getAllProperties().size(); propCounter++) {
+			    Property p  = null;
+			    if (includeInvisibleColumns) {
+			         p = elt.getAllProperties().get(propCounter);
+			    } else {
+			        String propertyName = getColumnId(propCounter);
+	                if (propertyName == null || propertyName.equals("ERROR!")) continue;
+	                p = elt.getProperty(propertyName);
+			    }
+			    if (p == null) continue;
+			    
+	            MessageTableColumnDefinition columnDef = getColumnDefinitions().get(p.getName());
+			    if (includeInvisibleColumns || (columnDef != null && hasColumn(columnDef.getId()))) {
 
-					if (p != null) {
-						Property q = null;
-                        if (!definitionAdded) {
-                            Property pdef = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, "",
+
+                    if (!definitionAdded) {
+                        String description = columnDef == null ? "" : columnDef.getTitle();
+                        Property pdef = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, description,
+                                "out");
+                        def.addProperty(pdef);
+                    }
+                    Property q = null;
+                    if (p.getType().equals(Property.SELECTION_PROPERTY) && p.getCardinality().equals("+")) {
+                        try {
+                            q = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, p.getDescription(),
                                     "out");
-                            def.addProperty(pdef);
+                            List<Selection> sels = p.getAllSelectedSelections();
+                            String value = sels.get(0).getName();
+                            for (int g = 1; g < sels.size(); g++) {
+                                value = value + "/" + sels.get(g).getName();
+                            }
+                            q.setValue(value);
+
+                        } catch (Exception e) {
+                            logger.error("Error: ", e);
                         }
-						if (p.getType().equals(Property.SELECTION_PROPERTY)
-								&& p.getCardinality().equals("+")) {
-							try {
-								q = NavajoFactory.getInstance().createProperty(
-										newNavajo, p.getName(), "string", "",
-										255, p.getDescription(), "out");
-								List<Selection> sels = p
-										.getAllSelectedSelections();
-								String value = sels.get(0).getName();
-								for (int g = 1; g < sels.size(); g++) {
-									value = value + "/" + sels.get(g).getName();
-								}
-								q.setValue(value);
-
-							} catch (Exception e) {
-								logger.error("Error: ",e);
-							}
-						} else {
-							q = p.copy(newNavajo);
-							q.setAnyValue(p.getTypedValue());
-							try {
-								q.setType(p.getEvaluatedType());
-							} catch (NavajoException e) {
-								logger.error("Error: ",e);
-								q.setType(Property.STRING_PROPERTY);
-							}
-						}
-						newRow.addProperty(q);
-					}
-                    definitionAdded = true;
-				}
-			} else {
-				for (int j = 0; j < getColumnCount(); j++) {
-					String prop = getColumnId(j);
-					Property p = elt.getProperty(prop);
-					if (p != null) {
-						Property q = null;
-                        // Headers need special parsing. In the first loop parse the header row
-                        if (!definitionAdded) {
-                            Property pdef = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, "",
-                                    "out");
-                            def.addProperty(pdef);
+                    } else {
+                        q = p.copy(newNavajo);
+                        q.setAnyValue(p.getTypedValue());
+                        try {
+                            q.setType(p.getEvaluatedType());
+                        } catch (NavajoException e) {
+                            logger.error("Error: ", e);
+                            q.setType(Property.STRING_PROPERTY);
                         }
-						if (p.getType().equals(Property.SELECTION_PROPERTY)
-								&& p.getCardinality().equals("+")) {
-							try {
-								q = NavajoFactory.getInstance().createProperty(
-										newNavajo, p.getName(), "string", "",
-										255, p.getDescription(), "out");
-								ArrayList<Selection> sels = p
-										.getAllSelectedSelections();
-								String value = sels.get(0).getName();
-								for (int g = 1; g < sels.size(); g++) {
-									value = value + "/" + sels.get(g).getName();
-								}
-								q.setValue(value);
+                    }
+                    newRow.addProperty(q);
 
-							} catch (Exception e) {
-								logger.error("Error: ",e);
-							}
-						} else {
-							q = p.copy(newNavajo);
-							q.setAnyValue(p.getTypedValue());
-							try {
-								q.setType(p.getEvaluatedType());
-							} catch (NavajoException e) {
-								logger.error("Error: ",e);
-								q.setType(Property.STRING_PROPERTY);
-							}
-						}
-
-						newRow.addProperty(q);
-					}
-				}
-                definitionAdded = true;
+                
+			    }
+			    
 			}
+			
+//			for (Property p : elt.getAllProperties()) {
+//			    if (p == null) continue;
+//			    
+//			    MessageTableColumnDefinition columnDef = getColumnDefinitions().get(p.getName());
+//                if (includeInvisibleColumns || (columnDef != null && hasColumn(columnDef.getId()))) {}
+//			}
+			definitionAdded = true;
 			constructed.addElement(newRow);
 		}
 
-        constructed.addMessage(def, true);// .addElement(def);
 
 		return constructed;
 	}
