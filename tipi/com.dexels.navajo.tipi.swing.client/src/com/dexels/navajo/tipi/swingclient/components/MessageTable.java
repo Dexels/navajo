@@ -1543,7 +1543,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 					Message.MSG_TYPE_ARRAY_ELEMENT);
 			
 			
-			for (int propCounter=0; propCounter<elt.getAllProperties().size(); propCounter++) {
+            for (int propCounter = 0; propCounter < elt.getAllProperties().size(); propCounter++) {
 			    Property p  = null;
 			    if (includeInvisibleColumns) {
 			         p = elt.getAllProperties().get(propCounter);
@@ -1556,7 +1556,6 @@ public class MessageTable extends JTable implements CellEditorListener,
 			    
 	            MessageTableColumnDefinition columnDef = getColumnDefinitions().get(p.getName());
 			    if (includeInvisibleColumns || (columnDef != null && hasColumn(columnDef.getId()))) {
-
 
                     if (!definitionAdded) {
                         String description = columnDef == null ? "" : columnDef.getTitle();
@@ -1595,13 +1594,6 @@ public class MessageTable extends JTable implements CellEditorListener,
 			    }
 			    
 			}
-			
-//			for (Property p : elt.getAllProperties()) {
-//			    if (p == null) continue;
-//			    
-//			    MessageTableColumnDefinition columnDef = getColumnDefinitions().get(p.getName());
-//                if (includeInvisibleColumns || (columnDef != null && hasColumn(columnDef.getId()))) {}
-//			}
 			definitionAdded = true;
 			constructed.addElement(newRow);
 		}
