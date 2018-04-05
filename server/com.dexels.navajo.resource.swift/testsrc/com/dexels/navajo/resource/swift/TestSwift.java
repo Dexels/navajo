@@ -21,7 +21,7 @@ public class TestSwift {
 	private static SwiftReactiveImpl osi;
 
 //	@BeforeClass
-	public static void setup() throws IOException {
+	public static void setup() throws Exception {
 		osi = new SwiftReactiveImpl();
 		Map<String,Object> settings = new HashMap<>();
 		settings.put("endpoint", "https://identity.api.rackspacecloud.com/v2.0");

@@ -1,9 +1,8 @@
-import java.net.MalformedURLException;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import com.dexels.navajo.adapters.stream.HTTP;
+import com.dexels.navajo.client.stream.jetty.JettyClient;
 import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
 
@@ -12,9 +11,11 @@ import io.reactivex.Flowable;
 public class TestHttp {
 
 	@Test 
-	public void testHttpGet() throws MalformedURLException {
-		
-		String weather = HTTP.get("http://api.openweathermap.org/data/2.5/weather?q=Amsterdam&APPID=c9a22840a45f9da6f235c718475c4f08&mode=xml")
+	public void testHttpGet() throws Exception {
+		JettyClient jc = new JettyClient();
+//		jc.c
+		String weather = jc.callWithoutBodyToStream("http://api.openweathermap.org/data/2.5/weather?q=Amsterdam&APPID=c9a22840a45f9da6f235c718475c4f08&mode=xml", e->e)
+//		String weather = HTTP.get("http://api.openweathermap.org/data/2.5/weather?q=Amsterdam&APPID=c9a22840a45f9da6f235c718475c4f08&mode=xml")
 		.lift(XML.parseFlowable(10))
 		.flatMap(x->x)
 		.filter(e->e.getType()==XmlEventTypes.START_ELEMENT)
@@ -29,11 +30,12 @@ public class TestHttp {
 
 
 	@Test
-	public void testBiggerDownload() throws MalformedURLException, InterruptedException {
+	public void testBiggerDownload() throws Exception {
 //		String url = "https://repo.dexels.com/nexus/service/local/repositories/central/content/org/apache/tika/tika-bundle/1.6/tika-bundle-1.6.jar";
 		String url = "http://10.0.0.8:9090/nexus/content/repositories/obr2/.meta/obr.xml";
 //		String url = "http://localhost:8080/clubs.xml";
-		long l = HTTP.get(url)
+		JettyClient jc = new JettyClient();
+		long l = jc.callWithoutBodyToStream(url,e->e)
 			.lift(XML.parseFlowable(10))
 			.flatMap(x->x)
 			.count().blockingGet();
