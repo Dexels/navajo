@@ -137,9 +137,12 @@ public final class TipiExecuteMethod extends TipiAction {
             mylock = TipiReentrantLockManager.getInstance().getLock(lockName);
             if (mylock.tryLock(lockTimeoutSeconds, TimeUnit.SECONDS)) {
                 // Lock is mine :)
-                logger.info("Executing method with lock {} and timeout {} seconds ", lockName, lockTimeoutSeconds);
-                tipiMethod.performAction(event, event.getParent(), event.getExeIndex(this));
-                TipiReentrantLockManager.getInstance().releaseLock(lockName, mylock);
+                try {
+                    logger.debug("Executing method with lock {} and timeout {} seconds ", lockName, lockTimeoutSeconds);
+                    tipiMethod.performAction(event, event.getParent(), event.getExeIndex(this));
+                } finally {
+                    TipiReentrantLockManager.getInstance().releaseLock(lockName, mylock);
+                }
             } else {
                 // Lock is acquired and we have timed out.
                 logger.error("Waited for {} seconds but lock was acquired by another thread. Sorry :( ", lockTimeoutSeconds);
