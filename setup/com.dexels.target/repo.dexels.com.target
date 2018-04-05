@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2668">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2676">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.4.9.201803201811"/>
@@ -68,7 +68,6 @@
         <plugin id="com.fasterxml.jackson.dataformat.jackson-dataformat-yaml"/>
         <plugin id="com.fasterxml.jackson.module.jackson-module-jaxb-annotations"/>
         <plugin id="com.fasterxml.woodstox.woodstox-core"/>
-        <plugin id="com.github.akarnokd.rxjava2-interop"/>
         <plugin id="com.google.guava"/>
         <plugin id="com.google.inject"/>
         <plugin id="com.google.protobuf"/>
@@ -79,22 +78,9 @@
         <plugin id="com.oracle.jdbc.driver"/>
         <plugin id="com.springsource.javax.transaction"/>
         <plugin id="com.vaadin"/>
-        <plugin id="io.netty.buffer"/>
-        <plugin id="io.netty.codec"/>
-        <plugin id="io.netty.codec-http"/>
-        <plugin id="io.netty.codec-http2"/>
-        <plugin id="io.netty.common"/>
-        <plugin id="io.netty.handler"/>
-        <plugin id="io.netty.resolver"/>
-        <plugin id="io.netty.transport"/>
-        <plugin id="io.netty.transport-native-epoll"/>
-        <plugin id="io.reactivex.rxjava"/>
         <plugin id="io.reactivex.rxjava-joins"/>
         <plugin id="io.reactivex.rxjava-string"/>
         <plugin id="io.reactivex.rxjava2.rxjava"/>
-        <plugin id="io.reactivex.rxnetty-common"/>
-        <plugin id="io.reactivex.rxnetty-http"/>
-        <plugin id="io.reactivex.rxnetty-tcp"/>
         <plugin id="javaewah"/>
         <plugin id="javax.el.source"/>
         <plugin id="javax.inject"/>
@@ -128,8 +114,8 @@
         <plugin id="org.apache.felix.fileinstall"/>
         <plugin id="org.apache.felix.framework"/>
         <plugin id="org.apache.felix.gogo.command" version="1.0.2"/>
-        <plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
         <plugin id="org.apache.felix.gogo.runtime" version="1.0.6"/>
+        <plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
         <plugin id="org.apache.felix.gogo.shell" version="1.0.0"/>
         <plugin id="org.apache.felix.inventory"/>
         <plugin id="org.apache.felix.log"/>
@@ -153,7 +139,6 @@
         <plugin id="org.apache.httpcomponents.httpclient" version="4.5.3"/>
         <plugin id="org.apache.httpcomponents.httpcore" version="4.4.6"/>
         <plugin id="org.apache.james.protocols.api"/>
-        <plugin id="org.apache.james.protocols.netty"/>
         <plugin id="org.apache.james.protocols.smtp"/>
         <plugin id="org.apache.mina.core"/>
         <plugin id="org.apache.pdfbox"/>
@@ -240,7 +225,6 @@
         <plugin id="org.eclipse.paho.client.mqttv3"/>
         <plugin id="org.freemarker.freemarker"/>
         <plugin id="org.h2"/>
-        <plugin id="org.jboss.netty"/>
         <plugin id="org.jctools.core"/>
         <plugin id="org.jvnet.mimepull"/>
         <plugin id="org.jvnet.staxex.stax-ex"/>
