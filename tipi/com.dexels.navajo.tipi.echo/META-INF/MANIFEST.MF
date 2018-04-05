@@ -13,7 +13,7 @@ Export-Package: com.dexels.navajo.tipi.components.echoimpl,
  com.dexels.navajo.tipi.components.echoimpl.impl.remotecombobox,
  com.dexels.navajo.tipi.components.echoimpl.parsers,
  com.dexels.navajo.tipi.components.echoimpl.tipimegatable
-Import-Package: com.dexels.navajo.client.stream;version="1.0.0",
+Import-Package: com.dexels.navajo.client;version="1.0.0",
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.parser,

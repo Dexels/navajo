@@ -32,6 +32,5 @@ Import-Package: com.dexels.immutable.api;version="1.0.0",
 Service-Component: OSGI-INF/*
 Export-Package: com.dexels.navajo.listeners.stream;version="2.0.13"
 Bundle-ClassPath: .,
- lib/reactive-servlet.jar,
  lib/rxjava2-extras-0.1.20.jar
 Bundle-ActivationPolicy: lazy
