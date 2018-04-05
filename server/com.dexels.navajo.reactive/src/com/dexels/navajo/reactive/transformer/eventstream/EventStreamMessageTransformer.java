@@ -35,20 +35,9 @@ public class EventStreamMessageTransformer implements ReactiveTransformer {
 		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata,sourceElement,sourcePath);
 		String messageName = resolved.paramString("messageName");
 		boolean isArray = resolved.paramBoolean("isArray");
-		// TODO remove duplication
 		return flow->{
 			Flowable<Flowable<NavajoStreamEvent>> transform = flow.map(di->di.message())
 					.map(msg->StreamDocument.toMessageEventStream(messageName,msg,isArray));
-					
-//			if (isArray) {
-//				transform = transform.
-//			return flow->
-//				flow.map(di->di.message()).concatMap(msg->StreamDocument.replicationMessageToStreamEvents(messageName, msg, isArray)).compose(StreamDocument.inArray(messageName)).map(DataItem::of);
-//		} else {
-//			return flow->flow.take(1).
-//					map(di->di.message()).concatMap(msg->StreamDocument.replicationMessageToStreamEvents(messageName, msg, isArray)).map(DataItem::of);
-//		}
-			
 			return transform.map(DataItem::ofEventStream);
 		};
 	}

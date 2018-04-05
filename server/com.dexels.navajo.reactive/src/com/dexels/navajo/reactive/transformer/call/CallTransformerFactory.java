@@ -32,7 +32,8 @@ public class CallTransformerFactory implements ReactiveTransformerFactory {
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier,
 			Set<String> transformers,
-			Set<String> reducers) {
+			Set<String> reducers,
+			boolean useGlobalInput) {
 		return new CallTransformer(this,parameters,xml,relativePath);
 	}
 	@Override

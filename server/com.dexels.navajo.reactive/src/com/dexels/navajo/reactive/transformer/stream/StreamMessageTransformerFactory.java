@@ -33,7 +33,8 @@ public class StreamMessageTransformerFactory implements ReactiveTransformerFacto
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier,
 			Set<String> transformers,
-			Set<String> reducers) {
+			Set<String> reducers,
+			boolean useGlobalInput) {
 		return new StreamMessageTransformer(this,parameters,xml,relativePath);
 	}
 

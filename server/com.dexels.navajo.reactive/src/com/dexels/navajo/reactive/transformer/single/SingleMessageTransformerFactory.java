@@ -35,8 +35,9 @@ public class SingleMessageTransformerFactory implements ReactiveTransformerFacto
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier,
 			Set<String> transformers,
-			Set<String> reducers) {
-		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, problems, xml.map(x->x.getChildren()), reducerSupplier);
+			Set<String> reducers,
+			boolean useGlobalInput) {
+		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, problems, xml.map(x->x.getChildren()), reducerSupplier,useGlobalInput);
 		return new SingleMessageTransformer(this,parameters,joinermapper,xml,relativePath);
 	}
 

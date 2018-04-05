@@ -31,7 +31,8 @@ public class ReplicationMessageParseTransformerFactory implements ReactiveTransf
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier,
 			Set<String> transformers,
-			Set<String> reducers) {
+			Set<String> reducers,
+			boolean useGlobalInput) {
 		return new ReplicationMessageParseTransformer(this, parser);
 	}
 

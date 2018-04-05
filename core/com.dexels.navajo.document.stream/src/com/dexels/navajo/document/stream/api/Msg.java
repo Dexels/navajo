@@ -9,12 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
@@ -57,47 +59,74 @@ public class Msg {
 				values.put(prop.name(), prop.valueAsString());
 				break;
 			case "integer":
-				values.put(prop.name(), Integer.parseInt( prop.valueAsString()));
+				if(prop.value()!=null) {
+					values.put(prop.name(), Integer.parseInt( prop.valueAsString()));
+				}
 				break;
 			case "long":
-				values.put(prop.name(), Long.parseLong(prop.valueAsString()));
+				if(prop.value()!=null) {
+					values.put(prop.name(), Long.parseLong(prop.valueAsString()));
+				}
 				break;
 			case "double":
-				values.put(prop.name(), Double.parseDouble(prop.valueAsString()));
+				if(prop.value()!=null) {
+					values.put(prop.name(), Double.parseDouble(prop.valueAsString()));
+				}
 				break;
 			case "float":
-				values.put(prop.name(), Float.parseFloat(prop.valueAsString()));
+				if(prop.value()!=null) {
+					values.put(prop.name(), Float.parseFloat(prop.valueAsString()));
+				}
 				break;
 			case "boolean":
-				values.put(prop.name(), Boolean.parseBoolean(prop.valueAsString()));
+				if(prop.value()!=null) {
+					values.put(prop.name(), Boolean.parseBoolean(prop.valueAsString()));
+				}
 				break;
 			case "binary_digest":
-				values.put(prop.name(), prop.valueAsString());
+				if(prop.value()!=null) {
+					values.put(prop.name(), prop.valueAsString());
+				}
 				break;
 
 			case "date":
 				//"2011-10-03 15:01:06.00"
-				try {
-					values.put(prop.name(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS").parse( prop.valueAsString()));
-				} catch (ParseException e) {
-				    logger.warn("Cannot parse date {} = returning null", prop.value());
-					return null;
+				if(prop.value()!=null) {
+					try {
+						values.put(prop.name(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS").parse( prop.valueAsString()));
+					} catch (ParseException e) {
+					    logger.warn("Cannot parse date {} = returning null", prop.value());
+						return null;
+					}
 				}
 			case "clocktime":
                 //"15:01:06"
-                try {
-                    values.put(prop.name(),new SimpleDateFormat("HH:mm:ss").parse( prop.valueAsString()));
+				if(prop.value()!=null) {
+					try {
+	                    values.put(prop.name(),new SimpleDateFormat("HH:mm:ss").parse( prop.valueAsString()));
+	
+	                } catch (ParseException e) {
+	                    logger.warn("Cannot parse clocktime {} = returning null", prop.value());
+	                }
+				}
+                
+			case "selection":
+				if(prop.cardinality().isPresent() && prop.cardinality().get().equals(Property.CARDINALITY_MULTIPLE)) {
+					String sel = prop.selections().stream().filter(e->e.selected()).map(e->e.value()).collect(Collectors.joining(","));
+					values.put(prop.name(), sel);
+				} else {
+					Optional<String> sel = prop.selections().stream().filter(e->e.selected()).map(e->e.value()).findFirst();
+					if(sel.isPresent()) {
+						values.put(prop.name(), sel.get());
+					}
+				}
+				break;
 
-                } catch (ParseException e) {
-                    logger.warn("Cannot parse clocktime {} = returning null", prop.value());
-
-                    return null;
-                }
 			default:
 			    logger.warn("Unsupported type {}", type);
 				break;
 		}
-			System.err.println("Name: "+prop.name()+" -> "+prop.type()+" obje: "+prop.value().getClass());
+//			System.err.println("Name: "+prop.name()+" -> "+prop.type()+" obje: "+prop.value().getClass());
 		}
 		// TODO
 		return ImmutableFactory.create(values, types);

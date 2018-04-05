@@ -35,7 +35,8 @@ public class SkipTransformerFactory implements ReactiveTransformerFactory, Trans
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier,
 			Set<String> transformers,
-			Set<String> reducers) {
+			Set<String> reducers,
+			boolean useGlobalInput) {
 		return new SkipTransformer(this,parameters);
 	}
 	@Override

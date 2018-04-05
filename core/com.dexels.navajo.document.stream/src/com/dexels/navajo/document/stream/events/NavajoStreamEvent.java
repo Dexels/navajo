@@ -30,6 +30,7 @@ public class NavajoStreamEvent {
 		this.attributes = attributes == null? Collections.emptyMap() : Collections.unmodifiableMap(attributes);
 	}
 
+	@SuppressWarnings("unchecked")
 	public String toString() {
 		if(type==NavajoEventTypes.NAVAJO_STARTED) {
 			NavajoHead h = (NavajoHead)body;
@@ -46,6 +47,10 @@ public class NavajoStreamEvent {
 				}
 			}
 			return sb.toString();
+		}
+		if(type==NavajoEventTypes.NAVAJO_DONE) {
+			List<String> methods = (List<String>)body;
+			return "Navajo Done. Methods: "+methods;
 		}
 		return "Type: "+type+" path: "+path+" attributes: {"+attributes+"} "+body;
 	}

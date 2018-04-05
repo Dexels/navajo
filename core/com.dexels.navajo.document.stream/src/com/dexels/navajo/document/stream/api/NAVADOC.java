@@ -27,14 +27,6 @@ public class NAVADOC {
 
 	public static FlowableOperator<NavajoStreamEvent,NavajoStreamEvent> messageWithPath(final String messagePath, final Function<Msg,Msg> operation, boolean filter) {
 
-
-//		@Override
-//		public org.reactivestreams.Subscriber<? super NavajoStreamEvent> apply(
-//				org.reactivestreams.Subscriber<? super NavajoStreamEvent> arg0) throws Exception {
-//			// TODO Auto-generated method stub
-//			return null;
-//		}
-		
 		return new FlowableOperator<NavajoStreamEvent,NavajoStreamEvent>(){
 			@Override
 			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super NavajoStreamEvent> outbound) {

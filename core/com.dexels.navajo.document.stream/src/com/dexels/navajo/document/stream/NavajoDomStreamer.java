@@ -67,7 +67,9 @@ public class NavajoDomStreamer {
 		for (Message message : all) {
 			emitMessage(message,result,output);
 		}
-		result.add(done(navajo.getAllMethods().stream().map(e->new Method(e.getName())).collect(Collectors.toList())));
+		NavajoStreamEvent done = done(navajo.getAllMethods().stream().map(e->new Method(e.getName())).collect(Collectors.toList()));
+		System.err.println("NavajoDoneEvent: "+done);
+		result.add(done);
 		return result;
 	}
 	public static Flowable<NavajoStreamEvent> streamMessage(Message message) {

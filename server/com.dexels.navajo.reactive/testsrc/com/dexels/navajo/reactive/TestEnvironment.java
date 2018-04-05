@@ -149,7 +149,10 @@ public class TestEnvironment {
 				.toObservable()
 				.flatMap(e->e)
 				.toFlowable(BackpressureStrategy.BUFFER);
-		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.empty(), Optional.empty(), Collections.emptyMap(),Optional.of(inStream),Optional.empty(),Optional.empty(), Collections.emptyList());
+		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.empty(), Optional.empty(),
+				Collections.emptyMap(),
+				Optional.of(inStream),Optional.empty(),
+				Optional.empty(),Collections.emptyList(),Optional.empty());
 		return context;
 	}
 

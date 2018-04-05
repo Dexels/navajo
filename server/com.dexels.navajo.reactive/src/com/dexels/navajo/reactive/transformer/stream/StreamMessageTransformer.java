@@ -1,6 +1,7 @@
 package com.dexels.navajo.reactive.transformer.stream;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -37,13 +38,6 @@ public class StreamMessageTransformer implements ReactiveTransformer {
 		return flow->flow.map(di->di.message())
 				.compose(StreamDocument.toMessageEvent(messageName,isArray))
 				.map(DataItem::of);
-//		if (isArray) {
-//			return flow->
-//				flow.map(di->di.message()).concatMap(msg->StreamDocument.replicationMessageToStreamEvents(messageName, msg, isArray)).compose(StreamDocument.inArray(messageName)).map(DataItem::of);
-//		} else {
-//			return flow->flow.take(1).
-//					map(di->di.message()).concatMap(msg->StreamDocument.replicationMessageToStreamEvents(messageName, msg, isArray)).map(DataItem::of);
-//		}
 	}
 
 	@Override

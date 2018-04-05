@@ -31,7 +31,8 @@ public class FlattenEventStreamFactory implements ReactiveTransformerFactory, Tr
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier,
 			Set<String> transformers,
-			Set<String> reducers) {
+			Set<String> reducers,
+			boolean useGlobalInput) {
 		return new FlattenEventStream(this,parameters);
 	}
 

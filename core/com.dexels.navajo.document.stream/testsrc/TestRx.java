@@ -43,9 +43,6 @@ public class TestRx {
 		
 		joined.flatMap(e->e).doOnComplete(()->System.err.println("Flowable completed"))
 		.blockingForEach(xml->System.err.println("XML: "+xml));
-//		.subscribe(e->System.err.println("item: "+e));
-//		String a = "<a><ble></ble><aba>";
-//		String b = "tralala</aba></a>";
 	}
 
 	@Test

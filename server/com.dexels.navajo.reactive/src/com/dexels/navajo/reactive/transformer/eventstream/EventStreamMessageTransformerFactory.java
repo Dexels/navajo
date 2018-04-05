@@ -33,7 +33,8 @@ public class EventStreamMessageTransformerFactory implements ReactiveTransformer
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier,
 			Set<String> transformers,
-			Set<String> reducers) {
+			Set<String> reducers,
+			boolean useGlobalInput) {
 		return new EventStreamMessageTransformer(this,parameters,xml,relativePath);
 	}
 

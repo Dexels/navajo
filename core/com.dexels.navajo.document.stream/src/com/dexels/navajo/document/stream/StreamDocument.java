@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -49,12 +48,10 @@ import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;
 import io.reactivex.FlowableSubscriber;
 import io.reactivex.FlowableTransformer;
-import io.reactivex.MaybeTransformer;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOperator;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Observer;
-import io.reactivex.Single;
 import io.reactivex.SingleTransformer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -1120,6 +1117,9 @@ public class StreamDocument {
 		return isArrayMessage ? Msg.createElement(properties) : Msg.create(properties);
 	}
 
+	public static Flowable<byte[]> streamBinary(Binary binary, int bufferSize) {
+		return Flowable.fromIterable(binary.getDataAsIterable(bufferSize));
+	}
 	public static ObservableOperator<Binary, byte[]> createBinary() {
 		return new ObservableOperator<Binary, byte[]>() {
 

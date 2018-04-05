@@ -82,6 +82,11 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 			public List<ReactiveParseProblem> problems() {
 				return Collections.emptyList();
 			}
+
+			@Override
+			public boolean streamInput() {
+				return false;
+			}
 		};
 //		
 	}
@@ -103,33 +108,13 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 						logger.warn("=== END OF DEBUG REQUEST============");
 					}
 				})
-		.map(inputNav->executeLegacy(context,inputNav))
-		.toFlowable()
-		.concatMap(e->e)
+			.doOnSuccess(nav->nav.write(System.err))
+			.map(inputNav->executeLegacy(context,inputNav))
+			.toFlowable()
+			.concatMap(e->e)
 		;
-//		.toObservable();
-		
-//		.toFlowable();
-//		;
-//		
-//		return eventStream.concatMap(e->e)
-//				)
-//				.lift(StreamDocument.collectNew())
-////				.firstOrError()
-//				.firstElement()
-//				
-//				
-//				.(nav->{
-//					if(debug) {
-//						logger.warn("======== DEBUG REQUEST============");
-//						nav.write(System.err);
-//						logger.warn("=== END OF DEBUG REQUEST============");
-//					}
-//				})
-//				.toFlowable(BackpressureStrategy.BUFFER)
-//				.flatMap(inputNav->executeLegacy(context, inputNav));
 	}
-	
+	 
 
 	private final Flowable<NavajoStreamEvent> executeLegacy(StreamScriptContext context, Navajo input) {
 			try {
@@ -138,8 +123,7 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 					.compose(StreamDocument.domStreamTransformer())
 					.toObservable()
 					.flatMap(e->e)
-					.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED)
-					.doOnNext(e->System.err.println(">>>><<>>>> aap: "+e))
+//					.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED)
 					.toFlowable(BackpressureStrategy.BUFFER);
 			} catch (Throwable e) {
 				logger.error("Error: ", e);
@@ -166,6 +150,9 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 				in.getHeader().setRPCUser(context.username.get());
 				in.getHeader().setRPCPassword(context.password.get());
 				Navajo outDoc = getLocalClient().handleInternal(context.tenant, in, null, null);
+				System.err.println("before internal legacy");
+				outDoc.write(System.err);
+				System.err.println("after internal legacy");
 				return outDoc;
 			}
 		} catch (Throwable e) {

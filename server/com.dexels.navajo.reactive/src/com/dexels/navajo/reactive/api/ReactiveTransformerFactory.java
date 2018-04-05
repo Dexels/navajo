@@ -20,11 +20,12 @@ public interface ReactiveTransformerFactory extends TransformerMetadata {
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier,
 			Set<String> transformers,
-			Set<String> reducers
+			Set<String> reducers,
+			boolean useGlobalInput
 			);
 
 	default 	public ReactiveTransformer build(List<ReactiveParseProblem> problems, ReactiveParameters parameters) {
-		return build("",problems,parameters, Optional.empty(),n->null,n->null,n->null,Collections.emptySet(),Collections.emptySet());
+		return build("",problems,parameters, Optional.empty(),n->null,n->null,n->null,Collections.emptySet(),Collections.emptySet(),true);
 	}
 
 }
