@@ -139,7 +139,7 @@ public abstract class TipiAction extends TipiAbstractExecutable{
 	}
 
 	protected abstract void execute(TipiEvent event) throws TipiBreakException,
-			TipiException,TipiSuspendException;
+            TipiException, TipiSuspendException, InterruptedException;
 
 
 	public static final boolean INLINE_ACTIONS = true;

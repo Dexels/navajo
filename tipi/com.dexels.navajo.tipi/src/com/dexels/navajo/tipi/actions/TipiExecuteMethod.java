@@ -1,10 +1,14 @@
 package com.dexels.navajo.tipi.actions;
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.core.TipiReentrantLockManager;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiMethod;
@@ -40,26 +44,49 @@ public final class TipiExecuteMethod extends TipiAction {
 	@Override
 	public final void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
-			com.dexels.navajo.tipi.TipiBreakException {
+            com.dexels.navajo.tipi.TipiBreakException, InterruptedException {
 		// Set<String> ss = getParameterNames();
+
+        ReentrantLock mylock = null;
+        String lockName = null;
+        int lockTimeoutSeconds = 30;
 
 		Object o = getEvaluatedParameterValue("name", event);
 		Object p = getEvaluatedParameterValue("rootComponent", event);
-		if (o == null) {
-			throw new TipiException(
-					"TipiExecuteMethod: Name missing ");
 
+        Object l = (String) getEvaluatedParameterValue("lock", event);
+        Object lt = (String) getEvaluatedParameterValue("lockTimeout", event);
+
+		if (o == null) {
+            throw new TipiException("TipiExecuteMethod: name missing ");
 		}
 		if (!(o instanceof String))
 		{
-			throw new TipiException(
-					"TipiExecuteMethod: Name wrong type");
+            throw new TipiException("TipiExecuteMethod: name wrong type");
 		}
 		if (p != null && !(p instanceof TipiComponent)) {
-			throw new TipiException(
-					"TipiExecuteMethod: rootComponent wrong type");
+            throw new TipiException("TipiExecuteMethod: rootComponent wrong type");
 		}
 		String name = (String) o;
+
+        if (l != null) {
+            if (!(l instanceof String)) {
+                throw new TipiException("TipiExecuteMethod: lock wrong type. Should be string");
+            }
+            // Set the lockName only if l is not null and is string
+            lockName = (String) l;
+        }
+
+        if (lt != null && lt instanceof String) {
+            String ltString = (String) lt;
+            if (!ltString.matches("-?\\d+")) {
+                throw new TipiException("TipiExecuteMethod: lockTimeout wrong type. Should be int");
+            }
+            // set the lockTimeoutSeconds only if the parsed string is an integer
+            // representation
+            lockTimeoutSeconds = Integer.parseInt(ltString);
+        }
+
 		// is rootComponent defined? if not, use event.getComponent() for now.
 		if (getParameter("rootComponent") == null && event != null)
 		{
@@ -105,6 +132,21 @@ public final class TipiExecuteMethod extends TipiAction {
 		XMLElement methodXML = localMethodXML == null ? globalMethodXML : localMethodXML;
 		TipiMethod tipiMethod = new TipiMethod(event.getContext());
 		tipiMethod.load(methodXML, tc, null);
-		tipiMethod.performAction(event, event.getParent(), event.getExeIndex(this));
+
+        if (lockName != null) {
+            mylock = TipiReentrantLockManager.getInstance().getLock(lockName);
+            if (mylock.tryLock(lockTimeoutSeconds, TimeUnit.SECONDS)) {
+                // Lock is mine :)
+                logger.info("Executing method with lock {} and timeout {} seconds ", lockName, lockTimeoutSeconds);
+                tipiMethod.performAction(event, event.getParent(), event.getExeIndex(this));
+                TipiReentrantLockManager.getInstance().releaseLock(lockName, mylock);
+            } else {
+                // Lock is acquired and we have timed out.
+                logger.error("Waited for {} seconds but lock was acquired by another thread. Sorry :( ", lockTimeoutSeconds);
+                throw new InterruptedException();
+            }
+        } else {
+            tipiMethod.performAction(event, event.getParent(), event.getExeIndex(this));
+        }
 	}
 }
