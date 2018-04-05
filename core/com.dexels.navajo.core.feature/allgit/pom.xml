@@ -15,6 +15,7 @@
 		<module>../../com.dexels.navajo.document.stream</module>
 		<module>../../com.dexels.navajo.document.json</module>
 		<module>../../com.dexels.navajo.client</module>
+		<module>../../com.dexels.navajo.client.stream</module>
                 <module>../../com.dexels.navajo.client.impl.javanet</module>
                 <module>../../com.dexels.navajo.client.impl.apache</module>
                 <module>../../com.dexels.navajo.client.nql</module>
