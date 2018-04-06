@@ -68,10 +68,17 @@ public class TmlContinuationServlet extends HttpServlet implements
 		logger.info("Continuation servlet component deactivated");
 	}
 
+	private boolean useReactiveEndpoint(final HttpServletRequest req) {
+		String header = req.getHeader("X-Navajo-Reactive");
+		boolean useReactive = header!=null && this.reactiveHttpServlet!=null && "true".equals(header);
+		logger.info("Using reactive: "+useReactive);
+		return useReactive;
+	}
+
 	@Override
 	protected void service(final HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		if(req.getHeader("X-Navajo-Reactive")!=null && this.reactiveHttpServlet!=null) {
+		if(useReactiveEndpoint(req)) {
 			reactiveHttpServlet.service(req, resp);
 			return;
 		}
