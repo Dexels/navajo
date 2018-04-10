@@ -205,6 +205,7 @@ public class NavajoStreamCollector {
 //		Property result = NavajoFactory.getInstance().createProperty(assemble, name, Property.BINARY_PROPERTY, null,0,"", Property.DIR_IN);
 		if(result==null) {
 			logger.error("Missing binary property with name "+name);
+			Thread.dumpStack();
 		} else {
 			result.setAnyValue(value);
 			return result;
