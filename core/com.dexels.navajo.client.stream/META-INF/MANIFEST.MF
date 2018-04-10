@@ -5,7 +5,7 @@ Bundle-SymbolicName: com.dexels.navajo.client.stream
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: com.dexels.config.runtime,
+Import-Package: com.dexels.config.runtime;resolution:=optional,
  com.dexels.navajo.client;version="1.0.0",
  com.dexels.navajo.client.async,
  com.dexels.navajo.document;version="2.2.1",
