@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -103,7 +105,7 @@ public class InstanceConfigurationProviderImpl implements
 				}
 			}			
 			fis = new FileInputStream(arguments);
-			PropertyResourceBundle globalArguments = new PropertyResourceBundle(fis);
+			PropertyResourceBundle globalArguments = new PropertyResourceBundle(new InputStreamReader(fis,Charset.forName("UTF-8")));
 			Set<String> keys = globalArguments.keySet();
 			for (String key : keys) {
 				String[] split = key.split("/");
@@ -146,7 +148,7 @@ public class InstanceConfigurationProviderImpl implements
 					continue;
 				}
 				fis = new FileInputStream(profileFile);
-				PropertyResourceBundle profileArguments = new PropertyResourceBundle(fis);
+				PropertyResourceBundle profileArguments = new PropertyResourceBundle(new InputStreamReader(fis,Charset.forName("UTF-8")));
 				Set<String> profileKeys = profileArguments.keySet();
 				for (String profileKey : profileKeys) {
 					String[] profileSplit = profileKey.split("/");

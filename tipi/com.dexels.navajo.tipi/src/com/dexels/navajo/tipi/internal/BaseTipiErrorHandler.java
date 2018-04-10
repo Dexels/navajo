@@ -2,7 +2,9 @@ package com.dexels.navajo.tipi.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
@@ -261,7 +263,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 		if (errorMessageBundle == null) {
 			try {				
 				if (tipiResourceStream!= null) {
-					errorMessageBundle = new PropertyResourceBundle(tipiResourceStream);
+					errorMessageBundle = new PropertyResourceBundle(new InputStreamReader(tipiResourceStream,Charset.forName("UTF-8")));
 					logger.info("Retrieved validation.properties from server");
 				} else {
 					logger.warn("Empty inputstream - cannot retrieve validation.properties");

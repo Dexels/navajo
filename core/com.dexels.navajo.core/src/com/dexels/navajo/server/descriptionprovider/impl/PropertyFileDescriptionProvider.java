@@ -3,6 +3,8 @@ package com.dexels.navajo.server.descriptionprovider.impl;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
@@ -113,7 +115,7 @@ public class PropertyFileDescriptionProvider extends BaseDescriptionProvider imp
         String props = resourceBundle.getResource(null, "description", access.getTenant(), sublocale, locale);
         PropertyResourceBundle p = null;
         try (InputStream stream = new ByteArrayInputStream(props.getBytes(StandardCharsets.UTF_8))) {
-            p = new PropertyResourceBundle(stream);
+            p = new PropertyResourceBundle(new InputStreamReader(stream,Charset.forName("UTF-8")));
         }
 
         return p;

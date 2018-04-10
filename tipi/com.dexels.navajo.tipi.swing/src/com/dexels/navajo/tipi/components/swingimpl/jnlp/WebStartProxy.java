@@ -2,8 +2,10 @@ package com.dexels.navajo.tipi.components.swingimpl.jnlp;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 
@@ -104,7 +106,7 @@ public class WebStartProxy {
 				URL base = bs.getCodeBase();
 				URL args = new URL(base, "arguments.properties");
 				InputStream is = args.openStream();
-				PropertyResourceBundle pr = new PropertyResourceBundle(is);
+				PropertyResourceBundle pr = new PropertyResourceBundle(new InputStreamReader(is,Charset.forName("UTF-8")));
 				is.close();
 				for (String key : pr.keySet()) {
 					properties.put(key, pr.getString(key));
