@@ -29,6 +29,10 @@ public class StoreAsSubMessage implements ReactiveMerger {
 			// will use the second message as input, if not present, will use the source message
 			ImmutableMessage s = item.message();
 			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s), item.stateMessage(), this, xml, relativePath);
+			boolean condition = parms.optionalBoolean("condition").orElse(true);
+			if(!condition) {
+				return item;
+			}
 			String name = parms.paramString("name");
 			ImmutableMessage state = item.stateMessage();
 			ImmutableMessage assembled = item.message().withSubMessage(name, state);
@@ -39,7 +43,7 @@ public class StoreAsSubMessage implements ReactiveMerger {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"name"}));
+		return Optional.of(Arrays.asList(new String[]{"name","condition"}));
 	}
 
 	@Override
@@ -51,6 +55,7 @@ public class StoreAsSubMessage implements ReactiveMerger {
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String,String> result = new HashMap<String, String>();
 		result.put("name", Property.STRING_PROPERTY);
+		result.put("condition", Property.BOOLEAN_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(result));
 	}
 }

@@ -24,8 +24,13 @@ public class SetSingleKeyValue implements ReactiveMerger {
 	@Override
 	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		return context->(item)->{
+			
 			ImmutableMessage s = item.message();
 			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s),item.stateMessage(), this, xml, relativePath);
+			boolean condition = parms.optionalBoolean("condition").orElse(true);
+			if(!condition) {
+				return item;
+			}
 			Operand resolvedValue = parms.resolveAllParams().get("value");
 			String toValue = parms.paramString("to");
 			return DataItem.of(item.message().with(toValue, resolvedValue.value, resolvedValue.type));
@@ -36,7 +41,7 @@ public class SetSingleKeyValue implements ReactiveMerger {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"to","value"}));
+		return Optional.of(Arrays.asList(new String[]{"to","value","condition"}));
 	}
 
 	@Override
@@ -48,6 +53,7 @@ public class SetSingleKeyValue implements ReactiveMerger {
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String,String> r = new HashMap<>();
 		r.put("to", Property.STRING_PROPERTY);
+		r.put("condition", Property.BOOLEAN_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
 

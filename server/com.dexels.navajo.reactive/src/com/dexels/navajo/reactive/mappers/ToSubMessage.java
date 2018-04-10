@@ -26,6 +26,10 @@ public class ToSubMessage implements ReactiveMerger {
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		return context->(item)->{
 			ReactiveResolvedParameters resolved = params.resolveNamed(context, Optional.of(item.message()),item.stateMessage(), this, xml, relativePath);
+			boolean condition = resolved.optionalBoolean("condition").orElse(true);
+			if(!condition) {
+				return item;
+			}
 			;
 			return DataItem.of(item.message().withSubMessage(resolved.paramString("name"), item.stateMessage()), item.stateMessage());
 		};
@@ -34,7 +38,7 @@ public class ToSubMessage implements ReactiveMerger {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"name"}));
+		return Optional.of(Arrays.asList(new String[]{"name","condition"}));
 	}
 
 	@Override
@@ -46,6 +50,7 @@ public class ToSubMessage implements ReactiveMerger {
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String,String> r = new HashMap<>();
 		r.put("name", Property.STRING_PROPERTY);
+		r.put("condition", Property.BOOLEAN_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
 }

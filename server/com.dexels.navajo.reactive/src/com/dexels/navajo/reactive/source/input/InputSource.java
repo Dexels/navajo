@@ -19,19 +19,19 @@ import io.reactivex.Flowable;
 public class InputSource implements ReactiveSource {
 	
 	private Type finalType;
-	private final ReactiveParameters params;
 	private final List<ReactiveTransformer> transformers;
-	private final Optional<XMLElement> sourceElement;
-	private final String sourcePath;
-	private final SourceMetadata metadata;
+//	private final ReactiveParameters params;
+//	private final Optional<XMLElement> sourceElement;
+//	private final String sourcePath;
+//	private final SourceMetadata metadata;
 	
 	public InputSource(SourceMetadata metadata, ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType, Optional<XMLElement> sourceElement, String sourcePath) {
-		this.metadata = metadata;
-		this.params = params;
 		this.transformers = transformers;
 		this.finalType = finalType;
-		this.sourceElement = sourceElement;
-		this.sourcePath = sourcePath;
+//		this.metadata = metadata;
+//		this.params = params;
+//		this.sourceElement = sourceElement;
+//		this.sourcePath = sourcePath;
 	}
 
 	@Override

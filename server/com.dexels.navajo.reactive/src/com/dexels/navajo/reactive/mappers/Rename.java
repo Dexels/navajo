@@ -27,9 +27,14 @@ public class Rename implements ReactiveMerger {
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		return context->(item)->{
 			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(item.message()), ImmutableFactory.empty(), this, xml, relativePath);
+			boolean condition = parms.optionalBoolean("condition").orElse(true);
+			if(!condition) {
+				return item;
+			}
 			String fromKey = parms.paramString("from");
 			Object oldValue = item.message().columnValue(fromKey);
 			String oldType = item.message().columnType(fromKey);
+			
 			return DataItem.of(item.message().without(fromKey ).with(parms.paramString("to"),oldValue, oldType));
 		};
 	
@@ -37,7 +42,7 @@ public class Rename implements ReactiveMerger {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"to","from"}));
+		return Optional.of(Arrays.asList(new String[]{"to","from","condition"}));
 	}
 
 	@Override
@@ -50,6 +55,7 @@ public class Rename implements ReactiveMerger {
 		Map<String,String> r = new HashMap<>();
 		r.put("to", Property.STRING_PROPERTY);
 		r.put("from", Property.STRING_PROPERTY);
+		r.put("condition", Property.BOOLEAN_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
 }

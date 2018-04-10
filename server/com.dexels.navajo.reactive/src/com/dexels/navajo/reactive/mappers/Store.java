@@ -30,6 +30,10 @@ public class Store implements ReactiveMerger {
 			ImmutableMessage state = item.stateMessage();
 			
 			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s),state , this, xml, relativePath);
+			boolean condition = parms.optionalBoolean("condition").orElse(true);
+			if(!condition) {
+				return item;
+			}
 			ImmutableMessage di = item.stateMessage();
 			Set<Entry<String, Operand>> entrySet = parms.resolveAllParams().entrySet();
 			for (Entry<String, Operand> e : entrySet) {

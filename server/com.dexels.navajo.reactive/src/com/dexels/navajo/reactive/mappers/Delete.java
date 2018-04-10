@@ -27,6 +27,10 @@ public class Delete implements ReactiveMerger {
 		return context->(item)->{
 			ReactiveResolvedParameters resolved = params.resolveNamed(context, Optional.of(item.message()),item.stateMessage(), this, xml, relativePath);
 			String name = resolved.paramString("name");	
+			boolean condition = resolved.optionalBoolean("condition").orElse(true);
+			if(!condition) {
+				return item;
+			}
 			return DataItem.of(item.message().without(Arrays.asList(name.split(","))));
 		};
 	
@@ -35,7 +39,7 @@ public class Delete implements ReactiveMerger {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"name"}));
+		return Optional.of(Arrays.asList(new String[]{"name","condition"}));
 	}
 
 	@Override
@@ -47,6 +51,7 @@ public class Delete implements ReactiveMerger {
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String,String> r = new HashMap<>();
 		r.put("name", Property.STRING_PROPERTY);
+		r.put("condition", Property.BOOLEAN_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
 }

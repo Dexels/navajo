@@ -174,7 +174,7 @@ public class ReactiveResolvedParameters {
 	}
 
 	public Optional<Boolean> optionalBoolean(String key) {
-		return typeCheckedOperand(paramValue(key), key, Optional.of(Property.INTEGER_PROPERTY)).map(e->(Boolean)e.value);
+		return typeCheckedOperand(paramValue(key), key, Optional.of(Property.BOOLEAN_PROPERTY)).map(e->(Boolean)e.value);
 	}
 
 	public boolean paramBoolean(String key, Callable<Boolean> defaultValue) {
