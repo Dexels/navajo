@@ -150,9 +150,6 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 				in.getHeader().setRPCUser(context.username.get());
 				in.getHeader().setRPCPassword(context.password.get());
 				Navajo outDoc = getLocalClient().handleInternal(context.tenant, in, null, null);
-				System.err.println("before internal legacy");
-				outDoc.write(System.err);
-				System.err.println("after internal legacy");
 				return outDoc;
 			}
 		} catch (Throwable e) {
