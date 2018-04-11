@@ -6,6 +6,11 @@
 
 }
 
+.unlocked{
+	position: absolute;
+	right: 3em;
+}
+
 a  {
 	text-decoration: none;
 }
