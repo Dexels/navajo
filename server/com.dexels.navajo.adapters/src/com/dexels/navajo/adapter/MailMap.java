@@ -3,6 +3,7 @@ package com.dexels.navajo.adapter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -161,6 +162,40 @@ public class MailMap implements MailMapInterface, Mappable,
 		return true;
 	}
 
+    /**
+     * Converts each e-mail string of an array of strings to their corresponding
+     * InternetAddreses and returns an array with InternetAddreses
+     * 
+     * If ignoreFailures is set, then no exceptions will be thrown
+     */
+    private InternetAddress[] convertToInternetAddresses(String strAddreses[]) throws UserException {
+
+        ArrayList<InternetAddress> addresses = new ArrayList<InternetAddress>();
+
+        for (int i = 0; i < strAddreses.length; i++) {
+            try {
+                addresses.add(new InternetAddress(strAddreses[i], true));
+            } catch (Exception e) {
+                logger.warn("Invalid e-mail address was provided : {}", strAddreses[i]);
+                if (ignoreFailures) {
+                    AuditLog.log("MailMap", e.getMessage(), e, Level.WARNING, myAccess.accessID);
+                    logger.warn("ingoreFailures flag is set. Ignoring the invalid e-mail address.");
+                    failure = e.getMessage();
+                } else {
+                    AuditLog.log("MailMap", e.getMessage(), e, Level.SEVERE, myAccess.accessID);
+                    throw new UserException(-1, e.getMessage(), e);
+                }
+            }
+        }
+
+        InternetAddress[] addr = new InternetAddress[addresses.size()];
+        for (int i = 0; i < addresses.size(); i++) {
+            addr[i] = addresses.get(i);
+        }
+
+        return addr;
+    }
+
 	private final void sendMail() throws UserException {
 	    final ClassLoader current = Thread.currentThread().getContextClassLoader();
 
@@ -181,28 +216,19 @@ public class MailMap implements MailMapInterface, Mappable,
 			}
 			msg.setFrom(new InternetAddress(sender));
 
-			InternetAddress[] addresses = new InternetAddress[this.recipientArray.length];
+            InternetAddress[] recipients = convertToInternetAddresses(this.recipientArray);
+            msg.setRecipients(javax.mail.Message.RecipientType.TO, recipients);
 
-			for (int i = 0; i < this.recipientArray.length; i++) {
-				addresses[i] = new InternetAddress(this.recipientArray[i]);
-			}
-
-			msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
-
+            InternetAddress[] ccrecipients = null;
 			if (ccArray != null) {
-				InternetAddress[] extra = new InternetAddress[this.ccArray.length];
-				for (int i = 0; i < this.ccArray.length; i++) {
-					extra[i] = new InternetAddress(this.ccArray[i]);
-				}
-				msg.setRecipients(javax.mail.Message.RecipientType.CC, extra);
+                ccrecipients = convertToInternetAddresses(this.ccArray);
+                msg.setRecipients(javax.mail.Message.RecipientType.CC, ccrecipients);
 			}
 
+            InternetAddress[] bccrecipients = null;
 			if (bccArray != null) {
-				InternetAddress[] extra = new InternetAddress[this.bccArray.length];
-				for (int i = 0; i < this.bccArray.length; i++) {
-					extra[i] = new InternetAddress(this.bccArray[i]);
-				}
-				msg.setRecipients(javax.mail.Message.RecipientType.BCC, extra);
+                bccrecipients = convertToInternetAddresses(this.bccArray);
+                msg.setRecipients(javax.mail.Message.RecipientType.BCC, bccrecipients);
 			}
 
 			msg.setSubject(subject);
@@ -276,19 +302,14 @@ public class MailMap implements MailMapInterface, Mappable,
 				}
 				msg.setContent(multipart);
 			}
-			//msg.getContent()
-			logger.info("Sending mail to "+recipients+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
+            logger.info("Sending mail to: {}, cc: {}, bcc: {} with subject: {}", Arrays.toString(recipients),
+                    ccrecipients != null ? Arrays.toString(ccrecipients) : "[]",
+                    bccrecipients != null ? Arrays.toString(bccrecipients) : "[]", subject);
 			Transport.send(msg);
-
 		} catch (Exception e) {
-		    logger.error("Exception on sending mail!", e);
-			if (ignoreFailures) {
-				AuditLog.log("MailMap", e.getMessage(), e,Level.WARNING, myAccess.accessID);
-				failure = e.getMessage();
-			} else {
-				AuditLog.log("MailMap", e.getMessage(),e, Level.SEVERE, myAccess.accessID);
-				throw new UserException(-1, e.getMessage(), e);
-			}
+            // This catch is needed since we use the send method.
+            logger.error("Exception on sending mail!", e);
+            throw new UserException(-1, e.getMessage(), e);
 		} finally {
             Thread.currentThread().setContextClassLoader( current );
         }
