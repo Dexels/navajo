@@ -51,16 +51,8 @@ public class JettyClient {
 		ReactiveRequest.Builder requestBuilder = ReactiveRequest.newBuilder(req);
 		if(requestBody.isPresent()) {
 			Publisher<ContentChunk> bb = requestBody.get()
-//					.doOnNext(e->System.err.println("Bytes detected: "+new String(e)))
 					.map(e->new ContentChunk(ByteBuffer.wrap(e)));
-//					.doOnRequest(l->System.err.println("REqUESTED DATA: "+l))
-//					.doOnComplete(()->System.err.println("CLIENT_SIDE_REQUEST_COMPLETE!!!!!>>>>>>>>>>>>>>>>>>"))
-//					.doOnSubscribe(s->System.err.println("SUBSCRIBED TO INPUT"));
-//					.doOnSubscribe(e->e.request(50));
-					
-					
-//			System.err.println("Attaching request body");
-;			requestBuilder = requestBuilder.content(ReactiveRequest.Content.fromPublisher(bb, requestContentType.get()));
+			requestBuilder = requestBuilder.content(ReactiveRequest.Content.fromPublisher(bb, requestContentType.get()));
 		}
 		ReactiveRequest request = requestBuilder.build();
 		return Flowable.fromPublisher(request.response((response, content) -> Flowable.just(new ReactiveReply(response,content))));
