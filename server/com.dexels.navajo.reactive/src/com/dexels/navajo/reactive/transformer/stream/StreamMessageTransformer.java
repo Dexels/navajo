@@ -1,7 +1,6 @@
 package com.dexels.navajo.reactive.transformer.stream;
 
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;

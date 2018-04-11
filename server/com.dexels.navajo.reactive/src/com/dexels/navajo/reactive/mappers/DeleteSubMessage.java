@@ -29,6 +29,11 @@ public class DeleteSubMessage implements ReactiveMerger {
 			String name = resolved.paramString("name");	
 			// both singular and array submessages will be removed
 			// TODO this could be more efficient
+			boolean condition = resolved.optionalBoolean("condition").orElse(true);
+			if(!condition) {
+				return item;
+			}
+
 			return DataItem.of(item.message().withoutSubMessages(name).withoutSubMessage(name));
 		};
 	
@@ -37,7 +42,7 @@ public class DeleteSubMessage implements ReactiveMerger {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"name"}));
+		return Optional.of(Arrays.asList(new String[]{"name","condition"}));
 	}
 
 	@Override
@@ -49,6 +54,7 @@ public class DeleteSubMessage implements ReactiveMerger {
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String,String> r = new HashMap<>();
 		r.put("name", Property.STRING_PROPERTY);
+		r.put("condition", Property.BOOLEAN_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
 }

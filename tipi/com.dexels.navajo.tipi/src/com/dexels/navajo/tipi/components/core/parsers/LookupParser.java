@@ -2,6 +2,8 @@ package com.dexels.navajo.tipi.components.core.parsers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -113,7 +115,7 @@ public class LookupParser extends BaseTipiParser {
         try {
             InputStream s = context.getGenericResourceStream(filename);
             if (s != null) {
-                ResourceBundle defaultBundle = new PropertyResourceBundle(s);
+                ResourceBundle defaultBundle = new PropertyResourceBundle(new InputStreamReader(s,Charset.forName("UTF-8")));
                 s.close();
                 for (String key : defaultBundle.keySet()) {
                     result.put(key, defaultBundle.getObject(key));
@@ -126,7 +128,7 @@ public class LookupParser extends BaseTipiParser {
         try {
             InputStream s = context.getGenericResourceStream(localefilename);
             if (s != null) {
-                ResourceBundle localeBundle = new PropertyResourceBundle(s);
+                ResourceBundle localeBundle = new PropertyResourceBundle(new InputStreamReader(s,Charset.forName("UTF-8")));
                 s.close();
                 for (String key : localeBundle.keySet()) {
                     result.put(key, localeBundle.getObject(key));
@@ -142,7 +144,7 @@ public class LookupParser extends BaseTipiParser {
             try {
                 InputStream s = context.getGenericResourceStream(sublocalefilename);
                 if (s != null) {
-                    ResourceBundle sublocaleBundle = new PropertyResourceBundle(s);
+                    ResourceBundle sublocaleBundle = new PropertyResourceBundle(new InputStreamReader(s,Charset.forName("UTF-8")));
                     s.close();
                     for (String key : sublocaleBundle.keySet()) {
                         result.put(key, sublocaleBundle.getObject(key));
@@ -169,7 +171,7 @@ public class LookupParser extends BaseTipiParser {
         try {
             InputStream s = context.getGenericResourceStream(filename);
             if (s != null) {
-                ResourceBundle defaultBundle = new PropertyResourceBundle(s);
+                ResourceBundle defaultBundle = new PropertyResourceBundle(new InputStreamReader(s,Charset.forName("UTF-8")));
                 s.close();
                 for (String key : defaultBundle.keySet()) {
                     result.put(key, defaultBundle.getObject(key));
@@ -183,7 +185,7 @@ public class LookupParser extends BaseTipiParser {
         try {
             InputStream s = context.getGenericResourceStream(localefilename);
             if (s != null) {
-                ResourceBundle defaultBundle = new PropertyResourceBundle(s);
+                ResourceBundle defaultBundle = new PropertyResourceBundle(new InputStreamReader(s,Charset.forName("UTF-8")));
                 s.close();
                 for (String key : defaultBundle.keySet()) {
                     result.put(key, defaultBundle.getObject(key));
@@ -201,7 +203,7 @@ public class LookupParser extends BaseTipiParser {
             try {
                 InputStream s = context.getGenericResourceStream(sublocalefilename);
                 if (s != null) {
-                    ResourceBundle sublocaleBundle = new PropertyResourceBundle(s);
+                    ResourceBundle sublocaleBundle = new PropertyResourceBundle(new InputStreamReader(s,Charset.forName("UTF-8")));
                     s.close();
                     for (String key : sublocaleBundle.keySet()) {
                         result.put(key, sublocaleBundle.getObject(key));

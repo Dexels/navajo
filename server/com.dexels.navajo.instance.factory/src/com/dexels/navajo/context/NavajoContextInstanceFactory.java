@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -288,7 +290,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		InputStream fi = null;
 		try {
 			fi = new FileInputStream(propertyFile);
-			ResourceBundle rb = new PropertyResourceBundle(fi);
+			ResourceBundle rb = new PropertyResourceBundle(new InputStreamReader(fi,Charset.forName("UTF-8")));
 			for (String s : rb.keySet()) {
 				if (deployment != null) {
 					if (s.indexOf("/") >= 0) {
@@ -396,7 +398,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		InputStream is = null;
 		try {
 			is = new FileInputStream(clientProperties);
-			PropertyResourceBundle prb = new PropertyResourceBundle(is);
+			PropertyResourceBundle prb = new PropertyResourceBundle(new InputStreamReader(is,Charset.forName("UTF-8")));
 			Enumeration<String> en = prb.getKeys();
 			do {
 				String next = en.nextElement();

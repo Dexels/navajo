@@ -54,4 +54,8 @@ public class NavajoReactiveJettyClient {
 	public void activate(Map<String,Object> settings) {
 		
 	}
+	
+	public void close() throws Exception {
+		client.close();
+	}
 }

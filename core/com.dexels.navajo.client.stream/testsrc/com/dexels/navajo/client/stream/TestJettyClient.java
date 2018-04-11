@@ -108,24 +108,18 @@ public class TestJettyClient {
 	}
 	
 	@Test
-	public void testNavajoClientSeriously() throws Exception {
-		JettyClient client = new JettyClient();
-
-		call(client,uri,username,password,service,"KNVB",Flowable.empty())
-			.blockingForEach(e->System.err.println("Item: "+e));
-	}
-	
-	@Test
 	public void testNavajoClientForReal() throws Exception {
 		NavajoReactiveJettyClient client = new NavajoReactiveJettyClient(this.uri,this.username,this.password,Optional.empty(),false);
 		
 		int size = client.call("vla/authorization/InitLoginSystemUser", "", Flowable.empty())
 			.lift(StreamDocument.serialize())
+			.doOnNext(e->System.err.println("$$: "+new String(e)))
 			.reduce(new AtomicInteger(),(acc,i)->{acc.addAndGet(i.length); return acc;})
 			.blockingGet().get();
 		
 		System.err.println("size: "+size);
 		Assert.assertTrue(size>5000);
+		client.close();
 	}
 
 }

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Dictionary;
@@ -241,7 +243,7 @@ public class ResourceManager implements EventHandler {
 		File install = new File(navajoServerContext.getInstallationPath(),CONFIG_CLIENT_PROPERTIES);
 		try {
 			fis = new FileInputStream(install);
-			ResourceBundle b = new PropertyResourceBundle(fis);
+			ResourceBundle b = new PropertyResourceBundle(new InputStreamReader(fis,Charset.forName("UTF-8")));
 			if(! b.containsKey("username")) {
 				logger.error("No username found in client.properties");
 			}

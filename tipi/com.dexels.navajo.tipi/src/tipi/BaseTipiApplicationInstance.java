@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -179,7 +181,7 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 
 	private void readArguments(FileInputStream profile,
 			Map<String, String> result) throws IOException {
-		PropertyResourceBundle prb = new PropertyResourceBundle(profile);
+		PropertyResourceBundle prb = new PropertyResourceBundle(new InputStreamReader(profile,Charset.forName("UTF-8")));
 		for (String key : prb.keySet()) {
 			result.put(key, prb.getString(key));
 		}

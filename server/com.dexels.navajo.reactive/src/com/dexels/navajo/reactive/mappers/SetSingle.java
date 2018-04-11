@@ -24,19 +24,26 @@ public class SetSingle implements ReactiveMerger {
 	@Override
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		return context->(item)->{
-			// will use the second message as input, if not present, will use the source message
 			ImmutableMessage s = item.message();
 			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s), item.stateMessage(), this, xml, relativePath);
+			boolean condition = parms.optionalBoolean("condition").orElse(true);
+			System.err.println("Condition: "+item.message()+" parms present? "+parms.optionalBoolean("condition").isPresent());
+			if(!condition) {
+				return item;
+			}
+			// will use the second message as input, if not present, will use the source message
 			
 			for (Entry<String,Operand> elt : parms.resolveAllParams().entrySet()) {
-				s = s.with(elt.getKey(), elt.getValue().value, elt.getValue().type);
+				if(!elt.getKey().equals("condition")) {
+					s = s.with(elt.getKey(), elt.getValue().value, elt.getValue().type);
+				}
 			}
 			return DataItem.of(s);
 		};
 	
 	}
 
-	
+	// parameter checking off 
 	@Override
 	public Optional<List<String>> allowedParameters() {
 		return Optional.empty();

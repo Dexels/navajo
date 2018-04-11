@@ -14,7 +14,7 @@ public final class ASTModNode extends SimpleNode {
     }
 	@Override
 	public ContextExpression interpretToLambda(List<String> problems) {
-		return lazyBiFunction(problems, (a,b)->interpret(a, b),emptyOrType(Property.INTEGER_PROPERTY),(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
+		return lazyBiFunction(problems, (a,b)->interpret(a, b),emptyOrType(Property.INTEGER_PROPERTY),(a,b)->Optional.of(Property.INTEGER_PROPERTY));
 	}
 
 	public final Object interpret(Object a, Object b){

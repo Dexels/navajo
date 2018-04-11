@@ -30,9 +30,15 @@ public class JsonFileAppender implements ReactiveMerger {
 	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		ImmutableMessageParser parser = ImmutableFactory.createParser();
 		return context -> {
-			ReactiveResolvedParameters named = params.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), this,xml,relativePath);
-			String  path = named.paramString("path");
+			
 			return (item) -> {
+				ReactiveResolvedParameters named = params.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), this,xml,relativePath);
+				String  path = named.paramString("path");
+				boolean condition = named.optionalBoolean("condition").orElse(true);
+				if(!condition) {
+					return item;
+				}
+				
 				FileOutputStream fw = new FileOutputStream(path,true);
 				// TODO Fix
 				byte[] data = parser.serialize(item.message());
@@ -46,7 +52,7 @@ public class JsonFileAppender implements ReactiveMerger {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"path"}));
+		return Optional.of(Arrays.asList(new String[]{"path","condition"}));
 	}
 
 	@Override
@@ -58,6 +64,7 @@ public class JsonFileAppender implements ReactiveMerger {
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String,String> r = new HashMap<>();
 		r.put("path", Property.STRING_PROPERTY);
+		r.put("condition", Property.BOOLEAN_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
 }
