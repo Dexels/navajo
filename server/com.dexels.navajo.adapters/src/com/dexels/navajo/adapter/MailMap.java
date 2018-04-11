@@ -174,13 +174,13 @@ public class MailMap implements MailMapInterface, Mappable,
 
         for (int i = 0; i < strAddreses.length; i++) {
             try {
-                addresses.add(new InternetAddress(strAddreses[i], true));
+                addresses.add(new InternetAddress(strAddreses[i]));
             } catch (Exception e) {
                 logger.warn("Invalid e-mail address was provided : {}", strAddreses[i]);
                 if (ignoreFailures) {
                     AuditLog.log("MailMap", e.getMessage(), e, Level.WARNING, myAccess.accessID);
                     logger.warn("ingoreFailures flag is set. Ignoring the invalid e-mail address.");
-                    failure = e.getMessage();
+                    failure += e.getMessage() + ";";
                 } else {
                     AuditLog.log("MailMap", e.getMessage(), e, Level.SEVERE, myAccess.accessID);
                     throw new UserException(-1, e.getMessage(), e);
@@ -307,9 +307,15 @@ public class MailMap implements MailMapInterface, Mappable,
                     bccrecipients != null ? Arrays.toString(bccrecipients) : "[]", subject);
 			Transport.send(msg);
 		} catch (Exception e) {
-            // This catch is needed since we use the send method.
-            logger.error("Exception on sending mail!", e);
-            throw new UserException(-1, e.getMessage(), e);
+		    logger.error("Exception on sending mail!", e);
+		    if (ignoreFailures) {
+                AuditLog.log("MailMap", e.getMessage(), e, Level.WARNING, myAccess.accessID);
+                logger.warn("ingoreFailures flag is set. Ignoring the invalid e-mail address.");
+                failure += e.getMessage() + ";";
+            } else {
+                AuditLog.log("MailMap", e.getMessage(), e, Level.SEVERE, myAccess.accessID);
+                throw new UserException(-1, e.getMessage(), e);
+            }
 		} finally {
             Thread.currentThread().setContextClassLoader( current );
         }
