@@ -245,7 +245,6 @@ function runScript(script) {
         		startTitleLoader();
         		req.setRequestHeader('Authorization', null); // Safari fix
         		req.setRequestHeader('Content-Type', "text/xml;charset=utf-8");
-        		console.log('Reactive: '+sessionStorage.reactive);
         	},
         	complete: function() {stopTitleLoader();},
         	type: "POST",
@@ -258,7 +257,6 @@ function runScript(script) {
                       var stateObj = { script: script, xml:  serializer.serializeToString(result) };
                       history.pushState(stateObj, script, "tester.html?script="+script);
             	  } else {
-            		  console.log('weehee');
                       var stateObj = { script: script, xml:  result };
                       history.pushState(stateObj, script, "tester.html?script="+script);
                       $('#HTMLview')[0].innerHTML = result;
