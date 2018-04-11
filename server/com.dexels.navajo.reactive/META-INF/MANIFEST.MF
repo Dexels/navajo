@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Reactive Script implementation
 Bundle-SymbolicName: com.dexels.navajo.reactive
-Bundle-Version: 2.0.18
+Bundle-Version: 2.0.19.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.config.runtime;resolution:=optional,
