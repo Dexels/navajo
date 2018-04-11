@@ -10,6 +10,7 @@
 	</property>
    <reference bind="setReactiveScriptParser" cardinality="1..1" interface="com.dexels.navajo.reactive.ReactiveScriptParser" name="ReactiveScriptParser" policy="dynamic" unbind="clearReactiveScriptParser"/>
    <reference bind="setReactiveScriptEnvironment" cardinality="1..1" interface="com.dexels.navajo.document.stream.api.ReactiveScriptRunner" name="ReactiveScriptEnvironment" policy="dynamic" unbind="clearReactiveScriptEnvironment" target="(name=legacy)"/>
+   <reference bind="setAuthenticationMethodBuilder" cardinality="1..1" interface="com.dexels.navajo.authentication.api.AuthenticationMethodBuilder" name="AuthenticationMethodBuilder" policy="dynamic" unbind="clearAuthenticationMethodBuilder"/>
    <reference bind="setNavajoConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfigInterface" policy="dynamic" unbind="clearNavajoConfig"/>
    <property name="name" type="String" value="reactive"/>
 </scr:component>

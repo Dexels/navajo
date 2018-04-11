@@ -150,6 +150,7 @@ public class TestEnvironment {
 				.flatMap(e->e)
 				.toFlowable(BackpressureStrategy.BUFFER);
 		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.empty(), Optional.empty(),
+				NavajoFactory.getInstance().createNavajo(),
 				Collections.emptyMap(),
 				Optional.of(inStream),Optional.empty(),
 				Optional.empty(),Collections.emptyList(),Optional.empty());

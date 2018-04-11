@@ -40,6 +40,7 @@ public class SingleSource implements ReactiveSource {
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
 		ReactiveResolvedParameters parameters = this.params.resolveNamed(context, current, ImmutableFactory.empty(), metadata, sourceElement, sourcePath);
+
 		boolean debug = parameters.paramBoolean("debug", ()->false);
 		int count =  parameters.paramInteger("count", ()->1);
 		int delay =  parameters.paramInteger("delay", ()->0);

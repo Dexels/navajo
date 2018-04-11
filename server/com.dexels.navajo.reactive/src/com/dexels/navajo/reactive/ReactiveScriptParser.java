@@ -554,9 +554,9 @@ public class ReactiveScriptParser {
 
 		Type fn = finalType(reactiveSourceFactory, factories,problems);
 		ReactiveSource build = reactiveSourceFactory.build(relativePath, type,problems,Optional.of(x),params,factories,fn,reducerSupplier);
-		logger.info("Source type: "+reactiveSourceFactory.sourceType());
+		logger.debug("Source type: "+reactiveSourceFactory.sourceType());
 		for (ReactiveTransformer reactiveTransformer : factories) {
-			logger.info("Transformer type: "+reactiveTransformer.metadata().outType());
+			logger.debug("Transformer type: "+reactiveTransformer.metadata().outType());
 		}
 		return build;
 	}
@@ -564,16 +564,14 @@ public class ReactiveScriptParser {
 
 	private static Type finalType(ReactiveSourceFactory source, List<ReactiveTransformer> transformers, List<ReactiveParseProblem> problems) {
 		Type current = source.sourceType();
-		logger.info("Determine source type: "+current);
+		logger.debug("Determine source type: "+current);
 		for (ReactiveTransformer reactiveTransformer : transformers) {
-			System.err.println("Checking if allowed in types: "+reactiveTransformer.metadata().inType()+" contains: "+current.name()+" for transformer: "+reactiveTransformer.getClass().getName());
 			if(!reactiveTransformer.metadata().inType().contains(current)) {
 				problems.add(ReactiveParseProblem.of("Type mismatch: Last type in pipeline: "+current+" next part expects: "+reactiveTransformer.metadata().inType()));
-//				throw new ClassCastException("Type mismatch: Last type in pipeline: "+current+" next part expects: "+reactiveTransformer.metadata().inType());
 			}
 			current = reactiveTransformer.metadata().outType();
 		}
-		logger.info("Final type: "+current);
+		logger.debug("Final type: "+current);
 		return current;
 	}
 	

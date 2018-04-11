@@ -21,6 +21,7 @@ import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
+import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 
@@ -117,14 +118,17 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 	 
 
 	private final Flowable<NavajoStreamEvent> executeLegacy(StreamScriptContext context, Navajo input) {
-			try {
+		try {
+				context.authNavajo.getAllMessages().forEach(message->{
+					input.addMessage(message);
+				});
 				Navajo result = execute(context, input);
 				return Single.just(result)
-					.compose(StreamDocument.domStreamTransformer())
-					.toObservable()
-					.flatMap(e->e)
-//					.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED)
-					.toFlowable(BackpressureStrategy.BUFFER);
+						.compose(StreamDocument.domStreamTransformer())
+						.toObservable()
+						.flatMap(e->e)
+//						.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED)
+						.toFlowable(BackpressureStrategy.BUFFER);
 			} catch (Throwable e) {
 				logger.error("Error: ", e);
  				return errorMessage(context.service,context.username,101,"Could not resolve script: "+context.service);
@@ -149,7 +153,7 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 			} else {
 				in.getHeader().setRPCUser(context.username.get());
 				in.getHeader().setRPCPassword(context.password.get());
-				Navajo outDoc = getLocalClient().handleInternal(context.tenant, in, null, null);
+				Navajo outDoc = getLocalClient().handleInternal(context.tenant, in, null, createClientInfo(context));
 				return outDoc;
 			}
 		} catch (Throwable e) {
@@ -166,6 +170,27 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 		}
 	}
 
+	private ClientInfo createClientInfo(StreamScriptContext context) {
+		String authHeader =  (String) context.attributes.get("Authorization");
+		String contentEncoding = (String) context.attributes.get("Content-Encoding");
+//		String acceptEncoding = (String) context.attributes.get("Accept-Encoding");
+		String ip = "1.1.1.1";
+		
+		ClientInfo clientInfo = new ClientInfo(
+					ip,
+					"unknown",
+					contentEncoding,
+					(int) (0),
+					(int) (0),
+					0,
+					"reactive",
+					false,
+					false,
+					-1,
+					new java.util.Date());
+		clientInfo.setAuthHeader(authHeader);
+			return clientInfo;
+	}
 	private static Flowable<NavajoStreamEvent> errorMessage(String service, Optional<String> user, int code, String message) {
 		return Msg.create("error")
 				.with(Prop.create("code",""+code,Property.INTEGER_PROPERTY))

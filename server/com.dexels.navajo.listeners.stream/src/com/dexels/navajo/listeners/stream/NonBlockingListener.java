@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.authentication.api.AuthenticationMethodBuilder;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveScript;
@@ -48,6 +49,7 @@ import com.dexels.navajo.script.api.LocalClient;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 
@@ -129,34 +131,11 @@ public class NonBlockingListener extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		AsyncContext ac = request.startAsync();
-		ac.addListener(new AsyncListener() {
-			
-			@Override
-			public void onTimeout(AsyncEvent ae) throws IOException {
-				System.err.println("timeout");
-			}
-			
-			@Override
-			public void onStartAsync(AsyncEvent ae) throws IOException {
-				System.err.println("start");
-			}
-			
-			@Override
-			public void onError(AsyncEvent ae) throws IOException {
-				System.err.println("error");
-			}
-			
-			@Override
-			public void onComplete(AsyncEvent ae) throws IOException {
-				System.err.println("complete");
-				
-			}
-		});
 		ResponseSubscriber responseSubscriber = new ResponseSubscriber(ac);
 		StreamScriptContext context;
 		
 		try {
-			context = createScriptContext(ac,responseSubscriber);
+			context = createScriptContext(ac,responseSubscriber,authMethodBuilder);
 		} catch (Throwable e3) {
 			logger.error("Low level problem: ",e3);
 			// TODO do something prettier?
@@ -186,9 +165,13 @@ public class NonBlockingListener extends HttpServlet {
 				respondError("Script compilation problem",context, responseEncoding,response,  responseSubscriber, e2);	
 				return;
 			}
+			
+//			final Navajo in;
 
 			try {
-				authenticate(context,(String)context.attributes.get("x-navajo-password"), (String)context.attributes.get("Authorization"),context.tenant);
+//				in = authenticate(service, username, password, authHeader, tenant)
+//				in = authorize(context);
+//				in.write(System.err);
 			} catch (Exception e1) {
 				respondError("Authentication problem. ",context, responseEncoding,response,  responseSubscriber, e1);	
 				return;
@@ -267,6 +250,7 @@ public class NonBlockingListener extends HttpServlet {
 		}
 	}
 
+
 	private void respondError(String message, StreamScriptContext context, Optional<String> responseEncoding, HttpServletResponse response,
 			Subscriber<ByteBuffer> responseSubscriber, Throwable e1) {
 		logger.error("Returning error with message: "+message+" with responseEncoding: "+responseEncoding,e1);
@@ -288,15 +272,16 @@ public class NonBlockingListener extends HttpServlet {
 
 	}
 
-	public void authenticate(StreamScriptContext context, String password, String authHeader, String tenant) throws AuthorizationException {
-		Access a = new Access(-1,-1,context.username.orElse(null),context.service,"stream","ip","hostname",null,false,"access");
+	public Navajo authenticate(String service, String username, String password, String authHeader, String tenant) throws AuthorizationException {
+		Access a = new Access(-1,-1,username,service,"stream","ip","hostname",null,false,"access");
 		if(tenant==null) {
-			throw new AuthorizationException(true, false, context.username.orElse(null), "Can not authenticate without tenant!");
+			throw new AuthorizationException(true, false, username, "Can not authenticate without tenant!");
 		}
 		a.setTenant(tenant);
 		a.setInDoc(NavajoFactory.getInstance().createNavajo());
 		a.rpcPwd = password;
 		authMethodBuilder.getInstanceForRequest(authHeader).process(a);
+		return a.getInDoc();
 	}
 
 	private static Flowable<NavajoStreamEvent> errorMessage(boolean wrapNavajo, StreamScriptContext context, Optional<Throwable> throwable, String message) {
@@ -343,14 +328,14 @@ public class NonBlockingListener extends HttpServlet {
 		    return bytesArray;
 	}
 
-	private StreamScriptContext createScriptContext(AsyncContext ac, ResponseSubscriber responseSubscriber) throws IOException {
+	private StreamScriptContext createScriptContext(AsyncContext ac, ResponseSubscriber responseSubscriber, AuthenticationMethodBuilder builder) throws IOException, AuthorizationException {
 		final HttpServletRequest req = (HttpServletRequest) ac.getRequest();
 		Map<String, Object> attributes = extractHeaders(req);
 		String tenant = determineTenantFromRequest(req);
 		String username = (String) attributes.get("X-Navajo-Username");
 		String password = (String) attributes.get("X-Navajo-Password");
 		String serviceHeader = (String) attributes.get("X-Navajo-Service");
-
+		String authorizationHeader = (String) attributes.get("Authorization");
 		boolean isGet = "GET".equals(req.getMethod());
 		if(serviceHeader == null) {
 			throw new NullPointerException("Missing service header. Streaming Endpoint requires a 'X-Navajo-Service' header");
@@ -364,9 +349,10 @@ public class NonBlockingListener extends HttpServlet {
 		if(tenant == null) {
 			throw new NullPointerException("Missing tenant header. Streaming Endpoint requires a tenant");
 		}
+		Navajo in = authenticate(serviceHeader,username,password,authorizationHeader,tenant);
 
 		if(isGet) {
-			return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),
+			return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,
 					attributes,Optional.of(
 							Flowable.<NavajoStreamEvent>empty().compose(StreamDocument
 									.inNavajo(serviceHeader, Optional.of(username), Optional.of(password)))
@@ -375,14 +361,15 @@ public class NonBlockingListener extends HttpServlet {
 		String requestEncoding = (String) attributes.get("Content-Encoding");
 		RequestPublisher rp = new RequestPublisher(ac, 8192);
 		Flowable<NavajoStreamEvent> input = Flowable.fromPublisher(rp)
-			.doOnComplete(()->System.err.println("REQUEST_COMPLETE!!!!!>>>>>>>>>>>>>>>>>>"))
 			.map(e->getByteArrayFromByteBuffer(e))
 			.compose(StreamCompress.decompress(Optional.ofNullable(requestEncoding)))
 			.lift(XML.parseFlowable(50))
 			.concatMap(e->e)
 			.lift(StreamDocument.parse())
 			.concatMap(e->e);
-		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),attributes,Optional.of(input),Optional.empty(), Optional.of(this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(responseSubscriber));
+		
+//	au
+		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,attributes,Optional.of(input),Optional.of(Maybe.just(in)), Optional.of(this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(responseSubscriber));
 	}
 
 	// warn: Duplicated code

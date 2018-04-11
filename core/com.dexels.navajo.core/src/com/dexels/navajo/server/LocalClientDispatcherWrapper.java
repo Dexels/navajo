@@ -76,7 +76,7 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 
     @Override
     public Navajo handleInternal(String instance, Navajo in, Object cert, ClientInfo clientInfo) throws FatalException {
-        Navajo outDoc = dispatcherInterface.removeInternalMessages(dispatcherInterface.handle(in, instance, cert, clientInfo));
+        Navajo outDoc = dispatcherInterface.removeInternalMessages(dispatcherInterface.handle(in, instance, true));
         if (outDoc == null) {
             logger.error("handleInternal seems to have failed, as outDoc is null.");
         }
