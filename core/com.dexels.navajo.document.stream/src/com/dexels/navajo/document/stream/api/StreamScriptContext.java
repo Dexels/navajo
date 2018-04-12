@@ -26,7 +26,7 @@ public class StreamScriptContext {
 	public final Optional<String> username;
 	public final Optional<String> password;
 	private final Optional<Flowable<NavajoStreamEvent>> inputFlowable;
-	private final Optional<Maybe<Navajo>> inputNavajo;
+	private final Navajo inputNavajo;
 	public final Map<String, Object> attributes;
 	private final Optional<ReactiveScriptRunner> runner;
 	private String deployment;
@@ -43,15 +43,15 @@ public class StreamScriptContext {
 	
 	// mostly for testing
 	public StreamScriptContext(String tenant, String service, String deployment) {
-		this(UUID.randomUUID().toString(),tenant,service,Optional.empty(),Optional.empty(),NavajoFactory.getInstance().createNavajo(),Collections.emptyMap(),Optional.empty(),Optional.of( Maybe.empty()),Optional.empty(),Collections.emptyList(),Optional.empty());
+		this(UUID.randomUUID().toString(),tenant,service,Optional.empty(),Optional.empty(),null,Collections.emptyMap(),Optional.empty(),null,Optional.empty(),Collections.emptyList(),Optional.empty());
 		this.deployment = deployment;
 	}
 
-	public StreamScriptContext(String tenant, String service, Optional<String> username, Optional<String> password,Navajo authNavajo, Map<String,Object> attributes,Optional<Flowable<NavajoStreamEvent>> input, Optional<Maybe<Navajo>> inputNavajo, Optional<ReactiveScriptRunner> runner, List<String> addedMethods, Optional<Disposable> disposable) {
+	public StreamScriptContext(String tenant, String service, Optional<String> username, Optional<String> password,Navajo authNavajo, Map<String,Object> attributes,Optional<Flowable<NavajoStreamEvent>> input, Navajo inputNavajo, Optional<ReactiveScriptRunner> runner, List<String> addedMethods, Optional<Disposable> disposable) {
 		this(UUID.randomUUID().toString(),tenant,service,username,password,authNavajo,attributes,input,inputNavajo,runner,addedMethods,disposable);
 	}
 	
-	public StreamScriptContext(String uuid, String tenant, String service, Optional<String> username, Optional<String> password,Navajo authNavajo, Map<String,Object> attributes,Optional<Flowable<NavajoStreamEvent>> input, Optional<Maybe<Navajo>> inputNavajo, Optional<ReactiveScriptRunner> runner, List<String> addedMethods, Optional<Disposable> disposable) {
+	public StreamScriptContext(String uuid, String tenant, String service, Optional<String> username, Optional<String> password,Navajo authNavajo, Map<String,Object> attributes,Optional<Flowable<NavajoStreamEvent>> input, Navajo inputNavajo, Optional<ReactiveScriptRunner> runner, List<String> addedMethods, Optional<Disposable> disposable) {
 		this.uuid = uuid;
 		this.tenant = tenant;
 		this.service = service;
@@ -92,14 +92,14 @@ public class StreamScriptContext {
 	}
 	
 	public StreamScriptContext withInput(Flowable<NavajoStreamEvent> input) {
-		return new StreamScriptContext(this.uuid,this.tenant, service, username, password, authNavajo, attributes, Optional.of(input),Optional.empty(), runner, methods,disposable);
+		return new StreamScriptContext(this.uuid,this.tenant, service, username, password, authNavajo, attributes, Optional.of(input),null, runner, methods,disposable);
 	}
 
 	public StreamScriptContext withInputNavajo(Navajo input) {
-		if(inputFlowable.isPresent()) {
-			throw new IllegalArgumentException("Can not attach resolved input  when there is a input flowable");
-		}
-		return new StreamScriptContext(this.uuid,this.tenant, service, username, password, authNavajo, attributes, Optional.empty(),Optional.of(Maybe.just(input)), runner, methods,disposable);
+//		if(inputFlowable.isPresent()) {
+//			throw new IllegalArgumentException("Can not attach resolved input  when there is a input flowable");
+//		}
+		return new StreamScriptContext(this.uuid,this.tenant, service, username, password, authNavajo, attributes, Optional.empty(),input, runner, methods,disposable);
 	}
 
 	public ReactiveScriptRunner runner() {
@@ -113,13 +113,6 @@ public class StreamScriptContext {
 	public Flowable<NavajoStreamEvent> inputFlowable() {
 		return inputFlowable.orElse(Flowable.empty());
 	}
-
-	public Navajo getBlockingInput() {
-		if(this.resolvedNavajo == null) {
-			this.resolvedNavajo = getInput().blockingGet();
-		}
-		return this.resolvedNavajo;
-	}
 	
 	public Single<Navajo> getInput() {
 		return collect().toSingle(NavajoFactory.getInstance().createNavajo())
@@ -131,8 +124,8 @@ public class StreamScriptContext {
 	}
 	
 	private Maybe<Navajo> collect() {
-		if(!inputFlowable.isPresent()) {
-			return inputNavajo.orElse(Maybe.empty());
+		if(inputNavajo!=null) {
+			return Maybe.error(()->new IllegalStateException("Can't collect navajo when input is already present"));
 		}
 		return inputFlowable.get()
 				.toObservable().compose(StreamDocument.domStreamCollector()).firstElement();
@@ -142,6 +135,13 @@ public class StreamScriptContext {
 		if(this.disposable.isPresent()) {
 			this.disposable.get().dispose();
 		}
+	}
+	
+	public Navajo resolvedNavajo() {
+		if(resolvedNavajo==null) {
+			throw new NullPointerException("Failed when getting input navajo: You are not allowed to ask for unresolved input.");
+		}
+		return resolvedNavajo;
 	}
 
 	public void logEvent(String message) {

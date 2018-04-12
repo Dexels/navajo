@@ -14,8 +14,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.servlet.AsyncContext;
-import javax.servlet.AsyncEvent;
-import javax.servlet.AsyncListener;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +47,6 @@ import com.dexels.navajo.script.api.LocalClient;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 
@@ -166,6 +163,7 @@ public class NonBlockingListener extends HttpServlet {
 				return;
 			}
 			
+			
 //			final Navajo in;
 
 			try {
@@ -182,10 +180,19 @@ public class NonBlockingListener extends HttpServlet {
 				return errorMessage(true,context,Optional.of(e), e.getMessage()).map(DataItem::of);
 			};
 
+//			if(!rs.streamInput()) {			}
+
+			Flowable<DataItem> execution = rs.streamInput() ? 
+					rs.execute(context) 
+					: context.getInput()
+						.map(n->context.withInputNavajo(n))
+						.map(ctx->rs.execute(ctx))
+						.toFlowable()
+						.flatMap(elt->elt);
 
 			switch(rs.dataType()) {
 			case DATA:
-				rs.execute(context)
+				execution
 					.map(di->di.data())
 					.compose(StreamCompress.compress(responseEncoding))
 					.doOnCancel(()->removeRunningScript(context))
@@ -194,7 +201,7 @@ public class NonBlockingListener extends HttpServlet {
 					.subscribe(responseSubscriber);
 				break;
 			case MESSAGE:
-				rs.execute(context)
+				execution
 				.onErrorResumeNext(cc)
 				.map(di->di.message())
 				.map(msg->msg.toFlatString(ImmutableFactory.getInstance()).getBytes())
@@ -204,7 +211,7 @@ public class NonBlockingListener extends HttpServlet {
 				.subscribe(responseSubscriber);
 				break;
 			case EVENTSTREAM:
-				rs.execute(context)
+				execution
 				.onErrorResumeNext(cc)
 				.map(e->e.eventStream())
 				.concatMap(e->e)
@@ -222,7 +229,7 @@ public class NonBlockingListener extends HttpServlet {
 			case MSGSTREAM:
 			case EVENT:
 			default:
-				rs.execute(context)
+				execution
 					.onErrorResumeNext(cc)
 					.map(di->di.event())
 					.lift(StreamDocument.filterMessageIgnore())
@@ -356,7 +363,7 @@ public class NonBlockingListener extends HttpServlet {
 					attributes,Optional.of(
 							Flowable.<NavajoStreamEvent>empty().compose(StreamDocument
 									.inNavajo(serviceHeader, Optional.of(username), Optional.of(password)))
-							),Optional.empty(), Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(responseSubscriber));
+							),null, Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(responseSubscriber));
 		}
 		String requestEncoding = (String) attributes.get("Content-Encoding");
 		RequestPublisher rp = new RequestPublisher(ac, 8192);
@@ -369,7 +376,7 @@ public class NonBlockingListener extends HttpServlet {
 			.concatMap(e->e);
 		
 //	au
-		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,attributes,Optional.of(input),Optional.of(Maybe.just(in)), Optional.of(this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(responseSubscriber));
+		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,attributes,Optional.of(input),null, Optional.of(this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(responseSubscriber));
 	}
 
 	// warn: Duplicated code

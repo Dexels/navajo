@@ -25,8 +25,6 @@ import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFac
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 
-import io.reactivex.Maybe;
-
 public class TestSetup {
 
 	public static ReactiveScriptParser setup() {
@@ -64,7 +62,7 @@ public class TestSetup {
 				, NavajoFactory.getInstance().createNavajo()
 				, Collections.emptyMap()
 				, Optional.empty()
-				, Optional.of(Maybe.just(input)),runner, Collections.emptyList(),Optional.empty());
+				, input,runner, Collections.emptyList(),Optional.empty());
 		return context;
 	}
 	

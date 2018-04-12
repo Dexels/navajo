@@ -58,7 +58,7 @@ public class StoreTest {
 				, NavajoFactory.getInstance().createNavajo()
 				, Collections.emptyMap()
 				, Optional.empty()
-				, Optional.of(Maybe.just(input)), runner, Collections.emptyList(),Optional.empty());
+				, input, runner, Collections.emptyList(),Optional.empty());
 		return context;
 	}
 	

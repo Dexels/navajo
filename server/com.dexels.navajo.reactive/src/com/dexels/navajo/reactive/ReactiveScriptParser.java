@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
-import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
@@ -32,13 +31,11 @@ import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.mapping.MappingUtils;
-import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
-import com.dexels.navajo.reactive.api.ReactiveParameterException;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
 import com.dexels.navajo.reactive.api.ReactiveSource;
@@ -57,7 +54,6 @@ import com.dexels.navajo.reactive.mappers.StoreAsSubMessage;
 import com.dexels.navajo.reactive.mappers.StoreSingle;
 import com.dexels.navajo.reactive.mappers.ToSubMessage;
 import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformer;
-import com.dexels.navajo.script.api.SystemException;
 
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
@@ -270,7 +266,7 @@ public class ReactiveScriptParser {
 	}
 
 	private static Operand evaluateCompiledExpression(ContextExpression ctx, StreamScriptContext context,Map<String,Object> params, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage, boolean useGlobalInput)  {
-		Navajo inMessage = !useGlobalInput ? context.getBlockingInput() : null;
+		Navajo inMessage = useGlobalInput ? context.resolvedNavajo() : null;
 		Object val =ctx.apply(inMessage, null, null, null, null, null, null,immutableMessage,paramMessage);
 		String type = MappingUtils.determineNavajoType(val);
 		return new Operand(val, type, "");
@@ -325,11 +321,6 @@ public class ReactiveScriptParser {
 					problems.add(ReactiveParseProblem.of(ex.getMessage()).withCause(ex).withRange(attrLine, attrLine, attrStart, attrEnd));
 				}
 				// todo implement default
-			} else if(e.endsWith(".default")) {
-				// deprecated?
-				String name = e.substring(0, e.length()-".default".length());
-				Function3<StreamScriptContext,Optional<ImmutableMessage>, ImmutableMessage, Operand> value = (context,msg,param)->evaluate((String)x.getStringAttribute(e), context, msg,param,false);
-				namedParameters.put(name, value);
 			} else {
 				if(parameterTypes.isPresent()) {
 					String type = parameterTypes.get().get(e);
@@ -355,16 +346,18 @@ public class ReactiveScriptParser {
 				String name = possibleParam.getStringAttribute("name");
 				boolean debug = possibleParam.getBooleanAttribute("debug", "true", "false", false);
 				String content = possibleParam.getContent();
-				String defaultValue = possibleParam.getStringAttribute("default");
 				if(content==null || "".equals(content)) {
 					continue;
 				}
 				if(name==null) {
-					if(defaultValue!=null) {
-						throw new ReactiveParameterException("No default value is allowed for unnamed parameters in file: "+relativePath+" line: "+possibleParam.getStartLineNr());
-					}
 					if (evaluate) {
-						unnamedParameters.add((context,msg,param)->evaluate((String)content, context, msg,param,debug));
+						List<String> probs = new ArrayList<>();
+						ContextExpression ce = ExpressionCache.getInstance().parse(probs,content);
+						probs.stream().forEach(elt->problems.add(ReactiveParseProblem.of(elt)));
+						// TODO should we type check unnamed parameters somehow?
+						Function3<StreamScriptContext,Optional<ImmutableMessage>, ImmutableMessage, Operand> value = (context,msg,param)->evaluateCompiledExpression(ce, context, Collections.emptyMap(), msg,Optional.of(param),useGlobalInput);
+						
+						unnamedParameters.add(value);
 					} else {
 						unnamedParameters.add((context,msg,param)->new Operand(content,"string",null));
 					}
@@ -576,27 +569,6 @@ public class ReactiveScriptParser {
 		logger.debug("Final type: "+current);
 		return current;
 	}
-	
-	// TODO default eval
-	private static Operand evaluate(String expression, StreamScriptContext context, Optional<ImmutableMessage> m, ImmutableMessage param, boolean debug) throws SystemException {
-		if(debug) {
-			logger.info("Evaluating expression: {}",expression);
-			if(m.isPresent()) {
-				logger.info("With message: "+m.get().toFlatString(ImmutableFactory.getInstance()));
-			}
-			logger.info("With param message: "+param.toFlatString(ImmutableFactory.getInstance()));
-		}
-		Operand result = Expression.evaluate(expression, context.getBlockingInput(), null, null,null,null,null,null,m,Optional.of(param));
-		if(debug) {
-			logger.info("Result type: "+result.type+" value: "+result.value);
-		}
-		return result;
-	}
-	
-	public static ImmutableMessage empty() {
-		return ImmutableFactory.create(Collections.emptyMap(), Collections.emptyMap());
-	}
-	
 
 	public static Function<StreamScriptContext,Function<DataItem,DataItem>> parseReducerList (String relativePath, List<ReactiveParseProblem> problems, Optional<List<XMLElement>> elements, Function<String, ReactiveMerger> reducerSupplier, boolean useGlobalInput) {
 		List<Function<StreamScriptContext,Function<DataItem,DataItem>>> funcList = elements.orElse(Collections.emptyList()).stream()
