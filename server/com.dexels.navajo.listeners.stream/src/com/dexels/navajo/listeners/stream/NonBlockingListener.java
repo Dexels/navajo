@@ -133,7 +133,7 @@ public class NonBlockingListener extends HttpServlet {
 		AsyncContext ac = request.startAsync();
 		ResponseSubscriber responseSubscriber = new ResponseSubscriber(ac);
 		StreamScriptContext context;
-		
+		ac.setTimeout(60000);
 		try {
 			context = createScriptContext(ac,responseSubscriber,authMethodBuilder);
 		} catch (Throwable e3) {
