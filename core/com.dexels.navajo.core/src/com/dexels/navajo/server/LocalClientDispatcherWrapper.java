@@ -76,13 +76,21 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 
     @Override
     public Navajo handleInternal(String instance, Navajo in, Object cert, ClientInfo clientInfo) throws FatalException {
-        Navajo outDoc = dispatcherInterface.removeInternalMessages(dispatcherInterface.handle(in, instance, true));
+        Navajo outDoc = dispatcherInterface.removeInternalMessages(dispatcherInterface.handle(in, instance, cert, clientInfo));
         if (outDoc == null) {
             logger.error("handleInternal seems to have failed, as outDoc is null.");
         }
         return outDoc;
     }
 
+    @Override
+    public Navajo handleInternal(String instance, Navajo in, boolean skipAuth) throws FatalException {
+        Navajo outDoc = dispatcherInterface.removeInternalMessages(dispatcherInterface.handle(in, instance, skipAuth));
+        if (outDoc == null) {
+            logger.error("handleInternal seems to have failed, as outDoc is null.");
+        }
+        return outDoc;
+    }
 	@Override
 	public boolean isSpecialWebservice(String name) {
 		return Dispatcher.isSpecialwebservice(name);
