@@ -171,6 +171,8 @@ public class ReactiveScriptParser {
 						: 
 							Flowable.fromIterable(r)
 							.concatMap(r->r.execute(context, Optional.empty()));
+					flow = flow.doOnSubscribe(s->context.logEvent("source starting"))
+							.doOnComplete(()->context.logEvent("source completed"));
 					if(isTml) {
 						flow = flow.compose(StreamDocument.inNavajoDataItem(context.service,context.username,context.password,methods));
 					}

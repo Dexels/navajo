@@ -100,7 +100,6 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 	private boolean useReactiveEndpoint(final HttpServletRequest req) {
 		String header = req.getHeader("X-Navajo-Reactive");
 		boolean useReactive = header!=null && this.reactiveHttpServlet!=null && "true".equals(header);
-		logger.info("Using reactive: "+useReactive);
 		return useReactive;
 	}
 
