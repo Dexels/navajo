@@ -170,7 +170,8 @@ public class ReactiveScriptParser {
 					flow = flow.doOnSubscribe(s->context.logEvent("source starting"))
 							.doOnComplete(()->context.logEvent("source completed"));
 					if(isTml) {
-						flow = flow.compose(StreamDocument.inNavajoDataItem(context.service,context.username,context.password,methods));
+						// Omit password from response
+						flow = flow.compose(StreamDocument.inNavajoDataItem(context.service,context.username,Optional.empty(),methods));
 					}
 					return flow;
 				} catch (Throwable e) {
@@ -418,8 +419,6 @@ public class ReactiveScriptParser {
 						namedParameters.put(name, (context,msg,param)->new Operand(content,"string",null));
 					}
 				}
-			} else {
-				logger.info("Ignoring non-parameter: "+possibleParam.getName());
 			}
 		}
 		return ReactiveParameters.of(namedParameters, unnamedParameters);
@@ -427,7 +426,6 @@ public class ReactiveScriptParser {
 	
 	private static ReactiveSource parseSource(String relativePath, XMLElement x, List<ReactiveParseProblem> problems, Function<String,ReactiveSourceFactory> sourceFactorySupplier,Function<String,ReactiveTransformerFactory> factorySupplier,Function<String, ReactiveMerger> reducerSupplier, Set<String> transformerNames, Set<String> reducerNames, boolean streamInput) throws Exception  {
 		String type = x.getName();
-		logger.info("Type of source: "+type);
 		String[] typeSplit = type.split("\\.");
 		ReactiveSource src = createSource(relativePath, x,problems,typeSplit[1],sourceFactorySupplier, factorySupplier, reducerSupplier,transformerNames,reducerNames, streamInput);
 		return src;
@@ -508,7 +506,7 @@ public class ReactiveScriptParser {
 			throw new ReactiveParseException("Mismatched output for transformer: "+operatorName+" expected: "+out+" but got: "+newBaseParsed+" at element " +relativePath+" with name: "+String.join(".", typeParts)+" at line: "+xml.getStartLineNr());
 		}
 
-		logger.info("CHAIN: "+in+" / "+baseType+" ---> "+newBaseType+" / "+out);
+		logger.debug("CHAIN: "+in+" / "+baseType+" ---> "+newBaseType+" / "+out);
 		return transformer;
 	}
 

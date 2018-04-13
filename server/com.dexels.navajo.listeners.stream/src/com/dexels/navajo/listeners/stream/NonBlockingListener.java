@@ -112,17 +112,10 @@ public class NonBlockingListener extends HttpServlet {
 		return Collections.unmodifiableMap(attributes);
 	}
 	
-	private void handleInitialError(HttpServletResponse response, Throwable error,StreamScriptContext context) {
-		try {
-			response.sendError(502,error.getMessage());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	private void removeRunningScript(StreamScriptContext context) {
-//		System.err.println("REMOvING SCRIPT FROM:");
-//		Thread.dumpStack();
+		long started = context.started;
+		long elapsed = System.currentTimeMillis() - started;
+		logger.info("Script: {} ran for: {} millis",context.service,elapsed);
 		scriptsInProgress.remove(context.uuid());
 	}
 	@Override

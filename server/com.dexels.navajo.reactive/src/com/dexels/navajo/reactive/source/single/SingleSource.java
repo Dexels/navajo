@@ -53,7 +53,7 @@ public class SingleSource implements ReactiveSource {
 //			}
 			
 			Flowable<Long> f = delay > 0 ? Flowable.interval(delay, TimeUnit.MILLISECONDS).take(count) : Flowable.rangeLong(0, count);
-			Flowable<DataItem> flow = f.map(i->DataItem.of(ImmutableFactory.empty().with("index", i.intValue(), "integer")));
+			Flowable<DataItem> flow = f.map(i->DataItem.of(ImmutableFactory.empty(),ImmutableFactory.empty().with("index", i.intValue(), "integer")));
 			
 			if(debug) {
 				flow = flow.doOnNext(di->System.err.println("Item: "+ImmutableFactory.getInstance().describe(di.message())));
