@@ -48,7 +48,7 @@ public final class ASTFunctionNode extends SimpleNode {
 		return true;
 	}
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
+	public ContextExpression interpretToLambda(List<String> problems,String expression) {
 
 
 		List<ContextExpression> l = new LinkedList<>();
@@ -61,7 +61,7 @@ public final class ASTFunctionNode extends SimpleNode {
 
 		// TODO Type check input parameters
 		for (int i = 0; i < args; i++) {
-			ContextExpression a = jjtGetChild(i).interpretToLambda(problems);
+			ContextExpression a = jjtGetChild(i).interpretToLambda(problems,expression);
 			l.add(a);
 		}
 		return new ContextExpression() {
@@ -95,6 +95,10 @@ public final class ASTFunctionNode extends SimpleNode {
 			@Override
 			public Optional<String> returnType() {
 				return typeCheckInstance.getReturnType();
+			}
+			@Override
+			public String expression() {
+				return expression;
 			}
 		};
 	}

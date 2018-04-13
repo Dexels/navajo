@@ -27,7 +27,7 @@ public final class ASTIntegerConstantNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
 		return new ContextExpression() {
 			
 			@Override
@@ -44,6 +44,11 @@ public final class ASTIntegerConstantNode extends SimpleNode {
 			@Override
 			public Optional<String> returnType() {
 				return Optional.of(Property.INTEGER_PROPERTY);
+			}
+			
+			@Override
+			public String expression() {
+				return expression;
 			}
 		};
 	}

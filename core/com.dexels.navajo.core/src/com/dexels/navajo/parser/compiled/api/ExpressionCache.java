@@ -103,7 +103,7 @@ public class ExpressionCache {
 			StringReader sr = new StringReader(expression);
 			cp = new CompiledParser(sr);
 			cp.Expression();
-	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems);
+	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression);
 	        parsedCount.incrementAndGet();
 	        if(parsed.isLiteral() && allowLiteralResolve) {
 	        		Object result = parsed.apply(null, null, null, null, null, null, null,null,null);
@@ -127,6 +127,11 @@ public class ExpressionCache {
 						@Override
 						public Optional<String> returnType() {
 							return Optional.of(MappingUtils.determineNavajoType(result));
+						}
+						
+						@Override
+						public String expression() {
+							return expression;
 						}
 					};
 	        } else {

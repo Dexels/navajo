@@ -17,7 +17,7 @@ public final class ASTExpressionLiteralNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
 		// TODO is this ok?!
         String value = val.substring(1, val.length() - 1);
         return ExpressionCache.getInstance().parse(problems,value);

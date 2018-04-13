@@ -38,7 +38,7 @@ public final class ASTMappableNode extends SimpleNode {
     
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
 		return new ContextExpression() {
 			
 			@Override
@@ -63,7 +63,7 @@ public final class ASTMappableNode extends SimpleNode {
 		        }
 		        for (int i = 0; i < args; i++) {
 		        		List<String> problems = new ArrayList<>();
-		            Object a = jjtGetChild(i).interpretToLambda(problems).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
+		            Object a = jjtGetChild(i).interpretToLambda(problems, expression).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
 		            if(!problems.isEmpty()) {
 		            		throw new TMLExpressionException(problems);
 		            }
@@ -108,6 +108,11 @@ public final class ASTMappableNode extends SimpleNode {
 			@Override
 			public Optional<String> returnType() {
 				return Optional.empty();
+			}
+			
+			@Override
+			public String expression() {
+				return expression;
 			}
 		};
 	}

@@ -21,8 +21,8 @@ public final class ASTGENode extends SimpleNode {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
-		return lazyBiFunction(problems,(a,b)->interpret(a, b),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
+		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
 	}
 	
     public static final Boolean compare(Object a, Object b)  {

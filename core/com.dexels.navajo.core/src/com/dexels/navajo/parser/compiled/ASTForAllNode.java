@@ -44,7 +44,7 @@ public final class ASTForAllNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
 		return new ContextExpression() {
 			
 			@Override
@@ -56,8 +56,8 @@ public final class ASTForAllNode extends SimpleNode {
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 				List<String> problems = new ArrayList<>();
-				ContextExpression a = jjtGetChild(0).interpretToLambda(problems);
-				ContextExpression b = jjtGetChild(1).interpretToLambda(problems);
+				ContextExpression a = jjtGetChild(0).interpretToLambda(problems,expression);
+				ContextExpression b = jjtGetChild(1).interpretToLambda(problems,expression);
 				
 				if(!problems.isEmpty()) {
 					throw new TMLExpressionException(problems);
@@ -68,6 +68,11 @@ public final class ASTForAllNode extends SimpleNode {
 			@Override
 			public Optional<String> returnType() {
 				return Optional.empty();
+			}
+			
+			@Override
+			public String expression() {
+				return expression;
 			}
 		};
 	}
