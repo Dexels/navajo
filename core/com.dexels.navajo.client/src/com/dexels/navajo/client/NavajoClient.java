@@ -50,7 +50,6 @@ public abstract class NavajoClient implements ClientInterface{
     protected KeyStore keyStore;
 
 	private boolean markDescriptions = System.getProperty("MARK_DESCRIPTIONS")!=null;
-	protected final boolean useReactive = System.getProperty("REACTIVE_NAVAJO")!=null || System.getenv("REACTIVE_NAVAJO")!=null;
 
     
     @Override

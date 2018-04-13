@@ -240,9 +240,7 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
         httppost.setHeader("X-Navajo-Username", header.getRPCUser());
         httppost.setHeader("X-Navajo-Service", header.getRPCName());
         httppost.setHeader("X-Navajo-Password", header.getRPCPassword());
-        if(useReactive) {
-            httppost.setHeader("X-Navajo-Reactive","true");
-        }
+        
         for (String key : httpHeaders.keySet()) {
         	httppost.setHeader(key, httpHeaders.get(key));
         }
