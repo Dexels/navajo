@@ -4,6 +4,7 @@
    <reference bind="setLocalClient" cardinality="1..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="dynamic" unbind="clearLocalClient"/>
    <reference bind="setTmlScheduler" cardinality="1..1" interface="com.dexels.navajo.script.api.TmlScheduler" name="TmlScheduler" policy="dynamic" unbind="clearTmlScheduler"/>
    <reference bind="setReactiveServlet" cardinality="0..1" interface="javax.servlet.http.HttpServlet" name="ReactiveServlet" policy="dynamic" unbind="clearReactiveServlet" target="(servlet-name=stream-postman)"/>
+   <reference bind="setReactiveScriptEnvironment" cardinality="0..1" interface="com.dexels.navajo.document.stream.api.ReactiveScriptRunner" name="ReactiveScriptEnvironment" policy="dynamic" unbind="clearReactiveScriptEnvironment" target="(name=reactive)"/>
    <service>
       <provide interface="javax.servlet.Servlet"/>
    </service>

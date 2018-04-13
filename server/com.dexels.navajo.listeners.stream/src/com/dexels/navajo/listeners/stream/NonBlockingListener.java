@@ -127,6 +127,11 @@ public class NonBlockingListener extends HttpServlet {
 	}
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String serviceHeader = request.getHeader("X-Navajo-Service");
+		if(serviceHeader==null) {
+			logger.info("Can not deal with missing X-Navajo-Service header, redirecting to legacy");
+		}
 		AsyncContext ac = request.startAsync();
 		ResponseSubscriber responseSubscriber = new ResponseSubscriber(ac);
 		StreamScriptContext context;

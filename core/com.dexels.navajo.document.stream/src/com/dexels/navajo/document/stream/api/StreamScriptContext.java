@@ -32,7 +32,6 @@ public class StreamScriptContext {
 	private String deployment;
 	private final List<String> methods;
 	private final String uuid;
-	private Navajo resolvedNavajo = null;
 	private final Optional<Disposable> disposable;
 	public final Navajo authNavajo;
 	
@@ -138,10 +137,7 @@ public class StreamScriptContext {
 	}
 	
 	public Navajo resolvedNavajo() {
-		if(resolvedNavajo==null) {
-			throw new NullPointerException("Failed when getting input navajo: You are not allowed to ask for unresolved input.");
-		}
-		return resolvedNavajo;
+		return inputNavajo;
 	}
 
 	public void logEvent(String message) {

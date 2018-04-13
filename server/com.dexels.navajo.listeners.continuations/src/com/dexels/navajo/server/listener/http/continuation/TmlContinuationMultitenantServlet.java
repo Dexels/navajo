@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.SchedulableServlet;
 import com.dexels.navajo.script.api.TmlRunnable;
@@ -34,7 +34,17 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 
 
 	private HttpServlet reactiveHttpServlet;
+
+	private ReactiveScriptRunner reactiveScriptEnvironment;
 	
+    public void setReactiveScriptEnvironment(ReactiveScriptRunner env) {
+		this.reactiveScriptEnvironment = env;
+}
+
+	public void clearReactiveScriptEnvironment(ReactiveScriptRunner env) {
+		this.reactiveScriptEnvironment = null;
+	}
+
 	public void setReactiveServlet(HttpServlet servlet) {
 		this.reactiveHttpServlet = servlet;
 	}
@@ -98,9 +108,14 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 	}
 
 	private boolean useReactiveEndpoint(final HttpServletRequest req) {
-		String header = req.getHeader("X-Navajo-Reactive");
-		boolean useReactive = header!=null && this.reactiveHttpServlet!=null && "true".equals(header);
-		return useReactive;
+		String serviceHeader = req.getHeader("X-Navajo-Service");
+		if(this.reactiveScriptEnvironment!=null && this.reactiveHttpServlet!=null && serviceHeader!=null) {
+			return this.reactiveScriptEnvironment.acceptsScript(serviceHeader);
+		}
+//		String header = req.getHeader("X-Navajo-Reactive");
+//		boolean useReactive = header!=null && this.reactiveHttpServlet!=null && "true".equals(header);
+		return false;
+//		return useReactive && serviceHeader != null;
 	}
 
 	private String determineTenantFromRequest(final HttpServletRequest req) {

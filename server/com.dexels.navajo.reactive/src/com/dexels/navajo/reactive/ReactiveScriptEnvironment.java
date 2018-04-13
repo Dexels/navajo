@@ -73,6 +73,11 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	}
 		
 	public boolean acceptsScript(String service) {
+		ReactiveScript rs = scripts.get(service);
+		if(rs!=null) {
+			return true;
+		}
+		// add negative cache if necessary?
 		return resolveFile(service).exists();
 	}
 	
