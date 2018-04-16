@@ -404,6 +404,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			clearValue(internal);
 			return;
 		}
+        if (o instanceof Coordinate) {
+            setValue((Coordinate) o);
+            setType(Property.COORDINATE_PROPERTY);
+            return;
+        }
 		if (o instanceof Integer) {
 			setValue((Integer) o, internal);
 			return;
@@ -465,7 +470,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			setValue(((BinaryDigest) o).hex());
 			setType(Property.BINARY_DIGEST_PROPERTY);
 			return;
-		}		
+        }
+
 
 		if (o instanceof String) {
 			if(!isStringType(getType())) {
@@ -832,14 +838,12 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			return new BinaryDigest(getValue());
         } else if (getType().equals(Property.COORDINATE_PROPERTY)) {
             try {
-                String mydata = myValue;
-                mydata.replace("[", "");
-                mydata.replace("]", "");
+                String mydata = myValue.substring(1, myValue.length() - 1);
                 String[] vals = mydata.split(",");
                 System.out.println(vals[0] + " " + vals[1]);
                 return new Coordinate(vals[0], vals[1]);
             } catch (Exception e) {
-                logger.error("Error: ", e);
+                logger.error("Cannot create Coordinate Property: ", e);
             }
 		}
 
