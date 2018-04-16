@@ -40,6 +40,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.BinaryDigest;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Coordinate;
 import com.dexels.navajo.document.types.Memo;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.NavajoExpression;
@@ -440,6 +441,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			setValue((Money) o, internal);
 			return;
 		}
+        if (o instanceof Coordinate) {
+            setValue((Coordinate) o, internal);
+            return;
+        }
 		if (o instanceof Memo) {
             setValue((Memo) o, internal);
             return;
@@ -477,7 +482,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		firePropertyChanged(old, getTypedValue(), internal);
 	}
 
-	private void setValue(List<?> list){
+    private void setValue(List<?> list) {
 		// first, determine content of list.
 		if(list.isEmpty()) {
 			// tricky. Will assume it is a selection property, for backward compatibility.
@@ -825,6 +830,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			return null;
 		} else if (getType().equals(Property.BINARY_DIGEST_PROPERTY) ) {
 			return new BinaryDigest(getValue());
+        } else if (getType().equals(Property.COORDINATE_PROPERTY)) {
+            try {
+                String mydata = myValue;
+                mydata.replace("[", "");
+                mydata.replace("]", "");
+                String[] vals = mydata.split(",");
+                System.out.println(vals[0] + " " + vals[1]);
+                return new Coordinate(vals[0], vals[1]);
+            } catch (Exception e) {
+                logger.error("Error: ", e);
+            }
 		}
 
 		return getValue();
@@ -1007,6 +1023,28 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		}
 	}
 	
+    @Override
+    public final void setValue(Coordinate value) {
+        setValue(value, false);
+    }
+
+    private final void setValue(Coordinate value, Boolean internal) {
+        Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
+        setType(COORDINATE_PROPERTY);
+
+        if (value != null) {
+            setCheckedValue(value.toString());
+        } else {
+            myValue = null;
+        }
+        if (hasPropertyDataListeners()) {
+            firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+        }
+    }
+
 	private final void setValue(Memo value, Boolean internal) {
 	    Object old = null;
         if (hasPropertyDataListeners()) {

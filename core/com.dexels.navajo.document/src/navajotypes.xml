@@ -24,4 +24,6 @@
     <type name="navajo" type="com.dexels.navajo.document.Navajo"/>
     <type name="property" type="com.dexels.navajo.document.Property"/>
     <type name="expressionliteral" type="com.dexels.navajo.document.types.NavajoExpression"/>
+    <type name="coordinate" type="com.dexels.navajo.document.types.Coordinate"/>
+    
 </navajotypes>
