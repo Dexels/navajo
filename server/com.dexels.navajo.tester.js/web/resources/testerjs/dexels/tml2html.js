@@ -264,6 +264,26 @@ function processProperty(property) {
 
 
         propertyString += '>' +  propvalue + '</textarea>';
+    } else if( htmltype === "tuple"){
+    	var value = propvalue;
+    	value = value.substring(1, value.length-1 );
+    	var values = value.split(',')
+    	var dirS = "";
+    	
+    	if (propdirection === "out") {
+    		dirS = ' readOnly="readOnly" '
+	        } else {
+	         // This is only needed if the element can be changed
+	        	dirS = ' class="tmlinput' + htmltype + '" '
+	        	dirS += ' id="' + getElementXPath(property[0]) + '"'
+	        }
+    	
+    	var test = '<form name="form1">\
+    	     <label>longitude:</label> <input type="'+htmltype+'" name="url" value="'+values[0]+'"'+dirS+' tmltype="coordinate">\
+    	     <label>latitude:</label><label> </label><input type="'+htmltype+'" name="url" value="'+values[1]+'"'+dirS+' tmltype="coordinate">\
+    	</form>'
+	     
+    	propertyString += test;
     } else {
 
 
@@ -326,6 +346,9 @@ function tmlTypeToHtml(tmlType) {
     }
     if (tmlType === "binary") {
         return "binary";
+    }
+    if (tmlType === "coordinate") {
+        return "tuple";
     }
 
     return "text"
