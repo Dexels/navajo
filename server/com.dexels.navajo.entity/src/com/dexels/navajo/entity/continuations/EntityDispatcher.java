@@ -97,7 +97,6 @@ public class EntityDispatcher {
                 
             }
             
-
             String ip = runner.getHttpRequest().getHeader("X-Forwarded-For");
             if (ip == null || ip.equals("")) {
                 ip = runner.getHttpRequest().getRemoteAddr();
@@ -193,6 +192,12 @@ public class EntityDispatcher {
             
             // Create a header from the input
             Header header = NavajoFactory.getInstance().createHeader(input, "", access.rpcUser, access.rpcPwd, -1);
+
+            String locale = determineLocaleFromRequest(runner.getHttpRequest());
+            if (locale != null) {
+                header.setHeaderAttribute("locale", locale);
+            }
+
             input.addHeader(header);
 
 
@@ -277,6 +282,14 @@ public class EntityDispatcher {
 
     private String determineInstanceFromRequest(final HttpServletRequest req) {
         String requestInstance = req.getHeader("X-Navajo-Instance");
+        if (requestInstance != null) {
+            return requestInstance;
+        }
+        return null;
+    }
+
+    private String determineLocaleFromRequest(final HttpServletRequest req) {
+        String requestInstance = req.getHeader("X-Navajo-Locale");
         if (requestInstance != null) {
             return requestInstance;
         }

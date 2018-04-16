@@ -12,8 +12,8 @@ public final class ASTExpressionNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
-		return  jjtGetChild(0).interpretToLambda(problems);
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
+		return  jjtGetChild(0).interpretToLambda(problems,expression);
 	}
 
 }

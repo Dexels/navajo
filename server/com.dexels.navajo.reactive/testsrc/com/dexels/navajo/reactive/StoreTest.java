@@ -52,7 +52,13 @@ public class StoreTest {
 	
 	private StreamScriptContext createContext(String serviceName,Navajo input, Optional<ReactiveScriptRunner> runner) {
 //		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
-		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.of("username"), Optional.of("password"), Collections.emptyMap(), Optional.empty(),Optional.of(Maybe.just(input)), runner, Collections.emptyList(),Optional.empty());
+		StreamScriptContext context = new StreamScriptContext("tenant", serviceName
+				, Optional.of("username")
+				, Optional.of("password")
+				, NavajoFactory.getInstance().createNavajo()
+				, Collections.emptyMap()
+				, Optional.empty()
+				, input, runner, Collections.emptyList(),Optional.empty());
 		return context;
 	}
 	

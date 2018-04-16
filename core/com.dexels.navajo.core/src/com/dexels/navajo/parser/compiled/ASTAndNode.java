@@ -21,9 +21,9 @@ public final class ASTAndNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems);
-		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems);
+	public ContextExpression interpretToLambda(List<String> problems,String expression) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression);
+		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression);
 		Optional<String> expressionA = expA.returnType();
 		checkOrAdd("In AND expression the first expression is not a boolean but a "+expressionA.orElse("<unknown>"), problems, expB.returnType(), Property.BOOLEAN_PROPERTY);
 //		
@@ -66,6 +66,11 @@ public final class ASTAndNode extends SimpleNode {
 			@Override
 			public Optional<String> returnType() {
 				return Optional.of(Property.BOOLEAN_PROPERTY);
+			}
+
+			@Override
+			public String expression() {
+				return expression;
 			}
 		};
 	}

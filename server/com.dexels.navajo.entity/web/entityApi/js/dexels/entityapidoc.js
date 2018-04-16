@@ -45,6 +45,10 @@ function setupLoginDialog() {
 }
 
 $(document).ready(function() {
+	
+	// Locale init
+	sessionStorage.locale = "n/a"
+	
     setupLoginDialog();
     if (localStorage.clientid != null) {
         $('#clientid').val(localStorage.clientid);
@@ -57,6 +61,11 @@ $(document).ready(function() {
         $(this).next().find('.JSON').children('pre').addClass("prettyprint");
         prettyPrint();
         $(this).next().filter(".entityDescription").slideToggle();
+    });
+    
+    // locale set
+    $(document).on('change', '#locale', function(event) {
+    	sessionStorage.locale = $('#locale').val()
     });
     
     
@@ -194,6 +203,9 @@ $(document).ready(function() {
                 				req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
                 		}
                     req.setRequestHeader('Accept', 'application/json'); 
+                    if(sessionStorage.locale !== "n/a"){
+                    	req.setRequestHeader('X-Navajo-Locale', sessionStorage.locale)
+                    }
                 },
                 dataType: 'json',
                 type: method,
@@ -233,6 +245,9 @@ $(document).ready(function() {
 	            		} 
                     req.setRequestHeader('Accept', 'application/json');
                     req.setRequestHeader('content-type', 'application/json');
+                    if(sessionStorage.locale !== "n/a"){
+                    	req.setRequestHeader('X-Navajo-Locale', sessionStorage.locale)
+                    }
                 },
                 dataType: 'json',
                 data: requestdata,
@@ -267,10 +282,13 @@ $(document).ready(function() {
                 response += ' -H "Authorization: Bearer ' + sessionStorage.token +'"';
             } else if(sessionStorage.authType == 'basic'){
                 response += ' -H "Authorization: Basic ' + btoa(sessionStorage.bauth_username + ':' + sessionStorage.bauth_password) + '"';
-                if (sessionStorage.isLocalhost == '1') response += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
+                if (sessionStorage.isLocalhost == '1') response += ' -H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
             } else {
                 response += ' -H "Authorization: ' +sessionStorage.cauth_type + ' ' + sessionStorage.token +'"';
-                if (sessionStorage.isLocalhost == '1' && sessionStorage.tenant) response += '-H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
+                if (sessionStorage.isLocalhost == '1' && sessionStorage.tenant) response += ' -H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
+            }
+            if(sessionStorage.locale !== "n/a"){
+            	response += ' -H "X-Navajo-Locale: ' + sessionStorage.locale + '"' ;
             }
             return response + ' ';
         }

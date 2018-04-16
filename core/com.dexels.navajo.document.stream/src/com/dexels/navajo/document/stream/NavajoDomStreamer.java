@@ -68,7 +68,6 @@ public class NavajoDomStreamer {
 			emitMessage(message,result,output);
 		}
 		NavajoStreamEvent done = done(navajo.getAllMethods().stream().map(e->new Method(e.getName())).collect(Collectors.toList()));
-		System.err.println("NavajoDoneEvent: "+done);
 		result.add(done);
 		return result;
 	}
@@ -115,19 +114,13 @@ public class NavajoDomStreamer {
 				emitMessage(m, list,outputNavajo);
 			}
 			emitBinaryProperties(message,list);
-//			if(message.getMode()!=null && !"".equals(message.getMode())) {
-//				System.err.println("MESSAGE name: "+message.getName() + " with mode: "+message.getMode());
-//			}
 			list.add(Events.message( message(message), name,messageAttributes));
 		}
 
 	}
 
 	private static void emitBinaryProperties(Message m, List<NavajoStreamEvent> list) {
-		// TODO Auto-generated method stub
 		for(Property p: m.getAllProperties()) {
-//			 <property subtype="extension=png,mime=image/png" length="12316" name="Logo" description="Clublogo" type="binary" direction="in">			
-//			<property name="Logo" type="binary">
 			if(Property.BINARY_PROPERTY.equals(p.getType())) {
 				list.add(Events.binaryStarted(p.getName(),p.getLength(),Optional.ofNullable(p.getDescription()),Optional.ofNullable(p.getDirection()),Optional.ofNullable(p.getSubType())));
 				Binary b = (Binary) p.getTypedValue();

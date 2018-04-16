@@ -22,18 +22,18 @@ public final class ASTDatePatternNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
-		ContextExpression y = jjtGetChild(0).interpretToLambda(problems);
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
+		ContextExpression y = jjtGetChild(0).interpretToLambda(problems,expression);
 		checkOrAdd("Year (item 0) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
-		ContextExpression m = jjtGetChild(1).interpretToLambda(problems);
+		ContextExpression m = jjtGetChild(1).interpretToLambda(problems,expression);
 		checkOrAdd("Month (item 1) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
-		ContextExpression d = jjtGetChild(2).interpretToLambda(problems);
+		ContextExpression d = jjtGetChild(2).interpretToLambda(problems,expression);
 		checkOrAdd("Day (item 2) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
-		ContextExpression h = jjtGetChild(3).interpretToLambda(problems);
+		ContextExpression h = jjtGetChild(3).interpretToLambda(problems,expression);
 		checkOrAdd("Hour (item 3) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
-		ContextExpression min = jjtGetChild(4).interpretToLambda(problems);
+		ContextExpression min = jjtGetChild(4).interpretToLambda(problems,expression);
 		checkOrAdd("Minute (item 4) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
-		ContextExpression s = jjtGetChild(5).interpretToLambda(problems);
+		ContextExpression s = jjtGetChild(5).interpretToLambda(problems,expression);
 		checkOrAdd("Second (item 5) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
 		final boolean isLiteral = y.isLiteral() && m.isLiteral() && d.isLiteral() && h.isLiteral() && h.isLiteral() && s.isLiteral();
 		
@@ -59,6 +59,11 @@ public final class ASTDatePatternNode extends SimpleNode {
 			@Override
 			public Optional<String> returnType() {
 				return Optional.of(Property.DATE_PATTERN_PROPERTY);
+			}
+			
+			@Override
+			public String expression() {
+				return expression;
 			}
 		};
 	}

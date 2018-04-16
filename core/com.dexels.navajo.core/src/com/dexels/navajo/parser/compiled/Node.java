@@ -40,7 +40,7 @@ interface Node {
   /** Interpret method */
 //  public Object interpret(Navajo input) throws TMLExpressionException;
 
-ContextExpression interpretToLambda(List<String> problems);
+ContextExpression interpretToLambda(List<String> problems, String originalExpression);
 
 }
 /* JavaCC - OriginalChecksum=22197c64ec0b9502885f0a5dc1d3ddd7 (do not edit this line) */

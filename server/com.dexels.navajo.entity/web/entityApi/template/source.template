@@ -25,9 +25,25 @@
     <h1>Entity API Documentation: {{ENTITY_PATH}}</h1>
 
 	<div class="unlocked">
-		<button id="authbutton" class="authorize button"
-			<span>Authorize</span>
-		</button>
+		<table>
+			<tr>
+				<td>
+				<span>Locale:</span>
+				<select id="locale">
+					  <option value="n/a">n/a</option>
+					  <option value="nl">nl</option>
+					  <option value="en">en</option>
+					  <option value="fr">fr</option>
+					</select>
+				</td>
+				<td>
+					<button id="authbutton" class="authorize button">
+						<span>Authorize</span>
+					</button>
+				</td>
+				</tr>
+		</table>
+
 	</div>
 
 	<div class="authdialog" id="setauth" style="display:none"/>

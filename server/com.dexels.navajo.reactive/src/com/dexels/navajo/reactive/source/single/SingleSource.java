@@ -10,7 +10,6 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
@@ -40,6 +39,7 @@ public class SingleSource implements ReactiveSource {
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
 		ReactiveResolvedParameters parameters = this.params.resolveNamed(context, current, ImmutableFactory.empty(), metadata, sourceElement, sourcePath);
+
 		boolean debug = parameters.paramBoolean("debug", ()->false);
 		int count =  parameters.paramInteger("count", ()->1);
 		int delay =  parameters.paramInteger("delay", ()->0);
@@ -53,7 +53,7 @@ public class SingleSource implements ReactiveSource {
 //			}
 			
 			Flowable<Long> f = delay > 0 ? Flowable.interval(delay, TimeUnit.MILLISECONDS).take(count) : Flowable.rangeLong(0, count);
-			Flowable<DataItem> flow = f.map(i->DataItem.of(ReactiveScriptParser.empty().with("index", i.intValue(), "integer")));
+			Flowable<DataItem> flow = f.map(i->DataItem.of(ImmutableFactory.empty(),ImmutableFactory.empty().with("index", i.intValue(), "integer")));
 			
 			if(debug) {
 				flow = flow.doOnNext(di->System.err.println("Item: "+ImmutableFactory.getInstance().describe(di.message())));

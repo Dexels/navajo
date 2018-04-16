@@ -23,7 +23,7 @@ public final class ASTFloatConstantNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
 		return new ContextExpression() {
 			
 			@Override
@@ -40,6 +40,11 @@ public final class ASTFloatConstantNode extends SimpleNode {
 			@Override
 			public Optional<String> returnType() {
 				return Optional.of(Property.FLOAT_PROPERTY);
+			}
+			
+			@Override
+			public String expression() {
+				return expression;
 			}
 		};
 	}

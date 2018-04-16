@@ -17,9 +17,9 @@ public final class ASTMulNode extends SimpleNode {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
 		// TODO We can do *some* type restriction, just not much.
-		return lazyBiFunction(problems, (a,b)->interpret(a, b),(a,b)->true,(a,b)->Optional.empty());
+		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),(a,b)->true,(a,b)->Optional.empty());
 	}
 	
 	public  Object interpret(Object a, Object b) {

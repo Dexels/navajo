@@ -8,6 +8,7 @@ public interface LocalClient {
 	public Navajo generateAbortMessage(String reason) throws FatalException;
 	public Navajo handleCallback(String instance, Navajo n, String callback);
 	public Navajo handleInternal(String instance, Navajo in, Object cert, ClientInfo clientInfo) throws FatalException;
+	public Navajo handleInternal(String instance, Navajo in, boolean skipAuth) throws FatalException;
 	public boolean isSpecialWebservice(String name);
 	public String getApplicationId();
 }

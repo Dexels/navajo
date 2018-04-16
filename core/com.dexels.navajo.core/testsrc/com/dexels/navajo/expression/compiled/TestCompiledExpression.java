@@ -67,7 +67,7 @@ public class TestCompiledExpression {
 		CompiledParser cp = new CompiledParser(sr);
 		cp.Expression();
 		List<String> problems = new ArrayList<>();
-        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems);
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString());
         if(!problems.isEmpty()) {
     			throw new TMLExpressionException(problems);
         }

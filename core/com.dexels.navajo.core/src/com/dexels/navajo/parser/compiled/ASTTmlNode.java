@@ -46,7 +46,7 @@ public final class ASTTmlNode extends SimpleNode {
     }
 
     @Override
-	public final ContextExpression interpretToLambda(List<String> problems) {
+	public final ContextExpression interpretToLambda(List<String> problems, String expression) {
 		return new ContextExpression() {
 	
 			@Override
@@ -353,6 +353,11 @@ public final class ASTTmlNode extends SimpleNode {
 			@Override
 			public Optional<String> returnType() {
 				return Optional.empty();
+			}
+			
+			@Override
+			public String expression() {
+				return expression;
 			}
 		};
 	}
