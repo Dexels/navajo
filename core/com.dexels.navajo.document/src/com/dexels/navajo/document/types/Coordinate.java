@@ -123,8 +123,8 @@ public class Coordinate extends NavajoType implements Serializable {
 
     public static void main(String[] args) {
         
-        String arrStr = "[+12.3,-12.3]";
-        System.out.println(arrStr.matches("\\[[+-]{0,1}\\d+.*\\d+,[+-]{0,1}\\d+.*\\d+\\]"));
+        String arrStr = "[1,-1]";
+        System.out.println(arrStr.matches("\\[[+-]{0,1}\\d+.*\\d*,[+-]{0,1}\\d+.*\\d*\\]"));
 
         // arrStr = "11.12";
         // System.out.println(arrStr.matches("\\d+.*\\d+"));

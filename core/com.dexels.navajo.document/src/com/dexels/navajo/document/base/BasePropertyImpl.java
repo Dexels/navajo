@@ -846,7 +846,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			return new BinaryDigest(getValue());
         } else if (getType().equals(Property.COORDINATE_PROPERTY)) {
             try {
-                if (!myValue.matches("\\[[+-]{0,1}\\d+.*\\d+,[+-]{0,1}\\d+.*\\d+\\]")) {
+                if (!myValue.matches("\\[[+-]{0,1}\\d+.*\\d*,[+-]{0,1}\\d+.*\\d*\\]")) {
                     logger.error("Error while creating coordinate property. Values are not number representations.");
                 }
                 String mydata = myValue.substring(1, myValue.length() - 1);
