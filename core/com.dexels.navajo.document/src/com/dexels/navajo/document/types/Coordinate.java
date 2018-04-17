@@ -49,7 +49,7 @@ public class Coordinate extends NavajoType implements Serializable {
     }
 
     public Coordinate(Object longitude, Object latitude) throws Exception {
-        setLatitude(longitude);
+        setLatitude(latitude);
         setLongitude(longitude);
     }
 
@@ -67,7 +67,7 @@ public class Coordinate extends NavajoType implements Serializable {
         } else if (latitude instanceof Double) {
             this.latitude = (Double) latitude;
         } else if (latitude instanceof Integer) {
-            this.latitude = new Double(((Integer) latitude).intValue());
+            this.latitude = new Double(((Integer) latitude).intValue() + "");
         } else {
             this.latitude = new Double(latitude + "");
         }
@@ -81,7 +81,7 @@ public class Coordinate extends NavajoType implements Serializable {
         } else if (longitude instanceof Double) {
             this.longitude = (Double) longitude;
         } else if (longitude instanceof Integer) {
-            this.longitude = new Double(((Integer) longitude).intValue());
+            this.longitude = new Double(((Integer) longitude).intValue() + "");
         } else {
             this.longitude = new Double(longitude + "");
         }
@@ -109,15 +109,16 @@ public class Coordinate extends NavajoType implements Serializable {
     // this.longitude + "}}";
     // }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         
-        String arrStr = "[1.23,-1]";
-        System.out.println(arrStr.matches("\\[[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*\\]"));
+        // String arrStr = "[1.23,-1]";
+        // System.out.println(arrStr.matches("\\[[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*\\]"));
 
         // arrStr = "11.12";
         // System.out.println(arrStr.matches("\\d+.*\\d+"));
         
-        // Coordinate test = new Coordinate("[1,1]");
+        Coordinate test = new Coordinate(1, 2);
+        System.out.println(test);
 
         // Coordinate test = new Coordinate("123.33", 11);
         // System.out.println(test.toString());
