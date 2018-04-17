@@ -1318,6 +1318,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 outDoc.addMessage(m);
             }
         } catch (Exception e) {
+            logger.error("Error on setting sendthrough", e);
             throw new UserException(-1, e.getMessage(), e);
         }
 
