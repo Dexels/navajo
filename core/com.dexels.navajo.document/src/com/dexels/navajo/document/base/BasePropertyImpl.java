@@ -404,11 +404,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			clearValue(internal);
 			return;
 		}
-        if (o instanceof Coordinate) {
-            setValue((Coordinate) o);
-            setType(Property.COORDINATE_PROPERTY);
-            return;
-        }
 		if (o instanceof Integer) {
 			setValue((Integer) o, internal);
 			return;
@@ -471,8 +466,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			setType(Property.BINARY_DIGEST_PROPERTY);
 			return;
         }
-
-
 		if (o instanceof String) {
             String dataStr = (String) o;
             if (getType().equals(Property.COORDINATE_PROPERTY)) {

@@ -42,7 +42,6 @@ public class ToCoordinate extends FunctionInterface {
             return cor;
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             throw new TMLExpressionException(e.getMessage(), e);
         }
