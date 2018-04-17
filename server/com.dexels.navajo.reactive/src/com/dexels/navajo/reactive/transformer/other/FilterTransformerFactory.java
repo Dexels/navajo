@@ -69,4 +69,9 @@ public class FilterTransformerFactory implements ReactiveTransformerFactory, Tra
 		r.put("filter", Property.BOOLEAN_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
+
+	@Override
+	public String name() {
+		return "filter";
+	}
 }

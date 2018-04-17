@@ -36,7 +36,10 @@ public class ReduceTransformer implements ReactiveTransformer {
 			Function<DataItem,DataItem> reducer;
 			try {
 				reducer = reducers.apply(context);
-				return flow.reduce(DataItem.of(ImmutableFactory.empty()), (state,message)->reducer.apply(DataItem.of(message.message(), state.stateMessage()))).toFlowable();
+				return flow.reduce(DataItem.of(ImmutableFactory.empty()), (state,message)->reducer.apply(DataItem.of(message.message(), state.stateMessage())))
+						.map(d->DataItem.of(ImmutableFactory.empty(),d.stateMessage()))
+						.toFlowable();
+//				return flow.reduce(DataItem.of(ImmutableFactory.empty()), (state,message)->reducer.apply(DataItem.of(ImmutableFactory.empty(), state.stateMessage()))).toFlowable();
 			} catch (Exception e) {
 				logger.error("Error: ", context);
 			}

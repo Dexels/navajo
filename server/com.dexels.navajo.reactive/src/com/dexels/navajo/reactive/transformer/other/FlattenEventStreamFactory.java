@@ -64,4 +64,10 @@ public class FlattenEventStreamFactory implements ReactiveTransformerFactory, Tr
 		r.put("parallel", Property.INTEGER_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
+	
+
+	@Override
+	public String name() {
+		return "flatten";
+	}
 }

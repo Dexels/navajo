@@ -67,4 +67,9 @@ public class StoreFactory implements ReactiveTransformerFactory {
 		return null;
 	}
 
+	@Override
+	public String name() {
+		return "store";
+	}
+
 }

@@ -66,5 +66,11 @@ public class StreamMessageTransformerFactory implements ReactiveTransformerFacto
 		r.put("isArray", Property.BOOLEAN_PROPERTY);
 		return Optional.of(r);
 	}
+	
+
+	@Override
+	public String name() {
+		return "stream";
+	}
 
 }

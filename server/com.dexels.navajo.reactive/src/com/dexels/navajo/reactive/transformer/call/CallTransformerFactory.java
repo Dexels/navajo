@@ -63,5 +63,10 @@ public class CallTransformerFactory implements ReactiveTransformerFactory {
 	public Type outType() {
 		return Type.EVENTSTREAM;
 	}
+
+	@Override
+	public String name() {
+		return "call";
+	}
 	
 }

@@ -66,4 +66,10 @@ public class ScanTransformerFactory implements ReactiveTransformerFactory, Trans
 	public Type outType() {
 		return Type.SINGLEMESSAGE;
 	}
+	
+
+	@Override
+	public String name() {
+		return "scan";
+	}
 }

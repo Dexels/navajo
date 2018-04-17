@@ -43,6 +43,7 @@ import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.api.StandardTransformerMetadata;
+import com.dexels.navajo.reactive.api.TransformerMetadata;
 import com.dexels.navajo.reactive.mappers.Delete;
 import com.dexels.navajo.reactive.mappers.DeleteSubMessage;
 import com.dexels.navajo.reactive.mappers.JsonFileAppender;
@@ -277,6 +278,14 @@ public class ReactiveScriptParser {
 		}
 	}
 
+	private static Optional<String> evaluateKey(String key) {
+		if(key.endsWith(".eval")) {
+			return Optional.of(key.substring(0, key.length()-".eval".length()));
+		} else if (key.endsWith(":")) {
+			return Optional.of(key.substring(0, key.length()-":".length()));
+		}
+		return Optional.empty();
+	}
 	
 	public static ReactiveParameters parseParamsFromChildren(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> sourceElement, ParameterValidator validator, boolean streamInput) {
 		Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> namedParameters = new HashMap<>();
@@ -288,8 +297,9 @@ public class ReactiveScriptParser {
 		List<XMLElement> children = x.getChildren();
 		x.enumerateAttributeNames().forEachRemaining(e->{
 			Optional<Map<String, String>> parameterTypes = validator.parameterTypes();
-			if(e.endsWith(".eval")) {
-				String name = e.substring(0, e.length()-".eval".length());
+			Optional<String> evaluateKey = evaluateKey(e);
+			if(evaluateKey.isPresent()) {
+				String name = evaluateKey.get();
 				if(validator.allowedParameters().isPresent()) {
 					List<String> val = validator.allowedParameters().get();
 					if(!val.contains(name)) {
@@ -325,7 +335,7 @@ public class ReactiveScriptParser {
 					int attrLine = x.getAttributeLineNr(e);
 					problems.add(ReactiveParseProblem.of(ex.getMessage()).withCause(ex).withRange(attrLine, attrLine, attrStart, attrEnd));
 				}
-				// todo implement default
+				// TODO implement default?
 			} else {
 				if(parameterTypes.isPresent()) {
 					String type = parameterTypes.get().get(e);
@@ -347,7 +357,8 @@ public class ReactiveScriptParser {
 		for (XMLElement possibleParam : children) {
 			String elementName = possibleParam.getName();
 			if(elementName.startsWith("param")) {
-				boolean evaluate = elementName.endsWith("eval");
+				Optional<String> evaluateKey = evaluateKey(elementName);
+				boolean evaluate = evaluateKey.isPresent();
 				String name = possibleParam.getStringAttribute("name");
 				boolean debug = possibleParam.getBooleanAttribute("debug", "true", "false", false);
 				String content = possibleParam.getContent();
@@ -482,7 +493,9 @@ public class ReactiveScriptParser {
 		
 	}
 
-	private static ReactiveTransformer typeCheckTransformer(String relativePath, List<ReactiveParseProblem> problems, XMLElement xml, String[] typeParts,
+	private static ReactiveTransformer typeCheckTransformer(String relativePath,
+			List<ReactiveParseProblem> problems,
+			XMLElement xml, String[] typeParts,
 			Function<String, ReactiveSourceFactory> sourceSupplier,
 			Function<String, ReactiveTransformerFactory> factorySupplier,
 			Function<String, ReactiveMerger> reducerSupplier,
@@ -495,8 +508,12 @@ public class ReactiveScriptParser {
 		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, problems,Optional.of(xml),transformerFactory,useGlobalInput);
 
 		ReactiveTransformer transformer = transformerFactory.build(relativePath, problems, parameters, Optional.of(xml),sourceSupplier,factorySupplier,reducerSupplier,transformers,reducers,useGlobalInput);
-		Set<DataItem.Type> in = transformer.metadata().inType();
-		Type out = transformer.metadata().outType();
+		TransformerMetadata metadata = transformer.metadata();
+		if(metadata==null) {
+			problems.add(ReactiveParseProblem.of("Transformer did not return metadata. This isn't allowed.").withTag(xml));
+		}
+		Set<DataItem.Type> in = metadata.inType();
+		Type out = metadata.outType();
 		Type baseParsed = baseType.map(e->DataItem.parseType(e)).orElse(Type.ANY);
 		if(!in.contains(baseParsed) && !baseParsed.equals(DataItem.Type.ANY)) {
 			throw new ReactiveParseException("Mismatched input for transformer: "+operatorName+" expected: "+in+" but got: "+baseParsed+" at element " +relativePath+" with name: "+String.join(".", typeParts)+" at line: "+xml.getStartLineNr());
@@ -564,7 +581,7 @@ public class ReactiveScriptParser {
 		logger.debug("Determine source type: "+current);
 		for (ReactiveTransformer reactiveTransformer : transformers) {
 			if(!reactiveTransformer.metadata().inType().contains(current)) {
-				problems.add(ReactiveParseProblem.of("Type mismatch: Last type in pipeline: "+current+" next part expects: "+reactiveTransformer.metadata().inType()));
+				problems.add(ReactiveParseProblem.of("Type mismatch: Last type in pipeline: "+current+" next part ("+reactiveTransformer.metadata().name()+") expects: "+reactiveTransformer.metadata().inType()));
 			}
 			current = reactiveTransformer.metadata().outType();
 		}

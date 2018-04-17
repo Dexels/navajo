@@ -63,6 +63,13 @@ public class CSVTransformerFactory implements ReactiveTransformerFactory, Transf
 		r.put("delimiter", Property.STRING_PROPERTY);
 		return Optional.of(r);
 	}
+
+
+
+	@Override
+	public String name() {
+		return "csv";
+	}
 	
 
 }

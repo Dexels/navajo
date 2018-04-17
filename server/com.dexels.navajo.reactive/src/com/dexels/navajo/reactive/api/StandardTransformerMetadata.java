@@ -47,6 +47,11 @@ public class StandardTransformerMetadata {
 			public Optional<Map<String, String>> parameterTypes() {
 				return Optional.of(Collections.emptyMap());
 			}
+
+			@Override
+			public String name() {
+				return "identity";
+			}
 		};
 		
 	}

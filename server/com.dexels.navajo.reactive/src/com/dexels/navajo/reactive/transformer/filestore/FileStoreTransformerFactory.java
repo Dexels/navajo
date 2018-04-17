@@ -64,4 +64,9 @@ public class FileStoreTransformerFactory implements ReactiveTransformerFactory, 
 		return Optional.of(r);
 	}
 
+	@Override
+	public String name() {
+		return "filestore";
+	}
+
 }
