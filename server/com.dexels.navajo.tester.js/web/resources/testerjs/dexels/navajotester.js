@@ -453,7 +453,6 @@ $(document).on('click', '.script', function() {
     }
     $('li.recentScript>[id=\''+newScript+'\']').parent().append(hooverdiv);
 
-
     runScript(newScript);
 });
 
@@ -805,6 +804,27 @@ $(document).on('input change', '.tmlinputcheckbox', function(evt) {
         var $element = $(element);
         $element.attr('value',  $(this).prop('checked'));
     }
+});
+
+$(document).on('input change', '.tmlinputtuple', function(evt) {
+    var xpath = $(this).attr('id').replace("/lon","").replace("/lat","");
+    var element = $(xml).xpath(xpath)[0];
+    if (typeof element != 'undefined') {
+        var $element = $(element);
+        // Create the new value 
+        var value = $element.attr('value')
+        value = value.replace("[","");
+        value = value.replace("]","");
+        var lon = value.split(",")[0];
+        var lat = value.split(",")[1];
+        
+        if($(this).attr('id').includes("\lon")){
+        	$element.attr('value',  "["+$(this)[0].value+","+lat+"]");
+        }else{
+        	$element.attr('value',  "["+lon+","+$(this)[0].value+"]");
+        }
+   }
+    
 });
 
 $(document).on('input change', '.tmlinputselect', function(evt) {

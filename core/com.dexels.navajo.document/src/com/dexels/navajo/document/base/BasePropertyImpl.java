@@ -474,9 +474,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 
 		if (o instanceof String) {
-			if(!isStringType(getType())) {
-				setType(Property.STRING_PROPERTY);
-			}
+            String dataStr = (String) o;
+            if (getType().equals(Property.COORDINATE_PROPERTY)) {
+                setType(Property.COORDINATE_PROPERTY);
+                // try to matchthe string
+                String[] vals = dataStr.substring(1, dataStr.length() - 1).split(",");
+                setValue(new Coordinate(vals[0], vals[1]));
+                return;
+            }
+            if (!isStringType(getType())) {
+                setType(Property.STRING_PROPERTY);
+            }
 			setValue((String) o, internal);
 			return;
 		}
@@ -838,9 +846,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			return new BinaryDigest(getValue());
         } else if (getType().equals(Property.COORDINATE_PROPERTY)) {
             try {
+                if (!myValue.matches("\\[[+-]{0,1}\\d+.*\\d+,[+-]{0,1}\\d+.*\\d+\\]")) {
+                    logger.warn("Warning while creating Coordinate. Values is not of format '[x,y]'");
+                }
                 String mydata = myValue.substring(1, myValue.length() - 1);
                 String[] vals = mydata.split(",");
-                System.out.println(vals[0] + " " + vals[1]);
                 return new Coordinate(vals[0], vals[1]);
             } catch (Exception e) {
                 logger.error("Cannot create Coordinate Property: ", e);

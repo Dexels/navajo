@@ -22,6 +22,29 @@ public class Coordinate extends NavajoType implements Serializable {
         this.longitude = longitude;
     }
 
+    public Coordinate(String arrStr) {
+
+        // check if format is correct.
+        System.out.println(arrStr.matches("(*)"));
+        if (!arrStr.matches("\\[[+-]{0,1}\\d+.*\\d+,[+-]{0,1}\\d+.*\\d+\\]")) {
+            logger.error("Not valid format given.");
+        } else {
+            String mydata = arrStr.substring(1, arrStr.length() - 1);
+            String[] vals = mydata.split(",");
+
+            this.latitude = Double.parseDouble(vals[0]);
+            this.longitude = Double.parseDouble(vals[1]);
+        }
+
+        // String mydata = arrStr.substring(1, arrStr.length() - 1);
+        // String[] vals = mydata.split(",");
+        // System.out.println(vals[0] + " " + vals[1]);
+        //
+        //
+        // this.latitude = latitude;
+        // this.longitude = longitude;
+    }
+
     public Coordinate(Object longitude, Object latitude) {
 
         if (latitude instanceof String) {
@@ -99,16 +122,25 @@ public class Coordinate extends NavajoType implements Serializable {
     // }
 
     public static void main(String[] args) {
-        Coordinate test = new Coordinate("123.33", 11);
-        System.out.println(test.toString());
         
-        String mydata = test.toString();
+        String arrStr = "[+12.3,-12.3]";
+        System.out.println(arrStr.matches("\\[[+-]{0,1}\\d+.*\\d+,[+-]{0,1}\\d+.*\\d+\\]"));
 
+        // arrStr = "11.12";
+        // System.out.println(arrStr.matches("\\d+.*\\d+"));
         
-        mydata.replace("[", "");
-        mydata.replace("]", "");
-        String[] vals = mydata.split(",");
-        System.out.println(vals[0] + " " + vals[1]);
+        // Coordinate test = new Coordinate("[123.12,13]");
+
+        // Coordinate test = new Coordinate("123.33", 11);
+        // System.out.println(test.toString());
+        //
+        // String mydata = test.toString();
+        //
+        //
+        // mydata.replace("[", "");
+        // mydata.replace("]", "");
+        // String[] vals = mydata.split(",");
+        // System.out.println(vals[0] + " " + vals[1]);
 
     }
 

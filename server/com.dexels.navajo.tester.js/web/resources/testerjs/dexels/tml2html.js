@@ -268,19 +268,23 @@ function processProperty(property) {
     	var value = propvalue;
     	value = value.substring(1, value.length-1 );
     	var values = value.split(',')
-    	var dirS = "";
+    	var dirSLat = "";
+    	var dirSLon = "";
     	
     	if (propdirection === "out") {
-    		dirS = ' readOnly="readOnly" '
+    		dirSLon = ' readOnly="readOnly" ';
+    		dirSLat = ' readOnly="readOnly" ';
 	        } else {
 	         // This is only needed if the element can be changed
-	        	dirS = ' class="tmlinput' + htmltype + '" '
-	        	dirS += ' id="' + getElementXPath(property[0]) + '"'
+	        	dirSLat = ' class="tmlinput' + htmltype + '" ';
+	        	dirSLat += ' id="' + getElementXPath(property[0]) + '/lat"';
+	        	dirSLon = ' class="tmlinput' + htmltype + '" ';
+	        	dirSLon += ' id="' + getElementXPath(property[0]) + '/lon"';
 	        }
     	
     	var test = '<form name="form1">\
-    	     <label>longitude:</label> <input type="'+htmltype+'" name="url" value="'+values[0]+'"'+dirS+' tmltype="coordinate">\
-    	     <label>latitude:</label><label> </label><input type="'+htmltype+'" name="url" value="'+values[1]+'"'+dirS+' tmltype="coordinate">\
+    	     <label>longitude:</label> <input type="'+htmltype+'" name="longitude" value="'+values[0]+'"'+dirSLon+' tmltype="coordinate">\
+    	     <label>latitude:</label><label> </label><input type="'+htmltype+'" name="latitude" value="'+values[1]+'"'+dirSLat+' tmltype="coordinate">\
     	</form>'
 	     
     	propertyString += test;
