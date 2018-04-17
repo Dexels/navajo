@@ -131,10 +131,15 @@ public class NonBlockingListener extends HttpServlet {
 		ac.setTimeout(60000);
 		try {
 			context = createScriptContext(ac,responseSubscriber,authMethodBuilder);
+		} catch (AuthorizationException e3) {
+			logger.error("Authorization problem: ",e3);
+			response.sendError(401,"Not authorized");
+			return;
+
 		} catch (Throwable e3) {
 			logger.error("Low level problem: ",e3);
 			// TODO do something prettier?
-			response.sendError(500);
+			response.sendError(500,"Server error");
 			return;
 		}
 		scriptsInProgress.put(context.uuid(),context);
