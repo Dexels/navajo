@@ -25,8 +25,7 @@ public class Coordinate extends NavajoType implements Serializable {
     public Coordinate(String arrStr) {
 
         // check if format is correct.
-        System.out.println(arrStr.matches("(*)"));
-        if (!arrStr.matches("\\[[+-]{0,1}\\d+.*\\d+,[+-]{0,1}\\d+.*\\d+\\]")) {
+        if (!arrStr.matches("\\[[+-]{0,1}\\d+.*\\d*,[+-]{0,1}\\d+.*\\d*\\]")) {
             logger.error("Not valid format given.");
         } else {
             String mydata = arrStr.substring(1, arrStr.length() - 1);
@@ -129,7 +128,7 @@ public class Coordinate extends NavajoType implements Serializable {
         // arrStr = "11.12";
         // System.out.println(arrStr.matches("\\d+.*\\d+"));
         
-        // Coordinate test = new Coordinate("[123.12,13]");
+        Coordinate test = new Coordinate("[1,1]");
 
         // Coordinate test = new Coordinate("123.33", 11);
         // System.out.println(test.toString());
