@@ -35,37 +35,11 @@ public class Coordinate extends NavajoType implements Serializable {
             this.longitude = Double.parseDouble(vals[1]);
         }
 
-        // String mydata = arrStr.substring(1, arrStr.length() - 1);
-        // String[] vals = mydata.split(",");
-        // System.out.println(vals[0] + " " + vals[1]);
-        //
-        //
-        // this.latitude = latitude;
-        // this.longitude = longitude;
     }
 
     public Coordinate(Object longitude, Object latitude) {
-
-        if (latitude instanceof String) {
-            this.latitude = Double.parseDouble((String) latitude);
-        } else if (latitude instanceof Double) {
-            this.latitude = (Double) latitude;
-        } else if (latitude instanceof Integer) {
-            this.latitude = new Double(((Integer) latitude).intValue());
-        } else {
-            this.latitude = new Double(latitude + "");
-        }
-
-        if (longitude instanceof String) {
-            this.longitude = Double.parseDouble((String) longitude);
-        } else if (longitude instanceof Double) {
-            this.longitude = (Double) longitude;
-        } else if (longitude instanceof Integer) {
-            this.longitude = new Double(((Integer) longitude).intValue());
-        } else {
-            this.longitude = new Double(longitude + "");
-        }
-
+        setLatitude(longitude);
+        setLongitude(longitude);
     }
 
     public Double getLatitude() {
@@ -106,6 +80,7 @@ public class Coordinate extends NavajoType implements Serializable {
         return false;
     }
 
+    @Override
     public String toString() {
         return "[" + this.longitude + "," + this.latitude + "]";
     }
