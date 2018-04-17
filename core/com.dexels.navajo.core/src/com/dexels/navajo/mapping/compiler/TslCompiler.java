@@ -2072,6 +2072,8 @@ public class TslCompiler {
 					castedValue = "((Double) sValue)";
 				} else if (type.equals("java.lang.Boolean")) {
 					castedValue = "((Boolean) sValue)";
+				} else if (type.equals("java.util.List")) {
+					castedValue = "((List<Object>) sValue)";
 				} else {
 					castedValue = "sValue";
 				}

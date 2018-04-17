@@ -466,15 +466,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			setType(Property.BINARY_DIGEST_PROPERTY);
 			return;
         }
-		if (o instanceof String) {
-            String dataStr = (String) o;
-            if (getType().equals(Property.COORDINATE_PROPERTY)) {
-                setType(Property.COORDINATE_PROPERTY);
-                // try to matchthe string
-                String[] vals = dataStr.substring(1, dataStr.length() - 1).split(",");
-                setValue(new Coordinate(vals[0], vals[1]));
-                return;
-            }
+        if (o instanceof String) {
             if (!isStringType(getType())) {
                 setType(Property.STRING_PROPERTY);
             }
