@@ -94,4 +94,32 @@ public class TestCoordinateProperty {
         }
     }
 
+    @Test
+    public void testPropertyMethods() throws Exception {
+        Coordinate c = new Coordinate(-1, 3);
+        assertEquals(c.toString(), "[-1.0,3.0]");
+        assertEquals(c.isEmpty(), false);
+
+        c.setLatitude("32");
+        assertEquals(c.toString(), "[-1.0,32.0]");
+
+        c.setLongitude(-11.455555);
+        assertEquals(c.toString(), "[-11.455555,32.0]");
+
+        try {
+            c.setLatitude(null);
+        } catch (NumberFormatException e) {
+            assertTrue(true);
+        }
+
+        try {
+            c.setLatitude(-900);
+            assertTrue(false);
+        } catch (Exception e) {
+            System.out.println(e);
+            assertTrue(true);
+        }
+
+    }
+
 }

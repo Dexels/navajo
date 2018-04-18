@@ -26,9 +26,8 @@ public class Coordinate extends NavajoType implements Serializable {
     public Coordinate(String arrStr) throws Exception {
         // check if format is correct.
         if (!(arrStr.matches(
-                "\\[[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*\\]|[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*|[+-]{0,1}\\d+\\.{0,1}\\d* [+-]{0,1}\\d+\\.{0,1}\\d*"))) { // 31
-                                                                                                                                                                                         // -18
-            throw new Exception("Not valid format given :: " + arrStr + ". Please use number representations");
+                "\\[[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*\\]|[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*|[+-]{0,1}\\d+\\.{0,1}\\d* [+-]{0,1}\\d+\\.{0,1}\\d*"))) { // -18
+            throw new Exception("Not valid format given :: " + arrStr + ". Please use '[x,y]', 'x,y' or 'x y'");
         } else {
             String mydata = arrStr.replaceAll("\\[", "").replaceAll("\\]", "");
             String[] vals = mydata.split(",| ");
