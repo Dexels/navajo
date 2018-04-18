@@ -17,6 +17,7 @@ import io.reactivex.Emitter;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.Single;
+import io.reactivex.SingleTransformer;
 
 public class JettyClient {
 
@@ -61,6 +62,7 @@ public class JettyClient {
 	public FlowableTransformer<ReactiveReply, byte[]> responseStream() {
 		return single->single.flatMap(e->e.content).map(c->this.streamResponse(c)	).flatMap(e->e);
 	}
+
 	
 	private Flowable<byte[]> streamResponse(ContentChunk chunk) {
 		

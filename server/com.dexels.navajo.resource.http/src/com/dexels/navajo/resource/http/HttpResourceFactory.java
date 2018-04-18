@@ -44,6 +44,7 @@ public class HttpResourceFactory {
 	}
 	
 	public HttpResource getHttpResource(String name) {
+		logger.error("Can not locate http resource: {}. Available http resources: {}",name,httpResource.keySet());
 		return httpResource.get(name);
 	}
 }
