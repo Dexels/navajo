@@ -207,11 +207,10 @@ public class EntityDispatcher {
             // Create a header from the input
             Header header = NavajoFactory.getInstance().createHeader(input, "", access.rpcUser, access.rpcPwd, -1);
 
-            String locale = determineLocaleFromRequest(runner.getHttpRequest());
+            String locale = runner.getHttpRequest().getHeader("X-Navajo-Locale");
             if (locale != null) {
                 header.setHeaderAttribute("locale", locale);
             }
-
             input.addHeader(header);
 
 
@@ -314,13 +313,6 @@ public class EntityDispatcher {
         return null;
     }
 
-    private String determineLocaleFromRequest(final HttpServletRequest req) {
-        String requestInstance = req.getHeader("X-Navajo-Locale");
-        if (requestInstance != null) {
-            return requestInstance;
-        }
-        return null;
-    }
 
     // In case of an exception, we create a Navajo document with some messages
     // describing the error. This allows us to output the exception in the
