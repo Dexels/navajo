@@ -3,6 +3,7 @@ package com.dexels.navajo.entity.continuations;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.activation.MimeType;
@@ -35,6 +36,10 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 
 public class EntityDispatcher {
+    private static final String HTTP_METHOD_DELETE = "DELETE";
+    private static final String HTTP_METHOD_GET = "GET";
+    private static final Object HTTP_METHOD_OPTIONS = "OPTIONS";
+
     private final static Logger logger = LoggerFactory.getLogger(EntityDispatcher.class);
     private final static Logger statLogger = LoggerFactory.getLogger("stats");
 
@@ -81,21 +86,27 @@ public class EntityDispatcher {
                 // Remove .<format> from entityName
                 entityName = entityName.substring(0, entityName.indexOf('.'));
             }
-
-            String authHeader = runner.getHttpRequest().getHeader("Authorization");
-            if (authHeader == null) {
-                logger.warn("Missing authentication header!");
-                throw new EntityException(EntityException.UNAUTHORIZED);
-
-            }
             
-            String tenant = determineInstanceFromRequest(runner.getHttpRequest());
-            if (tenant == null && !authHeader.startsWith(AuthenticationMethod.OAUTH_IDENTIFIER)) {
-                // No tenant only supported for Oauth login
-                logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
-                throw new EntityException(EntityException.UNAUTHORIZED);
+            // Auth is only required for methods other than OPTIONS
+            String authHeader = null;
+            String tenant = null;
+            if (!method.equals(HTTP_METHOD_OPTIONS)) {
+                authHeader = runner.getHttpRequest().getHeader("Authorization");
+                if (authHeader == null) {
+                    logger.warn("Missing authentication header!");
+                    throw new EntityException(EntityException.UNAUTHORIZED);
+
+                }
                 
+                tenant = determineInstanceFromRequest(runner.getHttpRequest());
+                if (tenant == null && !authHeader.startsWith(AuthenticationMethod.OAUTH_IDENTIFIER)) {
+                    // No tenant only supported for Oauth login
+                    logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
+                    throw new EntityException(EntityException.UNAUTHORIZED);
+                    
+                }
             }
+           
             
             String ip = runner.getHttpRequest().getHeader("X-Forwarded-For");
             if (ip == null || ip.equals("")) {
@@ -148,10 +159,9 @@ public class EntityDispatcher {
             Message entityMessage = e.getMessage();
 
             // Get the input document
-            if (method.equals("GET") || method.equals("DELETE")) {
+            if (method.equals(HTTP_METHOD_OPTIONS) || method.equals(HTTP_METHOD_GET) || method.equals(HTTP_METHOD_DELETE)) {
                 input = EntityHelper.deriveNavajoFromParameterMap(e, runner.getHttpRequest().getParameterMap());
             } else {
-              
                 JSONTML json = JSONTMLFactory.getInstance();
                 json.setEntityTemplate(entityMessage.getRootDoc());
                 try {
@@ -167,7 +177,11 @@ public class EntityDispatcher {
                 throw new EntityException(EntityException.BAD_REQUEST);
             }
 
-           
+            if (method.equals(HTTP_METHOD_OPTIONS)) {
+                processGetOptions(e, runner.getHttpResponse());
+                result = NavajoFactory.getInstance().createNavajo();
+                return;
+            }
             Operation entityOperation = myManager.getOperation(e.getName(), method);
             
             // Create an access object for logging purposes
@@ -230,7 +244,7 @@ public class EntityDispatcher {
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND);
             }
 
-            if (method.equals("GET") && result.getMessage(entityMessage.getName()) != null) {
+            if (method.equals(HTTP_METHOD_GET) && result.getMessage(entityMessage.getName()) != null) {
                 runner.setOutputEtag(result.getMessage(entityMessage.getName()).generateEtag());
             }
             access.processingTime = (int) (System.currentTimeMillis() - opStartTime);
@@ -279,6 +293,18 @@ public class EntityDispatcher {
             }
         }
     }
+
+    private void processGetOptions(Entity e, HttpServletResponse response) {
+        Map<String, Operation> operations = myManager.getOperations(e.getName());
+        String allowed = "";
+        for (Operation op : operations.values()) {
+            allowed += op.getMethod() + ", ";
+        }
+        if (!allowed.equals("")) allowed = allowed.substring(0,  allowed.length() -2); // remove , at the end
+        response.setHeader("Access-Control-Allow-Methods", allowed);
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type,authorization");
+    }
+
 
     private String determineInstanceFromRequest(final HttpServletRequest req) {
         String requestInstance = req.getHeader("X-Navajo-Instance");
