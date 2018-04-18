@@ -18,10 +18,13 @@
     <type name="memo" type="com.dexels.navajo.document.types.Memo"/>
     <type name="percentage" type="com.dexels.navajo.document.types.Percentage"/>
     <type name="stopwatchtime" type="com.dexels.navajo.document.types.StopwatchTime"/>
+    <type name="coordinate" type="com.dexels.navajo.document.types.Coordinate"/>
     <type name="any" type="java.lang.Object"/>
     <type name="list" type="java.util.List"  generic="*"/>
     <type name="message" type="com.dexels.navajo.document.Message"/>
     <type name="navajo" type="com.dexels.navajo.document.Navajo"/>
     <type name="property" type="com.dexels.navajo.document.Property"/>
     <type name="expressionliteral" type="com.dexels.navajo.document.types.NavajoExpression"/>
+    
+    
 </navajotypes>

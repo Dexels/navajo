@@ -33,6 +33,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Coordinate;
 import com.dexels.navajo.document.types.Memo;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.NavajoExpression;
@@ -106,6 +107,8 @@ public final class MappingUtils {
             return Property.MEMO_PROPERTY;
         else if (o instanceof Selection[]) {
             return Property.SELECTION_PROPERTY;
+        } else if (o instanceof Coordinate) {
+            return Property.COORDINATE_PROPERTY;
         } else if (o instanceof Property) {
             return "property";
         } else
