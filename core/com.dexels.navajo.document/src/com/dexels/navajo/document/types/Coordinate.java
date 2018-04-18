@@ -25,9 +25,9 @@ public class Coordinate extends NavajoType implements Serializable {
 
     public Coordinate(String arrStr) throws Exception {
         // check if format is correct.
-        if (!(arrStr.matches("\\[[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*\\]") // [+1.4,4]
-                || arrStr.matches("[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*") // -2, 33
-                || arrStr.matches("[+-]{0,1}\\d+\\.{0,1}\\d* [+-]{0,1}\\d+\\.{0,1}\\d*"))) { // 31 -18
+        if (!(arrStr.matches(
+                "\\[[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*\\]|[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*|[+-]{0,1}\\d+\\.{0,1}\\d* [+-]{0,1}\\d+\\.{0,1}\\d*"))) { // 31
+                                                                                                                                                                                         // -18
             throw new Exception("Not valid format given :: " + arrStr + ". Please use number representations");
         } else {
             String mydata = arrStr.replaceAll("\\[", "").replaceAll("\\]", "");
@@ -97,40 +97,6 @@ public class Coordinate extends NavajoType implements Serializable {
     @Override
     public String toString() {
         return "[" + this.longitude + "," + this.latitude + "]";
-    }
-
-    // public String toString() {
-    // return "{\"latitude\": " + this.latitude + ", \"longitude\": " +
-    // this.longitude + "}";
-    // }
-
-    // public String toString() {
-    // return "{coordinate : {latitude:" + this.latitude + ", longitude:" +
-    // this.longitude + "}}";
-    // }
-
-    public static void main(String[] args) throws Exception {
-        
-        // String arrStr = "[1.23,-1]";
-        // System.out.println(arrStr.matches("\\[[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*\\]"));
-
-        // arrStr = "11.12";
-        // System.out.println(arrStr.matches("\\d+.*\\d+"));
-        
-        Coordinate test = new Coordinate(1, 2);
-        System.out.println(test);
-
-        // Coordinate test = new Coordinate("123.33", 11);
-        // System.out.println(test.toString());
-        //
-        // String mydata = test.toString();
-        //
-        //
-        // mydata.replace("[", "");
-        // mydata.replace("]", "");
-        // String[] vals = mydata.split(",");
-        // System.out.println(vals[0] + " " + vals[1]);
-
     }
 
 }
