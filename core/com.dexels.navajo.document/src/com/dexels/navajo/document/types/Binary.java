@@ -26,7 +26,6 @@ import java.nio.channels.FileChannel;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,7 +35,6 @@ import java.util.Map;
 
 import org.dexels.utils.Base64;
 import org.dexels.utils.Base64DecodingFinishedException;
-import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,10 +42,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.metadata.FormatDescription;
 import com.dexels.navajo.document.saximpl.qdxml.QDParser;
-
-import io.reactivex.Emitter;
-import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
 
 /**
  * <p>
@@ -883,26 +877,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         }
 
     }
-
     
-    public Publisher<byte[]> flowData(final int bufferSize) {
-    		InputStream is = getDataAsStream();
-        return Flowable.generate(new Consumer<Emitter<byte[]>>() {
-            @Override
-            public void accept(Emitter<byte[]> emitter) throws Exception {
-                byte[] buffer = new byte[bufferSize];
-                int count = is.read(buffer);
-                if (count == -1) {
-                    emitter.onComplete();
-                } else if (count < bufferSize) {
-                    emitter.onNext(Arrays.copyOf(buffer, count));
-                } else {
-                    emitter.onNext(buffer);
-                }
-            }
-        });
-    }
-
     
     public final InputStream getDataAsStream() {
 //    	if (NavajoFactory.getInstance().isSandboxMode()) {
