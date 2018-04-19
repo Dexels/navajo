@@ -77,5 +77,10 @@ public class ResourceComponent implements HttpResource {
 		return null;
 	}
 
+	@Override
+	public String getURL() {
+		return this.url;
+	}
+
 
 }

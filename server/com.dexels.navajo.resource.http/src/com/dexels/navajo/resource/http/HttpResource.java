@@ -44,5 +44,6 @@ public interface HttpResource {
 		return Flowable.fromPublisher(list(bucket))
 				.blockingIterable();
 	}
+	public String getURL();
 	
 }
