@@ -65,6 +65,16 @@ public class DataItem {
 		this.stateMsg = null;
 		this.eventStream = null;
 	}
+	
+	private DataItem(byte[] data, ImmutableMessage stateMessage) {
+		this.msg = null;
+		this.data = data;
+		this.streamEvent = null;
+		this.msgList = null;
+		this.type = Type.DATA;
+		this.stateMsg = stateMessage;
+		this.eventStream = null;
+	}
 
 	private DataItem(NavajoStreamEvent event) {
 		this.msg = null;
@@ -140,6 +150,12 @@ public class DataItem {
 
 	public static DataItem empty() {
 		return new DataItem();
+	}
+
+
+	// TODO support all types?
+	public DataItem withStateMessage(ImmutableMessage state) {
+		return new DataItem(this.data,state);
 	}
 
 	public static DataItem of(ImmutableMessage repl) {
