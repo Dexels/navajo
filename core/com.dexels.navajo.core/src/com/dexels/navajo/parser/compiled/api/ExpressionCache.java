@@ -141,6 +141,8 @@ public class ExpressionCache {
 	        
 		} catch (ParseException e) {
 			throw new TMLExpressionException("Error parsing expression: "+expression, e);
+		} catch(Throwable e) {
+			throw new TMLExpressionException("Unexpected error parsing expression: "+expression, e);
 		}
 
 	}
