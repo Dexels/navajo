@@ -54,7 +54,7 @@ public class HttpPushTransformer implements ReactiveTransformer {
 						
 						Binary bin = (Binary)msg.columnValue(property);
 						
-						return res.put(bucket, id,bin)
+						return res.put(context.tenant, bucket, id,bin)
 							.map(e->e.toMessage())
 							.toFlowable();
 						

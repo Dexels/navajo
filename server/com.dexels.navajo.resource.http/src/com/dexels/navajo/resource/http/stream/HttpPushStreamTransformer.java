@@ -45,7 +45,7 @@ public class HttpPushStreamTransformer implements ReactiveTransformer {
 			Flowable<byte[]> in = flow.map(f->f.data());
 			return HttpResourceFactory.getInstance()
 					.getHttpResource(name)
-					.put(bucket, id,type, in)
+					.put(context.tenant, bucket, id,type, in)
 					.map(status->ImmutableFactory.empty().with("code", status, Property.INTEGER_PROPERTY)).map(DataItem::of)
 					.toFlowable();
 		};

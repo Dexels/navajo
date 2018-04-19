@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.client.stream.ReactiveReply;
 import com.dexels.navajo.client.stream.jetty.JettyClient;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.resource.http.HttpElement;
 import com.dexels.navajo.resource.http.HttpResource;
 
@@ -35,10 +36,10 @@ public class ResourceComponent implements HttpResource {
 	private String authorization;
 	private Optional<String> secret;
 	private Integer expire;
+	private String deployment;
 	
 	public void activate(Map<String, Object> settings) throws Exception {
 		client = new JettyClient();
-	
 //		logger.debug("Activating HTTP connector with: " + settings);
 		String u = (String) settings.get("url");
 		this.authorization = (String) settings.get("authorization");
@@ -60,10 +61,22 @@ public class ResourceComponent implements HttpResource {
 		
 	}
 
+	
+
+	public synchronized void setRepositoryInstance(RepositoryInstance instance) {
+		deployment = instance.getDeployment();
+		logger.info("Attaching repository instance, bound to deployment: {}",deployment);
+	}
+
+	public synchronized void clearRepositoryInstance(RepositoryInstance instance) {
+		deployment = null;
+	}
+	
+	
 	@Override
-	public Single<ReactiveReply> put(String bucket, String id, String type, Publisher<byte[]> data) {
-		logger.info("Putting: {} type: {}",assembleURL(bucket, id),type);
-		return client.callWithBody(assembleURL(bucket, id), 
+	public Single<ReactiveReply> put(String tenant, String bucket, String id, String type, Publisher<byte[]> data) {
+		logger.info("Putting: {} type: {}",assembleURL(tenant,bucket, id),type);
+		return client.callWithBody(assembleURL(tenant,bucket, id), 
 					r->r.header("Authorization", this.authorization)
 						.method(HttpMethod.PUT)
 				,Flowable.fromPublisher(data),type)
@@ -71,8 +84,8 @@ public class ResourceComponent implements HttpResource {
 	}
 
 	@Override
-	public Flowable<byte[]> get(String bucket, String id) {
-		String callingUrl = assembleURL(bucket, id);
+	public Flowable<byte[]> get(String tenant, String bucket, String id) {
+		String callingUrl = assembleURL(tenant,bucket, id);
 		logger.info("Calling url: "+callingUrl);
 		return client.callWithoutBody(callingUrl, r->r.header("Authorization", this.authorization))
 			.toFlowable()
@@ -80,17 +93,27 @@ public class ResourceComponent implements HttpResource {
 	}
 
 	@Override
-	public Single<Integer> delete(String bucket, String id) {
-		return client.callWithoutBody(assembleURL(bucket, id), r->r.header("Authorization", this.authorization))
-				.map(e->e.status());
+	public Single<ReactiveReply> delete(String tenant, String bucket, String id) {
+		return client.callWithoutBody(assembleURL(tenant,bucket, id), r->r.header("Authorization", this.authorization).method(HttpMethod.DELETE));
+	}
+	
+	@Override
+	public Single<ReactiveReply> head(String tenant, String bucket, String id) {
+		return client.callWithoutBody(assembleURL(tenant,bucket, id), 
+				r->r.header("Authorization", this.authorization)
+					.method(HttpMethod.HEAD)
+				);
 	}
 
-	private String assembleURL(String bucket, String id) {
-		return this.url+bucket+"/"+id;
+
+	private String assembleURL(String tenant, String bucket, String id) {
+		String u = this.url+tenant+"-"+deployment+"-"+bucket+"/"+id;
+		System.err.println("Assembling: "+u);
+		return u;
 	}
 
 	@Override
-	public Flowable<HttpElement> list(String bucket) {
+	public Flowable<HttpElement> list(String tenant, String bucket) {
 		// todo
 		return null;
 	}
@@ -120,10 +143,10 @@ public class ResourceComponent implements HttpResource {
 	}
 
 	@Override
-	public String expiringURL(String bucket, String id) {
+	public String expiringURL(String tenant, String bucket, String id) {
 		long unixTimestamp = Instant.now().getEpochSecond()+this.expire;
 		long exp = unixTimestamp+expire;
-		String totalURL = assembleURL(bucket, id)+"?expires="+exp+"&sig="+sign(bucket, id,exp);
+		String totalURL = assembleURL(tenant,bucket, id)+"?expires="+exp+"&sig="+sign(bucket, id,exp);
 		System.err.println("URL: "+totalURL);
 		return totalURL;
 	}
@@ -154,8 +177,8 @@ public class ResourceComponent implements HttpResource {
 	}
 	
 	@Override
-	public Binary lazyBinary(String bucket, String id) throws IOException {
-		URL u = new URL(expiringURL(bucket, id));
+	public Binary lazyBinary(String tenant, String bucket, String id) throws IOException {
+		URL u = new URL(expiringURL(tenant, bucket, id));
 		return new Binary(u, true);
 	}
 }
