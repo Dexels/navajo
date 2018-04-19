@@ -41,6 +41,7 @@ public class HttpPushTransformer implements ReactiveTransformer {
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
 		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, sourceElement, "");
 		String name = resolved.paramString("name");
+		int parallel = resolved.optionalInteger("parallel").orElse(1);
 		HttpResource res = HttpResourceFactory.getInstance().getHttpResource(name);
 		
 		return flow->{
@@ -52,7 +53,6 @@ public class HttpPushTransformer implements ReactiveTransformer {
 						ReactiveResolvedParameters resInMsg = parameters.resolveNamed(context, Optional.of(msg), ImmutableFactory.empty(), metadata, sourceElement, "");
 						String id = resInMsg.paramString("id");
 						String bucket = resInMsg.paramString("bucket");
-						String type = resInMsg.optionalString("type").orElse("application/octetstream");
 						String method = resInMsg.paramString("method");
 						String property = resInMsg.paramString("property");
 						
@@ -63,7 +63,7 @@ public class HttpPushTransformer implements ReactiveTransformer {
 							.toFlowable();
 						
 					})
-					.flatMap(f->f,10)
+					.flatMap(f->f,parallel)
 					.map(DataItem::of);
 					
 			

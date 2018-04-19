@@ -28,7 +28,7 @@ public interface HttpResource {
 
 		logger.info("Size of binary: "+data.getLength());
 		String type = Optional.ofNullable(data.getMimeType()).orElse(data.guessContentType());
-		return put(bucket,id,type,data.flowData(100));
+		return put(bucket,id,type,this.flowBinary(data, 100));
 	}
 	default public Binary getBinary(String bucket, String id) throws IOException {
 		Binary result = new Binary();
@@ -44,6 +44,11 @@ public interface HttpResource {
 		return Flowable.fromPublisher(list(bucket))
 				.blockingIterable();
 	}
+	
+	public Publisher<byte[]> flowBinary(Binary bin, final int bufferSize);
+
+
+	
 	public String getURL();
 	
 }
