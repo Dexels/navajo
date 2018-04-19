@@ -39,12 +39,14 @@ public class CallTransformer implements ReactiveTransformer {
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(),metadata, sourceElement, sourcePath);
-
-		final String service =  resolved.paramString("service");
-		final boolean debug = resolved.paramBoolean("debug", ()->false);
 		return flow->
 			{
+				//TODO add messages? We have an event stream input, unsure how to deal with this.
+			ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(),metadata, sourceElement, sourcePath);
+
+			final String service =  resolved.paramString("service");
+			final boolean debug = resolved.paramBoolean("debug", ()->false);
+	
 			if(debug) {
 				flow = flow.doOnNext(e->logger.info("calltransformerEvent: "+ e));
 			}

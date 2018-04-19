@@ -25,7 +25,7 @@ public class FilterTransformer implements ReactiveTransformer {
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
 		return e->e.filter(item->{
-			ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.of(item.message()), ImmutableFactory.empty(), metadata, Optional.empty(), "");
+			ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.of(item.message()), item.stateMessage(), metadata, Optional.empty(), "");
 			return parms.paramBoolean("filter");
 		});
 	}

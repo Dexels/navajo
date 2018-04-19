@@ -32,7 +32,7 @@ public class JsonFileAppender implements ReactiveMerger {
 		return context -> {
 			
 			return (item) -> {
-				ReactiveResolvedParameters named = params.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), this,xml,relativePath);
+				ReactiveResolvedParameters named = params.resolveNamed(context,Optional.of(item.message()), item.stateMessage(), this,xml,relativePath);
 				String  path = named.paramString("path");
 				boolean condition = named.optionalBoolean("condition").orElse(true);
 				if(!condition) {

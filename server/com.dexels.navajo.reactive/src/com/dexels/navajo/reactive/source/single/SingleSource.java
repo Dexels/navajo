@@ -57,6 +57,7 @@ public class SingleSource implements ReactiveSource {
 			
 			if(debug) {
 				flow = flow.doOnNext(di->System.err.println("Item: "+ImmutableFactory.getInstance().describe(di.message())));
+				flow = flow.doOnNext(di->System.err.println("State: "+ImmutableFactory.getInstance().describe(di.stateMessage())));
 			}
 			for (ReactiveTransformer reactiveTransformer : transformers) {
 				flow = flow.compose(reactiveTransformer.execute(context));
