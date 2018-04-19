@@ -32,6 +32,7 @@ import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.parser.compiled.TokenMgrError;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 import com.dexels.navajo.reactive.api.ParameterValidator;
@@ -330,10 +331,31 @@ public class ReactiveScriptParser {
 					Function3<StreamScriptContext,Optional<ImmutableMessage>, ImmutableMessage, Operand> value = (context,msg,param)->evaluateCompiledExpression(ce, context, Collections.emptyMap(), msg,Optional.of(param), streamInput);
 					namedParameters.put(name, value);
 				} catch (TMLExpressionException ex) {
+					Throwable cause = ex.getCause();
 					int attrStart = x.getAttributeOffset(e);
 					int attrEnd = x.getAttributeEndOffset(e);
 					int attrLine = x.getAttributeLineNr(e);
-					problems.add(ReactiveParseProblem.of(ex.getMessage()).withCause(ex).withRange(attrLine, attrLine, attrStart, attrEnd));
+					if(cause instanceof TokenMgrError) {
+						TokenMgrError te = (TokenMgrError)cause;
+						int errorLn = te.errorLine();
+						if(errorLn<=0) {
+							errorLn = attrLine;
+						} else {
+							errorLn = attrLine + errorLn;
+						}
+						int errorCl = te.errorColumn();
+						if(errorCl<=0) {
+							errorCl = attrStart;
+						} else {
+							errorCl = attrStart + errorCl;
+						}
+						
+						problems.add(ReactiveParseProblem.of(ex.getMessage()).withCause(ex).withRange(errorLn, errorLn, errorCl, errorCl+1));
+
+						logger.error("TokenManager error found: "+te.getLocalizedMessage(),te);
+					} else {
+						problems.add(ReactiveParseProblem.of(ex.getMessage()).withCause(ex).withRange(attrLine, attrLine, attrStart, attrEnd));
+					}
 				}
 				// TODO implement default?
 			} else {
