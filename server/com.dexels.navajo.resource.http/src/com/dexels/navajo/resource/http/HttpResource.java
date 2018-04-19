@@ -50,5 +50,7 @@ public interface HttpResource {
 
 	
 	public String getURL();
+	public String expiringURL(String bucket, String id);
+	public Binary lazyBinary(String bucket, String id) throws IOException;
 	
 }

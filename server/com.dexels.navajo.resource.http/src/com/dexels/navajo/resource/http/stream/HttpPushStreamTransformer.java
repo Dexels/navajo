@@ -2,7 +2,7 @@ package com.dexels.navajo.resource.http.stream;
 
 import java.util.List;
 import java.util.Optional;
-import com.dexels.immutable.api.ImmutableMessage;
+
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -41,7 +41,6 @@ public class HttpPushStreamTransformer implements ReactiveTransformer {
 		String id = resolved.paramString("id");
 		String bucket = resolved.paramString("bucket");
 		String type = resolved.optionalString("type").orElse("application/octetstream");
-		String method = resolved.paramString("method");
 		return flow->{
 			Flowable<byte[]> in = flow.map(f->f.data());
 			return HttpResourceFactory.getInstance()
@@ -50,12 +49,6 @@ public class HttpPushStreamTransformer implements ReactiveTransformer {
 					.map(status->ImmutableFactory.empty().with("code", status, Property.INTEGER_PROPERTY)).map(DataItem::of)
 					.toFlowable();
 		};
-		
-//		return d->d.map(item->item.message())
-//				
-//				map(di->di.data())
-//				
-//		
 	}
 
 	@Override

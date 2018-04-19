@@ -27,6 +27,8 @@ public class TestHttpResource {
 		settings.put("url", TestConfig.HTTP_TEST_URL.getValue());
 		settings.put("name", "binstore");
 		settings.put("authorization", TestConfig.HTTP_TEST_TOKEN.getValue());
+		settings.put("secret", TestConfig.HTTP_TEST_SECRET.getValue());
+		settings.put("expire", "120");
 		component.activate(settings);
 		factory.addHttpResource(component, settings);
 		factory.activate();
@@ -48,5 +50,11 @@ public class TestHttpResource {
 		
 		System.err.println("Size: "+sz);
 		Assert.assertTrue(sz>13000);
+	}
+	
+	@Test
+	public void testSHA() {
+		System.err.println(factory.getHttpResource("binstore").expiringURL("example","test1.png"));
+		
 	}
 }

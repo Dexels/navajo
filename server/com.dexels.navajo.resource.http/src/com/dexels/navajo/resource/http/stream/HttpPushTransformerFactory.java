@@ -59,7 +59,6 @@ public class HttpPushTransformerFactory implements ReactiveTransformerFactory, T
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String,String> types = new HashMap<>();
 		types.put("name", Property.STRING_PROPERTY);
-		types.put("method", Property.STRING_PROPERTY);
 		types.put("bucket", Property.STRING_PROPERTY);
 		types.put("id", Property.STRING_PROPERTY);
 		types.put("property", Property.STRING_PROPERTY);

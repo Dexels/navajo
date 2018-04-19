@@ -1,10 +1,14 @@
 package com.dexels.navajo.resource.http.impl;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Optional;
 
+import org.apache.commons.codec.digest.HmacUtils;
 import org.eclipse.jetty.http.HttpMethod;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -15,9 +19,10 @@ import com.dexels.navajo.client.stream.jetty.JettyClient;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.resource.http.HttpElement;
 import com.dexels.navajo.resource.http.HttpResource;
+
+import io.reactivex.Emitter;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
-import io.reactivex.Emitter;
 import io.reactivex.functions.Consumer;
 
 public class ResourceComponent implements HttpResource {
@@ -28,16 +33,17 @@ public class ResourceComponent implements HttpResource {
 	
 	private JettyClient client = null;
 	private String authorization;
+	private Optional<String> secret;
+	private Integer expire;
 	
 	public void activate(Map<String, Object> settings) throws Exception {
 		client = new JettyClient();
 	
-		logger.debug("Activating HTTP connector with: " + settings);
-		for (Entry<String, Object> e : settings.entrySet()) {
-			logger.debug("key: " + e.getKey() + " value: " + e.getValue());
-		}
+//		logger.debug("Activating HTTP connector with: " + settings);
 		String u = (String) settings.get("url");
 		this.authorization = (String) settings.get("authorization");
+		this.secret = Optional.ofNullable((String) settings.get("secret"));
+		this.expire = Integer.parseInt( Optional.ofNullable((String) settings.get("expire")).orElse("3600"));
 		this.url = u.endsWith("/") ? u : u+"/";
 	}
 
@@ -48,12 +54,16 @@ public class ResourceComponent implements HttpResource {
 			client = null;
 			c.close();
 		}
+		this.authorization = null;
+		this.secret = Optional.empty();
+		this.url = null;
+		
 	}
 
 	@Override
 	public Single<ReactiveReply> put(String bucket, String id, String type, Publisher<byte[]> data) {
-		logger.info("Putting: {} type: {}",this.url+bucket+"/"+id,type);
-		return client.callWithBody(this.url+bucket+"/"+id, 
+		logger.info("Putting: {} type: {}",assembleURL(bucket, id),type);
+		return client.callWithBody(assembleURL(bucket, id), 
 					r->r.header("Authorization", this.authorization)
 						.method(HttpMethod.PUT)
 				,Flowable.fromPublisher(data),type)
@@ -62,7 +72,7 @@ public class ResourceComponent implements HttpResource {
 
 	@Override
 	public Flowable<byte[]> get(String bucket, String id) {
-		String callingUrl = this.url+bucket+"/"+id;
+		String callingUrl = assembleURL(bucket, id);
 		logger.info("Calling url: "+callingUrl);
 		return client.callWithoutBody(callingUrl, r->r.header("Authorization", this.authorization))
 			.toFlowable()
@@ -71,8 +81,12 @@ public class ResourceComponent implements HttpResource {
 
 	@Override
 	public Single<Integer> delete(String bucket, String id) {
-		return client.callWithoutBody(this.url+bucket+"/"+id, r->r.header("Authorization", this.authorization))
+		return client.callWithoutBody(assembleURL(bucket, id), r->r.header("Authorization", this.authorization))
 				.map(e->e.status());
+	}
+
+	private String assembleURL(String bucket, String id) {
+		return this.url+bucket+"/"+id;
 	}
 
 	@Override
@@ -105,4 +119,43 @@ public class ResourceComponent implements HttpResource {
 	    });
 	}
 
+	@Override
+	public String expiringURL(String bucket, String id) {
+		long unixTimestamp = Instant.now().getEpochSecond()+this.expire;
+		long exp = unixTimestamp+expire;
+		String totalURL = assembleURL(bucket, id)+"?expires="+exp+"&sig="+sign(bucket, id,exp);
+		System.err.println("URL: "+totalURL);
+		return totalURL;
+	}
+	private String sign(String bucket, String id, long expirationTime) {
+		if(!secret.isPresent()) {
+			throw new IllegalArgumentException("Http component has no secret. Can't make expiring URL's");
+		}
+		if(bucket.endsWith("/")) {
+			throw new IllegalArgumentException("'bucket' should not have trailing slashes. Value: "+bucket);
+		}
+		if(bucket.startsWith("/")) {
+			throw new IllegalArgumentException("'bucket' should not have leading slashes. Value: "+bucket);
+		}
+		if(id.startsWith("/")) {
+			throw new IllegalArgumentException("'id' should not have leading slashes. Value: "+bucket);
+		}
+		
+		String path = Long.toString(expirationTime)+"/"+bucket+"/"+id;
+		String encoded = HmacUtils.hmacSha1Hex(this.secret.get(), path);
+
+		//		Expires = 1513890085 (21 december 2017, 21:01:25)
+//				Sig = Hex(HMAC-SHA1("1513890085/example/test1.png", fc6a0bd4d36da7a47fa8d4)) = eb00233f016e11a40cfafd806647c259f261915c
+
+//		String encoded = HmacUtils.hmacSha1Hex("fc6a0bd4d36da7a47fa8d4", "1513890085/example/test1.png");
+		System.err.println("Encoded: "+encoded);
+		return encoded;
+//		DigestUtils.sha1Hex("1513890085/example/test1.png")
+	}
+	
+	@Override
+	public Binary lazyBinary(String bucket, String id) throws IOException {
+		URL u = new URL(expiringURL(bucket, id));
+		return new Binary(u, true);
+	}
 }
