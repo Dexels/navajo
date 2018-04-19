@@ -61,22 +61,6 @@ public class TestHttpResource {
 		HttpResourceFactory.getInstance().deactivate();	
 	}
 
-	@Test @Ignore
-	public void testSimple() throws MappableException, UserException {
-		long sz = Flowable.fromPublisher(factory.getHttpResource("binstore").get("tenant",TestConfig.HTTP_TEST_BUCKET.getValue(), "test1.png"))
-			.reduce(new AtomicLong(),(size,data)->{size.addAndGet(data.length); return size;})
-			.blockingGet().get();
-		
-		System.err.println("Size: "+sz);
-		Assert.assertTrue(sz>13000);
-	}
-	
-	@Test @Ignore
-	public void testSHA() {
-		System.err.println(factory.getHttpResource("binstore").expiringURL("tenant","example","test1.png"));
-		
-	}
-	
 	@Test
 	public void testStoreAdapter() throws IOException, MappableException, UserException {
 		BinaryStoreAdapter bsa = new BinaryStoreAdapter();
