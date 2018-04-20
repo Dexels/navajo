@@ -27,8 +27,7 @@
             </method>
         </methods>
     </map>
-    
-        <map>
+    <map>
         <tagname>httpurl</tagname>
         <object>com.dexels.navajo.adapter.resource.URLMap</object>
         <values>

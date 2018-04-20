@@ -17,31 +17,32 @@ public interface HttpResource {
 	
 	
 
-	public Single<ReactiveReply> put(String bucket, String id, String type, Publisher<byte[]> data);
-	public Flowable<byte[]> get(String bucket, String id);
-	public Single<Integer> delete(String bucket, String id);
-	public Flowable<HttpElement> list(String bucket);
+	public Single<ReactiveReply> put(String tenant, String bucket, String id, String type, Publisher<byte[]> data);
+	public Flowable<byte[]> get(String tenant, String bucket, String id);
+	public Single<ReactiveReply> head(String tenant, String bucket, String id);
+	public Single<ReactiveReply> delete(String tenant, String bucket, String id);
+	public Flowable<HttpElement> list(String tenant, String bucket);
 
-	default Single<ReactiveReply> put(String bucket, String id, Binary data) {
+	default Single<ReactiveReply> put(String tenant,String bucket, String id, Binary data) {
 		// todo Null guessed content types?
 		Logger logger = LoggerFactory.getLogger(HttpResource.class);
 
 		logger.info("Size of binary: "+data.getLength());
 		String type = Optional.ofNullable(data.getMimeType()).orElse(data.guessContentType());
-		return put(bucket,id,type,this.flowBinary(data, 100));
+		return put(tenant,bucket,id,type,this.flowBinary(data, 100));
 	}
-	default public Binary getBinary(String bucket, String id) throws IOException {
+	default public Binary getBinary(String tenant,String bucket, String id) throws IOException {
 		Binary result = new Binary();
 		result.startBinaryPush();
-		Flowable.fromPublisher(get(bucket,id))
+		Flowable.fromPublisher(get(tenant, bucket,id))
 			.blockingForEach(e->result.pushContent(e));
 		result.finishPushContent();
 		return result;
 	}
 
 	
-	default public Iterable<HttpElement> listBlocking(String bucket) {
-		return Flowable.fromPublisher(list(bucket))
+	default public Iterable<HttpElement> listBlocking(String tenant,String bucket) {
+		return Flowable.fromPublisher(list(tenant, bucket))
 				.blockingIterable();
 	}
 	
@@ -50,5 +51,7 @@ public interface HttpResource {
 
 	
 	public String getURL();
+	public String expiringURL(String tenant, String bucket, String id);
+	public Binary lazyBinary(String tenant, String bucket, String id) throws IOException;
 	
 }

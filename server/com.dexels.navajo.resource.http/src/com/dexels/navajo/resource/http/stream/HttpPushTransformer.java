@@ -2,9 +2,8 @@ package com.dexels.navajo.resource.http.stream;
 
 import java.util.List;
 import java.util.Optional;
-import com.dexels.immutable.api.ImmutableMessage;
+
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
@@ -17,9 +16,7 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 import com.dexels.navajo.resource.http.HttpResource;
 import com.dexels.navajo.resource.http.HttpResourceFactory;
 
-import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
-import io.reactivex.Single;
 
 public class HttpPushTransformer implements ReactiveTransformer {
 
@@ -53,31 +50,19 @@ public class HttpPushTransformer implements ReactiveTransformer {
 						ReactiveResolvedParameters resInMsg = parameters.resolveNamed(context, Optional.of(msg), ImmutableFactory.empty(), metadata, sourceElement, "");
 						String id = resInMsg.paramString("id");
 						String bucket = resInMsg.paramString("bucket");
-						String method = resInMsg.paramString("method");
 						String property = resInMsg.paramString("property");
 						
 						Binary bin = (Binary)msg.columnValue(property);
 						
-						return res.put(bucket, id,bin)
+						return res.put(context.tenant, bucket, id,bin)
 							.map(e->e.toMessage())
 							.toFlowable();
 						
 					})
 					.flatMap(f->f,parallel)
 					.map(DataItem::of);
-					
-			
-//			Binary b = in.map(msg->
-//					.put(bucket, id,type, in)
-//					.map(status->ImmutableFactory.empty().with("code", status, Property.INTEGER_PROPERTY)).map(DataItem::of)
-//					.toFlowable());
 		};
-		
-//		return d->d.map(item->item.message())
-//				
-//				map(di->di.data())
-//				
-//		
+
 	}
 
 	@Override

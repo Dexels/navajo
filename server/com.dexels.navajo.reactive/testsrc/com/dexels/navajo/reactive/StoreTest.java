@@ -25,9 +25,6 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
 
-import io.reactivex.Maybe;
-import io.reactivex.Single;
-
 public class StoreTest {
 
 	public StoreTest() {
