@@ -555,11 +555,9 @@ public class StreamCompress {
 			@Override
 			public Publisher<byte[]> apply(Flowable<byte[]> f) {
 				if(!encodingDefinition.isPresent()) {
-					logger.info("Not compressing response: No encoding header found");
 					return f;
 				}
 				String encoding = encodingDefinition.get();
-				logger.info("Compressing response: Encoding header: "+encoding);
 				if("jzlib".equals(encoding) || "deflate".equals(encoding) || "inflate".equals(encoding)) {
 					return f.lift(genericCompress2(CompressionType.DEFLATE,false)).concatMap(e->e);
 				}

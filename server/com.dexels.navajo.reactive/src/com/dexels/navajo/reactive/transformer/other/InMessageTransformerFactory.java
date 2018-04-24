@@ -64,4 +64,10 @@ public class InMessageTransformerFactory implements ReactiveTransformerFactory, 
 		r.put("name", Property.STRING_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
+	
+
+	@Override
+	public String name() {
+		return "inmessage";
+	}
 }

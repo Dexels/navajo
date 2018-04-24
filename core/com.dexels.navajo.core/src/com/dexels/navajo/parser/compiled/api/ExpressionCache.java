@@ -103,7 +103,7 @@ public class ExpressionCache {
 			StringReader sr = new StringReader(expression);
 			cp = new CompiledParser(sr);
 			cp.Expression();
-	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems);
+	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression);
 	        parsedCount.incrementAndGet();
 	        if(parsed.isLiteral() && allowLiteralResolve) {
 	        		Object result = parsed.apply(null, null, null, null, null, null, null,null,null);
@@ -128,6 +128,11 @@ public class ExpressionCache {
 						public Optional<String> returnType() {
 							return Optional.of(MappingUtils.determineNavajoType(result));
 						}
+						
+						@Override
+						public String expression() {
+							return expression;
+						}
 					};
 	        } else {
 	        		expressionCache.put(expression, Optional.ofNullable(parsed));
@@ -136,6 +141,8 @@ public class ExpressionCache {
 	        
 		} catch (ParseException e) {
 			throw new TMLExpressionException("Error parsing expression: "+expression, e);
+		} catch(Throwable e) {
+			throw new TMLExpressionException("Unexpected error parsing expression: "+expression, e);
 		}
 
 	}

@@ -347,7 +347,9 @@ public final class SaxHandler implements DocHandler {
         } else {
             currentProperty = (BasePropertyImpl) NavajoFactory.getInstance().createProperty(currentDocument, myName, type, myValue, length, description, direction, subtype);
         }
-
+        if(messageStack.isEmpty()) {
+          	throw NavajoFactory.getInstance().createNavajoException("Can not parse property without being inside a message, probably an input error");
+        }
           Message current = messageStack.peek();
 //          logger.info("Adding property: "+currentProperty.getName()+" to message: "+current.getFullMessageName());
           current.addProperty(currentProperty);

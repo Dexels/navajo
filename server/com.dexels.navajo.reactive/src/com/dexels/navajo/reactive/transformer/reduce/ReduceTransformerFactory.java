@@ -66,4 +66,10 @@ public class ReduceTransformerFactory implements ReactiveTransformerFactory, Tra
 	public Type outType() {
 		return Type.SINGLEMESSAGE;
 	}
+	
+
+	@Override
+	public String name() {
+		return "reduce";
+	}
 }

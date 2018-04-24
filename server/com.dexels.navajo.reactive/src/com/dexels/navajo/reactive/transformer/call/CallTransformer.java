@@ -3,6 +3,9 @@ package com.dexels.navajo.reactive.transformer.call;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -25,6 +28,8 @@ public class CallTransformer implements ReactiveTransformer {
 	private String sourcePath;
 	private final TransformerMetadata metadata;
 	
+	private final static Logger logger = LoggerFactory.getLogger(CallTransformer.class);
+	
 	public CallTransformer(TransformerMetadata metadata, ReactiveParameters parameters,Optional<XMLElement> sourceElement, String sourcePath) {
 		this.parameters = parameters;
 		this.sourceElement = sourceElement;
@@ -34,14 +39,16 @@ public class CallTransformer implements ReactiveTransformer {
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(),metadata, sourceElement, sourcePath);
-
-		final String service =  resolved.paramString("service");
-		final boolean debug = resolved.paramBoolean("debug", ()->false);
 		return flow->
 			{
+				//TODO add messages? We have an event stream input, unsure how to deal with this.
+			ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(),metadata, sourceElement, sourcePath);
+
+			final String service =  resolved.paramString("service");
+			final boolean debug = resolved.paramBoolean("debug", ()->false);
+	
 			if(debug) {
-				flow = flow.doOnNext(e->System.err.println("calltransformerEvent: "+ e));
+				flow = flow.doOnNext(e->logger.info("calltransformerEvent: "+ e));
 			}
 			Flowable<Flowable<NavajoStreamEvent>> ff = flow.map(e->e.eventStream());
 			return ff.map(callService(context,service,debug)).concatMap(e->e);

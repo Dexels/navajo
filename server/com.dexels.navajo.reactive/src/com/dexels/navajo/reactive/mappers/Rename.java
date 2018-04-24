@@ -26,7 +26,7 @@ public class Rename implements ReactiveMerger {
 	@Override
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		return context->(item)->{
-			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(item.message()), ImmutableFactory.empty(), this, xml, relativePath);
+			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(item.message()), item.stateMessage(), this, xml, relativePath);
 			boolean condition = parms.optionalBoolean("condition").orElse(true);
 			if(!condition) {
 				return item;

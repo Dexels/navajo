@@ -63,4 +63,8 @@ public class FirstTransformerFactory implements ReactiveTransformerFactory, Tran
 		return Optional.of(Collections.emptyMap());
 	}
 
+	@Override
+	public String name() {
+		return "first";
+	}
 }

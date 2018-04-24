@@ -29,8 +29,6 @@ import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFac
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 
-import io.reactivex.Maybe;
-
 public class TestScript {
 
 	private ReactiveScriptParser reactiveScriptParser;
@@ -59,7 +57,11 @@ public class TestScript {
 	
 	public StreamScriptContext createContext(String serviceName,Navajo input, Optional<ReactiveScriptRunner> runner) {
 //		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
-		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.of("username"), Optional.of("password"), Collections.emptyMap(), Optional.empty(),Optional.of(Maybe.just(input)),runner, Collections.emptyList(),Optional.empty());
+		StreamScriptContext context = new StreamScriptContext("tenant", serviceName
+				, Optional.of("username")
+				, Optional.of("password")
+				, NavajoFactory.getInstance().createNavajo()
+				, Collections.emptyMap(), Optional.empty(),input,runner, Collections.emptyList(),Optional.empty());
 		return context;
 	}
 	

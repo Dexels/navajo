@@ -15,4 +15,5 @@ public interface ContextExpression {
 	public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel, MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException;
 	public boolean isLiteral();
 	public Optional<String> returnType();
+	public String expression();
 }

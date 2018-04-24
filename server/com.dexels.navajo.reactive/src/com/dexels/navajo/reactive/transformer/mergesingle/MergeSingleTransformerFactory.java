@@ -89,5 +89,10 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 		return Optional.of(Collections.emptyMap());
 	}
 
+	@Override
+	public String name() {
+		return "mergesingle";
+	}
+
 
 }

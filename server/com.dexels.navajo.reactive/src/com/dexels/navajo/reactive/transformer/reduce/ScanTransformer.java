@@ -3,9 +3,9 @@ package com.dexels.navajo.reactive.transformer.reduce;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
@@ -35,7 +35,7 @@ public class ScanTransformer implements ReactiveTransformer {
 			Function<DataItem,DataItem> reducer;
 			try {
 				reducer = reducers.apply(context);
-				return flow.scan(DataItem.of(ReactiveScriptParser.empty()), (state,message)->reducer.apply(DataItem.of(message.message(), state.stateMessage())));
+				return flow.scan(DataItem.of(ImmutableFactory.empty()), (state,message)->reducer.apply(DataItem.of(message.message(), state.stateMessage())));
 			} catch (Exception e) {
 				logger.error("Error: ", context);
 			}

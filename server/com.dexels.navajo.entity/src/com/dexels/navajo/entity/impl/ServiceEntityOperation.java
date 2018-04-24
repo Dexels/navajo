@@ -19,6 +19,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.types.Coordinate;
 import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
@@ -530,6 +531,13 @@ public class ServiceEntityOperation implements EntityOperation {
                 // message demands.
                 if (x.getTypedValue() != null) {
                     // Special types check
+
+                    // Coordinate input check
+                    if (x.getType().equalsIgnoreCase(Property.COORDINATE_PROPERTY) && !(x.getTypedValue() instanceof Coordinate)) {
+                        throw new EntityException(EntityException.BAD_REQUEST,
+                                "Invalid input value for " + x.getName() + ". Expected 'x,y' where x in [-180,180], y in [-90,90]");
+                    }
+
                     // Date check
                     if (x.getType().equalsIgnoreCase(Property.DATE_PROPERTY) && !(x.getTypedValue() instanceof Date)) {
 						throw new EntityException(EntityException.BAD_REQUEST,
@@ -546,6 +554,8 @@ public class ServiceEntityOperation implements EntityOperation {
                         throw new EntityException(EntityException.BAD_REQUEST,
                                 "Invalid input value for " + x.getName() + ". Expected true or false using lower case");
                     }
+                    
+
 				}
             }
 		}

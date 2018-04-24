@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,8 +118,10 @@ public class NavajoStreamCollector {
 			String arrayElementName = tagStack.peek();
 			String  arrayPath = currentPath();
 			AtomicInteger currentCount = arrayCounts.get(arrayPath);
-			String ind = "@"+currentCount.getAndIncrement();
-			tagStack.push(ind);
+			if(currentCount!=null) {
+				String ind = "@"+currentCount.getAndIncrement();
+				tagStack.push(ind);
+			}
 			arrayPath = currentPath();
 			Message newElt = NavajoFactory.getInstance().createMessage(assemble, arrayElementName, Message.MSG_TYPE_ARRAY_ELEMENT);
 			Message arrParent = messageStack.peek();
@@ -204,8 +205,7 @@ public class NavajoStreamCollector {
 		Property result = this.binaryProperties.get(name);
 //		Property result = NavajoFactory.getInstance().createProperty(assemble, name, Property.BINARY_PROPERTY, null,0,"", Property.DIR_IN);
 		if(result==null) {
-			logger.error("Missing binary property with name "+name);
-			Thread.dumpStack();
+			logger.warn("Missing binary property with name "+name);
 		} else {
 			result.setAnyValue(value);
 			return result;

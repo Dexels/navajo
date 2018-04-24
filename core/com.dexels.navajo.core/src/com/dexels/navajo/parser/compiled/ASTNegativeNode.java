@@ -33,8 +33,8 @@ public final class ASTNegativeNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
-		return lazyFunction(problems, a->interpret(a), Optional.empty());
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
+		return lazyFunction(problems,expression, a->interpret(a), Optional.empty());
 	}
 
 }

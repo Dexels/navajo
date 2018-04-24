@@ -17,8 +17,8 @@ public final class ASTAddNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
-		return untypedLazyBiFunction(problems, (a,b)->interpret(a, b));
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
+		return untypedLazyBiFunction(problems,expression, (a,b)->interpret(a, b));
 	}
 	
 	public final Object interpret(Object a,Object b) {

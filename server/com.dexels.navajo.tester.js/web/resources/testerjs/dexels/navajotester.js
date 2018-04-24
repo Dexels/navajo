@@ -174,7 +174,6 @@ function processLoginForm(){
     sessionStorage.instance = $( "#handlers option:selected" ).text()
     sessionStorage.user =     $('#navajousername').val();
     sessionStorage.password = $('#navajopassword').val();
-    sessionStorage.reactive = $('#usereactive')[0].checked;
 
     var locale = $("#locale :selected").val();
     if (locale !== "empty")
@@ -239,7 +238,7 @@ function runScript(script) {
         }
 
         var navajoinput = prepareInputNavajo(script);
-        console.log('script: '+script)
+
         $.ajax({
         	beforeSend: function(req) {
         		startTitleLoader();
@@ -250,7 +249,7 @@ function runScript(script) {
         	type: "POST",
             url: "/navajo/" + instance,
             data: navajoinput,
-            headers: {"X-Navajo-Tester": "true","X-Navajo-Username":sessionStorage.user,"X-Navajo-Reactive":sessionStorage.reactive,"X-Navajo-Service":script,"X-Navajo-Password":sessionStorage.password},
+            headers: {"X-Navajo-Tester": "true","X-Navajo-Username":sessionStorage.user,"X-Navajo-Service":script,"X-Navajo-Password":sessionStorage.password},
             success: function(result) {
             	  if(result instanceof Node) {
                       replaceXml(script, result);
@@ -453,7 +452,6 @@ $(document).on('click', '.script', function() {
         $('#recentscriptslist').find(".scriptli").slice(5, 10).remove();
     }
     $('li.recentScript>[id=\''+newScript+'\']').parent().append(hooverdiv);
-
 
     runScript(newScript);
 });
@@ -806,6 +804,27 @@ $(document).on('input change', '.tmlinputcheckbox', function(evt) {
         var $element = $(element);
         $element.attr('value',  $(this).prop('checked'));
     }
+});
+
+$(document).on('input change', '.tmlinputtuple', function(evt) {
+    var xpath = $(this).attr('id').replace("/lon","").replace("/lat","");
+    var element = $(xml).xpath(xpath)[0];
+    if (typeof element != 'undefined') {
+        var $element = $(element);
+        // Create the new value 
+        var value = $element.attr('value')
+        value = value.replace("[","");
+        value = value.replace("]","");
+        var lon = value.split(",")[0];
+        var lat = value.split(",")[1];
+        
+        if($(this).attr('id').includes("\lon")){
+        	$element.attr('value',  "["+$(this)[0].value+","+lat+"]");
+        }else{
+        	$element.attr('value',  "["+lon+","+$(this)[0].value+"]");
+        }
+   }
+    
 });
 
 $(document).on('input change', '.tmlinputselect', function(evt) {

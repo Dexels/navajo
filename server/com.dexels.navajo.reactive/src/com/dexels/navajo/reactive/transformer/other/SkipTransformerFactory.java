@@ -66,4 +66,8 @@ public class SkipTransformerFactory implements ReactiveTransformerFactory, Trans
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
 
+	@Override
+	public String name() {
+		return "skip";
+	}
 }

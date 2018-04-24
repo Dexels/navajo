@@ -10,6 +10,10 @@
         <input>string</input>
         <result>binary_digest</result>
     </function>
-    
+    <function name="BinaryDigest" class="com.dexels.navajo.adapters.binarystore.functions.BinaryDigest">
+        <description>A convertor to query the binary digests from a binary</description>
+        <input>binary</input>
+        <result>string</result>
+    </function>    
     
 </functiondef>

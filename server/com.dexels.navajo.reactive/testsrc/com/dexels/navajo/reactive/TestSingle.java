@@ -66,7 +66,7 @@ public class TestSingle {
 		ReactiveTransformer takeTransformer = new TakeTransformerFactory().build(problems,transformerParameter);
 		int lastIndex = ssf.build("",parameters, problems,Arrays.asList(new ReactiveTransformer[] {takeTransformer}), DataItem.Type.MESSAGE)
 			.execute(context, Optional.empty())
-			.map(e->e.message())
+			.map(e->e.stateMessage())
 			.lastOrError()
 			.map(msg->(Integer)msg.columnValue("index"))
 			.blockingGet();
@@ -85,7 +85,7 @@ public class TestSingle {
 		
 		ReactiveParameters transformerParameter = ReactiveParameters.empty()
 				.with("filter", (cxt,msg,param)->{
-					int i = ((Integer)msg.get().columnValue("index")).intValue();
+					int i = ((Integer)param.columnValue("index")).intValue();
 					boolean isEven = i % 2 == 0;
 					System.err.println("Even numer? "+i+" is even: "+isEven);
 					return new Operand( isEven,Property.BOOLEAN_PROPERTY);
@@ -96,7 +96,10 @@ public class TestSingle {
 		ReactiveTransformer filterTransformer = new FilterTransformerFactory().build(problems,transformerParameter);
 		long lastIndex = ssf.build("",parameters, problems, Arrays.asList(new ReactiveTransformer[] {filterTransformer}), DataItem.Type.MESSAGE)
 			.execute(context, Optional.empty())
-			.map(e->e.message())
+			.doOnNext(e->System.err.println("<< "+e.stateMessage()))
+			.map(
+					e->e.message()
+					)
 			.count()
 			.blockingGet();
 		System.err.println("Number of even: "+lastIndex);
@@ -120,7 +123,7 @@ public class TestSingle {
 		
 		int lastIndex = ssf.build("",parameters, problems, Arrays.asList(new ReactiveTransformer[] {skipTransformer}), DataItem.Type.MESSAGE)
 			.execute(context, Optional.empty())
-			.map(e->e.message())
+			.map(e->e.stateMessage())
 			.lastOrError()
 			.map(msg->(Integer)msg.columnValue("index"))
 			.blockingGet();

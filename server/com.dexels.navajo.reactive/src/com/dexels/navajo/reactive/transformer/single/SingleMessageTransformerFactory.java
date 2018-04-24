@@ -71,4 +71,8 @@ public class SingleMessageTransformerFactory implements ReactiveTransformerFacto
 	}
 
 
+	@Override
+	public String name() {
+		return "single";
+	}
 }

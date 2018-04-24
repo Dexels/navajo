@@ -878,6 +878,11 @@
 		<input>string</input>
 		<result>memo</result>
 	</function>
+    <function name="ToCoordinate" class="com.dexels.navajo.functions.ToCoordinate">
+        <description>Create a coordinate </description>
+        <input>string,string</input>
+        <result>coordinate</result>
+    </function>
 	<function name="ToMilliseconds" class="com.dexels.navajo.functions.ToMilliseconds">
 		<description>Get the supplied time in milliseconds (long).
 		</description>

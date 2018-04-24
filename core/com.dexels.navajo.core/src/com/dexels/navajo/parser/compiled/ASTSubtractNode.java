@@ -17,8 +17,8 @@ public final class ASTSubtractNode extends SimpleNode {
     }
     
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
-		return lazyBiFunction(problems,(a,b)->interpret(a, b),equalOrEmptyTypes(),(a,b)->Optional.empty());
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
+		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b),equalOrEmptyTypes(),(a,b)->Optional.empty());
 	}
 
 

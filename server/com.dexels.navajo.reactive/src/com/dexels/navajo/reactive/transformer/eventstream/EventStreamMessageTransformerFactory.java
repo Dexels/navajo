@@ -67,4 +67,9 @@ public class EventStreamMessageTransformerFactory implements ReactiveTransformer
 		return Optional.of(r);
 	}
 
+	@Override
+	public String name() {
+		return "eventstream";
+	}
+
 }

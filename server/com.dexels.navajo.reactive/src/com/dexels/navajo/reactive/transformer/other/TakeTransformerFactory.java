@@ -67,4 +67,8 @@ public class TakeTransformerFactory implements ReactiveTransformerFactory, Trans
 	}
 
 
+	@Override
+	public String name() {
+		return "take";
+	}
 }

@@ -17,6 +17,7 @@ import io.reactivex.Emitter;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.Single;
+import io.reactivex.SingleTransformer;
 
 public class JettyClient {
 
@@ -51,16 +52,8 @@ public class JettyClient {
 		ReactiveRequest.Builder requestBuilder = ReactiveRequest.newBuilder(req);
 		if(requestBody.isPresent()) {
 			Publisher<ContentChunk> bb = requestBody.get()
-//					.doOnNext(e->System.err.println("Bytes detected: "+new String(e)))
 					.map(e->new ContentChunk(ByteBuffer.wrap(e)));
-//					.doOnRequest(l->System.err.println("REqUESTED DATA: "+l))
-//					.doOnComplete(()->System.err.println("CLIENT_SIDE_REQUEST_COMPLETE!!!!!>>>>>>>>>>>>>>>>>>"))
-//					.doOnSubscribe(s->System.err.println("SUBSCRIBED TO INPUT"));
-//					.doOnSubscribe(e->e.request(50));
-					
-					
-//			System.err.println("Attaching request body");
-;			requestBuilder = requestBuilder.content(ReactiveRequest.Content.fromPublisher(bb, requestContentType.get()));
+			requestBuilder = requestBuilder.content(ReactiveRequest.Content.fromPublisher(bb, requestContentType.get()));
 		}
 		ReactiveRequest request = requestBuilder.build();
 		return Flowable.fromPublisher(request.response((response, content) -> Flowable.just(new ReactiveReply(response,content))));
@@ -69,6 +62,7 @@ public class JettyClient {
 	public FlowableTransformer<ReactiveReply, byte[]> responseStream() {
 		return single->single.flatMap(e->e.content).map(c->this.streamResponse(c)	).flatMap(e->e);
 	}
+
 	
 	private Flowable<byte[]> streamResponse(ContentChunk chunk) {
 		

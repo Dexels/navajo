@@ -132,12 +132,12 @@ public abstract class SimpleNode implements Node {
     		};
     }
     
-    public ContextExpression untypedLazyBiFunction(List<String> problems, BiFunction<Object, Object, Object> func) {
-    		return lazyBiFunction(problems, func, (a,b)->true, (a,b)->Optional.empty());
+    public ContextExpression untypedLazyBiFunction(List<String> problems, String expression, BiFunction<Object, Object, Object> func) {
+    		return lazyBiFunction(problems,expression, func, (a,b)->true, (a,b)->Optional.empty());
 	}
-    	public ContextExpression lazyBiFunction(List<String> problems, BiFunction<Object, Object, Object> func, BiFunction<Optional<String>, Optional<String>, Boolean> acceptTypes,  BiFunction<Optional<String>, Optional<String>, Optional<String>> returnTypeResolver) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems);
-		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems);
+    	public ContextExpression lazyBiFunction(List<String> problems, String expression, BiFunction<Object, Object, Object> func, BiFunction<Optional<String>, Optional<String>, Boolean> acceptTypes,  BiFunction<Optional<String>, Optional<String>, Optional<String>> returnTypeResolver) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression);
+		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression);
 		Optional<String> aType = expA.returnType();
 		Optional<String> bType = expB.returnType();
 		boolean inputTypesValid = acceptTypes.apply(aType, bType);
@@ -164,11 +164,16 @@ public abstract class SimpleNode implements Node {
 			public Optional<String> returnType() {
 				return returnType;
 			}
+			
+			@Override
+			public String expression() {
+				return expression;
+			}
 		};
 	}
 	
-	public ContextExpression lazyFunction(List<String> problems, Function<Object, Object> func, Optional<String> requiredReturnType) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems);
+	public ContextExpression lazyFunction(List<String> problems, String expression, Function<Object, Object> func, Optional<String> requiredReturnType) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression);
 		return new ContextExpression() {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
@@ -186,6 +191,12 @@ public abstract class SimpleNode implements Node {
 			public Optional<String> returnType() {
 				return requiredReturnType;
 			}
+			
+			@Override
+			public String expression() {
+				return expression;
+			}
+			
 		};
 	}
 	

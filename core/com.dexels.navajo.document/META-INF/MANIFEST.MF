@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Document reference implementation
 Bundle-SymbolicName: com.dexels.navajo.document
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.4.53.qualifier
+Bundle-Version: 3.5.4.qualifier
 Bundle-Activator: navajodocument.Version
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
@@ -23,6 +23,8 @@ Import-Package: com.dexels.immutable.api;version="1.0.0",
  com.fasterxml.jackson.databind;version="2.6.3",
  com.fasterxml.jackson.databind.module;version="2.6.3",
  com.fasterxml.jackson.databind.ser.std;version="2.6.3",
+ io.reactivex;version="2.1.9",
+ io.reactivex.functions;version="2.1.9",
  javax.xml,
  javax.xml.parsers,
  javax.xml.transform,
@@ -35,6 +37,7 @@ Import-Package: com.dexels.immutable.api;version="1.0.0",
  org.junit.runner;resolution:=optional,
  org.junit.runners;resolution:=optional,
  org.osgi.framework;version="1.5.0";resolution:=optional,
+ org.reactivestreams;version="1.0.2",
  org.slf4j,
  org.w3c.dom,
  org.xml.sax

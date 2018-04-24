@@ -25,7 +25,7 @@ public final class ASTTipiNode extends SimpleNode {
   }
 
 @Override
-public ContextExpression interpretToLambda(List<String> problems) {
+public ContextExpression interpretToLambda(List<String> problems, String expression) {
 	return new ContextExpression() {
 		
 		@Override
@@ -46,6 +46,11 @@ public ContextExpression interpretToLambda(List<String> problems) {
 		@Override
 		public Optional<String> returnType() {
 			return Optional.empty();
+		}
+		
+		@Override
+		public String expression() {
+			return expression;
 		}
 	};
 }

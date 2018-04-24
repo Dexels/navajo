@@ -2,7 +2,7 @@ Bundle-Name: Navajo Entity model implementation
 Bundle-SymbolicName: com.dexels.navajo.entity
 Bundle-Description: Entity
 Bundle-ManifestVersion: 2
-Bundle-Version: 6.4.13.qualifier
+Bundle-Version: 6.5.2.qualifier
 Bundle-Activator: navajoentity.Version
 Bundle-ClassPath: .
 Bundle-Vendor: Dexels
@@ -16,8 +16,9 @@ Import-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.compiler.tsl,
  com.dexels.navajo.dependency,
  com.dexels.navajo.document,
- com.dexels.navajo.document.base;version="2.2.1",
+ com.dexels.navajo.document.base,
  com.dexels.navajo.document.json,
+ com.dexels.navajo.document.types,
  com.dexels.navajo.events,
  com.dexels.navajo.events.types,
  com.dexels.navajo.mapping.compiler.meta,

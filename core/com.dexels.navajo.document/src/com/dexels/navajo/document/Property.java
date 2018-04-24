@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Coordinate;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.NavajoExpression;
 import com.dexels.navajo.document.types.Percentage;
@@ -70,6 +71,8 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String BINARY_DIGEST_PROPERTY = "binary_digest";
   public static final String STOPWATCHTIME_PROPERTY = "stopwatchtime";
 
+  public static final String COORDINATE_PROPERTY = "coordinate";
+
   public static final String SUBTYPE_REQUIRED = "required";
   public static final String SUBTYPE_POSITIVE = "positive";
   public static final String SUBTYPE_NEGATIVE = "negative";
@@ -78,7 +81,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   // Needless to say, if you add a type, add it here as well.
   public static final String[] VALID_DATA_TYPES = new String[] {
       STRING_PROPERTY, INTEGER_PROPERTY, LONG_PROPERTY, DATE_PROPERTY,
-      FLOAT_PROPERTY, MONEY_PROPERTY, CLOCKTIME_PROPERTY,
+            FLOAT_PROPERTY, MONEY_PROPERTY, CLOCKTIME_PROPERTY, COORDINATE_PROPERTY,
       URL_PROPERTY, MEMO_PROPERTY, BOOLEAN_PROPERTY, POINTS_PROPERTY,
       DATE_PATTERN_PROPERTY, PASSWORD_PROPERTY,
       TIPI_PROPERTY, BINARY_PROPERTY, EXPRESSION_PROPERTY, PERCENTAGE_PROPERTY, STOPWATCHTIME_PROPERTY, LIST_PROPERTY
@@ -356,16 +359,20 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    */
   public void setType(String type);
 
-  /**
-   * Get the value of a (string, integer, float, boolean, date, clocktime, money or memo) property.
-   *  @return String representation of this Property's value object
-   */
+    /**
+     * Get the value of a (string, integer, float, boolean, date, clocktime, money,
+     * coordinate or memo) property.
+     * 
+     * @return String representation of this Property's value object
+     */
   public String getValue();
 
-  /**
-   * Get the typed value (String, Integer, Double, Boolean, Date, Money, ClockTime, byte [])
-   * @return Object value
-   */
+    /**
+     * Get the typed value (String, Integer, Double, Boolean, Date, Money,
+     * ClockTime, Coordinate byte [])
+     * 
+     * @return Object value
+     */
   public Object getTypedValue();
 
   /**
@@ -424,6 +431,8 @@ public String toString();
   public void setValue(URL url);
 
   public void setValue(Money m);
+
+    public void setValue(Coordinate c);
 
   public void setValue(Percentage value);
 

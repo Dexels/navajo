@@ -27,11 +27,11 @@ public final class ASTListNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
 		final List<ContextExpression> exprs = new ArrayList<>();
 		boolean onlyImmutable = true;
 		for (int i = 0; i < jjtGetNumChildren(); i++) {
-			ContextExpression lmb = jjtGetChild(i).interpretToLambda(problems);
+			ContextExpression lmb = jjtGetChild(i).interpretToLambda(problems,expression);
 			exprs.add(lmb);
 			if(!onlyImmutable && !lmb.isLiteral()) {
 				onlyImmutable = false;
@@ -58,6 +58,11 @@ public final class ASTListNode extends SimpleNode {
 			@Override
 			public Optional<String> returnType() {
 				return Optional.of(Property.LIST_PROPERTY);
+			}
+			
+			@Override
+			public String expression() {
+				return expression;
 			}
 		};
 	}

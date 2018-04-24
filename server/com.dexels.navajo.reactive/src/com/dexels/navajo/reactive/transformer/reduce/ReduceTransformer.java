@@ -3,6 +3,7 @@ package com.dexels.navajo.reactive.transformer.reduce;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
@@ -35,7 +36,10 @@ public class ReduceTransformer implements ReactiveTransformer {
 			Function<DataItem,DataItem> reducer;
 			try {
 				reducer = reducers.apply(context);
-				return flow.reduce(DataItem.of(ReactiveScriptParser.empty()), (state,message)->reducer.apply(DataItem.of(message.message(), state.stateMessage()))).toFlowable();
+				return flow.reduce(DataItem.of(ImmutableFactory.empty()), (state,message)->reducer.apply(DataItem.of(message.message(), state.stateMessage())))
+						.map(d->DataItem.of(ImmutableFactory.empty(),d.stateMessage()))
+						.toFlowable();
+//				return flow.reduce(DataItem.of(ImmutableFactory.empty()), (state,message)->reducer.apply(DataItem.of(ImmutableFactory.empty(), state.stateMessage()))).toFlowable();
 			} catch (Exception e) {
 				logger.error("Error: ", context);
 			}

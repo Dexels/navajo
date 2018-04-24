@@ -14,8 +14,8 @@ public final class ASTNENode extends SimpleNode {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
-		return lazyBiFunction(problems, (a,b)->interpret(a, b),equalOrEmptyTypes(),(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
+		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),equalOrEmptyTypes(),(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
 	}
 	
 	public final Object interpret(Object a, Object b) {

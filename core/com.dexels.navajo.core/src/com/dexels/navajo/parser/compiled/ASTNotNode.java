@@ -14,9 +14,9 @@ public final class ASTNotNode extends SimpleNode {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression) {
 		
-		return lazyFunction(problems, a->interpret(a),Optional.of(Property.BOOLEAN_PROPERTY));
+		return lazyFunction(problems,expression, a->interpret(a),Optional.of(Property.BOOLEAN_PROPERTY));
 	}
 
 	public final Object interpret(Object a) {
