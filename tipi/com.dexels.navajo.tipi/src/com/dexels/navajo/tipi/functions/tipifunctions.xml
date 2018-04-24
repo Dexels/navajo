@@ -46,6 +46,11 @@
         <input>context,string</input>
         <result>object</result>
     </function>
+    <function name="GetLookup" class="com.dexels.navajo.tipi.functions.GetLookup">
+        <description>Gets a certain lookup value in the same way as the parser would have, given a certain component</description>
+        <input>component,string</input>
+        <result>object</result>
+    </function>
     <function name="GetNavajo" class="com.dexels.navajo.tipi.functions.GetNavajo">
         <description>Resolves a navajo name. Source component is required</description>
         <input>component|context,string|empty</input>
