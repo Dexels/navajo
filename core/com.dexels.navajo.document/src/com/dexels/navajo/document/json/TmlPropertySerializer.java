@@ -34,14 +34,14 @@ public class TmlPropertySerializer extends StdSerializer<Property> {
             try {
                 jg.writeString(df.format((Date) value));
             } catch (ClassCastException e) {
-                jg.writeString((String) value);
+                jg.writeString(value.toString());
             }
         } else if (property.getType().equals(Property.TIMESTAMP_PROPERTY)) {
             DateFormat df = new SimpleDateFormat(Property.TIMESTAMP_FORMAT);
             try {
                 jg.writeString(df.format((Date) value));
             } catch (ClassCastException e) {
-                jg.writeString((String) value);
+                jg.writeString(value.toString());
             }
         } else {
             JsonSerializer<Object> serializer = provider.findValueSerializer(value.getClass());
