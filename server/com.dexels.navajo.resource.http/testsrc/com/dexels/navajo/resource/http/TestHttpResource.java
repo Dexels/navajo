@@ -147,7 +147,7 @@ public class TestHttpResource {
 
 		//--------------------------------------
 
-		Thread.sleep(15000);
+		Thread.sleep(20000);
 		bsa = new BinaryStoreAdapter();
 		bsa.load(access);
 		bsa.setBinary(b);
