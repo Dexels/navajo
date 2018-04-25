@@ -6,7 +6,8 @@ Bundle-Version: 1.0.17.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Service-Component: OSGI-INF/*
-Export-Package: com.dexels.navajo.resource.http
+Export-Package: com.dexels.navajo.resource.http,
+ com.dexels.navajo.resource.http.adapter
 Import-Package: com.dexels.config.runtime;resolution:=optional,
  com.dexels.immutable.api;version="2.0.0",
  com.dexels.immutable.factory;version="1.2.0",
@@ -17,16 +18,21 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  com.dexels.navajo.document.stream;version="2.0.19",
  com.dexels.navajo.document.stream.api,
  com.dexels.navajo.document.types;version="2.2.1",
+ com.dexels.navajo.parser,
  com.dexels.navajo.reactive.api;version="1.0.0",
  com.dexels.navajo.repository.api;version="10.0.0",
  com.dexels.navajo.script.api;version="1.0.0",
  io.reactivex;version="2.1.9",
  io.reactivex.functions;version="2.1.9",
+ navajo;version="1.1.0",
+ navajoextension,
  org.apache.commons.codec.digest;version="1.10.0",
  org.eclipse.jetty.client.api;version="9.4.9",
  org.eclipse.jetty.http;version="9.4.9",
  org.eclipse.jetty.util.log;version="9.4.9",
  org.junit;version="4.0.0";resolution:=optional,
+ org.osgi.framework;version="1.8.0",
  org.reactivestreams;version="1.0.2",
  org.slf4j;version="[1.6.1,1.8.0)"
 Bundle-ActivationPolicy: lazy
+Bundle-Activator: navajohttpresource.Version

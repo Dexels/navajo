@@ -17,7 +17,6 @@ import io.reactivex.Emitter;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.Single;
-import io.reactivex.SingleTransformer;
 
 public class JettyClient {
 
@@ -48,15 +47,20 @@ public class JettyClient {
 	public  Flowable<ReactiveReply> call(String uri,Function<Request,Request> buildRequest,Optional<Flowable<byte[]>> requestBody,Optional<String> requestContentType) {
 //		Reque
 		Request req = httpClient.newRequest(uri);
-		req = buildRequest.apply(req);
-		ReactiveRequest.Builder requestBuilder = ReactiveRequest.newBuilder(req);
+		Request reqProcessed = buildRequest.apply(req);
+		ReactiveRequest.Builder requestBuilder = ReactiveRequest.newBuilder(reqProcessed);
 		if(requestBody.isPresent()) {
 			Publisher<ContentChunk> bb = requestBody.get()
 					.map(e->new ContentChunk(ByteBuffer.wrap(e)));
 			requestBuilder = requestBuilder.content(ReactiveRequest.Content.fromPublisher(bb, requestContentType.get()));
 		}
 		ReactiveRequest request = requestBuilder.build();
-		return Flowable.fromPublisher(request.response((response, content) -> Flowable.just(new ReactiveReply(response,content))));
+		return Flowable.fromPublisher(request.response((response, content) -> Flowable.just(new ReactiveReply(response,content))))
+				.doOnNext(reply->{
+//					System.err.println("Calling URI: "+uri+" headers: "+reqProcessed.getHeaders()+" method: "+reqProcessed.getMethod()+" -> "+reqProcessed.getURI());
+//					System.err.println("Reply. Result: "+reply.status()+" headers: "+reply.responseHeaders());
+				})
+				;
 	}
 
 	public FlowableTransformer<ReactiveReply, byte[]> responseStream() {

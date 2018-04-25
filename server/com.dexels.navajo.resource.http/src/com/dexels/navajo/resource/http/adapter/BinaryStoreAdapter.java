@@ -1,14 +1,12 @@
 package com.dexels.navajo.resource.http.adapter;
 
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.stream.ReactiveReply;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.resource.http.HttpResourceFactory;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
@@ -27,7 +25,7 @@ public class BinaryStoreAdapter implements Mappable {
 		this.access = access;
 	}
 
-	public ReactiveReply storeBinary(Binary b, String resource, String bucket, boolean force) throws IOException {
+	public String storeBinary(Binary b, String resource, String bucket, boolean force) throws IOException {
 		String hexDigest = b.getHexDigest();
 		String tenant = access.getTenant();
 		ReactiveReply result = HttpResourceFactory.getInstance().getHttpResource(resource)
@@ -45,18 +43,17 @@ public class BinaryStoreAdapter implements Mappable {
 		if(result.status()>=400) {
 			throw new IOException("Error inserting binary into resource: "+resource+" bucket: "+bucket+" status: "+result.status()+" headers: "+result.responseHeaders());
 		}
-		return result;
+		return hexDigest;
 	}
 	
-	public boolean headBinary(Binary b, String resource, String bucket, boolean force) throws IOException {
-		String hexDigest = b.getHexDigest();
+	public boolean headBinary(String hexDigest, String resource, String bucket) throws IOException {
 		String tenant = access.getTenant();
 		ReactiveReply result = HttpResourceFactory.getInstance().getHttpResource(resource)
-			.delete(tenant,bucket, hexDigest)
-			.filter(reply->reply.status()!=404 || force)
+			.head(tenant,bucket, hexDigest)
+//			.filter(reply->reply.status()!=404 || force)
 			.blockingGet();
 		
-		logger.info("HEAD binary with status: {}",result.status());
+		logger.info("HEAD binary with status: {} headers: {}",result.status(),"\n -> headers: "+result.responseHeaders());
 		
 		if(result.status()>=400) {
 			return false;
@@ -64,20 +61,86 @@ public class BinaryStoreAdapter implements Mappable {
 		return true;
 	}
 
-	public ReactiveReply deleteBinary(Binary b, String resource, String bucket, boolean force) throws IOException {
-		String hexDigest = b.getHexDigest();
+	public ReactiveReply deleteBinary(String hexDigest, String resource, String bucket, boolean force) throws IOException {
 		String tenant = access.getTenant();
 		ReactiveReply result = HttpResourceFactory.getInstance().getHttpResource(resource)
 			.delete(tenant,bucket, hexDigest)
-			.filter(reply->reply.status()!=404 || force)
+//			.filter(reply->reply.status()!=404 || force)
 			.blockingGet();
 		
 		logger.info("Deleted binary with status: {}",result.status());
-		
-//		if(result.status()>=400) {
-//			throw new IOException("Error inserting binary into resource: "+resource+" bucket: "+bucket);
-//		}
 		return result;
+	}
+
+	public String temporaryURL(String binaryHash, String resource, String bucket, long expiration) throws IOException {
+		return HttpResourceFactory.getInstance().getHttpResource(resource).expiringURL(access.getTenant(), bucket, binaryHash,expiration);
+	}
+
+//	public String temporaryURL(Binary binary, String resource, String bucket, long expiration) throws IOException {
+//		return temporaryURL(binary.getHexDigest(), resource, bucket, expiration);
+//	}
+//	
+	public void setExpiration(Object expiration) {
+		System.err.println("Setting expiration: "+expiration);
+		if(expiration instanceof Long) {
+			this.expiration = (Long)expiration;
+			return;
+		}
+
+		if(expiration instanceof Integer) {
+			this.expiration = (Integer)expiration;
+			return;
+		}
+		logger.info("Error setting expiration: Weird type: "+expiration.getClass());
+	}
+
+	public void setBinary(Binary binary) {
+		this.binary = binary;
+	}
+
+	public void setBinaryHash(String binaryHash) {
+		this.binaryHash = binaryHash;
+	}
+
+	public void setResource(String resource) {
+		this.resource = resource;
+	}
+
+	public void setBucket(String bucket) {
+		this.bucket = bucket;
+	}
+
+	private long expiration;
+	private Binary binary;
+	private String binaryHash;
+	private String resource;
+	private String bucket;
+	private String putResult;
+
+	
+	public String getTemporaryURL() throws IOException {
+		String hash = binaryHash!=null ? binaryHash : binary.getHexDigest();
+		return temporaryURL(hash, resource, bucket, expiration);
+	}
+
+	public String getPutResult() throws IOException {
+		return storeBinary(this.binary,  this.resource,this.bucket,false);
+	}
+
+	
+	public int getDeleteResult() throws IOException {
+		String hash = binaryHash!=null ? binaryHash : binary.getHexDigest();
+		ReactiveReply reply =  deleteBinary(hash,  this.resource,this.bucket,false);
+		return reply.status();
+	}
+
+	public void setPutResult(String digest) {
+		logger.info("Put result with digest: {}",digest);
+		this.putResult = digest;
+	}
+	public boolean getHeadResult() throws IOException {
+		String hash = binaryHash!=null ? binaryHash : binary.getHexDigest();
+		return headBinary(hash,  this.resource,this.bucket);
 	}
 	
 	@Override

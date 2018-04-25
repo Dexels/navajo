@@ -15,6 +15,7 @@ import io.reactivex.Single;
 
 public interface HttpResource {
 	
+	public static final int BUFFER_SIZE = 16384;
 	
 
 	public Single<ReactiveReply> put(String tenant, String bucket, String id, String type, Publisher<byte[]> data);
@@ -29,7 +30,7 @@ public interface HttpResource {
 
 		logger.info("Size of binary: "+data.getLength());
 		String type = Optional.ofNullable(data.getMimeType()).orElse(data.guessContentType());
-		return put(tenant,bucket,id,type,this.flowBinary(data, 100));
+		return put(tenant,bucket,id,type,this.flowBinary(data, BUFFER_SIZE));
 	}
 	default public Binary getBinary(String tenant,String bucket, String id) throws IOException {
 		Binary result = new Binary();
@@ -51,7 +52,6 @@ public interface HttpResource {
 
 	
 	public String getURL();
-	public String expiringURL(String tenant, String bucket, String id);
-	public Binary lazyBinary(String tenant, String bucket, String id) throws IOException;
-	
+	public String expiringURL(String tenant, String bucket, String id, long expiration);
+	public Binary lazyBinary(String tenant, String bucket, String id, long expire) throws IOException;
 }

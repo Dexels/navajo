@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<functiondef>
+    <function name="GetBinaryFromStore" class="com.dexels.navajo.resource.http.function.GetBinaryFromStore">
+        <description>Gets a binary as a temporary url (resource,bucket,id,expiration)</description>
+        <input>string,string,string,integer</input>
+        <result>string</result>
+    </function>
+
+    <function name="StoreBinary" class="com.dexels.navajo.resource.http.function.PutBinaryFromStore">
+        <description>Uploads a binary to the binary store</description>
+        <input>string,string,binary</input>
+        <result>integer</result>
+    </function>    
+
+    <function name="DeleteBinary" class="com.dexels.navajo.resource.http.function.PutBinaryFromStore">
+        <description>Deletes a binary from the binary store</description>
+        <input>string,string,string</input>
+        <result>integer</result>
+    </function>    
+
+
+    <function name="ExistsBinaryInStore" class="com.dexels.navajo.resource.http.function.ExistsBinaryInStore">
+        <description>Gets a binary as a temporary url (resource,bucket,id)</description>
+        <input>string,string,string</input>
+        <result>boolean</result>
+    </function>
+</functiondef>

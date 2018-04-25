@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -25,26 +25,26 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;
 
-import io.reactivex.Flowable;
-
 public class TestHttpResource {
 
-	private HttpResourceFactory factory;
+	private  HttpResourceFactory factory;
 	private Access access;
+	private ResourceComponent component;
 
 	@Before
-	public void setUp() throws Exception {
+	public  void setUp() throws Exception {
 		
 		this.access = new Access();
 		access.setTenant("MYTENANT");
 		
 		factory = new HttpResourceFactory();
-		ResourceComponent component = new ResourceComponent();
-		
+		component = new ResourceComponent();
 		RepositoryInstance instance = createStubInstance("test");
 		component.setRepositoryInstance(instance);
 		Map<String,Object> settings = new HashMap<String, Object>();
-		settings.put("url", TestConfig.HTTP_TEST_URL.getValue());
+		String url = TestConfig.HTTP_TEST_URL.getValue();
+		Assert.assertNotNull(url);
+		settings.put("url", url);
 		settings.put("name", "binstore");
 		settings.put("authorization", TestConfig.HTTP_TEST_TOKEN.getValue());
 		settings.put("secret", TestConfig.HTTP_TEST_SECRET.getValue());
@@ -58,34 +58,129 @@ public class TestHttpResource {
 
 	@After
 	public void tearDown() throws Exception {
-		HttpResourceFactory.getInstance().deactivate();	
+//		HttpResourceFactory.getInstance().deactivate();	
+		factory.deactivate();
+//		HttpResourceFactory.setInstance(null);
 	}
 
-	@Test
-	public void testStoreAdapter() throws IOException, MappableException, UserException {
+	@Test 
+	public void testHead() throws IOException, MappableException, UserException {
 		BinaryStoreAdapter bsa = new BinaryStoreAdapter();
-		
-		
-		
 		bsa.load(access);
-		byte[] content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.".getBytes();
-		Binary b = new Binary(content);
-		System.err.println(">>>> HASH: "+b.getHexDigest());
+		Binary b = createBinary();
 		b.setMimeType("text/plain");
-		ReactiveReply result = bsa.deleteBinary(b, "binstore", "junit", false);
-		System.err.println("Delete: "+result.status());
-		boolean exists = bsa.headBinary(b, "binstore", "junit", false);
+		boolean exists = bsa.headBinary(b.getHexDigest(), "binstore", "junit");
 		Assert.assertFalse(exists);
-		System.err.println("exists after delete: "+exists);
-			
-		ReactiveReply bb = bsa.storeBinary(b, "binstore", "junit", false);
-		System.err.println("Result of put: "+bb);
-		boolean existsNow = bsa.headBinary(b, "binstore", "junit", false);
-		Assert.assertTrue(existsNow);
-		System.err.println("exists after insert: "+existsNow);
-
 	}
 	
+	@Test
+	public void testDelete() throws IOException, MappableException, UserException {
+		BinaryStoreAdapter bsa = new BinaryStoreAdapter();
+		bsa.load(access);
+		Binary b = createBinary();
+
+		System.err.println(">>>> HASH: "+b.getHexDigest());
+		b.setMimeType("text/plain");
+		ReactiveReply reply = bsa.deleteBinary(b.getHexDigest(), "binstore", "junit", false);
+		Assert.assertNotSame(200, reply.status());
+	}
+
+	@Test 
+	public void testPut() throws IOException, MappableException, UserException {
+		BinaryStoreAdapter bsa = new BinaryStoreAdapter();
+		bsa.load(access);
+		Binary b = createBinary();
+
+		String digest = bsa.storeBinary(b, "binstore", "junit", false);
+	}
+
+	
+	@Test 
+	public void testStoreAdapterBasics() throws IOException, MappableException, UserException, InterruptedException {
+		BinaryStoreAdapter bsa = new BinaryStoreAdapter();
+		bsa.load(access);
+		Binary b = createBinary();
+
+		String bb = bsa.storeBinary(b, "binstore", "junit", false);
+		System.err.println("Result of put: "+bb);
+		
+//		Thread.sleep(1000);
+		boolean existsNow = bsa.headBinary(b.getHexDigest(), "binstore", "junit");
+		Assert.assertTrue(existsNow);
+		System.err.println("exists after insert: "+existsNow);
+//		Thread.sleep(1000);
+
+		ReactiveReply result = bsa.deleteBinary(b.getHexDigest(), "binstore", "junit", false);
+		System.err.println("Delete: "+result.status());
+
+//		Thread.sleep(1000);
+
+		boolean exists = bsa.headBinary(b.getHexDigest(), "binstore", "junit");
+		Assert.assertFalse(exists);
+		System.err.println("exists after delete: "+exists);
+
+	}
+
+	@Test 
+	public void testStoreAdapterAdvanced() throws IOException, MappableException, UserException, InterruptedException {
+		Binary b = createBinary();
+
+		BinaryStoreAdapter bsa = new BinaryStoreAdapter();
+		bsa.load(access);
+		bsa.setBinaryHash(b.getHexDigest());
+		bsa.setResource("binstore");
+		bsa.setBucket("junit");
+		int delres = bsa.getDeleteResult();
+		bsa.store();
+//		Assert.assertTrue(delres<400);
+
+		//--------------------------------------
+
+		bsa = new BinaryStoreAdapter();
+		bsa.load(access);
+		bsa.setBinaryHash(b.getHexDigest());
+		bsa.setResource("binstore");
+		bsa.setBucket("junit");
+		boolean existsAfterDelete  = bsa.getHeadResult();
+		bsa.store();
+		Assert.assertFalse(existsAfterDelete);
+
+		//--------------------------------------
+
+		Thread.sleep(15000);
+		bsa = new BinaryStoreAdapter();
+		bsa.load(access);
+		bsa.setBinary(b);
+		String hexDigest = b.getHexDigest();
+		bsa.setResource("binstore");
+		bsa.setBucket("junit");
+		String put  = bsa.getPutResult();
+		bsa.store();
+		Assert.assertTrue(hexDigest.equals(put));
+
+		//--------------------------------------
+		Thread.sleep(5000);
+		bsa = new BinaryStoreAdapter();
+		bsa.load(access);
+		bsa.setBinaryHash(b.getHexDigest());
+		bsa.setResource("binstore");
+		bsa.setBucket("junit");
+		boolean existsAfterPut  = bsa.getHeadResult();
+		bsa.store();
+//		Thread.sleep(10000);
+		Assert.assertTrue(existsAfterPut);
+		//--------------------------------------
+
+
+	}
+
+	private Binary createBinary() {
+		byte[] content = ("The time is:"+System.currentTimeMillis()+" :Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.").getBytes();
+		Binary b = new Binary(content);
+		b.setMimeType("text/plain");
+		return b;
+	}
+
 	
 	private RepositoryInstance createStubInstance(String deployment) {
 		return new RepositoryInstance() {
