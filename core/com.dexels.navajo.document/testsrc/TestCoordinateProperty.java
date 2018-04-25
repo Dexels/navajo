@@ -52,6 +52,13 @@ public class TestCoordinateProperty {
         }
 
         try {
+            Coordinate c = new Coordinate("[-1, 3]");
+            assertEquals(c.toString(), "[-1.0,3.0]");
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+
+        try {
             Coordinate c = new Coordinate("-1 3");
             assertEquals(c.toString(), "[-1.0,3.0]");
         } catch (Exception e) {

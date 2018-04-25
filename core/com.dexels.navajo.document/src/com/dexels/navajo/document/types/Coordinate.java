@@ -1,6 +1,8 @@
 package com.dexels.navajo.document.types;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +28,10 @@ public class Coordinate extends NavajoType implements Serializable {
     public Coordinate(String arrStr) throws Exception {
         // check if format is correct.
         if (!(arrStr.matches(
-                "\\[[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*\\]|[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*|[+-]{0,1}\\d+\\.{0,1}\\d* [+-]{0,1}\\d+\\.{0,1}\\d*"))) { // -18
+                "\\[[+-]{0,1}\\d+\\.{0,1}\\d*, [+-]{0,1}\\d+\\.{0,1}\\d*\\]|\\[[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*\\]|[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*|[+-]{0,1}\\d+\\.{0,1}\\d* [+-]{0,1}\\d+\\.{0,1}\\d*"))) { // -18
             throw new Exception("Not valid format given :: " + arrStr + ". Please use '[x,y]', 'x,y' or 'x y'");
         } else {
-            String mydata = arrStr.replaceAll("\\[", "").replaceAll("\\]", "");
+            String mydata = arrStr.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(", ", ",");
             String[] vals = mydata.split(",| ");
 
             this.latitude = Double.parseDouble(vals[1]);
@@ -86,6 +88,13 @@ public class Coordinate extends NavajoType implements Serializable {
             this.longitude = new Double(longitude + "");
         }
         verifyCoordinates();
+    }
+
+    public List<Double> getCoordinatesAsList() {
+        ArrayList<Double> arr = new ArrayList<>();
+        arr.add(this.getLongitude());
+        arr.add(this.getLatitude());
+        return arr;
     }
 
     @Override

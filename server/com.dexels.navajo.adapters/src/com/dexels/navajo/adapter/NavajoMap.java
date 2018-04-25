@@ -79,6 +79,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     public String username = null;
     public String password = null;
     public String tenant = null;
+    public String locale = null;
     public String server = null;
     // For scheduling tasks from NavajoMap.
     public String trigger = null;
@@ -629,6 +630,10 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     public void setTenant(String t) {
         this.tenant = t;
+    }
+    
+    public void setLocale(String locale) {
+    		this.locale = locale;
     }
 
     /**
@@ -1503,7 +1508,9 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             h.setHeaderAttribute("parentaccessid", access.accessID);
             h.setHeaderAttribute("application", access.getApplication());
             h.setHeaderAttribute("organization", access.getOrganization());
-            if (access.getInDoc() != null && 
+            if (locale != null && !locale.equals("")) {
+    				h.setHeaderAttribute("locale", locale);
+            	} else if (access.getInDoc() != null && 
                     access.getInDoc().getHeader().getHeaderAttribute("locale") != null) {
                 h.setHeaderAttribute("locale", access.getInDoc().getHeader().getHeaderAttribute("locale"));
             }
