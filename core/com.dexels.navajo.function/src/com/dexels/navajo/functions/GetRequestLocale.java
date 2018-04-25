@@ -22,7 +22,6 @@ public class GetRequestLocale  extends FunctionInterface {
        }
       
        return DEFAULT_LOCALE;
-       
     }
 
 
