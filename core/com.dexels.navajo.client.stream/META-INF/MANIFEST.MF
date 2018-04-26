@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Stream based Navajo Client
 Bundle-SymbolicName: com.dexels.navajo.client.stream
-Bundle-Version: 1.0.2.qualifier
+Bundle-Version: 1.0.4.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.config.runtime;resolution:=optional,
@@ -37,5 +37,5 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  org.slf4j;version="1.7.0"
 Bundle-ClassPath: lib/jetty-reactive-httpclient-0.9.3-SNAPSHOT.jar,
  .
-Export-Package: com.dexels.navajo.client.stream;version="1.0.2",
- com.dexels.navajo.client.stream.jetty;version="1.0.2"
+Export-Package: com.dexels.navajo.client.stream;version="1.0.4",
+ com.dexels.navajo.client.stream.jetty;version="1.0.4"

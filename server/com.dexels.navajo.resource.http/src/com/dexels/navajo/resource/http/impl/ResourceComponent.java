@@ -35,7 +35,6 @@ public class ResourceComponent implements HttpResource {
 	private JettyClient client = null;
 	private String authorization;
 	private Optional<String> secret;
-	private Integer expire;
 	private String deployment;
 	
 	public void activate(Map<String, Object> settings) throws Exception {
@@ -44,7 +43,7 @@ public class ResourceComponent implements HttpResource {
 		String u = (String) settings.get("url");
 		this.authorization = (String) settings.get("authorization");
 		this.secret = Optional.ofNullable((String) settings.get("secret"));
-		this.expire = Integer.parseInt( Optional.ofNullable((String) settings.get("expire")).orElse("3600"));
+//		this.expire = Integer.parseInt( Optional.ofNullable((String) settings.get("expire")).orElse("3600"));
 		this.url = u.endsWith("/") ? u : u+"/";
 	}
 
@@ -79,7 +78,7 @@ public class ResourceComponent implements HttpResource {
 		return client.callWithBody(assembleURL(tenant,bucket, id), 
 					r->r.header("Authorization", this.authorization)
 						.method(HttpMethod.PUT)
-				,Flowable.fromPublisher(data),type)
+				,Flowable.fromPublisher(data).doOnNext(b->System.err.println("Bytes detected:"+b.length)),type)
 				.firstOrError();
 	}
 
@@ -107,8 +106,14 @@ public class ResourceComponent implements HttpResource {
 
 
 	private String assembleURL(String tenant, String bucket, String id) {
-		String u = this.url+tenant+"-"+deployment+"-"+bucket+"/"+id;
+		String u = this.url+resolveBucket(tenant, bucket)+"/"+id;
 		System.err.println("Assembling: "+u);
+		return u;
+	}
+	
+	private String resolveBucket(String tenant, String bucket) {
+		String u = tenant+"-"+deployment+"-"+bucket;
+		System.err.println("Resolved bucket: "+u);
 		return u;
 	}
 
@@ -143,10 +148,11 @@ public class ResourceComponent implements HttpResource {
 	}
 
 	@Override
-	public String expiringURL(String tenant, String bucket, String id) {
-		long unixTimestamp = Instant.now().getEpochSecond()+this.expire;
+	public String expiringURL(String tenant, String bucket, String id, long expire) {
+		long unixTimestamp = Instant.now().getEpochSecond()+expire;
+		System.err.println("Assembling url to last "+expire+" seconds into the future. Epoch time: "+unixTimestamp);
 		long exp = unixTimestamp+expire;
-		String totalURL = assembleURL(tenant,bucket, id)+"?expires="+exp+"&sig="+sign(bucket, id,exp);
+		String totalURL = assembleURL(tenant,bucket, id)+"?expires="+exp+"&sig="+sign(resolveBucket(tenant, bucket), id,exp);
 		System.err.println("URL: "+totalURL);
 		return totalURL;
 	}
@@ -165,20 +171,16 @@ public class ResourceComponent implements HttpResource {
 		}
 		
 		String path = Long.toString(expirationTime)+"/"+bucket+"/"+id;
+		System.err.println("Signing path: "+path);
 		String encoded = HmacUtils.hmacSha1Hex(this.secret.get(), path);
 
-		//		Expires = 1513890085 (21 december 2017, 21:01:25)
-//				Sig = Hex(HMAC-SHA1("1513890085/example/test1.png", fc6a0bd4d36da7a47fa8d4)) = eb00233f016e11a40cfafd806647c259f261915c
-
-//		String encoded = HmacUtils.hmacSha1Hex("fc6a0bd4d36da7a47fa8d4", "1513890085/example/test1.png");
-		System.err.println("Encoded: "+encoded);
+		System.err.println("Encoded: "+encoded+" encoding path: "+path+" -> secret: "+this.secret.get()+" -> result: "+encoded);
 		return encoded;
-//		DigestUtils.sha1Hex("1513890085/example/test1.png")
 	}
 	
 	@Override
-	public Binary lazyBinary(String tenant, String bucket, String id) throws IOException {
-		URL u = new URL(expiringURL(tenant, bucket, id));
+	public Binary lazyBinary(String tenant, String bucket, String id, long expire) throws IOException {
+		URL u = new URL(expiringURL(tenant, bucket, id,expire));
 		return new Binary(u, true);
 	}
 }

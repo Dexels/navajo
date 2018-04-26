@@ -1,0 +1,35 @@
+<adapterdef>
+    <map>
+        <tagname>binstore</tagname>
+        <object>com.dexels.navajo.resource.http.adapter.BinaryStoreAdapter</object>
+        <values>
+            <value name="resource" type="string" required="true" direction="in"/>
+            <value name="binaryHash" type="string" required="false" direction="in"/>
+            <value name="binary" type="binary" required="false" direction="in"/>
+            <value name="bucket" type="string" required="true" direction="in"/>
+            <value name="putResult" type="String" required="false" direction="out"/>
+            <value name="headResult" type="integer" required="false" direction="out"/>
+            <value name="deleteResult" type="integer" required="false" direction="out"/>
+            	<value name="expiration" type="integer" required="false" direction="in"/>
+        </values>
+        <methods>
+            <method name="put">
+                <param name="binary" field="binary" type="binary" required="true"/>
+                <param name="putResult" field="putResult" type="string" required="false"/>
+            </method>
+            <method name="delete">
+                <param name="resource" field="resource" type="string" required="true"/>
+                <param name="id" field="binaryHash" type="binary" required="true"/>
+                <param name="bucket" field="bucket" type="string" required="true"/>
+                <param name="deleteResult" field="deleteResult" type="integer" required="automatic" value="true"/>
+            </method>
+            <method name="getURL">
+                <param name="resource" field="resource" type="string" required="true"/>
+                <param name="binaryHash" field="binaryHash" type="string" required="true"/>
+                <param name="bucket" field="bucket" type="string" required="true"/>
+                <param name="url" field="temporaryURL" type="string" required="false"/>
+            </method>
+        </methods>
+    </map>
+    
+    </adapterdef>
