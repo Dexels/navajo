@@ -48,6 +48,7 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 import com.dexels.navajo.reactive.mappers.Delete;
 import com.dexels.navajo.reactive.mappers.DeleteSubMessage;
 import com.dexels.navajo.reactive.mappers.JsonFileAppender;
+import com.dexels.navajo.reactive.mappers.Log;
 import com.dexels.navajo.reactive.mappers.Rename;
 import com.dexels.navajo.reactive.mappers.SetSingle;
 import com.dexels.navajo.reactive.mappers.SetSingleKeyValue;
@@ -82,6 +83,7 @@ public class ReactiveScriptParser {
 		reactiveReducer.put("deleteAll", new DeleteSubMessage());
 		reactiveReducer.put("rename", new Rename());
 		reactiveReducer.put("dump", new JsonFileAppender());
+		reactiveReducer.put("log", new Log());
 		reactiveReducer.put("saveall", new Store());
 		reactiveReducer.put("save", new StoreSingle());
 		reactiveReducer.put("store", new StoreAsSubMessage());
