@@ -121,11 +121,11 @@ class NavajoMessage(val parent: Message) {
        var checkNext = true
        val st = new StringTokenizer(orderBy, ",")
        while (st.hasMoreElements() && checkNext) {
-        var elem = st.nextToken().trim();
+        var elem = st.nextToken().trim().toUpperCase()
         var asc = true;
         if (elem.contains(" ")) {
           val splitted = elem.split(" ")
-          elem = splitted(0)
+          elem = splitted(0).trim()
           asc = !splitted(1).equals("DESC")
         }
         val prop1 = msg1.property(elem)
