@@ -117,9 +117,10 @@ class NavajoMessage(val parent: Message) {
     // Sort the messages
   def sort(orderBy:String)(f: NavajoMessage => Unit) : Unit = {
     this.sort((msg1, msg2) => {
-       var result : Boolean = true
+       var result = true
+       var checkNext = true
        val st = new StringTokenizer(orderBy, ",")
-       while (st.hasMoreElements() && result) {
+       while (st.hasMoreElements() && checkNext) {
         var elem = st.nextToken();
         var asc = true;
         if (elem.contains(" ")) {
@@ -128,16 +129,18 @@ class NavajoMessage(val parent: Message) {
           asc = !splitted(1).equals("DESC")
         }
         val prop1 = msg1.property(elem)
-        val prop2 = msg2.property(elem).getOrElse(null)
+        val prop2Value = msg2.property(elem).getOrElse(null)
         if (prop1.isDefined) {
-          val myResult = if (asc) prop1.get.compareTo(prop2) < 0 else  prop1.get.compareTo(prop2) > 0
-          result = result && myResult
+          val res = if (asc) prop1.get.compareTo(prop2Value) else prop2Value.compareTo(prop1.get)
+          if (res != 0) {
+            checkNext = false 
+            result = res < 0;
+          } 
         }
       }
       result
     })(f)
   }
-  
 
   def one(f: NavajoMessage => Unit) = {
     f(this)
