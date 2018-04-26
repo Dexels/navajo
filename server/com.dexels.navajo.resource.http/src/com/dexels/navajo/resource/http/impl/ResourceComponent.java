@@ -78,7 +78,7 @@ public class ResourceComponent implements HttpResource {
 		return client.callWithBody(assembleURL(tenant,bucket, id), 
 					r->r.header("Authorization", this.authorization)
 						.method(HttpMethod.PUT)
-				,Flowable.fromPublisher(data).doOnNext(b->System.err.println("Bytes detected:"+b.length)),type)
+				,Flowable.fromPublisher(data).doOnNext(b->logger.debug("Bytes detected:"+b.length)),type)
 				.firstOrError();
 	}
 
@@ -107,13 +107,13 @@ public class ResourceComponent implements HttpResource {
 
 	private String assembleURL(String tenant, String bucket, String id) {
 		String u = this.url+resolveBucket(tenant, bucket)+"/"+id;
-		System.err.println("Assembling: "+u);
+		logger.debug("Assembling: "+u);
 		return u;
 	}
 	
 	private String resolveBucket(String tenant, String bucket) {
 		String u = tenant+"-"+deployment+"-"+bucket;
-		System.err.println("Resolved bucket: "+u);
+		logger.debug("Resolved bucket: "+u);
 		return u;
 	}
 
@@ -150,10 +150,10 @@ public class ResourceComponent implements HttpResource {
 	@Override
 	public String expiringURL(String tenant, String bucket, String id, long expire) {
 		long unixTimestamp = Instant.now().getEpochSecond()+expire;
-		System.err.println("Assembling url to last "+expire+" seconds into the future. Epoch time: "+unixTimestamp);
+		logger.info("Assembling url to {} in {} lasting {} seconds into the future", id, bucket, expire);
 		long exp = unixTimestamp+expire;
 		String totalURL = assembleURL(tenant,bucket, id)+"?expires="+exp+"&sig="+sign(resolveBucket(tenant, bucket), id,exp);
-		System.err.println("URL: "+totalURL);
+		logger.debug("URL: "+totalURL);
 		return totalURL;
 	}
 	private String sign(String bucket, String id, long expirationTime) {
@@ -171,10 +171,10 @@ public class ResourceComponent implements HttpResource {
 		}
 		
 		String path = Long.toString(expirationTime)+"/"+bucket+"/"+id;
-		System.err.println("Signing path: "+path);
+		logger.debug("Signing path: "+path);
 		String encoded = HmacUtils.hmacSha1Hex(this.secret.get(), path);
 
-		System.err.println("Encoded: "+encoded+" encoding path: "+path+" -> secret: "+this.secret.get()+" -> result: "+encoded);
+		logger.debug("Encoded: "+encoded+" encoding path: "+path+" -> secret: "+this.secret.get()+" -> result: "+encoded);
 		return encoded;
 	}
 	
