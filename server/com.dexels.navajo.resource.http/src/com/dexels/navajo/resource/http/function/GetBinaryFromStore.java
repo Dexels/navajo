@@ -15,38 +15,33 @@ public class GetBinaryFromStore extends FunctionInterface{
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		String resource = (String) super.getOperand(0);
+		String resource = (String) getOperand(0);
 		if(resource==null) {
-			throw new TMLExpressionException("No resource defined in GetBinary");
+			throw new TMLExpressionException("No resource defined in GetBinaryFromStore");
 		}
-		String bucket = (String) super.getOperand(1);
+		String bucket = (String) getOperand(1);
 		if(bucket==null) {
-			throw new TMLExpressionException("No bucket defined in GetBinary");
+			throw new TMLExpressionException("No bucket defined in GetBinaryFromStore");
 		}
-		String id = (String) super.getOperand(2);
+		String id = (String) getOperand(2);
 		if(id==null) {
-			throw new TMLExpressionException("No id defined in GetBinary");
-		}
-		Access access = this.getAccess();
-		if(access==null) {
-			throw new TMLExpressionException("No access defined in GetBinary");
-		}
-		String tenant = access.getTenant();
-		if(tenant==null) {
-			throw new TMLExpressionException("No tenant defined in GetBinary");
+			throw new TMLExpressionException("No id defined in GetBinaryFromStore");
 		}
 		Integer expiration = (Integer) super.getOperand(3);
-		if(expiration==null) {
-			throw new TMLExpressionException("No expiration defined in GetBinary");
-		}
+        if(expiration==null) {
+            throw new TMLExpressionException("No expiration defined in GetBinaryFromStore");
+        }
+		
+		Access access = this.getAccess();
+		String tenant = access.getTenant();
 
 		HttpResourceFactory instance = HttpResourceFactory.getInstance();
 		if(instance==null) {
-			throw new TMLExpressionException("No HttpResourceFactory found in GetBinary");
+			throw new TMLExpressionException("No HttpResourceFactory found in GetBinaryFromStore");
 		}
 		HttpResource httpResource = instance.getHttpResource(resource);
 		if(httpResource==null) {
-			throw new TMLExpressionException("HttpResource: "+resource+" found in GetBinary");
+			throw new TMLExpressionException("HttpResource: "+resource+" not found in GetBinaryFromStore");
 		}
 		return httpResource.expiringURL(tenant, bucket, id,expiration);
 	}
