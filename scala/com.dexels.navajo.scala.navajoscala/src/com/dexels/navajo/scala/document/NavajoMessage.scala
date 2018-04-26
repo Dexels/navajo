@@ -121,7 +121,7 @@ class NavajoMessage(val parent: Message) {
        var checkNext = true
        val st = new StringTokenizer(orderBy, ",")
        while (st.hasMoreElements() && checkNext) {
-        var elem = st.nextToken().trim().toUpperCase()
+        var elem = st.nextToken().trim()
         var asc = true;
         if (elem.contains(" ")) {
           val splitted = elem.split(" ")
