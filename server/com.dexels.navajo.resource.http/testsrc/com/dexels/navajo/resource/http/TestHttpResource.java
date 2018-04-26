@@ -8,10 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.config.runtime.TestConfig;
@@ -79,7 +77,6 @@ public class TestHttpResource {
 		bsa.load(access);
 		Binary b = createBinary();
 
-		System.err.println(">>>> HASH: "+b.getHexDigest());
 		b.setMimeType("text/plain");
 		ReactiveReply reply = bsa.deleteBinary(b.getHexDigest(), "binstore", "junit", false);
 		Assert.assertNotSame(200, reply.status());
@@ -91,7 +88,7 @@ public class TestHttpResource {
 		bsa.load(access);
 		Binary b = createBinary();
 
-		String digest = bsa.storeBinary(b, "binstore", "junit", false);
+		bsa.storeBinary(b, "binstore", "junit", false);
 	}
 
 	
@@ -104,16 +101,13 @@ public class TestHttpResource {
 		String bb = bsa.storeBinary(b, "binstore", "junit", false);
 		System.err.println("Result of put: "+bb);
 		
-//		Thread.sleep(1000);
 		boolean existsNow = bsa.headBinary(b.getHexDigest(), "binstore", "junit");
 		Assert.assertTrue(existsNow);
 		System.err.println("exists after insert: "+existsNow);
-//		Thread.sleep(1000);
 
 		ReactiveReply result = bsa.deleteBinary(b.getHexDigest(), "binstore", "junit", false);
 		System.err.println("Delete: "+result.status());
 
-//		Thread.sleep(1000);
 
 		boolean exists = bsa.headBinary(b.getHexDigest(), "binstore", "junit");
 		Assert.assertFalse(exists);
@@ -132,7 +126,7 @@ public class TestHttpResource {
 		bsa.setBucket("junit");
 		int delres = bsa.getDeleteResult();
 		bsa.store();
-//		Assert.assertTrue(delres<400);
+		Assert.assertTrue(delres<400);
 
 		//--------------------------------------
 
@@ -147,7 +141,6 @@ public class TestHttpResource {
 
 		//--------------------------------------
 
-		Thread.sleep(20000);
 		bsa = new BinaryStoreAdapter();
 		bsa.load(access);
 		bsa.setBinary(b);
@@ -159,7 +152,6 @@ public class TestHttpResource {
 		Assert.assertTrue(hexDigest.equals(put));
 
 		//--------------------------------------
-		Thread.sleep(5000);
 		bsa = new BinaryStoreAdapter();
 		bsa.load(access);
 		bsa.setBinaryHash(b.getHexDigest());
@@ -167,7 +159,6 @@ public class TestHttpResource {
 		bsa.setBucket("junit");
 		boolean existsAfterPut  = bsa.getHeadResult();
 		bsa.store();
-//		Thread.sleep(10000);
 		Assert.assertTrue(existsAfterPut);
 		//--------------------------------------
 
