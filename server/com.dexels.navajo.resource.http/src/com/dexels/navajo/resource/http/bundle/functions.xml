@@ -7,13 +7,13 @@
         <result>string</result>
     </function>
 
-    <function name="StoreBinary" class="com.dexels.navajo.resource.http.function.PutBinaryFromStore">
+    <function name="StoreBinary" class="com.dexels.navajo.resource.http.function.StoreBinary">
         <description>Uploads a binary to the binary store</description>
         <input>string,string,binary</input>
         <result>integer</result>
     </function>    
 
-    <function name="DeleteBinary" class="com.dexels.navajo.resource.http.function.PutBinaryFromStore">
+    <function name="DeleteBinary" class="com.dexels.navajo.resource.http.function.DeleteBinary">
         <description>Deletes a binary from the binary store</description>
         <input>string,string,string</input>
         <result>integer</result>
