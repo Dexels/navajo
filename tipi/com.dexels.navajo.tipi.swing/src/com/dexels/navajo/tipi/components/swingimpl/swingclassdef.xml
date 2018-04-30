@@ -502,6 +502,14 @@
             <param name="propertyName" type="string" />
             <param name="value" type="object" />
          </method>
+         <method name="setPropertyFilter">
+            <description>
+               Select the property filter
+            </description>
+            <param name="propertyName" type="string" />
+            <param name="value" type="object" />
+            <param name="operator" type="string" />
+         </method>
          <method name="updateConditionalRemarks">
             <description>
                Refreshes the conditional remarks.

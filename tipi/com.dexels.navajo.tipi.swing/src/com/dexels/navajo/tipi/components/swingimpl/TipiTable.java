@@ -853,6 +853,17 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
                             logger.error("Error detected", ex1);
                         }
                     }
+                    if ("setPropertyFilter".equals(name)) {
+                        Operand name = compMeth.getEvaluatedParameter("propertyName", event);
+                        Operand value = compMeth.getEvaluatedParameter("value", event);
+                        Operand operator = compMeth.getEvaluatedParameter("operator", event);
+                        
+                        Property property = NavajoFactory.getInstance().createProperty(null, "unknown", "string", value.value.toString(), 0, "", Property.DIR_IN);
+                        
+                        mm.getTable().addPropertyFilter((String) name.value, property, (String) operator.value);
+                        
+                    }
+                    
                     if ("selectByValue".equals(name)) {
                         Operand name = compMeth.getEvaluatedParameter("propertyName", event);
                         Operand value = compMeth.getEvaluatedParameter("value", event);
