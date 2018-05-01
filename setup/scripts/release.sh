@@ -14,11 +14,11 @@ else
    environmentSwitch=" -Denvironment=release"
 fi
 mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=$1 $environmentSwitch
-mvn deploy -Dmaven.test.failure.ignore=true  -Dbranch=$branch_name $environmentSwitch
+mvn deploy -DskipTests -Dmaven.test.failure.ignore=true  -Dbranch=$branch_name $environmentSwitch
 git commit -m "$commitMsg" -a
 git tag -a -f "$releaseTag" -m "$commitMsg"
 mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=$2-SNAPSHOT $environmentSwitch
-mvn deploy -Dmaven.test.failure.ignore=true  -Dbranch=$branch_name $environmentSwitch
+mvn deploy -DskipTests -Dmaven.test.failure.ignore=true  -Dbranch=$branch_name $environmentSwitch
 git commit -m "Development stream of ${PWD##*/} version $2" -a
 git push --tags
 git push
