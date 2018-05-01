@@ -22,14 +22,14 @@ public final class ASTLTNode extends SimpleNode {
     }
 	@Override
 	public ContextExpression interpretToLambda(List<String> problems, String expression) {
-		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
+		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b,expression),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
 	}
 	
-    public final static Boolean compare(Object a, Object b) throws TMLExpressionException {
+    public final static Boolean compare(Object a, Object b, String expression) throws TMLExpressionException {
 
         if (a == null || b == null) {
             throw new TMLExpressionException(
-                    "Illegal arguement for lt;. Cannot compare " + a + " < " + b + ". No null values are allowed.");
+                    "Illegal arguement for lt;. Cannot compare " + a + " < " + b + ". No null values are allowed: "+expression);
         }
 
         if (a instanceof Integer && b instanceof Integer)
@@ -52,14 +52,14 @@ public final class ASTLTNode extends SimpleNode {
             throw new TMLExpressionException("Illegal comparison for lt; " + a.getClass().getName() + " " + b.getClass().getName());
     }
 
-	public final Object interpret(Object a, Object b) {
+	public final Object interpret(Object a, Object b, String expression) {
 
         if (a instanceof List) { // Compare all elements in the list.
             List list = (List) a;
             boolean result = true;
 
             for (int i = 0; i < list.size(); i++) {
-                boolean dum = compare(list.get(i), b).booleanValue();
+                boolean dum = compare(list.get(i), b, expression).booleanValue();
 
                 if (!(dum))
                     return Boolean.valueOf(false);
@@ -67,7 +67,7 @@ public final class ASTLTNode extends SimpleNode {
             }
             return Boolean.valueOf(result);
         } else {
-            return compare(a, b);
+            return compare(a, b,expression);
         }
     }
 }

@@ -15,12 +15,12 @@ public final class ASTNENode extends SimpleNode {
     }
 	@Override
 	public ContextExpression interpretToLambda(List<String> problems, String expression) {
-		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),equalOrEmptyTypes(),(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
+		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),equalOrEmptyTypes(),(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
 	}
 	
-	public final Object interpret(Object a, Object b) {
+	public final Object interpret(Object a, Object b, String expression) {
 
-        return Boolean.valueOf(!Utils.equals(a, b));
+        return Boolean.valueOf(!Utils.equals(a, b,expression));
 
     }
 }

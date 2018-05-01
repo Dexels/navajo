@@ -60,7 +60,7 @@ public final class ASTForAllNode extends SimpleNode {
 				ContextExpression b = jjtGetChild(1).interpretToLambda(problems,expression);
 				
 				if(!problems.isEmpty()) {
-					throw new TMLExpressionException(problems);
+					throw new TMLExpressionException(problems,expression);
 				}
 				return interpret(doc,parentMsg,parentParamMsg,parentSel,mapNode,tipiLink,access,immutableMessage,paramMessage, a,b);
 			}

@@ -22,14 +22,14 @@ public final class ASTGENode extends SimpleNode {
     }
 	@Override
 	public ContextExpression interpretToLambda(List<String> problems, String expression) {
-		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
+		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b,expression),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
 	}
 	
-    public static final Boolean compare(Object a, Object b)  {
+    public static final Boolean compare(Object a, Object b, String expression)  {
 
         if (a == null || b == null) {
             throw new TMLExpressionException(
-                    "Illegal arguement for ge;. Cannot compare " + a + " >= " + b + ". No null values are allowed.");
+                    "Illegal arguement for ge;. Cannot compare " + a + " >= " + b + ". No null values are allowed: "+expression);
         }
 
         if (a instanceof Integer && b instanceof Integer)
@@ -52,7 +52,7 @@ public final class ASTGENode extends SimpleNode {
             throw new TMLExpressionException("Illegal comparison for ge; " + a.getClass().getName() + " " + b.getClass().getName());
     }
 
-	public final Object interpret(Object a, Object b) throws TMLExpressionException {
+	private final Object interpret(Object a, Object b, String expression) throws TMLExpressionException {
 
 
 
@@ -61,7 +61,7 @@ public final class ASTGENode extends SimpleNode {
             boolean result = true;
 
             for (int i = 0; i < list.size(); i++) {
-                boolean dum = compare(list.get(i), b).booleanValue();
+                boolean dum = compare(list.get(i), b, expression).booleanValue();
 
 
                 if (!(dum))
@@ -70,7 +70,7 @@ public final class ASTGENode extends SimpleNode {
             }
             return Boolean.valueOf(result);
         } else {
-            return compare(a, b);
+            return compare(a, b,expression);
         }
     }
 }

@@ -22,14 +22,14 @@ public final class ASTLENode extends SimpleNode {
     }
 	@Override
 	public ContextExpression interpretToLambda(List<String> problems, String expression) {
-		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
+		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
 	}
 	
-    public final static Boolean compare(Object a, Object b) throws TMLExpressionException {
+    public final static Boolean compare(Object a, Object b, String expression) throws TMLExpressionException {
 
         if (a == null || b == null) {
             throw new TMLExpressionException(
-                    "Illegal arguement for le;. Cannot compare " + a + " <= " + b + ". No null values are allowed.");
+                    "Illegal arguement for le;. Cannot compare " + a + " <= " + b + ". No null values are allowed. Expression: "+expression);
         }
 
         if (a instanceof Integer && b instanceof Integer)
@@ -52,7 +52,7 @@ public final class ASTLENode extends SimpleNode {
             throw new TMLExpressionException("Illegal comparison for le; " + a.getClass().getName() + " " + b.getClass().getName());
     }
 
-	public final Object interpret(Object a, Object b)  {
+	public final Object interpret(Object a, Object b, String expression)  {
         // System.out.println("Got second argument");
 
         if (a instanceof List) { // Compare all elements in the list.
@@ -60,7 +60,7 @@ public final class ASTLENode extends SimpleNode {
             boolean result = true;
 
             for (int i = 0; i < list.size(); i++) {
-                boolean dum = compare(list.get(i), b).booleanValue();
+                boolean dum = compare(list.get(i), b, expression).booleanValue();
 
                 if (!(dum))
                     return Boolean.valueOf(false);
@@ -68,7 +68,7 @@ public final class ASTLENode extends SimpleNode {
             }
             return Boolean.valueOf(result);
         } else {
-            return compare(a, b);
+            return compare(a, b,expression);
         }
     }
 }

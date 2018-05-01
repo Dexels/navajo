@@ -83,7 +83,7 @@ public class ExpressionCache {
 		List<String> problems = new ArrayList<>();
 		ContextExpression parse = parse(problems,expression);
 		if(!problems.isEmpty()) {
-			throw new TMLExpressionException(problems);
+			throw new TMLExpressionException(problems,expression);
 		}
 		return parse.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage,paramMessage);
 		

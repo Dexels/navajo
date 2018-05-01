@@ -13,6 +13,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
@@ -23,28 +24,42 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage)
 			throws NavajoException {
 		ExpressionCache ce = ExpressionCache.getInstance();
-		Object val =ce.evaluate(clause, inMessage, parent, null, null, (MappableTreeNode)mappableTreeNode, null,null,immutableMessage,paramMessage);
-//		ce.evaluate(expression, doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage)
-		String type = MappingUtils.determineNavajoType(val);
-		return new Operand(val, type, "");
+		
+		Object val;
+		String type;
+		try {
+			val = ce.evaluate(clause, inMessage, parent, null, null, (MappableTreeNode)mappableTreeNode, null,null,immutableMessage,paramMessage);
+			type = MappingUtils.determineNavajoType(val);
+			return new Operand(val, type, "");
+		} catch (TMLExpressionException e) {
+			throw new TMLExpressionException("TML parsing issue with expression: "+clause,e);
+		}
 	}
 
 	@Override
 	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent,
 			Message currentParam, Selection selection, Object tipiLink, Map<String,Object> params, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws NavajoException {
-		ExpressionCache ce = ExpressionCache.getInstance();
-		Access access = params == null? null : (Access)params.get(Expression.ACCESS);
-		Object val =ce.evaluate(clause, inMessage, parent, currentParam, selection, (MappableTreeNode)mappableTreeNode, (TipiLink) tipiLink, access,immutableMessage,paramMessage);
-		String type = MappingUtils.determineNavajoType(val);
-		return new Operand(val, type, "");
+		try {
+			ExpressionCache ce = ExpressionCache.getInstance();
+			Access access = params == null? null : (Access)params.get(Expression.ACCESS);
+			Object val =ce.evaluate(clause, inMessage, parent, currentParam, selection, (MappableTreeNode)mappableTreeNode, (TipiLink) tipiLink, access,immutableMessage,paramMessage);
+			String type = MappingUtils.determineNavajoType(val);
+			return new Operand(val, type, "");
+		} catch (TMLExpressionException e) {
+			throw new TMLExpressionException("TML parsing issue with expression: "+clause,e);
+		}
 	}
 
 	@Override
 	public Operand evaluate(String clause, Navajo inMessage, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws NavajoException {
-		ExpressionCache ce = ExpressionCache.getInstance();
-		Object val =ce.evaluate(clause, inMessage, null, null, null, null, null, null, immutableMessage,paramMessage);
-		String type = MappingUtils.determineNavajoType(val);
-		return new Operand(val, type, "");
+		try {
+			ExpressionCache ce = ExpressionCache.getInstance();
+			Object val =ce.evaluate(clause, inMessage, null, null, null, null, null, null, immutableMessage,paramMessage);
+			String type = MappingUtils.determineNavajoType(val);
+			return new Operand(val, type, "");
+		} catch (TMLExpressionException e) {
+			throw new TMLExpressionException("TML parsing issue with expression: "+clause,e);
+		}
 	}
 
 }

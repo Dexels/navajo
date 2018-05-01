@@ -249,7 +249,7 @@ public final class Utils extends Exception {
 	 * @return
 	 * @throws TMLExpressionException
 	 */
-	public final static Object add(Object a, Object b) throws TMLExpressionException {
+	public final static Object add(Object a, Object b, String expression) throws TMLExpressionException {
 		if ((a == null) && (b == null))
 			return null;
 		else if (a == null)
@@ -285,17 +285,17 @@ public final class Utils extends Exception {
 			return dp1.getDate();
 		} else if ((a instanceof Money || b instanceof Money)) {
 			if (!(a instanceof Money || a instanceof Integer || a instanceof Double))
-				throw new TMLExpressionException("Invalid argument for operation: " + a.getClass());
+				throw new TMLExpressionException("Invalid argument for operation: " + a.getClass()+" expression: "+expression);
 			if (!(b instanceof Money || b instanceof Integer || b instanceof Double))
-				throw new TMLExpressionException("Invalid argument for operation: " + b.getClass());
+				throw new TMLExpressionException("Invalid argument for operation: " + b.getClass()+" expression: "+expression);
 			Money arg1 = (a instanceof Money ? (Money) a : new Money(a));
 			Money arg2 = (b instanceof Money ? (Money) b : new Money(b));
 			return new Money(arg1.doubleValue() + arg2.doubleValue());
 		} else if ((a instanceof Percentage || b instanceof Percentage)) {
 			if (!(a instanceof Percentage || a instanceof Integer || a instanceof Double))
-				throw new TMLExpressionException("Invalid argument for operation: " + a.getClass());
+				throw new TMLExpressionException("Invalid argument for operation: " + a.getClass()+" expression: "+expression);
 			if (!(b instanceof Percentage || b instanceof Integer || b instanceof Double))
-				throw new TMLExpressionException("Invalid argument for operation: " + b.getClass());
+				throw new TMLExpressionException("Invalid argument for operation: " + b.getClass()+" expression: "+expression);
 			Percentage arg1 = (a instanceof Percentage ? (Percentage) a : new Percentage(a));
 			Percentage arg2 = (b instanceof Percentage ? (Percentage) b : new Percentage(b));
 			return new Percentage(arg1.doubleValue() + arg2.doubleValue());
@@ -321,7 +321,7 @@ public final class Utils extends Exception {
 			Boolean bb = (Boolean) b;
 			return new Integer((ba.booleanValue() ? 1 : 0) + (bb.booleanValue() ? 1 : 0));
 		} else
-			throw new TMLExpressionException("Addition: Unknown type");
+			throw new TMLExpressionException("Addition: Unknown type. "+" expression: "+expression);
 	}
 
 	/**
@@ -393,7 +393,7 @@ public final class Utils extends Exception {
 	 * @throws TMLExpressionException
 	 */
 	@SuppressWarnings("rawtypes")
-	public final static boolean equals(Object a, Object b) throws TMLExpressionException {
+	public final static boolean equals(Object a, Object b, String expression) throws TMLExpressionException {
 		if (a instanceof ArrayList) {
 			boolean result = true;
 			ArrayList list = (ArrayList) a;

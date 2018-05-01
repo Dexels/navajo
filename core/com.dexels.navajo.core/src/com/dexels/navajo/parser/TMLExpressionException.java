@@ -40,8 +40,18 @@ public class TMLExpressionException extends RuntimeException {
 		this.message = s + "\nUsage: " + usage + "\nRemarks: " + remarks;
 	}
 
-	public TMLExpressionException(List<String> problems) {
-		this(problems.stream().collect(Collectors.joining("\n")));
+	public TMLExpressionException(List<String> problems,String expression) {
+		this(createProblemMessage(problems, expression));
+	}
+
+	private static String createProblemMessage(List<String> problems, String expression) {
+		StringBuilder sb = new StringBuilder("Found: ");
+		sb.append(problems.size());
+		sb.append(" problems evaluating expression: ");
+		sb.append(expression);
+		sb.append("\n");
+		sb.append(problems.stream().collect(Collectors.joining("\n")));
+		return sb.toString();
 	}
 
 	@Override

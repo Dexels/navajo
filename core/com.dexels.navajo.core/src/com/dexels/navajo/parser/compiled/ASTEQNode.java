@@ -14,12 +14,12 @@ public final class ASTEQNode extends SimpleNode {
         super(id);
     }
 
-	public final Object interpret( Object a, Object b) throws TMLExpressionException {
-        return Boolean.valueOf(Utils.equals(a, b));
+	public final Object interpret( Object a, Object b, String expression) throws TMLExpressionException {
+        return Boolean.valueOf(Utils.equals(a, b,expression));
     }
 	@Override
 	public ContextExpression interpretToLambda(List<String> problems, String expression) {
-		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b),equalOrEmptyTypes(),(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
+		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b, expression),equalOrEmptyTypes(),(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
 	}
     
 }
