@@ -157,8 +157,8 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 		    // add attachments
 			List<String> inlineImages = new ArrayList<String>();
 			if (this.attachments != null) {
+                logger.debug("# of attachments found: "+attachments.size());
 				for (int i = 0; i < this.attachments.size(); i++) {
-					logger.info("# of attachments found: "+attachments.size());
 					AttachmentMapInterface am = this.attachments.get(i);
 					String file = am.getAttachFile();
 					String userFileName = am.getAttachFileName();
@@ -184,7 +184,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 					}
 				}
 			} else {
-				logger.info("No attachments");
+				logger.debug("No attachments");
 			}
 		  logger.debug("Setting body, before replace: "+bodyText);
 		  
@@ -197,7 +197,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 
 		  // set the alternative message
 		  email.setTextMsg(this.getNonHtmlText());
-			logger.debug("Sending mail to "+to+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
+		  logger.info("Sending mail to "+to+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
 
 		  // send the email
 		  email.send();
