@@ -57,18 +57,6 @@ public class TestRx {
 			.blockingForEach(xml->System.err.println("XML: "+xml));
 //			.subscribe(event->System.err.println("Event: "+event));
 	}
-	
-	@Test 
-	public void simplerXMLObservable() {
-		String[] parts = new String[]{"<a><ble></ble><aba>","tralala</aba></a>"};
-		Observable.fromArray(parts)
-			.map(x->x.getBytes())
-			.lift(XML.parse())
-			.doOnComplete(()->System.err.println("Pre-flatmap complete"))
-			.flatMap(e->e)
-			.doOnComplete(()->System.err.println("Post-flatmap complete"))
-			.subscribe(event->System.err.println("Event: "+event));
-	}
 
 	@Test 
 	public void simpleXML() throws InterruptedException {

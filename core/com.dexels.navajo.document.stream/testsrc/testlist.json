@@ -1,0 +1,34 @@
+{
+  "Objects": [
+    {
+      "Name": "818C6E601A24F72750DA0F6C98EBE28",
+      "ContentType": "image/png",
+      "Size": 16680,
+      "Hash": "$1$34b64138f6589d3d32d02358fe73ec788cb981bf"
+    },
+    {
+      "Name": "cake.png",
+      "ContentType": "image/png",
+      "Size": 71383,
+      "Hash": "$1$968ff4a000da440aef33345d96a7a9ad1933e743"
+    },
+    {
+      "Name": "graph.png",
+      "ContentType": "image/png",
+      "Size": 46878,
+      "Hash": "$1$ff00c6bbb73917add7cf7cebb542b5c6184462c8"
+    },
+    {
+      "Name": "test1.png",
+      "ContentType": "image/png",
+      "Size": 5969,
+      "Hash": "$1$1737d3dfb441c07b86ed8bd30f5987a4dc397cc1"
+    },
+    {
+      "Name": "test2.png",
+      "ContentType": "image/png",
+      "Size": 24854,
+      "Hash": "$1$c6a2a1f63c2e4b67940770a1277dd0ec8379bef3"
+    }
+  ]
+}

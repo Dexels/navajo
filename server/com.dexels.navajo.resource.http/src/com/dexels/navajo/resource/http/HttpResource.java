@@ -49,7 +49,7 @@ public interface HttpResource {
 	
 	public Publisher<byte[]> flowBinary(Binary bin, final int bufferSize);
 
-
+	public Flowable<HttpElement> bucketList(String tenant, String bucket);
 	
 	public String getURL();
 	public String expiringURL(String tenant, String bucket, String id, long expiration);
