@@ -3,6 +3,9 @@ package com.dexels.navajo.parser.compiled.api;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
@@ -19,6 +22,7 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
 
 public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implements ExpressionEvaluator {
+    private final static Logger logger = LoggerFactory.getLogger(CachedExpressionEvaluator.class);
 
 	@Override
 	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage)
@@ -32,7 +36,8 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 			type = MappingUtils.determineNavajoType(val);
 			return new Operand(val, type, "");
 		} catch (TMLExpressionException e) {
-			throw new TMLExpressionException("TML parsing issue with expression: "+clause,e);
+		    logger.error("TML parsing issue with expression: {} exception:", clause, e );
+            throw new TMLExpressionException("TML parsing issue");
 		}
 	}
 
@@ -46,7 +51,8 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 			String type = MappingUtils.determineNavajoType(val);
 			return new Operand(val, type, "");
 		} catch (TMLExpressionException e) {
-			throw new TMLExpressionException("TML parsing issue with expression: "+clause,e);
+		    logger.error("TML parsing issue with expression: {} exception:", clause, e );
+			throw new TMLExpressionException("TML parsing issue");
 		}
 	}
 
@@ -58,7 +64,8 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 			String type = MappingUtils.determineNavajoType(val);
 			return new Operand(val, type, "");
 		} catch (TMLExpressionException e) {
-			throw new TMLExpressionException("TML parsing issue with expression: "+clause,e);
+		    logger.error("TML parsing issue with expression: {} exception:", clause, e );
+            throw new TMLExpressionException("TML parsing issue");
 		}
 	}
 
