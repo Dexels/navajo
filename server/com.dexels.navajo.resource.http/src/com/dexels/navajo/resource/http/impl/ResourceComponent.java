@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.stream.ReactiveReply;
 import com.dexels.navajo.client.stream.jetty.JettyClient;
+import com.dexels.navajo.document.stream.json.JSON;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.resource.http.HttpElement;
@@ -39,11 +40,9 @@ public class ResourceComponent implements HttpResource {
 	
 	public void activate(Map<String, Object> settings) throws Exception {
 		client = new JettyClient();
-//		logger.debug("Activating HTTP connector with: " + settings);
 		String u = (String) settings.get("url");
 		this.authorization = (String) settings.get("authorization");
 		this.secret = Optional.ofNullable((String) settings.get("secret"));
-//		this.expire = Integer.parseInt( Optional.ofNullable((String) settings.get("expire")).orElse("3600"));
 		this.url = u.endsWith("/") ? u : u+"/";
 	}
 
@@ -182,5 +181,11 @@ public class ResourceComponent implements HttpResource {
 	public Binary lazyBinary(String tenant, String bucket, String id, long expire) throws IOException {
 		URL u = new URL(expiringURL(tenant, bucket, id,expire));
 		return new Binary(u, true);
+	}
+
+	@Override
+	public Flowable<HttpElement> bucketList(String tenant, String bucket) {
+//		JSON.parseObjectNodes(input)
+		return null;
 	}
 }

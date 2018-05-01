@@ -38,7 +38,7 @@ public final class Contains extends FunctionInterface {
             if (a instanceof List)
                 result = contains((List<?>) a, o);
             else
-                result = Utils.equals(a, o);
+                result = Utils.equals(a, o,"<unknown>");
             if (result)
                 i = list.size() + 1;
         }

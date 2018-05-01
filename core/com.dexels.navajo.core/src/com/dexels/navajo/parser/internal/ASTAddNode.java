@@ -24,14 +24,14 @@ public final class ASTAddNode extends SimpleNode {
 		// System.out.println("Got second argument");
 
 		if (!(a instanceof ArrayList || b instanceof ArrayList)) {
-			return Utils.add(a, b);
+			return Utils.add(a, b,"<unknown>");
 		} else if ((a instanceof ArrayList) && !(b instanceof ArrayList)) {
 			ArrayList list = (ArrayList) a;
 			ArrayList result = new ArrayList();
 
 			for (int i = 0; i < list.size(); i++) {
 				Object val = list.get(i);
-				Object rel = Utils.add(val, b);
+				Object rel = Utils.add(val, b,"<unknown>");
 
 				result.add(rel);
 			}
@@ -42,7 +42,7 @@ public final class ASTAddNode extends SimpleNode {
 
 			for (int i = 0; i < list.size(); i++) {
 				Object val = list.get(i);
-				Object rel = Utils.add(a, val);
+				Object rel = Utils.add(a, val,"<unknown>");
 
 				result.add(rel);
 			}
@@ -58,7 +58,7 @@ public final class ASTAddNode extends SimpleNode {
 			for (int i = 0; i < list1.size(); i++) {
 				Object val1 = list1.get(i);
 				Object val2 = list2.get(i);
-				Object rel = Utils.add(val1, val2);
+				Object rel = Utils.add(val1, val2,"<unknown>");
 
 				result.add(rel);
 			}

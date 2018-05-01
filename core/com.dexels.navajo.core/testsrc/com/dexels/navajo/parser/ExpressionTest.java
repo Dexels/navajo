@@ -126,7 +126,7 @@ public class ExpressionTest {
 
 	@Test
 	public void testExpressionMoney() throws Exception {
-		boolean eq = Utils.equals(new Money(), null);
+		boolean eq = Utils.equals(new Money(), null,"<unknown>");
 		assertTrue(eq);
 	}
 

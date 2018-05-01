@@ -1,7 +1,5 @@
 package com.dexels.navajo.resource.http;
 
-import java.time.Instant;
-
 import org.apache.commons.codec.digest.HmacUtils;
 import org.junit.Test;
 

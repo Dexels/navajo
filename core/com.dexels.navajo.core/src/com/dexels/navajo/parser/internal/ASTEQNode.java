@@ -18,6 +18,6 @@ public final class ASTEQNode extends SimpleNode {
 
 		// System.out.println("Got second argument");
 
-		return Boolean.valueOf(Utils.equals(a, b));
+		return Boolean.valueOf(Utils.equals(a, b,"<unknown>"));
 	}
 }

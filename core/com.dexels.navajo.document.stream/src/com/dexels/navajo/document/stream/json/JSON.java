@@ -1,5 +1,7 @@
 package com.dexels.navajo.document.stream.json;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.reactivestreams.Subscriber;
@@ -9,9 +11,12 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;
+import io.reactivex.FlowableTransformer;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOperator;
 import io.reactivex.Observer;
@@ -22,9 +27,18 @@ public class JSON {
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(JSON.class);
-
+	private final static ObjectMapper objectMapper = new ObjectMapper();
 	private JSON() {}
 
+	public static JsonNode parseObjectNodes(byte[] input) throws IOException {
+		return objectMapper.reader().readTree(new ByteArrayInputStream(input));
+	}
+	
+	public static FlowableTransformer<byte[], byte[]> collectBytesToSingle() {
+		return flow->flow.reduce(new ByteArrayOutputStream(), (baos,b)->{baos.write(b); return baos;})
+				.map(b->b.toByteArray()).toFlowable()
+				;
+	}
 	public static FlowableOperator<Flowable<JSONEvent>, byte[]> parseFlowable(int queueSize) {
 		return new BaseFlowableOperator<Flowable<JSONEvent>, byte[]>(queueSize) {
 
