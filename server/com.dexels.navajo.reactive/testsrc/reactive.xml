@@ -1,16 +1,16 @@
 <reactive parallel="1">
-	<source.sql resource="dummy">
+	<source.sql resource="sportlinkkernel">
 		<param name="query">select * from ORGANIZATION</param>
-		<mergeSingle>
-			<source.sql resource="dummy">
+		<msg.mergeSingle.msg>
+			<source.sql resource="sportlinkkernel">
 				<param name="query">select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?</param>
-				<param:>[ORGANIZATIONID]</param>
-				<reduce>
+				<parameval>[ORGANIZATIONID]</parameval>
+				<message.reduce.singlemessage>
 					<save to.eval="[ATTRIBNAME]" value.eval="[ATTRIBVALUE]"/>
-				</reduce>
+				</message.reduce.singlemessage>
 			</source.sql>
 			<store name="Attributes"/>
-		</mergeSingle>
+		</msg.mergeSingle.msg>
 		<msg.take.msg count.eval="20"/>
 		<msg.stream.event messageName="Club" isArray.eval="true"/>
 	</source.sql>
