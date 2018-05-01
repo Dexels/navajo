@@ -267,6 +267,8 @@ public class TslCompiler {
 		StringBuffer functionNameBuffer = new StringBuffer();
 		String functionName = "";
 		String call = "";
+		
+		
 
 		// Try if clause contains only a (Navajo) function and a mappable
 		// attribute call.
