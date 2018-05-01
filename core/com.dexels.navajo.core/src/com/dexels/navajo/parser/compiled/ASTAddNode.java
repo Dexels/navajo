@@ -18,20 +18,20 @@ public final class ASTAddNode extends SimpleNode {
 
 	@Override
 	public ContextExpression interpretToLambda(List<String> problems, String expression) {
-		return untypedLazyBiFunction(problems,expression, (a,b)->interpret(a, b));
+		return untypedLazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression));
 	}
 	
-	public final Object interpret(Object a,Object b) {
+	public final Object interpret(Object a,Object b, String expression) {
 
         if (!(a instanceof ArrayList || b instanceof ArrayList)) {
-            return Utils.add(a, b);
+            return Utils.add(a, b, expression);
         } else if ((a instanceof ArrayList) && !(b instanceof ArrayList)) {
             ArrayList list = (ArrayList) a;
             ArrayList result = new ArrayList();
 
             for (int i = 0; i < list.size(); i++) {
                 Object val = list.get(i);
-                Object rel = Utils.add(val, b);
+                Object rel = Utils.add(val, b, expression);
 
                 result.add(rel);
             }
@@ -42,7 +42,7 @@ public final class ASTAddNode extends SimpleNode {
 
             for (int i = 0; i < list.size(); i++) {
                 Object val = list.get(i);
-                Object rel = Utils.add(a, val);
+                Object rel = Utils.add(a, val, expression);
 
                 result.add(rel);
             }
@@ -52,13 +52,13 @@ public final class ASTAddNode extends SimpleNode {
             ArrayList list2 = (ArrayList) b;
 
             if (list1.size() != list2.size())
-                throw new RuntimeException("Can only add lists of equals length");
+                throw new RuntimeException("Can only add lists of equals length. Lengths found: "+list1.size()+" and"+list2.size()+" expression: "+expression);
             ArrayList result = new ArrayList();
 
             for (int i = 0; i < list1.size(); i++) {
                 Object val1 = list1.get(i);
                 Object val2 = list2.get(i);
-                Object rel = Utils.add(val1, val2);
+                Object rel = Utils.add(val1, val2,expression);
 
                 result.add(rel);
             }

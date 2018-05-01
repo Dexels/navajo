@@ -65,7 +65,7 @@ public final class ASTMappableNode extends SimpleNode {
 		        		List<String> problems = new ArrayList<>();
 		            Object a = jjtGetChild(i).interpretToLambda(problems, expression).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
 		            if(!problems.isEmpty()) {
-		            		throw new TMLExpressionException(problems);
+		            		throw new TMLExpressionException(problems,expression);
 		            }
 		            if(objects!=null) {
 		                objects.add(a);

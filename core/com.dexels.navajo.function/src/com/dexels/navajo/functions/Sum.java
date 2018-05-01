@@ -39,9 +39,9 @@ public final class Sum extends FunctionInterface {
             Object b = list.get(i);
 
             if (b instanceof ArrayList) {
-                sum = Utils.add(sum, sumList((List) b));
+                sum = Utils.add(sum, sumList((List) b),"<unknown>");
             } else {
-                sum = Utils.add(sum, b);
+                sum = Utils.add(sum, b,"<unknown>");
             }
         }
         return sum;

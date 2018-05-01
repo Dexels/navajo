@@ -46,10 +46,11 @@ public class TestCompiledExpression {
 	@Test
 	public void parseIntAddition() throws ParseException, TMLExpressionException {
 		List<String> problems = new ArrayList<>();
-        ContextExpression ss =  ExpressionCache.getInstance().parse(problems,"1+1");
-        ContextExpression ss2 =  ExpressionCache.getInstance().parse(problems,"1+1");
+        String expression = "1+1";
+		ContextExpression ss =  ExpressionCache.getInstance().parse(problems,expression);
+        ContextExpression ss2 =  ExpressionCache.getInstance().parse(problems,expression);
         if(!problems.isEmpty()) {
-        		throw new TMLExpressionException(problems);
+        		throw new TMLExpressionException(problems,expression);
         }
         System.err.println("ss: "+ss.isLiteral());
         System.err.println("ss2: "+ss2.isLiteral());
@@ -63,13 +64,14 @@ public class TestCompiledExpression {
 
 	@Test
 	public void testParseTml() throws ParseException, TMLExpressionException {
-		StringReader sr = new StringReader("[/TestMessage/TestProperty]");
+		String expression = "[/TestMessage/TestProperty]";
+		StringReader sr = new StringReader(expression);
 		CompiledParser cp = new CompiledParser(sr);
 		cp.Expression();
 		List<String> problems = new ArrayList<>();
         ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString());
         if(!problems.isEmpty()) {
-    			throw new TMLExpressionException(problems);
+    			throw new TMLExpressionException(problems,expression);
         }
         
         System.err.println("tml: "+ss.isLiteral());
