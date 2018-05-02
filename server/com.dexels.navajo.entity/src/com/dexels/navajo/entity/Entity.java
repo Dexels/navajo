@@ -33,6 +33,9 @@ public class Entity {
     private Set<Entity> subEntities = new HashSet<Entity>();
     private Set<Entity> superEntities = new HashSet<Entity>();
 
+    // Keep track of entity messages versions
+    protected Map<String, Message> myMessageVersionMap = new HashMap<String, Message>();
+
     protected Map<String, Entity> superEntitiesMap = new HashMap<String, Entity>();
 
     protected BundleContext bundleContext;
@@ -116,6 +119,7 @@ public class Entity {
 
         Message l = n.getAllMessages().iterator().next();
         setMessage(l);
+        setVersionMessages(n);
 
         Operation head = new OperationComponent();
         head.setEntityName(getName());
@@ -127,6 +131,20 @@ public class Entity {
             o.setEntityName(getName());
             entityManager.addOperation(o);
         }
+    }
+
+    private void setVersionMessages(Navajo n) {
+        n.getAllMessages().forEach(m -> {
+            if (!m.getName().matches("^[\\$a-zA-Z0-9._-]*$")) {
+                logger.error("Unsupported version name :: {}. Please use alphanumeric, -, _ or . characters", m.getName());
+            } else {
+                myMessageVersionMap.put(m.getName().contains(".$") ? m.getName() : "default", m.copy());
+            }
+        });
+    }
+
+    public Map<String, Message> getMyMessageVersionMap() {
+        return myMessageVersionMap;
     }
 
     public Set<Entity> getSubEntities() {

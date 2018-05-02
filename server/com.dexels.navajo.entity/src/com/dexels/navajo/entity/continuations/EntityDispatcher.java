@@ -22,6 +22,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.entity.Entity;
@@ -50,9 +51,19 @@ public class EntityDispatcher {
     private AuthenticationMethodBuilder authMethodBuilder;
     private EntityMapper myMapper;
 
+    private void clearEntityMessage(Message entityMessage) {
+        for (Message m : entityMessage.getAllMessages()) {
+            entityMessage.removeMessage(m);
+        }
+        for (Property p : entityMessage.getAllProperties()) {
+            entityMessage.removeProperty(p);
+        }
+    }
+
     public void run(EntityContinuationRunner runner) {
         Navajo result = null;
         Access access = null;
+        String messageVersion = "";
         String method = runner.getHttpRequest().getMethod();
         String path = runner.getHttpRequest().getPathInfo();
         if (path.startsWith("/entity")) {
@@ -157,6 +168,27 @@ public class EntityDispatcher {
             entityFound = true;
 
             Message entityMessage = e.getMessage();
+
+            // Handle versioning
+            String entityMessageName = entityMessage.getName();
+
+            if (queryString != null && runner.getHttpRequest().getParameter("entityVersion") != null) {
+                messageVersion = entityMessage.getName() + ".$" + runner.getHttpRequest().getParameter("entityVersion");
+                logger.debug("Requesting version : {}", messageVersion);
+                // check if version exists in entity definition ::
+                if (e.getMyMessageVersionMap().get(messageVersion) != null) {
+                    logger.debug("Version Found");
+                    clearEntityMessage(entityMessage);
+                    entityMessage.merge(e.getMyMessageVersionMap().get(messageVersion));
+                } else {
+                    logger.debug("Version Not Found");
+                    clearEntityMessage(entityMessage);
+                    entityMessage.merge(e.getMyMessageVersionMap().get("default"));
+                }
+            } else {
+                clearEntityMessage(entityMessage);
+                entityMessage.merge(e.getMyMessageVersionMap().get("default"));
+            }
 
             // Get the input document
             if (method.equals(HTTP_METHOD_OPTIONS) || method.equals(HTTP_METHOD_GET) || method.equals(HTTP_METHOD_DELETE)) {
