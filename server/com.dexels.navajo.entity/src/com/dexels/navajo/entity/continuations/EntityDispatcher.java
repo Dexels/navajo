@@ -168,9 +168,8 @@ public class EntityDispatcher {
             entityFound = true;
 
             Message entityMessage = e.getMessage();
-
-            // Handle versioning
-            String entityMessageName = entityMessage.getName();
+            
+            e.setMessage(e.getMyMessageVersionMap().get("default"));
 
             if (queryString != null && runner.getHttpRequest().getParameter("entityVersion") != null) {
                 messageVersion = entityMessage.getName() + ".$" + runner.getHttpRequest().getParameter("entityVersion");
@@ -178,18 +177,11 @@ public class EntityDispatcher {
                 // check if version exists in entity definition ::
                 if (e.getMyMessageVersionMap().get(messageVersion) != null) {
                     logger.debug("Version Found");
-                    clearEntityMessage(entityMessage);
-                    entityMessage.merge(e.getMyMessageVersionMap().get(messageVersion));
-                } else {
-                    logger.debug("Version Not Found");
-                    clearEntityMessage(entityMessage);
-                    entityMessage.merge(e.getMyMessageVersionMap().get("default"));
+                    e.setMessage(e.getMyMessageVersionMap().get(messageVersion));
                 }
-            } else {
-                clearEntityMessage(entityMessage);
-                entityMessage.merge(e.getMyMessageVersionMap().get("default"));
             }
 
+            e.refreshEntityManagerOperations();
             // Get the input document
             if (method.equals(HTTP_METHOD_OPTIONS) || method.equals(HTTP_METHOD_GET) || method.equals(HTTP_METHOD_DELETE)) {
                 input = EntityHelper.deriveNavajoFromParameterMap(e, runner.getHttpRequest().getParameterMap());
@@ -322,6 +314,9 @@ public class EntityDispatcher {
                 NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
                 statLogger.info("Finished {} ({}) in {}ms", access.accessID, access.getRpcName(), (System.currentTimeMillis() - runner.getStartedAt()));
             }
+
+            // TODO : MUST RESET ENTITY MESSAGE AT THE END
+
         }
     }
 
