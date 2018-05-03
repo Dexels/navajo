@@ -356,6 +356,10 @@ public class ServiceEntityOperation implements EntityOperation {
 
 		Message inputEntity = input.getMessage(myEntity.getMessageName());
 
+        Message entityInfo = NavajoFactory.getInstance().createMessage(input, "__entity__");
+        Property entityVersion = NavajoFactory.getInstance().createProperty(input, "version", "string", "test", 0, "", Property.DIR_OUT);
+        entityInfo.addProperty(entityVersion);
+
 		if (inputEntity == null) {
 			throw new EntityException(EntityException.BAD_REQUEST, "No valid entity found.");
 		}
@@ -401,8 +405,9 @@ public class ServiceEntityOperation implements EntityOperation {
 		// Now we are ready to handle the operations
 		String method = myOperation.getMethod();
 		if (method.equals(Operation.GET)) {
-			return handleGet(input, inputEntity);
-
+            Navajo result = handleGet(input, inputEntity);
+            result.addMessage(entityInfo);
+            return result;
 		}
 		if (method.equals(Operation.DELETE)) {
 			return handleDelete(input, inputEntity);
