@@ -68,9 +68,9 @@ public class TipiNewCallService extends TipiAction {
             retries = 0;
         }
         
-        Boolean breakOnNonValidation = (Boolean) getEvaluatedParameterValue("breakOnNonValidation", event);
+        Boolean breakOnNonValidation = (Boolean) getEvaluatedParameterValue("breakOnConditionError", event);
         if (breakOnNonValidation == null) {
-            breakOnNonValidation = true;
+            breakOnNonValidation = false;
         }
 
         final TipiConnector defaultConnector = getContext().getDefaultConnector();
