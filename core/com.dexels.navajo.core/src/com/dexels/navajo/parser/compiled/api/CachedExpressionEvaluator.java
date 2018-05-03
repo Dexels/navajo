@@ -36,7 +36,10 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 			type = MappingUtils.determineNavajoType(val);
 			return new Operand(val, type, "");
 		} catch (TMLExpressionException e) {
-		    logger.error("TML parsing issue with expression: {} exception:", clause, e );
+		    if (inMessage != null) {
+                // Only log if we have useful context
+                logger.error("TML parsing issue with expression: {} exception", clause, e );
+            }
             throw new TMLExpressionException("TML parsing issue");
 		}
 	}
@@ -51,7 +54,10 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 			String type = MappingUtils.determineNavajoType(val);
 			return new Operand(val, type, "");
 		} catch (TMLExpressionException e) {
-		    logger.error("TML parsing issue with expression: {} exception:", clause, e );
+		    if (inMessage != null) {
+		        // Only log if we have useful context
+		        logger.error("TML parsing issue with expression: {} exception", clause, e );
+		    }
 			throw new TMLExpressionException("TML parsing issue");
 		}
 	}
@@ -64,7 +70,10 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 			String type = MappingUtils.determineNavajoType(val);
 			return new Operand(val, type, "");
 		} catch (TMLExpressionException e) {
-		    logger.error("TML parsing issue with expression: {} exception:", clause, e );
+		    if (inMessage != null) {
+                // Only log if we have useful context
+                logger.error("TML parsing issue with expression: {} exception", clause, e );
+            }
             throw new TMLExpressionException("TML parsing issue");
 		}
 	}
