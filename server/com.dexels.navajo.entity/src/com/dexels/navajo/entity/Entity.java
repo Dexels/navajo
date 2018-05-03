@@ -28,6 +28,7 @@ public class Entity {
     private final static Logger logger = LoggerFactory.getLogger(Entity.class);
     protected String entityName = null;
     protected String messageName = null;
+    private String myVersion;
     private Navajo entityNavajo = null;
 
     // Keep track of entities that are derived from this entity.
@@ -120,6 +121,7 @@ public class Entity {
 
         Message l = n.getAllMessages().iterator().next();
         setMessage(l);
+        setMyVersion("default");
         setVersionMessages(n);
 
         Operation head = new OperationComponent();
@@ -128,6 +130,14 @@ public class Entity {
 
         // Add operations defined in entity.
         refreshEntityManagerOperationsFromNavajo(n);
+    }
+
+    public void setMyVersion(String version) {
+        this.myVersion = version;
+    }
+
+    public String getMyVersion() {
+        return this.myVersion;
     }
 
     public void refreshEntityManagerOperationsFromNavajo(Navajo n) {
