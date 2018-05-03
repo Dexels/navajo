@@ -1,7 +1,11 @@
 package com.dexels.navajo.reactive.source.sql;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
@@ -42,12 +46,14 @@ public class SQLReactiveSource implements ReactiveSource {
 		ReactiveResolvedParameters params = parameters.resolveNamed(context, current, ImmutableFactory.empty(), metadata, sourceElement, sourcePath);
 		String datasource = params.paramString("resource");
 		String query = params.paramString("query");
-		Flowable<DataItem> flow = SQL.query(datasource, context.tenant, query, unnamedParams).map(d->DataItem.of(d));
+		Flowable<DataItem> flow = SQL.query(datasource, context.tenant, query, unnamedParams)
+				.map(d->DataItem.of(d));
 		for (ReactiveTransformer trans : transformers) {
 			flow = flow.compose(trans.execute(context));
 		}
 		return flow;
 	}
+
 
 	private Object[] evaluateParams(StreamScriptContext context, Optional<ImmutableMessage> immutable) {
 		return parameters.resolveUnnamed(context, immutable, ImmutableFactory.empty()).stream().map(e->e.value).toArray();
