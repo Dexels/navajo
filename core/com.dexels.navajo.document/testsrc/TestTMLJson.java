@@ -13,6 +13,10 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Memo;
+import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.Percentage;
 
 public class TestTMLJson {
     
@@ -124,6 +128,71 @@ public class TestTMLJson {
         // Turn back into a Navajo and compare
         Navajo n2 = json.parse(new StringReader(result), "SimpleMessage");
         Assert.assertEquals(n2.getMessage("SimpleMessage").getProperty("Bin").getTypedValue(), "YWJjZGVmZw==");
+    }
+
+    @Test
+    public void TestMoney() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message2.xml"));
+        JSONTML json = JSONTMLFactory.getInstance();
+
+        Property moneyProp = NavajoFactory.getInstance().createProperty(n, "moneyProp", "", "", "");
+        moneyProp.setAnyValue(new Money("32.22"));
+        n.getMessage("SimpleMessage").addProperty(moneyProp);
+
+        Writer sw = new StringWriter();
+        json.format(n, sw, true);
+
+        String result = sw.toString();
+        Assert.assertEquals("{\n  \"moneyProp\" : 3222.0\n}", result);
+    }
+
+    @Test
+    public void TestClockTime() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message2.xml"));
+        JSONTML json = JSONTMLFactory.getInstance();
+
+        Property prop = NavajoFactory.getInstance().createProperty(n, "clockTimeProp", "", "", "");
+        prop.setAnyValue(new ClockTime("11:12:12"));
+        n.getMessage("SimpleMessage").addProperty(prop);
+
+        Writer sw = new StringWriter();
+        json.format(n, sw, true);
+
+        String result = sw.toString();
+        Assert.assertEquals("{\n  \"clockTimeProp\" : \"11:12:00\"\n}", result);
+    }
+
+    @Test
+    public void TestPercentage() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message2.xml"));
+        JSONTML json = JSONTMLFactory.getInstance();
+
+        Property prop = NavajoFactory.getInstance().createProperty(n, "percentageProp", "", "", "");
+        prop.setAnyValue(new Percentage("43"));
+        n.getMessage("SimpleMessage").addProperty(prop);
+
+        Writer sw = new StringWriter();
+        json.format(n, sw, true);
+
+        String result = sw.toString();
+        Assert.assertEquals("{\n  \"percentageProp\" : 43.0\n}", result);
+    }
+
+    @Test
+    public void TestMemo() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message2.xml"));
+        JSONTML json = JSONTMLFactory.getInstance();
+
+        Property prop = NavajoFactory.getInstance().createProperty(n, "memoProp", "", "", "");
+        prop.setAnyValue(new Memo("This is a memo value"));
+        n.getMessage("SimpleMessage").addProperty(prop);
+
+        Writer sw = new StringWriter();
+        json.format(n, sw, true);
+
+        String result = sw.toString();
+        System.out.println(result);
+        Assert.assertEquals("{\n  \"memoProp\" : \"This is a memo value\"\n}", result);
     }
 
 }

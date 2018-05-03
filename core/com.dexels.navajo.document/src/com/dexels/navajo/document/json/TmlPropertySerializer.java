@@ -31,10 +31,24 @@ public class TmlPropertySerializer extends StdSerializer<Property> {
             jg.writeNull();
         } else if (property.getType().equals(Property.DATE_PROPERTY)) {
             DateFormat df = new SimpleDateFormat(Property.DATE_FORMAT2);
-            jg.writeString(df.format((Date) value));
+            try {
+                jg.writeString(df.format((Date) value));
+            } catch (ClassCastException e) {
+                jg.writeString(value.toString());
+            }
         } else if (property.getType().equals(Property.TIMESTAMP_PROPERTY)) {
             DateFormat df = new SimpleDateFormat(Property.TIMESTAMP_FORMAT);
-            jg.writeString(df.format((Date) value));
+            try {
+                jg.writeString(df.format((Date) value));
+            } catch (ClassCastException e) {
+                jg.writeString(value.toString());
+            }
+        } else if (property.getType().equals(Property.MONEY_PROPERTY) || property.getType().equals(Property.PERCENTAGE_PROPERTY)) {
+            try {
+                jg.writeNumber(Double.parseDouble(value.toString()));
+            } catch (NumberFormatException e) {
+                jg.writeString(value.toString());
+            }
         } else {
             JsonSerializer<Object> serializer = provider.findValueSerializer(value.getClass());
             serializer.serialize(value, jg, provider);
