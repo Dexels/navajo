@@ -29,13 +29,13 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  org.eclipse.jetty.http;version="9.4.9",
  org.eclipse.jetty.io;version="9.4.9",
  org.eclipse.jetty.io.ssl;version="9.4.9",
+ org.eclipse.jetty.reactive.client;version="1.0.1",
  org.eclipse.jetty.util;version="9.4.9",
  org.eclipse.jetty.util.component;version="9.4.9",
  org.eclipse.jetty.util.ssl;version="9.4.9",
  org.junit;version="4.10.0";resolution:=optional,
  org.reactivestreams;version="1.0.0.release",
  org.slf4j;version="1.7.0"
-Bundle-ClassPath: lib/jetty-reactive-httpclient-0.9.3-SNAPSHOT.jar,
- .
+Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.client.stream;version="1.0.4",
  com.dexels.navajo.client.stream.jetty;version="1.0.4"

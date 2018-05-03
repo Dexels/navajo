@@ -4,6 +4,5 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="testsrc"/>
-	<classpathentry kind="lib" path="lib/jetty-reactive-httpclient-0.9.3-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
