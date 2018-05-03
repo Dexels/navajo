@@ -12,7 +12,7 @@ function setupLoginDialog() {
     if(url.indexOf('localhost') > -1){
         sessionStorage.setItem('isLocalhost', '1');
         var regex = /entityDocumentation\/(\w+)\//;
-        var tenant = url.match(regex)[1].toUpperCase();
+        var tenant = url.match(regex)[1];
         $('#bauth_tenant').val(tenant);
         $('#cauth_tenant').val(tenant);
     } else{
@@ -129,7 +129,7 @@ $(document).ready(function() {
         sessionStorage.bauth_username = bauth_username;
         sessionStorage.bauth_password = bauth_password;
         sessionStorage.token = btoa(bauth_username + ":" + bauth_password);
-        sessionStorage.tenant =  bauth_tenant.toUpperCase();
+        sessionStorage.tenant =  bauth_tenant;
         sessionStorage.authType = 'basic';
         
         modal.close();
@@ -143,7 +143,7 @@ $(document).ready(function() {
         
         sessionStorage.cauth_type = cauth_type.charAt(0).toUpperCase() + cauth_type.substring(1,cauth_type.length);
         sessionStorage.token = cauth_token;
-        sessionStorage.tenant =  cauth_tenant.toUpperCase();
+        sessionStorage.tenant =  cauth_tenant;
         sessionStorage.authType = 'custom';
         
         modal.close();
