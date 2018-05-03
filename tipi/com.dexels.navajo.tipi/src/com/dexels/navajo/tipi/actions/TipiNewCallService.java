@@ -68,6 +68,11 @@ public class TipiNewCallService extends TipiAction {
             retries = 0;
         }
         
+        Boolean breakOnNonValidation = (Boolean) getEvaluatedParameterValue("breakOnNonValidation", event);
+        if (breakOnNonValidation == null) {
+            breakOnNonValidation = true;
+        }
+
         final TipiConnector defaultConnector = getContext().getDefaultConnector();
 
         if (connector == null && defaultConnector == null) {
@@ -99,17 +104,17 @@ public class TipiNewCallService extends TipiAction {
                 throw new IllegalStateException("No default tipi connector found!");
             }
             Navajo result = defaultConnector.doTransaction(input, service, retries);
-            processResult(breakOnError, destination, service, result, cached);
+            processResult(breakOnError, breakOnNonValidation, destination, service, result, cached);
         } else {
             TipiConnector ttt = myContext.getConnector(connector);
             if (ttt == null) {
                 logger.warn("Warning: connector: " + connector + " not found, reverting to default connector");
 
                 Navajo result = defaultConnector.doTransaction(input, service, destination);
-                processResult(breakOnError, destination, service, result, cached);
+                processResult(breakOnError, breakOnNonValidation, destination, service, result, cached);
             } else {
                 Navajo result = ttt.doTransaction(input, service, destination);
-                processResult(breakOnError, destination, service, result, cached);
+                processResult(breakOnError, breakOnNonValidation, destination, service, result, cached);
             }
         }
         setThreadState("busy");
@@ -137,6 +142,11 @@ public class TipiNewCallService extends TipiAction {
         }
         Integer retries = (Integer) getEvaluatedParameterValue("retries", event);
 
+        Boolean breakOnNonValidation = (Boolean) getEvaluatedParameterValue("breakOnNonValidation", event);
+        if (breakOnNonValidation == null) {
+            breakOnNonValidation = true;
+        }
+
         if (serviceOperand == null || serviceOperand.value == null) {
             throw new TipiException("Error in callService action: service parameter missing!");
         }
@@ -159,7 +169,7 @@ public class TipiNewCallService extends TipiAction {
         myContext.fireNavajoSent(input, service);
         try {
             myContext.getClient().doSimpleSend(nn, service, retries);
-            processResult(breakOnError, destination, service, nn, false);
+            processResult(breakOnError, breakOnNonValidation, destination, service, nn, false);
         } catch (ClientException e) {
             logger.error("Error: ", e);
         }
@@ -228,7 +238,8 @@ public class TipiNewCallService extends TipiAction {
         return input;
     }
 
-    private void processResult(boolean breakOnError, String destination, String service, Navajo result, boolean cache) throws TipiException {
+    private void processResult(boolean breakOnError, boolean breakOnNonValidation, String destination, String service, Navajo result,
+            boolean cache) throws TipiException {
         if (myContext.getErrorHandler().hasErrors(result) == null) {
             // Only add navajo if we have no errors!
             myContext.addNavajo(service, result);
@@ -245,7 +256,7 @@ public class TipiNewCallService extends TipiAction {
             service = destination;
         }
         try {
-            myContext.loadNavajo(result, service, breakOnError);
+            myContext.loadNavajo(result, service, breakOnError, breakOnNonValidation);
         } catch (TipiBreakException e) {
             performTipiEvent("onError", Collections.singletonMap("error", (Object) result), true);
             throw e;

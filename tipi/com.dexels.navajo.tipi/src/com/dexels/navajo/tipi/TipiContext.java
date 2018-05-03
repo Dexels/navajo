@@ -1686,7 +1686,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         fireNavajoReceived(reply, method);
 
         addNavajo(method, reply);
-        loadNavajo(reply, method, tipiDestinationPath, event, breakOnError);
+        loadNavajo(reply, method, tipiDestinationPath, event, breakOnError, true);
     }
 
     public Navajo getNavajo(String method) {
@@ -1745,7 +1745,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         navajoMap.put(method, navajo);
     }
     
-    public void loadNavajo(Navajo reply, String method, boolean breakOnException) throws TipiBreakException {
+    public void loadNavajo(Navajo reply, String method, boolean breakOnException, boolean breakOnNonValidation) throws TipiBreakException {
 
         Header h = reply.getHeader();
         if (h == null) {
@@ -1753,7 +1753,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             reply.addHeader(h);
         }
         
-        loadNavajo(reply, method, "*", null, breakOnException);
+        loadNavajo(reply, method, "*", null, breakOnException, breakOnNonValidation);
         Navajo compNavajo = null;
         if (hasDebugger && !"NavajoListNavajo".equals(method)) {
             try {
@@ -1776,13 +1776,14 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
     }
 
     public void loadNavajo(Navajo reply, String method) throws TipiBreakException {
-        loadNavajo(reply, method, false);
+        loadNavajo(reply, method, true, true); // According to default change this should be true
     }
     
 
 
 
-    public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError) throws TipiBreakException {
+    public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError,
+            boolean breakOnNonValidation) throws TipiBreakException {
         if (reply != null) {
                        
             String errorMessage = getErrorHandler().hasErrors(reply);
@@ -1816,7 +1817,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
                 } else {
                     logger.info("Not delivering error since one or more components have their own errorhandler defined");
                 }
-                if (breakOnError || getErrorHandler().hasServerErrors(reply)) {
+                if (breakOnError || getErrorHandler().hasServerErrors(reply) || breakOnNonValidation) {
                     throw new TipiBreakException(TipiBreakException.WEBSERVICE_BREAK);
                 }
                 return;

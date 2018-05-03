@@ -279,6 +279,7 @@
       <param name="destination" type="string" required="false" />
       <param name="input" type="navajo" />
       <param name="breakOnError" type="boolean" default="false" />
+      <param name="breakOnNonValidation" type="boolean" default="false" />
       <events>
          <event name="onError">
             <description>
