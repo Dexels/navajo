@@ -49,6 +49,8 @@ public class TmlPropertySerializer extends StdSerializer<Property> {
             } catch (NumberFormatException e) {
                 jg.writeString(value.toString());
             }
+        } else if (property.getType().equals(Property.COORDINATE_PROPERTY)) {
+            jg.writeString(value.toString());
         } else {
             JsonSerializer<Object> serializer = provider.findValueSerializer(value.getClass());
             serializer.serialize(value, jg, provider);

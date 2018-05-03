@@ -14,6 +14,7 @@ import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Coordinate;
 import com.dexels.navajo.document.types.Memo;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
@@ -193,6 +194,22 @@ public class TestTMLJson {
         String result = sw.toString();
         System.out.println(result);
         Assert.assertEquals("{\n  \"memoProp\" : \"This is a memo value\"\n}", result);
+    }
+
+    @Test
+    public void TestCoordinate() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message2.xml"));
+        JSONTML json = JSONTMLFactory.getInstance();
+
+        Property prop = NavajoFactory.getInstance().createProperty(n, "coordinateProp", "", "", "");
+        prop.setAnyValue(new Coordinate(-12.65342223, 13.12323425));
+        n.getMessage("SimpleMessage").addProperty(prop);
+
+        Writer sw = new StringWriter();
+        json.format(n, sw, true);
+
+        String result = sw.toString();
+        Assert.assertEquals("{\n  \"coordinateProp\" : \"[-12.65342223,13.12323425]\"\n}", result);
     }
 
 }
