@@ -170,6 +170,7 @@ public class EntityDispatcher {
             Message entityMessage = e.getMessage();
             
             e.setMessage(e.getMyMessageVersionMap().get("default"));
+            e.setMyVersion("default");
 
             if (queryString != null && runner.getHttpRequest().getParameter("entityVersion") != null) {
                 messageVersion = entityMessage.getName() + ".$" + runner.getHttpRequest().getParameter("entityVersion");
@@ -178,6 +179,11 @@ public class EntityDispatcher {
                 if (e.getMyMessageVersionMap().get(messageVersion) != null) {
                     logger.debug("Version Found");
                     e.setMessage(e.getMyMessageVersionMap().get(messageVersion));
+                    e.setMyVersion(messageVersion.split("\\.\\$")[1]);
+                }
+                if (runner.getHttpRequest().getParameter("noDefaultOnFail") != null) {
+                    logger.error("Request on unknown entity version");
+                    throw new EntityException(EntityException.UNKNOWN_VERSION);
                 }
             }
 
@@ -314,8 +320,6 @@ public class EntityDispatcher {
                 NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
                 statLogger.info("Finished {} ({}) in {}ms", access.accessID, access.getRpcName(), (System.currentTimeMillis() - runner.getStartedAt()));
             }
-
-            // TODO : MUST RESET ENTITY MESSAGE AT THE END
 
         }
     }
