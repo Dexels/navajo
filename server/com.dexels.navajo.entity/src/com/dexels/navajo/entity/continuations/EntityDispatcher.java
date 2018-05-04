@@ -168,7 +168,8 @@ public class EntityDispatcher {
             entityFound = true;
             Message entityMessage = e.getMessage();
 
-            if (queryString != null && runner.getHttpRequest().getParameter("entityVersion") != null) {
+            if (queryString != null && runner.getHttpRequest().getParameter("entityVersion") != null
+                    && !runner.getHttpRequest().getParameter("entityVersion").equals("")) {
                 // Parse the version from the url parameter
                 String version = runner.getHttpRequest().getParameter("entityVersion") != null
                         ? runner.getHttpRequest().getParameter("entityVersion")
