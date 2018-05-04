@@ -2,8 +2,10 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -347,9 +349,24 @@ public final class ASTTmlNode extends SimpleNode {
 
 			// TODO support actual path parser
 			private Object parseImmutablePath(String text, ImmutableMessage rm) {
-				return rm.columnValue(text);
+				List<String> parts = Arrays.asList(text.split("/"));
+				return parseImmutablePath(parts, rm);
 			}
 
+			private Object parseImmutablePath(List<String> path, ImmutableMessage rm) {
+				if(path.size()>1) {
+					Optional<ImmutableMessage> imm = rm.subMessage(path.get(0));
+					if(imm.isPresent()) {
+						List<String> parts = new LinkedList<>(path);
+						parts.remove(0);
+						return parseImmutablePath(parts,imm.get());
+					}
+					return null;
+				}
+				return rm.columnValue(path.get(0));
+			}
+
+			
 			@Override
 			public Optional<String> returnType() {
 				return Optional.empty();
