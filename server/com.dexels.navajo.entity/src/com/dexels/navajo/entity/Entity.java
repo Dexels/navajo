@@ -166,7 +166,7 @@ public class Entity {
             } else {
                 Message newMessage = m.copy();
                 newMessage.setName(getMessageName());
-                myMessageVersionMap.put(m.getName().contains(".") ? m.getName() : "0", newMessage);
+                myMessageVersionMap.put(m.getName().contains(".") ? m.getName() : m.getName() + ".0", newMessage);
             }
         });
     }

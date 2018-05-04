@@ -168,39 +168,33 @@ public class EntityDispatcher {
             entityFound = true;
             Message entityMessage = e.getMessage();
 
-            if (queryString != null && runner.getHttpRequest().getParameter("entityVersion") != null
-                    && !runner.getHttpRequest().getParameter("entityVersion").equals("")) {
-                // Parse the version from the url parameter
-                String version = runner.getHttpRequest().getParameter("entityVersion") != null
-                        ? runner.getHttpRequest().getParameter("entityVersion")
-                        : "";
-                messageVersion = entityMessage.getName() + ".$" + version;
-                logger.debug("Requesting version : {}", messageVersion);
+            String version = runner.getHttpRequest().getHeader("X-Navajo-Version");
 
+            if (version != null && !version.equals("")) {
+                messageVersion = entityMessage.getName() + "." + version;
+                logger.debug("Requesting version : {}", messageVersion);
                 // Is version that has been requested the same as in the previous request?
                 if (!e.getMyVersion().equals(version)) {
                     // Does the version exist?
                     if (e.getMyMessageVersionMap().get(messageVersion) != null) {
                         logger.debug("Version Found");
                         e.setMessage(e.getMyMessageVersionMap().get(messageVersion));
-                        e.setMyVersion(messageVersion.split("\\.\\$")[1]);
+                        e.setMyVersion(messageVersion.split("\\.")[1]);
                     } else {
-                        // Is default behavior requested? If no throw error
-                        if (runner.getHttpRequest().getParameter("noDefaultOnFail") != null) {
+                        // set default entity again
+                        logger.debug("Version Not Found");
+                        e.setMessage(e.getMyMessageVersionMap().get(entityMessage.getName() + ".0"));
+                        e.setMyVersion("0");
+                        // throw error cause version was not found
                             logger.error("Request on unknown entity version");
                             throw new EntityException(EntityException.UNKNOWN_VERSION);
-                        } else {
-                            e.setMessage(e.getMyMessageVersionMap().get("default"));
-                            e.setMyVersion("default");
-                        }
                     }
                 }
-            } else if (!e.getMyVersion().equals("default")) { // Is version that has been requested the same as in the previous request? If
+            } else if (!e.getMyVersion().equals("0")) { // Is version that has been requested the same as in the previous request? If
                                                               // not then set it
-                e.setMessage(e.getMyMessageVersionMap().get("default"));
-                e.setMyVersion("default");
+                e.setMessage(e.getMyMessageVersionMap().get(entityMessage.getName() + ".0"));
+                e.setMyVersion("0");
             }
-
             e.refreshEntityManagerOperations();
             // Get the input document
             if (method.equals(HTTP_METHOD_OPTIONS) || method.equals(HTTP_METHOD_GET) || method.equals(HTTP_METHOD_DELETE)) {
