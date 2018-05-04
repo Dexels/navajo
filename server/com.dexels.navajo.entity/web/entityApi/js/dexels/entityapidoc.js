@@ -153,6 +153,29 @@ $(document).ready(function() {
         modal.open();
     });
     
+    $(document).on('click', '.version-checkbox', function() {
+        if($(this)[0].checked){
+        	$($($(this)[0]).parent().parent().find('.version-input')[0]).prop('disabled', false);
+        }else{
+        	$($($(this)[0]).parent().parent().find('.version-input')[0]).prop('disabled', true);
+        	$($($(this)[0]).parent().parent().find('.version-input')[0]).val(0, false);
+        }
+    });
+    
+    $(document).on('change', '.version-input', function() {
+    	console.log($(this).val());
+    	
+//        
+//        if($(this)[0].checked){
+//        	$($($(this)[0]).parent().parent().find('.version-input')[0]).prop('disabled', false);
+//        }else{
+//        	$($($(this)[0]).parent().parent().find('.version-input')[0]).prop('disabled', true);
+//        	$($($(this)[0]).parent().parent().find('.version-input')[0]).val(0, false);
+//        }
+    });
+    
+    
+    
     /* Going to perform an entity call */
     $(document).on('click', '.callentitybutton', function() {
         var myRequest =  $(this).closest('.requestbody');
@@ -165,6 +188,12 @@ $(document).ready(function() {
         myOp.find('.entityresponsebody').children().remove();
         myOp.find('.shell-body').text('');
         var url = window.location.origin + "/entity/"+ myOp.find('.url').text();
+        
+        //var entityVersion specific
+        var entityField = $($(this).parents().get(2)).find(".entity-version");
+        var requestVersion = $(entityField).find("input")[0].checked;
+        var requestVersionNum = $(entityField).find("input")[1].value;
+        
        
         if (method === "GET" || method === "DELETE") {
             // prepare URL
@@ -203,6 +232,7 @@ $(document).ready(function() {
                 				req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
                 		}
                     req.setRequestHeader('Accept', 'application/json'); 
+                    req.setRequestHeader('X-Navajo-Version', requestVersionNum); 
                     if(sessionStorage.locale !== "n/a"){
                     	req.setRequestHeader('X-Navajo-Locale', sessionStorage.locale)
                     }
@@ -245,6 +275,7 @@ $(document).ready(function() {
 	            		} 
                     req.setRequestHeader('Accept', 'application/json');
                     req.setRequestHeader('content-type', 'application/json');
+                    req.setRequestHeader('X-Navajo-Version', requestVersionNum); 
                     if(sessionStorage.locale !== "n/a"){
                     	req.setRequestHeader('X-Navajo-Locale', sessionStorage.locale)
                     }
@@ -287,9 +318,6 @@ $(document).ready(function() {
                 response += ' -H "Authorization: ' +sessionStorage.cauth_type + ' ' + sessionStorage.token +'"';
                 if (sessionStorage.isLocalhost == '1' && sessionStorage.tenant) response += ' -H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
             }
-            if(sessionStorage.locale !== "n/a"){
-            	response += ' -H "X-Navajo-Locale: ' + sessionStorage.locale + '"' ;
-            }
             return response + ' ';
         }
         
@@ -299,6 +327,10 @@ $(document).ready(function() {
             curl += '-X' + method;
             curl += getCurlAuth();
             curl += ' -H "Accept: application/json" ';
+            curl += ' -H "X-Navajo-Version: '+requestVersionNum+'" ';
+            if(sessionStorage.locale !== "n/a"){
+            	curl += ' -H "X-Navajo-Locale: ' + sessionStorage.locale + '"' ;
+            }
             curl += '"' + encodeURI(url) + '"'
             return curl;
         }
@@ -308,6 +340,10 @@ $(document).ready(function() {
             curl += '-X' + method;
             curl += getCurlAuth();
             curl +=  ' -H "Accept: application/json" ';
+            curl += ' -H "X-Navajo-Version: '+requestVersionNum+'" ';
+            if(sessionStorage.locale !== "n/a"){
+            	curl += ' -H "X-Navajo-Locale: ' + sessionStorage.locale + '"' ;
+            }
             curl += '-d "';
             curl += data.replace(new RegExp('\"', 'g'), '\\"').replace(new RegExp('\n', 'g'), '')
             curl += '" ';
@@ -333,6 +369,7 @@ $(document).ready(function() {
             parent.children('.perform-call-entity').hide();
             parent.find('.callentitybutton').hide();
             
+            parent.find(".entity-version").hide();            
            
             $(this).removeClass('cancel');
         } else {
@@ -342,6 +379,8 @@ $(document).ready(function() {
             // Hide response
             parent.find('.responsebody').hide();
             parent.find('.callentitybutton').show();
+            
+            parent.find(".entity-version").show();
              
             // Add input to table
             var method = parent.find('a').attr('method') ;

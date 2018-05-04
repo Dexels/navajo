@@ -1,4 +1,4 @@
-<ul class="operations" >
+<ul class="operations" id="{{ENOPID}}" >
 	<li class="operation {{OP}}">
 		<a href="#" method="{{OP}}"> 
 			<div class="operationHeader {{OP}}">

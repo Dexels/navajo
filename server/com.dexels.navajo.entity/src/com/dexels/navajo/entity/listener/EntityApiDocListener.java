@@ -133,6 +133,7 @@ public class EntityApiDocListener extends HttpServlet  {
 
         result = template.replace("{{OP}}", method);
         result = result.replace("{{URL}}", entityNameUrl);
+        result = result.replace("{{ENOPID}}", "ul_" + e.getName());
 
         String oprequesttemplate = getTemplate("operationrequest.template");
         String opresponsetemplate = getTemplate("operationresponse.template");
@@ -158,6 +159,7 @@ public class EntityApiDocListener extends HttpServlet  {
             // TODO: FINISH REQUEStS
             if (e.getMyMessageVersionMap().size() > 1) {
                 String operationrequestversion = getTemplate("operationrequestversion.template");
+                operationrequestversion = operationrequestversion.replace("{{CURRENT_ENTITY_VERSION}}", e.getMyVersion());
                 requestBody = requestBody.replace("{{REQUEST_VERSION}}", operationrequestversion);
             } else {
                 requestBody = requestBody.replace("{{REQUEST_VERSION}}", "");
@@ -250,6 +252,7 @@ public class EntityApiDocListener extends HttpServlet  {
 
         if (e.getMyMessageVersionMap().size() > 1) {
             String operationrequestversion = getTemplate("operationrequestversion.template");
+            operationrequestversion = operationrequestversion.replace("{{CURRENT_ENTITY_VERSION}}", e.getMyVersion());
             result += operationrequestversion;
         }
 
