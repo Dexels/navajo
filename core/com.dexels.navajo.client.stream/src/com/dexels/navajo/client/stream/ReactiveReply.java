@@ -12,15 +12,18 @@ import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Property;
 
 import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 
 public class ReactiveReply {
 
 	public final ReactiveResponse response;
 	public final Flowable<ContentChunk> content;
+	private final Consumer<byte[]> receivedReporter;
 
-	public ReactiveReply(ReactiveResponse response, Publisher<ContentChunk> content) {
+	public ReactiveReply(ReactiveResponse response, Publisher<ContentChunk> content, Consumer<byte[]> receivedReporter) {
 		this.response = response;
 		this.content = Flowable.fromPublisher(content);
+		this.receivedReporter = receivedReporter;
 	}
 
 	public Map<String,String> responseHeaders() {

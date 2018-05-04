@@ -2,6 +2,7 @@ package com.dexels.navajo.client.stream.jetty;
 
 import java.nio.ByteBuffer;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
 import org.eclipse.jetty.client.HttpClient;
@@ -10,6 +11,8 @@ import org.eclipse.jetty.reactive.client.ContentChunk;
 import org.eclipse.jetty.reactive.client.ReactiveRequest;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.stream.ReactiveReply;
 
@@ -17,10 +20,16 @@ import io.reactivex.Emitter;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.Single;
+import io.reactivex.functions.Consumer;
 
 public class JettyClient {
 
 	private final HttpClient httpClient = new HttpClient(new SslContextFactory());
+	private AtomicLong sent = new AtomicLong();
+	private AtomicLong received = new AtomicLong();
+
+	
+	private final static Logger logger = LoggerFactory.getLogger(JettyClient.class);
 
 	public JettyClient() throws Exception {
 		httpClient.start();
@@ -51,16 +60,18 @@ public class JettyClient {
 		ReactiveRequest.Builder requestBuilder = ReactiveRequest.newBuilder(reqProcessed);
 		if(requestBody.isPresent()) {
 			Publisher<ContentChunk> bb = requestBody.get()
+					.doOnNext(b->this.sent.addAndGet(b.length))
 					.map(e->new ContentChunk(ByteBuffer.wrap(e)));
 			requestBuilder = requestBuilder.content(ReactiveRequest.Content.fromPublisher(bb, requestContentType.get()));
 		}
 		ReactiveRequest request = requestBuilder.build();
-		return Flowable.fromPublisher(request.response((response, content) -> Flowable.just(new ReactiveReply(response,content))))
+		return Flowable.fromPublisher(request.response((response, content) -> Flowable.just(new ReactiveReply(response,content,b->this.sent.addAndGet(b.length)))))
 				.doOnNext(reply->{
 //					System.err.println("Calling URI: "+uri+" headers: "+reqProcessed.getHeaders()+" method: "+reqProcessed.getMethod()+" -> "+reqProcessed.getURI());
 //					System.err.println("Reply. Result: "+reply.status()+" headers: "+reply.responseHeaders());
-				})
-				;
+				}).doOnComplete(
+						()->logger.info("HTTP Client to {}: sent: {} received: {}",uri,sent.get(),received.get())
+					);
 	}
 
 	public FlowableTransformer<ReactiveReply, byte[]> responseStream() {
