@@ -33,10 +33,15 @@ public class StoreAsSubMessage implements ReactiveMerger {
 			if(!condition) {
 				return item;
 			}
-			String name = parms.paramString("name");
-			ImmutableMessage state = item.stateMessage();
-			ImmutableMessage assembled = item.message().withSubMessage(name, state);
-			return DataItem.of(assembled, item.stateMessage());
+			Optional<String> nameOpt = parms.optionalString("name");
+			if(nameOpt.isPresent()) {
+				String name = nameOpt.get();
+				ImmutableMessage state = item.stateMessage();
+				ImmutableMessage assembled = item.message().withSubMessage(name, state);
+				return DataItem.of(assembled, item.stateMessage());
+			} else {
+				return DataItem.of(item.message().merge(item.stateMessage(), Optional.empty()));
+			}
 		};
 	}
 
@@ -48,7 +53,7 @@ public class StoreAsSubMessage implements ReactiveMerger {
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[]{"name"}));
+		return Optional.of(Arrays.asList(new String[]{}));
 	}
 
 	@Override
