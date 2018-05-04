@@ -154,6 +154,10 @@ $(document).ready(function() {
     });
     
     $(document).on('click', '.version-checkbox', function() {
+    	if (sessionStorage.getItem("token") === null || !sessionStorage.getItem("token") ) {
+            modal.open();
+            return;
+        }
         if($(this)[0].checked){
         	$($($(this)[0]).parent().parent().find('.version-input')[0]).prop('disabled', false);
         }else{
@@ -165,13 +169,13 @@ $(document).ready(function() {
     $(document).on('change', '.version-input', function() {
     	console.log($(this).val());
     	
-//        
-//        if($(this)[0].checked){
-//        	$($($(this)[0]).parent().parent().find('.version-input')[0]).prop('disabled', false);
-//        }else{
-//        	$($($(this)[0]).parent().parent().find('.version-input')[0]).prop('disabled', true);
-//        	$($($(this)[0]).parent().parent().find('.version-input')[0]).val(0, false);
-//        }
+    	if (sessionStorage.getItem("token") === null || !sessionStorage.getItem("token") ) {
+            modal.open();
+            return;
+        }
+    	//TODO: Request the new entity version to be activated 
+
+    	//TODO: refresh the page and go there
     });
     
     
@@ -190,9 +194,19 @@ $(document).ready(function() {
         var url = window.location.origin + "/entity/"+ myOp.find('.url').text();
         
         //var entityVersion specific
-        var entityField = $($(this).parents().get(2)).find(".entity-version");
-        var requestVersion = $(entityField).find("input")[0].checked;
-        var requestVersionNum = $(entityField).find("input")[1].value;
+        var entityField;
+        var requestVersion;
+        var requestVersionNum;
+        
+        try {
+        	entityField = $($(this).parents().get(2)).find(".entity-version");
+        	requestVersion = $(entityField).find("input")[0].checked;
+        	requestVersionNum = $(entityField).find("input")[1].value;
+        }
+        catch(err) {
+        	requestVersionNum = 0;
+        }
+
         
        
         if (method === "GET" || method === "DELETE") {
