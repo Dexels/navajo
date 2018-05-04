@@ -161,12 +161,12 @@ public class Entity {
 
     private void setVersionMessages(Navajo n) {
         n.getAllMessages().forEach(m -> {
-            if (!m.getName().matches("^[\\$a-zA-Z0-9._-]*$")) {
+            if (!m.getName().matches("^[a-zA-Z0-9.]*$")) {
                 logger.error("Unsupported version name :: {}. Please use alphanumeric, -, _ or . characters", m.getName());
             } else {
                 Message newMessage = m.copy();
                 newMessage.setName(getMessageName());
-                myMessageVersionMap.put(m.getName().contains(".$") ? m.getName() : "default", newMessage);
+                myMessageVersionMap.put(m.getName().contains(".") ? m.getName() : "0", newMessage);
             }
         });
     }

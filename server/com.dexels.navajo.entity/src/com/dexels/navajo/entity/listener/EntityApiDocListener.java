@@ -138,17 +138,37 @@ public class EntityApiDocListener extends HttpServlet  {
         String opresponsetemplate = getTemplate("operationresponse.template");
 
         String requestBody = null;
-//        String modelBody =  printModel(e.getMessage(), method, "request");
+        // String modelBody = printModel(e.getMessage(), method, "request");
         result = result.replace("{{OPREQUESTMODEL}}", "");
+
+        // if (e.getMyMessageVersionMap().size() > 1) {
+        // System.out.println("Added it muahahahahahhahhahaah");
+        // String operationrequestversion =
+        // getTemplate("operationrequestversion.template");
+        // result = result.replace("{{REQUEST_VERSION}}", operationrequestversion);
+        // } else {
+        // result = result.replace("{{REQUEST_VERSION}}", "");
+        // }
+
         if (method.equals(Operation.GET) || method.equals(Operation.DELETE)) {
             requestBody =  printRequestKeysDefinition(e);
         } else {
             String requestbodyTemplate = getTemplate("operationrequestbody.template");
             requestBody = requestbodyTemplate.replace("{{REQUEST_BODY}}", writeEntityJson(n, "request"));
+            // TODO: FINISH REQUEStS
+            if (e.getMyMessageVersionMap().size() > 1) {
+                String operationrequestversion = getTemplate("operationrequestversion.template");
+                requestBody = requestBody.replace("{{REQUEST_VERSION}}", operationrequestversion);
+            } else {
+                requestBody = requestBody.replace("{{REQUEST_VERSION}}", "");
+            }
         }
         String request = oprequesttemplate.replace("{{ENTITY_REQUEST_BODY}}", requestBody);
         request = request.replace("{{OP}}", method);
         result = result.replace("{{OPREQUEST}}", request);
+
+
+
         if (op.getDescription() != null) {
             result = result.replace("{{DESCRIPTION}}", op.getDescription());
 
@@ -227,6 +247,12 @@ public class EntityApiDocListener extends HttpServlet  {
     private String printRequestKeysDefinition(Entity e) throws ServletException {
         
         String result = "";
+
+        if (e.getMyMessageVersionMap().size() > 1) {
+            String operationrequestversion = getTemplate("operationrequestversion.template");
+            result += operationrequestversion;
+        }
+
         for (Key key : e.getKeys()) {
 
             String rows = "";
@@ -260,7 +286,7 @@ public class EntityApiDocListener extends HttpServlet  {
         }
         
         result.replace("{{CLASS}}", "inputmodel");  
-        
+
         return result;
 
     }
