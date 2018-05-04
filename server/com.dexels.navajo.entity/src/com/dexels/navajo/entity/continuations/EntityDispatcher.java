@@ -166,25 +166,38 @@ public class EntityDispatcher {
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND);
             }
             entityFound = true;
-
             Message entityMessage = e.getMessage();
-            
-            e.setMessage(e.getMyMessageVersionMap().get("default"));
-            e.setMyVersion("default");
 
             if (queryString != null && runner.getHttpRequest().getParameter("entityVersion") != null) {
-                messageVersion = entityMessage.getName() + ".$" + runner.getHttpRequest().getParameter("entityVersion");
+                // Parse the version from the url parameter
+                String version = runner.getHttpRequest().getParameter("entityVersion") != null
+                        ? runner.getHttpRequest().getParameter("entityVersion")
+                        : "";
+                messageVersion = entityMessage.getName() + ".$" + version;
                 logger.debug("Requesting version : {}", messageVersion);
-                // check if version exists in entity definition ::
-                if (e.getMyMessageVersionMap().get(messageVersion) != null) {
-                    logger.debug("Version Found");
-                    e.setMessage(e.getMyMessageVersionMap().get(messageVersion));
-                    e.setMyVersion(messageVersion.split("\\.\\$")[1]);
+
+                // Is version that has been requested the same as in the previous request?
+                if (!e.getMyVersion().equals(version)) {
+                    // Does the version exist?
+                    if (e.getMyMessageVersionMap().get(messageVersion) != null) {
+                        logger.debug("Version Found");
+                        e.setMessage(e.getMyMessageVersionMap().get(messageVersion));
+                        e.setMyVersion(messageVersion.split("\\.\\$")[1]);
+                    } else {
+                        // Is default behavior requested? If no throw error
+                        if (runner.getHttpRequest().getParameter("noDefaultOnFail") != null) {
+                            logger.error("Request on unknown entity version");
+                            throw new EntityException(EntityException.UNKNOWN_VERSION);
+                        } else {
+                            e.setMessage(e.getMyMessageVersionMap().get("default"));
+                            e.setMyVersion("default");
+                        }
+                    }
                 }
-                if (runner.getHttpRequest().getParameter("noDefaultOnFail") != null) {
-                    logger.error("Request on unknown entity version");
-                    throw new EntityException(EntityException.UNKNOWN_VERSION);
-                }
+            } else if (!e.getMyVersion().equals("default")) { // Is version that has been requested the same as in the previous request? If
+                                                              // not then set it
+                e.setMessage(e.getMyMessageVersionMap().get("default"));
+                e.setMyVersion("default");
             }
 
             e.refreshEntityManagerOperations();
