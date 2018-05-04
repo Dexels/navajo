@@ -2,6 +2,7 @@ package com.dexels.navajo.resource.http;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public interface HttpResource {
 	public Single<ReactiveReply> head(String tenant, String bucket, String id);
 	public Single<ReactiveReply> delete(String tenant, String bucket, String id);
 	public Flowable<HttpElement> list(String tenant, String bucket);
-
+	
 	default Single<ReactiveReply> put(String tenant,String bucket, String id, Binary data) {
 		// todo Null guessed content types?
 		Logger logger = LoggerFactory.getLogger(HttpResource.class);

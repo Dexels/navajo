@@ -17,6 +17,7 @@ import com.dexels.navajo.resource.http.HttpResource;
 import com.dexels.navajo.resource.http.HttpResourceFactory;
 
 import io.reactivex.FlowableTransformer;
+import io.reactivex.schedulers.Schedulers;
 
 public class HttpPushTransformer implements ReactiveTransformer {
 
@@ -46,6 +47,7 @@ public class HttpPushTransformer implements ReactiveTransformer {
 				throw new NullPointerException("Missing http resource: "+name);
 			}
 			return flow.map(f->f.message())
+					.observeOn(Schedulers.io())
 					.map(msg->{
 						ReactiveResolvedParameters resInMsg = parameters.resolveNamed(context, Optional.of(msg), ImmutableFactory.empty(), metadata, sourceElement, "");
 						String id = resInMsg.paramString("id");

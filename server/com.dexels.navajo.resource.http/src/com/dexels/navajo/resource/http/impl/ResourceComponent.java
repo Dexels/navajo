@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.stream.ReactiveReply;
 import com.dexels.navajo.client.stream.jetty.JettyClient;
-import com.dexels.navajo.document.stream.json.JSON;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.resource.http.HttpElement;
@@ -77,14 +76,14 @@ public class ResourceComponent implements HttpResource {
 		return client.callWithBody(assembleURL(tenant,bucket, id), 
 					r->r.header("Authorization", this.authorization)
 						.method(HttpMethod.PUT)
-				,Flowable.fromPublisher(data).doOnNext(b->logger.debug("Bytes detected:"+b.length)),type)
+				,Flowable.fromPublisher(data)
+				,type)
 				.firstOrError();
 	}
 
 	@Override
 	public Flowable<byte[]> get(String tenant, String bucket, String id) {
 		String callingUrl = assembleURL(tenant,bucket, id);
-		logger.info("Calling url: "+callingUrl);
 		return client.callWithoutBody(callingUrl, r->r.header("Authorization", this.authorization))
 			.toFlowable()
 			.compose(client.responseStream());
@@ -106,13 +105,13 @@ public class ResourceComponent implements HttpResource {
 
 	private String assembleURL(String tenant, String bucket, String id) {
 		String u = this.url+resolveBucket(tenant, bucket)+"/"+id;
-		logger.debug("Assembling: "+u);
+//		logger.debug("Assembling: "+u);
 		return u;
 	}
 	
 	private String resolveBucket(String tenant, String bucket) {
 		String u = tenant+"-"+deployment+"-"+bucket;
-		logger.debug("Resolved bucket: "+u);
+//		logger.debug("Resolved bucket: "+u);
 		return u;
 	}
 
