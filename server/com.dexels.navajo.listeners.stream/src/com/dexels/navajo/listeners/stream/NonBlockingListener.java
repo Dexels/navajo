@@ -1,6 +1,7 @@
 package com.dexels.navajo.listeners.stream;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -44,6 +45,9 @@ import com.dexels.navajo.reactive.api.ReactiveParseException;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.LocalClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -62,6 +66,9 @@ public class NonBlockingListener extends HttpServlet {
 	private ReactiveScriptRunner reactiveScriptEnvironment;
 	
 	private Map<String,StreamScriptContext> scriptsInProgress = new HashMap<>();
+	
+	ObjectMapper objectMapper = new ObjectMapper();
+
 	
 	public NonBlockingListener() {
 		Observable.interval(10, TimeUnit.SECONDS)
@@ -120,7 +127,15 @@ public class NonBlockingListener extends HttpServlet {
 	}
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String cancel = request.getParameter("cancel");
+		if(cancel!=null) {
+			cancel(cancel,request,response);
+		}
 		
+		if(request.getParameter("list")!=null) {
+			listScriptsHtml(request,response);
+			return;
+		}
 		String serviceHeader = request.getHeader("X-Navajo-Service");
 		if(serviceHeader==null) {
 			logger.info("Can not deal with missing X-Navajo-Service header, redirecting to legacy");
@@ -145,7 +160,6 @@ public class NonBlockingListener extends HttpServlet {
 		scriptsInProgress.put(context.uuid(),context);
 		
 		Optional<String> responseEncoding = decideEncoding(request.getHeader("Accept-Encoding"));
-//		Subscriber<byte[]> responseSubscriber = Servlets.createSubscriber(ac,(resp,error)->handleInitialError(resp, error, context));
 			
 		try {
 			String debugString = request.getHeader("X-Navajo-Debug");
@@ -261,6 +275,53 @@ public class NonBlockingListener extends HttpServlet {
 	}
 
 
+	private void cancel(String cancel, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setContentType("text/html");
+		StreamScriptContext ctx = this.scriptsInProgress.get(cancel);
+		if(ctx==null) {
+//			response.sendError(404);
+			return;
+		} else {
+			ctx.cancel();
+//			r.put("response", "canceled");
+		}
+//		objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, r);
+		response.sendRedirect("/stream?list");
+//		listScriptsHtml(request, response);
+		
+	}
+
+	private void listScriptsHtml(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setContentType("text/html");
+		PrintWriter writer = response.getWriter();
+		writer.write("<html><head></head><body>");
+		writer.write("<h2>Running scripts:</h2><ul>");
+		this.scriptsInProgress.entrySet().forEach(e->{
+			writer.write("<li><a href=\"stream?cancel="+e.getKey()+"&list\">"+e.getValue().service+"</li>");
+			
+		});
+		writer.write("<ul></body></html>");
+	}
+	private void listScriptsJson(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setContentType("application/json");
+		PrintWriter writer = response.getWriter();
+		ArrayNode list = objectMapper.createArrayNode();
+		long now = System.currentTimeMillis();
+		this.scriptsInProgress.entrySet().forEach(e->{
+			ObjectNode current = objectMapper.createObjectNode();
+			current.put("id", e.getKey());
+			StreamScriptContext ctx = e.getValue();
+			current.put("service", ctx.service);
+			current.put("tenant", ctx.tenant);
+			current.put("deployment", ctx.deployment());
+			current.put("username", ctx.username.orElse("<unknown>"));
+			current.put("started", ctx.started);
+			current.put("running", (now-ctx.started));
+			list.add(current);
+		});
+		objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, list);
+	}
+
 	private void respondError(String message, StreamScriptContext context, Optional<String> responseEncoding, HttpServletResponse response,
 			Subscriber<ByteBuffer> responseSubscriber, Throwable e1) {
 		logger.error("Returning error with message: "+message+" with responseEncoding: "+responseEncoding,e1);
@@ -366,7 +427,7 @@ public class NonBlockingListener extends HttpServlet {
 					attributes,Optional.of(
 							Flowable.<NavajoStreamEvent>empty().compose(StreamDocument
 									.inNavajo(serviceHeader, Optional.of(username), Optional.of(password)))
-							),null, Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(responseSubscriber));
+							),null, Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(()->{responseSubscriber.cancel(); ac.complete();}));
 		}
 		String requestEncoding = (String) attributes.get("Content-Encoding");
 		RequestPublisher rp = new RequestPublisher(ac, 8192);
@@ -379,7 +440,7 @@ public class NonBlockingListener extends HttpServlet {
 			.concatMap(e->e);
 		
 //	au
-		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,attributes,Optional.of(input),null, Optional.of(this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(responseSubscriber));
+		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,attributes,Optional.of(input),null, Optional.of(this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(()->{responseSubscriber.cancel(); ac.complete();}));
 	}
 
 	// warn: Duplicated code
