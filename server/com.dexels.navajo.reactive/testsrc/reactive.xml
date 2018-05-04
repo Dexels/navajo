@@ -4,9 +4,9 @@
 		<msg.mergeSingle.msg>
 			<source.sql resource="sportlinkkernel">
 				<param name="query">select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?</param>
-				<parameval>[ORGANIZATIONID]</parameval>
+				<parameval>[organizationid]</parameval>
 				<message.reduce.singlemessage>
-					<save to.eval="[ATTRIBNAME]" value.eval="[ATTRIBVALUE]"/>
+					<save to.eval="[attribname]" value.eval="[attribvalue]"/>
 				</message.reduce.singlemessage>
 			</source.sql>
 			<store name="Attributes"/>

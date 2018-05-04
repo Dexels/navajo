@@ -6,12 +6,16 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.Optional;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.api.ImmutableMessageParser;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
@@ -63,12 +67,13 @@ public class TestEnvironment {
 		reactiveScriptParser.addReactiveTransformerFactory(new ReduceTransformerFactory(),"reduce");
 		reactiveScriptParser.addReactiveTransformerFactory(new TakeTransformerFactory(),"take");
 		env.setReactiveScriptParser(reactiveScriptParser);
+		ImmutableFactory.setInstance(ImmutableFactory.createParser());
 //		rsp.addReactiveSourceFactory("", settings);
 	}
 
 	@Test 
 	public void testEnv() throws IOException {
-		runScript("singlesimple")
+		runScriptTML("singlesimple")
 			.lift(StreamDocument.serialize())
 			.blockingForEach(e->System.err.print(new String(e)));
 
@@ -77,7 +82,7 @@ public class TestEnvironment {
 
 	@Test 
 	public void testSingleMerge() throws IOException {
-		runScript("reactive")
+		runScriptTML("reactive")
 			.lift(StreamDocument.serialize())
 			.blockingForEach(e->System.err.print(new String(e)));
 	}
@@ -85,14 +90,14 @@ public class TestEnvironment {
 	@Test 
 	public void testSingle() throws IOException {
 		ImmutableFactory.setInstance(ImmutableFactory.createParser());
-		runScript("single")
+		runScriptTML("single")
 			.lift(StreamDocument.serialize())
 			.blockingForEach(e->System.err.print(new String(e)));
 	}
 	
 	@Test 
 	public void testSqlDump() throws IOException {
-		runScript("sql")
+		runScriptTML("sql")
 			.lift(StreamDocument.serialize())
 			.blockingForEach(e->System.err.print(new String(e)));
 	}
@@ -101,7 +106,7 @@ public class TestEnvironment {
 	
 	@Test 
 	public void testInputStream() throws IOException {
-		runScript("inputstream")
+		runScriptTML("inputstream")
 		.lift(StreamDocument.serialize())
 		.blockingForEach(e->System.err.print(new String(e)));
 	}
@@ -111,6 +116,19 @@ public class TestEnvironment {
 		runScriptBinary("csv")
 			.blockingForEach(e->System.err.print(new String(e)));
 	}
+	
+	@Test 
+	public void testCreateSubmessage() throws IOException {
+		ImmutableMessage imm = runScript("singlesubmessage")
+			.map(di->di.message())
+			.blockingFirst();
+		ImmutableFactory.getInstance().describe(imm);
+		Assert.assertTrue(imm.subMessage("aap").isPresent());
+		Assert.assertEquals("mies", imm.columnValue("other"));
+//		Assert.assertTrue(imm.subMessages("mies").isPresent());
+		
+	}
+
 
 	@Test 
 	public void testParseJSON() throws IOException {
@@ -121,11 +139,14 @@ public class TestEnvironment {
 		
 	}
 
-	private Flowable<NavajoStreamEvent> runScript(String name) {
+	private Flowable<NavajoStreamEvent> runScriptTML(String name) {
+		return runScript(name).map(d->d.event());
+	}
+	private Flowable<DataItem> runScript(String name) {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream(name+".xml")) {
 				env.installScript(name, in,"serviceName");
-				return env.build(name,true).execute(createContext(name))
-						.map(di->di.event());
+				return env.build(name,true).execute(createContext(name));
+						
 		} catch (IOException e1) {
 			return Flowable.error(e1);
 		}

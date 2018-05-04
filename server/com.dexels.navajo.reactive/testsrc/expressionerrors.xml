@@ -1,5 +1,5 @@
-<source.single count.eval="'a'">
- 	<set aap="noot" mies="wim" zus.eval="1+2" jet.eval="[index]"/>
+<source.single count:="'a'">
+ 	<set aap="noot" mies="wim" zus:="1+2" jet:="[index]"/>
 	<delete name="index"/>
 	<bloep/>
 	<msg.stream.event messageName="Bla" isArray.eval="true+1"/>
