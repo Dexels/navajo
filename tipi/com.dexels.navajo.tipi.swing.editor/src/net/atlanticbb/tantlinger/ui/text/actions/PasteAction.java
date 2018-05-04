@@ -4,6 +4,7 @@
  */
 package net.atlanticbb.tantlinger.ui.text.actions;
 
+import com.google.common.io.CharStreams;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -101,12 +102,8 @@ public class PasteAction extends HTMLTextEditAction
 			    DataFlavor html = DataFlavor.selectBestTextFlavor(content.getTransferDataFlavors());
 			    if (html.getMimeType().startsWith("text/html")) {
 	                // read html-code from stream
-	                Object transferData = content.getTransferData(html);
-	                BufferedReader reader = new BufferedReader((InputStreamReader) transferData);
-	                StringBuffer str = new StringBuffer();
-                    for (String line; (line = reader.readLine()) != null; str.append(line));
-
-	                htmlcontent =  str.toString();
+			        InputStreamReader transferDataStream = (InputStreamReader) content.getTransferData(html);
+			        htmlcontent = CharStreams.toString(transferDataStream);
 	            } else {
 	                // Another try at this
 	                htmlcontent = content.getTransferData(new DataFlavor("text/html;class=java.lang.String;charset=UTF-8")).toString();
