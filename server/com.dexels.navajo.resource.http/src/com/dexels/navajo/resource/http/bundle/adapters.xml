@@ -13,15 +13,15 @@
         </values>
         <methods>
             <method name="put">
-                <param name="binary" type="binary" required="true"/>
+                <param name="binary" field="binary" type="binary" required="true"/>
                 <param name="putBinary" field="putBinary" type="boolean" required="automatic" value="true"/>
             </method>
             <method name="delete">
-                <param name="binaryHash" type="string" required="true"/>
+                <param name="binaryHash" field="binaryHash" type="string" required="true"/>
                 <param name="deleteBinary" field="deleteBinary" type="boolean" required="automatic" value="true"/>
             </method>
             <method name="getURL">
-                <param name="binaryHash" type="string" required="true"/>
+                <param name="binaryHash"  field="binaryHash" type="string" required="true"/>
                 <param name="expiration" type="integer" required="true" />
                 <param name="url" field="temporaryURL" type="string" required="false"/>
             </method>
