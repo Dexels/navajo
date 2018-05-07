@@ -152,6 +152,10 @@
                     <td>602</td>
                     <td>Missing entity ID - the primary identifier fields of this entity are missing</td>
                 </tr>
+                <tr>
+                    <td>603</td>
+                    <td>Invalid Version Request - The requested entity version does not exist</td>
+                </tr>
             </tbody>
         </table>
     </div>

@@ -1,5 +1,4 @@
 <div class="requestbody">
-	{{REQUEST_VERSION}}
 	<div class="requestinput JSON">
 		<pre>
 {{REQUEST_BODY}}

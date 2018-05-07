@@ -287,6 +287,7 @@ li.operation pre {
 
 .entity-version{
 	float: right;
+	padding: 5px 5px 5px 5px;
 }
 
 /* .entity-version{
@@ -297,7 +298,7 @@ li.operation pre {
 	border-style: solid;
 	font-size: small;
 	margin: 10px 10px 10px 10px;
-	padding: 5px 5px 5px 5px;
+	
 	float: right;
 } */
 
