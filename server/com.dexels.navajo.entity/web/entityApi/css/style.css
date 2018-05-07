@@ -285,8 +285,12 @@ li.operation pre {
     
 }
 
-
 .entity-version{
+	float: right;
+}
+
+/* .entity-version{
+	visibility:hidden;
 	display:none;
 	border-color: #4990e2;
 	border-width: 0.2em;
@@ -295,7 +299,7 @@ li.operation pre {
 	margin: 10px 10px 10px 10px;
 	padding: 5px 5px 5px 5px;
 	float: right;
-}
+} */
 
 
 .tryentitybutton {

@@ -4,6 +4,7 @@
 			<div class="operationHeader {{OP}}">
 				<div class="method http{{OP}}">{{OP}}</div>
 				<div class="url">{{URL}}</div>
+				<div class="entity-version">{{VERSION}}</div>
 			</div>
 		</a>
 		<div style="display: none " class="entityDescription">

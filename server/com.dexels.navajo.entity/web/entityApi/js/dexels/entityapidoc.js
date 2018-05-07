@@ -260,8 +260,10 @@ $(document).ready(function() {
         myOp.find('.shell-body').text('');
         var url = window.location.origin + "/entity/"+ myOp.find('.url').text();
         
+        var requestVersionNum = 0;
+        
         try {
-         	requestVersionNum = self.parents('.entity-version').find('.version-input').val();
+         	requestVersionNum = $(this).closest('.operations').attr('id').split("-v")[1];
          }
          catch(err) {
          	requestVersionNum = 0;
