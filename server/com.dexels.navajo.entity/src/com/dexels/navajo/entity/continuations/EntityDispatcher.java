@@ -22,6 +22,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.entity.Entity;
@@ -50,9 +51,19 @@ public class EntityDispatcher {
     private AuthenticationMethodBuilder authMethodBuilder;
     private EntityMapper myMapper;
 
+    private void clearEntityMessage(Message entityMessage) {
+        for (Message m : entityMessage.getAllMessages()) {
+            entityMessage.removeMessage(m);
+        }
+        for (Property p : entityMessage.getAllProperties()) {
+            entityMessage.removeProperty(p);
+        }
+    }
+
     public void run(EntityContinuationRunner runner) {
         Navajo result = null;
         Access access = null;
+        String messageVersion = "";
         String method = runner.getHttpRequest().getMethod();
         String path = runner.getHttpRequest().getPathInfo();
         if (path.startsWith("/entity")) {
@@ -155,9 +166,37 @@ public class EntityDispatcher {
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND);
             }
             entityFound = true;
-
             Message entityMessage = e.getMessage();
 
+            String version = runner.getHttpRequest().getHeader("X-Navajo-Version");
+
+            if (version != null && !version.equals("")) {
+                messageVersion = entityMessage.getName() + "." + version;
+                logger.debug("Requesting version : {}", messageVersion);
+                // Is version that has been requested the same as in the previous request?
+                if (!e.getMyVersion().equals(version)) {
+                    // Does the version exist?
+                    if (e.getMyMessageVersionMap().get(messageVersion) != null) {
+                        logger.debug("Version Found");
+                        e.setMessage(e.getMyMessageVersionMap().get(messageVersion));
+                        e.setMyVersion(messageVersion.split("\\.")[1]);
+                    } else {
+                        // set default entity again
+                        logger.debug("Version Not Found");
+                        e.setMessage(e.getMyMessageVersionMap().get(entityMessage.getName() + ".0"));
+                        e.setMyVersion("0");
+                        e.refreshEntityManagerOperations();
+                        // throw error cause version was not found
+                            logger.error("Request on unknown entity version");
+                            throw new EntityException(EntityException.UNKNOWN_VERSION);
+                    }
+                }
+            } else if (!e.getMyVersion().equals("0")) { // Is version that has been requested the same as in the previous request? If
+                                                              // not then set it
+                e.setMessage(e.getMyMessageVersionMap().get(entityMessage.getName() + ".0"));
+                e.setMyVersion("0");
+            }
+            e.refreshEntityManagerOperations();
             // Get the input document
             if (method.equals(HTTP_METHOD_OPTIONS) || method.equals(HTTP_METHOD_GET) || method.equals(HTTP_METHOD_DELETE)) {
                 input = EntityHelper.deriveNavajoFromParameterMap(e, runner.getHttpRequest().getParameterMap());
@@ -290,6 +329,7 @@ public class EntityDispatcher {
                 NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
                 statLogger.info("Finished {} ({}) in {}ms", access.accessID, access.getRpcName(), (System.currentTimeMillis() - runner.getStartedAt()));
             }
+
         }
     }
 

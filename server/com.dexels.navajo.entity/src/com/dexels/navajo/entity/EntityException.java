@@ -33,6 +33,7 @@ public class EntityException extends UserException {
 	public final static int ENTITY_LOOP = 600;
 	public final static int UNKNOWN_PARENT_TYPE = 601;
 	public final static int MISSING_ID = 602;
+    public final static int UNKNOWN_VERSION = 603;
 	
 	private static Map<Integer,String> errorCodes = new HashMap<Integer, String>();
 	
@@ -45,6 +46,7 @@ public class EntityException extends UserException {
 		errorCodes.put(ENTITY_NOT_FOUND, "Entity not found");
 		errorCodes.put(OPERATION_NOT_SUPPORTED, "Operation not supported");
 		errorCodes.put(MISSING_ID, "Missing entity id");
+        errorCodes.put(UNKNOWN_VERSION, "Unknown entity version");
 		errorCodes.put(BAD_REQUEST, "Invalid entity request");
 		errorCodes.put(VALIDATION_ERROR, "Validation exception");
 		errorCodes.put(OUTPUT_NOT_ACCEPTABLE, "Requested output not available");

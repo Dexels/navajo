@@ -1,3 +1,4 @@
+
 .bodycenter {
 	margin-left: auto;
 	margin-right: auto;
@@ -283,6 +284,25 @@ li.operation pre {
     color: #3b4151;
     
 }
+
+.entity-version{
+	float: right;
+	padding: 5px 5px 5px 5px;
+}
+
+/* .entity-version{
+	visibility:hidden;
+	display:none;
+	border-color: #4990e2;
+	border-width: 0.2em;
+	border-style: solid;
+	font-size: small;
+	margin: 10px 10px 10px 10px;
+	
+	float: right;
+} */
+
+
 .tryentitybutton {
     outline: none;
     float: right;

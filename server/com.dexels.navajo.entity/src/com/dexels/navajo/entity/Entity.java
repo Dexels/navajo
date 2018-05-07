@@ -28,10 +28,15 @@ public class Entity {
     private final static Logger logger = LoggerFactory.getLogger(Entity.class);
     protected String entityName = null;
     protected String messageName = null;
+    private String myVersion;
+    private Navajo entityNavajo = null;
 
     // Keep track of entities that are derived from this entity.
     private Set<Entity> subEntities = new HashSet<Entity>();
     private Set<Entity> superEntities = new HashSet<Entity>();
+
+    // Keep track of entity messages versions
+    protected Map<String, Message> myMessageVersionMap = new HashMap<String, Message>();
 
     protected Map<String, Entity> superEntitiesMap = new HashMap<String, Entity>();
 
@@ -52,7 +57,7 @@ public class Entity {
             entityName = (String) properties.get("entity.name");
             messageName = (String) properties.get("entity.message");
             
-            Navajo entityNavajo = entityManager.getEntityNavajo((String) properties.get("service.name"));
+            entityNavajo = entityManager.getEntityNavajo((String) properties.get("service.name"));
             activateMessage(entityNavajo);
             entityManager.registerEntity(this);
         } catch (Throwable t) {
@@ -116,17 +121,58 @@ public class Entity {
 
         Message l = n.getAllMessages().iterator().next();
         setMessage(l);
+        setMyVersion("default");
+        setVersionMessages(n);
 
         Operation head = new OperationComponent();
         head.setEntityName(getName());
         head.setMethod("HEAD");
 
         // Add operations defined in entity.
+        refreshEntityManagerOperationsFromNavajo(n);
+    }
+
+    public void setMyVersion(String version) {
+        this.myVersion = version;
+    }
+
+    public String getMyVersion() {
+        return this.myVersion;
+    }
+
+    public void refreshEntityManagerOperationsFromNavajo(Navajo n) {
+        // Add operations defined in entity.
         List<Operation> allOps = n.getAllOperations();
         for (Operation o : allOps) {
             o.setEntityName(getName());
             entityManager.addOperation(o);
         }
+    }
+
+    public void refreshEntityManagerOperations() {
+        // Add operations defined in entity.
+        List<Operation> allOps = entityNavajo.getAllOperations();
+        for (Operation o : allOps) {
+            o.setEntityName(getName());
+            entityManager.addOperation(o);
+        }
+        entityManager.registerEntity(this);
+    }
+
+    private void setVersionMessages(Navajo n) {
+        n.getAllMessages().forEach(m -> {
+            if (!m.getName().matches("^[a-zA-Z0-9.]*$")) {
+                logger.error("Unsupported version name :: {}. Please use alphanumeric, -, _ or . characters", m.getName());
+            } else {
+                Message newMessage = m.copy();
+                newMessage.setName(getMessageName());
+                myMessageVersionMap.put(m.getName().contains(".") ? m.getName() : m.getName() + ".0", newMessage);
+            }
+        });
+    }
+
+    public Map<String, Message> getMyMessageVersionMap() {
+        return myMessageVersionMap;
     }
 
     public Set<Entity> getSubEntities() {

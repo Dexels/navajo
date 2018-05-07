@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -116,30 +117,48 @@ public class EntityApiDocListener extends HttpServlet  {
         String result = "";
         Map<String, Operation> ops = myManager.getOperations(entityName);
         Entity entity = myManager.getEntity(entityName);
+        if (ops != null) {
         for (String op : ops.keySet()) {
-            result += writeEntityOperation(operationtemplate, entity, path, ops.get(op));
+            for (Entry<String, Message> entry : entity.getMyMessageVersionMap().entrySet()) {
+                result += writeEntityOperation(operationtemplate, entity, entry.getKey(), path, ops.get(op));
+            }
+            }
         }
         return result;
         
     }
 
-    private String writeEntityOperation(String template, Entity e, String path, Operation op) throws ServletException {
+    private String writeEntityOperation(String template, Entity e, String entityVersion, String path, Operation op)
+            throws ServletException {
         String result = "";
         String method = op.getMethod();
+        String versionNum = entityVersion.split("\\.")[1];
         
+        try {
+            e.setMessage(e.getMyMessageVersionMap().get(entityVersion));
+            e.setMyVersion(versionNum);
+            e.refreshEntityManagerOperations();
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+
         Navajo n = NavajoFactory.getInstance().createNavajo();
         n.addMessage(e.getMessage().copy(n));
         String entityNameUrl = path + "/" + e.getMessageName();
 
         result = template.replace("{{OP}}", method);
         result = result.replace("{{URL}}", entityNameUrl);
+        result = result.replace("{{VERSION}}", " (v." + versionNum + ")");
+        result = result.replace("{{ENOPID}}", op.getMethod() + '-' + e.getMessageName() + "-v" + versionNum);
 
         String oprequesttemplate = getTemplate("operationrequest.template");
         String opresponsetemplate = getTemplate("operationresponse.template");
 
         String requestBody = null;
-//        String modelBody =  printModel(e.getMessage(), method, "request");
+        // String modelBody = printModel(e.getMessage(), method, "request");
         result = result.replace("{{OPREQUESTMODEL}}", "");
+
+
         if (method.equals(Operation.GET) || method.equals(Operation.DELETE)) {
             requestBody =  printRequestKeysDefinition(e);
         } else {
@@ -149,6 +168,9 @@ public class EntityApiDocListener extends HttpServlet  {
         String request = oprequesttemplate.replace("{{ENTITY_REQUEST_BODY}}", requestBody);
         request = request.replace("{{OP}}", method);
         result = result.replace("{{OPREQUEST}}", request);
+
+
+
         if (op.getDescription() != null) {
             result = result.replace("{{DESCRIPTION}}", op.getDescription());
 
@@ -227,6 +249,7 @@ public class EntityApiDocListener extends HttpServlet  {
     private String printRequestKeysDefinition(Entity e) throws ServletException {
         
         String result = "";
+
         for (Key key : e.getKeys()) {
 
             String rows = "";
@@ -260,7 +283,7 @@ public class EntityApiDocListener extends HttpServlet  {
         }
         
         result.replace("{{CLASS}}", "inputmodel");  
-        
+
         return result;
 
     }

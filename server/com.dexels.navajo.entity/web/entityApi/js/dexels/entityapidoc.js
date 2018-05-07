@@ -44,7 +44,18 @@ function setupLoginDialog() {
 
 }
 
+
+
+
 $(document).ready(function() {
+	
+	// Inside document.ready, so that it's executed AFTER the page is ready. Navigate to the last clicked entity :)  
+	$(document).ready(function() {		
+	 if(sessionStorage.getItem("clickedOperation")){
+		 $('#'+sessionStorage.getItem("clickedOperation")).find('.entityDescription').show();
+		 window.location.hash = sessionStorage.getItem("clickedOperation");
+	 }
+	});
 	
 	// Locale init
 	sessionStorage.locale = "n/a"
@@ -153,6 +164,12 @@ $(document).ready(function() {
         modal.open();
     });
     
+    
+    $(document).on('click', '.operations', function(){
+    	sessionStorage.setItem('clickedOperation',$(this).attr('id'));
+    }) 
+    
+    
     /* Going to perform an entity call */
     $(document).on('click', '.callentitybutton', function() {
         var myRequest =  $(this).closest('.requestbody');
@@ -165,7 +182,16 @@ $(document).ready(function() {
         myOp.find('.entityresponsebody').children().remove();
         myOp.find('.shell-body').text('');
         var url = window.location.origin + "/entity/"+ myOp.find('.url').text();
-       
+        
+        var requestVersionNum = 0;
+        
+        try {
+         	requestVersionNum = $(this).closest('.operations').attr('id').split("-v")[1];
+         }
+         catch(err) {
+         	requestVersionNum = 0;
+         }
+
         if (method === "GET" || method === "DELETE") {
             // prepare URL
             var missingRequired = false;
@@ -203,6 +229,7 @@ $(document).ready(function() {
                 				req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
                 		}
                     req.setRequestHeader('Accept', 'application/json'); 
+                    req.setRequestHeader('X-Navajo-Version', requestVersionNum); 
                     if(sessionStorage.locale !== "n/a"){
                     	req.setRequestHeader('X-Navajo-Locale', sessionStorage.locale)
                     }
@@ -245,6 +272,7 @@ $(document).ready(function() {
 	            		} 
                     req.setRequestHeader('Accept', 'application/json');
                     req.setRequestHeader('content-type', 'application/json');
+                    req.setRequestHeader('X-Navajo-Version', requestVersionNum); 
                     if(sessionStorage.locale !== "n/a"){
                     	req.setRequestHeader('X-Navajo-Locale', sessionStorage.locale)
                     }
@@ -287,9 +315,6 @@ $(document).ready(function() {
                 response += ' -H "Authorization: ' +sessionStorage.cauth_type + ' ' + sessionStorage.token +'"';
                 if (sessionStorage.isLocalhost == '1' && sessionStorage.tenant) response += ' -H "X-Navajo-Instance: ' + sessionStorage.tenant +'"';
             }
-            if(sessionStorage.locale !== "n/a"){
-            	response += ' -H "X-Navajo-Locale: ' + sessionStorage.locale + '"' ;
-            }
             return response + ' ';
         }
         
@@ -299,6 +324,10 @@ $(document).ready(function() {
             curl += '-X' + method;
             curl += getCurlAuth();
             curl += ' -H "Accept: application/json" ';
+            curl += ' -H "X-Navajo-Version: '+requestVersionNum+'" ';
+            if(sessionStorage.locale !== "n/a"){
+            	curl += ' -H "X-Navajo-Locale: ' + sessionStorage.locale + '"' ;
+            }
             curl += '"' + encodeURI(url) + '"'
             return curl;
         }
@@ -308,6 +337,10 @@ $(document).ready(function() {
             curl += '-X' + method;
             curl += getCurlAuth();
             curl +=  ' -H "Accept: application/json" ';
+            curl += ' -H "X-Navajo-Version: '+requestVersionNum+'" ';
+            if(sessionStorage.locale !== "n/a"){
+            	curl += ' -H "X-Navajo-Locale: ' + sessionStorage.locale + '"' ;
+            }
             curl += '-d "';
             curl += data.replace(new RegExp('\"', 'g'), '\\"').replace(new RegExp('\n', 'g'), '')
             curl += '" ';
@@ -333,6 +366,7 @@ $(document).ready(function() {
             parent.children('.perform-call-entity').hide();
             parent.find('.callentitybutton').hide();
             
+            parent.find(".entity-version").hide();            
            
             $(this).removeClass('cancel');
         } else {
@@ -342,6 +376,8 @@ $(document).ready(function() {
             // Hide response
             parent.find('.responsebody').hide();
             parent.find('.callentitybutton').show();
+            
+            parent.find(".entity-version").show();
              
             // Add input to table
             var method = parent.find('a').attr('method') ;

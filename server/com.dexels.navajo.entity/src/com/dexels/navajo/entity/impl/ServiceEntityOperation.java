@@ -387,6 +387,13 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 		clean(input, "request", false, merge);
 
+        // Add the entity input message
+        Message entityInfo = NavajoFactory.getInstance().createMessage(input, "__entity__");
+        Property entityVersion = NavajoFactory.getInstance().createProperty(input, "version", "string", myEntity.getMyVersion(), 0, "",
+                Property.DIR_OUT);
+        entityInfo.addProperty(entityVersion);
+        input.addMessage(entityInfo);
+
 		// Perform validation method if defined
 		if ((myOperation.getValidationService()) != null) {
 			Navajo validationResult = callEntityValidationService(input);
@@ -401,8 +408,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		// Now we are ready to handle the operations
 		String method = myOperation.getMethod();
 		if (method.equals(Operation.GET)) {
-			return handleGet(input, inputEntity);
-
+            return handleGet(input, inputEntity);
 		}
 		if (method.equals(Operation.DELETE)) {
 			return handleDelete(input, inputEntity);
@@ -520,7 +526,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		for (Property x : message.getAllProperties()) {
 			// Check all non "" (empty) values.
 			// surround with try catch so that other errors are avoided ::
-            if (x.getValue() != null && !"".equals(x.getValue())) {
+            if (x != null && x.getValue() != null && !"".equals(x.getValue())) {
                 // If it's null, it could not be converted, which means that wrong input was
                 // provided
                 if (x.getTypedValue() == null) {
