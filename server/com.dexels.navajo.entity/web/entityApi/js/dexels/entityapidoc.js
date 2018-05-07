@@ -165,86 +165,9 @@ $(document).ready(function() {
     });
     
     
-    function getRequestForEntityActivation(self){
-    	 if (sessionStorage.getItem("token") === null || !sessionStorage.getItem("token") ) {
-             modal.open();
-             return;
-         }
-    	 
-    	 var myOp =  self.closest('.operation');
-
-         var method = "GET";
-                  
-         var url = window.location.origin + "/entity/"+ myOp.find('.url').text();
-         
-         var requestVersionNum;
-         
-         try {
-         	requestVersionNum = self.parents('.entity-version').find('.version-input').val();
-         }
-         catch(err) {
-         	requestVersionNum = 0;
-         }
-         
-         console.log(myOp)
-         
-         console.log(url)
-         
-         $.ajax({
-             beforeSend: function(req) {
-             		if(sessionStorage.authType == 'oauth'){
-             			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
-             		}else if(sessionStorage.authType == 'basic'){
-             			req.setRequestHeader("Authorization", 'Basic ' + btoa(sessionStorage.bauth_username + ":" + sessionStorage.bauth_password));
-             			req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
-             		}else{
-             			req.setRequestHeader('Authorization', sessionStorage.cauth_type + ' ' + sessionStorage.token);
-             			if(sessionStorage.tenant)
-             				req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
-             		}
-                 req.setRequestHeader('Accept', 'application/json'); 
-                 req.setRequestHeader('X-Navajo-Version', requestVersionNum); 
-                 if(sessionStorage.locale !== "n/a"){
-                 	req.setRequestHeader('X-Navajo-Locale', sessionStorage.locale)
-                 }
-             },
-             dataType: 'json',
-             type: method,
-             url: url,
-             complete: function(xhr, status, error){
-            	 console.log(xhr)
-            	 if(xhr.statusText == "603"){
-            		 alert('Entity version not found. Request on default version. Refreshing page...');
-            	 }else{
-            		 alert('Entity version found. Refreshing page...')
-            	 }
-             }
-             
-         });
-         
-    }
-    
-    $(document).on('change', '.version-input', function() {    	
-    	if (sessionStorage.getItem("token") === null || !sessionStorage.getItem("token") ) {
-            modal.open();
-            return;
-        }
-    	    	 
-    	var self = $(this);
-    	
-    	setTimeout(function() {	
-    		getRequestForEntityActivation(self);
-			if(sessionStorage.getItem("clickedOperation")){
-				window.location.href = window.location.pathname + "#" + sessionStorage.getItem("clickedOperation");
-			}
-			location.reload();
-    	}, 2000);
-    });
-    
     $(document).on('click', '.operations', function(){
     	sessionStorage.setItem('clickedOperation',$(this).attr('id'));
-    })
-    
+    }) 
     
     
     /* Going to perform an entity call */

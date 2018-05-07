@@ -154,7 +154,7 @@
                 </tr>
                 <tr>
                     <td>603</td>
-                    <td>Invalid Version Request - The requested entity version does not exist</td>
+                    <td>Version Not Found - The requested entity version does not exist</td>
                 </tr>
             </tbody>
         </table>
