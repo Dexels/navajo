@@ -18,15 +18,11 @@
                 <param name="putResult" field="putResult" type="string" required="false"/>
             </method>
             <method name="delete">
-                <param name="resource" field="resource" type="string" required="true"/>
-                <param name="id" field="binaryHash" type="binary" required="true"/>
-                <param name="bucket" field="bucket" type="string" required="true"/>
+                <param name="binaryHash" field="binaryHash" type="string" required="true"/>
                 <param name="deleteResult" field="deleteResult" type="integer" required="automatic" value="true"/>
             </method>
             <method name="getURL">
-                <param name="resource" field="resource" type="string" required="true"/>
                 <param name="binaryHash" field="binaryHash" type="string" required="true"/>
-                <param name="bucket" field="bucket" type="string" required="true"/>
                 <param name="url" field="temporaryURL" type="string" required="false"/>
             </method>
         </methods>
