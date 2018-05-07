@@ -185,6 +185,7 @@ public class EntityDispatcher {
                         logger.debug("Version Not Found");
                         e.setMessage(e.getMyMessageVersionMap().get(entityMessage.getName() + ".0"));
                         e.setMyVersion("0");
+                        e.refreshEntityManagerOperations();
                         // throw error cause version was not found
                             logger.error("Request on unknown entity version");
                             throw new EntityException(EntityException.UNKNOWN_VERSION);

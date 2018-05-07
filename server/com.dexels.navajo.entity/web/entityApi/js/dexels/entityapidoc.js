@@ -44,7 +44,18 @@ function setupLoginDialog() {
 
 }
 
+
+
+
 $(document).ready(function() {
+	
+	// Inside document.ready, so that it's executed AFTER the page is ready. Navigate to the last clicked entity :)  
+	$(document).ready(function() {		
+	 if(sessionStorage.getItem("clickedOperation")){
+		 $('#'+sessionStorage.getItem("clickedOperation")).find('.entityDescription').show();
+		 window.location.hash = sessionStorage.getItem("clickedOperation");
+	 }
+	});
 	
 	// Locale init
 	sessionStorage.locale = "n/a"
@@ -153,30 +164,86 @@ $(document).ready(function() {
         modal.open();
     });
     
-    $(document).on('click', '.version-checkbox', function() {
+    
+    function getRequestForEntityActivation(self){
+    	 if (sessionStorage.getItem("token") === null || !sessionStorage.getItem("token") ) {
+             modal.open();
+             return;
+         }
+    	 
+    	 var myOp =  self.closest('.operation');
+
+         var method = "GET";
+                  
+         var url = window.location.origin + "/entity/"+ myOp.find('.url').text();
+         
+         var requestVersionNum;
+         
+         try {
+         	requestVersionNum = self.parents('.entity-version').find('.version-input').val();
+         }
+         catch(err) {
+         	requestVersionNum = 0;
+         }
+         
+         console.log(myOp)
+         
+         console.log(url)
+         
+         $.ajax({
+             beforeSend: function(req) {
+             		if(sessionStorage.authType == 'oauth'){
+             			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
+             		}else if(sessionStorage.authType == 'basic'){
+             			req.setRequestHeader("Authorization", 'Basic ' + btoa(sessionStorage.bauth_username + ":" + sessionStorage.bauth_password));
+             			req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
+             		}else{
+             			req.setRequestHeader('Authorization', sessionStorage.cauth_type + ' ' + sessionStorage.token);
+             			if(sessionStorage.tenant)
+             				req.setRequestHeader("X-Navajo-Instance", sessionStorage.tenant);//if we aren't on localhost, the framework adds the header on the reuquest
+             		}
+                 req.setRequestHeader('Accept', 'application/json'); 
+                 req.setRequestHeader('X-Navajo-Version', requestVersionNum); 
+                 if(sessionStorage.locale !== "n/a"){
+                 	req.setRequestHeader('X-Navajo-Locale', sessionStorage.locale)
+                 }
+             },
+             dataType: 'json',
+             type: method,
+             url: url,
+             complete: function(xhr, status, error){
+            	 console.log(xhr)
+            	 if(xhr.statusText == "603"){
+            		 alert('Entity version not found. Request on default version. Refreshing page...');
+            	 }else{
+            		 alert('Entity version found. Refreshing page...')
+            	 }
+             }
+             
+         });
+         
+    }
+    
+    $(document).on('change', '.version-input', function() {    	
     	if (sessionStorage.getItem("token") === null || !sessionStorage.getItem("token") ) {
             modal.open();
             return;
         }
-        if($(this)[0].checked){
-        	$($($(this)[0]).parent().parent().find('.version-input')[0]).prop('disabled', false);
-        }else{
-        	$($($(this)[0]).parent().parent().find('.version-input')[0]).prop('disabled', true);
-        	$($($(this)[0]).parent().parent().find('.version-input')[0]).val(0, false);
-        }
+    	    	 
+    	var self = $(this);
+    	
+    	setTimeout(function() {	
+    		getRequestForEntityActivation(self);
+			if(sessionStorage.getItem("clickedOperation")){
+				window.location.href = window.location.pathname + "#" + sessionStorage.getItem("clickedOperation");
+			}
+			location.reload();
+    	}, 2000);
     });
     
-    $(document).on('change', '.version-input', function() {
-    	console.log($(this).val());
-    	
-    	if (sessionStorage.getItem("token") === null || !sessionStorage.getItem("token") ) {
-            modal.open();
-            return;
-        }
-    	//TODO: Request the new entity version to be activated 
-
-    	//TODO: refresh the page and go there
-    });
+    $(document).on('click', '.operations', function(){
+    	sessionStorage.setItem('clickedOperation',$(this).attr('id'));
+    })
     
     
     
@@ -193,22 +260,13 @@ $(document).ready(function() {
         myOp.find('.shell-body').text('');
         var url = window.location.origin + "/entity/"+ myOp.find('.url').text();
         
-        //var entityVersion specific
-        var entityField;
-        var requestVersion;
-        var requestVersionNum;
-        
         try {
-        	entityField = $($(this).parents().get(2)).find(".entity-version");
-        	requestVersion = $(entityField).find("input")[0].checked;
-        	requestVersionNum = $(entityField).find("input")[1].value;
-        }
-        catch(err) {
-        	requestVersionNum = 0;
-        }
+         	requestVersionNum = self.parents('.entity-version').find('.version-input').val();
+         }
+         catch(err) {
+         	requestVersionNum = 0;
+         }
 
-        
-       
         if (method === "GET" || method === "DELETE") {
             // prepare URL
             var missingRequired = false;

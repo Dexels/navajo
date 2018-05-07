@@ -133,7 +133,7 @@ public class EntityApiDocListener extends HttpServlet  {
 
         result = template.replace("{{OP}}", method);
         result = result.replace("{{URL}}", entityNameUrl);
-        result = result.replace("{{ENOPID}}", "ul_" + e.getName());
+        result = result.replace("{{ENOPID}}", op.getMethod() + '-' + e.getMessageName());
 
         String oprequesttemplate = getTemplate("operationrequest.template");
         String opresponsetemplate = getTemplate("operationresponse.template");

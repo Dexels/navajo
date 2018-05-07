@@ -1,7 +1,6 @@
 <fieldset  class="entity-version">
 	<legend>Entity Version Support</legend>
-		<div>
-		<span>Request Specific Version<input type="checkbox" name="requestVersion" class="version-checkbox" value="requestVersion" checked></span><br>
+		<div title="By enabling specific versions the page will automatically reload with the new entity version">
 	  	<label for="entityVersion">Request Version:</label>
 	  	<input type="number" name="entityVersion" value="{{CURRENT_ENTITY_VERSION}}" min="0" step="1" class="version-input">
 	  	<br>
