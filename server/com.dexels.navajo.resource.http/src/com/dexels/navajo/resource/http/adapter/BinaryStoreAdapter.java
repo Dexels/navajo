@@ -116,28 +116,43 @@ public class BinaryStoreAdapter implements Mappable {
 	private String resource;
 	private String bucket;
 	private String putResult;
+    private int deleteResult = -1;
+
 
 	
 	public String getTemporaryURL() throws IOException {
 		String hash = binaryHash!=null ? binaryHash : binary.getHexDigest();
 		return temporaryURL(hash, resource, bucket, expiration);
 	}
+	
 
 	public String getPutResult() throws IOException {
-		return storeBinary(this.binary,  this.resource,this.bucket,false);
+	    if (this.putResult == null) {
+	        setPutBinary(true);
+        }
+	    return putResult;
+		
 	}
 
+	public void setPutBinary(boolean ignore) throws IOException {
+	    this.putResult = storeBinary(this.binary, this.resource,this.bucket, false);
+    }
 	
 	public int getDeleteResult() throws IOException {
-		String hash = binaryHash!=null ? binaryHash : binary.getHexDigest();
-		ReactiveReply reply =  deleteBinary(hash,  this.resource,this.bucket,false);
-		return reply.status();
+	    if (this.deleteResult < 0) {
+	        setDeleteBinary(true);
+	    }
+	    return this.deleteResult;
+        
 	}
+	
+	public void setDeleteBinary(boolean ignore) throws IOException {
+        String hash = binaryHash != null ? binaryHash : binary.getHexDigest();
+        ReactiveReply reply = deleteBinary(hash, this.resource, this.bucket, false);
+        this.deleteResult = reply.status();
+    }
 
-	public void setPutResult(String digest) {
-		logger.info("Put result with digest: {}",digest);
-		this.putResult = digest;
-	}
+	
 	public boolean getHeadResult() throws IOException {
 		String hash = binaryHash!=null ? binaryHash : binary.getHexDigest();
 		return headBinary(hash,  this.resource,this.bucket);
