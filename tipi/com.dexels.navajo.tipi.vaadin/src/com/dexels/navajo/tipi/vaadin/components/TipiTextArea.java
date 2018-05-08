@@ -1,6 +1,8 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
+import com.dexels.navajo.tipi.vaadin.document.AdHocProperty;
+import com.vaadin.data.Property;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TextArea;
 
@@ -8,28 +10,37 @@ public class TipiTextArea extends TipiVaadinComponentImpl {
 
 	private static final long serialVersionUID = 1561760767992331660L;
 	private TextArea textField;
+	private Property p;
 
 	@Override
 	public Object createContainer() {
-		textField = new TextArea();
+		p = new AdHocProperty("", String.class) {
+			@Override
+			public String toString() {
+				return (String) getValue();
+			}
+		};
+
+		textField = new TextArea("", p);
 		return textField;
 	}
 
-	public void setText(String s) {
-		textField.setCaption(s);
+	@Override
+	public void setComponentValue(final String name, final Object object) {
+		if (name.equals("text")) {
+			p.setValue(object);
+			return;
+		}
+		super.setComponentValue(name, object);
 	}
 
-	public String getText() {
-		return textField.getCaption();
+	@Override
+	public Object getComponentValue(final String name) {
+		if (name.equals("text")) {
+			return p.getValue();
+		}
+		return super.getComponentValue(name);
+
 	}
-	
-	  @Override
-	public void setComponentValue(final String name, final Object object) {
-		    super.setComponentValue(name, object);
-			Component v = getVaadinContainer();
-		        if (name.equals("text")) {
-		          v.setCaption( ""+ object);
-		        }
-	  }
 
 }
