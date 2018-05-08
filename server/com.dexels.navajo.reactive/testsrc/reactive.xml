@@ -1,10 +1,10 @@
 <reactive parallel="1">
-	<source.sql resource="sportlinkkernel">
+	<source.sql resource="dummy">
 		<param name="query">select * from ORGANIZATION</param>
 		<msg.mergeSingle.msg>
-			<source.sql resource="sportlinkkernel">
+			<source.sql resource="dummy">
 				<param name="query">select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?</param>
-				<parameval>[organizationid]</parameval>
+				<param.eval>[organizationid]</param.eval>
 				<message.reduce.singlemessage>
 					<save to.eval="[attribname]" value.eval="[attribvalue]"/>
 				</message.reduce.singlemessage>

@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.davidmoten.rx.jdbc.Database;
+import org.dexels.grus.GrusProvider;
 import org.dexels.grus.GrusProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,8 @@ public class SQL {
 	        return null;
 		}
 		logger.info("Resolving datasource {} for tenant {}",dataSourceName,tenant);
-		DataSource source = GrusProviderFactory.getInstance().getInstanceDataSource(tenant, dataSourceName);
+		GrusProvider instance = GrusProviderFactory.getInstance();
+		DataSource source = instance.getInstanceDataSource(tenant, dataSourceName);
 		return Optional.of(source);
 	}
 	
