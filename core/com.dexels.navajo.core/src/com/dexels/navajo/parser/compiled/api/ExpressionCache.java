@@ -84,7 +84,7 @@ public class ExpressionCache {
 		ContextExpression parse = parse(problems,expression);
 		if(!problems.isEmpty()) {
 			problems.forEach(problem->
-				logger.error("Compile-time type error when compiling expression: {} -> {}",expression,problem)
+				logger.warn("Compile-time type error when compiling expression: {} -> {}",expression,problem)
 			);
 			
 //			throw new TMLExpressionException(problems,expression);
