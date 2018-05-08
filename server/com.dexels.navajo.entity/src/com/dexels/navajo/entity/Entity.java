@@ -143,7 +143,7 @@ public class Entity {
     private void setMyConfigurations() {
         // Validate Configuration names
         entityNavajo.getAllMessages().stream().filter(m -> m.getName().contains("__"))
-                .filter(m -> Arrays.asList(VALID_CONFIGURATION_MESSAGES).contains(m.getName())).forEach(m -> {
+                .filter(m -> !Arrays.asList(VALID_CONFIGURATION_MESSAGES).contains(m.getName())).forEach(m -> {
                     logger.error("Invalid config message found : {}. Skipping it...", m.getName());
                 });
         setMyValidations(entityNavajo.getMessage("__validations__"));
