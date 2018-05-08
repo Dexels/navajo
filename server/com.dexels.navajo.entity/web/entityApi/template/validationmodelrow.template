@@ -1,0 +1,4 @@
+<tr>
+	<td>{{NAME}}</td>
+    <td>{{DESCRIPTION}}</td>
+</tr>
