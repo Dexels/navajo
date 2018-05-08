@@ -862,6 +862,11 @@
         <input>list|any,empty|any,empty|string</input>
         <result>list</result>
     </function>
+    <function name="ToListAll" class="com.dexels.navajo.functions.ToListAll">
+        <description>Converts all elements to a single list </description>
+        <input>list|any,..</input>
+        <result>list</result>
+    </function>
 	<function name="ToLong" class="com.dexels.navajo.functions.ToLong">
 		<description>Get an long representation of given object.</description>
 		<input>any</input>
