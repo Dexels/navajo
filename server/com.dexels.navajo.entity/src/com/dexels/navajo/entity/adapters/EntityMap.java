@@ -1,7 +1,11 @@
 package com.dexels.navajo.entity.adapters;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.NavajoMap;
 import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
@@ -23,6 +27,7 @@ public class EntityMap extends NavajoMap {
 	private String method;
 	private Entity myEntity;
 	private boolean breakOnNoResult = false;
+    private final static Logger logger = LoggerFactory.getLogger(EntityMap.class);
 	
 	@Override
 	public void load(Access access) throws MappableException, UserException {
@@ -112,5 +117,27 @@ public class EntityMap extends NavajoMap {
 	@Override
 	public void kill() {
 	}
+
+    public void setVersion(String ver) {
+        try {
+            Message m = myEntity.getMyMessageVersionMap().get(myEntity.getMessage().getName() + '.' + ver);
+            if (m != null) {
+                myEntity.setMessage(myEntity.getMyMessageVersionMap().get(myEntity.getMessage().getName() + '.' + ver));
+                myEntity.setMyVersion(ver);
+                logger.info("Entity Set to: {}", myEntity.getMessage().getName() + '.' + ver);
+            } else {
+                logger.warn("Entity Version Not Found");
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            logger.warn("Something with entity versioning went wrong");
+        } finally {
+            myEntity.refreshEntityManagerOperations();
+        }
+    }
+
+    public String getVersion() {
+        return myEntity.getMyVersion();
+    }
 
 }

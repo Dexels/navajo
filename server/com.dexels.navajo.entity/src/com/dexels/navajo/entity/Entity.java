@@ -481,4 +481,8 @@ public class Entity {
         }
         return required;
     }
+
+    public Navajo getMyNavajo() {
+        return entityNavajo;
+    }
 }
