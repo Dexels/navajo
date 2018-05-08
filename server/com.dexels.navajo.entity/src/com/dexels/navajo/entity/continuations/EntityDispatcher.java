@@ -1,5 +1,6 @@
 package com.dexels.navajo.entity.continuations;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -368,7 +369,6 @@ public class EntityDispatcher {
             logger.error("Exception in handling entity request. Going to try to handle it nicely.", ex);
 
         }
-
         result = NavajoFactory.getInstance().createNavajo();
         Message m = NavajoFactory.getInstance().createMessage(result, "errors");
         result.addMessage(m);
@@ -377,12 +377,27 @@ public class EntityDispatcher {
             response.setStatus(((EntityException) ex).getCode());
             int code = ((EntityException) ex).getCode();
             m.addProperty(NavajoFactory.getInstance().createProperty(result, "Status", "string", String.valueOf(code), 1, null, null));
+
             m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string", ex.getMessage(), 1, null, null));
 
+            // Specifically check for condition errors
+            Navajo n = ((EntityException) ex).getNavajo();
+            if (n != null && n.getMessage("ConditionErrors") != null) {
+                ArrayList<String> viols = new ArrayList<String>();
+                for (Message message : n.getMessage("ConditionErrors").getAllMessages()) {
+                    viols.add(message.getProperty("Id").getValue());
+                }
+                m.addProperty(
+                        NavajoFactory.getInstance().createProperty(result, "ViolationCodes", "list", viols.toString(), 1, null, null));
+            } else {
+                m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string", ex.getMessage(), 1, null, null));
+            }
+            
         } else {
             response.setStatus(EntityException.SERVER_ERROR);
             m.addProperty(NavajoFactory.getInstance().createProperty(result, "Status", "string", String.valueOf(EntityException.SERVER_ERROR), 1, null, null));
-            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string", "Server error (" + ex.toString(), 1, null, null));
+            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string", "Server error " + ex.toString(), 1, null,
+                    null));
         }
         response.addHeader("Connection", "close");
         return result;

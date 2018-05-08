@@ -158,13 +158,26 @@ public class EntityApiDocListener extends HttpServlet  {
         // String modelBody = printModel(e.getMessage(), method, "request");
         result = result.replace("{{OPREQUESTMODEL}}", "");
 
-
         if (method.equals(Operation.GET) || method.equals(Operation.DELETE)) {
             requestBody =  printRequestKeysDefinition(e);
         } else {
             String requestbodyTemplate = getTemplate("operationrequestbody.template");
             requestBody = requestbodyTemplate.replace("{{REQUEST_BODY}}", writeEntityJson(n, "request"));
         }
+        
+        if (e.getMyValidations().size() > 0) {
+            String validationrowtemplate = getTemplate("validationmodelrow.template");
+            String validationrowtable = getTemplate("validationmodeltable.template");
+            String valRows = "";
+            for (Map.Entry<String, String> entry : e.getMyValidations().entrySet()) {
+                valRows += validationrowtemplate.replace("{{DESCRIPTION}}", entry.getValue()).replace("{{NAME}}", entry.getKey());
+            }
+            String res = validationrowtable.replace("{{VALIDATION_ROWS}}", valRows);
+            requestBody = requestBody.replace("{{VALL}}", res);
+        } else {
+            requestBody = requestBody.replace("{{VALL}}", "");
+        }
+        
         String request = oprequesttemplate.replace("{{ENTITY_REQUEST_BODY}}", requestBody);
         request = request.replace("{{OP}}", method);
         result = result.replace("{{OPREQUEST}}", request);

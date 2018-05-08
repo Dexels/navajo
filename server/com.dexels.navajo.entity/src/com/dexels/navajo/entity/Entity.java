@@ -1,11 +1,13 @@
 package com.dexels.navajo.entity;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
@@ -39,6 +41,11 @@ public class Entity {
     protected Map<String, Message> myMessageVersionMap = new HashMap<String, Message>();
 
     protected Map<String, Entity> superEntitiesMap = new HashMap<String, Entity>();
+
+    protected Map<String, String> myValidations = new TreeMap<String, String>();
+
+    private static String VALIDATIONS = "__validations__";
+    public static final String[] VALID_CONFIGURATION_MESSAGES = { VALIDATIONS };
 
     protected BundleContext bundleContext;
 
@@ -119,10 +126,12 @@ public class Entity {
             throw new Exception("unable to find entity in provided script!");
         }
 
-        Message l = n.getAllMessages().iterator().next();
+        Message l = n.getMessage(messageName);
         setMessage(l);
         setMyVersion("default");
         setVersionMessages(n);
+
+        setMyConfigurations();
 
         Operation head = new OperationComponent();
         head.setEntityName(getName());
@@ -130,6 +139,16 @@ public class Entity {
 
         // Add operations defined in entity.
         refreshEntityManagerOperationsFromNavajo(n);
+    }
+
+    private void setMyConfigurations() {
+        // Validate Configuration names
+        entityNavajo.getAllMessages().stream().filter(m -> m.getName().contains("__"))
+                .filter(m -> !Arrays.asList(VALID_CONFIGURATION_MESSAGES).contains(m.getName())).forEach(m -> {
+                    logger.error("Invalid config message found : {}. Skipping it...", m.getName());
+                });
+        setMyValidations(entityNavajo.getMessage("__validations__"));
+        // for future configuration messages::
     }
 
     public void setMyVersion(String version) {
@@ -160,9 +179,10 @@ public class Entity {
     }
 
     private void setVersionMessages(Navajo n) {
-        n.getAllMessages().forEach(m -> {
+        n.getAllMessages().stream().filter(m -> m.getName().contains(messageName)).forEach(m -> {
             if (!m.getName().matches("^[a-zA-Z0-9.]*$")) {
-                logger.error("Unsupported version name :: {}. Please use alphanumeric, -, _ or . characters", m.getName());
+                logger.error("Unsupported version name :: {}. Please use alphanumeric, -, _ or . characters. Version was not registered",
+                        m.getName());
             } else {
                 Message newMessage = m.copy();
                 newMessage.setName(getMessageName());
@@ -181,6 +201,34 @@ public class Entity {
 
     public Set<Entity> getSuperEntities() {
         return superEntities;
+    }
+
+    public Map<String, String> getMyValidations() {
+        return myValidations;
+    }
+
+    public void setMyValidations(Message validationsMessage) {
+
+        if (validationsMessage == null) {
+            return;
+        }
+
+        // First check validations message
+        if (!validationsMessage.getType().equals(Message.MSG_TYPE_SIMPLE)) {
+            logger.error("Could not register entity validation codes. Message must be simple.");
+            return;
+        }
+
+        if (validationsMessage.getAllProperties().stream().filter(prop -> !prop.getType().equals(Property.STRING_PROPERTY)).findFirst()
+                .orElse(null) != null) {
+            logger.error("Could not register entity validation codes. Properties of validation message must be of type string");
+            return;
+        }
+
+        validationsMessage.getAllProperties().forEach(prop -> {
+            myValidations.put(prop.getName(), prop.getValue());
+        });
+
     }
 
     public void printKeys() {
