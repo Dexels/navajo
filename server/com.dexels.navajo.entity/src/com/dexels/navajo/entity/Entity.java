@@ -308,7 +308,7 @@ public class Entity {
         return parent;
     }
 
-    private void processExtendedEntity(Message m, String extendedEntity, String optionsString) throws EntityException {
+    private void processExtendedEntity(Message m, String extendedEntity, String optionsString, String version) throws EntityException {
         logger.info("Processing super entity {} ", extendedEntity);
         Entity superEntity = getSuperEntity(extendedEntity);
 
@@ -328,7 +328,7 @@ public class Entity {
             }
         }
         
-        Message incoming = superEntity.getMessage(DEFAULT_VERSION).copy(m.getRootDoc());
+        Message incoming = superEntity.getMessage(version).copy(m.getRootDoc());
         if (ignoreKeys) {
             for (Property p : incoming.getAllProperties()) {
                 if (p.getKey() != null) {
@@ -373,6 +373,11 @@ public class Entity {
             }
             
             String ext = m.getExtends().substring(NAVAJO_URI.length());
+
+            String version = ext.split("\\.").length == 1 ? Entity.DEFAULT_VERSION : ext.split("\\.")[1];
+            String rep = "." + version;
+            ext = ext.replace(rep, "");
+
             String[] superEntities = ext.split(",");
             for (String superEntity : superEntities) {
                 superEntity = superEntity.replace("/", ".");
@@ -381,7 +386,7 @@ public class Entity {
                     options = superEntity.split("\\?")[1];
                     superEntity = superEntity.split("\\?")[0];
                 }
-                processExtendedEntity(m, superEntity, options);
+                processExtendedEntity(m, superEntity, options, version);
             }
         }
 

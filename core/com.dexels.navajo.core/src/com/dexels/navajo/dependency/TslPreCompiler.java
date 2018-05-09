@@ -220,6 +220,11 @@ public class TslPreCompiler {
             }
 
             String ext = extendsAttr.substring(9);
+            // Entity versioning stuff
+            String version = ext.split("\\.").length == 1 ? "0" : ext.split("\\.")[1];
+            String rep = "." + version;
+            ext = ext.replace(rep, "");
+
             String[] superEntities = ext.split(",");
             for (String superEntity : superEntities) {
                 if (superEntity.indexOf('?') > 0) {

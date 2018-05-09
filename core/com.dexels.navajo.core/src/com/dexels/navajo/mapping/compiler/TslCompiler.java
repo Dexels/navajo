@@ -952,6 +952,9 @@ public class TslCompiler {
 				
 				if (extendsMsg.startsWith("navajo://")) {
 				    String ext = extendsMsg.substring(9);
+                    String version = ext.split("\\.").length == 1 ? "0" : ext.split("\\.")[1];
+                    String rep = "." + version;
+                    ext = ext.replace(rep, "");
 		            String[] superEntities = ext.split(",");
 		            for (String superEntity : superEntities) {
 		                if (superEntity.indexOf('?') > 0) {
