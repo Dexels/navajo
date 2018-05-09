@@ -374,7 +374,10 @@ public class Entity {
             
             String ext = m.getExtends().substring(NAVAJO_URI.length());
 
-            String version = ext.indexOf('.') == -1 ? Entity.DEFAULT_VERSION : ext.split("\\.")[1];
+            String version = Entity.DEFAULT_VERSION;
+            if (ext.indexOf(".") != -1) {
+                version = ext.substring(ext.indexOf(".") + 1, ext.indexOf("?") == -1 ? ext.length() : ext.indexOf("?"));
+            }
             String rep = "." + version;
             ext = ext.replace(rep, "");
 

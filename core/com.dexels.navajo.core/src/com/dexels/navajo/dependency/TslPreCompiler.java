@@ -221,7 +221,10 @@ public class TslPreCompiler {
 
             String ext = extendsAttr.substring(9);
             // Entity versioning stuff
-            String version = ext.indexOf('.') == -1 ? "0" : ext.split("\\.")[1];
+            String version = "0";
+            if (ext.indexOf(".") != -1) {
+                version = ext.substring(ext.indexOf(".") + 1, ext.indexOf("?") == -1 ? ext.length() : ext.indexOf("?"));
+            }
             String rep = "." + version;
             ext = ext.replace(rep, "");
 
