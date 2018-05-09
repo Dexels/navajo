@@ -59,6 +59,7 @@ public class Entity {
     // Non-OSGi activation
     public Entity(Message msg, EntityManager m) {
         entityManager = m;
+        myMessageVersionMap.put(DEFAULT_VERSION, msg);
     }
 
     public void activate(Map<String, Object> properties) throws Throwable {
