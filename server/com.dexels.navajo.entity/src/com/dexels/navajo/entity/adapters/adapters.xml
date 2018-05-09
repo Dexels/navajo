@@ -78,6 +78,7 @@
                 
             </method>
             <method name="get">
+                <param name="version" field="version" type="string" required="false" />
                 <param name="method" field="method" type="string" required="automatic" value="'GET'" />
                 <param name="call" field="call" type="boolean" required="automatic" value="true" />
                 <param name="breakOnException" field="breakOnException" type="boolean" required="false" />
@@ -95,6 +96,7 @@
                 
             </method>
             <method name="put">
+                <param name="version" field="version" type="string" required="false" />
                 <param name="method" field="method" type="string" required="automatic" value="'PUT'" />
                 <param name="call" field="call" type="boolean" required="automatic" value="true" />
                 <param name="breakOnException" field="breakOnException" type="boolean" required="false" />
@@ -111,6 +113,7 @@
                 <param name="breakOnNoResult" field="breakOnNoResult" type="boolean" required="false" />
             </method>
             <method name="post">
+                <param name="version" field="version" type="string" required="false" />
                 <param name="method" field="method" type="string" required="automatic" value="'POST'" />
                 <param name="call" field="call" type="boolean" required="automatic" value="true" />
                 <param name="breakOnException" field="breakOnException" type="boolean" required="false" />
@@ -128,6 +131,7 @@
                 
             </method>
             <method name="delete">
+                <param name="version" field="version" type="string" required="false" />
                 <param name="method" field="method" type="string" required="automatic" value="'DELETE'" />
                 <param name="call" field="call" type="boolean" required="automatic" value="true" />
                 <param name="breakOnException" field="breakOnException" type="boolean" required="false" />
