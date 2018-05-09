@@ -246,7 +246,7 @@ public class TestEntity {
         m.getMessage().write(System.err);
         System.err.println("**************************************************");
 
-        m.setMessage(m.getMessage());
+        m.testSetMessage(m.getMessage());
 
         Assert.assertEquals(0, m.getSuperEntities().size());
 
@@ -275,7 +275,7 @@ public class TestEntity {
         activity.addProperty(keyPropActAlt);
 
         System.err.println("INJECTING NEW MESSAGE!!!!!!!");
-        a.setMessage(activity);
+        a.testSetMessage(activity);
 
         // m = manager.getEntity("MyEntity");
         // m.activate();

@@ -243,13 +243,19 @@ public class Entity {
     /**
      * Inject a new entity message.
      */
-    public void setMessage(Message entity) throws Exception {
-
+    private void setMessage(Message entity) throws Exception {
         // First deactivate.
         deactivate();
         myMessage = entity;
         startEntity();
-
+    }
+    
+    /** Use for testcases only! **/
+    protected void testSetMessage(Message entity) throws Exception {
+        // First deactivate.
+        deactivate();
+        myMessage = entity;
+        startEntity();
     }
     
     public void setCompiledScript(CompiledScriptFactory c1) {
