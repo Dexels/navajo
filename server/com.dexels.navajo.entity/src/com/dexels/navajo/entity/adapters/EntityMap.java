@@ -62,6 +62,10 @@ public class EntityMap extends NavajoMap {
 			        throw new ConditionErrorException(e.getNavajo());
 			    }
 			    throw e;
+            } finally {
+                // Set back default version
+                setVersion("0");
+                
 			}
 			
 			if (breakOnNoResult && (result == null  || result.getMessage(seo.getMyEntity().getMessageName()) == null)) {
@@ -72,6 +76,8 @@ public class EntityMap extends NavajoMap {
 			this.serviceFinished = true;
 			this.inDoc = result;
 			
+
+
 		}
 	}
 	
