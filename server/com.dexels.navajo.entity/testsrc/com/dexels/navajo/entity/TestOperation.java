@@ -104,7 +104,7 @@ public class TestOperation {
 		oc.setService("aap/ProcessGetAap");
 		manager.addOperation(oc);
 		
-		ServiceEntityOperation seo = new ServiceEntityOperation(manager, (DispatcherInterface) null, oc);
+        ServiceEntityOperation seo = new ServiceEntityOperation(manager, (DispatcherInterface) null, oc, Entity.DEFAULT_VERSION);
 		
 		Navajo result = seo.perform(null);
 		

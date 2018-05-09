@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -23,8 +24,6 @@ public class Entity {
 
     public static final String NAVAJO_URI = "navajo://";
 
-    private Message myMessage;
-    private Set<Key> myKeys = new HashSet<Key>();
     protected EntityManager entityManager = null;
     private boolean activated = false;
     private final static Logger logger = LoggerFactory.getLogger(Entity.class);
@@ -37,6 +36,8 @@ public class Entity {
     private Set<Entity> subEntities = new HashSet<Entity>();
     private Set<Entity> superEntities = new HashSet<Entity>();
 
+    private Map<String, Set<Key>> myKeysMap = new HashMap<String, Set<Key>>();
+
     // Keep track of entity messages versions
     protected Map<String, Message> myMessageVersionMap = new HashMap<String, Message>();
 
@@ -47,6 +48,8 @@ public class Entity {
     private static String VALIDATIONS = "__validations__";
     public static final String[] VALID_CONFIGURATION_MESSAGES = { VALIDATIONS };
 
+    public static final String DEFAULT_VERSION = "0";
+
     protected BundleContext bundleContext;
 
     public Entity() {
@@ -55,7 +58,6 @@ public class Entity {
 
     // Non-OSGi activation
     public Entity(Message msg, EntityManager m) {
-        myMessage = msg;
         entityManager = m;
     }
 
@@ -102,7 +104,11 @@ public class Entity {
         // Set activate flag immediately to prevent looping
         activated = true;
 
-        findSuperEntities(myMessage);
+        // Find and register super entities
+        for (Entry<String, Message> entry : myMessageVersionMap.entrySet()) {
+            findSuperEntities(entry.getValue());
+        }
+
         findKeys();
 
         for (Entity sub : subEntities) {
@@ -122,15 +128,15 @@ public class Entity {
 
     /* OSGi activation */
     public void activateMessage(Navajo n) throws Exception {
-        if (n.getMessage(messageName) == null) {
-            throw new Exception("unable to find entity in provided script!");
+
+        if (n.getAllMessages().stream().filter(m -> !m.getName().contains(messageName)).findFirst().orElse(null) != null) {
+                throw new Exception("unable to find entity in provided script!");
         }
 
-        Message l = n.getMessage(messageName);
-        setMessage(l);
-        setMyVersion("default");
+        // Message l = n.getMessage(messageName);
         setVersionMessages(n);
-
+        deactivate();
+        startEntity();
         setMyConfigurations();
 
         Operation head = new OperationComponent();
@@ -186,12 +192,16 @@ public class Entity {
             } else {
                 Message newMessage = m.copy();
                 newMessage.setName(getMessageName());
-                myMessageVersionMap.put(m.getName().contains(".") ? m.getName() : m.getName() + ".0", newMessage);
+                myMessageVersionMap.put(m.getName().contains(".") ? m.getName().split("\\.")[1] : "0", newMessage);
             }
         });
     }
 
-    public Map<String, Message> getMyMessageVersionMap() {
+    public Set<String> getMyVersionKeys() {
+        return myMessageVersionMap.keySet();
+    }
+
+    private Map<String, Message> getMyMessageVersionMap() {
         return myMessageVersionMap;
     }
 
@@ -231,7 +241,8 @@ public class Entity {
 
     }
 
-    public void printKeys() {
+    public void printKeys(String version) {
+        Set<Key> myKeys = myKeysMap.get(version);
         String output = "";
         for (Key k : myKeys) {
             output += ("==================\n");
@@ -247,7 +258,6 @@ public class Entity {
 
         // First deactivate.
         deactivate();
-        myMessage = entity;
         startEntity();
 
     }
@@ -318,7 +328,7 @@ public class Entity {
             }
         }
         
-        Message incoming = superEntity.getMessage().copy(m.getRootDoc());
+        Message incoming = superEntity.getMessage(DEFAULT_VERSION).copy(m.getRootDoc());
         if (ignoreKeys) {
             for (Property p : incoming.getAllProperties()) {
                 if (p.getKey() != null) {
@@ -358,7 +368,8 @@ public class Entity {
         if (m.getExtends() != null && !"".equals(m.getExtends())) {
             if (!(m.getExtends().startsWith(NAVAJO_URI))) {
                 logger.warn("Invalid extend message: {}", m.getExtends());
-                throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE, "Extension type not supported: " + myMessage.getExtends());
+                throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE,
+                        "Extension type not supported: " + getMessage(DEFAULT_VERSION).getExtends());
             }
             
             String ext = m.getExtends().substring(NAVAJO_URI.length());
@@ -391,36 +402,45 @@ public class Entity {
     }
 
     private void findKeys() {
-        myKeys.clear();
+
+        Set<Key> myKeys = new HashSet<Key>();
         HashMap<String, Key> foundKeys = new HashMap<String, Key>();
+        List<Property> allProps = null; // = getMessage(entityVersion).getAllProperties();
 
-        List<Property> allProps = myMessage.getAllProperties();
-        for (Message m : myMessage.getAllMessages()) {
-            List<Property> newProps = m.getAllProperties();
-            allProps.addAll(newProps);
-        }
-        int keySequence = 0;
+        for (Entry<String, Message> entry : myMessageVersionMap.entrySet()) {
+            allProps = entry.getValue().getAllProperties();
+            for (Message m : entry.getValue().getAllMessages()) {
+                List<Property> newProps = m.getAllProperties();
+                allProps.addAll(newProps);
+            }
+            int keySequence = 0;
+            for (Property p : allProps) {
+                if (Key.isKey(p.getKey())) {
+                    String id = Key.getKeyId(p.getKey());
+                    if (id == null) {
+                        id = "" + (keySequence++);
+                    }
+                    Key key = null;
+                    if ((key = foundKeys.get(id)) == null) {
+                        key = new Key(id, this);
+                        foundKeys.put(id, key);
+                        myKeys.add(key);
+                    }
+                    key.addProperty(p);
+                }
+            }
 
-        for (Property p : allProps) {
-            if (Key.isKey(p.getKey())) {
-                String id = Key.getKeyId(p.getKey());
-                if (id == null) {
-                    id = "" + (keySequence++);
-                }
-                Key key = null;
-                if ((key = foundKeys.get(id)) == null) {
-                    key = new Key(id, this);
-                    foundKeys.put(id, key);
-                    myKeys.add(key);
-                }
-                key.addProperty(p);
-            } 
+            myKeysMap.put(entry.getKey(), new HashSet(myKeys));
+
+            myKeys.clear();
+            foundKeys.clear();
+            allProps.clear();
         }
 
     }
 
-    public Message getMessage() {
-        return myMessage;
+    public Message getMessage(String version) {
+        return myMessageVersionMap.get(version);
     }
 
     public String getName() {
@@ -431,7 +451,8 @@ public class Entity {
         return messageName;
     }
 
-    public Key getKey(Set<Property> p) {
+    public Key getKey(Set<Property> p, String version) {
+        Set<Key> myKeys = myKeysMap.get(version);
         for (Key k : myKeys) {
             if (k.keyMatch(p)) {
                 return k;
@@ -440,11 +461,12 @@ public class Entity {
         return null;
     }
 
-    public Key getKey(List<Property> p) {
-        return getKey(new HashSet<Property>(p));
+    public Key getKey(List<Property> p, String version) {
+        return getKey(new HashSet<Property>(p), version);
     }
 
-    public Key getKey(String id) {
+    public Key getKey(String id, String version) {
+        Set<Key> myKeys = myKeysMap.get(version);
         for (Key k : myKeys) {
             if (k.getId().equals(id)) {
                 return k;
@@ -453,11 +475,12 @@ public class Entity {
         return null;
     }
 
-    public Set<Key> getKeys() {
-        return myKeys;
+    public Set<Key> getKeys(String version) {
+        return myKeysMap.get(version);
     }
     
-    public Key getAutoKey() {
+    public Key getAutoKey(String version) {
+        Set<Key> myKeys = myKeysMap.get(version);
         for (Key key : myKeys) {
             for (Property p : key.getKeyProperties()) {
                 if (Key.isAutoKey(p.getKey())) {
@@ -468,8 +491,9 @@ public class Entity {
         return null;
     }
 
-    public Set<Key> getRequiredKeys() {
+    public Set<Key> getRequiredKeys(String version) {
         Set<Key> required = new HashSet<>();
+        Set<Key> myKeys = myKeysMap.get(version);
         for (Key key : myKeys) {
             Set<Property> properties = key.getKeyProperties();
             for (Property p : properties) {

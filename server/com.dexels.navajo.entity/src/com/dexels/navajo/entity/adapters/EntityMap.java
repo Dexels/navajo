@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.NavajoMap;
 import com.dexels.navajo.document.Header;
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
@@ -28,6 +27,7 @@ public class EntityMap extends NavajoMap {
 	private Entity myEntity;
 	private boolean breakOnNoResult = false;
     private final static Logger logger = LoggerFactory.getLogger(EntityMap.class);
+    private String myVersion = Entity.DEFAULT_VERSION;
 	
 	@Override
 	public void load(Access access) throws MappableException, UserException {
@@ -47,7 +47,7 @@ public class EntityMap extends NavajoMap {
 		if ( entityName != null && method != null ) {
 			Operation o = myManager.getOperation(entityName, method);
 			o.setTenant(access.getTenant());
-			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, o);
+            ServiceEntityOperation seo = new ServiceEntityOperation(myManager, o, getVersion());
 			Navajo request = prepareOutDoc();
 			if ( request.getHeader() == null ) {
 				Header h = NavajoFactory.getInstance().createHeader(request, myEntity.getName(), access.rpcUser, access.rpcName, -1);
@@ -75,8 +75,6 @@ public class EntityMap extends NavajoMap {
 			this.serviceCalled = true;
 			this.serviceFinished = true;
 			this.inDoc = result;
-			
-
 
 		}
 	}
@@ -125,25 +123,12 @@ public class EntityMap extends NavajoMap {
 	}
 
     public void setVersion(String ver) {
-        try {
-            Message m = myEntity.getMyMessageVersionMap().get(myEntity.getMessage().getName() + '.' + ver);
-            if (m != null) {
-                myEntity.setMessage(myEntity.getMyMessageVersionMap().get(myEntity.getMessage().getName() + '.' + ver));
-                myEntity.setMyVersion(ver);
-                logger.info("Entity Set to: {}", myEntity.getMessage().getName() + '.' + ver);
-            } else {
-                logger.warn("Entity Version Not Found");
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            logger.warn("Something with entity versioning went wrong");
-        } finally {
-            myEntity.refreshEntityManagerOperations();
-        }
+        myVersion = ver;
     }
 
     public String getVersion() {
-        return myEntity.getMyVersion();
+        logger.debug("Requesting version {} of entity {}", myVersion, myEntity.getName());
+        return myVersion;
     }
 
 }

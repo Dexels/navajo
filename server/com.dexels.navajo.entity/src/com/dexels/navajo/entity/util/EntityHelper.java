@@ -90,7 +90,7 @@ public class EntityHelper {
 		}
 	}
 	
-	public static Navajo deriveNavajoFromParameterMap(Entity entity, Map<String, String[]> parameters) {
+    public static Navajo deriveNavajoFromParameterMap(Entity entity, Map<String, String[]> parameters, String version) {
 
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message m = NavajoFactory.getInstance().createMessage(n, entity.getMessageName());
@@ -102,7 +102,7 @@ public class EntityHelper {
 			if (!propertyName.startsWith("/" + entity.getMessageName() + "/")) {
 				propertyName = "/" + entity.getMessageName() + "/" + propertyName;
 			}
-			Property prop = entity.getMessage().getProperty(propertyName);
+            Property prop = entity.getMessage(version).getProperty(propertyName);
 			if (prop != null) {
 				Property prop_copy = prop.copy(n);
 				String propValue = parameters.get(key)[0];

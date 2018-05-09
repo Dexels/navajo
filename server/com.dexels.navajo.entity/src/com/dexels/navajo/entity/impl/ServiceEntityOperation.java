@@ -38,18 +38,21 @@ public class ServiceEntityOperation implements EntityOperation {
 	private Entity myEntity;
 	private Key myKey;
 	private Set<String> validMessages = new HashSet<String>(Arrays.asList("__parms__", "__globals__", "__aaa__"));
+    private String entityVersion = Entity.DEFAULT_VERSION;
 
-	public ServiceEntityOperation(EntityManager m, Operation o) throws EntityException {
+    public ServiceEntityOperation(EntityManager m, Operation o, String version) throws EntityException {
 		this.dispatcher = DispatcherFactory.getInstance();
+        this.entityVersion = version;
 		setup(m, o);
 	}
 
-	public ServiceEntityOperation(EntityManager m, DispatcherInterface c, Operation o) throws EntityException {
+    public ServiceEntityOperation(EntityManager m, DispatcherInterface c, Operation o, String version) throws EntityException {
 		this.dispatcher = c;
+        this.entityVersion = version;
 		setup(m, o);
 	}
 
-	private void setup(EntityManager m, Operation o) throws EntityException {
+    private void setup(EntityManager m, Operation o) throws EntityException {
 		this.manager = m;
 		this.myOperation = o;
 		this.myEntity = manager.getEntity(myOperation.getEntityName());
@@ -68,7 +71,7 @@ public class ServiceEntityOperation implements EntityOperation {
 
 	public ServiceEntityOperation cloneServiceEntityOperation(Operation o) throws EntityException {
 		if (dispatcher != null) {
-			return new ServiceEntityOperation(manager, dispatcher, o);
+            return new ServiceEntityOperation(manager, dispatcher, o, entityVersion);
 		} else {
 			return null;
 		}
@@ -209,11 +212,11 @@ public class ServiceEntityOperation implements EntityOperation {
 	}
 
 	private HashMap<String, Navajo> getInputNavajosForReferencedEntities(Navajo n) {
-		List<Property> allProps = myEntity.getMessage().getAllProperties();
+        List<Property> allProps = myEntity.getMessage(entityVersion).getAllProperties();
 		HashMap<String, Navajo> referencedEntities = new HashMap<String, Navajo>();
 		for (Property p : allProps) {
 			// Fetch property from entity definition
-			Property e_p = myEntity.getMessage().getProperty(p.getName());
+            Property e_p = myEntity.getMessage(entityVersion).getProperty(p.getName());
 			if (e_p.getReference() != null && e_p.getDirection().indexOf("in") != -1) {
 				String entityName = getEntityFromReference(e_p.getReference());
 				if (!referencedEntities.containsKey(entityName)) {
@@ -229,12 +232,15 @@ public class ServiceEntityOperation implements EntityOperation {
 	}
 
 	/**
-	 * Clean a Navajo document: only valid messages are kept, missing properties and
-	 * messages are added, and filter properties on the right direction *
-	 * 
-	 * @return
-	 */
-	private void clean(Navajo n, String method, boolean resolveLinks, boolean merge) {
+     * Clean a Navajo document: only valid messages are kept, missing properties and
+     * messages are added, and filter properties on the right direction
+     * 
+     * @param entityVersion2
+     * *
+     * 
+     * @return
+     */
+    private void clean(Navajo n, String method, boolean resolveLinks, boolean merge, String entityVersion) {
 
 		List<Message> all = n.getAllMessages();
 		for (Message m : all) {
@@ -244,15 +250,15 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 		if (n.getMessage(myEntity.getMessageName()) != null) {
 			if (merge) {
-				n.getMessage(myEntity.getMessageName()).merge(myEntity.getMessage(), true);
+                n.getMessage(myEntity.getMessageName()).merge(myEntity.getMessage(entityVersion), true);
 			}
-			n.getMessage(myEntity.getMessageName()).maskMessage(myEntity.getMessage(), method);
+            n.getMessage(myEntity.getMessageName()).maskMessage(myEntity.getMessage(entityVersion), method);
 
 			if (method.equals("request")) {
 				// Do we have a auto key as input, and an extra Mongo message?
 				// If so, replace the auto key with a _id property
 				for (Property p : n.getMessage(myEntity.getMessageName()).getAllProperties()) {
-					Property entityp = myEntity.getMessage().getProperty(p.getFullPropertyName());
+                    Property entityp = myEntity.getMessage(entityVersion).getProperty(p.getFullPropertyName());
 					if (entityp.getKey() != null && Key.isAutoKey(entityp.getKey()) && hasExtraMessageMongo()) {
 						Message parentMsg = p.getParentMessage();
 						parentMsg.removeProperty(p);
@@ -271,7 +277,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				// myEntity.getMessage().write(System.err);
 
 				// Add properties that refer to other entities.
-				List<Property> allProps = myEntity.getMessage().getAllProperties();
+                List<Property> allProps = myEntity.getMessage(entityVersion).getAllProperties();
 				HashMap<String, Navajo> referencedEntities = getInputNavajosForReferencedEntities(n);
 				// Populate property values that bind to external entities.
 				HashMap<String, Navajo> cachedEntities = new HashMap<String, Navajo>();
@@ -284,7 +290,7 @@ public class ServiceEntityOperation implements EntityOperation {
 							try {
 								Operation o = EntityManager.getInstance().getOperation(entityName, "GET");
 								ServiceEntityOperation seo = new ServiceEntityOperation(EntityManager.getInstance(),
-										DispatcherFactory.getInstance(), o);
+                                        DispatcherFactory.getInstance(), o, entityVersion);
 								entityObj = seo.perform(referencedEntities.get(entityName));
 								cachedEntities.put(entityName, entityObj);
 							} catch (Exception e) {
@@ -311,7 +317,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			props.addAll(m.getAllProperties());
 		}
 
-		Key entityKey = entityObj.getKey(props);
+        Key entityKey = entityObj.getKey(props, entityVersion);
 		Navajo inputC = input.copy();
 		// Correct message name of copy of input.
 		inputC.getMessage(myEntity.getMessageName()).setName(entityName);
@@ -347,10 +353,10 @@ public class ServiceEntityOperation implements EntityOperation {
 	}
 
 	@Override
-	public Navajo perform(Navajo input) throws EntityException {
+    public Navajo perform(Navajo input) throws EntityException {
 		if (myOperation.getMethod().equals(Operation.HEAD)) {
 			Navajo out = NavajoFactory.getInstance().createNavajo();
-			out.addMessage(myEntity.getMessage().copy(out));
+            out.addMessage(myEntity.getMessage(entityVersion).copy(out));
 			return out;
 		}
 
@@ -365,11 +371,18 @@ public class ServiceEntityOperation implements EntityOperation {
 			props.addAll(m.getAllProperties());
 		}
 
-		myKey = myEntity.getKey(props);
+        // Check if version exists
+
+        if (!myEntity.getMyVersionKeys().contains(entityVersion)) {
+            logger.error("Request on unknown entity {} version {}", myEntity.getName(), entityVersion);
+            throw new EntityException(EntityException.UNKNOWN_VERSION);
+        }
+
+        myKey = myEntity.getKey(props, entityVersion);
 		if (myKey == null) {
 			// Check for _id property. If _id is present it is good as a key.
 			// It's also possible our entity has no keys defined. In that case accept input
-			if (inputEntity.getProperty("_id") == null && myEntity.getRequiredKeys().size() > 0) {
+            if (inputEntity.getProperty("_id") == null && myEntity.getRequiredKeys(entityVersion).size() > 0) {
 				throw new EntityException(EntityException.MISSING_ID, "Input is invalid: no valid entity key found.");
 			} else {
 				myKey = new Key("", myEntity);
@@ -385,7 +398,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			// are already present in the backend with empty values
 			merge = false;
 		}
-		clean(input, "request", false, merge);
+        clean(input, "request", false, merge, entityVersion);
 
         // Add the entity input message
         Message entityInfo = NavajoFactory.getInstance().createMessage(input, "__entity__");
@@ -435,7 +448,7 @@ public class ServiceEntityOperation implements EntityOperation {
 
 		// Check property types.
 		List<String> invalidProperties = new ArrayList<String>();
-		checkTypes(inputEntity, myEntity.getMessage(), myOperation.getMethod(), invalidProperties);
+        checkTypes(inputEntity, myEntity.getMessage(entityVersion), myOperation.getMethod(), invalidProperties);
 		if (invalidProperties.size() > 0) {
 			throw new EntityException(EntityException.BAD_REQUEST,
 					"Could not perform operation, invalid property types: " + listToString(invalidProperties));
@@ -449,10 +462,10 @@ public class ServiceEntityOperation implements EntityOperation {
 		// If the entity has a mongo backend, we added the _id property.
 		// Remove this now to ensure a proper mask operation can take place.
 		if (hasExtraMessageMongo()) {
-			Property id = myEntity.getMessage().getProperty("_id");
+            Property id = myEntity.getMessage(entityVersion).getProperty("_id");
 			// Only remove if it's not a key
 			if (id != null && id.getKey() == null) {
-				myEntity.getMessage().removeProperty(id);
+                myEntity.getMessage(entityVersion).removeProperty(id);
 			}
 		}
 
@@ -489,7 +502,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	private void performPostValidation(Navajo input, Message inputEntity) throws EntityException {
 		// Duplicate entry check.
 		// Required properties check.
-		List<String> missing = checkRequired(inputEntity, myEntity.getMessage(), false);
+        List<String> missing = checkRequired(inputEntity, myEntity.getMessage(entityVersion), false);
 		if (missing.size() > 0) {
 			throw new EntityException(EntityException.BAD_REQUEST,
 					"Could not perform insert, missing required properties: " + listToString(missing));
@@ -506,7 +519,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	private Navajo handleGet(Navajo input, Message inputEntity) throws EntityException {
 
 		// property type validation
-		validateInputMessage(input.getMessage(myEntity.getMessage().getName()));
+        validateInputMessage(input.getMessage(myEntity.getMessage(entityVersion).getName()));
 
 		String postedEtag = inputEntity.getEtag();
 		Navajo result = callEntityService(input);
@@ -678,14 +691,14 @@ public class ServiceEntityOperation implements EntityOperation {
 			id = result.getProperty(myEntity.getMessageName() + "/_id");
 		}
 
-		clean(result, "response", true, true);
+        clean(result, "response", true, true, entityVersion);
 
 		if (id != null && id.getValue() != null) {
 			input.getMessage(myEntity.getMessageName()).addProperty(id.copy(input));
 			input.getRootMessage().addProperty(id.copy(input));
 
-			if (myEntity.getAutoKey() != null) {
-				for (Property p : myEntity.getAutoKey().getKeyProperties()) {
+            if (myEntity.getAutoKey(entityVersion) != null) {
+                for (Property p : myEntity.getAutoKey(entityVersion).getKeyProperties()) {
 					result.getProperty(p.getFullPropertyName()).setAnyValue(id.getValue());
 				}
 			}
@@ -751,10 +764,10 @@ public class ServiceEntityOperation implements EntityOperation {
 			id = result.getProperty(myEntity.getMessageName() + "/_id");
 		}
 
-		clean(result, "response", true, true);
+        clean(result, "response", true, true, entityVersion);
 
 		if (id != null && id.getValue() != null) {
-			Key autoKey = myEntity.getAutoKey();
+            Key autoKey = myEntity.getAutoKey(entityVersion);
 			if (autoKey != null) {
 				for (Property p : autoKey.getKeyProperties()) {
 					result.getProperty(p.getFullPropertyName()).setAnyValue(id.getValue());
@@ -777,7 +790,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		List<Property> list = result.getMessage(myEntity.getMessageName()).getAllProperties();
 		for (Property p : list) {
 			// Check if this is a bind property.
-			Property e_p = myEntity.getMessage().getProperty(p.getName());
+            Property e_p = myEntity.getMessage(entityVersion).getProperty(p.getName());
 			if (e_p != null && e_p.getBind() != null && !e_p.getBind().equals("")) {
 				result.getMessage(myEntity.getMessageName()).removeProperty(p);
 			}

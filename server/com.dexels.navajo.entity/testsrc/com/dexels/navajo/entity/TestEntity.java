@@ -84,16 +84,16 @@ public class TestEntity {
     public void testEntityGetKeySize() throws Exception {
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
-        Assert.assertEquals(4, e.getKeys().size());
+        Assert.assertEquals(4, e.getKeys(Entity.DEFAULT_VERSION).size());
         System.err.println("AFTER EXTEND: ******************************************* ");
-        e.getMessage().write(System.err);
+        e.getMessage(Entity.DEFAULT_VERSION).write(System.err);
     }
 
     @Test
     public void testEntityGetKeyMessage() throws Exception {
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
-        Set<Key> keys = e.getKeys();
+        Set<Key> keys = e.getKeys(Entity.DEFAULT_VERSION);
         int found = 3;
         for (Key k : keys) {
             Navajo m = k.generateRequestMessage();
@@ -129,7 +129,7 @@ public class TestEntity {
         matchingProperties.add(p);
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
-        Key k = e.getKey(matchingProperties);
+        Key k = e.getKey(matchingProperties, Entity.DEFAULT_VERSION);
         Assert.assertNotNull(k);
         Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/MatchId"));
 
@@ -148,7 +148,7 @@ public class TestEntity {
         matchingProperties.add(p);
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
-        Key k = e.getKey(matchingProperties);
+        Key k = e.getKey(matchingProperties, Entity.DEFAULT_VERSION);
         Assert.assertNull(k);
     }
 
@@ -168,7 +168,7 @@ public class TestEntity {
         matchingProperties.add(p2);
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
-        Key k = e.getKey(matchingProperties);
+        Key k = e.getKey(matchingProperties, Entity.DEFAULT_VERSION);
         Assert.assertNotNull(k);
         Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/MatchId"));
     }
@@ -186,7 +186,7 @@ public class TestEntity {
         matchingProperties.add(p);
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
-        Key k = e.getKey(matchingProperties);
+        Key k = e.getKey(matchingProperties, Entity.DEFAULT_VERSION);
         Assert.assertNotNull(k);
         Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/_id"));
 
@@ -211,7 +211,7 @@ public class TestEntity {
         matchingProperties.add(p3);
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
-        Key k = e.getKey(matchingProperties);
+        Key k = e.getKey(matchingProperties, Entity.DEFAULT_VERSION);
         Assert.assertNotNull(k);
         Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/SeasonId"));
         Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/ExternalMatchId"));
@@ -224,7 +224,7 @@ public class TestEntity {
 
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
-        Key k = e.getKey("ALT");
+        Key k = e.getKey("ALT", Entity.DEFAULT_VERSION);
         Assert.assertNotNull(k);
         Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/SeasonId"));
         Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/ExternalMatchId"));
@@ -239,14 +239,12 @@ public class TestEntity {
         m.startEntity();
         Assert.assertEquals(1, m.getSuperEntities().size());
 
-        m.getMessage().setExtends("");
-        m.getMessage().getProperty("MatchId").setExtends("");
+        m.getMessage(Entity.DEFAULT_VERSION).setExtends("");
+        m.getMessage(Entity.DEFAULT_VERSION).getProperty("MatchId").setExtends("");
 
         System.err.println("**************************************************");
-        m.getMessage().write(System.err);
+        m.getMessage(Entity.DEFAULT_VERSION).write(System.err);
         System.err.println("**************************************************");
-
-        m.setMessage(m.getMessage());
 
         Assert.assertEquals(0, m.getSuperEntities().size());
 
@@ -275,11 +273,10 @@ public class TestEntity {
         activity.addProperty(keyPropActAlt);
 
         System.err.println("INJECTING NEW MESSAGE!!!!!!!");
-        a.setMessage(activity);
 
         // m = manager.getEntity("MyEntity");
         // m.activate();
-        m.getMessage().write(System.err);
+        m.getMessage(Entity.DEFAULT_VERSION).write(System.err);
 
         // for ( Key k : m.getKeys() ) {
         // System.err.println("KEY:");
@@ -288,6 +285,6 @@ public class TestEntity {
         // System.err.println("=================================================================================");
 
         Assert.assertEquals(1, m.getSuperEntities().size());
-        Assert.assertEquals(5, m.getKeys().size());
+        Assert.assertEquals(5, m.getKeys(Entity.DEFAULT_VERSION).size());
     }
 }
