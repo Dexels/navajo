@@ -183,8 +183,6 @@ public class EntityApiDocListener extends HttpServlet  {
         request = request.replace("{{OP}}", method);
         result = result.replace("{{OPREQUEST}}", request);
 
-
-
         if (op.getDescription() != null) {
             result = result.replace("{{DESCRIPTION}}", op.getDescription());
 

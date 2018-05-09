@@ -244,6 +244,8 @@ public class TestEntity {
 
         System.err.println("**************************************************");
         m.getMessage(Entity.DEFAULT_VERSION).write(System.err);
+        m.deactivate();
+        m.startEntity();
         System.err.println("**************************************************");
 
         Assert.assertEquals(0, m.getSuperEntities().size());
@@ -277,6 +279,8 @@ public class TestEntity {
         // m = manager.getEntity("MyEntity");
         // m.activate();
         m.getMessage(Entity.DEFAULT_VERSION).write(System.err);
+        m.deactivate();
+        m.startEntity();
 
         // for ( Key k : m.getKeys() ) {
         // System.err.println("KEY:");
@@ -285,6 +289,14 @@ public class TestEntity {
         // System.err.println("=================================================================================");
 
         Assert.assertEquals(1, m.getSuperEntities().size());
-        Assert.assertEquals(5, m.getKeys(Entity.DEFAULT_VERSION).size());
+        Assert.assertEquals(4, m.getKeys(Entity.DEFAULT_VERSION).size());
+
+        a.getMessage(Entity.DEFAULT_VERSION).merge(activity, true);
+        a.getMessage(Entity.DEFAULT_VERSION).write(System.err);
+
+        a.deactivate();
+        a.startEntity();
+
+        Assert.assertEquals(2, a.getKeys(Entity.DEFAULT_VERSION).size());
     }
 }
