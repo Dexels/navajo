@@ -39,12 +39,12 @@ public class SQLInsertTransformerFactory implements ReactiveTransformerFactory {
 
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"resource","query","parallel","debug"}));
+		return Optional.of(Arrays.asList(new String[]{"resource","query","debug"}));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[]{"resource","query","parallel"}));
+		return Optional.of(Arrays.asList(new String[]{"resource","query"}));
 	}
 
 	@Override
@@ -52,7 +52,6 @@ public class SQLInsertTransformerFactory implements ReactiveTransformerFactory {
 		Map<String,String> r = new HashMap<>();
 		r.put("resource", Property.STRING_PROPERTY);
 		r.put("query", Property.STRING_PROPERTY);
-		r.put("parallel", Property.INTEGER_PROPERTY);
 		r.put("debug", Property.BOOLEAN_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
