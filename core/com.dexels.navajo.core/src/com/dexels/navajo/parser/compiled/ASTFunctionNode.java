@@ -75,7 +75,7 @@ public final class ASTFunctionNode extends SimpleNode {
 				}
 			}
 		} catch (Throwable e2) {
-			typechecklogger.error("Typechecker itself failed. Error: ", e2);
+			typechecklogger.error("Typechecker itself failed when parsing: "+expression+" function definition: "+typeCheckInstance+" Error: ", e2);
 		}
 		
 		return new ContextExpression() {
