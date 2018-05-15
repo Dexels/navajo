@@ -114,7 +114,8 @@ Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  navajocore;uses:="org.osgi.framework,navajoextension",
  navajoextension;uses:="org.osgi.framework,navajo,com.dexels.navajo.version"
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.immutable.api;version="1.0.0",
+Import-Package: com.dexels.config.runtime;resolution:=optional,
+ com.dexels.immutable.api;version="1.0.0",
  com.dexels.immutable.factory;version="1.2.0",
  com.dexels.navajo.authentication.api,
  com.dexels.navajo.client,

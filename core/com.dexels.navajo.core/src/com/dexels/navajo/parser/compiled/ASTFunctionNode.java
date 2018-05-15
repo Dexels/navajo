@@ -5,6 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dexels.config.runtime.RuntimeConfig;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -22,6 +26,9 @@ import com.dexels.navajo.version.AbstractVersion;
 
 
 public final class ASTFunctionNode extends SimpleNode {
+
+	
+	private final static Logger typechecklogger = LoggerFactory.getLogger("navajo.typecheck");
 
 	String functionName;
 	int args = 0;
@@ -42,11 +49,7 @@ public final class ASTFunctionNode extends SimpleNode {
 			FunctionFactoryFactory.getInstance().getInstance(cl, functionName);
 		return f;
 	}
-
-	// TODO, connect to function type declaration
-	private boolean typeCheckArgument(ContextExpression ce, Class enconteredType,List<String> problems) {
-		return true;
-	}
+	
 	@Override
 	public ContextExpression interpretToLambda(List<String> problems,String expression) {
 
@@ -64,6 +67,17 @@ public final class ASTFunctionNode extends SimpleNode {
 			ContextExpression a = jjtGetChild(i).interpretToLambda(problems,expression);
 			l.add(a);
 		}
+		try {
+			List<String> typeProblems = typeCheckInstance.typeCheck(l,expression);
+			if(!typeProblems.isEmpty()) {
+				if(RuntimeConfig.STRICT_TYPECHECK.getValue()!=null) {
+					problems.addAll(typeProblems);
+				}
+			}
+		} catch (Throwable e2) {
+			typechecklogger.error("Typechecker itself failed. Error: ", e2);
+		}
+		
 		return new ContextExpression() {
 			
 			@Override

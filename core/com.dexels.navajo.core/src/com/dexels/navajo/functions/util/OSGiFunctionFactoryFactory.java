@@ -34,6 +34,7 @@ public class OSGiFunctionFactoryFactory  {
         
 		cache.put(functionName, fd);
 		FunctionInterface instance = fd.getFunctionInstance();
+		instance.setDefinition(fd);
 		return instance;
 	}
 

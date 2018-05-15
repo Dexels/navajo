@@ -198,6 +198,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 			FunctionDefinition fd = getDef(functionName);
 			Class<FunctionInterface> myClass = (Class<FunctionInterface>) Class.forName(fd.getObject(), true, cl);
 			FunctionInterface fi =myClass.newInstance();
+			fi.setDefinition(fd);
 			if (!fi.isInitialized()) {
 				fi.setTypes(fd.getInputParams(), fd.getResultParam());
 			}
@@ -208,6 +209,17 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		}
 	}
 
+//	public void load(FunctionDefinition fd) {
+//		myFunctionDefinition = fd;
+//		if (fd.getInputParams() != null) {
+//			myinputtypes = loadInputTypes(fd.getInputParams());
+//		}
+//		if (fd.getResultParam() != null) {
+//			myreturntypes = loadReturnType(fd.getResultParam());
+//		}
+//	}
+	
+	
 	public Map<String, FunctionDefinition> getConfig(ExtensionDefinition ed) {
 		Map<String, FunctionDefinition> map = functionConfig.get(ed);
 		if(map!=null) {

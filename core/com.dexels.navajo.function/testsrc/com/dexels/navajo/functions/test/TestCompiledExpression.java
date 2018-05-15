@@ -7,7 +7,10 @@ import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.dexels.config.runtime.RuntimeConfig;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -21,6 +24,10 @@ import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 public class TestCompiledExpression {
 
 	private Navajo input;
+	
+	
+	private final static Logger logger = LoggerFactory.getLogger(TestCompiledExpression.class);
+
 
 
 	@Before
@@ -48,7 +55,31 @@ public class TestCompiledExpression {
 		Assert.assertEquals("BLE", o);
 	}
 	
-
+	@Test
+	public void testFunctionParamTypeError() throws TMLExpressionException {
+		List<String> problems = new ArrayList<>();
+		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(1)");
+		System.err.println("problems: "+problems);
+		System.err.println("returntype: "+o.returnType());
+		if(RuntimeConfig.STRICT_TYPECHECK.getValue()!=null) {
+			Assert.assertEquals(1, problems.size());
+		} else {
+			Assert.assertEquals("Don't expect problems to appear when STRICT_TYPECHECK is false", 0,problems.size());
+//			Assert.fail("Failed test, ony valid when STRICT_TYPECHECK. Set env for unit tests.");
+		}
+		
+	}
+	
+	@Test
+	public void testNestedFunctionType() throws TMLExpressionException {
+		List<String> problems = new ArrayList<>();
+		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(ToLower('Bob'))");
+		System.err.println("problems: "+problems);
+		System.err.println("returntype: "+o.returnType().orElse("<unknown>"));
+		Assert.assertTrue("Expected a return type here", o.returnType().isPresent());
+		Assert.assertEquals("string", o.returnType().get());
+	}
+	
 	@Test
 	public void testFunctionType() {
 		ExpressionCache ce = ExpressionCache.getInstance();
