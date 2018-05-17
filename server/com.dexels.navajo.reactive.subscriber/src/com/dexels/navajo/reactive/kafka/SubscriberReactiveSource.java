@@ -1,7 +1,6 @@
 package com.dexels.navajo.reactive.kafka;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,7 +11,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.kafka.api.OffsetQuery;
-import com.dexels.kafka.factory.KafkaClientFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
@@ -40,7 +38,6 @@ public class SubscriberReactiveSource implements ReactiveSource {
 	private final TopicSubscriber topicSubcriber;
 	private final List<ReactiveTransformer> transformers;
 	private final Optional<OffsetQuery> offsetQuery;
-	private final Map<String, Object> subscriberSettings;
 	private final SourceMetadata metadata;
 	
 // 	<source.kafka.message [resource="topicscubscriber"] topic="bla-bla" group="bla" from="bla-bla:0">
@@ -55,14 +52,12 @@ public class SubscriberReactiveSource implements ReactiveSource {
 		this.topicSubcriber = topicSubscriber;
 		this.transformers = transformers;
 		this.offsetQuery = offsetQuery;
-		this.subscriberSettings = subscriberSettings;
 	}
 
 	
 	private String createDefaultEndTag(String topic) {
 		Map<Integer,Long> mm = offsetQuery.orElseThrow(()->new RuntimeException("Missing offsetquery.")).partitionOffsets(topic);
 		
-//		offsetQuery.get().encodeTopicTag(tag, partitions)
 		return offsetQuery.get().encodeTopicTag(partition->mm.get(partition),new ArrayList<>(mm.keySet()));
 	}
 	@Override
@@ -76,18 +71,13 @@ public class SubscriberReactiveSource implements ReactiveSource {
 		AtomicInteger outMessages = new AtomicInteger();
 
 		String assembledTopic = tenant + "-"+context.deployment()+"-"+topic;
-		System.err.println("ASSEMBLED: "+assembledTopic+" group: "+group+" from: "+from+" to: "+to );
 		
 		
 		ReplicationFactory.setInstance(new FallbackReplicationMessageParser(true));
 		AtomicLong totalRequest = new AtomicLong();
 		
-		Map<String,String> config = new HashMap<>();
-		config.put("wait", "1000");
-		TopicSubscriber subscriber = KafkaClientFactory.createSubscriber("aeneas1.sportlink-infra.net:9092,aeneas1.sportlink-infra.net:9093", config);
-
-		
-		
+//		Map<String,String> config = new HashMap<>();
+//		config.put("wait", "1000");
 //		System.err.println("SubscriberSettings: "+subscriberSettings);
 //		List<DataItem> persons = Flowable.fromPublisher(subscriber.subscribeSingleRange("KNVB-test-sportlinkkernel-PERSON", UUID.randomUUID().toString(), "0:23000", "0:24000"))
 //				.concatMap(l->Flowable.fromIterable(l))
@@ -101,14 +91,14 @@ public class SubscriberReactiveSource implements ReactiveSource {
 //		
 		Flowable<DataItem> flow = Flowable.fromPublisher(topicSubcriber.subscribeSingleRange(assembledTopic, group, from, to))
 			.concatMap(e->Flowable.fromIterable(e))
-			.doOnNext(e->System.err.println("some message: "+e.key()))
+//			.doOnNext(e->System.err.println("some message: "+e.key()))
 			.doOnNext(e->totalRequest.decrementAndGet())
 //			.filter(e->e.value()!=null)
-			.doOnNext(e->System.err.println("Message detected: "+e.key()))
+//			.doOnNext(e->System.err.println("Message detected: "+e.key()))
 			.doOnRequest(e->totalRequest.addAndGet(e))
-			.doOnRequest(e->System.err.println("Total Requested: "+totalRequest.get()))
-			.doOnNext(e->System.err.println(">Total Requested: "+totalRequest.get()))
-			.doOnCancel(()->System.err.println("Canceled!"))
+//			.doOnRequest(e->System.err.println("Total Requested: "+totalRequest.get()))
+//			.doOnNext(e->System.err.println(">Total Requested: "+totalRequest.get()))
+//			.doOnCancel(()->System.err.println("Canceled!"))
 //			.map(e->DataItem.of(e.value()))
 //			.map(e->ReplicationFactory.getInstance().parseBytes(e.value()))
 			.map(e->DataItem.of(e.value()))
