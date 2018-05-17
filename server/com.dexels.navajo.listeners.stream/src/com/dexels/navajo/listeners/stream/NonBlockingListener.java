@@ -5,14 +5,13 @@ import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
@@ -41,17 +40,17 @@ import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.xml.XML;
+import com.dexels.navajo.reactive.RunningReactiveScripts;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.LocalClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 
 public class NonBlockingListener extends HttpServlet {
@@ -65,16 +64,18 @@ public class NonBlockingListener extends HttpServlet {
 
 	private ReactiveScriptRunner reactiveScriptEnvironment;
 	
-	private Map<String,StreamScriptContext> scriptsInProgress = new HashMap<>();
+	private final static ObjectMapper objectMapper = new ObjectMapper();
+
+	private RunningReactiveScripts runningReactiveScripts = new RunningReactiveScripts();
 	
-	ObjectMapper objectMapper = new ObjectMapper();
 
 	
 	public NonBlockingListener() {
 		Observable.interval(10, TimeUnit.SECONDS)
 			.subscribe(i->{
-				if(scriptsInProgress.size()>0) {
-					logger.info("Running scripts: "+scriptsInProgress.values().stream().map(e->e.service).collect(Collectors.toList()));
+				List<String> scripts = runningReactiveScripts.services();
+				if(scripts.size()>0) {
+					logger.info("Running scripts: "+scripts);
 				}
 			});
 	}
@@ -120,10 +121,7 @@ public class NonBlockingListener extends HttpServlet {
 	}
 	
 	private void removeRunningScript(StreamScriptContext context) {
-		long started = context.started;
-		long elapsed = System.currentTimeMillis() - started;
-		logger.info("Script: {} ran for: {} millis",context.service,elapsed);
-		scriptsInProgress.remove(context.uuid());
+		runningReactiveScripts.completed(context);
 	}
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -157,7 +155,7 @@ public class NonBlockingListener extends HttpServlet {
 			response.sendError(500,"Server error");
 			return;
 		}
-		scriptsInProgress.put(context.uuid(),context);
+		runningReactiveScripts.submit(context);
 		
 		Optional<String> responseEncoding = decideEncoding(request.getHeader("Accept-Encoding"));
 			
@@ -277,14 +275,7 @@ public class NonBlockingListener extends HttpServlet {
 
 	private void cancel(String cancel, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.setContentType("text/html");
-		StreamScriptContext ctx = this.scriptsInProgress.get(cancel);
-		if(ctx==null) {
-//			response.sendError(404);
-			return;
-		} else {
-			ctx.cancel();
-//			r.put("response", "canceled");
-		}
+		runningReactiveScripts.cancel(cancel);
 //		objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, r);
 		response.sendRedirect("/stream?list");
 //		listScriptsHtml(request, response);
@@ -296,8 +287,8 @@ public class NonBlockingListener extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		writer.write("<html><head></head><body>");
 		writer.write("<h2>Running scripts:</h2><ul>");
-		this.scriptsInProgress.entrySet().forEach(e->{
-			writer.write("<li><a href=\"stream?cancel="+e.getKey()+"&list\">"+e.getValue().service+"</li>");
+		runningReactiveScripts.contexts().forEach(e->{
+			writer.write("<li><a href=\"stream?cancel="+e.uuid()+"&list\">"+e.service+"</li>");
 			
 		});
 		writer.write("<ul></body></html>");
@@ -305,21 +296,22 @@ public class NonBlockingListener extends HttpServlet {
 	private void listScriptsJson(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.setContentType("application/json");
 		PrintWriter writer = response.getWriter();
-		ArrayNode list = objectMapper.createArrayNode();
-		long now = System.currentTimeMillis();
-		this.scriptsInProgress.entrySet().forEach(e->{
-			ObjectNode current = objectMapper.createObjectNode();
-			current.put("id", e.getKey());
-			StreamScriptContext ctx = e.getValue();
-			current.put("service", ctx.service);
-			current.put("tenant", ctx.tenant);
-			current.put("deployment", ctx.deployment());
-			current.put("username", ctx.username.orElse("<unknown>"));
-			current.put("started", ctx.started);
-			current.put("running", (now-ctx.started));
-			list.add(current);
-		});
-		objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, list);
+//		
+//		ArrayNode list = objectMapper.createArrayNode();
+//		long now = System.currentTimeMillis();
+//		this.scriptsInProgress.entrySet().forEach(e->{
+//			ObjectNode current = objectMapper.createObjectNode();
+//			current.put("id", e.getKey());
+//			StreamScriptContext ctx = e.getValue();
+//			current.put("service", ctx.service);
+//			current.put("tenant", ctx.tenant);
+//			current.put("deployment", ctx.deployment());
+//			current.put("username", ctx.username.orElse("<unknown>"));
+//			current.put("started", ctx.started);
+//			current.put("running", (now-ctx.started));
+//			list.add(current);
+//		});
+		objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, runningReactiveScripts.asJson());
 	}
 
 	private void respondError(String message, StreamScriptContext context, Optional<String> responseEncoding, HttpServletResponse response,
@@ -399,7 +391,7 @@ public class NonBlockingListener extends HttpServlet {
 		    return bytesArray;
 	}
 
-	private StreamScriptContext createScriptContext(AsyncContext ac, ResponseSubscriber responseSubscriber, AuthenticationMethodBuilder builder) throws IOException, AuthorizationException {
+	private StreamScriptContext createScriptContext(AsyncContext ac, Disposable responseSubscriber, AuthenticationMethodBuilder builder) throws IOException, AuthorizationException {
 		final HttpServletRequest req = (HttpServletRequest) ac.getRequest();
 		Map<String, Object> attributes = extractHeaders(req);
 		String tenant = determineTenantFromRequest(req);
@@ -427,7 +419,7 @@ public class NonBlockingListener extends HttpServlet {
 					attributes,Optional.of(
 							Flowable.<NavajoStreamEvent>empty().compose(StreamDocument
 									.inNavajo(serviceHeader, Optional.of(username), Optional.of(password)))
-							),null, Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(()->{responseSubscriber.cancel(); ac.complete();}));
+							),null, Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(()->{responseSubscriber.dispose(); ac.complete();}));
 		}
 		String requestEncoding = (String) attributes.get("Content-Encoding");
 		RequestPublisher rp = new RequestPublisher(ac, 8192);
@@ -440,7 +432,7 @@ public class NonBlockingListener extends HttpServlet {
 			.concatMap(e->e);
 		
 //	au
-		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,attributes,Optional.of(input),null, Optional.of(this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(()->{responseSubscriber.cancel(); ac.complete();}));
+		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,attributes,Optional.of(input),null, Optional.of(this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(()->{responseSubscriber.dispose(); ac.complete();}));
 	}
 
 	// warn: Duplicated code

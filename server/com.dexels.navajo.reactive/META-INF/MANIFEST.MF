@@ -27,6 +27,7 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
  com.dexels.navajo.server.listener.http.continuation,
+ com.dexels.pubsub.rx2.api;version="4.1.0",
  com.dexels.replication.api;version="9.1.0",
  com.dexels.replication.factory;version="1.1.0",
  com.dexels.replication.impl.json;version="2.0.0",
@@ -47,5 +48,6 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  org.slf4j;version="1.7.21"
 Export-Package: com.dexels.navajo.reactive;version="1.0.0",
  com.dexels.navajo.reactive.api;version="1.0.0"
-Service-Component: OSGI-INF/*
+Service-Component: OSGI-INF/*,
+ OSGI-INF/navajo.reactive.running.xml
 Bundle-ActivationPolicy: lazy

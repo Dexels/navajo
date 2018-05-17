@@ -468,8 +468,8 @@ public class ReactiveScriptParser {
 		return src;
 	}
 
-	private static List<ReactiveTransformer> parseTransformationsFromChildren(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> parent, Function<String,ReactiveSourceFactory> sourceFactorySupplier,
-			Function<String,ReactiveTransformerFactory> factorySupplier,Function<String, ReactiveMerger> reducerSupplier, Set<String> transformers, Set<String> reducers, boolean useGlobalInput) throws Exception {
+	public static List<ReactiveTransformer> parseTransformationsFromChildren(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> parent, Function<String,ReactiveSourceFactory> sourceFactorySupplier,
+			Function<String,ReactiveTransformerFactory> factorySupplier,Function<String, ReactiveMerger> reducerSupplier, Set<String> transformers, Set<String> reducers, boolean useGlobalInput) {
 		return parent.map(p->(List<XMLElement>)p.getChildren())
 			.orElse(Collections.emptyList())
 			.stream()
