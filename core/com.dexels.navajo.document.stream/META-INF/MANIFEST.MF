@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Async Stream Push Parser
 Bundle-SymbolicName: com.dexels.navajo.document.stream
-Bundle-Version: 2.0.28
+Bundle-Version: 2.0.29.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.immutable.api;version="1.0.0",
@@ -43,13 +43,13 @@ Import-Package: com.dexels.immutable.api;version="1.0.0",
  org.junit;version="[4.0.0,5.0.0)";resolution:=optional,
  org.reactivestreams;version="1.0.0.release",
  org.slf4j;version="1.7.0"
-Export-Package: com.dexels.navajo.document.stream;version="2.0.28",
+Export-Package: com.dexels.navajo.document.stream;version="2.0.29",
  com.dexels.navajo.document.stream.api,
  com.dexels.navajo.document.stream.base,
- com.dexels.navajo.document.stream.events;version="2.0.28",
+ com.dexels.navajo.document.stream.events;version="2.0.29",
  com.dexels.navajo.document.stream.io,
  com.dexels.navajo.document.stream.json,
- com.dexels.navajo.document.stream.xml;version="2.0.28",
+ com.dexels.navajo.document.stream.xml;version="2.0.29",
  com.github.davidmoten.rx2;version="0.1.16",
  com.github.davidmoten.rx2.buffertofile;version="0.1.16",
  com.github.davidmoten.rx2.exceptions;version="0.1.16",
