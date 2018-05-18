@@ -23,7 +23,6 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.entity.Entity;
@@ -52,19 +51,10 @@ public class EntityDispatcher {
     private AuthenticationMethodBuilder authMethodBuilder;
     private EntityMapper myMapper;
 
-    private void clearEntityMessage(Message entityMessage) {
-        for (Message m : entityMessage.getAllMessages()) {
-            entityMessage.removeMessage(m);
-        }
-        for (Property p : entityMessage.getAllProperties()) {
-            entityMessage.removeProperty(p);
-        }
-    }
 
     public void run(EntityContinuationRunner runner) {
         Navajo result = null;
         Access access = null;
-        String messageVersion = "";
         String method = runner.getHttpRequest().getMethod();
         String path = runner.getHttpRequest().getPathInfo();
         if (path.startsWith("/entity")) {
@@ -83,8 +73,7 @@ public class EntityDispatcher {
             String urlOutput = null;
             if (dotString != null) {
                 // The output format can be set by adding a trailing .<format>
-                // to
-                // the URL. This overrules accept-encoding
+                // to the URL. This overrules accept-encoding
                 urlOutput = dotString.substring(dotString.lastIndexOf('.') + 1);
                 if (!SUPPORTED_OUTPUT.contains(urlOutput)) {
                     // unsupported format

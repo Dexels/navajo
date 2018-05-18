@@ -6,7 +6,7 @@ Bundle-Version: 7.0.3.qualifier
 Bundle-Activator: navajoentity.Version
 Bundle-ClassPath: .
 Bundle-Vendor: Dexels
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Navajo-Extension: com/dexels/navajo/entity/adapters/adapters.xml
 Navajo-Name: Entity
 Import-Package: com.dexels.navajo.adapter,

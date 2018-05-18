@@ -407,7 +407,6 @@ public class Entity {
     }
 
     private void findKeys() {
-
         Set<Key> myKeys = new HashSet<Key>();
         HashMap<String, Key> foundKeys = new HashMap<String, Key>();
         List<Property> allProps = null; // = getMessage(entityVersion).getAllProperties();
