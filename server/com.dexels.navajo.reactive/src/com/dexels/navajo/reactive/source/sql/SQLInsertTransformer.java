@@ -46,7 +46,7 @@ public class SQLInsertTransformer implements ReactiveTransformer {
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
 		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, sourceElement, sourcePath);
-		int parallel = resolved.optionalInteger("parallel").orElse(1);
+//		int parallel = resolved.optionalInteger("parallel").orElse(1);
 		boolean debug = resolved.optionalBoolean("debug").orElse(false);
 		Map<String, Function3<StreamScriptContext, Optional<ImmutableMessage>, ImmutableMessage, Operand>> named = resolved.named;
 		try {

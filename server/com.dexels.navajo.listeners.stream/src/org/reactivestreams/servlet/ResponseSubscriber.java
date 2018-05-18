@@ -62,11 +62,11 @@ private final static Logger logger = LoggerFactory.getLogger(ResponseSubscriber.
     this.outputStream = context.getResponse().getOutputStream();
   }
 
-  public void cancel() {
-	  if(this.subscription!=null) {
-		  this.subscription.cancel();
-	  }
-  }
+//  public void cancel() {
+//	  if(this.subscription!=null) {
+//		  this.subscription.cancel();
+//	  }
+//  }
   /**
    * Invoked when a downstream error occurs, ie, when an error writing to the servlet
    * output stream occurs.
@@ -80,9 +80,8 @@ private final static Logger logger = LoggerFactory.getLogger(ResponseSubscriber.
    * @param t The error that occurred.
    */
   protected void onOutputStreamError(final Throwable t) {
-	  System.err.println("OUTPUTSTREAM ERROR");
 	  logger.error("Error: ", t);
-	  cancel();
+	  dispose();
 	  try {
 		this.outputStream.close();
 		  this.context.complete();
@@ -101,7 +100,6 @@ private final static Logger logger = LoggerFactory.getLogger(ResponseSubscriber.
    * @param t The error that occurred.
    */
   protected void onPublisherError(final Throwable t) {
-	  System.err.println("PUBLISH ERROR");
 	  logger.error("Error publisher: ", t);
 	  try {
 		this.outputStream.close();

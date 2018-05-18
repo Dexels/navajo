@@ -9,8 +9,10 @@ package com.dexels.navajo.parser;
  * @version 1.0
  */
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -19,6 +21,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.script.api.Access;
 
 @SuppressWarnings("rawtypes")
@@ -102,14 +105,14 @@ public abstract class FunctionInterface {
 		return false;
 	}
 	
-	public void load(FunctionDefinition fd) {
+	public void setDefinition(FunctionDefinition fd) {
 		myFunctionDefinition = fd;
-		if (fd.getInputParams() != null) {
-			myinputtypes = loadInputTypes(fd.getInputParams());
-		}
-		if (fd.getResultParam() != null) {
-			myreturntypes = loadReturnType(fd.getResultParam());
-		}
+//		if (fd.getInputParams() != null) {
+//			myinputtypes = loadInputTypes(fd.getInputParams());
+//		}
+//		if (fd.getResultParam() != null) {
+//			myreturntypes = loadReturnType(fd.getResultParam());
+//		}
 	}
 
 	// Legacy
@@ -320,5 +323,52 @@ public abstract class FunctionInterface {
 		} else {
 			return this.access.getTenant();
 		}
+	}
+
+	public List<String> typeCheck(List<ContextExpression> l, String expression) {
+//		Class[][] types = getTypes();
+		String[][] types = myFunctionDefinition.getInputParams();
+		int index = 0;
+		for (String[] classes : types) {
+			System.err.println("Classes: "+classes.length);
+			List<String> typeCheckProblems = typeCheckOption(classes,l,index,expression);
+			if(typeCheckProblems.isEmpty()) {
+				System.err.println("Found typechecked option!");
+				return typeCheckProblems;
+			}
+			index++;
+		}
+		return Arrays.asList(new String[] {"Could not find a suitable type solution to this function: "+getClass().getName()+" in expression: "+expression});
+	}
+
+	private List<String> typeCheckOption(String[] classes, List<ContextExpression> l, int optionIndex, String expression) {
+		int argumentNumber = 0;
+		List<String> problems = new ArrayList<>();
+		for (ContextExpression contextExpression : l) {
+			Optional<String> returnType = contextExpression.returnType();
+			if(!returnType.isPresent()) {
+				continue;
+			}
+			if(argumentNumber > classes.length) {
+				return Arrays.asList(new String[] {"Argument number mismatch"});
+			}
+			String rt = returnType.get();
+			boolean isCompatible = isCompatible(rt,classes[argumentNumber]);
+			if(!isCompatible) {
+				problems.add("Argument # "+argumentNumber+" of type: "+classes[argumentNumber]+" is incompatible with: "+rt);
+			}
+			argumentNumber++;
+			
+//			System.err.println("Checking context: "+);
+		}
+		return problems;
+	}
+
+	private boolean isCompatible(String rt, String inputType) {
+		System.err.println("Comparing: "+rt+" -> "+inputType);
+		if(rt==null || inputType==null) {
+			return true;
+		}
+		return rt.equals(inputType);
 	}
 }

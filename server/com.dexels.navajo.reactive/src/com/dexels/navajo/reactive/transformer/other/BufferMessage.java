@@ -22,7 +22,7 @@ public class BufferMessage implements ReactiveTransformer {
 
 	private final ReactiveParameters parameters;
 	private final TransformerMetadata metadata;
-	private final Function<StreamScriptContext, Function<DataItem, DataItem>> joiner;
+//	private final Function<StreamScriptContext, Function<DataItem, DataItem>> joiner;
 	
 	
 	private final static Logger logger = LoggerFactory.getLogger(BufferMessage.class);
@@ -30,7 +30,7 @@ public class BufferMessage implements ReactiveTransformer {
 	public BufferMessage(TransformerMetadata metadata, ReactiveParameters parameters, Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper) {
 		this.parameters = parameters;
 		this.metadata = metadata;
-		this.joiner = joinermapper;
+//		this.joiner = joinermapper;
 	}
 
 	@Override

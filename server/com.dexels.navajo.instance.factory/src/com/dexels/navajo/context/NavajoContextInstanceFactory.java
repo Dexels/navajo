@@ -543,7 +543,8 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		if(typeProperty==null) {
 			throw new NullPointerException("No type property missing for instance: "+instance+" and name: "+name);
 		}
-		String type = (String) typeProperty.getTypedValue();
+//		String type = (String) typeProperty.getTypedValue();
+		String[] types = ((String) typeProperty.getTypedValue()).split(",");
 
 		if (configAdmin == null) {
 			logger.warn("No configuration admin, assuming testing");
@@ -553,10 +554,12 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		if(uniqueId!=null) {
 			settings.put("navajo.uniqueid", uniqueId);
 		}
-		final String filter = createFilter(instance, name, settings, type,uniqueId);
-		Configuration cc = createOrReuse("navajo.resource." + type, filter);
-		appendIfChanged(cc, settings);
-		logger.debug("Data source settings for source: {} : {}", name, settings);
+		for (String type : types) {
+			final String filter = createFilter(instance, name, settings, type,uniqueId);
+			Configuration cc = createOrReuse("navajo.resource." + type, filter);
+			appendIfChanged(cc, settings);
+			logger.debug("Data source settings for source: {} : {}", name, settings);
+		}
 
 //		addResourceGroup(name, instance, type, settings);
 	}

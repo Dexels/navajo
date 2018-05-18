@@ -18,8 +18,16 @@ public final class ASTModNode extends SimpleNode {
 	}
 
 	public final Object interpret(Object a, Object b){
-        if (!(a instanceof Integer && b instanceof Integer))
-            throw new TMLExpressionException("Modulo operator only defined for integers");
+		if(a==null) {
+            throw new TMLExpressionException("Modulo operator failed: First operand is null.");
+		}
+		if(b==null) {
+            throw new TMLExpressionException("Modulo operator failed: Second operand is null.");
+		}
+        if (!(a instanceof Integer && b instanceof Integer)) {
+                throw new TMLExpressionException("Modulo operator only defined for integers, not: "+a.getClass()+" and "+b.getClass());
+        }
+        	
         return new Integer(((Integer) a).intValue() % ((Integer) b).intValue());
     }
 }

@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Core
 Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-ManifestVersion: 2
-Bundle-Version: 5.1.43.qualifier
+Bundle-Version: 5.1.47.qualifier
 Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
 Navajo-Name: Core
 Eclipse-ExtensibleAPI: true
@@ -114,7 +114,8 @@ Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  navajocore;uses:="org.osgi.framework,navajoextension",
  navajoextension;uses:="org.osgi.framework,navajo,com.dexels.navajo.version"
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.immutable.api;version="1.0.0",
+Import-Package: com.dexels.config.runtime;resolution:=optional,
+ com.dexels.immutable.api;version="1.0.0",
  com.dexels.immutable.factory;version="1.2.0",
  com.dexels.navajo.authentication.api,
  com.dexels.navajo.client,

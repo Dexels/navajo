@@ -49,6 +49,7 @@ import com.dexels.navajo.reactive.mappers.Delete;
 import com.dexels.navajo.reactive.mappers.DeleteSubMessage;
 import com.dexels.navajo.reactive.mappers.JsonFileAppender;
 import com.dexels.navajo.reactive.mappers.Log;
+import com.dexels.navajo.reactive.mappers.LogState;
 import com.dexels.navajo.reactive.mappers.Rename;
 import com.dexels.navajo.reactive.mappers.SetSingle;
 import com.dexels.navajo.reactive.mappers.SetSingleKeyValue;
@@ -84,6 +85,7 @@ public class ReactiveScriptParser {
 		reactiveReducer.put("rename", new Rename());
 		reactiveReducer.put("dump", new JsonFileAppender());
 		reactiveReducer.put("log", new Log());
+		reactiveReducer.put("logState", new LogState());
 		reactiveReducer.put("saveall", new Store());
 		reactiveReducer.put("save", new StoreSingle());
 		reactiveReducer.put("store", new StoreAsSubMessage());
@@ -384,7 +386,7 @@ public class ReactiveScriptParser {
 				Optional<String> evaluateKey = evaluateKey(elementName);
 				boolean evaluate = evaluateKey.isPresent();
 				String name = possibleParam.getStringAttribute("name");
-				boolean debug = possibleParam.getBooleanAttribute("debug", "true", "false", false);
+//				boolean debug = possibleParam.getBooleanAttribute("debug", "true", "false", false);
 				String content = possibleParam.getContent();
 				if(content==null || "".equals(content)) {
 					continue;
@@ -466,8 +468,8 @@ public class ReactiveScriptParser {
 		return src;
 	}
 
-	private static List<ReactiveTransformer> parseTransformationsFromChildren(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> parent, Function<String,ReactiveSourceFactory> sourceFactorySupplier,
-			Function<String,ReactiveTransformerFactory> factorySupplier,Function<String, ReactiveMerger> reducerSupplier, Set<String> transformers, Set<String> reducers, boolean useGlobalInput) throws Exception {
+	public static List<ReactiveTransformer> parseTransformationsFromChildren(String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> parent, Function<String,ReactiveSourceFactory> sourceFactorySupplier,
+			Function<String,ReactiveTransformerFactory> factorySupplier,Function<String, ReactiveMerger> reducerSupplier, Set<String> transformers, Set<String> reducers, boolean useGlobalInput) {
 		return parent.map(p->(List<XMLElement>)p.getChildren())
 			.orElse(Collections.emptyList())
 			.stream()

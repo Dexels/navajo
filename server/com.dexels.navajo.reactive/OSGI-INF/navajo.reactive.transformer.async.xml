@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.reactive.transformer.async">
+   <implementation class="com.dexels.navajo.reactive.transformer.other.AsyncTransformerFactory"/>
+   <property name="name" type="String" value="async"/>
+   <service>
+      <provide interface="com.dexels.navajo.reactive.api.ReactiveTransformerFactory"/>
+   </service>
+   <reference bind="setTopicPublisher" cardinality="1..1" interface="com.dexels.pubsub.rx2.api.TopicPublisher" name="TopicPublisher" policy="dynamic" unbind="clearTopicSubscriber"/>
+   <reference bind="setRunningReactiveScripts" cardinality="1..1" interface="com.dexels.navajo.reactive.RunningReactiveScripts" name="RunningReactiveScripts" policy="dynamic" unbind="clearRunningReactiveScripts"/>
+</scr:component>

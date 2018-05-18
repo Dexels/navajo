@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;

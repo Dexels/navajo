@@ -51,7 +51,7 @@ public class StreamScriptContext {
 		this(UUID.randomUUID().toString(),System.currentTimeMillis(), tenant,service,username,password,authNavajo,attributes,input,inputNavajo,runner,addedMethods,onDispose);
 	}
 	
-	public StreamScriptContext(String uuid, long started, String tenant, String service, Optional<String> username, Optional<String> password,Navajo authNavajo, Map<String,Object> attributes,Optional<Flowable<NavajoStreamEvent>> input, Navajo inputNavajo, Optional<ReactiveScriptRunner> runner, List<String> addedMethods, Optional<Runnable> onDispose) {
+	private StreamScriptContext(String uuid, long started, String tenant, String service, Optional<String> username, Optional<String> password,Navajo authNavajo, Map<String,Object> attributes,Optional<Flowable<NavajoStreamEvent>> input, Navajo inputNavajo, Optional<ReactiveScriptRunner> runner, List<String> addedMethods, Optional<Runnable> onDispose) {
 		this.uuid = uuid;
 		this.tenant = tenant;
 		this.started = started;
