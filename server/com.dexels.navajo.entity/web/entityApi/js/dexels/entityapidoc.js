@@ -12,7 +12,13 @@ function setupLoginDialog() {
     if(url.indexOf('localhost') > -1){
         sessionStorage.setItem('isLocalhost', '1');
         var regex = /entityDocumentation\/(\w+)\//;
-        var tenant = url.match(regex)[1];
+        tenant = ""
+        try {
+            tenant = url.match(regex)[1];
+        }catch(e) {
+            console.log(e);
+        }
+        
         $('#bauth_tenant').val(tenant);
         $('#cauth_tenant').val(tenant);
     } else{
