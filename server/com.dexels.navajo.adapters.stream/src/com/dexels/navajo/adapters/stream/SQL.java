@@ -72,7 +72,6 @@ public class SQL {
 			} 
 	        return null;
 		}
-		logger.info("Resolving datasource {} for tenant {}",dataSourceName,tenant);
 		GrusProvider instance = GrusProviderFactory.getInstance();
 		DataSource source = instance.getInstanceDataSource(tenant, dataSourceName);
 		return Optional.of(source);

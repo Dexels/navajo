@@ -61,7 +61,8 @@ public class TestScript {
 				, Optional.of("username")
 				, Optional.of("password")
 				, NavajoFactory.getInstance().createNavajo()
-				, Collections.emptyMap(), Optional.empty(),input,runner, Collections.emptyList(),Optional.empty());
+				, Collections.emptyMap(), Optional.empty(),input,runner, Collections.emptyList(),Optional.empty()
+				, Optional.empty());
 		return context;
 	}
 	
