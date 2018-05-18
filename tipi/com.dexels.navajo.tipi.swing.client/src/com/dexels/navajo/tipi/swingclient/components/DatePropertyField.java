@@ -28,7 +28,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 import com.dexels.navajo.tipi.swingclient.components.calendar.CalendarPickerDialog;
 
-@SuppressWarnings("deprecation")
 public final class DatePropertyField extends PropertyField implements PropertyControlled {
 
     private static final long serialVersionUID = -6817551990943620076L;
@@ -41,7 +40,7 @@ public final class DatePropertyField extends PropertyField implements PropertyCo
     private static SimpleDateFormat inputFormat4 = new SimpleDateFormat("ddMM");
     private static SimpleDateFormat inputFormat5 = new SimpleDateFormat("dd");
 
-    private SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+    private SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 
     private boolean showCalendarPickerButton = true;
     private boolean readOnly = false;
@@ -55,6 +54,9 @@ public final class DatePropertyField extends PropertyField implements PropertyCo
 
     public DatePropertyField(Boolean addFocusLostListener) {
         super(addFocusLostListener);
+        
+        displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+
         setColumns(10);
 
         try {

@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi.actions;
 
+import java.util.Locale;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +49,15 @@ public class TipiSetLocale extends TipiAction {
 		Boolean localeChanged = currentLocale==null || !currentLocale.equals("" + locale.value); 
 		myContext.clearLazyDefinitionCache();
 		myContext.getApplicationInstance().setLocaleCode("" + locale.value);
+		
+		
+		try {
+		    Locale newLocale = new Locale("" + locale.value);
+	        Locale.setDefault(newLocale);
+		} catch (Throwable t) {
+		    logger.warn("Unable to set locale for JVM: ", t);
+		}
+		
 		// check/change subLocale if given
 		if (hasParameter("subLocale"))
 		{

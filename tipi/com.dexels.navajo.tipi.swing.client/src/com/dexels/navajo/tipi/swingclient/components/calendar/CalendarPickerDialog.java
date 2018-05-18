@@ -22,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+import com.dexels.navajo.tipi.components.core.parsers.LookupParser;
 import com.dexels.navajo.tipi.swingclient.components.BasePanel;
 import com.dexels.navajo.tipi.swingclient.components.DialogConstants;
 import com.dexels.navajo.tipi.swingclient.components.StandardDialog;
@@ -51,6 +52,9 @@ public class CalendarPickerDialog extends StandardDialog implements
 	 * 
 	 */
 	private static final long serialVersionUID = 2258070699725278356L;
+	
+    private LookupParser parser;
+
 	BasePanel mainPanel = new BasePanel();
 	BasePanel mainControlPanel = new BasePanel();
 	BasePanel controlMonthPanel = new BasePanel();
@@ -84,6 +88,7 @@ public class CalendarPickerDialog extends StandardDialog implements
 	}
 
 	private void init() {
+	    parser = new LookupParser();
 		addMainPanel(mainPanel);
 		mainPanel.setLayout(new BorderLayout());
 		mainControlPanel.setLayout(new BorderLayout());
@@ -98,7 +103,8 @@ public class CalendarPickerDialog extends StandardDialog implements
 		CalendarConstants
 				.setColorScheme(CalendarConstants.COLORSCHEME_SPORTLINK);
 		calendar.rebuildUI();
-		setTitle("Selecteer datum");
+		
+		setTitle(parser.lookup("SelectDate"));
 		setMode(DialogConstants.MODE_CLOSE);
 		iconButtonPanel.setButtonAlignment(FlowLayout.RIGHT);
 		// setMode(DialogConstants.MODE_OK_CANCEL);
