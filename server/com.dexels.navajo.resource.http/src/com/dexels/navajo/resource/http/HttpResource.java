@@ -2,7 +2,6 @@ package com.dexels.navajo.resource.http;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -29,7 +28,7 @@ public interface HttpResource {
 		// todo Null guessed content types?
 		Logger logger = LoggerFactory.getLogger(HttpResource.class);
 
-		logger.info("Size of binary: "+data.getLength());
+		logger.debug("Size of binary: "+data.getLength());
 		String type = Optional.ofNullable(data.getMimeType()).orElse(data.guessContentType());
 		return put(tenant,bucket,id,type,this.flowBinary(data, BUFFER_SIZE));
 	}

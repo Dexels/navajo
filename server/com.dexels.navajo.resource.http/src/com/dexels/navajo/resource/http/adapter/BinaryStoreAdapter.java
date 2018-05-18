@@ -32,7 +32,7 @@ public class BinaryStoreAdapter implements Mappable {
 			.put(tenant,bucket, hexDigest,b)
 			.filter(reply->{ 
 				boolean doInsert = reply.status()!=404 || force;
-				logger.info("Result of head: "+reply.status());
+				logger.debug("Result of insert: "+reply.status());
 				return doInsert;
 			})
 //			.flatMap(status->HttpResourceFactory.getInstance().getHttpResource(resource).put(bucket, hexDigest, b).toMaybe())

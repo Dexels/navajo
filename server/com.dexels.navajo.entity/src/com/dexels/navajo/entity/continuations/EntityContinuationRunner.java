@@ -40,8 +40,7 @@ import com.dexels.navajo.server.DispatcherInterface;
 
 public class EntityContinuationRunner implements TmlRunnable {
     private final static Logger logger = LoggerFactory.getLogger(EntityContinuationRunner.class);
-    private final static String QUEUE_NAME = "normalPool";
-
+ 
     private final Continuation continuation;
     private HttpServletRequest request;
     private HttpServletResponse response;

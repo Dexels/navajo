@@ -202,10 +202,6 @@ public class Entity {
         return myMessageVersionMap.keySet();
     }
 
-    private Map<String, Message> getMyMessageVersionMap() {
-        return myMessageVersionMap;
-    }
-
     public Set<Entity> getSubEntities() {
         return subEntities;
     }
@@ -338,7 +334,7 @@ public class Entity {
             }
         }
         // Copy properties/messages from superEntity.
-        m.merge(incoming);
+        m.merge(incoming, true);
         registerSuperEntity(superEntity);
     }
 
@@ -411,7 +407,6 @@ public class Entity {
     }
 
     private void findKeys() {
-
         Set<Key> myKeys = new HashSet<Key>();
         HashMap<String, Key> foundKeys = new HashMap<String, Key>();
         List<Property> allProps = null; // = getMessage(entityVersion).getAllProperties();
@@ -439,7 +434,7 @@ public class Entity {
                 }
             }
 
-            myKeysMap.put(entry.getKey(), new HashSet(myKeys));
+            myKeysMap.put(entry.getKey(), new HashSet<>(myKeys));
 
             myKeys.clear();
             foundKeys.clear();
