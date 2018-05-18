@@ -202,10 +202,6 @@ public class Entity {
         return myMessageVersionMap.keySet();
     }
 
-    private Map<String, Message> getMyMessageVersionMap() {
-        return myMessageVersionMap;
-    }
-
     public Set<Entity> getSubEntities() {
         return subEntities;
     }
@@ -439,7 +435,7 @@ public class Entity {
                 }
             }
 
-            myKeysMap.put(entry.getKey(), new HashSet(myKeys));
+            myKeysMap.put(entry.getKey(), new HashSet<>(myKeys));
 
             myKeys.clear();
             foundKeys.clear();
