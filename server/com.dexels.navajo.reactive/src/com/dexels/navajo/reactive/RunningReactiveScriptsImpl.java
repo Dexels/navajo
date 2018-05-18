@@ -4,37 +4,37 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.stream.api.RunningReactiveScripts;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public class RunningReactiveScripts {
+public class RunningReactiveScriptsImpl implements RunningReactiveScripts {
 	
 	
-	private final static Logger logger = LoggerFactory.getLogger(RunningReactiveScripts.class);
-
+	private final static Logger logger = LoggerFactory.getLogger(RunningReactiveScriptsImpl.class);
 	private final static ObjectMapper objectMapper = new ObjectMapper();
+	private Map<String,StreamScriptContext> scriptsInProgress = new ConcurrentHashMap<>();
 
-	private Map<String,StreamScriptContext> scriptsInProgress = new HashMap<>();
-
-	public RunningReactiveScripts() {
-	}
-
+	@Override
 	public void submit(StreamScriptContext context) {
 		scriptsInProgress.put(context.uuid(),context);		
 	}
 
+	@Override
 	public List<String> services() {
 		return scriptsInProgress.values().stream().map(e->e.service).collect(Collectors.toList());
 	}
 	
+	@Override
 	public void completed(StreamScriptContext context) {
 		long started = context.started;
 		long elapsed = System.currentTimeMillis() - started;
@@ -42,6 +42,7 @@ public class RunningReactiveScripts {
 		scriptsInProgress.remove(context.uuid());
 	}
 
+	@Override
 	public void cancel(String uuid) {
 		StreamScriptContext ctx = scriptsInProgress.get(uuid);
 		if(ctx!=null) {
@@ -50,10 +51,12 @@ public class RunningReactiveScripts {
 		completed(ctx);
 	}
 	
+	@Override
 	public Collection<StreamScriptContext> contexts() {
 		return scriptsInProgress.values();
 	}
 	
+	@Override
 	public JsonNode asJson() {
 		ArrayNode list = objectMapper.createArrayNode();
 		long now = System.currentTimeMillis();
@@ -71,4 +74,13 @@ public class RunningReactiveScripts {
 		});
 		return list;
 	}
+	
+	public void complete(String uuid) {
+		StreamScriptContext ssc = this.scriptsInProgress.get(uuid);
+		if(ssc!=null) {
+			ssc.complete();
+			this.scriptsInProgress.remove(uuid);
+		}
+	}
+
 }

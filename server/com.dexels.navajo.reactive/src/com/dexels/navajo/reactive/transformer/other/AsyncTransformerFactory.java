@@ -13,9 +13,9 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
+import com.dexels.navajo.document.stream.api.RunningReactiveScripts;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
-import com.dexels.navajo.reactive.RunningReactiveScripts;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
@@ -32,7 +32,6 @@ import io.reactivex.functions.Function;
 public class AsyncTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	private TopicPublisher topicPublisher;
-	private RunningReactiveScripts runningReactiveScripts;
     public void setTopicSubscriber(TopicPublisher topicPublisher, Map<String,Object> settings) {
         this.topicPublisher = topicPublisher;
     }
@@ -41,14 +40,6 @@ public class AsyncTransformerFactory implements ReactiveTransformerFactory, Tran
         this.topicPublisher = null;
     }
 
-    public void setRunningReactiveScripts(RunningReactiveScripts runningReactiveScripts) {
-    	this.runningReactiveScripts = runningReactiveScripts;
-    }
-
-    public void clearRunningReactiveScripts(RunningReactiveScripts runningReactiveScripts) {
-    	this.runningReactiveScripts = null;
-    }
-	
 	@Override
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, 
 			ReactiveParameters parameters,

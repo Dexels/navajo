@@ -172,7 +172,7 @@ public class TestEnvironment {
 				NavajoFactory.getInstance().createNavajo(),
 				Collections.emptyMap(),
 				Optional.of(inStream),null,
-				Optional.empty(),Collections.emptyList(),Optional.empty());
+				Optional.empty(),Collections.emptyList(),Optional.empty(),Optional.empty());
 		return context;
 	}
 

@@ -37,10 +37,11 @@ import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.Msg;
 import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
+import com.dexels.navajo.document.stream.api.RunningReactiveScripts;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.xml.XML;
-import com.dexels.navajo.reactive.RunningReactiveScripts;
+import com.dexels.navajo.reactive.RunningReactiveScriptsImpl;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
@@ -66,7 +67,7 @@ public class NonBlockingListener extends HttpServlet {
 	
 	private final static ObjectMapper objectMapper = new ObjectMapper();
 
-	private RunningReactiveScripts runningReactiveScripts = new RunningReactiveScripts();
+	private RunningReactiveScripts runningReactiveScripts = new RunningReactiveScriptsImpl();
 	
 
 	
@@ -415,11 +416,20 @@ public class NonBlockingListener extends HttpServlet {
 		Navajo in = authenticate(serviceHeader,username,password,authorizationHeader,tenant);
 
 		if(isGet) {
-			return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,
+			return new StreamScriptContext(tenant,serviceHeader, 
+					Optional.ofNullable(username), 
+					Optional.ofNullable(password),
+					in,
 					attributes,Optional.of(
 							Flowable.<NavajoStreamEvent>empty().compose(StreamDocument
 									.inNavajo(serviceHeader, Optional.of(username), Optional.of(password)))
-							),null, Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(()->{responseSubscriber.dispose(); ac.complete();}));
+							),
+					null, 
+					Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment), 
+					Collections.emptyList(),
+					Optional.of(()->{responseSubscriber.dispose(); ac.complete();}),
+					Optional.ofNullable(this.runningReactiveScripts)
+				);
 		}
 		String requestEncoding = (String) attributes.get("Content-Encoding");
 		RequestPublisher rp = new RequestPublisher(ac, 8192);
@@ -432,7 +442,7 @@ public class NonBlockingListener extends HttpServlet {
 			.concatMap(e->e);
 		
 //	au
-		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,attributes,Optional.of(input),null, Optional.of(this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(()->{responseSubscriber.dispose(); ac.complete();}));
+		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,attributes,Optional.of(input),null, Optional.of(this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(()->{responseSubscriber.dispose(); ac.complete();}),Optional.of(runningReactiveScripts));
 	}
 
 	// warn: Duplicated code
