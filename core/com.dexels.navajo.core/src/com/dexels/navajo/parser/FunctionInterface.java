@@ -10,12 +10,16 @@ package com.dexels.navajo.parser;
  */
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -32,6 +36,10 @@ public abstract class FunctionInterface {
 	protected Message currentMessage = null;
 	protected FunctionDefinition myFunctionDefinition = null;
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(FunctionInterface.class);
+
+	
 	public void setCurrentMessage(Message currentMessage) {
 		this.currentMessage = currentMessage;
 	}
@@ -326,22 +334,40 @@ public abstract class FunctionInterface {
 	}
 
 	public List<String> typeCheck(List<ContextExpression> l, String expression) {
-//		Class[][] types = getTypes();
+		// Disabled for now
+		
+		if(true) {
+			return Collections.emptyList();
+		}
+		//		Class[][] types = getTypes();
 		String[][] types = myFunctionDefinition.getInputParams();
-		int index = 0;
-		for (String[] classes : types) {
-			System.err.println("Classes: "+classes.length);
-			List<String> typeCheckProblems = typeCheckOption(classes,l,index,expression);
-			if(typeCheckProblems.isEmpty()) {
-				System.err.println("Found typechecked option!");
-				return typeCheckProblems;
+		if(types==null) {
+			logger.warn("Can't type check function {} as it does not have defined input types. Expression: {}",myFunctionDefinition.getFunctionClass(),expression);
+		} else {
+			int i = 0;
+			for (String[] classes : types) {
+				int j = 0;
+				for (String c : classes) {
+					logger.info("class: {} type: {} -> {}",i,j,c);
+					j++;
+				}
+				i++;
 			}
-			index++;
+			int index = 0;
+			for (String[] alternatives : types) {
+				logger.info("Number of alternatives for arg # {} is :{}",index,alternatives.length);
+				List<String> typeCheckProblems = typeCheckOption(alternatives,l,index,expression);
+				if(typeCheckProblems.isEmpty()) {
+					System.err.println("Found typechecked option!");
+					return typeCheckProblems;
+				}
+				index++;
+			}
 		}
 		return Arrays.asList(new String[] {"Could not find a suitable type solution to this function: "+getClass().getName()+" in expression: "+expression});
 	}
 
-	private List<String> typeCheckOption(String[] classes, List<ContextExpression> l, int optionIndex, String expression) {
+	private List<String> typeCheckOption(String[] alternatives, List<ContextExpression> l, int argumentIndex, String expression) {
 		int argumentNumber = 0;
 		List<String> problems = new ArrayList<>();
 		for (ContextExpression contextExpression : l) {
@@ -349,13 +375,14 @@ public abstract class FunctionInterface {
 			if(!returnType.isPresent()) {
 				continue;
 			}
-			if(argumentNumber > classes.length) {
-				return Arrays.asList(new String[] {"Argument number mismatch"});
-			}
+//			if(argumentNumber > alternatives.length) {
+//				return Arrays.asList(new String[] {"Argument number mismatch"});
+//			}
+			// TODO fix alternatives 
 			String rt = returnType.get();
-			boolean isCompatible = isCompatible(rt,classes[argumentNumber]);
+			boolean isCompatible = isCompatible(rt,alternatives[argumentNumber]);
 			if(!isCompatible) {
-				problems.add("Argument # "+argumentNumber+" of type: "+classes[argumentNumber]+" is incompatible with: "+rt);
+				problems.add("Argument # "+argumentNumber+" of type: "+alternatives[argumentNumber]+" is incompatible with: "+rt);
 			}
 			argumentNumber++;
 			
