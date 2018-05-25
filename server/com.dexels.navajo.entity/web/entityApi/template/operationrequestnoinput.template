@@ -2,6 +2,7 @@
 	<div class="noinput">
 		No input
 	</div>
+	<div class="validations"> {{VALL}} </div>
 	<div class="perform-call-entity" style="display:none">
 		<button method="{{OP}}" url="{{URL}}" class="callentitybutton button">Execute</button>
 	</div>
