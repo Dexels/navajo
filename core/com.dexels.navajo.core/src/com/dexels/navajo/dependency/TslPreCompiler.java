@@ -236,11 +236,11 @@ public class TslPreCompiler {
 
                 if (scriptTenant != null) {
                     // trying tenant-specific variant first
-                    String superScriptFile = scriptFolder + File.separator + superEntity + "_" + scriptTenant + ".xml";
+                    String operationScriptFile = scriptFolder + File.separator + superEntity + "_" + scriptTenant + ".xml";
 
                     // Check if exists
-                    if (new File(superScriptFile).exists()) {
-                        deps.add(new Dependency(scriptFile, superScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                    if (new File(operationScriptFile).exists()) {
+                        deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
 
                         // No need to try any other tenant-specific includes
                         // since we are tenant-specific in the first place

@@ -158,8 +158,8 @@ public class EntityManager {
     private void buildAndLoadScripts() throws Exception {
         if ("true".equals(System.getenv("DEVELOP_MODE"))) {
             logger.warn("Lazy compliation of entities!");
-//            this.lazy = true;
-//            return;
+            this.lazy = true;
+            return;
         }
         String scriptPath = navajoConfig.getScriptPath();
         logger.info("Compiling and installing scripts in: {}", scriptPath + File.separator + "entity");
