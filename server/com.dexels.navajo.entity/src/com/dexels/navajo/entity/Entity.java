@@ -130,8 +130,8 @@ public class Entity {
     /* OSGi activation */
     public void activateMessage(Navajo n) throws Exception {
 
-        if (n.getAllMessages().stream().filter(m -> !m.getName().contains(messageName)).findFirst().orElse(null) != null) {
-                throw new Exception("unable to find entity in provided script!");
+        if (n.getAllMessages().stream().filter(m -> m.getName().contains(messageName)).count() == 0) {
+            throw new Exception("unable to find entity in provided script!");
         }
 
         // Message l = n.getMessage(messageName);
