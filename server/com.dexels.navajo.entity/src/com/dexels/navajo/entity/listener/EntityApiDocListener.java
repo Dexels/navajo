@@ -176,8 +176,8 @@ public class EntityApiDocListener extends HttpServlet  {
             String res = validationrowtable.replace("{{VALIDATION_ROWS}}", valRows);
             
             requestBody = requestBody.substring(0,requestBody.lastIndexOf("{{VALL}}"))+"{{VALL_}}"+requestBody.substring(requestBody.lastIndexOf("{{VALL}}")+8);
-            requestBody = requestBody.replace("{{VALL}}", "")     ;  
-            requestBody = requestBody.replace("{{VALL_}}", "{{VALL}}")    ;     
+            requestBody = requestBody.replace("{{VALL}}", "");
+            requestBody = requestBody.replace("{{VALL_}}", "{{VALL}}");
             requestBody = requestBody.replace("{{VALL}}", res);
         } else {
             requestBody = requestBody.replace("{{VALL}}", "");
