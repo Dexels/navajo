@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ public class Entity {
 
     protected Map<String, Entity> superEntitiesMap = new HashMap<String, Entity>();
 
-    protected Map<String, String> myValidations = new HashMap<String, String>();
+    protected Map<String, String> myValidations = new TreeMap<String, String>();
 
     private static String VALIDATIONS = "__validations__";
     public static final String[] VALID_CONFIGURATION_MESSAGES = { VALIDATIONS };

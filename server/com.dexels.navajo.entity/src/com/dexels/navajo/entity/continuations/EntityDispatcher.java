@@ -160,13 +160,13 @@ public class EntityDispatcher {
 
             String version = runner.getHttpRequest().getHeader("X-Navajo-Version");
             if (version == null) {
-                logger.info("Request on default entity");
+                logger.debug("Request on default entity");
                 version = "0";
             } else if (!e.getMyVersionKeys().contains(version)) {
                 logger.error("Request on unknown entity {} version {}", e.getName(), version);
                 throw new EntityException(EntityException.UNKNOWN_VERSION);
             } else {
-                logger.info("Requesting entity {} version {}", e.getName(), version);
+                logger.debug("Requesting entity {} version {}", e.getName(), version);
             }
 
             // Get the input document
