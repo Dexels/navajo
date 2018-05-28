@@ -28,10 +28,10 @@ import io.reactivex.functions.Consumer;
 
 public class ResourceComponent implements HttpResource {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(ResourceComponent.class);
-	private String url;
+	private final static Logger logger = LoggerFactory.getLogger(ResourceComponent.class);
 	
+	private String url;
+    private String publicUrl;
 	private JettyClient client = null;
 	private String authorization;
 	private Optional<String> secret;
@@ -39,10 +39,12 @@ public class ResourceComponent implements HttpResource {
 	
 	public void activate(Map<String, Object> settings) throws Exception {
 		client = new JettyClient();
-		String u = (String) settings.get("url");
+		String url = (String) settings.get("url");
+		String publicurl = (String) settings.get("publicurl");
 		this.authorization = (String) settings.get("authorization");
 		this.secret = Optional.ofNullable((String) settings.get("secret"));
-		this.url = u.endsWith("/") ? u : u+"/";
+		this.url = url.endsWith("/") ? url : url+"/";
+		this.publicUrl = publicurl.endsWith("/") ? publicurl : publicurl+"/";
 	}
 
 	public void deactivate() throws Exception {
@@ -108,6 +110,11 @@ public class ResourceComponent implements HttpResource {
 //		logger.debug("Assembling: "+u);
 		return u;
 	}
+	private String assemblePublicURL(String tenant, String bucket, String id) {
+        String u = this.publicUrl+resolveBucket(tenant, bucket)+"/"+id;
+//      logger.debug("Assembling: "+u);
+        return u;
+    }
 	
 	private String resolveBucket(String tenant, String bucket) {
 		String u = tenant+"-"+deployment+"-"+bucket;
@@ -148,10 +155,10 @@ public class ResourceComponent implements HttpResource {
 	@Override
 	public String expiringURL(String tenant, String bucket, String id, long expire) {
 		long unixTimestamp = Instant.now().getEpochSecond()+expire;
-		logger.info("Assembling url to {} in {} lasting {} seconds into the future", id, bucket, expire);
 		long exp = unixTimestamp+expire;
-		String totalURL = assembleURL(tenant,bucket, id)+"?expires="+exp+"&sig="+sign(resolveBucket(tenant, bucket), id,exp);
-		logger.debug("URL: "+totalURL);
+		String totalURL = assemblePublicURL(tenant,bucket, id)+"?expires="+exp+"&sig="+sign(resolveBucket(tenant, bucket), id,exp);
+	    logger.debug("Assembled public url {} to {} in {} lasting {} seconds into the future", totalURL, id, bucket, expire);
+
 		return totalURL;
 	}
 	private String sign(String bucket, String id, long expirationTime) {
