@@ -267,10 +267,8 @@ public class ServiceEntityOperation implements EntityOperation {
 							p.setName("_id");
 							parentMsg.addProperty(p);
 						}
-
 					}
 				}
-
 			}
 
 			if (resolveLinks) {
