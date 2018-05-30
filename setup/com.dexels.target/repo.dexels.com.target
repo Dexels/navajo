@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2713">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2723">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.4.9.201803201811"/>
@@ -26,7 +26,7 @@
 <repository location="http://p2.dexels.com/eclipse/equinox/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.12.6.201805291316"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.12.6.201805291443"/>
 <repository location="http://p2.dexels.com/eclipse/3rdparty_1.12.6"/>
 </location>
 </locations>
@@ -271,6 +271,7 @@
 <plugin id="org.ops4j.pax.web.pax-web-resources-extender"/>
 <plugin id="org.ops4j.pax.web.pax-web-runtime"/>
 <plugin id="org.ops4j.pax.web.pax-web-spi"/>
+<plugin id="org.osgi.service.cm"/>
 <plugin id="org.postgresql.jdbc4"/>
 <plugin id="org.reactivestreams.reactive-streams"/>
 <plugin id="org.scala-lang.modules.scala-xml"/>
