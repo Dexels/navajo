@@ -99,7 +99,7 @@ public class Key {
                         break;
                     }
                 }
-                if (!isAutoKey(p.getKey()) && !foundProp) {
+                if (!foundProp) {
                     return false;
                 }
             }

@@ -382,7 +382,8 @@ public class ServiceEntityOperation implements EntityOperation {
 		if (myKey == null) {
 			// Check for _id property. If _id is present it is good as a key.
 			// It's also possible our entity has no keys defined. In that case accept input
-            if (inputEntity.getProperty("_id") == null && myEntity.getRequiredKeys(entityVersion).size() > 0) {
+            if (inputEntity.getProperty("_id") == null && myEntity.getRequiredKeys(entityVersion).size() > 0
+                    && myEntity.getAutoKey(entityVersion) == null) {
 				throw new EntityException(EntityException.MISSING_ID, "Input is invalid: no valid entity key found.");
 			} else {
 				myKey = new Key("", myEntity);
@@ -699,7 +700,11 @@ public class ServiceEntityOperation implements EntityOperation {
 
             if (myEntity.getAutoKey(entityVersion) != null) {
                 for (Property p : myEntity.getAutoKey(entityVersion).getKeyProperties()) {
-					result.getProperty(p.getFullPropertyName()).setAnyValue(id.getValue());
+                    Property pid = NavajoFactory.getInstance().createProperty(result, p.getName(), "", p.getDescription(),
+                            p.getDirection());
+                    pid.setMethod(p.getMethod());
+                    pid.setAnyValue(id.getValue());
+                    result.getMessage(p.getParentMessage().getName()).addProperty(pid);
 				}
 			}
 		}
@@ -770,7 +775,12 @@ public class ServiceEntityOperation implements EntityOperation {
             Key autoKey = myEntity.getAutoKey(entityVersion);
 			if (autoKey != null) {
 				for (Property p : autoKey.getKeyProperties()) {
-					result.getProperty(p.getFullPropertyName()).setAnyValue(id.getValue());
+                    // result.getProperty(p.getName()).setAnyValue(id.getValue());
+                    Property pid = NavajoFactory.getInstance().createProperty(result, p.getName(), "", p.getDescription(),
+                            p.getDirection());
+                    pid.setMethod(p.getMethod());
+                    pid.setAnyValue(id.getValue());
+                    result.getMessage(p.getParentMessage().getName()).addProperty(pid);
 				}
 			}
 		}
