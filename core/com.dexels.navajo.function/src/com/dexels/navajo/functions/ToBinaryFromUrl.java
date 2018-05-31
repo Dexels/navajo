@@ -37,7 +37,8 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 	   } catch (MalformedURLException e) {
 		throw new TMLExpressionException("Bad url in function ToBinaryFromUrl: "+s);
 	} catch (IOException e) {
-		throw new TMLExpressionException("Error opening url in function ToBinaryFromUrl: "+s);
+		//throw new TMLExpressionException("Error opening url in function ToBinaryFromUrl: "+s);
+		return null;
 	}
   }
 
