@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.stream.api;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,6 +41,20 @@ public class StreamScriptContext {
 	
 	private final static Logger logger = LoggerFactory.getLogger(StreamScriptContext.class);
 
+	public Map<String,String> createMDCMap(int linenr) {
+		Map<String,String> result = new HashMap<>();
+		result.put("tenant", tenant);
+		result.put("service", service);
+		result.put("deployment", deployment);
+		result.put("uuid", uuid);
+		if(username.isPresent()) {
+			result.put("username", username.get());
+		}
+		result.put("started", ""+started);
+		result.put("linenr", ""+linenr);
+
+		return Collections.unmodifiableMap(result);
+	}
 	//	private final Optional<AsyncContext> asyncContext;
 	
 	// mostly for testing
