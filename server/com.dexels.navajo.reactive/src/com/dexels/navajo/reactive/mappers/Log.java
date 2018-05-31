@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.dexels.immutable.api.ImmutableMessageParser;
 import com.dexels.immutable.factory.ImmutableFactory;
@@ -45,7 +46,15 @@ public class Log implements ReactiveMerger {
 				byte[] serialized = parser.serialize(item.message());
 				
 				String data = serialized ==null? "<empty>" : new String(serialized);
+				Map<String,String> previous = MDC.getCopyOfContextMap();
+				Map<String,String> map = context.createMDCMap(xml.map(e->e.getStartLineNr()).orElse(-1));
+				MDC.setContextMap(map);
 				logger.info(data);
+				if(previous!=null) {
+					MDC.setContextMap(previous);
+				} else {
+					MDC.clear();
+				}
 				return item;
 			};
 		};
@@ -53,7 +62,7 @@ public class Log implements ReactiveMerger {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"condition"}));
+		return Optional.of(Arrays.asList(new String[]{"condition","field"}));
 	}
 
 	@Override
@@ -65,6 +74,7 @@ public class Log implements ReactiveMerger {
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String,String> r = new HashMap<>();
 		r.put("condition", Property.BOOLEAN_PROPERTY);
+		r.put("field", Property.STRING_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
 }
