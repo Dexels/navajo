@@ -12,7 +12,7 @@ import org.junit.Test;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.functions.security.Security;
 
-public class Encrypt {
+public class TestEncryptBinary {
 
 	@Test
 	public void testEncryptBinary() throws Exception {
