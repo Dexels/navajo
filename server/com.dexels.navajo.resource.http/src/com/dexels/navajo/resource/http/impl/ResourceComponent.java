@@ -44,7 +44,11 @@ public class ResourceComponent implements HttpResource {
 		this.authorization = (String) settings.get("authorization");
 		this.secret = Optional.ofNullable((String) settings.get("secret"));
 		this.url = url.endsWith("/") ? url : url+"/";
-		this.publicUrl = publicurl.endsWith("/") ? publicurl : publicurl+"/";
+		if (publicurl != null) {
+		    this.publicUrl = publicurl.endsWith("/") ? publicurl : publicurl+"/";
+		} else {
+		    this.publicUrl = url.endsWith("/") ? url : url+"/";
+		}
 	}
 
 	public void deactivate() throws Exception {
