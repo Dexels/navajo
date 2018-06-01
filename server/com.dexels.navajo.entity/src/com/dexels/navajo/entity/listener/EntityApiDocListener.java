@@ -164,8 +164,12 @@ public class EntityApiDocListener extends HttpServlet  {
         } else {
             String requestbodyTemplate = getTemplate("operationrequestbody.template");
             requestBody = requestbodyTemplate.replace("{{REQUEST_BODY}}", writeEntityJson(n, "request"));
+            // Add descriptions in request
+            requestBody = requestBody.replace("{{PP_DESCRIPTIONS}}", printModel(e.getMessage(Entity.DEFAULT_VERSION), method, "request"));
         }
         
+
+
         if (e.getMyValidations().size() > 0) {
             String validationrowtemplate = getTemplate("validationmodelrow.template");
             String validationrowtable = getTemplate("validationmodeltable.template");
@@ -349,7 +353,9 @@ public class EntityApiDocListener extends HttpServlet  {
 			
             // Print if the property matches the method, OR if we are a request, or if we are request,response
             // if we are a key and this is a GET or DELETE operation.
-            if (method.equals("response") && propertyMethod.equals(method) || propertyMethod.equals("")
+            if (method.equals("response") && propertyMethod.equals("response")
+                    || (method.equals("request") && (op.equals(Operation.PUT) || op.equals(Operation.POST))
+                            && (propertyMethod.equals("") || propertyMethod.equals("request")))
                     || (method.equals("request") && (op.equals(Operation.GET) || op.equals(Operation.DELETE)) && Key.isKey(p.getKey()))) {
                 
                 // Create the path of the property:
