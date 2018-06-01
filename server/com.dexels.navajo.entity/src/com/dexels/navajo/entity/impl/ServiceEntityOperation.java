@@ -254,23 +254,6 @@ public class ServiceEntityOperation implements EntityOperation {
 			}
             n.getMessage(myEntity.getMessageName()).maskMessage(myEntity.getMessage(entityVersion), method);
 
-			if (method.equals("request")) {
-				// Do we have a auto key as input, and an extra Mongo message?
-				// If so, replace the auto key with a _id property
-				for (Property p : n.getMessage(myEntity.getMessageName()).getAllProperties()) {
-                    Property entityp = myEntity.getMessage(entityVersion).getProperty(p.getFullPropertyName());
-					if (entityp.getKey() != null && Key.isAutoKey(entityp.getKey()) && hasExtraMessageMongo()) {
-						Message parentMsg = p.getParentMessage();
-						parentMsg.removeProperty(p);
-
-						if (!p.getValue().equals("")) {
-							p.setName("_id");
-							parentMsg.addProperty(p);
-						}
-					}
-				}
-			}
-
 			if (resolveLinks) {
 				// myEntity.getMessage().write(System.err);
 
@@ -454,20 +437,6 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 
 		Navajo result = callEntityService(input);
-
-		// Update referenced entities as well...
-		// updateReferencedEntities(input);
-
-		// If the entity has a mongo backend, we added the _id property.
-		// Remove this now to ensure a proper mask operation can take place.
-		if (hasExtraMessageMongo()) {
-            Property id = myEntity.getMessage(entityVersion).getProperty("_id");
-			// Only remove if it's not a key
-			if (id != null && id.getKey() == null) {
-                myEntity.getMessage(entityVersion).removeProperty(id);
-			}
-		}
-
 		// After a POST or PUT, return the full new object resulting from the previous
 		// operation
 		// effectively this is a GET. However, if this fails (e.g. no GET operation is
@@ -685,27 +654,9 @@ public class ServiceEntityOperation implements EntityOperation {
 		if (result.getMessage(myEntity.getMessageName()) == null) {
 			return null;
 		}
-		Property id = null;
-		if (hasExtraMessageMongo()) {
-			id = result.getProperty(myEntity.getMessageName() + "/_id");
-		}
 
         clean(result, "response", true, true, entityVersion);
 
-		if (id != null && id.getValue() != null) {
-			input.getMessage(myEntity.getMessageName()).addProperty(id.copy(input));
-			input.getRootMessage().addProperty(id.copy(input));
-
-            if (myEntity.getAutoKey(entityVersion) != null) {
-                for (Property p : myEntity.getAutoKey(entityVersion).getKeyProperties()) {
-                    Property pid = NavajoFactory.getInstance().createProperty(result, p.getName(), "", p.getDescription(),
-                            p.getDirection());
-                    pid.setMethod(p.getMethod());
-                    pid.setAnyValue(id.getValue());
-                    result.getMessage(p.getParentMessage().getName()).addProperty(pid);
-				}
-			}
-		}
 		return result;
 	}
 
@@ -761,27 +712,8 @@ public class ServiceEntityOperation implements EntityOperation {
 			}
 
 		}
-		// Check for auto key and bind _id value to it
-		Property id = null;
-		if (hasExtraMessageMongo()) {
-			id = result.getProperty(myEntity.getMessageName() + "/_id");
-		}
 
         clean(result, "response", true, true, entityVersion);
-
-		if (id != null && id.getValue() != null) {
-            Key autoKey = myEntity.getAutoKey(entityVersion);
-			if (autoKey != null) {
-				for (Property p : autoKey.getKeyProperties()) {
-                    // result.getProperty(p.getName()).setAnyValue(id.getValue());
-                    Property pid = NavajoFactory.getInstance().createProperty(result, p.getName(), "", p.getDescription(),
-                            p.getDirection());
-                    pid.setMethod(p.getMethod());
-                    pid.setAnyValue(id.getValue());
-                    result.getMessage(p.getParentMessage().getName()).addProperty(pid);
-				}
-			}
-		}
 
 		return result;
 
