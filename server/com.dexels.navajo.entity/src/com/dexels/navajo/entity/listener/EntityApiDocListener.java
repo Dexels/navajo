@@ -347,9 +347,9 @@ public class EntityApiDocListener extends HttpServlet  {
                 }
             }
 			
-            // Print if the property matches the method, OR if we are a request,
+            // Print if the property matches the method, OR if we are a request, or if we are request,response
             // if we are a key and this is a GET or DELETE operation.
-            if (method.equals("response") && propertyMethod.equals(method)
+            if (method.equals("response") && propertyMethod.equals(method) || propertyMethod.equals("")
                     || (method.equals("request") && (op.equals(Operation.GET) || op.equals(Operation.DELETE)) && Key.isKey(p.getKey()))) {
                 
                 // Create the path of the property:
