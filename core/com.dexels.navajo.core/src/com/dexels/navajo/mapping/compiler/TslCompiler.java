@@ -2485,11 +2485,23 @@ public class TslCompiler {
 		String linenr = n.getAttribute("linenr");
 		// Check for error definition. If error is defined throw UserException else just BreakEvent
 		String error = n.getAttribute("error");
-		if ( error == null || error.equals("") ) {
+		String conditionError = n.getAttribute("conditionError");
+		String errorCode = n.getAttribute("errorCode");
+        if (conditionError != null && !conditionError.equals("")) {
+            if (errorCode == null || errorCode.equals("")) {
+                throw new UserException(-1, "Validation syntax error: errorCode attribute missing or empty");
+            }
+            result.append(printIdent(ident + 2) + "Access.writeToConsole(access, \"ConditionError break at line: " + linenr + "\");\n");
+            result.append(
+                    printIdent(ident + 2) + "Access.writeToConsole(access, \"ErrorCode: " + errorCode + " - " + conditionError + "\");\n");
+            result.append(printIdent(ident + 2) + "throw new UserException(UserException.CONDITION_ERROR, op.value + \"\");\n");
+            result.append(printIdent(ident) + "}\n");
+        } else if (error == null || error.equals("")) {
 			result.append(printIdent(ident + 2) + "Access.writeToConsole(access, \"Breaking at line: " + linenr + "\");\n");
 			result.append(printIdent(ident + 2) + "throw new BreakEvent();\n");
 			result.append(printIdent(ident) + "}\n");
-		} else {
+		} 
+		else {
 			result.append(printIdent(ident + 2) + "op = Expression.evaluate("
 					+ replaceQuotes(error)
 					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
