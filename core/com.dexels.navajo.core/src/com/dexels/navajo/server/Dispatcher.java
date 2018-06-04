@@ -835,7 +835,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 throw new FatalException("No script defined");
             }
             
-            if (!tenantConfig.getTenants().contains(instance)) {
+            if (!instance.equals("default") && !tenantConfig.getTenants().contains(instance)) {
                 throw new FatalException("Unsupported tenant");
             }
 
