@@ -86,39 +86,44 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	
 	private static final Logger logger = LoggerFactory.getLogger(BasePropertyImpl.class);
 	private final static ThreadLocal<SimpleDateFormat> dateFormat1 = new ThreadLocal<SimpleDateFormat>() {
-		 @Override
-	        protected SimpleDateFormat initialValue()
-	        {
-	            return new SimpleDateFormat( Property.DATE_FORMAT1 );
-	        }
+        @Override
+        protected SimpleDateFormat initialValue() {
+            SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT1);
+            sdf.setLenient(false);
+            return sdf;
+        }
 	}; 
 	private final static ThreadLocal<SimpleDateFormat> dateFormat4 = new ThreadLocal<SimpleDateFormat>() {
-		 @Override
-	        protected SimpleDateFormat initialValue()
-	        {
-	            return new SimpleDateFormat( Property.DATE_FORMAT4 );
-	        }
+        @Override
+        protected SimpleDateFormat initialValue() {
+            SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT4);
+            sdf.setLenient(false);
+            return sdf;
+        }
 	}; 
 	private final static ThreadLocal<SimpleDateFormat> dateFormat2 = new ThreadLocal<SimpleDateFormat>() {
-		 @Override
-	        protected SimpleDateFormat initialValue()
-	        {
-	            return new SimpleDateFormat( Property.DATE_FORMAT2 );
-	        }
+        @Override
+        protected SimpleDateFormat initialValue() {
+            SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT2);
+            sdf.setLenient(false);
+            return sdf;
+        }
 	}; 
 	private final static ThreadLocal<SimpleDateFormat> dateFormat3 = new ThreadLocal<SimpleDateFormat>() {
-		 @Override
-	        protected SimpleDateFormat initialValue()
-	        {
-	            return new SimpleDateFormat( Property.DATE_FORMAT3 );
-	        }
+        @Override
+        protected SimpleDateFormat initialValue() {
+            SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT3);
+            sdf.setLenient(false);
+            return sdf;
+        }
 	}; 
 	private final static ThreadLocal<SimpleDateFormat> timestampFormat = new ThreadLocal<SimpleDateFormat>() {
         @Override
-           protected SimpleDateFormat initialValue()
-           {
-               return new SimpleDateFormat( Property.TIMESTAMP_FORMAT );
-           }
+        protected SimpleDateFormat initialValue() {
+            SimpleDateFormat sdf = new SimpleDateFormat(Property.TIMESTAMP_FORMAT);
+            sdf.setLenient(false);
+            return sdf;
+        }
    }; 
 	//SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
 	
@@ -736,7 +741,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
                         Date d = dateFormat1.get().parse(getValue());
                         return d;
                     } catch (Exception ex3) {
-
                         try {
                             Date d = dateFormat2.get().parse(getValue());
                             return d;
