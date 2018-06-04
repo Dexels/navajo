@@ -2483,11 +2483,17 @@ public class TslCompiler {
 
 		}
 		String linenr = n.getAttribute("linenr");
-		// Check for error definition. If error is defined throw UserException else just BreakEvent
+        // Check for error definition. If error is defined throw UserException. If
+        // conditionError is defined also throw User Exception.
+        // Else just BreakEvent
+
 		String error = n.getAttribute("error");
 		String conditionError = n.getAttribute("conditionError");
 		String errorCode = n.getAttribute("errorCode");
-        if (conditionError != null && !conditionError.equals("")) {
+        if ((conditionError != null && !conditionError.equals("")) || (errorCode != null && !errorCode.equals(""))) {
+            if (conditionError == null || conditionError.equals("")) {
+                throw new UserException(-1, "Validation syntax error: conditionError attribute missing or empty");
+            }
             if (errorCode == null || errorCode.equals("")) {
                 throw new UserException(-1, "Validation syntax error: errorCode attribute missing or empty");
             }
