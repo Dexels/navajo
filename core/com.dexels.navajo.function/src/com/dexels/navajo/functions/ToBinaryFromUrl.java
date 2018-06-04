@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -18,6 +21,8 @@ import com.dexels.navajo.parser.TMLExpressionException;
  */
 
 public class ToBinaryFromUrl extends FunctionInterface {
+    private final static Logger logger = LoggerFactory.getLogger(ToBinaryFromUrl.class);
+    
   public ToBinaryFromUrl() {
   }
 
@@ -36,8 +41,9 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 		return b;
 	   } catch (MalformedURLException e) {
 		throw new TMLExpressionException("Bad url in function ToBinaryFromUrl: "+s);
-	} catch (IOException e) {
+	} catch (IOException e) { 
 		//throw new TMLExpressionException("Error opening url in function ToBinaryFromUrl: "+s);
+	    logger.warn("IOException in ToBinaryFromUrl (URL {}). Return null", s, e);
 		return null;
 	}
   }
