@@ -89,6 +89,7 @@ import com.dexels.navajo.server.global.GlobalManagerRepository;
 import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
 import com.dexels.navajo.server.jmx.SNMPManager;
 import com.dexels.navajo.server.resource.ResourceManager;
+import com.dexels.navajo.tenant.TenantConfig;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -806,7 +807,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         String origThreadName = null;
         boolean scheduledWebservice = false;
         boolean afterWebServiceActivated = false;
-
+        
+        
         int accessSetSize = accessSet.size();
         setRequestRate(clientInfo, accessSetSize);
 
@@ -832,6 +834,11 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             if (rpcName == null) {
                 throw new FatalException("No script defined");
             }
+            
+            if (!tenantConfig.getTenants().contains(instance)) {
+                throw new FatalException("Unsupported tenant");
+            }
+
 
             if (rpcName.equals("navajo_ping")) {
                 // Ping!
@@ -1524,6 +1531,8 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
     private int health;
 
+    private TenantConfig tenantConfig;
+
 
     @Override
     public int getHealth(String resourceId) {
@@ -1586,6 +1595,14 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     
     public void removeDescriptionProvider(DescriptionProviderInterface dpi) {
         desciptionProviders.remove(dpi.getClass().getName());
+    }
+    
+    public void setTenantConfig(TenantConfig tenantConfig) {
+        this.tenantConfig = tenantConfig;
+    }
+
+    public void clearTenantConfig(TenantConfig tenantConfig) {
+        this.tenantConfig = null;
     }
 
 }
