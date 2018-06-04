@@ -86,39 +86,44 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	
 	private static final Logger logger = LoggerFactory.getLogger(BasePropertyImpl.class);
 	private final static ThreadLocal<SimpleDateFormat> dateFormat1 = new ThreadLocal<SimpleDateFormat>() {
-		 @Override
-	        protected SimpleDateFormat initialValue()
-	        {
-	            return new SimpleDateFormat( Property.DATE_FORMAT1 );
-	        }
+        @Override
+        protected SimpleDateFormat initialValue() {
+            SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT1);
+            sdf.setLenient(false);
+            return sdf;
+        }
 	}; 
 	private final static ThreadLocal<SimpleDateFormat> dateFormat4 = new ThreadLocal<SimpleDateFormat>() {
-		 @Override
-	        protected SimpleDateFormat initialValue()
-	        {
-	            return new SimpleDateFormat( Property.DATE_FORMAT4 );
-	        }
+        @Override
+        protected SimpleDateFormat initialValue() {
+            SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT4);
+            sdf.setLenient(false);
+            return sdf;
+        }
 	}; 
 	private final static ThreadLocal<SimpleDateFormat> dateFormat2 = new ThreadLocal<SimpleDateFormat>() {
-		 @Override
-	        protected SimpleDateFormat initialValue()
-	        {
-	            return new SimpleDateFormat( Property.DATE_FORMAT2 );
-	        }
+        @Override
+        protected SimpleDateFormat initialValue() {
+            SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT2);
+            sdf.setLenient(false);
+            return sdf;
+        }
 	}; 
 	private final static ThreadLocal<SimpleDateFormat> dateFormat3 = new ThreadLocal<SimpleDateFormat>() {
-		 @Override
-	        protected SimpleDateFormat initialValue()
-	        {
-	            return new SimpleDateFormat( Property.DATE_FORMAT3 );
-	        }
+        @Override
+        protected SimpleDateFormat initialValue() {
+            SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT3);
+            sdf.setLenient(false);
+            return sdf;
+        }
 	}; 
 	private final static ThreadLocal<SimpleDateFormat> timestampFormat = new ThreadLocal<SimpleDateFormat>() {
         @Override
-           protected SimpleDateFormat initialValue()
-           {
-               return new SimpleDateFormat( Property.TIMESTAMP_FORMAT );
-           }
+        protected SimpleDateFormat initialValue() {
+            SimpleDateFormat sdf = new SimpleDateFormat(Property.TIMESTAMP_FORMAT);
+            sdf.setLenient(false);
+            return sdf;
+        }
    }; 
 	//SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
 	
@@ -725,38 +730,28 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
             }
             // Try in order from most specific to least specific
             try {
-                timestampFormat.get().setLenient(false);
                 Date d = timestampFormat.get().parse(getValue());
                 return d;
             } catch (Exception ex) {
                 try {
-                    dateFormat4.get().setLenient(false);
                     Date d = dateFormat4.get().parse(getValue());
                     return d;
                 } catch (Exception ex2) {
                     try {
-                        dateFormat1.get().setLenient(false);
                         Date d = dateFormat1.get().parse(getValue());
                         return d;
                     } catch (Exception ex3) {
                         try {
-                            dateFormat2.get().setLenient(false);
                             Date d = dateFormat2.get().parse(getValue());
                             return d;
                         } catch (Exception ex4) {
                             try {
-                                dateFormat3.get().setLenient(false);
-                                Date d = dateFormat3.get().parse(getValue());
+                                Long l = Long.parseLong(getValue());
+                                Date d = new java.util.Date();
+                                d.setTime(l);
                                 return d;
-                            } catch (Exception e4) {
-                                try {
-                                    Long l = Long.parseLong(getValue());
-                                    Date d = new java.util.Date();
-                                    d.setTime(l);
-                                    return d;
-                                } catch (Exception e5) {
-                                    logger.info("Sorry I really can't parse that date: " + getValue());
-                                }
+                            } catch (Exception e5) {
+                                logger.info("Sorry I really can't parse that date: " + getValue());
                             }
                         }
                     }
