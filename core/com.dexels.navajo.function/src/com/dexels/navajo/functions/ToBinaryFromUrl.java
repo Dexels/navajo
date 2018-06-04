@@ -12,46 +12,55 @@ import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 /**
- * <p>Title: Navajo Product Project</p>
- * <p>Description: This is the official source for the Navajo server</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Dexels BV</p>
+ * <p>
+ * Title: Navajo Product Project
+ * </p>
+ * <p>
+ * Description: This is the official source for the Navajo server
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Dexels BV
+ * </p>
+ * 
  * @author Arjen Schoneveld
  * @version $Id$
  */
 
 public class ToBinaryFromUrl extends FunctionInterface {
     private final static Logger logger = LoggerFactory.getLogger(ToBinaryFromUrl.class);
-    
-  public ToBinaryFromUrl() {
-  }
 
-  @Override
-public String remarks() {
-    return "Load a binary from a URL";
-  }
+    public ToBinaryFromUrl() {
+    }
 
-  @Override
-public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-   Object o = getOperand(0);
-   String s = (String)o;
- 	try {
-		URL u = new URL(s);
-		Binary b = new Binary(u.openStream());
-		return b;
-	   } catch (MalformedURLException e) {
-		throw new TMLExpressionException("Bad url in function ToBinaryFromUrl: "+s);
-	} catch (IOException e) { 
-		//throw new TMLExpressionException("Error opening url in function ToBinaryFromUrl: "+s);
-	    logger.warn("IOException in ToBinaryFromUrl (URL {}). Return null", s, e);
-		return null;
-	}
-  }
+    @Override
+    public String remarks() {
+        return "Load a binary from a URL";
+    }
 
-  @Override
-public String usage() {
-    return "ToBinaryFromUrl(String): Binary";
-  }
+    @Override
+    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+        Object o = getOperand(0);
+        String s = (String) o;
+        try {
+            URL u = new URL(s);
+            Binary b = new Binary(u.openStream());
+            return b;
+        } catch (MalformedURLException e) {
+            throw new TMLExpressionException("Bad url in function ToBinaryFromUrl: " + s);
+        } catch (IOException e) {
+            // throw new TMLExpressionException("Error opening url in function
+            // ToBinaryFromUrl: "+s);
+            logger.warn("IOException in ToBinaryFromUrl (URL {}). Return null", s, e);
+            return null;
+        }
+    }
 
+    @Override
+    public String usage() {
+        return "ToBinaryFromUrl(String): Binary";
+    }
 
 }
