@@ -725,29 +725,38 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
             }
             // Try in order from most specific to least specific
             try {
+                timestampFormat.get().setLenient(false);
                 Date d = timestampFormat.get().parse(getValue());
                 return d;
             } catch (Exception ex) {
                 try {
+                    dateFormat4.get().setLenient(false);
                     Date d = dateFormat4.get().parse(getValue());
                     return d;
                 } catch (Exception ex2) {
                     try {
+                        dateFormat1.get().setLenient(false);
                         Date d = dateFormat1.get().parse(getValue());
                         return d;
                     } catch (Exception ex3) {
-
                         try {
+                            dateFormat2.get().setLenient(false);
                             Date d = dateFormat2.get().parse(getValue());
                             return d;
                         } catch (Exception ex4) {
                             try {
-                                Long l = Long.parseLong(getValue());
-                                Date d = new java.util.Date();
-                                d.setTime(l);
+                                dateFormat3.get().setLenient(false);
+                                Date d = dateFormat3.get().parse(getValue());
                                 return d;
-                            } catch (Exception e5) {
-                                logger.info("Sorry I really can't parse that date: " + getValue());
+                            } catch (Exception e4) {
+                                try {
+                                    Long l = Long.parseLong(getValue());
+                                    Date d = new java.util.Date();
+                                    d.setTime(l);
+                                    return d;
+                                } catch (Exception e5) {
+                                    logger.info("Sorry I really can't parse that date: " + getValue());
+                                }
                             }
                         }
                     }
