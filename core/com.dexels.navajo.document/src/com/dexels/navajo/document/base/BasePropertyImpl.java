@@ -752,15 +752,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
                                 return d;
                             } catch (Exception e5) {
                                 logger.info("Sorry I really can't parse that date: " + getValue());
+                                return null;
                             }
                         }
                     }
                 }
-            }
-            if (getType().equals(TIMESTAMP_PROPERTY)) {
-                // Could not parse, return null
-                // Date property still returns original value -> Dexels/navajo#254
-                return null;
             }
             
         } else if (getType().equals(Property.INTEGER_PROPERTY)) {
