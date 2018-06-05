@@ -283,7 +283,10 @@ public class EntityDispatcher {
 	                } else if (e.getCode() == EntityException.CONFLICT) {
 	                    skipLogging = true;
 	                    access.setExitCode(Access.EXIT_ENTITY_CONFLICT);
-	                }
+	                } else if (e.getCode() == EntityException.BAD_REQUEST) {
+                        skipLogging = true;
+                        access.setExitCode(Access.EXIT_VALIDATION_ERR);
+                    }
                 }
 
                 if (!skipLogging) {
