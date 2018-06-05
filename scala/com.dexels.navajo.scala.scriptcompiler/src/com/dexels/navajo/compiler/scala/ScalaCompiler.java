@@ -119,9 +119,8 @@ public class ScalaCompiler extends ScriptCompiler {
         try {
             Files.walk(Paths.get(commonDir.toURI()))
             .filter(Files::isRegularFile)
-            .forEach(f -> {
-                files.$plus$eq(f.normalize().toString());
-            });
+            .filter(f -> f.endsWith(".scala"))
+            .forEach(f -> files.$plus$eq(f.normalize().toString()));
         } catch (IOException e) {
             logger.error("IOException on adding scala common!", e);
         }
