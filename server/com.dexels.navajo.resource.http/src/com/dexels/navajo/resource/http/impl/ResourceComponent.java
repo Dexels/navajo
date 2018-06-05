@@ -182,8 +182,6 @@ public class ResourceComponent implements HttpResource {
 		String path = Long.toString(expirationTime)+"/"+bucket+"/"+id;
 		logger.debug("Signing path: "+path);
 		String encoded = HmacUtils.hmacSha1Hex(this.secret.get(), path);
-
-		logger.debug("Encoded: "+encoded+" encoding path: "+path+" -> secret: "+this.secret.get()+" -> result: "+encoded);
 		return encoded;
 	}
 	
