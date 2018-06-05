@@ -1,6 +1,9 @@
 package com.dexels.navajo.compiler.scala;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -25,7 +28,9 @@ import scala.tools.reflect.ReflectGlobal;
 public class ScalaCompiler extends ScriptCompiler {
 	private static final String SCRIPT_PATH = "scripts";
     private static String SCRIPTEXTENSION = ".scala";
+    
     private ClassLoader navajoScriptClassLoader;
+    private File commonDir;
     
     Set<String> whitelist = new HashSet<>();
     
@@ -64,7 +69,6 @@ public class ScalaCompiler extends ScriptCompiler {
     }
     
     
-
     @Override
     protected Set<String> compileScript(File scriptFile, String script, String packagePath, List<Dependency> dependencies, String tenant,
             boolean hasTenantSpecificFile, boolean forceTenant) throws Exception {
@@ -98,18 +102,31 @@ public class ScalaCompiler extends ScriptCompiler {
         ListBuffer<String> files = new ListBuffer<>();
         String file = scriptFile.getAbsolutePath();
 
+        addScalaCommon(files);
         files.$plus$eq(file);
-         
+
         try {
             compiler.compile(files.toList());
         } catch (Exception e) {
             logger.error("Exception on getting scala code! {}", e);
         }
 
-        
         logger.debug("finished compiling scala for the following files: {}", compiler.compiledFiles());
         return packages;
     }
+
+    private void addScalaCommon(ListBuffer<String> files) {
+        try {
+            Files.walk(Paths.get(commonDir.toURI()))
+            .filter(Files::isRegularFile)
+            .forEach(f -> {
+                files.$plus$eq(f.normalize().toString());
+            });
+        } catch (IOException e) {
+            logger.error("IOException on adding scala common!", e);
+        }
+    }
+
 
     @Override
     public boolean scriptNeedsCompilation() {
@@ -123,10 +140,12 @@ public class ScalaCompiler extends ScriptCompiler {
 
     public void setNavajoConfig(NavajoIOConfig config) {
         this.navajoIOConfig = config;
+        commonDir = new File(navajoIOConfig.getRootPath(), "scalacommon");
     }
 
     public void clearNavajoConfig(NavajoIOConfig config) {
         this.navajoIOConfig = null;
+        commonDir = null;
     }
 
     public void setClassLoader(ClassLoader navajoScriptClassLoader) {
