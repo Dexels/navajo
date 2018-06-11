@@ -161,7 +161,7 @@ public class ResourceComponent implements HttpResource {
 		long unixTimestamp = Instant.now().getEpochSecond()+expire;
 		long exp = unixTimestamp+expire;
 		String totalURL = assemblePublicURL(tenant,bucket, id)+"?expires="+exp+"&sig="+sign(resolveBucket(tenant, bucket), id,exp);
-	    logger.debug("Assembled public url {} to {} in {} lasting {} seconds into the future", totalURL, id, bucket, expire);
+	    //logger.debug("Assembled public url {} to {} in {} lasting {} seconds into the future", totalURL, id, bucket, expire);
 
 		return totalURL;
 	}
@@ -180,7 +180,6 @@ public class ResourceComponent implements HttpResource {
 		}
 		
 		String path = Long.toString(expirationTime)+"/"+bucket+"/"+id;
-		logger.debug("Signing path: "+path);
 		String encoded = HmacUtils.hmacSha1Hex(this.secret.get(), path);
 		return encoded;
 	}
