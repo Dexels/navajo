@@ -150,13 +150,21 @@ class NavajoMessage(val parent: Message) {
   /* Property methods */
   
   def getAny(key : String) : Option[Any] = {
+    if (parent == null) {
+      return None;
+    }
     val prop = parent.getProperty(key)
     if (prop != null && prop.getValue != null) {
       return Some(prop.getTypedValue)
     }
     None
   }
+  
   def getString(key : String) : Option[String] = {
+    if (parent == null) {
+      return None;
+    }
+    
     val prop = parent.getProperty(key)
     if (prop != null && prop.getValue != null) {
       val value : Any = prop.getTypedValue
@@ -172,6 +180,10 @@ class NavajoMessage(val parent: Message) {
   
   
   def getDate(key : String) : Option[Date] = {
+    if (parent == null) {
+      return None;
+    }
+    
     val prop = parent.getProperty(key)
     if (prop != null && prop.getValue != null) {
       return Some(prop.getTypedValue.asInstanceOf[Date])
@@ -180,6 +192,10 @@ class NavajoMessage(val parent: Message) {
   }
   
   def getInt(key : String) : Option[Int] = {
+    if (parent == null) {
+      return None;
+    }
+    
     val prop = parent.getProperty(key)
     if (prop != null) {
       val value : Any = prop.getTypedValue
@@ -193,6 +209,10 @@ class NavajoMessage(val parent: Message) {
   }
   
   def getBoolean(key : String) : Option[Boolean] = {
+    if (parent == null) {
+      return None;
+    }
+    
     val prop = parent.getProperty(key)
     if (prop != null) {
        val value : Any =  prop.getTypedValue
@@ -211,6 +231,10 @@ class NavajoMessage(val parent: Message) {
   }
   
   def getList(key : String) : Option[List[String]] = {
+    if (parent == null) {
+      return None;
+    }
+    
     val prop = parent.getProperty(key)
     if (prop != null) {
        if (prop.getType().equals(Property.LIST_PROPERTY)) {
@@ -221,6 +245,10 @@ class NavajoMessage(val parent: Message) {
   }
   
   def getSelections(key : String) : Option[List[Selection]] = {
+    if (parent == null) {
+      return None;
+    }
+    
     val prop = parent.getProperty(key)
     if (prop != null) {
       if (prop.getType().equals(Property.SELECTION_PROPERTY)) {        
@@ -231,6 +259,10 @@ class NavajoMessage(val parent: Message) {
   }
   
   def getSelectedValue(key : String) : Option[String] = {
+    if (parent == null) {
+      return None;
+    }
+    
     val prop = parent.getProperty(key)
     if (prop != null) {
       if (prop.getType().equals(Property.SELECTION_PROPERTY)) {
@@ -240,6 +272,10 @@ class NavajoMessage(val parent: Message) {
     None
   }
   def getSelectedName(key : String) : Option[String] = {
+    if (parent == null) {
+      return None;
+    }
+    
     val prop = parent.getProperty(key)
     if (prop != null) {
       if (prop.getType().equals(Property.SELECTION_PROPERTY)) {
