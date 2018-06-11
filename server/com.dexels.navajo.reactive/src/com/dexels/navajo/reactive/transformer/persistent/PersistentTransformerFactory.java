@@ -1,5 +1,9 @@
-package com.dexels.navajo.reactive.transformer.other;
+package com.dexels.navajo.reactive.transformer.persistent;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,6 +18,7 @@ import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.reactive.ReactiveBuildContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
@@ -29,47 +34,56 @@ import com.dexels.pubsub.rx2.api.TopicSubscriber;
 
 import io.reactivex.functions.Function;
 
-public class AsyncTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
+public class PersistentTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	private TopicPublisher topicPublisher;
-    public void setTopicSubscriber(TopicPublisher topicPublisher, Map<String,Object> settings) {
-        this.topicPublisher = topicPublisher;
+	private TopicSubscriber topicSubscriber;
+
+
+    public void setTopicSubscriber(TopicSubscriber topicSubscriber, Map<String,Object> settings) {
+        this.topicSubscriber = topicSubscriber;
     }
 
     public void clearTopicSubscriber(TopicSubscriber topicSubscriber) {
+        this.topicSubscriber = null;
+    }
+
+    public void setTopicPublisher(TopicPublisher topicPublisher, Map<String,Object> settings) {
+        this.topicPublisher = topicPublisher;
+    }
+
+    public void clearTopicPublisher(TopicSubscriber topicSubscriber) {
         this.topicPublisher = null;
     }
 
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, 
+	public PersistentTransformer build(String relativePath, List<ReactiveParseProblem> problems, 
 			ReactiveParameters parameters,
 			Optional<XMLElement> xmlElement,
 			ReactiveBuildContext buildContext) {
-		
-//		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), reducerSupplier,useGlobalInput);
-//		ReactiveScriptParser.parseTransformationsFromChildren(relativePath, problems, xml, sourceSupplier, factorySupplier, reducerSupplier, transformers, reducers, useGlobalInput);
-		//
 
-		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
+		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("Persistent Transformer: Can't build without XML element"));
 		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
-		Optional<ReactiveSource> subSource;
+		List<ReactiveTransformer> subtransformer = ReactiveScriptParser.parseTransformationsFromChildren(relativePath, problems, Optional.of(xml),buildContext);
+
+		// we don't really need to parse it now, but it is good to know if there is something wrong.
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
-			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems,buildContext);
-		} catch (Exception e) {
-			throw new ReactiveParseException("Unable to parse sub source in xml: "+xml,e);
+			xml.write(new OutputStreamWriter(baos));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		if(!subSource.isPresent()) {
-			throw new NullPointerException("Missing sub source in xml: "+xml);
-		}
-		ReactiveSource sub = subSource.get();
-		if(!sub.finalType().equals(DataItem.Type.SINGLEMESSAGE)) {
-			throw new IllegalArgumentException("Wrong type of sub source: "+sub.finalType()+ ", reduce or first maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);
-		}
-//		return new MergeSingleTransformer(this,parameters,sub, joinermapper);
-				return new AsyncTransformer(this,parameters,sub, joinermapper);
+		Binary b = new Binary(baos.toByteArray());
+
+		
+		return new PersistentTransformer(this,relativePath,problems,xmlElement,parameters, buildContext,b);
 	}
+	
+//	private byte[] serializeScript(	)
 
 
+	
 	@Override
 	public Set<Type> inType() {
 		return new HashSet<>(Arrays.asList(new Type[] {DataItem.Type.SINGLEMESSAGE,DataItem.Type.MESSAGE}));

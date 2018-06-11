@@ -13,10 +13,9 @@ import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.reactive.ReactiveBuildContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
-import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
-import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
@@ -30,14 +29,10 @@ public class ScanTransformerFactory implements ReactiveTransformerFactory, Trans
 
 	@Override
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems,ReactiveParameters parameters, Optional<XMLElement> xml,
-			Function<String, ReactiveSourceFactory> sourceSupplier,
-			Function<String, ReactiveTransformerFactory> factorySupplier,
-			Function<String, ReactiveMerger> reducerSupplier,
-			Set<String> transformers,
-			Set<String> reducers,
-			boolean useGlobalInput) {
+			ReactiveBuildContext buildContext) {
 
-		Function<StreamScriptContext,Function<DataItem,DataItem>> reducermapper = ReactiveScriptParser.parseReducerList(relativePath, problems,xml.map(e->(List<XMLElement>)e.getChildren()) , reducerSupplier,useGlobalInput);
+
+		Function<StreamScriptContext,Function<DataItem,DataItem>> reducermapper = ReactiveScriptParser.parseReducerList(relativePath, problems,xml.map(e->(List<XMLElement>)e.getChildren()) , buildContext);
 		return new ScanTransformer(this, reducermapper,parameters);
 	}
 

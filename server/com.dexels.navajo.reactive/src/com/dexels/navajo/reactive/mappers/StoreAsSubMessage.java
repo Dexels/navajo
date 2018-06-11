@@ -7,7 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -20,27 +24,34 @@ import io.reactivex.functions.Function;
 
 public class StoreAsSubMessage implements ReactiveMerger {
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(StoreAsSubMessage.class);
+
 	public StoreAsSubMessage() {
 	}
 
 	@Override
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
 		return context->(item)->{
-			// will use the second message as input, if not present, will use the source message
-			ImmutableMessage s = item.message();
-			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s), item.stateMessage(), this, xml, relativePath);
+			ImmutableMessage message = item.message();
+			ImmutableMessage stateMessage = item.stateMessage();
+			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(message),stateMessage, this, xml, relativePath);
+			boolean debug = parms.optionalBoolean("debug").orElse(false);
 			boolean condition = parms.optionalBoolean("condition").orElse(true);
 			if(!condition) {
 				return item;
+			}
+			if(debug) {
+				logger.info("Store as Submessage.State:\n{}Input:\n{}",ImmutableFactory.getInstance().describe(stateMessage),ImmutableFactory.getInstance().describe(message));
 			}
 			Optional<String> nameOpt = parms.optionalString("name");
 			if(nameOpt.isPresent()) {
 				String name = nameOpt.get();
 				ImmutableMessage state = item.stateMessage();
-				ImmutableMessage assembled = item.message().withSubMessage(name, state);
+				ImmutableMessage assembled = message.withSubMessage(name, state);
 				return DataItem.of(assembled, item.stateMessage());
 			} else {
-				return DataItem.of(item.message().merge(item.stateMessage(), Optional.empty()));
+				return DataItem.of(message.merge(item.stateMessage(), Optional.empty()));
 			}
 		};
 	}
@@ -48,7 +59,7 @@ public class StoreAsSubMessage implements ReactiveMerger {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"name","condition"}));
+		return Optional.of(Arrays.asList(new String[]{"name","condition","debug"}));
 	}
 
 	@Override
@@ -61,6 +72,7 @@ public class StoreAsSubMessage implements ReactiveMerger {
 		Map<String,String> result = new HashMap<String, String>();
 		result.put("name", Property.STRING_PROPERTY);
 		result.put("condition", Property.BOOLEAN_PROPERTY);
+		result.put("debug", Property.BOOLEAN_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(result));
 	}
 }

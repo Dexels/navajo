@@ -13,6 +13,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
+import com.dexels.navajo.reactive.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
@@ -26,13 +27,9 @@ public class HttpPushTransformerFactory implements ReactiveTransformerFactory, T
 
 	@Override
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems,ReactiveParameters parameters, Optional<XMLElement> xml,
-			Function<String, ReactiveSourceFactory> sourceSupplier,
-			Function<String, ReactiveTransformerFactory> factorySupplier,
-			Function<String, ReactiveMerger> reducerSupplier,
-			Set<String> transformers,
-			Set<String> reducers,
-			boolean useGlobalInput) {
-		return new HttpPushTransformer(this,relativePath, problems, parameters, xml,useGlobalInput);
+			ReactiveBuildContext buildContext) {
+
+		return new HttpPushTransformer(this,relativePath, problems, parameters, xml,buildContext.useGlobalInput);
 	}
 
 	@Override

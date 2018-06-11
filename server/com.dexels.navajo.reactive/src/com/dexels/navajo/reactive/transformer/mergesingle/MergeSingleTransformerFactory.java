@@ -13,12 +13,11 @@ import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.reactive.ReactiveBuildContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
-import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
 import com.dexels.navajo.reactive.api.ReactiveSource;
-import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
@@ -36,17 +35,14 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 
 	@Override
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
-			Optional<XMLElement> xmlElement, Function<String, ReactiveSourceFactory> sourceSupplier,
-			Function<String, ReactiveTransformerFactory> factorySupplier,
-			Function<String, ReactiveMerger> reducerSupplier,
-			Set<String> transformers,
-			Set<String> reducers,
-			boolean useGlobalInput) {
+			Optional<XMLElement> xmlElement,
+			ReactiveBuildContext buildContext) {
+
 		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
-		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), reducerSupplier,useGlobalInput);
+		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
 		Optional<ReactiveSource> subSource;
 		try {
-			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems, sourceSupplier, factorySupplier,reducerSupplier,transformers,reducers,useGlobalInput);
+			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems, buildContext);
 		} catch (Exception e) {
 			throw new ReactiveParseException("Unable to parse sub source in xml: "+xml,e);
 		}
