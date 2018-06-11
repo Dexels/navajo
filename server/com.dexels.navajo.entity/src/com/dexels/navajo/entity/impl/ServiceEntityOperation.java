@@ -371,6 +371,15 @@ public class ServiceEntityOperation implements EntityOperation {
 			}
 		}
 
+        // Check required properties on post only
+        if (myOperation.getMethod().equals(Operation.POST)) {
+            List<String> missing = checkRequired(inputEntity, myEntity.getMessage(entityVersion), false);
+            if (missing.size() > 0) {
+                throw new EntityException(EntityException.BAD_REQUEST,
+                        "Could not perform insert, missing required properties: " + listToString(missing));
+            }
+        }
+
 		// Merge input, except when modifying existing entry to prevent clearing
 		// existing fields
 		boolean merge = true;
@@ -469,12 +478,7 @@ public class ServiceEntityOperation implements EntityOperation {
 
 	private void performPostValidation(Navajo input, Message inputEntity) throws EntityException {
 		// Duplicate entry check.
-		// Required properties check.
-        List<String> missing = checkRequired(inputEntity, myEntity.getMessage(entityVersion), false);
-		if (missing.size() > 0) {
-			throw new EntityException(EntityException.BAD_REQUEST,
-					"Could not perform insert, missing required properties: " + listToString(missing));
-		}
+
 
 		if (getCurrentEntity(input) != null) {
 			// TODO: Support POST for updates
