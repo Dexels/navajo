@@ -256,7 +256,7 @@ public class ReactiveScriptParser {
 						return mpr;
 					}, reactiveOperatorFactory.keySet(),
 	reactiveReducer.keySet()
-	,streamInput);
+	, !streamInput);
 					try {
 						return parseSource(relativePath, xx,problems,buildContext);
 					} catch (Exception e) {
@@ -521,7 +521,7 @@ public class ReactiveScriptParser {
 			Optional<String> baseType, String operatorName,
 			Optional<String> newBaseType) throws Exception {
 		ReactiveTransformerFactory transformerFactory = buildContext.factorySupplier.apply(operatorName); 
-		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, problems,Optional.of(xml),transformerFactory,buildContext.useGlobalInput);
+		ReactiveParameters parameters = ReactiveScriptParser.parseParamsFromChildren(relativePath, problems,Optional.of(xml),transformerFactory, !buildContext.useGlobalInput);
 		ReactiveTransformer transformer = transformerFactory.build(relativePath, problems, parameters, Optional.of(xml),buildContext);
 		TransformerMetadata metadata = transformer.metadata();
 		if(metadata==null) {
@@ -608,7 +608,7 @@ public class ReactiveScriptParser {
 					logger.info("Assuming this is a reducer element: "+xml);
 					try {
 						ReactiveMerger reducer = buildContext.reducerSupplier.apply(xml.getName());
-						ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, problems, Optional.of(xml),reducer,buildContext.useGlobalInput);
+						ReactiveParameters r = ReactiveScriptParser.parseParamsFromChildren(relativePath, problems, Optional.of(xml),reducer, !buildContext.useGlobalInput);
 						return reducer.execute(r,relativePath, Optional.of(xml));
 					} catch (Exception e) {
 						throw new RuntimeException("I'm genuinely surprised that this happened. Well done.",e);
