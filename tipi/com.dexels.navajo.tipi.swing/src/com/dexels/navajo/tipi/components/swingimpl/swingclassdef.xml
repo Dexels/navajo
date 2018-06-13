@@ -502,6 +502,11 @@
             <param name="propertyName" type="string" />
             <param name="value" type="object" />
          </method>
+         <method name="clearPropertyFilters">
+            <description>
+               Clears all property filters
+            </description>
+         </method>
          <method name="setPropertyFilter">
             <description>
                Select the property filter
