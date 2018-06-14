@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.eclipse.jetty.http.HttpMethod;
 
-import com.dexels.navajo.client.stream.ReactiveReply;
 import com.dexels.navajo.document.stream.StreamCompress;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
@@ -19,14 +18,12 @@ public class NavajoReactiveJettyClient {
 	private final String username;
 	private final String password;
 	private final boolean useReactive;
-	private final Optional<String> tenant;
 	
-	public NavajoReactiveJettyClient(String uri, String username, String password, Optional<String> tenant, boolean useReactive) throws Exception {
+	public NavajoReactiveJettyClient(String uri, String username, String password, boolean useReactive) throws Exception {
 		this.client = new JettyClient();
 		this.uri = uri;
 		this.username = username;
 		this.password = password;
-		this.tenant = tenant;
 		this.useReactive = useReactive;
 	}
 

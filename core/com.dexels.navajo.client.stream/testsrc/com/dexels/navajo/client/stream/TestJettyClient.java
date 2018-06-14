@@ -83,33 +83,9 @@ public class TestJettyClient {
 //	.blockingForEach(e->System.err.println("elt: "+e));
 	}
 
-	private static Flowable<NavajoStreamEvent> call(JettyClient client,String uri, String username, String password, String service, String tenant, Flowable<NavajoStreamEvent> in) {
-		Flowable<byte[]> inStream = in
-				.compose(StreamDocument.inNavajo(service, Optional.of(username), Optional.of(password)))
-				.lift(StreamDocument.serialize())
-				.doOnNext(e->System.err.println("Sending: "+new String(e)));
-//			.compose(StreamCompress.compress(Optional.of("deflate")));
-		return client.callWithBodyToStream(uri, req->req
-				.header("X-Navajo-Reactive", "true")
-				.header("X-Navajo-Service", service)
-				.header("X-Navajo-Instance", tenant)
-				.header("X-Navajo-Username", username)
-				.header("X-Navajo-Password", password)
-//				.header("Content-Encoding", "deflate")
-//				.header("Accept-Encoding", "deflate")
-
-				.method(HttpMethod.POST), inStream,"text/xml;charset=utf-8")
-//		.compose(StreamCompress.decompress(Optional.of("deflate")))
-		.lift(XML.parseFlowable(5))
-		.concatMap(e->e)
-		.lift(StreamDocument.parse())
-		.concatMap(e->e)
-		.compose(StreamDocument.inNavajo(service, Optional.of(username), Optional.of(password)));
-	}
-	
 	@Test
 	public void testNavajoClientForReal() throws Exception {
-		NavajoReactiveJettyClient client = new NavajoReactiveJettyClient(this.uri,this.username,this.password,Optional.empty(),false);
+		NavajoReactiveJettyClient client = new NavajoReactiveJettyClient(this.uri,this.username,this.password,false);
 		
 		int size = client.call("vla/authorization/InitLoginSystemUser", "", Flowable.empty())
 			.lift(StreamDocument.serialize())
