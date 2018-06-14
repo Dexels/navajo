@@ -18,12 +18,10 @@ public class ReactiveReply {
 
 	public final ReactiveResponse response;
 	public final Flowable<ContentChunk> content;
-	private final Consumer<byte[]> receivedReporter;
 
 	public ReactiveReply(ReactiveResponse response, Publisher<ContentChunk> content, Consumer<byte[]> receivedReporter) {
 		this.response = response;
 		this.content = Flowable.fromPublisher(content);
-		this.receivedReporter = receivedReporter;
 	}
 
 	public Map<String,String> responseHeaders() {

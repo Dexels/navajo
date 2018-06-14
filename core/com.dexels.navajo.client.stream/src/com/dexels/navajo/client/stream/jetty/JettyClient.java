@@ -20,7 +20,6 @@ import io.reactivex.Emitter;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.Single;
-import io.reactivex.functions.Consumer;
 
 public class JettyClient {
 
