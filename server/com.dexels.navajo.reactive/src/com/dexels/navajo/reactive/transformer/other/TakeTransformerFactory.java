@@ -14,6 +14,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
+import com.dexels.navajo.reactive.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
@@ -30,12 +31,8 @@ public class TakeTransformerFactory implements ReactiveTransformerFactory, Trans
 
 	@Override
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
-			Function<String, ReactiveSourceFactory> sourceSupplier,
-			Function<String, ReactiveTransformerFactory> factorySupplier,
-			Function<String, ReactiveMerger> reducerSupplier,
-			Set<String> transformers,
-			Set<String> reducers,
-			boolean useGlobalInput) {
+			ReactiveBuildContext buildContext) {
+
 		return new TakeTransformer(this,parameters);
 	}
 	

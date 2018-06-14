@@ -14,6 +14,7 @@ import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.reactive.ReactiveBuildContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -31,13 +32,9 @@ public class SingleMessageTransformerFactory implements ReactiveTransformerFacto
 
 	@Override
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters,Optional<XMLElement> xml, 
-			Function<String, ReactiveSourceFactory> sourceSupplier,
-			Function<String, ReactiveTransformerFactory> factorySupplier,
-			Function<String, ReactiveMerger> reducerSupplier,
-			Set<String> transformers,
-			Set<String> reducers,
-			boolean useGlobalInput) {
-		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, problems, xml.map(x->x.getChildren()), reducerSupplier,useGlobalInput);
+			ReactiveBuildContext buildContext) {
+
+		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath, problems, xml.map(x->x.getChildren()),buildContext);
 		return new SingleMessageTransformer(this,parameters,joinermapper,xml,relativePath);
 	}
 

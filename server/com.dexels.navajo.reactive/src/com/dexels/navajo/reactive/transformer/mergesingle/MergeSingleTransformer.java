@@ -28,9 +28,15 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
 		return flow->flow.flatMap(item->{
-			Flowable<DataItem> sourceStream = source.execute(context,  Optional.of(item.message()));
+			Flowable<DataItem> sourceStream = source.execute(context,  Optional.of(item.message()))
+					.doOnNext(dataitem->{
+						System.err.println("");
+					});
 			return sourceStream
-				.map(reducedItem->joiner.apply(context).apply(DataItem.of(item.message(), reducedItem.message())));
+				.map(reducedItem->joiner.apply(context).apply(
+						DataItem.of(item.message(), reducedItem.stateMessage())
+						)
+				);
 		},false,10);
 				
 				
