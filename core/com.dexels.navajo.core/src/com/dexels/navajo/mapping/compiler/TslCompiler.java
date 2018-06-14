@@ -2501,9 +2501,13 @@ public class TslCompiler {
             result.append(printIdent(ident + 2) + "op = Expression.evaluate(" + replaceQuotes(conditionError)
                     + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
             result.append(
-                    printIdent(ident + 2) + "Access.writeToConsole(access, \"ErrorCode: " + errorCode + " - " + conditionError + "\");\n");
-            result.append(printIdent(ident + 2) + "throw new UserException(UserException.CONDITION_ERROR, \"coditionError code: "
-                    + errorCode + " - \"+ op.value + \"\");\n");
+                    printIdent(ident + 2) + "Access.writeToConsole(access, \"ErrorCode: \" + Expression.evaluate("
+                            + replaceQuotes(errorCode)
+                            + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams()).value + \" - \"+ op.value + \" \");\n");
+            result.append(printIdent(ident + 2)
+                    + "throw new UserException(UserException.CONDITION_ERROR, \"coditionError code: \" + Expression.evaluate("
+                    + replaceQuotes(errorCode)
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams()).value + \" - \"+ op.value + \"\");\n");
             result.append(printIdent(ident) + "}\n");
         } else if (error == null || error.equals("")) {
 			result.append(printIdent(ident + 2) + "Access.writeToConsole(access, \"Breaking at line: " + linenr + "\");\n");
