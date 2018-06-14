@@ -37,14 +37,24 @@ public class TipiComposeMail extends TipiAction {
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
 		String recipientProperty = (String) getEvaluatedParameter("recipientProperty", event).value;
-		Message arrayList = (Message) getEvaluatedParameter("recipientList", event).value;
 		String subject = (String) getEvaluatedParameter("subject", event).value;
 		String body = (String) getEvaluatedParameter("body", event).value;
 		String recipientsDelimiter = (String) getEvaluatedParameter("recipientsDelimiter", event).value;
-		createEmail(arrayList, recipientProperty, subject, body, recipientsDelimiter);
+
+		// Check if TO or BCC needs to be applied
+		Message arrayList;
+		String mailRecipientType = "TO";
+		if (getEvaluatedParameter("recipientListBcc", event) != null && ((Message) getEvaluatedParameter("recipientListBcc", event).value).getArraySize() != 0) {
+			mailRecipientType = "BCC";
+			arrayList = (Message) getEvaluatedParameter("recipientListBcc", event).value;
+		} else {
+			arrayList = (Message) getEvaluatedParameter("recipientList", event).value;
+		}
+		
+		createEmail(arrayList, recipientProperty, subject, body, recipientsDelimiter, mailRecipientType);
 	}
 	
-	private void createEmail(Message recipient, String propertyName, String subject, String body, String recipientsDelimiter) {
+	private void createEmail(Message recipient, String propertyName, String subject, String body, String recipientsDelimiter, String mailRecipientType) {
 
 		String emailAddress;
 		// "mailto:" is added by BinaryOpener
@@ -66,11 +76,10 @@ public class TipiComposeMail extends TipiAction {
 				}
 			}
 			if (recipientsFound) {
-				emailString = emailString.substring(0,
-						(emailString.length() - 1));
+				emailString = emailString.substring(0, (emailString.length() - 1));
 				emailString = emailString + "?subject=" + subject + "&body=" + body;
 				logger.info("Generated email string: " + emailString);
-				BinaryOpenerFactory.getInstance().mail(emailString);
+				BinaryOpenerFactory.getInstance().mail(emailString, mailRecipientType);
 			} else {
 				logger.info("No recipients found that have an email address");
 			}

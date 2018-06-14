@@ -10,7 +10,7 @@ public interface BinaryOpener {
 
 	public boolean browse(String url);
 
-	public boolean mail(String url);
+	public boolean mail(String url, String mailRecipientType);
 	
 	public boolean open(Binary b);
 	

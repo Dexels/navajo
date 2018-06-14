@@ -28,9 +28,13 @@ public class GenericBinaryOpener implements BinaryOpener {
     }
 
     @Override
-    public boolean mail(String url) {
+    public boolean mail(String url, String mailRecipientType) {
         try {
-            Desktop.getDesktop().mail(new URI("mailto", url, null));
+        	String mailURI = "mailto";
+			if ( mailRecipientType.equalsIgnoreCase("BCC") ) {
+				mailURI = mailURI + ":?bcc=";
+			}
+            Desktop.getDesktop().mail(new URI(mailURI, url, null));
             return true;
         } catch (IOException e) {
             logger.error("Could not open mail, uri= {}", url, e);
