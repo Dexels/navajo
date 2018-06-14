@@ -2498,6 +2498,8 @@ public class TslCompiler {
                 throw new UserException(-1, "Validation syntax error: errorCode attribute missing or empty");
             }
             result.append(printIdent(ident + 2) + "Access.writeToConsole(access, \"ConditionError break at line: " + linenr + "\");\n");
+            result.append(printIdent(ident + 2) + "op = Expression.evaluate(" + replaceQuotes(conditionError)
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
             result.append(
                     printIdent(ident + 2) + "Access.writeToConsole(access, \"ErrorCode: " + errorCode + " - " + conditionError + "\");\n");
             result.append(printIdent(ident + 2) + "throw new UserException(UserException.CONDITION_ERROR, op.value + \"\");\n");
