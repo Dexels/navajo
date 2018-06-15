@@ -274,6 +274,18 @@
 					<url>http://repo.dexels.com/repository/thirdparty/</url>
 					<layout>default</layout>
 				</repository>
+				<repository>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+					<id>maven_central</id>
+					<name>Maven Central</name>
+					<url>https://repo.maven.apache.org/maven2/</url>
+					<layout>default</layout>
+				</repository>
 
 
 			</repositories>
