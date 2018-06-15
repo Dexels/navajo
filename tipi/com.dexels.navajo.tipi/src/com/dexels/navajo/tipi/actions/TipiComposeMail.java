@@ -77,9 +77,14 @@ public class TipiComposeMail extends TipiAction {
 			}
 			if (recipientsFound) {
 				emailString = emailString.substring(0, (emailString.length() - 1));
-				emailString = emailString + "?subject=" + subject + "&body=" + body;
+				String params = "subject=" + subject + "&body=" + body;
+				if (mailRecipientType.equalsIgnoreCase("BCC")) {
+					emailString = "?bcc=" + emailString + "&" + params;
+				} else {
+					emailString = emailString + "?" + params;
+				}
 				logger.info("Generated email string: " + emailString);
-				BinaryOpenerFactory.getInstance().mail(emailString, mailRecipientType);
+				BinaryOpenerFactory.getInstance().mail(emailString);
 			} else {
 				logger.info("No recipients found that have an email address");
 			}

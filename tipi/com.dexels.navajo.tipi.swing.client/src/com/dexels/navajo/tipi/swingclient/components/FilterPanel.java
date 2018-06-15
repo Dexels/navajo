@@ -250,7 +250,7 @@ public class FilterPanel extends JPanel {
             }
             mailString = mailString.substring(0, mailString.length() - 1);
             logger.info("Calling openDoc: " + mailString);
-            BinaryOpenerFactory.getInstance().mail(mailString, "TO");
+            BinaryOpenerFactory.getInstance().mail(mailString);
         } catch (Exception e) {
             logger.info("Could not send email: " + e.getMessage());
         }

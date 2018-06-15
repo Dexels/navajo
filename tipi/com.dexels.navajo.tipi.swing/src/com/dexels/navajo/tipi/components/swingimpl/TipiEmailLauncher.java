@@ -82,7 +82,7 @@ public class TipiEmailLauncher extends TipiSwingDataComponentImpl {
 				emailString = emailString + "?subject=" + subject + "&body="
 						+ body;
 				logger.debug("Generated email string: " + emailString);
-				BinaryOpenerFactory.getInstance().mail(emailString, "TO");
+				BinaryOpenerFactory.getInstance().mail(emailString);
 			} else {
 				logger.warn("No recipients found that have an email address");
 			}
