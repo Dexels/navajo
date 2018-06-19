@@ -2488,27 +2488,34 @@ public class TslCompiler {
         // Else just BreakEvent
 
 		String error = n.getAttribute("error");
-		String conditionError = n.getAttribute("conditionError");
-		String errorCode = n.getAttribute("errorCode");
-        if ((conditionError != null && !conditionError.equals("")) || (errorCode != null && !errorCode.equals(""))) {
-            if (conditionError == null || conditionError.equals("")) {
+        String conditionDescription = n.getAttribute("conditionDescription");
+        String conditionId = n.getAttribute("conditionId");
+        if ((conditionDescription != null && !conditionDescription.equals("")) || (conditionId != null && !conditionId.equals(""))) {
+            if (conditionDescription == null || conditionDescription.equals("")) {
                 throw new UserException(-1, "Validation syntax error: conditionError attribute missing or empty");
             }
-            if (errorCode == null || errorCode.equals("")) {
+            if (conditionId == null || conditionId.equals("")) {
                 throw new UserException(-1, "Validation syntax error: errorCode attribute missing or empty");
             }
-            result.append(printIdent(ident + 2) + "Access.writeToConsole(access, \"ConditionError break at line: " + linenr + "\");\n");
-            result.append(printIdent(ident + 2) + "op = Expression.evaluate(" + replaceQuotes(conditionError)
-                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
-            result.append(
-                    printIdent(ident + 2) + "Access.writeToConsole(access, \"ErrorCode: \" + Expression.evaluate("
-                            + replaceQuotes(errorCode)
-                            + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams()).value + \" - \"+ op.value + \" \");\n");
-            result.append(printIdent(ident + 2)
-                    + "throw new UserException(UserException.CONDITION_ERROR, \"coditionError code: \" + Expression.evaluate("
-                    + replaceQuotes(errorCode)
-                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams()).value + \" - \"+ op.value + \"\");\n");
+            result.append(printIdent(ident + 2) + "Navajo outMessage = access.getOutputDoc();\n"
+                    + "            Message msg = NavajoFactory.getInstance().createMessage(outMessage, \"ConditionErrors\");\n"
+                    + "            msg.setType(Message.MSG_TYPE_ARRAY);\n"
+                    + "            Message childMsg = NavajoFactory.getInstance().createMessage(outMessage, \"ConditionErrors\");\n"
+                    + "            childMsg.setType(Message.MSG_TYPE_ARRAY_ELEMENT);\n" + "            msg.addMessage(childMsg);\n"
+                    + "            Property prConditionId = NavajoFactory.getInstance().createProperty(outMessage, \"Id\", Property.STRING_PROPERTY, "
+                    + "String.valueOf(Expression.evaluate(" + replaceQuotes(conditionId)
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams()).value)"
+                    + "                    ,120, \"\", Property.DIR_OUT);\n"
+                    + "            Property prConditionDesc = NavajoFactory.getInstance().createProperty(outMessage, \"Description\", Property.STRING_PROPERTY,\n"
+                    + "String.valueOf(Expression.evaluate(" + replaceQuotes(conditionDescription)
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams()).value)"
+                    + ", 120, \"\", Property.DIR_OUT);\n"
+                    + "            childMsg.addProperty(prConditionId);\n" + "            childMsg.addProperty(prConditionDesc);\n"
+                    + "            outMessage.addMessage(msg);");
+
+            result.append(printIdent(ident + 2) + "throw new BreakEvent();\n");
             result.append(printIdent(ident) + "}\n");
+
         } else if (error == null || error.equals("")) {
 			result.append(printIdent(ident + 2) + "Access.writeToConsole(access, \"Breaking at line: " + linenr + "\");\n");
 			result.append(printIdent(ident + 2) + "throw new BreakEvent();\n");
