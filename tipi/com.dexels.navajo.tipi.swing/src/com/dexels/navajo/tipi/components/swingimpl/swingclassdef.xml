@@ -513,6 +513,7 @@
             </description>
             <param name="propertyName" type="string" />
             <param name="value" type="object" />
+            <param name="propertyType" type="string" />
             <param name="operator" type="string" />
          </method>
          <method name="updateConditionalRemarks">

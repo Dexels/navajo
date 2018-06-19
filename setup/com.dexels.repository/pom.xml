@@ -258,7 +258,7 @@
 					</snapshots>
 					<id>central</id>
 					<name>Dexels Central</name>
-					<url>http://repo.dexels.com/nexus/content/groups/public/</url>
+					<url>http://repo.dexels.com/repository/public/</url>
 					<layout>default</layout>
 				</repository>
 
@@ -270,8 +270,20 @@
 						<enabled>false</enabled>
 					</snapshots>
 					<id>repo_thirdparty</id>
-					<name>Dexels Central</name>
-					<url>http://repo.dexels.com/nexus/content/repositories/thirdparty/</url>
+					<name>Dexels Third</name>
+					<url>http://repo.dexels.com/repository/thirdparty/</url>
+					<layout>default</layout>
+				</repository>
+				<repository>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+					<id>maven_central</id>
+					<name>Maven Central</name>
+					<url>https://repo.maven.apache.org/maven2/</url>
 					<layout>default</layout>
 				</repository>
 

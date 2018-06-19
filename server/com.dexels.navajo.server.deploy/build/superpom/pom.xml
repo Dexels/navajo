@@ -32,11 +32,11 @@
 			<artifactId>com.dexels.navajo.api</artifactId>
 			<version>2.0.8</version>
 		</dependency>
-		<dependency>
-			<groupId>org.mozilla</groupId>
-			<artifactId>org.mozilla.javascript</artifactId>
-			<version>1.7.2</version>
-		</dependency>
+<dependency>
+    <groupId>org.eclipse.birt.runtime.3_7_1</groupId>
+    <artifactId>org.mozilla.javascript</artifactId>
+    <version>1.7.2</version>
+</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.jsp</artifactId>
