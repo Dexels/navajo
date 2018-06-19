@@ -2492,10 +2492,10 @@ public class TslCompiler {
         String conditionId = n.getAttribute("conditionId");
         if ((conditionDescription != null && !conditionDescription.equals("")) || (conditionId != null && !conditionId.equals(""))) {
             if (conditionDescription == null || conditionDescription.equals("")) {
-                throw new UserException(-1, "Validation syntax error: conditionError attribute missing or empty");
+                throw new UserException(-1, "Validation syntax error: conditionDescription attribute missing or empty");
             }
             if (conditionId == null || conditionId.equals("")) {
-                throw new UserException(-1, "Validation syntax error: errorCode attribute missing or empty");
+                throw new UserException(-1, "Validation syntax error: conditionId attribute missing or empty");
             }
             result.append(printIdent(ident + 2) + "Navajo outMessage = access.getOutputDoc();\n"
                     + "            Message msg = NavajoFactory.getInstance().createMessage(outMessage, \"ConditionErrors\");\n"
