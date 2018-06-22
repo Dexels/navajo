@@ -29,7 +29,8 @@ public class IntervalTransformer implements ReactiveTransformer {
         ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, Optional.empty(), "");
         int delay = parms.paramInteger("delay");
         boolean debug = parms.optionalBoolean("debug").orElse(false);
-        return e -> e.zipWith(Flowable.interval(delay, TimeUnit.MILLISECONDS), (t, idx) -> {
+        Flowable<Long> intervalFlowable = Flowable.interval(delay, TimeUnit.MILLISECONDS).onBackpressureDrop();
+        return e -> e.zipWith(intervalFlowable, (t, idx) -> {
             if (debug) {
                 System.out.println("forwaring itemnr " + idx);
             }
