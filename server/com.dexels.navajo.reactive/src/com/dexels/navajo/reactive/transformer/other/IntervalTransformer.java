@@ -28,12 +28,7 @@ public class IntervalTransformer implements ReactiveTransformer {
     public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
         ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, Optional.empty(), "");
         int delay = parms.paramInteger("delay");
-        boolean debug = parms.optionalBoolean("debug").orElse(false);
-        return e-> Flowable.interval(delay,  TimeUnit.MILLISECONDS)
-                .doOnNext(counter -> {
-                    if (debug) System.err.println("Forwaring itemnr: " + counter + " after sleeping " + delay);
-                })
-                .flatMap(counter -> e.take(1));
+        return e-> e.zipWith( Flowable.interval(delay,  TimeUnit.MILLISECONDS), (t, idx) -> t);
     }
 
     @Override
