@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2723">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2751">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.4.9.201803201811"/>
 <unit id="org.eclipse.jetty.bundles.f.source.feature.group" version="9.4.9.201803201811"/>
 <repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.9.v20180320"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.3.22.201711021538"/>
-<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.22.v20171030"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jgit.feature.group" version="4.11.0.201803080745-r"/>
-<unit id="org.eclipse.jgit.http.apache.feature.group" version="4.11.0.201803080745-r"/>
-<unit id="org.eclipse.jgit.lfs.feature.group" version="4.11.0.201803080745-r"/>
-<repository location="http://download.eclipse.org/egit/updates/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.core.feature.feature.group" version="1.4.2.v20180210-1608"/>
@@ -26,8 +16,21 @@
 <repository location="http://p2.dexels.com/eclipse/equinox/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.12.6.201805291443"/>
-<repository location="http://p2.dexels.com/eclipse/3rdparty_1.12.6"/>
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.3.22.201711021538"/>
+<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.22.v20171030"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.13.9.201806221031"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.13.9"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jgit.feature.group" version="4.11.0.201803080745-r"/>
+<unit id="org.eclipse.jgit.http.apache.feature.group" version="4.11.0.201803080745-r"/>
+<unit id="org.eclipse.jgit.lfs.feature.group" version="4.11.0.201803080745-r"/>
+<unit id="org.eclipse.jgit.pgm.feature.group" version="4.11.0.201803080745-r"/>
+<unit id="org.eclipse.jgit.pgm.source.feature.group" version="4.11.0.201803080745-r"/>
+<unit id="org.eclipse.jgit.source.feature.group" version="4.11.0.201803080745-r"/>
+<repository location="http://download.eclipse.org/egit/updates-4.11"/>
 </location>
 </locations>
 <includeBundles>
@@ -116,8 +119,7 @@
 <plugin id="org.apache.felix.fileinstall"/>
 <plugin id="org.apache.felix.framework"/>
 <plugin id="org.apache.felix.gogo.command" version="1.0.2"/>
-<plugin id="org.apache.felix.gogo.runtime" version="1.0.6"/>
-<plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
+<plugin id="org.apache.felix.gogo.runtime" version="1.0.12"/>
 <plugin id="org.apache.felix.gogo.shell" version="1.0.0"/>
 <plugin id="org.apache.felix.inventory"/>
 <plugin id="org.apache.felix.log"/>
@@ -231,10 +233,14 @@
 <plugin id="org.mongodb.driver-async"/>
 <plugin id="org.mongodb.driver-reactivestreams"/>
 <plugin id="org.mongodb.mongo-java-driver"/>
-<plugin id="org.objectweb.asm" version="6.0.0.v20180116-1719"/>
 <plugin id="org.objectweb.asm" version="5.0.3"/>
-<plugin id="org.objectweb.asm.commons"/>
-<plugin id="org.objectweb.asm.tree"/>
+<plugin id="org.objectweb.asm" version="6.1.1"/>
+<plugin id="org.objectweb.asm.commons" version="6.1.1"/>
+<plugin id="org.objectweb.asm.commons" version="5.0.3"/>
+<plugin id="org.objectweb.asm.tree" version="5.0.3"/>
+<plugin id="org.objectweb.asm.tree" version="6.1.1"/>
+<plugin id="org.objectweb.asm.util" version="6.1.1"/>
+<plugin id="org.objectweb.asm.util" version="5.0.3"/>
 <plugin id="org.openstreetmap.jmapviewer"/>
 <plugin id="org.ops4j.base.io"/>
 <plugin id="org.ops4j.base.lang"/>
@@ -284,6 +290,6 @@
 <plugin id="redis.clients.jedis"/>
 <plugin id="slf4j.api"/>
 <plugin id="slf4j.simple"/>
-<plugin id="stax2-api"/>
+<plugin id="stax2-api" version="4.0.0"/>
 </includeBundles>
 </target>
