@@ -53,7 +53,7 @@ public class ToBinaryFromUrl extends FunctionInterface {
         } catch (IOException e) {
             // throw new TMLExpressionException("Error opening url in function
             // ToBinaryFromUrl: "+s);
-            logger.warn("IOException in ToBinaryFromUrl (URL {}). Return null", s, e);
+            logger.warn("IOException in ToBinaryFromUrl (URL {}) error: {}. Return null", s, e.getMessage());
             return null;
         }
     }
