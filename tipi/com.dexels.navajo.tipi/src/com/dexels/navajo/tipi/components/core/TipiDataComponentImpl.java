@@ -108,7 +108,19 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		{
 			// nothing wrong, it is just not available for this class.
 		}
-		
+        if (mySettingsService != null) {
+            loadServices(mySettingsService);
+            Navajo settings = this.getContext().getNavajo(mySettingsService);
+            if (settings != null) {
+                try {
+                    loadData(settings, mySettingsService);
+                }
+                catch(TipiException te) {
+                    logger.error("Something going wrong loading the settings data for component " + this + " with settings " + settings, te);
+                }
+            }
+        }
+					
 	}
 	@Override
 	public void registerPropertyChild(TipiComponent component) {
@@ -220,7 +232,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		for (int i=0; i<userSettings.getArraySize();i++)
 		{
 			Message singleComponentUserSettings = userSettings.getMessage(i);
-			if (singleComponentUserSettings != null && singleComponentUserSettings.getProperty("ObjectName").getValue().equals(myName) && singleComponentUserSettings.getProperty("ObjectType").getValue().equalsIgnoreCase(this.getClass().getName()))
+			if (singleComponentUserSettings != null && singleComponentUserSettings.getProperty("ObjectName").getValue().equalsIgnoreCase(myName) && singleComponentUserSettings.getProperty("ObjectType").getValue().equalsIgnoreCase(this.getClass().getName()))
 			{
 				Integer propertyX = 0;
 				Integer propertyY = 0;
@@ -268,7 +280,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 				for (int i=0; i<userSettings.getArraySize();i++)
 				{
 					Message singleComponentUserSettings = userSettings.getMessage(i);
-					if (singleComponentUserSettings != null && singleComponentUserSettings.getProperty("ObjectName").getValue().equals(myName) && singleComponentUserSettings.getProperty("ObjectType").getValue().equalsIgnoreCase(this.getClass().getName()))
+					if (singleComponentUserSettings != null && singleComponentUserSettings.getProperty("ObjectName").getValue().equalsIgnoreCase(myName) && singleComponentUserSettings.getProperty("ObjectType").getValue().equalsIgnoreCase(this.getClass().getName()))
 					{
 						thisComponentUserSettings = singleComponentUserSettings;
 					}
