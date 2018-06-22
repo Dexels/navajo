@@ -236,7 +236,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
     
     public String getHexDigest() {
-		return getDigest().hex();
+        BinaryDigest digest = getDigest();
+        if (digest == null) return null;
+		return digest.hex();
     }
 
     public void setDigest(byte[] digest) {
