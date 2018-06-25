@@ -174,8 +174,8 @@ public class TestEnvironment {
 		StreamScriptContext context = new StreamScriptContext("tenant", serviceName, Optional.empty(), Optional.empty(),
 				NavajoFactory.getInstance().createNavajo(),
 				Collections.emptyMap(),
-				Optional.of(inStream),null,
-				Optional.empty(),Collections.emptyList(),Optional.empty(),Optional.empty());
+				Optional.of(inStream),Optional.empty(),
+				Collections.emptyList(),Optional.empty(),Optional.empty());
 		return context;
 	}
 

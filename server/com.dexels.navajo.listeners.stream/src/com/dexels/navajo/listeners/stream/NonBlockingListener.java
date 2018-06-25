@@ -424,9 +424,8 @@ public class NonBlockingListener extends HttpServlet {
 							Flowable.<NavajoStreamEvent>empty().compose(StreamDocument
 									.inNavajo(serviceHeader, Optional.of(username), Optional.of(password)))
 							),
-					null, 
 					Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment), 
-					Collections.emptyList(),
+					Collections.emptyList(), 
 					Optional.of(()->{responseSubscriber.dispose(); ac.complete();}),
 					Optional.ofNullable(this.runningReactiveScripts)
 				);
@@ -442,7 +441,7 @@ public class NonBlockingListener extends HttpServlet {
 			.concatMap(e->e);
 		
 //	au
-		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,attributes,Optional.of(input),null, Optional.of(this.reactiveScriptEnvironment), Collections.emptyList(),Optional.of(()->{responseSubscriber.dispose(); ac.complete();}),Optional.of(runningReactiveScripts));
+		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,attributes,Optional.of(input),Optional.of(this.reactiveScriptEnvironment), Collections.emptyList(), Optional.of(()->{responseSubscriber.dispose(); ac.complete();}),Optional.of(runningReactiveScripts));
 	}
 
 	// warn: Duplicated code

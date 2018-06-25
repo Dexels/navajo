@@ -43,11 +43,6 @@ public class StoreTest {
 	}
 	
 	private StreamScriptContext createContext(String serviceName, Optional<ReactiveScriptRunner> runner) {
-		Navajo input = NavajoFactory.getInstance().createNavajo();
-		return createContext(serviceName, input,runner);
-	}
-	
-	private StreamScriptContext createContext(String serviceName,Navajo input, Optional<ReactiveScriptRunner> runner) {
 //		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
 		StreamScriptContext context = new StreamScriptContext("tenant", serviceName
 				, Optional.of("username")
@@ -55,8 +50,7 @@ public class StoreTest {
 				, NavajoFactory.getInstance().createNavajo()
 				, Collections.emptyMap()
 				, Optional.empty()
-				, input, runner, Collections.emptyList(),Optional.empty()
-				, Optional.empty());
+				, runner, Collections.emptyList(), Optional.empty(),Optional.empty());
 		return context;
 	}
 	
